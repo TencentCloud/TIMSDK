@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.Pair;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultCaller;
@@ -26,7 +25,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,17 +46,16 @@ class TUIRouter {
 
     private static final Map<String, String> routerMap = new HashMap<>();
 
-    private static final Map<ActivityResultCaller, ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>>> activityResultLauncherMap = new WeakHashMap<>();
+    private static final Map<ActivityResultCaller, ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>>> activityResultLauncherMap =
+        new WeakHashMap<>();
 
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
+    @SuppressLint("StaticFieldLeak") private static Context context;
 
     private static boolean initialized = false;
 
-    private TUIRouter() {
-    }
+    private TUIRouter() {}
 
-    public synchronized static void init(Context context) {
+    public static synchronized void init(Context context) {
         if (initialized) {
             return;
         }
@@ -72,7 +69,8 @@ class TUIRouter {
         initialized = true;
     }
 
-    static class RouterActivityResultContract extends ActivityResultContract<Pair<Intent, ActivityResultCallback<ActivityResult>>, Pair<ActivityResult, ActivityResultCallback<ActivityResult>>> {
+    static class RouterActivityResultContract
+        extends ActivityResultContract<Pair<Intent, ActivityResultCallback<ActivityResult>>, Pair<ActivityResult, ActivityResultCallback<ActivityResult>>> {
         private ActivityResultCallback<ActivityResult> callback;
 
         @NonNull
@@ -84,7 +82,7 @@ class TUIRouter {
 
         @Override
         public Pair<ActivityResult, ActivityResultCallback<ActivityResult>> parseResult(int resultCode, @Nullable Intent intent) {
-            Pair<ActivityResult, ActivityResultCallback<ActivityResult>> pair =  Pair.create(new ActivityResult(resultCode, intent), callback);
+            Pair<ActivityResult, ActivityResultCallback<ActivityResult>> pair = Pair.create(new ActivityResult(resultCode, intent), callback);
             callback = null;
             return pair;
         }
@@ -107,23 +105,27 @@ class TUIRouter {
                     if (activity instanceof ActivityResultCaller) {
                         registerForActivityResult((ActivityResultCaller) activity);
                         if (activity instanceof FragmentActivity) {
-                            ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-                                @Override
-                                public void onFragmentCreated(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, @Nullable Bundle savedInstanceState) {
-                                    registerForActivityResult(fragment);
-                                }
+                            ((FragmentActivity) activity)
+                                .getSupportFragmentManager()
+                                .registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                                    @Override
+                                    public void onFragmentCreated(
+                                        @NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, @Nullable Bundle savedInstanceState) {
+                                        registerForActivityResult(fragment);
+                                    }
 
-                                @Override
-                                public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment fragment) {
-                                    clearLauncher(fragment);
-                                }
-                            }, true);
+                                    @Override
+                                    public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment fragment) {
+                                        clearLauncher(fragment);
+                                    }
+                                }, true);
                         }
                     }
                 }
 
                 private void registerForActivityResult(ActivityResultCaller resultCaller) {
-                    ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>> activityFragmentResultLauncher = resultCaller.registerForActivityResult(new RouterActivityResultContract(), new RouterActivityResultCallback());
+                    ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>> activityFragmentResultLauncher =
+                        resultCaller.registerForActivityResult(new RouterActivityResultContract(), new RouterActivityResultCallback());
                     activityResultLauncherMap.put(resultCaller, activityFragmentResultLauncher);
                 }
 
@@ -132,29 +134,19 @@ class TUIRouter {
                 }
 
                 @Override
-                public void onActivityStarted(@NonNull Activity activity) {
-
-                }
+                public void onActivityStarted(@NonNull Activity activity) {}
 
                 @Override
-                public void onActivityResumed(@NonNull Activity activity) {
-
-                }
+                public void onActivityResumed(@NonNull Activity activity) {}
 
                 @Override
-                public void onActivityPaused(@NonNull Activity activity) {
-
-                }
+                public void onActivityPaused(@NonNull Activity activity) {}
 
                 @Override
-                public void onActivityStopped(@NonNull Activity activity) {
-
-                }
+                public void onActivityStopped(@NonNull Activity activity) {}
 
                 @Override
-                public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-
-                }
+                public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {}
 
                 @Override
                 public void onActivityDestroyed(@NonNull Activity activity) {
@@ -469,16 +461,23 @@ class TUIRouter {
                 e.printStackTrace();
             }
         }
-
     }
 
-    public static void startActivityForResult(@Nullable ActivityResultCaller caller, String activityName, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
-        TUIRouter.Navigation navigation = TUIRouter.getInstance().setDestination(activityName).putExtras(param);
+    public static void startActivityForResult(
+        @Nullable ActivityResultCaller caller, String activityName, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
+        Navigation navigation = TUIRouter.getInstance().setDestination(activityName).putExtras(param);
         navigation.navigate(caller, resultCallback);
     }
 
-    public static void startActivityForResult(@Nullable ActivityResultCaller caller, Class<? extends Activity> activityClazz, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
-        TUIRouter.Navigation navigation = TUIRouter.getInstance().setDestination(activityClazz).putExtras(param);
+    public static void startActivityForResult(
+        @Nullable ActivityResultCaller caller, Class<? extends Activity> activityClazz, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
+        Navigation navigation = TUIRouter.getInstance().setDestination(activityClazz).putExtras(param);
+        navigation.navigate(caller, resultCallback);
+    }
+
+    public static void startActivityForResult(@Nullable ActivityResultCaller caller, Intent intent, ActivityResultCallback<ActivityResult> resultCallback) {
+        Navigation navigation = new Navigation();
+        navigation.setIntent(intent);
         navigation.navigate(caller, resultCallback);
     }
 

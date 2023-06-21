@@ -10,7 +10,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.FaceReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class FaceMessageBean extends TUIMessageBean {
-
     private V2TIMFaceElem faceElem;
 
     @Override

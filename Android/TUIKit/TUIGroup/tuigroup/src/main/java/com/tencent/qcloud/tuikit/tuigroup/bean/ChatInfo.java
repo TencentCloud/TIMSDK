@@ -10,7 +10,6 @@ import java.util.List;
  * 聊天信息基本类
  */
 public class ChatInfo implements Serializable {
-
     public static final int TYPE_C2C = V2TIMConversation.V2TIM_C2C;
     public static final int TYPE_GROUP = V2TIMConversation.V2TIM_GROUP;
     public static final int TYPE_INVALID = V2TIMConversation.CONVERSATION_TYPE_INVALID;
@@ -24,14 +23,11 @@ public class ChatInfo implements Serializable {
     private boolean isTopChat;
     private boolean isFolded;
 
-
-    public ChatInfo() {
-
-    }
+    public ChatInfo() {}
 
     /**
      * 获取聊天的标题，单聊一般为对方名称，群聊为群名字
-     * 
+     *
      * Get the title of the chat, usually the name of the other party for a single chat, and the group name for a group chat
      *
      * @return
@@ -42,7 +38,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 设置聊天的标题，单聊一般为对方名称，群聊为群名字
-     * 
+     *
      * Set the title of the chat, usually the name of the other party for a single chat, and the group name for a group chat
      *
      * @param chatName
@@ -53,7 +49,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 获取聊天类型，C2C为单聊，Group为群聊
-     * 
+     *
      * Get the chat type, C2C is a single chat, Group is a group chat
      *
      * @return
@@ -64,7 +60,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 设置聊天类型，C2C为单聊，Group为群聊
-     * 
+     *
      * Set the chat type, C2C is a single chat, Group is a group chat
      *
      * @param type
@@ -75,7 +71,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 获取聊天唯一标识
-     * 
+     *
      * Get chat id
      *
      * @return
@@ -86,7 +82,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 设置聊天唯一标识
-     * 
+     *
      * Set chat id
      *
      * @param id
@@ -97,7 +93,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 获取群组类型
-     * 
+     *
      * Get group type
      */
     public String getGroupType() {
@@ -106,7 +102,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 设置群组类型
-     * 
+     *
      * Set group type
      */
     public void setGroupType(String groupType) {
@@ -115,7 +111,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 是否为置顶的会话
-     * 
+     *
      * Is it a pinned conversation
      *
      * @return
@@ -126,7 +122,7 @@ public class ChatInfo implements Serializable {
 
     /**
      * 设置会话是否置顶
-     * 
+     *
      * Set whether the conversation is sticky
      *
      * @param topChat
@@ -152,6 +148,4 @@ public class ChatInfo implements Serializable {
     public List<V2TIMGroupAtInfo> getAtInfoList() {
         return atInfoList;
     }
-
-
 }

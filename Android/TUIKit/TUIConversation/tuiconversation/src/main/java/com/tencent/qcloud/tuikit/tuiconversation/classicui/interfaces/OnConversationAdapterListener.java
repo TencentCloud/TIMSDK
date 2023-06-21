@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface OnConversationAdapterListener {
     void onItemClick(View view, int viewType, ConversationInfo conversationInfo);
-    void OnItemLongClick(View view, ConversationInfo conversationInfo);
+
+    void onItemLongClick(View view, ConversationInfo conversationInfo);
+
     void onConversationChanged(List<ConversationInfo> dataSource);
 }

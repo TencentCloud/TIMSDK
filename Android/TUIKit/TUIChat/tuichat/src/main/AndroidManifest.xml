@@ -19,9 +19,7 @@
         <activity
             android:name=".component.imagevideoscan.ImageVideoScanActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
 
         <!-- **************** Classic UI Start **************** -->
@@ -49,7 +47,7 @@
             android:name=".classicui.page.MessageReceiptDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".classicui.component.camera.CameraActivity"
+            android:name=".component.camera.CameraActivity"
             android:screenOrientation="portrait" />
 
         <provider

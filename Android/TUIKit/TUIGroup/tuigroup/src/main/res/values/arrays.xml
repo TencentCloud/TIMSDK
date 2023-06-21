@@ -6,5 +6,10 @@
         <item>@string/auto_judge</item>
     </string-array>
 
+    <string-array name="group_invite_type">
+        <item>@string/forbid_invite</item>
+        <item>@string/manager_judge</item>
+        <item>@string/auto_judge</item>
+    </string-array>
 
 </resources>

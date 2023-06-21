@@ -2,8 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
@@ -24,6 +24,7 @@ public class MessageReceiptPresenter {
     private final ChatProvider provider;
     private ChatPresenter chatPresenter;
     private ChatInfo chatInfo;
+
     public MessageReceiptPresenter() {
         provider = new ChatProvider();
     }
@@ -45,9 +46,9 @@ public class MessageReceiptPresenter {
             return;
         }
         Set<String> userIds = new HashSet<>(chatPresenter.getReplyUserNames(Collections.singletonList(message)));
-        chatPresenter.getReactUserBean(userIds, new IUIKitCallback<Map<String, ReactUserBean>>() {
+        chatPresenter.getReactUserBean(userIds, new IUIKitCallback<Map<String, UserBean>>() {
             @Override
-            public void onSuccess(Map<String, ReactUserBean> data) {
+            public void onSuccess(Map<String, UserBean> data) {
                 MessageRepliesBean repliesBean = message.getMessageRepliesBean();
                 chatPresenter.setMessageReplyBean(repliesBean, data);
                 TUIChatUtils.callbackOnSuccess(callback, null);

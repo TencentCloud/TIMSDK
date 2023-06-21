@@ -13,7 +13,6 @@ import android.widget.PopupWindow;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 
 public class BottomPopupCard implements IPopupCard {
-
     private PopupWindow popupWindow;
 
     public BottomPopupCard(Activity activity, View contentView) {
@@ -47,7 +46,6 @@ public class BottomPopupCard implements IPopupCard {
     }
 
     private void startAnimation(Window window, boolean isShow) {
-        LinearInterpolator interpolator = new LinearInterpolator();
         ValueAnimator animator;
         if (isShow) {
             animator = ValueAnimator.ofFloat(1.0f, 0.5f);
@@ -62,7 +60,7 @@ public class BottomPopupCard implements IPopupCard {
                 window.setAttributes(lp);
             }
         });
-
+        LinearInterpolator interpolator = new LinearInterpolator();
         animator.setDuration(200);
         animator.setInterpolator(interpolator);
         animator.start();
@@ -76,7 +74,7 @@ public class BottomPopupCard implements IPopupCard {
 
     @Override
     public void dismiss() {
-        if(popupWindow != null && popupWindow.isShowing()) {
+        if (popupWindow != null && popupWindow.isShowing()) {
             popupWindow.dismiss();
         }
     }

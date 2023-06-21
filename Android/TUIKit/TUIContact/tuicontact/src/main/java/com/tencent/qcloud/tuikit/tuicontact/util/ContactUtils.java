@@ -6,7 +6,6 @@ import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 
 public class ContactUtils {
-
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
             callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, desc));

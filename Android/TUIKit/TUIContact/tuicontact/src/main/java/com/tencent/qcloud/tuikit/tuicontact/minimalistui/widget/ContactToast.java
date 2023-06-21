@@ -11,17 +11,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.FragmentManager;
-
 import com.tencent.qcloud.tuikit.tuicontact.R;
 
 public class ContactToast {
-
     public static final int TOAST_ICON_NONE = 0;
     public static final int TOAST_ICON_POSITIVE = 1;
     public static final int TOAST_ICON_NEGATIVE = 2;
@@ -59,13 +56,13 @@ public class ContactToast {
 
     private void showToast(Context context, String toastContent, long time, int iconType) {
         if (context instanceof AppCompatActivity) {
-            FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
             if (toast != null) {
                 dismiss();
             }
             toast = new ToastFragment();
             toast.iconType = iconType;
             toast.text = toastContent;
+            FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
             toast.show(fragmentManager, "ContactToast");
             handler.postDelayed(new Runnable() {
                 @Override
@@ -91,7 +88,7 @@ public class ContactToast {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            Dialog dialog =  super.onCreateDialog(savedInstanceState);
+            Dialog dialog = super.onCreateDialog(savedInstanceState);
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
             Window window = dialog.getWindow();

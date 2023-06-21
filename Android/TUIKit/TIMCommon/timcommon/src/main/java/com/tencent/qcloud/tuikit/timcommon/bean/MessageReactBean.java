@@ -12,7 +12,7 @@ public class MessageReactBean implements Serializable {
     private Map<String, Set<String>> reacts;
     private int version = VERSION;
 
-    private transient Map<String, ReactUserBean> reactUserBeanMap;
+    private transient Map<String, UserBean> reactUserBeanMap;
 
     public void operateUser(String emojiId, String userId) {
         if (reacts == null) {
@@ -48,11 +48,11 @@ public class MessageReactBean implements Serializable {
         return 0;
     }
 
-    public void setReactUserBeanMap(Map<String, ReactUserBean> reactUserBeanMap) {
+    public void setReactUserBeanMap(Map<String, UserBean> reactUserBeanMap) {
         this.reactUserBeanMap = reactUserBeanMap;
     }
 
-    public Map<String, ReactUserBean> getReactUserBeanMap() {
+    public Map<String, UserBean> getReactUserBeanMap() {
         return reactUserBeanMap;
     }
 

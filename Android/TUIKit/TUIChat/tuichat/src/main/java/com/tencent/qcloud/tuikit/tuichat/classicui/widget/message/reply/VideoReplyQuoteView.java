@@ -12,7 +12,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class VideoReplyQuoteView extends ImageReplyQuoteView {
-
     public VideoReplyQuoteView(Context context) {
         super(context);
     }
@@ -26,8 +25,8 @@ public class VideoReplyQuoteView extends ImageReplyQuoteView {
         videoPlayIv.setLayoutParams(layoutParams);
         imageMsgLayout.setVisibility(View.VISIBLE);
         videoPlayIv.setVisibility(View.VISIBLE);
-        if (!TextUtils.isEmpty(messageBean.getDataPath())) {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, messageBean.getDataPath(), null, DEFAULT_RADIUS);
+        if (!TextUtils.isEmpty(messageBean.getSnapshotPath())) {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, messageBean.getSnapshotPath(), null, DEFAULT_RADIUS);
         } else {
             GlideEngine.clear(imageMsgIv);
             synchronized (downloadEles) {
@@ -52,8 +51,8 @@ public class VideoReplyQuoteView extends ImageReplyQuoteView {
                 @Override
                 public void onSuccess() {
                     downloadEles.remove(messageBean.getSnapshotUUID());
-                    messageBean.setDataPath(path);
-                    GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, messageBean.getDataPath(), null, DEFAULT_RADIUS);
+                    messageBean.setSnapshotPath(path);
+                    GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, messageBean.getSnapshotPath(), null, DEFAULT_RADIUS);
                 }
             });
         }

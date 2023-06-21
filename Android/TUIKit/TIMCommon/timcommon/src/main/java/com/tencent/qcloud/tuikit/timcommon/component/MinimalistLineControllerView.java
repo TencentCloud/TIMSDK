@@ -11,9 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.widget.SwitchCompat;
-
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
@@ -21,7 +19,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
  * Custom LineControllerView
  */
 public class MinimalistLineControllerView extends RelativeLayout {
-
     private String mName;
     private boolean mIsBottom;
     private boolean mIsTop;
@@ -157,5 +154,4 @@ public class MinimalistLineControllerView extends RelativeLayout {
         this.mName = name;
         mNameText.setText(name);
     }
-
 }

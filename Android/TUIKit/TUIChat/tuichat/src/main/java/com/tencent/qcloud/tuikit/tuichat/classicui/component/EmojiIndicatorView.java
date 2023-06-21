@@ -11,15 +11,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-
 import java.util.ArrayList;
 
-
 public class EmojiIndicatorView extends LinearLayout {
-
     private Context mContext;
     private ArrayList<ImageView> mImageViews;
     private Bitmap bmpSelect;
@@ -49,7 +45,8 @@ public class EmojiIndicatorView extends LinearLayout {
         for (int i = 0; i < count; i++) {
             RelativeLayout rl = new RelativeLayout(mContext);
             LayoutParams params = new LinearLayout.LayoutParams(mMaxHeight, mMaxHeight);
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams layoutParams =
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
             ImageView imageView = new ImageView(mContext);
             if (i == 0) {
@@ -141,8 +138,7 @@ public class EmojiIndicatorView extends LinearLayout {
 
         anim1.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
-            }
+            public void onAnimationStart(Animator animation) {}
 
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -157,12 +153,10 @@ public class EmojiIndicatorView extends LinearLayout {
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
-            }
+            public void onAnimationCancel(Animator animation) {}
 
             @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
+            public void onAnimationRepeat(Animator animation) {}
         });
         mPlayByOutAnimatorSet.start();
     }

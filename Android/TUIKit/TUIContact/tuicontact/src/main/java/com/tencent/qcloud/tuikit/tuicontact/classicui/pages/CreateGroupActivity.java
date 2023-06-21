@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.classicui.pages;
 
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,9 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -42,9 +39,9 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ContactStartChatUtils;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
 import java.util.ArrayList;
 import java.util.List;
+
 public class CreateGroupActivity extends BaseLightActivity implements View.OnClickListener {
     private static final String TAG = CreateGroupActivity.class.getSimpleName();
 
@@ -57,7 +54,8 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
     private LineControllerView groupTypeLv;
     private View groupAvatarLayout;
     private TextView confirmButton;
-    private TextView groupTypeContentView, groupTypeContentUrlView;
+    private TextView groupTypeContentView;
+    private TextView groupTypeContentUrlView;
 
     private String groupName;
     private String groupId;
@@ -69,7 +67,7 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
 
     private ArrayList<GroupMemberInfo> mGroupMembers = new ArrayList<>();
     private boolean mCreating;
-    
+
     private ContactPresenter presenter;
 
     @Override
@@ -158,7 +156,7 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
     }
 
     private void initGroupTypeContentView() {
-        switch(groupType) {
+        switch (groupType) {
             case V2TIMManager.GROUP_TYPE_WORK:
                 groupTypeContentView.setText(getString(R.string.group_work_content));
                 break;
@@ -213,6 +211,7 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
         groupTypeContentUrlView.setText(spannedString);
         groupTypeContentUrlView.setMovementMethod(LinkMovementMethod.getInstance());
     }
+
     @Override
     public void onClick(View v) {
         if (v == groupAvatar || v == groupAvatarLayout) {
@@ -284,7 +283,7 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
             });
             popupInputCard.setTextExceedListener(new PopupInputCard.OnTextExceedListener() {
                 @Override
-                public void onTextExceedMax(){
+                public void onTextExceedMax() {
                     ToastUtil.toastLongMessage(getResources().getString(R.string.group_id_edit_exceed_tips));
                 }
             });
@@ -340,7 +339,7 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 mCreating = false;
-                //mGroupMembers.remove(selfInfo);
+                // mGroupMembers.remove(selfInfo);
                 if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT || errCode == 11000) {
                     showNotSupportDialog();
                 }
@@ -376,28 +375,30 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
         spannedString.setSpan(clickableSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         TUIKitDialog.TUIIMUpdateDialog.getInstance()
-                .createDialog(this)
-                .setMovementMethod(LinkMovementMethod.getInstance())
-                .setShowOnlyDebug(true)
-                .setCancelable(true)
-                .setCancelOutside(true)
-                .setTitle(spannedString)
-                .setDialogWidth(0.75f)
-                .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_COMMUNITY)
-                .setPositiveButton(getString(R.string.contact_no_more_reminders), new View.OnClickListener() {
+            .createDialog(this)
+            .setMovementMethod(LinkMovementMethod.getInstance())
+            .setShowOnlyDebug(true)
+            .setCancelable(true)
+            .setCancelOutside(true)
+            .setTitle(spannedString)
+            .setDialogWidth(0.75f)
+            .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_COMMUNITY)
+            .setPositiveButton(getString(R.string.contact_no_more_reminders),
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().setNeverShow(true);
                     }
                 })
-                .setNegativeButton(getString(R.string.contact_i_know), new View.OnClickListener() {
+            .setNegativeButton(getString(R.string.contact_i_know),
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
                     }
                 })
-                .show();
+            .show();
     }
 
     private void openWebUrl(String url) {
@@ -408,7 +409,7 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -451,5 +452,4 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
             }
         }
     }
-
 }

@@ -25,14 +25,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
@@ -46,7 +44,6 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.util.BlurUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,8 +125,7 @@ public class ChatPopActivity extends AppCompatActivity {
 
         int statusBarHeight = getStatusBarHeight();
 
-        if (messageRect.top - emojiHeight >= statusBarHeight &&
-                messageRect.bottom + actionAreaHeight <= screenHeight) {
+        if (messageRect.top - emojiHeight >= statusBarHeight && messageRect.bottom + actionAreaHeight <= screenHeight) {
             // no need to move container
             dialogContainer.setY(messageRect.top - emojiHeight - statusBarHeight);
         } else {
@@ -158,8 +154,7 @@ public class ChatPopActivity extends AppCompatActivity {
     private int getStatusBarHeight() {
         int statusBarHeight = 0;
         try {
-            int resourceId = getResources().getIdentifier("status_bar_height",
-                    "dimen", "android");
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         } catch (Exception e) {
             Log.e(TAG, "setLocation getStatusBarHeight exception");
@@ -301,7 +296,6 @@ public class ChatPopActivity extends AppCompatActivity {
     }
 
     class RecentFaceAdapter extends RecyclerView.Adapter<RecentFaceAdapter.RecentFaceViewHolder> {
-
         private Emoji moreBtn;
 
         @NonNull
@@ -446,7 +440,6 @@ public class ChatPopActivity extends AppCompatActivity {
     }
 
     static class GridDecoration extends RecyclerView.ItemDecoration {
-
         private final int columnNum;
         private final int leftRightSpace;
         private final int topBottomSpace;
@@ -492,7 +485,6 @@ public class ChatPopActivity extends AppCompatActivity {
             canvas.restore();
         }
     }
-
 
     public interface EmojiOnClickListener {
         void onClick(Emoji emoji);
@@ -549,5 +541,4 @@ public class ChatPopActivity extends AppCompatActivity {
             void onClick();
         }
     }
-
 }

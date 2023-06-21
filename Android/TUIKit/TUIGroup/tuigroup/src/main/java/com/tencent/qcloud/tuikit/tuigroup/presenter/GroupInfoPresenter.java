@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuigroup.presenter;
 
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
@@ -13,10 +12,8 @@ import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.model.GroupInfoProvider;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class GroupInfoPresenter {
     public static final String TAG = GroupInfoPresenter.class.getSimpleName();
@@ -235,26 +232,6 @@ public class GroupInfoPresenter {
         });
     }
 
-    public void inviteGroupMembers(String groupId, List<String> addMembers, IUIKitCallback<Object> callback) {
-        provider.loadGroupInfo(groupId, new IUIKitCallback<GroupInfo>() {
-            @Override
-            public void onSuccess(GroupInfo data) {
-                groupInfo = data;
-                inviteGroupMembers(addMembers, callback);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIGroupUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
-
-    public void deleteGroupMembers(String groupId, List<String> members, IUIKitCallback<List<String>> callback) {
-        provider.removeGroupMembers(groupId, members, callback);
-    }
-
     private void inviteGroupMembers(List<String> addMembers, IUIKitCallback<Object> callback) {
         provider.inviteGroupMembers(groupInfo, addMembers, new IUIKitCallback<Object>() {
             @Override
@@ -270,6 +247,25 @@ public class GroupInfoPresenter {
                 TUIGroupUtils.callbackOnError(callback, module, errCode, errMsg);
             }
         });
+    }
+
+    public void inviteGroupMembers(String groupId, List<String> addMembers, IUIKitCallback<Object> callback) {
+        provider.loadGroupInfo(groupId, new IUIKitCallback<GroupInfo>() {
+            @Override
+            public void onSuccess(GroupInfo data) {
+                groupInfo = data;
+                inviteGroupMembers(addMembers, callback);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIGroupUtils.callbackOnError(callback, module, errCode, errMsg);
+            }
+        });
+    }
+
+    public void deleteGroupMembers(String groupId, List<String> members, IUIKitCallback<List<String>> callback) {
+        provider.removeGroupMembers(groupId, members, callback);
     }
 
     public void removeGroupMembers(GroupInfo groupInfo, List<GroupMemberInfo> delMembers, IUIKitCallback callBack) {

@@ -14,11 +14,9 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -26,14 +24,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ReplyPreviewView extends FrameLayout {
-
     private ImageView firstImg;
     private ImageView secondImg;
     private ImageView thirdImg;
@@ -87,7 +83,6 @@ public class ReplyPreviewView extends FrameLayout {
             if (iconList == null || iconList.isEmpty()) {
                 return;
             }
-            String firstIconUrl = iconList.get(0);
             String secondIconUrl = null;
             String thirdIconUrl = null;
 
@@ -97,7 +92,7 @@ public class ReplyPreviewView extends FrameLayout {
             if (iconList.size() > 2) {
                 thirdIconUrl = iconList.get(2);
             }
-
+            String firstIconUrl = iconList.get(0);
             firstImg.setVisibility(VISIBLE);
             loadAvatar(firstImg, firstIconUrl);
             if (secondIconUrl != null) {
@@ -108,7 +103,7 @@ public class ReplyPreviewView extends FrameLayout {
             if (iconList.size() == 3 && thirdIconUrl != null) {
                 thirdImg.setVisibility(VISIBLE);
                 loadAvatar(thirdImg, thirdIconUrl);
-            } else if (iconList.size() > 3){
+            } else if (iconList.size() > 3) {
                 thirdImg.setVisibility(VISIBLE);
                 loadAvatar(thirdImg, R.drawable.chat_reply_more_icon);
             }
@@ -130,33 +125,30 @@ public class ReplyPreviewView extends FrameLayout {
 
     private void loadAvatar(ImageView imageView, Object url) {
         Glide.with(getContext())
-                .load(url)
-                .centerCrop()
-                .apply(new RequestOptions()
-                        .transform(new ReplyRingCircleCrop())
-                        .error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
-                .into(imageView);
+            .load(url)
+            .centerCrop()
+            .apply(new RequestOptions().transform(new ReplyRingCircleCrop()).error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
+            .into(imageView);
     }
 
     static class ReplyRingCircleCrop extends CircleCrop {
         @Override
         protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
             Bitmap outBitmap = pool.get(outWidth, outHeight, Bitmap.Config.ARGB_8888);
-            int borderWidth = ScreenUtil.dip2px(1);
-            int innerWidth = outWidth - 2 * borderWidth;
-            int innerHeight = outHeight - 2 * borderWidth;
-            Bitmap bitmap = super.transform(pool, toTransform, innerWidth, innerHeight);
-            Canvas canvas = new Canvas(outBitmap);
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
             paint.setColor(Color.WHITE);
+            Canvas canvas = new Canvas(outBitmap);
+            int borderWidth = ScreenUtil.dip2px(1);
+            int innerWidth = outWidth - 2 * borderWidth;
             canvas.drawCircle(outWidth / 2, outHeight / 2, innerWidth / 2, paint);
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
             Rect rect = new Rect(borderWidth, borderWidth, outWidth - borderWidth, outHeight - borderWidth);
+            int innerHeight = outHeight - 2 * borderWidth;
+            Bitmap bitmap = super.transform(pool, toTransform, innerWidth, innerHeight);
             canvas.drawBitmap(bitmap, null, rect, paint);
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
             canvas.drawCircle(outWidth / 2, outHeight / 2, outWidth / 2, paint);
             return outBitmap;
         }
     }
-
 }

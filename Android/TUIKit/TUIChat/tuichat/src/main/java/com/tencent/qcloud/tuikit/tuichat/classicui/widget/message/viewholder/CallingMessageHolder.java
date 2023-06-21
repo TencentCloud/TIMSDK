@@ -5,14 +5,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
-public class CallingMessageHolder extends TextMessageHolder{
-
+public class CallingMessageHolder extends TextMessageHolder {
     private TextView msgBodyText;
-    private ImageView mLeftView, mRightView;
+    private ImageView mLeftView;
+    private ImageView mRightView;
     private LinearLayout mCallingLayout;
 
     public CallingMessageHolder(View itemView) {
@@ -56,9 +56,8 @@ public class CallingMessageHolder extends TextMessageHolder{
             unreadAudioText.setVisibility(callingMessageBean.isShowUnreadPoint() ? View.VISIBLE : View.GONE);
         }
 
-        if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL ||
-                callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
-
+        if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL
+            || callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
             msgArea.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {

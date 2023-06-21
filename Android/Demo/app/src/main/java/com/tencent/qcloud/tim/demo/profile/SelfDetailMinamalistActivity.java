@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
@@ -33,7 +30,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -100,9 +96,7 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
             }
 
             @Override
-            public void onError(int code, String desc) {
-
-            }
+            public void onError(int code, String desc) {}
         });
         setUserInfoListener();
     }
@@ -118,9 +112,9 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
         if (TextUtils.isEmpty(birthdayStr) || birthdayStr.length() < 8) {
             birthdayStr = "19700101";
         }
-        StringBuilder sb=new StringBuilder(birthdayStr);
-        sb.insert(4,"-");
-        sb.insert(7,"-");
+        StringBuilder sb = new StringBuilder(birthdayStr);
+        sb.insert(4, "-");
+        sb.insert(7, "-");
         birthdayStr = sb.toString();
         birthdayLv.setContent(birthdayStr);
         accountLv.setContent(info.getUserID());
@@ -159,7 +153,7 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
         if (v == selfIcon) {
             ArrayList<ImageSelectMinimalistActivity.ImageBean> faceList = new ArrayList<>();
             for (int i = 0; i < Constants.AVATAR_FACE_COUNT; i++) {
-                ImageSelectMinimalistActivity.ImageBean imageBean= new ImageSelectMinimalistActivity.ImageBean();
+                ImageSelectMinimalistActivity.ImageBean imageBean = new ImageSelectMinimalistActivity.ImageBean();
                 imageBean.setThumbnailUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
                 imageBean.setImageUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
                 faceList.add(imageBean);
@@ -291,7 +285,8 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_AVATAR_REQUEST_CODE && resultCode == ImageSelectMinimalistActivity.RESULT_CODE_SUCCESS) {
             if (data != null) {
-                ImageSelectMinimalistActivity.ImageBean imageBean = (ImageSelectMinimalistActivity.ImageBean) data.getSerializableExtra(ImageSelectMinimalistActivity.DATA);
+                ImageSelectMinimalistActivity.ImageBean imageBean =
+                    (ImageSelectMinimalistActivity.ImageBean) data.getSerializableExtra(ImageSelectMinimalistActivity.DATA);
                 if (imageBean == null) {
                     return;
                 }

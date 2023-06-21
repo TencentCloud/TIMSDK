@@ -1,5 +1,0 @@
-rootProject.name = "TUIChat"
-include ':tuichat'
-
-include ':tuicore'
-project(':tuicore').projectDir = new File(settingsDir, '../TUICore/tuicore')

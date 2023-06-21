@@ -45,7 +45,7 @@ public class SwitchCustomWidth extends SwitchCompat {
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         try {
-            if(customSwitchWidth == 0){
+            if (customSwitchWidth == 0) {
                 return;
             }
             Class<SwitchCompat> clazz = SwitchCompat.class;

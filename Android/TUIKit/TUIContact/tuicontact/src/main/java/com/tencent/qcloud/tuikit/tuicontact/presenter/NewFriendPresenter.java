@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicontact.presenter;
 
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
@@ -11,7 +10,6 @@ import com.tencent.qcloud.tuikit.tuicontact.interfaces.INewFriendActivity;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,9 +32,9 @@ public class NewFriendPresenter {
             @Override
             public void onFriendApplicationListAdded(List<FriendApplicationBean> applicationList) {
                 Iterator<FriendApplicationBean> beanIterator = applicationList.iterator();
-                while(beanIterator.hasNext()) {
+                while (beanIterator.hasNext()) {
                     FriendApplicationBean friendApplicationBean = beanIterator.next();
-                    for(FriendApplicationBean dataBean : dataSource) {
+                    for (FriendApplicationBean dataBean : dataSource) {
                         if (TextUtils.equals(dataBean.getUserId(), friendApplicationBean.getUserId())) {
                             beanIterator.remove();
                         }
@@ -49,9 +47,9 @@ public class NewFriendPresenter {
             @Override
             public void onFriendApplicationListDeleted(List<String> userIDList) {
                 Iterator<FriendApplicationBean> applicationIterator = dataSource.iterator();
-                while(applicationIterator.hasNext()) {
+                while (applicationIterator.hasNext()) {
                     FriendApplicationBean friendApplicationBean = applicationIterator.next();
-                    for(String id : userIDList) {
+                    for (String id : userIDList) {
                         if (TextUtils.equals(id, friendApplicationBean.getUserId())) {
                             applicationIterator.remove();
                         }
@@ -125,7 +123,6 @@ public class NewFriendPresenter {
             }
         });
     }
-
 
     public void setFriendApplicationListAllRead(IUIKitCallback<Void> callback) {
         provider.setGroupApplicationRead(callback);

@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
@@ -23,7 +21,6 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class TUIForwardChatActivity extends BaseLightActivity {
-
     private static final String TAG = TUIForwardChatActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -61,7 +58,6 @@ public class TUIForwardChatActivity extends BaseLightActivity {
         });
 
         mFowardChatMessageRecyclerView.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
             public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
                 if (!(messageInfo instanceof MergeMessageBean)) {
@@ -69,7 +65,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
                 }
 
                 Intent intent = new Intent(getBaseContext(), TUIForwardChatActivity.class);
-                Bundle bundle=new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageInfo);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -88,7 +84,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
         init();
     }
 
-    private void init(){
+    private void init() {
         Intent intent = getIntent();
         if (intent != null) {
             mTitleBar.setTitle(mTitle, ITitleBarLayout.Position.MIDDLE);
@@ -104,5 +100,4 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             presenter.downloadMergerMessage(mMessageInfo);
         }
     }
-
 }

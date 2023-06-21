@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <com.tencent.qcloud.tuikit.tuichat.minimalistui.component.camera.view.CameraView
-        android:id="@+id/jcameraview"
+        android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:duration_max="10000"

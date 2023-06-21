@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
@@ -31,7 +30,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
@@ -39,7 +37,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +82,7 @@ public class ChatPopMenu {
     private int oldFacePageIndex = 0;
 
     private boolean isShowFaces = false;
+
     public ChatPopMenu(Context context) {
         chatPopMenu = this;
         this.context = context;
@@ -93,8 +91,8 @@ public class ChatPopMenu {
         indicatorHeight = context.getResources().getDimensionPixelOffset(R.dimen.chat_pop_menu_indicator_height);
 
         // add space to show shadow
-        popupView.setPadding(popupView.getPaddingLeft() + SHADOW_WIDTH, popupView.getPaddingTop() + SHADOW_WIDTH,
-                popupView.getPaddingRight() + SHADOW_WIDTH, popupView.getPaddingBottom() + SHADOW_WIDTH);
+        popupView.setPadding(popupView.getPaddingLeft() + SHADOW_WIDTH, popupView.getPaddingTop() + SHADOW_WIDTH, popupView.getPaddingRight() + SHADOW_WIDTH,
+            popupView.getPaddingBottom() + SHADOW_WIDTH);
         // actions
         actionRecyclerView = popupView.findViewById(R.id.chat_pop_menu_content_view);
         actionGridLayoutManager = new GridLayoutManager(context, ACTION_COLUMN_NUM);
@@ -229,8 +227,8 @@ public class ChatPopMenu {
 
     private void showAtLocation() {
         // reset padding
-        popupView.setPadding(popupView.getPaddingLeft(), popupView.getPaddingTop() - paddingTopOffset,
-                popupView.getPaddingRight(), popupView.getPaddingBottom() - paddingBottomOffset);
+        popupView.setPadding(popupView.getPaddingLeft(), popupView.getPaddingTop() - paddingTopOffset, popupView.getPaddingRight(),
+            popupView.getPaddingBottom() - paddingBottomOffset);
         paddingTopOffset = 0;
         paddingBottomOffset = 0;
 
@@ -258,13 +256,13 @@ public class ChatPopMenu {
             y = (int) (location[1] + anchorHeight + indicatorHeight);
             // add paddingTop to show indicator
             paddingTopOffset = indicatorHeight;
-            popupView.setPadding(popupView.getPaddingLeft(), popupView.getPaddingTop() + paddingTopOffset,
-                    popupView.getPaddingRight(), popupView.getPaddingBottom());
+            popupView.setPadding(
+                popupView.getPaddingLeft(), popupView.getPaddingTop() + paddingTopOffset, popupView.getPaddingRight(), popupView.getPaddingBottom());
         } else {
             // add paddingBottom to show indicator
             paddingBottomOffset = indicatorHeight;
-            popupView.setPadding(popupView.getPaddingLeft(), popupView.getPaddingTop(),
-                    popupView.getPaddingRight(), popupView.getPaddingBottom() + paddingBottomOffset);
+            popupView.setPadding(
+                popupView.getPaddingLeft(), popupView.getPaddingTop(), popupView.getPaddingRight(), popupView.getPaddingBottom() + paddingBottomOffset);
             y = y - indicatorHeight;
         }
         if (popupWindow.isShowing()) {
@@ -332,7 +330,7 @@ public class ChatPopMenu {
             this.indicatorHeight = indicatorHeight;
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.FILL);
-            paint.setShadowLayer(SHADOW_WIDTH, 0,0,0xFFAAAAAA);
+            paint.setShadowLayer(SHADOW_WIDTH, 0, 0, 0xFFAAAAAA);
         }
 
         @Override
@@ -358,15 +356,13 @@ public class ChatPopMenu {
             // indicator on the top
             if (isTop) {
                 float top = indicatorHeight + SHADOW_WIDTH;
-                path.addRoundRect(new RectF(SHADOW_WIDTH, top, widthPixel -  SHADOW_WIDTH,
-                        heightPixel - SHADOW_WIDTH), radius, radius, Path.Direction.CW);
+                path.addRoundRect(new RectF(SHADOW_WIDTH, top, widthPixel - SHADOW_WIDTH, heightPixel - SHADOW_WIDTH), radius, radius, Path.Direction.CW);
                 path.moveTo(indicatorX - indicatorHeight, top);
                 path.lineTo(indicatorX, top - indicatorHeight);
                 path.lineTo(indicatorX + indicatorHeight, top);
             } else {
                 float bottom = heightPixel - SHADOW_WIDTH - indicatorHeight;
-                path.addRoundRect(new RectF(SHADOW_WIDTH, SHADOW_WIDTH, widthPixel - SHADOW_WIDTH,
-                        bottom), radius, radius, Path.Direction.CW);
+                path.addRoundRect(new RectF(SHADOW_WIDTH, SHADOW_WIDTH, widthPixel - SHADOW_WIDTH, bottom), radius, radius, Path.Direction.CW);
                 path.moveTo(indicatorX - indicatorHeight, bottom);
                 path.lineTo(indicatorX, bottom + indicatorHeight);
                 path.lineTo(indicatorX + indicatorHeight, bottom);
@@ -376,14 +372,10 @@ public class ChatPopMenu {
         }
 
         @Override
-        public void setAlpha(int alpha) {
-
-        }
+        public void setAlpha(int alpha) {}
 
         @Override
-        public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-        }
+        public void setColorFilter(@Nullable ColorFilter colorFilter) {}
 
         @Override
         public int getOpacity() {
@@ -392,7 +384,6 @@ public class ChatPopMenu {
     }
 
     class RecentFaceAdapter extends RecyclerView.Adapter<RecentFaceAdapter.RecentFaceViewHolder> {
-
         @NonNull
         @Override
         public RecentFaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -453,6 +444,7 @@ public class ChatPopMenu {
 
         class RecentFaceViewHolder extends RecyclerView.ViewHolder {
             ImageView faceIv;
+
             public RecentFaceViewHolder(@NonNull View itemView) {
                 super(itemView);
                 faceIv = itemView.findViewById(R.id.face_iv);
@@ -461,7 +453,6 @@ public class ChatPopMenu {
     }
 
     class FacePageAdapter extends RecyclerView.Adapter<FacePageAdapter.FacePageViewHolder> {
-
         @NonNull
         @Override
         public FacePageAdapter.FacePageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -494,6 +485,7 @@ public class ChatPopMenu {
 
         class FacePageViewHolder extends RecyclerView.ViewHolder {
             public RecyclerView recyclerView;
+
             public FacePageViewHolder(@NonNull View itemView) {
                 super(itemView);
                 recyclerView = (RecyclerView) itemView;
@@ -543,6 +535,7 @@ public class ChatPopMenu {
 
     static class FaceViewHolder extends RecyclerView.ViewHolder {
         ImageView faceIv;
+
         public FaceViewHolder(@NonNull View itemView) {
             super(itemView);
             faceIv = itemView.findViewById(R.id.face_iv);
@@ -550,7 +543,6 @@ public class ChatPopMenu {
     }
 
     static class FaceGridDecoration extends RecyclerView.ItemDecoration {
-
         private final int columnNum;
         private final int leftRightSpace; // horizontal spacing
         private final int topBottomSpace; // vertical spacing
@@ -621,7 +613,6 @@ public class ChatPopMenu {
     }
 
     static class GridDecoration extends RecyclerView.ItemDecoration {
-
         private final int columnNum;
         private final int leftRightSpace;
         private final int topBottomSpace;
@@ -702,6 +693,7 @@ public class ChatPopMenu {
         public void setPriority(int priority) {
             this.priority = priority;
         }
+
         public void setActionClickListener(OnClickListener actionClickListener) {
             this.actionClickListener = actionClickListener;
         }
@@ -715,5 +707,4 @@ public class ChatPopMenu {
             void onClick();
         }
     }
-
 }

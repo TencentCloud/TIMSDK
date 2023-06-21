@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuikit.timcommon.R;
 
 public class MaxWidthFrameLayout extends FrameLayout {
-
     int maxWidthPx;
 
     public MaxWidthFrameLayout(@NonNull Context context) {
@@ -37,7 +36,7 @@ public class MaxWidthFrameLayout extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
-        if(maxWidthPx > 0 && maxWidthPx < measuredWidth) {
+        if (maxWidthPx > 0 && maxWidthPx < measuredWidth) {
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(maxWidthPx, MeasureSpec.AT_MOST);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

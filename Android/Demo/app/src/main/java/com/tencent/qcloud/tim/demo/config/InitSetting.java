@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -15,8 +16,10 @@ import com.tencent.qcloud.tim.demo.push.OfflinePushLocalReceiver;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -55,30 +58,46 @@ public class InitSetting {
         AppConfig.DEMO_UI_STYLE = sharedPreferences.getInt("tuikit_demo_style", 0);
     }
 
-    private void setPermissionRequestContent() {
+    public void setPermissionRequestContent() {
         ApplicationInfo applicationInfo = TUIChatService.getAppContext().getApplicationInfo();
         Resources resources = TUIChatService.getAppContext().getResources();
         String appName = resources.getString(applicationInfo.labelRes);
 
         PermissionRequester.PermissionRequestContent microphoneContent = new PermissionRequester.PermissionRequestContent();
         microphoneContent.setReasonTitle(mContext.getResources().getString(R.string.demo_permission_mic_reason_title, appName));
-        microphoneContent.setReason(mContext.getResources().getString(R.string.demo_permission_mic_reason));
+        String micReason = mContext.getResources().getString(R.string.demo_permission_mic_reason);
+        microphoneContent.setReason(micReason);
         microphoneContent.setIconResId(R.drawable.demo_permission_icon_mic);
         microphoneContent.setDeniedAlert(mContext.getResources().getString(R.string.demo_permission_mic_dialog_alert, appName));
         PermissionRequester.setPermissionRequestContent(PermissionRequester.PermissionConstants.MICROPHONE, microphoneContent);
 
         PermissionRequester.PermissionRequestContent cameraContent = new PermissionRequester.PermissionRequestContent();
         cameraContent.setReasonTitle(mContext.getResources().getString(R.string.demo_permission_camera_reason_title, appName));
-        cameraContent.setReason(mContext.getResources().getString(R.string.demo_permission_camera_reason));
+        String cameraReason = mContext.getResources().getString(R.string.demo_permission_camera_reason);
+        cameraContent.setReason(cameraReason);
         cameraContent.setIconResId(R.drawable.demo_permission_icon_camera);
         cameraContent.setDeniedAlert(mContext.getResources().getString(R.string.demo_permission_camera_dialog_alert, appName));
         PermissionRequester.setPermissionRequestContent(PermissionRequester.PermissionConstants.CAMERA, cameraContent);
+
+        TUICore.unregisterObjectFactory(TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME);
+        TUICore.registerObjectFactory(TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME, new ITUIObjectFactory() {
+            @Override
+            public Object onCreateObject(String objectName, Map<String, Object> param) {
+                if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.CAMERA_PERMISSIONS)) {
+                    return cameraReason;
+                } else if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.MICROPHONE_PERMISSIONS)) {
+                    return micReason;
+                }
+                return null;
+            }
+        });
+
     }
 
     private void initOfflinePushConfigs() {
         final SharedPreferences sharedPreferences = mContext.getSharedPreferences("TUIKIT_DEMO_SETTINGS", mContext.MODE_PRIVATE);
-        int registerMode= sharedPreferences.getInt("test_OfflinePushRegisterMode_v2", 1);
-        int callbackMode= sharedPreferences.getInt("test_OfflinePushCallbackMode_v2", 1);
+        int registerMode = sharedPreferences.getInt("test_OfflinePushRegisterMode_v2", 1);
+        int callbackMode = sharedPreferences.getInt("test_OfflinePushCallbackMode_v2", 1);
         Log.i(TAG, "initOfflinePushConfigs registerMode = " + registerMode);
         Log.i(TAG, "initOfflinePushConfigs callbackMode = " + callbackMode);
 

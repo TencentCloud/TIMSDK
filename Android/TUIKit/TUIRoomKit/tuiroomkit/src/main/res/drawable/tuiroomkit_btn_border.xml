@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true">
+        <shape android:shape="rectangle"
+            android:useLevel="false">
+            <solid android:color="#006EFF" />
+            <corners android:radius="10dp"/>
+            <padding android:left="5dp" android:right="5dp" android:top="3dp" android:bottom="3dp"/>
+        </shape>
+    </item>
+
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle"
+            android:useLevel="false">
+            <solid android:color="@color/tuiroomkit_text_color_second" />
+            <corners android:radius="10dp"/>
+            <padding android:left="5dp" android:right="5dp" android:top="3dp" android:bottom="3dp"/>
+        </shape>
+    </item>
+</selector>
+

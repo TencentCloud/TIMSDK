@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.net.Uri;
@@ -19,14 +17,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
@@ -35,32 +30,35 @@ import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
-import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnMatrixChangedListener;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnPhotoTapListener;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.listener.OnSingleFlingListener;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.view.PhotoView;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.video.UIKitVideoView;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.video.proxy.IPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.photoview.listener.OnMatrixChangedListener;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.photoview.listener.OnPhotoTapListener;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.photoview.listener.OnSingleFlingListener;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.photoview.view.PhotoView;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.video.VideoView;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.video.proxy.IPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
+import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAdapter.ViewHolder>{
+public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAdapter.ViewHolder> {
     private static final String TAG = ImageVideoScanAdapter.class.getSimpleName();
 
     private static final String DOWNLOAD_ORIGIN_IMAGE_PATH = "downloadOriginImagePath";
@@ -70,13 +68,16 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
     private BroadcastReceiver downloadReceiver;
     private Context mContext = null;
 
-    private TUIMessageBean mOldLocateMessage, mNewLocateMessage;
+    private TUIMessageBean mOldLocateMessage;
+    private TUIMessageBean mNewLocateMessage;
 
     private Handler durationHandler;
     private boolean mIsVideoPlay = false;
     private String mCacheImagePath = null;
 
-    public ImageVideoScanAdapter(){
+    private Set<String> loadingIdList = new HashSet<>();
+
+    public ImageVideoScanAdapter() {
         mContext = TUIChatService.getAppContext();
     }
 
@@ -90,7 +91,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.playButton.setImageResource(R.drawable.ic_play_icon);
         holder.pauseCenterView.setVisibility(View.VISIBLE);
         holder.snapImageView.setVisibility(View.GONE);
-        holder.loadingView.setVisibility(View.GONE);
+        holder.progressBar.setVisibility(View.GONE);
         holder.playSeekBar.setProgress(0);
         mIsVideoPlay = false;
         String durations = DateTimeUtil.formatSecondsTo00(0);
@@ -103,7 +104,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_video_scan_item, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_video_scan_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -121,10 +122,25 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 return false;
             }
         });
-        V2TIMMessage timMessage = messageBean.getV2TIMMessage();
-        if (timMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE) {
+
+        holder.progressContainer.setVisibility(View.GONE);
+        holder.progressContainer.setOnClickListener(null);
+        holder.progressListener = progress -> {
+            holder.progressContainer.setVisibility(View.VISIBLE);
+            holder.progressIcon.setVisibility(View.GONE);
+            holder.progressText.setVisibility(View.VISIBLE);
+            holder.progressBar.setVisibility(View.VISIBLE);
+            holder.progressBar.setProgress(progress);
+            holder.progressText.setText(progress + "%");
+            if (progress == 100) {
+                holder.progressContainer.setVisibility(View.GONE);
+            }
+        };
+        ProgressPresenter.registerProgressListener(messageBean.getId(), holder.progressListener);
+
+        if (messageBean instanceof ImageMessageBean) {
             performPhotoView(holder, messageBean, position);
-        } else if (timMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
+        } else if (messageBean instanceof VideoMessageBean) {
             performVideoView(holder, messageBean, position);
         } else {
             TUIChatLog.d(TAG, "error message type");
@@ -136,7 +152,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         return mDataSource.size();
     }
 
-    private TUIMessageBean getItem(int position) {
+    public TUIMessageBean getItem(int position) {
         if (mDataSource == null || mDataSource.isEmpty()) {
             return null;
         }
@@ -154,72 +170,84 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         notifyDataSetChanged();
     }
 
-    private void loadPhotoView(ViewHolder holder, ImageMessageBean imageMessageBean,  int positon) {
+    private void loadPhotoView(ViewHolder holder, ImageMessageBean imageMessageBean, int positon) {
         final List<ImageMessageBean.ImageBean> imgs = imageMessageBean.getImageBeanList();
-        String imagePath = imageMessageBean.getDataPath();
+        String imagePath = null;
         String originImagePath = TUIChatUtils.getOriginImagePath(imageMessageBean);
         if (!TextUtils.isEmpty(originImagePath)) {
             imagePath = originImagePath;
+        } else {
+            String largePath = TUIChatUtils.generateLargeImagePath(imageMessageBean);
+            File file = new File(largePath);
+            if (file.exists()) {
+                imagePath = largePath;
+            }
         }
-
         if (TextUtils.isEmpty(imagePath)) {
             for (int i = 0; i < imgs.size(); i++) {
                 final ImageMessageBean.ImageBean img = imgs.get(i);
-                if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
-                    final String path = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
+                if (img.getType() == ImageMessageBean.IMAGE_TYPE_LARGE) {
+                    final String path = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_LARGE);
+                    if (loadingIdList.contains(path)) {
+                        return;
+                    }
+                    loadingIdList.add(path);
                     img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
                         @Override
                         public void onProgress(long currentSize, long totalSize) {
-                            TUIChatLog.i("downloadImage progress current:",
-                                    currentSize + ", total:" + totalSize);
+                            int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
+                            ProgressPresenter.updateProgress(imageMessageBean.getId(), progress);
+
+                            TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                         }
 
                         @Override
                         public void onError(int code, String desc) {
+                            loadingIdList.remove(path);
                             TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
                         }
 
                         @Override
                         public void onSuccess() {
-                            holder.loadingView.setVisibility(View.GONE);
-                            imageMessageBean.setDataPath(path);
+                            loadingIdList.remove(path);
+                            ProgressPresenter.updateProgress(imageMessageBean.getId(), 100);
                             ThreadUtils.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     notifyDataSetChanged();
                                 }
                             });
-
                         }
                     });
                     break;
                 }
             }
+            return;
         }
 
         V2TIMImageElem.V2TIMImage currentOriginalImage = null;
-        String thumbPath = null;
+        String largePath = null;
         for (int i = 0; i < imgs.size(); i++) {
             ImageMessageBean.ImageBean img = imgs.get(i);
             if (img.getType() == ImageMessageBean.IMAGE_TYPE_ORIGIN) {
                 currentOriginalImage = img.getV2TIMImage();
             }
-            if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
-                thumbPath = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
+            if (img.getType() == ImageMessageBean.IMAGE_TYPE_LARGE) {
+                largePath = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_LARGE);
             }
         }
         String localImgPath = TUIChatUtils.getOriginImagePath(imageMessageBean);
         boolean isOriginImg = localImgPath != null && currentOriginalImage != null && !TextUtils.isEmpty(localImgPath)
-                && currentOriginalImage.getSize() == FileUtil.getFileSize(localImgPath);
+            && currentOriginalImage.getSize() == FileUtil.getFileSize(localImgPath);
         String previewImgPath;
         if (!isOriginImg) {
-            previewImgPath = thumbPath;
+            previewImgPath = largePath;
         } else {
             previewImgPath = localImgPath;
         }
         Uri uri = FileUtil.getUriFromPath(previewImgPath);
         if (uri != null) {
-            holder.loadingView.setVisibility(View.GONE);
+            holder.progressBar.setVisibility(View.GONE);
         }
         Matrix mCurrentDisplayMatrix = new Matrix();
         holder.photoView.setDisplayMatrix(mCurrentDisplayMatrix);
@@ -227,7 +255,8 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.photoView.setOnPhotoTapListener(new PhotoTapListener());
         holder.photoView.setOnSingleFlingListener(new SingleFlingListener());
         // 如果是原图就直接显示原图， 否则显示缩略图，点击查看原图按钮后下载原图显示
-        // If it is the original image, the original image will be displayed directly, otherwise, the thumbnail image will be displayed. Click the View Original Image button to download the original image and display it.
+        // If it is the original image, the original image will be displayed directly, otherwise, the thumbnail image will be displayed. Click the View Original
+        // Image button to download the original image and display it.
 
         loadImageIntoView(holder.photoView, previewImgPath);
         if (!isOriginImg) {
@@ -244,9 +273,9 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                     finalMCurrentOriginalImage.downloadImage(path, new V2TIMDownloadCallback() {
                         @Override
                         public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
-                            long percent = Math.round(100 * (progressInfo.getCurrentSize() * 1.0d) / progressInfo.getTotalSize());
+                            int progress = Math.round(progressInfo.getCurrentSize() * 1.0f * 100 / progressInfo.getTotalSize());
                             if (holder.viewOriginalButton.getVisibility() != View.INVISIBLE && holder.viewOriginalButton.getVisibility() != View.GONE) {
-                                holder.viewOriginalButton.setText(percent + "%");
+                                holder.viewOriginalButton.setText(progress + "%");
                             }
                         }
 
@@ -308,9 +337,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.closeButton.setVisibility(View.GONE);
         holder.playControlLayout.setVisibility(View.GONE);
         holder.pauseCenterView.setVisibility(View.GONE);
-        holder.loadingView.setVisibility(View.VISIBLE);
         holder.videoViewLayout.setVisibility(View.GONE);
-
         ImageMessageBean imageMessageBean;
         if (messageBean instanceof ImageMessageBean) {
             imageMessageBean = (ImageMessageBean) messageBean;
@@ -324,18 +351,20 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
 
     private void loadImageIntoView(ImageView imageView, Object resObj) {
         Glide.with(TUIChatService.getAppContext())
-                .load(resObj)
-                .centerInside()
-                .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
-                .into(imageView);
+            .load(resObj)
+            .centerInside()
+            .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+            .into(imageView);
     }
 
     private void loadVideoView(ViewHolder holder, VideoMessageBean videoMessageBean, int position) {
-        if (TextUtils.isEmpty(videoMessageBean.getDataPath())) {
+        if (TextUtils.isEmpty(videoMessageBean.getSnapshotPath())) {
             final String path = TUIConfig.getImageDownloadDir() + videoMessageBean.getSnapshotUUID();
             videoMessageBean.downloadSnapshot(path, new VideoMessageBean.VideoDownloadCallback() {
                 @Override
                 public void onProgress(long currentSize, long totalSize) {
+                    int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
+                    ProgressPresenter.updateProgress(videoMessageBean.getId(), progress);
                     TUIChatLog.i("downloadSnapshot progress current:", currentSize + ", total:" + totalSize);
                 }
 
@@ -346,26 +375,19 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
 
                 @Override
                 public void onSuccess() {
+                    ProgressPresenter.updateProgress(videoMessageBean.getId(), 100);
                     holder.pauseCenterView.setVisibility(View.VISIBLE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    videoMessageBean.setDataPath(path);
+                    videoMessageBean.setSnapshotPath(path);
                     mCacheImagePath = path;
                     holder.snapImageView.setVisibility(View.VISIBLE);
                     loadImageIntoView(holder.snapImageView, path);
-
-                    Bitmap firstFrame = ImageUtil.getBitmapFormPath(path);
-                    if (firstFrame != null) {
-                        int videoWidth = firstFrame.getWidth();
-                        int videoHeight = firstFrame.getHeight();
-                        updateVideoView(holder, videoWidth, videoHeight);
-                    }
+                    getOrPlayVideo(holder, videoMessageBean, position);
                 }
             });
         } else {
-            String imagePath = videoMessageBean.getDataPath();
+            String imagePath = videoMessageBean.getSnapshotPath();
             holder.snapImageView.setVisibility(View.VISIBLE);
             loadImageIntoView(holder.snapImageView, imagePath);
-            updateVideoViewSize(holder, imagePath);
         }
 
         if (videoMessageBean.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
@@ -374,28 +396,25 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         }
         if (videoMessageBean.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
             ToastUtil.toastShortMessage(mContext.getString(R.string.send_failed));
-            holder.loadingView.setVisibility(View.GONE);
+            holder.progressBar.setVisibility(View.GONE);
             return;
         }
 
-        final String videoPath = TUIConfig.getVideoDownloadDir() + videoMessageBean.getVideoUUID();
+        getOrPlayVideo(holder, videoMessageBean, position);
+    }
+
+    private void getOrPlayVideo(ViewHolder holder, VideoMessageBean videoMessageBean, int position) {
+        final String videoPath = videoMessageBean.getVideoPath();
         final File videoFile = new File(videoPath);
         if (videoFile.exists() && videoMessageBean.getVideoSize() == videoFile.length()) {
             playVideo(holder, videoMessageBean);
         } else {
             if (!holder.downloadVideoFailed && !holder.downloadVideoFinished) {
-                getVideo(holder, videoPath, videoMessageBean, true, position);
-            }
-        }
-    }
-    
-    private void updateVideoViewSize(ViewHolder holder, String path) {
-        if (mCacheImagePath == null || !mCacheImagePath.equals(path)) {
-            Bitmap firstFrame = ImageUtil.getBitmapFormPath(path);
-            if (firstFrame != null) {
-                int videoWidth = firstFrame.getWidth();
-                int videoHeight = firstFrame.getHeight();
-                updateVideoView(holder, videoWidth, videoHeight);
+                holder.progressContainer.setVisibility(View.VISIBLE);
+                holder.progressIcon.setVisibility(View.VISIBLE);
+                holder.progressText.setVisibility(View.GONE);
+                holder.progressBar.setProgress(0);
+                holder.progressContainer.setOnClickListener(v -> getVideo(holder, videoPath, videoMessageBean, true, position));
             }
         }
     }
@@ -406,9 +425,9 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.closeButton.setVisibility(View.VISIBLE);
         holder.playControlLayout.setVisibility(View.VISIBLE);
         holder.pauseCenterView.setVisibility(View.GONE);
-        holder.loadingView.setVisibility(View.VISIBLE);
+        holder.progressBar.setVisibility(View.VISIBLE);
         holder.videoViewLayout.setVisibility(View.VISIBLE);
-
+        holder.progressContainer.setVisibility(View.GONE);
         VideoMessageBean videoMessageBean;
         if (messageBean instanceof VideoMessageBean) {
             videoMessageBean = (VideoMessageBean) messageBean;
@@ -435,10 +454,10 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             }
         });
         holder.playButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               clickPlayVideo(holder);
-           }
+            @Override
+            public void onClick(View view) {
+                clickPlayVideo(holder);
+            }
         });
 
         holder.playSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -447,18 +466,20 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 String durations = DateTimeUtil.formatSecondsTo00(progress);
                 holder.timeBeginView.setText(durations);
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();
-                TUIChatLog.i(TAG,"onStartTrackingTouch progress == " + progress);
+                TUIChatLog.i(TAG, "onStartTrackingTouch progress == " + progress);
                 if (holder.videoView != null) {
                     holder.videoView.seekTo(progress * 1000);
                 }
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();
-                TUIChatLog.i(TAG,"onStopTrackingTouch progress == " + progress);
+                TUIChatLog.i(TAG, "onStopTrackingTouch progress == " + progress);
                 if (holder.videoView != null && holder.videoView.isPlaying()) {
                     holder.videoView.seekTo(progress * 1000);
                     holder.videoView.start();
@@ -487,22 +508,22 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             holder.videoView.pause();
             holder.playButton.setImageResource(R.drawable.ic_play_icon);
             holder.pauseCenterView.setVisibility(View.VISIBLE);
-            holder.loadingView.setVisibility(View.GONE);
+            holder.progressBar.setVisibility(View.GONE);
             mIsVideoPlay = false;
         } else {
-            float times= holder.videoView.getDuration() *1.0f / 1000;
+            float times = holder.videoView.getDuration() * 1.0f / 1000;
             if (times <= 0) {
-                TUIChatLog.e(TAG,"onClick, downloading video");
-                //ToastUtil.toastShortMessage("downloading video");
+                TUIChatLog.e(TAG, "onClick, downloading video");
+                // ToastUtil.toastShortMessage("downloading video");
                 holder.pauseCenterView.setVisibility(View.GONE);
-                holder.loadingView.setVisibility(View.VISIBLE);
+                holder.progressBar.setVisibility(View.VISIBLE);
                 resetVideo(holder);
                 return;
             }
 
-            int duration= Math.round(holder.videoView.getDuration() * 1.0f / 1000);
+            int duration = Math.round(holder.videoView.getDuration() * 1.0f / 1000);
             int progress = Math.round(holder.videoView.getCurrentPosition() * 1.0f / 1000);
-            TUIChatLog.d(TAG,"onClick playSeekBar duration == " + duration + " playSeekBar progress = " + progress);
+            TUIChatLog.d(TAG, "onClick playSeekBar duration == " + duration + " playSeekBar progress = " + progress);
             if (holder.playSeekBar.getProgress() >= duration) {
                 TUIChatLog.e(TAG, "getProgress() >= duration");
                 resetVideo(holder);
@@ -511,7 +532,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             holder.videoView.start();
             holder.playButton.setImageResource(R.drawable.ic_pause_icon);
             holder.pauseCenterView.setVisibility(View.GONE);
-            holder.loadingView.setVisibility(View.GONE);
+            holder.progressBar.setVisibility(View.GONE);
             holder.snapImageView.setVisibility(View.GONE);
             mIsVideoPlay = true;
 
@@ -525,7 +546,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         }
     }
 
-    private Uri processVideoMessage(VideoMessageBean videoMessageBean){
+    private Uri processVideoMessage(VideoMessageBean videoMessageBean) {
         V2TIMMessage timMessage = videoMessageBean.getV2TIMMessage();
         V2TIMVideoElem videoEle = timMessage.getVideoElem();
         if (timMessage.isSelf() && !TextUtils.isEmpty(videoEle.getSnapshotPath())) {
@@ -536,16 +557,19 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         }
     }
 
-    private void  playVideo(ViewHolder holder, VideoMessageBean videoMessageBean) {
+    private void playVideo(ViewHolder holder, VideoMessageBean videoMessageBean) {
         Uri videoUri = processVideoMessage(videoMessageBean);
 
         holder.pauseCenterView.setVisibility(View.VISIBLE);
-        holder.loadingView.setVisibility(View.GONE);
+        holder.progressBar.setVisibility(View.GONE);
 
         if (videoUri == null) {
-            TUIChatLog.e(TAG,"playVideo videoUri == null");
+            TUIChatLog.e(TAG, "playVideo videoUri == null");
             return;
         }
+        Matrix matrix = new Matrix(holder.snapImageView.getImageMatrix());
+        holder.videoView.setTransform(matrix);
+        holder.videoView.invalidate();
 
         holder.videoView.setVideoURI(videoUri);
         holder.videoView.setOnPreparedListener(new IPlayer.OnPreparedListener() {
@@ -556,8 +580,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 holder.videoView.pause();
                 holder.playButton.setImageResource(R.drawable.ic_play_icon);
                 holder.pauseCenterView.setVisibility(View.VISIBLE);
-                holder.loadingView.setVisibility(View.GONE);
-                updateVideoViewSize(holder, videoMessageBean.getDataPath());
+                holder.progressBar.setVisibility(View.GONE);
                 mIsVideoPlay = false;
                 if (durationHandler != null) {
                     durationHandler = null;
@@ -566,10 +589,16 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                     updateSeekBarTime = null;
                 }
                 durationHandler = new Handler();
+                durationHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.snapImageView.setVisibility(View.GONE);
+                    }
+                }, 300);
                 updateSeekBarTime = new Runnable() {
                     public void run() {
-                        //TUIChatLog.e(TAG, "mIsVideoPlay = " + mIsVideoPlay);
-                        //get current position
+                        // TUIChatLog.e(TAG, "mIsVideoPlay = " + mIsVideoPlay);
+                        // get current position
                         int timeElapsed = holder.videoView.getCurrentPosition();
 
                         if (holder.playSeekBar.getProgress() >= holder.playSeekBar.getMax()) {
@@ -577,13 +606,13 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                             resetVideo(holder);
                             return;
                         }
-                        //set seekbar progress
-                        //TUIChatLog.e(TAG, "Runnable playSeekBar setProgress = " + (int) timeElapsed/1000);
+                        // set seekbar progress
+                        // TUIChatLog.e(TAG, "Runnable playSeekBar setProgress = " + (int) timeElapsed/1000);
                         holder.playSeekBar.setProgress(Math.round(timeElapsed * 1.0f / 1000));
 
                         String durations = DateTimeUtil.formatSecondsTo00(Math.round(holder.videoView.getCurrentPosition() * 1.0f / 1000));
                         holder.timeBeginView.setText(durations);
-                        //repeat yourself that again in 100 miliseconds
+                        // repeat yourself that again in 100 miliseconds
                         if (mIsVideoPlay) {
                             durationHandler.postDelayed(this, 100);
                         }
@@ -591,7 +620,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 };
 
                 int duration = Math.round(mediaPlayer.getDuration() * 1.0f / 1000);
-                int progress = Math.round(mediaPlayer.getCurrentPosition() *1.0f / 1000);
+                int progress = Math.round(mediaPlayer.getCurrentPosition() * 1.0f / 1000);
                 holder.playSeekBar.setMax(duration);
                 holder.playSeekBar.setProgress(progress);
                 String durations = DateTimeUtil.formatSecondsTo00(duration);
@@ -601,23 +630,29 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         });
         holder.videoView.setOnSeekCompleteListener(new IPlayer.OnSeekCompleteListener() {
             @Override
-            public void OnSeekComplete(IPlayer mp) {
-
-            }
+            public void onSeekComplete(IPlayer mp) {}
         });
     }
 
     private void getVideo(ViewHolder holder, String videoPath, final VideoMessageBean msg, final boolean autoPlay, final int position) {
+        if (loadingIdList.contains(msg.getId())) {
+            return;
+        }
+        loadingIdList.add(msg.getId());
         msg.downloadVideo(videoPath, new VideoMessageBean.VideoDownloadCallback() {
             @Override
             public void onProgress(long currentSize, long totalSize) {
+                int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
+                ProgressPresenter.updateProgress(msg.getId(), progress);
                 TUIChatLog.i("downloadVideo progress current:", currentSize + ", total:" + totalSize);
                 holder.downloadVideoFinished = false;
             }
 
             @Override
             public void onError(int code, String desc) {
-                ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.download_file_error) + code + "=" + desc);
+                loadingIdList.remove(msg.getId());
+                String errorMessage = ErrorMessageConverter.convertIMError(code, desc);
+                ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.download_file_error) + code + " " + errorMessage);
                 msg.setStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
                 notifyItemChanged(position);
                 holder.downloadVideoFailed = true;
@@ -625,8 +660,9 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
 
             @Override
             public void onSuccess() {
+                loadingIdList.remove(msg.getId());
+                ProgressPresenter.updateProgress(msg.getId(), 100);
                 holder.pauseCenterView.setVisibility(View.VISIBLE);
-                holder.loadingView.setVisibility(View.GONE);
                 notifyItemChanged(position);
                 holder.downloadVideoFailed = false;
                 holder.downloadVideoFinished = true;
@@ -637,40 +673,10 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         });
     }
 
-    private void updateVideoView(ViewHolder holder, int videoWidth, int videoHeight) {
-        TUIChatLog.i(TAG, "updateVideoView videoWidth: " + videoWidth + " videoHeight: " + videoHeight);
-        if (videoWidth <= 0 && videoHeight <= 0) {
-            return;
-        }
-        boolean isLandscape = true;
-        if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            isLandscape = false;
-        }
-
-        int deviceWidth;
-        int deviceHeight;
-        if (isLandscape) {
-            deviceWidth = Math.max(ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
-            deviceHeight = Math.min(ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
-        } else {
-            deviceWidth = Math.min(ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
-            deviceHeight = Math.max(ScreenUtil.getScreenWidth(mContext), ScreenUtil.getScreenHeight(mContext));
-        }
-        int[] scaledSize = ScreenUtil.scaledSize(deviceWidth, deviceHeight, videoWidth, videoHeight);
-        TUIChatLog.i(TAG, "scaled width: " + scaledSize[0] + " height: " + scaledSize[1]);
-        ViewGroup.LayoutParams params = holder.videoView.getLayoutParams();
-        params.width = scaledSize[0];
-        params.height = scaledSize[1];
-        holder.videoView.setLayoutParams(params);
-        if (holder.snapImageView.getVisibility() == View.VISIBLE) {
-            holder.snapImageView.setLayoutParams(params);
-        }
-    }
-
     public void destroyView(RecyclerView mRecyclerView, int index) {
         View itemView = mRecyclerView.getChildAt(index);
         if (itemView != null) {
-            UIKitVideoView videoView = itemView.findViewById(R.id.video_play_view);
+            VideoView videoView = itemView.findViewById(R.id.video_play_view);
             SeekBar playSeekBar = itemView.findViewById(R.id.play_seek);
             if (videoView != null) {
                 videoView.stop();
@@ -685,24 +691,25 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             downloadReceiver = null;
         }
     }
+
     public void setDataSource(List<TUIMessageBean> dataSource) {
         if (dataSource != null && !dataSource.isEmpty()) {
             mOldLocateMessage = dataSource.get(0);
-            mNewLocateMessage = dataSource.get(dataSource.size()-1);
+            mNewLocateMessage = dataSource.get(dataSource.size() - 1);
         } else {
             TUIChatLog.d(TAG, "setDataSource dataSource is Empty");
             mOldLocateMessage = null;
             mNewLocateMessage = null;
         }
         this.mDataSource = dataSource;
-        
+
         for (TUIMessageBean messageBean : mDataSource) {
             TUIChatLog.d(TAG, "message seq = " + messageBean.getV2TIMMessage().getSeq());
         }
         Log.d(TAG, "mOldLocateMessage seq:" + mOldLocateMessage.getV2TIMMessage().getSeq());
         Log.d(TAG, "mNewLocateMessage seq:" + mNewLocateMessage.getV2TIMMessage().getSeq());
     }
-    
+
     public List<TUIMessageBean> getDataSource() {
         return mDataSource;
     }
@@ -733,7 +740,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             mDataSource.addAll(0, dataSource);
             newPositon = dataSource.size();
         } else if (type == TUIChatConstants.GET_MESSAGE_BACKWARD) {
-            mNewLocateMessage = dataSource.get(dataSource.size()-1);
+            mNewLocateMessage = dataSource.get(dataSource.size() - 1);
             Log.d(TAG, "mNewLocateMessage seq:" + mNewLocateMessage.getV2TIMMessage().getSeq());
 
             mDataSource.addAll(dataSource);
@@ -745,7 +752,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         for (TUIMessageBean tuiMessageBean : mDataSource) {
             TUIChatLog.d(TAG, "message seq = " + tuiMessageBean.getV2TIMMessage().getSeq());
         }
-
 
         if (messageBean == null) {
             TUIChatLog.e(TAG, "messageBean == null");
@@ -764,39 +770,40 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         }
     }
 
-
     private class MatrixChangeListener implements OnMatrixChangedListener {
-
         @Override
-        public void onMatrixChanged(RectF rect) {
-
-        }
+        public void onMatrixChanged(RectF rect) {}
     }
 
     private class SingleFlingListener implements OnSingleFlingListener {
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             return true;
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout photoViewLayout;
         PhotoView photoView;
         TextView viewOriginalButton;
 
         FrameLayout videoViewLayout;
-        UIKitVideoView videoView;
+        VideoView videoView;
         boolean downloadVideoFailed = false;
         boolean downloadVideoFinished = false;
         ImageView closeButton;
         LinearLayout playControlLayout;
         ImageView playButton;
         SeekBar playSeekBar;
-        TextView timeBeginView, timeEndView;
-        ImageView pauseCenterView, snapImageView;
-        ProgressBar loadingView;
+        TextView timeBeginView;
+        TextView timeEndView;
+        ImageView pauseCenterView;
+        ImageView snapImageView;
+        FrameLayout progressContainer;
+        ChatRingProgressBar progressBar;
+        ImageView progressIcon;
+        TextView progressText;
+        private ProgressPresenter.ProgressListener progressListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -812,8 +819,11 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             timeBeginView = itemView.findViewById(R.id.time_begin);
             pauseCenterView = itemView.findViewById(R.id.pause_button_center);
             snapImageView = itemView.findViewById(R.id.content_image_iv);
-            loadingView = itemView.findViewById(R.id.message_sending_pb);
             videoViewLayout = itemView.findViewById(R.id.video_view_layout);
+            progressContainer = itemView.findViewById(R.id.progress_container);
+            progressText = itemView.findViewById(R.id.file_progress_text);
+            progressBar = itemView.findViewById(R.id.file_progress_bar);
+            progressIcon = itemView.findViewById(R.id.file_progress_icon);
         }
     }
 }

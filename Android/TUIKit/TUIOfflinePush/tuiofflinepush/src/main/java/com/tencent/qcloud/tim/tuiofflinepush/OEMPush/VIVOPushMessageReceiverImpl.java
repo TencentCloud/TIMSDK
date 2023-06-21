@@ -1,16 +1,12 @@
 package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 
 import android.content.Context;
-
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.vivo.push.model.UPSNotificationMessage;
 import com.vivo.push.sdk.OpenClientPushMessageReceiver;
-
 import java.util.Map;
 
-
 public class VIVOPushMessageReceiverImpl extends OpenClientPushMessageReceiver {
-
     private static final String TAG = VIVOPushMessageReceiverImpl.class.getSimpleName();
 
     private static String sExt = "";

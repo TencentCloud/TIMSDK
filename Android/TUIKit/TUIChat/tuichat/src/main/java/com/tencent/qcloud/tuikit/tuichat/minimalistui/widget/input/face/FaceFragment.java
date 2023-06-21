@@ -13,13 +13,11 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.tencent.qcloud.tuikit.timcommon.component.face.ChatFace;
@@ -31,13 +29,11 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.BaseInputFragment;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FaceFragment extends BaseInputFragment {
-
     ViewPager2 faceViewPager;
     RecyclerView faceTabListView;
     FaceTabListAdapter faceTabListAdapter;
@@ -133,8 +129,7 @@ public class FaceFragment extends BaseInputFragment {
         if (!isShowDelete) {
             dit = 0;
         }
-        return count % (columns * rows - dit) == 0 ? count / (columns * rows - dit)
-                : count / (columns * rows - dit) + 1;
+        return count % (columns * rows - dit) == 0 ? count / (columns * rows - dit) : count / (columns * rows - dit) + 1;
     }
 
     @Override
@@ -171,9 +166,9 @@ public class FaceFragment extends BaseInputFragment {
         public void onBindViewHolder(@NonNull FaceTabListViewHolder holder, int position) {
             FaceGroup faceGroup = faceGroups.get(position);
             Glide.with(holder.itemView)
-                    .load(faceGroup.getFaceGroupIconUrl())
-                    .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
-                    .into(holder.faceGroupIcon);
+                .load(faceGroup.getFaceGroupIconUrl())
+                .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+                .into(holder.faceGroupIcon);
             if (selected == position) {
                 holder.selectBorder.setVisibility(View.VISIBLE);
             } else {
@@ -202,6 +197,7 @@ public class FaceFragment extends BaseInputFragment {
         class FaceTabListViewHolder extends ViewHolder {
             private View selectBorder;
             private ImageView faceGroupIcon;
+
             public FaceTabListViewHolder(@NonNull View itemView) {
                 super(itemView);
                 selectBorder = itemView.findViewById(R.id.select_border);
@@ -284,7 +280,6 @@ public class FaceFragment extends BaseInputFragment {
     }
 
     class FaceVPAdapter extends RecyclerView.Adapter<FaceVPAdapter.FaceVPHolder> {
-
         private List<FaceGroup> faceGroups;
 
         public void setFaceGroups(List<FaceGroup> faceGroups) {
@@ -322,6 +317,7 @@ public class FaceFragment extends BaseInputFragment {
             private ViewPager2 viewPager2;
             private FaceGridAdapter faceGridAdapter;
             private EmojiIndicatorView indicatorView;
+
             public FaceVPHolder(@NonNull View itemView) {
                 super(itemView);
                 viewPager2 = itemView.findViewById(R.id.face_group_view_pager2);
@@ -339,10 +335,8 @@ public class FaceFragment extends BaseInputFragment {
 
             void setData(FaceGroup faceGroup) {
                 faceGridAdapter.setFaceGroup(faceGroup);
-                indicatorView.init(getPagerCount(faceGroup.getFaces(),
-                        faceGroup.getPageColumnCount(),
-                        faceGroup.getPageRowCount(),
-                        faceGroup.getGroupID() == 0));
+                indicatorView.init(
+                    getPagerCount(faceGroup.getFaces(), faceGroup.getPageColumnCount(), faceGroup.getPageRowCount(), faceGroup.getGroupID() == 0));
                 oldPosition = 0;
                 faceGridAdapter.notifyDataSetChanged();
             }
@@ -395,7 +389,7 @@ public class FaceFragment extends BaseInputFragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (subList.get(position) instanceof CustomFace) {
                             listener.onCustomFaceClick(faceGroup.getGroupID(), (CustomFace) subList.get(position));
-                        } else if (subList.get(position) instanceof Emoji){
+                        } else if (subList.get(position) instanceof Emoji) {
                             if (position == columns * rows - 1) {
                                 if (listener != null) {
                                     listener.onEmojiDelete();
@@ -415,14 +409,12 @@ public class FaceFragment extends BaseInputFragment {
                 if (faceGroup == null) {
                     return 0;
                 }
-                return getPagerCount(faceGroup.getFaces(),
-                        faceGroup.getPageColumnCount(),
-                        faceGroup.getPageRowCount(),
-                        faceGroup.getGroupID() == 0);
+                return getPagerCount(faceGroup.getFaces(), faceGroup.getPageColumnCount(), faceGroup.getPageRowCount(), faceGroup.getGroupID() == 0);
             }
 
             class FaceGridHolder extends ViewHolder {
                 private GridView faceGrid;
+
                 public FaceGridHolder(@NonNull View itemView) {
                     super(itemView);
                     faceGrid = (GridView) itemView;

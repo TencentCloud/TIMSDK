@@ -19,6 +19,7 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
 
     private ChatInfo chatInfo;
     private C2CChatPresenter presenter;
+    
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +44,6 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
     protected void initView() {
         super.initView();
 
-
         setTitleBarClickAction();
         chatView.setPresenter(presenter);
         presenter.setChatInfo(chatInfo);
@@ -51,7 +51,6 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
     }
 
     private void setTitleBarClickAction() {
-
         chatView.setOnAvatarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

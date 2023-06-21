@@ -5,9 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import androidx.annotation.Nullable;
-
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -20,7 +18,6 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,8 +73,7 @@ public class ImageReplyQuoteView extends TUIReplyQuoteView {
                     img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
                         @Override
                         public void onProgress(long currentSize, long totalSize) {
-                            TUIChatLog.i("downloadImage progress current:",
-                                    currentSize + ", total:" + totalSize);
+                            TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                         }
 
                         @Override
@@ -112,7 +108,6 @@ public class ImageReplyQuoteView extends TUIReplyQuoteView {
     }
 
     protected ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, int width, int height) {
-
         if (width == 0 || height == 0) {
             return params;
         }

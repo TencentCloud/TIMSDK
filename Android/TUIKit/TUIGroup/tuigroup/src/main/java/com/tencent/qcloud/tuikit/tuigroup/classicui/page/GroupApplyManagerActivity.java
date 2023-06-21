@@ -12,7 +12,6 @@ import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupApplyManagerLayo
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 
 public class GroupApplyManagerActivity extends BaseLightActivity {
-
     private GroupApplyManagerLayout mManagerLayout;
 
     @Override
@@ -38,5 +37,4 @@ public class GroupApplyManagerActivity extends BaseLightActivity {
     public void onResume() {
         super.onResume();
     }
-
 }

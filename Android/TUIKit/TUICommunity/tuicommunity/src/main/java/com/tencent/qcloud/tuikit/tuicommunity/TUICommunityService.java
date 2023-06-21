@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuicommunity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupListener;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
@@ -26,7 +25,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityParser;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +94,6 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
         });
 
         V2TIMManager.getInstance().addGroupListener(new V2TIMGroupListener() {
-
             @Override
             public void onMemberEnter(String groupID, List<V2TIMGroupMemberInfo> memberList) {
                 if (CommunityUtil.isCommunityGroup(groupID)) {
@@ -112,7 +109,6 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
                     }
                 }
             }
-
 
             @Override
             public void onGroupCreated(String groupID) {
@@ -301,7 +297,7 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
                     communityEventListener.onCommunityExperienceChanged(experienceName);
                 }
             }
-        } else if (TextUtils.equals(key,  TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED)) {
+        } else if (TextUtils.equals(key, TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED)) {
             if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_INFO_UPDATED)) {
                 if (param != null) {
                     String faceUrl = (String) param.get(TUIConstants.TUILogin.SELF_FACE_URL);
@@ -312,8 +308,8 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
                 }
             }
         }
-
     }
+
     @Override
     public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
         if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID)) {
@@ -335,5 +331,4 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
         }
         return null;
     }
-
 }

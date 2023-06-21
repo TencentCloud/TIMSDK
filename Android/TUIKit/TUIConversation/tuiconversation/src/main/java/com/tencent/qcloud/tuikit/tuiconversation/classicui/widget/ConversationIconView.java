@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
@@ -17,7 +16,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationIconPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,6 @@ import java.util.List;
  * 会话列表头像View
  */
 public class ConversationIconView extends RelativeLayout {
-
     private static final int icon_size = ScreenUtil.getPxByDp(50);
     private ImageView mIconView;
     private boolean showFoldedStyle = false;
@@ -136,9 +133,7 @@ public class ConversationIconView extends RelativeLayout {
                     }
 
                     @Override
-                    public void onError(String module, int errCode, String errMsg) {
-
-                    }
+                    public void onError(String module, int errCode, String errMsg) {}
                 });
             }
         });
@@ -167,4 +162,3 @@ public class ConversationIconView extends RelativeLayout {
         }
     }
 }
-

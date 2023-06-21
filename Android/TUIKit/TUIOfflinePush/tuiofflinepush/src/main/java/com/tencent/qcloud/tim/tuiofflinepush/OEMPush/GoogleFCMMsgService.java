@@ -3,9 +3,8 @@ package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
-
 public class GoogleFCMMsgService extends FirebaseMessagingService {
-    private final String TAG = GoogleFCMMsgService.class.getSimpleName();
+    private static final String TAG = GoogleFCMMsgService.class.getSimpleName();
 
     @Override
     public void onNewToken(String token) {

@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
@@ -20,7 +19,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
  * Custom LineControllerView
  */
 public class LineControllerView extends RelativeLayout {
-
     private String mName;
     private boolean mIsBottom;
     private boolean mIsTop;
@@ -134,5 +132,4 @@ public class LineControllerView extends RelativeLayout {
             mSwitchView.setEnabled(true);
         }
     }
-
 }

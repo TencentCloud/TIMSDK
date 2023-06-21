@@ -1,9 +1,7 @@
 package com.tencent.qcloud.tuikit.tuigroup.minimalistui.page;
 
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
@@ -12,7 +10,6 @@ import com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget.GroupApplyManagerL
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 
 public class GroupApplyManagerMinimalistActivity extends BaseMinimalistLightActivity {
-
     private GroupApplyManagerLayout mManagerLayout;
 
     @Override
@@ -33,5 +30,4 @@ public class GroupApplyManagerMinimalistActivity extends BaseMinimalistLightActi
         groupInfo.setId(groupId);
         mManagerLayout.setDataSource(groupInfo);
     }
-
 }

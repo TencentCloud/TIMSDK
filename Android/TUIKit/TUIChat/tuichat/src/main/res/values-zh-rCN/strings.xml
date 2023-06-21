@@ -80,6 +80,7 @@
     <string name="forward_extra">[聊天记录]</string>
 
     <string name="create_group">创建群组</string>
+    <string name="create_community">创建社群</string>
     <string name="etc">等</string>
     <string name="join_group">加入群组</string>
     <string name="invite_joined_group">被邀请进群</string>
@@ -101,6 +102,7 @@
     <string name="group_add_opt_auto_approval">自动审批</string>
     <string name="group_add_opt_admin_approve">管理员审批</string>
     <string name="group_add_opt_join_disable">禁止加群</string>
+    <string name="group_add_opt_invite_disable">禁止邀请</string>
 
 
     <string name="typing">对方正在输入...</string>
@@ -251,4 +253,8 @@
     <string name="chat_group_call_switch_to_audio_format">%s视频转语音</string>
     <string name="chat_group_call_confirm_switch_to_audio_format">%s同意视频转语音</string>
 
+    <string name="chat_quick_tap_message_default_action_name">拍了拍</string>
+    <string name="chat_quick_tap_message_action_from_me">我%s"%s"</string>
+    <string name="chat_quick_tap_message_action_to_me">"%s"%s我</string>
+    <string name="chat_quick_tap_message_action">"%s"%s"%s"</string>
 </resources>

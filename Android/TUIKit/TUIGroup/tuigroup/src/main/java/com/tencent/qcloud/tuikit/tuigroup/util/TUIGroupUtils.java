@@ -72,7 +72,8 @@ public class TUIGroupUtils {
                     }
                     toastGroupEventByName(type, groupName);
                 } else {
-                    TUIGroupLog.e(TAG, "toastGroupEvent failed, code=" + v2TIMGroupInfoResult.getResultCode() + ", msg=" + v2TIMGroupInfoResult.getResultMessage());
+                    TUIGroupLog.e(
+                        TAG, "toastGroupEvent failed, code=" + v2TIMGroupInfoResult.getResultCode() + ", msg=" + v2TIMGroupInfoResult.getResultMessage());
                 }
             }
 
@@ -93,7 +94,8 @@ public class TUIGroupUtils {
         } else if (type == GROUP_EVENT_TIP_KICKED) {
             toastString = TUIGroupService.getAppContext().getString(R.string.kick_group) + groupName;
         } else if (type == GROUP_EVENT_TIP_DISBANDED) {
-            toastString = TUIGroupService.getAppContext().getString(R.string.dismiss_tip_before) + groupName + TUIGroupService.getAppContext().getString(R.string.dismiss_tip_after);
+            toastString = TUIGroupService.getAppContext().getString(R.string.dismiss_tip_before) + groupName
+                + TUIGroupService.getAppContext().getString(R.string.dismiss_tip_after);
         }
         if (toastString != null) {
             ToastUtil.toastLongMessage(toastString);

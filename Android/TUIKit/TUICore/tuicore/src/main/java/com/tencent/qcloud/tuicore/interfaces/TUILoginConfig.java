@@ -31,8 +31,7 @@ public class TUILoginConfig {
     /**
      * Configuration class constructor
      */
-    public TUILoginConfig() {
-    }
+    public TUILoginConfig() {}
 
     /**
      * Set the write log level. This operation must be performed before IM SDK initialization. Otherwise, the setting does not take effect.
@@ -56,7 +55,8 @@ public class TUILoginConfig {
 
     /**
      * Set the current log callback listener. This operation must be performed before IM SDK initialization.
-     * @note The callback is in the main thread. Log callbacks can be quite frequent, so be careful not to synchronize too many time-consuming tasks in the callback, which may block the main thread.
+     * @note The callback is in the main thread. Log callbacks can be quite frequent, so be careful not to synchronize too many time-consuming tasks in the
+     * callback, which may block the main thread.
      */
     public void setLogListener(TUILogListener logListener) {
         this.tuiLogListener = logListener;

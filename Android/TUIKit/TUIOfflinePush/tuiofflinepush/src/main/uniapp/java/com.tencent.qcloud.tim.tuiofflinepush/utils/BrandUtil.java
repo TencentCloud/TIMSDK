@@ -7,36 +7,28 @@ import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushConfig;
 
 public class BrandUtil {
     public static int vendorId = 0;
+
     public static boolean isBrandXiaoMi() {
-        return "xiaomi".equalsIgnoreCase(getBuildBrand())
-                || "xiaomi".equalsIgnoreCase(getBuildManufacturer());
+        return "xiaomi".equalsIgnoreCase(getBuildBrand()) || "xiaomi".equalsIgnoreCase(getBuildManufacturer());
     }
 
     public static boolean isBrandHuawei() {
-        return "huawei".equalsIgnoreCase(getBuildBrand()) ||
-                "huawei".equalsIgnoreCase(getBuildManufacturer()) ||
-                "honor".equalsIgnoreCase(getBuildBrand());
+        return "huawei".equalsIgnoreCase(getBuildBrand()) || "huawei".equalsIgnoreCase(getBuildManufacturer()) || "honor".equalsIgnoreCase(getBuildBrand());
     }
 
     public static boolean isBrandMeizu() {
-        return "meizu".equalsIgnoreCase(getBuildBrand())
-                || "meizu".equalsIgnoreCase(getBuildManufacturer())
-                || "22c4185e".equalsIgnoreCase(getBuildBrand())
-                || MzSystemUtils.isBrandMeizu(TUIOfflinePushConfig.getInstance().getContext());
+        return "meizu".equalsIgnoreCase(getBuildBrand()) || "meizu".equalsIgnoreCase(getBuildManufacturer()) || "22c4185e".equalsIgnoreCase(getBuildBrand())
+            || MzSystemUtils.isBrandMeizu(TUIOfflinePushConfig.getInstance().getContext());
     }
 
     public static boolean isBrandOppo() {
-        return "oppo".equalsIgnoreCase(getBuildBrand()) ||
-                "realme".equalsIgnoreCase(getBuildBrand()) ||
-                "oneplus".equalsIgnoreCase(getBuildBrand()) ||
-                "oppo".equalsIgnoreCase(getBuildManufacturer()) ||
-                "realme".equalsIgnoreCase(getBuildManufacturer()) ||
-                "oneplus".equalsIgnoreCase(getBuildManufacturer());
+        return "oppo".equalsIgnoreCase(getBuildBrand()) || "realme".equalsIgnoreCase(getBuildBrand()) || "oneplus".equalsIgnoreCase(getBuildBrand())
+            || "oppo".equalsIgnoreCase(getBuildManufacturer()) || "realme".equalsIgnoreCase(getBuildManufacturer())
+            || "oneplus".equalsIgnoreCase(getBuildManufacturer());
     }
 
     public static boolean isBrandVivo() {
-        return "vivo".equalsIgnoreCase(getBuildBrand())
-                || "vivo".equalsIgnoreCase(getBuildManufacturer());
+        return "vivo".equalsIgnoreCase(getBuildBrand()) || "vivo".equalsIgnoreCase(getBuildManufacturer());
     }
 
     public static boolean isBrandHonor() {

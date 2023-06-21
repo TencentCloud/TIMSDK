@@ -2,10 +2,8 @@ package com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 
@@ -25,7 +23,8 @@ public class TUIForwardSelectMinimalistActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         TUIConversationLog.i(TAG, "onNewIntent");
-        super.onNewIntent(intent);;
+        super.onNewIntent(intent);
+        ;
     }
 
     @Override
@@ -37,6 +36,5 @@ public class TUIForwardSelectMinimalistActivity extends AppCompatActivity {
     private void init() {
         forwardSelectMinimalistFragment = new TUIForwardSelectMinimalistFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, forwardSelectMinimalistFragment).commitAllowingStateLoss();
-
     }
 }

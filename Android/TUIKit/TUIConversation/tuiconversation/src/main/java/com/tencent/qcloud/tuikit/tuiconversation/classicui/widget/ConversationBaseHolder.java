@@ -2,12 +2,11 @@ package com.tencent.qcloud.tuikit.tuiconversation.classicui.widget;
 
 import android.view.View;
 
-import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class ConversationBaseHolder extends RecyclerView.ViewHolder {
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
+public abstract class ConversationBaseHolder extends RecyclerView.ViewHolder {
     protected View rootView;
     protected ConversationListAdapter mAdapter;
 
@@ -21,5 +20,4 @@ public abstract class ConversationBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public abstract void layoutViews(ConversationInfo conversationInfo, int position);
-
 }

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 public class Emoji extends ChatFace {
     private Bitmap icon;
+
     public Bitmap getIcon() {
         return icon;
     }

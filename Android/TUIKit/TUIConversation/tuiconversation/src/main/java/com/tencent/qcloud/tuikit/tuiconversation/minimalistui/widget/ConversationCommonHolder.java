@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -23,12 +22,10 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
-
 import java.util.Date;
 import java.util.HashMap;
 
 public class ConversationCommonHolder extends ConversationBaseHolder {
-
     public ConversationIconView conversationIconView;
     protected LinearLayout leftItemLayout;
     protected TextView titleText;
@@ -49,8 +46,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView draftTv;
     private boolean showFoldedStyle = true;
     protected SwipeLayout swipeLayout;
-    protected RelativeLayout markReadView, moreView;
-    protected TextView markReadTextView, notDisplayView;
+    protected RelativeLayout markReadView;
+    protected RelativeLayout moreView;
+    protected TextView markReadTextView;
+    protected TextView notDisplayView;
     protected ImageView markReadIconView;
 
     public ConversationCommonHolder(View itemView) {
@@ -88,22 +87,58 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     }
 
     public void layoutViews(ConversationInfo conversation, int position) {
-        if (conversation.isTop() && !isForwardMode) {
-            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_item_top_color));
-        } else {
-            leftItemLayout.setBackgroundColor(Color.WHITE);
+        initTitleAndTime(conversation);
+        setLastMessageAndStatus(conversation);
+
+        conversationIconView.setRadius(mAdapter.getItemAvatarRadius());
+        if (mAdapter.getItemDateTextSize() != 0) {
+            timelineText.setTextSize(mAdapter.getItemDateTextSize());
+        }
+        if (mAdapter.getItemBottomTextSize() != 0) {
+            messageText.setTextSize(mAdapter.getItemBottomTextSize());
+        }
+        if (mAdapter.getItemTopTextSize() != 0) {
+            titleText.setTextSize(mAdapter.getItemTopTextSize());
+        }
+        if (!mAdapter.hasItemUnreadDot()) {
+            conversationNotDisturbUnread.setVisibility(View.GONE);
+            unreadText.setVisibility(View.GONE);
         }
 
-        if (showFoldedStyle && conversation.isMarkFold()) {
-            titleText.setText(R.string.folded_group_chat);
-            timelineText.setVisibility(View.GONE);
+        conversationIconView.setShowFoldedStyle(showFoldedStyle);
+        conversationIconView.setConversation(conversation);
+
+        if (conversation.isShowDisturbIcon() && !isForwardMode) {
+            if (showFoldedStyle && conversation.isMarkFold()) {
+                disturbView.setVisibility(View.GONE);
+            } else {
+                disturbView.setVisibility(View.VISIBLE);
+            }
         } else {
-            titleText.setText(conversation.getTitle());
+            disturbView.setVisibility(View.GONE);
         }
-        messageText.setText("");
-        timelineText.setText("");
-        atAllTv.setVisibility(View.GONE);
-        atMeTv.setVisibility(View.GONE);
+
+        if (isForwardMode) {
+            messageText.setVisibility(View.GONE);
+            timelineText.setVisibility(View.GONE);
+            unreadText.setVisibility(View.GONE);
+            messageStatusLayout.setVisibility(View.GONE);
+            messageFailed.setVisibility(View.GONE);
+            messageSending.setVisibility(View.GONE);
+        }
+
+        if (!conversation.isGroup() && TUIConversationConfig.getInstance().isShowUserStatus()) {
+            if (conversation.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
+                userStatusView.setVisibility(View.VISIBLE);
+            } else {
+                userStatusView.setVisibility(View.GONE);
+            }
+        } else {
+            userStatusView.setVisibility(View.GONE);
+        }
+    }
+
+    private void setLastMessageAndStatus(ConversationInfo conversation) {
         draftTv.setVisibility(View.GONE);
         DraftInfo draftInfo = conversation.getDraft();
         String draftText = "";
@@ -126,7 +161,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         } else {
             HashMap<String, Object> param = new HashMap<>();
             param.put(TUIConstants.TUIChat.V2TIMMESSAGE, conversation.getLastMessage());
-            String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
+            String lastMsgDisplayString =
+                (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
             // 获取要显示的字符
             // Get the characters to display
             if (lastMsgDisplayString != null) {
@@ -215,52 +251,24 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 messageSending.setVisibility(View.GONE);
             }
         }
+    }
 
-        conversationIconView.setRadius(mAdapter.getItemAvatarRadius());
-        if (mAdapter.getItemDateTextSize() != 0) {
-            timelineText.setTextSize(mAdapter.getItemDateTextSize());
-        }
-        if (mAdapter.getItemBottomTextSize() != 0) {
-            messageText.setTextSize(mAdapter.getItemBottomTextSize());
-        }
-        if (mAdapter.getItemTopTextSize() != 0) {
-            titleText.setTextSize(mAdapter.getItemTopTextSize());
-        }
-        if (!mAdapter.hasItemUnreadDot()) {
-            conversationNotDisturbUnread.setVisibility(View.GONE);
-            unreadText.setVisibility(View.GONE);
-        }
-
-        conversationIconView.setShowFoldedStyle(showFoldedStyle);
-        conversationIconView.setConversation(conversation);
-
-        if (conversation.isShowDisturbIcon() && !isForwardMode) {
-            if (showFoldedStyle && conversation.isMarkFold()) {
-                disturbView.setVisibility(View.GONE);
-            } else {
-                disturbView.setVisibility(View.VISIBLE);
-            }
+    private void initTitleAndTime(ConversationInfo conversation) {
+        if (conversation.isTop() && !isForwardMode) {
+            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_item_top_color));
         } else {
-            disturbView.setVisibility(View.GONE);
+            leftItemLayout.setBackgroundColor(Color.WHITE);
         }
 
-        if (isForwardMode) {
-            messageText.setVisibility(View.GONE);
+        if (showFoldedStyle && conversation.isMarkFold()) {
+            titleText.setText(R.string.folded_group_chat);
             timelineText.setVisibility(View.GONE);
-            unreadText.setVisibility(View.GONE);
-            messageStatusLayout.setVisibility(View.GONE);
-            messageFailed.setVisibility(View.GONE);
-            messageSending.setVisibility(View.GONE);
-        }
-
-        if (!conversation.isGroup() && TUIConversationConfig.getInstance().isShowUserStatus()) {
-            if (conversation.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
-                userStatusView.setVisibility(View.VISIBLE);
-            } else {
-                userStatusView.setVisibility(View.GONE);
-            }
         } else {
-            userStatusView.setVisibility(View.GONE);
+            titleText.setText(conversation.getTitle());
         }
+        messageText.setText("");
+        timelineText.setText("");
+        atAllTv.setVisibility(View.GONE);
+        atMeTv.setVisibility(View.GONE);
     }
 }

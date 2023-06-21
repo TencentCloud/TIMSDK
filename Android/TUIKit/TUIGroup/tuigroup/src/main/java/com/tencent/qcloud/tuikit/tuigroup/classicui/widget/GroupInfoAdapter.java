@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
@@ -20,19 +21,17 @@ import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GroupInfoAdapter extends BaseAdapter {
-
     private static final int ADD_TYPE = -100;
     private static final int DEL_TYPE = -101;
-    private static final int OWNER_PRIVATE_MAX_LIMIT = 8;  //讨论组,owner可以添加成员和删除成员，
-    private static final int OWNER_PUBLIC_MAX_LIMIT = 9;   //公开群,owner不可以添加成员，但是可以删除成员
-    private static final int OWNER_CHATROOM_MAX_LIMIT = 9; //聊天室,owner不可以添加成员，但是可以删除成员
-    private static final int OWNER_COMMUNITY_MAX_LIMIT = 8; //社群,owner可以添加成员和删除成员，
-    private static final int NORMAL_PRIVATE_MAX_LIMIT = 9; //讨论组,普通人可以添加成员
-    private static final int NORMAL_PUBLIC_MAX_LIMIT = 10;  //公开群,普通人没有权限添加成员和删除成员
-    private static final int NORMAL_CHATROOM_MAX_LIMIT = 10; //聊天室,普通人没有权限添加成员和删除成员
-    private static final int NORMAL_COMMUNITY_MAX_LIMIT = 9; //社群,普通人可以添加成员
+    private static final int OWNER_PRIVATE_MAX_LIMIT = 8; // 讨论组,owner可以添加成员和删除成员，
+    private static final int OWNER_PUBLIC_MAX_LIMIT = 9; // 公开群,owner不可以添加成员，但是可以删除成员
+    private static final int OWNER_CHATROOM_MAX_LIMIT = 9; // 聊天室,owner不可以添加成员，但是可以删除成员
+    private static final int OWNER_COMMUNITY_MAX_LIMIT = 8; // 社群,owner可以添加成员和删除成员，
+    private static final int NORMAL_PRIVATE_MAX_LIMIT = 9; // 讨论组,普通人可以添加成员
+    private static final int NORMAL_PUBLIC_MAX_LIMIT = 10; // 公开群,普通人没有权限添加成员和删除成员
+    private static final int NORMAL_CHATROOM_MAX_LIMIT = 10; // 聊天室,普通人没有权限添加成员和删除成员
+    private static final int NORMAL_COMMUNITY_MAX_LIMIT = 9; // 社群,普通人可以添加成员
 
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
     private IGroupMemberListener mTailListener;
@@ -91,7 +90,14 @@ public class GroupInfoAdapter extends BaseAdapter {
                 }
             }
         }
-        view.setOnClickListener(null);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTailListener != null) {
+                    mTailListener.forwardShowMemberDetail(info);
+                }
+            }
+        });
         holder.memberIcon.setBackground(null);
         holder.memberIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         if (info.getMemberType() == ADD_TYPE) {
@@ -129,7 +135,7 @@ public class GroupInfoAdapter extends BaseAdapter {
         if (members != null) {
             int shootMemberCount = 0;
             if (TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_PRIVATE)
-                    || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_WORK)) {
+                || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_WORK)) {
                 if (info.isOwner()) {
                     shootMemberCount = members.size() > OWNER_PRIVATE_MAX_LIMIT ? OWNER_PRIVATE_MAX_LIMIT : members.size();
                 } else {
@@ -142,7 +148,7 @@ public class GroupInfoAdapter extends BaseAdapter {
                     shootMemberCount = members.size() > NORMAL_PUBLIC_MAX_LIMIT ? NORMAL_PUBLIC_MAX_LIMIT : members.size();
                 }
             } else if (TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_CHAT_ROOM)
-                    || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_MEETING)) {
+                || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_MEETING)) {
                 if (info.isOwner()) {
                     shootMemberCount = members.size() > OWNER_CHATROOM_MAX_LIMIT ? OWNER_CHATROOM_MAX_LIMIT : members.size();
                 } else {
@@ -159,10 +165,7 @@ public class GroupInfoAdapter extends BaseAdapter {
             for (int i = 0; i < shootMemberCount; i++) {
                 mGroupMembers.add(members.get(i));
             }
-            if (TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_PRIVATE)
-                    || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_WORK)
-                    || TextUtils.equals(info.getGroupType(), TUIConstants.GroupType.TYPE_COMMUNITY)) {
-                // 公开群/聊天室 只有APP管理员可以邀请他人入群
+            if (info.getInviteType() != V2TIMGroupInfo.V2TIM_GROUP_ADD_FORBID) {
                 GroupMemberInfo add = new GroupMemberInfo();
                 add.setMemberType(ADD_TYPE);
                 mGroupMembers.add(add);
@@ -187,7 +190,6 @@ public class GroupInfoAdapter extends BaseAdapter {
                 }
             });
         }
-
     }
 
     public boolean isAdmin(int memberType) {
@@ -208,6 +210,4 @@ public class GroupInfoAdapter extends BaseAdapter {
         private ImageView memberIcon;
         private TextView memberName;
     }
-
-
 }

@@ -68,7 +68,6 @@ android {
             res.srcDirs += "src/main/res-light"
             res.srcDirs += "src/main/res-lively"
             res.srcDirs += "src/main/res-serious"
-            res.srcDirs += "src/main/self-res"
         }
     }
 }
@@ -93,8 +92,10 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 
-    api "com.tencent.imsdk.tuiplugin:tuigroupnote:7.2.4146"
-    api "com.tencent.imsdk.tuiplugin:tuipoll:7.2.4146"
+    def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
+    println "all projects : {$projects}"
+
+
     api project(':tuicommunity')
     api project(':tuiconversation')
     api project(':tuicontact')
@@ -103,6 +104,31 @@ dependencies {
     api project(':tuigroup')
     api project(':tuicallkit')
     api project(':tuiofflinepush')
-    api project(':tuitranslation')
+    api project(':tuitranslationplugin')
 
+    if (projects.contains("tuigroupnoteplugin")) {
+        api project(':tuigroupnoteplugin')
+    } else {
+        api "com.tencent.imsdk:tuigroupnote-plugin:7.3.4358"
+    }
+
+    if (projects.contains("tuipollplugin")) {
+        api project(':tuipollplugin')
+    } else {
+        api "com.tencent.imsdk:tuipoll-plugin:7.3.4358"
+    }
+
+    if (projects.contains("tuiconversationmarkplugin")) {
+        api project(':tuiconversationmarkplugin')
+    } else {
+        api "com.tencent.imsdk:tuiconversationmark-plugin:7.3.4358"
+    }
+
+    if (projects.contains("tuiconversationgroupplugin")) {
+        api project(':tuiconversationgroup-plugin')
+    } else {
+        api "com.tencent.imsdk:tuiconversationgroup-plugin:7.3.4358"
+    }
+
+    api project(':tuiroomkit')
 }

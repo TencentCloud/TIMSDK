@@ -26,9 +26,7 @@ public class MessageProperties implements IMessageProperties {
     private int mChatTimeFontColor;
     private Drawable mChatTimeBubble;
 
-    private MessageProperties() {
-
-    }
+    private MessageProperties() {}
 
     public static MessageProperties getInstance() {
         if (sP == null) {
@@ -220,5 +218,4 @@ public class MessageProperties implements IMessageProperties {
     public void setChatTimeFontColor(int color) {
         this.mChatTimeFontColor = color;
     }
-
 }

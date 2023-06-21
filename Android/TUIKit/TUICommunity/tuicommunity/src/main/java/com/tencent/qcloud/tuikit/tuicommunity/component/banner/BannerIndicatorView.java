@@ -12,16 +12,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class BannerIndicatorView extends LinearLayout {
-
-    private static final int PLAY_TIME = 150;  // 300ms
+    private static final int PLAY_TIME = 150; // 300ms
 
     private final List<ViewWrapper> viewWrappers = new ArrayList<>();
     private AnimatorSet showAnimSet;
@@ -29,6 +26,7 @@ public class BannerIndicatorView extends LinearLayout {
 
     private int normalWidth;
     private int selectedWidth;
+
     public BannerIndicatorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(HORIZONTAL);
@@ -70,22 +68,20 @@ public class BannerIndicatorView extends LinearLayout {
         final ViewWrapper startView = viewWrappers.get(startPosition);
         final ViewWrapper nextView = viewWrappers.get(nextPosition);
 
-        ObjectAnimator animReset = ObjectAnimator.ofInt(startView, "width", selectedWidth, normalWidth);
-
         if (resetAnimSet != null && resetAnimSet.isRunning()) {
             resetAnimSet.cancel();
             resetAnimSet = null;
         }
+        ObjectAnimator animReset = ObjectAnimator.ofInt(startView, "width", selectedWidth, normalWidth);
         resetAnimSet = new AnimatorSet();
         resetAnimSet.setDuration(PLAY_TIME);
         resetAnimSet.play(animReset);
-
-        ObjectAnimator animShow = ObjectAnimator.ofInt(nextView, "width", normalWidth, selectedWidth);
 
         if (showAnimSet != null && showAnimSet.isRunning()) {
             showAnimSet.cancel();
             showAnimSet = null;
         }
+        ObjectAnimator animShow = ObjectAnimator.ofInt(nextView, "width", normalWidth, selectedWidth);
         showAnimSet = new AnimatorSet();
         showAnimSet.setDuration(PLAY_TIME);
         showAnimSet.play(animShow);
@@ -97,8 +93,7 @@ public class BannerIndicatorView extends LinearLayout {
 
         animReset.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
-            }
+            public void onAnimationStart(Animator animation) {}
 
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -112,12 +107,10 @@ public class BannerIndicatorView extends LinearLayout {
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
-            }
+            public void onAnimationCancel(Animator animation) {}
 
             @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
+            public void onAnimationRepeat(Animator animation) {}
         });
         resetAnimSet.start();
     }
@@ -125,6 +118,7 @@ public class BannerIndicatorView extends LinearLayout {
     private static class ViewWrapper {
         private final View view;
         private final ShapeDrawable drawable;
+
         public ViewWrapper(Context context) {
             view = new View(context);
             int viewRadius = ScreenUtil.dip2px(1.5f);

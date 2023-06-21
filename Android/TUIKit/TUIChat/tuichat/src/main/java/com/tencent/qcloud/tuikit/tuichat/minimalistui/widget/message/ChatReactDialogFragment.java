@@ -10,34 +10,30 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ReactPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ChatReactDialogFragment extends DialogFragment {
-
     private BottomSheetDialog dialog;
 
     private TUIMessageBean messageBean;
@@ -138,8 +134,8 @@ public class ChatReactDialogFragment extends DialogFragment {
         public void onBindViewHolder(@NonNull ReactDetailHolder holder, int position) {
             ReactUserAdapter adapter = (ReactUserAdapter) holder.recyclerView.getAdapter();
             List<Pair<String, String>> data = new ArrayList<>();
-                MessageReactBean reactBean = messageBean.getMessageReactBean();
-                Map<String, Set<String>> reacts = reactBean.getReacts();
+            MessageReactBean reactBean = messageBean.getMessageReactBean();
+            Map<String, Set<String>> reacts = reactBean.getReacts();
             if (position == 0) {
                 for (String emojiKey : reacts.keySet()) {
                     Set<String> userSet = reacts.get(emojiKey);
@@ -188,7 +184,6 @@ public class ChatReactDialogFragment extends DialogFragment {
     }
 
     class ReactUserAdapter extends RecyclerView.Adapter<ReactUserAdapter.ReactUserViewHolder> {
-
         private List<Pair<String, String>> data;
 
         public void setData(List<Pair<String, String>> data) {
@@ -205,8 +200,8 @@ public class ChatReactDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull ReactUserViewHolder holder, int position) {
             Pair<String, String> pair = data.get(position);
-            Map<String, ReactUserBean> userBeanMap = messageBean.getMessageReactBean().getReactUserBeanMap();
-            ReactUserBean reactUserBean = userBeanMap.get(pair.first);
+            Map<String, UserBean> userBeanMap = messageBean.getMessageReactBean().getReactUserBeanMap();
+            UserBean reactUserBean = userBeanMap.get(pair.first);
             GlideEngine.loadImage(holder.userFace, reactUserBean.getFaceUrl());
             if (pair.second != null) {
                 GlideEngine.loadImage(holder.emojiIcon, FaceManager.getEmoji(pair.second));
@@ -253,7 +248,6 @@ public class ChatReactDialogFragment extends DialogFragment {
     }
 
     class ReactCategoryAdapter extends RecyclerView.Adapter<ReactCategoryAdapter.ReactCategoryHolder> {
-
         @NonNull
         @Override
         public ReactCategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -323,5 +317,4 @@ public class ChatReactDialogFragment extends DialogFragment {
     interface OnReactClickListener {
         void onClick(String userID, String emojiKey);
     }
-
 }

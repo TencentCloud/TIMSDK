@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface IGroupApplyLayout {
     default void onGroupApplyInfoListChanged(List<GroupApplyInfo> dataSource) {}
-    default void onDataSetChanged() {}
-    default Context getContext() {return null;}
 
+    default void onDataSetChanged() {}
+
+    default Context getContext() {
+        return null;
+    }
 }

@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 
 public class CommunityExperienceView extends FrameLayout {

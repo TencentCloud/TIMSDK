@@ -1,18 +1,15 @@
 package com.tencent.qcloud.tuikit.tuiconversation.bean;
 
 import androidx.annotation.NonNull;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConversationInfo implements Serializable, Comparable<ConversationInfo> {
-
     public static final int TYPE_COMMON = 1;
     public static final int TYPE_CUSTOM = 2;
 
@@ -25,7 +22,7 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     public static final int AT_TYPE_UNKNOWN = V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
     /**
      * 会话类型，自定义会话or普通会话
-     * 
+     *
      * conversation type
      */
     private int type;
@@ -34,19 +31,19 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     /**
      * 消息未读数
-     * 
+     *
      * unread message number
      */
     private int unRead;
     /**
      * 会话ID
-     * 
+     *
      * conversation ID
      */
     private String conversationId;
     /**
      * 会话标识，C2C为对方用户ID，群聊为群组ID
-     * 
+     *
      * ID, C2C is UserID, Group is group ID
      */
     private String id;
@@ -79,7 +76,7 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         }
         return null;
     }
-    
+
     private String title;
     private String iconPath;
     private boolean isGroup;
@@ -100,6 +97,8 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      * 本地记录未读状态 Is marked conversation local-unread or not
      */
     private boolean isMarkLocalUnread;
+
+    private boolean isMarkStar;
     /**
      * 最后一条消息时间
      */
@@ -108,14 +107,14 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     /**
      * 会话界面显示的@提示消息
-     * 
+     *
      * "@" message in group
      */
     private String atInfoText;
 
     /**
      * 会话界面显示消息免打扰图标
-     * 
+     *
      * the conversation item displays the icon of Do Not Disturb
      */
     private boolean showDisturbIcon;
@@ -125,14 +124,12 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     /**
      * 会话排序键值
-     * 
+     *
      * conversation sort key
      */
     private long orderKey;
 
-    public ConversationInfo() {
-
-    }
+    public ConversationInfo() {}
 
     public String getConversationId() {
         return conversationId;
@@ -214,9 +211,27 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         isMarkLocalUnread = markLocalUnread;
     }
 
+    public boolean isMarkStar() {
+        return isMarkStar;
+    }
+
+    public void setMarkStar(boolean markStar) {
+        isMarkStar = markStar;
+    }
+
+    /**
+     * 会话标记列表（从 6.5 版本开始支持）
+     */
+    public List<Long> getMarkList() {
+        if (conversation == null) {
+            return null;
+        }
+        return conversation.getMarkList();
+    }
+
     /**
      * 获得最后一条消息的时间，单位是秒
-     * 
+     *
      * Get the time of the last message, in seconds
      */
     public long getLastMessageTime() {
@@ -225,7 +240,7 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     /**
      * 设置最后一条消息的时间，单位是秒
-     * 
+     *
      * Set the time of the last message, in seconds
      * @param lastMessageTime
      */
@@ -321,6 +336,14 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.statusType = statusType;
     }
 
+    public List<String> getConversationGroupList() {
+        if (conversation != null) {
+            return conversation.getConversationGroupList();
+        }
+
+        return null;
+    }
+
     @Override
     public int compareTo(@NonNull ConversationInfo other) {
         if (this.isTop() && !other.isTop()) {
@@ -342,21 +365,9 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     @Override
     public String toString() {
-        return "ConversationInfo{" +
-                "type=" + type +
-                ", unRead=" + unRead +
-                ", conversationId='" + conversationId + '\'' +
-                ", id='" + id + '\'' +
-                ", iconUrl='" + iconUrlList.size() + '\'' +
-                ", title='" + title + '\'' +
-                ", iconPath=" + iconPath +
-                ", isGroup=" + isGroup +
-                ", top=" + top +
-                ", lastMessageTime=" + lastMessageTime +
-                ", lastMessage=" + lastMessage +
-                ", draftText=" + draft +
-                ", groupType=" + groupType +
-                ", statusType=" + statusType +
-                '}';
+        return "ConversationInfo{"
+            + "type=" + type + ", unRead=" + unRead + ", conversationId='" + conversationId + '\'' + ", id='" + id + '\'' + ", iconUrl='" + iconUrlList.size()
+            + '\'' + ", title='" + title + '\'' + ", iconPath=" + iconPath + ", isGroup=" + isGroup + ", top=" + top + ", lastMessageTime=" + lastMessageTime
+            + ", lastMessage=" + lastMessage + ", draftText=" + draft + ", groupType=" + groupType + ", statusType=" + statusType + '}';
     }
 }

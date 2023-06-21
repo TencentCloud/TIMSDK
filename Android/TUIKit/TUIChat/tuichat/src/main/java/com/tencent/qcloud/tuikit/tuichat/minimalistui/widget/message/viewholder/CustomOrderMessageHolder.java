@@ -60,7 +60,7 @@ public class CustomOrderMessageHolder extends MessageContentHolder {
         GlideEngine.loadCornerImageWithoutPlaceHolder(imageView, imageUrl, new RequestListener() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
-                TUIChatLog.e(TAG,"onLoadFailed e=" + e);
+                TUIChatLog.e(TAG, "onLoadFailed e=" + e);
                 return false;
             }
 
@@ -80,8 +80,8 @@ public class CustomOrderMessageHolder extends MessageContentHolder {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction("android.intent.action.VIEW");
-                Uri content_url = Uri.parse(finalLink);
-                intent.setData(content_url);
+                Uri contentUrl = Uri.parse(finalLink);
+                intent.setData(contentUrl);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 TUIChatService.getAppContext().startActivity(intent);
             }

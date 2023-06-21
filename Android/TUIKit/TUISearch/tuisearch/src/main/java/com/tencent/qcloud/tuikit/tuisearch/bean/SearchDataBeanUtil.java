@@ -24,7 +24,7 @@ public class SearchDataBeanUtil {
 
     public static List<SearchDataBean> convertFriendInfos2SearchDataBeans(List<V2TIMFriendInfoResult> v2TIMFriendInfoResults) {
         List<SearchDataBean> searchDataBeanList = new ArrayList<>();
-        for(V2TIMFriendInfoResult v2TIMFriendInfoResult : v2TIMFriendInfoResults) {
+        for (V2TIMFriendInfoResult v2TIMFriendInfoResult : v2TIMFriendInfoResults) {
             SearchDataBean bean = convertFriendInfo2SearchDataBean(v2TIMFriendInfoResult);
             if (bean == null) {
                 continue;
@@ -45,7 +45,6 @@ public class SearchDataBeanUtil {
         return searchMessageBean;
     }
 
-
     public static List<SearchMessageBean> convertSearchResultItems2SearchMessageBeans(List<V2TIMMessageSearchResultItem> v2TIMMessageSearchResultItems) {
         List<SearchMessageBean> searchMessageBeanList = new ArrayList<>();
         for (V2TIMMessageSearchResultItem v2TIMMessageSearchResultItem : v2TIMMessageSearchResultItems) {
@@ -57,6 +56,4 @@ public class SearchDataBeanUtil {
         }
         return searchMessageBeanList;
     }
-
-
 }

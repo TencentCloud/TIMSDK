@@ -7,5 +7,6 @@ import java.util.Map;
 
 public interface IReplyMessageHandler {
     void updateData(TUIMessageBean messageBean);
+
     void onRepliesMessageFound(Map<MessageRepliesBean.ReplyBean, TUIMessageBean> messageBeanMap);
 }

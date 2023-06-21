@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tim.tuiofflinepush.utils;
 
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tim.tuiofflinepush.PrivateConstants;
 import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushConfig;
 
@@ -12,7 +11,7 @@ public class TUIOfflinePushUtils {
         long bussinessId;
         int deviceBrand = BrandUtil.getInstanceType();
         switch (deviceBrand) {
-            case TUIOfflinePushConfig.BRAND_XIAOMI://xiaomi
+            case TUIOfflinePushConfig.BRAND_XIAOMI: // xiaomi
                 String xiaomiPushBussinessId = params.getXiaomiPushBussinessId();
                 if (TextUtils.isEmpty(xiaomiPushBussinessId)) {
                     TUIOfflinePushLog.e(TAG, "registerPush-- xiaomiPushBussinessId is null");
@@ -34,7 +33,7 @@ public class TUIOfflinePushUtils {
 
                 bussinessId = PrivateConstants.xiaomiPushBussinessId;
                 break;
-            case TUIOfflinePushConfig.BRAND_HONOR://honor
+            case TUIOfflinePushConfig.BRAND_HONOR: // honor
                 String honorPushBussinessId = params.getHonorPushBussinessId();
                 if (TextUtils.isEmpty(honorPushBussinessId)) {
                     TUIOfflinePushLog.e(TAG, "registerPush-- honorPushBussinessId is null");
@@ -44,7 +43,7 @@ public class TUIOfflinePushUtils {
 
                 bussinessId = PrivateConstants.honorPushBussinessId;
                 break;
-            case TUIOfflinePushConfig.BRAND_HUAWEI://huawei
+            case TUIOfflinePushConfig.BRAND_HUAWEI: // huawei
                 String huaweiPushBussinessId = params.getHuaweiPushBussinessId();
                 if (TextUtils.isEmpty(huaweiPushBussinessId)) {
                     TUIOfflinePushLog.e(TAG, "registerPush-- huaweiPushBussinessId is null");
@@ -61,7 +60,7 @@ public class TUIOfflinePushUtils {
 
                 bussinessId = PrivateConstants.huaweiPushBussinessId;
                 break;
-            case TUIOfflinePushConfig.BRAND_MEIZU://meizu
+            case TUIOfflinePushConfig.BRAND_MEIZU: // meizu
                 String meizuPushBussinessId = params.getMeizuPushBussinessId();
                 if (TextUtils.isEmpty(meizuPushBussinessId)) {
                     TUIOfflinePushLog.e(TAG, "registerPush-- meizuPushBussinessId is null");
@@ -83,7 +82,7 @@ public class TUIOfflinePushUtils {
 
                 bussinessId = PrivateConstants.meizuPushBussinessId;
                 break;
-            case TUIOfflinePushConfig.BRAND_OPPO://oppo
+            case TUIOfflinePushConfig.BRAND_OPPO: // oppo
                 String oppoPushBussinessId = params.getOppoPushBussinessId();
                 if (TextUtils.isEmpty(oppoPushBussinessId)) {
                     TUIOfflinePushLog.e(TAG, "registerPush-- oppoPushBussinessId is null");
@@ -105,7 +104,7 @@ public class TUIOfflinePushUtils {
 
                 bussinessId = PrivateConstants.oppoPushBussinessId;
                 break;
-            case TUIOfflinePushConfig.BRAND_VIVO://vivo
+            case TUIOfflinePushConfig.BRAND_VIVO: // vivo
                 String vivoPushBussinessId = params.getVivoPushBussinessId();
                 if (TextUtils.isEmpty(vivoPushBussinessId)) {
                     TUIOfflinePushLog.e(TAG, "registerPush-- vivoPushBussinessId is null");
@@ -115,7 +114,7 @@ public class TUIOfflinePushUtils {
 
                 bussinessId = PrivateConstants.vivoPushBussinessId;
                 break;
-            default:// fcm
+            default: // fcm
                 String fcmPushBussinessId = params.getFcmPushBussinessId();
                 if (TextUtils.isEmpty(fcmPushBussinessId)) {
                     TUIOfflinePushLog.e(TAG, "registerPush-- fcmPushBussinessId is null");

@@ -2,8 +2,7 @@ package com.tencent.qcloud.tim.tuiofflinepush.utils;
 
 import android.util.Log;
 
-public class TUIOfflinePushLog{
-
+public class TUIOfflinePushLog {
     private static final String PRE = "TUIOfflinePush-";
 
     private static String mixTag(String tag) {
@@ -64,5 +63,4 @@ public class TUIOfflinePushLog{
         Log.e(mixTag(strTag), strInfo);
         return 0;
     }
-
 }

@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuigroup;
 
 public class TUIGroupConstants {
-
     public static final class ActivityRequest {
         public static final int CODE_1 = 1;
     }
@@ -10,6 +9,7 @@ public class TUIGroupConstants {
         public static final int MODIFY_GROUP_NAME = 0X01;
         public static final int MODIFY_GROUP_NOTICE = 0X02;
         public static final int MODIFY_GROUP_JOIN_TYPE = 0X03;
+        public static final int MODIFY_GROUP_INVITE_TYPE = 0X04;
         public static final int MODIFY_MEMBER_NAME = 0X11;
 
         public static final String GROUP_ID = "group_id";
@@ -30,10 +30,8 @@ public class TUIGroupConstants {
         public static final String EXCLUDE_LIST = "excludeList";
         public static final String SELECTED_LIST = "selectedList";
         public static final String FILTER = "filter";
-
     }
 
     public static final String GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%s.png";
     public static final int GROUP_FACE_COUNT = 24;
-
 }

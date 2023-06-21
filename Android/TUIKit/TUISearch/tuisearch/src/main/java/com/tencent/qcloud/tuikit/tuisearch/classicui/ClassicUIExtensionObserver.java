@@ -5,19 +5,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.tuisearch.R;
-
 import java.util.List;
 import java.util.Map;
 
 public class ClassicUIExtensionObserver extends ServiceInitializer implements ITUIExtension {
-
     @Override
     public void init(Context context) {
         super.init(context);
@@ -35,6 +32,7 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
                 return;
             }
             View searchView = LayoutInflater.from(getAppContext()).inflate(R.layout.search_bar_layout, null);
+            viewGroup.setVisibility(View.VISIBLE);
             viewGroup.removeAllViews();
             searchView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -48,7 +46,6 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
 
     @Override
     public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
-
         return null;
     }
 
@@ -66,5 +63,4 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
         }
         return defaultValue;
     }
-
 }

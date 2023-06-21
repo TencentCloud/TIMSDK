@@ -2,11 +2,10 @@ package com.tencent.qcloud.tuikit.timcommon.component.face;
 
 /**
  * 自定义表情属性类
- * 
+ *
  * Custom expression attribute class
  */
 public class CustomFace extends ChatFace {
-
     /**
      * 设置表情在asset中的路径
      *

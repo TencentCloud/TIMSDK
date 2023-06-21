@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 
 import android.text.TextUtils;
-
 import com.hihonor.push.sdk.HonorMessageService;
 import com.hihonor.push.sdk.bean.DataMessage;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;

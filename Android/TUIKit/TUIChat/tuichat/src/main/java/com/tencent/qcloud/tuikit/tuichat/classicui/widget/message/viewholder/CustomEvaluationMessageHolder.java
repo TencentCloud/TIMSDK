@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.tuichat.R;

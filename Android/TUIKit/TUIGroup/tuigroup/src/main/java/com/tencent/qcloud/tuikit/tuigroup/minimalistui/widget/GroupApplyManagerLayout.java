@@ -29,14 +29,13 @@ import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 
 import java.util.List;
 
-
 public class GroupApplyManagerLayout extends LinearLayout implements IGroupApplyLayout {
-
     private MinimalistTitleBar mTitleBar;
     private ListView mApplyMemberList;
     private GroupApplyAdapter mAdapter;
 
     private GroupApplyPresenter presenter;
+    
     public GroupApplyManagerLayout(Context context) {
         super(context);
         init();
@@ -61,19 +60,20 @@ public class GroupApplyManagerLayout extends LinearLayout implements IGroupApply
             public void onItemClick(GroupApplyInfo info) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(TUIGroupConstants.Group.MEMBER_APPLY, info);
-                TUICore.startActivityForResult((ActivityResultCaller) getContext(), GroupApplyDetailMinimalistActivity.class, bundle, new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() != RESULT_OK || result.getData() == null) {
-                            return;
+                TUICore.startActivityForResult(
+                    (ActivityResultCaller) getContext(), GroupApplyDetailMinimalistActivity.class, bundle, new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult result) {
+                            if (result.getResultCode() != RESULT_OK || result.getData() == null) {
+                                return;
+                            }
+                            GroupApplyInfo info = (GroupApplyInfo) result.getData().getSerializableExtra(TUIGroupConstants.Group.MEMBER_APPLY);
+                            if (info == null) {
+                                return;
+                            }
+                            updateItemData(info);
                         }
-                        GroupApplyInfo info = (GroupApplyInfo) result.getData().getSerializableExtra(TUIGroupConstants.Group.MEMBER_APPLY);
-                        if (info == null) {
-                            return;
-                        }
-                        updateItemData(info);
-                    }
-                });
+                    });
             }
         });
 

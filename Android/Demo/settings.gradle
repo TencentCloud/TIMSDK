@@ -30,5 +30,11 @@ project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOffl
 include ':tuicommunity'
 project(':tuicommunity').projectDir = new File(settingsDir, '../TUIKit/TUICommunity/tuicommunity')
 
-include ':tuitranslation'
-project(':tuitranslation').projectDir = new File(settingsDir, '../TUIKit/TUITranslation/tuitranslation')
+include ':tuitranslationplugin'
+project(':tuitranslationplugin').projectDir = new File(settingsDir, '../TUIKit/TUITranslationPlugin/tuitranslationplugin')
+
+include ':tuiroomkit'
+project(':tuiroomkit').projectDir = new File(settingsDir, '../TUIKit/TUIRoomKit/tuiroomkit')
+
+include ':tuivideoseat'
+project(':tuivideoseat').projectDir = new File(settingsDir, '../TUIKit/TUIVideoSeat/tuivideoseat')

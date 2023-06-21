@@ -8,9 +8,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -22,12 +20,10 @@ import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
-
     protected List<ContactItemBean> mData;
     private ContactListView.OnSelectChangedListener mOnSelectChangedListener;
     private ContactListView.OnItemClickListener mOnClickListener;
@@ -63,7 +59,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ContactAdapter.ViewHolder holder, final int position) {
         final ContactItemBean contactBean = mData.get(position);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.line.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.line.getLayoutParams();
         if (position < mData.size() - 1) {
             String tag1 = contactBean.getSuspensionTag();
             String tag2 = mData.get(position + 1).getSuspensionTag();
@@ -147,9 +143,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfig.getInstance().isShowUserStatus()) {
                 holder.userStatusView.setVisibility(View.VISIBLE);
                 if (contactBean.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
-                    holder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_online));
+                    holder.userStatusView.setBackgroundResource(
+                        TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_online));
                 } else {
-                    holder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_offline));
+                    holder.userStatusView.setBackgroundResource(
+                        TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_offline));
                 }
             } else {
                 holder.userStatusView.setVisibility(View.GONE);
@@ -175,7 +173,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         if (holder != null) {
             GlideEngine.clear(holder.avatar);
             holder.avatar.setImageResource(0);
-
         }
         super.onViewRecycled(holder);
     }

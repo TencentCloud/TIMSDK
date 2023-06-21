@@ -1,13 +1,9 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-
-import androidx.appcompat.app.AlertDialog;
-
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.Constants;
@@ -19,13 +15,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 public class AboutIMActivity extends BaseLightActivity implements View.OnClickListener {
     private TitleBarLayout titleBarLayout;
     private LineControllerView sdkVersionLv;
-    private LineControllerView privacyLv;
-    private LineControllerView userAgreementLv;
-    private LineControllerView statementLv;
     private LineControllerView aboutIMLv;
-    private LineControllerView cancelAccountLv;
-    private LineControllerView selfInfomationCollectionLv;
-    private LineControllerView thirdPartSharedLv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

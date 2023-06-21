@@ -1,8 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
-import android.net.Uri;
 import android.text.TextUtils;
-
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
@@ -12,17 +10,14 @@ import com.tencent.imsdk.v2.V2TIMVideoElem;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
-import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
-
 import java.io.File;
 
 public class VideoMessageBean extends TUIMessageBean {
-    private String dataUri;
-    private String dataPath;
+    private String videoPath;
+    private String snapshotPath;
     private int imgWidth;
     private int imgHeight;
     private V2TIMVideoElem videoElem;
@@ -35,24 +30,27 @@ public class VideoMessageBean extends TUIMessageBean {
     @Override
     public void onProcessMessage(V2TIMMessage v2TIMMessage) {
         V2TIMVideoElem videoEle = v2TIMMessage.getVideoElem();
-        if (isSelf() && !TextUtils.isEmpty(videoEle.getSnapshotPath())) {
-            int size[] = ImageUtil.getImageSize(videoEle.getSnapshotPath());
-            imgWidth = size[0];
-            imgHeight= size[1];
-            dataPath = videoEle.getSnapshotPath();
-            setDataUri(FileUtil.getUriFromPath(videoEle.getVideoPath()));
+        if (isSelf()) {
+            if (!TextUtils.isEmpty(videoEle.getSnapshotPath())) {
+                snapshotPath = videoEle.getSnapshotPath();
+            } else {
+                snapshotPath = TUIConfig.getImageDownloadDir() + videoEle.getSnapshotUUID();
+            }
+            if (!TextUtils.isEmpty(videoEle.getVideoPath())) {
+                videoPath = videoEle.getVideoPath();
+            } else {
+                videoPath = TUIConfig.getVideoDownloadDir() + videoEle.getVideoUUID();
+                ;
+            }
         } else {
-            final String videoPath = TUIConfig.getVideoDownloadDir() + videoEle.getVideoUUID();
-            Uri uri = Uri.parse(videoPath);
-            setDataUri(uri);
-            imgWidth = (int) videoEle.getSnapshotWidth();
-            imgHeight = (int) videoEle.getSnapshotHeight();
+            videoPath = TUIConfig.getVideoDownloadDir() + videoEle.getVideoUUID();
             final String snapPath = TUIConfig.getImageDownloadDir() + videoEle.getSnapshotUUID();
             if (new File(snapPath).exists()) {
-                dataPath = snapPath;
+                snapshotPath = snapPath;
             }
         }
-
+        imgWidth = (int) videoEle.getSnapshotWidth();
+        imgHeight = (int) videoEle.getSnapshotHeight();
         if (v2TIMMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
             videoElem = v2TIMMessage.getVideoElem();
         }
@@ -60,53 +58,40 @@ public class VideoMessageBean extends TUIMessageBean {
     }
 
     /**
-     * 获取多媒体消息的数据源
-     * 
-     * Get the data source of the multimedia message
-     *
-     * @return
-     */
-    public Uri getDataUriObj() {
-        if (!TextUtils.isEmpty(dataUri)) {
-            return Uri.parse(dataUri);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * 设置多媒体消息的数据源
-     * 
+     *
      * Set the data source of the multimedia message
      *
-     * @param dataUri
+     * @param videoPath
      */
-    public void setDataUri(Uri dataUri) {
-        if (dataUri != null) {
-            this.dataUri = dataUri.toString();
-        }
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     /**
      * 获取多媒体消息的保存路径
-     * 
+     *
      * Get the save path of multimedia messages
      *
      * @return
      */
-    public String getDataPath() {
-        return dataPath;
+    public String getSnapshotPath() {
+        return snapshotPath;
+    }
+
+    public String getVideoPath() {
+        return videoPath;
     }
 
     /**
      * 设置多媒体消息的保存路径
-     * 
+     *
      * Set the save path of multimedia messages
      *
-     * @param dataPath
+     * @param snapshotPath
      */
-    public void setDataPath(String dataPath) {
-        this.dataPath = dataPath;
+    public void setSnapshotPath(String snapshotPath) {
+        this.snapshotPath = snapshotPath;
     }
 
     public void setImgHeight(int imgHeight) {

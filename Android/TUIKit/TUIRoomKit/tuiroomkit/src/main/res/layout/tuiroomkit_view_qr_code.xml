@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_qr_code_view"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/tuiroomkit_ic_back">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:singleLine="true"
+            android:text="@string/tuiroomkit_room_qr_code"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
+            android:textSize="16sp" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_save"
+        android:layout_below="@id/toolbar_qr_code_view"
+        android:fillViewport="true"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tuiroomkit_color_bg_bottom_black"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_room_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:textColor="@color/tuiroomkit_color_text_light_grey"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_room_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_room_name"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/tuiroomkit_color_text_light_grey"
+                    android:textSize="20sp" />
+
+
+                <ImageButton
+                    android:id="@+id/btn_copy_room_id"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignTop="@+id/tv_room_id"
+                    android:layout_alignBottom="@+id/tv_room_id"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="7dp"
+                    android:layout_toEndOf="@id/tv_room_id"
+                    android:background="@color/tuiroomkit_transparent"
+                    android:src="@drawable/tuiroomkit_ic_copy_white" />
+
+                <LinearLayout
+                    android:id="@+id/ll_qr_code_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_room_id"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/tuiroomkit_color_white"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/img_qr_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal" />
+
+                    <TextView
+                        android:id="@+id/tv_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/tuiroomkit_room_qr_code_tip"
+                        android:textColor="@color/tuiroomkit_bg_main_light_black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/img_tencent_cloud"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_qr_code_container"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:src="@drawable/tuiroomkit_ic_tencent_cloud_white" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="88dp"
+        android:layout_marginEnd="88dp"
+        android:layout_marginBottom="34dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="@string/tuiroomkit_room_qr_code_save"
+        android:textColor="@color/tuiroomkit_color_white" />
+</RelativeLayout>

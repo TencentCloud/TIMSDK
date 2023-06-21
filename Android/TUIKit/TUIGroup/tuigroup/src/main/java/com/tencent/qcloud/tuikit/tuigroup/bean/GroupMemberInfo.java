@@ -1,14 +1,11 @@
 package com.tencent.qcloud.tuikit.tuigroup.bean;
 
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
-
 import java.io.Serializable;
 
 public class GroupMemberInfo implements Serializable {
-
     private String iconUrl;
     private String account;
     private String signature;

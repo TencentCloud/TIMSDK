@@ -1,13 +1,12 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.ReactUserBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -18,7 +17,6 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IReplyMessageHandler;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public class ReplyPresenter {
     private ChatProvider provider;
     private GroupChatEventListener groupChatEventListener;
@@ -37,6 +34,7 @@ public class ReplyPresenter {
     private ChatInfo chatInfo;
     private String messageId;
     private IReplyMessageHandler replyHandler;
+
     public ReplyPresenter() {
         provider = new ChatProvider();
     }
@@ -63,7 +61,6 @@ public class ReplyPresenter {
     public void setChatEventListener() {
         if (chatPresenter instanceof C2CChatPresenter) {
             c2CChatEventListener = new C2CChatEventListener() {
-
                 @Override
                 public void onRecvMessageModified(TUIMessageBean messageBean) {
                     if (TextUtils.equals(messageBean.getId(), messageId)) {
@@ -74,7 +71,6 @@ public class ReplyPresenter {
             TUIChatService.getInstance().addC2CChatEventListener(c2CChatEventListener);
         } else {
             groupChatEventListener = new GroupChatEventListener() {
-
                 @Override
                 public void onRecvMessageModified(TUIMessageBean messageBean) {
                     if (TextUtils.equals(messageBean.getId(), messageId)) {
@@ -104,7 +100,7 @@ public class ReplyPresenter {
             public void onSuccess(List<TUIMessageBean> data) {
                 for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
                     Iterator<TUIMessageBean> iterator = data.listIterator();
-                    while(iterator.hasNext()) {
+                    while (iterator.hasNext()) {
                         TUIMessageBean messageBean = iterator.next();
                         if (TextUtils.equals(messageBean.getId(), replyBean.getMessageID())) {
                             messageBeanMap.put(replyBean, messageBean);
@@ -136,13 +132,13 @@ public class ReplyPresenter {
             }
             return;
         }
-        chatPresenter.getReactUserBean(userIDSet, new IUIKitCallback<Map<String, ReactUserBean>>() {
+        chatPresenter.getReactUserBean(userIDSet, new IUIKitCallback<Map<String, UserBean>>() {
             @Override
-            public void onSuccess(Map<String, ReactUserBean> data) {
-                for (Map.Entry<String, ReactUserBean> dataEntry : data.entrySet()) {
+            public void onSuccess(Map<String, UserBean> data) {
+                for (Map.Entry<String, UserBean> dataEntry : data.entrySet()) {
                     if (dataEntry.getValue() != null) {
                         String userID = dataEntry.getKey();
-                        ReactUserBean userBean = dataEntry.getValue();
+                        UserBean userBean = dataEntry.getValue();
                         for (Map.Entry<MessageRepliesBean.ReplyBean, TUIMessageBean> entry : replyBeanDataMap.entrySet()) {
                             if (TextUtils.equals(entry.getKey().getMessageSender(), userID)) {
                                 entry.getKey().setSenderShowName(userBean.getDisplayString());
@@ -207,9 +203,9 @@ public class ReplyPresenter {
             TUIChatUtils.callbackOnSuccess(callback, null);
             return;
         }
-        chatPresenter.getReactUserBean(userIdSet, new IUIKitCallback<Map<String, ReactUserBean>>() {
+        chatPresenter.getReactUserBean(userIdSet, new IUIKitCallback<Map<String, UserBean>>() {
             @Override
-            public void onSuccess(Map<String, ReactUserBean> map) {
+            public void onSuccess(Map<String, UserBean> map) {
                 for (TUIMessageBean messageBean : messageBeanList) {
                     MessageReactBean reactBean = messageBean.getMessageReactBean();
                     if (reactBean != null) {
@@ -225,5 +221,4 @@ public class ReplyPresenter {
             }
         });
     }
-
 }

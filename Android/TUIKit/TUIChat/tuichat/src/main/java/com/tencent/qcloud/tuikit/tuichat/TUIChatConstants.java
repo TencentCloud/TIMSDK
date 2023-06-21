@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat;
 import com.tencent.imsdk.BaseConstants;
 
 public class TUIChatConstants {
-
     public static final String CAMERA_IMAGE_PATH = "camera_image_path";
     public static final String IMAGE_WIDTH = "image_width";
     public static final String IMAGE_HEIGHT = "image_height";
@@ -17,14 +16,14 @@ public class TUIChatConstants {
     public static final String BUSINESS_ID_CUSTOM_EVALUATION = "evaluation";
     public static final String BUSINESS_ID_CUSTOM_ORDER = "order";
     public static final String BUSINESS_ID_CUSTOM_TYPING = "user_typing_status";
+    public static final String BUSINESS_ID_QUICK_TAP = "quick_tap";
 
     public static final int PLUGIN_NORMAL_MESSAGE = 1;
-    public static final int PLUGIN_TIPS_MESSAGE   = 2;
+    public static final int PLUGIN_TIPS_MESSAGE = 2;
 
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
     public static final int FORWARD_SELECT_ACTIVTY_CODE = 101;
     public static final String FORWARD_MERGE_MESSAGE_KEY = "forward_merge_message_key";
-
 
     public static final int GET_MESSAGE_FORWARD = 0;
     public static final int GET_MESSAGE_BACKWARD = 1;
@@ -39,7 +38,7 @@ public class TUIChatConstants {
     public static final String OPEN_MESSAGE_SCAN = "open_message_scan";
     public static final String OPEN_MESSAGES_SCAN_FORWARD = "open_messages_scan_forward";
 
-    public static final String FORWARD_MODE = "forward_mode";//0,onebyone;  1,merge;
+    public static final String FORWARD_MODE = "forward_mode"; // 0,onebyone;  1,merge;
     public static final int FORWARD_MODE_ONE_BY_ONE = 0;
     public static final int FORWARD_MODE_MERGE = 1;
 
@@ -49,7 +48,7 @@ public class TUIChatConstants {
 
     public static final int TYPING_SEND_MESSAGE_INTERVAL = 4;
     public static final int TYPING_PARSE_MESSAGE_INTERVAL = 5;
-    public static final int TYPING_TRIGGER_CHAT_TIME = 30; //second
+    public static final int TYPING_TRIGGER_CHAT_TIME = 30; // second
 
     public static final String EVENT_KEY_MESSAGE_STATUS_CHANGED = "eventKeyMessageStatusChanged";
     public static final String EVENT_SUB_KEY_MESSAGE_SEND = "eventSubKeyMessageSend";
@@ -67,16 +66,16 @@ public class TUIChatConstants {
      * 2: iOS支持的视频通话版本，后续已经不兼容
      * 3: 未发布版本
      * 4: Android/iOS/Web互通的视频通话版本
-     * 
-     * 
+     *
+     *
      * 1: Just a text message with a link
      * 2: The video calling version supported by iOS is no longer compatible
      * 3: unreleased version
-     * 4: Android/iOS/Web interoperable version for video call 
+     * 4: Android/iOS/Web interoperable version for video call
      */
     public static final int JSON_VERSION_UNKNOWN = 0;
-    public static final int JSON_VERSION_1       = 1;
-    public static final int JSON_VERSION_4       = 4;
+    public static final int JSON_VERSION_1 = 1;
+    public static final int JSON_VERSION_4 = 4;
     public static int version = JSON_VERSION_4;
 
     public static String covert2HTMLString(String original) {
@@ -84,7 +83,6 @@ public class TUIChatConstants {
     }
 
     public static final class Group {
-
         public static final String GROUP_ID = "group_id";
         public static final String GROUP_INFO = "groupInfo";
         public static final String MEMBER_APPLY = "apply";
@@ -102,5 +100,4 @@ public class TUIChatConstants {
     public static class DataStore {
         public static final String DATA_STORE_NAME = "tuichat_datastore";
     }
-
 }

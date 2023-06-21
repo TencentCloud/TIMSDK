@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -20,11 +18,9 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.List;
 
 public abstract class TUIBaseChatMinimalistActivity extends BaseMinimalistLightActivity {
-
     private static final String TAG = TUIBaseChatMinimalistActivity.class.getSimpleName();
 
     @Override

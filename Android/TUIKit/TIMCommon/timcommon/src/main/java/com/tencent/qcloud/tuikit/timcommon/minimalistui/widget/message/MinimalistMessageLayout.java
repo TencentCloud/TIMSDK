@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi;
 
 import com.tencent.qcloud.tuikit.timcommon.R;
 
-public class MinimalistMessageLayout extends RelativeLayout  {
+public class MinimalistMessageLayout extends RelativeLayout {
     private View msgArea;
     private View quoteArea;
     private View translationArea;
@@ -102,8 +102,8 @@ public class MinimalistMessageLayout extends RelativeLayout  {
     private void drawLine(Canvas canvas) {
         canvas.drawColor(0x00FFFFFF);
         if (msgArea.getVisibility() == VISIBLE) {
-            float msgX, msgCenterY;
             msgAreaRect = getChildRectInParent(msgArea);
+            float msgX;
             if (isStart) {
                 paint.setColor(getResources().getColor(R.color.chat_minimalist_left_message_bubble_color));
                 msgX = msgAreaRect.left + strokeWidth / 2;
@@ -111,9 +111,11 @@ public class MinimalistMessageLayout extends RelativeLayout  {
                 paint.setColor(getResources().getColor(R.color.chat_minimalist_right_message_bubble_color));
                 msgX = msgAreaRect.right - strokeWidth / 2;
             }
+            float msgCenterY;
             msgCenterY = msgAreaRect.top + msgAreaRect.height() * 1.0f / 2;
             if (translationArea.getVisibility() == VISIBLE) {
-                float translationX, translationCenterY;
+                float translationX;
+                float translationCenterY;
                 translationRect = getChildRectInParent(translationArea);
                 if (isStart) {
                     translationX = translationRect.left;
@@ -129,7 +131,8 @@ public class MinimalistMessageLayout extends RelativeLayout  {
                 canvas.drawPath(translationPath, paint);
             }
             if (quoteArea.getVisibility() == VISIBLE) {
-                float quoteX, quoteCenterY;
+                float quoteX;
+                float quoteCenterY;
                 quoteRect = getChildRectInParent(quoteArea);
                 if (isStart) {
                     quoteX = quoteRect.left;
@@ -145,7 +148,8 @@ public class MinimalistMessageLayout extends RelativeLayout  {
                 canvas.drawPath(quotePath, paint);
             }
             if (replyArea.getVisibility() == VISIBLE) {
-                float replyX, replyCenterY;
+                float replyX;
+                float replyCenterY;
                 replyRect = getChildRectInParent(replyArea);
                 if (isStart) {
                     replyX = replyRect.left;

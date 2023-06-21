@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.text.TextUtils;
-
 import androidx.annotation.IntDef;
-
 import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -16,8 +14,7 @@ public class PermissionHelper {
     public static final int PERMISSION_STORAGE = 3;
 
     @IntDef({PERMISSION_MICROPHONE, PERMISSION_CAMERA, PERMISSION_STORAGE})
-    public @interface PermissionType {
-    }
+    public @interface PermissionType {}
 
     public static void requestPermission(@PermissionType int type, PermissionCallback callback) {
         String permission = null;
@@ -73,17 +70,18 @@ public class PermissionHelper {
         };
         if (!TextUtils.isEmpty(permission)) {
             PermissionRequester.permission(permission)
-                    .reason(reason)
-                    .reasonTitle(reasonTitle)
-                    .reasonIcon(permissionIcon)
-                    .deniedAlert(deniedAlert)
-                    .callback(simpleCallback)
-                    .request();
+                .reason(reason)
+                .reasonTitle(reasonTitle)
+                .reasonIcon(permissionIcon)
+                .deniedAlert(deniedAlert)
+                .callback(simpleCallback)
+                .request();
         }
     }
 
     public interface PermissionCallback {
         void onGranted();
+
         void onDenied();
     }
 }

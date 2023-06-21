@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuicontact.util;
 import com.tencent.imsdk.common.IMLog;
 
 public class TUIContactLog extends IMLog {
-
     private static final String PRE = "TUIContact-";
 
     private static String mixTag(String tag) {
@@ -12,7 +11,7 @@ public class TUIContactLog extends IMLog {
 
     /**
      * 打印INFO级别日志
-     * 
+     *
      * Print INFO level log
      *
      * @param strTag  TAG
@@ -24,7 +23,7 @@ public class TUIContactLog extends IMLog {
 
     /**
      * 打印DEBUG级别日志
-     * 
+     *
      * Print DEBUG level log
      *
      * @param strTag  TAG
@@ -36,7 +35,7 @@ public class TUIContactLog extends IMLog {
 
     /**
      * 打印INFO级别日志
-     * 
+     *
      * Print INFO level log
      *
      * @param strTag  TAG
@@ -48,7 +47,7 @@ public class TUIContactLog extends IMLog {
 
     /**
      * 打印WARN级别日志
-     * 
+     *
      * Print WARN level log
      *
      * @param strTag  TAG
@@ -60,7 +59,7 @@ public class TUIContactLog extends IMLog {
 
     /**
      * 打印WARN级别日志
-     * 
+     *
      * Print WARN level log
      *
      * @param strTag  TAG
@@ -72,7 +71,7 @@ public class TUIContactLog extends IMLog {
 
     /**
      * 打印ERROR级别日志
-     * 
+     *
      * Print ERROR level log
      *
      * @param strTag  TAG
@@ -81,5 +80,4 @@ public class TUIContactLog extends IMLog {
     public static void e(String strTag, String strInfo) {
         IMLog.e(mixTag(strTag), strInfo);
     }
-
 }

@@ -3,11 +3,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/header_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ConversationListLayout
         android:id="@+id/conversation_list"
         android:layout_width="match_parent"

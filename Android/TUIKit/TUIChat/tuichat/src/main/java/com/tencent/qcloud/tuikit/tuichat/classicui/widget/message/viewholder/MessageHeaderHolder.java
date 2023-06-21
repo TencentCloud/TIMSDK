@@ -9,7 +9,6 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
 
 public class MessageHeaderHolder extends MessageBaseHolder {
-
     private boolean mLoading;
 
     public MessageHeaderHolder(View itemView) {

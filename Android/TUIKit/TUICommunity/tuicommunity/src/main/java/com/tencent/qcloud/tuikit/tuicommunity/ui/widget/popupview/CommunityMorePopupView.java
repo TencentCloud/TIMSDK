@@ -10,10 +10,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
@@ -82,7 +80,7 @@ public class CommunityMorePopupView extends FrameLayout implements IPopupView {
     public void setCommunityBean(CommunityBean communityBean) {
         this.communityBean = communityBean;
         GlideEngine.loadImageSetDefault(groupFace, communityBean.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
+            TUIThemeManager.getAttrResId(getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
         communityName.setText(communityBean.getCommunityName());
         communityID.setText(communityBean.getGroupId());
 
@@ -130,21 +128,20 @@ public class CommunityMorePopupView extends FrameLayout implements IPopupView {
             @Override
             public void onClick(View v) {
                 if (exitDialog == null) {
-                    exitDialog = new TUIKitDialog(getContext()).builder()
-                            .setTitle(getResources().getString(R.string.community_exit_community))
-                            .setCancelOutside(true)
-                            .setPositiveButton(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    exitCommunity();
-                                }
-                            })
-                            .setNegativeButton(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            });
+                    exitDialog = new TUIKitDialog(getContext())
+                                     .builder()
+                                     .setTitle(getResources().getString(R.string.community_exit_community))
+                                     .setCancelOutside(true)
+                                     .setPositiveButton(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             exitCommunity();
+                                         }
+                                     })
+                                     .setNegativeButton(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {}
+                                     });
                 }
                 exitDialog.show();
             }

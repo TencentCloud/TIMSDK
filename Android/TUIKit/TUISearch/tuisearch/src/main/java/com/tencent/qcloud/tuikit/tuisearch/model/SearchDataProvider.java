@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuisearch.model;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Pair;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMFriendInfoResult;
 import com.tencent.imsdk.v2.V2TIMFriendSearchParam;
@@ -33,7 +32,6 @@ import com.tencent.qcloud.tuikit.tuisearch.util.GroupInfoUtils;
 import com.tencent.qcloud.tuikit.tuisearch.util.MessageInfoUtil;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,18 +51,19 @@ public class SearchDataProvider {
     /**
      * 群搜索
      * @param searchParam 搜索参数
-     * 
-     * @note 
+     *
+     * @note
      * - 搜索时支持匹配群信息，支持匹配群ID、群名称，详见 @TUISearchGroupMatchField
      * - 搜索时支持匹配群成员信息，支持匹配成员ID、匹配成员昵称、匹配成员备注、匹配成员名片，详见 @TUISearchGroupMemberMatchField
-     * 
-     * 
+     *
+     *
      * group search
      * @param searchParam
-     * 
-     * @note 
+     *
+     * @note
      * - Support matching group information when searching, support matching group ID and group name, see @TUISearchGroupMatchField for details.
-     * - Support matching group member information when searching, support matching member ID, matching member nickname, matching member note, matching member business card, see @TUISearchGroupMemberMatchField for details
+     * - Support matching group member information when searching, support matching member ID, matching member nickname, matching member note, matching member
+     * business card, see @TUISearchGroupMemberMatchField for details
      */
     public void searchGroups(final TUISearchGroupParam searchParam, final IUIKitCallback<List<TUISearchGroupResult>> callback) {
         if (searchParam == null || searchParam.getKeywordList().size() == 0) {
@@ -75,7 +74,7 @@ public class SearchDataProvider {
         final List<V2TIMGroupInfo> groupInfos = new ArrayList<>();
         final HashMap<String, List<V2TIMGroupMemberFullInfo>> groupMemberFullInfos = new HashMap<String, List<V2TIMGroupMemberFullInfo>>();
 
-        //search group
+        // search group
         V2TIMGroupSearchParam groupSearchParam = new V2TIMGroupSearchParam();
         groupSearchParam.setKeywordList(searchParam.getKeywordList());
         groupSearchParam.setSearchGroupID(searchParam.isSearchGroupID());
@@ -100,7 +99,7 @@ public class SearchDataProvider {
             }
         });
 
-        //search group member
+        // search group member
         V2TIMGroupMemberSearchParam groupMemberSearchParam = new V2TIMGroupMemberSearchParam();
         groupMemberSearchParam.setKeywordList(searchParam.getKeywordList());
         groupMemberSearchParam.setSearchMemberUserID(searchParam.isSearchMemberUserID());
@@ -155,7 +154,8 @@ public class SearchDataProvider {
         });
     }
 
-    public void searchMessages(final List<String> keywordList, String conversationId, int index, IUIKitCallback<Pair<Integer,List<SearchMessageBean>>> callBack) {
+    public void searchMessages(
+        final List<String> keywordList, String conversationId, int index, IUIKitCallback<Pair<Integer, List<SearchMessageBean>>> callBack) {
         final V2TIMMessageSearchParam v2TIMMessageSearchParam = new V2TIMMessageSearchParam();
         v2TIMMessageSearchParam.setKeywordList(keywordList);
         v2TIMMessageSearchParam.setPageSize(CONVERSATION_MESSAGE_PAGE_SIZE);
@@ -167,16 +167,14 @@ public class SearchDataProvider {
             @Override
             public void onSuccess(V2TIMMessageSearchResult v2TIMMessageSearchResult) {
                 List<SearchMessageBean> searchMessageBeanList =
-                        SearchDataBeanUtil.convertSearchResultItems2SearchMessageBeans(v2TIMMessageSearchResult.getMessageSearchResultItems());
+                    SearchDataBeanUtil.convertSearchResultItems2SearchMessageBeans(v2TIMMessageSearchResult.getMessageSearchResultItems());
                 TUISearchUtils.callbackOnSuccess(callBack, new Pair<>(v2TIMMessageSearchResult.getTotalCount(), searchMessageBeanList));
-
             }
 
             @Override
             public void onError(int code, String desc) {
                 TUISearchLog.e(TAG, "searchMessages code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
                 TUISearchUtils.callbackOnError(callBack, TAG, code, desc);
-
             }
         });
     }
@@ -187,7 +185,6 @@ public class SearchDataProvider {
             public void onSuccess(List<V2TIMConversation> v2TIMConversationList) {
                 List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(v2TIMConversationList);
                 TUISearchUtils.callbackOnSuccess(callBack, conversationInfoList);
-
             }
 
             @Override
@@ -212,7 +209,7 @@ public class SearchDataProvider {
         }
 
         String keyword = keywordList.get(0);
-        //return text.toLowerCase().contains(keyword.toLowerCase());
+        // return text.toLowerCase().contains(keyword.toLowerCase());
         SpannableString spannableString = new SpannableString(text);
         Pattern pattern = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(spannableString);
@@ -223,8 +220,8 @@ public class SearchDataProvider {
         return false;
     }
 
-    private void mergeGroupAndGroupMemberResult(List<String> keywordList, List<V2TIMGroupInfo> groupInfos, HashMap<String, List<V2TIMGroupMemberFullInfo>> groupMemberFullInfos,
-                                                final IUIKitCallback<List<TUISearchGroupResult>> callback) {
+    private void mergeGroupAndGroupMemberResult(List<String> keywordList, List<V2TIMGroupInfo> groupInfos,
+        HashMap<String, List<V2TIMGroupMemberFullInfo>> groupMemberFullInfos, final IUIKitCallback<List<TUISearchGroupResult>> callback) {
         if (!groupInfoFinish || !groupMemberFullInfofinish) {
             return;
         }
@@ -240,8 +237,9 @@ public class SearchDataProvider {
 
         final List<TUISearchGroupResult> searchGroupResults = new ArrayList<>();
 
-        TUISearchLog.d(TAG, "mergeGroupAndGroupMemberResult groupInfos.size() =" + groupInfos.size() + "groupMemberFullInfos.size() = " + groupMemberFullInfos.size());
-        //GroupInfo
+        TUISearchLog.d(
+            TAG, "mergeGroupAndGroupMemberResult groupInfos.size() =" + groupInfos.size() + "groupMemberFullInfos.size() = " + groupMemberFullInfos.size());
+        // GroupInfo
         if (groupInfos != null && groupInfos.size() != 0) {
             for (V2TIMGroupInfo v2TIMGroupInfo : groupInfos) {
                 // 组装匹配到的群信息数据
@@ -269,15 +267,15 @@ public class SearchDataProvider {
                     String key = (String) iterator.next();
                     if (v2TIMGroupInfo.getGroupID().equals(key)) {
                         iterator.remove();
-                        //groupMemberFullInfos.remove(key);
+                        // groupMemberFullInfos.remove(key);
                     }
                 }
             }
         }
 
         TUISearchLog.d(TAG, "mergeGroupAndGroupMemberResult remove repeat, groupMemberFullInfos.size() = " + groupMemberFullInfos.size());
-        //GroupMemberFullInfo
-        List<String> groupIDList = new ArrayList<>();// 用来请求 groupInfo 数据 // Used to request groupInfo data
+        // GroupMemberFullInfo
+        List<String> groupIDList = new ArrayList<>(); // 用来请求 groupInfo 数据 // Used to request groupInfo data
         // 暂存匹配到的群成员数据，缺少 groupInfo 信息 // Temporarily store the matched group member data, but the groupInfo information is missing
         final HashMap<String, TUISearchGroupResult> searchGroupMemberResults = new HashMap<>();
         for (Map.Entry<String, List<V2TIMGroupMemberFullInfo>> entry : groupMemberFullInfos.entrySet()) {
@@ -340,7 +338,9 @@ public class SearchDataProvider {
                             searchGroupResult.setGroupInfo(GroupInfoUtils.convertTimGroupInfo2GroupInfo(v2TIMGroupInfoResult.getGroupInfo()));
                             searchGroupResults.add(searchGroupResult);
                         } else {
-                            TUISearchLog.e(TAG, "getGroupsInfo not searchGroupMemberResults.get(v2TIMGroupInfoResult.getGroupInfo().getGroupID(): " + v2TIMGroupInfoResult.getGroupInfo().getGroupID());
+                            TUISearchLog.e(TAG,
+                                "getGroupsInfo not searchGroupMemberResults.get(v2TIMGroupInfoResult.getGroupInfo().getGroupID(): "
+                                    + v2TIMGroupInfoResult.getGroupInfo().getGroupID());
                         }
                     }
 

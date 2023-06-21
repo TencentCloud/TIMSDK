@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -36,12 +34,10 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuoteMessageHolder extends TextMessageHolder {
-
     private final TextView senderNameTv;
     private FrameLayout quoteContentFrameLayout;
 
@@ -148,7 +144,6 @@ public class QuoteMessageHolder extends TextMessageHolder {
         } else {
             performNotFound(replyQuoteBean, quoteMessageBean);
         }
-
     }
 
     private void resetAll() {
@@ -218,8 +213,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
                         img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
                             @Override
                             public void onProgress(long currentSize, long totalSize) {
-                                TUIChatLog.i("downloadImage progress current:",
-                                        currentSize + ", total:" + totalSize);
+                                TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                             }
 
                             @Override
@@ -240,7 +234,8 @@ public class QuoteMessageHolder extends TextMessageHolder {
                                     }
 
                                     @Override
-                                    public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
+                                    public boolean onResourceReady(
+                                        Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
                                         mImagePath = path;
                                         return false;
                                     }
@@ -257,8 +252,8 @@ public class QuoteMessageHolder extends TextMessageHolder {
             imageIv.setLayoutParams(layoutParams);
             playIv.setLayoutParams(layoutParams);
             playIv.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(messageBean.getDataPath())) {
-                GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, messageBean.getDataPath(), null, imageRadius);
+            if (!TextUtils.isEmpty(messageBean.getSnapshotPath())) {
+                GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, messageBean.getSnapshotPath(), null, imageRadius);
             } else {
                 GlideEngine.clear(imageIv);
                 synchronized (downloadEles) {
@@ -283,8 +278,8 @@ public class QuoteMessageHolder extends TextMessageHolder {
                     @Override
                     public void onSuccess() {
                         downloadEles.remove(messageBean.getSnapshotUUID());
-                        messageBean.setDataPath(path);
-                        GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, messageBean.getDataPath(), null, imageRadius);
+                        messageBean.setSnapshotPath(path);
+                        GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, messageBean.getSnapshotPath(), null, imageRadius);
                     }
                 });
             }
@@ -330,7 +325,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
         } else if (replyQuoteBean instanceof SoundReplyQuoteBean) {
             performSound((SoundReplyQuoteBean) replyQuoteBean);
         } else if (replyQuoteBean instanceof ImageReplyQuoteBean || replyQuoteBean instanceof VideoReplyQuoteBean
-                || replyQuoteBean instanceof FaceReplyQuoteBean) {
+            || replyQuoteBean instanceof FaceReplyQuoteBean) {
             performImage(replyQuoteBean);
         } else {
             performTextMessage(replyQuoteBean.getDefaultAbstract());

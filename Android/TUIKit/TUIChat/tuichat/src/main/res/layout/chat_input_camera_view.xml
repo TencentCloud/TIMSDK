@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
+    android:clipChildren="false"
     android:orientation="vertical">
 
     <FrameLayout
@@ -22,31 +23,27 @@
             android:visibility="invisible" />
     </FrameLayout>
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/image_switch"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:scaleType="centerInside"
         android:layout_gravity="right"
-        android:orientation="horizontal">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_margin="16dp"
+        android:src="@drawable/chat_camera_switchcamera" />
 
-        <ImageView
-            android:id="@+id/image_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/chat_camera_switchcamera" />
-
-    </LinearLayout>
-
-
-    <com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.view.CaptureLayout
+    <com.tencent.qcloud.tuikit.tuichat.component.camera.view.CaptureLayout
         android:id="@+id/capture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom|center_horizontal" />
 
-    <com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.view.FoucsView
-        android:id="@+id/fouce_view"
+    <com.tencent.qcloud.tuikit.tuichat.component.camera.view.FocusView
+        android:id="@+id/focus_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

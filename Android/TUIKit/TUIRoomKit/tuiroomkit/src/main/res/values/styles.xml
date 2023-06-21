@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIRoomDialogTheme" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowBackground">@color/tuiroomkit_color_bg_dialog</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="TUIRoomButtonTheme">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="TUIRoomDialogFragmentTheme" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowBackground">@color/tuiroomkit_color_bg_dialog</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="TUIRoomTabFragmentTabText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">18sp</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+    </style>
+
+    <style name="TUIRoomBottomDialogHorizontalAnim" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowExitAnimation">@anim/tuiroomkit_anim_horizontal_dismiss</item>
+        <item name="android:windowEnterAnimation">@anim/tuiroomkit_anim_horizontal_show</item>
+    </style>
+
+    <style name="TUIRoomBottomDialogVerticalAnim" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowExitAnimation">@anim/tuiroomkit_anim_bottom_view_dismiss</item>
+        <item name="android:windowEnterAnimation">@anim/tuiroomkit_anim_bottom_view_show</item>
+    </style>
+    <style name="TUIRoomMsgLoadingAnim">
+        <item name="android:indeterminateDrawable">@drawable/tuiroomkit_room_msg_loading</item>
+        <item name="android:minWidth">27dip</item>
+        <item name="android:maxWidth">27dip</item>
+        <item name="android:minHeight">27dip</item>
+        <item name="android:maxHeight">27dip</item>
+    </style>
+    <style name="TUIRoomActivityTransparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item> <!-- 背景色透明 -->
+        <item name="android:windowIsTranslucent">true</item> <!-- 是否有透明属性 -->
+        <item name="android:backgroundDimEnabled">false</item> <!-- 背景是否半透明 -->
+    </style>
+</resources>

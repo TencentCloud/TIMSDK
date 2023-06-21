@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
@@ -22,7 +20,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,7 +63,7 @@ public class ReplyDetailsView extends RecyclerView {
         this.activity = activity;
     }
 
-    public class ReplyDetailsAdapter extends Adapter<ReplyDetailsViewHolder>{
+    public class ReplyDetailsAdapter extends Adapter<ReplyDetailsViewHolder> {
         Map<MessageRepliesBean.ReplyBean, TUIMessageBean> data;
 
         public void setData(Map<MessageRepliesBean.ReplyBean, TUIMessageBean> messageBeanMap) {
@@ -119,7 +116,7 @@ public class ReplyDetailsView extends RecyclerView {
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, ReplyDetailsView.this);
 
-        TUICore.raiseExtension(TUIConstants.TUITranslation.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
     }
 
     static class ReplyDetailsViewHolder extends ViewHolder {

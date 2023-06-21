@@ -8,22 +8,21 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
-
 import androidx.annotation.NonNull;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
-
 import java.security.MessageDigest;
 
 public class CornerTransform implements Transformation<Bitmap> {
-
     private BitmapPool mBitmapPool;
     private float radius;
-    private boolean exceptLeftTop, exceptRightTop, exceptLeftBottom, exceptRightBottom;
+    private boolean exceptLeftTop;
+    private boolean exceptRightTop;
+    private boolean exceptLeftBottom;
+    private boolean exceptRightBottom;
 
     public CornerTransform(Context context, float radius) {
         this.mBitmapPool = Glide.get(context).getBitmapPool();
@@ -41,7 +40,8 @@ public class CornerTransform implements Transformation<Bitmap> {
     @Override
     public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
         Bitmap source = resource.get();
-        int finalWidth, finalHeight;
+        int finalWidth;
+        int finalHeight;
         // 输出目标的宽高或高宽比例
         // The width-height or height-width ratio of the output target
         float ratio;
@@ -52,7 +52,7 @@ public class CornerTransform implements Transformation<Bitmap> {
             finalWidth = source.getWidth();
             // 固定原图宽度,求最终高度
             // Fix the width of the original image and find the final height
-            finalHeight = (int) ((float) source.getWidth() * ratio); 
+            finalHeight = (int) ((float) source.getWidth() * ratio);
             if (finalHeight > source.getHeight()) {
                 // 求出的最终高度>原图高度,求宽高比
                 // Find the final height > the original image height, find the aspect ratio
@@ -62,7 +62,7 @@ public class CornerTransform implements Transformation<Bitmap> {
                 // Fix the width of the original image and find the final width
                 finalWidth = (int) ((float) source.getHeight() * ratio);
             }
-        } else if (outWidth < outHeight) { 
+        } else if (outWidth < outHeight) {
             // 输出宽度 < 输出高度,求宽高比
             // output width < output height, find the aspect ratio
             ratio = (float) outWidth / (float) outHeight;
@@ -70,14 +70,14 @@ public class CornerTransform implements Transformation<Bitmap> {
             // 固定原图高度,求最终宽度
             // Fix the width of the original image and find the final width
             finalWidth = (int) ((float) source.getHeight() * ratio);
-            if (finalWidth > source.getWidth()) { 
+            if (finalWidth > source.getWidth()) {
                 // 求出的最终宽度 > 原图宽度,求高宽比
                 // Find the final width > the original image width, find the aspect ratio
                 ratio = (float) outHeight / (float) outWidth;
                 finalWidth = source.getWidth();
                 finalHeight = (int) ((float) source.getWidth() * ratio);
             }
-        } else { 
+        } else {
             // 输出宽度=输出高度
             // output width = output height
             finalHeight = source.getHeight();
@@ -92,7 +92,6 @@ public class CornerTransform implements Transformation<Bitmap> {
             outBitmap = Bitmap.createBitmap(finalWidth, finalHeight, Bitmap.Config.ARGB_8888);
         }
 
-        Canvas canvas = new Canvas(outBitmap);
         Paint paint = new Paint();
         BitmapShader shader = new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         // 计算中心位置,进行偏移
@@ -107,6 +106,7 @@ public class CornerTransform implements Transformation<Bitmap> {
 
         paint.setShader(shader);
         paint.setAntiAlias(true);
+        Canvas canvas = new Canvas(outBitmap);
         RectF rectF = new RectF(0.0F, 0.0F, (float) canvas.getWidth(), (float) canvas.getHeight());
         canvas.drawRoundRect(rectF, this.radius, this.radius, paint);
 

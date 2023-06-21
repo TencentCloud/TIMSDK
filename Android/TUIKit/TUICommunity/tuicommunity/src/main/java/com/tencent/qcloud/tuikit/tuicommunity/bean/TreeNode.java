@@ -113,14 +113,6 @@ public class TreeNode<T extends Comparable<T>> implements Serializable, Comparab
         Collections.sort(childList);
     }
 
-    public boolean remove() {
-        return remove(false);
-    }
-
-    public boolean delete(TreeNode<T> node) {
-        return delete(node, false);
-    }
-
     public void clear() {
         childList = null;
         isCollapse = false;
@@ -129,8 +121,17 @@ public class TreeNode<T extends Comparable<T>> implements Serializable, Comparab
         level = 0;
     }
 
+
+    public boolean remove() {
+        return remove(false);
+    }
+
     public boolean remove(boolean deleteChildren) {
         return delete(this, deleteChildren);
+    }
+
+    public boolean delete(TreeNode<T> node) {
+        return delete(node, false);
     }
 
     public boolean delete(TreeNode<T> node, boolean deleteChildren) {

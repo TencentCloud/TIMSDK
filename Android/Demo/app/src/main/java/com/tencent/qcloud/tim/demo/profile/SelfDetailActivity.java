@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +7,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
@@ -32,7 +29,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -100,9 +96,7 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
             }
 
             @Override
-            public void onError(int code, String desc) {
-
-            }
+            public void onError(int code, String desc) {}
         });
         setUserInfoListener();
     }
@@ -118,9 +112,9 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
         if (TextUtils.isEmpty(birthdayStr) || birthdayStr.length() < 8) {
             birthdayStr = "19700101";
         }
-        StringBuilder sb=new StringBuilder(birthdayStr);
-        sb.insert(4,"-");
-        sb.insert(7,"-");
+        StringBuilder sb = new StringBuilder(birthdayStr);
+        sb.insert(4, "-");
+        sb.insert(7, "-");
         birthdayStr = sb.toString();
         birthdayLv.setContent(birthdayStr);
         accountLv.setContent(info.getUserID());
@@ -159,7 +153,7 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
         if (v == selfIcon || v == faceArea) {
             ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
             for (int i = 0; i < Constants.AVATAR_FACE_COUNT; i++) {
-                ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                ImageSelectActivity.ImageBean imageBean = new ImageSelectActivity.ImageBean();
                 imageBean.setThumbnailUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
                 imageBean.setImageUri(String.format(Constants.AVATAR_FACE_URL, (i + 1) + ""));
                 faceList.add(imageBean);

@@ -13,7 +13,6 @@ public class CommunityConstants {
     public static final int COVER_COUNT = 12;
     public static final int GROUP_FACE_COUNT = 24;
 
-
     public static final String TOPIC_CUSTOM_STRING_TOPIC_TYPE_KEY = "type";
     public static final String TOPIC_CUSTOM_STRING_TOPIC_CATEGORY_KEY = "category";
 
@@ -49,6 +48,4 @@ public class CommunityConstants {
     public static final int COMMUNITY_NETWORK_STATE_CONNECTED = 1;
     public static final int COMMUNITY_NETWORK_STATE_CONNECT_FAILED = 2;
     public static final int COMMUNITY_NETWORK_STATE_CONNECTING = 3;
-
-
 }

@@ -62,15 +62,14 @@ class ServiceManager {
         }
     }
 
-    public <T> Object callService(String serviceName, String method, Map<String, Object> param, TUIServiceCallback callback) {
+    public Object callService(String serviceName, String method, Map<String, Object> param, TUIServiceCallback callback) {
         Log.i(TAG, "callService : " + serviceName + " method : " + method);
         ITUIService service = serviceMap.get(serviceName);
         if (service != null) {
             return service.onCall(method, param, callback);
         } else {
-            Log.w(TAG, "can't find async service : " + serviceName);
+            Log.w(TAG, "can't find service : " + serviceName);
             return null;
         }
     }
-
 }

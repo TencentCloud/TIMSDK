@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -25,7 +24,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -55,7 +53,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLi
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.TUIContactMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,7 +63,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MainMinimalistActivity extends BaseMinimalistLightActivity {
-
     private static final String TAG = MainMinimalistActivity.class.getSimpleName();
 
     private ViewPager2 mainViewPager;
@@ -118,7 +114,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         unreadCountFilter.addAction(TUIConstants.CONVERSATION_UNREAD_COUNT_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(unreadCountReceiver, unreadCountFilter);
     }
-
 
     private void initRecentCallsReceiver() {
         recentCallsReceiver = new BroadcastReceiver() {
@@ -223,16 +218,14 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                 }
             }
         };
-
     }
 
     private void onRecentCallsStatusChanged(boolean isEnable) {
         if (isEnable) {
             Map<String, Object> param = new HashMap<>();
-            param.put(TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE,
-                    TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE_MINIMALIST);
-            Object object = TUICore.createObject(TUIConstants.TUICalling.ObjectFactory.FACTORY_NAME,
-                    TUIConstants.TUICalling.ObjectFactory.RecentCalls.OBJECT_NAME, param);
+            param.put(TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE, TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE_MINIMALIST);
+            Object object =
+                TUICore.createObject(TUIConstants.TUICalling.ObjectFactory.FACTORY_NAME, TUIConstants.TUICalling.ObjectFactory.RecentCalls.OBJECT_NAME, param);
             if (object instanceof Fragment) {
                 recentCallsBean = new TabBean();
                 recentCallsBean.weight = 95;
@@ -263,7 +256,8 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             @Override
             public void onError(int code, String desc) {
                 DemoLog.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                ToastUtil.toastShortMessage(MainMinimalistActivity.this.getString(R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
+                ToastUtil.toastShortMessage(MainMinimalistActivity.this.getString(
+                    R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
             }
         });
 
@@ -282,37 +276,38 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                     unreadConversationIDList.add(entry.getKey());
                 }
 
-                V2TIMManager.getConversationManager().markConversation(unreadConversationIDList,
-                        V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD,
-                        false,
-                        new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
-                    @Override
-                    public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
-                        for (V2TIMConversationOperationResult result : v2TIMConversationOperationResults) {
-                            if (result.getResultCode() == BaseConstants.ERR_SUCC) {
-                                V2TIMConversation v2TIMConversation = markUnreadMap.get(result.getConversationID());
-                                if (!v2TIMConversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE)) {
-                                    markUnreadMap.remove(result.getConversationID());
+                V2TIMManager.getConversationManager().markConversation(unreadConversationIDList, V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD, false,
+                    new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+                        @Override
+                        public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                            for (V2TIMConversationOperationResult result : v2TIMConversationOperationResults) {
+                                if (result.getResultCode() == BaseConstants.ERR_SUCC) {
+                                    V2TIMConversation v2TIMConversation = markUnreadMap.get(result.getConversationID());
+                                    if (!v2TIMConversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE)) {
+                                        markUnreadMap.remove(result.getConversationID());
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(int code, String desc) {
-                        DemoLog.e(TAG, "triggerClearAllUnreadMessage->markConversation error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                    }
-                });
+                        @Override
+                        public void onError(int code, String desc) {
+                            DemoLog.e(TAG,
+                                "triggerClearAllUnreadMessage->markConversation error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                        }
+                    });
             }
 
             @Override
             public void onError(int code, String desc) {
-                DemoLog.e(TAG, "triggerClearAllUnreadMessage->getMarkUnreadConversationList error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                DemoLog.e(TAG,
+                    "triggerClearAllUnreadMessage->getMarkUnreadConversationList error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
             }
         });
     }
 
-    private void getMarkUnreadConversationList(V2TIMConversationListFilter filter, long nextSeq, int count, boolean fromStart, V2TIMValueCallback<HashMap<String, V2TIMConversation>> callback) {
+    private void getMarkUnreadConversationList(
+        V2TIMConversationListFilter filter, long nextSeq, int count, boolean fromStart, V2TIMValueCallback<HashMap<String, V2TIMConversation>> callback) {
         if (fromStart) {
             markUnreadMap.clear();
         }
@@ -360,9 +355,8 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
     }
 
     private void setCurrentMenuState(int type) {
-//        selectedItem = type;
+        //        selectedItem = type;
         mainViewPager.setCurrentItem(type, false);
-
     }
 
     private final V2TIMFriendshipListener friendshipListener = new V2TIMFriendshipListener() {
@@ -410,7 +404,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         handleOfflinePush();
     }
 
-
     private void setCurrentItemTab() {
         if (TUIConfig.getTUIHostType() == TUIConfig.TUI_HOST_TYPE_RTCUBE) {
             Intent intent = getIntent();
@@ -431,7 +424,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             }
         }
     }
-
 
     private void handleOfflinePush() {
         Intent intent = getIntent();
@@ -487,9 +479,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             }
 
             @Override
-            public void onError(int code, String desc) {
-
-            }
+            public void onError(int code, String desc) {}
         });
     }
 
@@ -526,7 +516,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             instance.get().finish();
         }
     }
-
 
     private void onTabBeanChanged(TabBean tabBean) {
         int index = tabBeanList.indexOf(tabBean);
@@ -581,7 +570,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
     }
 
     class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
-
         @NonNull
         @Override
         public TabAdapter.TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -596,7 +584,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
             holder.itemView.setLayoutParams(params);
             holder.textView.setText(tabBean.text);
-            ((ViewGroup)holder.itemView).requestDisallowInterceptTouchEvent(true);
+            ((ViewGroup) holder.itemView).requestDisallowInterceptTouchEvent(true);
 
             if (tabBean == selectedItem) {
                 holder.imageView.setBackgroundResource(tabBean.selectedIcon);
@@ -614,6 +602,8 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                 }
                 if (tabBean.unreadClearEnable) {
                     prepareToClearAllUnreadMessage(holder.unreadCountTextView, tabBean);
+                } else {
+                    holder.unreadCountTextView.setOnTouchListener(null);
                 }
             } else {
                 holder.unreadCountTextView.setVisibility(View.GONE);
@@ -632,7 +622,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                 }
             });
         }
-
 
         private void prepareToClearAllUnreadMessage(UnreadCountTextView unreadCountTextView, TabBean tabBean) {
             unreadCountTextView.setOnTouchListener(new View.OnTouchListener() {
@@ -722,14 +711,11 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                     }
 
                     @Override
-                    public void onViewDetachedFromWindow(View v) {
-
-                    }
+                    public void onViewDetachedFromWindow(View v) {}
                 });
             }
         }
     }
-
 
     class TabDecoration extends RecyclerView.ItemDecoration {
         @Override
@@ -737,7 +723,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             int columnNum = tabBeanList.size();
             int column = parent.getChildAdapterPosition(view);
             int screenWidth = ScreenUtil.getScreenWidth(MainMinimalistActivity.this);
-            int columnWidth =  parent.getResources().getDimensionPixelSize(R.dimen.demo_tab_bottom_item_width);
+            int columnWidth = parent.getResources().getDimensionPixelSize(R.dimen.demo_tab_bottom_item_width);
             if (columnNum > 1) {
                 int leftRightSpace = (screenWidth - columnNum * columnWidth) / (columnNum - 1);
                 outRect.left = column * leftRightSpace / columnNum;
@@ -750,5 +736,4 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         void onTabSelected(TabBean tabBean);
         void onTabUnreadCleared(TabBean tabBean);
     }
-
 }

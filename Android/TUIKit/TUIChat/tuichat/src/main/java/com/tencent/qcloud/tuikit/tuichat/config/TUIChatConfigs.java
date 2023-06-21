@@ -3,18 +3,15 @@ package com.tencent.qcloud.tuikit.tuichat.config;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayoutConfig;
 
 public class TUIChatConfigs {
-
     private static TUIChatConfigs sConfigs;
     private GeneralConfig generalConfig;
     private NoticeLayoutConfig noticeLayoutConfig;
 
-    private TUIChatConfigs() {
-
-    }
+    private TUIChatConfigs() {}
 
     /**
      * 获取TUIKit的全部配置
-     * 
+     *
      * Get TUIKit configs
      *
      * @return
@@ -28,7 +25,7 @@ public class TUIChatConfigs {
 
     /**
      * 获取TUIKit的通用配置
-     * 
+     *
      * Get TUIKit general configs
      *
      * @return
@@ -42,7 +39,7 @@ public class TUIChatConfigs {
 
     /**
      * 设置TUIKit的通用配置
-     * 
+     *
      * Set TUIKit general configs
      *
      * @param generalConfig
@@ -66,5 +63,4 @@ public class TUIChatConfigs {
         }
         return noticeLayoutConfig;
     }
-
 }

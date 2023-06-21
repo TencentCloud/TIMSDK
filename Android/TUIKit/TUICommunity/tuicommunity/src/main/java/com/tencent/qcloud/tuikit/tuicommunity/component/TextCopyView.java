@@ -9,16 +9,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 
 public class TextCopyView extends AppCompatTextView {
-
     private int bindResID = 0;
     private TextView bindTextView = null;
 
@@ -58,7 +55,7 @@ public class TextCopyView extends AppCompatTextView {
         super.onAttachedToWindow();
         ViewParent parent = getParent();
         View textView = null;
-        while(parent instanceof View) {
+        while (parent instanceof View) {
             textView = ((View) parent).findViewById(bindResID);
             if (textView != null) {
                 break;
@@ -95,5 +92,4 @@ public class TextCopyView extends AppCompatTextView {
             }
         });
     }
-
 }

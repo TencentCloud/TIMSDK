@@ -8,16 +8,13 @@ import android.widget.TextView;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
-
 public class ConversationCustomHolder extends ConversationBaseHolder {
-
     protected LinearLayout leftItemLayout;
     protected TextView titleText;
     protected TextView messageText;
     protected TextView timelineText;
     protected TextView unreadText;
     protected ConversationIconView conversationIconView;
-
 
     public ConversationCustomHolder(View itemView) {
         super(itemView);
@@ -62,7 +59,5 @@ public class ConversationCustomHolder extends ConversationBaseHolder {
         if (mAdapter.getItemTopTextSize() != 0) {
             titleText.setTextSize(mAdapter.getItemTopTextSize());
         }
-
     }
-
 }

@@ -8,11 +8,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 
 public class SoftKeyBoardUtil {
-
     public static void hideKeyBoard(IBinder token) {
         InputMethodManager imm = (InputMethodManager) TUIConfig.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
@@ -20,19 +18,19 @@ public class SoftKeyBoardUtil {
         }
     }
 
-    public static void showKeyBoard(Window window) {
+    public static void hideKeyBoard(Window window) {
         InputMethodManager imm = (InputMethodManager) TUIConfig.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            if (!isSoftInputShown(window)) {
+            if (isSoftInputShown(window)) {
                 imm.toggleSoftInput(0, 0);
             }
         }
     }
 
-    public static void hideKeyBoard(Window window) {
+    public static void showKeyBoard(Window window) {
         InputMethodManager imm = (InputMethodManager) TUIConfig.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            if (isSoftInputShown(window)) {
+            if (!isSoftInputShown(window)) {
                 imm.toggleSoftInput(0, 0);
             }
         }
@@ -58,6 +56,4 @@ public class SoftKeyBoardUtil {
             return 0;
         }
     }
-
 }
-

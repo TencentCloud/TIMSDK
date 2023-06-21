@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.bean;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -13,13 +12,11 @@ import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CallModel implements Cloneable, Serializable {
-
     private static final String TAG = CallModel.class.getSimpleName();
 
     /**
@@ -36,7 +33,6 @@ public class CallModel implements Cloneable, Serializable {
     public static final int CALL_PROTOCOL_TYPE_LINE_BUSY = 7;
     public static final int CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO = 8;
     public static final int CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO_COMFIRM = 9;
-
 
     /**
      * 通话流媒体类型
@@ -77,16 +73,19 @@ public class CallModel implements Cloneable, Serializable {
     public int style = CHAT_CALLING_MESSAGE_APPEARANCE_SIMPLIFY;
 
     private Map jsonData;
+
     public void setJsonData(Map jsonData) {
         this.jsonData = jsonData;
     }
 
     private V2TIMSignalingInfo signalingInfo;
+
     public void setSignalingInfo(V2TIMSignalingInfo signalingInfo) {
         this.signalingInfo = signalingInfo;
     }
 
     private V2TIMMessage innerMessage;
+
     public void setInnerMessage(V2TIMMessage innerMessage) {
         this.innerMessage = innerMessage;
     }
@@ -94,7 +93,7 @@ public class CallModel implements Cloneable, Serializable {
     public static CallModel convert2VideoCallData(V2TIMMessage msg) {
         V2TIMSignalingInfo signalingInfo = V2TIMManager.getSignalingManager().getSignalingInfo(msg);
         if (signalingInfo == null) {
-           return null;
+            return null;
         }
         String businessId = null;
         Double businessIdForTimeout = 0.0;
@@ -115,8 +114,8 @@ public class CallModel implements Cloneable, Serializable {
             businessIdForTimeout = (Double) businessIdObj;
         }
 
-        if (!TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID) &&
-                Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) >= 0.000001) {
+        if (!TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID)
+            && Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) >= 0.000001) {
             return null;
         }
 
@@ -166,12 +165,10 @@ public class CallModel implements Cloneable, Serializable {
                         type = CALL_PROTOCOL_TYPE_SEND;
                     }
                 }
-            }
-                break;
+            } break;
             case V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_CANCEL_INVITE: {
                 type = CALL_PROTOCOL_TYPE_CANCEL;
-            }
-                break;
+            } break;
             case V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_ACCEPT_INVITE: {
                 Map data = (Map) this.jsonData.get("data");
                 if (data != null && data instanceof Map) {
@@ -191,20 +188,17 @@ public class CallModel implements Cloneable, Serializable {
                     // Compatiable
                     type = CALL_PROTOCOL_TYPE_ACCEPT;
                 }
-            }
-                break;
+            } break;
             case V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_REJECT_INVITE: {
                 if (this.jsonData.containsKey("line_busy")) {
                     type = CALL_PROTOCOL_TYPE_LINE_BUSY;
                 } else {
                     type = CALL_PROTOCOL_TYPE_REJECT;
                 }
-            }
-                break;
+            } break;
             case V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE_TIMEOUT: {
                 type = CALL_PROTOCOL_TYPE_TIMEOUT;
-            }
-                break;
+            } break;
             default:
                 type = CALL_PROTOCOL_TYPE_UNKNOWN;
                 break;
@@ -242,8 +236,7 @@ public class CallModel implements Cloneable, Serializable {
                     }
                 }
             }
-        } else if (protocolType == CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO ||
-                   protocolType == CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO_COMFIRM) {
+        } else if (protocolType == CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO || protocolType == CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO_COMFIRM) {
             type = CALL_STREAM_MEDIA_TYPE_VIDEO;
         }
 
@@ -261,7 +254,7 @@ public class CallModel implements Cloneable, Serializable {
             return CALL_PARTICIPANT_TYPE_C2C;
         }
     }
-    
+
     public String getCaller() {
         String callerID = null;
         Map data = (Map) this.jsonData.get("data");
@@ -287,9 +280,7 @@ public class CallModel implements Cloneable, Serializable {
 
     public boolean isExcludeFromHistory() {
         if (style == CHAT_CALLING_MESSAGE_APPEARANCE_SIMPLIFY) {
-            return getProtocolType() != CALL_PROTOCOL_TYPE_UNKNOWN &&
-                   innerMessage.isExcludedFromLastMessage() &&
-                   innerMessage.isExcludedFromUnreadCount();
+            return getProtocolType() != CALL_PROTOCOL_TYPE_UNKNOWN && innerMessage.isExcludedFromLastMessage() && innerMessage.isExcludedFromUnreadCount();
         } else {
             return false;
         }
@@ -323,10 +314,10 @@ public class CallModel implements Cloneable, Serializable {
         if (isExcludeFromHistory()) {
             return false;
         }
-        return  (innerMessage.getLocalCustomInt() == 0) &&
-                (getParticipantRole() == CALL_PARTICIPANT_ROLE_CALLEE) &&
-                (getParticipantType() == CALL_PARTICIPANT_TYPE_C2C) &&
-                (getProtocolType() == CALL_PROTOCOL_TYPE_CANCEL || getProtocolType() == CALL_PROTOCOL_TYPE_TIMEOUT || getProtocolType() == CALL_PROTOCOL_TYPE_LINE_BUSY);
+        return (innerMessage.getLocalCustomInt() == 0) && (getParticipantRole() == CALL_PARTICIPANT_ROLE_CALLEE)
+            && (getParticipantType() == CALL_PARTICIPANT_TYPE_C2C)
+            && (getProtocolType() == CALL_PROTOCOL_TYPE_CANCEL || getProtocolType() == CALL_PROTOCOL_TYPE_TIMEOUT
+                || getProtocolType() == CALL_PROTOCOL_TYPE_LINE_BUSY);
     }
 
     public String getDisplayName() {
@@ -346,7 +337,6 @@ public class CallModel implements Cloneable, Serializable {
         return displayName;
     }
 
-
     // ******* Details style ********
     public String getContentForDetailsAppearance() {
         Context context = TUIChatService.getAppContext();
@@ -361,24 +351,21 @@ public class CallModel implements Cloneable, Serializable {
         String senderShowName = getDisplayName();
         if (protocolType == CALL_PROTOCOL_TYPE_SEND) {
             // Launch call
-            content = isGroup ? ("\"" + senderShowName + "\"" +
-                    context.getString(R.string.start_group_call)) : (context.getString(R.string.start_call));
+            content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.start_group_call)) : (context.getString(R.string.start_call));
         } else if (protocolType == CALL_PROTOCOL_TYPE_ACCEPT) {
             // Accept call
-            content = isGroup ? ("\"" + senderShowName + "\"" +
-                    context.getString(R.string.accept_call)) : context.getString(R.string.accept_call);
+            content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.accept_call)) : context.getString(R.string.accept_call);
         } else if (protocolType == CALL_PROTOCOL_TYPE_REJECT) {
             // Reject call
-            content = isGroup ? ("\"" + senderShowName + "\"" +
-                    context.getString(R.string.reject_group_calls)) : context.getString(R.string.reject_calls);
+            content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.reject_group_calls)) : context.getString(R.string.reject_calls);
         } else if (protocolType == CALL_PROTOCOL_TYPE_CANCEL) {
             // Cancel pending call
             content = isGroup ? context.getString(R.string.cancle_group_call) : context.getString(R.string.cancle_call);
         } else if (protocolType == CALL_PROTOCOL_TYPE_HANGUP) {
             // Hang up
             int duration = Integer.parseInt(String.valueOf(jsonData.get("call_end")));
-            content = isGroup ? context.getString(R.string.stop_group_call) :
-                    context.getString(R.string.stop_call_tip) + DateTimeUtil.formatSecondsTo00(duration);
+            content =
+                isGroup ? context.getString(R.string.stop_group_call) : context.getString(R.string.stop_call_tip) + DateTimeUtil.formatSecondsTo00(duration);
         } else if (protocolType == CALL_PROTOCOL_TYPE_TIMEOUT) {
             // Call timeout
             StringBuilder mutableContent = new StringBuilder();
@@ -396,8 +383,7 @@ public class CallModel implements Cloneable, Serializable {
             content = mutableContent.toString();
         } else if (protocolType == CALL_PROTOCOL_TYPE_LINE_BUSY) {
             // Hang up with line busy
-            content = isGroup ? ("\"" + senderShowName + "\"" +
-                    context.getString(R.string.line_busy)) : context.getString(R.string.other_line_busy);
+            content = isGroup ? ("\"" + senderShowName + "\"" + context.getString(R.string.line_busy)) : context.getString(R.string.other_line_busy);
         } else if (protocolType == CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO) {
             // Change video-call to voice-call
             content = context.getString(R.string.chat_calling_switch_to_audio);
@@ -408,7 +394,7 @@ public class CallModel implements Cloneable, Serializable {
         return content;
     }
 
-    public  int getDirectionForDetailsAppearance() {
+    public int getDirectionForDetailsAppearance() {
         if (innerMessage.isSelf()) {
             return CALL_MESSAGE_DIRECTION_OUTGOING;
         } else {
@@ -467,8 +453,7 @@ public class CallModel implements Cloneable, Serializable {
                 display = context.getString(R.string.chat_group_call_end);
             } else if (protocolType == CALL_PROTOCOL_TYPE_HANGUP) {
                 display = context.getString(R.string.chat_group_call_end);
-            } else if (protocolType == CALL_PROTOCOL_TYPE_TIMEOUT ||
-                       protocolType == CALL_PROTOCOL_TYPE_LINE_BUSY) {
+            } else if (protocolType == CALL_PROTOCOL_TYPE_TIMEOUT || protocolType == CALL_PROTOCOL_TYPE_LINE_BUSY) {
                 StringBuilder mutableContent = new StringBuilder();
                 if (getParticipantType() == CALL_PARTICIPANT_TYPE_GROUP) {
                     for (String invitee : signalingInfo.getInviteeList()) {

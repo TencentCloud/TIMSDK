@@ -34,14 +34,14 @@ public class ImageLoader {
         loadImage(context, imageView, url, R.drawable.tuicalling_ic_avatar);
     }
 
-    public static void loadImage(Context context, ImageView imageView, Object url, @DrawableRes int errorResId) {
+    public static void loadImage(Context context, ImageView imageView, Object url, @DrawableRes int resId) {
         if (url == null || url == "") {
-            if (imageView != null && errorResId != 0) {
-                imageView.setImageResource(errorResId);
+            if (imageView != null && resId != 0) {
+                imageView.setImageResource(resId);
             }
             return;
         }
-        Glide.with(context).load(url).error(loadTransform(context, errorResId, radius)).into(imageView);
+        Glide.with(context).load(url).placeholder(resId).error(loadTransform(context, resId, radius)).into(imageView);
     }
 
     public static void loadImage(Context context, ImageView imageView, @RawRes @DrawableRes Integer resourceId) {
@@ -63,8 +63,8 @@ public class ImageLoader {
         Glide.with(context).asGif().load(resourceId).into(imageView);
     }
 
-    private static RequestBuilder<Drawable> loadTransform(Context context, @DrawableRes int placeholderId, int radius) {
-        return Glide.with(context).load(placeholderId)
+    private static RequestBuilder<Drawable> loadTransform(Context context, @DrawableRes int resId, int radius) {
+        return Glide.with(context).load(resId).placeholder(resId)
                 .apply(new RequestOptions().centerCrop().transform(new GlideRoundTransform(context, radius)));
     }
 

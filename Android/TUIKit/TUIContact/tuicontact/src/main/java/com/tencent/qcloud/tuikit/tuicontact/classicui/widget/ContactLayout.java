@@ -3,17 +3,13 @@ package com.tencent.qcloud.tuikit.tuicontact.classicui.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.interfaces.IContactLayout;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
-
 public class ContactLayout extends LinearLayout implements IContactLayout {
-
     private static final String TAG = ContactLayout.class.getSimpleName();
 
     private ContactListView mContactListView;
@@ -61,7 +57,5 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
     }
 
     @Override
-    public void setParentLayout(Object parent) {
-
-    }
+    public void setParentLayout(Object parent) {}
 }

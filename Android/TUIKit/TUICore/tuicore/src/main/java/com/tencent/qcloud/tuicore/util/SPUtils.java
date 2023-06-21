@@ -2,16 +2,12 @@ package com.tencent.qcloud.tuicore.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import androidx.annotation.NonNull;
-
 import com.tencent.qcloud.tuicore.ServiceInitializer;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class SPUtils {
-
     public static final String DEFAULT_DATABASE = "tuikit";
     private static final Map<String, SPUtils> SP_UTILS_MAP = new HashMap<>();
 
@@ -54,6 +50,13 @@ public class SPUtils {
         return ServiceInitializer.getAppContext();
     }
 
+    public String getString(@NonNull final String key) {
+        return getString(key, "");
+    }
+
+    public String getString(@NonNull final String key, final String defaultValue) {
+        return mSharedPreferences.getString(key, defaultValue);
+    }
 
     // String
     public void put(@NonNull final String key, final String value) {
@@ -66,14 +69,6 @@ public class SPUtils {
         } else {
             mSharedPreferences.edit().putString(key, value).apply();
         }
-    }
-
-    public String getString(@NonNull final String key) {
-        return getString(key, "");
-    }
-
-    public String getString(@NonNull final String key, final String defaultValue) {
-        return mSharedPreferences.getString(key, defaultValue);
     }
 
     // boolean
@@ -89,14 +84,6 @@ public class SPUtils {
         }
     }
 
-    public boolean getBoolean(@NonNull final String key) {
-        return getBoolean(key, false);
-    }
-
-    public boolean getBoolean(@NonNull final String key, final boolean defaultValue) {
-        return mSharedPreferences.getBoolean(key, defaultValue);
-    }
-
     // int
     public void put(@NonNull final String key, final int value) {
         put(key, value, false);
@@ -108,14 +95,6 @@ public class SPUtils {
         } else {
             mSharedPreferences.edit().putInt(key, value).apply();
         }
-    }
-
-    public int getInt(@NonNull final String key) {
-        return getInt(key, -1);
-    }
-
-    public int getInt(@NonNull final String key, final int defaultValue) {
-        return mSharedPreferences.getInt(key, defaultValue);
     }
 
     // float
@@ -131,14 +110,6 @@ public class SPUtils {
         }
     }
 
-    public float getFloat(@NonNull final String key) {
-        return getFloat(key, -1f);
-    }
-
-    public float getFloat(@NonNull final String key, final float defaultValue) {
-        return mSharedPreferences.getFloat(key, defaultValue);
-    }
-
     // long
     public void put(@NonNull final String key, final long value) {
         put(key, value, false);
@@ -152,6 +123,30 @@ public class SPUtils {
         }
     }
 
+    public boolean getBoolean(@NonNull final String key) {
+        return getBoolean(key, false);
+    }
+
+    public boolean getBoolean(@NonNull final String key, final boolean defaultValue) {
+        return mSharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    public int getInt(@NonNull final String key) {
+        return getInt(key, -1);
+    }
+
+    public int getInt(@NonNull final String key, final int defaultValue) {
+        return mSharedPreferences.getInt(key, defaultValue);
+    }
+
+    public float getFloat(@NonNull final String key) {
+        return getFloat(key, -1f);
+    }
+
+    public float getFloat(@NonNull final String key, final float defaultValue) {
+        return mSharedPreferences.getFloat(key, defaultValue);
+    }
+
     public long getLong(@NonNull final String key) {
         return getLong(key, -1L);
     }
@@ -159,7 +154,6 @@ public class SPUtils {
     public long getLong(@NonNull final String key, final long defaultValue) {
         return mSharedPreferences.getLong(key, defaultValue);
     }
-
 
     public boolean contains(@NonNull final String key) {
         return mSharedPreferences.contains(key);

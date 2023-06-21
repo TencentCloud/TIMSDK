@@ -12,11 +12,9 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
@@ -25,11 +23,11 @@ import com.tencent.qcloud.tuikit.timcommon.util.SoftKeyBoardUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 
 public class BeginnerGuidePage {
-
     private PopupWindow popupWindow;
     private ViewPager2 viewPager;
     private OnFinishListener onFinishListener;
     private int[] resIDs;
+
     public BeginnerGuidePage(Activity activity) {
         View popupView = LayoutInflater.from(activity).inflate(R.layout.layout_beginner_guide, null);
         viewPager = popupView.findViewById(R.id.view_pager);
@@ -63,7 +61,6 @@ public class BeginnerGuidePage {
     }
 
     private void startAnimation(Window window, boolean isShow) {
-        LinearInterpolator interpolator = new LinearInterpolator();
         ValueAnimator animator;
         if (isShow) {
             animator = ValueAnimator.ofFloat(1.0f, 0.5f);
@@ -78,7 +75,7 @@ public class BeginnerGuidePage {
                 window.setAttributes(lp);
             }
         });
-
+        LinearInterpolator interpolator = new LinearInterpolator();
         animator.setDuration(200);
         animator.setInterpolator(interpolator);
         animator.start();
@@ -105,7 +102,7 @@ public class BeginnerGuidePage {
         @NonNull
         @Override
         public GuideViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new GuideViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_beginner_guide_item, parent ,false));
+            return new GuideViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_beginner_guide_item, parent, false));
         }
 
         @Override
@@ -147,13 +144,13 @@ public class BeginnerGuidePage {
 
         class GuideViewHolder extends RecyclerView.ViewHolder {
             private final ImageView image;
+
             public GuideViewHolder(@NonNull View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.center_image);
             }
         }
     }
-
 
     public static void showBeginnerGuideThen(View view, Runnable runnable) {
         boolean isShowGuide = SPUtils.getInstance(TIMCommonConstants.CHAT_SETTINGS_SP_NAME).getBoolean(TIMCommonConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, true);

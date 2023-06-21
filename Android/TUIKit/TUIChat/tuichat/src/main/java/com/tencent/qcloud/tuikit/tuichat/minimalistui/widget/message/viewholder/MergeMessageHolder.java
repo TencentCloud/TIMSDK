@@ -2,13 +2,11 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
-
 import java.util.List;
 
 public class MergeMessageHolder extends MessageContentHolder {
@@ -32,7 +30,7 @@ public class MergeMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
-        if (msg == null){
+        if (msg == null) {
             return;
         }
         msgArea.setBackgroundResource(R.drawable.chat_minimalist_merge_message_border);
@@ -50,7 +48,7 @@ public class MergeMessageHolder extends MessageContentHolder {
 
         MergeMessageBean messageBean = (MergeMessageBean) msg;
         String title = messageBean.getTitle();
-        List<String> abstractList= messageBean.getAbstractList();
+        List<String> abstractList = messageBean.getAbstractList();
         msgForwardTitle.setText(title);
         String content = "";
         for (int i = 0; i < abstractList.size(); i++) {

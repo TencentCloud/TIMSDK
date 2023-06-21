@@ -20,10 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
@@ -42,7 +40,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.Conversatio
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.Menu;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,12 +52,14 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
     private String popWindowConversationId;
     private List<PopMenuAction> mConversationPopActions = new ArrayList<>();
     private AlertDialog mBottomDialog;
-    private boolean isShowReadButton, isShowReadAllButton;
+    private boolean isShowReadButton;
+    private boolean isShowReadAllButton;
     private BroadcastReceiver unreadCountReceiver;
     private Menu menu;
 
     private ConversationPresenter presenter;
     private ConversationListAdapter mAdapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +86,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         // 会话列表面板的默认UI和交互初始化
         mConversationLayout.initDefault();
         // 通过API设置ConversataonLayout各种属性的样例，开发者可以打开注释，体验效果
-//        ConversationLayoutSetting.customizeConversation(mConversationLayout);
+        //        ConversationLayoutSetting.customizeConversation(mConversationLayout);
         isShowReadButton = false;
         isShowReadAllButton = false;
         mAdapter = mConversationLayout.getConversationList().getAdapter();
@@ -105,7 +104,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                         return;
                     }
                     isShowReadButton = false;
-                    for(ConversationInfo conversation : mSelectConversations) {
+                    for (ConversationInfo conversation : mSelectConversations) {
                         if (conversation.isMarkUnread() || conversation.getUnRead() > 0) {
                             isShowReadButton = true;
                             break;
@@ -122,15 +121,19 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
             }
 
             @Override
-            public void OnItemLongClick(View view, ConversationInfo conversationInfo) {
+            public void onItemLongClick(View view, ConversationInfo conversationInfo) {
                 showItemPopMenu(view, conversationInfo);
             }
 
             @Override
             public void onConversationChanged(List<ConversationInfo> dataSource) {
-                if (dataSource == null)return;
+                if (dataSource == null) {
+                    return;
+                }
                 ConversationInfo conversationInfo = dataSource.get(0);
-                if (conversationInfo == null)return;
+                if (conversationInfo == null) {
+                    return;
+                }
 
                 if (!TextUtils.isEmpty(popWindowConversationId) && popWindowConversationId.equals(conversationInfo.getConversationId())) {
                     if (mConversationPopWindow != null) {
@@ -202,10 +205,10 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
     }
 
     public void restoreConversationItemBackground() {
-        if (mConversationLayout.getConversationList().getAdapter() !=  null &&
-                mConversationLayout.getConversationList().getAdapter().isClick()) {
+        if (mConversationLayout.getConversationList().getAdapter() != null && mConversationLayout.getConversationList().getAdapter().isClick()) {
             mConversationLayout.getConversationList().getAdapter().setClick(false);
-            mConversationLayout.getConversationList().getAdapter().notifyItemChanged(mConversationLayout.getConversationList().getAdapter().getCurrentPosition());
+            mConversationLayout.getConversationList().getAdapter().notifyItemChanged(
+                mConversationLayout.getConversationList().getAdapter().getCurrentPosition());
         }
     }
 
@@ -322,7 +325,6 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                 if (action.getActionName().equals(getResources().getString(R.string.quit_chat_top))) {
                     action.setActionName(getResources().getString(R.string.chat_top));
                 }
-
             }
         }
         mConversationPopAdapter = new PopDialogAdapter();
@@ -342,7 +344,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
             }
         });
         int x = view.getWidth() / 2;
-        int y = - view.getHeight() / 3;
+        int y = -view.getHeight() / 3;
         int popHeight = ScreenUtil.dip2px(45) * 3;
         if (y + popHeight + view.getY() + view.getHeight() > mConversationLayout.getBottom()) {
             y = y - popHeight;
@@ -357,21 +359,23 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
 
     public interface OnClickListener {
         void onEditConversationStartClick();
+
         void onEditConversationEndClick();
+
         void onStartChatClick();
+
         void finishActivity();
     }
 
-    private void showEditConversationDialog(){
+    private void showEditConversationDialog() {
         if (mBottomDialog != null && mBottomDialog.isShowing()) {
             return;
         }
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.minimalist_bottom_bar,null,false);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.minimalist_bottom_bar, null, false);
         mBottomDialog = new AlertDialog.Builder(getContext()).setView(view).create();
 
         TextView markReadView = view.findViewById(R.id.mark_read);
         TextView notDisplayView = view.findViewById(R.id.not_display);
-        TextView deleteChatView = view.findViewById(R.id.delete_chat);
 
         if (isShowReadAllButton) {
             markReadView.setAlpha(1f);
@@ -382,6 +386,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
             markReadView.setEnabled(false);
             markReadView.setText(getString(R.string.mark_read));
         }
+        TextView deleteChatView = view.findViewById(R.id.delete_chat);
         notDisplayView.setAlpha(0.5f);
         notDisplayView.setEnabled(false);
         deleteChatView.setAlpha(0.5f);
@@ -414,7 +419,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                     return;
                 }
                 List<ConversationInfo> mSelectConversations = mAdapter.getSelectedItem();
-                for(ConversationInfo conversationInfo : mSelectConversations) {
+                for (ConversationInfo conversationInfo : mSelectConversations) {
                     mConversationLayout.markConversationHidden(conversationInfo);
                 }
                 resetEditConversationStatus();
@@ -429,7 +434,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                     return;
                 }
                 List<ConversationInfo> mSelectConversations = mAdapter.getSelectedItem();
-                for(ConversationInfo conversationInfo : mSelectConversations) {
+                for (ConversationInfo conversationInfo : mSelectConversations) {
                     mConversationLayout.deleteConversation(conversationInfo);
                 }
                 resetEditConversationStatus();
@@ -439,7 +444,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         mBottomDialog.setCanceledOnTouchOutside(false);
         mBottomDialog.show();
         Window win = mBottomDialog.getWindow();
-        win.setGravity(Gravity.BOTTOM);   // 这里控制弹出的位置
+        win.setGravity(Gravity.BOTTOM); // 这里控制弹出的位置
         win.getDecorView().setPadding(0, 0, 0, 0);
         WindowManager.LayoutParams lp = win.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -534,13 +539,13 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
             }
         };
 
-        List<PopMenuAction> menuActions = new ArrayList<>();
 
         PopMenuAction action = new PopMenuAction();
 
         action.setActionName(getResources().getString(R.string.start_conversation));
         action.setActionClickListener(popActionClickListener);
         action.setIconResId(R.drawable.create_c2c);
+        List<PopMenuAction> menuActions = new ArrayList<>();
         menuActions.add(action);
 
         action = new PopMenuAction();
@@ -552,17 +557,11 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         menu.setMenuAction(menuActions);
     }
 
-    private void showConversationMoreActionDialog(ConversationInfo conversationInfo){
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.minimalist_more_dialog,null,false);
+    private void showConversationMoreActionDialog(ConversationInfo conversationInfo) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.minimalist_more_dialog, null, false);
         AlertDialog moreDialog = new AlertDialog.Builder(getContext()).setView(view).create();
 
         TextView setTopView = view.findViewById(R.id.top_set);
-        TextView notDisplayView = view.findViewById(R.id.not_display);
-        TextView clearChatView = view.findViewById(R.id.clear_chat);
-        TextView deleteChatView = view.findViewById(R.id.delete_chat);
-        TextView cancelView = view.findViewById(R.id.cancel_button);
-
-
         if (conversationInfo.isTop()) {
             setTopView.setText(getString(R.string.quit_chat_top));
         } else {
@@ -585,7 +584,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                 moreDialog.dismiss();
             }
         });
-
+        TextView notDisplayView = view.findViewById(R.id.not_display);
         notDisplayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -593,7 +592,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                 moreDialog.dismiss();
             }
         });
-
+        TextView clearChatView = view.findViewById(R.id.clear_chat);
         clearChatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -604,7 +603,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                 moreDialog.dismiss();
             }
         });
-
+        TextView deleteChatView = view.findViewById(R.id.delete_chat);
         deleteChatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -612,7 +611,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                 moreDialog.dismiss();
             }
         });
-
+        TextView cancelView = view.findViewById(R.id.cancel_button);
         cancelView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -649,6 +648,10 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(unreadCountReceiver);
             unreadCountReceiver = null;
         }
-    }
 
+        if (presenter != null) {
+            presenter.destroy();
+            presenter = null;
+        }
+    }
 }

@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuikit.timcommon.R;
 
 public class RoundFrameLayout extends FrameLayout {
-
     private final Path path = new Path();
     private final RectF rectF = new RectF();
     private final PaintFlagsDrawFilter aliasFilter = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
@@ -74,8 +73,8 @@ public class RoundFrameLayout extends FrameLayout {
         canvas.setDrawFilter(aliasFilter);
         rectF.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
         // left-top -> right-top -> right-bottom -> left-bottom
-        float[] radius = {leftTopRadius, leftTopRadius, rightTopRadius, rightTopRadius,
-                rightBottomRadius, rightBottomRadius, leftBottomRadius, leftBottomRadius};
+        float[] radius = {
+            leftTopRadius, leftTopRadius, rightTopRadius, rightTopRadius, rightBottomRadius, rightBottomRadius, leftBottomRadius, leftBottomRadius};
         path.addRoundRect(rectF, radius, Path.Direction.CW);
         canvas.clipPath(path);
         super.dispatchDraw(canvas);

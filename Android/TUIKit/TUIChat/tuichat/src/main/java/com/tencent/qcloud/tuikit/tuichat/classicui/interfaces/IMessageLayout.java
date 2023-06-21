@@ -12,13 +12,12 @@ import java.util.List;
 /**
  * 消息区域 {@link MessageRecyclerView} 继承自 {@link RecyclerView}，提供了消息的展示功能。<br>
  * 本类提供了大量的方法以供定制化需求，包括外观设置、事件点击，以及自定义消息的展示等。
- * 
+ *
  * The message area {@link MessageRecyclerView} inherits from {@link RecyclerView} and provides the display function of the message.
- * This class provides a large number of methods for customization requirements, including appearance settings, event clicks, 
+ * This class provides a large number of methods for customization requirements, including appearance settings, event clicks,
  * and display of custom messages.
  */
 public interface IMessageLayout extends IMessageProperties {
-
     /**
      * 设置消息列表的适配器 {@link MessageAdapter}
      *

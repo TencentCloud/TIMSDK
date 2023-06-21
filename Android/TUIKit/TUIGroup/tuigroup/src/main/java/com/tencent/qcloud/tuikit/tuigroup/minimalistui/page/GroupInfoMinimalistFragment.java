@@ -6,11 +6,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -27,11 +25,9 @@ import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberLi
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget.GroupInfoLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class GroupInfoMinimalistFragment extends BaseFragment {
     private static final int CALL_MEMBER_LIMIT = 8;
@@ -44,7 +40,6 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
     private GroupInfoPresenter groupInfoPresenter = null;
     private String mChatBackgroundThumbnailUrl;
     private String groupAvatarUrl;
-
 
     @Nullable
     @Override
@@ -93,14 +88,12 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
             public void setSelectedMember(ArrayList<String> members) {
                 IGroupMemberListener.super.setSelectedMember(members);
             }
-
         });
 
         groupInfoLayout.setOnButtonClickListener(new GroupInfoLayout.OnButtonClickListener() {
             @Override
             public void onSetChatBackground() {
                 startSetChatBackground();
-
             }
 
             @Override
@@ -119,16 +112,17 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
             selectedList.add(memberInfo.getAccount());
         }
         param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, selectedList);
-        TUICore.startActivityForResult(GroupInfoMinimalistFragment.this, "StartGroupMemberSelectMinimalistActivity", param, new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getData() == null) {
-                    return;
+        TUICore.startActivityForResult(
+            GroupInfoMinimalistFragment.this, "StartGroupMemberSelectMinimalistActivity", param, new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getData() == null) {
+                        return;
+                    }
+                    List<String> friends = (List<String>) result.getData().getSerializableExtra(TUIGroupConstants.Selection.LIST);
+                    inviteGroupMembers(friends);
                 }
-                List<String> friends = (List<String>) result.getData().getSerializableExtra(TUIGroupConstants.Selection.LIST);
-                inviteGroupMembers(friends);
-            }
-        });
+            });
     }
 
     private void startModifyGroupAvatar(String originAvatarUrl) {
@@ -148,21 +142,23 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
         param.putSerializable(ImageSelectMinimalistActivity.DATA, faceList);
         param.putSerializable(ImageSelectMinimalistActivity.SELECTED, new ImageSelectMinimalistActivity.ImageBean(originAvatarUrl, originAvatarUrl, false));
 
-        TUICore.startActivityForResult(GroupInfoMinimalistFragment.this, ImageSelectMinimalistActivity.class, param, new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                Intent data = result.getData();
-                if (data != null) {
-                    ImageSelectMinimalistActivity.ImageBean imageBean = (ImageSelectMinimalistActivity.ImageBean) data.getSerializableExtra(ImageSelectMinimalistActivity.DATA);
-                    if (imageBean == null) {
-                        return;
-                    }
+        TUICore.startActivityForResult(
+            GroupInfoMinimalistFragment.this, ImageSelectMinimalistActivity.class, param, new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        ImageSelectMinimalistActivity.ImageBean imageBean =
+                            (ImageSelectMinimalistActivity.ImageBean) data.getSerializableExtra(ImageSelectMinimalistActivity.DATA);
+                        if (imageBean == null) {
+                            return;
+                        }
 
-                    String avatarUrl = imageBean.getImageUri();
-                    modifyGroupAvatar(avatarUrl);
+                        String avatarUrl = imageBean.getImageUri();
+                        modifyGroupAvatar(avatarUrl);
+                    }
                 }
-            }
-        });
+            });
     }
 
     private void startSetChatBackground() {
@@ -183,37 +179,40 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
         param.putInt(ImageSelectMinimalistActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
         param.putInt(ImageSelectMinimalistActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
         param.putSerializable(ImageSelectMinimalistActivity.DATA, faceList);
-        if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl) || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
+        if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
+            || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
             param.putSerializable(ImageSelectMinimalistActivity.SELECTED, defaultFace);
         } else {
             param.putSerializable(ImageSelectMinimalistActivity.SELECTED, new ImageSelectMinimalistActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
         }
         param.putBoolean(ImageSelectMinimalistActivity.NEED_DOWLOAD_LOCAL, true);
 
-        TUICore.startActivityForResult(GroupInfoMinimalistFragment.this, ImageSelectMinimalistActivity.class, param, new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                Intent data = result.getData();
-                if (data == null) {
-                    return;
-                }
-                ImageSelectMinimalistActivity.ImageBean imageBean = (ImageSelectMinimalistActivity.ImageBean) data.getSerializableExtra(ImageSelectMinimalistActivity.DATA);
-                if (imageBean == null) {
-                    TUIGroupLog.e("GroupInfoMinimalistFragment", "onActivityResult imageBean is null");
-                    return;
-                }
+        TUICore.startActivityForResult(
+            GroupInfoMinimalistFragment.this, ImageSelectMinimalistActivity.class, param, new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent data = result.getData();
+                    if (data == null) {
+                        return;
+                    }
+                    ImageSelectMinimalistActivity.ImageBean imageBean =
+                        (ImageSelectMinimalistActivity.ImageBean) data.getSerializableExtra(ImageSelectMinimalistActivity.DATA);
+                    if (imageBean == null) {
+                        TUIGroupLog.e("GroupInfoMinimalistFragment", "onActivityResult imageBean is null");
+                        return;
+                    }
 
-                String backgroundUri = imageBean.getLocalPath();
-                String thumbnailUri = imageBean.getThumbnailUri();
-                String dataUri = thumbnailUri + "," + backgroundUri;
-                TUIGroupLog.d("GroupInfoMinimalistFragment", "onActivityResult backgroundUri = " + backgroundUri);
-                mChatBackgroundThumbnailUrl = thumbnailUri;
-                HashMap<String, Object> param = new HashMap<>();
-                param.put(TUIConstants.TUIChat.CHAT_ID, groupId);
-                param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
-                TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);
-            }
-        });
+                    String backgroundUri = imageBean.getLocalPath();
+                    String thumbnailUri = imageBean.getThumbnailUri();
+                    TUIGroupLog.d("GroupInfoMinimalistFragment", "onActivityResult backgroundUri = " + backgroundUri);
+                    mChatBackgroundThumbnailUrl = thumbnailUri;
+                    HashMap<String, Object> param = new HashMap<>();
+                    param.put(TUIConstants.TUIChat.CHAT_ID, groupId);
+                    String dataUri = thumbnailUri + "," + backgroundUri;
+                    param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
+                    TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);
+                }
+            });
     }
 
     private void modifyGroupAvatar(String avatarUrl) {
@@ -248,15 +247,11 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
-
 
     public interface OnModifyGroupAvatarListener {
         void onModifyGroupAvatar(String originAvatarUrl);
     }
-
 }

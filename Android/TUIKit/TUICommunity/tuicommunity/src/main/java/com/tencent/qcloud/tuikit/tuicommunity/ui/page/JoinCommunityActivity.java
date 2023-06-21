@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
@@ -21,7 +20,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
 
 public class JoinCommunityActivity extends BaseLightActivity {
-
     private ImageView searchIcon;
     private TextView cancelButton;
     private View communityItemArea;
@@ -34,6 +32,7 @@ public class JoinCommunityActivity extends BaseLightActivity {
 
     private CommunityPresenter presenter;
     private CommunityBean communityBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,14 +54,10 @@ public class JoinCommunityActivity extends BaseLightActivity {
         presenter = new CommunityPresenter();
         idEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -87,8 +82,8 @@ public class JoinCommunityActivity extends BaseLightActivity {
 
     private void setCommunityArea(CommunityBean data) {
         communityBean = data;
-        GlideEngine.loadImageSetDefault(avatar, data.getGroupFaceUrl(),
-                TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
+        GlideEngine.loadImageSetDefault(
+            avatar, data.getGroupFaceUrl(), TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
         name.setText(data.getCommunityName());
         owner.setText(getString(R.string.community_owner) + ": " + data.getOwner());
         setJoinButton(data.getRole() != CommunityBean.ROLE_UNDEFINED);

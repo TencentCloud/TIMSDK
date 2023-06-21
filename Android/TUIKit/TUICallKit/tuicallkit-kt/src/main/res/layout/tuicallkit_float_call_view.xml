@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/tuicallkit_bg_floatwindow"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_video_view"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            android:visibility="gone" />
+
+        <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            app:corner_radius="15dp" />
+
+        <ImageView
+            android:id="@+id/iv_audio_view_icon"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/tuicallkit_ic_float" />
+
+        <TextView
+            android:id="@+id/tv_call_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4dp"
+            android:text="@string/tuicalling_wait_resonse"
+            android:textColor="@color/tuicalling_color_green"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
+
+

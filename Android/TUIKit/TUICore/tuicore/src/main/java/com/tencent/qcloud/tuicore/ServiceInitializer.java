@@ -5,16 +5,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * If each module needs to be initialized, it needs to implement the init method of this class 
+ * If each module needs to be initialized, it needs to implement the init method of this class
  * and register it in the form of ContentProvider in the Manifest file.
  */
 public class ServiceInitializer extends ContentProvider {
-
     /**
      * @param context applicationContext
      */
@@ -41,9 +39,9 @@ public class ServiceInitializer extends ContentProvider {
         return R.style.TUIBaseSeriousTheme;
     }
 
-/////////////////////////////////////////////////////////////////////////////////
-//             The following methods do not need to be overridden              //
-/////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+    //             The following methods do not need to be overridden              //
+    /////////////////////////////////////////////////////////////////////////////////
 
     private static Context appContext;
 
@@ -56,7 +54,7 @@ public class ServiceInitializer extends ContentProvider {
         if (appContext == null) {
             appContext = getContext().getApplicationContext();
         }
-        
+
         TUIRouter.init(appContext);
         TUIConfig.init(appContext);
         TUIThemeManager.addLightTheme(getLightThemeResId());
@@ -69,7 +67,8 @@ public class ServiceInitializer extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(
+        @NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         return null;
     }
 

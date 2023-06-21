@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -102,9 +101,9 @@ public class ReplyDetailsView extends RecyclerView {
                 holder.timeInLineTextLayout.setTimeText(DateTimeUtil.getTimeFormatText(new Date(messageBean.getMessageTime() * 1000)));
             }
             Glide.with(holder.itemView.getContext())
-                    .load(faceUrl)
-                    .apply(new RequestOptions().error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
-                    .into(holder.userFaceView);
+                .load(faceUrl)
+                .apply(new RequestOptions().error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
+                .into(holder.userFaceView);
             FaceManager.handlerEmojiText(holder.timeInLineTextLayout.getTextView(), messageText, false);
 
             setTranslationContent(messageBean);
@@ -154,7 +153,7 @@ public class ReplyDetailsView extends RecyclerView {
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, ReplyDetailsView.this);
 
-        TUICore.raiseExtension(TUIConstants.TUITranslation.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
     }
 
     static class ReplyDetailsViewHolder extends RecyclerView.ViewHolder {

@@ -9,7 +9,6 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupApplyLayout;
 import com.tencent.qcloud.tuikit.tuigroup.model.GroupInfoProvider;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupUtils;
-
 import java.util.List;
 
 public class GroupApplyPresenter {
@@ -35,9 +34,7 @@ public class GroupApplyPresenter {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
 
@@ -50,7 +47,7 @@ public class GroupApplyPresenter {
                 IUIKitCallback.callbackOnSuccess(callback, null);
 
                 TUICore.notifyEvent(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION,
-                        TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, null);
+                    TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, null);
             }
 
             @Override
@@ -70,7 +67,7 @@ public class GroupApplyPresenter {
                 IUIKitCallback.callbackOnSuccess(callback, null);
 
                 TUICore.notifyEvent(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION,
-                        TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, null);
+                    TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, null);
             }
 
             @Override
@@ -80,5 +77,4 @@ public class GroupApplyPresenter {
             }
         });
     }
-
 }

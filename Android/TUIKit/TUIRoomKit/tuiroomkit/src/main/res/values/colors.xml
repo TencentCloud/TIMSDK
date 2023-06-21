@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tuiroomkit_color_white">#ffffff</color>
+    <color name="tuiroomkit_color_blue">#146EFA</color>
+    <color name="tuiroomkit_color_bg_dialog">#66000000</color>
+    <color name="tuiroomkit_color_black">#373A43</color>
+    <color name="tuiroomkit_text_color_second">#666666</color>
+    <color name="tuiroomkit_color_second_text">#666666</color>
+    <color name="tuiroomkit_item_btn">@color/tuiroomkit_text_color_second</color>
+    <color name="tuiroomkit_color_bg_bottom_black">#2A2D38</color>
+    <color name="tuiroomkit_color_bg_bottom_red">#D52E4A</color>
+    <color name="tuiroomkit_color_text_light_grey">#D1D9EC</color>
+    <color name="tuiroomkit_transparent">#00000000</color>
+    <color name="tuiroomkit_bg_main_color_black">#17181F</color>
+    <color name="tuiroomkit_bg_main_light_black">#2A2D38</color>
+    <color name="tuiroomkit_bg_guide_line_grey">#E1E1E1</color>
+    <color name="tuiroomkit_color_hint">#ADB6CC</color>
+    <color name="tuiroomkit_color_text_red">#FF2E2E</color>
+    <color name="tuiroomkit_color_gradient_start">#00CED9</color>
+    <color name="tuiroomkit_color_gradient_end">#0C59F2</color>
+    <color name="tuiroomkit_color_info_title">#7C85A6</color>
+    <color name="tuiroomkit_color_bg_bottom_tip">#5A5757</color>
+    <color name="tuiroomkit_color_bg_item_checked">#4F515A</color>
+    <color name="tuiroomkit_color_text_hint_search">#636A7E</color>
+    <color name="tuiroomkit_bg_bottom_dialog">#1B1E26</color>
+    <color name="tuiroomkit_room_msg_title_creating">#147AFF</color>
+    <color name="tuiroomkit_room_msg_title_created">#15B72D</color>
+    <color name="tuiroomkit_room_msg_title_destroyed">#888888</color>
+    <color name="tuiroomkit_room_msg_btn_text_color_join">#FFFFFF</color>
+    <color name="tuiroomkit_room_msg_btn_text_color_joined">#999999</color>
+</resources>

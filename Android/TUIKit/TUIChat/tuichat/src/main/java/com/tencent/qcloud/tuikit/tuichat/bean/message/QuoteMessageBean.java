@@ -12,7 +12,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
  * Quote Message
  */
 public class QuoteMessageBean extends TUIMessageBean {
-
     // quote content
     private TUIMessageBean contentMessageBean;
 

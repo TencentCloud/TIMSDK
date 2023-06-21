@@ -1,8 +1,6 @@
 package com.tencent.qcloud.tim.demo.utils;
 
-
 public class Constants {
-
     public static final String USERINFO = "userInfo";
     public static final String ACCOUNT = "account";
     public static final String PWD = "password";

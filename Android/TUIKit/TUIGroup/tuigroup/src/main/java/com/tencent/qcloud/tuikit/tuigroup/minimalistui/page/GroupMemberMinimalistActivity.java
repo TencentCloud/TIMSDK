@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuigroup.minimalistui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -19,7 +17,6 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
-
     private GroupMemberLayout mMemberLayout;
     private String groupID;
     private GroupInfoPresenter presenter;
@@ -36,6 +32,7 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
     private ArrayList<String> excludeList;
     private ArrayList<String> alreadySelectedList;
     private String userData;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,19 +44,18 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
     private void init() {
         Intent intent = getIntent();
         groupID = intent.getStringExtra(TUIConstants.TUIGroup.GROUP_ID);
-        int limit = getIntent().getIntExtra(TUIConstants.TUIGroup.LIMIT, Integer.MAX_VALUE);
         isSelectMode = intent.getBooleanExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
-        String title = intent.getStringExtra(TUIConstants.TUIGroup.TITLE);
         excludeList = intent.getStringArrayListExtra(TUIConstants.TUIGroup.EXCLUDE_LIST);
         alreadySelectedList = intent.getStringArrayListExtra(TUIConstants.TUIGroup.SELECTED_LIST);
         userData = intent.getStringExtra(TUIConstants.TUIGroup.USER_DATA);
-        int filter = intent.getIntExtra(TUIConstants.TUIGroup.FILTER, GroupInfo.GROUP_MEMBER_FILTER_ALL);
         mMemberLayout.setSelectMode(isSelectMode);
+        String title = intent.getStringExtra(TUIConstants.TUIGroup.TITLE);
         mMemberLayout.setTitle(title);
         mMemberLayout.setExcludeList(excludeList);
         mMemberLayout.setAlreadySelectedList(alreadySelectedList);
         presenter = new GroupInfoPresenter(mMemberLayout);
         mMemberLayout.setPresenter(presenter);
+        int filter = intent.getIntExtra(TUIConstants.TUIGroup.FILTER, GroupInfo.GROUP_MEMBER_FILTER_ALL);
         presenter.loadGroupInfo(groupID, filter);
 
         mMemberLayout.getTitleBar().setOnLeftClickListener(new View.OnClickListener() {
@@ -68,8 +64,8 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
                 finish();
             }
         });
+        int limit = getIntent().getIntExtra(TUIConstants.TUIGroup.LIMIT, Integer.MAX_VALUE);
         mMemberLayout.setGroupMemberListener(new IGroupMemberListener() {
-
             @Override
             public void setSelectedMember(ArrayList<String> members) {
                 if (members == null || members.isEmpty()) {
@@ -93,9 +89,7 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
             }
 
             @Override
-            public void forwardListMember(GroupInfo info) {
-
-            }
+            public void forwardListMember(GroupInfo info) {}
 
             @Override
             public void forwardAddMember(GroupInfo info) {
@@ -120,7 +114,6 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
         });
 
         mMemberLayout.setOnGroupMemberClickListener(new GroupMemberLayout.OnGroupMemberClickListener() {
-
             @Override
             public void onShowInfo(GroupMemberInfo groupMemberInfo) {
                 Bundle bundle = new Bundle();
@@ -140,8 +133,8 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
 
                         @Override
                         public void onError(String module, int errCode, String errMsg) {
-                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_fail)
-                                    + ", errCode = " + errCode + ", errMsg = " + errMsg);
+                            ToastUtil.toastLongMessage(
+                                getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_fail) + ", errCode = " + errCode + ", errMsg = " + errMsg);
                         }
                     });
                 } else {
@@ -154,8 +147,8 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
 
                         @Override
                         public void onError(String module, int errCode, String errMsg) {
-                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_fail)
-                                    + ", errCode = " + errCode + ", errMsg = " + errMsg);
+                            ToastUtil.toastLongMessage(
+                                getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_fail) + ", errCode = " + errCode + ", errMsg = " + errMsg);
                         }
                     });
                 }
@@ -163,19 +156,16 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
 
             @Override
             public void onDelete(GroupMemberInfo groupMemberInfo) {
-                presenter.deleteGroupMembers(groupID, Collections.singletonList(groupMemberInfo.getAccount()),
-                        new IUIKitCallback<List<String>>() {
+                presenter.deleteGroupMembers(groupID, Collections.singletonList(groupMemberInfo.getAccount()), new IUIKitCallback<List<String>>() {
                     @Override
                     public void onSuccess(List<String> data) {
                         ToastUtil.toastLongMessage(getString(R.string.remove_tip_suc));
                         onMemberDeleted(data);
-
                     }
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
-                        ToastUtil.toastLongMessage(getString(R.string.remove_fail_tip)
-                                + ", errCode = " + errCode + ", errMsg = " + errMsg);
+                        ToastUtil.toastLongMessage(getString(R.string.remove_fail_tip) + ", errCode = " + errCode + ", errMsg = " + errMsg);
                     }
                 });
             }
@@ -218,9 +208,7 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
                     }
 
                     @Override
-                    public void onError(String module, int errCode, String errMsg) {
-
-                    }
+                    public void onError(String module, int errCode, String errMsg) {}
                 });
             }
         }
@@ -247,5 +235,4 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
             }
         }
     }
-
 }

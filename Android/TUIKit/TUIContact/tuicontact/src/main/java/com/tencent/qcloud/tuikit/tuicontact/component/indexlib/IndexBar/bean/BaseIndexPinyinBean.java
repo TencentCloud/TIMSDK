@@ -1,8 +1,6 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean;
-
+package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.bean;
 
 public abstract class BaseIndexPinyinBean extends BaseIndexBean {
-
     private String baseIndexPinyin;
 
     public String getBaseIndexPinyin() {
@@ -19,6 +17,4 @@ public abstract class BaseIndexPinyinBean extends BaseIndexBean {
     }
 
     public abstract String getTarget();
-
-
 }

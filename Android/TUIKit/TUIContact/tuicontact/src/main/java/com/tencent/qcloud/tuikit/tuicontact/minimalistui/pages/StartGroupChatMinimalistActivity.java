@@ -7,13 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -28,13 +26,11 @@ import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactAdapter;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class StartGroupChatMinimalistActivity extends AppCompatActivity {
-
     private static final String TAG = StartGroupChatMinimalistActivity.class.getSimpleName();
 
     private TextView cancelButton;
@@ -48,6 +44,7 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
     private GroupMemberSelectedAdapter selectedListAdapter;
     private ContactPresenter presenter;
     private GroupMemberInfo selfInfo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,7 +178,8 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
         @NonNull
         @Override
         public GroupMemberSelectedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new GroupMemberSelectedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_create_group_list_selected_item, parent, false));
+            return new GroupMemberSelectedViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_create_group_list_selected_item, parent, false));
         }
 
         @Override
@@ -207,11 +205,11 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
             return mMembers.size();
         }
 
-
         public static class GroupMemberSelectedViewHolder extends RecyclerView.ViewHolder {
             public RoundCornerImageView userIconView;
             public ImageView removeIcon;
             public TextView userNameTv;
+
             public GroupMemberSelectedViewHolder(@NonNull View itemView) {
                 super(itemView);
                 userIconView = itemView.findViewById(R.id.ivAvatar);
@@ -221,5 +219,4 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
             }
         }
     }
-
 }

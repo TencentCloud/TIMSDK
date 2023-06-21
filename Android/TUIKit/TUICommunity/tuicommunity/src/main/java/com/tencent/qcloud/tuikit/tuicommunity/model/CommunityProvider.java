@@ -40,9 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CommunityProvider {
-
     public static final String TAG = CommunityProvider.class.getSimpleName();
-
 
     public void getJoinedCommunityList(IUIKitCallback<List<CommunityBean>> callback) {
         V2TIMManager.getGroupManager().getJoinedCommunityList(new V2TIMValueCallback<List<V2TIMGroupInfo>>() {
@@ -270,7 +268,7 @@ public class CommunityProvider {
 
     public void loadCommunityMembers(String groupID, int filter, long nextSeq, final IUIKitCallback<Pair<List<CommunityMemberBean>, Long>> callBack) {
         if (filter != V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL && filter != V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_OWNER
-                && filter != V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ADMIN && filter != V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_COMMON) {
+            && filter != V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ADMIN && filter != V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_COMMON) {
             filter = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL;
         }
         V2TIMManager.getGroupManager().getGroupMemberList(groupID, filter, nextSeq, new V2TIMValueCallback<V2TIMGroupMemberInfoResult>() {
@@ -617,7 +615,7 @@ public class CommunityProvider {
     }
 
     public void modifyCommunitySelfNameCard(String groupID, String nameCard, IUIKitCallback<Void> callback) {
-        V2TIMGroupMemberFullInfo v2TIMGroupMemberInfo= new V2TIMGroupMemberFullInfo();
+        V2TIMGroupMemberFullInfo v2TIMGroupMemberInfo = new V2TIMGroupMemberFullInfo();
         v2TIMGroupMemberInfo.setUserID(TUILogin.getLoginUser());
         v2TIMGroupMemberInfo.setNameCard(nameCard);
         V2TIMManager.getGroupManager().setGroupMemberInfo(groupID, v2TIMGroupMemberInfo, new V2TIMCallback() {

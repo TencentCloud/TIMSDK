@@ -11,19 +11,16 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.MessageProperties;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
-
 import java.util.Date;
 
-public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
+public abstract class MessageBaseHolder<T extends TUIMessageBean> extends RecyclerView.ViewHolder {
     public static final int MSG_TYPE_HEADER_VIEW = -99;
 
     public ICommonMessageAdapter mAdapter;
@@ -41,6 +38,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public RelativeLayout mContentLayout;
 
     private ValueAnimator highLightAnimator;
+
     public MessageBaseHolder(View itemView) {
         super(itemView);
         chatTimeText = itemView.findViewById(R.id.message_top_time_tv);
@@ -81,7 +79,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         return this.onItemClickListener;
     }
 
-    public void layoutViews(final TUIMessageBean msg, final int position) {
+    public void layoutViews(final T msg, final int position) {
         if (properties.getChatTimeBubble() != null) {
             chatTimeText.setBackground(properties.getChatTimeBubble());
         }
@@ -120,7 +118,6 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         int highLightColorLight = itemView.getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.chat_message_bubble_high_light_light_color);
 
         if (highLightAnimator == null) {
-            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
             highLightAnimator = new ValueAnimator();
             highLightAnimator.setIntValues(highLightColorDark, highLightColorLight);
             highLightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -132,9 +129,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
             });
             highLightAnimator.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
+                public void onAnimationStart(Animator animation) {}
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -147,10 +142,9 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
                 }
 
                 @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
+                public void onAnimationRepeat(Animator animation) {}
             });
+            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
             highLightAnimator.setEvaluator(argbEvaluator);
             highLightAnimator.setRepeatCount(3);
             highLightAnimator.setDuration(250);
@@ -172,5 +166,4 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
             drawable.setColorFilter(null);
         }
     }
-
 }

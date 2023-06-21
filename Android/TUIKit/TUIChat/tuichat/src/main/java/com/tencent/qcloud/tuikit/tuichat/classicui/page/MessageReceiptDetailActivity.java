@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -38,13 +36,11 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MessageReceiptDetailActivity extends BaseLightActivity {
-
     private static final String TAG = MessageReceiptDetailActivity.class.getSimpleName();
 
     private MessageReceiptPresenter presenter;
@@ -84,6 +80,7 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
 
     private boolean readLoading = false;
     private boolean unreadLoading = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +121,8 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             @Override
             public void onClick(View v) {
                 readTitleLine.setVisibility(View.VISIBLE);
-                readTitleTv.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(MessageReceiptDetailActivity.this, com.tencent.qcloud.tuicore.R.attr.core_primary_color)));
+                readTitleTv.setTextColor(getResources().getColor(
+                    TUIThemeManager.getAttrResId(MessageReceiptDetailActivity.this, com.tencent.qcloud.tuicore.R.attr.core_primary_color)));
                 readList.setVisibility(View.VISIBLE);
                 unreadList.setVisibility(View.GONE);
                 unreadTitleLine.setVisibility(View.INVISIBLE);
@@ -136,7 +134,8 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             @Override
             public void onClick(View v) {
                 unreadTitleLine.setVisibility(View.VISIBLE);
-                unreadTitleTv.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(MessageReceiptDetailActivity.this, com.tencent.qcloud.tuicore.R.attr.core_primary_color)));
+                unreadTitleTv.setTextColor(getResources().getColor(
+                    TUIThemeManager.getAttrResId(MessageReceiptDetailActivity.this, com.tencent.qcloud.tuicore.R.attr.core_primary_color)));
                 unreadList.setVisibility(View.VISIBLE);
                 readList.setVisibility(View.GONE);
                 readTitleLine.setVisibility(View.INVISIBLE);
@@ -179,9 +178,7 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
 
         readList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -217,7 +214,7 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             if (messageBean instanceof ImageMessageBean) {
                 GlideEngine.loadImage(msgAbstractImg, ((ImageMessageBean) messageBean).getDataPath());
             } else if (messageBean instanceof VideoMessageBean) {
-                GlideEngine.loadImage(msgAbstractImg, ((VideoMessageBean) messageBean).getDataPath());
+                GlideEngine.loadImage(msgAbstractImg, ((VideoMessageBean) messageBean).getSnapshotPath());
             }
             msgAbstract.setText("");
         } else {
@@ -336,7 +333,6 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
     }
 
     static class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> {
-
         private List<GroupMemberInfo> data;
 
         public void setData(List<GroupMemberInfo> data) {
@@ -398,5 +394,4 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             return displayName;
         }
     }
-
 }

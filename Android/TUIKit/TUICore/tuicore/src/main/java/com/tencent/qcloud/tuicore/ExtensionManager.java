@@ -3,10 +3,8 @@ package com.tencent.qcloud.tuicore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +25,7 @@ class ExtensionManager {
         return ExtensionManagerHolder.extensionManager;
     }
 
-    private final Map<String, List<ITUIExtension>>  extensionHashMap = new ConcurrentHashMap<>();
+    private final Map<String, List<ITUIExtension>> extensionHashMap = new ConcurrentHashMap<>();
 
     private ExtensionManager() {}
 
@@ -60,7 +58,7 @@ class ExtensionManager {
 
     @Deprecated
     public Map<String, Object> getExtensionInfo(String key, Map<String, Object> param) {
-        Log.i(TAG, "getExtensionInfo key : " + key );
+        Log.i(TAG, "getExtensionInfo key : " + key);
         if (TextUtils.isEmpty(key)) {
             return null;
         }
@@ -68,7 +66,7 @@ class ExtensionManager {
         if (list == null) {
             return null;
         }
-        for(ITUIExtension extension : list) {
+        for (ITUIExtension extension : list) {
             return extension.onGetExtensionInfo(key, param);
         }
         return null;
@@ -107,5 +105,4 @@ class ExtensionManager {
             return;
         }
     }
-
 }

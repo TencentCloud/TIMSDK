@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
@@ -17,13 +15,13 @@ import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
 public class GroupListActivity extends BaseLightActivity {
-
     private static final String TAG = GroupListActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
     private ContactListView mListView;
 
     private ContactPresenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

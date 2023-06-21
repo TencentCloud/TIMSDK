@@ -1,9 +1,7 @@
 package com.tencent.qcloud.tim.demo.push;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -18,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class OfflineMessageDispatcher {
-
     private static final String TAG = OfflineMessageDispatcher.class.getSimpleName();
     private static final String OEMMessageKey = "ext";
     private static final String XIAOMIMessageKey = "key_message";
@@ -113,12 +110,11 @@ public class OfflineMessageDispatcher {
     private static OfflineMessageBean offlineMessageBeanValidCheck(OfflineMessageBean bean) {
         if (bean == null) {
             return null;
-        } else if (bean.version != 1
-                || (bean.action != OfflineMessageBean.REDIRECT_ACTION_CHAT
-                    && bean.action != OfflineMessageBean.REDIRECT_ACTION_CALL) ) {
+        } else if (bean.version != 1 || (bean.action != OfflineMessageBean.REDIRECT_ACTION_CHAT && bean.action != OfflineMessageBean.REDIRECT_ACTION_CALL)) {
             PackageManager packageManager = TIMAppService.getAppContext().getPackageManager();
             String label = String.valueOf(packageManager.getApplicationLabel(TIMAppService.getAppContext().getApplicationInfo()));
-            ToastUtil.toastLongMessage(TIMAppService.getAppContext().getString(R.string.you_app) + label + TIMAppService.getAppContext().getString(R.string.low_version));
+            ToastUtil.toastLongMessage(
+                TIMAppService.getAppContext().getString(R.string.you_app) + label + TIMAppService.getAppContext().getString(R.string.low_version));
             DemoLog.e(TAG, "unknown version: " + bean.version + " or action: " + bean.action);
             return null;
         }

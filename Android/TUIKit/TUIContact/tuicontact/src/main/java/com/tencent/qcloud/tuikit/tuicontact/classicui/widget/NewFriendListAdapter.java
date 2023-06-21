@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
@@ -19,11 +18,9 @@ import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.NewFriendPresenter;
-
 import java.util.List;
 
 public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
-
     private static final String TAG = NewFriendListAdapter.class.getSimpleName();
 
     private int mResourceId;
@@ -31,6 +28,7 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
     private ViewHolder mViewHolder;
 
     private NewFriendPresenter presenter;
+
     /**
      * Constructor
      *
@@ -43,7 +41,6 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
         super(context, resource, objects);
         mResourceId = resource;
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -100,6 +97,8 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
             case FriendApplicationBean.FRIEND_APPLICATION_BOTH:
                 mViewHolder.agree.setText(res.getString(R.string.request_accepted));
                 break;
+            default:
+                break;
         }
         return mView;
     }
@@ -122,8 +121,7 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
             } else {
                 presenter.refuseFriendApplication(bean, new IUIKitCallback<Void>() {
                     @Override
-                    public void onSuccess(Void data) {
-                    }
+                    public void onSuccess(Void data) {}
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
@@ -150,5 +148,4 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
         TextView reject;
         TextView result;
     }
-
 }

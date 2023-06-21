@@ -3,18 +3,18 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
+import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
@@ -35,20 +35,23 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IMessageLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.page.MessageReplyDetailActivity;
+import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +62,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     // 取一个足够大的偏移保证能一次性滚动到最底部
     // Take a large enough offset to scroll to the bottom at one time
     private static final int SCROLL_TO_END_OFFSET = -999999;
+    private static final int SOUND_PLAY_DELAYED = 500;
 
     protected OnItemClickListener mOnItemClickListener;
     protected MessageRecyclerView.OnLoadMoreHandler mHandler;
@@ -69,12 +73,16 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     protected OnChatPopActionClickListener mOnPopActionClickListener;
     private final MessageProperties properties = MessageProperties.getInstance();
 
+    private Set<String> downloadList = new HashSet<>();
+
     private OnMenuEmojiClickListener menuEmojiOnClickListener;
 
     private ChatPresenter presenter;
 
     private int mSelectedPosition = -1;
     private ChatPopMenu mChatPopMenu;
+
+    private final Handler soundPlayHandler = new Handler();
 
     public MessageRecyclerView(Context context) {
         super(context);
@@ -156,7 +164,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         mChatPopMenu.setShowFaces(TUIChatConfigs.getConfigs().getGeneralConfig().isReactEnable());
         mChatPopMenu.setChatPopMenuActionList(mPopActions);
         mChatPopMenu.setEmojiOnClickListener(new ChatPopMenu.EmojiOnClickListener() {
-
             @Override
             public void onClick(Emoji emoji) {
                 if (menuEmojiOnClickListener != null) {
@@ -185,10 +192,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             }
         }
     }
-    
+
     public boolean isDisplayJumpMessageLayout() {
-        TUIChatLog.d(TAG, "computeVerticalScrollRange() = " + computeVerticalScrollRange() + ", computeVerticalScrollExtent() = "
-                + computeVerticalScrollExtent() + ", computeVerticalScrollOffset() = " + computeVerticalScrollOffset());
+        TUIChatLog.d(TAG,
+            "computeVerticalScrollRange() = " + computeVerticalScrollRange() + ", computeVerticalScrollExtent() = " + computeVerticalScrollExtent()
+                + ", computeVerticalScrollOffset() = " + computeVerticalScrollOffset());
         int toBottom = computeVerticalScrollRange() - computeVerticalScrollExtent() - computeVerticalScrollOffset();
         TUIChatLog.d(TAG, "toBottom = " + toBottom);
         if (toBottom > 0 && toBottom >= 2 * computeVerticalScrollExtent()) {
@@ -272,11 +280,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
 
         if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-                forwardAction = new ChatPopMenu.ChatPopMenuAction();
-                forwardAction.setActionName(getContext().getString(R.string.forward_button));
-                forwardAction.setActionIcon(R.drawable.pop_menu_forward);
-                forwardAction.setActionClickListener(() -> mOnPopActionClickListener.onForwardMessageClick(msg));
-            }
+            forwardAction = new ChatPopMenu.ChatPopMenuAction();
+            forwardAction.setActionName(getContext().getString(R.string.forward_button));
+            forwardAction.setActionIcon(R.drawable.pop_menu_forward);
+            forwardAction.setActionClickListener(() -> mOnPopActionClickListener.onForwardMessageClick(msg));
+        }
 
         if (textIsAllSelected) {
             if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
@@ -376,7 +384,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                         ((MessageAdapter) getAdapter()).showLoading();
                     }
                     mHandler.loadMore(TUIChatConstants.GET_MESSAGE_FORWARD);
-                } else if (isListEnd(lastPosition)){
+                } else if (isLastItemVisibleCompleted()) {
                     if (getAdapter() instanceof MessageAdapter) {
                         ((MessageAdapter) getAdapter()).showLoading();
                     }
@@ -404,10 +412,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         if (mHandler != null) {
             mHandler.displayBackToNewMessage(display, messageId, count);
         }
-    }
-
-    private boolean isListEnd(int lastPosition) {
-       return mHandler.isListEnd(lastPosition);
     }
 
     public void scrollToEnd() {
@@ -537,24 +541,24 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             @Override
             public void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {
                 new TUIKitDialog(getContext())
-                        .builder()
-                        .setCancelable(true)
-                        .setCancelOutside(true)
-                        .setTitle(getContext().getString(R.string.resend_tips))
-                        .setDialogWidth(0.75f)
-                        .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), new View.OnClickListener() {
+                    .builder()
+                    .setCancelable(true)
+                    .setCancelOutside(true)
+                    .setTitle(getContext().getString(R.string.resend_tips))
+                    .setDialogWidth(0.75f)
+                    .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
+                        new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mOnPopActionClickListener.onSendMessageClick(messageInfo, true);
                             }
                         })
-                        .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), new View.OnClickListener() {
+                    .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                        new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-
-                            }
+                            public void onClick(View v) {}
                         })
-                        .show();
+                    .show();
             }
 
             @Override
@@ -566,6 +570,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
             @Override
             public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+                if (messageBean instanceof SoundMessageBean) {
+                    onSoundMessageClicked((SoundMessageBean) messageBean);
+                    return;
+                }
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onMessageClick(view, position, messageBean);
                 }
@@ -580,6 +588,96 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         });
     }
 
+    private void onSoundMessageClicked(SoundMessageBean messageBean) {
+        soundPlayHandler.removeCallbacksAndMessages(null);
+        if (AudioPlayer.getInstance().isPlaying()) {
+            AudioPlayer.getInstance().stopPlay();
+            soundPlayHandler.removeCallbacksAndMessages(null);
+            if (TextUtils.equals(AudioPlayer.getInstance().getPath(), messageBean.getDataPath())) {
+                return;
+            }
+        }
+        if (TextUtils.isEmpty(messageBean.getDataPath())) {
+            ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.voice_play_tip));
+            getSound(messageBean);
+            return;
+        }
+        messageBean.setPlaying(true);
+        messageBean.setPlayed();
+        updateMessageView(messageBean);
+        boolean needPlayNext = !messageBean.hasPlayed() && !messageBean.isSelf();
+        AudioPlayer.getInstance().startPlay(messageBean.getDataPath(), new AudioPlayer.Callback() {
+            @Override
+            public void onCompletion(Boolean success) {
+                messageBean.setPlaying(false);
+                updateMessageView(messageBean);
+                if (needPlayNext) {
+                    soundPlayHandler.postDelayed(() -> playNext(messageBean), SOUND_PLAY_DELAYED);
+                }
+            }
+        });
+    }
+
+    private void playNext(SoundMessageBean soundMessageBean) {
+        Adapter adapter = getAdapter();
+        if (adapter instanceof MessageAdapter) {
+            List<TUIMessageBean> messageBeans = ((MessageAdapter) adapter).getDataSource();
+            int index = messageBeans.indexOf(soundMessageBean);
+            if (index == -1) {
+                return;
+            }
+            for (int i = index + 1; i < messageBeans.size(); i++) {
+                TUIMessageBean messageBean = messageBeans.get(i);
+                if (messageBean instanceof SoundMessageBean) {
+                    if (!((SoundMessageBean) messageBean).hasPlayed()) {
+                        onSoundMessageClicked((SoundMessageBean) messageBean);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateMessageView(TUIMessageBean messageBean) {
+        Adapter adapter = getAdapter();
+        if (adapter instanceof MessageAdapter) {
+            ((MessageAdapter) adapter).onViewNeedRefresh(DATA_CHANGE_TYPE_UPDATE, messageBean);
+        }
+    }
+
+    private void getSound(final SoundMessageBean messageBean) {
+        if (downloadList.contains(messageBean.getUUID())) {
+            return;
+        }
+        downloadList.add(messageBean.getUUID());
+        final String path = TUIConfig.getRecordDownloadDir() + messageBean.getUUID();
+        File file = new File(path);
+        if (!file.exists()) {
+            messageBean.downloadSound(path, new SoundMessageBean.SoundDownloadCallback() {
+                @Override
+                public void onProgress(long currentSize, long totalSize) {
+                    TUIChatLog.i("downloadSound progress current:", currentSize + ", total:" + totalSize);
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    downloadList.remove(messageBean.getUUID());
+                    TUIChatLog.e("getSoundToFile failed code = ", code + ", info = " + desc);
+                    ToastUtil.toastLongMessage("getSoundToFile failed code = " + code + ", info = " + desc);
+                }
+
+                @Override
+                public void onSuccess() {
+                    downloadList.remove(messageBean.getUUID());
+                    messageBean.setDataPath(path);
+                    onSoundMessageClicked(messageBean);
+                }
+            });
+        } else {
+            messageBean.setDataPath(path);
+        }
+    }
+
     private void locateOriginMessage(String originMsgId) {
         if (TextUtils.isEmpty(originMsgId)) {
             ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
@@ -587,9 +685,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         presenter.locateMessage(originMsgId, new IUIKitCallback<Void>() {
             @Override
-            public void onSuccess(Void data) {
-
-            }
+            public void onSuccess(Void data) {}
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
@@ -632,7 +728,15 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip) + " code = " + errCode + " message = " + errMsg);
             }
         });
+    }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (soundPlayHandler != null) {
+            AudioPlayer.getInstance().stopPlay();
+            soundPlayHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     @Override
@@ -858,14 +962,19 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         void onClick(Emoji emoji, TUIMessageBean messageBean);
     }
 
-
     public interface OnLoadMoreHandler {
         void loadMore(int type);
+
         boolean isListEnd(int position);
+
         void displayBackToLastMessage(boolean display);
+
         void displayBackToNewMessage(boolean display, String messageId, int count);
+
         void hideBackToAtMessage();
+
         void loadMessageFinish();
+
         void scrollMessageFinish();
     }
 

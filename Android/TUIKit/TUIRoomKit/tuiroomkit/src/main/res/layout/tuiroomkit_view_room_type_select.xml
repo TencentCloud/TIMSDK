@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tuiroomkit_bg_bottom_dialog_black_portrait"
+    android:paddingBottom="70dp">
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/tuiroomkit_transparent"
+        android:text="@string/tuiroomkit_cancel"
+        android:textColor="@color/tuiroomkit_color_text_light_grey"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/rg_room_type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/tuiroomkit_transparent"
+        android:text="@string/tuiroomkit_dialog_ok"
+        android:textColor="@color/tuiroomkit_color_blue"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_cancel" />
+
+    <RadioGroup
+        android:id="@+id/rg_room_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/rb_free_speech"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tuiroomkit_bg_room_type_item"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/tuiroomkit_room_free_speech"
+            android:textColor="@color/tuiroomkit_color_white"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rb_raise_hand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tuiroomkit_bg_room_type_item"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/tuiroomkit_room_raise_hand"
+            android:textColor="@color/tuiroomkit_color_white"
+            android:textSize="16sp" />
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

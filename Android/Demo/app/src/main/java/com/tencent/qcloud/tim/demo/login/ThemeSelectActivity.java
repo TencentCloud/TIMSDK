@@ -7,11 +7,9 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -20,7 +18,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +108,6 @@ public class ThemeSelectActivity extends BaseLightActivity {
         titleBarLayout.setBackgroundColor(color);
         titleBarLayout.getMiddleTitle().setTextColor(titleColor);
         titleBarLayout.getLeftIcon().setBackgroundResource(backIconId);
-
     }
 
     private void initData() {
@@ -162,7 +158,6 @@ public class ThemeSelectActivity extends BaseLightActivity {
      * Add spacing and dividers
      */
     static class GridDecoration extends RecyclerView.ItemDecoration {
-
         private final int columnNum;
         private final int leftRightSpace;
         private final int topBottomSpace;

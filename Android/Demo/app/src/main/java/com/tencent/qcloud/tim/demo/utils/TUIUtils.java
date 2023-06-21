@@ -22,12 +22,10 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginConfig;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 
 public class TUIUtils {
     private static final String TAG = TUIUtils.class.getSimpleName();
@@ -174,5 +172,4 @@ public class TUIUtils {
         }
         return config;
     }
-
 }

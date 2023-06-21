@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -26,7 +25,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.TopicPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICreateTopicActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,20 +143,20 @@ public class CreateTopicActivity extends BaseLightActivity implements ICreateTop
     private void createTopic() {
         String topicName = topicNameEdit.getText().toString();
         if (!TextUtils.isEmpty(topicName)) {
-            presenter.createTopic(communityBean.getGroupId(), topicName, category, TopicBean.TOPIC_TYPE_TEXT,
-                    new IUIKitCallback<String>() {
-                        @Override
-                        public void onSuccess(String data) {
-                            TUICore.notifyEvent(TUIConstants.TUICommunity.EVENT_KEY_COMMUNITY_EXPERIENCE, TUIConstants.TUICommunity.EVENT_SUB_KEY_CREATE_TOPIC, null);
-                            ToastUtil.toastShortMessage(TUICommunityService.getAppContext().getString(R.string.community_create_topic_success));
-                            finish();
-                        }
+            presenter.createTopic(communityBean.getGroupId(), topicName, category, TopicBean.TOPIC_TYPE_TEXT, new IUIKitCallback<String>() {
+                @Override
+                public void onSuccess(String data) {
+                    TUICore.notifyEvent(TUIConstants.TUICommunity.EVENT_KEY_COMMUNITY_EXPERIENCE, TUIConstants.TUICommunity.EVENT_SUB_KEY_CREATE_TOPIC, null);
+                    ToastUtil.toastShortMessage(TUICommunityService.getAppContext().getString(R.string.community_create_topic_success));
+                    finish();
+                }
 
-                        @Override
-                        public void onError(String module, int errCode, String errMsg) {
-                            ToastUtil.toastShortMessage(TUICommunityService.getAppContext().getString(R.string.community_create_topic_failed) + ", code=" + errCode + " message=" + errMsg);
-                        }
-                    });
+                @Override
+                public void onError(String module, int errCode, String errMsg) {
+                    ToastUtil.toastShortMessage(
+                        TUICommunityService.getAppContext().getString(R.string.community_create_topic_failed) + ", code=" + errCode + " message=" + errMsg);
+                }
+            });
         }
     }
 }

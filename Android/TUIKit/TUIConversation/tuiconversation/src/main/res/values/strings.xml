@@ -24,4 +24,8 @@
 
     <string name="folded_group_chat">folded group chat</string>
     <string name="conversation_title_edit">Edit</string>
+    <string name="conversation_add_new_conversation">Add Conversation</string>
+    <string name="conversation_page_all">All</string>
+    <string name="conversation_null_text">No Conversation for %1$s</string>
+    <string name="conversation_delete_tips">The conversation and chat history will all be deleted</string>
 </resources>

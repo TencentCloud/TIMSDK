@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
@@ -17,11 +15,9 @@ import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.NewFriendListAdapte
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.INewFriendActivity;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.NewFriendPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
 import java.util.List;
 
 public class NewFriendActivity extends BaseLightActivity implements INewFriendActivity {
-
     private static final String TAG = NewFriendActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -30,6 +26,7 @@ public class NewFriendActivity extends BaseLightActivity implements INewFriendAc
     private TextView notFoundTip;
 
     private NewFriendPresenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,14 +54,10 @@ public class NewFriendActivity extends BaseLightActivity implements INewFriendAc
         presenter.setFriendActivity(this);
         presenter.setFriendApplicationListAllRead(new IUIKitCallback<Void>() {
             @Override
-            public void onSuccess(Void data) {
-
-            }
+            public void onSuccess(Void data) {}
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
         mNewFriendLv = findViewById(R.id.new_friend_list);
         notFoundTip = findViewById(R.id.not_found_tip);
@@ -93,5 +86,4 @@ public class NewFriendActivity extends BaseLightActivity implements INewFriendAc
     public void finish() {
         super.finish();
     }
-
 }

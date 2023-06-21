@@ -122,7 +122,7 @@
     <string name="TUIKitErrorSVRCommonSDkappidForbidden">SDKAppID is disabled.</string>
     <string name="TUIKitErrorSVRCommonReqForbidden">Request is disabled.</string>
     <string name="TUIKitErrorSVRCommonReqFreqLimit">Too many requests. Try again later.</string>
-    <string name="TUIKitErrorSVRCommonInvalidService">Your professional package has expired and been deactivated. Please log in to the im purchase page to re purchase the package. After purchase, it will take effect in 5 minutes.</string>
+    <string name="TUIKitErrorSVRCommonInvalidService">The package has not been purchased, or the package has expired, or the purchased package is being configured and has not yet taken effect. Please log in to the im purchase page to re purchase the package. After purchase, it will take effect in 5 minutes.</string>
     <string name="TUIKitErrorSVRCommonSensitiveText">Text is filtered due to security reasons, which may contain sensitive words.</string>
     <string name="TUIKitErrorSVRCommonBodySizeLimit">The sending message package is too long. Currently, the maximum 12K message package length is supported. Please reduce the package size and try again.</string>
     <string name="TUIKitErrorSVRAccountUserSigExpired">UserSig has expired. Generate a new one.</string>

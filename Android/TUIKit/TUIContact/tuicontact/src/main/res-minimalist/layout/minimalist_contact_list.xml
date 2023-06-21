@@ -23,7 +23,7 @@
         tools:visibility="visible"
         tools:text="暂无群聊"/>
 
-    <com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.widget.IndexBar
+    <com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.widget.IndexBar
         android:id="@+id/contact_indexBar"
         android:layout_width="24dp"
         android:layout_marginTop="54dp"

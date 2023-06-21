@@ -2,12 +2,10 @@ package com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationListLayout;
@@ -15,7 +13,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConve
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 public class ConversationListLayout extends RecyclerView implements IConversationListLayout {
-
     private ConversationListAdapter mAdapter;
     private ConversationPresenter presenter;
     private boolean isFolded = false;
@@ -102,7 +99,7 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     }
 
     @Override
-    public void setOnConversationAdapterListener(OnConversationAdapterListener listener){
+    public void setOnConversationAdapterListener(OnConversationAdapterListener listener) {
         mAdapter.setOnConversationAdapterListener(listener);
     }
 
@@ -133,7 +130,7 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
     }
 
-    boolean isLoadCompleted(){
+    boolean isLoadCompleted() {
         if (presenter != null) {
             return presenter.isLoadFinished();
         }

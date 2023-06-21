@@ -22,10 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
@@ -40,7 +38,6 @@ import com.tencent.qcloud.tuikit.tuisearch.classicui.widget.PageRecycleView;
 import com.tencent.qcloud.tuikit.tuisearch.classicui.widget.SearchResultAdapter;
 import com.tencent.qcloud.tuikit.tuisearch.presenter.SearchMainPresenter;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +56,7 @@ public class SearchMainActivity extends BaseLightActivity {
     private SearchResultAdapter mContactRcSearchAdapter;
     private SearchResultAdapter mGroupRcSearchAdapter;
     private SearchResultAdapter mConversationRcSearchAdapter;
-    
+
     private RelativeLayout mContactLayout;
     private RelativeLayout mGroupLayout;
     private RelativeLayout mConversationLayout;
@@ -73,6 +70,7 @@ public class SearchMainActivity extends BaseLightActivity {
     private List<SearchDataBean> mConversationData = new ArrayList<>();
 
     private SearchMainPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +78,7 @@ public class SearchMainActivity extends BaseLightActivity {
         init();
     }
 
-    private void init(){
+    private void init() {
         initView();
 
         if (mContactRcSearchAdapter == null) {
@@ -112,14 +110,10 @@ public class SearchMainActivity extends BaseLightActivity {
     private void setListener() {
         mEdtSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -134,7 +128,7 @@ public class SearchMainActivity extends BaseLightActivity {
         });
 
         if (mContactRcSearchAdapter != null) {
-            mContactRcSearchAdapter.setOnItemClickListener(new SearchResultAdapter.onItemClickListener() {
+            mContactRcSearchAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
                 @Override
                 public void onClick(View view, int pos) {
                     if (mContactSearchData != null && pos < mContactSearchData.size()) {
@@ -150,13 +144,12 @@ public class SearchMainActivity extends BaseLightActivity {
                         }
                         chatInfo.setChatName(chatName);
                         ClassicSearchUtils.startChatActivity(chatInfo);
-
                     }
                 }
             });
         }
         if (mGroupRcSearchAdapter != null) {
-            mGroupRcSearchAdapter.setOnItemClickListener(new SearchResultAdapter.onItemClickListener() {
+            mGroupRcSearchAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
                 @Override
                 public void onClick(View view, int pos) {
                     if (mGroupSearchData != null && pos < mGroupSearchData.size()) {
@@ -173,16 +166,15 @@ public class SearchMainActivity extends BaseLightActivity {
                         chatInfo.setChatName(chatName);
                         chatInfo.setId(searchDataBean.getGroupID());
                         ClassicSearchUtils.startChatActivity(chatInfo);
-
                     }
                 }
             });
         }
         if (mConversationRcSearchAdapter != null) {
-            mConversationRcSearchAdapter.setOnItemClickListener(new SearchResultAdapter.onItemClickListener() {
+            mConversationRcSearchAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
                 @Override
                 public void onClick(View view, int pos) {
-                    if (mConversationRcSearchAdapter == null){
+                    if (mConversationRcSearchAdapter == null) {
                         return;
                     }
                     List<SearchDataBean> searchDataBeans = mConversationRcSearchAdapter.getDataSource();
@@ -217,11 +209,11 @@ public class SearchMainActivity extends BaseLightActivity {
         mMoreContactLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mContactRcSearchAdapter == null){
+                if (mContactRcSearchAdapter == null) {
                     return;
                 }
                 List<SearchDataBean> searchDataBeans = mContactRcSearchAdapter.getDataSource();
-                if (searchDataBeans == null || searchDataBeans.size() < 4){
+                if (searchDataBeans == null || searchDataBeans.size() < 4) {
                     return;
                 }
                 Intent intent = new Intent(getApplicationContext(), SearchMoreListActivity.class);
@@ -234,11 +226,11 @@ public class SearchMainActivity extends BaseLightActivity {
         mMoreGroupLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mGroupRcSearchAdapter== null){
+                if (mGroupRcSearchAdapter == null) {
                     return;
                 }
                 List<SearchDataBean> searchDataBeans = mGroupRcSearchAdapter.getDataSource();
-                if (searchDataBeans == null || searchDataBeans.size() < 4){
+                if (searchDataBeans == null || searchDataBeans.size() < 4) {
                     return;
                 }
                 Intent intent = new Intent(getApplicationContext(), SearchMoreListActivity.class);
@@ -251,11 +243,11 @@ public class SearchMainActivity extends BaseLightActivity {
         mMoreConversationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mConversationRcSearchAdapter== null){
+                if (mConversationRcSearchAdapter == null) {
                     return;
                 }
                 List<SearchDataBean> searchDataBeans = mConversationRcSearchAdapter.getDataSource();
-                if (searchDataBeans == null || searchDataBeans.size() < 4){
+                if (searchDataBeans == null || searchDataBeans.size() < 4) {
                     return;
                 }
                 Intent intent = new Intent(getApplicationContext(), SearchMoreListActivity.class);
@@ -265,7 +257,6 @@ public class SearchMainActivity extends BaseLightActivity {
             }
         });
     }
-
 
     private void doChangeColor(String text) {
         if (text.equals("")) {
@@ -280,16 +271,16 @@ public class SearchMainActivity extends BaseLightActivity {
     }
 
     private void initData(final String keyWords) {
-       if (keyWords == null || TextUtils.isEmpty(keyWords)){
-           mContactLayout.setVisibility(View.GONE);
-           mGroupLayout.setVisibility(View.GONE);
-           mConversationLayout.setVisibility(View.GONE);
-           return;
-       }
+        if (keyWords == null || TextUtils.isEmpty(keyWords)) {
+            mContactLayout.setVisibility(View.GONE);
+            mGroupLayout.setVisibility(View.GONE);
+            mConversationLayout.setVisibility(View.GONE);
+            return;
+        }
 
-        final List<String> keywordList = new ArrayList<String>() {{
-                add(keyWords);
-        }};
+        final List<String> keywordList = new ArrayList<String>() {
+            { add(keyWords); }
+        };
 
         presenter.searchContact(keywordList, new IUIKitCallback<List<SearchDataBean>>() {
             @Override
@@ -335,7 +326,6 @@ public class SearchMainActivity extends BaseLightActivity {
                     mMoreGroupLayout.setVisibility(View.GONE);
                 }
                 mGroupRcSearchAdapter.onIsShowAllChanged(false);
-
             }
 
             @Override
@@ -379,7 +369,8 @@ public class SearchMainActivity extends BaseLightActivity {
         String string = getResources().getString(R.string.search_im_flagship_edition_update_tip, getString(R.string.search));
         String buyingGuidelines = getResources().getString(R.string.search_buying_guidelines);
         int buyingGuidelinesIndex = string.lastIndexOf(buyingGuidelines);
-        final int foregroundColor = getResources().getColor(TUIThemeManager.getAttrResId(SearchMainActivity.this, com.tencent.qcloud.tuicore.R.attr.core_primary_color));
+        final int foregroundColor =
+            getResources().getColor(TUIThemeManager.getAttrResId(SearchMainActivity.this, com.tencent.qcloud.tuicore.R.attr.core_primary_color));
         SpannableString spannedString = new SpannableString(string);
         ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(foregroundColor);
         spannedString.setSpan(colorSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -401,29 +392,31 @@ public class SearchMainActivity extends BaseLightActivity {
         };
         spannedString.setSpan(clickableSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         TUIKitDialog.TUIIMUpdateDialog.getInstance()
-                .createDialog(this)
-                .setShowOnlyDebug(true)
-                .setMovementMethod(LinkMovementMethod.getInstance())
-                .setHighlightColor(Color.TRANSPARENT)
-                .setCancelable(true)
-                .setCancelOutside(true)
-                .setTitle(spannedString)
-                .setDialogWidth(0.75f)
-                .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_SEARCH)
-                .setPositiveButton(getString(R.string.search_no_more_reminders), new View.OnClickListener() {
+            .createDialog(this)
+            .setShowOnlyDebug(true)
+            .setMovementMethod(LinkMovementMethod.getInstance())
+            .setHighlightColor(Color.TRANSPARENT)
+            .setCancelable(true)
+            .setCancelOutside(true)
+            .setTitle(spannedString)
+            .setDialogWidth(0.75f)
+            .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_SEARCH)
+            .setPositiveButton(getString(R.string.search_no_more_reminders),
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().setNeverShow(true);
                     }
                 })
-                .setNegativeButton(getString(R.string.search_i_know), new View.OnClickListener() {
+            .setNegativeButton(getString(R.string.search_i_know),
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
                     }
                 })
-                .show();
+            .show();
     }
 
     private void openWebUrl(String url) {
@@ -455,6 +448,7 @@ public class SearchMainActivity extends BaseLightActivity {
         mConversationLayout = (RelativeLayout) findViewById(R.id.conversation_layout);
         mMoreConversationLayout = (RelativeLayout) findViewById(R.id.more_conversation_layout);
     }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
@@ -470,8 +464,10 @@ public class SearchMainActivity extends BaseLightActivity {
         if (v != null && (v instanceof EditText)) {
             int[] l = {0, 0};
             v.getLocationInWindow(l);
-            int left = l[0], top = l[1], bottom = top + v.getHeight(), right = left
-                    + v.getWidth();
+            int left = l[0];
+            int top = l[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
             if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
                 return false;
             } else {
@@ -487,5 +483,4 @@ public class SearchMainActivity extends BaseLightActivity {
             im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-
 }

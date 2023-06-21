@@ -7,13 +7,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.TIMAppService;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +26,13 @@ public class ThemeSelectAdapter extends RecyclerView.Adapter<ThemeSelectAdapter.
 
     @NonNull
     @Override
-    public SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ThemeSelectAdapter.SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_theme_select_item, parent, false);
-        return new SelectViewHolder(view);
+        return new ThemeSelectAdapter.SelectViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SelectViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ThemeSelectAdapter.SelectViewHolder holder, int position) {
         ThemeBean themeBean = themeBeanList.get(position);
         holder.content.setBackgroundResource(themeBean.resId);
         holder.name.setText(themeBean.name);
@@ -67,7 +64,7 @@ public class ThemeSelectAdapter extends RecyclerView.Adapter<ThemeSelectAdapter.
         themeBeanList = data;
     }
 
-    class SelectViewHolder extends RecyclerView.ViewHolder{
+    class SelectViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         ImageView selectedIcon;
         FrameLayout frame;

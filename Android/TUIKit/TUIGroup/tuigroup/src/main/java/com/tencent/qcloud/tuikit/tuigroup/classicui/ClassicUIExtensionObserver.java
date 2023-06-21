@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuigroup.classicui;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -14,13 +13,11 @@ import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupInfoActivity;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class ClassicUIExtensionObserver extends ServiceInitializer implements ITUIExtension {
-
     @Override
     public void init(Context context) {
         super.init(context);
@@ -49,5 +46,4 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
         }
         return null;
     }
-
 }

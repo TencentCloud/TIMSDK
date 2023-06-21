@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tencent.cloud.tuikit.roomkit.view.base.BaseFloatingView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:background="#7F000000">
+
+    <TextView
+        android:textColor="@color/tuiroomkit_color_white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxEms="1"
+        android:text="@string/tuiroomkit_tv_screen_recording"/>
+
+</com.tencent.cloud.tuikit.roomkit.view.base.BaseFloatingView>

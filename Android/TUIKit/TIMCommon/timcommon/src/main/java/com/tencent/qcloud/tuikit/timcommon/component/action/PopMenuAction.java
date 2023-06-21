@@ -3,11 +3,11 @@ package com.tencent.qcloud.tuikit.timcommon.component.action;
 import android.graphics.Bitmap;
 
 public class PopMenuAction {
-
     private String actionName;
     private Bitmap icon;
     private int iconResId;
     private PopActionClickListener actionClickListener;
+    private int weight;
 
     public String getActionName() {
         return actionName;
@@ -25,7 +25,6 @@ public class PopMenuAction {
         this.icon = mIcon;
     }
 
-
     public int getIconResId() {
         return iconResId;
     }
@@ -40,5 +39,13 @@ public class PopMenuAction {
 
     public void setActionClickListener(PopActionClickListener actionClickListener) {
         this.actionClickListener = actionClickListener;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 }

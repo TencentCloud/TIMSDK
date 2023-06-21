@@ -16,7 +16,5 @@ public class LocationReplyQuoteView extends TUIReplyQuoteView {
     }
 
     @Override
-    public void onDrawReplyQuote(TUIReplyQuoteBean quoteBean) {
-
-    }
+    public void onDrawReplyQuote(TUIReplyQuoteBean quoteBean) {}
 }

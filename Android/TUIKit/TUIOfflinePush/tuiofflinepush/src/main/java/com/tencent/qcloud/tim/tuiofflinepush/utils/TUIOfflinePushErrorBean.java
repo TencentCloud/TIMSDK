@@ -2,14 +2,14 @@ package com.tencent.qcloud.tim.tuiofflinepush.utils;
 
 public class TUIOfflinePushErrorBean {
     public long errorCode;
-    public String ErrorDescription;
+    public String errorDescription;
 
     public long getErrorCode() {
         return errorCode;
     }
 
     public String getErrorDescription() {
-        return ErrorDescription;
+        return errorDescription;
     }
 
     public void setErrorCode(long errorCode) {
@@ -17,6 +17,6 @@ public class TUIOfflinePushErrorBean {
     }
 
     public void setErrorDescription(String errorDescription) {
-        ErrorDescription = errorDescription;
+        this.errorDescription = errorDescription;
     }
 }

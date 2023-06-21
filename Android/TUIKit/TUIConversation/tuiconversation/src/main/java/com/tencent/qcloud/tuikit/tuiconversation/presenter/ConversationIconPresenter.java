@@ -15,5 +15,4 @@ public class ConversationIconPresenter {
     public void getGroupMemberIconList(String groupId, IUIKitCallback<List<Object>> callback) {
         provider.getGroupMemberIconList(groupId, 9, callback);
     }
-
 }

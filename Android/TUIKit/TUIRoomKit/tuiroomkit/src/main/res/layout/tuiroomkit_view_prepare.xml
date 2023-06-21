@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_root_prepare"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/tuiroomkit_ic_back_black"
+        app:layout_constraintBottom_toBottomOf="@+id/img_head_prepare"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_head_prepare" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_head_prepare"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/tuiroomkit_head"
+        app:layout_constraintStart_toEndOf="@id/img_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_name_prepare"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/img_head_prepare"
+        app:layout_constraintStart_toEndOf="@+id/img_head_prepare"
+        app:layout_constraintTop_toTopOf="@+id/img_head_prepare" />
+
+    <ImageView
+        android:id="@+id/img_language_change"
+        android:layout_width="20dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="20dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/tuiroomkit_ic_change_language"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_name_prepare"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_name_prepare" />
+
+    <RelativeLayout
+        android:id="@+id/rl_product_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_head_prepare">
+
+        <ImageView
+            android:id="@+id/img_tencent_cloud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/tuiroomkit_ic_tencent_cloud_prepare" />
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_tencent_cloud"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_product_name"
+            android:textSize="24sp"
+            android:textStyle="italic|bold" />
+    </RelativeLayout>
+
+    <com.tencent.cloud.tuikit.roomkit.view.component.RoundRelativeLayout
+        android:id="@+id/rl_video_preview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/tuiroomkit_bg_main_light_black"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_head_prepare">
+
+        <ImageView
+            android:id="@+id/image_switch_camera_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/tuiroomkit_ic_camera_switch" />
+
+        <ImageView
+            android:id="@+id/image_mirror_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@id/image_switch_camera_preview"
+            android:src="@drawable/tuiroomkit_ic_mirror" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_head_close_video"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ll_user_info_close_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_head_close_video"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp">
+
+            <ImageView
+                android:id="@+id/image_volume_close_video"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                android:src="@drawable/tuiroomkit_ic_mic_on" />
+
+            <TextView
+                android:id="@+id/tv_user_name_close_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/tuiroomkit_color_white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+    </com.tencent.cloud.tuikit.roomkit.view.component.RoundRelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_mic_prepare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/gl_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/rl_video_preview">
+
+        <ImageView
+            android:id="@+id/image_microphone_prepare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/tuiroomkit_ic_mic_on" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/tuiroomkit_microphone"
+            android:textColor="@color/tuiroomkit_color_bg_bottom_black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_camera_prepare"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintStart_toEndOf="@+id/gl_vertical"
+        app:layout_constraintTop_toTopOf="@+id/ll_mic_prepare">
+
+        <ImageView
+            android:id="@+id/image_camera_prepare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/tuiroomkit_ic_camera_on"
+            tools:layout_editor_absoluteX="81dp"
+            tools:layout_editor_absoluteY="629dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/tuiroomkit_camera"
+            android:textColor="@color/tuiroomkit_color_bg_bottom_black"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_enter_room"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/gl_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_mic_prepare">
+
+        <TextView
+            android:id="@+id/img_enter_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/tuiroomkit_ic_enter_room"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_enter_room"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_create_room"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ll_enter_room"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/gl_vertical"
+        app:layout_constraintTop_toTopOf="@+id/ll_enter_room"
+        app:layout_constraintVertical_bias="1.0">
+
+        <TextView
+            android:id="@+id/img_create_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/tuiroomkit_ic_create_room"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_create_room"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_cloud_icon_bottom"
+        android:layout_width="86dp"
+        android:layout_height="23dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/tuiroomkit_icon_tencent_cloud"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_enter_room"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+</androidx.constraintlayout.widget.ConstraintLayout>

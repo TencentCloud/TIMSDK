@@ -6,16 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.qcloud.tim.tuiofflinepush.interfaces.PushCallback;
 import com.tencent.qcloud.tim.tuiofflinepush.interfaces.PushSettingInterface;
 import com.tencent.qcloud.tim.tuiofflinepush.notification.ParseNotification;
 import com.tencent.qcloud.tim.tuiofflinepush.oempush.OEMPushSetting;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
-import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
-
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
 
 public class TUIOfflinePushManager {
@@ -31,9 +29,7 @@ public class TUIOfflinePushManager {
 
     private UniJSCallback jsLifeCycleCallback;
 
-    private TUIOfflinePushManager() {
-
-    }
+    private TUIOfflinePushManager() {}
 
     public static TUIOfflinePushManager getInstance() {
         if (instance == null) {
@@ -98,7 +94,7 @@ public class TUIOfflinePushManager {
         pushSetting.initPush(context);
     }
 
-    private void unInitPush(Context context, String userId){
+    private void unInitPush(Context context, String userId) {
         if (pushSetting == null) {
             pushSetting = new OEMPushSetting();
         }
@@ -136,7 +132,7 @@ public class TUIOfflinePushManager {
         if (jsNotificationCallback != null) {
             JSONObject data = new JSONObject();
             data.put(TUIOfflinePushModule.RESPONSE_NOTIFICATION_KEY, ext);
-            TUIOfflinePushLog.d(TAG, "callJsNotificationCallback invoke data--"+data);
+            TUIOfflinePushLog.d(TAG, "callJsNotificationCallback invoke data--" + data);
             jsNotificationCallback.invokeAndKeepAlive(data);
             mClickIntentData = null;
         } else {
@@ -159,19 +155,20 @@ public class TUIOfflinePushManager {
                     TUIOfflinePushLog.i(TAG, "onActivityCreated bundle: " + bundle);
                     if (bundle != null) { // 若bundle不为空则程序异常结束
                         // 重启整个程序
-
                     }
                 }
 
                 @Override
                 public void onActivityStarted(Activity activity) {
                     foregroundActivities++;
+                    TUIOfflinePushLog.i(TAG, "onActivityStarted foregroundActivities = " + foregroundActivities);
+                    TUIOfflinePushLog.i(TAG, "onActivityStarted isChangingConfiguration = " + isChangingConfiguration);
                     if (foregroundActivities == 1 && !isChangingConfiguration) {
                         TUIOfflinePushLog.i(TAG, "application enter foreground");
                         if (jsLifeCycleCallback != null) {
                             JSONObject data = new JSONObject();
                             data.put(TUIOfflinePushModule.RESPONSE_APPSHOW_KEY, 1);
-                            TUIOfflinePushLog.d(TAG, "calljsLifeCycleCallback invoke data--"+data);
+                            TUIOfflinePushLog.d(TAG, "calljsLifeCycleCallback invoke data--" + data);
                             jsLifeCycleCallback.invokeAndKeepAlive(data);
                         } else {
                             TUIOfflinePushLog.e(TAG, "jsLifeCycleCallback is null");
@@ -182,40 +179,40 @@ public class TUIOfflinePushManager {
 
                 @Override
                 public void onActivityResumed(Activity activity) {
-
+                    TUIOfflinePushLog.i(TAG, "onActivityResumed foregroundActivities = " + foregroundActivities);
                 }
 
                 @Override
                 public void onActivityPaused(Activity activity) {
-
+                    TUIOfflinePushLog.i(TAG, "onActivityPaused foregroundActivities = " + foregroundActivities);
                 }
 
                 @Override
                 public void onActivityStopped(Activity activity) {
                     foregroundActivities--;
+                    TUIOfflinePushLog.i(TAG, "onActivityStopped foregroundActivities = " + foregroundActivities);
                     if (foregroundActivities == 0) {
                         // 应用切到后台
                         TUIOfflinePushLog.i(TAG, "application enter background");
                         if (jsLifeCycleCallback != null) {
                             JSONObject data = new JSONObject();
                             data.put(TUIOfflinePushModule.RESPONSE_APPSHOW_KEY, 0);
-                            TUIOfflinePushLog.d(TAG, "calljsLifeCycleCallback invoke data--"+data);
+                            TUIOfflinePushLog.d(TAG, "calljsLifeCycleCallback invoke data--" + data);
                             jsLifeCycleCallback.invokeAndKeepAlive(data);
                         } else {
                             TUIOfflinePushLog.e(TAG, "jsLifeCycleCallback is null");
                         }
                     }
                     isChangingConfiguration = activity.isChangingConfigurations();
+                    TUIOfflinePushLog.i(TAG, "onActivityStarted isChangingConfiguration = " + isChangingConfiguration);
                 }
 
                 @Override
-                public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-
-                }
+                public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {}
 
                 @Override
                 public void onActivityDestroyed(Activity activity) {
-
+                    TUIOfflinePushLog.i(TAG, "onActivityDestroyed foregroundActivities = " + foregroundActivities);
                 }
             });
         }

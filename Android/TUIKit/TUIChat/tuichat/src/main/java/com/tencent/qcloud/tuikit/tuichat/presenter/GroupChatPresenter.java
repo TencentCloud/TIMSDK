@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
 import android.util.Pair;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
@@ -17,7 +16,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +36,6 @@ public class GroupChatPresenter extends ChatPresenter {
 
     public void initListener() {
         groupChatEventListener = new GroupChatEventListener() {
-
             @Override
             public void onGroupForceExit(String groupId) {
                 GroupChatPresenter.this.onGroupForceExit(groupId);
@@ -141,7 +138,6 @@ public class GroupChatPresenter extends ChatPresenter {
         String chatId = groupInfo.getId();
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
             provider.loadGroupMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<TUIMessageBean>>() {
-
                 @Override
                 public void onSuccess(List<TUIMessageBean> data) {
                     TUIChatLog.i(TAG, "load group message success " + data.size());
@@ -193,7 +189,6 @@ public class GroupChatPresenter extends ChatPresenter {
         addGroupMessage(messageInfo);
     }
 
-
     private void addGroupMessage(TUIMessageBean message) {
         if (!(message instanceof TipsMessageBean)) {
             return;
@@ -229,11 +224,10 @@ public class GroupChatPresenter extends ChatPresenter {
                 }
 
                 @Override
-                public void onError(String module, int errCode, String errMsg) {
-
-                }
+                public void onError(String module, int errCode, String errMsg) {}
             });
-        } else if (tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NAME || tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE) {
+        } else if (tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NAME
+            || tipsMessage.getTipType() == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE) {
             provider.addModifyGroupMessage(tipsMessage, new IUIKitCallback<Pair<Integer, String>>() {
                 @Override
                 public void onSuccess(Pair<Integer, String> data) {
@@ -260,7 +254,7 @@ public class GroupChatPresenter extends ChatPresenter {
         message.setGroup(true);
         String groupType = groupInfo.getGroupType();
         if (TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_AVCHATROOM) || TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_COMMUNITY)
-                || (TUIChatUtils.isCommunityGroup(groupInfo.getId()))) {
+            || (TUIChatUtils.isCommunityGroup(groupInfo.getId()))) {
             message.setNeedReadReceipt(false);
         }
     }
@@ -359,5 +353,4 @@ public class GroupChatPresenter extends ChatPresenter {
             });
         }
     }
-
 }

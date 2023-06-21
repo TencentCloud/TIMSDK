@@ -9,28 +9,25 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
 public class ChatReactView extends FrameLayout {
-
     private static final int EMOJI_LIMIT = 5;
     private LinearLayoutManager layoutManager;
     private TextView reactNumText;
     private View moreIcon;
     private RecyclerView reactRecyclerView;
     private ChatReactAdapter adapter;
+
     public ChatReactView(@NonNull Context context) {
         super(context);
         initView();
@@ -109,10 +106,10 @@ public class ChatReactView extends FrameLayout {
 
     static class ChatReactViewHolder extends RecyclerView.ViewHolder {
         public ImageView faceImageView;
+
         public ChatReactViewHolder(@NonNull View itemView) {
             super(itemView);
             faceImageView = itemView.findViewById(R.id.face_iv);
         }
     }
-
 }

@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
@@ -16,13 +15,11 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class SoundMessageHolder extends MessageContentHolder {
-
     private static final int UNREAD = 0;
     private static final int READ = 1;
 
@@ -42,7 +39,6 @@ public class SoundMessageHolder extends MessageContentHolder {
     public int getVariableLayout() {
         return R.layout.minimalist_message_adapter_content_audio;
     }
-
 
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
@@ -96,7 +92,7 @@ public class SoundMessageHolder extends MessageContentHolder {
                 }
 
                 audioPlayImage.setImageResource(R.drawable.chat_audio_stop_btn_ic);
-                message.setCustomInt(READ);
+                message.setPlayed();
                 AudioPlayer.getInstance().startPlay(message.getDataPath(), new AudioPlayer.Callback() {
                     @Override
                     public void onCompletion(Boolean success) {
@@ -147,5 +143,4 @@ public class SoundMessageHolder extends MessageContentHolder {
             messageBean.setDataPath(path);
         }
     }
-
 }

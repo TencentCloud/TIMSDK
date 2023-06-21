@@ -3,9 +3,6 @@ package com.tencent.qcloud.tuikit.tuisearch.util;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.qcloud.tuikit.tuisearch.bean.GroupInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GroupInfoUtils {
     public static GroupInfo convertTimGroupInfo2GroupInfo(V2TIMGroupInfo v2TIMGroupInfo) {
         if (v2TIMGroupInfo == null) {

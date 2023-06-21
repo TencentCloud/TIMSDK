@@ -8,35 +8,35 @@ import java.io.Serializable;
 public class FriendApplicationBean implements Serializable {
     /**
      * ## 别人发给我的加好友请求
-     * 
+     *
      * ## Friend request received by me
      */
     public static final int FRIEND_APPLICATION_COME_IN = V2TIMFriendApplication.V2TIM_FRIEND_APPLICATION_COME_IN;
 
     /**
      * ## 我发给别人的加好友请求
-     * 
+     *
      * ## Friend request sent by me
      */
     public static final int FRIEND_APPLICATION_SEND_OUT = V2TIMFriendApplication.V2TIM_FRIEND_APPLICATION_SEND_OUT;
 
     /**
      * ## 别人发给我的和我发给别人的加好友请求。仅在拉取时有效。
-     * 
+     *
      * ## Friend requests received and sent by me. Valid only during pulling
      */
     public static final int FRIEND_APPLICATION_BOTH = V2TIMFriendApplication.V2TIM_FRIEND_APPLICATION_BOTH;
 
     /**
      * ## 同意加好友（建立单向好友）
-     * 
+     *
      * ## Accept the friend request (build a one-way friend relationship)
      */
     public static final int FRIEND_ACCEPT_AGREE = V2TIMFriendApplication.V2TIM_FRIEND_ACCEPT_AGREE;
 
     /**
      * ## 同意加好友并加对方为好友（建立双向好友）
-     * 
+     *
      * ## Accept the friend request and add the peer party as a friend (build a two-way friend relationship)
      */
     public static final int FRIEND_ACCEPT_AGREE_AND_ADD = V2TIMFriendApplication.V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD;
@@ -57,6 +57,7 @@ public class FriendApplicationBean implements Serializable {
     private String faceUrl;
     private V2TIMFriendApplication friendApplication;
     private boolean isAccept = false;
+    
     public FriendApplicationBean() {}
 
     public String getUserId() {

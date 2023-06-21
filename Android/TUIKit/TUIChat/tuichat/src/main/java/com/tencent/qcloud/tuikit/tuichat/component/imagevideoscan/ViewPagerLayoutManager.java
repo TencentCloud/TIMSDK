@@ -2,18 +2,16 @@ package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
 import android.content.Context;
 import android.view.View;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 public class ViewPagerLayoutManager extends LinearLayoutManager {
     private static final String TAG = "ViewPagerLayoutManager";
     private PagerSnapHelper mPagerSnapHelper;
     private OnViewPagerListener mOnViewPagerListener;
     private RecyclerView mRecyclerView;
-    private int mDrift;//位移，用来判断移动方向 Displacement, used to determine the direction of movement
+    private int mDrift; // 位移，用来判断移动方向 Displacement, used to determine the direction of movement
     private boolean mIsLeftScroll = false;
 
     public ViewPagerLayoutManager(Context context, int orientation) {
@@ -44,8 +42,8 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
      * 快速滚动-> SCROLL_STATE_SETTLING
      * 空闲状态-> SCROLL_STATE_IDLE
      * @param state
-     * 
-     * 
+     *
+     *
      * Change of sliding state
      * drag slowly-> SCROLL_STATE_DRAGGING
      * scroll fast-> SCROLL_STATE_SETTLING
@@ -53,22 +51,20 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
      */
     @Override
     public void onScrollStateChanged(int state) {
-        switch (state) {
-            case RecyclerView.SCROLL_STATE_IDLE:
-                View viewIdle = mPagerSnapHelper.findSnapView(this);
-                int positionIdle = getPosition(viewIdle);
-                if (mOnViewPagerListener != null && getChildCount() == 1) {
-                    mOnViewPagerListener.onPageSelected(positionIdle,positionIdle == getItemCount() - 1, mIsLeftScroll);
-                }
-                break;
+        if (state == RecyclerView.SCROLL_STATE_IDLE) {
+            View viewIdle = mPagerSnapHelper.findSnapView(this);
+            int positionIdle = getPosition(viewIdle);
+            if (mOnViewPagerListener != null && getChildCount() == 1) {
+                mOnViewPagerListener.onPageSelected(positionIdle, positionIdle == getItemCount() - 1, mIsLeftScroll);
+            }
         }
     }
 
     /**
      * 监听竖直方向的相对偏移量
-     * 
+     *
      * Monitor the relative offset in the vertical direction
-     * 
+     *
      * @param dy
      * @param recycler
      * @param state
@@ -80,12 +76,11 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
         return super.scrollVerticallyBy(dy, recycler, state);
     }
 
-
     /**
      * 监听水平方向的相对偏移量
-     * 
+     *
      * Monitor the relative offset in the horizontal direction
-     * 
+     *
      * @param dx
      * @param recycler
      * @param state
@@ -102,7 +97,7 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
         return super.scrollHorizontallyBy(dx, recycler, state);
     }
 
-    public void setOnViewPagerListener(OnViewPagerListener listener){
+    public void setOnViewPagerListener(OnViewPagerListener listener) {
         this.mOnViewPagerListener = listener;
     }
 
@@ -116,12 +111,15 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
 
         @Override
         public void onChildViewDetachedFromWindow(View view) {
-            if (mDrift >= 0){
-                if (mOnViewPagerListener != null) mOnViewPagerListener.onPageRelease(true,getPosition(view));
-            }else {
-                if (mOnViewPagerListener != null) mOnViewPagerListener.onPageRelease(false,getPosition(view));
+            if (mDrift >= 0) {
+                if (mOnViewPagerListener != null) {
+                    mOnViewPagerListener.onPageRelease(true, getPosition(view));
+                }
+            } else {
+                if (mOnViewPagerListener != null) {
+                    mOnViewPagerListener.onPageRelease(false, getPosition(view));
+                }
             }
-
         }
     };
 }

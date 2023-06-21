@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -163,14 +161,10 @@ public class AddMoreMinimalistDialogFragment extends DialogFragment implements I
 
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -190,8 +184,8 @@ public class AddMoreMinimalistDialogFragment extends DialogFragment implements I
     private void setGroupDetail(GroupInfo groupInfo) {
         int radius = ScreenUtil.dip2px(28);
         faceImgView.setRadius(radius);
-        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(),
-                TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), groupInfo.getGroupType()), radius);
+        GlideEngine.loadUserIcon(
+            faceImgView, groupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), groupInfo.getGroupType()), radius);
         idTextView.setText(groupInfo.getId());
         nickNameView.setText(groupInfo.getGroupName());
         groupTypeTagView.setVisibility(View.VISIBLE);

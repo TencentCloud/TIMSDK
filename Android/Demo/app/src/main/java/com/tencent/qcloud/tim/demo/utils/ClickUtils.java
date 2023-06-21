@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.demo.utils;
 import java.util.HashMap;
 
 public class ClickUtils {
-
     private static final int MIN_CLICK_DELAY_TIME = 2000;
     private static HashMap<Integer, Long> sLastClickTimeMap = new HashMap<>();
 
@@ -29,5 +28,4 @@ public class ClickUtils {
         }
         return lastClickTime;
     }
-
 }

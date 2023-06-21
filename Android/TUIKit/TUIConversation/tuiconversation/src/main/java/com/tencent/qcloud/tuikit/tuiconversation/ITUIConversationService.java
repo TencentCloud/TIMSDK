@@ -6,7 +6,6 @@ import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import java.util.Map;
 
 public interface ITUIConversationService extends ITUIService, ITUINotification {
-
     /**
      * 1、获取会话是否置顶；
      * @param method TUIConstants.TUIConversation.METHOD_IS_TOP_CONVERSATION
@@ -23,8 +22,8 @@ public interface ITUIConversationService extends ITUIService, ITUINotification {
      * 5、删除会话。
      * @param method TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION
      * @param param {TUIConstants.TUIConversation.CONVERSATION_ID : String}
-     * 
-     * 
+     *
+     *
      * 1、Get whether the conversation is sticky
      * @param method TUIConstants.TUIConversation.METHOD_IS_TOP_CONVERSATION
      * @param param {TUIConstants.TUIConversation.CHAT_ID : String}
@@ -41,8 +40,7 @@ public interface ITUIConversationService extends ITUIService, ITUINotification {
      * @param method TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION
      * @param param {TUIConstants.TUIConversation.CONVERSATION_ID : String}
      */
-    @Override
-    Object onCall(String method, Map<String, Object> param);
+    @Override Object onCall(String method, Map<String, Object> param);
 
     /**
      * 1、接收退群通知；
@@ -59,8 +57,8 @@ public interface ITUIConversationService extends ITUIService, ITUINotification {
      * @param key TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED
      * @param subKey TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED
      * @param param {TUIConstants.TUIContact.FRIEND_ID : String, TUIConstants.TUIContact.FRIEND_REMARK : String}
-     * 
-     * 
+     *
+     *
      * 1、Receive notifications of exit group
      * @param key TUIConstants.TUIGroup.EVENT_GROUP
      * @param subKey TUIConstants.TUIGroup.EVENT_SUB_KEY_EXIT_GROUP,

@@ -9,17 +9,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.Size;
 import androidx.core.content.ContextCompat;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,21 +40,19 @@ public class PermissionRequester {
     private String mSettingsTip;
     private ITUINotification mPermissionNotification;
 
+    public enum Result { Granted, Denied, Requesting }
+
     private PermissionRequester(String... permissions) {
         mPermissions = permissions;
         mPermissionNotification = (key, subKey, param) -> {
             if (param == null) {
                 return;
             }
-            final Object result = param.get(PERMISSION_RESULT);
-            if (result == null || !(result instanceof Boolean)) {
+            Object result = param.get(PERMISSION_RESULT);
+            if (result == null) {
                 return;
             }
-            if ((boolean) result) {
-                afterPermissionGranted();
-            } else {
-                afterPermissionDenied();
-            }
+            notifyPermissionRequestResult((Result) result);
         };
     }
 
@@ -163,35 +158,46 @@ public class PermissionRequester {
         TUICore.registerEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, mPermissionNotification);
         if (TUIBuild.getVersionInt() < Build.VERSION_CODES.M) {
             Log.i(TAG, "current version is lower than 23");
-            afterPermissionGranted();
+            notifyPermissionRequestResult(Result.Granted);
             return;
         }
         String[] unauthorizedPermissions = findUnauthorizedPermissions(mPermissions);
         if (unauthorizedPermissions.length <= 0) {
-            afterPermissionGranted();
+            notifyPermissionRequestResult(Result.Granted);
             return;
         }
-        RequestData realRequest =
-                new RequestData(mTitle, mDescription, mSettingsTip, unauthorizedPermissions);
+        RequestData realRequest = new RequestData(mTitle, mDescription, mSettingsTip, unauthorizedPermissions);
         startPermissionActivity(realRequest);
     }
 
-    private void afterPermissionGranted() {
-        TUICore.unRegisterEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, mPermissionNotification);
-        sIsRequesting.set(false);
-        if (mPermissionCallback != null) {
-            mPermissionCallback.onGranted();
-            mPermissionCallback = null;
+    public boolean has() {
+        for (String permission : mPermissions) {
+            if (!has(permission)) {
+                return false;
+            }
         }
+        return true;
     }
 
-    private void afterPermissionDenied() {
+    private boolean has(final String permission) {
+        return TUIBuild.getVersionInt() < Build.VERSION_CODES.M
+            || PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(TUIConfig.getAppContext(), permission);
+    }
+
+    private void notifyPermissionRequestResult(Result result) {
         TUICore.unRegisterEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, mPermissionNotification);
         sIsRequesting.set(false);
-        if (mPermissionCallback != null) {
-            mPermissionCallback.onDenied();
-            mPermissionCallback = null;
+        if (mPermissionCallback == null) {
+            return;
         }
+        if (Result.Granted.equals(result)) {
+            mPermissionCallback.onGranted();
+        } else if (Result.Requesting.equals(result)) {
+            mPermissionCallback.onRequesting();
+        } else {
+            mPermissionCallback.onDenied();
+        }
+        mPermissionCallback = null;
     }
 
     private String[] findUnauthorizedPermissions(String[] permissions) {
@@ -229,8 +235,7 @@ public class PermissionRequester {
         private final String mSettingsTip;
         private int mPermissionIconId;
 
-        public RequestData(@NonNull String title, @NonNull String description,
-                           @NonNull String settingsTip, @NonNull String... perms) {
+        public RequestData(@NonNull String title, @NonNull String description, @NonNull String settingsTip, @NonNull String... perms) {
             mTitle = title;
             mDescription = description;
             mSettingsTip = settingsTip;
@@ -295,12 +300,9 @@ public class PermissionRequester {
 
         @Override
         public String toString() {
-            return "PermissionRequest{" +
-                    "mPermissions=" + Arrays.toString(mPermissions) +
-                    ", mTitle=" + mTitle +
-                    ", mDescription='" + mDescription +
-                    ", mSettingsTip='" + mSettingsTip +
-                    '}';
+            return "PermissionRequest{"
+                + "mPermissions=" + Arrays.toString(mPermissions) + ", mTitle=" + mTitle + ", mDescription='" + mDescription + ", mSettingsTip='" + mSettingsTip
+                + '}';
         }
 
         @Override

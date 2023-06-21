@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -16,7 +15,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
@@ -27,7 +25,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -46,7 +43,6 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.ContactStartChatUtils;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -418,28 +414,30 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
         spannedString.setSpan(clickableSpan2, buyingGuidelinesIndex, buyingGuidelinesIndex + buyingGuidelines.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         TUIKitDialog.TUIIMUpdateDialog.getInstance()
-                .createDialog(this)
-                .setMovementMethod(LinkMovementMethod.getInstance())
-                .setShowOnlyDebug(true)
-                .setCancelable(true)
-                .setCancelOutside(true)
-                .setTitle(spannedString)
-                .setDialogWidth(0.75f)
-                .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_COMMUNITY)
-                .setPositiveButton(getString(R.string.contact_no_more_reminders), new View.OnClickListener() {
+            .createDialog(this)
+            .setMovementMethod(LinkMovementMethod.getInstance())
+            .setShowOnlyDebug(true)
+            .setCancelable(true)
+            .setCancelOutside(true)
+            .setTitle(spannedString)
+            .setDialogWidth(0.75f)
+            .setDialogFeatureName(TUIConstants.BuyingFeature.BUYING_FEATURE_COMMUNITY)
+            .setPositiveButton(getString(R.string.contact_no_more_reminders),
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().setNeverShow(true);
                     }
                 })
-                .setNegativeButton(getString(R.string.contact_i_know), new View.OnClickListener() {
+            .setNegativeButton(getString(R.string.contact_i_know),
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         TUIKitDialog.TUIIMUpdateDialog.getInstance().dismiss();
                     }
                 })
-                .show();
+            .show();
     }
 
     private void openWebUrl(String url) {
@@ -451,12 +449,10 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
         startActivity(intent);
     }
 
-
     /**
      * add spacing
      */
     public static class GridDecoration extends RecyclerView.ItemDecoration {
-
         private final int leftRightSpace; // vertical spacing
         private final int topBottomSpace; // horizontal spacing
 
@@ -471,5 +467,4 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
             outRect.bottom = topBottomSpace;
         }
     }
-
 }

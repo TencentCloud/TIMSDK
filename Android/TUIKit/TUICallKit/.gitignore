@@ -7,8 +7,6 @@
 */.gradle/
 *.gradle/
 # IDEA Files
-/tuicalling/.idea/
-/tuicalling/build/
 local.properties
 /.codecc/
 /build.yml
@@ -18,3 +16,7 @@ build/
 /captures
 .externalNativeBuild
 .cxx
+
+/tuicallkit/.idea/
+/tuicallkit/build/
+tuicore

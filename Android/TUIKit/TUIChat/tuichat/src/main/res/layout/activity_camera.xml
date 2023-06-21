@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tencent.qcloud.tuikit.tuichat.classicui.component.camera.view.JCameraView
-        android:id="@+id/jcameraview"
+    <com.tencent.qcloud.tuikit.tuichat.component.camera.view.CameraView
+        android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:duration_max="10000"

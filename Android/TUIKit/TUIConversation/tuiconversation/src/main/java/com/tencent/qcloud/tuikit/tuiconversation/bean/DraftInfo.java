@@ -24,9 +24,7 @@ public class DraftInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "DraftInfo{" +
-                "draftText='" + draftText + '\'' +
-                ", draftTime=" + draftTime +
-                '}';
+        return "DraftInfo{"
+            + "draftText='" + draftText + '\'' + ", draftTime=" + draftTime + '}';
     }
 }

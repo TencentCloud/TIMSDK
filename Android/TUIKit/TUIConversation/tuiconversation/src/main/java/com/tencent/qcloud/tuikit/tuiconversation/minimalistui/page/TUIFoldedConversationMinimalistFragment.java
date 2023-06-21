@@ -11,10 +11,8 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
@@ -29,7 +27,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConve
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.util.TUIConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.FoldedConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationFoldPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,15 +74,19 @@ public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
             }
 
             @Override
-            public void OnItemLongClick(View view, ConversationInfo conversationInfo) {
+            public void onItemLongClick(View view, ConversationInfo conversationInfo) {
                 showItemPopMenu(view, conversationInfo);
             }
 
             @Override
             public void onConversationChanged(List<ConversationInfo> dataSource) {
-                if (dataSource == null)return;
+                if (dataSource == null) {
+                    return;
+                }
                 ConversationInfo conversationInfo = dataSource.get(0);
-                if (conversationInfo == null)return;
+                if (conversationInfo == null) {
+                    return;
+                }
 
                 if (!TextUtils.isEmpty(popWindowConversationId) && popWindowConversationId.equals(conversationInfo.getConversationId())) {
                     if (mConversationPopWindow != null) {
@@ -95,19 +96,13 @@ public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
             }
 
             @Override
-            public void onMarkConversationUnread(View view, ConversationInfo conversationInfo, boolean markUnread) {
-
-            }
+            public void onMarkConversationUnread(View view, ConversationInfo conversationInfo, boolean markUnread) {}
 
             @Override
-            public void onMarkConversationHidden(View view, ConversationInfo conversationInfo) {
-
-            }
+            public void onMarkConversationHidden(View view, ConversationInfo conversationInfo) {}
 
             @Override
-            public void onClickMoreView(View view, ConversationInfo conversationInfo) {
-
-            }
+            public void onClickMoreView(View view, ConversationInfo conversationInfo) {}
 
             @Override
             public void onSwipeConversationChanged(ConversationInfo conversationInfo) {
@@ -151,8 +146,7 @@ public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
     }
 
     private void restoreConversationItemBackground() {
-        if (mFoldedLayout.getConversationList().getAdapter() !=  null &&
-                mFoldedLayout.getConversationList().getAdapter().isClick()) {
+        if (mFoldedLayout.getConversationList().getAdapter() != null && mFoldedLayout.getConversationList().getAdapter().isClick()) {
             mFoldedLayout.getConversationList().getAdapter().setClick(false);
             mFoldedLayout.getConversationList().getAdapter().notifyItemChanged(mFoldedLayout.getConversationList().getAdapter().getCurrentPosition());
         }
@@ -211,7 +205,6 @@ public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
                 if (action.getActionName().equals(getResources().getString(R.string.quit_chat_top))) {
                     action.setActionName(getResources().getString(R.string.chat_top));
                 }
-
             }
         }
         mConversationPopAdapter = new PopDialogAdapter();
@@ -231,11 +224,20 @@ public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
             }
         });
         int x = view.getWidth() / 2;
-        int y = - view.getHeight() / 3;
+        int y = -view.getHeight() / 3;
         int popHeight = ScreenUtil.dip2px(45) * 3;
         if (y + popHeight + view.getY() + view.getHeight() > mFoldedLayout.getBottom()) {
             y = y - popHeight;
         }
         mConversationPopWindow.showAsDropDown(view, x, y, Gravity.TOP | Gravity.START);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (presenter != null) {
+            presenter.destroy();
+            presenter = null;
+        }
     }
 }

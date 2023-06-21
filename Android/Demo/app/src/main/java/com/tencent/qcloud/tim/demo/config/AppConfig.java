@@ -8,7 +8,7 @@ public class AppConfig {
     // app flavor
     public static String DEMO_FLAVOR_VERSION = Constants.FLAVOR_LOCAL;
     // app build version
-    public static String DEMO_VERSION_NAME = "7.2.4146";
+    public static String DEMO_VERSION_NAME = "7.3.4358";
     // 0,classic; 1,minimalist
     public static int DEMO_UI_STYLE = 0;
     // long connection addr: china、india ...

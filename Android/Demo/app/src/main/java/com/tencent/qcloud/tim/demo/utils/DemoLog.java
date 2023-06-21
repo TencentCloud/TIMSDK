@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.demo.utils;
 import com.tencent.imsdk.common.IMLog;
 
 public class DemoLog extends IMLog {
-
     private static final String PRE = "TUIKitDemo-";
 
     private static String mixTag(String tag) {
@@ -59,5 +58,4 @@ public class DemoLog extends IMLog {
     public static void e(String strTag, String strInfo) {
         IMLog.e(mixTag(strTag), strInfo);
     }
-
 }

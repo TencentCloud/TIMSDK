@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
@@ -20,12 +18,10 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 
 public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.GroupInfoMembersHolder> {
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
@@ -172,5 +168,4 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.Grou
             rightArrow = itemView.findViewById(R.id.rightArrow);
         }
     }
-
 }

@@ -78,7 +78,6 @@ public class CommunityParser {
         return communityBeanList;
     }
 
-
     public static TopicBean parseTopicBean(V2TIMTopicInfo v2TIMTopicInfo) {
         if (v2TIMTopicInfo == null) {
             return null;
@@ -130,7 +129,6 @@ public class CommunityParser {
         return topicBeanList;
     }
 
-
     public static CommunityMemberBean parseCommunityMemberBean(V2TIMGroupMemberInfo v2TIMGroupMemberInfo) {
         if (v2TIMGroupMemberInfo == null) {
             return null;
@@ -144,7 +142,6 @@ public class CommunityParser {
 
         return communityMemberBean;
     }
-
 
     public static List<CommunityMemberBean> parseCommunityMemberBeanList(List<V2TIMGroupMemberFullInfo> v2TIMGroupMemberInfos) {
         List<CommunityMemberBean> communityMemberBeans = new ArrayList<>();

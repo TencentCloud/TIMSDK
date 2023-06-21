@@ -7,144 +7,132 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 public class CallModel implements Cloneable, Serializable {
-
     private static final String TAG = CallModel.class.getSimpleName();
 
     /**
      * 系统错误
-     * 
+     *
      * system error
      */
-    public static final int VIDEO_CALL_ACTION_ERROR           = -1;
+    public static final int VIDEO_CALL_ACTION_ERROR = -1;
     /**
      * 未知信令
-     * 
+     *
      * unknown signaling
      */
-    public static final int VIDEO_CALL_ACTION_UNKNOWN         = 0;
+    public static final int VIDEO_CALL_ACTION_UNKNOWN = 0;
     /**
      * 正在呼叫
-     * 
+     *
      * calling
      */
-    public static final int VIDEO_CALL_ACTION_DIALING         = 1;
+    public static final int VIDEO_CALL_ACTION_DIALING = 1;
     /**
      * 发起人取消
-     * 
+     *
      * initiator cancellation
      */
-    public static final int VIDEO_CALL_ACTION_SPONSOR_CANCEL  = 2;
+    public static final int VIDEO_CALL_ACTION_SPONSOR_CANCEL = 2;
     /**
      * 拒接电话
-     * 
+     *
      * reject the call
      */
-    public static final int VIDEO_CALL_ACTION_REJECT          = 3;
+    public static final int VIDEO_CALL_ACTION_REJECT = 3;
     /**
      * 无人接听
-     * 
+     *
      * no one heard
      */
     public static final int VIDEO_CALL_ACTION_SPONSOR_TIMEOUT = 4;
     /**
      * 挂断
-     * 
+     *
      * hang up
      */
-    public static final int VIDEO_CALL_ACTION_HANGUP          = 5;
+    public static final int VIDEO_CALL_ACTION_HANGUP = 5;
     /**
      * 电话占线
-     * 
+     *
      * phone busy
      */
-    public static final int VIDEO_CALL_ACTION_LINE_BUSY       = 6;
+    public static final int VIDEO_CALL_ACTION_LINE_BUSY = 6;
     /**
      * 接听电话
-     * 
+     *
      * answer the phone
      */
-    public static final int VIDEO_CALL_ACTION_ACCEPT          = 7;
+    public static final int VIDEO_CALL_ACTION_ACCEPT = 7;
 
     public static String SIGNALING_EXTRA_VALUE_BUSINESS_ID = "av_call";
 
     public static String SIGNALING_EXTRA_KEY_BUSINESS_ID = "businessID";
-    public static String SIGNALING_EXTRA_KEY_CALL_TYPE   = "call_type";
-    public static String SIGNALING_EXTRA_KEY_ROOM_ID     = "room_id";
-    public static String SIGNALING_EXTRA_KEY_LINE_BUSY   = "line_busy";
-    public static String SIGNALING_EXTRA_KEY_CALL_END    = "call_end";
-    public static String SIGNALING_EXTRA_KEY_VERSION     = "version";
+    public static String SIGNALING_EXTRA_KEY_CALL_TYPE = "call_type";
+    public static String SIGNALING_EXTRA_KEY_ROOM_ID = "room_id";
+    public static String SIGNALING_EXTRA_KEY_LINE_BUSY = "line_busy";
+    public static String SIGNALING_EXTRA_KEY_CALL_END = "call_end";
+    public static String SIGNALING_EXTRA_KEY_VERSION = "version";
 
-    @SerializedName("businessID")
-    public String bussinessID;
+    @SerializedName("businessID") public String bussinessID;
 
-    @SerializedName("version")
-    public int version = 0;
+    @SerializedName("version") public int version = 0;
 
     /**
      * 表示一次通话的唯一ID
-     * 
+     *
      * call ID
      */
-    @SerializedName("call_id")
-    public String callId;
+    @SerializedName("call_id") public String callId;
 
     /**
      * TRTC的房间号
-     * 
+     *
      * room ID
      */
-    @SerializedName("room_id")
-    public int roomId  = 0;
+    @SerializedName("room_id") public int roomId = 0;
 
     /**
      * IM的群组id，在群组内发起通话时使用
-     * 
+     *
      * group ID
      */
-    @SerializedName("group_id")
-    public String groupId = "";
+    @SerializedName("group_id") public String groupId = "";
 
     /**
      * 信令动作
-     * 
+     *
      * signaling action
      */
-    @SerializedName("action")
-    public int action = VIDEO_CALL_ACTION_UNKNOWN;
+    @SerializedName("action") public int action = VIDEO_CALL_ACTION_UNKNOWN;
 
     /**
      * 通话类型
      * 0-未知
      * 1-语音通话
      * 2-视频通话
-     * 
+     *
      * call type
      * 0-unkown
      * 1-audio call
      * 2-video call
      */
-    @SerializedName("call_type")
-    public int callType = 0;
+    @SerializedName("call_type") public int callType = 0;
 
     /**
      * 正在邀请的列表
-     * 
+     *
      * Inviting list
      */
-    @SerializedName("invited_list")
-    public List<String> invitedList;
+    @SerializedName("invited_list") public List<String> invitedList;
 
-    @SerializedName("duration")
-    public int duration = 0;
+    @SerializedName("duration") public int duration = 0;
 
-    @SerializedName("code")
-    public int code = 0;
+    @SerializedName("code") public int code = 0;
 
     public long timestamp;
     public String sender;
@@ -159,9 +147,8 @@ public class CallModel implements Cloneable, Serializable {
         CallModel callModel = new CallModel();
         try {
             Map extraMap = new Gson().fromJson(signalingInfo.getData(), Map.class);
-            if (extraMap != null
-                    && extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_VERSION)
-                    && ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue() > TUISearchConstants.version) {
+            if (extraMap != null && extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_VERSION)
+                && ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue() > TUISearchConstants.version) {
                 callModel.action = CallModel.VIDEO_CALL_ACTION_UNKNOWN;
                 return callModel;
             }
@@ -172,28 +159,28 @@ public class CallModel implements Cloneable, Serializable {
             if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_INVITE && extraMap != null) {
                 callModel.groupId = signalingInfo.getGroupID();
                 callModel.timestamp = msg.getTimestamp();
-                callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
+                callModel.version = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
                 if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_CALL_END)) {
                     callModel.action = CallModel.VIDEO_CALL_ACTION_HANGUP;
-                    callModel.duration = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END)).intValue();
+                    callModel.duration = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_END)).intValue();
                 } else {
                     callModel.action = CallModel.VIDEO_CALL_ACTION_DIALING;
                     callModel.callId = signalingInfo.getInviteID();
                     callModel.sender = signalingInfo.getInviter();
                     callModel.invitedList = signalingInfo.getInviteeList();
-                    callModel.callType = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)).intValue();
-                    callModel.roomId = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)).intValue();
+                    callModel.callType = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_CALL_TYPE)).intValue();
+                    callModel.roomId = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_ROOM_ID)).intValue();
                 }
             } else if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_CANCEL_INVITE) {
                 callModel.action = CallModel.VIDEO_CALL_ACTION_SPONSOR_CANCEL;
                 callModel.groupId = signalingInfo.getGroupID();
                 callModel.callId = signalingInfo.getInviteID();
-                callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
+                callModel.version = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
             } else if (signalingInfo.getActionType() == V2TIMSignalingInfo.SIGNALING_ACTION_TYPE_REJECT_INVITE && extraMap != null) {
                 callModel.groupId = signalingInfo.getGroupID();
                 callModel.callId = signalingInfo.getInviteID();
                 callModel.invitedList = signalingInfo.getInviteeList();
-                callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
+                callModel.version = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
                 if (extraMap.containsKey(CallModel.SIGNALING_EXTRA_KEY_LINE_BUSY)) {
                     callModel.action = CallModel.VIDEO_CALL_ACTION_LINE_BUSY;
                 } else {
@@ -209,7 +196,7 @@ public class CallModel implements Cloneable, Serializable {
                 callModel.groupId = signalingInfo.getGroupID();
                 callModel.callId = signalingInfo.getInviteID();
                 callModel.invitedList = signalingInfo.getInviteeList();
-                callModel.version = ((Double)extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
+                callModel.version = ((Double) extraMap.get(CallModel.SIGNALING_EXTRA_KEY_VERSION)).intValue();
             }
         } catch (Exception e) {
             TUISearchLog.e(TAG, "convert2VideoCallData exception:" + e);

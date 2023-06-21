@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,28 +27,40 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
+import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
+import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ImageMessageHolder extends MessageContentHolder {
-
     private static final int DEFAULT_MAX_SIZE = 540;
     private static final int DEFAULT_RADIUS = 10;
-    private final List<String> downloadEles = new ArrayList<>();
+    private static final Set<String> downloadEles = new HashSet<>();
     private ImageView contentImage;
     private ImageView videoPlayBtn;
     private TextView videoDurationText;
+    private FrameLayout progressContainer;
+    private ChatRingProgressBar fileProgressBar;
+    private TextView progressText;
+    private ImageView progressIcon;
     private String mImagePath = null;
+
+    private ProgressPresenter.ProgressListener progressListener;
 
     public ImageMessageHolder(View itemView) {
         super(itemView);
         contentImage = itemView.findViewById(R.id.content_image_iv);
         videoPlayBtn = itemView.findViewById(R.id.video_play_btn);
         videoDurationText = itemView.findViewById(R.id.video_duration_tv);
+        progressContainer = itemView.findViewById(R.id.progress_container);
+        fileProgressBar = itemView.findViewById(R.id.file_progress_bar);
+        progressText = itemView.findViewById(R.id.file_progress_text);
+        progressIcon = itemView.findViewById(R.id.file_progress_icon);
     }
 
     @Override
@@ -77,9 +90,18 @@ public class ImageMessageHolder extends MessageContentHolder {
     }
 
     private void performImage(final ImageMessageBean msg, final int position) {
-        contentImage.setLayoutParams(getImageParams(contentImage.getLayoutParams(), msg));
+        ViewGroup.LayoutParams params = getImageParams(contentImage.getLayoutParams(), msg);
+        contentImage.setLayoutParams(params);
+        ViewGroup.LayoutParams progressParams = getImageParams(progressContainer.getLayoutParams(), msg);
+        progressContainer.setLayoutParams(progressParams);
+        progressContainer.setVisibility(View.GONE);
+        progressText.setVisibility(View.GONE);
         videoPlayBtn.setVisibility(View.GONE);
         videoDurationText.setVisibility(View.GONE);
+        sendingProgress.setVisibility(View.GONE);
+
+        progressListener = this::updateProgress;
+        ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
 
         final List<ImageMessageBean.ImageBean> imgs = msg.getImageBeanList();
         String imagePath = msg.getDataPath();
@@ -89,8 +111,10 @@ public class ImageMessageHolder extends MessageContentHolder {
         }
         if (!TextUtils.isEmpty(imagePath)) {
             GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, imagePath, null, DEFAULT_RADIUS);
+            progressContainer.setVisibility(View.GONE);
         } else {
             GlideEngine.clear(contentImage);
+            progressContainer.setVisibility(View.VISIBLE);
             for (int i = 0; i < imgs.size(); i++) {
                 final ImageMessageBean.ImageBean img = imgs.get(i);
                 if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
@@ -107,8 +131,10 @@ public class ImageMessageHolder extends MessageContentHolder {
                     img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
                         @Override
                         public void onProgress(long currentSize, long totalSize) {
-                            TUIChatLog.i("downloadImage progress current:",
-                                    currentSize + ", total:" + totalSize);
+                            int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
+                            ProgressPresenter.updateProgress(msg.getId(), progress);
+
+                            TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                         }
 
                         @Override
@@ -119,6 +145,7 @@ public class ImageMessageHolder extends MessageContentHolder {
 
                         @Override
                         public void onSuccess() {
+                            ProgressPresenter.updateProgress(msg.getId(), 100);
                             downloadEles.remove(img.getUUID());
                             msg.setDataPath(path);
                             GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), new RequestListener() {
@@ -183,6 +210,18 @@ public class ImageMessageHolder extends MessageContentHolder {
         }
     }
 
+    private void updateProgress(int progress) {
+        progressContainer.setVisibility(View.VISIBLE);
+        progressText.setVisibility(View.VISIBLE);
+        fileProgressBar.setVisibility(View.VISIBLE);
+        fileProgressBar.setProgress(progress);
+        progressText.setText(progress + "%");
+        progressIcon.setVisibility(View.GONE);
+        if (progress == 100) {
+            progressContainer.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void setHighLightBackground(int color) {
         Drawable drawable = contentImage.getDrawable();
@@ -190,7 +229,6 @@ public class ImageMessageHolder extends MessageContentHolder {
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         }
     }
-
 
     @Override
     public void clearHighLightBackground() {

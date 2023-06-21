@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
@@ -23,7 +21,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.bean.TreeNode;
 import com.tencent.qcloud.tuikit.tuicommunity.interfaces.ITopicBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.TopicPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityTopicList;
-
 import java.util.List;
 
 public class CommunityTopicList extends RecyclerView implements ICommunityTopicList {
@@ -31,6 +28,7 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
     private TopicAdapter topicAdapter;
     private TopicPresenter presenter;
     private CommunityDetailView.OnTopicClickListener onTopicClickListener;
+
     public CommunityTopicList(@NonNull Context context) {
         super(context);
         init();
@@ -63,8 +61,7 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
         topicAdapter.setOnTopicClickListener(onTopicClickListener);
     }
 
-    public static class TopicAdapter extends RecyclerView.Adapter{
-
+    public static class TopicAdapter extends RecyclerView.Adapter {
         private static final int VIEW_TYPE_TITLE = 1;
         private static final int VIEW_TYPE_TOPIC = 2;
 
@@ -195,6 +192,7 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
             private final TextView topicTitle;
             private final TextView lastMsgAbstract;
             private final ImageView topicFace;
+
             public TopicViewHolder(@NonNull View itemView) {
                 super(itemView);
                 topicFace = itemView.findViewById(R.id.topic_face);
@@ -207,6 +205,7 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
         public static class TopicCategoryViewHolder extends RecyclerView.ViewHolder {
             private final ImageView indicatorImage;
             private final TextView topicCategory;
+
             public TopicCategoryViewHolder(@NonNull View itemView) {
                 super(itemView);
                 indicatorImage = itemView.findViewById(R.id.indicator_image);
@@ -221,5 +220,4 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
         topicAdapter.notifyDataSetChanged();
         setVisibility(VISIBLE);
     }
-
 }

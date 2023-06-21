@@ -17,16 +17,15 @@ public abstract class OnItemClickListener {
 
     public void onRecallClick(View view, int position, TUIMessageBean messageBean) {}
 
-    public  void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {}
+    public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {}
 
-    public  void onReplyDetailClick(TUIMessageBean messageBean) {}
+    public void onReplyDetailClick(TUIMessageBean messageBean) {}
 
-    public  void onReactOnClick(String emojiId, TUIMessageBean messageBean) {}
+    public void onReactOnClick(String emojiId, TUIMessageBean messageBean) {}
 
-    public  void onSendFailBtnClick(View view, int position, TUIMessageBean messageBean) {}
+    public void onSendFailBtnClick(View view, int position, TUIMessageBean messageBean) {}
 
-    public  void onTextSelected(View view, int position, TUIMessageBean messageBean) {}
+    public void onTextSelected(View view, int position, TUIMessageBean messageBean) {}
 
     public void onMessageReadStatusClick(View view, TUIMessageBean messageBean) {}
-
 }

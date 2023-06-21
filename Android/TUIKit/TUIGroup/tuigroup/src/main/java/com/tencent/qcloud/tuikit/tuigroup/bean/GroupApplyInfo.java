@@ -1,11 +1,9 @@
 package com.tencent.qcloud.tuikit.tuigroup.bean;
 
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
-
 import java.io.Serializable;
 
 public class GroupApplyInfo implements Serializable {
-
     public static final int APPLIED = 1;
     public static final int REFUSED = -1;
     public static final int UNHANDLED = 0;
@@ -84,5 +82,4 @@ public class GroupApplyInfo implements Serializable {
         }
         return false;
     }
-
 }

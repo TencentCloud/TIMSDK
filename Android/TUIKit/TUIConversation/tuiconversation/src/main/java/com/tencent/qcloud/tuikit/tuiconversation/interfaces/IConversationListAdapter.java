@@ -7,7 +7,7 @@ import java.util.List;
 public interface IConversationListAdapter {
     /**
      * 获取适配器的条目数据，返回的是ConversationInfo对象或其子对象
-     * 
+     *
      * Get the entry data of the adapter, which returns the ConversationInfo object or its sub-objects
      *
      * @param position
@@ -26,7 +26,7 @@ public interface IConversationListAdapter {
     void onItemInserted(int position);
 
     void onItemChanged(int position);
-    
+
     void onItemRangeChanged(int startPosition, int count);
 
     void onConversationChanged(List<ConversationInfo> conversationInfoList);

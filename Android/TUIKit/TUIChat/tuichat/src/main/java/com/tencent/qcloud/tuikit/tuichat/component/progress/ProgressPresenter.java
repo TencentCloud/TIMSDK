@@ -2,7 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.component.progress;
 
 import android.text.TextUtils;
 import android.util.Log;
-
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
@@ -25,45 +25,45 @@ public class ProgressPresenter {
 
     private ProgressPresenter() {}
 
-    public void registerProgressListener(String progressId, ProgressListener listener) {
+    public static void registerProgressListener(String progressId, ProgressListener listener) {
         Log.i(TAG, "registerProgressListener id : " + progressId + ", listener : " + listener);
         if (TextUtils.isEmpty(progressId) || listener == null) {
             return;
         }
-
-        List<WeakReference<ProgressListener>> list = progressListenerMap.get(progressId);
+        ProgressPresenter presenter = ProgressPresenter.getInstance();
+        List<WeakReference<ProgressListener>> list = presenter.progressListenerMap.get(progressId);
         if (list == null) {
             list = new CopyOnWriteArrayList<>();
-            progressListenerMap.put(progressId, list);
+            presenter.progressListenerMap.put(progressId, list);
         }
         WeakReference<ProgressListener> weakReference = new WeakReference<>(listener);
         list.add(weakReference);
     }
 
-    public void updateProgress(String progressId, int progress) {
-
-        List<WeakReference<ProgressListener>> referenceList = progressListenerMap.get(progressId);
+    public static void updateProgress(String progressId, int progress) {
+        ProgressPresenter presenter = ProgressPresenter.getInstance();
+        List<WeakReference<ProgressListener>> referenceList = presenter.progressListenerMap.get(progressId);
         if (referenceList != null && !referenceList.isEmpty()) {
             Iterator<WeakReference<ProgressListener>> iterator = referenceList.listIterator();
             while (iterator.hasNext()) {
                 WeakReference<ProgressListener> weakReference = iterator.next();
                 ProgressListener listener = weakReference.get();
                 if (listener != null) {
-                    listener.onProgress(progress);
+                    ThreadUtils.runOnUiThread(() -> listener.onProgress(progress));
                 }
             }
         } else {
-            progressListenerMap.remove(progressId);
+            presenter.progressListenerMap.remove(progressId);
         }
     }
 
-    public void unregisterProgressListener(String progressId, ProgressListener listener) {
+    public static void unregisterProgressListener(String progressId, ProgressListener listener) {
         Log.i(TAG, "unregisterProgressListener id : " + progressId + ", listener : " + listener);
         if (TextUtils.isEmpty(progressId) || listener == null) {
             return;
         }
 
-        List<WeakReference<ProgressListener>> list = progressListenerMap.get(progressId);
+        List<WeakReference<ProgressListener>> list = ProgressPresenter.getInstance().progressListenerMap.get(progressId);
         if (list != null) {
             return;
         }

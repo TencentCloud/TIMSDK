@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tuiroomkit_top_item_view_width">20dp</dimen>
+    <dimen name="tuiroomkit_top_item_view_height">20dp</dimen>
+    <dimen name="tuiroomkit_bottom_item_icon_width">24dp</dimen>
+    <dimen name="tuiroomkit_bottom_item_icon_height">24dp</dimen>
+    <dimen name="tuiroomkit_bottom_item_view_width">52dp</dimen>
+    <dimen name="tuiroomkit_bottom_item_view_height">52dp</dimen>
+    <dimen name="tuiroomkit_bottom_extension_width">31dp</dimen>
+    <dimen name="tuiroomkit_item_title_size">16sp</dimen>
+    <dimen name="tuiroomkit_radio_button_text_size">16sp</dimen>
+    <dimen name="tuiroomkit_radio_button_padding_horizon">20dp</dimen>
+    <dimen name="tuiroomkit_radio_button_padding_vertical">12dp</dimen>
+    <dimen name="tuiroomkit_radio_button_bounds_horizon">24dp</dimen>
+    <dimen name="tuiroomkit_radio_button_bounds_vertical">24dp</dimen>
+    <dimen name="tuiroomkit_create_room_margin_bottom">100dp</dimen>
+    <dimen name="tuiroomkit_enter_room_margin_bottom">20dp</dimen>
+    <dimen name="tuiroomkit_video_seat_bottom_margin">15dp</dimen>
+    <dimen name="tuiroomkit_room_float_view_size">50dp</dimen>
+</resources>

@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuicommunity.utils;
 import com.tencent.imsdk.common.IMLog;
 
 public class TUICommunityLog extends IMLog {
-
     private static final String PRE = "TUICommunity-";
 
     private static String mixTag(String tag) {
@@ -81,5 +80,4 @@ public class TUICommunityLog extends IMLog {
     public static void e(String strTag, String strInfo) {
         IMLog.e(mixTag(strTag), strInfo);
     }
-
 }

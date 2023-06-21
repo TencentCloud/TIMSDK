@@ -33,12 +33,17 @@ android {
     }
 }
 
-afterEvaluate{
-    generateReleaseBuildConfig.enabled =false
-    generateDebugBuildConfig.enabled =false
+afterEvaluate {
+    generateReleaseBuildConfig.enabled = false
+    generateDebugBuildConfig.enabled = false
 }
 
 dependencies {
+    /*plugin-build-Begin
+
+    compileOnly fileTree(include: ['*.jar','*.aar'], dir: '../../../../tuikit/android/libs')
+
+    plugin-build-End*/
 
     api project(':tuicore')
     implementation 'com.google.code.gson:gson:2.9.1'

@@ -95,6 +95,9 @@ public class RecentCallsItemHolder extends RecyclerView.ViewHolder {
                             userFullInfoList.get(i).getUserID() : userFullInfoList.get(i).getNickName();
                     nameList.add(name);
                 }
+                if (!TextUtils.isEmpty(records.groupId)) {
+                    avatarList.add(TUILogin.getFaceUrl());
+                }
 
                 List<String> oldUserList = new ArrayList<>((List<String>) mCallIconView.getTag());
                 if (oldUserList.size() == newUserList.size() && oldUserList.containsAll(newUserList)) {

@@ -16,13 +16,13 @@ import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
 public class GroupListMinimalistActivity extends BaseMinimalistLightActivity {
-
     private static final String TAG = GroupListMinimalistActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
     private ContactListView mListView;
 
     private ContactPresenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

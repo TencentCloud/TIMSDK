@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_dark"
@@ -12,42 +10,30 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <ImageView
             android:id="@+id/content_image_iv"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <com.tencent.qcloud.tuikit.tuichat.classicui.component.video.UIKitVideoView
+        <com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.video.VideoView
             android:id="@+id/video_play_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_centerInParent="true"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/pause_button_center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:clickable="true"
             android:visibility="gone"
             android:src="@drawable/ic_pause_center" />
 
-        <ProgressBar
-            android:id="@+id/message_sending_pb"
-            android:indeterminateTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"
-            android:visibility="visible" />
     </FrameLayout>
 
     <RelativeLayout
@@ -56,8 +42,9 @@
         android:layout_height="match_parent"
         android:visibility="gone">
 
-        <com.tencent.qcloud.tuikit.tuichat.classicui.component.photoview.view.PhotoView
+        <com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.photoview.view.PhotoView
             android:id="@+id/photo_view"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -69,8 +56,11 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
+            android:gravity="center"
             android:background="@drawable/view_original_image_border"
-            android:padding="2dp"
+            android:padding="4dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:text="@string/view_original_image"
             android:textColor="#fff"
             android:textSize="12sp"
@@ -158,5 +148,42 @@
             android:textSize="14sp" />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/progress_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:background="#80333333">
+
+        <com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar
+            android:id="@+id/file_progress_bar"
+            android:layout_gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <TextView
+            android:id="@+id/file_progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:text="0%"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/file_progress_icon"
+            android:scaleType="centerInside"
+            android:layout_gravity="center"
+            android:background="@drawable/chat_progress_download_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
 
 </RelativeLayout>

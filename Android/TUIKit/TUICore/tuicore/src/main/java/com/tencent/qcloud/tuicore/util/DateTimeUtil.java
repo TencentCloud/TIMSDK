@@ -1,26 +1,22 @@
 package com.tencent.qcloud.tuicore.util;
 
 import android.content.Context;
-
 import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-
 public class DateTimeUtil {
-
-    private final static long minute = 60 * 1000;
-    private final static long hour = 60 * minute;
-    private final static long day = 24 * hour;
-    private final static long week = 7 * day;
-    private final static long month = 31 * day;
-    private final static long year = 12 * month;
+    private static final long minute = 60 * 1000;
+    private static final long hour = 60 * minute;
+    private static final long day = 24 * hour;
+    private static final long week = 7 * day;
+    private static final long month = 31 * day;
+    private static final long year = 12 * month;
 
     /**
      * return format text for time
@@ -49,14 +45,12 @@ public class DateTimeUtil {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        long dayStartTimeInMillis = calendar.getTimeInMillis();
         calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        long weekStartTimeInMillis = calendar.getTimeInMillis();
         calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_YEAR, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -65,6 +59,8 @@ public class DateTimeUtil {
         calendar.set(Calendar.MILLISECOND, 0);
         long yearStartTimeInMillis = calendar.getTimeInMillis();
         long outTimeMillis = date.getTime();
+        long weekStartTimeInMillis = calendar.getTimeInMillis();
+        long dayStartTimeInMillis = calendar.getTimeInMillis();
         if (outTimeMillis < yearStartTimeInMillis) {
             timeText = String.format(locale, "%tD", date);
         } else if (outTimeMillis < weekStartTimeInMillis) {
@@ -106,14 +102,16 @@ public class DateTimeUtil {
             if (min > 60) {
                 min = (seconds / 60) % 60;
                 long hour = (seconds / 60) / 60;
-                timeStr = hour + context.getString(R.string.date_hour_short) + min + context.getString(R.string.date_minute_short) + second + context.getString(R.string.date_second_short);
+                timeStr = hour + context.getString(R.string.date_hour_short) + min + context.getString(R.string.date_minute_short) + second
+                    + context.getString(R.string.date_second_short);
                 if (hour % 24 == 0) {
                     long day = (((seconds / 60) / 60) / 24);
                     timeStr = day + context.getString(R.string.date_day_short);
                 } else if (hour > 24) {
                     hour = ((seconds / 60) / 60) % 24;
                     long day = (((seconds / 60) / 60) / 24);
-                    timeStr = day + context.getString(R.string.date_day_short) + hour + context.getString(R.string.date_hour_short) + min + context.getString(R.string.date_minute_short) + second + context.getString(R.string.date_second_short);
+                    timeStr = day + context.getString(R.string.date_day_short) + hour + context.getString(R.string.date_hour_short) + min
+                        + context.getString(R.string.date_minute_short) + second + context.getString(R.string.date_second_short);
                 }
             }
         }
@@ -127,11 +125,10 @@ public class DateTimeUtil {
             int minute = minuteTemp % 60;
             int hour = minuteTemp / 60;
             if (hour > 0) {
-                return (hour >= 10 ? (hour + "") : ("0" + hour)) + ":" + (minute >= 10 ? (minute + "") : ("0" + minute))
-                        + ":" + (second >= 10 ? (second + "") : ("0" + second));
+                return (hour >= 10 ? (hour + "") : ("0" + hour)) + ":" + (minute >= 10 ? (minute + "") : ("0" + minute)) + ":"
+                    + (second >= 10 ? (second + "") : ("0" + second));
             } else {
-                return (minute >= 10 ? (minute + "") : ("0" + minute)) + ":"
-                        + (second >= 10 ? (second + "") : ("0" + second));
+                return (minute >= 10 ? (minute + "") : ("0" + minute)) + ":" + (second >= 10 ? (second + "") : ("0" + second));
             }
         } else {
             return "00:" + (second >= 10 ? (second + "") : ("0" + second));
@@ -141,9 +138,9 @@ public class DateTimeUtil {
     public static long getStringToDate(String dateString, String pattern) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date date = new Date();
-        try{
+        try {
             date = dateFormat.parse(dateString);
-        } catch(ParseException e) {
+        } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

@@ -7,21 +7,17 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.widget.ImageView;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuikit.timcommon.TIMCommonConfig;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-
 public class TeamHeadSynthesizer implements Synthesizer {
-
     MultiImageData multiImageData;
     Context mContext;
 
@@ -38,7 +34,6 @@ public class TeamHeadSynthesizer implements Synthesizer {
             GlideEngine.loadUserIcon(imageView, bitmap);
         }
     };
-
 
     public TeamHeadSynthesizer(Context mContext, ImageView imageView) {
         this.mContext = mContext;
@@ -130,10 +125,10 @@ public class TeamHeadSynthesizer implements Synthesizer {
     public void drawDrawable(Canvas canvas, MultiImageData imageData) {
         canvas.drawColor(imageData.bgColor);
         int size = imageData.size();
-        int t_center = (imageData.maxHeight + imageData.gap) / 2;
-        int b_center = (imageData.maxHeight - imageData.gap) / 2;
-        int l_center = (imageData.maxWidth + imageData.gap) / 2;
-        int r_center = (imageData.maxWidth - imageData.gap) / 2;
+        int tCenter = (imageData.maxHeight + imageData.gap) / 2;
+        int bCenter = (imageData.maxHeight - imageData.gap) / 2;
+        int lCenter = (imageData.maxWidth + imageData.gap) / 2;
+        int rCenter = (imageData.maxWidth - imageData.gap) / 2;
         int center = (imageData.maxHeight - imageData.targetImageSize) / 2;
         for (int i = 0; i < size; i++) {
             int rowNum = i / imageData.columnCount;
@@ -153,43 +148,53 @@ public class TeamHeadSynthesizer implements Synthesizer {
                 if (i == 0) {
                     drawBitmapAtPosition(canvas, center, top, center + imageData.targetImageSize, bottom, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, imageData.gap * i + imageData.targetImageSize * (i - 1), t_center, imageData.gap * i + imageData.targetImageSize * i, t_center + imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * i + imageData.targetImageSize * (i - 1), tCenter,
+                        imageData.gap * i + imageData.targetImageSize * i, tCenter + imageData.targetImageSize, bitmap);
                 }
             } else if (size == 4) {
                 drawBitmapAtPosition(canvas, left, top, right, bottom, bitmap);
             } else if (size == 5) {
                 if (i == 0) {
-                    drawBitmapAtPosition(canvas, r_center - imageData.targetImageSize, r_center - imageData.targetImageSize, r_center, r_center, bitmap);
+                    drawBitmapAtPosition(canvas, rCenter - imageData.targetImageSize, rCenter - imageData.targetImageSize, rCenter, rCenter, bitmap);
                 } else if (i == 1) {
-                    drawBitmapAtPosition(canvas, l_center, r_center - imageData.targetImageSize, l_center + imageData.targetImageSize, r_center, bitmap);
+                    drawBitmapAtPosition(canvas, lCenter, rCenter - imageData.targetImageSize, lCenter + imageData.targetImageSize, rCenter, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 2), t_center, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 1), t_center +
-                            imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 2), tCenter,
+                        imageData.gap * (i - 1) + imageData.targetImageSize * (i - 1), tCenter + imageData.targetImageSize, bitmap);
                 }
             } else if (size == 6) {
                 if (i < 3) {
-                    drawBitmapAtPosition(canvas, imageData.gap * (i + 1) + imageData.targetImageSize * i, b_center - imageData.targetImageSize, imageData.gap * (i + 1) + imageData.targetImageSize * (i + 1), b_center, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i + 1) + imageData.targetImageSize * i, bCenter - imageData.targetImageSize,
+                        imageData.gap * (i + 1) + imageData.targetImageSize * (i + 1), bCenter, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, imageData.gap * (i - 2) + imageData.targetImageSize * (i - 3), t_center, imageData.gap * (i - 2) + imageData.targetImageSize * (i - 2), t_center +
-                            imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 2) + imageData.targetImageSize * (i - 3), tCenter,
+                        imageData.gap * (i - 2) + imageData.targetImageSize * (i - 2), tCenter + imageData.targetImageSize, bitmap);
                 }
             } else if (size == 7) {
                 if (i == 0) {
                     drawBitmapAtPosition(canvas, center, imageData.gap, center + imageData.targetImageSize, imageData.gap + imageData.targetImageSize, bitmap);
                 } else if (i > 0 && i < 4) {
-                    drawBitmapAtPosition(canvas, imageData.gap * i + imageData.targetImageSize * (i - 1), center, imageData.gap * i + imageData.targetImageSize * i, center + imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * i + imageData.targetImageSize * (i - 1), center,
+                        imageData.gap * i + imageData.targetImageSize * i, center + imageData.targetImageSize, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, imageData.gap * (i - 3) + imageData.targetImageSize * (i - 4), t_center + imageData.targetImageSize / 2, imageData.gap * (i - 3) + imageData.targetImageSize * (i - 3), t_center + imageData.targetImageSize / 2 + imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 3) + imageData.targetImageSize * (i - 4), tCenter + imageData.targetImageSize / 2,
+                        imageData.gap * (i - 3) + imageData.targetImageSize * (i - 3), tCenter + imageData.targetImageSize / 2 + imageData.targetImageSize,
+                        bitmap);
                 }
             } else if (size == 8) {
                 if (i == 0) {
-                    drawBitmapAtPosition(canvas, r_center - imageData.targetImageSize, imageData.gap, r_center, imageData.gap + imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(
+                        canvas, rCenter - imageData.targetImageSize, imageData.gap, rCenter, imageData.gap + imageData.targetImageSize, bitmap);
                 } else if (i == 1) {
-                    drawBitmapAtPosition(canvas, l_center, imageData.gap, l_center + imageData.targetImageSize, imageData.gap + imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(
+                        canvas, lCenter, imageData.gap, lCenter + imageData.targetImageSize, imageData.gap + imageData.targetImageSize, bitmap);
                 } else if (i > 1 && i < 5) {
-                    drawBitmapAtPosition(canvas, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 2), center, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 1), center + imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 1) + imageData.targetImageSize * (i - 2), center,
+                        imageData.gap * (i - 1) + imageData.targetImageSize * (i - 1), center + imageData.targetImageSize, bitmap);
                 } else {
-                    drawBitmapAtPosition(canvas, imageData.gap * (i - 4) + imageData.targetImageSize * (i - 5), t_center + imageData.targetImageSize / 2, imageData.gap * (i - 4) + imageData.targetImageSize * (i - 4), t_center + imageData.targetImageSize / 2 + imageData.targetImageSize, bitmap);
+                    drawBitmapAtPosition(canvas, imageData.gap * (i - 4) + imageData.targetImageSize * (i - 5), tCenter + imageData.targetImageSize / 2,
+                        imageData.gap * (i - 4) + imageData.targetImageSize * (i - 4), tCenter + imageData.targetImageSize / 2 + imageData.targetImageSize,
+                        bitmap);
                 }
             } else if (size == 9) {
                 drawBitmapAtPosition(canvas, left, top, right, bottom, bitmap);
@@ -234,7 +239,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
     public void load(String imageId) {
         if (multiImageData.size() == 0) {
             // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
-            // The image id when the request is initiated is inconsistent with the current image id, 
+            // The image id when the request is initiated is inconsistent with the current image id,
             // indicating that multiplexing has occurred, and the image should not be set at this time.
             if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
                 return;
@@ -245,7 +250,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
 
         if (multiImageData.size() == 1) {
             // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
-            // The image id when the request is initiated is inconsistent with the current image id, 
+            // The image id when the request is initiated is inconsistent with the current image id,
             // indicating that multiplexing has occurred, and the image should not be set at this time.
             if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
                 return;
@@ -260,9 +265,9 @@ public class TeamHeadSynthesizer implements Synthesizer {
 
         // 初始化图片信息，由于是异步加载和合成头像，这里需要传给合成线程一个局部对象，只在异步加载线程中使用
         // 这样在图片被复用时外部线程再次设置 url 就不会覆盖此局部对象
-        // Initialize the image information. Since it is asynchronous loading and synthesizing the avatar, 
-        // a local object needs to be passed to the synthesis thread, which is only used in the asynchronous 
-        // loading thread, so that when the image is reused, the external thread will not overwrite the local 
+        // Initialize the image information. Since it is asynchronous loading and synthesizing the avatar,
+        // a local object needs to be passed to the synthesis thread, which is only used in the asynchronous
+        // loading thread, so that when the image is reused, the external thread will not overwrite the local
         // object by setting the url again.
         MultiImageData copyMultiImageData;
         try {
@@ -278,8 +283,8 @@ public class TeamHeadSynthesizer implements Synthesizer {
         int[] gridParam = calculateGridParam(multiImageData.size());
         copyMultiImageData.rowCount = gridParam[0];
         copyMultiImageData.columnCount = gridParam[1];
-        copyMultiImageData.targetImageSize = (copyMultiImageData.maxWidth - (copyMultiImageData.columnCount + 1)
-                * copyMultiImageData.gap) / (copyMultiImageData.columnCount == 1 ? 2 : copyMultiImageData.columnCount);
+        copyMultiImageData.targetImageSize = (copyMultiImageData.maxWidth - (copyMultiImageData.columnCount + 1) * copyMultiImageData.gap)
+            / (copyMultiImageData.columnCount == 1 ? 2 : copyMultiImageData.columnCount);
         final String finalImageId = imageId;
         final MultiImageData finalCopyMultiImageData = copyMultiImageData;
         ThreadUtils.execute(new Runnable() {
@@ -326,5 +331,4 @@ public class TeamHeadSynthesizer implements Synthesizer {
     interface Callback {
         void onCall(Bitmap bitmap, String targetID);
     }
-
 }
