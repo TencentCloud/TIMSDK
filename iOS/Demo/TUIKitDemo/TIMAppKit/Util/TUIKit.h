@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /** 腾讯云 TUIKit
  *  - 本类依赖于腾讯云 IM SDK 实现
  *  - TUIKit 中的组件在实现 UI 功能的同时，调用 IM SDK 相应的接口实现 IM 相关逻辑和数据的处理
@@ -45,30 +48,29 @@ typedef NS_ENUM(NSUInteger, TUIUserStatus) {
  */
 - (void)onReceiveGroupCallAPNs:(V2TIMSignalingInfo *)signalingInfo;
 
-
 /**
  *  IMSDK sdkAppId
  */
-@property (readonly) UInt32 sdkAppId;
+@property(readonly) UInt32 sdkAppId;
 
 /**
  *  userID
  */
-@property (readonly) NSString *userID;
+@property(readonly) NSString *userID;
 
 /**
  *  userSig
  */
-@property (readonly) NSString *userSig;
+@property(readonly) NSString *userSig;
 
 /**
  * nickName
  */
-@property (readonly) NSString *nickName;
+@property(readonly) NSString *nickName;
 
 /**
  * faceUrl
  */
-@property (readonly) NSString *faceUrl;
+@property(readonly) NSString *faceUrl;
 
 @end

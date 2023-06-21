@@ -2,25 +2,23 @@
 //  TUIWarningView.m
 //
 //  Created by summeryxia on 2022/7/19.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIWarningView.h"
 #import <TIMCommon/TIMDefine.h>
 
-@interface TUIWarningView()
+@interface TUIWarningView ()
 
-@property (nonatomic, strong) UILabel *tipsLabel;
-@property (nonatomic, strong) UIButton *tipsButton;
-@property (nonatomic, copy) void(^buttonAction)(void);
+@property(nonatomic, strong) UILabel *tipsLabel;
+@property(nonatomic, strong) UIButton *tipsButton;
+@property(nonatomic, copy) void (^buttonAction)(void);
 
 @end
 
 @implementation TUIWarningView
 
-- (instancetype)initWithFrame:(CGRect)frame
-                         tips:(NSString *)tips
-                  buttonTitle:(NSString *)buttonTitle
-                 buttonAction:(void(^)(void))action {
+- (instancetype)initWithFrame:(CGRect)frame tips:(NSString *)tips buttonTitle:(NSString *)buttonTitle buttonAction:(void (^)(void))action {
     self = [super initWithFrame:frame];
     if (self) {
         self.buttonAction = action;
@@ -32,28 +30,21 @@
             self.tipsLabel.font = [UIFont systemFontOfSize:12];
             self.tipsLabel.numberOfLines = 0;
             self.tipsLabel.textColor = [UIColor tui_colorWithHex:@"FF8C39"];
-            
+
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.minimumLineHeight = 18;
             [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
             [paragraphStyle setAlignment:NSTextAlignmentLeft];
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:tips];
-            [attributedString addAttribute:NSParagraphStyleAttributeName
-                                     value:paragraphStyle
-                                     range:NSMakeRange(0, [tips length])];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [tips length])];
             self.tipsLabel.attributedText = attributedString;
-            CGRect rect = [self.tipsLabel.text boundingRectWithSize:CGSizeMake(self.mm_w - 32, MAXFLOAT)
-                                                            options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                         attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:12],
-                                                                       NSParagraphStyleAttributeName : paragraphStyle
-                                                                    }
-                                                            context:nil];
+            CGRect rect =
+                [self.tipsLabel.text boundingRectWithSize:CGSizeMake(self.mm_w - 32, MAXFLOAT)
+                                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                               attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12], NSParagraphStyleAttributeName : paragraphStyle}
+                                                  context:nil];
             self.mm_height(rect.size.height + 32);
-            self.tipsLabel
-                .mm_width(rect.size.width)
-                .mm_height(rect.size.height)
-                .mm_top(16)
-                .mm_left(16);
+            self.tipsLabel.mm_width(rect.size.width).mm_height(rect.size.height).mm_top(16).mm_left(16);
         }
 
         if (buttonTitle.length > 0) {
@@ -65,7 +56,6 @@
             [self.tipsButton addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             self.tipsButton.mm_sizeToFit().mm_right(16).mm_bottom(10);
         }
-
     }
     return self;
 }

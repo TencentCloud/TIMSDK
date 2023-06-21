@@ -21,7 +21,7 @@ static AppDelegate *app = nil;
 @interface AppDelegate : UIResponder <UIApplicationDelegate,TUIStyleSelectControllerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-
+@property (nonatomic, assign) BOOL allowRotation;
 @property (nonatomic, assign) NSUInteger unReadCount;
 @property (nonatomic, strong, readonly) TUIContactViewDataProvider *contactDataProvider;
 

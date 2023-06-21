@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class TUILanguageSelectCellModel;
-typedef void(^TUILanguageSelectCallback)(TUILanguageSelectCellModel *);
+typedef void (^TUILanguageSelectCallback)(TUILanguageSelectCellModel *);
 
 @protocol TUILanguageSelectControllerDelegate <NSObject>
 
@@ -19,27 +19,26 @@ typedef void(^TUILanguageSelectCallback)(TUILanguageSelectCellModel *);
 
 @end
 
-
 @interface TUILanguageSelectCell : UITableViewCell
 
-@property (nonatomic, strong) UILabel *nameLabel;
-@property (nonatomic, strong) UIImageView *chooseIconView;
+@property(nonatomic, strong) UILabel *nameLabel;
+@property(nonatomic, strong) UIImageView *chooseIconView;
 
-@property (nonatomic, strong) TUILanguageSelectCellModel *cellModel;
+@property(nonatomic, strong) TUILanguageSelectCellModel *cellModel;
 
 @end
 
 @interface TUILanguageSelectCellModel : NSObject
 
-@property (nonatomic, copy) NSString *languageID;
-@property (nonatomic, strong) NSString *languageName;
-@property (nonatomic, assign) BOOL selected;
+@property(nonatomic, copy) NSString *languageID;
+@property(nonatomic, strong) NSString *languageName;
+@property(nonatomic, assign) BOOL selected;
 
 @end
 
 @interface TUILanguageSelectController : UIViewController
 
-@property (nonatomic, weak) id<TUILanguageSelectControllerDelegate> delegate;
+@property(nonatomic, weak) id<TUILanguageSelectControllerDelegate> delegate;
 
 @end
 

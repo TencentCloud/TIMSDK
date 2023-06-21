@@ -31,6 +31,7 @@
 #import "TUIChatConfig.h"
 #import "TUIWarningView.h"
 #import "TUICallingHistoryViewController.h"
+#import "TIMDefine.h"
 
 //Minimalist
 #import "ConversationController_Minimalist.h"
@@ -58,7 +59,6 @@
     
     TUIRegisterThemeResourcePath(TUIDemoThemePath, TUIThemeModuleDemo);
     [TUIThemeSelectController applyLastTheme];
-        
     [self setupListener];
     [self setupGlobalUI];
     [self setupConfig];
@@ -69,6 +69,71 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {}
 - (void)applicationWillEnterForeground:(UIApplication *)application {}
 - (void)applicationWillTerminate:(UIApplication *)application {}
+
+- (UIInterfaceOrientationMask )application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    if (self.allowRotation) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    return UIInterfaceOrientationMaskPortrait;
+}
+- (void)startFullScreen {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.allowRotation = YES;
+    if (@available(iOS 16.0, *)) {
+        UIWindowScene *windowScene =
+            (UIWindowScene *)[UIApplication sharedApplication].connectedScenes.allObjects.firstObject;
+        for (UIWindow *windows in windowScene.windows) {
+            if ([windows.rootViewController respondsToSelector:NSSelectorFromString(@"setNeedsUpdateOfSupportedInterfaceOrientations")]) {
+                [windows.rootViewController performSelector:NSSelectorFromString(@"setNeedsUpdateOfSupportedInterfaceOrientations")];
+            }
+        }
+    } else {
+        // Fallback on earlier versions
+    }
+}
+
+- (void)endFullScreen {
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.allowRotation = NO;
+ 
+    
+    if (@available(iOS 16.0, *)) {
+        @try {
+            NSArray *array = [[[UIApplication sharedApplication] connectedScenes] allObjects];
+            UIWindowScene *ws = (UIWindowScene *)array[0];
+            Class GeometryPreferences = NSClassFromString(@"UIWindowSceneGeometryPreferencesIOS");
+            id geometryPreferences = [[GeometryPreferences alloc]init];
+            [geometryPreferences setValue:@(UIInterfaceOrientationMaskPortrait) forKey:@"interfaceOrientations"];
+            SEL sel_method = NSSelectorFromString(@"requestGeometryUpdateWithPreferences:errorHandler:");
+            void (^ErrorBlock)(NSError *err) = ^(NSError *err){};
+            if ([ws respondsToSelector:sel_method]) {
+                (((void (*)(id, SEL,id,id))[ws methodForSelector:sel_method])(ws, sel_method,geometryPreferences,ErrorBlock));
+            }
+        } @catch (NSException *exception) {
+            
+        } @finally {
+            
+        }
+    }
+    else {
+        if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+            @try {
+                SEL selector = NSSelectorFromString(@"setOrientation:");
+                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
+                [invocation setSelector:selector];
+                [invocation setTarget:[UIDevice currentDevice]];
+                int val = UIInterfaceOrientationPortrait;
+                [invocation setArgument:&val atIndex:2];
+                [invocation invoke];
+            } @catch (NSException *exception) {
+                
+            } @finally {
+                
+            }
+        }
+    }
+}
+
 #pragma mark - Public
 + (instancetype)sharedInstance {
     return app;
@@ -109,6 +174,8 @@
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLogoutSucc) name:TUILogoutSuccessNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onDisplayCallsRecordForMinimalist:) name:kEnableCallsRecord_mini object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onDisplayCallsRecordForClassic:) name:kEnableCallsRecord object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(startFullScreen) name:kEnableAllRotationOrientationNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(endFullScreen) name:kDisableAllRotationOrientationNotification object:nil];
 }
 
 void uncaughtExceptionHandler(NSException*exception) {

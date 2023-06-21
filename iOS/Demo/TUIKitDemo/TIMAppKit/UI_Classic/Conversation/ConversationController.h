@@ -17,7 +17,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ConversationController : UIViewController
-@property(nonatomic, copy) void(^viewWillAppear)(BOOL isAppear);
+@property(nonatomic, copy) void (^viewWillAppear)(BOOL isAppear);
 
 - (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID;
 

@@ -6,22 +6,22 @@
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
 #import "ConversationController_Minimalist.h"
-#import "TUIConversationListController_Minimalist.h"
-#import "TUIC2CChatViewController_Minimalist.h"
-#import "TUIGroupChatViewController_Minimalist.h"
-#import <TUICore/TUIThemeManager.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
+#import "TUIC2CChatViewController_Minimalist.h"
+#import "TUIConversationListController_Minimalist.h"
+#import "TUIGroupChatViewController_Minimalist.h"
 
 @interface ConversationController_Minimalist () <TUIConversationListControllerListener, V2TIMSDKListener, TUIPopViewDelegate, V2TIMSDKListener>
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
-@property (nonatomic, strong) UIBarButtonItem *moreItem;
-@property (nonatomic, strong) UIBarButtonItem *editItem;
-@property (nonatomic, strong) UIBarButtonItem *doneItem;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) UIBarButtonItem *moreItem;
+@property(nonatomic, strong) UIBarButtonItem *editItem;
+@property(nonatomic, strong) UIBarButtonItem *doneItem;
 @end
 
 @implementation ConversationController_Minimalist
 
-- (instancetype) init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.leftSpaceWidth = kScale390(13);
@@ -32,17 +32,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupNavigation];
-    
+
     self.conv = [[TUIConversationListController_Minimalist alloc] init];
     self.conv.delegate = self;
     [self addChildViewController:self.conv];
     [self.view addSubview:self.conv.view];
-    
+
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
 }
 
 - (UIColor *)navBackColor {
-    return  [UIColor whiteColor];
+    return [UIColor whiteColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -52,15 +52,14 @@
         [appearance configureWithDefaultBackground];
         appearance.shadowColor = nil;
         appearance.backgroundEffect = nil;
-        appearance.backgroundColor =  [self navBackColor];
+        appearance.backgroundColor = [self navBackColor];
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
         navigationBar.shadowImage = [UIImage new];
         navigationBar.standardAppearance = appearance;
-        navigationBar.scrollEdgeAppearance= appearance;
-    }
-    else {
+        navigationBar.scrollEdgeAppearance = appearance;
+    } else {
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
@@ -78,29 +77,28 @@
     }
 }
 
-- (void)setupNavigation
-{
+- (void)setupNavigation {
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     _titleView.label.font = [UIFont boldSystemFontOfSize:34];
     _titleView.maxLabelLength = Screen_Width;
     [_titleView setTitle:TIMCommonLocalizableString(TIMAppTabBarItemMessageText_mini)];
     _titleView.label.textColor = TUIDynamicColor(@"nav_title_text_color", TUIThemeModuleDemo_Minimalist, @"#000000");
-    
+
     UIBarButtonItem *leftTitleItem = [[UIBarButtonItem alloc] initWithCustomView:_titleView];
-    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     leftSpaceItem.width = self.leftSpaceWidth;
-    self.showLeftBarButtonItems = [NSMutableArray arrayWithArray:@[leftSpaceItem,leftTitleItem]];
-    
+    self.showLeftBarButtonItems = [NSMutableArray arrayWithArray:@[ leftSpaceItem, leftTitleItem ]];
+
     self.navigationItem.title = @"";
     self.navigationItem.leftBarButtonItems = self.showLeftBarButtonItems;
-    
+
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [editButton setTitle:TIMCommonLocalizableString(Edit) forState:UIControlStateNormal];
     [editButton setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(editBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     editButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [editButton setFrame:CGRectMake(0, 0, 26, 26)];
-    
+    [editButton setFrame:CGRectMake(0, 0, 40, 26)];
+
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton setImage:[UIImage imageNamed:TUIConversationImagePath_Minimalist(@"nav_add")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -119,21 +117,20 @@
     self.moreItem.tag = UIBarButtonItemType_More;
     self.doneItem = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
     self.doneItem.tag = UIBarButtonItemType_Done;
-    self.rightBarButtonItems = @[self.editItem, self.moreItem, self.doneItem];
-    
-    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[self.moreItem,self.editItem]];
+    self.rightBarButtonItems = @[ self.editItem, self.moreItem, self.doneItem ];
+
+    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[ self.moreItem, self.editItem ]];
     self.navigationItem.rightBarButtonItems = self.showRightBarButtonItems;
 }
 
-- (void)rightBarButtonClick:(UIButton *)rightBarButton
-{
+- (void)rightBarButtonClick:(UIButton *)rightBarButton {
     NSMutableArray *menus = [NSMutableArray array];
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
-    
+
     friend.image = TUIConversationDynamicImage(@"pop_icon_new_chat_img", [UIImage imageNamed:TUIConversationImagePath(@"new_chat")]);
     friend.title = TIMCommonLocalizableString(ChatsNewChatText);
     [menus addObject:friend];
-    
+
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
     group.image = TUIConversationDynamicImage(@"pop_icon_new_group_img", [UIImage imageNamed:TUIConversationImagePath(@"new_groupchat")]);
     group.title = TIMCommonLocalizableString(ChatsNewGroupText);
@@ -150,26 +147,24 @@
 }
 
 - (void)doneBarButtonClick:(UIBarButtonItem *)doneBarButton {
-
     [self.conv openMultiChooseBoard:NO];
-    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[self.moreItem,self.editItem]];
+    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[ self.moreItem, self.editItem ]];
     self.navigationItem.rightBarButtonItems = self.showRightBarButtonItems;
 }
 
 - (void)editBarButtonClick:(UIButton *)editBarButton {
     [self.conv openMultiChooseBoard:YES];
     [self.conv enableMultiSelectedMode:YES];
-    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[self.doneItem]];
+    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[ self.doneItem ]];
     self.navigationItem.rightBarButtonItems = self.showRightBarButtonItems;
-    
+
     if (self.getUnReadCount && self.getUnReadCount() <= 0) {
         self.conv.multiChooseView.readButton.enabled = NO;
     }
 }
 
 #pragma TUIPopViewDelegate
-- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index
-{
+- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index {
     if (0 == index) {
         [self.conv startConversation:V2TIM_C2C];
     } else {
@@ -178,7 +173,6 @@
 }
 
 - (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID {
-
     UIViewController *topVc = self.navigationController.topViewController;
     BOOL isSameTarget = NO;
     BOOL isInChat = NO;
@@ -190,11 +184,11 @@
     if (isInChat && isSameTarget) {
         return;
     }
-    
+
     if (isInChat && !isSameTarget) {
         [self.navigationController popViewControllerAnimated:NO];
     }
-    
+
     TUIChatConversationModel *conversationData = [[TUIChatConversationModel alloc] init];
     conversationData.userID = userID;
     conversationData.groupID = groupID;
@@ -221,7 +215,7 @@
 }
 
 - (void)onCloseConversationMultiChooseBoard {
-    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[self.moreItem,self.editItem]];
+    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[ self.moreItem, self.editItem ]];
     self.navigationItem.rightBarButtonItems = self.showRightBarButtonItems;
 }
 
@@ -236,7 +230,7 @@
     [self.titleView stopAnimating];
 }
 
-- (void)onConnectFailed:(int)code err:(NSString*)err {
+- (void)onConnectFailed:(int)code err:(NSString *)err {
     [self.titleView setTitle:TIMCommonLocalizableString(TIMAppChatDisconnectTitle)];
     [self.titleView stopAnimating];
 }

@@ -7,19 +7,19 @@
 //
 
 #import "TUIAboutUsViewController.h"
+#import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIUtil.h"
-#import <TIMCommon/TIMDefine.h>
 
-@interface TUIAboutUsViewController ()<UITableViewDelegate,UITableViewDataSource>
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSMutableArray *data;
+@interface TUIAboutUsViewController () <UITableViewDelegate, UITableViewDataSource>
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) NSMutableArray *data;
 @end
 
 @implementation TUIAboutUsViewController
 
-//MARK: life cycle
+// MARK: life cycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,7 +29,7 @@
 
 - (void)setupView {
     [self.view addSubview:self.tableView];
-    
+
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:TIMCommonLocalizableString(TIMAppMeAbout)];
     self.navigationItem.titleView = _titleView;
@@ -38,25 +38,25 @@
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
 }
 - (void)applyData {
-    //PRIVATEMARK
+    // PRIVATEMARK
     if (self.data) {
         [self.data removeAllObjects];
     }
     NSString *aboutUsUrl = @"https://cloud.tencent.com/document/product/269/59590";
     NSString *versionText = [V2TIMManager sharedInstance].getVersion;
     TUICommonTextCellData *versionData = [TUICommonTextCellData new];
-    versionData.key = TIMCommonLocalizableString(TUIKitAboutUsSDKVersion); // "SDK版本";
-    versionData.value = versionText?versionText:@"";// @"版本号"
+    versionData.key = TIMCommonLocalizableString(TUIKitAboutUsSDKVersion);  // "SDK版本";
+    versionData.value = versionText ? versionText : @"";                    // @"版本号"
     versionData.showAccessory = NO;
-    versionData.ext = @{@"event_type":@"0"};
-    NSArray * keysArray = @[TIMCommonLocalizableString(TUIKitAboutUsContactUs)];
-    NSArray * extssArray = @[
-        @{@"event_type":@"101",@"url":aboutUsUrl},
+    versionData.ext = @{@"event_type" : @"0"};
+    NSArray *keysArray = @[ TIMCommonLocalizableString(TUIKitAboutUsContactUs) ];
+    NSArray *extssArray = @[
+        @{@"event_type" : @"101", @"url" : aboutUsUrl},
     ];
-    
-    NSMutableArray *clickArray = [NSMutableArray arrayWithCapacity:keysArray.count+1];
+
+    NSMutableArray *clickArray = [NSMutableArray arrayWithCapacity:keysArray.count + 1];
     [clickArray addObject:versionData];
-    
+
     for (int i = 0; i < keysArray.count; i++) {
         TUICommonTextCellData *data = [TUICommonTextCellData new];
         data.key = keysArray[i];
@@ -65,12 +65,12 @@
         data.cselector = @selector(click:);
         [clickArray addObject:data];
     }
-    
+
     [self.data addObject:clickArray];
     [self.tableView reloadData];
 }
 
-//MARK: lazy
+// MARK: lazy
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
@@ -86,66 +86,63 @@
     return _data;
 }
 
-//MARK: action
+// MARK: action
 - (void)click:(id)data {
     if ([data isKindOfClass:[TUICommonTextCell class]]) {
-        TUICommonTextCell *cell = (TUICommonTextCell*)data;
+        TUICommonTextCell *cell = (TUICommonTextCell *)data;
         NSDictionary *dic = cell.data.ext;
         if ([dic isKindOfClass:[NSDictionary class]]) {
             NSString *event_type = dic[@"event_type"];
-            NSString *urlStr = dic[@"url"]?dic[@"url"]:@"";
-            NSString *txt = dic[@"txt"]?dic[@"txt"]:@"";
+            NSString *urlStr = dic[@"url"] ? dic[@"url"] : @"";
+            NSString *txt = dic[@"txt"] ? dic[@"txt"] : @"";
             if ([event_type isEqualToString:@"101"]) {
-                NSURL * url = [NSURL URLWithString:urlStr];
+                NSURL *url = [NSURL URLWithString:urlStr];
                 [TUIUtil openLinkWithURL:url];
-            }
-            else if([event_type isEqualToString:@"102"]) {
+            } else if ([event_type isEqualToString:@"102"]) {
                 [self showAlertWithText:txt];
-            }
-            else if ([event_type isEqualToString:@"103"]) {
+            } else if ([event_type isEqualToString:@"103"]) {
                 Class cls = NSClassFromString(@"TUICancelAccountViewController");
-                NSString * clsStr = NSStringFromClass(cls);
-                if ([clsStr isKindOfClass:[NSString class]] && clsStr.length>0) {
-                    UIViewController * vc = [[cls alloc] init];
+                NSString *clsStr = NSStringFromClass(cls);
+                if ([clsStr isKindOfClass:[NSString class]] && clsStr.length > 0) {
+                    UIViewController *vc = [[cls alloc] init];
                     [self.navigationController pushViewController:vc animated:YES];
                 }
-            }
-            else {
-                
+            } else {
             }
         }
-        
     }
-    
 }
 
 - (void)showAlertWithText:(NSString *)atext {
+    UIAlertController *alvc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitAboutUsDisclaimer)
+                                                                  message:atext
+                                                           preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:TIMCommonLocalizableString(Accept)
+                                                            style:UIAlertActionStyleDestructive
+                                                          handler:^(UIAlertAction *_Nonnull action){
 
-    UIAlertController *alvc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitAboutUsDisclaimer) message:atext preferredStyle:(UIAlertControllerStyleAlert)];
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:TIMCommonLocalizableString(Accept) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-
-    }];
+                                                          }];
     [alvc tuitheme_addAction:confirmAction];
-    [self presentViewController:alvc animated:YES completion:^{
-    }];
+    [self presentViewController:alvc
+                       animated:YES
+                     completion:^{
+                     }];
 }
 
-//MARK: delegate
+// MARK: delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSInteger sectionCount = self.data.count;
     return sectionCount;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
     return view;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return section == 0 ? 0 : 10;
 }
 
@@ -154,18 +151,17 @@
     return array.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = _data[indexPath.section];
     TUICommonCellData *data = array[indexPath.row];
-    
+
     return [data heightOfWidth:Screen_Width];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = _data[indexPath.section];
     NSObject *data = array[indexPath.row];
-    if([data isKindOfClass:[TUICommonTextCellData class]]) {
+    if ([data isKindOfClass:[TUICommonTextCellData class]]) {
         TUICommonTextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"textCell" forIndexPath:indexPath];
         [cell fillWithData:(TUICommonTextCellData *)data];
         return cell;

@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 //  Aspects.h
 //  Aspects - A delightful, simple library for aspect oriented programming.
@@ -8,11 +11,11 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_OPTIONS(NSUInteger, AspectOptions) {
-    AspectPositionAfter   = 0,            /// Called after the original implementation (default)
-    AspectPositionInstead = 1,            /// Will replace the original implementation.
-    AspectPositionBefore  = 2,            /// Called before the original implementation.
+    AspectPositionAfter = 0,    /// Called after the original implementation (default)
+    AspectPositionInstead = 1,  /// Will replace the original implementation.
+    AspectPositionBefore = 2,   /// Called before the original implementation.
 
-    AspectOptionAutomaticRemoval = 1 << 3 /// Will remove the hook after the first execution.
+    AspectOptionAutomaticRemoval = 1 << 3  /// Will remove the hook after the first execution.
 };
 
 /// Opaque Aspect Token that allows to deregister the hook.
@@ -39,7 +42,8 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
 @end
 
 /**
- Aspects uses Objective-C message forwarding to hook into messages. This will create some overhead. Don't add aspects to methods that are called a lot. Aspects is meant for view/controller code that is not called a 1000 times per second.
+ Aspects uses Objective-C message forwarding to hook into messages. This will create some overhead. Don't add aspects to methods that are called a lot. Aspects
+ is meant for view/controller code that is not called a 1000 times per second.
 
  Adding aspects returns an opaque token which can be used to deregister again. All calls are thread safe.
  */
@@ -54,30 +58,23 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
 ///
 /// @note Hooking static methods is not supported.
 /// @return A token which allows to later deregister the aspect.
-+ (id<AspectToken>)aspect_hookSelector:(SEL)selector
-                           withOptions:(AspectOptions)options
-                            usingBlock:(id)block
-                                 error:(NSError **)error;
++ (id<AspectToken>)aspect_hookSelector:(SEL)selector withOptions:(AspectOptions)options usingBlock:(id)block error:(NSError **)error;
 
 /// Adds a block of code before/instead/after the current `selector` for a specific instance.
-- (id<AspectToken>)aspect_hookSelector:(SEL)selector
-                           withOptions:(AspectOptions)options
-                            usingBlock:(id)block
-                                 error:(NSError **)error;
+- (id<AspectToken>)aspect_hookSelector:(SEL)selector withOptions:(AspectOptions)options usingBlock:(id)block error:(NSError **)error;
 
 @end
 
-
 typedef NS_ENUM(NSUInteger, AspectErrorCode) {
-    AspectErrorSelectorBlacklisted,                   /// Selectors like release, retain, autorelease are blacklisted.
-    AspectErrorDoesNotRespondToSelector,              /// Selector could not be found.
-    AspectErrorSelectorDeallocPosition,               /// When hooking dealloc, only AspectPositionBefore is allowed.
-    AspectErrorSelectorAlreadyHookedInClassHierarchy, /// Statically hooking the same method in subclasses is not allowed.
-    AspectErrorFailedToAllocateClassPair,             /// The runtime failed creating a class pair.
-    AspectErrorMissingBlockSignature,                 /// The block misses compile time signature info and can't be called.
-    AspectErrorIncompatibleBlockSignature,            /// The block signature does not match the method or is too large.
+    AspectErrorSelectorBlacklisted,                    /// Selectors like release, retain, autorelease are blacklisted.
+    AspectErrorDoesNotRespondToSelector,               /// Selector could not be found.
+    AspectErrorSelectorDeallocPosition,                /// When hooking dealloc, only AspectPositionBefore is allowed.
+    AspectErrorSelectorAlreadyHookedInClassHierarchy,  /// Statically hooking the same method in subclasses is not allowed.
+    AspectErrorFailedToAllocateClassPair,              /// The runtime failed creating a class pair.
+    AspectErrorMissingBlockSignature,                  /// The block misses compile time signature info and can't be called.
+    AspectErrorIncompatibleBlockSignature,             /// The block signature does not match the method or is too large.
 
-    AspectErrorRemoveObjectAlreadyDeallocated = 100   /// (for removing) The object hooked is already deallocated.
+    AspectErrorRemoveObjectAlreadyDeallocated = 100  /// (for removing) The object hooked is already deallocated.
 };
 
 extern NSString *const AspectErrorDomain;

@@ -12,8 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSUInteger(^GetUnReadCount)(void);
-typedef void(^ClearUnreadMessage)(void);
+typedef NSUInteger (^GetUnReadCount)(void);
+typedef void (^ClearUnreadMessage)(void);
 
 typedef NS_ENUM(NSInteger, UIBarButtonItemType) {
     UIBarButtonItemType_Edit,
@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, UIBarButtonItemType) {
 @property(nonatomic, assign) CGFloat leftSpaceWidth;
 @property(nonatomic, copy) GetUnReadCount getUnReadCount;
 @property(nonatomic, copy) ClearUnreadMessage clearUnreadMessage;
-@property(nonatomic, copy) void(^viewWillAppear)(BOOL isAppear);
+@property(nonatomic, copy) void (^viewWillAppear)(BOOL isAppear);
 
 - (void)pushToChatViewController:(NSString *)groupID userID:(NSString *)userID;
 

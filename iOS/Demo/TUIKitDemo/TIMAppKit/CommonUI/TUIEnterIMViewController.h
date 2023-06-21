@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, DefaultVC) {
 };
 
 @interface TUIEnterIMViewController : UIViewController
-@property (nonatomic, assign) DefaultVC defaultVC;
+@property(nonatomic, assign) DefaultVC defaultVC;
 @end
 
 NS_ASSUME_NONNULL_END

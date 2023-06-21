@@ -13,7 +13,7 @@
     return [self initWithTitle:nil subTitle:nil cellClass:[NSObject class]];
 }
 
--(instancetype)initWithTitle:(NSString *)title subTitle:(NSString *)subTitle cellClass:(Class)cellClass {
+- (instancetype)initWithTitle:(NSString *)title subTitle:(NSString *)subTitle cellClass:(Class)cellClass {
     if (self = [super init]) {
         _title = title;
         _subtitle = subTitle;

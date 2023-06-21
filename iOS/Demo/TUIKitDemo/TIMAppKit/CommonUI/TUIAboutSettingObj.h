@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-typedef void(^CellClickedAction)(UITableView *tableview, NSIndexPath *path);
+typedef void (^CellClickedAction)(UITableView *tableview, NSIndexPath *path);
 
 @interface TUIAboutSettingObj : NSObject
 @property(nonatomic, strong) NSString *title;

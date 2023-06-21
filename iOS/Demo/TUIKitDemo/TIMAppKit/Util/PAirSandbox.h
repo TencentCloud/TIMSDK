@@ -18,4 +18,3 @@
 - (void)addAppGroup:(NSString *)groupId;
 
 @end
-

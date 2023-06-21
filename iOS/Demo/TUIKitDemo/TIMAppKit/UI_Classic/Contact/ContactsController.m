@@ -13,26 +13,24 @@
  */
 
 #import "ContactsController.h"
-#import "TUIContactController.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import "TUIContactController.h"
 
 @interface ContactsController () <TUIPopViewDelegate>
-@property (nonatomic, strong) TUIContactController *contactVC;
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) TUIContactController *contactVC;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation ContactsController
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (self.viewWillAppear) {
         self.viewWillAppear(YES);
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     if (self.viewWillAppear) {
         self.viewWillAppear(NO);
@@ -54,27 +52,24 @@
     [_titleView setTitle:TIMCommonLocalizableString(TIMAppTabBarItemContactText)];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
-    
+
     self.contactVC = [[TUIContactController alloc] init];
     [self addChildViewController:self.contactVC];
     [self.view addSubview:self.contactVC.view];
-
 }
 
 - (void)onRightItem:(UIButton *)rightBarButton;
 {
     NSMutableArray *menus = [NSMutableArray array];
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
-    friend.image =
-    TUIContactDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIContactImagePath(@"add_friend")]);
-    friend.title = TIMCommonLocalizableString(ContactsAddFriends); //@"添加好友";
+    friend.image = TUIContactDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIContactImagePath(@"add_friend")]);
+    friend.title = TIMCommonLocalizableString(ContactsAddFriends);  //@"添加好友";
     [menus addObject:friend];
 
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
-    group.image =
-    TUIContactDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIContactImagePath(@"add_group")]);
+    group.image = TUIContactDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIContactImagePath(@"add_group")]);
 
-    group.title = TIMCommonLocalizableString(ContactsJoinGroup);//@"添加群组";
+    group.title = TIMCommonLocalizableString(ContactsJoinGroup);  //@"添加群组";
     [menus addObject:group];
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
@@ -87,12 +82,8 @@
     [popView showInWindow:self.view.window];
 }
 
-- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index
-{
+- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index {
     [self.contactVC addToContactsOrGroups:(index == 0 ? TUIFindContactTypeC2C : TUIFindContactTypeGroup)];
 }
-
-
-
 
 @end

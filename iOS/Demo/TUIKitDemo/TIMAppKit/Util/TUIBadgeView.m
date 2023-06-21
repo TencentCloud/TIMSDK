@@ -17,15 +17,15 @@
 
 @interface TUIBadgeView () <UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) UILabel *label;
+@property(nonatomic, strong) UILabel *label;
 
 // 辅助圆，用来原地显示
 // Assist circle view for displaying in the origin position
-@property (nonatomic, strong) UIView *assistCircleView;
+@property(nonatomic, strong) UIView *assistCircleView;
 
 // 初始位置
 // initial postion
-@property (nonatomic, assign) CGPoint initialCenterPosition;
+@property(nonatomic, assign) CGPoint initialCenterPosition;
 
 @end
 
@@ -43,7 +43,7 @@
     CGPoint point = self.center;
     self.label.text = title;
     self.hidden = (title.length == 0);
-    
+
     [self sizeToFit];
     self.center = point;
 }
@@ -51,7 +51,7 @@
 - (void)setupUI {
     self.backgroundColor = TUIBadgeViewColor;
     [self addSubview:self.label];
-    
+
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
     pan.cancelsTouchesInView = NO;
     pan.delegate = self;
@@ -71,7 +71,7 @@
     if (width < height) {
         width = height;
     }
-    return CGSizeMake( width, height);
+    return CGSizeMake(width, height);
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
@@ -82,17 +82,17 @@
     if (self.clearCallback == nil) {
         return;
     }
-    
+
     if (UIGestureRecognizerStateBegan == gesture.state) {
         self.initialCenterPosition = self.center;
     }
-    
+
     CGPoint point = [gesture locationInView:self.superview];
     CGFloat distance_x = point.x - self.initialCenterPosition.x;
     CGFloat distance_y = point.y - self.initialCenterPosition.y;
     CGFloat distance = sqrtf(distance_x * distance_x + distance_y * distance_y);
     self.center = point;
-    
+
     if (UIGestureRecognizerStateEnded == gesture.state) {
         // end
         self.hidden = distance >= 60;

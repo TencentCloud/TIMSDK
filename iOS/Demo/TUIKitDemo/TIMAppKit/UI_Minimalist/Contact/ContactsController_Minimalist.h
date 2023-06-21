@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) TUIContactController_Minimalist *contact;
 @property(nonatomic, strong) NSMutableArray<UIBarButtonItem *> *showLeftBarButtonItems;
 @property(nonatomic, strong) NSMutableArray<UIBarButtonItem *> *showRightBarButtonItems;
-@property(nonatomic, copy) void(^viewWillAppear)(BOOL isAppear);
+@property(nonatomic, copy) void (^viewWillAppear)(BOOL isAppear);
 @end
 
 NS_ASSUME_NONNULL_END

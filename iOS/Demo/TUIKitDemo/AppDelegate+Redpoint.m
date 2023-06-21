@@ -149,12 +149,12 @@ NSInteger _markHideUnreadCount = 0;
 - (void)updateMarkUnreadCount:(NSNotification *) note {
     
     NSDictionary *userInfo = note.userInfo;
-    NSInteger markUnreadCount = [[userInfo objectForKey:@"markUnreadCount"] integerValue];
-    NSInteger markHideUnreadCount = [[userInfo objectForKey:@"markHideUnreadCount"] integerValue];
+    NSInteger markUnreadCount = [[userInfo objectForKey:TUIKitNotification_onConversationMarkUnreadCountChanged_MarkUnreadCount] integerValue];
+    NSInteger markHideUnreadCount = [[userInfo objectForKey:TUIKitNotification_onConversationMarkUnreadCountChanged_MarkHideUnreadCount] integerValue];
     _markUnreadCount = markUnreadCount;
     _markHideUnreadCount = markHideUnreadCount;
-    if ([userInfo objectForKey:@"markUnreadMap"]) {
-        self.markUnreadMap = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:@"markUnreadMap"]];
+    if ([userInfo objectForKey:TUIKitNotification_onConversationMarkUnreadCountChanged_MarkUnreadMap]) {
+        self.markUnreadMap = [NSMutableDictionary dictionaryWithDictionary:[userInfo objectForKey:TUIKitNotification_onConversationMarkUnreadCountChanged_MarkUnreadMap]];
     }
     @weakify(self)
     [V2TIMManager.sharedInstance getTotalUnreadMessageCount:^(UInt64 totalCount) {

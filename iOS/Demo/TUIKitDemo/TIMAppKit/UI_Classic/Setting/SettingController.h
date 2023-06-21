@@ -17,15 +17,15 @@
  */
 #import <UIKit/UIKit.h>
 
-extern NSString * kEnableMsgReadStatus;
-extern NSString * kEnableOnlineStatus;
-extern NSString * kEnableCallsRecord;
+extern NSString* kEnableMsgReadStatus;
+extern NSString* kEnableOnlineStatus;
+extern NSString* kEnableCallsRecord;
 
 @interface SettingController : UIViewController
-@property(nonatomic ,copy) void(^changeStyle)(void);
-@property(nonatomic ,copy) void(^changeTheme)(void);
-@property(nonatomic ,copy) void(^confirmLogout)(void);
-@property(nonatomic, copy) void(^viewWillAppear)(BOOL isAppear);
+@property(nonatomic, copy) void (^changeStyle)(void);
+@property(nonatomic, copy) void (^changeTheme)(void);
+@property(nonatomic, copy) void (^confirmLogout)(void);
+@property(nonatomic, copy) void (^viewWillAppear)(BOOL isAppear);
 @property(nonatomic, assign) BOOL showPersonalCell;
 @property(nonatomic, assign) BOOL showSelectStyleCell;
 @property(nonatomic, assign) BOOL showChangeThemeCell;

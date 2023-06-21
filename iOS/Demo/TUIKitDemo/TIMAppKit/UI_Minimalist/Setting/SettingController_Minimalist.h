@@ -19,17 +19,17 @@
 
 @class TUISettingController_Minimalist;
 
-extern NSString * kEnableMsgReadStatus_mini;
-extern NSString * kEnableOnlineStatus_mini;
-extern NSString * kEnableCallsRecord_mini;
+extern NSString *kEnableMsgReadStatus_mini;
+extern NSString *kEnableOnlineStatus_mini;
+extern NSString *kEnableCallsRecord_mini;
 
 @interface SettingController_Minimalist : UIViewController
 @property(nonatomic, strong) TUISettingController_Minimalist *setting;
 @property(nonatomic, strong) NSMutableArray<UIBarButtonItem *> *showLeftBarButtonItems;
-@property(nonatomic ,copy) void(^changeStyle)(void);
-@property(nonatomic ,copy) void(^changeTheme)(void);
-@property(nonatomic ,copy) void(^confirmLogout)(void);
-@property(nonatomic, copy) void(^viewWillAppear)(BOOL isAppear);
+@property(nonatomic, copy) void (^changeStyle)(void);
+@property(nonatomic, copy) void (^changeTheme)(void);
+@property(nonatomic, copy) void (^confirmLogout)(void);
+@property(nonatomic, copy) void (^viewWillAppear)(BOOL isAppear);
 @property(nonatomic, assign) BOOL showPersonalCell;
 @property(nonatomic, assign) BOOL showSelectStyleCell;
 @property(nonatomic, assign) BOOL showChangeThemeCell;

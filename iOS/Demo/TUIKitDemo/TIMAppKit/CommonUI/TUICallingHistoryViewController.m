@@ -3,6 +3,7 @@
 //  TIMAppKit
 //
 //  Created by harvy on 2023/3/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUICallingHistoryViewController.h"
@@ -10,9 +11,7 @@
 #import <TUICore/TUIDefine.h>
 
 @interface TUICallingHistoryViewController ()
-
-@property (nonatomic, strong) UIViewController *callsVC;
-
+@property(nonatomic, strong) UIViewController *settingCallsVc;
 @end
 
 @implementation TUICallingHistoryViewController
@@ -24,17 +23,18 @@
     } else {
         param[TUICore_TUICallingObjectFactory_RecordCallsVC_UIStyle] = TUICore_TUICallingObjectFactory_RecordCallsVC_UIStyle_Classic;
     }
-    UIViewController *callsVc = [TUICore createObject:TUICore_TUICallingObjectFactory key:TUICore_TUICallingObjectFactory_RecordCallsVC param:param];
-    if (callsVc) {
-        return [[TUICallingHistoryViewController alloc] initWithCallsVC:callsVc];
+    UIViewController *settingCallsVc = [TUICore createObject:TUICore_TUICallingObjectFactory key:TUICore_TUICallingObjectFactory_RecordCallsVC param:param];
+    if (settingCallsVc) {
+        return [[TUICallingHistoryViewController alloc] initWithCallsVC:settingCallsVc isMimimalist:isMimimalist];
     } else {
         return nil;
     }
 }
 
-- (instancetype)initWithCallsVC:(UIViewController *)callsVC {
+- (instancetype)initWithCallsVC:(UIViewController *)callsVC isMimimalist:(BOOL)isMimimalist {
     TUICallingHistoryViewController *vc = [[TUICallingHistoryViewController alloc] init];
-    vc.callsVC = callsVC;
+    vc.settingCallsVc = callsVC;
+    vc.isMimimalist = isMimimalist;
     return vc;
 }
 
@@ -46,11 +46,22 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.navigationController.navigationBarHidden = NO;
+    if (self.viewWillAppear) {
+        self.viewWillAppear(NO);
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (self.viewWillAppear) {
+        self.viewWillAppear(YES);
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if (self.callsVC) {
+    if (self.settingCallsVc) {
+        self.callsVC = self.settingCallsVc;
         [self addChildViewController:self.callsVC];
         [self.view addSubview:self.callsVC.view];
     }

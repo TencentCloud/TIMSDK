@@ -10,13 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^TUIBadgeViewClearCallback)(void);
+typedef void (^TUIBadgeViewClearCallback)(void);
 
 @interface TUIBadgeView : UIView
 
-@property (nonatomic, copy) NSString *title;
+@property(nonatomic, copy) NSString *title;
 
-@property (nonatomic, copy) TUIBadgeViewClearCallback clearCallback;
+@property(nonatomic, copy) TUIBadgeViewClearCallback clearCallback;
 
 @end
 

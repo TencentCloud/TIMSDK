@@ -13,18 +13,18 @@
  */
 
 #import "ContactsController_Minimalist.h"
-#import "TUIContactController_Minimalist.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import "TUIContactController_Minimalist.h"
 
 @interface ContactsController_Minimalist () <TUIPopViewDelegate>
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation ContactsController_Minimalist
 
 - (UIColor *)navBackColor {
-    return  [UIColor whiteColor];
+    return [UIColor whiteColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -34,15 +34,14 @@
         [appearance configureWithDefaultBackground];
         appearance.shadowColor = nil;
         appearance.backgroundEffect = nil;
-        appearance.backgroundColor =  [self navBackColor];
+        appearance.backgroundColor = [self navBackColor];
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
         navigationBar.shadowImage = [UIImage new];
         navigationBar.standardAppearance = appearance;
-        navigationBar.scrollEdgeAppearance= appearance;
-    }
-    else {
+        navigationBar.scrollEdgeAppearance = appearance;
+    } else {
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
@@ -53,8 +52,7 @@
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     if (self.viewWillAppear) {
         self.viewWillAppear(NO);
@@ -65,27 +63,26 @@
     [super viewDidLoad];
 
     [self setupNavigation];
-    
+
     self.contact = [[TUIContactController_Minimalist alloc] init];
     [self addChildViewController:self.contact];
     [self.view addSubview:self.contact.view];
 }
 
-- (void)setupNavigation
-{
+- (void)setupNavigation {
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     _titleView.label.font = [UIFont boldSystemFontOfSize:34];
     [_titleView setTitle:TIMCommonLocalizableString(TIMAppTabBarItemContactText_mini)];
     _titleView.label.textColor = TUIDynamicColor(@"nav_title_text_color", TUIThemeModuleDemo_Minimalist, @"#000000");
-    
+
     UIBarButtonItem *leftTitleItem = [[UIBarButtonItem alloc] initWithCustomView:_titleView];
-    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     leftSpaceItem.width = kScale390(13);
-    self.showLeftBarButtonItems = [NSMutableArray arrayWithArray:@[leftSpaceItem, leftTitleItem]];
-    
+    self.showLeftBarButtonItems = [NSMutableArray arrayWithArray:@[ leftSpaceItem, leftTitleItem ]];
+
     self.navigationItem.title = @"";
     self.navigationItem.leftBarButtonItems = self.showLeftBarButtonItems;
-    
+
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton setImage:[UIImage imageNamed:TUIConversationImagePath_Minimalist(@"nav_add")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(onRightItem:) forControlEvents:UIControlEventTouchUpInside];
@@ -93,7 +90,7 @@
     [moreButton setFrame:CGRectMake(0, 0, 26, 26)];
 
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
-    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[moreItem]];
+    self.showRightBarButtonItems = [NSMutableArray arrayWithArray:@[ moreItem ]];
     self.navigationItem.rightBarButtonItems = self.showRightBarButtonItems;
 }
 
@@ -101,16 +98,14 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
-    friend.image =
-    TUIContactDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIContactImagePath(@"add_friend")]);
-    friend.title = TIMCommonLocalizableString(ContactsAddFriends); //@"添加好友";
+    friend.image = TUIContactDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIContactImagePath(@"add_friend")]);
+    friend.title = TIMCommonLocalizableString(ContactsAddFriends);  //@"添加好友";
     [menus addObject:friend];
 
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
-    group.image =
-    TUIContactDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIContactImagePath(@"add_group")]);
+    group.image = TUIContactDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIContactImagePath(@"add_group")]);
 
-    group.title = TIMCommonLocalizableString(ContactsJoinGroup);//@"添加群组";
+    group.title = TIMCommonLocalizableString(ContactsJoinGroup);  //@"添加群组";
     [menus addObject:group];
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
@@ -123,16 +118,12 @@
     [popView showInWindow:self.view.window];
 }
 
-- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index
-{
+- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index {
     if (0 == index) {
         [self.contact addToContacts];
     } else {
         [self.contact addGroups];
     }
 }
-
-
-
 
 @end

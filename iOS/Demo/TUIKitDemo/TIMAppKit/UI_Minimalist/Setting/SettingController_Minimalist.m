@@ -6,25 +6,25 @@
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
 #import "SettingController_Minimalist.h"
-#import "TUISettingController_Minimalist.h"
-#import "TUIAboutUsViewController.h"
-#import <TUICore/TUILogin.h>
-#import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUILogin.h>
+#import "TUIAboutUsViewController.h"
 #import "TUIChatConfig.h"
+#import "TUISettingController_Minimalist.h"
 #import "TUIUtil.h"
 
-NSString * kEnableMsgReadStatus_mini = @"TUIKitDemo_EnableMsgReadStatus";
-NSString * kEnableOnlineStatus_mini = @"TUIKitDemo_EnableOnlineStatus";
-NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
+NSString *kEnableMsgReadStatus_mini = @"TUIKitDemo_EnableMsgReadStatus";
+NSString *kEnableOnlineStatus_mini = @"TUIKitDemo_EnableOnlineStatus";
+NSString *kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
 
 @interface SettingController_Minimalist () <TUISettingControllerDelegate_Minimalist, V2TIMSDKListener, UIActionSheetDelegate>
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation SettingController_Minimalist
 
-- (instancetype) init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.showPersonalCell = YES;
@@ -36,7 +36,7 @@ NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
 }
 
 - (UIColor *)navBackColor {
-    return  [UIColor whiteColor];
+    return [UIColor whiteColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -46,15 +46,14 @@ NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
         [appearance configureWithDefaultBackground];
         appearance.shadowColor = nil;
         appearance.backgroundEffect = nil;
-        appearance.backgroundColor =  [self navBackColor];
+        appearance.backgroundColor = [self navBackColor];
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
         navigationBar.shadowImage = [UIImage new];
         navigationBar.standardAppearance = appearance;
-        navigationBar.scrollEdgeAppearance= appearance;
-    }
-    else {
+        navigationBar.scrollEdgeAppearance = appearance;
+    } else {
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
         navigationBar.backgroundColor = [self navBackColor];
         navigationBar.barTintColor = [self navBackColor];
@@ -65,8 +64,7 @@ NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     if (self.viewWillAppear) {
         self.viewWillAppear(NO);
@@ -76,11 +74,11 @@ NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupNavigation];
-    
+
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapTest:)];
     tap.numberOfTapsRequired = 5;
     [self.parentViewController.view addGestureRecognizer:tap];
-    
+
     self.setting = [[TUISettingController_Minimalist alloc] init];
     self.setting.delegate = self;
     self.setting.aboutIMCellText = TIMCommonLocalizableString(TIMAppMeAbout);
@@ -95,7 +93,7 @@ NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
     }
     [self addChildViewController:self.setting];
     [self.view addSubview:self.setting.view];
-    
+
     [TUIChatConfig defaultConfig].msgNeedReadReceipt = [self msgReadStatus];
     [TUIConfig defaultConfig].displayOnlineStatusIcon = [self onlineStatus];
     self.setting.displayCallsRecord = [[NSUserDefaults.standardUserDefaults objectForKey:kEnableCallsRecord_mini] boolValue];
@@ -107,18 +105,18 @@ NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
     _titleView.label.font = [UIFont boldSystemFontOfSize:34];
     [_titleView setTitle:TIMCommonLocalizableString(TIMAppTabBarItemSettingText_mini)];
     _titleView.label.textColor = TUIDynamicColor(@"nav_title_text_color", TUIThemeModuleDemo_Minimalist, @"#000000");
-    
+
     UIBarButtonItem *leftTitleItem = [[UIBarButtonItem alloc] initWithCustomView:_titleView];
-    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     leftSpaceItem.width = kScale390(13);
-    self.showLeftBarButtonItems = [NSMutableArray arrayWithArray:@[leftSpaceItem, leftTitleItem]];
-    
+    self.showLeftBarButtonItems = [NSMutableArray arrayWithArray:@[ leftSpaceItem, leftTitleItem ]];
+
     self.navigationItem.title = @"";
     self.navigationItem.leftBarButtonItems = self.showLeftBarButtonItems;
 }
 
 - (void)onTapTest:(UIGestureRecognizer *)recognizer {
-    //PRIVATEMARK
+    // PRIVATEMARK
 }
 
 #pragma mark TUISettingControllerDelegate_Minimalist
@@ -165,13 +163,19 @@ NSString * kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
 }
 
 - (void)onClickLogout {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TIMAppConfirmLogout)/*@"确定退出吗"*/ message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TIMAppCancel) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TIMAppConfirmLogout) /*@"确定退出吗"*/
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TIMAppCancel)
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction *_Nonnull action){
 
-    }]];
-    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TIMAppConfirm) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        [self didConfirmLogout];
-    }]];
+                                                     }]];
+    [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TIMAppConfirm)
+                                                       style:UIAlertActionStyleDestructive
+                                                     handler:^(UIAlertAction *_Nonnull action) {
+                                                       [self didConfirmLogout];
+                                                     }]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

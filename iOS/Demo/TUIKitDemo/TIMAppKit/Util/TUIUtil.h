@@ -15,8 +15,7 @@
  */
 #import <Foundation/Foundation.h>
 
-#define IS_NOT_EMPTY_NSSTRING(__X__)            (__X__ && [__X__ isKindOfClass:[NSString class]] && ![__X__ isEqualToString:@""])
-
+#define IS_NOT_EMPTY_NSSTRING(__X__) (__X__ && [__X__ isKindOfClass:[NSString class]] && ![__X__ isEqualToString:@""])
 
 @interface TUIUtil : NSObject
 
@@ -30,16 +29,14 @@
 
 + (NSString *)getFileCachePath:(NSString *)fileName;
 
-+ (NSUInteger)getContentLength:(NSString*)string;
++ (NSUInteger)getContentLength:(NSString *)string;
 
 /// get random string with length
 /// @param len length
-+ (NSString *) randomStringWithLength: (int) len;
++ (NSString *)randomStringWithLength:(int)len;
 
 BOOL isFirstLaunch(void);
-
 
 + (void)openLinkWithURL:(NSURL *)url;
 
 @end
-

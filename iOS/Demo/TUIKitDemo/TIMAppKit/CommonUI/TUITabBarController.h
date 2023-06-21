@@ -11,16 +11,15 @@
 
 @class TUIBadgeView;
 
-
 @interface TUITabBarItem : NSObject
-@property (nonatomic, strong) UIImage *normalImage;
-@property (nonatomic, strong) UIImage *selectedImage;
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) UIViewController *controller;
-@property (nonatomic, strong) TUIBadgeView *badgeView;
+@property(nonatomic, strong) UIImage *normalImage;
+@property(nonatomic, strong) UIImage *selectedImage;
+@property(nonatomic, strong) NSString *title;
+@property(nonatomic, strong) UIViewController *controller;
+@property(nonatomic, strong) TUIBadgeView *badgeView;
 @end
 
 @interface TUITabBarController : UITabBarController
-@property (nonatomic, strong) NSMutableArray *tabBarItems;
+@property(nonatomic, strong) NSMutableArray *tabBarItems;
 - (void)layoutBadgeViewIfNeeded;
 @end

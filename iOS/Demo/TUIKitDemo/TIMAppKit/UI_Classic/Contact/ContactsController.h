@@ -20,7 +20,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ContactsController : UIViewController
-@property(nonatomic, copy) void(^viewWillAppear)(BOOL isAppear);
+@property(nonatomic, copy) void (^viewWillAppear)(BOOL isAppear);
 @end
 
 NS_ASSUME_NONNULL_END
