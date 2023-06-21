@@ -16,6 +16,8 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUICore.zip)
 
+[Latest TIMCommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TIMCommon.zip)
+
 [Latest TUICallKit download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUICallKit.zip)
 
 [Latest TUIRoomKit download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIRoomKit.zip)

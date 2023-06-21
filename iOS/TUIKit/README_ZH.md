@@ -18,6 +18,8 @@
 
 [最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUICore.zip)
 
+[最新 TIMCommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TIMCommon.zip)
+
 [最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUICallKit.zip)
 
 [最新 TUIRoomKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIRoomKit.zip)
