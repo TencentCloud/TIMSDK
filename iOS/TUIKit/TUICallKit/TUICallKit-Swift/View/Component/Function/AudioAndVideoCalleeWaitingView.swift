@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import TUICallEngine
 
 class AudioAndVideoCalleeWaitingView: UIView {
     
@@ -22,7 +23,7 @@ class AudioAndVideoCalleeWaitingView: UIView {
         if let image = TUICallKitCommon.getBundleImage(name: "trtccalling_ic_dialing") {
             acceptBtn.updateImage(image: image)
         }
-        if viewModel.mediaType.value == .audio {
+        if viewModel.mediaType.value ==  TUICallMediaType.audio {
             acceptBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#242424"))
         } else if viewModel.mediaType.value == .video {
             acceptBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))

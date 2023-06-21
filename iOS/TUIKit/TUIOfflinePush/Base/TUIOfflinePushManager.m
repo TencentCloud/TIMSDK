@@ -3,73 +3,70 @@
 //  TUIOfflinePush
 //
 //  Created by harvy on 2022/5/6.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
-#import <ImSDK_Plus/ImSDK_Plus.h>
 #import "TUIOfflinePushManager.h"
-#import "TUIOfflinePushManager+Inner.h"
+#import <ImSDK_Plus/ImSDK_Plus.h>
 #import "TUIOfflinePushManager+Advance.h"
+#import "TUIOfflinePushManager+Inner.h"
 
-#define TUIOfflinePush_Business_NormalMsg  1
-#define TUIOfflinePush_Business_Call       2
+#define TUIOfflinePush_Business_NormalMsg 1
+#define TUIOfflinePush_Business_Call 2
 
 @implementation TUIOfflinePushManager
 
 NSString *_groupID;
 NSString *_userID;
 
-+ (void)load
-{
++ (void)load {
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLoginSucc) name:@"TUILoginSuccessNotification" object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLogoutSucc) name:@"TUILogoutSuccessNotification" object:nil];
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onApplicationDidLaunch:) name:UIApplicationDidFinishLaunchingNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(onApplicationDidLaunch:)
+                                               name:UIApplicationDidFinishLaunchingNotification
+                                             object:nil];
 }
 
-static id _instance;
+static id gShareInstance;
 
-+ (instancetype)shareManager
-{
++ (instancetype)shareManager {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [[self alloc] init];
+      gShareInstance = [[self alloc] init];
     });
-    return _instance;
+    return gShareInstance;
 }
 
-
-+ (void)onLoginSucc
-{
++ (void)onLoginSucc {
     if ([self.shareManager respondsToSelector:@selector(registerService)]) {
         [self.shareManager registerService];
     }
 }
 
-+ (void)onLogoutSucc
-{
++ (void)onLogoutSucc {
     if ([self.shareManager respondsToSelector:@selector(unregisterService)]) {
         [self.shareManager unregisterService];
     }
 }
 
-+ (void)onApplicationDidLaunch:(NSNotification *)notice
-{
-    if ([self.shareManager respondsToSelector:@selector(handleLanuchInfoIfNeeded:)] ) {
++ (void)onApplicationDidLaunch:(NSNotification *)notice {
+    if ([self.shareManager respondsToSelector:@selector(handleLanuchInfoIfNeeded:)]) {
         [self.shareManager handleLanuchInfoIfNeeded:notice.userInfo];
     }
 }
 
-- (void)registerService
-{
+- (void)registerService {
     NSLog(@"[TUIOfflinePushManager] %s", __func__);
-    
+
     self.serviceRegistered = YES;
-    
+
     /**
      * 接管 appDelegate
      * Take over appDelegate
      */
     [self loadApplicationDelegateIfNeeded];
-    
+
     /**
      * 新能力分发
      * Distrubute new ability
@@ -77,25 +74,25 @@ static id _instance;
     if ([self respondsToSelector:@selector(registerForVOIPPush)]) {
         [self registerForVOIPPush];
     }
-    
+
     /**
      * 申请 token
      * Apply the push token
      */
     [self applyPushToken];
-    
+
     /**
      * 响应离线推送
      * 当点击了通知栏的离线推送后启动 APP，先缓存当前的推送信息，登录成功之后再执行跳转
      *
      * Process received offline push
-     * When the offline push notification bar is clicked, start the APP, and then cache the current push information first, and then execute the redirection after the login is successful.
+     * When the offline push notification bar is clicked, start the APP, and then cache the current push information first, and then execute the redirection
+     * after the login is successful.
      */
     [self onReceiveNormalMessageOfflinePush];
 }
 
-- (void)onReportToken:(NSData *)deviceToken
-{
+- (void)onReportToken:(NSData *)deviceToken {
     NSLog(@"[TUIOfflinePushManager] %s", __func__);
     BOOL supportTPNS = NO;
     if ([self respondsToSelector:@selector(supportTPNS)]) {
@@ -106,50 +103,47 @@ static id _instance;
         confg.businessID = self.apnsCertificateID;
         confg.token = deviceToken;
         confg.isTPNSToken = supportTPNS;
-        [[V2TIMManager sharedInstance] setAPNS:confg succ:^{
-             NSLog(@"%s, succ, %@, id:%zd", __func__, supportTPNS ? @"TPNS": @"APNS", confg.businessID);
-        } fail:^(int code, NSString *msg) {
-             NSLog(@"%s, fail, %d, %@", __func__, code, msg);
-        }];
+        [[V2TIMManager sharedInstance] setAPNS:confg
+            succ:^{
+              NSLog(@"%s, succ, %@, id:%zd", __func__, supportTPNS ? @"TPNS" : @"APNS", confg.businessID);
+            }
+            fail:^(int code, NSString *msg) {
+              NSLog(@"%s, fail, %d, %@", __func__, code, msg);
+            }];
     }
 }
 
-- (void)handleLanuchInfoIfNeeded:(NSDictionary *)launchOptions
-{
+- (void)handleLanuchInfoIfNeeded:(NSDictionary *)launchOptions {
     if (launchOptions == nil || ![launchOptions isKindOfClass:NSDictionary.class] ||
         ![launchOptions.allKeys containsObject:UIApplicationLaunchOptionsRemoteNotificationKey]) {
         return;
     }
-    
+
     NSDictionary *remoteDictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (![remoteDictionary isKindOfClass:NSDictionary.class] || ![remoteDictionary.allKeys containsObject:@"ext"]) {
         return;
     }
     NSDictionary *extParam = [self jsonSring2Dictionary:remoteDictionary[@"ext"]];
-    if (extParam == nil ||
-        ![extParam.allKeys containsObject:@"entity"]) {
+    if (extParam == nil || ![extParam.allKeys containsObject:@"entity"]) {
         return;
     }
-    
+
     NSDictionary *entity = extParam[@"entity"];
     [self onReceiveOfflinePushEntity:entity];
 }
 
-- (void)onReceiveOfflinePushEntity:(NSDictionary *)entity
-{
+- (void)onReceiveOfflinePushEntity:(NSDictionary *)entity {
     NSLog(@"[TUIOfflinePushManager] %s, %@", __func__, entity);
 
     BOOL filter = [self onReceiveRemoteNotification:entity];
     if (filter) {
         return;
     }
-    
-    if (entity == nil ||
-        ![entity.allKeys containsObject:@"action"] ||
-        ![entity.allKeys containsObject:@"chatType"]) {
+
+    if (entity == nil || ![entity.allKeys containsObject:@"action"] || ![entity.allKeys containsObject:@"chatType"]) {
         return;
     }
-    
+
     NSString *action = entity[@"action"];
     NSString *chatType = entity[@"chatType"];
     if (action == nil || chatType == nil) {
@@ -175,8 +169,7 @@ static id _instance;
     }
 }
 
-- (void)onReceiveNormalMessageOfflinePush
-{
+- (void)onReceiveNormalMessageOfflinePush {
     NSLog(@"[TUIOfflinePushManager] %s, groupId:%@, userId:%@", __func__, _groupID, _userID);
     /**
      * 异步处理，防止出现时序问题, 特别是当前正在登录操作中
@@ -184,18 +177,16 @@ static id _instance;
      */
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (_groupID.length > 0 || _userID.length > 0) {
-            [weakSelf jumpToCustomVC:_userID groupID:_groupID];
-            _groupID = nil;
-            _userID = nil;
-        }
+      if (_groupID.length > 0 || _userID.length > 0) {
+          [weakSelf jumpToCustomVC:_userID groupID:_groupID];
+          _groupID = nil;
+          _userID = nil;
+      }
     });
 }
 
-
 #pragma mark - Configuration
-- (int)apnsCertificateID
-{
+- (int)apnsCertificateID {
     SEL selector = NSSelectorFromString(@"push_certificateIDForAPNS");
     NSMethodSignature *signature = [self.applicationDelegate.class instanceMethodSignatureForSelector:selector];
     if (signature == nil) {
@@ -205,17 +196,16 @@ static id _instance;
     invocation.target = self.applicationDelegate;
     invocation.selector = selector;
     [invocation invoke];
-    
+
     int busiID = 0;
     if (signature.methodReturnLength) {
         [invocation getReturnValue:&busiID];
     }
-    
+
     return busiID;
 }
 
-- (NSString *)tpnsConfigDomain
-{
+- (NSString *)tpnsConfigDomain {
     SEL selector = NSSelectorFromString(@"push_accessID:accessKey:domain:");
     NSMethodSignature *signature = [self.applicationDelegate.class instanceMethodSignatureForSelector:selector];
     if (signature == nil) {
@@ -224,11 +214,11 @@ static id _instance;
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     invocation.target = self.applicationDelegate;
     invocation.selector = selector;
-    
+
     int accessID = 0;
     NSString *accessKey = nil;
     NSString *domain = nil;
-    
+
     void *p_id = &accessID;
     void *p_accessKey = &accessKey;
     void *p_domain = &domain;
@@ -237,12 +227,11 @@ static id _instance;
     [invocation setArgument:&p_domain atIndex:4];
 
     [invocation invoke];
-    
+
     return domain;
 }
 
-- (int)tpnsConfigAccessID
-{
+- (int)tpnsConfigAccessID {
     SEL selector = NSSelectorFromString(@"push_accessID:accessKey:domain:");
     NSMethodSignature *signature = [self.applicationDelegate.class instanceMethodSignatureForSelector:selector];
     if (signature == nil) {
@@ -251,25 +240,24 @@ static id _instance;
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     invocation.target = self.applicationDelegate;
     invocation.selector = selector;
-    
+
     int accessID = 0;
     NSString *accessKey = nil;
     NSString *domain = nil;
-    
+
     void *p_id = &accessID;
     void *p_accessKey = &accessKey;
     void *p_domain = &domain;
     [invocation setArgument:&p_id atIndex:2];
     [invocation setArgument:&p_accessKey atIndex:3];
     [invocation setArgument:&p_domain atIndex:4];
-    
+
     [invocation invoke];
-    
+
     return accessID;
 }
 
-- (NSString *)tpnsConfigAccessKey
-{
+- (NSString *)tpnsConfigAccessKey {
     SEL selector = NSSelectorFromString(@"push_accessID:accessKey:domain:");
     NSMethodSignature *signature = [self.applicationDelegate.class instanceMethodSignatureForSelector:selector];
     if (signature == nil) {
@@ -278,25 +266,24 @@ static id _instance;
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     invocation.target = self.applicationDelegate;
     invocation.selector = selector;
-    
+
     int accessID = 0;
     NSString *accessKey = nil;
     NSString *domain = nil;
-    
+
     void *p_id = &accessID;
     void *p_accessKey = &accessKey;
     void *p_domain = &domain;
     [invocation setArgument:&p_id atIndex:2];
     [invocation setArgument:&p_accessKey atIndex:3];
     [invocation setArgument:&p_domain atIndex:4];
-    
+
     [invocation invoke];
-    
+
     return accessKey;
 }
 
-- (void)jumpToCustomVC:(NSString *)userID groupID:(NSString *)groupID
-{
+- (void)jumpToCustomVC:(NSString *)userID groupID:(NSString *)groupID {
     SEL selector = NSSelectorFromString(@"navigateToTUIChatViewController:groupID:");
     NSMethodSignature *signature = [self.applicationDelegate.class instanceMethodSignatureForSelector:selector];
     if (signature == nil) {
@@ -310,8 +297,7 @@ static id _instance;
     [invocation invoke];
 }
 
-- (BOOL)onReceiveRemoteNotification:(NSDictionary *)userInfo
-{
+- (BOOL)onReceiveRemoteNotification:(NSDictionary *)userInfo {
     SEL selector = NSSelectorFromString(@"processTUIOfflinePushNotification:");
     NSMethodSignature *signature = [self.applicationDelegate.class instanceMethodSignatureForSelector:selector];
     if (signature == nil) {
@@ -330,24 +316,21 @@ static id _instance;
 }
 
 #pragma mark - Take over AppDelegate
-- (void)loadApplicationDelegateIfNeeded
-{
+- (void)loadApplicationDelegateIfNeeded {
     if (![UIApplication.sharedApplication.delegate isEqual:self]) {
         self.applicationDelegate = UIApplication.sharedApplication.delegate;
         UIApplication.sharedApplication.delegate = self;
     }
 }
 
-- (void)unloadApplicationDelegateIfNeeded
-{
+- (void)unloadApplicationDelegateIfNeeded {
     if (![self.applicationDelegate isEqual:self]) {
         UIApplication.sharedApplication.delegate = self.applicationDelegate;
         self.applicationDelegate = nil;
     }
 }
 
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
+- (BOOL)respondsToSelector:(SEL)aSelector {
     BOOL response = NO;
     if (self.applicationDelegate) {
         /**
@@ -376,7 +359,7 @@ static id _instance;
              * 托管的是业务层的 AppDelegate
              * At this point, the AppDelegate of the business layer has been taken over
              */
-            
+
             /**
              * 优先判断业务的 AppDelegate 是否实现该方法
              * - 业务如果实现了，TUIOfflinePushManager 就认为自己实现了
@@ -384,10 +367,11 @@ static id _instance;
              *
              * Prioritize whether the AppDelegate implements this method
              * - If the AppDelegate implements it, TUIOfflinePushManager thinks it has implemented it
-             * - When TUIOfflinePushManager does not actually implement this method, it will go through the "fast forwarding" process and forward the message to AppDelegate again
+             * - When TUIOfflinePushManager does not actually implement this method, it will go through the "fast forwarding" process and forward the message to
+             * AppDelegate again
              */
             response = [self.applicationDelegate respondsToSelector:aSelector];
-            
+
             /**
              * 如果业务层没实现，再判断自己是否实现
              * If the AppDelegate does not implement this method, then judge whether it is implemented by itself
@@ -406,8 +390,7 @@ static id _instance;
     return response;
 }
 
-- (id)forwardingTargetForSelector:(SEL)aSelector
-{
+- (id)forwardingTargetForSelector:(SEL)aSelector {
     if ([self.applicationDelegate respondsToSelector:aSelector]) {
         return self.applicationDelegate;
     }
@@ -415,8 +398,7 @@ static id _instance;
 }
 
 #pragma mark - Utils
-- (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString
-{
+- (NSDictionary *)jsonSring2Dictionary:(NSString *)jsonString {
     if (jsonString == nil) {
         return nil;
     }

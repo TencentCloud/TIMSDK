@@ -3,6 +3,7 @@
 //  TUIGroup
 //
 //  Created by harvy on 2021/12/24.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -25,16 +26,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIGroupManageDataProvider : NSObject
 
-@property (nonatomic, assign) BOOL muteAll;
-@property (nonatomic, copy) NSString *groupID;
-@property (nonatomic, assign) BOOL currentGroupTypeSupportSettingAdmin;
-@property (nonatomic, assign) BOOL currentGroupTypeSupportAddMemberOfBlocked;
-@property (nonatomic, weak) id<TUIGroupManageDataProviderDelegate> delegate;
-@property (nonatomic, strong, readonly) NSMutableArray *datas;
+@property(nonatomic, assign) BOOL muteAll;
+@property(nonatomic, copy) NSString *groupID;
+@property(nonatomic, assign) BOOL currentGroupTypeSupportSettingAdmin;
+@property(nonatomic, assign) BOOL currentGroupTypeSupportAddMemberOfBlocked;
+@property(nonatomic, weak) id<TUIGroupManageDataProviderDelegate> delegate;
+@property(nonatomic, strong, readonly) NSMutableArray *datas;
 
 - (void)loadData;
 
-- (void)mutedAll:(BOOL)mute completion:(void(^)(int, NSString *))completion;
+- (void)mutedAll:(BOOL)mute completion:(void (^)(int, NSString *))completion;
 - (void)mute:(BOOL)mute user:(TUIUserModel *)user;
 
 - (void)updateMuteMembersFilterAdmins;

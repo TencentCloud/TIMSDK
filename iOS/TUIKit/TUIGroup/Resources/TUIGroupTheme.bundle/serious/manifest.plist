@@ -22,11 +22,11 @@
 	<string>#000000</string>
 	<key>group_modify_confirm_enable_bg_color</key>
 	<string>#0052FF</string>
-	<key>group_modify_confirm_disable_bg_color</key>
-	<string></string>
 	<key>group_nav_back_img</key>
 	<string>nav_back.png</string>
 	<key>chat_nav_more_menu_img</key>
 	<string>chat_nav_more_menu.png</string>
+	<key>group_controller_bg_color</key>
+	<string>#FFFFFF</string>
 </dict>
 </plist>

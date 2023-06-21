@@ -3,11 +3,11 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/6/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <TIMCommon/TIMCommonModel.h>
-
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,7 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL enablePopMenuReferenceAction;
 
-
 /**
  *  C2C聊天对话框是否展示 "对方正在输入中..."，默认 YES
  *  Whether the C2C chat dialog box displays "The other party is typing...", the default is YES
@@ -89,7 +88,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, assign) BOOL enableFloatWindowForCall;
 
-
 /**
  * 设置音视频通话开启多端登录功能，默认关闭
  * Whether to enable multi-terminal login function for audio and video calls, default is NO
@@ -98,7 +96,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * 消息可撤回时间，单位秒，默认 120 秒。如果想调整该配置，请同步修改 IM 控制台设置。
- * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings synchronously.
+ * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings
+ * synchronously.
  *
  * https://cloud.tencent.com/document/product/269/38656#.E6.B6.88.E6.81.AF.E6.92.A4.E5.9B.9E.E8.AE.BE.E7.BD.AE
  */

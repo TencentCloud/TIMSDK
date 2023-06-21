@@ -7,7 +7,7 @@
 //
 
 #import "TUICallingUserManager.h"
-#import "ImSDK_Plus/ImSDK_Plus.h"
+#import "TUICallKitHeader.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallingUserModel.h"
 #import <TUICore/TUILogin.h>

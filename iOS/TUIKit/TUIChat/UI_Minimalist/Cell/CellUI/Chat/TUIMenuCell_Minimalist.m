@@ -7,47 +7,41 @@
 //
 
 #import "TUIMenuCell_Minimalist.h"
-#import <TUICore/TUIThemeManager.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUIMenuCell_Minimalist
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = [UIColor whiteColor];
     _menu = [[UIImageView alloc] init];
     _menu.backgroundColor = [UIColor clearColor];
     [self addSubview:_menu];
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
 }
 
-- (void)setData:(TUIMenuCellData_Minimalist *)data
-{
-    //set data
+- (void)setData:(TUIMenuCellData_Minimalist *)data {
+    // set data
     _menu.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
-    if(data.isSelected){
+    if (data.isSelected) {
         _menu.layer.borderWidth = 1;
         _menu.layer.borderColor = RGBA(20, 122, 255, 1).CGColor;
-    }
-    else{
+    } else {
         _menu.layer.borderWidth = 0;
     }
-    //update layout
+    // update layout
     CGSize size = self.frame.size;
     _menu.frame = CGRectMake(TMenuCell_Margin, TMenuCell_Margin, size.width - 2 * TMenuCell_Margin, size.height - 2 * TMenuCell_Margin);
     _menu.contentMode = UIViewContentModeScaleAspectFit;
-
 }
 @end

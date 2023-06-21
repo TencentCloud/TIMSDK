@@ -3,14 +3,14 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/7.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUICommonContactCellData.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
 
-@implementation TUICommonContactCellData
-{
+@implementation TUICommonContactCellData {
     V2TIMFriendInfo *_friendProfile;
 }
 
@@ -30,8 +30,7 @@
     return self;
 }
 
-- (instancetype)initWithGroupInfo:(V2TIMGroupInfo *)args
-{
+- (instancetype)initWithGroupInfo:(V2TIMGroupInfo *)args {
     self = [super init];
 
     _title = args.groupName;
@@ -42,13 +41,11 @@
     return self;
 }
 
-- (NSComparisonResult)compare:(TUICommonContactCellData *)data
-{
+- (NSComparisonResult)compare:(TUICommonContactCellData *)data {
     return [self.title localizedCompare:data.title];
 }
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     return 56;
 }
 @end

@@ -3,23 +3,22 @@
 //  UIKit
 //
 //  Created by annidyfeng on 2019/5/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIVideoMessageCell_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
 #import "TUIMessageProgressManager.h"
 
-@interface TUIVideoMessageCell_Minimalist ()<TUIMessageProgressManagerDelegate>
+@interface TUIVideoMessageCell_Minimalist () <TUIMessageProgressManagerDelegate>
 
-@property (nonatomic, strong) UIView *animateHighlightView;
+@property(nonatomic, strong) UIView *animateHighlightView;
 
 @end
 
 @implementation TUIVideoMessageCell_Minimalist
 
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _thumb = [[UIImageView alloc] init];
@@ -47,7 +46,7 @@
         [self.container addSubview:_progress];
         _progress.mm_fill();
         _progress.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
+
         self.msgTimeLabel.textColor = RGB(255, 255, 255);
         [TUIMessageProgressManager.shareManager addDelegate:self];
     }
@@ -56,60 +55,58 @@
 
 - (void)fillWithData:(TUIVideoMessageCellData_Minimalist *)data;
 {
-    //set data
+    // set data
     [super fillWithData:data];
     self.videoData = data;
     _thumb.image = nil;
-    if(data.thumbImage == nil){
+    if (data.thumbImage == nil) {
         [data downloadThumb];
     }
 
-    @weakify(self)
+    @weakify(self);
     [[RACObserve(data, thumbImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *thumbImage) {
-        @strongify(self)
-        if (thumbImage) {
-            self.thumb.image = thumbImage;
-        }
+      @strongify(self);
+      if (thumbImage) {
+          self.thumb.image = thumbImage;
+      }
     }];
 
     if (data.direction == MsgDirectionIncoming) {
         [[[RACObserve(data, thumbProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
-            @strongify(self)
-            int progress = [x intValue];
-            self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
-            self.progress.hidden = (progress >= 100 || progress == 0);
-            self.play.hidden = !self.progress.hidden;
+          @strongify(self);
+          int progress = [x intValue];
+          self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
+          self.progress.hidden = (progress >= 100 || progress == 0);
+          self.play.hidden = !self.progress.hidden;
         }];
     } else {
         [[[RACObserve(data, uploadProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
-            @strongify(self)
-            self.play.hidden = !self.progress.hidden;
+          @strongify(self);
+          self.play.hidden = !self.progress.hidden;
         }];
     }
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
 
     CGFloat topMargin = 0;
     CGFloat height = self.container.mm_h;
-    
+
     if (self.messageData.messageModifyReactsSize.height > 0) {
         topMargin = 10;
         height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
     }
-    
+
     _thumb.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
 
     _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).tui_mm_center();
-    
+
     self.msgStatusView.frame = CGRectOffset(self.msgStatusView.frame, kScale390(8), 0);
     self.msgTimeLabel.frame = CGRectOffset(self.msgTimeLabel.frame, kScale390(8), 0);
 }
 
-- (void)highlightWhenMatchKeyword:(NSString *)keyword
-{
+- (void)highlightWhenMatchKeyword:(NSString *)keyword {
     if (keyword) {
         if (self.highlightAnimating) {
             return;
@@ -118,8 +115,7 @@
     }
 }
 
-- (void)animate:(int)times
-{
+- (void)animate:(int)times {
     times--;
     if (times < 0) {
         [self.animateHighlightView removeFromSuperview];
@@ -130,23 +126,26 @@
     self.animateHighlightView.frame = self.container.bounds;
     self.animateHighlightView.alpha = 0.1;
     [self.container addSubview:self.animateHighlightView];
-    [UIView animateWithDuration:0.25 animations:^{
-        self.animateHighlightView.alpha = 0.5;
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.animateHighlightView.alpha = 0.1;
-        } completion:^(BOOL finished) {
-            if (!self.videoData.highlightKeyword) {
-                [self animate:0];
-                return;
-            }
-            [self animate:times];
+    [UIView animateWithDuration:0.25
+        animations:^{
+          self.animateHighlightView.alpha = 0.5;
+        }
+        completion:^(BOOL finished) {
+          [UIView animateWithDuration:0.25
+              animations:^{
+                self.animateHighlightView.alpha = 0.1;
+              }
+              completion:^(BOOL finished) {
+                if (!self.videoData.highlightKeyword) {
+                    [self animate:0];
+                    return;
+                }
+                [self animate:times];
+              }];
         }];
-    }];
 }
 
-- (UIView *)animateHighlightView
-{
+- (UIView *)animateHighlightView {
     if (_animateHighlightView == nil) {
         _animateHighlightView = [[UIView alloc] init];
         _animateHighlightView.backgroundColor = [UIColor orangeColor];
@@ -154,7 +153,8 @@
     return _animateHighlightView;
 }
 #pragma mark - TUIMessageProgressManagerDelegate
-- (void)onProgress:(NSString *)msgID progress:(NSInteger)progress {
+
+- (void)onUploadProgress:(NSString *)msgID progress:(NSInteger)progress {
     if (![msgID isEqualToString:self.videoData.msgID]) {
         return;
     }

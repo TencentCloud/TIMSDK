@@ -3,12 +3,13 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUITextMessageCellData.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
-#import <TIMCommon/NSString+TUIEmoji.h>
 #import <TUICore/TUIThemeManager.h>
 
 #ifndef CGFLOAT_CEIL
@@ -19,19 +20,18 @@
 #endif
 #endif
 
-@interface TUITextMessageCellData()
+@interface TUITextMessageCellData ()
 
-@property (nonatomic, assign) CGSize textSize;
-@property (nonatomic, assign) CGPoint textOrigin;
-@property (nonatomic, assign) CGSize size;
-@property (nonatomic, assign) CGFloat containerWidth;
+@property(nonatomic, assign) CGSize textSize;
+@property(nonatomic, assign) CGPoint textOrigin;
+@property(nonatomic, assign) CGSize size;
+@property(nonatomic, assign) CGFloat containerWidth;
 
 @end
 
 @implementation TUITextMessageCellData
 
-+ (void)initialize
-{
++ (void)initialize {
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
 }
 
@@ -48,18 +48,15 @@
     return content.getLocalizableStringWithFaceContent;
 }
 
-- (Class)getReplyQuoteViewDataClass
-{
+- (Class)getReplyQuoteViewDataClass {
     return NSClassFromString(@"TUITextReplyQuoteViewData");
 }
 
-- (Class)getReplyQuoteViewClass
-{
+- (Class)getReplyQuoteViewClass {
     return NSClassFromString(@"TUITextReplyQuoteView");
 }
 
-- (instancetype)initWithDirection:(TMsgDirection)direction
-{
+- (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
     if (self) {
         if (direction == MsgDirectionIncoming) {
@@ -69,7 +66,7 @@
         } else {
             _textColor = [[self class] outgoingTextColor];
             _textFont = [[self class] outgoingTextFont];
-            self.cellLayout = [TUIMessageCellLayout outgoingTextMessageLayout]; 
+            self.cellLayout = [TUIMessageCellLayout outgoingTextMessageLayout];
         }
     }
     return self;
@@ -80,8 +77,7 @@
 }
 
 // Override, the height of whole tableview cell.
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     CGFloat height = [super heightOfWidth:width];
     if (self.bottomContainerSize.height > 0) {
         height += self.bottomContainerSize.height + 6;
@@ -90,23 +86,24 @@
 }
 
 // Override, the size of bubble content.
-- (CGSize)contentSize
-{
+- (CGSize)contentSize {
     if (!CGSizeEqualToSize(self.size, CGSizeZero)) {
         return self.size;
     }
-    
+
     static CGSize maxTextSize;
     if (CGSizeEqualToSize(maxTextSize, CGSizeZero)) {
         maxTextSize = CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT);
     }
-    CGRect rect = [self.attributedString boundingRectWithSize:maxTextSize options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
-    
+    CGRect rect = [self.attributedString boundingRectWithSize:maxTextSize
+                                                      options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                      context:nil];
+
     CGFloat width = CGFLOAT_CEIL(rect.size.width);
     CGFloat height = CGFLOAT_CEIL(rect.size.height);
-    
+
     self.textSize = CGSizeMake(width, height);
-    
+
     static CGPoint textOrigin;
     if (CGPointEqualToPoint(CGPointZero, textOrigin)) {
         textOrigin = CGPointMake(self.cellLayout.bubbleInsets.left, self.cellLayout.bubbleInsets.top + self.bubbleTop);
@@ -114,20 +111,19 @@
     self.textOrigin = textOrigin;
 
     height += self.cellLayout.bubbleInsets.top + self.cellLayout.bubbleInsets.bottom;
-    width += self.cellLayout.bubbleInsets.left+self.cellLayout.bubbleInsets.right;
+    width += self.cellLayout.bubbleInsets.left + self.cellLayout.bubbleInsets.right;
 
     if (self.direction == MsgDirectionIncoming) {
         height = MAX(height, [TUIBubbleMessageCellData incommingBubble].size.height);
     } else {
         height = MAX(height, [TUIBubbleMessageCellData outgoingBubble].size.height);
     }
-    
+
     self.size = CGSizeMake(width, height);
     return self.size;
 }
 
-- (NSMutableAttributedString *)attributedString
-{
+- (NSMutableAttributedString *)attributedString {
     if (!_attributedString) {
         _emojiLocations = [NSMutableArray array];
         _attributedString = [self.content getFormatEmojiStringWithFont:self.textFont emojiLocations:_emojiLocations];
@@ -145,9 +141,9 @@
                 }
             }
             attchment.image = image;
-            attchment.bounds = CGRectMake(0, -(self.textFont.lineHeight-self.textFont.pointSize)/2, 16, 16);
+            attchment.bounds = CGRectMake(0, -(self.textFont.lineHeight - self.textFont.pointSize) / 2, 16, 16);
             NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:(NSTextAttachment *)(attchment)];
-            NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"  " attributes:@{NSFontAttributeName: self.textFont}];
+            NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"  " attributes:@{NSFontAttributeName : self.textFont}];
             if (self.isCaller) {
                 [_attributedString appendAttributedString:spaceString];
                 [_attributedString appendAttributedString:imageString];
@@ -161,70 +157,61 @@
 }
 
 #pragma mark - Color
-static UIColor *sOutgoingTextColor;
+static UIColor *gOutgoingTextColor;
 
-+ (UIColor *)outgoingTextColor
-{
-    if (!sOutgoingTextColor) {
-        sOutgoingTextColor = TUIChatDynamicColor(@"chat_text_message_send_text_color", @"#000000");
++ (UIColor *)outgoingTextColor {
+    if (!gOutgoingTextColor) {
+        gOutgoingTextColor = TUIChatDynamicColor(@"chat_text_message_send_text_color", @"#000000");
     }
-    return sOutgoingTextColor;
+    return gOutgoingTextColor;
 }
 
-+ (void)setOutgoingTextColor:(UIColor *)outgoingTextColor
-{
-    sOutgoingTextColor = outgoingTextColor;
++ (void)setOutgoingTextColor:(UIColor *)outgoingTextColor {
+    gOutgoingTextColor = outgoingTextColor;
 }
 
-static UIFont *sOutgoingTextFont;
+static UIFont *gOutgoingTextFont;
 
-+ (UIFont *)outgoingTextFont
-{
-    if (!sOutgoingTextFont) {
-        sOutgoingTextFont = [UIFont systemFontOfSize:16];
++ (UIFont *)outgoingTextFont {
+    if (!gOutgoingTextFont) {
+        gOutgoingTextFont = [UIFont systemFontOfSize:16];
     }
-    return sOutgoingTextFont;
+    return gOutgoingTextFont;
 }
 
-+ (void)setOutgoingTextFont:(UIFont *)outgoingTextFont
-{
-    sOutgoingTextFont = outgoingTextFont;
++ (void)setOutgoingTextFont:(UIFont *)outgoingTextFont {
+    gOutgoingTextFont = outgoingTextFont;
 }
 
-static UIColor *sIncommingTextColor;
+static UIColor *gIncommingTextColor;
 
-+ (UIColor *)incommingTextColor
-{
-    if (!sIncommingTextColor) {
-        sIncommingTextColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
++ (UIColor *)incommingTextColor {
+    if (!gIncommingTextColor) {
+        gIncommingTextColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
     }
-    return sIncommingTextColor;
+    return gIncommingTextColor;
 }
 
-+ (void)setIncommingTextColor:(UIColor *)incommingTextColor
-{
-    sIncommingTextColor = incommingTextColor;
++ (void)setIncommingTextColor:(UIColor *)incommingTextColor {
+    gIncommingTextColor = incommingTextColor;
 }
 
-static UIFont *sIncommingTextFont;
+static UIFont *gIncommingTextFont;
 
-+ (UIFont *)incommingTextFont
-{
-    if (!sIncommingTextFont) {
-        sIncommingTextFont = [UIFont systemFontOfSize:16];
++ (UIFont *)incommingTextFont {
+    if (!gIncommingTextFont) {
+        gIncommingTextFont = [UIFont systemFontOfSize:16];
     }
-    return sIncommingTextFont;
+    return gIncommingTextFont;
 }
 
-+ (void)setIncommingTextFont:(UIFont *)incommingTextFont
-{
-    sIncommingTextFont = incommingTextFont;
++ (void)setIncommingTextFont:(UIFont *)incommingTextFont {
+    gIncommingTextFont = incommingTextFont;
 }
 
-+ (void)onThemeChanged
-{
-    sOutgoingTextColor = nil;
-    sIncommingTextColor = nil;
++ (void)onThemeChanged {
+    gOutgoingTextColor = nil;
+    gIncommingTextColor = nil;
 }
 
 @end

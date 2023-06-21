@@ -3,18 +3,14 @@
 //  Masonry
 //
 //  Created by wyl on 2022/10/13.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, TUISearchType) {
-    TUISearchTypeContact     = 0,
-    TUISearchTypeGroup       = 1,
-    TUISearchTypeChatHistory = 2
-};
-
+typedef NS_ENUM(NSInteger, TUISearchType) { TUISearchTypeContact = 0, TUISearchTypeGroup = 1, TUISearchTypeChatHistory = 2 };
 
 @protocol TUIConversationListControllerListener <NSObject>
 @optional

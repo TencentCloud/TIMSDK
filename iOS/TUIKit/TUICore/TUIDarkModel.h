@@ -3,6 +3,7 @@
 //  TUICore
 //
 //  Created by xiangzhang on 2021/9/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -17,7 +18,6 @@
 + (UIColor *)d_systemBlueColor __attribute__((deprecated("use TUICoreDynamicColor()")));
 
 @end
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -39,11 +39,14 @@
  *  imageName: common image name, dark image name must be "ordinary image name_dark"
  *  bundleName: bundleName where the image is stored
  */
-+ (UIImage *)d_imageNamed:(NSString *)imageName bundle:(NSString *)bundleName __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
++ (UIImage *)d_imageNamed:(NSString *)imageName
+                   bundle:(NSString *)bundleName __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
 
-+ (UIImage *)d_imageWithImageLight:(NSString *)lightImagePath dark:(NSString *)darkImagePath __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
++ (UIImage *)d_imageWithImageLight:(NSString *)lightImagePath
+                              dark:(NSString *)darkImagePath __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
 
 + (void)d_fixResizableImage;
 
-+ (UIImage *)d_imageWithImageLightImg:(UIImage *)lightImage dark:(UIImage *)darkImage __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
++ (UIImage *)d_imageWithImageLightImg:(UIImage *)lightImage
+                                 dark:(UIImage *)darkImage __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
 @end

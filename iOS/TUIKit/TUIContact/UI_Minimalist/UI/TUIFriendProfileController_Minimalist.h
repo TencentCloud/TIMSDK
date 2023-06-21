@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  腾讯云通讯服务界面组件 TUIKIT - 好友信息视图界面
@@ -17,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIFriendProfileController_Minimalist : UIViewController
 
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) V2TIMFriendInfo *friendProfile;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) V2TIMFriendInfo *friendProfile;
 
 @end
 

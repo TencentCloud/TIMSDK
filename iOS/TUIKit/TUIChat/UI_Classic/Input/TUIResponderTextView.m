@@ -11,44 +11,39 @@
 
 @implementation TUIResponderTextView
 
-- (UIResponder *)nextResponder
-{
-    if(_overrideNextResponder == nil){
+- (UIResponder *)nextResponder {
+    if (_overrideNextResponder == nil) {
         return [super nextResponder];
-    }
-    else{
+    } else {
         return _overrideNextResponder;
     }
 }
 
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     if (_overrideNextResponder != nil)
         return NO;
     else
         return [super canPerformAction:action withSender:sender];
 }
 
-- (void)buildMenuWithBuilder:(id<UIMenuBuilder>)builder API_AVAILABLE(ios(13.0))  {
+- (void)buildMenuWithBuilder:(id<UIMenuBuilder>)builder API_AVAILABLE(ios(13.0)) {
     if (@available(iOS 16.0, *)) {
         [builder removeMenuForIdentifier:UIMenuLookup];
     }
     [super buildMenuWithBuilder:builder];
 }
 
-- (void)deleteBackward
-{
+- (void)deleteBackward {
     id<TUIResponderTextViewDelegate> delegate = (id<TUIResponderTextViewDelegate>)self.delegate;
-    
+
     if ([delegate respondsToSelector:@selector(onDeleteBackward:)]) {
         [delegate onDeleteBackward:self];
     }
-    
+
     [super deleteBackward];
 }
 
-- (void)setText:(NSString *)text
-{
+- (void)setText:(NSString *)text {
     [super setText:text];
     if (self.delegate && [self.delegate respondsToSelector:@selector(textViewDidChange:)]) {
         [self.delegate textViewDidChange:self];
@@ -64,10 +59,8 @@
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = [[self.textStorage attributedSubstringFromRange:self.selectedRange] getPlainString];
     UIFont *textFont = [UIFont systemFontOfSize:16.0];
-    NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSFontAttributeName: textFont}];
+    NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSFontAttributeName : textFont}];
     [self.textStorage replaceCharactersInRange:self.selectedRange withAttributedString:spaceString];
-    
 }
-
 
 @end

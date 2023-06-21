@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactViewDataProvider.h"
@@ -11,13 +12,13 @@
 
 #define kGetUserStatusPageCount 500
 
-@interface TUIContactViewDataProvider() <V2TIMFriendshipListener, V2TIMSDKListener>
+@interface TUIContactViewDataProvider () <V2TIMFriendshipListener, V2TIMSDKListener>
 @property NSDictionary<NSString *, NSArray<TUICommonContactCellData *> *> *dataDict;
 @property NSArray *groupList;
 @property BOOL isLoadFinished;
 @property NSUInteger pendencyCnt;
 
-@property (nonatomic, strong) NSDictionary *contactMap;
+@property(nonatomic, strong) NSDictionary *contactMap;
 
 @end
 
@@ -37,76 +38,79 @@
 
 - (void)loadContacts {
     self.isLoadFinished = NO;
-    @weakify(self)
-    [[V2TIMManager sharedInstance] getFriendList:^(NSArray<V2TIMFriendInfo *> *infoList) {
-        @strongify(self)
-        NSMutableDictionary *dataDict = @{}.mutableCopy;
-        NSMutableArray *groupList = @[].mutableCopy;
-        NSMutableArray *nonameList = @[].mutableCopy;
-        
-        NSMutableDictionary *contactMap = [NSMutableDictionary dictionary];
-        NSMutableArray *userIDList = [NSMutableArray array];
+    @weakify(self);
+    [[V2TIMManager sharedInstance]
+        getFriendList:^(NSArray<V2TIMFriendInfo *> *infoList) {
+          @strongify(self);
+          NSMutableDictionary *dataDict = @{}.mutableCopy;
+          NSMutableArray *groupList = @[].mutableCopy;
+          NSMutableArray *nonameList = @[].mutableCopy;
 
-        for (V2TIMFriendInfo *friend in infoList) {
-            TUICommonContactCellData *data = [[TUICommonContactCellData alloc] initWithFriend:friend];
-            // for online status
-            data.onlineStatus = TUIContactOnlineStatusUnknown;
-            if (data.identifier) {
-                [contactMap setObject:data forKey:data.identifier];
-                [userIDList addObject:data.identifier];
-            }
-            
-            NSString *group = [[data.title firstPinYin] uppercaseString];
-            if (group.length == 0 || !isalpha([group characterAtIndex:0])) {
-                [nonameList addObject:data];
-                continue;
-            }
-            NSMutableArray *list = [dataDict objectForKey:group];
-            if (!list) {
-                list = @[].mutableCopy;
-                dataDict[group] = list;
-                [groupList addObject:group];
-            }
-            [list addObject:data];
-        }
+          NSMutableDictionary *contactMap = [NSMutableDictionary dictionary];
+          NSMutableArray *userIDList = [NSMutableArray array];
 
-        [groupList sortUsingSelector:@selector(localizedStandardCompare:)];
-        if (nonameList.count) {
-            [groupList addObject:@"#"];
-            dataDict[@"#"] = nonameList;
+          for (V2TIMFriendInfo *friend in infoList) {
+              TUICommonContactCellData *data = [[TUICommonContactCellData alloc] initWithFriend:friend];
+              // for online status
+              data.onlineStatus = TUIContactOnlineStatusUnknown;
+              if (data.identifier) {
+                  [contactMap setObject:data forKey:data.identifier];
+                  [userIDList addObject:data.identifier];
+              }
+
+              NSString *group = [[data.title firstPinYin] uppercaseString];
+              if (group.length == 0 || !isalpha([group characterAtIndex:0])) {
+                  [nonameList addObject:data];
+                  continue;
+              }
+              NSMutableArray *list = [dataDict objectForKey:group];
+              if (!list) {
+                  list = @[].mutableCopy;
+                  dataDict[group] = list;
+                  [groupList addObject:group];
+              }
+              [list addObject:data];
+          }
+
+          [groupList sortUsingSelector:@selector(localizedStandardCompare:)];
+          if (nonameList.count) {
+              [groupList addObject:@"#"];
+              dataDict[@"#"] = nonameList;
+          }
+          for (NSMutableArray *list in [dataDict allValues]) {
+              [list sortUsingSelector:@selector(compare:)];
+          }
+          self.groupList = groupList;
+          self.dataDict = dataDict;
+          self.contactMap = [NSDictionary dictionaryWithDictionary:contactMap];
+          self.isLoadFinished = YES;
+
+          // refresh online status async
+          [self asyncGetOnlineStatus:userIDList];
         }
-        for (NSMutableArray *list in [dataDict allValues]) {
-            [list sortUsingSelector:@selector(compare:)];
-        }
-        self.groupList = groupList;
-        self.dataDict = dataDict;
-        self.contactMap = [NSDictionary dictionaryWithDictionary:contactMap];
-        self.isLoadFinished = YES;
-        
-        // refresh online status async
-        [self asyncGetOnlineStatus:userIDList];
-        
-    } fail:^(int code, NSString *desc) {
-        NSLog(@"getFriendList failed, code:%d desc:%@", code, desc);
-    }];
+        fail:^(int code, NSString *desc) {
+          NSLog(@"getFriendList failed, code:%d desc:%@", code, desc);
+        }];
 
     [self loadFriendApplication];
 }
 
 - (void)loadFriendApplication {
-    @weakify(self)
-    [[V2TIMManager sharedInstance] getFriendApplicationList:^(V2TIMFriendApplicationResult *result) {
-        @strongify(self)
-        self.pendencyCnt = result.unreadCount;
-    } fail:nil];
+    @weakify(self);
+    [[V2TIMManager sharedInstance]
+        getFriendApplicationList:^(V2TIMFriendApplicationResult *result) {
+          @strongify(self);
+          self.pendencyCnt = result.unreadCount;
+        }
+                            fail:nil];
 }
 
 - (void)asyncGetOnlineStatus:(NSArray *)userIDList {
     if (NSThread.isMainThread) {
-        @weakify(self)
+        @weakify(self);
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            @strongify(self)
-            [self asyncGetOnlineStatus:userIDList];
+          @strongify(self);
+          [self asyncGetOnlineStatus:userIDList];
         });
         return;
     }
@@ -114,43 +118,45 @@
     if (userIDList.count == 0) {
         return;
     }
-    
-    @weakify(self)
-    void(^GetUserStatus)(NSArray *userIDList) = ^(NSArray *userIDList) {
-        @strongify(self)
-        @weakify(self)
-        [V2TIMManager.sharedInstance getUserStatus:userIDList succ:^(NSArray<V2TIMUserStatus *> *result) {
-            @strongify(self)
+
+    @weakify(self);
+    void (^getUserStatus)(NSArray *userIDList) = ^(NSArray *userIDList) {
+      @strongify(self);
+      @weakify(self);
+      [V2TIMManager.sharedInstance getUserStatus:userIDList
+          succ:^(NSArray<V2TIMUserStatus *> *result) {
+            @strongify(self);
             [self handleOnlineStatus:result];
-        } fail:^(int code, NSString *desc) {
-    #if DEBUG
+          }
+          fail:^(int code, NSString *desc) {
+#if DEBUG
             if (code == ERR_SDK_INTERFACE_NOT_SUPPORT && TUIConfig.defaultConfig.displayOnlineStatusIcon) {
                 [TUITool makeToast:desc];
             }
-    #endif
-        }];
+#endif
+          }];
     };
-    
+
     NSInteger count = kGetUserStatusPageCount;
     if (userIDList.count > count) {
         NSArray *subUserIDList = [userIDList subarrayWithRange:NSMakeRange(0, count)];
         NSArray *pendingUserIDList = [userIDList subarrayWithRange:NSMakeRange(count, userIDList.count - count)];
-        GetUserStatus(subUserIDList);
+        getUserStatus(subUserIDList);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            @strongify(self)
-            [self asyncGetOnlineStatus:pendingUserIDList];
+          @strongify(self);
+          [self asyncGetOnlineStatus:pendingUserIDList];
         });
     } else {
-        GetUserStatus(userIDList);
+        getUserStatus(userIDList);
     }
 }
 
 - (void)asyncUpdateOnlineStatus {
     if (NSThread.isMainThread) {
-        @weakify(self)
+        @weakify(self);
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            @strongify(self)
-            [self asyncUpdateOnlineStatus];
+          @strongify(self);
+          [self asyncUpdateOnlineStatus];
         });
         return;
     }
@@ -163,15 +169,15 @@
             [userIDList addObject:contact.identifier];
         }
     }
-    
+
     // refresh table view on the main thread
-    @weakify(self)
+    @weakify(self);
     dispatch_async(dispatch_get_main_queue(), ^{
-        @strongify(self)
-        self.isLoadFinished = YES;
-        
-        // fetch
-        [self asyncGetOnlineStatus:userIDList];
+      @strongify(self);
+      self.isLoadFinished = YES;
+
+      // fetch
+      [self asyncGetOnlineStatus:userIDList];
     });
 }
 
@@ -187,21 +193,23 @@
     if (changed == 0) {
         return;
     }
-    
+
     // refresh table view on the main thread
-    @weakify(self)
+    @weakify(self);
     dispatch_async(dispatch_get_main_queue(), ^{
-        @strongify(self)
-        self.isLoadFinished = YES;
+      @strongify(self);
+      self.isLoadFinished = YES;
     });
 }
 
 - (void)clearApplicationCnt {
-    @weakify(self)
-    [[V2TIMManager sharedInstance] setFriendApplicationRead:^{
-        @strongify(self)
-        (self).pendencyCnt = 0;
-    } fail:nil];
+    @weakify(self);
+    [[V2TIMManager sharedInstance]
+        setFriendApplicationRead:^{
+          @strongify(self);
+          (self).pendencyCnt = 0;
+        }
+                            fail:nil];
 }
 
 #pragma mark - V2TIMSDKListener
@@ -232,17 +240,16 @@
     [self loadFriendApplication];
 }
 
-- (void)onFriendListAdded:(NSArray<V2TIMFriendInfo *>*)infoList {
+- (void)onFriendListAdded:(NSArray<V2TIMFriendInfo *> *)infoList {
     [self loadContacts];
 }
 
-- (void)onFriendListDeleted:(NSArray*)userIDList {
+- (void)onFriendListDeleted:(NSArray *)userIDList {
     [self loadContacts];
 }
 
 - (void)onFriendProfileChanged:(NSArray<V2TIMFriendInfo *> *)infoList {
     [self loadContacts];
 }
-
 
 @end

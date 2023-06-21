@@ -6,9 +6,9 @@
 //  Copyright © 2019年 Tencent. All rights reserved.
 //
 
+#import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 #import <TIMCommon/TUIMessageCell.h>
 #import "TUILinkCellData_Minimalist.h"
-#import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUILinkCell_Minimalist : TUIBubbleMessageCell_Minimalist

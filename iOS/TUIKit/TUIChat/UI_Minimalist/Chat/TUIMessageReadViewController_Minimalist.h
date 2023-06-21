@@ -3,23 +3,24 @@
 //  TUIChat
 //
 //  Created by xia on 2022/3/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <TIMCommon/TUIMessageCellData.h>
-#import "TUIChatDefine.h"
 #import <TIMCommon/TUIMessageCell_Minimalist.h>
+#import <UIKit/UIKit.h>
+#import "TUIChatDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class TUIMessageDataProvider_Minimalist;
 @interface TUIMessageReadViewController_Minimalist : UIViewController
-@property (nonatomic, strong) Class alertCellClass;
-@property (nonatomic, strong) TUIMessageCellData *alertViewCellData;
-@property (nonatomic, assign) CGRect originFrame;
+@property(nonatomic, strong) Class alertCellClass;
+@property(nonatomic, strong) TUIMessageCellData *alertViewCellData;
+@property(nonatomic, assign) CGRect originFrame;
 
-@property (copy, nonatomic) void (^viewWillShowHandler)(TUIMessageCell *alertView);
-@property (copy, nonatomic) void (^viewDidShowHandler)(TUIMessageCell *alertView);
+@property(copy, nonatomic) void (^viewWillShowHandler)(TUIMessageCell *alertView);
+@property(copy, nonatomic) void (^viewDidShowHandler)(TUIMessageCell *alertView);
 
 - (instancetype)initWithCellData:(TUIMessageCellData *)data
                     dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider
@@ -27,7 +28,5 @@ NS_ASSUME_NONNULL_BEGIN
                  c2cReceiverName:(NSString *)name
                c2cReceiverAvatar:(NSString *)avatarUrl;
 @end
-
-
 
 NS_ASSUME_NONNULL_END

@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/4/20.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by xiangzhang on 2022/1/6.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -36,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIChatSmallTongueManager : NSObject
 
-+ (void)showTongue:(TUIChatSmallTongue *)tongue delegate:(id<TUIChatSmallTongueViewDelegate>) delegate;
++ (void)showTongue:(TUIChatSmallTongue *)tongue delegate:(id<TUIChatSmallTongueViewDelegate>)delegate;
 + (void)removeTongue:(TUIChatSmallTongueType)type;
 + (void)removeTongue;
 + (void)hideTongue:(BOOL)isHidden;

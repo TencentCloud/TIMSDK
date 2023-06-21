@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by harvy on 2021/11/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -10,13 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^TUIChatPopMenuActionCallback)(void);
+typedef void (^TUIChatPopMenuActionCallback)(void);
 
 @interface TUIChatPopMenuAction : NSObject
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, strong) UIImage *image;
-@property (nonatomic, copy) TUIChatPopMenuActionCallback callback;
+@property(nonatomic, copy) NSString *title;
+@property(nonatomic, strong) UIImage *image;
+@property(nonatomic, copy) TUIChatPopMenuActionCallback callback;
 
 /**
  * 排序优先级:  复制(1)、转发(2)、多选(3)、引用(4)、回复(5)、撤回(6)、删除(7)、翻译(8)
@@ -24,19 +25,15 @@ typedef void(^TUIChatPopMenuActionCallback)(void);
  * 权重越大越靠前weight:  复制 10000  转发 9000 多选 8000 引用 7000 回复 5000 撤回4000 删除 3000  翻译 2000
  * The higher the weight, the more prominent it is: Copy 10000, Forward 9000, Multiple Choice 8000, Quote 7000, Reply 5000, Withdraw 4000, Delete 3000.
  */
-@property (nonatomic, assign) NSInteger weight;
+@property(nonatomic, assign) NSInteger weight;
 
-- (instancetype)initWithTitle:(NSString *)title
-                        image:(UIImage *)image
-                         weight:(NSInteger)weight
-                     callback:(TUIChatPopMenuActionCallback)callback;
+- (instancetype)initWithTitle:(NSString *)title image:(UIImage *)image weight:(NSInteger)weight callback:(TUIChatPopMenuActionCallback)callback;
 @end
 
-
-typedef void(^TUIChatPopMenuHideCallback)(void);
+typedef void (^TUIChatPopMenuHideCallback)(void);
 @interface TUIChatPopMenu : UIView
-@property (nonatomic, copy) TUIChatPopMenuHideCallback hideCallback;
-@property (nonatomic, copy) void(^reactClickCallback)(NSString *faceName);
+@property(nonatomic, copy) TUIChatPopMenuHideCallback hideCallback;
+@property(nonatomic, copy) void (^reactClickCallback)(NSString *faceName);
 
 /**
  * TUIChatPopMenu 默认不带 emojiView。如果要显示，需要使用该方法初始化。
@@ -47,7 +44,7 @@ typedef void(^TUIChatPopMenuHideCallback)(void);
 - (void)addAction:(TUIChatPopMenuAction *)action;
 - (void)removeAllAction;
 - (void)setArrawPosition:(CGPoint)point adjustHeight:(CGFloat)adjustHeight;
-- (void)showInView:(UIView * __nullable)window;
+- (void)showInView:(UIView *__nullable)window;
 - (void)layoutSubview;
 - (void)hideWithAnimation;
 

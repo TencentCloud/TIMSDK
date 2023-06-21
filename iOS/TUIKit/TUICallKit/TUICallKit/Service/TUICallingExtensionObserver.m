@@ -83,7 +83,7 @@
             [weakSelf startCall:nil userIDs:@[userID] callingType:type];
         } else if (groupID.length > 0 && pushVC) {
             // group video call
-            [weakSelf launchCall:type inGroup:groupID withPushVC:pushVC];
+            [weakSelf launchCall:type inGroup:groupID withPushVC:pushVC isClassicUI:NO];
         }
     };
     
@@ -124,11 +124,11 @@
                                             asClass:NSNumber.class] boolValue];
     if (!filterVideoCall) {
         TUIExtensionInfo *videoInfo = [[TUIExtensionInfo alloc] init];
-        videoInfo.weight = 400;
+        videoInfo.weight = 600;
         videoInfo.text = TUIKitLocalizableString(TUIKitMoreVideoCall);
         videoInfo.icon = TUICoreBundleThemeImage(@"service_more_video_call_img", @"more_video_call");
         videoInfo.onClicked = ^(NSDictionary * _Nonnull param) {
-            [weakSelf doResponseInputViewExtension:param type:TUICallMediaTypeVideo];
+            [weakSelf doResponseInputViewExtension:param type:TUICallMediaTypeVideo isClassicUI:YES];
         };
         [result addObject:videoInfo];
     }
@@ -137,11 +137,11 @@
                                             asClass:NSNumber.class] boolValue];
     if (!filterAudioCall) {
         TUIExtensionInfo *audioInfo = [[TUIExtensionInfo alloc] init];
-        audioInfo.weight = 300;
+        audioInfo.weight = 500;
         audioInfo.text = TUIKitLocalizableString(TUIKitMoreVoiceCall);
         audioInfo.icon = TUICoreBundleThemeImage(@"service_more_voice_call_img", @"more_voice_call");
         audioInfo.onClicked = ^(NSDictionary * _Nonnull param) {
-            [weakSelf doResponseInputViewExtension:param type:TUICallMediaTypeAudio];
+            [weakSelf doResponseInputViewExtension:param type:TUICallMediaTypeAudio isClassicUI:YES];
         };
         [result addObject:audioInfo];
     }
@@ -261,7 +261,7 @@
             NSString *groupID = [param tui_objectForKey:TUICore_TUIGroupExtension_GroupInfoCardActionMenu_GroupID
                                                 asClass:NSString.class];
             if (pushVC && groupID.length > 0) {
-                [weakSelf launchCall:TUICallMediaTypeVideo inGroup:groupID withPushVC:pushVC];
+                [weakSelf launchCall:TUICallMediaTypeVideo inGroup:groupID withPushVC:pushVC isClassicUI:NO];
             }
         };
         [result addObject:videoInfo];
@@ -282,7 +282,7 @@
             NSString *groupID = [param tui_objectForKey:TUICore_TUIGroupExtension_GroupInfoCardActionMenu_GroupID
                                                 asClass:NSString.class];
             if (pushVC && groupID.length > 0) {
-                [weakSelf launchCall:TUICallMediaTypeAudio inGroup:groupID withPushVC:pushVC];
+                [weakSelf launchCall:TUICallMediaTypeAudio inGroup:groupID withPushVC:pushVC isClassicUI:NO];
             }
         };
         [result addObject:audioInfo];
@@ -293,7 +293,7 @@
 
 #pragma mark - Utils
 
-- (void)doResponseInputViewExtension:(NSDictionary *)param type:(TUICallMediaType)type {
+- (void)doResponseInputViewExtension:(NSDictionary *)param type:(TUICallMediaType)type isClassicUI:(BOOL)isClassic {
     NSString *userID = [param tui_objectForKey:TUICore_TUIChatExtension_InputViewMoreItem_UserID
                                        asClass:NSString.class];
     NSString *groupID = [param tui_objectForKey:TUICore_TUIChatExtension_InputViewMoreItem_GroupID
@@ -305,24 +305,24 @@
         [self startCall:nil userIDs:@[userID] callingType:type];
     } else if (groupID.length > 0 && pushVC) {
         // group video call
-        [self launchCall:type inGroup:groupID withPushVC:pushVC];
+        [self launchCall:type inGroup:groupID withPushVC:pushVC isClassicUI:isClassic];
     }
 }
 
 - (void)launchCall:(TUICallMediaType)type
            inGroup:(NSString *)groupID
-        withPushVC:(UINavigationController *)pushVC {
+        withPushVC:(UINavigationController *)pushVC
+       isClassicUI:(BOOL)isClassic {
     if (groupID.length > 0 && pushVC) {
         // group audio call
         NSMutableDictionary *requestParam = [NSMutableDictionary dictionary];
         requestParam[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID] = groupID;
-        requestParam[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name]
-        = TIMCommonLocalizableString(Make-a-call);
+        requestParam[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name] = TIMCommonLocalizableString(Make-a-call);
+        NSString *viewControllerKey = isClassic ?
+                                      TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Classic :
+                                      TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Minimalist;
         __weak typeof(self) weakSelf = self;
-        UIViewController *selectGroupMemberVC = [TUICore createObject:TUICore_TUIGroupObjectFactory_Minimalist
-                                                                  key:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC
-                                                                param:requestParam];
-        selectGroupMemberVC.tui_valueCallback = ^(NSDictionary * _Nonnull responseData) {
+        [pushVC pushViewController:viewControllerKey param:requestParam forResult:^(NSDictionary * _Nonnull responseData) {
             NSArray<TUIUserModel *> *modelList = [responseData tui_objectForKey:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList
                                                                         asClass:NSArray.class];
             NSMutableArray *userIDs = [NSMutableArray arrayWithCapacity:modelList.count];
@@ -331,8 +331,7 @@
                 [userIDs addObject:user.userId];
             }
             [weakSelf startCall:groupID userIDs:userIDs callingType:type];
-        };
-        [pushVC pushViewController:selectGroupMemberVC animated:YES];
+        }];
     }
 }
 

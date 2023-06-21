@@ -417,6 +417,8 @@
 		162B826A29F7DDA200443117 /* TUICameraView.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B80D029F7DDA100443117 /* TUICameraView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		16814FF029F7F86600C58971 /* libopencore-amrwb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 162B7FD129F7DDA100443117 /* libopencore-amrwb.a */; };
 		16814FF129F7F86600C58971 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 162B7FD329F7DDA100443117 /* libopencore-amrnb.a */; };
+		93F7C9112A1B727800760C97 /* TUICircleLodingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F7C90F2A1B727800760C97 /* TUICircleLodingView.h */; };
+		93F7C9122A1B727800760C97 /* TUICircleLodingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F7C9102A1B727800760C97 /* TUICircleLodingView.m */; };
 		D8ABB0B42DD606A9930E570F /* Pods_TUIChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28D5A137617952A0B52ADFB6 /* Pods_TUIChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -838,6 +840,8 @@
 		28D5A137617952A0B52ADFB6 /* Pods_TUIChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TUIChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66D550827CE1D0EB7DB0AA59 /* Pods-TIMCommon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TIMCommon.release.xcconfig"; path = "Target Support Files/Pods-TIMCommon/Pods-TIMCommon.release.xcconfig"; sourceTree = "<group>"; };
 		794E9563E5CF845D94EB0030 /* Pods-TIMCommon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TIMCommon.debug.xcconfig"; path = "Target Support Files/Pods-TIMCommon/Pods-TIMCommon.debug.xcconfig"; sourceTree = "<group>"; };
+		93F7C90F2A1B727800760C97 /* TUICircleLodingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUICircleLodingView.h; sourceTree = "<group>"; };
+		93F7C9102A1B727800760C97 /* TUICircleLodingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUICircleLodingView.m; sourceTree = "<group>"; };
 		A4CF9A3078FC829832918896 /* Pods-TUIChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIChat.debug.xcconfig"; path = "Target Support Files/Pods-TUIChat/Pods-TUIChat.debug.xcconfig"; sourceTree = "<group>"; };
 		C66DD3F144DEE7E1E956FD7A /* Pods-TUICore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICore.debug.xcconfig"; path = "Target Support Files/Pods-TUICore/Pods-TUICore.debug.xcconfig"; sourceTree = "<group>"; };
 		D2D738DBAE3BB6797A7473EB /* Pods-TUICore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICore.release.xcconfig"; path = "Target Support Files/Pods-TUICore/Pods-TUICore.release.xcconfig"; sourceTree = "<group>"; };
@@ -1554,6 +1558,8 @@
 		162B809829F7DDA100443117 /* CommonModel */ = {
 			isa = PBXGroup;
 			children = (
+				93F7C90F2A1B727800760C97 /* TUICircleLodingView.h */,
+				93F7C9102A1B727800760C97 /* TUICircleLodingView.m */,
 				162B809929F7DDA100443117 /* TUIChatDefine.h */,
 				162B809A29F7DDA100443117 /* TUIChatConfig.h */,
 				162B809B29F7DDA100443117 /* TUIMessageItem.h */,
@@ -1697,6 +1703,7 @@
 				162B821329F7DDA200443117 /* TUIVideoReplyQuoteView_Minimalist.h in Headers */,
 				162B812C29F7DDA100443117 /* TUIGroupCreatedCellData.h in Headers */,
 				162B81BF29F7DDA200443117 /* TUIMergeMessageCellData_Minimalist.h in Headers */,
+				93F7C9112A1B727800760C97 /* TUICircleLodingView.h in Headers */,
 				162B81C429F7DDA200443117 /* TUIVideoMessageCellData_Minimalist.h in Headers */,
 				162B825629F7DDA200443117 /* TUICaptureTimer.h in Headers */,
 				162B80FF29F7DDA100443117 /* TUIMessageDataProvider+MessageDeal.h in Headers */,
@@ -2021,6 +2028,7 @@
 				162B813D29F7DDA100443117 /* TUIImageMessageCell.m in Sources */,
 				162B814229F7DDA200443117 /* TUIVoiceMessageCell.m in Sources */,
 				162B80EB29F7DDA100443117 /* TUIMessageMultiChooseView.m in Sources */,
+				93F7C9122A1B727800760C97 /* TUICircleLodingView.m in Sources */,
 				162B826529F7DDA200443117 /* TUICameraManager.m in Sources */,
 				162B81B829F7DDA200443117 /* TUIChatDataProvider_Minimalist.m in Sources */,
 				162B81F629F7DDA200443117 /* TUIJoinGroupMessageCell_Minimalist.m in Sources */,

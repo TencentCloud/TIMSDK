@@ -1,22 +1,25 @@
 
-#import <TIMCommon/TUIMessageCellData.h>
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
+#import <TIMCommon/TUIMessageCellData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^VoicePlayTime)(CGFloat);
+typedef void (^VoicePlayTime)(CGFloat);
 
 @interface TUIVoiceMessageCellData_Minimalist : TUIBubbleMessageCellData_Minimalist
 
-@property (nonatomic, strong) NSString *path;
-@property (nonatomic, strong) NSString *uuid;
-@property (nonatomic, assign) int duration;
-@property (nonatomic, assign) int length;
-@property (nonatomic, assign) BOOL isDownloading;
-@property (nonatomic, assign) BOOL isPlaying;
-@property (nonatomic, assign) CGFloat voiceTop;
-@property (nonatomic, assign) CGFloat voiceHeight;
-@property (nonatomic, copy) VoicePlayTime playTime;
+@property(nonatomic, strong) NSString *path;
+@property(nonatomic, strong) NSString *uuid;
+@property(nonatomic, assign) int duration;
+@property(nonatomic, assign) int length;
+@property(nonatomic, assign) BOOL isDownloading;
+@property(nonatomic, assign) BOOL isPlaying;
+@property(nonatomic, assign) CGFloat voiceTop;
+@property(nonatomic, assign) CGFloat voiceHeight;
+@property(nonatomic, copy) VoicePlayTime playTime;
 
 /**
  *  语音图标顶部
@@ -27,8 +30,8 @@ typedef void(^VoicePlayTime)(CGFloat);
  *  This value is used to determine the position of the bubble, which is convenient for UI layout of the content in the bubble.
  *  If the value is abnormal or set arbitrarily, UI errors such as message position dislocation will occur.
  */
-@property (nonatomic, class) CGFloat incommingVoiceTop;
-@property (nonatomic, class) CGFloat outgoingVoiceTop;
+@property(nonatomic, class) CGFloat incommingVoiceTop;
+@property(nonatomic, class) CGFloat outgoingVoiceTop;
 
 - (void)stopVoiceMessage;
 
@@ -36,7 +39,7 @@ typedef void(^VoicePlayTime)(CGFloat);
  *  开始语音播放。
  *
  *  Begin to play voice. It will download the voice file from server if it not exists in local.
-*/
+ */
 - (void)playVoiceMessage;
 
 @end

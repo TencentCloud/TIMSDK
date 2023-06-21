@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by harvy on 2021/11/15.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -10,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define kChatDefaultEmojiSize CGSizeMake(15,15)
+#define kChatDefaultEmojiSize CGSizeMake(15, 15)
 #define kSplitStringResultKey @"result"
 #define kSplitStringTextKey @"text"
 #define kSplitStringTextIndexKey @"textIndex"
@@ -42,12 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * Get the formatted emoticon text (after the image and text are mixed) The emoticon is stored in the NSTextAttachment object and cannot carry parameters
  */
-- (NSMutableAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont emojiLocations:(nullable NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *)emojiLocations;
+- (NSMutableAttributedString *)getFormatEmojiStringWithFont:(UIFont *)textFont
+                                             emojiLocations:(nullable NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *)emojiLocations;
 
 /**
  * 获取格式化之后的表情（图文混排过后） 表情用TUIEmojiTextAttachment对象存储，可携带参数。
  * 例如: 原始文本是 @"你好,[大哭]",  则该方法将文本变成了@"你好,😭"
- * 
+ *
  * Get the formatted emoji (after the image and text are mixed together) The emoji is stored in the TUIEmojiTextAttachment object, which can carry parameters.
  * For example: the original text is @"Hello,[cry]", then this method turns the text into @"Hello,😭"
  */
@@ -72,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  * kSplitStringTextKey'value contains all text elements in the split result, excluding emojis and @user infos.
  * kSplitStringTextIndexKey'value contains the location of text in split result.
  */
-- (NSDictionary *)splitTextByEmojiAndAtUsers:(NSArray * _Nullable)users;
+- (NSDictionary *)splitTextByEmojiAndAtUsers:(NSArray *_Nullable)users;
 
 /**
  * Replace the element in array, whose index is in index with the corresponding value in replaceDict.
@@ -82,9 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
  * replaceDict is   @{@"hello":@"你好", @"world":@"世界", @"see you!":@"再见!"}
  * Return value is  @"你好[Grin]世界, @user1 再见!"
  */
-+ (NSString *)replacedStringWithArray:(NSArray *)array
-                                index:(NSArray *)index
-                          replaceDict:(NSDictionary *)replaceDict;
++ (NSString *)replacedStringWithArray:(NSArray *)array index:(NSArray *)index replaceDict:(NSDictionary *)replaceDict;
 
 @end
 

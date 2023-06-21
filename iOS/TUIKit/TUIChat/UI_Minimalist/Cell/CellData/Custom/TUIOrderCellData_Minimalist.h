@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by xia on 2022/6/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
@@ -11,11 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIOrderCellData_Minimalist : TUIBubbleMessageCellData_Minimalist
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *desc;
-@property (nonatomic, copy) NSString *price;
-@property (nonatomic, copy) NSString *imageUrl;
-@property (nonatomic, copy) NSString *link;
+@property(nonatomic, copy) NSString *title;
+@property(nonatomic, copy) NSString *desc;
+@property(nonatomic, copy) NSString *price;
+@property(nonatomic, copy) NSString *imageUrl;
+@property(nonatomic, copy) NSString *link;
 
 @end
 

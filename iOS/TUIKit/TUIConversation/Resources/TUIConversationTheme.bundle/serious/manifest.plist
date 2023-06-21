@@ -14,5 +14,15 @@
 	<string>#F4F4F4</string>
 	<key>conversation_bg_color</key>
 	<string>#FFFFFF</string>
+	<key>conversation_group_bg_color</key>
+	<string>#EBECF0</string>
+	<key>conversation_group_animate_view_color</key>
+	<string>#FFFFFF</string>
+	<key>conversation_group_btn_select_color</key>
+	<string>#006EFF</string>
+	<key>conversation_group_btn_unselect_color</key>
+	<string>#666666</string>
+	<key>no_conversation_img</key>
+	<string>no_conversation</string>
 </dict>
 </plist>

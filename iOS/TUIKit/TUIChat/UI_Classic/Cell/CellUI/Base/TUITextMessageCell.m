@@ -3,19 +3,19 @@
 //  UIKit
 //
 //  Created by annidyfeng on 2019/5/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUITextMessageCell.h"
-#import "TUIFaceView.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
-#import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUICore.h>
+#import <TUICore/TUIGlobalization.h>
+#import "TUIFaceView.h"
 
 @implementation TUITextMessageCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.textView = [[TUITextView alloc] init];
@@ -26,15 +26,15 @@
         self.textView.editable = NO;
         self.textView.delegate = self;
         [self.bubbleView addSubview:self.textView];
-        
+
         self.bottomContainer = [[UIView alloc] init];
         [self.contentView addSubview:self.bottomContainer];
-        
+
         self.voiceReadPoint = [[UIImageView alloc] init];
         self.voiceReadPoint.backgroundColor = [UIColor redColor];
         self.voiceReadPoint.frame = CGRectMake(0, 0, 5, 5);
         self.voiceReadPoint.hidden = YES;
-        [self.voiceReadPoint.layer setCornerRadius:self.voiceReadPoint.frame.size.width/2];
+        [self.voiceReadPoint.layer setCornerRadius:self.voiceReadPoint.frame.size.width / 2];
         [self.voiceReadPoint.layer setMasksToBounds:YES];
         [self.bubbleView addSubview:self.voiceReadPoint];
     }
@@ -50,13 +50,12 @@
 
 // Override
 - (void)notifyBottomContainerReadyOfData:(TUIMessageCellData *)cellData {
-    NSDictionary *param = @{TUICore_TUIChatExtension_BottomContainer_CellData: self.textData};
+    NSDictionary *param = @{TUICore_TUIChatExtension_BottomContainer_CellData : self.textData};
     [TUICore raiseExtension:TUICore_TUIChatExtension_BottomContainer_ClassicExtensionID parentView:self.bottomContainer param:param];
 }
 
-- (void)fillWithData:(TUITextMessageCellData *)data
-{
-    //set data
+- (void)fillWithData:(TUITextMessageCellData *)data {
+    // set data
     [super fillWithData:data];
     self.textData = data;
     self.selectContent = data.content;
@@ -67,8 +66,7 @@
     self.bottomContainer.hidden = CGSizeEqualToSize(data.bottomContainerSize, CGSizeZero);
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     self.textView.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
     if (self.voiceReadPoint.hidden == NO) {
@@ -77,7 +75,8 @@
     if (self.messageData.messageModifyReactsSize.height > 0) {
         if (self.tagView) {
             CGFloat tagViewTopPadding = 6;
-            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopPadding , self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
+            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopPadding,
+                                            self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
         }
     }
 
@@ -93,30 +92,21 @@
     CGFloat topMargin = self.bubbleView.mm_maxY + self.nameLabel.mm_h + 6;
 
     if (self.textData.direction == MsgDirectionOutgoing) {
-        self.bottomContainer
-            .mm_top(topMargin)
-            .mm_width(size.width)
-            .mm_height(size.height)
-            .mm_right(self.mm_w - self.container.mm_maxX);
+        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_right(self.mm_w - self.container.mm_maxX);
     } else {
-        self.bottomContainer
-            .mm_top(topMargin)
-            .mm_width(size.width)
-            .mm_height(size.height)
-            .mm_left(self.container.mm_minX);
+        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_left(self.container.mm_minX);
     }
 
     if (!self.messageModifyRepliesButton.hidden) {
         CGRect oldRect = self.messageModifyRepliesButton.frame;
-        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame),
-                                    oldRect.size.width, oldRect.size.height);
+        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame), oldRect.size.width, oldRect.size.height);
         self.messageModifyRepliesButton.frame = newRect;
     }
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView {
     NSAttributedString *selectedString = [textView.attributedText attributedSubstringFromRange:textView.selectedRange];
-    if (self.selectAllContentContent && selectedString.length>0) {
+    if (self.selectAllContentContent && selectedString.length > 0) {
         if (selectedString.length == textView.attributedText.length) {
             self.selectAllContentContent(YES);
         } else {
@@ -151,4 +141,3 @@
 }
 
 @end
-

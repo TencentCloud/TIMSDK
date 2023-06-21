@@ -7,18 +7,18 @@
 //
 
 #import "TUIContactController.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIThemeManager.h>
+#import "ReactiveObjC.h"
+#import "TUIBlackListController.h"
+#import "TUIContactActionCell.h"
 #import "TUIFindContactViewController.h"
 #import "TUIFriendProfileController.h"
 #import "TUIFriendRequestViewController.h"
-#import "TUIUserProfileController.h"
-#import "TUIBlackListController.h"
-#import "TUINewFriendViewController.h"
 #import "TUIGroupConversationListController.h"
-#import "TUIContactActionCell.h"
-#import <TUICore/TUIThemeManager.h>
-#import <TIMCommon/TIMDefine.h>
-#import <TUICore/TUICore.h>
-#import "ReactiveObjC.h"
+#import "TUINewFriendViewController.h"
+#import "TUIUserProfileController.h"
 
 #define kContactCellReuseId @"ContactCellReuseId"
 #define kContactActionCellReuseId @"ContactActionCellReuseId"
@@ -34,31 +34,31 @@
     [super viewDidLoad];
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
-        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = TUIContactDynamicImage(@"contact_new_friend_img", [UIImage imageNamed:TUIContactImagePath(@"new_friend")]);
-        data.title = TIMCommonLocalizableString(TUIKitContactsNewFriends);
-        data.cselector = @selector(onAddNewFriend:);
-        data;
-    })];
+              TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
+              data.icon = TUIContactDynamicImage(@"contact_new_friend_img", [UIImage imageNamed:TUIContactImagePath(@"new_friend")]);
+              data.title = TIMCommonLocalizableString(TUIKitContactsNewFriends);
+              data.cselector = @selector(onAddNewFriend:);
+              data;
+          })];
     [list addObject:({
-        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = TUIContactDynamicImage(@"contact_public_group_img", [UIImage imageNamed:TUIContactImagePath(@"public_group")]);
-        data.title = TIMCommonLocalizableString(TUIKitContactsGroupChats);
-        data.cselector = @selector(onGroupConversation:);
-        data;
-    })];
+              TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
+              data.icon = TUIContactDynamicImage(@"contact_public_group_img", [UIImage imageNamed:TUIContactImagePath(@"public_group")]);
+              data.title = TIMCommonLocalizableString(TUIKitContactsGroupChats);
+              data.cselector = @selector(onGroupConversation:);
+              data;
+          })];
     [list addObject:({
-        TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
-        data.icon = TUIContactDynamicImage(@"contact_blacklist_img", [UIImage imageNamed:TUIContactImagePath(@"blacklist")]);
-        data.title = TIMCommonLocalizableString(TUIKitContactsBlackList);
-        data.cselector = @selector(onBlackList:);
-        data;
-    })];
+              TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
+              data.icon = TUIContactDynamicImage(@"contact_blacklist_img", [UIImage imageNamed:TUIContactImagePath(@"blacklist")]);
+              data.title = TIMCommonLocalizableString(TUIKitContactsBlackList);
+              data.cselector = @selector(onBlackList:);
+              data;
+          })];
     self.firstGroupData = [NSArray arrayWithArray:list];
-    
+
     [self setupNavigator];
     [self setupViews];
-    
+
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
 }
 
@@ -66,8 +66,7 @@
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
-- (void)onFriendInfoChanged:(NSNotification *)notice
-{
+- (void)onFriendInfoChanged:(NSNotification *)notice {
     [self.viewModel loadContacts];
 }
 
@@ -79,7 +78,7 @@
     [moreButton.heightAnchor constraintEqualToConstant:24].active = YES;
     UIBarButtonItem *moreItem = [[UIBarButtonItem alloc] initWithCustomView:moreButton];
     self.navigationItem.rightBarButtonItem = moreItem;
-    
+
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
@@ -93,29 +92,29 @@
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 8, 0);
     [_tableView setSectionIndexColor:[UIColor darkGrayColor]];
     [_tableView setBackgroundColor:self.view.backgroundColor];
-    
+
     _tableView.delaysContentTouches = NO;
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
     }
     [self.view addSubview:_tableView];
-    
+
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
     [_tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:kContactCellReuseId];
     [_tableView registerClass:[TUIContactActionCell class] forCellReuseIdentifier:kContactActionCellReuseId];
-    
-    @weakify(self)
+
+    @weakify(self);
     [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id finished) {
-        @strongify(self)
-        if ([(NSNumber *)finished boolValue]) {
-            [self.tableView reloadData];
-        }
+      @strongify(self);
+      if ([(NSNumber *)finished boolValue]) {
+          [self.tableView reloadData];
+      }
     }];
     [RACObserve(self.viewModel, pendencyCnt) subscribeNext:^(NSNumber *x) {
-        @strongify(self)
-        self.firstGroupData[0].readNum = [x integerValue];
+      @strongify(self);
+      self.firstGroupData[0].readNum = [x integerValue];
     }];
 }
 
@@ -123,16 +122,14 @@
 {
     NSMutableArray *menus = [NSMutableArray array];
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
-    friend.image =
-    TUIDemoDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIDemoImagePath(@"add_friend")]);
-    friend.title = TIMCommonLocalizableString(ContactsAddFriends); //@"添加好友";
+    friend.image = TUIDemoDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIDemoImagePath(@"add_friend")]);
+    friend.title = TIMCommonLocalizableString(ContactsAddFriends);  //@"添加好友";
     [menus addObject:friend];
 
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
-    group.image =
-    TUIDemoDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIDemoImagePath(@"add_group")]);
+    group.image = TUIDemoDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIDemoImagePath(@"add_group")]);
 
-    group.title = TIMCommonLocalizableString(ContactsJoinGroup);//@"添加群组";
+    group.title = TIMCommonLocalizableString(ContactsJoinGroup);  //@"添加群组";
     [menus addObject:group];
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
@@ -145,36 +142,33 @@
     [popView showInWindow:self.view.window];
 }
 
-- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index
-{
+- (void)popView:(TUIPopView *)popView didSelectRowAtIndex:(NSInteger)index {
     [self addToContactsOrGroups:(index == 0 ? TUIFindContactTypeC2C : TUIFindContactTypeGroup)];
 }
 
 - (void)addToContactsOrGroups:(TUIFindContactType)type {
     TUIFindContactViewController *add = [[TUIFindContactViewController alloc] init];
     add.type = type;
-    @weakify(self)
-    add.onSelect = ^(TUIFindContactCellModel * cellModel) {
-        @strongify(self)
-        if (cellModel.type == TUIFindContactTypeC2C) {
-            TUIFriendRequestViewController *frc = [[TUIFriendRequestViewController alloc] init];
-            frc.profile = cellModel.userInfo;
-            [self.navigationController popViewControllerAnimated:NO];
-            [self.navigationController pushViewController:frc animated:YES];
-        } else {
-            NSDictionary *param = @{
-                TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey: cellModel.groupInfo
-            };
-            UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory key:TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod param:param];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+    @weakify(self);
+    add.onSelect = ^(TUIFindContactCellModel *cellModel) {
+      @strongify(self);
+      if (cellModel.type == TUIFindContactTypeC2C) {
+          TUIFriendRequestViewController *frc = [[TUIFriendRequestViewController alloc] init];
+          frc.profile = cellModel.userInfo;
+          [self.navigationController popViewControllerAnimated:NO];
+          [self.navigationController pushViewController:frc animated:YES];
+      } else {
+          NSDictionary *param = @{TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey : cellModel.groupInfo};
+          UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory
+                                                   key:TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod
+                                                 param:param];
+          [self.navigationController pushViewController:vc animated:YES];
+      }
     };
     [self.navigationController pushViewController:add animated:YES];
 }
 
-
-- (TUIContactViewDataProvider *)viewModel
-{
+- (TUIContactViewDataProvider *)viewModel {
     if (_viewModel == nil) {
         _viewModel = [TUIContactViewDataProvider new];
         [_viewModel loadContacts];
@@ -192,31 +186,25 @@
 
 #pragma mark - UITableView
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-{
-    return self.viewModel.groupList.count + 1;
-}
+{ return self.viewModel.groupList.count + 1; }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
         return self.firstGroupData.count;
     } else {
-        NSString *group = self.viewModel.groupList[section-1];
+        NSString *group = self.viewModel.groupList[section - 1];
         NSArray *list = self.viewModel.dataDict[group];
         return list.count;
     }
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    if (section == 0)
-        return nil;
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == 0) return nil;
 
 #define TEXT_TAG 1
     static NSString *headerViewId = @"ContactDrawerView";
     UITableViewHeaderFooterView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headerViewId];
-    if (!headerView)
-    {
+    if (!headerView) {
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
@@ -227,20 +215,17 @@
         textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
-    label.text = self.viewModel.groupList[section-1];
+    label.text = self.viewModel.groupList[section - 1];
     headerView.contentView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     return headerView;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 56;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    if (section == 0)
-        return 0;
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == 0) return 0;
 
     return 33;
 }
@@ -251,8 +236,7 @@
     return array;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         TUIContactActionCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactActionCellReuseId forIndexPath:indexPath];
         [cell fillWithData:self.firstGroupData[indexPath.row]];
@@ -260,7 +244,7 @@
         return cell;
     } else {
         TUICommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:kContactCellReuseId forIndexPath:indexPath];
-        NSString *group = self.viewModel.groupList[indexPath.section-1];
+        NSString *group = self.viewModel.groupList[indexPath.section - 1];
         NSArray *list = self.viewModel.dataDict[group];
         TUICommonContactCellData *data = list[indexPath.row];
         data.cselector = @selector(onSelectFriend:);
@@ -270,13 +254,11 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark -
-- (void)onSelectFriend:(TUICommonContactCell *)cell
-{
+- (void)onSelectFriend:(TUICommonContactCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(onSelectFriend:)]) {
         [self.delegate onSelectFriend:cell];
         return;
@@ -287,63 +269,58 @@
     [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
 }
 
-- (void)onAddNewFriend:(TUICommonTableViewCell *)cell
-{
+- (void)onAddNewFriend:(TUICommonTableViewCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(onAddNewFriend:)]) {
         [self.delegate onAddNewFriend:cell];
         return;
     }
     TUINewFriendViewController *vc = TUINewFriendViewController.new;
-    vc.cellClickBlock = ^(TUICommonPendencyCell * _Nonnull cell) {
-        TUIUserProfileController *controller = [[TUIUserProfileController alloc] init];
-        [[V2TIMManager sharedInstance] getUsersInfo:@[cell.pendencyData.identifier] succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
-            controller.userFullInfo = profiles.firstObject;
-            controller.pendency = cell.pendencyData;
-            controller.actionType = PCA_PENDENDY_CONFIRM;
-            [self.navigationController pushViewController:(UIViewController *)controller animated:YES];
-        } fail:nil];
+    vc.cellClickBlock = ^(TUICommonPendencyCell *_Nonnull cell) {
+      TUIUserProfileController *controller = [[TUIUserProfileController alloc] init];
+      [[V2TIMManager sharedInstance] getUsersInfo:@[ cell.pendencyData.identifier ]
+                                             succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
+                                               controller.userFullInfo = profiles.firstObject;
+                                               controller.pendency = cell.pendencyData;
+                                               controller.actionType = PCA_PENDENDY_CONFIRM;
+                                               [self.navigationController pushViewController:(UIViewController *)controller animated:YES];
+                                             }
+                                             fail:nil];
     };
     [self.navigationController pushViewController:vc animated:YES];
     [self.viewModel clearApplicationCnt];
 }
 
-- (void)onGroupConversation:(TUICommonTableViewCell *)cell
-{
+- (void)onGroupConversation:(TUICommonTableViewCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(onGroupConversation:)]) {
         [self.delegate onGroupConversation:cell];
         return;
     }
     TUIGroupConversationListController *vc = TUIGroupConversationListController.new;
-    @weakify(self)
-    vc.onSelect = ^(TUICommonContactCellData * _Nonnull cellData) {
-        @strongify(self)
-        NSDictionary *param = @{
-            TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : cellData.identifier ?: @""
-        };
-        UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
-        [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
+    @weakify(self);
+    vc.onSelect = ^(TUICommonContactCellData *_Nonnull cellData) {
+      @strongify(self);
+      NSDictionary *param = @{TUICore_TUIChatObjectFactory_ChatViewController_GroupID : cellData.identifier ?: @""};
+      [self.navigationController pushViewController:TUICore_TUIChatObjectFactory_ChatViewController_Classic param:param forResult:nil];
     };
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)onBlackList:(TUICommonContactCell *)cell
-{
+- (void)onBlackList:(TUICommonContactCell *)cell {
     TUIBlackListController *vc = TUIBlackListController.new;
     @weakify(self);
-    vc.didSelectCellBlock = ^(TUICommonContactCell * _Nonnull cell) {
-        @strongify(self);
-        [self onSelectFriend:cell];
+    vc.didSelectCellBlock = ^(TUICommonContactCell *_Nonnull cell) {
+      @strongify(self);
+      [self onSelectFriend:cell];
     };
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)runSelector:(SEL)selector withObject:(id)object{
-    if([self respondsToSelector:selector]){
+- (void)runSelector:(SEL)selector withObject:(id)object {
+    if ([self respondsToSelector:selector]) {
         IMP imp = [self methodForSelector:selector];
         void (*func)(id, SEL, id) = (void *)imp;
         func(self, selector, object);
     }
-
 }
 
 @end

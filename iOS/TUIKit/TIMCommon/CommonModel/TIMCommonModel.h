@@ -3,11 +3,12 @@
 //  TIMCommon
 //
 //  Created by cologne on 2023/3/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "TIMDefine.h"
 #import <TUICore/TUICommonModel.h>
+#import "TIMDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,21 +22,21 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface TUIPopView : UIView
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, assign) CGPoint arrowPoint;
-@property (nonatomic, weak) id<TUIPopViewDelegate> delegate;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, assign) CGPoint arrowPoint;
+@property(nonatomic, weak) id<TUIPopViewDelegate> delegate;
 - (void)setData:(NSMutableArray *)data;
 - (void)showInWindow:(UIWindow *)window;
 @end
 
 @interface TUIPopCellData : NSObject
-@property (nonatomic, strong) UIImage *image;
-@property (nonatomic, strong) NSString *title;
+@property(nonatomic, strong) UIImage *image;
+@property(nonatomic, strong) NSString *title;
 @end
 
 @interface TUIPopCell : UITableViewCell
-@property (nonatomic, strong) UIImageView *image;
-@property (nonatomic, strong) UILabel *title;
+@property(nonatomic, strong) UIImageView *image;
+@property(nonatomic, strong) UILabel *title;
 + (CGFloat)getHeight;
 - (void)setData:(TUIPopCellData *)data;
 @end
@@ -51,20 +52,20 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface TUIModifyViewData : NSObject
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSString *content;
-@property (nonatomic, strong) NSString *desc;
-@property (nonatomic, assign) BOOL enableNull;
+@property(nonatomic, strong) NSString *title;
+@property(nonatomic, strong) NSString *content;
+@property(nonatomic, strong) NSString *desc;
+@property(nonatomic, assign) BOOL enableNull;
 @end
 
 @interface TUIModifyView : UIView
-@property (nonatomic, strong) UIView *container;
-@property (nonatomic, strong) UILabel *title;
-@property (nonatomic, strong) UITextField *content;
-@property (nonatomic, strong) UILabel *descLabel;
-@property (nonatomic, strong) UIButton *confirm;
-@property (nonatomic, strong) UIView *hLine;
-@property (nonatomic, weak) id<TUIModifyViewDelegate> delegate;
+@property(nonatomic, strong) UIView *container;
+@property(nonatomic, strong) UILabel *title;
+@property(nonatomic, strong) UITextField *content;
+@property(nonatomic, strong) UILabel *descLabel;
+@property(nonatomic, strong) UIButton *confirm;
+@property(nonatomic, strong) UIView *hLine;
+@property(nonatomic, weak) id<TUIModifyViewDelegate> delegate;
 - (void)setData:(TUIModifyViewData *)data;
 - (void)showInWindow:(UIWindow *)window;
 @end
@@ -76,11 +77,11 @@ NS_ASSUME_NONNULL_BEGIN
 /////////////////////////////////////////////////////////////////////////////////
 @interface TUINaviBarIndicatorView : UIView
 
-@property (nonatomic, strong) UIActivityIndicatorView *indicator;
+@property(nonatomic, strong) UIActivityIndicatorView *indicator;
 
-@property (nonatomic, strong) UILabel *label;
+@property(nonatomic, strong) UILabel *label;
 
-@property (nonatomic, assign) CGFloat maxLabelLength;
+@property(nonatomic, assign) CGFloat maxLabelLength;
 
 - (void)setTitle:(NSString *)title;
 
@@ -97,16 +98,16 @@ NS_ASSUME_NONNULL_BEGIN
 /////////////////////////////////////////////////////////////////////////////////
 
 @interface TUICommonCellData : NSObject
-@property (strong) NSString *reuseId;
-@property (nonatomic, assign) SEL cselector;
-@property (nonatomic, strong) NSDictionary *ext;
+@property(strong) NSString *reuseId;
+@property(nonatomic, assign) SEL cselector;
+@property(nonatomic, strong) NSDictionary *ext;
 - (CGFloat)heightOfWidth:(CGFloat)width;
 - (CGFloat)estimatedHeight;
 @end
 
 @interface TUICommonTableViewCell : UITableViewCell
 
-@property (readonly) TUICommonCellData *data;
+@property(readonly) TUICommonCellData *data;
 @property UIColor *colorWhenTouched;
 @property BOOL changeColorWhenTouched;
 
@@ -128,14 +129,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property UIColor *valueColor;
 @property BOOL enableMultiLineValue;
 
-@property (nonatomic, assign) UIEdgeInsets keyEdgeInsets;
+@property(nonatomic, assign) UIEdgeInsets keyEdgeInsets;
 
 @end
 
 @interface TUICommonTextCell : TUICommonTableViewCell
 @property UILabel *keyLabel;
 @property UILabel *valueLabel;
-@property (readonly) TUICommonTextCellData *textData;
+@property(readonly) TUICommonTextCellData *textData;
 
 - (void)fillWithData:(TUICommonTextCellData *)data;
 
@@ -150,22 +151,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property NSString *title;
 @property NSString *desc;
-@property (getter=isOn) BOOL on;
+@property(getter=isOn) BOOL on;
 @property CGFloat margin;
 @property SEL cswitchSelector;
 
-@property (nonatomic,assign) BOOL displaySeparatorLine;
+@property(nonatomic, assign) BOOL displaySeparatorLine;
 
-@property (nonatomic,assign) BOOL disableChecked;
+@property(nonatomic, assign) BOOL disableChecked;
 
 @end
 
 @interface TUICommonSwitchCell : TUICommonTableViewCell
-@property UILabel *titleLabel; // main title label
-@property UILabel *descLabel; // detail title label below the main title label, used for explaining details
+@property UILabel *titleLabel;  // main title label
+@property UILabel *descLabel;   // detail title label below the main title label, used for explaining details
 @property UISwitch *switcher;
 
-@property (readonly) TUICommonSwitchCellData *switchData;
+@property(readonly) TUICommonSwitchCellData *switchData;
 
 - (void)fillWithData:(TUICommonSwitchCellData *)data;
 
@@ -184,15 +185,15 @@ typedef enum : NSUInteger {
 } TUIButtonStyle;
 
 @interface TUIButtonCellData : TUICommonCellData
-@property (nonatomic, strong) NSString *title;
+@property(nonatomic, strong) NSString *title;
 @property SEL cbuttonSelector;
 @property TUIButtonStyle style;
-@property (nonatomic, strong) UIColor *textColor;
-@property (nonatomic, assign) BOOL hideSeparatorLine;
+@property(nonatomic, strong) UIColor *textColor;
+@property(nonatomic, assign) BOOL hideSeparatorLine;
 @end
 
 @interface TUIButtonCell : TUICommonTableViewCell
-@property (nonatomic, strong) UIButton *button;
+@property(nonatomic, strong) UIButton *button;
 @property TUIButtonCellData *buttonData;
 
 - (void)fillWithData:(TUIButtonCellData *)data;
@@ -207,13 +208,13 @@ typedef enum : NSUInteger {
 
 @interface TUIGroupPendencyCellData : TUICommonCellData
 
-@property(nonatomic,strong) NSString* groupId;
+@property(nonatomic, strong) NSString *groupId;
 
-@property(nonatomic,strong) NSString* fromUser;
+@property(nonatomic, strong) NSString *fromUser;
 
-@property(nonatomic,strong) NSString* toUser;
+@property(nonatomic, strong) NSString *toUser;
 
-@property (readonly) V2TIMGroupApplication *pendencyItem;
+@property(readonly) V2TIMGroupApplication *pendencyItem;
 
 @property NSURL *avatarUrl;
 
@@ -244,9 +245,7 @@ typedef enum : NSUInteger {
 @property BOOL isRejectd;
 @property SEL cbuttonSelector;
 
-
 - (instancetype)initWithPendency:(V2TIMGroupApplication *)args;
-
 
 - (void)accept;
 - (void)reject;
@@ -269,7 +268,6 @@ typedef enum : NSUInteger {
 
 @end
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                             TUIFaceCell & data
@@ -290,19 +288,19 @@ typedef enum : NSUInteger {
  * 表情名称
  * The name of emoticon
  */
-@property (nonatomic, strong) NSString *name;
+@property(nonatomic, strong) NSString *name;
 
 /**
  * 表情的本地化名称（国际化属性，如果为空或者length为0，默认显示name）
  * The localized name of the emoticon (the attribute used for internationalization, if it is empty or the length is 0, the name is displayed by default)
  */
-@property (nonatomic, copy) NSString *localizableName;
+@property(nonatomic, copy) NSString *localizableName;
 
 /**
  * 表情在本地缓存的存储路径。
  * The storage path of the emoticon cached locally.
  */
-@property (nonatomic, strong) NSString *path;
+@property(nonatomic, strong) NSString *path;
 @end
 
 /**
@@ -321,8 +319,7 @@ typedef enum : NSUInteger {
  *  表情图像
  *  The image view for displaying emoticon
  */
-@property (nonatomic, strong) UIImageView *face;
-
+@property(nonatomic, strong) UIImageView *face;
 
 - (void)setData:(TUIFaceCellData *)data;
 @end
@@ -343,7 +340,8 @@ typedef enum : NSUInteger {
  * 【Module name】 TUIFaceGroup
  * 【Function description】 It is used to realize the grouping of emoticon, which is convenient for users to browse and select under different emoticon themes.
  *  This class stores the index of each emoticon group, so that FaceView can locate each emoticon group.
- *  At the same time, this class stores the path of all emoticon pictures in an emoticon group, and provides data such as the number of lines, the number of emoticons in each line, etc., to locate specific emoticons
+ *  At the same time, this class stores the path of all emoticon pictures in an emoticon group, and provides data such as the number of lines, the number of
+ * emoticons in each line, etc., to locate specific emoticons
  */
 @interface TUIFaceGroup : NSObject
 
@@ -351,36 +349,37 @@ typedef enum : NSUInteger {
  *  表情组索引号，从0开始。
  *  Index of emoticons group, begining with zero.
  */
-@property (nonatomic, assign) int groupIndex;
+@property(nonatomic, assign) int groupIndex;
 
 /**
  *  表情组路径
  *  The resource path of the entire expression group
  */
-@property (nonatomic, strong) NSString *groupPath;
+@property(nonatomic, strong) NSString *groupPath;
 
 /**
  *  表情组总行数
  *  The number of lines of emoticons in the emoticon group
  */
-@property (nonatomic, assign) int rowCount;
+@property(nonatomic, assign) int rowCount;
 
 /**
  *  每行所包含的表情数
  *  The number of emoticons contained in each line
  */
-@property (nonatomic, assign) int itemCountPerRow;
+@property(nonatomic, assign) int itemCountPerRow;
 
-@property (nonatomic, strong) NSMutableArray *faces;
+@property(nonatomic, strong) NSMutableArray *faces;
 
 /**
  *  删除标志位
  *  当该位为 YES 时，FaceView 会在表情视图右下角中显示一个“删除”图标，使您无需呼出键盘即可进行表情的删除操作。
  *
  *  The flag of indicating whether to display the delete button
- *  When set to YES, FaceView will display a "delete" icon in the lower right corner of the emoticon view. Clicking the icon can delete the entered emoticon directly without evoking the keyboard.
+ *  When set to YES, FaceView will display a "delete" icon in the lower right corner of the emoticon view. Clicking the icon can delete the entered emoticon
+ * directly without evoking the keyboard.
  */
-@property (nonatomic, assign) BOOL needBackDelete;
+@property(nonatomic, assign) BOOL needBackDelete;
 
 /**
  *  表情menu路径
@@ -388,16 +387,16 @@ typedef enum : NSUInteger {
  *
  *  The path to the cover image of the emoticon group
  */
-@property (nonatomic, strong) NSString *menuPath;
+@property(nonatomic, strong) NSString *menuPath;
 @end
 
 @interface TUIEmojiTextAttachment : NSTextAttachment
 
-@property(nonatomic,strong) TUIFaceCellData *faceCellData;
+@property(nonatomic, strong) TUIFaceCellData *faceCellData;
 
-@property(nonatomic,copy) NSString *emojiTag;
+@property(nonatomic, copy) NSString *emojiTag;
 
-@property(nonatomic,assign) CGSize emojiSize;  //For emoji image size
+@property(nonatomic, assign) CGSize emojiSize;  // For emoji image size
 
 @end
 
@@ -412,7 +411,7 @@ typedef enum : NSUInteger {
  * 未读数展示 label
  * The label of displaying unread message count
  */
-@property (nonatomic, strong) UILabel *unReadLabel;
+@property(nonatomic, strong) UILabel *unReadLabel;
 
 /**
  * 设置未读数
@@ -442,12 +441,12 @@ extern NSString *kTopConversationListChangedNotification;
  * 置顶会话
  * Pin the conversation
  */
-- (void)addTopConversation:(NSString *)conv callback:(void(^ __nullable)(BOOL success, NSString * __nullable errorMessage))callback;
+- (void)addTopConversation:(NSString *)conv callback:(void (^__nullable)(BOOL success, NSString *__nullable errorMessage))callback;
 /**
  * 删除置顶的会话
  * Remove pinned conversations
  */
-- (void)removeTopConversation:(NSString *)conv callback:(void(^ __nullable)(BOOL success, NSString * __nullable errorMessage))callback;
+- (void)removeTopConversation:(NSString *)conv callback:(void (^__nullable)(BOOL success, NSString *__nullable errorMessage))callback;
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -457,18 +456,15 @@ extern NSString *kTopConversationListChangedNotification;
 /////////////////////////////////////////////////////////////////////////////////
 @interface TUICommonContactSelectCellData : TUICommonCellData
 
+@property(nonatomic, strong) NSString *identifier;
+@property(nonatomic, strong) NSString *title;
+@property(nonatomic, strong) NSURL *avatarUrl;
+@property(nonatomic, strong) UIImage *avatarImage;
 
-@property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSURL *avatarUrl;
-@property (nonatomic, strong) UIImage *avatarImage;
-
-
-@property (nonatomic,getter=isSelected) BOOL selected;
-@property (nonatomic,getter=isEnabled) BOOL enabled;
+@property(nonatomic, getter=isSelected) BOOL selected;
+@property(nonatomic, getter=isEnabled) BOOL enabled;
 
 @end
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -481,19 +477,18 @@ extern NSString *kTopConversationListChangedNotification;
 
 @end
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                          TUIContactListPickerOnCancel
 //
 /////////////////////////////////////////////////////////////////////////////////
-typedef void(^TUIContactListPickerOnCancel)(TUICommonContactSelectCellData *data);
+typedef void (^TUIContactListPickerOnCancel)(TUICommonContactSelectCellData *data);
 
 @interface TUIContactListPicker : UIControl
 
-@property (nonatomic, strong, readonly) UIButton *accessoryBtn;
-@property (nonatomic, strong) NSArray<TUICommonContactSelectCellData *> *selectArray;
-@property (nonatomic, copy) TUIContactListPickerOnCancel onCancel;
+@property(nonatomic, strong, readonly) UIButton *accessoryBtn;
+@property(nonatomic, strong) NSArray<TUICommonContactSelectCellData *> *selectArray;
+@property(nonatomic, copy) TUIContactListPickerOnCancel onCancel;
 
 @end
 
@@ -508,31 +503,31 @@ typedef void(^TUIContactListPickerOnCancel)(TUICommonContactSelectCellData *data
 @end
 
 @interface TUIProfileCardCellData : TUICommonCellData
-@property (nonatomic, strong) UIImage *avatarImage;
-@property (nonatomic, strong) NSURL *avatarUrl;
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSString *signature;
-@property (nonatomic, strong) UIImage *genderIconImage;
-@property (nonatomic, strong) NSString *genderString;
+@property(nonatomic, strong) UIImage *avatarImage;
+@property(nonatomic, strong) NSURL *avatarUrl;
+@property(nonatomic, strong) NSString *name;
+@property(nonatomic, strong) NSString *identifier;
+@property(nonatomic, strong) NSString *signature;
+@property(nonatomic, strong) UIImage *genderIconImage;
+@property(nonatomic, strong) NSString *genderString;
 @property BOOL showAccessory;
 @property BOOL showSignature;
 @end
 
 @interface TUIProfileCardCell : TUICommonTableViewCell
-@property (nonatomic, strong) UIImageView *avatar;
-@property (nonatomic, strong) UILabel *name;
-@property (nonatomic, strong) UILabel *identifier;
-@property (nonatomic, strong) UILabel *signature;
-@property (nonatomic, strong) UIImageView *genderIcon;
-@property (nonatomic, strong) TUIProfileCardCellData *cardData;
-@property (nonatomic, weak)  id<TUIProfileCardDelegate> delegate;
+@property(nonatomic, strong) UIImageView *avatar;
+@property(nonatomic, strong) UILabel *name;
+@property(nonatomic, strong) UILabel *identifier;
+@property(nonatomic, strong) UILabel *signature;
+@property(nonatomic, strong) UIImageView *genderIcon;
+@property(nonatomic, strong) TUIProfileCardCellData *cardData;
+@property(nonatomic, weak) id<TUIProfileCardDelegate> delegate;
 - (void)fillWithData:(TUIProfileCardCellData *)data;
 @end
 
 @interface TUIAvatarViewController : UIViewController
 
-@property (nonatomic, strong) TUIProfileCardCellData *avatarData;
+@property(nonatomic, strong) TUIProfileCardCellData *avatarData;
 
 @end
 
@@ -544,21 +539,21 @@ typedef NS_ENUM(NSUInteger, TUISelectAvatarType) {
 };
 
 @interface TUISelectAvatarCardItem : NSObject
-@property (nonatomic, strong) NSString *posterUrlStr;
-@property (nonatomic, assign) BOOL isSelect;
-@property (nonatomic, copy) NSString *fullUrlStr;
-@property (nonatomic, assign) BOOL isDefaultBackgroundItem;
-@property (nonatomic, assign) BOOL isGroupGridAvatar;
-@property (nonatomic, copy) NSString *createGroupType;
-@property (nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
+@property(nonatomic, strong) NSString *posterUrlStr;
+@property(nonatomic, assign) BOOL isSelect;
+@property(nonatomic, copy) NSString *fullUrlStr;
+@property(nonatomic, assign) BOOL isDefaultBackgroundItem;
+@property(nonatomic, assign) BOOL isGroupGridAvatar;
+@property(nonatomic, copy) NSString *createGroupType;
+@property(nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
 @end
 
 @interface TUISelectAvatarController : UIViewController
-@property (nonatomic, copy) void (^selectCallBack)(NSString *urlStr);
-@property (nonatomic, assign) TUISelectAvatarType selectAvatarType;
-@property (nonatomic, copy) NSString *profilFaceURL;
-@property (nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
-@property (nonatomic, copy) NSString *createGroupType;
+@property(nonatomic, copy) void (^selectCallBack)(NSString *urlStr);
+@property(nonatomic, assign) TUISelectAvatarType selectAvatarType;
+@property(nonatomic, copy) NSString *profilFaceURL;
+@property(nonatomic, strong) UIImage *cacheGroupGridAvatarImage;
+@property(nonatomic, copy) NSString *createGroupType;
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -566,24 +561,45 @@ typedef NS_ENUM(NSUInteger, TUISelectAvatarType) {
 //                             TUICommonAvatarCell & Data
 //
 /////////////////////////////////////////////////////////////////////////////////
-@interface TUICommonAvatarCellData : TUICommonCellData;
-@property (nonatomic, strong) NSString *key;
-@property (nonatomic, strong) NSString *value;
+@interface TUICommonAvatarCellData : TUICommonCellData
+;
+@property(nonatomic, strong) NSString *key;
+@property(nonatomic, strong) NSString *value;
 @property BOOL showAccessory;
-@property (nonatomic, strong) UIImage *avatarImage;
-@property (nonatomic, strong) NSURL *avatarUrl;
+@property(nonatomic, strong) UIImage *avatarImage;
+@property(nonatomic, strong) NSURL *avatarUrl;
 
 @end
 
-@interface TUICommonAvatarCell :TUICommonTableViewCell
+@interface TUICommonAvatarCell : TUICommonTableViewCell
 @property UILabel *keyLabel;
 @property UILabel *valueLabel;
 @property UIImageView *avatar;
-@property (readonly) TUICommonAvatarCellData *avatarData;
+@property(readonly) TUICommonAvatarCellData *avatarData;
 
-
-- (void)fillWithData:(TUICommonAvatarCellData *) avatarData;
+- (void)fillWithData:(TUICommonAvatarCellData *)avatarData;
 
 @end
 
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                             TUIConversationGroupItem
+//
+/////////////////////////////////////////////////////////////////////////////////
+extern NSUInteger kConversationMarkStarType;
+@interface TUIConversationGroupItem : NSObject
+@property(nonatomic, strong) NSString *groupName;
+@property(nonatomic, assign) NSInteger unreadCount;
+@property(nonatomic, assign) NSInteger groupIndex;
+@property(nonatomic, assign) BOOL isShow;
+@property(nonatomic, strong) UIButton *groupBtn;
+@end
+
+
+@interface TUISendMessageAppendParams : NSObject
+@property (nonatomic, assign) BOOL isSendPushInfo;
+@property (nonatomic, assign) BOOL isOnlineUserOnly;
+@property (nonatomic, assign) V2TIMMessagePriority priority;
++ (instancetype)defaultConfig;
+@end
 NS_ASSUME_NONNULL_END

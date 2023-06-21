@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import TUICallEngine
 
 class TimerView: UIView {
     let viewModel = TimerViewModel()
@@ -18,7 +19,7 @@ class TimerView: UIView {
         timerLabel.font = UIFont.boldSystemFont(ofSize: 14.0)
         timerLabel.backgroundColor = UIColor.clear
         timerLabel.textAlignment = .center
-        if viewModel.mediaType.value == .audio {
+        if viewModel.mediaType.value == TUICallMediaType.audio {
             timerLabel.textColor = UIColor.t_colorWithHexString(color: "#242424")
         } else if viewModel.mediaType.value == .video {
             timerLabel.textColor = UIColor.t_colorWithHexString(color: "#F2F2F2")

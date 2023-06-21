@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by harvy on 2021/11/25.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIFileReplyQuoteView.h"
@@ -10,8 +11,7 @@
 
 @implementation TUIFileReplyQuoteView
 
-- (void)fillWithData:(TUIReplyQuoteViewData *)data
-{
+- (void)fillWithData:(TUIReplyQuoteViewData *)data {
     [super fillWithData:data];
     if (![data isKindOfClass:TUIFileReplyQuoteViewData.class]) {
         return;

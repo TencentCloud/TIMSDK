@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  - 本文件声明了 TUIBubbleMessageCellData 类。
@@ -14,7 +17,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** 
+/**
  * 【模块名称】TUIBubbleMessageCellData
  * 【功能说明】气泡消息数据源。
  *  - 气泡消息，即最常见的包含文本与表情字符的消息，大多数情况下将会是您最常见的消息类型。
@@ -25,7 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
  * 【Module name】TUIBubbleMessageCellData
  * 【Function description】Bubble message data source.
  *  - Bubble messages, the most common type of messages that contain text and emoji characters, will be your most common type of message in most cases.
- *  - The Bubble Message data source (hereinafter referred to as the data source) is responsible for storing various information required to render the Bubble Message UI.
+ *  - The Bubble Message data source (hereinafter referred to as the data source) is responsible for storing various information required to render the Bubble
+ * Message UI.
  *  - The data source implements a series of business logic that can provide the required information to the Bubble Message UI.
  *  - Both TUIFileMessageCellData and TUIVoiceMessageCellData inherit from this class and implement the UI of bubble messages.
  */
@@ -41,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * - If the value is abnormal or set arbitrarily, UI exceptions such as message dislocation will occur.
  *
  */
-@property (nonatomic, assign) CGFloat bubbleTop;
+@property(nonatomic, assign) CGFloat bubbleTop;
 
 /**
  *  气泡图标（正常）
@@ -51,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  - The bubble icon changes depending on whether the message is sent or received, and the relevant business logic has been implemented in the data source.
  *  - You can also personalize it according to your needs.
  */
-@property (nonatomic, strong) UIImage *bubble;
+@property(nonatomic, strong) UIImage *bubble;
 
 /**
  *  气泡图标（高亮）
@@ -61,15 +65,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  - The bubble icon changes depending on whether the message is sent or received, and the relevant business logic has been implemented in the data source.
  *  - You can also personalize it according to your needs.
  */
-@property (nonatomic, strong) UIImage *highlightedBubble;
+@property(nonatomic, strong) UIImage *highlightedBubble;
 
 /**
  *  气泡图标（动画闪烁）
  *  Bubble icon (animated blinking state)
  */
-@property (nonatomic, strong) UIImage *animateHighlightBubble_alpha50;
-@property (nonatomic, strong) UIImage *animateHighlightBubble_alpha20;
-
+@property(nonatomic, strong) UIImage *animateHighlightBubble_alpha50;
+@property(nonatomic, strong) UIImage *animateHighlightBubble_alpha20;
 
 /**
  *  发送气泡图标（正常）
@@ -78,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Send bubble icon (normal state)
  *  - The send icon of the bubble, assigned to the @bubble when the bubble message was sent.
  */
-@property (nonatomic, class) UIImage *outgoingBubble;
+@property(nonatomic, class) UIImage *outgoingBubble;
 
 /**
  *  发送气泡图标（高亮）
@@ -87,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Send bubble icon (highlighted state)
  *  - The send icon (highlighted state) of the bubble, assigned to @highlightedBubble when the bubble message was sent.
  */
-@property (nonatomic, class) UIImage *outgoingHighlightedBubble;
+@property(nonatomic, class) UIImage *outgoingHighlightedBubble;
 
 /**
  *  接收气泡图标（正常）
@@ -96,7 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Receive bubble icon (normal state)
  *  - The receive icon of the bubble, assigned to the @bubble when the bubble message was received.
  */
-@property (nonatomic, class) UIImage *incommingBubble;
+@property(nonatomic, class) UIImage *incommingBubble;
 
 /**
  *  接收气泡图标（高亮）
@@ -105,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Receive bubble icon (highlighted state)
  *  - The receive icon of the bubble, assigned to @highlightedBubble when the bubble message was received.
  */
-@property (nonatomic, class) UIImage *incommingHighlightedBubble;
+@property(nonatomic, class) UIImage *incommingHighlightedBubble;
 
 /**
  *  发送气泡顶部的间距
@@ -114,7 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Spacing at the top of the send bubble
  *  - It is used to locate the top of the sent bubble, and is assigned to @bubbleTop when the bubble message was sent.
  */
-@property (nonatomic, class) CGFloat outgoingBubbleTop;
+@property(nonatomic, class) CGFloat outgoingBubbleTop;
 
 /**
  *  接收气泡顶部的间距
@@ -123,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Spacing at the top of the receiving bubble
  *  - It is used to locate the top of the receive bubble, and is assigned to @bubbleTop when the bubble message was received.
  */
-@property (nonatomic, class) CGFloat incommingBubbleTop;
+@property(nonatomic, class) CGFloat incommingBubbleTop;
 
 @end
 

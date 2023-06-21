@@ -1,43 +1,45 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import "TUICameraViewController.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import <CoreMedia/CMMetadata.h>
 #import <Photos/Photos.h>
 
+#import "TUICameraView.h"
 #import "TUICaptureImagePreviewController.h"
 #import "TUICaptureVideoPreviewViewController.h"
-#import "TUICameraView.h"
 
-#import "TUICameraManager.h"
-#import "TUIMotionManager.h"
-#import "TUIMovieManager.h"
-#import "TUICaptureTimer.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import "TUICameraManager.h"
+#import "TUICaptureTimer.h"
+#import "TUIMotionManager.h"
+#import "TUIMovieManager.h"
 
-@interface TUICameraViewController ()<AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, TUICameraViewDelegate>
-{
-    AVCaptureSession          *_session;
-    AVCaptureDeviceInput      *_deviceInput;
+@interface TUICameraViewController () <AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, TUICameraViewDelegate> {
+    AVCaptureSession *_session;
+    AVCaptureDeviceInput *_deviceInput;
 
-    AVCaptureConnection       *_videoConnection;
-    AVCaptureConnection       *_audioConnection;
-    AVCaptureVideoDataOutput  *_videoOutput;
+    AVCaptureConnection *_videoConnection;
+    AVCaptureConnection *_audioConnection;
+    AVCaptureVideoDataOutput *_videoOutput;
     AVCaptureStillImageOutput *_imageOutput;
 
-    BOOL                       _recording;
+    BOOL _recording;
 }
 
-@property(nonatomic, strong) TUICameraView   *cameraView;
-@property(nonatomic, strong) TUIMovieManager  *movieManager;
+@property(nonatomic, strong) TUICameraView *cameraView;
+@property(nonatomic, strong) TUIMovieManager *movieManager;
 @property(nonatomic, strong) TUICameraManager *cameraManager;
 @property(nonatomic, strong) TUIMotionManager *motionManager;
 @property(nonatomic, strong) AVCaptureDevice *activeCamera;
 @property(nonatomic, strong) AVCaptureDevice *inactiveCamera;
 
-@property (nonatomic) BOOL isFirstShow;
-@property (nonatomic) BOOL lastPageBarHidden;
+@property(nonatomic) BOOL isFirstShow;
+@property(nonatomic) BOOL lastPageBarHidden;
 @end
 
 @implementation TUICameraViewController
@@ -47,7 +49,7 @@
     if (self) {
         _motionManager = [[TUIMotionManager alloc] init];
         _cameraManager = [[TUICameraManager alloc] init];
-        
+
         _type = TUICameraMediaTypePhoto;
         _aspectRatio = TUICameraViewAspectRatio16x9;
         _videoMaximumDuration = 15.0;
@@ -64,26 +66,25 @@
     self.cameraView.aspectRatio = self.aspectRatio;
     self.cameraView.delegate = self;
     [self.view addSubview:self.cameraView];
-    
+
     NSError *error;
     [self setupSession:&error];
     if (!error) {
         [self.cameraView.previewView setCaptureSessionsion:_session];
         [self startCaptureSession];
     } else {
-//        NSAssert1(NO, @"Camera Initialize Failed : %@", error.localizedDescription);
-//        [self showErrorStr:error.localizedDescription];
+        //        NSAssert1(NO, @"Camera Initialize Failed : %@", error.localizedDescription);
+        //        [self showErrorStr:error.localizedDescription];
     }
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self stopCaptureSession];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     if (self.isFirstShow) {
         self.isFirstShow = NO;
         self.lastPageBarHidden = self.navigationController.navigationBarHidden;
@@ -127,13 +128,12 @@
 
 #pragma mark - - Configuration
 - (void)setupSession:(NSError **)error {
-    _session = [[AVCaptureSession alloc]init];
+    _session = [[AVCaptureSession alloc] init];
     _session.sessionPreset = AVCaptureSessionPresetHigh;
-    
+
     [self setupSessionInputs:error];
     [self setupSessionOutputs:error];
 }
-
 
 - (void)setupSessionInputs:(NSError **)error {
     AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -158,9 +158,9 @@
 
     AVCaptureVideoDataOutput *videoOut = [[AVCaptureVideoDataOutput alloc] init];
     [videoOut setAlwaysDiscardsLateVideoFrames:YES];
-    [videoOut setVideoSettings:@{(id)kCVPixelBufferPixelFormatTypeKey: [NSNumber numberWithInt:kCVPixelFormatType_32BGRA]}];
+    [videoOut setVideoSettings:@{(id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_32BGRA]}];
     [videoOut setSampleBufferDelegate:self queue:captureQueue];
-    if ([_session canAddOutput:videoOut]){
+    if ([_session canAddOutput:videoOut]) {
         [_session addOutput:videoOut];
     }
     _videoOutput = videoOut;
@@ -169,14 +169,14 @@
     if (_type == TUICameraMediaTypeVideo) {
         AVCaptureAudioDataOutput *audioOut = [[AVCaptureAudioDataOutput alloc] init];
         [audioOut setSampleBufferDelegate:self queue:captureQueue];
-        if ([_session canAddOutput:audioOut]){
+        if ([_session canAddOutput:audioOut]) {
             [_session addOutput:audioOut];
         }
         _audioConnection = [audioOut connectionWithMediaType:AVMediaTypeAudio];
     }
-    
-    AVCaptureStillImageOutput *imageOutput = [[AVCaptureStillImageOutput alloc] init];            
-    imageOutput.outputSettings = @{AVVideoCodecKey:AVVideoCodecJPEG};
+
+    AVCaptureStillImageOutput *imageOutput = [[AVCaptureStillImageOutput alloc] init];
+    imageOutput.outputSettings = @{AVVideoCodecKey : AVVideoCodecJPEG};
     if ([_session canAddOutput:imageOutput]) {
         [_session addOutput:imageOutput];
     }
@@ -197,35 +197,35 @@
 }
 
 #pragma mark - - Camera Operation
--(void)zoomAction:(TUICameraView *)cameraView factor:(CGFloat)factor {
+- (void)zoomAction:(TUICameraView *)cameraView factor:(CGFloat)factor {
     NSError *error = [_cameraManager zoom:[self activeCamera] factor:factor];
     if (error) NSLog(@"%@", error);
 }
 
--(void)focusAction:(TUICameraView *)cameraView point:(CGPoint)point handle:(void (^)(NSError *))handle {
+- (void)focusAction:(TUICameraView *)cameraView point:(CGPoint)point handle:(void (^)(NSError *))handle {
     NSError *error = [_cameraManager focus:[self activeCamera] point:point];
     handle(error);
     NSLog(@"%f", [self activeCamera].activeFormat.videoMaxZoomFactor);
 }
 
--(void)exposAction:(TUICameraView *)cameraView point:(CGPoint)point handle:(void (^)(NSError *))handle {
+- (void)exposAction:(TUICameraView *)cameraView point:(CGPoint)point handle:(void (^)(NSError *))handle {
     NSError *error = [_cameraManager expose:[self activeCamera] point:point];
     handle(error);
 }
 
--(void)autoFocusAndExposureAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
+- (void)autoFocusAndExposureAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
     NSError *error = [_cameraManager resetFocusAndExposure:[self activeCamera]];
     handle(error);
 }
 
--(void)flashLightAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
+- (void)flashLightAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
     BOOL on = [_cameraManager flashMode:[self activeCamera]] == AVCaptureFlashModeOn;
     AVCaptureFlashMode mode = on ? AVCaptureFlashModeOff : AVCaptureFlashModeOn;
-    NSError *error = [_cameraManager changeFlash:[self activeCamera] mode: mode];
+    NSError *error = [_cameraManager changeFlash:[self activeCamera] mode:mode];
     handle(error);
 }
 
--(void)torchLightAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
+- (void)torchLightAction:(TUICameraView *)cameraView handle:(void (^)(NSError *))handle {
     BOOL on = [_cameraManager torchMode:[self activeCamera]] == AVCaptureTorchModeOn;
     AVCaptureTorchMode mode = on ? AVCaptureTorchModeOff : AVCaptureTorchModeOn;
     NSError *error = [_cameraManager changeTorch:[self activeCamera] model:mode];
@@ -260,106 +260,102 @@
     if (connection.isVideoOrientationSupported) {
         connection.videoOrientation = [self currentVideoOrientation];
     }
-    [_imageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef _Nullable imageDataSampleBuffer, NSError * _Nullable error) {
-        if (error) {
-            [self showErrorStr:error.localizedDescription];
-            return;
-        }
-        NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-        UIImage *image = [[UIImage alloc]initWithData:imageData];
-        TUICaptureImagePreviewController *vc = [[TUICaptureImagePreviewController alloc]initWithImage:image];
-        [self.navigationController pushViewController:vc animated:YES];
-        __weak __typeof(self) weakSelf = self;
-        vc.commitBlock = ^{
-            __strong __typeof(weakSelf) strongSelf = weakSelf;
-            UIGraphicsBeginImageContext(CGSizeMake(image.size.width, image.size.height));
-            [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
-            UIImage *convertToUpImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            NSData *data = UIImageJPEGRepresentation(convertToUpImage, 0.75);
-            [strongSelf.delegate cameraViewController:strongSelf didFinishPickingMediaWithImageData:data];
-            [strongSelf popViewControllerAnimated:YES];
-        };
-        vc.cancelBlock = ^{
-            __strong __typeof(weakSelf) strongSelf = weakSelf;
-            [strongSelf.navigationController popViewControllerAnimated:YES];
-        };
-    }];
+    [_imageOutput captureStillImageAsynchronouslyFromConnection:connection
+                                              completionHandler:^(CMSampleBufferRef _Nullable imageDataSampleBuffer, NSError *_Nullable error) {
+                                                if (error) {
+                                                    [self showErrorStr:error.localizedDescription];
+                                                    return;
+                                                }
+                                                NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+                                                UIImage *image = [[UIImage alloc] initWithData:imageData];
+                                                TUICaptureImagePreviewController *vc = [[TUICaptureImagePreviewController alloc] initWithImage:image];
+                                                [self.navigationController pushViewController:vc animated:YES];
+                                                __weak __typeof(self) weakSelf = self;
+                                                vc.commitBlock = ^{
+                                                  __strong __typeof(weakSelf) strongSelf = weakSelf;
+                                                  UIGraphicsBeginImageContext(CGSizeMake(image.size.width, image.size.height));
+                                                  [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
+                                                  UIImage *convertToUpImage = UIGraphicsGetImageFromCurrentImageContext();
+                                                  UIGraphicsEndImageContext();
+                                                  NSData *data = UIImageJPEGRepresentation(convertToUpImage, 0.75);
+                                                  [strongSelf.delegate cameraViewController:strongSelf didFinishPickingMediaWithImageData:data];
+                                                  [strongSelf popViewControllerAnimated:YES];
+                                                };
+                                                vc.cancelBlock = ^{
+                                                  __strong __typeof(weakSelf) strongSelf = weakSelf;
+                                                  [strongSelf.navigationController popViewControllerAnimated:YES];
+                                                };
+                                              }];
 }
 
 - (void)cancelAction:(TUICameraView *)cameraView {
     [self.delegate cameraViewControllerDidCancel:self];
-    
+
     [self popViewControllerAnimated:YES];
 }
 
 - (void)pictureLibAction:(TUICameraView *)cameraView {
-    
-    @weakify(self)
-    [self.delegate cameraViewControllerDidPictureLib:self finishCallback:^{
-        @strongify(self);
-        [self popViewControllerAnimated:NO];
-    }];
-
+    @weakify(self);
+    [self.delegate cameraViewControllerDidPictureLib:self
+                                      finishCallback:^{
+                                        @strongify(self);
+                                        [self popViewControllerAnimated:NO];
+                                      }];
 }
 
 #pragma mark - - Record
--(void)startRecordVideoAction:(TUICameraView *)cameraView {
-   
+- (void)startRecordVideoAction:(TUICameraView *)cameraView {
     /**
      * 每次重新创建，避免之前的信息未释放导致的 Crash
      * Recreate each time to avoid Crash caused by unreleased previous information
      */
-    _movieManager  = [[TUIMovieManager alloc]  init];
+    _movieManager = [[TUIMovieManager alloc] init];
     _recording = YES;
     _movieManager.currentDevice = [self activeCamera];
     _movieManager.currentOrientation = [self currentVideoOrientation];
-    @weakify(self)
-    [_movieManager start:^(NSError * _Nonnull error) {
-        @strongify(self)
-        @weakify(self)
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self)
-            if (error) [self showErrorStr:error.localizedDescription];
-        });
+    @weakify(self);
+    [_movieManager start:^(NSError *_Nonnull error) {
+      @strongify(self);
+      @weakify(self);
+      dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self);
+        if (error) [self showErrorStr:error.localizedDescription];
+      });
     }];
 }
 
--(void)stopRecordVideoAction:(TUICameraView *)cameraView RecordDuration:(CGFloat)duration {
-    
+- (void)stopRecordVideoAction:(TUICameraView *)cameraView RecordDuration:(CGFloat)duration {
     _recording = NO;
-    @weakify(self)
-    [_movieManager stop:^(NSURL * _Nonnull url, NSError * _Nonnull error) {
-        @strongify(self)
-        @weakify(self)
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self)
-            if (duration < self.videoMinimumDuration) {
-                [self showErrorStr:TIMCommonLocalizableString(TUIKitMoreVideoCaptureDurationTip)];
-            }
-            else if (error) {
-                [self showErrorStr:error.localizedDescription];
-            }
-            else {
-                TUICaptureVideoPreviewViewController *videoPreviewController = [[TUICaptureVideoPreviewViewController alloc] initWithVideoURL:url];
-                [self.navigationController pushViewController:videoPreviewController animated:YES];
-                @weakify(self)
-                videoPreviewController.commitBlock = ^{
-                    @strongify(self)
-                    [self.delegate cameraViewController:self didFinishPickingMediaWithVideoURL:url];
-                    [self popViewControllerAnimated:YES];
-                };
-                videoPreviewController.cancelBlock = ^{
-                    @strongify(self)
-                    [self.navigationController popViewControllerAnimated:YES];
-                };
-            }
-        });
+    @weakify(self);
+    [_movieManager stop:^(NSURL *_Nonnull url, NSError *_Nonnull error) {
+      @strongify(self);
+      @weakify(self);
+      dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self);
+        if (duration < self.videoMinimumDuration) {
+            [self showErrorStr:TIMCommonLocalizableString(TUIKitMoreVideoCaptureDurationTip)];
+        } else if (error) {
+            [self showErrorStr:error.localizedDescription];
+        } else {
+            TUICaptureVideoPreviewViewController *videoPreviewController = [[TUICaptureVideoPreviewViewController alloc] initWithVideoURL:url];
+            [self.navigationController pushViewController:videoPreviewController animated:YES];
+            @weakify(self);
+            videoPreviewController.commitBlock = ^{
+              @strongify(self);
+              [self.delegate cameraViewController:self didFinishPickingMediaWithVideoURL:url];
+              [self popViewControllerAnimated:YES];
+            };
+            videoPreviewController.cancelBlock = ^{
+              @strongify(self);
+              [self.navigationController popViewControllerAnimated:YES];
+            };
+        }
+      });
     }];
 }
 
 #pragma mark - - AVCaptureVideoDataOutputSampleBufferDelegate
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     if (_recording) {
         [_movieManager writeData:connection video:_videoConnection audio:_audioConnection buffer:sampleBuffer];
     }
@@ -368,7 +364,7 @@
 #pragma mark - - Others
 - (AVCaptureVideoOrientation)currentVideoOrientation {
     AVCaptureVideoOrientation orientation;
-    switch (self.motionManager.deviceOrientation) { 
+    switch (self.motionManager.deviceOrientation) {
         case UIDeviceOrientationPortrait:
             orientation = AVCaptureVideoOrientationPortrait;
             break;
@@ -394,17 +390,15 @@
 }
 
 - (void)popViewControllerAnimated:(BOOL)animated {
-    
-    
     NSUInteger index = [self.navigationController.viewControllers indexOfObject:self];
-    index --;
+    index--;
     UIViewController *lastVC = nil;
     if (index > 0 && index < self.navigationController.viewControllers.count) {
         lastVC = self.navigationController.viewControllers[index];
     }
-    
+
     self.navigationController.navigationBarHidden = self.lastPageBarHidden;
-    
+
     if (lastVC) {
         [self.navigationController popToViewController:lastVC animated:animated];
     } else {

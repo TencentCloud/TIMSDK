@@ -3,6 +3,7 @@
 //  TIMCommon
 //
 //  Created by cologne on 2023/3/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TIMCommonModel.h"
@@ -13,48 +14,49 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-@interface TUIPopView ()<UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
-@property (nonatomic, strong) NSMutableArray *data;
+@interface TUIPopView () <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
+@property(nonatomic, strong) NSMutableArray *data;
 @end
 
 @implementation TUIPopView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setData:(NSMutableArray *)data
-{
+- (void)setData:(NSMutableArray *)data {
     _data = data;
     [_tableView reloadData];
 }
 
-- (void)showInWindow:(UIWindow *)window
-{
+- (void)showInWindow:(UIWindow *)window {
     [window addSubview:self];
     __weak typeof(self) ws = self;
     self.alpha = 0;
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        ws.alpha = 1;
-    } completion:nil];
+    [UIView animateWithDuration:0.25
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                       ws.alpha = 1;
+                     }
+                     completion:nil];
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
     tap.delegate = self;
     [self addGestureRecognizer:tap];
-    UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
     [self addGestureRecognizer:pan];
-    
+
     self.backgroundColor = [UIColor clearColor];
     CGSize arrowSize = TUIPopView_Arrow_Size;
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y + arrowSize.height, self.frame.size.width, self.frame.size.height - arrowSize.height)];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y + arrowSize.height, self.frame.size.width,
+                                                               self.frame.size.height - arrowSize.height)];
     self.frame = [UIScreen mainScreen].bounds;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -65,33 +67,29 @@
     [self addSubview:_tableView];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _data.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [TUIPopCell getHeight];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TUIPopCell *cell = [tableView dequeueReusableCellWithIdentifier:TUIPopCell_ReuseId];
-    if(!cell){
+    if (!cell) {
         cell = [[TUIPopCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TUIPopCell_ReuseId];
     }
     [cell setData:_data[indexPath.row]];
-    if(indexPath.row == _data.count - 1){
+    if (indexPath.row == _data.count - 1) {
         cell.separatorInset = UIEdgeInsetsMake(0, self.bounds.size.width, 0, 0);
     }
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    if(_delegate && [_delegate respondsToSelector:@selector(popView:didSelectRowAtIndex:)]){
+    if (_delegate && [_delegate respondsToSelector:@selector(popView:didSelectRowAtIndex:)]) {
         [_delegate popView:self didSelectRowAtIndex:indexPath.row];
     }
     [self hide];
@@ -109,30 +107,31 @@
     [arrowPath fill];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    if ([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]){
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if ([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]) {
         return NO;
-     }
+    }
     return YES;
 }
 
-- (void)onTap:(UIGestureRecognizer *)recognizer
-{
+- (void)onTap:(UIGestureRecognizer *)recognizer {
     [self hide];
 }
 
-- (void)hide
-{
+- (void)hide {
     __weak typeof(self) ws = self;
     self.alpha = 1;
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        ws.alpha = 0;
-    } completion:^(BOOL finished) {
-        if([ws superview]){
-            [ws removeFromSuperview];
+    [UIView animateWithDuration:0.25
+        delay:0
+        options:UIViewAnimationOptionCurveEaseOut
+        animations:^{
+          ws.alpha = 0;
         }
-    }];
+        completion:^(BOOL finished) {
+          if ([ws superview]) {
+              [ws removeFromSuperview];
+          }
+        }];
 }
 @end
 
@@ -141,17 +140,15 @@
 
 @implementation TUIPopCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(self){
+    if (self) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = [UIColor clearColor];
 
     _image = [[UIImageView alloc] init];
@@ -167,25 +164,23 @@
     [self setSeparatorInset:UIEdgeInsetsMake(0, TUIPopCell_Padding, 0, 0)];
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     CGFloat headHeight = TUIPopCell_Height - 2 * TUIPopCell_Padding;
     self.image.frame = CGRectMake(TUIPopCell_Padding, TUIPopCell_Padding, headHeight, headHeight);
     self.image.center = CGPointMake(self.image.center.x, self.contentView.center.y);
-    
+
     CGFloat titleWidth = self.frame.size.width - 2 * TUIPopCell_Padding - TUIPopCell_Margin - _image.frame.size.width;
-    self.title.frame = CGRectMake(_image.frame.origin.x + _image.frame.size.width + TUIPopCell_Margin, TUIPopCell_Padding, titleWidth, self.contentView.bounds.size.height);
+    self.title.frame =
+        CGRectMake(_image.frame.origin.x + _image.frame.size.width + TUIPopCell_Margin, TUIPopCell_Padding, titleWidth, self.contentView.bounds.size.height);
     self.title.center = CGPointMake(self.title.center.x, self.contentView.center.y);
 }
 
-- (void)setData:(TUIPopCellData *)data
-{
+- (void)setData:(TUIPopCellData *)data {
     _image.image = data.image;
     _title.text = data.title;
 }
 
-+ (CGFloat)getHeight
-{
++ (CGFloat)getHeight {
     return TUIPopCell_Height;
 }
 @end
@@ -208,23 +203,21 @@
 @end
 
 @interface TUIModifyView () <UITextFieldDelegate, UIGestureRecognizerDelegate>
-@property (nonatomic, assign) BOOL keyboardShowing;
-@property (nonatomic, strong) TUIModifyViewData *data;
-@property (nonatomic, strong) UIButton *closeBtn;
+@property(nonatomic, assign) BOOL keyboardShowing;
+@property(nonatomic, strong) TUIModifyViewData *data;
+@property(nonatomic, strong) UIButton *closeBtn;
 @end
 
 @implementation TUIModifyView
-- (id)init
-{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -242,20 +235,19 @@
     [_container.layer setMasksToBounds:YES];
     [self addSubview:_container];
 
-
     CGFloat buttonHeight = 46;
     CGFloat titleHeight = 63;
 
     _title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _container.frame.size.width, titleHeight)];
-    _title.font =  [UIFont fontWithName:@"PingFangSC-Medium" size:17];
+    _title.font = [UIFont fontWithName:@"PingFangSC-Medium" size:17];
     _title.textColor = TUIGroupDynamicColor(@"group_modify_title_color", @"#000000");
     _title.textAlignment = NSTextAlignmentCenter;
     [_container addSubview:_title];
-    
+
     _hLine = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_title.frame), kContainerWidth, TLine_Heigh)];
     _hLine.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#E4E5E9");
     [_container addSubview:_hLine];
-    
+
     CGFloat contentMargin = 20;
     CGFloat contentWidth = _container.frame.size.width - 2 * contentMargin;
     CGFloat contentY = CGRectGetMaxY(_hLine.frame) + 17;
@@ -282,14 +274,14 @@
     _content.rightViewMode = UITextFieldViewModeAlways;
 
     [_container addSubview:_content];
-    
+
     _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_content.frame) + 17, contentWidth, 20)];
     _descLabel.textColor = TUIGroupDynamicColor(@"group_modify_desc_color", @"#888888");
     _descLabel.font = [UIFont systemFontOfSize:13.0];
     _descLabel.numberOfLines = 0;
     _descLabel.text = @"desc";
     [_container addSubview:_descLabel];
-    
+
     _confirm = [[UIButton alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_descLabel.frame) + 30, contentWidth, buttonHeight)];
     [_confirm setTitle:TIMCommonLocalizableString(Confirm) forState:UIControlStateNormal];
     [_confirm setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -300,47 +292,47 @@
     [self enableConfirmButton:self.data.enableNull];
     [_confirm addTarget:self action:@selector(didConfirm:) forControlEvents:UIControlEventTouchUpInside];
     [_container addSubview:_confirm];
-    
+
     _closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(_container.frame.size.width - 24 - 20, 0, 24, 24)];
     _closeBtn.mm__centerY(_title.mm_centerY);
     [_closeBtn setImage:[UIImage imageNamed:TUIGroupImagePath(@"ic_close_poppings")] forState:UIControlStateNormal];
     [_closeBtn addTarget:self action:@selector(didCancel:) forControlEvents:UIControlEventTouchUpInside];
     [_container addSubview:_closeBtn];
-    
 }
 
-- (void)setData:(TUIModifyViewData *)data
-{
+- (void)setData:(TUIModifyViewData *)data {
     _title.text = data.title;
     _content.text = data.content;
     _descLabel.text = data.desc;
     _data = data;
- 
+
     CGRect rect = [data.desc boundingRectWithSize:CGSizeMake(self.content.bounds.size.width, CGFLOAT_MAX)
                                           options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                       attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13.0]}
+                                       attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:13.0]}
                                           context:nil];
     CGRect frame = _descLabel.frame;
     frame.size.height = rect.size.height;
     _descLabel.frame = frame;
-    
+
     [self textChanged];
 }
 
-- (void)showInWindow:(UIWindow *)window
-{
+- (void)showInWindow:(UIWindow *)window {
     [window addSubview:self];
     [self layoutIfNeeded];
     CGFloat height = CGRectGetMaxY(self.confirm.frame) + 50;
 
     __weak typeof(self) ws = self;
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        ws.container.frame = CGRectMake(0, Screen_Height - height, kContainerWidth, height);
-    } completion:nil];
+    [UIView animateWithDuration:0.25
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                       ws.container.frame = CGRectMake(0, Screen_Height - height, kContainerWidth, height);
+                     }
+                     completion:nil];
 }
 
-- (void)onTap:(UIGestureRecognizer *)recognizer
-{
+- (void)onTap:(UIGestureRecognizer *)recognizer {
     [_content resignFirstResponder];
 
     if (!self.keyboardShowing) {
@@ -348,82 +340,79 @@
     }
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     return [touch.view isEqual:self];
 }
 
-- (void)hide
-{
+- (void)hide {
     __weak typeof(self) ws = self;
     self.alpha = 1;
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        ws.alpha = 0;
-    } completion:^(BOOL finished) {
-        [[NSNotificationCenter defaultCenter] removeObserver:ws];
-        if([ws superview]){
-            [ws removeFromSuperview];
+    [UIView animateWithDuration:0.25
+        delay:0
+        options:UIViewAnimationOptionCurveEaseOut
+        animations:^{
+          ws.alpha = 0;
         }
-    }];
+        completion:^(BOOL finished) {
+          [[NSNotificationCenter defaultCenter] removeObserver:ws];
+          if ([ws superview]) {
+              [ws removeFromSuperview];
+          }
+        }];
 }
 
-- (void)didCancel:(UIButton *)sender
-{
+- (void)didCancel:(UIButton *)sender {
     [self hide];
 }
 
-- (void)didConfirm:(UIButton *)sender
-{
-    if(_delegate && [_delegate respondsToSelector:@selector(modifyView:didModiyContent:)]){
+- (void)didConfirm:(UIButton *)sender {
+    if (_delegate && [_delegate respondsToSelector:@selector(modifyView:didModiyContent:)]) {
         [_delegate modifyView:self didModiyContent:_content.text];
     }
     [self hide];
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    if([text isEqualToString:@"\n"]){
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]) {
         [textView resignFirstResponder];
         return NO;
     }
     return YES;
 }
 
-- (void)textChanged
-{
+- (void)textChanged {
     [self enableConfirmButton:(self.content.text.length || self.data.enableNull)];
 }
 
-- (void)keyboardWillChangeFrame:(NSNotification *)notification
-{
+- (void)keyboardWillChangeFrame:(NSNotification *)notification {
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     self.keyboardShowing = keyboardFrame.size.height > 0;
     [self animateContainer:keyboardFrame.size.height];
 }
 
-- (void)keyboardWillHide:(NSNotification *)notification
-{
+- (void)keyboardWillHide:(NSNotification *)notification {
     [self animateContainer:0];
 }
 
-- (void)keyboardDidHide:(NSNotification *)notice
-{
+- (void)keyboardDidHide:(NSNotification *)notice {
     self.keyboardShowing = NO;
 }
 
-- (void)animateContainer:(CGFloat)keyboardHeight
-{
+- (void)animateContainer:(CGFloat)keyboardHeight {
     CGFloat height = CGRectGetMaxY(self.confirm.frame) + 50;
     CGRect frame = _container.frame;
-    frame.origin.y = Screen_Height - height - keyboardHeight; //(self.frame.size.height - keyboardHeight - frame.size.height) * 0.5;
+    frame.origin.y = Screen_Height - height - keyboardHeight;  //(self.frame.size.height - keyboardHeight - frame.size.height) * 0.5;
     __weak typeof(self) ws = self;
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        ws.container.frame = frame;
-    } completion:nil];
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                       ws.container.frame = frame;
+                     }
+                     completion:nil];
 }
 
-- (void)enableConfirmButton:(BOOL)enable
-{
+- (void)enableConfirmButton:(BOOL)enable {
     if (enable) {
         _confirm.backgroundColor = TUIGroupDynamicColor(@"group_modify_confirm_enable_bg_color", @"147AFF");
         _confirm.enabled = YES;
@@ -441,17 +430,15 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUINaviBarIndicatorView
-- (id)init
-{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     _indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     _indicator.center = CGPointMake(0, NavBar_Height * 0.5);
     _indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
@@ -465,32 +452,28 @@
     _maxLabelLength = 150;
 }
 
-- (void)setTitle:(NSString *)title
-{
+- (void)setTitle:(NSString *)title {
     _label.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     _label.text = title;
     [self updateLayout];
 }
 
-- (void)updateLayout
-{
+- (void)updateLayout {
     [_label sizeToFit];
-    CGSize labelSize = _label.bounds.size; // [_label sizeThatFits:CGSizeMake(Screen_Width, NavBar_Height)];
+    CGSize labelSize = _label.bounds.size;  // [_label sizeThatFits:CGSizeMake(Screen_Width, NavBar_Height)];
     CGFloat labelWidth = MIN(labelSize.width, _maxLabelLength);
     CGFloat labelY = 0;
     CGFloat labelX = _indicator.hidden ? 0 : (_indicator.frame.origin.x + _indicator.frame.size.width + TUINaviBarIndicatorView_Margin);
     _label.frame = CGRectMake(labelX, labelY, labelWidth, NavBar_Height);
     self.frame = CGRectMake(0, 0, labelX + labelWidth + TUINaviBarIndicatorView_Margin, NavBar_Height);
-//    self.center = CGPointMake(Screen_Width * 0.5, NavBar_Height * 0.5);
+    //    self.center = CGPointMake(Screen_Width * 0.5, NavBar_Height * 0.5);
 }
 
-- (void)startAnimating
-{
+- (void)startAnimating {
     [_indicator startAnimating];
 }
 
-- (void)stopAnimating
-{
+- (void)stopAnimating {
     [_indicator stopAnimating];
 }
 @end
@@ -502,8 +485,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUICommonCellData
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     return 60;
 }
 
@@ -513,30 +495,27 @@
 
 @end
 
-@interface TUICommonTableViewCell()<UIGestureRecognizerDelegate>
+@interface TUICommonTableViewCell () <UIGestureRecognizerDelegate>
 @property TUICommonCellData *data;
 @property UITapGestureRecognizer *tapRecognizer;
 @end
 
 @implementation TUICommonTableViewCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
         _tapRecognizer.delegate = self;
         _tapRecognizer.cancelsTouchesInView = NO;
-        
+
         self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     }
     return self;
 }
 
-
-- (void)tapGesture:(UIGestureRecognizer *)gesture
-{
+- (void)tapGesture:(UIGestureRecognizer *)gesture {
     if (self.data.cselector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.data.cselector]) {
@@ -549,8 +528,7 @@
     }
 }
 
-- (void)fillWithData:(TUICommonCellData *)data
-{
+- (void)fillWithData:(TUICommonCellData *)data {
     self.data = data;
     if (data.cselector) {
         [self addGestureRecognizer:self.tapRecognizer];
@@ -558,7 +536,6 @@
         [self removeGestureRecognizer:self.tapRecognizer];
     }
 }
-
 
 @end
 
@@ -578,8 +555,12 @@
     CGFloat height = [super heightOfWidth:width];
     if (self.enableMultiLineValue) {
         NSString *str = self.value;
-        NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:16]};
-        CGSize size = [str boundingRectWithSize:CGSizeMake(280, 999) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+        NSDictionary *attribute = @{NSFontAttributeName : [UIFont systemFontOfSize:16]};
+        CGSize size = [str boundingRectWithSize:CGSizeMake(280, 999)
+                                        options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                     attributes:attribute
+                                        context:nil]
+                          .size;
         height = size.height + 30;
     }
     return height;
@@ -587,57 +568,51 @@
 
 @end
 
-@interface TUICommonTextCell()
+@interface TUICommonTextCell ()
 @property TUICommonTextCellData *textData;
 @end
 
 @implementation TUICommonTextCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier])
-    {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier]) {
         self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
-        
+
         _keyLabel = self.textLabel;
         _keyLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _keyLabel.font = [UIFont systemFontOfSize:16.0];
-        
+
         _valueLabel = self.detailTextLabel;
         _valueLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
         _valueLabel.font = [UIFont systemFontOfSize:16.0];
-        
+
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    
-    
-    
+
     if (self.textData.keyEdgeInsets.left) {
         self.keyLabel.mm_left(self.textData.keyEdgeInsets.left);
     }
-    
+
     if (self.textData.keyEdgeInsets.top) {
         self.keyLabel.mm_top(self.textData.keyEdgeInsets.top);
     }
-    
+
     if (self.textData.keyEdgeInsets.bottom) {
         self.keyLabel.mm_bottom(self.textData.keyEdgeInsets.bottom);
     }
-    
+
     if (self.textData.keyEdgeInsets.right) {
         self.keyLabel.mm_right(self.textData.keyEdgeInsets.right);
     }
 }
 
-- (void)fillWithData:(TUICommonTextCellData *)textData
-{
+- (void)fillWithData:(TUICommonTextCellData *)textData {
     [super fillWithData:textData];
 
     self.textData = textData;
@@ -649,15 +624,15 @@
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
     }
-    
+
     if (self.textData.keyColor) {
         self.keyLabel.textColor = self.textData.keyColor;
     }
-    
+
     if (self.textData.valueColor) {
         self.valueLabel.textColor = self.textData.valueColor;
     }
-    
+
     if (self.textData.enableMultiLineValue) {
         self.valueLabel.numberOfLines = 0;
     } else {
@@ -683,11 +658,12 @@
     CGFloat height = [super heightOfWidth:width];
     if (self.desc.length > 0) {
         NSString *str = self.desc;
-        NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:12]};
+        NSDictionary *attribute = @{NSFontAttributeName : [UIFont systemFontOfSize:12]};
         CGSize size = [str boundingRectWithSize:CGSizeMake(264, 999)
-                                        options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                        options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                      attributes:attribute
-                                        context:nil].size;
+                                        context:nil]
+                          .size;
         height += size.height + 10;
     }
     return height;
@@ -695,25 +671,23 @@
 
 @end
 
-@interface TUICommonSwitchCell()
+@interface TUICommonSwitchCell ()
 
 @property TUICommonSwitchCellData *switchData;
-@property (nonatomic,strong) UIView * leftSeparatorLine;
+@property(nonatomic, strong) UIView *leftSeparatorLine;
 
 @end
 
 @implementation TUICommonSwitchCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
-    {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _titleLabel.font = [UIFont systemFontOfSize:16];
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:_titleLabel];
-        
+
         _descLabel = [[UILabel alloc] init];
         _descLabel.textColor = TIMCommonDynamicColor(@"group_modify_desc_color", @"#888888");
         _descLabel.font = [UIFont systemFontOfSize:12];
@@ -721,7 +695,7 @@
         _descLabel.textAlignment = NSTextAlignmentLeft;
         _descLabel.hidden = YES;
         [self.contentView addSubview:_descLabel];
-        
+
         _switcher = [[UISwitch alloc] init];
         _switcher.onTintColor = TIMCommonDynamicColor(@"common_switch_on_color", @"#147AFF");
         self.accessoryView = _switcher;
@@ -745,57 +719,52 @@
         _titleLabel.alpha = 0.4;
         _switcher.alpha = 0.4;
         self.userInteractionEnabled = NO;
-    }
-    else {
+    } else {
         _titleLabel.alpha = 1;
         _switcher.alpha = 1;
         _titleLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _switcher.onTintColor = TIMCommonDynamicColor(@"common_switch_on_color", @"#147AFF");
         self.userInteractionEnabled = YES;
     }
-    
-    CGFloat leftMargin = 0 ;
+
+    CGFloat leftMargin = 0;
     CGFloat padding = 5;
     if (self.switchData.displaySeparatorLine) {
         _leftSeparatorLine.mm_width(10).mm_height(2).mm_left(self.switchData.margin).mm__centerY(self.contentView.mm_h / 2);
-        leftMargin  = self.switchData.margin + _leftSeparatorLine.mm_w + padding;
-    }
-    else {
+        leftMargin = self.switchData.margin + _leftSeparatorLine.mm_w + padding;
+    } else {
         _leftSeparatorLine.mm_width(0).mm_height(0);
         leftMargin = self.switchData.margin;
     }
-    
+
     if (self.switchData.desc.length > 0) {
         _descLabel.text = self.switchData.desc;
         _descLabel.hidden = NO;
         NSString *str = self.switchData.desc;
-        NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:12]};
+        NSDictionary *attribute = @{NSFontAttributeName : [UIFont systemFontOfSize:12]};
         CGSize size = [str boundingRectWithSize:CGSizeMake(264, 999)
-                                        options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                        options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                      attributes:attribute
-                                        context:nil].size;
+                                        context:nil]
+                          .size;
         _titleLabel.mm_width(size.width).mm_height(24).mm_left(leftMargin).mm_top(12);
         _descLabel.mm_width(size.width).mm_height(size.height).mm_left(_titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY + 2);
     } else {
-        _descLabel.text =  @"";
+        _descLabel.text = @"";
         _titleLabel.mm_sizeToFit().mm_left(leftMargin).mm__centerY(self.contentView.mm_h / 2);
     }
-    
 }
 
-- (void)fillWithData:(TUICommonSwitchCellData *)switchData
-{
+- (void)fillWithData:(TUICommonSwitchCellData *)switchData {
     [super fillWithData:switchData];
 
     self.switchData = switchData;
     _titleLabel.text = switchData.title;
     [_switcher setOn:switchData.isOn];
     _descLabel.text = switchData.desc;
-
 }
 
-- (void)switchClick
-{
+- (void)switchClick {
     if (self.switchData.cswitchSelector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.switchData.cswitchSelector]) {
@@ -805,10 +774,8 @@
 #pragma clang diagnostic pop
         }
     }
-
 }
 @end
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -848,24 +815,30 @@
     return self;
 }
 
-- (void)accept
-{
-    [[V2TIMManager sharedInstance] acceptGroupApplication:_pendencyItem reason:TIMCommonLocalizableString(TUIKitAgreedByAdministor) succ:^{
-        [TUITool makeToast:TIMCommonLocalizableString(Have-been-sent)];
-        [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];;
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+- (void)accept {
+    [[V2TIMManager sharedInstance] acceptGroupApplication:_pendencyItem
+        reason:TIMCommonLocalizableString(TUIKitAgreedByAdministor)
+        succ:^{
+          [TUITool makeToast:TIMCommonLocalizableString(Have_been_sent)];
+          [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];
+          ;
+        }
+        fail:^(int code, NSString *msg) {
+          [TUITool makeToastError:code msg:msg];
+        }];
     self.isAccepted = YES;
 }
-- (void)reject
-{
-    [[V2TIMManager sharedInstance] refuseGroupApplication:_pendencyItem reason:TIMCommonLocalizableString(TUIkitDiscliedByAdministor) succ:^{
-        [TUITool makeToast:TIMCommonLocalizableString(Have-been-sent)];
-        [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];;
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+- (void)reject {
+    [[V2TIMManager sharedInstance] refuseGroupApplication:_pendencyItem
+        reason:TIMCommonLocalizableString(TUIkitDiscliedByAdministor)
+        succ:^{
+          [TUITool makeToast:TIMCommonLocalizableString(Have_been_sent)];
+          [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];
+          ;
+        }
+        fail:^(int code, NSString *msg) {
+          [TUITool makeToastError:code msg:msg];
+        }];
     self.isRejectd = YES;
 }
 
@@ -873,8 +846,7 @@
 
 @implementation TUIGroupPendencyCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 
     self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
@@ -884,13 +856,13 @@
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:self.titleLabel];
     self.titleLabel.textColor = [UIColor darkTextColor];
-    self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_top(14).mm_height(20).mm_width(120);
+    self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_top(14).mm_height(20).mm_width(120);
 
     self.addWordingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:self.addWordingLabel];
     self.addWordingLabel.textColor = [UIColor lightGrayColor];
     self.addWordingLabel.font = [UIFont systemFontOfSize:15];
-    self.addWordingLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY+6).mm_height(15).mm_width(self.mm_w - self.titleLabel.mm_x - 80);
+    self.addWordingLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY + 6).mm_height(15).mm_width(self.mm_w - self.titleLabel.mm_x - 80);
 
     self.agreeButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.accessoryView = self.agreeButton;
@@ -910,8 +882,7 @@
     // Configure the view for the selected state
 }
 
-- (void)fillWithData:(TUIGroupPendencyCellData *)pendencyData
-{
+- (void)fillWithData:(TUIGroupPendencyCellData *)pendencyData {
     [super fillWithData:pendencyData];
 
     self.pendencyData = pendencyData;
@@ -922,24 +893,24 @@
         [self.avatarView sd_setImageWithURL:pendencyData.avatarUrl placeholderImage:[UIImage imageNamed:TIMCommonImagePath(@"default_c2c_head")]];
     }
 
-    @weakify(self)
+    @weakify(self);
     [[RACObserve(pendencyData, isAccepted) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSNumber *isAccepted) {
-        @strongify(self)
-        if ([isAccepted boolValue]) {
-            [self.agreeButton setTitle:TIMCommonLocalizableString(Agreed) forState:UIControlStateNormal];
-            self.agreeButton.enabled = NO;
-            [self.agreeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-            self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
-        }
+      @strongify(self);
+      if ([isAccepted boolValue]) {
+          [self.agreeButton setTitle:TIMCommonLocalizableString(Agreed) forState:UIControlStateNormal];
+          self.agreeButton.enabled = NO;
+          [self.agreeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+          self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
+      }
     }];
     [[RACObserve(pendencyData, isRejectd) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSNumber *isAccepted) {
-        @strongify(self)
-        if ([isAccepted boolValue]) {
-            [self.agreeButton setTitle:TIMCommonLocalizableString(Disclined) forState:UIControlStateNormal];
-            self.agreeButton.enabled = NO;
-            [self.agreeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-            self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
-        }
+      @strongify(self);
+      if ([isAccepted boolValue]) {
+          [self.agreeButton setTitle:TIMCommonLocalizableString(Disclined) forState:UIControlStateNormal];
+          self.agreeButton.enabled = NO;
+          [self.agreeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+          self.agreeButton.layer.borderColor = [UIColor clearColor].CGColor;
+      }
     }];
 
     if (!(pendencyData.isAccepted || pendencyData.isRejectd)) {
@@ -949,11 +920,10 @@
         self.agreeButton.layer.borderColor = [UIColor grayColor].CGColor;
         self.agreeButton.layer.borderWidth = 1;
     }
-    self.agreeButton.mm_sizeToFit().mm_width(self.agreeButton.mm_w+20);
+    self.agreeButton.mm_sizeToFit().mm_width(self.agreeButton.mm_w + 20);
 }
 
-- (void)agreeClick
-{
+- (void)agreeClick {
     if (self.pendencyData.cbuttonSelector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.pendencyData.cbuttonSelector]) {
@@ -963,11 +933,9 @@
 #pragma clang diagnostic pop
         }
     }
-
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if ((touch.view == self.agreeButton)) {
         return NO;
     }
@@ -983,8 +951,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUIButtonCellData
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     return TButtonCell_Height;
 }
 @end
@@ -993,18 +960,16 @@
     UIView *_line;
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(self){
+    if (self) {
         [self setupViews];
         self.changeColorWhenTouched = YES;
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
 
@@ -1017,15 +982,13 @@
     [self setSeparatorInset:UIEdgeInsetsMake(0, Screen_Width, 0, 0)];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     self.changeColorWhenTouched = YES;
-    
+
     _line = [[UIView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_line];
     _line.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
 }
 
-
-- (void)fillWithData:(TUIButtonCellData *)data
-{
+- (void)fillWithData:(TUIButtonCellData *)data {
     [super fillWithData:data];
     self.buttonData = data;
     [_button setTitle:data.title forState:UIControlStateNormal];
@@ -1033,52 +996,44 @@
         case ButtonGreen: {
             [_button setTitleColor:TIMCommonDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
             _button.backgroundColor = TIMCommonDynamicColor(@"form_green_button_bg_color", @"#232323");
-            [_button setBackgroundImage:[self imageWithColor:TIMCommonDynamicColor(@"form_green_button_highlight_bg_color", @"#179A1A")] forState:UIControlStateHighlighted];
-        }
-            break;
+            [_button setBackgroundImage:[self imageWithColor:TIMCommonDynamicColor(@"form_green_button_highlight_bg_color", @"#179A1A")]
+                               forState:UIControlStateHighlighted];
+        } break;
         case ButtonWhite: {
             [_button setTitleColor:TIMCommonDynamicColor(@"form_white_button_text_color", @"#000000") forState:UIControlStateNormal];
             _button.backgroundColor = TIMCommonDynamicColor(@"form_white_button_bg_color", @"#FFFFFF");
-        }
-            break;
+        } break;
         case ButtonRedText: {
             [_button setTitleColor:TIMCommonDynamicColor(@"form_redtext_button_text_color", @"#FF0000") forState:UIControlStateNormal];
             _button.backgroundColor = TIMCommonDynamicColor(@"form_redtext_button_bg_color", @"#FFFFFF");
 
             break;
         }
-        case ButtonBule:{
+        case ButtonBule: {
             [_button.titleLabel setTextColor:TIMCommonDynamicColor(@"form_blue_button_text_color", @"#FFFFFF")];
             _button.backgroundColor = TIMCommonDynamicColor(@"form_blue_button_bg_color", @"#1E90FF");
-            [_button setBackgroundImage:[self imageWithColor:TIMCommonDynamicColor(@"form_blue_button_highlight_bg_color", @"#1978D5")] forState:UIControlStateHighlighted];
-        }
-            break;
+            [_button setBackgroundImage:[self imageWithColor:TIMCommonDynamicColor(@"form_blue_button_highlight_bg_color", @"#1978D5")]
+                               forState:UIControlStateHighlighted];
+        } break;
         default:
             break;
     }
-    
+
     if (data.textColor) {
         [_button setTitleColor:data.textColor forState:UIControlStateNormal];
     }
-    
+
     _line.hidden = data.hideSeparatorLine;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    _button.mm_width(Screen_Width - 2 * TButtonCell_Margin)
-    .mm_height(self.mm_h - TButtonCell_Margin)
-    .mm_left(TButtonCell_Margin);
-    
-    _line.mm_width(Screen_Width)
-    .mm_height(0.2)
-    .mm_left(20)
-    .mm_bottom(0);
+    _button.mm_width(Screen_Width - 2 * TButtonCell_Margin).mm_height(self.mm_h - TButtonCell_Margin).mm_left(TButtonCell_Margin);
+
+    _line.mm_width(Screen_Width).mm_height(0.2).mm_left(20).mm_bottom(0);
 }
 
-- (void)onClick:(UIButton *)sender
-{
+- (void)onClick:(UIButton *)sender {
     if (self.buttonData.cbuttonSelector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.buttonData.cbuttonSelector]) {
@@ -1090,16 +1045,14 @@
     }
 }
 
-- (void)didAddSubview:(UIView *)subview
-{
+- (void)didAddSubview:(UIView *)subview {
     [super didAddSubview:subview];
     if (subview != self.contentView) {
         [subview removeFromSuperview];
     }
 }
 
-- (UIImage *)imageWithColor:(UIColor *)color
-{
+- (UIImage *)imageWithColor:(UIColor *)color {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -1113,9 +1066,6 @@
     return image;
 }
 
-
-
-
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1127,31 +1077,27 @@
 @end
 
 @implementation TUIFaceCell
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     _face = [[UIImageView alloc] init];
     _face.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:_face];
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
     CGSize size = self.frame.size;
     _face.frame = CGRectMake(0, 0, size.width, size.height);
 }
 
-- (void)setData:(TUIFaceCellData *)data
-{
+- (void)setData:(TUIFaceCellData *)data {
     _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
     [self defaultLayout];
 }
@@ -1167,7 +1113,10 @@
 
 @implementation TUIEmojiTextAttachment
 
-- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
+- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer
+                      proposedLineFragment:(CGRect)lineFrag
+                             glyphPosition:(CGPoint)position
+                            characterIndex:(NSUInteger)charIndex {
     return CGRectMake(0, 0, _emojiSize.width, _emojiSize.height);
 }
 
@@ -1178,29 +1127,26 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUIUnReadView
-- (id)init
-{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setNum:(NSInteger)num
-{
+- (void)setNum:(NSInteger)num {
     NSString *unReadStr = [[NSNumber numberWithInteger:num] stringValue];
-    if (num > 99){
+    if (num > 99) {
         unReadStr = @"99+";
     }
     _unReadLabel.text = unReadStr;
-    self.hidden = (num == 0? YES: NO);
+    self.hidden = (num == 0 ? YES : NO);
     [self defaultLayout];
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     _unReadLabel = [[UILabel alloc] init];
     _unReadLabel.text = @"11";
     _unReadLabel.font = [UIFont systemFontOfSize:12];
@@ -1209,18 +1155,17 @@
     [_unReadLabel sizeToFit];
     [self addSubview:_unReadLabel];
 
-    self.layer.cornerRadius = (_unReadLabel.frame.size.height + TUnReadView_Margin_TB * 2)/2.0;
+    self.layer.cornerRadius = (_unReadLabel.frame.size.height + TUnReadView_Margin_TB * 2) / 2.0;
     [self.layer masksToBounds];
     self.backgroundColor = [UIColor redColor];
     self.hidden = YES;
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
     [_unReadLabel sizeToFit];
     CGFloat width = _unReadLabel.frame.size.width + 2 * TUnReadView_Margin_LR;
-    CGFloat height =  _unReadLabel.frame.size.height + 2 * TUnReadView_Margin_TB;
-    if(width < height){
+    CGFloat height = _unReadLabel.frame.size.height + 2 * TUnReadView_Margin_TB;
+    if (width < height) {
         width = height;
     }
     self.bounds = CGRectMake(0, 0, width, height);
@@ -1229,23 +1174,21 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (@available(iOS 11.0, *)){
-        //Here is a workaround on iOS 11 UINavigationBarItem init with custom view, position issue
+    if (@available(iOS 11.0, *)) {
+        // Here is a workaround on iOS 11 UINavigationBarItem init with custom view, position issue
         UIView *view = self;
-        while (![view isKindOfClass:[UINavigationBar class]] && [view superview] != nil)
-        {
+        while (![view isKindOfClass:[UINavigationBar class]] && [view superview] != nil) {
             view = [view superview];
-            if ([view isKindOfClass:[UIStackView class]] && [view superview] != nil)
-            {
-                    CGFloat margin = 40.0f;
-                        //margin = 4.0f;
-                    [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                                                    attribute:NSLayoutAttributeLeading
-                                                                                    relatedBy:NSLayoutRelationEqual
-                                                                                    toItem:view.superview
-                                                                                    attribute:NSLayoutAttributeLeading
-                                                                                    multiplier:1.0
-                                                                                    constant:margin]];
+            if ([view isKindOfClass:[UIStackView class]] && [view superview] != nil) {
+                CGFloat margin = 40.0f;
+                // margin = 4.0f;
+                [view.superview addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                                           attribute:NSLayoutAttributeLeading
+                                                                           relatedBy:NSLayoutRelationEqual
+                                                                              toItem:view.superview
+                                                                           attribute:NSLayoutAttributeLeading
+                                                                          multiplier:1.0
+                                                                            constant:margin]];
                 break;
             }
         }
@@ -1263,18 +1206,16 @@
 NSString *kTopConversationListChangedNotification = @"kTopConversationListChangedNotification";
 
 @implementation TUIConversationPin
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     static TUIConversationPin *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [TUIConversationPin new];
+      instance = [TUIConversationPin new];
     });
     return instance;
 }
 
-- (NSArray *)topConversationList
-{
+- (NSArray *)topConversationList {
 #ifndef SDKPlaceTop
 #define SDKPlaceTop
 #endif
@@ -1289,63 +1230,67 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 #endif
 }
 
-- (void)addTopConversation:(NSString *)conv callback:(void(^)(BOOL success, NSString *errorMessage))callback
-{
+- (void)addTopConversation:(NSString *)conv callback:(void (^)(BOOL success, NSString *errorMessage))callback {
 #ifndef SDKPlaceTop
 #define SDKPlaceTop
 #endif
 #ifdef SDKPlaceTop
-    [V2TIMManager.sharedInstance pinConversation:conv isPinned:YES succ:^{
-        if (callback) {
-            callback(YES, nil);
+    [V2TIMManager.sharedInstance pinConversation:conv
+        isPinned:YES
+        succ:^{
+          if (callback) {
+              callback(YES, nil);
+          }
         }
-    } fail:^(int code, NSString *desc) {
-        if (callback) {
-            callback(NO, desc);
-        }
-    }];
+        fail:^(int code, NSString *desc) {
+          if (callback) {
+              callback(NO, desc);
+          }
+        }];
 #else
     [TUITool dispatchMainAsync:^{
-        NSMutableArray *list = [self topConversationList].mutableCopy;
-        if ([list containsObject:conv]) {
-            [list removeObject:conv];
-        }
-        [list insertObject:conv atIndex:0];
-        [[NSUserDefaults standardUserDefaults] setValue:list forKey:TOP_CONV_KEY];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTopConversationListChangedNotification object:nil];
-        if (callback) {
-            callback(YES, nil);
-        }
+      NSMutableArray *list = [self topConversationList].mutableCopy;
+      if ([list containsObject:conv]) {
+          [list removeObject:conv];
+      }
+      [list insertObject:conv atIndex:0];
+      [[NSUserDefaults standardUserDefaults] setValue:list forKey:TOP_CONV_KEY];
+      [[NSNotificationCenter defaultCenter] postNotificationName:kTopConversationListChangedNotification object:nil];
+      if (callback) {
+          callback(YES, nil);
+      }
     }];
 #endif
 }
 
-- (void)removeTopConversation:(NSString *)conv callback:(void(^)(BOOL success, NSString *errorMessage))callback
-{
+- (void)removeTopConversation:(NSString *)conv callback:(void (^)(BOOL success, NSString *errorMessage))callback {
 #ifndef SDKPlaceTop
 #define SDKPlaceTop
 #endif
 #ifdef SDKPlaceTop
-    [V2TIMManager.sharedInstance pinConversation:conv isPinned:NO succ:^{
-        if (callback) {
-            callback(YES, nil);
+    [V2TIMManager.sharedInstance pinConversation:conv
+        isPinned:NO
+        succ:^{
+          if (callback) {
+              callback(YES, nil);
+          }
         }
-    } fail:^(int code, NSString *desc) {
-        if (callback) {
-            callback(NO, desc);
-        }
-    }];
+        fail:^(int code, NSString *desc) {
+          if (callback) {
+              callback(NO, desc);
+          }
+        }];
 #else
     [TUITool dispatchMainAsync:^{
-        NSMutableArray *list = [self topConversationList].mutableCopy;
-        if ([list containsObject:conv]) {
-            [list removeObject:conv];
-            [[NSUserDefaults standardUserDefaults] setValue:list forKey:TOP_CONV_KEY];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTopConversationListChangedNotification object:nil];
-        }
-        if (callback) {
-            callback(YES, nil);
-        }
+      NSMutableArray *list = [self topConversationList].mutableCopy;
+      if ([list containsObject:conv]) {
+          [list removeObject:conv];
+          [[NSUserDefaults standardUserDefaults] setValue:list forKey:TOP_CONV_KEY];
+          [[NSNotificationCenter defaultCenter] postNotificationName:kTopConversationListChangedNotification object:nil];
+      }
+      if (callback) {
+          callback(YES, nil);
+      }
     }];
 #endif
 }
@@ -1358,8 +1303,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUICommonContactSelectCellData
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _enabled = YES;
@@ -1367,13 +1311,11 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     return self;
 }
 
-- (NSComparisonResult)compare:(TUICommonContactSelectCellData *)data
-{
+- (NSComparisonResult)compare:(TUICommonContactSelectCellData *)data {
     return [self.title localizedCompare:data.title];
 }
 
 @end
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -1382,15 +1324,15 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUICommonContactListPickerCell
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        CGFloat AVATAR_WIDTH = 35.0;
-        _avatar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, AVATAR_WIDTH, AVATAR_WIDTH)];
+        CGFloat avatarWidth = 35.0;
+        _avatar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, avatarWidth, avatarWidth)];
         [self.contentView addSubview:_avatar];
-        _avatar.center = CGPointMake(AVATAR_WIDTH/2.0, AVATAR_WIDTH/2.0);
-        _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        _avatar.center = CGPointMake(avatarWidth / 2.0, avatarWidth / 2.0);
+        _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin |
+                                   UIViewAutoresizingFlexibleBottomMargin;
     }
     return self;
 }
@@ -1413,16 +1355,14 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 //                          TUIContactListPickerOnCancel
 //
 /////////////////////////////////////////////////////////////////////////////////
-@interface TUIContactListPicker()<UICollectionViewDelegate, UICollectionViewDataSource>
-@property (nonatomic) UICollectionView *collectionView;
-@property (nonatomic) UIButton *accessoryBtn;
+@interface TUIContactListPicker () <UICollectionViewDelegate, UICollectionViewDataSource>
+@property(nonatomic) UICollectionView *collectionView;
+@property(nonatomic) UIButton *accessoryBtn;
 @end
 
 @implementation TUIContactListPicker
 
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
 
     [self initControl];
@@ -1431,8 +1371,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     return self;
 }
 
-- (void)initControl
-{
+- (void)initControl {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
@@ -1449,21 +1388,18 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     [self addSubview:_collectionView];
 
     self.accessoryBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.accessoryBtn setBackgroundImage:TIMCommonBundleImage(@"icon_cell_blue_normal")
-                                 forState:UIControlStateNormal];
-    [self.accessoryBtn setBackgroundImage:TIMCommonBundleImage(@"icon_cell_blue_normal")
-                                 forState:UIControlStateHighlighted];
+    [self.accessoryBtn setBackgroundImage:TIMCommonBundleImage(@"icon_cell_blue_normal") forState:UIControlStateNormal];
+    [self.accessoryBtn setBackgroundImage:TIMCommonBundleImage(@"icon_cell_blue_normal") forState:UIControlStateHighlighted];
     [self.accessoryBtn setTitle:[NSString stringWithFormat:@" %@ ", TIMCommonLocalizableString(Confirm)] forState:UIControlStateNormal];
     self.accessoryBtn.enabled = NO;
     [self addSubview:self.accessoryBtn];
 }
 
-- (void)setupBinding
-{
+- (void)setupBinding {
     [self addObserver:self forKeyPath:@"selectArray" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"selectArray"]) {
         [self.collectionView reloadData];
         NSArray *newSelectArray = change[NSKeyValueChangeNewKey];
@@ -1477,7 +1413,9 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     return [self.selectArray count];
 }
 
-- (CGSize)collectionView:(nonnull UICollectionView *)collectionView layout:(nonnull UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+- (CGSize)collectionView:(nonnull UICollectionView *)collectionView
+                    layout:(nonnull UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     return CGSizeMake(35, collectionView.bounds.size.height);
 }
 
@@ -1495,8 +1433,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     if (indexPath.item >= self.selectArray.count) {
         return;
@@ -1507,13 +1444,11 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     }
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
 
     self.accessoryBtn.mm_sizeToFit().mm_height(30).mm_right(15).mm_top(13);
     self.collectionView.mm_left(15).mm_height(40).mm_width(self.accessoryBtn.mm_x - 30).mm__centerY(self.accessoryBtn.mm_centerY);
-
 }
 
 @end
@@ -1525,42 +1460,38 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUIProfileCardCellData
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _avatarImage = DefaultAvatarImage;
-        
-        if([_genderString isEqualToString:TIMCommonLocalizableString(Male)]){
+
+        if ([_genderString isEqualToString:TIMCommonLocalizableString(Male)]) {
             _genderIconImage = TUIGroupCommonBundleImage(@"male");
-        }else if([_genderString isEqualToString:TIMCommonLocalizableString(Female)]){
+        } else if ([_genderString isEqualToString:TIMCommonLocalizableString(Female)]) {
             _genderIconImage = TUIGroupCommonBundleImage(@"female");
-        }else{
+        } else {
             _genderIconImage = nil;
         }
     }
     return self;
 }
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     return TPersonalCommonCell_Image_Size.height + 2 * TPersonalCommonCell_Margin + (self.showSignature ? 24 : 0);
 }
 
 @end
 
 @implementation TUIProfileCardCell
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(self){
+    if (self) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     CGSize headSize = TPersonalCommonCell_Image_Size;
     _avatar = [[UIImageView alloc] initWithFrame:CGRectMake(TPersonalCommonCell_Margin, TPersonalCommonCell_Margin, headSize.width, headSize.height)];
     _avatar.contentMode = UIViewContentModeScaleAspectFit;
@@ -1569,7 +1500,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     UITapGestureRecognizer *tapAvatar = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAvatar)];
     [_avatar addGestureRecognizer:tapAvatar];
     _avatar.userInteractionEnabled = YES;
-    
+
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatar.layer.masksToBounds = YES;
         self.avatar.layer.cornerRadius = headSize.height / 2;
@@ -1578,67 +1509,65 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         self.avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
     [self.contentView addSubview:_avatar];
-    
-    //CGSize genderIconSize = CGSizeMake(20, 20);
+
+    // CGSize genderIconSize = CGSizeMake(20, 20);
     _genderIcon = [[UIImageView alloc] init];
     _genderIcon.contentMode = UIViewContentModeScaleAspectFit;
     _genderIcon.image = self.cardData.genderIconImage;
     [self.contentView addSubview:_genderIcon];
-    
+
     _name = [[UILabel alloc] init];
     [_name setFont:[UIFont boldSystemFontOfSize:18]];
     [_name setTextColor:TIMCommonDynamicColor(@"form_title_color", @"#000000")];
     [self.contentView addSubview:_name];
-    
+
     _identifier = [[UILabel alloc] init];
     [_identifier setFont:[UIFont systemFontOfSize:13]];
     [_identifier setTextColor:TIMCommonDynamicColor(@"form_subtitle_color", @"#888888")];
     [self.contentView addSubview:_identifier];
-    
+
     _signature = [[UILabel alloc] init];
     [_signature setFont:[UIFont systemFontOfSize:14]];
     [_signature setTextColor:TIMCommonDynamicColor(@"form_subtitle_color", @"#888888")];
     [self.contentView addSubview:_signature];
-    
+
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
-
-- (void)fillWithData:(TUIProfileCardCellData *)data
-{
+- (void)fillWithData:(TUIProfileCardCellData *)data {
     [super fillWithData:data];
     self.cardData = data;
     _signature.hidden = !data.showSignature;
-    //set data
-    @weakify(self)
-    
+    // set data
+    @weakify(self);
+
     RAC(_signature, text) = [RACObserve(data, signature) takeUntil:self.rac_prepareForReuseSignal];
     [[[RACObserve(data, identifier) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSString *x) {
-        @strongify(self)
-        self.identifier.text = [@"ID: " stringByAppendingString:data.identifier];
+      @strongify(self);
+      self.identifier.text = [@"ID: " stringByAppendingString:data.identifier];
     }];
-    
+
     [[[RACObserve(data, name) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSString *x) {
-        @strongify(self)
-        self.name.text = x;
-        [self.name sizeToFit];
+      @strongify(self);
+      self.name.text = x;
+      [self.name sizeToFit];
     }];
     [[RACObserve(data, avatarUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSURL *x) {
-        @strongify(self)
-        [self.avatar sd_setImageWithURL:x placeholderImage:self.cardData.avatarImage];
+      @strongify(self);
+      [self.avatar sd_setImageWithURL:x placeholderImage:self.cardData.avatarImage];
     }];
-    
+
     [[RACObserve(data, genderString) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *x) {
-        @strongify(self)
-        if([x isEqualToString:TIMCommonLocalizableString(Male)]){
-            self.genderIcon.image = TUIGroupCommonBundleImage(@"male");
-        }else if([x isEqualToString:TIMCommonLocalizableString(Female)]){
-            self.genderIcon.image = TUIGroupCommonBundleImage(@"female");
-        }else{
-            self.genderIcon.image = nil;
-        }
+      @strongify(self);
+      if ([x isEqualToString:TIMCommonLocalizableString(Male)]) {
+          self.genderIcon.image = TUIGroupCommonBundleImage(@"male");
+      } else if ([x isEqualToString:TIMCommonLocalizableString(Female)]) {
+          self.genderIcon.image = TUIGroupCommonBundleImage(@"female");
+      } else {
+          self.genderIcon.image = nil;
+      }
     }];
-    
+
     if (data.showAccessory) {
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
@@ -1646,41 +1575,40 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     }
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     CGFloat maxLabelWidth = self.contentView.mm_w - CGRectGetMaxX(_avatar.frame) - 30;
-    _name.mm_sizeToFitThan(0, _avatar.mm_h/3).mm_top(_avatar.mm_y).mm_left(_avatar.mm_maxX + TPersonalCommonCell_Margin);
+    _name.mm_sizeToFitThan(0, _avatar.mm_h / 3).mm_top(_avatar.mm_y).mm_left(_avatar.mm_maxX + TPersonalCommonCell_Margin);
     if (CGRectGetMaxX(_name.frame) >= self.contentView.mm_w) {
         _name.mm_w = maxLabelWidth;
     }
-    
-    _identifier.mm_sizeToFitThan(80, _avatar.mm_h/3).mm_left(_name.mm_x);
+
+    _identifier.mm_sizeToFitThan(80, _avatar.mm_h / 3).mm_left(_name.mm_x);
 
     if (self.cardData.showSignature) {
         _identifier.mm_y = _name.mm_y + _name.mm_h + 5;
     } else {
         _identifier.mm_bottom(_avatar.mm_b);
     }
-    
-    _signature.mm_sizeToFitThan(80, _avatar.mm_h/3).mm_left(_name.mm_x);
+
+    _signature.mm_sizeToFitThan(80, _avatar.mm_h / 3).mm_left(_name.mm_x);
     _signature.mm_y = CGRectGetMaxY(_identifier.frame) + 5;
     if (CGRectGetMaxX(_signature.frame) >= self.contentView.mm_w) {
         _signature.mm_w = maxLabelWidth;
     }
 
-    _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9).mm__centerY(_name.mm_centerY).mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);
+    _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9)
+        .mm__centerY(_name.mm_centerY)
+        .mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);
 }
 
-
--(void) onTapAvatar{
-    if(_delegate && [_delegate respondsToSelector:@selector(didTapOnAvatar:)])
-        [_delegate didTapOnAvatar:self];
+- (void)onTapAvatar {
+    if (_delegate && [_delegate respondsToSelector:@selector(didTapOnAvatar:)]) [_delegate didTapOnAvatar:self];
 }
 
 @end
 
-@interface TUIAvatarViewController ()<UIScrollViewDelegate>
+@interface TUIAvatarViewController () <UIScrollViewDelegate>
 @property UIImageView *avatarView;
 
 @property TUIScrollView *avatarScrollView;
@@ -1697,8 +1625,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
     self.saveBackgroundImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
     self.saveShadowImage = self.navigationController.navigationBar.shadowImage;
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-                                                  forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
 
     CGRect rect = self.view.bounds;
@@ -1715,70 +1642,64 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     self.avatarView.image = self.avatarData.avatarImage;
     TUIProfileCardCellData *data = self.avatarData;
     /*
-     @weakify(self)
+     @weakify(self);
     [RACObserve(data, avatarUrl) subscribeNext:^(NSURL *x) {
-        @strongify(self)
+        @strongify(self);
         [self.avatarView sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
     }];
     */
-    @weakify(self)
+    @weakify(self);
     [RACObserve(data, avatarUrl) subscribeNext:^(NSURL *x) {
-        @strongify(self)
-        [self.avatarView sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
-        [self.avatarScrollView setNeedsLayout];
+      @strongify(self);
+      [self.avatarView sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
+      [self.avatarScrollView setNeedsLayout];
     }];
-
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.avatarView;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-                                                  forBarMetrics:UIBarMetricsDefault];
+
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
-    
+
     self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
-- (void)willMoveToParentViewController:(UIViewController *)parent
-{
+- (void)willMoveToParentViewController:(UIViewController *)parent {
     if (parent == nil) {
-        [self.navigationController.navigationBar setBackgroundImage:self.saveBackgroundImage
-                                                      forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:self.saveBackgroundImage forBarMetrics:UIBarMetricsDefault];
         self.navigationController.navigationBar.shadowImage = self.saveShadowImage;
     }
 }
 
 @end
 
-#define UserAvatarURL(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_%d.png",x]
+#define UserAvatarURL(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/avatar/avatar_%d.png", x]
 #define UserAvatarCount 26
 
-#define GroupAvatarURL(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%d.png",x]
+#define GroupAvatarURL(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%d.png", x]
 #define GroupAvatarCount 24
 
-#define Community_coverURL(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/community-cover/community_cover_%d.png",x]
+#define Community_coverURL(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/community-cover/community_cover_%d.png", x]
 #define Community_coverCount 12
 
-#define BackGroundCoverURL(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%d.png",x]
+#define BackGroundCoverURL(x) \
+    [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%d.png", x]
 
-#define BackGroundCoverURL_full(x) [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%d_full.png",x]
+#define BackGroundCoverURL_full(x) \
+    [NSString stringWithFormat:@"https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%d_full.png", x]
 
 #define BackGroundCoverCount 7
-
-
 
 @implementation TUISelectAvatarCardItem
 
@@ -1786,12 +1707,12 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 @interface TUISelectAvatarCollectionCell : UICollectionViewCell
 
-@property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UIImageView *selectedView;
+@property(nonatomic, strong) UIImageView *imageView;
+@property(nonatomic, strong) UIImageView *selectedView;
 
-@property (nonatomic, strong) UIView *maskView;
-@property (nonatomic, strong) UILabel *descLabel;
-@property (nonatomic, strong) TUISelectAvatarCardItem *cardItem;
+@property(nonatomic, strong) UIView *maskView;
+@property(nonatomic, strong) UILabel *descLabel;
+@property(nonatomic, strong) TUISelectAvatarCardItem *cardItem;
 
 - (void)updateSelectedUI;
 
@@ -1799,38 +1720,34 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
 @implementation TUISelectAvatarCollectionCell
 
-- (instancetype)initWithFrame:(CGRect)frame{
-  self = [super initWithFrame:frame];
-  
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+
     if (self) {
-    
         self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    
+
         [self.imageView setUserInteractionEnabled:YES];
-    
+
         self.imageView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-    
+
         self.imageView.layer.borderWidth = 2;
 
         self.imageView.layer.masksToBounds = YES;
-    
+
         [self.contentView addSubview:self.imageView];
-    
+
         [self.imageView addSubview:self.selectedView];
-        
+
         [self setupMaskView];
-  }
-    
+    }
+
     return self;
-    
 }
 
 - (void)layoutSubviews {
-
     [self updateCellView];
 
-    self.selectedView.frame = CGRectMake(self.imageView.frame.size.width - 16 - 4 , 4 ,
-                                       16 , 16);
+    self.selectedView.frame = CGRectMake(self.imageView.frame.size.width - 16 - 4, 4, 16, 16);
 }
 
 - (void)updateCellView {
@@ -1840,16 +1757,13 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 }
 
 - (void)updateSelectedUI {
-    
-    if (self.cardItem.isSelect){
+    if (self.cardItem.isSelect) {
         self.imageView.layer.borderColor = TIMCommonDynamicColor(@"", @"#006EFF").CGColor;
         self.selectedView.hidden = NO;
-    }
-    else {
+    } else {
         if (self.cardItem.isDefaultBackgroundItem) {
             self.imageView.layer.borderColor = [[UIColor grayColor] colorWithAlphaComponent:0.1].CGColor;
-        }
-        else {
+        } else {
             self.imageView.layer.borderColor = UIColor.clearColor.CGColor;
         }
         self.selectedView.hidden = YES;
@@ -1859,8 +1773,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 - (void)updateImageView {
     if (self.cardItem.isGroupGridAvatar) {
         [self updateNormalGroupGridAvatar];
-    }
-    else {
+    } else {
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.cardItem.posterUrlStr]
                           placeholderImage:TIMCommonBundleThemeImage(@"default_c2c_head_img", @"default_c2c_head_img")];
     }
@@ -1871,8 +1784,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         self.maskView.frame = CGRectMake(0, self.imageView.frame.size.height - 28, self.imageView.frame.size.width, 28);
         [self.descLabel sizeToFit];
         self.descLabel.tui_mm_center();
-    }
-    else {
+    } else {
         self.maskView.hidden = YES;
     }
 }
@@ -1901,30 +1813,28 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 }
 
 - (UIImageView *)selectedView {
-    
     if (!_selectedView) {
-        _selectedView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        _selectedView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _selectedView.image = [UIImage imageNamed:TIMCommonImagePath(@"icon_avatar_selected")];
     }
     return _selectedView;
 }
 
-
 @end
 
-@interface TUISelectAvatarController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
+@interface TUISelectAvatarController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
-@property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray *dataArr;
-@property (nonatomic, strong) TUISelectAvatarCardItem *currentSelectCardItem;
-@property (nonatomic, strong) UIButton *rightButton;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) UICollectionView *collectionView;
+@property(nonatomic, strong) NSMutableArray *dataArr;
+@property(nonatomic, strong) TUISelectAvatarCardItem *currentSelectCardItem;
+@property(nonatomic, strong) UIButton *rightButton;
 
 @end
 
 @implementation TUISelectAvatarController
 
-static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
+static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -1934,73 +1844,67 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
     CGRect frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     self.collectionView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:flowLayout];
     [self.view addSubview:self.collectionView];
-    
+
     self.collectionView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
-    
+
     // Register cell classes
     [self.collectionView registerClass:[TUISelectAvatarCollectionCell class] forCellWithReuseIdentifier:reuseIdentifier];
-    
+
     // Do any additional setup after loading the view.
     [self setupNavigator];
-    
+
     self.dataArr = [NSMutableArray arrayWithCapacity:3];
-    
+
     [self loadData];
 }
 - (void)loadData {
-    
     if (self.selectAvatarType == TUISelectAvatarTypeUserAvatar) {
-        
-        for (int i = 0 ; i< UserAvatarCount; i++) {
-            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:UserAvatarURL(i+1)];
+        for (int i = 0; i < UserAvatarCount; i++) {
+            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:UserAvatarURL(i + 1)];
             [self.dataArr addObject:cardItem];
         }
-    }
-    else if (self.selectAvatarType == TUISelectAvatarTypeGroupAvatar) {
-
+    } else if (self.selectAvatarType == TUISelectAvatarTypeGroupAvatar) {
         if (TUIConfig.defaultConfig.enableGroupGridAvatar && self.cacheGroupGridAvatarImage) {
             TUISelectAvatarCardItem *cardItem = [self creatGroupGridAvatarCardItem];
             [self.dataArr addObject:cardItem];
         }
-        
-        for (int i = 0 ; i< GroupAvatarCount; i++) {
-            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:GroupAvatarURL(i+1)];
+
+        for (int i = 0; i < GroupAvatarCount; i++) {
+            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:GroupAvatarURL(i + 1)];
             [self.dataArr addObject:cardItem];
         }
-    }
-    else if (self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
+    } else if (self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
         TUISelectAvatarCardItem *cardItem = [self creatCleanCardItem];
         [self.dataArr addObject:cardItem];
-        for (int i = 0 ; i < BackGroundCoverCount; i++) {
-            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:BackGroundCoverURL(i+1) fullUrl:BackGroundCoverURL_full(i+1)];
+        for (int i = 0; i < BackGroundCoverCount; i++) {
+            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:BackGroundCoverURL(i + 1) fullUrl:BackGroundCoverURL_full(i + 1)];
             [self.dataArr addObject:cardItem];
         }
     }
-    
+
     else {
-        for (int i = 0 ; i< Community_coverCount; i++) {
-            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:Community_coverURL(i+1)];
+        for (int i = 0; i < Community_coverCount; i++) {
+            TUISelectAvatarCardItem *cardItem = [self creatCardItemByURL:Community_coverURL(i + 1)];
             [self.dataArr addObject:cardItem];
         }
     }
     [self.collectionView reloadData];
-
 }
 
 - (TUISelectAvatarCardItem *)creatCardItemByURL:(NSString *)urlStr {
     TUISelectAvatarCardItem *cardItem = [[TUISelectAvatarCardItem alloc] init];
     cardItem.posterUrlStr = urlStr;
     cardItem.isSelect = NO;
-    if ([cardItem.posterUrlStr isEqualToString:self.profilFaceURL] ) {
+    if ([cardItem.posterUrlStr isEqualToString:self.profilFaceURL]) {
         cardItem.isSelect = YES;
         self.currentSelectCardItem = cardItem;
     }
@@ -2026,8 +1930,7 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     cardItem.posterUrlStr = urlStr;
     cardItem.fullUrlStr = fullUrl;
     cardItem.isSelect = NO;
-    if ([cardItem.posterUrlStr isEqualToString:self.profilFaceURL]
-        || [cardItem.fullUrlStr isEqualToString:self.profilFaceURL]) {
+    if ([cardItem.posterUrlStr isEqualToString:self.profilFaceURL] || [cardItem.fullUrlStr isEqualToString:self.profilFaceURL]) {
         cardItem.isSelect = YES;
         self.currentSelectCardItem = cardItem;
     }
@@ -2039,121 +1942,114 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     cardItem.posterUrlStr = nil;
     cardItem.isSelect = NO;
     cardItem.isDefaultBackgroundItem = YES;
-    if (self.profilFaceURL.length == 0 ) {
+    if (self.profilFaceURL.length == 0) {
         cardItem.isSelect = YES;
         self.currentSelectCardItem = cardItem;
     }
     return cardItem;
 }
-- (void)setupNavigator{
+- (void)setupNavigator {
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
     if (self.selectAvatarType == TUISelectAvatarTypeCover) {
         [self.titleView setTitle:TIMCommonLocalizableString(TUIKitChooseCover)];
-    }
-    else if (self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
+    } else if (self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
         [self.titleView setTitle:TIMCommonLocalizableString(TUIKitChooseBackground)];
-    }
-    else {
+    } else {
         [self.titleView setTitle:TIMCommonLocalizableString(TUIKitChooseAvatar)];
     }
-    
-    self.rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+
+    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     [self.rightButton setTitle:TIMCommonLocalizableString(Save) forState:UIControlStateNormal];
     [self.rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
     self.rightButton.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
     [self.rightButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
 
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:self.rightButton];
-    self.navigationItem.rightBarButtonItems = @[rightItem];
+    self.navigationItem.rightBarButtonItems = @[ rightItem ];
 }
 
 - (void)setCurrentSelectCardItem:(TUISelectAvatarCardItem *)currentSelectCardItem {
     _currentSelectCardItem = currentSelectCardItem;
     if (_currentSelectCardItem) {
         [self.rightButton setTitleColor:TIMCommonDynamicColor(@"", @"#006EFF") forState:UIControlStateNormal];
-    }
-    else {
+    } else {
         [self.rightButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     }
 }
 - (void)rightBarButtonClick {
-    
     if (!self.currentSelectCardItem) {
         return;
     }
-    
+
     if (self.selectCallBack) {
         if (self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
             if (IS_NOT_EMPTY_NSSTRING(self.currentSelectCardItem.fullUrlStr)) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [TUITool makeToastActivity];
+                  [TUITool makeToastActivity];
                 });
-                @weakify(self)
-                [[SDWebImagePrefetcher sharedImagePrefetcher] prefetchURLs:@[[NSURL URLWithString:self.currentSelectCardItem.fullUrlStr]] progress:nil completed:^(NSUInteger noOfFinishedUrls, NSUInteger noOfSkippedUrls) {
-                    @strongify(self);
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [TUITool hideToastActivity];
-                            [TUITool makeToast:TIMCommonLocalizableString(TUIKitChooseBackgroundSuccess)];
-                            if (self.selectCallBack) {
-                                self.selectCallBack(self.currentSelectCardItem.fullUrlStr);
-                                [self.navigationController popViewControllerAnimated:YES];
-                            }
-                            
-                        });
-                    });
-                    
-                }];
-            }
-            else {
+                @weakify(self);
+                [[SDWebImagePrefetcher sharedImagePrefetcher]
+                    prefetchURLs:@[ [NSURL URLWithString:self.currentSelectCardItem.fullUrlStr] ]
+                        progress:nil
+                       completed:^(NSUInteger noOfFinishedUrls, NSUInteger noOfSkippedUrls) {
+                         @strongify(self);
+                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                           dispatch_async(dispatch_get_main_queue(), ^{
+                             [TUITool hideToastActivity];
+                             [TUITool makeToast:TIMCommonLocalizableString(TUIKitChooseBackgroundSuccess)];
+                             if (self.selectCallBack) {
+                                 self.selectCallBack(self.currentSelectCardItem.fullUrlStr);
+                                 [self.navigationController popViewControllerAnimated:YES];
+                             }
+                           });
+                         });
+                       }];
+            } else {
                 [TUITool makeToast:TIMCommonLocalizableString(TUIKitChooseBackgroundSuccess)];
                 self.selectCallBack(self.currentSelectCardItem.fullUrlStr);
                 [self.navigationController popViewControllerAnimated:YES];
             }
-        }
-        else {
+        } else {
             self.selectCallBack(self.currentSelectCardItem.posterUrlStr);
             [self.navigationController popViewControllerAnimated:YES];
         }
     }
-    
-    
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat margin = 15;
 
     CGFloat padding = 13;
 
     int rowCount = 4.0;
 
-    if (self.selectAvatarType == TUISelectAvatarTypeCover ||
-        self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
+    if (self.selectAvatarType == TUISelectAvatarTypeCover || self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
         rowCount = 2.0;
-    }
-    else {
+    } else {
         rowCount = 4.0;
     }
-    
-    CGFloat width = (self.view.frame.size.width - 2 * margin - (rowCount - 1) * padding) /rowCount ;
-    
+
+    CGFloat width = (self.view.frame.size.width - 2 * margin - (rowCount - 1) * padding) / rowCount;
+
     CGFloat height = 77;
     if (self.selectAvatarType == TUISelectAvatarTypeConversationBackGroundCover) {
         height = 125;
     }
-    
+
     return CGSizeMake(width, height);
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section {
     return UIEdgeInsetsMake(24, 15, 0, 15);
 }
-
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -2168,30 +2064,28 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     TUISelectAvatarCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     // Configure the cell
-    
+
     if (indexPath.row < self.dataArr.count) {
         cell.cardItem = self.dataArr[indexPath.row];
     }
-    
+
     return cell;
 }
 
 #pragma mark <UICollectionViewDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
     [self recoverSelectedStatus];
-    
-    TUISelectAvatarCollectionCell *cell= (TUISelectAvatarCollectionCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    
-    if(cell == nil) {
+
+    TUISelectAvatarCollectionCell *cell = (TUISelectAvatarCollectionCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+
+    if (cell == nil) {
         [self.collectionView layoutIfNeeded];
         cell = (TUISelectAvatarCollectionCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     }
-    if (self.currentSelectCardItem == cell.cardItem ) {
+    if (self.currentSelectCardItem == cell.cardItem) {
         self.currentSelectCardItem = nil;
-    }
-    else {
+    } else {
         cell.cardItem.isSelect = YES;
         [cell updateSelectedUI];
         self.currentSelectCardItem = cell.cardItem;
@@ -2207,11 +2101,11 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         }
         index++;
     }
-    
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    TUISelectAvatarCollectionCell *cell= (TUISelectAvatarCollectionCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    
-    if(cell == nil) {
+    TUISelectAvatarCollectionCell *cell = (TUISelectAvatarCollectionCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+
+    if (cell == nil) {
         [self.collectionView layoutIfNeeded];
         cell = (TUISelectAvatarCollectionCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     }
@@ -2227,46 +2121,42 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 @implementation TUICommonAvatarCellData
 - (instancetype)init {
     self = [super init];
-    if(self){
-         _avatarImage = DefaultAvatarImage;
+    if (self) {
+        _avatarImage = DefaultAvatarImage;
     }
     return self;
 }
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     return TPersonalCommonCell_Image_Size.height + 2 * TPersonalCommonCell_Margin;
 }
 
 @end
 
-@interface TUICommonAvatarCell()
+@interface TUICommonAvatarCell ()
 @property TUICommonAvatarCellData *avatarData;
 @end
 
 @implementation TUICommonAvatarCell
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier])
-    {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier]) {
         [self setupViews];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
 
-- (void)fillWithData:(TUICommonAvatarCellData *) avatarData
-{
+- (void)fillWithData:(TUICommonAvatarCellData *)avatarData {
     [super fillWithData:avatarData];
 
     self.avatarData = avatarData;
 
     RAC(_keyLabel, text) = [RACObserve(avatarData, key) takeUntil:self.rac_prepareForReuseSignal];
     RAC(_valueLabel, text) = [RACObserve(avatarData, value) takeUntil:self.rac_prepareForReuseSignal];
-     @weakify(self)
+    @weakify(self);
     [[RACObserve(avatarData, avatarUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSURL *x) {
-        @strongify(self)
-        [self.avatar sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
+      @strongify(self);
+      [self.avatar sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
     }];
 
     if (avatarData.showAccessory) {
@@ -2276,8 +2166,7 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     }
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     CGSize headSize = TPersonalCommonCell_Image_Size;
     _avatar = [[UIImageView alloc] initWithFrame:CGRectMake(TPersonalCommonCell_Margin, TPersonalCommonCell_Margin, headSize.width, headSize.height)];
     _avatar.contentMode = UIViewContentModeScaleAspectFit;
@@ -2297,21 +2186,45 @@ static NSString * const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 
     [self addSubview:_keyLabel];
     [self addSubview:_valueLabel];
-    
+
     self.keyLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
     self.valueLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
-- (void)layoutSubviews{
+- (void)layoutSubviews {
     [super layoutSubviews];
 
     //_avatar.mm_top(self.mm_maxY - TPersonalCommonCell_Margin).mm_left(self.mm_maxX - 100);
     CGFloat margin = self.avatarData.showAccessory ? 20 : 0;
     _avatar.mm_left(self.mm_maxX - 16 - TPersonalCommonCell_Image_Size.width - margin);
+}
+@end
 
+/////////////////////////////////////////////////////////////////////////////////
+//
+//                             TUIConversationGroupItem
+//
+/////////////////////////////////////////////////////////////////////////////////
+NSUInteger kConversationMarkStarType = V2TIM_CONVERSATION_MARK_TYPE_STAR;
+@implementation TUIConversationGroupItem
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.unreadCount = 0;
+        self.groupIndex = 0;
+        self.isShow = YES;
+    }
+    return self;
+}
+@end
+
+@implementation TUISendMessageAppendParams
++ (instancetype)defaultConfig {
+    TUISendMessageAppendParams *params = [[TUISendMessageAppendParams alloc] init];
+    params.priority = V2TIM_PRIORITY_NORMAL;
+    return params;
 }
 
 @end
-

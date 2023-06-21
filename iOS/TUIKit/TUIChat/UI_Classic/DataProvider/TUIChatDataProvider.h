@@ -1,10 +1,14 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <Foundation/Foundation.h>
-#import "TUIChatBaseDataProvider.h"
-#import "TUIVideoMessageCellData.h"
-#import "TUIInputMoreCellData.h"
-#import "TUIChatConversationModel.h"
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMInputViewMoreActionProtocol.h>
+#import "TUIChatBaseDataProvider.h"
+#import "TUIChatConversationModel.h"
+#import "TUIInputMoreCellData.h"
+#import "TUIVideoMessageCellData.h"
 
 @class TUIChatDataProvider;
 NS_ASSUME_NONNULL_BEGIN
@@ -14,12 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - CellData
 - (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
                                                            userID:(NSString *)userID
-                                                  isNeedVideoCall:(BOOL)isNeedVideoCall
-                                                  isNeedAudioCall:(BOOL)isNeedAudioCall
-                                                  isNeedGroupLive:(BOOL)isNeedGroupLive
-                                                       isNeedLink:(BOOL)isNeedLink;
+                                                 actionController:(id<TIMInputViewMoreActionProtocol>)actionController;
 
 @end
-
 
 NS_ASSUME_NONNULL_END

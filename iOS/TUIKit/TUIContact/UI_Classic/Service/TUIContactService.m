@@ -3,6 +3,7 @@
 //  lottie-ios
 //
 //  Created by kayev on 2021/8/18.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactService.h"
@@ -15,9 +16,9 @@
 
 + (TUIContactService *)shareInstance {
     static dispatch_once_t onceToken;
-    static TUIContactService * g_sharedInstance = nil;
+    static TUIContactService *g_sharedInstance = nil;
     dispatch_once(&onceToken, ^{
-        g_sharedInstance = [[TUIContactService alloc] init];
+      g_sharedInstance = [[TUIContactService alloc] init];
     });
     return g_sharedInstance;
 }

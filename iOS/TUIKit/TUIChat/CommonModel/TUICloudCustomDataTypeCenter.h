@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/4/29.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -15,22 +16,21 @@ typedef NS_OPTIONS(NSUInteger, TUICloudCustomDataType) {
     TUICloudCustomDataType_MessageReply = 1 << 1,
     TUICloudCustomDataType_MessageReact = 1 << 2,
     TUICloudCustomDataType_MessageReplies = 1 << 3,
-    TUICloudCustomDataType_MessageReference = 1 <<4,
+    TUICloudCustomDataType_MessageReference = 1 << 4,
 };
 
-typedef NSString * TUICustomType;
+typedef NSString *TUICustomType;
 
 FOUNDATION_EXTERN TUICustomType messageFeature;
 
 @interface V2TIMMessage (CloudCustomDataType)
 
-- (void)doThingsInContainsCloudCustomOfDataType:(TUICloudCustomDataType)type
-                                     callback:(void(^)(BOOL isContains, id obj))callback;
+- (void)doThingsInContainsCloudCustomOfDataType:(TUICloudCustomDataType)type callback:(void (^)(BOOL isContains, id obj))callback;
 /**
  * 是否包含了这种状态
  * Whether this state is included
  */
-- (BOOL)isContainsCloudCustomOfDataType:(TUICloudCustomDataType)type ;
+- (BOOL)isContainsCloudCustomOfDataType:(TUICloudCustomDataType)type;
 
 /**
  * 解析指定类型的数据
@@ -52,7 +52,6 @@ FOUNDATION_EXTERN TUICustomType messageFeature;
 
 - (void)modifyIfNeeded:(V2TIMMessageModifyCompletion)callback;
 
-
 @end
 @interface TUICloudCustomDataTypeCenter : NSObject
 + (NSString *)convertType2String:(TUICloudCustomDataType)type;
@@ -61,7 +60,6 @@ FOUNDATION_EXTERN TUICustomType messageFeature;
 //               ByType :(TUICloudCustomDataType)type;
 @end
 
-
 @class TUIReactModelMessageReact;
 @class TUIReactModelReacts;
 
@@ -69,19 +67,16 @@ FOUNDATION_EXTERN TUICustomType messageFeature;
 
 @interface TUIReactModelMessageReact : NSObject
 
-@property (nonatomic,strong) NSMutableArray<TUIReactModelReacts *> *reacts;
-@property (nonatomic, nullable, copy) NSString *version;
+@property(nonatomic, strong) NSMutableArray<TUIReactModelReacts *> *reacts;
+@property(nonatomic, nullable, copy) NSString *version;
 
-- (void)applyWithDic:(NSDictionary *)orignMessageReactDic
-           emojiName:(NSString *)emojiName
-           loginUser:(NSString *)loginUser;
+- (void)applyWithDic:(NSDictionary *)orignMessageReactDic emojiName:(NSString *)emojiName loginUser:(NSString *)loginUser;
 - (NSDictionary *)descriptionDic;
 @end
 
-
 @interface TUIReactModelReacts : NSObject
-@property (nonatomic, strong) NSMutableArray<NSString *> *emojiIdArray;
-@property (nonatomic, nullable, copy) NSString *emojiKey;
+@property(nonatomic, strong) NSMutableArray<NSString *> *emojiIdArray;
+@property(nonatomic, nullable, copy) NSString *emojiKey;
 - (NSDictionary *)descriptionDic;
 @end
 

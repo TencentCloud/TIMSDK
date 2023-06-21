@@ -8,28 +8,26 @@
 
 #import "TUIMenuView.h"
 #import <TIMCommon/TIMDefine.h>
-#import "TUIMenuCell.h"
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
+#import "TUIMenuCell.h"
 
 @interface TUIMenuView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) NSMutableArray<TUIMenuCellData *> *data;
+@property(nonatomic, strong) NSMutableArray<TUIMenuCellData *> *data;
 @end
 
 @implementation TUIMenuView
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setData:(NSMutableArray<TUIMenuCellData *> *)data
-{
+- (void)setData:(NSMutableArray<TUIMenuCellData *> *)data {
     _data = data;
     [_menuCollectionView reloadData];
     [self defaultLayout];
@@ -37,8 +35,7 @@
     [_menuCollectionView selectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _sendButton = [[UIButton alloc] init];
@@ -68,43 +65,36 @@
     [self addSubview:_menuCollectionView];
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
     CGFloat buttonWidth = self.frame.size.height * 1.3;
     _sendButton.frame = CGRectMake(self.frame.size.width - buttonWidth, 0, buttonWidth, self.frame.size.height);
     _menuCollectionView.frame = CGRectMake(0, 0, self.frame.size.width - 2 * buttonWidth, self.frame.size.height);
 }
 
-- (void)sendUpInside:(UIButton *)sender
-{
-    if(_delegate && [_delegate respondsToSelector:@selector(menuViewDidSendMessage:)]){
+- (void)sendUpInside:(UIButton *)sender {
+    if (_delegate && [_delegate respondsToSelector:@selector(menuViewDidSendMessage:)]) {
         [_delegate menuViewDidSendMessage:self];
     }
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return _data.count * 2;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if(indexPath.row % 2 == 0){
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row % 2 == 0) {
         TUIMenuCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:TMenuCell_ReuseId forIndexPath:indexPath];
         [cell setData:_data[indexPath.row / 2]];
         return cell;
-    }
-    else{
+    } else {
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:TMenuCell_Line_ReuseId forIndexPath:indexPath];
         cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
-
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if(indexPath.row % 2 != 0){
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row % 2 != 0) {
         return;
     }
     for (NSInteger i = 0; i < _data.count; ++i) {
@@ -112,24 +102,23 @@
         data.isSelected = (i == indexPath.row / 2);
     }
     [_menuCollectionView reloadData];
-    if(_delegate && [_delegate respondsToSelector:@selector(menuView:didSelectItemAtIndex:)]){
+    if (_delegate && [_delegate respondsToSelector:@selector(menuView:didSelectItemAtIndex:)]) {
         [_delegate menuView:self didSelectItemAtIndex:indexPath.row / 2];
     }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if(indexPath.row % 2 == 0){
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row % 2 == 0) {
         CGFloat wh = collectionView.frame.size.height;
         return CGSizeMake(wh, wh);
-    }
-    else{
+    } else {
         return CGSizeMake(TLine_Heigh, collectionView.frame.size.height);
     }
 }
 
-- (void)scrollToMenuIndex:(NSInteger)index
-{
+- (void)scrollToMenuIndex:(NSInteger)index {
     for (NSInteger i = 0; i < _data.count; ++i) {
         TUIMenuCellData *data = _data[i];
         data.isSelected = (i == index);

@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/7.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -12,11 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class V2TIMFriendInfo;
 @class V2TIMGroupInfo;
 
-typedef NS_ENUM(NSInteger, TUIContactOnlineStatus) {
-    TUIContactOnlineStatusUnknown = 0,
-    TUIContactOnlineStatusOnline  = 1,
-    TUIContactOnlineStatusOffline = 2
-};
+typedef NS_ENUM(NSInteger, TUIContactOnlineStatus) { TUIContactOnlineStatusUnknown = 0, TUIContactOnlineStatusOnline = 1, TUIContactOnlineStatusOffline = 2 };
 
 @interface TUICommonContactCellData : TUICommonCellData
 
@@ -31,7 +28,7 @@ typedef NS_ENUM(NSInteger, TUIContactOnlineStatus) {
 @property UIImage *avatarImage;
 
 // The flag of indicating the user's online status
-@property (nonatomic, assign) TUIContactOnlineStatus onlineStatus;
+@property(nonatomic, assign) TUIContactOnlineStatus onlineStatus;
 
 @end
 

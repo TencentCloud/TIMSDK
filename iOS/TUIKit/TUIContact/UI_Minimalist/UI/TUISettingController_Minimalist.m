@@ -6,51 +6,51 @@
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
 #import "TUISettingController_Minimalist.h"
+#import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMConfig.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUILogin.h>
+#import <TUICore/TUIThemeManager.h>
+#import "TUIContactProfileCardCell_Minimalist.h"
 #import "TUIProfileController_Minimalist.h"
 #import "TUIStyleSelectViewController.h"
 #import "TUIThemeSelectController.h"
-#import <TUICore/TUILogin.h>
-#import <TUICore/TUIDarkModel.h>
-#import <TIMCommon/TIMCommonModel.h>
-#import <TUICore/TUIThemeManager.h>
-#import <TIMCommon/TIMConfig.h>
-#import "TUIContactProfileCardCell_Minimalist.h"
-#import <TUICore/TUICore.h>
 
-static NSString * const kKeyWeight = @"weight";
-static NSString * const kKeyItems = @"items";
-static NSString * const kKeyViews = @"views"; // Used to pass custom views from extensions.
-
+static NSString *const kKeyWeight = @"weight";
+static NSString *const kKeyItems = @"items";
+static NSString *const kKeyViews = @"views";  // Used to pass custom views from extensions.
 
 @interface TUILogOutButtonCell : TUIButtonCell
 
 @end
 @implementation TUILogOutButtonCell
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    self.button.mm_width(Screen_Width - 2 * kScale390(16))
-    .mm_height(self.mm_h - TButtonCell_Margin)
-    .mm_left(kScale390(16));
+    self.button.mm_width(Screen_Width - 2 * kScale390(16)).mm_height(self.mm_h - TButtonCell_Margin).mm_left(kScale390(16));
     self.button.layer.cornerRadius = kScale390(10);
     self.button.layer.masksToBounds = YES;
     self.button.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
 }
 @end
 
-@interface TUISettingController_Minimalist () <UIActionSheetDelegate, V2TIMSDKListener, TUIProfileCardDelegate, TUIStyleSelectControllerDelegate, TUIThemeSelectControllerDelegate>
-@property (nonatomic, strong) NSMutableArray *dataList;
-@property (nonatomic, strong) V2TIMUserFullInfo *profile;
-@property (nonatomic, strong) TUIContactProfileCardCellData_Minimalist *profileCellData;
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
-@property (nonatomic, strong) NSString *styleName;
-@property (nonatomic, strong) NSString *themeName;
-@property (nonatomic, copy) NSArray *sortedDataList;
+@interface TUISettingController_Minimalist () <UIActionSheetDelegate,
+                                               V2TIMSDKListener,
+                                               TUIProfileCardDelegate,
+                                               TUIStyleSelectControllerDelegate,
+                                               TUIThemeSelectControllerDelegate>
+@property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, strong) V2TIMUserFullInfo *profile;
+@property(nonatomic, strong) TUIContactProfileCardCellData_Minimalist *profileCellData;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) NSString *styleName;
+@property(nonatomic, strong) NSString *themeName;
+@property(nonatomic, copy) NSArray *sortedDataList;
 @end
 
 @implementation TUISettingController_Minimalist
 
-- (instancetype) init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.showPersonalCell = YES;
@@ -68,18 +68,20 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
-    
+
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     if (loginUser.length > 0) {
-        @weakify(self)
-        [[V2TIMManager sharedInstance] getUsersInfo:@[loginUser] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-            @strongify(self)
-            self.profile = infoList.firstObject;
-            [self setupData];
-        } fail:nil];
+        @weakify(self);
+        [[V2TIMManager sharedInstance] getUsersInfo:@[ loginUser ]
+                                               succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                                                 @strongify(self);
+                                                 self.profile = infoList.firstObject;
+                                                 [self setupData];
+                                               }
+                                               fail:nil];
     }
-    
+
     [TUITool addUnsupportNotificationInVC:self debugOnly:NO];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -88,19 +90,18 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
 }
 
 #pragma mark - Private
-- (void)setupViews
-{
+- (void)setupViews {
     self.tableView.delaysContentTouches = NO;
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.backgroundColor = [UIColor whiteColor];
-    
-    CGRect rect = self.view.bounds;    
+
+    CGRect rect = self.view.bounds;
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
     [self.tableView registerClass:[TUIContactProfileCardCell_Minimalist class] forCellReuseIdentifier:@"personalCell"];
     [self.tableView registerClass:[TUILogOutButtonCell class] forCellReuseIdentifier:@"buttonCell"];
     [self.tableView registerClass:[TUICommonSwitchCell class] forCellReuseIdentifier:@"switchCell"];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"containerCell"];
-    
+
     if (@available(iOS 15.0, *)) {
         self.tableView.sectionHeaderTopPadding = 0;
     }
@@ -121,8 +122,9 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
     UIView *line = [[UIView alloc] init];
-    if(section != 1 ) {
-        line.backgroundColor = TUIDemoDynamicColor(@"separator_color", @"#DBDBDB");;
+    if (section != 1) {
+        line.backgroundColor = TUIDemoDynamicColor(@"separator_color", @"#DBDBDB");
+        ;
         line.frame = CGRectMake(kScale390(16), view.frame.size.height - 0.5, Screen_Width - kScale390(32), 0.5);
         [view addSubview:line];
     }
@@ -133,14 +135,13 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
     CGFloat height = 0;
     if (section == 0) {
         height = 0;
-    }
-    else if (section == self.dataList.count -1) {
+    } else if (section == self.dataList.count - 1) {
         height = kScale390(37);
-    }
-    else {
+    } else {
         height = 10;
     }
-    return height;}
+    return height;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSDictionary *dict = self.sortedDataList[section];
@@ -186,7 +187,7 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
         return cell;
     } else if ([data isKindOfClass:[TUIButtonCellData class]]) {
         TUILogOutButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:TButtonCell_ReuseId];
-        if(!cell){
+        if (!cell) {
             cell = [[TUILogOutButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TButtonCell_ReuseId];
         }
         [cell fillWithData:(TUIButtonCellData *)data];
@@ -214,14 +215,16 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
         personal.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
         personal.name = [self.profile showName];
         personal.genderString = [self.profile showGender];
-        personal.signature = self.profile.selfSignature.length ? [NSString stringWithFormat:TIMCommonLocalizableString(SignatureFormat), self.profile.selfSignature] : TIMCommonLocalizableString(no_personal_signature);
+        personal.signature = self.profile.selfSignature.length
+                                 ? [NSString stringWithFormat:TIMCommonLocalizableString(SignatureFormat), self.profile.selfSignature]
+                                 : TIMCommonLocalizableString(no_personal_signature);
         personal.cselector = @selector(didSelectCommon);
         personal.showAccessory = NO;
         personal.showSignature = YES;
         self.profileCellData = personal;
-        [self.dataList addObject:@{kKeyWeight: @1000, kKeyItems: @[personal]}];
+        [self.dataList addObject:@{kKeyWeight : @1000, kKeyItems : @[ personal ]}];
     }
-    
+
     TUICommonTextCellData *friendApply = [TUICommonTextCellData new];
     friendApply.key = TIMCommonLocalizableString(MeFriendRequest);
     friendApply.showAccessory = YES;
@@ -235,110 +238,111 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
     if (self.profile.allowType == V2TIM_FRIEND_DENY_ANY) {
         friendApply.value = TIMCommonLocalizableString(MeFriendRequestMethodDenyAll);
     }
-    [self.dataList addObject:@{kKeyWeight: @900, kKeyItems: @[friendApply]}];
-    
+    [self.dataList addObject:@{kKeyWeight : @900, kKeyItems : @[ friendApply ]}];
+
     if (self.showMessageReadStatusCell) {
         TUICommonSwitchCellData *msgReadStatus = [TUICommonSwitchCellData new];
-        msgReadStatus.title =  TIMCommonLocalizableString(MeMessageReadStatus);
-        msgReadStatus.desc = self.msgNeedReadReceipt ? TIMCommonLocalizableString(MeMessageReadStatusOpenDesc) : TIMCommonLocalizableString(MeMessageReadStatusCloseDesc);
+        msgReadStatus.title = TIMCommonLocalizableString(MeMessageReadStatus);
+        msgReadStatus.desc =
+            self.msgNeedReadReceipt ? TIMCommonLocalizableString(MeMessageReadStatusOpenDesc) : TIMCommonLocalizableString(MeMessageReadStatusCloseDesc);
         msgReadStatus.cswitchSelector = @selector(onSwitchMsgReadStatus:);
         msgReadStatus.on = self.msgNeedReadReceipt;
-        [self.dataList addObject:@{kKeyWeight: @800, kKeyItems: @[msgReadStatus]}];
+        [self.dataList addObject:@{kKeyWeight : @800, kKeyItems : @[ msgReadStatus ]}];
     }
-    
+
     if (self.showDisplayOnlineStatusCell) {
         TUICommonSwitchCellData *onlineStatus = [TUICommonSwitchCellData new];
-        onlineStatus.title =  TIMCommonLocalizableString(ShowOnlineStatus);
-        onlineStatus.desc = [TUIConfig defaultConfig].displayOnlineStatusIcon ? TIMCommonLocalizableString(ShowOnlineStatusOpenDesc) : TIMCommonLocalizableString(ShowOnlineStatusCloseDesc);
+        onlineStatus.title = TIMCommonLocalizableString(ShowOnlineStatus);
+        onlineStatus.desc = [TUIConfig defaultConfig].displayOnlineStatusIcon ? TIMCommonLocalizableString(ShowOnlineStatusOpenDesc)
+                                                                              : TIMCommonLocalizableString(ShowOnlineStatusCloseDesc);
         onlineStatus.cswitchSelector = @selector(onSwitchOnlineStatus:);
         onlineStatus.on = [TUIConfig defaultConfig].displayOnlineStatusIcon;
-        [self.dataList addObject:@{kKeyWeight: @700, kKeyItems: @[onlineStatus]}];
+        [self.dataList addObject:@{kKeyWeight : @700, kKeyItems : @[ onlineStatus ]}];
     }
-    
+
     if (self.showSelectStyleCell) {
         TUICommonTextCellData *styleApply = [TUICommonTextCellData new];
         styleApply.key = TIMCommonLocalizableString(TIMAppSelectStyle);
         styleApply.showAccessory = YES;
         styleApply.cselector = @selector(onClickChangeStyle);
         [[RACObserve(self, styleName) distinctUntilChanged] subscribeNext:^(NSString *styleName) {
-            styleApply.value = self.styleName;
+          styleApply.value = self.styleName;
         }];
-        self.styleName = [TUIStyleSelectViewController isClassicEntrance] ? TIMCommonLocalizableString(TUIKitClassic) : TIMCommonLocalizableString(TUIKitMinimalist);
-        [self.dataList addObject:@{kKeyWeight: @600, kKeyItems: @[styleApply]}];
+        self.styleName =
+            [TUIStyleSelectViewController isClassicEntrance] ? TIMCommonLocalizableString(TUIKitClassic) : TIMCommonLocalizableString(TUIKitMinimalist);
+        [self.dataList addObject:@{kKeyWeight : @600, kKeyItems : @[ styleApply ]}];
     }
-    
+
     if (self.showChangeThemeCell && [self.styleName isEqualToString:TIMCommonLocalizableString(TUIKitClassic)]) {
         TUICommonTextCellData *themeApply = [TUICommonTextCellData new];
         themeApply.key = TIMCommonLocalizableString(TIMAppChangeTheme);
         themeApply.showAccessory = YES;
         themeApply.cselector = @selector(onClickChangeTheme);
         [[RACObserve(self, themeName) distinctUntilChanged] subscribeNext:^(NSString *themeName) {
-            themeApply.value = self.themeName;
+          themeApply.value = self.themeName;
         }];
         self.themeName = [TUIThemeSelectController getLastThemeName];
-        [self.dataList addObject:@{kKeyWeight: @500, kKeyItems: @[themeApply]}];
+        [self.dataList addObject:@{kKeyWeight : @500, kKeyItems : @[ themeApply ]}];
     }
-    
+
     if (self.showCallsRecordCell) {
         TUICommonSwitchCellData *record = [TUICommonSwitchCellData new];
         record.title = TIMCommonLocalizableString(ShowCallsRecord);
         record.desc = @"";
         record.cswitchSelector = @selector(onSwitchCallsRecord:);
         record.on = self.displayCallsRecord;
-        [self.dataList addObject:@{kKeyWeight: @400, kKeyItems: @[record]}];
+        [self.dataList addObject:@{kKeyWeight : @400, kKeyItems : @[ record ]}];
     }
-    
+
     if (self.showAboutIMCell) {
         TUICommonTextCellData *about = [TUICommonTextCellData new];
         about.key = self.aboutIMCellText;
         about.showAccessory = YES;
         about.cselector = @selector(onClickAboutIM:);
-        [self.dataList addObject:@{kKeyWeight: @300, kKeyItems: @[about]}];
+        [self.dataList addObject:@{kKeyWeight : @300, kKeyItems : @[ about ]}];
     }
 
     if (self.showLoginOutCell) {
-        TUIButtonCellData *button =  [[TUIButtonCellData alloc] init];
+        TUIButtonCellData *button = [[TUIButtonCellData alloc] init];
         button.title = TIMCommonLocalizableString(logout);
         button.style = ButtonRedText;
         button.cbuttonSelector = @selector(onClickLogout:);
         button.hideSeparatorLine = YES;
-        [self.dataList addObject:@{kKeyWeight: @200, kKeyItems: @[button]}];
+        [self.dataList addObject:@{kKeyWeight : @200, kKeyItems : @[ button ]}];
     }
-    
+
     [self setupExtensionsData];
     [self sortDataList];
-    
+
     [self.tableView reloadData];
 }
 
 - (void)setupExtensionsData {
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[TUICore_TUIContactExtension_MeSettingMenu_Nav] = self.navigationController;
-    NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID
-                                                 param:param];
+    NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_MeSettingMenu_MinimalistExtensionID param:param];
     for (TUIExtensionInfo *info in extensionList) {
         NSAssert(info.data, @"extension for setting is invalid, check data");
         UIView *view = info.data[TUICore_TUIContactExtension_MeSettingMenu_View];
         NSInteger weight = [info.data[TUICore_TUIContactExtension_MeSettingMenu_Weight] integerValue];
         if (view) {
-            [self.dataList addObject:@{kKeyWeight: @(weight), kKeyViews: @[view]}];
+            [self.dataList addObject:@{kKeyWeight : @(weight), kKeyViews : @[ view ]}];
         }
     }
 }
 
 - (void)sortDataList {
     NSArray *sortedArray = [self.dataList sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
-        if ([obj1[kKeyWeight] integerValue] <= [obj2[kKeyWeight] integerValue]) {
-            return NSOrderedDescending;
-        } else {
-            return NSOrderedAscending;
-        }
+      if ([obj1[kKeyWeight] integerValue] <= [obj2[kKeyWeight] integerValue]) {
+          return NSOrderedDescending;
+      } else {
+          return NSOrderedAscending;
+      }
     }];
     self.sortedDataList = sortedArray;
 }
 
-
-#pragma mark -- Event
+#pragma mark-- Event
 - (void)didSelectCommon {
     [self setupData];
     TUIProfileController_Minimalist *test = [[TUIProfileController_Minimalist alloc] init];
@@ -359,18 +363,17 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.tag == SHEET_AGREE) {
-        if (buttonIndex >= 3)
-            return;
+        if (buttonIndex >= 3) return;
         self.profile.allowType = buttonIndex;
         [self setupData];
         V2TIMUserFullInfo *info = [[V2TIMUserFullInfo alloc] init];
         info.allowType = [NSNumber numberWithInteger:buttonIndex].intValue;
         [[V2TIMManager sharedInstance] setSelfInfo:info succ:nil fail:nil];
     }
-    //PRIVATEMARK
+    // PRIVATEMARK
 }
 
-- (void)didTapOnAvatar:(TUIProfileCardCell *)cell{
+- (void)didTapOnAvatar:(TUIProfileCardCell *)cell {
     TUIAvatarViewController *image = [[TUIAvatarViewController alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];
@@ -381,7 +384,7 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
     if (self.delegate && [self.delegate respondsToSelector:@selector(onSwitchMsgReadStatus:)]) {
         [self.delegate onSwitchMsgReadStatus:on];
     }
-    
+
     TUICommonSwitchCellData *switchData = cell.switchData;
     switchData.on = on;
     if (on) {
@@ -400,7 +403,7 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
         [self.delegate onSwitchOnlineStatus:on];
     }
     TUIConfig.defaultConfig.displayOnlineStatusIcon = on;
-    
+
     TUICommonSwitchCellData *switchData = cell.switchData;
     switchData.on = on;
     if (on) {
@@ -408,12 +411,12 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
     } else {
         switchData.desc = TIMCommonLocalizableString(ShowOnlineStatusCloseDesc);
     }
-    
+
     if (on) {
         [TUITool hideToast];
         [TUITool makeToast:TIMCommonLocalizableString(ShowPackageToast)];
     }
-    
+
     [cell fillWithData:switchData];
 }
 
@@ -425,7 +428,7 @@ static NSString * const kKeyViews = @"views"; // Used to pass custom views from 
 }
 
 - (void)onClickAboutIM:(TUICommonTextCell *)cell {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAboutIM)]){
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAboutIM)]) {
         [self.delegate onClickAboutIM];
     }
 }

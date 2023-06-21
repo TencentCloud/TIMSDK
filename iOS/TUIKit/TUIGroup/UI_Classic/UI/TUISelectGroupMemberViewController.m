@@ -3,40 +3,44 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by xiangzhang on 2020/7/6.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUISelectGroupMemberViewController.h"
+#import <TUICore/TUICore.h>
 #import <TUICore/TUIDarkModel.h>
-#import "TUISelectGroupMemberCell.h"
-#import "TUIMemberPanelCell.h"
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIMemberPanelCell.h"
-#import <TUICore/TUIGlobalization.h>
-#import <TUICore/TUICore.h>
-#import <TUICore/TUIThemeManager.h>
+#import "TUISelectGroupMemberCell.h"
 
 #define kUserBorder 44.0
 #define kUserSpacing 2
 #define kUserPanelLeftSpacing 15
 
-@interface TUISelectGroupMemberViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDelegate,UITableViewDataSource>
-@property(nonatomic,strong) UIButton *cancelBtn;
-@property(nonatomic,strong) UIButton *doneBtn;
-@property(nonatomic,strong) UICollectionView *userPanel;
-@property(nonatomic,strong) UITableView *selectTable;
-@property(nonatomic,strong) UIActivityIndicatorView *indicatorView;
-@property(nonatomic,strong) NSMutableArray <TUIUserModel *>*selectedUsers;
+@interface TUISelectGroupMemberViewController () <UICollectionViewDelegate,
+                                                  UICollectionViewDataSource,
+                                                  UICollectionViewDelegateFlowLayout,
+                                                  UITableViewDelegate,
+                                                  UITableViewDataSource>
+@property(nonatomic, strong) UIButton *cancelBtn;
+@property(nonatomic, strong) UIButton *doneBtn;
+@property(nonatomic, strong) UICollectionView *userPanel;
+@property(nonatomic, strong) UITableView *selectTable;
+@property(nonatomic, strong) UIActivityIndicatorView *indicatorView;
+@property(nonatomic, strong) NSMutableArray<TUIUserModel *> *selectedUsers;
 
-@property(nonatomic,assign) CGFloat topStartPosition;
-@property(nonatomic,assign) CGFloat userPanelWidth;
-@property(nonatomic,assign) CGFloat userPanelHeight;
-@property(nonatomic,assign) CGFloat realSpacing;
-@property(nonatomic,assign) NSInteger userPanelColumnCount;
-@property(nonatomic,assign) NSInteger userPanelRowCount;
+@property(nonatomic, assign) CGFloat topStartPosition;
+@property(nonatomic, assign) CGFloat userPanelWidth;
+@property(nonatomic, assign) CGFloat userPanelHeight;
+@property(nonatomic, assign) CGFloat realSpacing;
+@property(nonatomic, assign) NSInteger userPanelColumnCount;
+@property(nonatomic, assign) NSInteger userPanelRowCount;
 
-@property(nonatomic,strong) NSMutableArray *memberList;
-@property(nonatomic,assign) NSInteger pageIndex;
-@property(nonatomic,assign) BOOL isNoData;
+@property(nonatomic, strong) NSMutableArray *memberList;
+@property(nonatomic, assign) NSInteger pageIndex;
+@property(nonatomic, assign) BOOL isNoData;
 @end
 
 @implementation TUISelectGroupMemberViewController {
@@ -49,27 +53,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = self.name?:TIMCommonLocalizableString(Make-a-call);
+    titleLabel.text = self.name ?: TIMCommonLocalizableString(Make_a_call);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
     titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
-    
+
     self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
-    
+
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:self.cancelBtn];
     self.navigationItem.leftBarButtonItem = item;
-    
+
     UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithCustomView:self.doneBtn];
     self.navigationItem.rightBarButtonItem = item2;
-    
+
     CGFloat topPadding = 44.f;
-    
+
     if (@available(iOS 11.0, *)) {
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         topPadding = window.safeAreaInsets.top;
     }
-    
+
     topPadding = MAX(26, topPadding);
     CGFloat navBarHeight = self.navigationController.navigationBar.bounds.size.height;
     self.topStartPosition = topPadding + (navBarHeight > 0 ? navBarHeight : 44);
@@ -85,7 +89,7 @@
 
 - (UIButton *)cancelBtn {
     if (!_cancelBtn.superview) {
-         _cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+        _cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
         [_cancelBtn setTitle:TIMCommonLocalizableString(Cancel) forState:UIControlStateNormal];
         [_cancelBtn setTitleColor:TIMCommonDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
         [_cancelBtn addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
@@ -154,13 +158,15 @@
 - (void)updateUserPanel {
     self.userPanel.mm_height(self.userPanelHeight).mm_left(kUserPanelLeftSpacing).mm_flexToRight(0).mm_top(self.topStartPosition);
     self.selectTable.mm_width(self.view.mm_w).mm_top(self.userPanel.mm_maxY).mm_flexToBottom(0);
-    @weakify(self)
-    [self.userPanel performBatchUpdates:^{
-        @strongify(self)
-        [self.userPanel reloadSections:[NSIndexSet indexSetWithIndex:0]];
-    } completion:nil];
+    @weakify(self);
+    [self.userPanel
+        performBatchUpdates:^{
+          @strongify(self);
+          [self.userPanel reloadSections:[NSIndexSet indexSetWithIndex:0]];
+        }
+                 completion:nil];
     [self.selectTable reloadData];
-    self.doneBtn.alpha = (self.selectedUsers.count == 0 ?  0.5 : 1);
+    self.doneBtn.alpha = (self.selectedUsers.count == 0 ? 0.5 : 1);
 }
 
 #pragma mark action
@@ -176,7 +182,7 @@
     if (self.selectedFinished) {
         [self cancel];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.selectedFinished(users);
+          self.selectedFinished(users);
         });
     }
     if (self.optionalStyle == TUISelectMemberOptionalStyleTransferOwner) {
@@ -184,12 +190,10 @@
         return;
     }
     [self cancel];
-    
-    NSDictionary *result = @{
-        TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList : users
-    };
-    if (self.tui_valueCallback) {
-        self.tui_valueCallback(result);
+
+    NSDictionary *result = @{TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList : users};
+    if (self.navigateValueCallback) {
+        self.navigateValueCallback(result);
     }
 }
 
@@ -215,7 +219,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString* cellIdentifier = @"TUISelectGroupMemberCell";
+    static NSString *cellIdentifier = @"TUISelectGroupMemberCell";
     TUISelectGroupMemberCell *cell = (TUISelectGroupMemberCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
         cell = [[TUISelectGroupMemberCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -247,7 +251,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     BOOL isSelected = NO;
     TUIUserModel *userSelected = [[TUIUserModel alloc] init];
     if (indexPath.row < self.memberList.count) {
@@ -255,18 +258,18 @@
         isSelected = [self isUserSelected:user];
         userSelected = [user copy];
     }
-    
+
     if (userSelected.userId.length == 0) {
         return;
     }
-    
+
     if ([userSelected.userId isEqualToString:kImSDK_MesssageAtALL]) {
         [self.selectedUsers removeAllObjects];
         [self.selectedUsers addObject:userSelected];
         [self onNext];
         return;
     }
-    
+
     if (self.optionalStyle == TUISelectMemberOptionalStyleTransferOwner) {
         [self.selectedUsers removeAllObjects];
     }
@@ -283,26 +286,25 @@
     [self updateUserPanel];
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if(scrollView.contentOffset.y > 0 && (scrollView.contentOffset.y >= scrollView.bounds.origin.y)){
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.y > 0 && (scrollView.contentOffset.y >= scrollView.bounds.origin.y)) {
         if (self.indicatorView.isAnimating) {
             return;
         }
         [self.indicatorView startAnimating];
-        @weakify(self)
+        @weakify(self);
         [self loadData:^(BOOL success, NSString *desc, NSArray<TUIUserModel *> *datas) {
-            @strongify(self)
-            [self.indicatorView stopAnimating];
-            if (!success) {
-                return;
-            }
-            [self.memberList addObjectsFromArray:datas];
-            [self.selectTable reloadData];
-            [self.selectTable layoutIfNeeded];
-            if (datas.count == 0) {
-                [self.selectTable setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
-            }
+          @strongify(self);
+          [self.indicatorView stopAnimating];
+          if (!success) {
+              return;
+          }
+          [self.memberList addObjectsFromArray:datas];
+          [self.selectTable reloadData];
+          [self.selectTable layoutIfNeeded];
+          if (datas.count == 0) {
+              [self.selectTable setContentOffset:CGPointMake(0, scrollView.contentOffset.y - TMessageController_Header_Height) animated:YES];
+          }
         }];
     }
 }
@@ -317,7 +319,7 @@
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString* cellIdentifier = @"TUIMemberPanelCell";
+    static NSString *cellIdentifier = @"TUIMemberPanelCell";
     TUIMemberPanelCell *cell = (TUIMemberPanelCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     if (indexPath.row < self.selectedUsers.count) {
         [cell fillWithData:self.selectedUsers[indexPath.row]];
@@ -325,8 +327,9 @@
     return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(kUserBorder, kUserBorder);
 }
 
@@ -374,19 +377,19 @@
 }
 
 - (void)getMembers {
-    @weakify(self)
+    @weakify(self);
     [self getMembersWithOptionalStyle];
     [self loadData:^(BOOL success, NSString *desc, NSArray<TUIUserModel *> *datas) {
-        @strongify(self)
-        if (!success) {
-            return;
-        }
-        [self.memberList addObjectsFromArray:datas];
-        [self.selectTable reloadData];
+      @strongify(self);
+      if (!success) {
+          return;
+      }
+      [self.memberList addObjectsFromArray:datas];
+      [self.selectTable reloadData];
     }];
 }
 
-- (void)loadData:(void(^)(BOOL, NSString *, NSArray<TUIUserModel *> *))completion {
+- (void)loadData:(void (^)(BOOL, NSString *, NSArray<TUIUserModel *> *))completion {
     if (self.isNoData) {
         if (completion) {
             completion(YES, @"there is no more data", @[]);
@@ -394,66 +397,69 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupId filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:self.pageIndex succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-        weakSelf.pageIndex = nextSeq;
-        weakSelf.isNoData = (nextSeq == 0);
-        NSMutableArray *arrayM = [NSMutableArray array];
-        for (V2TIMGroupMemberFullInfo *info in memberList) {
-            if ([info.userID isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
-                continue;
-            }
-            if (weakSelf.optionalStyle & TUISelectMemberOptionalStylePublicMan) {
-                BOOL isSuper = (info.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
-                BOOL isAdMin = (info.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
-                if (isSuper || isAdMin) {
-                    continue;
-                }
-            }
-            
-            if (self.selectedUserIDList &&
-                [self.selectedUserIDList containsObject:info.userID]) {
-                continue;
-            }
-            
-            TUIUserModel *model = [[TUIUserModel alloc] init];
-            model.userId = info.userID;
-            if (info.nameCard.length > 0) {
-                model.name = info.nameCard;
-            } else if (info.friendRemark.length > 0) {
-                model.name = info.friendRemark;
-            } else if (info.nickName.length > 0) {
-                model.name = info.nickName;
-            } else {
-                model.name = info.userID;
-            }
-            if (info.faceURL != nil) {
-                model.avatar = info.faceURL;
-            }
-            [arrayM addObject:model];
+    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupId
+        filter:V2TIM_GROUP_MEMBER_FILTER_ALL
+        nextSeq:self.pageIndex
+        succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+          weakSelf.pageIndex = nextSeq;
+          weakSelf.isNoData = (nextSeq == 0);
+          NSMutableArray *arrayM = [NSMutableArray array];
+          for (V2TIMGroupMemberFullInfo *info in memberList) {
+              if ([info.userID isEqualToString:[[V2TIMManager sharedInstance] getLoginUser]]) {
+                  continue;
+              }
+              if (weakSelf.optionalStyle & TUISelectMemberOptionalStylePublicMan) {
+                  BOOL isSuper = (info.role == V2TIM_GROUP_MEMBER_ROLE_SUPER);
+                  BOOL isAdMin = (info.role == V2TIM_GROUP_MEMBER_ROLE_ADMIN);
+                  if (isSuper || isAdMin) {
+                      continue;
+                  }
+              }
+
+              if (self.selectedUserIDList && [self.selectedUserIDList containsObject:info.userID]) {
+                  continue;
+              }
+
+              TUIUserModel *model = [[TUIUserModel alloc] init];
+              model.userId = info.userID;
+              if (info.nameCard.length > 0) {
+                  model.name = info.nameCard;
+              } else if (info.friendRemark.length > 0) {
+                  model.name = info.friendRemark;
+              } else if (info.nickName.length > 0) {
+                  model.name = info.nickName;
+              } else {
+                  model.name = info.userID;
+              }
+              if (info.faceURL != nil) {
+                  model.avatar = info.faceURL;
+              }
+              [arrayM addObject:model];
+          }
+          if (completion) {
+              completion(YES, nil, [NSArray arrayWithArray:arrayM]);
+          }
         }
-        if (completion) {
-            completion(YES, nil, [NSArray arrayWithArray:arrayM]);
-        }
-    } fail:^(int code, NSString *desc) {
-        if (completion) {
-            completion(NO, desc, @[]);
-        }
-    }];
+        fail:^(int code, NSString *desc) {
+          if (completion) {
+              completion(NO, desc, @[]);
+          }
+        }];
 }
 
 - (void)getMembersWithOptionalStyle {
     if (!NSThread.isMainThread) {
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf getMembersWithOptionalStyle];
+          [weakSelf getMembersWithOptionalStyle];
         });
         return;
     }
-    
+
     if (self.optionalStyle == TUISelectMemberOptionalStyleNone) {
         return;
     }
-    
+
     if (self.optionalStyle & TUISelectMemberOptionalStyleAtAll) {
         TUIUserModel *model = [[TUIUserModel alloc] init];
         model.userId = kImSDK_MesssageAtALL;

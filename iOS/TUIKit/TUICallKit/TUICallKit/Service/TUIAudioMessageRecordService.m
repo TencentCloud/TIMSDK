@@ -13,7 +13,7 @@
 #import "NSDictionary+TUISafe.h"
 #import "TUILog.h"
 #import "TUILogin.h"
-#import "TRTCCloud.h"
+#import "TUICallKitHeader.h"
 #import "TUICallObserver.h"
 #import "TUICallingCommon.h"
 #import "TUICallingStatusManager.h"
@@ -51,7 +51,16 @@ NS_ASSUME_NONNULL_END
 @implementation TUIAudioMessageRecordService
 
 + (void)load {
-    [TUICore registerService:TUICore_TUIAudioMessageRecordService object:[TUIAudioMessageRecordService new]];
+    [TUICore registerService:TUICore_TUIAudioMessageRecordService object:[TUIAudioMessageRecordService shareInstance]];
+}
+
++ (instancetype)shareInstance {
+    static dispatch_once_t onceToken;
+    static id g_sharedInstance = nil;
+    dispatch_once(&onceToken, ^{
+        g_sharedInstance = [[self alloc] init];
+    });
+    return g_sharedInstance;
 }
 
 - (instancetype)init {

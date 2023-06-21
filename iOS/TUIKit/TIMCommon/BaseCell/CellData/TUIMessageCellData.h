@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明了 TUIMessageCellData 类。
@@ -6,13 +9,14 @@
  *  - 当您想要自定义消息时，需要将自定义消息的数据源继承于本类或者本类的子类。
  *
  * This file declares the TUIMessageCellData class.
- * - The "message unit" data source, as the parent class of various detailed data sources, provides basic templates for the properties and behaviors of various "message unit" data sources.
+ * - The "message unit" data source, as the parent class of various detailed data sources, provides basic templates for the properties and behaviors of various
+ * "message unit" data sources.
  * - The "data source class" in this document is the base class for all message data, and each type of data source inherits from this class or its subclasses.
  * - When you want to customize the message, you need to inherit the data source of the customized message from this class or a subclass of this class.
  */
 #import <TIMCommon/TIMCommonModel.h>
-#import "TUIMessageCellLayout.h"
 #import <TIMCommon/TIMDefine.h>
+#import "TUIMessageCellLayout.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,11 +29,11 @@ typedef void (^TDownloadResponse)(int code, NSString *desc, NSString *path);
  *  The definition of message status
  */
 typedef NS_ENUM(NSUInteger, TMsgStatus) {
-    Msg_Status_Init,        // 消息创建, message initial
-    Msg_Status_Sending,     // 消息发送中, message sending
-    Msg_Status_Sending_2,   // 消息发送中_2，推荐使用，message sending, recommended
-    Msg_Status_Succ,        // 消息发送成功, message sent successfully
-    Msg_Status_Fail,        // 消息发送失败, Failed to send message
+    Msg_Status_Init,       // 消息创建, message initial
+    Msg_Status_Sending,    // 消息发送中, message sending
+    Msg_Status_Sending_2,  // 消息发送中_2，推荐使用，message sending, recommended
+    Msg_Status_Succ,       // 消息发送成功, message sent successfully
+    Msg_Status_Fail,       // 消息发送失败, Failed to send message
 };
 
 /**
@@ -40,8 +44,8 @@ typedef NS_ENUM(NSUInteger, TMsgStatus) {
  *  Message direction affects UI styles such as bubble icons, bubble positions, etc.
  */
 typedef NS_ENUM(NSUInteger, TMsgDirection) {
-    MsgDirectionIncoming, //消息接收
-    MsgDirectionOutgoing, //消息发送
+    MsgDirectionIncoming,  // 消息接收
+    MsgDirectionOutgoing,  // 消息发送
 };
 
 /**
@@ -51,9 +55,12 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  - 聊天信息数据单元整合并调用了 IM SDK，能够通过 SDK 提供的接口实现消息的业务逻辑。
  *
  * 【Module name】TUIMessageCellData
- * 【Function description】The data source of the chat message unit cooperates with the message controller to realize the business logic of message sending and receiving.
- *  - It is used to store various data and information required for message management and logic implementation. Including a series of data such as message status, message sender ID and avatar.
- *  - The chat information data unit integrates and calls the IM SDK, and can implement the business logic of the message through the interface provided by the SDK.
+ * 【Function description】The data source of the chat message unit cooperates with the message controller to realize the business logic of message sending and
+ * receiving.
+ *  - It is used to store various data and information required for message management and logic implementation. Including a series of data such as message
+ * status, message sender ID and avatar.
+ *  - The chat information data unit integrates and calls the IM SDK, and can implement the business logic of the message through the interface provided by the
+ * SDK.
  */
 @interface TUIMessageCellData : TUICommonCellData
 
@@ -77,27 +84,27 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 /**
  *  Message unique id
  */
-@property (nonatomic, strong) NSString *msgID;
+@property(nonatomic, strong) NSString *msgID;
 
 /**
  *  Message sender ID
  */
-@property (nonatomic, strong) NSString *identifier;
+@property(nonatomic, strong) NSString *identifier;
 
 /**
  *  Sender's avatar url
  */
-@property (nonatomic, strong) NSURL * __nullable avatarUrl;
+@property(nonatomic, strong) NSURL *__nullable avatarUrl;
 
 /**
  *  Sender's avatar
  */
-@property (nonatomic, strong) UIImage *__nullable avatarImage __attribute__((deprecated("not supported")));
+@property(nonatomic, strong) UIImage *__nullable avatarImage __attribute__((deprecated("not supported")));
 
 /**
  * Whether to use the receiver's avatar, default is NO
  */
-@property (nonatomic, assign) BOOL isUseMsgReceiverAvatar;
+@property(nonatomic, assign) BOOL isUseMsgReceiverAvatar;
 
 /**
  *  信息发送者昵称
@@ -106,7 +113,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  Sender's nickname
  *  The nickname and ID are not necessarily the same, and the nickname is displayed by default in the chat interface.
  */
-@property (nonatomic, strong) NSString *name;
+@property(nonatomic, strong) NSString *name;
 
 /**
  *  名称展示 flag
@@ -119,19 +126,19 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  - In group chat, the nickname is displayed for messages sent by other users in the group.
  *  - YES: showing nickname;  NO: hidden nickname
  */
-@property (nonatomic, assign) BOOL showName;
+@property(nonatomic, assign) BOOL showName;
 
 /**
  *  头像展示
  *  Display user avatar
  */
-@property (nonatomic, assign) BOOL showAvatar;
+@property(nonatomic, assign) BOOL showAvatar;
 
 /**
  *  当前消息是否和下一条消息发送者一样
  *  Whether the current message is the same as the sender of the next message
  */
-@property (nonatomic, assign) BOOL sameToNextMsgSender;
+@property(nonatomic, assign) BOOL sameToNextMsgSender;
 
 /**
  * 显示消息多选 flag
@@ -139,22 +146,23 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  * - YES: 可多选，展示多选视图；NO:不可多选，展示默认视图
  *
  * The flag of showing message multiple selection
- * - In the message list, the selection button is not displayed by default. When you long press the message to pop up the multi-select button and click it, the message list becomes multi-selectable.
+ * - In the message list, the selection button is not displayed by default. When you long press the message to pop up the multi-select button and click it, the
+ * message list becomes multi-selectable.
  * - YES: Enable multiple selection, multiple selection views are displayed; NO: Disable multiple selection, the default view is displayed.
  */
-@property (nonatomic, assign) BOOL showCheckBox;
+@property(nonatomic, assign) BOOL showCheckBox;
 
 /**
  * 显示是否选中 flag
  * The flag of selected
  */
-@property (nonatomic, assign) BOOL selected;
+@property(nonatomic, assign) BOOL selected;
 
 /**
  * 消息 @ 用户列表
  * The user list in at message
  */
-@property (nonatomic, strong) NSMutableArray<NSString *>*atUserList;
+@property(nonatomic, strong) NSMutableArray<NSString *> *atUserList;
 
 /**
  * 消息方向
@@ -163,13 +171,13 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  * Message direction
  * - Message direction affects UI styles such as bubble icons, bubble positions, etc.
  */
-@property (nonatomic, assign) TMsgDirection direction;
+@property(nonatomic, assign) TMsgDirection direction;
 
 /**
  * 消息状态
  * Message status
  */
-@property (nonatomic, assign) TMsgStatus status;
+@property(nonatomic, assign) TMsgStatus status;
 
 /**
  * 内层消息
@@ -177,10 +185,11 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  * 详细信息请参考 TXIMSDK__Plus_iOS\Frameworks\ImSDK_Plus.framework\Headers\V2TIMMessage.h
  *
  * IMSDK message
- * The Message object provided by IM SDK. Contains various member functions for obtaining message information, including obtaining priority, obtaining element index, obtaining offline message configuration information, etc.
- * For details, please refer to TXIMSDK__Plus_iOS\Frameworks\ImSDK_Plus.framework\Headers\V2TIMMessage.h
+ * The Message object provided by IM SDK. Contains various member functions for obtaining message information, including obtaining priority, obtaining element
+ * index, obtaining offline message configuration information, etc. For details, please refer to
+ * TXIMSDK__Plus_iOS\Frameworks\ImSDK_Plus.framework\Headers\V2TIMMessage.h
  */
-@property (nonatomic, strong) V2TIMMessage *innerMessage;
+@property(nonatomic, strong) V2TIMMessage *innerMessage;
 
 /**
  * 昵称字体
@@ -189,7 +198,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  * The font of nickname
  * When the nickname needs to be displayed, set/get the nickname font from this variable.
  */
-@property (nonatomic, strong) UIFont *nameFont;
+@property(nonatomic, strong) UIFont *nameFont;
 
 /**
  *  昵称颜色
@@ -199,7 +208,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  When the nickname needs to be displayed, set/get the nickname color from this variable.
  *
  */
-@property (nonatomic, strong) UIColor *nameColor;
+@property(nonatomic, strong) UIColor *nameColor;
 
 /**
  *  接收时昵称颜色
@@ -208,7 +217,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  The color of the label that displays the recipient's nickname
  *  Used when the nickname needs to be displayed and the message direction is MsgDirectionIncoming
  */
-@property (nonatomic, class) UIColor *incommingNameColor;
+@property(nonatomic, class) UIColor *incommingNameColor;
 
 /**
  *  接收时昵称字体
@@ -218,7 +227,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  Used when the nickname needs to be displayed and the message direction is MsgDirectionIncoming
  *
  */
-@property (nonatomic, class) UIFont *incommingNameFont;
+@property(nonatomic, class) UIFont *incommingNameFont;
 
 /**
  *  发送时昵称颜色
@@ -227,7 +236,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  The color of the label showing the sender's nickname
  *  Used when the nickname needs to be displayed and the message direction is MsgDirectionOutgoing.
  */
-@property (nonatomic, class) UIColor *outgoingNameColor;
+@property(nonatomic, class) UIColor *outgoingNameColor;
 
 /**
  *  发送时昵称字体
@@ -236,7 +245,7 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  The font of the label that displays the sender's nickname
  *  Used when the nickname needs to be displayed and the message direction is MsgDirectionOutgoing.
  */
-@property (nonatomic, class) UIFont *outgoingNameFont;
+@property(nonatomic, class) UIFont *outgoingNameFont;
 
 /**
  *  消息单元布局
@@ -247,48 +256,48 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *  It includes UI information such as message margins, bubble padding, avatar margins, and avatar size.
  *  For details, please refer to Section\Chat\CellLayout\TUIMessageCellLayout.h
  */
-@property (nonatomic, strong) TUIMessageCellLayout *cellLayout;
+@property(nonatomic, strong) TUIMessageCellLayout *cellLayout;
 
 /**
  * 是否显示已读回执
  *
  * The flag of whether showing read receipts.
  */
-@property (nonatomic, assign) BOOL showReadReceipt;
+@property(nonatomic, assign) BOOL showReadReceipt;
 
 /**
  * 是否显示消息时间
  *
  * The flag of  whether showing message time.
  */
-@property (nonatomic, assign) BOOL showMessageTime;
+@property(nonatomic, assign) BOOL showMessageTime;
 
 /**
  * 是否显示消息编辑 x 人回复按钮
  *
  * The flag of whether showing the button which indicated how many people modiffied.
  */
-@property (nonatomic, assign) BOOL showMessageModifyReplies;
+@property(nonatomic, assign) BOOL showMessageModifyReplies;
 /**
  * 高亮关键字，当改关键字不为空时，会短暂高亮显示，主要用在消息搜索场景中
  *
  * Highlight keywords, when the keyword is not empty, it will be highlighted briefly, mainly used in message search scenarios.
  */
-@property (nonatomic, copy) NSString * __nullable highlightKeyword;
+@property(nonatomic, copy) NSString *__nullable highlightKeyword;
 
 /**
  * 消息已读回执
  *
  * Message read receipt
  */
-@property (nonatomic, strong) V2TIMMessageReceipt *messageReceipt;
+@property(nonatomic, strong) V2TIMMessageReceipt *messageReceipt;
 
 /**
  * 当前消息的「回复消息」列表
  *
  * List of Reply Messages for the current message
  */
-@property (nonatomic, strong) NSArray *messageModifyReplies;
+@property(nonatomic, strong) NSArray *messageModifyReplies;
 
 /**
  * 「表情互动消息」的用户信息
@@ -296,18 +305,18 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  *
  * User information of "Emoji Interactive Message"
  */
-@property (nonatomic, strong) NSDictionary *messageModifyReacts;
-@property (nonatomic, assign) CGSize messageModifyReactsSize;
+@property(nonatomic, strong) NSDictionary *messageModifyReacts;
+@property(nonatomic, assign) CGSize messageModifyReactsSize;
 
 /**
  *  当前会话参与消息编辑(回复、表情回应)的好友信息
  * Information about friends who participate in message editing (reply, emoticon react) in the current conversation
  */
 
-@property (nonatomic, strong) NSDictionary *messageModifyUserInfos;
+@property(nonatomic, strong) NSDictionary *messageModifyUserInfos;
 
 /// Size for bottom container.
-@property (nonatomic, assign) CGSize bottomContainerSize;
+@property(nonatomic, assign) CGSize bottomContainerSize;
 
 /// If cell content can be forwarded.
 - (BOOL)canForward;
@@ -340,8 +349,6 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 
 NS_ASSUME_NONNULL_END
 
-
-
 /**
  * 【模块名称】TUIMessageCellDataFileUploadProtocol
  * 【功能说明】文件类型的消息, 统一上传(发送)进度字段
@@ -357,7 +364,7 @@ NS_ASSUME_NONNULL_END
  *
  *  The progress of uploading (sending)
  */
-@property (nonatomic, assign) NSUInteger uploadProgress;
+@property(nonatomic, assign) NSUInteger uploadProgress;
 
 @end
 
@@ -369,7 +376,7 @@ NS_ASSUME_NONNULL_END
  *
  *  The progress of downloading (receving)
  */
-@property (nonatomic, assign) NSUInteger downladProgress;
+@property(nonatomic, assign) NSUInteger downladProgress;
 
 /**
  *  下载标识符
@@ -378,7 +385,6 @@ NS_ASSUME_NONNULL_END
  *  The flag of whether is downloading
  *  YES: downloading; NO: not download
  */
-@property (nonatomic, assign) BOOL isDownloading;
-
+@property(nonatomic, assign) BOOL isDownloading;
 
 @end

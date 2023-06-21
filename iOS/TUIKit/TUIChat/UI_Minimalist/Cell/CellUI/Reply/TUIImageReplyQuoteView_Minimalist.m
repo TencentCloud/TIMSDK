@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by harvy on 2021/11/25.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIImageReplyQuoteView_Minimalist.h"
@@ -10,8 +11,7 @@
 
 @implementation TUIImageReplyQuoteView_Minimalist
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         _imageView = [[UIImageView alloc] init];
         _imageView.frame = CGRectMake(0, 0, 60, 60);
@@ -20,10 +20,9 @@
     return self;
 }
 
-- (void)fillWithData:(TUIReplyQuoteViewData_Minimalist *)data
-{
+- (void)fillWithData:(TUIReplyQuoteViewData_Minimalist *)data {
     [super fillWithData:data];
-    
+
     if (![data isKindOfClass:TUIImageReplyQuoteViewData_Minimalist.class]) {
         return;
     }
@@ -35,8 +34,7 @@
     self.imageView.frame = CGRectMake(0, 0, myData.imageSize.width, myData.imageSize.height);
 }
 
-- (void)reset
-{
+- (void)reset {
     [super reset];
     self.imageView.image = nil;
     self.imageView.frame = CGRectMake(0, 0, 60, 60);

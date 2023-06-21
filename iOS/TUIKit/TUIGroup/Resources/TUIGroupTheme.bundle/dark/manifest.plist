@@ -26,5 +26,7 @@
 	<string>nav_back.png</string>
 	<key>chat_nav_more_menu_img</key>
 	<string>chat_nav_more_menu.png</string>
+	<key>group_controller_bg_color</key>
+	<string>#111111</string>
 </dict>
 </plist>

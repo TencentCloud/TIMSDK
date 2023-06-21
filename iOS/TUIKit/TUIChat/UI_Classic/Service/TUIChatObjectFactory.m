@@ -3,64 +3,57 @@
 //  TUIChat
 //
 //  Created by wyl on 2023/3/20.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIChatObjectFactory.h"
-#import "TUIC2CChatViewController.h"
-#import "TUIGroupChatViewController.h"
-#import "TUIChatConfig.h"
 #import <TUICore/NSDictionary+TUISafe.h>
+#import "TUIC2CChatViewController.h"
+#import "TUIChatConfig.h"
 #import "TUIChatDefine.h"
+#import "TUIGroupChatViewController.h"
 
-@interface TUIChatObjectFactory()<TUIObjectProtocol>
+@interface TUIChatObjectFactory () <TUIObjectProtocol>
 
 @end
 
 @implementation TUIChatObjectFactory
 + (void)load {
-    [TUICore registerObjectFactoryName:TUICore_TUIChatObjectFactory objectFactory:[TUIChatObjectFactory shareInstance]];
+    [TUICore registerObjectFactory:TUICore_TUIChatObjectFactory objectFactory:[TUIChatObjectFactory shareInstance]];
 }
 + (TUIChatObjectFactory *)shareInstance {
     static dispatch_once_t onceToken;
-    static TUIChatObjectFactory * g_sharedInstance = nil;
+    static TUIChatObjectFactory *g_sharedInstance = nil;
     dispatch_once(&onceToken, ^{
-        g_sharedInstance = [[TUIChatObjectFactory alloc] init];
+      g_sharedInstance = [[TUIChatObjectFactory alloc] init];
     });
     return g_sharedInstance;
 }
 
 #pragma mark - TUIObjectProtocol
 - (id)onCreateObject:(NSString *)method param:(nullable NSDictionary *)param {
-    if ([method isEqualToString:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod]) {
-        return [self createChatViewController:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey asClass:NSString.class]
-                                       userID:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_UserIDKey asClass:NSString.class]
-                                      groupID:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey asClass:NSString.class]
-                               conversationID:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_ConversationIDKey asClass:NSString.class]
-                                  avatarImage:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarImageKey asClass:UIImage.class]
-                                    avatarUrl:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AvatarUrlKey asClass:NSString.class]
-                             highlightKeyword:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_HighlightKeywordKey asClass:NSString.class]
-                                locateMessage:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_LocateMessageKey asClass:V2TIMMessage.class]
-                                    atMsgSeqs:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_AtMsgSeqsKey asClass:NSArray.class]
-                                        draft:[param tui_objectForKey:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_DraftKey asClass:NSString.class]];
+    if ([method isEqualToString:TUICore_TUIChatObjectFactory_ChatViewController_Classic]) {
+        return [self createChatViewControllerParam:param];
     }
     return nil;
 }
 
-
 #pragma mark - Private
 
+- (UIViewController *)createChatViewControllerParam:(nullable NSDictionary *)param {
+    
+    NSString *title = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Title asClass:NSString.class];
+    NSString *userID = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_UserID asClass:NSString.class];
+    NSString *groupID = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_GroupID asClass:NSString.class];
+    NSString *conversationID = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_ConversationID asClass:NSString.class];
+    UIImage *avatarImage = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_AvatarImage asClass:UIImage.class];
+    NSString *avatarUrl = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_AvatarUrl asClass:NSString.class];
+    NSString *highlightKeyword = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_HighlightKeyword asClass:NSString.class];
+    V2TIMMessage *locateMessage = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_LocateMessage asClass:V2TIMMessage.class];
+    NSArray * atMsgSeqs = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs asClass:NSArray.class];
+    NSString *draft = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Draft asClass:NSString.class];
 
-- (UIViewController *)createChatViewController:(NSString *)title
-                                        userID:(NSString *)userID
-                                       groupID:(NSString *)groupID
-                                conversationID:(NSString *)conversationID
-                                   avatarImage:(UIImage *)avatarImage
-                                     avatarUrl:(NSString *)avatarUrl
-                              highlightKeyword:(NSString *)highlightKeyword
-                                 locateMessage:(V2TIMMessage *)locateMessage
-                                    atMsgSeqs:(NSArray<NSNumber *> *)atMsgSeqs
-                                        draft:(NSString *)draft {
-    TUIChatConversationModel *conversationModel = [TUIChatConversationModel new];
+    TUIChatConversationModel *conversationModel = [[TUIChatConversationModel alloc] init];
     conversationModel.title = title;
     conversationModel.userID = userID;
     conversationModel.groupID = groupID;
@@ -69,7 +62,7 @@
     conversationModel.faceUrl = avatarUrl;
     conversationModel.atMsgSeqs = [NSMutableArray arrayWithArray:atMsgSeqs];
     conversationModel.draftText = draft;
-    
+
     TUIBaseChatViewController *chatVC = nil;
     if (conversationModel.groupID.length > 0) {
         chatVC = [[TUIGroupChatViewController alloc] init];

@@ -3,6 +3,7 @@
 //  TUIOfflinePush
 //
 //  Created by harvy on 2022/9/15.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIOfflinePushManager.h"
@@ -16,10 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @note 处理完成之后，需要调用 completion 通知系统已完成处理
  */
-- (void)onReceiveIncomingVOIPPushWithPayload:(NSDictionary *)payload withCompletionHandler:(void(^)(void))completion;
+- (void)onReceiveIncomingVOIPPushWithPayload:(NSDictionary *)payload withCompletionHandler:(void (^)(void))completion;
 
 @end
-
 
 @interface TUIOfflinePushManager (VOIP)
 

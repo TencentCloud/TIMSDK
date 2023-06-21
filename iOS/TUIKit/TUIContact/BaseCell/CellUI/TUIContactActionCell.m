@@ -3,13 +3,14 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/6/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactActionCell.h"
 #import <TIMCommon/TIMCommonModel.h>
-#import "TUICommonContactCellData.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import "TUICommonContactCellData.h"
 
 @interface TUIContactActionCell ()
 @property TUIContactActionCellData *actionData;
@@ -34,7 +35,7 @@
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
-        self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
+        self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
 
         self.unRead = [[TUIUnReadView alloc] init];
         [self.contentView addSubview:self.unRead];
@@ -54,14 +55,13 @@
     if (actionData.icon) {
         [self.avatarView setImage:actionData.icon];
     }
-    @weakify(self)
+    @weakify(self);
     [[RACObserve(self.actionData, readNum) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSNumber *x) {
-        @strongify(self)
-        [self.unRead setNum:[x integerValue]];
+      @strongify(self);
+      [self.unRead setNum:[x integerValue]];
     }];
 
     self.unRead.mm__centerY(self.avatarView.mm_centerY).mm_right(self.accessoryView.mm_w);
 }
-
 
 @end

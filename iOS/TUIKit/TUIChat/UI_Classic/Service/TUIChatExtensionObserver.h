@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by cologne on 2023/3/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

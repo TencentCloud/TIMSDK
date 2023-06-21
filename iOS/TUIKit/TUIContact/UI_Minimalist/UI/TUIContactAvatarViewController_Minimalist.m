@@ -1,11 +1,14 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 #import "TUIContactAvatarViewController_Minimalist.h"
-#import "ReactiveObjC/ReactiveObjC.h"
-#import "SDWebImage/UIImageView+WebCache.h"
-#import <TUICore/UIView+TUILayout.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/UIView+TUILayout.h>
+#import "ReactiveObjC/ReactiveObjC.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
-@interface TUIContactAvatarViewController_Minimalist ()<UIScrollViewDelegate>
+@interface TUIContactAvatarViewController_Minimalist () <UIScrollViewDelegate>
 @property UIImageView *avatarView;
 
 @property TUIScrollView *avatarScrollView;
@@ -22,8 +25,7 @@
 
     self.saveBackgroundImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
     self.saveShadowImage = self.navigationController.navigationBar.shadowImage;
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-                                                  forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
 
     CGRect rect = self.view.bounds;
@@ -40,48 +42,42 @@
     self.avatarView.image = self.avatarData.avatarImage;
     TUICommonContactProfileCardCellData_Minimalist *data = self.avatarData;
     /*
-     @weakify(self)
+     @weakify(self);
     [RACObserve(data, avatarUrl) subscribeNext:^(NSURL *x) {
-        @strongify(self)
+        @strongify(self);
         [self.avatarView sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
     }];
     */
-    @weakify(self)
+    @weakify(self);
     [RACObserve(data, avatarUrl) subscribeNext:^(NSURL *x) {
-        @strongify(self)
-        [self.avatarView sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
-        [self.avatarScrollView setNeedsLayout];
+      @strongify(self);
+      [self.avatarView sd_setImageWithURL:x placeholderImage:self.avatarData.avatarImage];
+      [self.avatarScrollView setNeedsLayout];
     }];
-
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.avatarView;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-                                                  forBarMetrics:UIBarMetricsDefault];
+
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
-    
+
     self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
-- (void)willMoveToParentViewController:(UIViewController *)parent
-{
+- (void)willMoveToParentViewController:(UIViewController *)parent {
     if (parent == nil) {
-        [self.navigationController.navigationBar setBackgroundImage:self.saveBackgroundImage
-                                                      forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:self.saveBackgroundImage forBarMetrics:UIBarMetricsDefault];
         self.navigationController.navigationBar.shadowImage = self.saveShadowImage;
     }
 }

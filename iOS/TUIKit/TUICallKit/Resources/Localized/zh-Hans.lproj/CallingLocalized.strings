@@ -37,6 +37,9 @@
 "Demo.TRTC.calling.invitetoaudiocall" = "邀请你音频通话";
 "Demo.TRTC.Streaming.call" = "呼叫";
 
+"TUICallKit.Audio.call" = "语音通话";
+"TUICallKit.Video.call" = "视频通话";
+
 "Demo.TRTC.Calling.waitaccept" = "等待对方接受";
 "Demo.TRTC.Calling.hangup" = "挂断";
 "Demo.TRTC.Calling.decline" = "拒接";

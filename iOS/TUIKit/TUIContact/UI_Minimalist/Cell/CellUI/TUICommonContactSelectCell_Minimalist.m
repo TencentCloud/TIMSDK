@@ -1,4 +1,7 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import "TUICommonContactSelectCell_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
@@ -7,7 +10,7 @@
 
 @end
 
-@interface TUICommonContactSelectCell_Minimalist()
+@interface TUICommonContactSelectCell_Minimalist ()
 @property TUICommonContactSelectCellData_Minimalist *selectData;
 @end
 
@@ -51,8 +54,8 @@
 
         self.avatarView.mm_width(kScale390(40)).mm_height(kScale390(40)).mm__centerY(self.mm_centerY).mm_left(kScale390(16));
         self.selectButton.mm_sizeToFit().mm__centerY(self.mm_centerY).mm_right(kScale390(kScale390(42)));
-        self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
-        
+        self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
+
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;

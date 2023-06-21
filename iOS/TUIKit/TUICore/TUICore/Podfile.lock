@@ -1,0 +1,29 @@
+PODS:
+  - ReactiveObjC (3.1.1)
+  - SDWebImage (5.15.8):
+    - SDWebImage/Core (= 5.15.8)
+  - SDWebImage/Core (5.15.8)
+  - TXIMSDK_Plus_iOS (7.2.4123)
+
+DEPENDENCIES:
+  - ReactiveObjC (= 3.1.1)
+  - SDWebImage (= 5.15.8)
+  - TXIMSDK_Plus_iOS (from `../../../../tuikit/ios/ImSDK/`)
+
+SPEC REPOS:
+  trunk:
+    - ReactiveObjC
+    - SDWebImage
+
+EXTERNAL SOURCES:
+  TXIMSDK_Plus_iOS:
+    :path: "../../../../tuikit/ios/ImSDK/"
+
+SPEC CHECKSUMS:
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
+  TXIMSDK_Plus_iOS: c059c9dd64d656b2a9556f9081ab87702182ed5f
+
+PODFILE CHECKSUM: e307392f9eb2c22bfecf49b711b30e58e7ef7b98
+
+COCOAPODS: 1.12.1

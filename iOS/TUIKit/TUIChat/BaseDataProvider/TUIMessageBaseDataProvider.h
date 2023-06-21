@@ -1,9 +1,12 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <Foundation/Foundation.h>
-#import "TUIChatConversationModel.h"
-#import <TIMCommon/TUIMessageCellData.h>
-#import <TIMCommon/TUIMessageCell.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIMessageCell.h>
+#import <TIMCommon/TUIMessageCellData.h>
+#import "TUIChatConversationModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,9 +40,7 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
  * @param userID recevier of one-to-one message
  * @param timestamp Read receipt time, messages before this timestamp can be considered read by the other party
  */
-- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
-ReceiveReadMsgWithUserID:(NSString *)userId
-                Time:(time_t)timestamp;
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider ReceiveReadMsgWithUserID:(NSString *)userId Time:(time_t)timestamp;
 
 /**
  * 群消息已读事件
@@ -59,10 +60,10 @@ ReceiveReadMsgWithUserID:(NSString *)userId
  * @param unreadCount Count of unread message
  */
 - (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
-ReceiveReadMsgWithGroupID:(NSString *)groupID
-               msgID:(NSString *)msgID
-           readCount:(NSUInteger)readCount
-         unreadCount:(NSUInteger)unreadCount;
+    ReceiveReadMsgWithGroupID:(NSString *)groupID
+                        msgID:(NSString *)msgID
+                    readCount:(NSUInteger)readCount
+                  unreadCount:(NSUInteger)unreadCount;
 
 /**
  * 收到一条新消息, 数据的更改, 刷新, 内部已经处理, 可以在这个方法中做后续的处理
@@ -74,15 +75,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  *
  * @param uiMsg The new message
  */
-- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
-     ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg;
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg;
 
 /**
  * 收到一条撤回消息
  * Reveived a recalled message
  */
-- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
-     ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg;
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg;
 
 /**
  * 在请求新消息完成后、收到新消息时, 会触发该事件
@@ -91,8 +90,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  * This event is fired when a new message is received after the request for a new message is completed
  * External can use this method to modify the CellData to be displayed, add messages (such as time messages), and customize messages
  */
-- (nullable TUIMessageCellData *)dataProvider:(TUIMessageBaseDataProvider *)dataProvider
-               CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg;
+- (nullable TUIMessageCellData *)dataProvider:(TUIMessageBaseDataProvider *)dataProvider CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg;
 
 @end
 
@@ -110,38 +108,35 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  */
 @interface TUIMessageBaseDataProvider : NSObject
 
-@property (nonatomic, weak) id<TUIMessageBaseDataProviderDataSource>     dataSource;
+@property(nonatomic, weak) id<TUIMessageBaseDataProviderDataSource> dataSource;
 
-@property (nonatomic, strong, readonly) NSArray<TUIMessageCellData *> *uiMsgs;
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSNumber *> *heightCache;
-@property (nonatomic, assign, readonly) BOOL isLoadingData;
-@property (nonatomic, assign, readonly) BOOL isNoMoreMsg;
-@property (nonatomic, assign, readonly) BOOL isFirstLoad;
+@property(nonatomic, strong, readonly) NSArray<TUIMessageCellData *> *uiMsgs;
+@property(nonatomic, strong, readonly) NSDictionary<NSString *, NSNumber *> *heightCache;
+@property(nonatomic, assign, readonly) BOOL isLoadingData;
+@property(nonatomic, assign, readonly) BOOL isNoMoreMsg;
+@property(nonatomic, assign, readonly) BOOL isFirstLoad;
 
 /**
  * loadMessage 请求的分页大小, default is 20
  *
  * Count of per page, default is 20.
  */
-@property (nonatomic, assign) NSInteger pageCount;
+@property(nonatomic, assign) NSInteger pageCount;
 
 - (instancetype)initWithConversationModel:(TUIChatConversationModel *)conversationModel;
 
-- (void)loadMessageSucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock FailBlock:(V2TIMFail)FailBlock;
+- (void)loadMessageSucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))succeedBlock
+                      FailBlock:(V2TIMFail)failBlock;
 
 - (void)sendUIMsg:(TUIMessageCellData *)uiMsg
-   toConversation:(TUIChatConversationModel *)conversationData
-    willSendBlock:(void(^)(BOOL isReSend, TUIMessageCellData *dateUIMsg))willSendBlock
-        SuccBlock:(nullable V2TIMSucc)succ
-        FailBlock:(nullable V2TIMFail)fail;
+    toConversation:(TUIChatConversationModel *)conversationData
+     willSendBlock:(void (^)(BOOL isReSend, TUIMessageCellData *dateUIMsg))willSendBlock
+         SuccBlock:(nullable V2TIMSucc)succ
+         FailBlock:(nullable V2TIMFail)fail;
 
-- (void)revokeUIMsg:(TUIMessageCellData *)uiMsg
-          SuccBlock:(nullable V2TIMSucc)succ
-          FailBlock:(nullable V2TIMFail)fail;
+- (void)revokeUIMsg:(TUIMessageCellData *)uiMsg SuccBlock:(nullable V2TIMSucc)succ FailBlock:(nullable V2TIMFail)fail;
 
-- (void)deleteUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs
-           SuccBlock:(nullable V2TIMSucc)succ
-           FailBlock:(nullable V2TIMFail)fail;
+- (void)deleteUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs SuccBlock:(nullable V2TIMSucc)succ FailBlock:(nullable V2TIMFail)fail;
 
 - (void)addUIMsg:(TUIMessageCellData *)cellData;
 
@@ -164,8 +159,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  * 预处理互动消息、回复消息(异步加载原始消息以及下载对应的缩略图)
  * Preprocessing interactive messages, reply messages (asynchronously loading original messages and downloading corresponding thumbnails)
  */
-- (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs
-                 callback:(void(^)(void))callback;
+- (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;
 
 /**
  * 发送最新消息的已读回执
@@ -189,42 +183,29 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)clearUIMsgList;
 
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback; // subclass override required
+- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;  // subclass override required
 @end
 
 @interface TUIMessageBaseDataProvider (IMSDK)
 /// imsdk interface call
 + (NSString *)sendMessage:(V2TIMMessage *)message
            toConversation:(TUIChatConversationModel *)conversationData
-           isSendPushInfo:(BOOL)isSendPushInfo
-         isOnlineUserOnly:(BOOL)isOnlineUserOnly
-                 priority:(V2TIMMessagePriority)priority
+             appendParams:(TUISendMessageAppendParams *)appendParams
                  Progress:(nullable V2TIMProgress)progress
                 SuccBlock:(nullable V2TIMSucc)succ
                 FailBlock:(nullable V2TIMFail)fail;
 
-+ (void)markC2CMessageAsRead:(NSString *)userID
-                        succ:(nullable V2TIMSucc)succ
-                        fail:(nullable V2TIMFail)fail;
++ (void)markC2CMessageAsRead:(NSString *)userID succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail;
 
-+ (void)markGroupMessageAsRead:(NSString *)groupID
-                          succ:(nullable V2TIMSucc)succ
-                          fail:(nullable V2TIMFail)fail;
++ (void)markGroupMessageAsRead:(NSString *)groupID succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail;
 
-+ (void)markConversationAsUndead:(NSArray<NSString *> *)conversationIDList
-                      enableMark:(BOOL)enableMark;
++ (void)markConversationAsUndead:(NSArray<NSString *> *)conversationIDList enableMark:(BOOL)enableMark;
 
-+ (void)revokeMessage:(V2TIMMessage *)msg
-                 succ:(nullable V2TIMSucc)succ
-                 fail:(nullable V2TIMFail)fail;
++ (void)revokeMessage:(V2TIMMessage *)msg succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail;
 
-+ (void)deleteMessages:(NSArray<V2TIMMessage *>*)msgList
-                  succ:(nullable V2TIMSucc)succ
-                  fail:(nullable V2TIMFail)fail;
++ (void)deleteMessages:(NSArray<V2TIMMessage *> *)msgList succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail;
 
-
-+ (void)modifyMessage:(V2TIMMessage *)msg
-           completion:(V2TIMMessageModifyCompletion)completion;
++ (void)modifyMessage:(V2TIMMessage *)msg completion:(V2TIMMessageModifyCompletion)completion;
 
 /**
  * 发送消息已读回执
@@ -245,12 +226,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
  * 获取消息的阅读信息回执
  * Getting the read receipt of the message
  */
-+ (void)getMessageReadReceipt:(NSArray *)messages
-                         succ:(nullable V2TIMMessageReadReceiptsSucc)succ
-                         fail:(nullable V2TIMFail)fail;
++ (void)getMessageReadReceipt:(NSArray *)messages succ:(nullable V2TIMMessageReadReceiptsSucc)succ fail:(nullable V2TIMFail)fail;
 
 /// message -> cellData
-+ (TUIMessageCellData * __nullable)getCellData:(V2TIMMessage *)message;
++ (TUIMessageCellData *__nullable)getCellData:(V2TIMMessage *)message;
 + (nullable TUIMessageCellData *)getSystemMsgFromDate:(NSDate *)date;
 + (TUIMessageCellData *)getRevokeCellData:(V2TIMMessage *)message;
 

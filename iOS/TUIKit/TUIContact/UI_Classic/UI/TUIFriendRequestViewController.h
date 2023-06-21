@@ -5,9 +5,9 @@
 //  Created by annidyfeng on 2019/4/18.
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
-#import <UIKit/UIKit.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

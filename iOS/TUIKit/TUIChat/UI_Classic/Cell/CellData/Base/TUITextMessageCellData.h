@@ -1,16 +1,19 @@
- /**
-  * 本文件声明了 TUITextMessageCellData 类。
-  * 本类继承于 TUIBubbleMessageCellData，用于存放文本消息单元所需的一系列数据与信息。
-  *
-  * This file declares the TUITextMessageCellData class.
-  * This class inherits from TUIBubbleMessageCellData and is used to store a series of data and information required by the text message unit.
-  */
-#import <TIMCommon/TUIMessageCellData.h>
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+/**
+ * 本文件声明了 TUITextMessageCellData 类。
+ * 本类继承于 TUIBubbleMessageCellData，用于存放文本消息单元所需的一系列数据与信息。
+ *
+ * This file declares the TUITextMessageCellData class.
+ * This class inherits from TUIBubbleMessageCellData and is used to store a series of data and information required by the text message unit.
+ */
 #import <TIMCommon/TUIBubbleMessageCellData.h>
+#import <TIMCommon/TUIMessageCellData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** 
+/**
  * 【模块名称】TUITextMessageCellData
  * 【功能说明】文本消息单元数据源。
  *  - 文本消息单元，即在多数消息收发情况下最常见的消息单元。
@@ -26,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Content of text message
  */
-@property (nonatomic, strong) NSString *content;
+@property(nonatomic, strong) NSString *content;
 
 /**
  *  文本字体
@@ -34,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The font of label which displays the text message content
  */
-@property (nonatomic, strong) UIFont *textFont;
+@property(nonatomic, strong) UIFont *textFont;
 
 /**
  *  文本颜色
@@ -42,12 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The color of label which displays the text message content
  */
-@property (nonatomic, strong) UIColor *textColor;
+@property(nonatomic, strong) UIColor *textColor;
 
-@property (nonatomic, assign) BOOL isAudioCall;
-@property (nonatomic, assign) BOOL isVideoCall;
-@property (nonatomic, assign) BOOL isCaller;
-@property (nonatomic, assign) BOOL showUnreadPoint;
+@property(nonatomic, assign) BOOL isAudioCall;
+@property(nonatomic, assign) BOOL isVideoCall;
+@property(nonatomic, assign) BOOL isCaller;
+@property(nonatomic, assign) BOOL showUnreadPoint;
 
 /**
  *  可变字符串
@@ -55,11 +58,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  本字符串则负责存储上述过程转换后的结果。
  *
  *  Mutable strings.
- *  After the text message receives the content string, it is necessary to convert the string expression (such as [smile]) that may exist in the string into a picture expression.
- *  This string is responsible for storing the converted result of the above process.
+ *  After the text message receives the content string, it is necessary to convert the string expression (such as [smile]) that may exist in the string into a
+ * picture expression. This string is responsible for storing the converted result of the above process.
  *
  */
-@property (nonatomic, strong) NSMutableAttributedString *attributedString;
+@property(nonatomic, strong) NSMutableAttributedString *attributedString;
 
 /**
  *  NSValue（NSRange） 存储的 emoji 转换后的字符串在 attributedString 的位置。
@@ -70,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  NSAttributedString stores the string before emoji conversion, such as "[呲牙]".
  *  When the text is selected and copied, it is necessary to find the original string of emoji.
  */
-@property (nonatomic, strong) NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *emojiLocations;
+@property(nonatomic, strong) NSMutableArray<NSDictionary<NSValue *, NSAttributedString *> *> *emojiLocations;
 
 /**
  *  文本内容尺寸。
@@ -79,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The size of the label which displays the text message content.
  *  Position the text message with the @textOrigin.
  */
-@property (nonatomic, assign, readonly) CGSize textSize;
+@property(nonatomic, assign, readonly) CGSize textSize;
 
 /**
  *  文本内容原点。
@@ -88,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The origin of label which displays the text message content.
  *  Position the text message with the @textSize.
  */
-@property (nonatomic, assign, readonly) CGPoint textOrigin;
+@property(nonatomic, assign, readonly) CGPoint textOrigin;
 
 /**
  *  文本消息颜色（发送）
@@ -97,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The color of label which displays the text message content.
  *  Used when the message direction is send.
  */
-@property (nonatomic, class) UIColor *outgoingTextColor;
+@property(nonatomic, class) UIColor *outgoingTextColor;
 
 /**
  *  文本消息字体（发送）
@@ -106,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The font of label which displays the text message content.
  *  Used when the message direction is send.
  */
-@property (nonatomic, class) UIFont *outgoingTextFont;
+@property(nonatomic, class) UIFont *outgoingTextFont;
 
 /**
  *  文本消息颜色（接收）
@@ -115,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The color of label which displays the text message content.
  *  Used when the message direction is received.
  */
-@property (nonatomic, class) UIColor *incommingTextColor;
+@property(nonatomic, class) UIColor *incommingTextColor;
 
 /**
  *  文本消息字体（接收）
@@ -124,7 +127,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The font of label which displays the text message content.
  *  Used when the message direction is received.
  */
-@property (nonatomic, class) UIFont *incommingTextFont;
+@property(nonatomic, class) UIFont *incommingTextFont;
 
 @end
 

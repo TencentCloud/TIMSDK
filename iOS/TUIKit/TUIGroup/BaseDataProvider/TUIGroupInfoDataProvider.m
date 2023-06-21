@@ -1,19 +1,23 @@
 
-#import "TUIGroupInfoDataProvider.h"
-#import "TIMGroupInfo+TUIDataProvider.h"
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import "TIMGroupInfo+TUIDataProvider.h"
 #import "TUIAddCellData.h"
+#import "TUIGroupInfoDataProvider.h"
 #import "TUIGroupMemberCellData.h"
 #import "TUIGroupMembersCellData.h"
-#import <TIMCommon/TIMDefine.h>
 #import "TUIGroupNoticeCell.h"
 
-@interface TUIGroupInfoDataProvider()<V2TIMGroupListener>
-@property (nonatomic, strong) TUICommonTextCellData *addOptionData;
-@property (nonatomic, strong) TUICommonTextCellData *groupNickNameCellData;
-@property (nonatomic, strong, readwrite) TUIProfileCardCellData *profileCellData;
-@property (nonatomic, strong) V2TIMGroupMemberFullInfo *selfInfo;
-@property (nonatomic, strong) NSString *groupID;
+@interface TUIGroupInfoDataProvider () <V2TIMGroupListener>
+@property(nonatomic, strong) TUICommonTextCellData *addOptionData;
+@property(nonatomic, strong) TUICommonTextCellData *inviteOptionData;
+@property(nonatomic, strong) TUICommonTextCellData *groupNickNameCellData;
+@property(nonatomic, strong, readwrite) TUIProfileCardCellData *profileCellData;
+@property(nonatomic, strong) V2TIMGroupMemberFullInfo *selfInfo;
+@property(nonatomic, strong) NSString *groupID;
 @end
 
 @implementation TUIGroupInfoDataProvider
@@ -28,104 +32,174 @@
 }
 
 #pragma mark V2TIMGroupListener
-- (void)onMemberEnter:(NSString *)groupID memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList {
+- (void)onMemberEnter:(NSString *)groupID memberList:(NSArray<V2TIMGroupMemberInfo *> *)memberList {
     [self loadData];
 }
 
-- (void)onMemberLeave:(NSString *)groupID member:(V2TIMGroupMemberInfo *)member{
+- (void)onMemberLeave:(NSString *)groupID member:(V2TIMGroupMemberInfo *)member {
     [self loadData];
 }
 
-- (void)onMemberInvited:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList {
+- (void)onMemberInvited:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray<V2TIMGroupMemberInfo *> *)memberList {
     [self loadData];
 }
 
-- (void)onMemberKicked:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList {
+- (void)onMemberKicked:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray<V2TIMGroupMemberInfo *> *)memberList {
     [self loadData];
 }
 
-- (void)loadData
-{
-    [self getGroupInfo];
+- (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray<V2TIMGroupChangeInfo *> *)changeInfoList {
+    if (![groupID isEqualToString:self.groupID]) {
+        return;
+    }
+
+    [self loadData];
 }
 
-- (void)updateGroupInfo
-{
-    @weakify(self)
-    [[V2TIMManager sharedInstance] getGroupsInfo:@[self.groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
-        @strongify(self)
-        if(groupResultList.count == 1){
-            self.groupInfo = groupResultList[0].info;
-            [self setupData];
+- (void)loadData {
+    if (self.groupID.length == 0) {
+        [TUITool makeToastError:ERR_INVALID_PARAMETERS msg:@"invalid groupID"];
+        return;
+    }
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+    [self getGroupInfo:^{
+      dispatch_group_leave(group);
+    }];
+
+    dispatch_group_enter(group);
+    [self getGroupMembers:^{
+      dispatch_group_leave(group);
+    }];
+
+    dispatch_group_enter(group);
+    [self getSelfInfoInGroup:^{
+      dispatch_group_leave(group);
+    }];
+
+    __weak typeof(self) weakSelf = self;
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+      [weakSelf setupData];
+    });
+}
+
+- (void)updateGroupInfo {
+    @weakify(self);
+    [[V2TIMManager sharedInstance] getGroupsInfo:@[ self.groupID ]
+        succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
+          @strongify(self);
+          if (groupResultList.count == 1) {
+              self.groupInfo = groupResultList[0].info;
+              [self setupData];
+          }
         }
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+        fail:^(int code, NSString *msg) {
+          [TUITool makeToastError:code msg:msg];
+        }];
 }
 
-- (void)transferGroupOwner:(NSString*)groupID member:(NSString*)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail {
-    [V2TIMManager.sharedInstance transferGroupOwner:groupID member:userID succ:^{
-        succ();
-    } fail:^(int code, NSString *desc) {
-        fail(code,desc);
-    }];
+- (void)transferGroupOwner:(NSString *)groupID member:(NSString *)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail {
+    [V2TIMManager.sharedInstance transferGroupOwner:groupID
+        member:userID
+        succ:^{
+          succ();
+        }
+        fail:^(int code, NSString *desc) {
+          fail(code, desc);
+        }];
 }
 
-- (void)updateGroupAvatar:(NSString *)url succ:(V2TIMSucc)succ fail:(V2TIMFail)fail
-{
+- (void)updateGroupAvatar:(NSString *)url succ:(V2TIMSucc)succ fail:(V2TIMFail)fail {
     V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
     info.groupID = self.groupID;
     info.faceURL = url;
     [V2TIMManager.sharedInstance setGroupInfo:info succ:succ fail:fail];
 }
 
-- (void)getGroupInfo {
-    @weakify(self)
-    [[V2TIMManager sharedInstance] getGroupsInfo:@[self.groupID] succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
-        @strongify(self)
-        if(groupResultList.count == 1){
-            self.groupInfo = groupResultList[0].info;
-            [self getGroupMembers];
+- (void)getGroupInfo:(dispatch_block_t)callback {
+    __weak typeof(self) weakSelf = self;
+    [[V2TIMManager sharedInstance] getGroupsInfo:@[ self.groupID ]
+        succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
+          weakSelf.groupInfo = groupResultList.firstObject.info;
+          if (callback) {
+              callback();
+          }
         }
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+        fail:^(int code, NSString *msg) {
+          if (callback) {
+              callback();
+          }
+          [TUITool makeToastError:code msg:msg];
+        }];
 }
 
-- (void)getGroupMembers {
-    @weakify(self)
-    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupID filter:V2TIM_GROUP_MEMBER_FILTER_ALL nextSeq:0 succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-        @strongify(self)
-        NSMutableArray *membersData = [NSMutableArray array];
-        for (V2TIMGroupMemberFullInfo *fullInfo in memberList) {
-            if([fullInfo.userID isEqualToString:[V2TIMManager sharedInstance].getLoginUser]){
-                self.selfInfo = fullInfo;
-            }
-            TUIGroupMemberCellData *data = [[TUIGroupMemberCellData alloc] init];
-            data.identifier = fullInfo.userID;
-            data.name = fullInfo.userID;
-            data.avatarUrl = fullInfo.faceURL;
-            if (fullInfo.nameCard.length > 0) {
-                data.name = fullInfo.nameCard;
-            } else if (fullInfo.friendRemark.length > 0) {
-                data.name = fullInfo.friendRemark;
-            } else if (fullInfo.nickName.length > 0) {
-                data.name = fullInfo.nickName;
-            }
-            [membersData addObject:data];
+- (void)getGroupMembers:(dispatch_block_t)callback {
+    __weak typeof(self) weakSelf = self;
+    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupID
+        filter:V2TIM_GROUP_MEMBER_FILTER_ALL
+        nextSeq:0
+        succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+          NSMutableArray *membersData = [NSMutableArray array];
+          for (V2TIMGroupMemberFullInfo *fullInfo in memberList) {
+              TUIGroupMemberCellData *data = [[TUIGroupMemberCellData alloc] init];
+              data.identifier = fullInfo.userID;
+              data.name = fullInfo.userID;
+              data.avatarUrl = fullInfo.faceURL;
+              if (fullInfo.nameCard.length > 0) {
+                  data.name = fullInfo.nameCard;
+              } else if (fullInfo.friendRemark.length > 0) {
+                  data.name = fullInfo.friendRemark;
+              } else if (fullInfo.nickName.length > 0) {
+                  data.name = fullInfo.nickName;
+              }
+              [membersData addObject:data];
+          }
+          weakSelf.membersData = membersData;
+          if (callback) {
+              callback();
+          }
         }
-        self.membersData = membersData;
-        [self setupData];
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+        fail:^(int code, NSString *msg) {
+          [TUITool makeToastError:code msg:msg];
+          if (callback) {
+              callback();
+          }
+        }];
 }
 
-- (void)setupData
-{
+- (void)getSelfInfoInGroup:(dispatch_block_t)callback {
+    NSString *loginUserID = [[V2TIMManager sharedInstance] getLoginUser];
+    if (loginUserID.length == 0) {
+        if (callback) {
+            callback();
+        }
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [[V2TIMManager sharedInstance] getGroupMembersInfo:self.groupID
+        memberList:@[ loginUserID ]
+        succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+          for (V2TIMGroupMemberFullInfo *item in memberList) {
+              if ([item.userID isEqualToString:loginUserID]) {
+                  weakSelf.selfInfo = item;
+                  break;
+              }
+          }
+          if (callback) {
+              callback();
+          }
+        }
+        fail:^(int code, NSString *desc) {
+          [TUITool makeToastError:code msg:desc];
+          if (callback) {
+              callback();
+          }
+        }];
+}
+
+- (void)setupData {
     NSMutableArray *dataList = [NSMutableArray array];
     if (self.groupInfo) {
-
         NSMutableArray *commonArray = [NSMutableArray array];
         TUIProfileCardCellData *commonData = [[TUIProfileCardCellData alloc] init];
         commonData.avatarImage = DefaultGroupAvatarImageByGroupType(self.groupInfo.groupType);
@@ -133,8 +207,8 @@
         commonData.name = self.groupInfo.groupName;
         commonData.identifier = self.groupInfo.groupID;
         commonData.signature = self.groupInfo.notification;
-    
-        if([TUIGroupInfoDataProvider isMeOwner:self.groupInfo] || [self.groupInfo isPrivate]){
+
+        if ([TUIGroupInfoDataProvider isMeOwner:self.groupInfo] || [self.groupInfo isPrivate]) {
             commonData.cselector = @selector(didSelectCommon);
             commonData.showAccessory = YES;
         }
@@ -142,7 +216,6 @@
 
         [commonArray addObject:commonData];
         [dataList addObject:commonArray];
-
 
         NSMutableArray *memberArray = [NSMutableArray array];
         TUICommonTextCellData *countData = [[TUICommonTextCellData alloc] init];
@@ -159,17 +232,16 @@
         self.groupMembersCellData = membersData;
         [dataList addObject:memberArray];
 
-
-        //group info
+        // group info
         NSMutableArray *groupInfoArray = [NSMutableArray array];
-        
+
         TUIGroupNoticeCellData *notice = [[TUIGroupNoticeCellData alloc] init];
         notice.name = TIMCommonLocalizableString(TUIKitGroupNotice);
-        notice.desc = self.groupInfo.notification?:TIMCommonLocalizableString(TUIKitGroupNoticeNull);
+        notice.desc = self.groupInfo.notification ?: TIMCommonLocalizableString(TUIKitGroupNoticeNull);
         notice.target = self;
         notice.selector = @selector(didSelectNotice);
         [groupInfoArray addObject:notice];
-        
+
         TUICommonTextCellData *manageData = [[TUICommonTextCellData alloc] init];
         manageData.key = TIMCommonLocalizableString(TUIKitGroupProfileManage);
         manageData.value = @"";
@@ -200,19 +272,29 @@
         }
         [groupInfoArray addObject:addOptionData];
         self.addOptionData = addOptionData;
+
+        TUICommonTextCellData *inviteOptionData = [[TUICommonTextCellData alloc] init];
+        inviteOptionData.key = TIMCommonLocalizableString(TUIKitGroupProfileInviteType);
+        if ([TUIGroupInfoDataProvider isMeOwner:self.groupInfo]) {
+            inviteOptionData.cselector = @selector(didSelectAddOption:);
+            inviteOptionData.showAccessory = YES;
+        }
+        inviteOptionData.value = [TUIGroupInfoDataProvider getApproveOption:self.groupInfo];
+        [groupInfoArray addObject:inviteOptionData];
+        self.inviteOptionData = inviteOptionData;
         [dataList addObject:groupInfoArray];
 
-        //personal info
+        // personal info
         TUICommonTextCellData *nickData = [[TUICommonTextCellData alloc] init];
         nickData.key = TIMCommonLocalizableString(TUIKitGroupProfileAlias);
         nickData.value = self.selfInfo.nameCard;
         nickData.cselector = @selector(didSelectGroupNick:);
         nickData.showAccessory = YES;
         self.groupNickNameCellData = nickData;
-        [dataList addObject:@[nickData]];
-        
+        [dataList addObject:@[ nickData ]];
+
         NSMutableArray *personalArray = [NSMutableArray array];
-        
+
         TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
 
         if (![self.groupInfo.groupType isEqualToString:GroupType_Meeting]) {
@@ -221,31 +303,30 @@
             messageSwitchData.cswitchSelector = @selector(didSelectOnNotDisturb:);
             [personalArray addObject:messageSwitchData];
         }
-        
+
         TUICommonSwitchCellData *markFold = [[TUICommonSwitchCellData alloc] init];
-        
+
         TUICommonSwitchCellData *switchData = [[TUICommonSwitchCellData alloc] init];
-        
-        markFold.title =  TIMCommonLocalizableString(TUIKitConversationMarkFold);
-        
+
+        markFold.title = TIMCommonLocalizableString(TUIKitConversationMarkFold);
+
         markFold.displaySeparatorLine = YES;
-    
+
         markFold.cswitchSelector = @selector(didSelectOnFoldConversation:);
         if (messageSwitchData.on) {
             [personalArray addObject:markFold];
         }
-        
+
         switchData.title = TIMCommonLocalizableString(TUIKitGroupProfileStickyOnTop);
         [personalArray addObject:switchData];
-        
+
         [dataList addObject:personalArray];
-        
+
         TUICommonTextCellData *changeBackgroundImageItem = [[TUICommonTextCellData alloc] init];
         changeBackgroundImageItem.key = TIMCommonLocalizableString(ProfileSetBackgroundImage);
         changeBackgroundImageItem.cselector = @selector(didSelectOnChangeBackgroundImage:);
         changeBackgroundImageItem.showAccessory = YES;
-        [dataList addObject:@[changeBackgroundImageItem]];
-
+        [dataList addObject:@[ changeBackgroundImageItem ]];
 
         NSMutableArray *buttonArray = [NSMutableArray array];
         TUIButtonCellData *clearHistory = [[TUIButtonCellData alloc] init];
@@ -253,7 +334,7 @@
         clearHistory.style = ButtonRedText;
         clearHistory.cbuttonSelector = @selector(didClearAllHistory:);
         [buttonArray addObject:clearHistory];
-        
+
         TUIButtonCellData *quitButton = [[TUIButtonCellData alloc] init];
         quitButton.title = TIMCommonLocalizableString(TUIKitGroupProfileDeleteAndExit);
         quitButton.style = ButtonRedText;
@@ -262,52 +343,53 @@
 
         if ([self.class isMeSuper:self.groupInfo]) {
             TUIButtonCellData *transferButton = [[TUIButtonCellData alloc] init];
-            transferButton.title =TIMCommonLocalizableString(TUIKitGroupTransferOwner);
+            transferButton.title = TIMCommonLocalizableString(TUIKitGroupTransferOwner);
             transferButton.style = ButtonRedText;
             transferButton.cbuttonSelector = @selector(didTransferGroup:);
             [buttonArray addObject:transferButton];
         }
 
         if ([self.groupInfo canDismissGroup]) {
-              TUIButtonCellData *Deletebutton = [[TUIButtonCellData alloc] init];
-              Deletebutton.title = TIMCommonLocalizableString(TUIKitGroupProfileDissolve);
-              Deletebutton.style = ButtonRedText;
-              Deletebutton.cbuttonSelector = @selector(didDeleteGroup:);
-              [buttonArray addObject:Deletebutton];
+            TUIButtonCellData *deletebutton = [[TUIButtonCellData alloc] init];
+            deletebutton.title = TIMCommonLocalizableString(TUIKitGroupProfileDissolve);
+            deletebutton.style = ButtonRedText;
+            deletebutton.cbuttonSelector = @selector(didDeleteGroup:);
+            [buttonArray addObject:deletebutton];
         }
 
         TUIButtonCellData *lastCellData = [buttonArray lastObject];
         lastCellData.hideSeparatorLine = YES;
         [dataList addObject:buttonArray];
-        
+
 #ifndef SDKPlaceTop
 #define SDKPlaceTop
 #endif
 #ifdef SDKPlaceTop
-        @weakify(self)
-        [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"group_%@",self.groupID] succ:^(V2TIMConversation *conv) {
-            @strongify(self)
-            
-            markFold.on = [self.class isMarkedByFoldType:conv.markList];
-            
-            switchData.cswitchSelector = @selector(didSelectOnTop:);
-            switchData.on = conv.isPinned;
-            
-            if (markFold.on) {
-                switchData.on = NO;
-                switchData.disableChecked = YES;
+        @weakify(self);
+        [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"group_%@", self.groupID]
+            succ:^(V2TIMConversation *conv) {
+              @strongify(self);
+
+              markFold.on = [self.class isMarkedByFoldType:conv.markList];
+
+              switchData.cswitchSelector = @selector(didSelectOnTop:);
+              switchData.on = conv.isPinned;
+
+              if (markFold.on) {
+                  switchData.on = NO;
+                  switchData.disableChecked = YES;
+              }
+
+              self.dataList = dataList;
             }
-            
-            self.dataList = dataList;
-        } fail:^(int code, NSString *desc) {
-            NSLog(@"");
-        }];
+            fail:^(int code, NSString *desc) {
+              NSLog(@"");
+            }];
 #else
-        if ([[[TUIConversationPin sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"group_%@",self.groupID]]) {
+        if ([[[TUIConversationPin sharedInstance] topConversationList] containsObject:[NSString stringWithFormat:@"group_%@", self.groupID]]) {
             switchData.on = YES;
         }
 #endif
-        
     }
 }
 
@@ -351,16 +433,14 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectOnFoldConversation:)]) {
         [self.delegate didSelectOnFoldConversation:cell];
     }
-
 }
 
 - (void)didSelectOnChangeBackgroundImage:(TUICommonTextCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectOnChangeBackgroundImage:)]) {
         [self.delegate didSelectOnChangeBackgroundImage:cell];
     }
-
 }
-- (void)didTransferGroup:(TUIButtonCell *)cell  {
+- (void)didTransferGroup:(TUIButtonCell *)cell {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTransferGroup:)]) {
         [self.delegate didTransferGroup:cell];
     }
@@ -377,22 +457,19 @@
     }
 }
 
-- (void)didSelectGroupManage
-{
+- (void)didSelectGroupManage {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectGroupManage)]) {
         [self.delegate didSelectGroupManage];
     }
 }
 
-- (void)didSelectNotice
-{
+- (void)didSelectNotice {
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectGroupNotice)]) {
         [self.delegate didSelectGroupNotice];
     }
 }
 
-- (NSMutableArray *)getShowMembers:(NSMutableArray *)members
-{
+- (NSMutableArray *)getShowMembers:(NSMutableArray *)members {
     int maxCount = TGroupMembersCell_Column_Count * TGroupMembersCell_Row_Count;
     if ([self.groupInfo canInviteMember]) maxCount--;
     if ([self.groupInfo canRemoveMember]) maxCount--;
@@ -416,24 +493,41 @@
     return tmpArray;
 }
 
-- (void)setGroupAddOpt:(V2TIMGroupAddOpt)opt
-{
-    @weakify(self)
+- (void)setGroupAddOpt:(V2TIMGroupAddOpt)opt {
+    @weakify(self);
     V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
     info.groupID = self.groupID;
     info.groupAddOpt = opt;
-    
-    [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
-        @strongify(self)
-        self.groupInfo.groupAddOpt = opt;
-        self.addOptionData.value = [TUIGroupInfoDataProvider getAddOptionWithV2AddOpt:opt];
-    } fail:^(int code, NSString *desc) {
-        [TUITool makeToastError:code msg:desc];
-    }];
+
+    [[V2TIMManager sharedInstance] setGroupInfo:info
+        succ:^{
+          @strongify(self);
+          self.groupInfo.groupAddOpt = opt;
+          self.addOptionData.value = [TUIGroupInfoDataProvider getAddOptionWithV2AddOpt:opt];
+        }
+        fail:^(int code, NSString *desc) {
+          [TUITool makeToastError:code msg:desc];
+        }];
 }
 
-- (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt Succ:(V2TIMSucc)succ fail:(V2TIMFail)fail
-{
+- (void)setGroupApproveOpt:(V2TIMGroupAddOpt)opt {
+    @weakify(self);
+    V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
+    info.groupID = self.groupID;
+    info.groupApproveOpt = opt;
+
+    [[V2TIMManager sharedInstance] setGroupInfo:info
+        succ:^{
+          @strongify(self);
+          self.groupInfo.groupApproveOpt = opt;
+          self.inviteOptionData.value = [TUIGroupInfoDataProvider getApproveOption:self.groupInfo];
+        }
+        fail:^(int code, NSString *desc) {
+          [TUITool makeToastError:code msg:desc];
+        }];
+}
+
+- (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt Succ:(V2TIMSucc)succ fail:(V2TIMFail)fail {
     [[V2TIMManager sharedInstance] setGroupReceiveMessageOpt:self.groupID opt:opt succ:succ fail:fail];
 }
 
@@ -441,26 +535,30 @@
     V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
     info.groupID = self.groupID;
     info.groupName = groupName;
-    @weakify(self)
-    [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
-        @strongify(self)
-        self.profileCellData.name = groupName;
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+    @weakify(self);
+    [[V2TIMManager sharedInstance] setGroupInfo:info
+        succ:^{
+          @strongify(self);
+          self.profileCellData.name = groupName;
+        }
+        fail:^(int code, NSString *msg) {
+          [TUITool makeToastError:code msg:msg];
+        }];
 }
 
 - (void)setGroupNotification:(NSString *)notification {
     V2TIMGroupInfo *info = [[V2TIMGroupInfo alloc] init];
     info.groupID = self.groupID;
     info.notification = notification;
-    @weakify(self)
-    [[V2TIMManager sharedInstance] setGroupInfo:info succ:^{
-        @strongify(self)
-        self.profileCellData.signature = notification;
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+    @weakify(self);
+    [[V2TIMManager sharedInstance] setGroupInfo:info
+        succ:^{
+          @strongify(self);
+          self.profileCellData.signature = notification;
+        }
+        fail:^(int code, NSString *msg) {
+          [TUITool makeToastError:code msg:msg];
+        }];
 }
 
 - (void)setGroupMemberNameCard:(NSString *)nameCard {
@@ -468,14 +566,17 @@
     V2TIMGroupMemberFullInfo *info = [[V2TIMGroupMemberFullInfo alloc] init];
     info.userID = userID;
     info.nameCard = nameCard;
-    @weakify(self)
-    [[V2TIMManager sharedInstance] setGroupMemberInfo:self.groupID info:info succ:^{
-        @strongify(self)
-        self.groupNickNameCellData.value = nameCard;
-        self.selfInfo.nameCard = nameCard;
-    } fail:^(int code, NSString *msg) {
-        [TUITool makeToastError:code msg:msg];
-    }];
+    @weakify(self);
+    [[V2TIMManager sharedInstance] setGroupMemberInfo:self.groupID
+        info:info
+        succ:^{
+          @strongify(self);
+          self.groupNickNameCellData.value = nameCard;
+          self.selfInfo.nameCard = nameCard;
+        }
+        fail:^(int code, NSString *msg) {
+          [TUITool makeToastError:code msg:msg];
+        }];
 }
 
 - (void)dismissGroup:(V2TIMSucc)succ fail:(V2TIMFail)fail {
@@ -491,25 +592,20 @@
 }
 
 + (NSString *)getGroupTypeName:(V2TIMGroupInfo *)groupInfo {
-
     if (groupInfo.groupType) {
-        if([groupInfo.groupType isEqualToString:@"Work"]){
+        if ([groupInfo.groupType isEqualToString:@"Work"]) {
             return TIMCommonLocalizableString(TUIKitWorkGroup);
-        }
-        else if([groupInfo.groupType isEqualToString:@"Public"]){
+        } else if ([groupInfo.groupType isEqualToString:@"Public"]) {
             return TIMCommonLocalizableString(TUIKitPublicGroup);
-        }
-        else if([groupInfo.groupType isEqualToString:@"Meeting"]){
+        } else if ([groupInfo.groupType isEqualToString:@"Meeting"]) {
             return TIMCommonLocalizableString(TUIKitChatRoom);
-        }
-        else if([groupInfo.groupType isEqualToString:@"Community"]){
+        } else if ([groupInfo.groupType isEqualToString:@"Community"]) {
             return TIMCommonLocalizableString(TUIKitCommunity);
         }
     }
 
     return @"";
 }
-
 
 + (NSString *)getAddOption:(V2TIMGroupInfo *)groupInfo {
     switch (groupInfo.groupAddOpt) {
@@ -545,6 +641,22 @@
     return @"";
 }
 
++ (NSString *)getApproveOption:(V2TIMGroupInfo *)groupInfo {
+    switch (groupInfo.groupApproveOpt) {
+        case V2TIM_GROUP_ADD_FORBID:
+            return TIMCommonLocalizableString(TUIKitGroupProfileInviteDisable);
+            break;
+        case V2TIM_GROUP_ADD_AUTH:
+            return TIMCommonLocalizableString(TUIKitGroupProfileAdminApprove);
+            break;
+        case V2TIM_GROUP_ADD_ANY:
+            return TIMCommonLocalizableString(TUIKitGroupProfileAutoApproval);
+            break;
+        default:
+            break;
+    }
+    return @"";
+}
 
 + (BOOL)isMarkedByFoldType:(NSArray *)markList {
     for (NSNumber *num in markList) {

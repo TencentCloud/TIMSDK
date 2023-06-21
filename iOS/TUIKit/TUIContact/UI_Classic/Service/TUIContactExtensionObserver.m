@@ -3,12 +3,12 @@
 //  TUIContact
 //
 //  Created by harvy on 2023/3/29.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactExtensionObserver.h"
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMCommonModel.h>
-
+#import <TUICore/TUICore.h>
 
 @interface TUIContactExtensionObserver () <TUIExtensionProtocol>
 
@@ -24,7 +24,7 @@
     static dispatch_once_t onceToken;
     static id instance = nil;
     dispatch_once(&onceToken, ^{
-        instance = [[self alloc] init];
+      instance = [[self alloc] init];
     });
     return instance;
 }
@@ -49,23 +49,24 @@
     if (userID.length > 0) {
         TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
         info.icon = TUIContactBundleThemeImage(@"chat_nav_more_menu_img", @"chat_nav_more_menu");
-        info.onClicked = ^(NSDictionary * _Nonnull param) {
-            UINavigationController *pushVC = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_PushVC asClass:UINavigationController.class];
-            if (pushVC) {
-                NSDictionary *param = @{
-                    TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
-                    TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey: ^(UIViewController *vc){
-                        [pushVC pushViewController:vc animated:YES];
-                    },
-                    TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey: ^(int code, NSString * desc){}
-                };
-                [TUICore createObject:TUICore_TUIContactObjectFactory key:TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod param:param];                
-            }
+        info.onClicked = ^(NSDictionary *_Nonnull param) {
+          UINavigationController *pushVC = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_PushVC asClass:UINavigationController.class];
+          if (pushVC) {
+              NSDictionary *param = @{TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey : userID ?: @"",
+                                      TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey : ^(UIViewController *vc){
+                                          [pushVC pushViewController:vc animated:YES];
+          }
+          , TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey : ^(int code, NSString *desc) {
+          }
         };
-        return @[info];
-    } else {
-        return nil;
+        [TUICore createObject:TUICore_TUIContactObjectFactory key:TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod param:param];
     }
+};
+return @[ info ];
+}
+else {
+    return nil;
+}
 }
 
 @end

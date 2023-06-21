@@ -24,6 +24,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
         if let image = TUICallKitCommon.getBundleImage(name: "ic_mute") {
             muteAudioBtn.updateImage(image: image)
         }
+        muteAudioBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#242424"))
         return muteAudioBtn
     }()
     
@@ -37,6 +38,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
         if let image = TUICallKitCommon.getBundleImage(name: "ic_hangup") {
             hangupBtn.updateImage(image: image)
         }
+        hangupBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#242424"))
         return hangupBtn
     }()
     
@@ -50,6 +52,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
         if let image = TUICallKitCommon.getBundleImage(name: "ic_handsfree") {
             changeSpeakerBtn.updateImage(image: image)
         }
+        changeSpeakerBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#242424"))
         return changeSpeakerBtn
     }()
     

@@ -3,11 +3,12 @@
 //  TUIConversation
 //
 //  Created by wyl on 2023/3/29.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * > 创建会话选择器：
  * factoryName: TUICore_TUIConversationObjectFactory
- * key ：TUICore_TUIConversationObjectFactory_GetConversationSelectControllerMethod
+ * key ：TUICore_TUIConversationObjectFactory_ConversationSelectVC_Classic
  *
  *
  * TUIConversationService currently provides two services:
@@ -37,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * > Create conversation selector:
  * factoryName: TUICore_TUIConversationObjectFactory
- * key: TUICore_TUIConversationObjectFactory_GetConversationSelectControllerMethod
+ * key: TUICore_TUIConversationObjectFactory_ConversationSelectVC_Classic
  *
  */
 @interface TUIConversationObjectFactory : NSObject

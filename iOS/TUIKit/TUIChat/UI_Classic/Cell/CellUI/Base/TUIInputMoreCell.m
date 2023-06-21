@@ -3,6 +3,7 @@
 //  UIKit
 //
 //  Created by annidyfeng on 2019/5/22.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIInputMoreCell.h"
@@ -10,17 +11,15 @@
 
 @implementation TUIInputMoreCell
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     _image = [[UIImageView alloc] init];
     _image.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:_image];
@@ -32,22 +31,20 @@
     [self addSubview:_title];
 }
 
-- (void)fillWithData:(TUIInputMoreCellData *)data
-{
-    //set data
+- (void)fillWithData:(TUIInputMoreCellData *)data {
+    // set data
     _data = data;
-    self.hidden = (data == nil)?YES:NO;
+    self.hidden = (data == nil) ? YES : NO;
     _image.image = data.image;
     [_title setText:data.title];
-    //update layout
+    // update layout
     CGSize menuSize = TMoreCell_Image_Size;
     _image.frame = CGRectMake(0, 0, menuSize.width, menuSize.height);
     _title.frame = CGRectMake(0, _image.frame.origin.y + _image.frame.size.height, _image.frame.size.width + 10, TMoreCell_Title_Height);
     _title.center = CGPointMake(_image.center.x, _title.center.y);
 }
 
-+ (CGSize)getSize
-{
++ (CGSize)getSize {
     CGSize menuSize = TMoreCell_Image_Size;
     return CGSizeMake(menuSize.width, menuSize.height + TMoreCell_Title_Height);
 }

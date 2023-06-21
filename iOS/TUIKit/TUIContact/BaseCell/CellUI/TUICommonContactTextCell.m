@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUICommonContactTextCell.h"
@@ -20,8 +21,12 @@
     CGFloat height = [super heightOfWidth:width];
     if (self.enableMultiLineValue) {
         NSString *str = self.value;
-        NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:16]};
-        CGSize size = [str boundingRectWithSize:CGSizeMake(280, 999) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+        NSDictionary *attribute = @{NSFontAttributeName : [UIFont systemFontOfSize:16]};
+        CGSize size = [str boundingRectWithSize:CGSizeMake(280, 999)
+                                        options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                     attributes:attribute
+                                        context:nil]
+                          .size;
         height = size.height + 30;
     }
     return height;
@@ -29,7 +34,7 @@
 
 @end
 
-@interface TUICommonContactTextCell()
+@interface TUICommonContactTextCell ()
 @property TUICommonContactTextCellData *textData;
 @end
 
@@ -39,15 +44,15 @@
     if (self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier]) {
         self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
-        
+
         _keyLabel = self.textLabel;
         _keyLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _keyLabel.font = [UIFont systemFontOfSize:16.0];
-        
+
         _valueLabel = self.detailTextLabel;
         _valueLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
         _valueLabel.font = [UIFont systemFontOfSize:16.0];
-        
+
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -55,19 +60,19 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     if (self.textData.keyEdgeInsets.left) {
         self.keyLabel.mm_left(self.textData.keyEdgeInsets.left);
     }
-    
+
     if (self.textData.keyEdgeInsets.top) {
         self.keyLabel.mm_top(self.textData.keyEdgeInsets.top);
     }
-    
+
     if (self.textData.keyEdgeInsets.bottom) {
         self.keyLabel.mm_bottom(self.textData.keyEdgeInsets.bottom);
     }
-    
+
     if (self.textData.keyEdgeInsets.right) {
         self.keyLabel.mm_right(self.textData.keyEdgeInsets.right);
     }
@@ -85,15 +90,15 @@
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
     }
-    
+
     if (self.textData.keyColor) {
         self.keyLabel.textColor = self.textData.keyColor;
     }
-    
+
     if (self.textData.valueColor) {
         self.valueLabel.textColor = self.textData.valueColor;
     }
-    
+
     if (self.textData.enableMultiLineValue) {
         self.valueLabel.numberOfLines = 0;
     } else {

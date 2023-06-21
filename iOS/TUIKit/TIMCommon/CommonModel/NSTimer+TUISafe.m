@@ -3,6 +3,7 @@
 //  TUICore
 //
 //  Created by wyl on 2022/7/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "NSTimer+TUISafe.h"

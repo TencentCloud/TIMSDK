@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 //  TUIAudioRecorder.m
 //  TUIChat
@@ -6,11 +9,11 @@
 #import "TUIAudioRecorder.h"
 
 #import <AVFoundation/AVFoundation.h>
-#import "TUIAIDenoiseSignatureManager.h"
 #import <TIMCommon/TIMCommonModel.h>
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 #import <TUICore/TUILogin.h>
+#import "TUIAIDenoiseSignatureManager.h"
 
 @interface TUIAudioRecorder () <AVAudioRecorderDelegate, TUINotificationProtocol>
 
@@ -35,9 +38,7 @@
 }
 
 - (void)configNotify {
-    [TUICore registerEvent:TUICore_RecordAudioMessageNotify
-                    subKey:TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey
-                    object:self];
+    [TUICore registerEvent:TUICore_RecordAudioMessageNotify subKey:TUICore_RecordAudioMessageNotify_RecordAudioVoiceVolumeSubKey object:self];
 }
 
 - (void)dealloc {
@@ -47,23 +48,21 @@
 #pragma mark - Public
 - (void)record {
     [self checkMicPermissionWithCompletion:^(BOOL isGranted, BOOL isFirstChek) {
-        if (isFirstChek) {
-            if (self.delegate &&
-                [self.delegate respondsToSelector:@selector(audioRecorder:didCheckPermission:isFirstTime:)]) {
-                [self.delegate audioRecorder:self didCheckPermission:isGranted isFirstTime:YES];
-            }
-            return;
-        }
-        if (self.delegate &&
-            [self.delegate respondsToSelector:@selector(audioRecorder:didCheckPermission:isFirstTime:)]) {
-            [self.delegate audioRecorder:self didCheckPermission:isGranted isFirstTime:NO];
-        }
-        if (isGranted) {
-            [self createRecordedFilePath];
-            if (![self startCallKitRecording]) {
-                [self startSystemRecording];
-            }
-        }
+      if (isFirstChek) {
+          if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didCheckPermission:isFirstTime:)]) {
+              [self.delegate audioRecorder:self didCheckPermission:isGranted isFirstTime:YES];
+          }
+          return;
+      }
+      if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didCheckPermission:isFirstTime:)]) {
+          [self.delegate audioRecorder:self didCheckPermission:isGranted isFirstTime:NO];
+      }
+      if (isGranted) {
+          [self createRecordedFilePath];
+          if (![self startCallKitRecording]) {
+              [self startSystemRecording];
+          }
+      }
     }];
 }
 
@@ -89,8 +88,7 @@
 
 #pragma mark - Private
 - (void)createRecordedFilePath {
-    self.recordedFilePath = [TUIKit_Voice_Path stringByAppendingString:[TUITool genVoiceName:nil
-                                                                               withExtension:@"m4a"]];
+    self.recordedFilePath = [TUIKit_Voice_Path stringByAppendingString:[TUITool genVoiceName:nil withExtension:@"m4a"]];
 }
 
 - (void)stopRecordTimer {
@@ -103,11 +101,7 @@
 #pragma mark-- Timer
 - (void)triggerRecordTimer {
     self.currentRecordTime = 0;
-    self.recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                                        target:self
-                                                      selector:@selector(onRecordTimerTriggered:)
-                                                      userInfo:nil
-                                                       repeats:YES];
+    self.recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(onRecordTimerTriggered:) userInfo:nil repeats:YES];
 }
 
 - (void)onRecordTimerTriggered:(NSTimer *)timer {
@@ -116,25 +110,22 @@
     if (self.isUsingCallKitRecorder) {
         /// To ensure the callkit recorder's recording time is enough for 60 seconds.
         self.currentRecordTime += 0.495;
-        if (self.delegate &&
-            [self.delegate respondsToSelector:@selector(audioRecorder:didRecordTimeChanged:)]) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didRecordTimeChanged:)]) {
             [self.delegate audioRecorder:self didRecordTimeChanged:self.currentRecordTime];
         }
     } else {
         float power = [self.recorder averagePowerForChannel:0];
         NSTimeInterval currentTime = self.recorder.currentTime;
-        if (self.delegate &&
-            [self.delegate respondsToSelector:@selector(audioRecorder:didPowerChanged:)]) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didPowerChanged:)]) {
             [self.delegate audioRecorder:self didPowerChanged:power];
         }
-        if (self.delegate &&
-            [self.delegate respondsToSelector:@selector(audioRecorder:didRecordTimeChanged:)]) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didRecordTimeChanged:)]) {
             [self.delegate audioRecorder:self didRecordTimeChanged:currentTime];
         }
     }
 }
 
-- (void)checkMicPermissionWithCompletion:(void(^)(BOOL isGranted, BOOL isFirstChek))completion {
+- (void)checkMicPermissionWithCompletion:(void (^)(BOOL isGranted, BOOL isFirstChek))completion {
     AVAudioSessionRecordPermission permission = AVAudioSession.sharedInstance.recordPermission;
 
     /**
@@ -142,18 +133,17 @@
      * For the first request for authorization after a new installation, it is necessary to
      * determine whether it is Undetermined again to avoid errors.
      */
-    if (permission == AVAudioSessionRecordPermissionDenied ||
-        permission == AVAudioSessionRecordPermissionUndetermined) {
+    if (permission == AVAudioSessionRecordPermissionDenied || permission == AVAudioSessionRecordPermissionUndetermined) {
         [AVAudioSession.sharedInstance requestRecordPermission:^(BOOL granted) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) {
-                    completion(granted, YES);
-                }
-            });
+          dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion(granted, YES);
+            }
+          });
         }];
         return;
     }
-    
+
     BOOL isGranted = permission == AVAudioSessionRecordPermissionGranted;
     if (completion) {
         completion(isGranted, NO);
@@ -169,34 +159,33 @@
     [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
     [session setActive:YES error:&error];
 
-    NSDictionary *recordSetting = [[NSDictionary alloc]
-        initWithObjectsAndKeys:
-            /**
-             * 采样率：8000/11025/22050/44100/96000（该参数影响音频的质量）
-             * Sampling rate: 8000/11025/22050/44100/96000 (this parameter affects the audio
-             * quality)
-             */
-                [NSNumber numberWithFloat:16000.0], AVSampleRateKey,
-                /**
-                 * 音频格式
-                 * Audio format
-                 */
-                [NSNumber numberWithInt:kAudioFormatMPEG4AAC], AVFormatIDKey,
-                /**
-                 * 采样位数：  8、16、24、32 默认为 16
-                 * Sampling bits: 8, 16, 24, 32, default is 16
-                 */
-                [NSNumber numberWithInt:16], AVLinearPCMBitDepthKey,
-                /**
-                 * 音频通道数 1 或 2
-                 * Number of audio channels 1 or 2
-                 */
-                [NSNumber numberWithInt:1], AVNumberOfChannelsKey,
-                /**
-                 * 录音质量
-                 * Recording quality
-                 */
-                [NSNumber numberWithInt:AVAudioQualityHigh], AVEncoderAudioQualityKey, nil];
+    NSDictionary *recordSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                                            /**
+                                                             * 采样率：8000/11025/22050/44100/96000（该参数影响音频的质量）
+                                                             * Sampling rate: 8000/11025/22050/44100/96000 (this parameter affects the audio
+                                                             * quality)
+                                                             */
+                                                            [NSNumber numberWithFloat:16000.0], AVSampleRateKey,
+                                                            /**
+                                                             * 音频格式
+                                                             * Audio format
+                                                             */
+                                                            [NSNumber numberWithInt:kAudioFormatMPEG4AAC], AVFormatIDKey,
+                                                            /**
+                                                             * 采样位数：  8、16、24、32 默认为 16
+                                                             * Sampling bits: 8, 16, 24, 32, default is 16
+                                                             */
+                                                            [NSNumber numberWithInt:16], AVLinearPCMBitDepthKey,
+                                                            /**
+                                                             * 音频通道数 1 或 2
+                                                             * Number of audio channels 1 or 2
+                                                             */
+                                                            [NSNumber numberWithInt:1], AVNumberOfChannelsKey,
+                                                            /**
+                                                             * 录音质量
+                                                             * Recording quality
+                                                             */
+                                                            [NSNumber numberWithInt:AVAudioQualityHigh], AVEncoderAudioQualityKey, nil];
 
     [self createRecordedFilePath];
 
@@ -251,21 +240,19 @@
     }
 
     NSMutableDictionary *audioRecordParam = [[NSMutableDictionary alloc] init];
-    [audioRecordParam setValue:signature
-                        forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SignatureKey];
-    [audioRecordParam setValue:@([TUILogin getSdkAppID])
-                        forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SdkappidKey];
-    [audioRecordParam setValue:self.recordedFilePath
-                        forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_PathKey];
-    
-    @weakify(self)
-    void(^startCallBack)(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) = ^(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) {
-        @strongify(self)
-        NSString *method = param[@"method"];
-        if ([method isEqualToString:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey]) {
-            [self onTUICallKitRecordStarted:errorCode];
-        }
-    };
+    [audioRecordParam setValue:signature forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SignatureKey];
+    [audioRecordParam setValue:@([TUILogin getSdkAppID]) forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SdkappidKey];
+    [audioRecordParam setValue:self.recordedFilePath forKey:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_PathKey];
+
+    @weakify(self);
+    void (^startCallBack)(NSInteger errorCode, NSString *errorMessage, NSDictionary *param) =
+        ^(NSInteger errorCode, NSString *errorMessage, NSDictionary *param) {
+          @strongify(self);
+          NSString *method = param[@"method"];
+          if ([method isEqualToString:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey]) {
+              [self onTUICallKitRecordStarted:errorCode];
+          }
+        };
 
     [TUICore callService:TUICore_TUIAudioMessageRecordService
                   method:TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod
@@ -278,28 +265,26 @@
 }
 
 - (void)stopCallKitRecording {
-    @weakify(self)
-    void(^stopCallBack)(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) = ^(NSInteger errorCode, NSString* errorMessage, NSDictionary *param) {
-        @strongify(self)
-        NSString *method = param[@"method"];
-        if ([method isEqualToString:TUICore_RecordAudioMessageNotify_StopRecordAudioMessageSubKey]) {
-            [self onTUICallKitRecordCompleted:errorCode];
-        }
-    };
-    
+    @weakify(self);
+    void (^stopCallBack)(NSInteger errorCode, NSString *errorMessage, NSDictionary *param) =
+        ^(NSInteger errorCode, NSString *errorMessage, NSDictionary *param) {
+          @strongify(self);
+          NSString *method = param[@"method"];
+          if ([method isEqualToString:TUICore_RecordAudioMessageNotify_StopRecordAudioMessageSubKey]) {
+              [self onTUICallKitRecordCompleted:errorCode];
+          }
+        };
+
     [TUICore callService:TUICore_TUIAudioMessageRecordService
                   method:TUICore_TUIAudioMessageRecordService_StopRecordAudioMessageMethod
                    param:nil
           resultCallback:stopCallBack];
-    
+
     NSLog(@"stop TUICallKit recording");
 }
 
 #pragma mark - TUINotificationProtocol
-- (void)onNotifyEvent:(NSString *)key
-               subKey:(NSString *)subKey
-               object:(nullable id)anObject
-                param:(NSDictionary *)param {
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(NSDictionary *)param {
     if ([key isEqualToString:TUICore_RecordAudioMessageNotify]) {
         if (param == nil) {
             NSLog(@"TUICallKit notify param is invalid");
@@ -335,8 +320,7 @@
         case TUICore_RecordAudioMessageNotifyError_MicStartFail:
         case TUICore_RecordAudioMessageNotifyError_MicNotAuthorized:
         case TUICore_RecordAudioMessageNotifyError_MicSetParamFail:
-        case TUICore_RecordAudioMessageNotifyError_MicOccupy:
-        {
+        case TUICore_RecordAudioMessageNotifyError_MicOccupy: {
             [self stopCallKitRecording];
             NSLog(@"start TUICallKit recording failed, errorCode: %ld", (long)errorCode);
             break;
@@ -347,8 +331,7 @@
         default: {
             [self stopCallKitRecording];
             [self startSystemRecording];
-            NSLog(@"start TUICallKit recording failed, errorCode: %ld, switch to system recorder",
-                  (long)errorCode);
+            NSLog(@"start TUICallKit recording failed, errorCode: %ld, switch to system recorder", (long)errorCode);
             break;
         }
     }
@@ -372,8 +355,7 @@
 - (void)onTUICallKitVolumeChanged:(NSUInteger)volume {
     /// Adapt volume to power.
     float power = (NSInteger)volume - 90;
-    if (self.delegate &&
-        [self.delegate respondsToSelector:@selector(audioRecorder:didPowerChanged:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didPowerChanged:)]) {
         [self.delegate audioRecorder:self didPowerChanged:power];
     }
 }

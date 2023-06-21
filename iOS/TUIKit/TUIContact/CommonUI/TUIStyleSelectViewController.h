@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define kTUIKitFirstInitAppStyleID @"Classic";  // Classic / Minimalist
 
 @class TUIStyleSelectCellModel;
-typedef void(^StyleSelectCallback)(TUIStyleSelectCellModel *);
+typedef void (^StyleSelectCallback)(TUIStyleSelectCellModel *);
 
 @protocol TUIStyleSelectControllerDelegate <NSObject>
 
@@ -20,27 +20,26 @@ typedef void(^StyleSelectCallback)(TUIStyleSelectCellModel *);
 
 @end
 
-
 @interface TUIStyleSelectCell : UITableViewCell
 
-@property (nonatomic, strong) UILabel *nameLabel;
-@property (nonatomic, strong) UIImageView *chooseIconView;
+@property(nonatomic, strong) UILabel *nameLabel;
+@property(nonatomic, strong) UIImageView *chooseIconView;
 
-@property (nonatomic, strong) TUIStyleSelectCellModel *cellModel;
+@property(nonatomic, strong) TUIStyleSelectCellModel *cellModel;
 
 @end
 
 @interface TUIStyleSelectCellModel : NSObject
 
-@property (nonatomic, copy) NSString *styleID;
-@property (nonatomic, strong) NSString *styleName;
-@property (nonatomic, assign) BOOL selected;
+@property(nonatomic, copy) NSString *styleID;
+@property(nonatomic, strong) NSString *styleName;
+@property(nonatomic, assign) BOOL selected;
 
 @end
 
 @interface TUIStyleSelectViewController : UIViewController
 
-@property (nonatomic, weak) id<TUIStyleSelectControllerDelegate> delegate;
+@property(nonatomic, weak) id<TUIStyleSelectControllerDelegate> delegate;
 
 + (BOOL)isClassicEntrance;
 - (void)setBackGroundColor:(UIColor *)color;

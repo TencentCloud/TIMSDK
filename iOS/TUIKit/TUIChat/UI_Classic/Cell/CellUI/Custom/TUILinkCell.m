@@ -15,8 +15,7 @@
 
 @implementation TUILinkCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _myTextLabel = [[UILabel alloc] init];
@@ -43,13 +42,13 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     CGRect rect = [self.myTextLabel.text boundingRectWithSize:CGSizeMake(245, MAXFLOAT)
                                                       options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                   attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:15] }
+                                                   attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}
                                                       context:nil];
     self.myTextLabel.mm_top(10).mm_left(10).mm_width(245).mm_height(rect.size.height);
-    self.myLinkLabel.mm_sizeToFit().mm_left(10).mm_top(self.myTextLabel.mm_y + self.myTextLabel.mm_h +15);
+    self.myLinkLabel.mm_sizeToFit().mm_left(10).mm_top(self.myTextLabel.mm_y + self.myTextLabel.mm_h + 15);
 }
 
 @end

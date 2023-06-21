@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by harvy on 2022/5/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 // ================ Apple 提供的 APNs 高级用法 ================
 // 1. 如果您不需要使用 TUILogin 的登录/登出，但依然想实现离线推送，您只需：
@@ -16,7 +17,6 @@
 // 如果 TUIOfflinePush 依然满足不了您的需求，欢迎加入 QQ 群（592465424）反馈。
 // ================================================================
 
-
 // ======================= TPNS 推送通道高级用法 ========================
 // 1. 如果您不需要使用 TUILogin 的登录/登出，但依然想实现离线推送，您只需：
 // - 在您的 APP/IM 登录完成后，调用 registerService 方法注册推送
@@ -29,8 +29,6 @@
 // 如果 TUIOfflinePush 依然满足不了您的需求，欢迎加入 QQ 群（592465424）反馈。
 // ===================================================================
 
-
-
 // ================ Advanced usage of APNs ================
 // 1. If you don't need to use TUILogin's login/logout, but still want to implement offline push, you just need to:
 // - After your APP/IM login is complete, call the registerService method to register push
@@ -42,7 +40,6 @@
 //
 // If TUIOfflinePush still can't meet your needs, please issue.
 // ================================================================
-
 
 // ======================= Advanced usage of TPNS ========================
 // 1. If you don't need to use TUILogin's login/logout, but still want to implement offline push, you just need to:

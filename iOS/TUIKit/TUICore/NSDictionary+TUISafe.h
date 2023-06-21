@@ -3,6 +3,7 @@
 //  lottie-ios
 //
 //  Created by kayev on 2021/8/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

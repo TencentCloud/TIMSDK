@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by harvy on 2020/12/8.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

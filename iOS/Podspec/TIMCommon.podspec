@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TIMCommon'
-  spec.version      = '7.2.4146'
+  spec.version      = '7.3.4358'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,12 +16,12 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.2.4146/ios/TIMCommon.zip?time=2'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TIMCommon.zip?time=2'}
 
   spec.subspec 'CommonModel' do |commonModel|
         commonModel.source_files = '**/TIMCommon/CommonModel/*.{h,m,mm}'
-        commonModel.dependency 'TXIMSDK_Plus_iOS','7.2.4146'
-        commonModel.dependency 'TUICore','7.2.4146'
+        commonModel.dependency 'TXIMSDK_Plus_iOS','7.3.4358'
+        commonModel.dependency 'TUICore','7.3.4358'
         #commonModel.dependency 'TUICore', :path => 'TUICore'
         commonModel.dependency 'ReactiveObjC'
         commonModel.dependency 'SDWebImage'

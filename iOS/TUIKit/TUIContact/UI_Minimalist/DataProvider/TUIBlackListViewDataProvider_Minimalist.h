@@ -1,10 +1,14 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明用于实现黑名单页面的视图模型。
  *  视图模型负责承担界面中的部分数据处理和业务逻辑，如拉取黑名单信息，加载黑名单数据。
  *
  *  This file declares the view model used to implement the blocklist page.
- *  The view model is responsible for some data processing and business logic in the interface, such as pulling blacklist information and loading blocklist data.
+ *  The view model is responsible for some data processing and business logic in the interface, such as pulling blacklist information and loading blocklist
+ * data.
  */
 
 #import <Foundation/Foundation.h>
@@ -32,9 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  The blocklist stores the detailed information of the blocked users.
  *  Include details such as user avatar (URL and image), user ID, user nickname, etc. Used to display detailed information when you click to a detailed meeting.
  */
-@property (readonly) NSArray<TUICommonContactCellData_Minimalist *> *blackListData;
+@property(readonly) NSArray<TUICommonContactCellData_Minimalist *> *blackListData;
 
-@property (readonly) BOOL isLoadFinished;
+@property(readonly) BOOL isLoadFinished;
 
 - (void)loadBlackList;
 

@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by cologne on 2023/3/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #ifndef TIMDefine_h
@@ -14,4 +15,7 @@
 
 #import "TIMCommonModel.h"
 
+#define kEnableAllRotationOrientationNotification @"kEnableAllRotationOrientationNotification"
+#define kDisableAllRotationOrientationNotification @"kDisableAllRotationOrientationNotification"
+#define TUIMessageMediaViewDeviceOrientationChangeNotification @"TUIMessageMediaViewDeviceOrientationChangeNotification"
 #endif /* TIMDefine_h */

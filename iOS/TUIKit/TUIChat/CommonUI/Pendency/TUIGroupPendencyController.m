@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/6/18.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIGroupPendencyController.h"
@@ -23,11 +24,9 @@
     self.title = TIMCommonLocalizableString(TUIKitGroupApplicant);
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 #pragma mark - Table view data source
 
@@ -50,42 +49,36 @@
     return cell;
 }
 
-
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     return NO;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 70;
 }
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
+        // add code here for when you hit delete
         [self.tableView beginUpdates];
         TUIGroupPendencyCellData *data = self.viewModel.dataList[indexPath.row];
         [self.viewModel removeData:data];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView endUpdates];
     }
 }
 
-- (void)btnClick:(TUIGroupPendencyCell *)cell
-{
+- (void)btnClick:(TUIGroupPendencyCell *)cell {
     [self.viewModel acceptData:cell.pendencyData];
     [self.tableView reloadData];
 }
 
-- (void)cellClick:(TUIGroupPendencyCell *)cell
-{
+- (void)cellClick:(TUIGroupPendencyCell *)cell {
     if (self.cellClickBlock) {
         self.cellClickBlock(cell);
     }

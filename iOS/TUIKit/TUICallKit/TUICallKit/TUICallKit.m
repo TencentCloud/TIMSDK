@@ -9,7 +9,6 @@
 #import "TUICallKit.h"
 #import <AVFoundation/AVCaptureDevice.h>
 #import "TUICallEngineHeader.h"
-#import "ImSDK_Plus/ImSDK_Plus.h"
 #import "CallingLocalized.h"
 #import "TUICallingAudioPlayer.h"
 #import "TUICallingFloatingWindowManager.h"
@@ -20,10 +19,9 @@
 #import "TUICallingCommon.h"
 #import "TUICallingAction.h"
 #import "TUICallingStatusManager.h"
-#import "TRTCCloud.h"
+#import "TUICallKitHeader.h"
 #import "TUICallingUserModel.h"
 #import "TUICallKitGCDTimer.h"
-#import "TUICallEngineHeader.h"
 #import "TUICallKitOfflinePushInfoConfig.h"
 #import "TUICallKitConstants.h"
 
@@ -113,19 +111,18 @@ callMediaType:(TUICallMediaType)callMediaType
         [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.UnableToRestartTheCall")];
         return;
     }
-    if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
+    if ([TUICallingCommon checkAuthorizationStatusIsDenied:callMediaType]) {
+        [self showAuthorizationAlert:callMediaType];
         if (fail) {
-            fail(ERROR_PARAM_INVALID, @"call failed, callMediaType is Unknown");
+            fail(ERROR_PARAM_INVALID, @"call failed, authorization status is denied");
         }
         return;
     }
     
     self.currentCallingType = callMediaType;
     self.currentCallingRole = TUICallRoleCall;
-    TUIRoomId *roomId = [[TUIRoomId alloc] init];
-    roomId.intRoomId = 1 + arc4random() % (INT32_MAX - 1);
     __weak typeof(self) weakSelf = self;
-    [[TUICallEngine createInstance] call:roomId userId:userId callMediaType:callMediaType params:params succ:^{
+    [[TUICallEngine createInstance] call:userId callMediaType:callMediaType params:params succ:^{
         __strong typeof(self) strongSelf = weakSelf;
         if (succ) {
             succ();
@@ -187,9 +184,10 @@ callMediaType:(TUICallMediaType)callMediaType
         [self makeToast:TUICallingLocalize(@"Demo.TRTC.Calling.User.Exceed.Limit")];
         return;
     }
-    if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
+    if ([TUICallingCommon checkAuthorizationStatusIsDenied:callMediaType]) {
+        [self showAuthorizationAlert:callMediaType];
         if (fail) {
-            fail(ERROR_PARAM_INVALID, @"groupCall failed, callMediaType is Unknown");
+            fail(ERROR_PARAM_INVALID, @"groupCall failed, authorization status is denied");
         }
         return;
     }
@@ -197,10 +195,8 @@ callMediaType:(TUICallMediaType)callMediaType
     self.groupID = groupId;
     self.currentCallingType = callMediaType;
     self.currentCallingRole = TUICallRoleCall;
-    TUIRoomId *roomId = [[TUIRoomId alloc] init];
-    roomId.intRoomId = 1 + arc4random() % (INT32_MAX - 1);
     __weak typeof(self) weakSelf = self;
-    [[TUICallEngine createInstance] groupCall:roomId groupId:groupId
+    [[TUICallEngine createInstance] groupCall:groupId
                                    userIdList:userIdList
                                 callMediaType:callMediaType
                                        params:params
@@ -232,10 +228,13 @@ callMediaType:(TUICallMediaType)callMediaType
         TUILog(@"TUICallKit - joinInGroupCall failed, groupId is invalid");
         return;
     }
-    if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
-        TUILog(@"TUICallKit - joinInGroupCall failed, mediaType is unknown");
+    if ([TUICallingCommon checkAuthorizationStatusIsDenied:callMediaType]) {
+        [self showAuthorizationAlert:callMediaType];
+        TUILog(@"TUICallKit - joinInGroupCall failed, authorization status is denied");
         return;
     }
+    
+    self.groupID = groupId;
     self.currentCallingRole = TUICallRoleCalled;
     self.currentCallingType = callMediaType;
     [self.callingViewManager createGroupCallingAcceptView:callMediaType callRole:TUICallRoleCalled callScene:TUICallSceneGroup];
@@ -435,14 +434,17 @@ callMediaType:(TUICallMediaType)callMediaType
     __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
         __strong typeof(self) strongSelf = weakSelf;
-        V2TIMUserFullInfo *userInfo =  [infoList firstObject];
-        CallingUserModel *newUser = [TUICallingCommon covertUser:userInfo];
-        newUser.isEnter = YES;
-        newUser.isAudioAvailable = isAudioAvailable;
-        if (isAudioAvailable) {
-            [TUICallingUserManager cacheUser:newUser];
+        CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
+        if (!userModel) {
+            V2TIMUserFullInfo *userInfo = [infoList firstObject];
+            userModel = [TUICallingCommon covertUser:userInfo];
         }
-        [strongSelf.callingViewManager updateUser:newUser];
+        userModel.isEnter = YES;
+        userModel.isAudioAvailable = isAudioAvailable;
+        if (isAudioAvailable) {
+            [TUICallingUserManager cacheUser:userModel];
+        }
+        [strongSelf.callingViewManager updateUser:userModel];
     } fail:nil];
 }
 
@@ -459,13 +461,18 @@ callMediaType:(TUICallMediaType)callMediaType
     __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
         __strong typeof(self) strongSelf = weakSelf;
-        V2TIMUserFullInfo *userInfo =  [infoList firstObject];
-        CallingUserModel *newUser = [TUICallingCommon covertUser:userInfo];
-        newUser.isVideoAvailable = isVideoAvailable;
-        if (isVideoAvailable) {
-            [TUICallingUserManager cacheUser:newUser];
+        
+        CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
+        if (!userModel) {
+            V2TIMUserFullInfo *userInfo = [infoList firstObject];
+            userModel = [TUICallingCommon covertUser:userInfo];
         }
-        [strongSelf.callingViewManager updateUser:newUser];
+        userModel.isEnter = YES;
+        userModel.isVideoAvailable = isVideoAvailable;
+        if (isVideoAvailable) {
+            [TUICallingUserManager cacheUser:userModel];
+        }
+        [strongSelf.callingViewManager updateUser:userModel];
     } fail:nil];
 }
 
@@ -513,15 +520,13 @@ callMediaType:(TUICallMediaType)callMediaType
     if ((callScene != TUICallSceneSingle) && callerId) {
         [allUserIdList addObject:callerId];
     }
+    
     [self updateCallingView:calleeIdList callScene:callScene sponsor:callerId];
     
-    if ([self checkAuthorizationStatusIsDenied:callMediaType]) {
-        [[TUICallEngine createInstance] reject:^{
-        } fail:^(int code, NSString *errMsg) {
-        }];
-        [self callEnd];
+    if ((UIApplicationStateActive == [UIApplication sharedApplication].applicationState) &&
+        [TUICallingCommon checkAuthorizationStatusIsDenied:callMediaType]) {
+        [self showAuthorizationAlert:callMediaType];
     }
-    
 }
 
 - (void)onCallCancelled:(nonnull NSString *)callerId {
@@ -642,8 +647,12 @@ callMediaType:(TUICallMediaType)callMediaType
 - (void)appDidBecomeActive {
     if ([TUICallingStatusManager shareInstance].callStatus != TUICallStatusNone) {
         [self showCallKitView];
+        
+        if ((TUICallStatusWaiting == [TUICallingStatusManager shareInstance].callStatus) &&
+            [TUICallingCommon checkAuthorizationStatusIsDenied:[TUICallingStatusManager shareInstance].callMediaType]) {
+            [self showAuthorizationAlert:[TUICallingStatusManager shareInstance].callMediaType];
+        }
     }
-    
     if (self.needContinuePlaying) {
         [self playAudioToCalled];
     }
@@ -811,18 +820,19 @@ callMediaType:(TUICallMediaType)callMediaType
     return TUICallSceneSingle;
 }
 
-- (BOOL)checkAuthorizationStatusIsDenied:(TUICallMediaType)callMediaType {
-    AVAuthorizationStatus statusAudio = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+- (void)showAuthorizationAlert:(TUICallMediaType)callMediaType {
     AVAuthorizationStatus statusVideo = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    AuthorizationDeniedType deniedType = AuthorizationDeniedTypeAudio;
+    
     if ((callMediaType == TUICallMediaTypeVideo) && (statusVideo == AVAuthorizationStatusDenied)) {
-        [TUICallingCommon showAuthorizationAlert:AuthorizationDeniedTypeVideo];
-        return YES;
+        deniedType = AuthorizationDeniedTypeVideo;
     }
-    if (statusAudio == AVAuthorizationStatusDenied) {
-        [TUICallingCommon showAuthorizationAlert:AuthorizationDeniedTypeAudio];
-        return YES;
-    }
-    return NO;
+    
+    [TUICallingCommon showAuthorizationAlert:deniedType openSettingHandler:^{
+        [[TUICallEngine createInstance] hangup:nil fail:nil];
+    } cancelHandler:^{
+        [[TUICallEngine createInstance] hangup:nil fail:nil];
+    }];
 }
 
 - (void)startTimer {

@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明了好友选择界面的视图模型
@@ -11,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef BOOL(^ContactSelectFilterBlock)(TUICommonContactSelectCellData *data);
+typedef BOOL (^ContactSelectFilterBlock)(TUICommonContactSelectCellData *data);
 
 /**
  * 【模块名称】好友选择界面视图模型（TContactSelectViewModel）
@@ -22,7 +25,8 @@ typedef BOOL(^ContactSelectFilterBlock)(TUICommonContactSelectCellData *data);
  * 【Module name】Friend selection interface view model (TContactSelectViewModel)
  * 【Function description】Implement the friend selection interface view model.
  *  This view model is responsible for pulling friend lists, friend requests and loading related data from the server.
- *  At the same time, this view model will also group friends according to the initials of their nicknames, which helps the view maintain an "alphabet" on the right side of the interface to quickly retrieve friends.
+ *  At the same time, this view model will also group friends according to the initials of their nicknames, which helps the view maintain an "alphabet" on the
+ * right side of the interface to quickly retrieve friends.
  */
 @interface TUIContactSelectViewDataProvider : NSObject
 
@@ -33,7 +37,7 @@ typedef BOOL(^ContactSelectFilterBlock)(TUICommonContactSelectCellData *data);
  *  Data dictionary, responsible for classifying friend information (TCommonContactCellData) by initials.
  *  For example, Jack and James are stored in "J".
  */
-@property (readonly) NSDictionary<NSString *, NSArray<TUICommonContactSelectCellData *> *> *dataDict;
+@property(readonly) NSDictionary<NSString *, NSArray<TUICommonContactSelectCellData *> *> *dataDict;
 
 /**
  *  分组列表，即当前好友的分组信息。
@@ -44,7 +48,7 @@ typedef BOOL(^ContactSelectFilterBlock)(TUICommonContactSelectCellData *data);
  *  For example, if the current user has only one friend "Jack", there is only one element "J" in this list.
  *  The grouping information is up to 26 letters from A - Z and "#".
  */
-@property (readonly) NSArray *groupList;
+@property(readonly) NSArray *groupList;
 
 /**
  *  加载完成标识符。
@@ -55,24 +59,24 @@ typedef BOOL(^ContactSelectFilterBlock)(TUICommonContactSelectCellData *data);
  *  YES: Loading is done; NO: Loading
  *  With this identifier, we can avoid reloading the data.
  */
-@property (readonly) BOOL isLoadFinished;
+@property(readonly) BOOL isLoadFinished;
 
 /**
  * 禁用联系人过滤器
  * Filter to disable contacts
  */
-@property (copy) ContactSelectFilterBlock disableFilter;
+@property(copy) ContactSelectFilterBlock disableFilter;
 
 /**
  * 显示联系人过滤器
  * Filter to display contacts
  */
-@property (copy) ContactSelectFilterBlock avaliableFilter;
+@property(copy) ContactSelectFilterBlock avaliableFilter;
 
 - (void)loadContacts;
 
 - (void)setSourceIds:(NSArray<NSString *> *)ids;
-- (void)setSourceIds:(NSArray<NSString *> *)ids displayNames:(NSDictionary * __nullable)displayNames;
+- (void)setSourceIds:(NSArray<NSString *> *)ids displayNames:(NSDictionary *__nullable)displayNames;
 
 @end
 

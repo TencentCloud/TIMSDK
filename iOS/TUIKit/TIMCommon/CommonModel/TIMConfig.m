@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by cologne on 2023/3/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TIMConfig.h"
@@ -22,29 +23,26 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
     TUIRegisterThemeResourcePath(TIMCommonThemePath, TUIThemeModuleTIMCommon);
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         [self updateEmojiGroups];
-        
+
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeLanguage) name:TUIChangeLanguageNotification object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeTheme) name:TUIDidApplyingThemeChangedNotfication object:nil];
     }
     return self;
 }
 
-+ (id)defaultConfig
-{
++ (id)defaultConfig {
     static dispatch_once_t onceToken;
     static TIMConfig *config;
     dispatch_once(&onceToken, ^{
-        config = [[TIMConfig alloc] init];
+      config = [[TIMConfig alloc] init];
     });
     return config;
 }
-- (void)onChangeLanguage
-{
+- (void)onChangeLanguage {
     [self updateEmojiGroups];
 }
 
@@ -60,18 +58,16 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
 }
 
 - (NSArray *)updateFaceGroups:(NSArray *)groups type:(emojiFaceType)type {
-    
     if (groups.count) {
         NSMutableArray *arrayM = [NSMutableArray arrayWithArray:groups];
         [arrayM removeObjectAtIndex:0];
-        
+
         TUIFaceGroup *defaultFaceGroup = [self findFaceGroupAboutType:type];
         if (defaultFaceGroup) {
             [arrayM insertObject:[self findFaceGroupAboutType:type] atIndex:0];
         }
-        return  [NSArray arrayWithArray:arrayM];
-    }
-    else {
+        return [NSArray arrayWithArray:arrayM];
+    } else {
         NSMutableArray *faceArray = [NSMutableArray array];
         TUIFaceGroup *defaultFaceGroup = [self findFaceGroupAboutType:type];
         if (defaultFaceGroup) {
@@ -82,7 +78,7 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
     return @[];
 }
 - (TUIFaceGroup *)findFaceGroupAboutType:(emojiFaceType)type {
-    //emoji group
+    // emoji group
 
     NSMutableArray *emojiFaces = [NSMutableArray array];
     NSArray *emojis = [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emoji.plist")];
@@ -97,18 +93,17 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         [self addFaceToCache:data.path];
         [emojiFaces addObject:data];
     }
-    if(emojiFaces.count != 0){
+    if (emojiFaces.count != 0) {
         TUIFaceGroup *emojiGroup = [[TUIFaceGroup alloc] init];
         emojiGroup.faces = emojiFaces;
         emojiGroup.groupIndex = 0;
         emojiGroup.groupPath = TUIChatFaceImagePath(@"emoji/");
         emojiGroup.menuPath = TUIChatFaceImagePath(@"emoji/menu");
-        if(type == emojiFaceTypeKeyBoard) {
+        if (type == emojiFaceTypeKeyBoard) {
             emojiGroup.rowCount = 3;
             emojiGroup.itemCountPerRow = 9;
             emojiGroup.needBackDelete = YES;
-        }
-        else  {
+        } else {
             emojiGroup.rowCount = 3;
             emojiGroup.itemCountPerRow = 8;
             emojiGroup.needBackDelete = NO;
@@ -119,18 +114,15 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         [self addFaceToCache:TUIChatFaceImagePath(@"ic_unknown_image")];
         return emojiGroup;
     }
-    
+
     return nil;
 }
 
-- (void)onChangeTheme
-{
-
+- (void)onChangeTheme {
 }
 
-- (TUIFaceGroup *)getDefaultFaceGroup
-{
-    //emoji group
+- (TUIFaceGroup *)getDefaultFaceGroup {
+    // emoji group
     NSMutableArray *emojiFaces = [NSMutableArray array];
     NSArray *emojis = [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emoji.plist")];
     for (NSDictionary *dic in emojis) {
@@ -144,7 +136,7 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         [self addFaceToCache:data.path];
         [emojiFaces addObject:data];
     }
-    if(emojiFaces.count != 0){
+    if (emojiFaces.count != 0) {
         TUIFaceGroup *emojiGroup = [[TUIFaceGroup alloc] init];
         emojiGroup.groupIndex = 0;
         emojiGroup.groupPath = TUIChatFaceImagePath(@"emoji/");
@@ -158,20 +150,17 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
         [self addFaceToCache:TUIChatFaceImagePath(@"ic_unknown_image")];
         return emojiGroup;
     }
-    
+
     return nil;
 }
 
 #pragma mark - resource
 
-- (void)addResourceToCache:(NSString *)path
-{
+- (void)addResourceToCache:(NSString *)path {
     [[TUIImageCache sharedInstance] addResourceToCache:path];
 }
 
-
-- (void)addFaceToCache:(NSString *)path
-{
+- (void)addFaceToCache:(NSString *)path {
     [[TUIImageCache sharedInstance] addFaceToCache:path];
 }
 

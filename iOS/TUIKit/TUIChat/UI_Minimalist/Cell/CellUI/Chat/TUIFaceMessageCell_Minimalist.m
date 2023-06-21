@@ -3,6 +3,7 @@
 //  UIKit
 //
 //  Created by annidyfeng on 2019/5/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIFaceMessageCell_Minimalist.h"
@@ -13,8 +14,7 @@
 
 @implementation TUIFaceMessageCell_Minimalist
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _face = [[UIImageView alloc] init];
@@ -33,13 +33,13 @@
 
     _face.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
-- (void)fillWithData:(TUIFaceMessageCellData_Minimalist *)data
-{
-    //set data
+- (void)fillWithData:(TUIFaceMessageCellData_Minimalist *)data {
+    // set data
     [super fillWithData:data];
     self.faceData = data;
 
-    _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];;
+    _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
+    ;
 }
 
 @end

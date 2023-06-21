@@ -3,6 +3,7 @@
 //  TUIContact
 //
 //  Created by wyl on 2023/1/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactEmptyView_Minimalist.h"
@@ -22,13 +23,11 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.midImage.frame = CGRectMake((self.bounds.size.width - kScale390(105)) *0.5, 0, kScale390(105), kScale390(105));
+    self.midImage.frame = CGRectMake((self.bounds.size.width - kScale390(105)) * 0.5, 0, kScale390(105), kScale390(105));
     [self.tipsLabel sizeToFit];
-    self.tipsLabel.frame = CGRectMake((self.bounds.size.width - self.tipsLabel.frame.size.width) *0.5 ,
-                                       self.midImage.frame.origin.y + self.midImage.frame.size.height + kScale390(10),
-                                       self.tipsLabel.frame.size.width,
-                                       self.tipsLabel.frame.size.height);
-
+    self.tipsLabel.frame = CGRectMake((self.bounds.size.width - self.tipsLabel.frame.size.width) * 0.5,
+                                      self.midImage.frame.origin.y + self.midImage.frame.size.height + kScale390(10), self.tipsLabel.frame.size.width,
+                                      self.tipsLabel.frame.size.height);
 }
 
 - (UILabel *)tipsLabel {
@@ -40,6 +39,5 @@
     }
     return _tipsLabel;
 }
-
 
 @end

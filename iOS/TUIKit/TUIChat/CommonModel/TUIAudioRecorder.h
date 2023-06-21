@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 //  TUIAudioRecorder.h
 //  TUIChat
@@ -21,9 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIAudioRecorder : NSObject
 
-@property (nonatomic, weak) id<TUIAudioRecorderDelegate> delegate;
+@property(nonatomic, weak) id<TUIAudioRecorderDelegate> delegate;
 
-@property (nonatomic, copy, readonly) NSString *recordedFilePath;
+@property(nonatomic, copy, readonly) NSString *recordedFilePath;
 
 - (void)record;
 - (void)stop;

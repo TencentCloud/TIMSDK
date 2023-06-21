@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/7.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUICommonPendencyCell.h"
@@ -23,32 +24,32 @@
             self.avatarView.layer.masksToBounds = YES;
             self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
         }
-        
+
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
-        self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_top(14).mm_height(20).mm_width(120);
-        
+        self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_top(14).mm_height(20).mm_width(120);
+
         self.addSourceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.addSourceLabel];
         self.addSourceLabel.textColor = [UIColor d_systemGrayColor];
         self.addSourceLabel.font = [UIFont systemFontOfSize:15];
-        self.addSourceLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY+6).mm_height(15).mm_width(120);
-        
+        self.addSourceLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY + 6).mm_height(15).mm_width(120);
+
         self.addWordingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.addWordingLabel];
         self.addWordingLabel.textColor = [UIColor d_systemGrayColor];
         self.addWordingLabel.font = [UIFont systemFontOfSize:15];
-        self.addWordingLabel.mm_left(self.addSourceLabel.mm_x).mm_top(self.addSourceLabel.mm_maxY+6).mm_height(15).mm_width(120);
-        
+        self.addWordingLabel.mm_left(self.addSourceLabel.mm_x).mm_top(self.addSourceLabel.mm_maxY + 6).mm_height(15).mm_width(120);
+
         self.agreeButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [self.agreeButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
         [self.agreeButton addTarget:self action:@selector(agreeClick) forControlEvents:UIControlEventTouchUpInside];
-        
+
         self.rejectButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [self.rejectButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
         [self.rejectButton addTarget:self action:@selector(rejectClick) forControlEvents:UIControlEventTouchUpInside];
-        
+
         UIStackView *stackView = [[UIStackView alloc] init];
         [stackView addSubview:self.agreeButton];
         [stackView addSubview:self.rejectButton];
@@ -81,7 +82,7 @@
     self.addWordingLabel.text = pendencyData.addWording;
     self.avatarView.image = DefaultAvatarImage;
     if (pendencyData.avatarUrl) {
-         [self.avatarView sd_setImageWithURL:pendencyData.avatarUrl];
+        [self.avatarView sd_setImageWithURL:pendencyData.avatarUrl];
     }
     if (pendencyData.isAccepted) {
         [self.agreeButton setTitle:TIMCommonLocalizableString(Agreed) forState:UIControlStateNormal];
@@ -97,7 +98,7 @@
         [self.agreeButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         self.agreeButton.backgroundColor = TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF");
     }
-    
+
     if (pendencyData.isRejected) {
         [self.rejectButton setTitle:TIMCommonLocalizableString(Disclined) forState:UIControlStateNormal];
         self.rejectButton.enabled = NO;
@@ -110,12 +111,11 @@
         self.rejectButton.layer.borderWidth = 0.2;
         [self.rejectButton setTitleColor:TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
     }
-    
-    self.agreeButton.mm_sizeToFit().mm_width(self.agreeButton.mm_w+20);
-    self.rejectButton.mm_left(CGRectGetMaxX(self.agreeButton.frame) + 10).mm_sizeToFit().mm_width(self.rejectButton.mm_w+20);
+
+    self.agreeButton.mm_sizeToFit().mm_width(self.agreeButton.mm_w + 20);
+    self.rejectButton.mm_left(CGRectGetMaxX(self.agreeButton.frame) + 10).mm_sizeToFit().mm_width(self.rejectButton.mm_w + 20);
     self.stackView.bounds = CGRectMake(0, 0, 2 * self.agreeButton.mm_w + 10, self.agreeButton.mm_h);
-    
-    
+
     if (self.pendencyData.isRejected && !self.pendencyData.isAccepted) {
         self.agreeButton.hidden = YES;
         self.rejectButton.hidden = NO;
@@ -126,7 +126,7 @@
         self.agreeButton.hidden = NO;
         self.rejectButton.hidden = NO;
     }
-    
+
     self.addSourceLabel.hidden = self.pendencyData.hideSource;
 }
 
@@ -140,7 +140,6 @@
 #pragma clang diagnostic pop
         }
     }
-
 }
 
 - (void)rejectClick {

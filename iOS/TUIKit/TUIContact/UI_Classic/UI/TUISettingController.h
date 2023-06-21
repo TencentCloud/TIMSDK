@@ -15,14 +15,14 @@
  *  - Here you can view and modify your personal information, or perform operations such as logging out.
  *  - This class depends on Tencent Cloud TUIKit and IMSDK
  */
-#import <UIKit/UIKit.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <UIKit/UIKit.h>
 
 #define SHEET_COMMON 1
-#define SHEET_AGREE  2
-#define SHEET_SEX    3
-#define SHEET_V2API  4
+#define SHEET_AGREE 2
+#define SHEET_SEX 3
+#define SHEET_V2API 4
 
 @protocol TUISettingControllerDelegate <NSObject>
 @optional

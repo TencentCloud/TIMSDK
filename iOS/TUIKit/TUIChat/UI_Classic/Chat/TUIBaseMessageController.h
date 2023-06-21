@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明了用于实现消息收发逻辑的控制器类。
@@ -6,13 +9,14 @@
  *  也就是说，当您使用本控制器时，您可以省去很大部分的数据处理上的工作，从而能够更快捷、更方便的接入 IM SDK。
  *
  *  This file declares the controller class used to implement the messaging logic
- *  The message controller is responsible for uniformly displaying the messages you send/receive, while providing response callbacks when you interact with those messages (tap/long-press, etc.).
- *  The message controller is also responsible for unified data processing of the messages you send into a data format that can be sent through the IM SDK and sent.
- *  That is to say, when you use this controller, you can save a lot of data processing work, so that you can access the IM SDK more quickly and conveniently.
+ *  The message controller is responsible for uniformly displaying the messages you send/receive, while providing response callbacks when you interact with
+ * those messages (tap/long-press, etc.). The message controller is also responsible for unified data processing of the messages you send into a data format
+ * that can be sent through the IM SDK and sent. That is to say, when you use this controller, you can save a lot of data processing work, so that you can
+ * access the IM SDK more quickly and conveniently.
  */
 
-#import <UIKit/UIKit.h>
 #import <TIMCommon/TUIMessageCell.h>
+#import <UIKit/UIKit.h>
 
 #import "TUIBaseMessageControllerDelegate.h"
 #import "TUIChatConversationModel.h"
@@ -35,22 +39,25 @@
  *  - 同时本类提供了图像、视频、文件信息的发送功能，直接整合调用了 IM SDK 实现发送功能。
  *
  * 【Module name】TUIBaseMessageController
- * 【Function description】The message controller is responsible for implementing a series of business logic such as receiving, sending, and displaying messages.
- *  - This class provides callback interfaces for interactive operations such as receiving/displaying new messages, showing/hiding menus, and clicking on message avatars.
- *  - At the same time, this class provides the sending function of image, video, and file information, and directly integrates and calls the IM SDK to realize the sending function.
+ * 【Function description】The message controller is responsible for implementing a series of business logic such as receiving, sending, and displaying
+ * messages.
+ *  - This class provides callback interfaces for interactive operations such as receiving/displaying new messages, showing/hiding menus, and clicking on
+ * message avatars.
+ *  - At the same time, this class provides the sending function of image, video, and file information, and directly integrates and calls the IM SDK to realize
+ * the sending function.
  *
  */
 @interface TUIBaseMessageController : UITableViewController
 
-@property (nonatomic, weak) id<TUIBaseMessageControllerDelegate> delegate;
+@property(nonatomic, weak) id<TUIBaseMessageControllerDelegate> delegate;
 
-@property (nonatomic, assign) BOOL isInVC;
+@property(nonatomic, assign) BOOL isInVC;
 
 /**
  * 发送消息是否需要已读回执，默认 NO
  * Whether a read receipt is required to send a message, the default is NO
  */
-@property (nonatomic) BOOL isMsgNeedReadReceipt;
+@property(nonatomic) BOOL isMsgNeedReadReceipt;
 
 - (void)sendMessage:(V2TIMMessage *)msg;
 

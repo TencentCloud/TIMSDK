@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by harvy on 2022/12/20.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -10,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^TUIChatMediaDataProviderResultCallback)(BOOL success, NSString * __nullable message, NSString * __nullable path);
+typedef void (^TUIChatMediaDataProviderResultCallback)(BOOL success, NSString *__nullable message, NSString *__nullable path);
 
 @protocol TUIChatMediaDataProtocol <NSObject>
 
@@ -20,7 +21,6 @@ typedef void(^TUIChatMediaDataProviderResultCallback)(BOOL success, NSString * _
 - (void)selectFile;
 
 @end
-
 
 @protocol TUIChatMediaDataListener <NSObject>
 
@@ -37,8 +37,8 @@ typedef void(^TUIChatMediaDataProviderResultCallback)(BOOL success, NSString * _
 
 @interface TUIChatMediaDataProvider : NSObject <TUIChatMediaDataProtocol>
 
-@property (nonatomic, weak) UIViewController *presentViewController;
-@property (nonatomic, weak) id<TUIChatMediaDataListener> listener;
+@property(nonatomic, weak) UIViewController *presentViewController;
+@property(nonatomic, weak) id<TUIChatMediaDataListener> listener;
 
 @end
 

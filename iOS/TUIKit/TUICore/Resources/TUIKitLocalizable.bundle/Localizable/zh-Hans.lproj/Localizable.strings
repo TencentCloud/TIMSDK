@@ -259,6 +259,7 @@
 "TUIKitErrorSVRToUserInvalid" = "IM: 无效接收方";
 "TUIKitErrorSVRRequestTimeout" = "请求超时";
 "TUIKitErrorSVRInitCoreFail" = "INIT CORE模块失败";
+"TUIKitErrorSVRConvGroupNameLengthLimit" = "会话分组名长度超过最大限制";
 "TUIKitErrorExpiredSessionNode" = "SessionNode为null";
 "TUIKitErrorLoggedOutBeforeLoginFinished" = "在登录完成前进行了登出（在登录时返回）";
 "TUIKitErrorTLSSDKNotInitialized" = "tlssdk未初始化";

@@ -7,7 +7,13 @@
 
 import Foundation
 import TUICore
+import TUICallEngine
+
+#if USE_TRTC
 import TXLiteAVSDK_TRTC
+#else
+import TXLiteAVSDK_Professional
+#endif
 
 class CallEngineManager {
     
@@ -37,8 +43,8 @@ class CallEngineManager {
                 TUICallState.instance.remoteUserList.value = mInviteeList
                 
                 for index in 0..<TUICallState.instance.remoteUserList.value.count {
-                    TUICallState.instance.remoteUserList.value[index].callStatus.value = .waiting
-                    TUICallState.instance.remoteUserList.value[index].callRole.value = .called
+                    TUICallState.instance.remoteUserList.value[index].callStatus.value = TUICallStatus.waiting
+                    TUICallState.instance.remoteUserList.value[index].callRole.value = TUICallRole.called
                 }
             }
             TUICallState.instance.mediaType.value = callMediaType
@@ -71,20 +77,21 @@ class CallEngineManager {
                           params: params) {
             
             TUICallState.instance.roomId.value = roomId
+            TUICallState.instance.groupId.value = groupId
             
             User.getUserInfosFromIM(userIDs: userIdList) { mInviteeList in
                 TUICallState.instance.remoteUserList.value = mInviteeList
                 for index in 0..<TUICallState.instance.remoteUserList.value.count {
-                    TUICallState.instance.remoteUserList.value[index].callStatus.value = .waiting
-                    TUICallState.instance.remoteUserList.value[index].callRole.value = .called
+                    TUICallState.instance.remoteUserList.value[index].callStatus.value = TUICallStatus.waiting
+                    TUICallState.instance.remoteUserList.value[index].callRole.value = TUICallRole.called
                 }
             }
             
             TUICallState.instance.mediaType.value = callMediaType
-            TUICallState.instance.scene.value = .group
+            TUICallState.instance.scene.value = TUICallScene.group
 
-            TUICallState.instance.selfUser.value.callRole.value = .call
-            TUICallState.instance.selfUser.value.callStatus.value = .waiting
+            TUICallState.instance.selfUser.value.callRole.value = TUICallRole.call
+            TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
             
             let _ = CallingBellFeature.instance.playCallingBell(type: .CallingBellTypeDial)
             
@@ -100,12 +107,13 @@ class CallEngineManager {
             TUICallState.instance.roomId.value = roomId
         
             TUICallState.instance.mediaType.value = callMediaType
-            TUICallState.instance.scene.value = .group
+            TUICallState.instance.scene.value = TUICallScene.group
             TUICallState.instance.groupId.value = groupId
 
-            TUICallState.instance.selfUser.value.callRole.value = .called
-            TUICallState.instance.selfUser.value.callStatus.value = .accept
-                                    
+            TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
+            TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.accept
+                
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER), object: nil)
         } fail: { code, message in
             
         }
@@ -149,7 +157,7 @@ class CallEngineManager {
     }
     
     func changeSpeaker() {
-        if TUICallState.instance.audioDevice.value == .speakerphone {
+        if TUICallState.instance.audioDevice.value == TUIAudioPlaybackDevice.speakerphone {
             engine.selectAudioPlaybackDevice(.earpiece)
             TUICallState.instance.audioDevice.value = .earpiece
         } else {
@@ -210,8 +218,8 @@ class CallEngineManager {
             User.getUserInfosFromIM(userIDs: userIds) { newRemoteUsers in
                 
                 for newUser in newRemoteUsers {
-                    newUser.callStatus.value = .waiting
-                    newUser.callRole.value = .called
+                    newUser.callStatus.value = TUICallStatus.waiting
+                    newUser.callRole.value = TUICallRole.called
                     TUICallState.instance.remoteUserList.value.append(newUser)
                 }
             }

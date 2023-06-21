@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/5/26.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -13,19 +14,19 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUITagsView : UIView
 
 /// collectionView
-@property (nonatomic, strong) UIView *containerView;
+@property(nonatomic, strong) UIView *containerView;
 /// datasource
-@property (nonatomic, strong) NSMutableArray *listArrM;
+@property(nonatomic, strong) NSMutableArray *listArrM;
 
 /// Height callback after refreshing collectionView
-@property (nonatomic, copy) void (^reloadCollectionView)(CGFloat updateHeight);
+@property(nonatomic, copy) void (^reloadCollectionView)(CGFloat updateHeight);
 
 /// Select the model for the TAB
-@property (nonatomic, copy) void (^signSelectTag)(TUITagsModel *model);
+@property(nonatomic, copy) void (^signSelectTag)(TUITagsModel *model);
 
-@property (nonatomic, copy) void (^emojiClickCallback)(TUITagsModel *model);
+@property(nonatomic, copy) void (^emojiClickCallback)(TUITagsModel *model);
 
-@property (nonatomic, copy) void (^userClickCallback)(TUITagsModel *model);
+@property(nonatomic, copy) void (^userClickCallback)(TUITagsModel *model);
 
 - (void)updateView;
 

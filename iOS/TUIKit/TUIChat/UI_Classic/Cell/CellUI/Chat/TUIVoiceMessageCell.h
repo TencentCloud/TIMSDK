@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *  本文件声明了 TUIVoiceMessageCell 类，负责实现语音消息的显示。
  *  语音消息，即在发送/接收到语音后显示的消息单元。TUIKit 默认将其显示为气泡中含有“音波”图标的的消息。
@@ -22,10 +25,13 @@
  *
  * 【Module name】 TUIVoiceMessageCell
  * 【Function description】 Voice message unit
- *  - Voice messages, i.e. message units displayed after voice is sent/received. TUIKit displays it as a message with a "sound wave" icon in a bubble by default.
+ *  - Voice messages, i.e. message units displayed after voice is sent/received. TUIKit displays it as a message with a "sound wave" icon in a bubble by
+ * default.
  *  - The voice message unit provides the display and playback functions of voice messages.
- *  - The TUIVoiceMessageCellData in the voice message unit integrates and calls the voice download and acquisition of the IM SDK, and handles the related business logic.
- *  - This class inherits from TUIBubbleMessageCell to implement bubble messages. You can implement custom bubbles by referring to this inheritance relationship.
+ *  - The TUIVoiceMessageCellData in the voice message unit integrates and calls the voice download and acquisition of the IM SDK, and handles the related
+ * business logic.
+ *  - This class inherits from TUIBubbleMessageCell to implement bubble messages. You can implement custom bubbles by referring to this inheritance
+ * relationship.
  */
 @interface TUIVoiceMessageCell : TUIBubbleMessageCell
 
@@ -36,7 +42,7 @@
  *  Voice icon
  *  It is used to display the voice "sound wave" icon, and at the same time realize the animation effect of the voice when it is playing.
  */
-@property (nonatomic, strong) UIImageView *voice;
+@property(nonatomic, strong) UIImageView *voice;
 
 /**
  *  语音时长标签
@@ -45,9 +51,9 @@
  *  Label for displays video duration
  *  Used to display the duration of the speech outside the bubble, the default value is an integer and the unit is seconds.
  */
-@property (nonatomic, strong) UILabel *duration;
+@property(nonatomic, strong) UILabel *duration;
 
-@property (nonatomic, strong) UIImageView *voiceReadPoint;
+@property(nonatomic, strong) UIImageView *voiceReadPoint;
 
 @property TUIVoiceMessageCellData *voiceData;
 

@@ -10,7 +10,7 @@
 
 @implementation TUILinkCellData_Minimalist
 
-+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message{
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
     TUILinkCellData_Minimalist *cellData = [[TUILinkCellData_Minimalist alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
     cellData.msgID = message.msgID;
@@ -29,7 +29,7 @@
     CGFloat textMaxWidth = 245.f;
     CGRect rect = [self.text boundingRectWithSize:CGSizeMake(textMaxWidth, MAXFLOAT)
                                           options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                       attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:15] }
+                                       attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}
                                           context:nil];
     CGSize size = CGSizeMake(textMaxWidth + 15, rect.size.height + 56);
     return size;

@@ -3,34 +3,35 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by kayev on 2021/6/17.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "ReactiveObjC/ReactiveObjC.h"
 
-#import "TUIBaseChatViewController+ProtectedAPI.h"
-#import "TUIGroupChatViewController.h"
-#import "TUIGroupPendencyDataProvider.h"
-#import "TUIGroupPendencyController.h"
-#import "TUITextMessageCellData.h"
-#import "TUILinkCellData.h"
-#import "TUIMessageDataProvider.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 #import <TIMCommon/TIMCommonModel.h>
-#import <TUICore/TUILogin.h>
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/NSDictionary+TUISafe.h>
-#import <TIMCommon/NSString+TUIEmoji.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUILogin.h>
+#import "TUIBaseChatViewController+ProtectedAPI.h"
+#import "TUIGroupChatViewController.h"
+#import "TUIGroupPendencyController.h"
+#import "TUIGroupPendencyDataProvider.h"
+#import "TUILinkCellData.h"
+#import "TUIMessageDataProvider.h"
+#import "TUITextMessageCellData.h"
 
 @interface TUIGroupChatViewController () <V2TIMGroupListener>
 
 //@property (nonatomic, strong) UIButton *atBtn;
-@property (nonatomic, strong) UIView *tipsView;
-@property (nonatomic, strong) UILabel *pendencyLabel;
-@property (nonatomic, strong) UIButton *pendencyBtn;
+@property(nonatomic, strong) UIView *tipsView;
+@property(nonatomic, strong) UILabel *pendencyLabel;
+@property(nonatomic, strong) UIButton *pendencyBtn;
 
-@property (nonatomic, strong) TUIGroupPendencyDataProvider *pendencyViewModel;
-@property (nonatomic, strong) NSMutableArray<TUIUserModel *> *atUserList;
-@property (nonatomic, assign) BOOL responseKeyboard;
+@property(nonatomic, strong) TUIGroupPendencyDataProvider *pendencyViewModel;
+@property(nonatomic, strong) NSMutableArray<TUIUserModel *> *atUserList;
+@property(nonatomic, assign) BOOL responseKeyboard;
 
 @end
 
@@ -66,53 +67,53 @@
     [self.pendencyBtn sizeToFit];
     self.tipsView.alpha = 0;
 
-    @weakify(self)
+    @weakify(self);
     [RACObserve(self.pendencyViewModel, unReadCnt) subscribeNext:^(NSNumber *unReadCnt) {
-        @strongify(self)
-        if ([unReadCnt intValue]) {
-            self.pendencyLabel.text = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt];
-            [self.pendencyLabel sizeToFit];
-            CGFloat gap = (self.tipsView.mm_w - self.pendencyLabel.mm_w - self.pendencyBtn.mm_w-8)/2;
-            self.pendencyLabel.mm_left(gap).mm__centerY(self.tipsView.mm_h/2);
-            self.pendencyBtn.mm_hstack(8);
+      @strongify(self);
+      if ([unReadCnt intValue]) {
+          self.pendencyLabel.text = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitChatPendencyRequestToJoinGroupFormat), unReadCnt];
+          [self.pendencyLabel sizeToFit];
+          CGFloat gap = (self.tipsView.mm_w - self.pendencyLabel.mm_w - self.pendencyBtn.mm_w - 8) / 2;
+          self.pendencyLabel.mm_left(gap).mm__centerY(self.tipsView.mm_h / 2);
+          self.pendencyBtn.mm_hstack(8);
 
-            self.tipsView.alpha = 1;
-            UIView *topView = [TUIGroupChatViewController customTopView];
-            self.tipsView.mm_top(topView ? topView.mm_h : 0);
-        } else {
-            self.tipsView.alpha = 0;
-        }
+          self.tipsView.alpha = 1;
+          UIView *topView = [TUIGroupChatViewController customTopView];
+          self.tipsView.mm_top(topView ? topView.mm_h : 0);
+      } else {
+          self.tipsView.alpha = 0;
+      }
     }];
-    
+
     [self getPendencyList];
 }
 
 - (void)getPendencyList {
-    if (self.conversationData.groupID.length > 0)
-        [self.pendencyViewModel loadData];
+    if (self.conversationData.groupID.length > 0) [self.pendencyViewModel loadData];
 }
 
 - (void)openPendency:(id)sender {
     TUIGroupPendencyController *vc = [[TUIGroupPendencyController alloc] init];
     @weakify(self);
-    vc.cellClickBlock = ^(TUIGroupPendencyCell * _Nonnull cell) {
-        if (cell.pendencyData.isRejectd || cell.pendencyData.isAccepted) {
-            //选择后不再进详情页了
-            return;
-        }
-        @strongify(self);
-        [[V2TIMManager sharedInstance] getUsersInfo:@[cell.pendencyData.fromUser] succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
-            // 显示用户资料 VC
-            NSDictionary *param = @{
-                TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod_UserProfileKey : profiles.firstObject,
-                TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod_PendencyDataKey : cell.pendencyData,
-                TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod_ActionTypeKey : @(3)
-            };
-            UIViewController *vc = [TUICore createObject:TUICore_TUIContactObjectFactory
-                                                     key:TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod
-                                                   param:param];
-            [self.navigationController pushViewController:vc animated:YES];
-        } fail:nil];
+    vc.cellClickBlock = ^(TUIGroupPendencyCell *_Nonnull cell) {
+      if (cell.pendencyData.isRejectd || cell.pendencyData.isAccepted) {
+          // 选择后不再进详情页了
+          return;
+      }
+      @strongify(self);
+      [[V2TIMManager sharedInstance] getUsersInfo:@[ cell.pendencyData.fromUser ]
+                                             succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
+                                               // 显示用户资料 VC
+                                               NSDictionary *param = @{
+                                                   TUICore_TUIContactObjectFactory_UserProfileController_UserProfile : profiles.firstObject,
+                                                   TUICore_TUIContactObjectFactory_UserProfileController_PendencyData : cell.pendencyData,
+                                                   TUICore_TUIContactObjectFactory_UserProfileController_ActionType : @(3)
+                                               };
+                                               [self.navigationController pushViewController:TUICore_TUIContactObjectFactory_UserProfileController_Classic
+                                                                                       param:param
+                                                                                   forResult:nil];
+                                             }
+                                             fail:nil];
     };
     vc.viewModel = self.pendencyViewModel;
     [self.navigationController pushViewController:vc animated:YES];
@@ -120,12 +121,12 @@
 
 - (void)setConversationData:(TUIChatConversationModel *)conversationData {
     [super setConversationData:conversationData];
-    
+
     if (self.conversationData.groupID.length > 0) {
         _pendencyViewModel = [TUIGroupPendencyDataProvider new];
         _pendencyViewModel.groupId = conversationData.groupID;
     }
-    
+
     self.atUserList = [NSMutableArray array];
 }
 
@@ -134,7 +135,7 @@
     [self getPendencyList];
 }
 
-- (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray <V2TIMGroupChangeInfo *> *)changeInfoList {
+- (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray<V2TIMGroupChangeInfo *> *)changeInfoList {
     if (![groupID isEqualToString:self.conversationData.groupID]) {
         return;
     }
@@ -145,7 +146,6 @@
         }
     }
 }
-
 
 #pragma mark - TUIInputControllerDelegate
 - (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg {
@@ -189,42 +189,40 @@
         param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID] = self.conversationData.groupID;
         param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name] = TIMCommonLocalizableString(TUIKitAtSelectMemberTitle);
         param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_OptionalStyle] = @(1);
-        UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory
-                                                 key:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC
-                                               param:param];
-        if (vc && [vc isKindOfClass:UIViewController.class]) {
-            vc.tui_valueCallback = ^(NSDictionary * _Nonnull param) {
-                NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList
-                                                                     asClass:NSArray.class];
-                NSMutableString *atText = [[NSMutableString alloc] init];
-                for (int i = 0; i < modelList.count; i++) {
-                    TUIUserModel *model = modelList[i];
-                    if (![model isKindOfClass:TUIUserModel.class]) {
-                        NSAssert(NO, @"Error data-type in modelList");
-                        continue;
-                    }
-                    [weakSelf.atUserList addObject:model];
-                    if (i == 0) {
-                        [atText appendString:[NSString stringWithFormat:@"%@ ",model.name]];
-                    } else {
-                        [atText appendString:[NSString stringWithFormat:@"@%@ ",model.name]];
-                    }
-                }
-                
+        [self.navigationController
+            pushViewController:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Classic
+                         param:param
+                     forResult:^(NSDictionary *_Nonnull param) {
+                       NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList
+                                                                            asClass:NSArray.class];
+                       NSMutableString *atText = [[NSMutableString alloc] init];
+                       for (int i = 0; i < modelList.count; i++) {
+                           TUIUserModel *model = modelList[i];
+                           if (![model isKindOfClass:TUIUserModel.class]) {
+                               NSAssert(NO, @"Error data-type in modelList");
+                               continue;
+                           }
+                           [weakSelf.atUserList addObject:model];
+                           if (i == 0) {
+                               [atText appendString:[NSString stringWithFormat:@"%@ ", model.name]];
+                           } else {
+                               [atText appendString:[NSString stringWithFormat:@"@%@ ", model.name]];
+                           }
+                       }
 
-                UIFont *textFont = kTUIInputNoramlFont;
-                NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:atText attributes:@{NSFontAttributeName: textFont}];
-                [weakSelf.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:weakSelf.inputController.inputBar.inputTextView.textStorage.length];
-                [weakSelf.inputController.inputBar updateTextViewFrame];
-            };
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+                       NSAttributedString *spaceString = [[NSAttributedString alloc]
+                           initWithString:atText
+                               attributes:@{NSFontAttributeName : kTUIInputNoramlFont, NSForegroundColorAttributeName : kTUIInputNormalTextColor}];
+                       NSRange range = weakSelf.inputController.inputBar.inputTextView.selectedRange;
+                       [weakSelf.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:range.location + range.length];
+                       [weakSelf.inputController.inputBar updateTextViewFrame];
+                     }];
     }
 }
 
 - (void)inputController:(TUIInputController *)inputController didDeleteAt:(NSString *)atText {
     [super inputController:inputController didDeleteAt:atText];
-    
+
     for (TUIUserModel *user in self.atUserList) {
         if ([atText rangeOfString:user.name].location != NSNotFound) {
             [self.atUserList removeObject:user];
@@ -257,15 +255,15 @@
         user.userId = cell.messageData.identifier;
         user.name = cell.messageData.name;
         [self.atUserList addObject:user];
-        
-        NSString * nameString = [NSString stringWithFormat:@"@%@ ",user.name];
-        UIFont *textFont = kTUIInputNoramlFont;
-        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:nameString attributes:@{NSFontAttributeName: textFont}];
-        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:self.inputController.inputBar.inputTextView.textStorage.length];        
-        [self.inputController.inputBar.inputTextView becomeFirstResponder];
-        self.inputController.inputBar.inputTextView.selectedRange = NSMakeRange(spaceString
-        .length + self.inputController.inputBar.inputTextView.textStorage.length,0);
 
+        NSString *nameString = [NSString stringWithFormat:@"@%@ ", user.name];
+        UIFont *textFont = kTUIInputNoramlFont;
+        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:nameString attributes:@{NSFontAttributeName : textFont}];
+        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString
+                                                                                atIndex:self.inputController.inputBar.inputTextView.textStorage.length];
+        [self.inputController.inputBar.inputTextView becomeFirstResponder];
+        self.inputController.inputBar.inputTextView.selectedRange =
+            NSMakeRange(spaceString.length + self.inputController.inputBar.inputTextView.textStorage.length, 0);
     }
 }
 

@@ -16,8 +16,6 @@
 	<string>public_group.png</string>
 	<key>contact_add_contact_tips_text_color</key>
 	<string>#444444</string>
-	<key>contact_add_contact_nodata_tips_text_color</key>
-	<string>#999999</string>
 	<key>contact_add_agree_bg_color</key>
 	<string>#147AFF</string>
 	<key>pop_icon_add_friend_img</key>

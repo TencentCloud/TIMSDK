@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-char TUIPinyinFirstLetter(unsigned short hanzi);
+char tui_pinyinFirstLetter(unsigned short hanzi);
 
 @interface NSString (TUIUtil)
 
@@ -23,7 +23,7 @@ char TUIPinyinFirstLetter(unsigned short hanzi);
  * 获取拼音的首字母
  * Get the first letter of Pinyin
  */
-- (NSString*)firstPinYin;
+- (NSString *)firstPinYin;
 
 - (NSString *)safePathString;
 
@@ -76,7 +76,6 @@ char TUIPinyinFirstLetter(unsigned short hanzi);
 - (BOOL)startsWith:(NSString *)str;
 - (BOOL)startsWith:(NSString *)str Options:(NSStringCompareOptions)compareOptions;
 
-
 /**
  * 以给定字符串结束,忽略大小写
  * Determines whether a string ends with the given string, ignoring case
@@ -97,9 +96,7 @@ char TUIPinyinFirstLetter(unsigned short hanzi);
  */
 - (BOOL)equalsString:(NSString *)str;
 
-
 - (NSString *)emjoiText;
-
 
 #pragma mark Hashing
 #if kSupportGTM64

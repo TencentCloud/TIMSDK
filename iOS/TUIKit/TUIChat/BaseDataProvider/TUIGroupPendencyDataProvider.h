@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 #import <Foundation/Foundation.h>
 @class TUIGroupPendencyCellData;
 
@@ -10,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * 【Module name】 TUIGroupPendencyViewModel
  * 【Function description】Group request view model
- *  This view model is responsible for unified processing of group request messages. For example, a series of logics such as obtaining the unread count, receiving new request messages and updating them, agreeing/removing data in the existing data queue, etc.
+ *  This view model is responsible for unified processing of group request messages. For example, a series of logics such as obtaining the unread count,
+ * receiving new request messages and updating them, agreeing/removing data in the existing data queue, etc.
  */
 @interface TUIGroupPendencyDataProvider : NSObject
 
@@ -23,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The object type stored in this list is TUIGroupPendencyCellData.
  *  That is, this array stores all pending request data of the current group, and this attribute is read-only and cannot be modified.
  */
-@property (readonly) NSArray *dataList;
+@property(readonly) NSArray *dataList;
 
 /**
  *  是否具有下一个请求数据。
@@ -39,7 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  当前视图模型正在加载数据时，本属性为 YES，此时不允许再次加载，直至当前加载过程完成。
  *
  *  Loading identifier
- *  When the current view model is loading data, this property is YES. At this time, loading again is not allowed until the current loading process is completed.
+ *  When the current view model is loading data, this property is YES. At this time, loading again is not allowed until the current loading process is
+ * completed.
  */
 @property BOOL isLoading;
 
@@ -64,13 +69,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  加载数据
  *  1、先判断当前是否在加载，如果是，则终止本次加载。
  *  2、通过 IM SDK 中的 TIMGroupManager 类提供的 getPendencyFromServer 接口从服务器拉取请求数据，默认一页100个请求。
- *  3、对于拉取的数据，判定请求对应的群组 ID 是否与本群相同，若相同，则将该请求转换为 TUIGroupPendencyCellData 并存入 datalist。（从服务器拉取的请求对象为 TIMGroupPendencyItem）。
+ *  3、对于拉取的数据，判定请求对应的群组 ID 是否与本群相同，若相同，则将该请求转换为 TUIGroupPendencyCellData 并存入 datalist。（从服务器拉取的请求对象为
+ * TIMGroupPendencyItem）。
  *
  *  Load data
  *  1. First determine whether it is currently loading, and if so, terminate this loading.
- *  2. Pull the request data from the server through the getPendencyFromServer interface provided by the TIMGroupManager class in the IM SDK. The default is 100 requests per page.
- *  3. For the pulled data, determine whether the group ID corresponding to the request is the same as this group, and if so, convert the request to TUIGroupPendencyCellData and store
- *   it in the datalist. (The request object pulled from the server is TIMGroupPendencyItem).
+ *  2. Pull the request data from the server through the getPendencyFromServer interface provided by the TIMGroupManager class in the IM SDK. The default is 100
+ * requests per page.
+ *  3. For the pulled data, determine whether the group ID corresponding to the request is the same as this group, and if so, convert the request to
+ * TUIGroupPendencyCellData and store it in the datalist. (The request object pulled from the server is TIMGroupPendencyItem).
  */
 - (void)loadData;
 

@@ -257,6 +257,7 @@
 "TUIKitErrorSVRToUserInvalid" = "IM: Invalid recipient";
 "TUIKitErrorSVRRequestTimeout" = "Request timeout";
 "TUIKitErrorSVRInitCoreFail" = "INIT CORE module failed";
+"TUIKitErrorSVRConvGroupNameLengthLimit" = "conversation group name length exceeds the maximum limit";
 "TUIKitErrorExpiredSessionNode" = "SessionNode is null.";
 "TUIKitErrorLoggedOutBeforeLoginFinished" = "Logged out before login (returned at login time)";
 "TUIKitErrorTLSSDKNotInitialized" = "tlssdk is not initialized.";

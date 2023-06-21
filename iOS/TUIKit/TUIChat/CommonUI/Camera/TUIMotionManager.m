@@ -1,57 +1,60 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import "TUIMotionManager.h"
 #import <CoreMotion/CoreMotion.h>
 @import UIKit;
-@interface TUIMotionManager()
+@interface TUIMotionManager ()
 
-@property(nonatomic, strong) CMMotionManager * motionManager;
+@property(nonatomic, strong) CMMotionManager *motionManager;
 
 @end
 
 @implementation TUIMotionManager
 
--(instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _motionManager = [[CMMotionManager alloc] init];
-        _motionManager.deviceMotionUpdateInterval = 1/15.0;
+        _motionManager.deviceMotionUpdateInterval = 1 / 15.0;
         if (!_motionManager.deviceMotionAvailable) {
             _motionManager = nil;
             return self;
         }
         __weak __typeof(self) weakSelf = self;
-        [_motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue currentQueue] withHandler: ^(CMDeviceMotion *motion, NSError *error){
-            __strong __typeof(weakSelf) strongSelf = weakSelf;
-            [strongSelf performSelectorOnMainThread:@selector(handleDeviceMotion:) withObject:motion waitUntilDone:YES];
-        }];
+        [_motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue currentQueue]
+                                            withHandler:^(CMDeviceMotion *motion, NSError *error) {
+                                              __strong __typeof(weakSelf) strongSelf = weakSelf;
+                                              [strongSelf performSelectorOnMainThread:@selector(handleDeviceMotion:) withObject:motion waitUntilDone:YES];
+                                            }];
     }
     return self;
 }
 
-- (void)handleDeviceMotion:(CMDeviceMotion *)deviceMotion{
+- (void)handleDeviceMotion:(CMDeviceMotion *)deviceMotion {
     double x = deviceMotion.gravity.x;
     double y = deviceMotion.gravity.y;
     if (fabs(y) >= fabs(x)) {
         if (y >= 0) {
             _deviceOrientation = UIDeviceOrientationPortraitUpsideDown;
-            _videoOrientation  = AVCaptureVideoOrientationPortraitUpsideDown;
+            _videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
         } else {
             _deviceOrientation = UIDeviceOrientationPortrait;
-            _videoOrientation  = AVCaptureVideoOrientationPortrait;
+            _videoOrientation = AVCaptureVideoOrientationPortrait;
         }
     } else {
         if (x >= 0) {
             _deviceOrientation = UIDeviceOrientationLandscapeRight;
-            _videoOrientation  = AVCaptureVideoOrientationLandscapeRight;
+            _videoOrientation = AVCaptureVideoOrientationLandscapeRight;
         } else {
             _deviceOrientation = UIDeviceOrientationLandscapeLeft;
-            _videoOrientation  = AVCaptureVideoOrientationLandscapeLeft;
+            _videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
         }
     }
 }
 
--(void)dealloc{
+- (void)dealloc {
     [_motionManager stopDeviceMotionUpdates];
 }
 

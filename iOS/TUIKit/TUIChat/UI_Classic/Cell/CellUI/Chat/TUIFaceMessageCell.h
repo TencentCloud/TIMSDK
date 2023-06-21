@@ -1,8 +1,10 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
+#import <TIMCommon/TUIBubbleMessageCell.h>
 #import <TIMCommon/TUIMessageCell.h>
 #import "TUIFaceMessageCellData.h"
-#import <TIMCommon/TUIBubbleMessageCell.h>
-
 
 @interface TUIFaceMessageCell : TUIBubbleMessageCell
 
@@ -12,7 +14,7 @@
  *
  *  Image view for the resource of emticon
  */
-@property (nonatomic, strong) UIImageView *face;
+@property(nonatomic, strong) UIImageView *face;
 
 @property TUIFaceMessageCellData *faceData;
 

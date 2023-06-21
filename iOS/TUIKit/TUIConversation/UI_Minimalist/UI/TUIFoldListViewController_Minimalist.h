@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIFoldListViewController_Minimalist : UIViewController
 
-@property (nonatomic,copy) void(^dismissCallback)(NSMutableAttributedString * foldStr,NSArray *sortArr, NSArray *needRemoveFromCacheMapArray);
+@property(nonatomic, copy) void (^dismissCallback)(NSMutableAttributedString *foldStr, NSArray *sortArr, NSArray *needRemoveFromCacheMapArray);
 
 @end
 

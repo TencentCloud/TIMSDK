@@ -3,25 +3,26 @@
 //  TUIConversation
 //
 //  Created by wyl on 2023/3/29.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIConversationObjectFactory.h"
+#import <TUICore/TUIThemeManager.h>
 #import "TUIConversationListController.h"
 #import "TUIConversationSelectController.h"
-#import <TUICore/TUIThemeManager.h>
 
-@interface TUIConversationObjectFactory() <TUIObjectProtocol>
+@interface TUIConversationObjectFactory () <TUIObjectProtocol>
 @end
 
 @implementation TUIConversationObjectFactory
 + (void)load {
-    [TUICore registerObjectFactoryName:TUICore_TUIConversationObjectFactory objectFactory:[TUIConversationObjectFactory shareInstance]];
+    [TUICore registerObjectFactory:TUICore_TUIConversationObjectFactory objectFactory:[TUIConversationObjectFactory shareInstance]];
 }
 + (TUIConversationObjectFactory *)shareInstance {
     static dispatch_once_t onceToken;
-    static TUIConversationObjectFactory * g_sharedInstance = nil;
+    static TUIConversationObjectFactory *g_sharedInstance = nil;
     dispatch_once(&onceToken, ^{
-        g_sharedInstance = [[TUIConversationObjectFactory alloc] init];
+      g_sharedInstance = [[TUIConversationObjectFactory alloc] init];
     });
     return g_sharedInstance;
 }
@@ -30,7 +31,7 @@
 - (id)onCreateObject:(NSString *)method param:(nullable NSDictionary *)param {
     if ([method isEqualToString:TUICore_TUIConversationObjectFactory_GetConversationControllerMethod]) {
         return [self createConversationController];
-    } else if ([method isEqualToString:TUICore_TUIConversationObjectFactory_GetConversationSelectControllerMethod]) {
+    } else if ([method isEqualToString:TUICore_TUIConversationObjectFactory_ConversationSelectVC_Classic]) {
         return [self createConversationSelectController];
     }
     return nil;

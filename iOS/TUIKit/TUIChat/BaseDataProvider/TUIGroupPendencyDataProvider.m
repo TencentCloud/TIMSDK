@@ -3,29 +3,29 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/6/18.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIGroupPendencyDataProvider.h"
 #import <TIMCommon/TIMDefine.h>
 
-@interface TUIGroupPendencyDataProvider()
+@interface TUIGroupPendencyDataProvider ()
 
 @property NSArray *dataList;
 
-@property (nonatomic,assign) uint64_t origSeq;
+@property(nonatomic, assign) uint64_t origSeq;
 
-@property (nonatomic,assign) uint64_t seq;
+@property(nonatomic, assign) uint64_t seq;
 
-@property (nonatomic,assign) uint64_t timestamp;
+@property(nonatomic, assign) uint64_t timestamp;
 
-@property (nonatomic,assign) uint64_t numPerPage;
+@property(nonatomic, assign) uint64_t numPerPage;
 
 @end
 
 @implementation TUIGroupPendencyDataProvider
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
 
     _numPerPage = 100;
@@ -36,13 +36,11 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)onPendencyChanged:(NSNotification *)notification
-{
+- (void)onPendencyChanged:(NSNotification *)notification {
     int unReadCnt = 0;
     for (TUIGroupPendencyCellData *data in self.dataList) {
         if (data.isRejectd || data.isAccepted) {
@@ -53,38 +51,36 @@
     self.unReadCnt = unReadCnt;
 }
 
-- (void)loadData
-{
-    if (self.isLoading)
-        return;
+- (void)loadData {
+    if (self.isLoading) return;
 
     self.isLoading = YES;
-    @weakify(self)
-    [[V2TIMManager sharedInstance] getGroupApplicationList:^(V2TIMGroupApplicationResult *result) {
-        @strongify(self)
-        NSMutableArray *list = @[].mutableCopy;
-        for (V2TIMGroupApplication *item in result.applicationList) {
-            if ([item.groupID isEqualToString:self.groupId] &&
-                item.handleStatus == V2TIM_GROUP_APPLICATION_HANDLE_STATUS_UNHANDLED) {
-                TUIGroupPendencyCellData *data = [[TUIGroupPendencyCellData alloc] initWithPendency:item];
-                [list addObject:data];
-            }
+    @weakify(self);
+    [[V2TIMManager sharedInstance]
+        getGroupApplicationList:^(V2TIMGroupApplicationResult *result) {
+          @strongify(self);
+          NSMutableArray *list = @[].mutableCopy;
+          for (V2TIMGroupApplication *item in result.applicationList) {
+              if ([item.groupID isEqualToString:self.groupId] && item.handleStatus == V2TIM_GROUP_APPLICATION_HANDLE_STATUS_UNHANDLED) {
+                  TUIGroupPendencyCellData *data = [[TUIGroupPendencyCellData alloc] initWithPendency:item];
+                  [list addObject:data];
+              }
+          }
+          self.dataList = list;
+          self.unReadCnt = (int)list.count;
+          self.isLoading = NO;
+          self.hasNextData = NO;
+          ;
         }
-        self.dataList = list;
-        self.unReadCnt = (int)list.count;
-        self.isLoading = NO;
-        self.hasNextData = NO;;
-    } fail:nil];
+                           fail:nil];
 }
 
-- (void)acceptData:(TUIGroupPendencyCellData *)data
-{
+- (void)acceptData:(TUIGroupPendencyCellData *)data {
     [data accept];
     self.unReadCnt--;
 }
 
-- (void)removeData:(TUIGroupPendencyCellData *)data
-{
+- (void)removeData:(TUIGroupPendencyCellData *)data {
     NSMutableArray *dataList = [NSMutableArray arrayWithArray:self.dataList];
     [dataList removeObject:data];
     self.dataList = dataList;

@@ -3,18 +3,19 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/8.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactSelectController.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIThemeManager.h>
 #import "TUICommonContactSelectCell.h"
 #import "TUIContactSelectViewDataProvider.h"
-#import <TUICore/TUICore.h>
-#import <TIMCommon/TIMDefine.h>
-#import <TUICore/TUIThemeManager.h>
 
-static NSString *kReuseIdentifier = @"ContactSelectCell";
+static NSString *gReuseIdentifier = @"ContactSelectCell";
 
-@interface TUIContactSelectController ()<UITableViewDelegate,UITableViewDataSource>
+@interface TUIContactSelectController () <UITableViewDelegate, UITableViewDataSource>
 
 @property UITableView *tableView;
 @property UIView *emptyView;
@@ -29,8 +30,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 @synthesize sourceIds;
 @synthesize viewModel;
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         [self initData];
@@ -38,8 +38,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     return self;
 }
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [self initData];
@@ -47,8 +46,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     return self;
 }
 
-- (void)initData
-{
+- (void)initData {
     self.maxSelectCount = 0;
     self.selectArray = @[].mutableCopy;
     self.viewModel = [TUIContactSelectViewDataProvider new];
@@ -57,7 +55,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor =  TIMCommonDynamicColor(@"controller_bg_color", @"#F3F5F9");
+    self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F3F5F9");
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -70,7 +68,7 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
     [_tableView setTableFooterView:v];
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
-    [_tableView registerClass:[TUICommonContactSelectCell class] forCellReuseIdentifier:kReuseIdentifier];
+    [_tableView registerClass:[TUICommonContactSelectCell class] forCellReuseIdentifier:gReuseIdentifier];
     if (@available(iOS 15.0, *)) {
         _tableView.sectionHeaderTopPadding = 0;
     }
@@ -96,51 +94,44 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
         [self.viewModel loadContacts];
     }
 
-    self.view.backgroundColor = RGB(42,42,40);
+    self.view.backgroundColor = RGB(42, 42, 40);
     self.navigationItem.title = self.title;
 }
 
-- (void)setupBinds
-{
-    @weakify(self)
+- (void)setupBinds {
+    @weakify(self);
     [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(NSNumber *finished) {
-        @strongify(self)
-        if ([finished boolValue]) {
-            [self.tableView reloadData];
-        }
+      @strongify(self);
+      if ([finished boolValue]) {
+          [self.tableView reloadData];
+      }
     }];
     [RACObserve(self.viewModel, groupList) subscribeNext:^(NSArray *group) {
-        @strongify(self)
-        self.emptyView.hidden = (group.count > 0);
+      @strongify(self);
+      self.emptyView.hidden = (group.count > 0);
     }];
 }
 
-- (void)viewDidLayoutSubviews
-{
+- (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    _pickerView.mm_width(self.view.mm_w).mm_height(60+_pickerView.mm_safeAreaBottomGap).mm_bottom(0);
+    _pickerView.mm_width(self.view.mm_w).mm_height(60 + _pickerView.mm_safeAreaBottomGap).mm_bottom(0);
     _tableView.mm_width(self.view.mm_w).mm_flexToBottom(_pickerView.mm_h);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-{
-    return self.viewModel.groupList.count;
-}
+{ return self.viewModel.groupList.count; }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSString *group = self.viewModel.groupList[section];
     NSArray *list = self.viewModel.dataDict[group];
     return list.count;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 #define TEXT_TAG 1
     static NSString *headerViewId = @"ContactDrawerView";
     UITableViewHeaderFooterView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headerViewId];
-    if (!headerView)
-    {
+    if (!headerView) {
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
@@ -156,13 +147,11 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     return headerView;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 56;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{   
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 33;
 }
 
@@ -175,9 +164,8 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     return self.viewModel.groupList;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    TUICommonContactSelectCell *cell = [tableView dequeueReusableCellWithIdentifier:kReuseIdentifier forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    TUICommonContactSelectCell *cell = [tableView dequeueReusableCellWithIdentifier:gReuseIdentifier forIndexPath:indexPath];
 
     NSString *group = self.viewModel.groupList[indexPath.section];
     NSArray *list = self.viewModel.dataDict[group];
@@ -191,12 +179,11 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
     return cell;
 }
 
-- (void)didSelectContactCell:(TUICommonContactSelectCell *)cell
-{
+- (void)didSelectContactCell:(TUICommonContactSelectCell *)cell {
     TUICommonContactSelectCellData *data = cell.selectData;
     if (!data.isSelected) {
         if (maxSelectCount > 0 && self.selectArray.count + 1 > self.maxSelectCount) {
-            [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitTipsMostSelectTextFormat),(long)self.maxSelectCount]];
+            [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitTipsMostSelectTextFormat), (long)self.maxSelectCount]];
             return;
         }
     }
@@ -211,7 +198,6 @@ static NSString *kReuseIdentifier = @"ContactSelectCell";
 }
 
 - (void)finishTask {
-    
     if (self.finishBlock) {
         self.finishBlock(self.selectArray);
     }

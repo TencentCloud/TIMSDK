@@ -1,10 +1,13 @@
 
-#import <Foundation/Foundation.h>
-#import "TUIChatBaseDataProvider.h"
-#import "TUIVideoMessageCellData_Minimalist.h"
-#import "TUIChatConversationModel.h"
-#import <TIMCommon/TIMDefine.h>
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 
+#import <Foundation/Foundation.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMInputViewMoreActionProtocol.h>
+#import "TUIChatBaseDataProvider.h"
+#import "TUIChatConversationModel.h"
+#import "TUIVideoMessageCellData_Minimalist.h"
 @class TUICustomActionSheetItem;
 
 @class TUIChatDataProvider_Minimalist;
@@ -14,9 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<TUICustomActionSheetItem *> *)getInputMoreActionItemList:(nullable NSString *)userID
                                                             groupID:(nullable NSString *)groupID
-                                                             pushVC:(nullable UINavigationController *)pushVC;
+                                                             pushVC:(nullable UINavigationController *)pushVC
+                                                   actionController:(id<TIMInputViewMoreActionProtocol>)actionController;
 
 @end
-
 
 NS_ASSUME_NONNULL_END

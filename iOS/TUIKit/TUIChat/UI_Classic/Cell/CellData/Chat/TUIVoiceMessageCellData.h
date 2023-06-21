@@ -1,17 +1,20 @@
 
-#import <TIMCommon/TUIMessageCellData.h>
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <TIMCommon/TUIBubbleMessageCellData.h>
+#import <TIMCommon/TUIMessageCellData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIVoiceMessageCellData : TUIBubbleMessageCellData
 
-@property (nonatomic, strong) NSString *path;
-@property (nonatomic, strong) NSString *uuid;
-@property (nonatomic, assign) int duration;
-@property (nonatomic, assign) int length;
-@property (nonatomic, assign) BOOL isDownloading;
-@property (nonatomic, assign) BOOL isPlaying;
+@property(nonatomic, strong) NSString *path;
+@property(nonatomic, strong) NSString *uuid;
+@property(nonatomic, assign) int duration;
+@property(nonatomic, assign) int length;
+@property(nonatomic, assign) BOOL isDownloading;
+@property(nonatomic, assign) BOOL isPlaying;
 
 /**
  *  播放动画图片
@@ -32,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Animated icon to show when the speech is not playing.
  */
 @property UIImage *voiceImage;
-@property (nonatomic, assign) CGFloat voiceTop;
+@property(nonatomic, assign) CGFloat voiceTop;
 
 /**
  *  语音图标顶部
@@ -43,8 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  This value is used to determine the position of the bubble, which is convenient for UI layout of the content in the bubble.
  *  If the value is abnormal or set arbitrarily, UI errors such as message position dislocation will occur.
  */
-@property (nonatomic, class) CGFloat incommingVoiceTop;
-@property (nonatomic, class) CGFloat outgoingVoiceTop;
+@property(nonatomic, class) CGFloat incommingVoiceTop;
+@property(nonatomic, class) CGFloat outgoingVoiceTop;
 
 - (void)stopVoiceMessage;
 
@@ -52,9 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  开始语音播放。
  *
  *  Begin to play voice. It will download the voice file from server if it not exists in local.
-*/
+ */
 - (void)playVoiceMessage;
 
+@property(nonatomic, copy) void (^audioPlayerDidFinishPlayingBlock)(void);
 @end
 
 NS_ASSUME_NONNULL_END

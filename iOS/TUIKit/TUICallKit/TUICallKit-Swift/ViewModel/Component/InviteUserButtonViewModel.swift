@@ -7,6 +7,7 @@
 
 import Foundation
 import TUICore
+import TUICallEngine
 
 let TUICallKit_TUIGroupService_UserDataValue = "TUICallKit"
 
@@ -33,25 +34,9 @@ class InviteUserButtonViewModel {
     }
 
     func inviteUser() {
-        guard let nameKey = TUICallKitLocalize(key: "Demo.TRTC.Streaming.call") else { return }
-        let param: [String: Any] = [
-            TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID: TUICallState.instance.groupId.value,
-            TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_SelectedUserIDList: TUICallState.instance.getUserIdList(),
-            TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name: nameKey,]
-        var viewController = TUICore.callService(TUICore_TUIGroupObjectFactory,
-                                                 method: TUICore_TUIGroupObjectFactory_SelectGroupMemberVC,
-                                                 param: param) as? UIViewController
-        if viewController == nil {
-            viewController = TUICore.callService(TUICore_TUIGroupObjectFactory_Minimalist,
-                                                 method: TUICore_TUIGroupObjectFactory_SelectGroupMemberVC,
-                                                 param: param) as? UIViewController
-        }
-        guard let viewController = viewController else { return }
-        
-        viewController.tui_valueCallback = tui_valueCallback
-        
-        let navigationController = TUINavigationController(rootViewController: viewController)
+        let navigationController = UINavigationController(rootViewController: SelectGroupMeberViewController())
         navigationController.modalPresentationStyle = .fullScreen
+        navigationController.navigationBar.barTintColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         let keyWindow = TUICallKitCommon.getKeyWindow()
         keyWindow?.rootViewController?.present(navigationController, animated: false)
     }

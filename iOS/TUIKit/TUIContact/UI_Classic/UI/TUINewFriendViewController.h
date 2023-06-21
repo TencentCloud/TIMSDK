@@ -1,4 +1,7 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <UIKit/UIKit.h>
 #import "TUICommonPendencyCell.h"
 
@@ -15,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TUINewFriendViewController : UIViewController
 
-@property (nonatomic) void (^cellClickBlock)(TUICommonPendencyCell *cell);
+@property(nonatomic) void (^cellClickBlock)(TUICommonPendencyCell *cell);
 
 @end
 

@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/2/16.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,8 +14,8 @@ typedef NS_OPTIONS(NSUInteger, TUIChatAuthControlType) {
     TUIChatAuthControlTypePhoto = 1 << 2,
 };
 @interface TUIUserAuthorizationCenter : NSObject
-@property (nonatomic, assign, class, readonly) BOOL isEnableCameraAuthorization;
-@property (nonatomic, assign, class, readonly) BOOL isEnableMicroAuthorization;
+@property(nonatomic, assign, class, readonly) BOOL isEnableCameraAuthorization;
+@property(nonatomic, assign, class, readonly) BOOL isEnableMicroAuthorization;
 
 + (void)cameraStateActionWithPopCompletion:(void (^)(void))completion API_AVAILABLE(ios(8.0));
 + (void)microStateActionWithPopCompletion:(void (^)(void))completion API_AVAILABLE(ios(8.0));
@@ -22,4 +23,3 @@ typedef NS_OPTIONS(NSUInteger, TUIChatAuthControlType) {
 + (void)openSettingPage;
 + (void)showAlert:(TUIChatAuthControlType)type;
 @end
-

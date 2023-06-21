@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by harvy on 2021/11/25.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIReplyMessageCellData_Minimalist.h"
@@ -11,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIImageReplyQuoteViewData_Minimalist : TUIReplyQuoteViewData_Minimalist
 
-@property (nonatomic, strong) UIImage *image;
+@property(nonatomic, strong) UIImage *image;
 
-@property (nonatomic, assign) CGSize imageSize;
+@property(nonatomic, assign) CGSize imageSize;
 
 + (CGSize)displaySizeWithOriginSize:(CGSize)originSize;
 - (void)downloadImage;

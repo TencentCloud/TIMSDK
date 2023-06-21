@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/6/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIChatConfig.h"
@@ -10,10 +11,9 @@
 
 @implementation TUIChatConfig
 
-- (id)init
-{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         self.msgNeedReadReceipt = NO;
         self.enableVideoCall = YES;
         self.enableAudioCall = YES;
@@ -25,7 +25,7 @@
         self.enableFloatWindowForCall = YES;
         self.enableMultiDeviceForCall = NO;
         self.timeIntervalForMessageRecall = 120;
-        
+
         [self updateEmojiGroups];
     }
     return self;
@@ -35,14 +35,12 @@
     static dispatch_once_t onceToken;
     static TUIChatConfig *config;
     dispatch_once(&onceToken, ^{
-        config = [[TUIChatConfig alloc] init];
+      config = [[TUIChatConfig alloc] init];
     });
     return config;
 }
 
-
-- (void)onChangeLanguage
-{
+- (void)onChangeLanguage {
     [self updateEmojiGroups];
 }
 
@@ -51,18 +49,16 @@
 }
 
 - (NSArray *)updateFaceGroups:(NSArray *)groups {
-    
     if (groups.count) {
         NSMutableArray *arrayM = [NSMutableArray arrayWithArray:groups];
         [arrayM removeObjectAtIndex:0];
-        
+
         TUIFaceGroup *defaultFaceGroup = [self findFaceGroup];
         if (defaultFaceGroup) {
             [arrayM insertObject:[self findFaceGroup] atIndex:0];
         }
-        return  [NSArray arrayWithArray:arrayM];
-    }
-    else {
+        return [NSArray arrayWithArray:arrayM];
+    } else {
         NSMutableArray *faceArray = [NSMutableArray array];
         TUIFaceGroup *defaultFaceGroup = [self findFaceGroup];
         if (defaultFaceGroup) {
@@ -72,12 +68,11 @@
     }
     return @[];
 }
-- (void)addFaceToCache:(NSString *)path
-{
+- (void)addFaceToCache:(NSString *)path {
     [[TUIImageCache sharedInstance] addFaceToCache:path];
 }
 - (TUIFaceGroup *)findFaceGroup {
-    //emoji group
+    // emoji group
 
     NSMutableArray *emojiFaces = [NSMutableArray array];
     NSArray *emojis = [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emoji.plist")];
@@ -92,7 +87,7 @@
         [self addFaceToCache:data.path];
         [emojiFaces addObject:data];
     }
-    if(emojiFaces.count != 0){
+    if (emojiFaces.count != 0) {
         TUIFaceGroup *emojiGroup = [[TUIFaceGroup alloc] init];
         emojiGroup.faces = emojiFaces;
         emojiGroup.groupIndex = 0;
@@ -104,9 +99,8 @@
         [self addFaceToCache:emojiGroup.menuPath];
         return emojiGroup;
     }
-    
+
     return nil;
 }
-
 
 @end

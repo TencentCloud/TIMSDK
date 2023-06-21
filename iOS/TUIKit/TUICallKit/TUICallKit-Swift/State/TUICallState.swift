@@ -6,6 +6,7 @@
 
 import Foundation
 import TUICore
+import TUICallEngine
 
 class TUICallState: NSObject {
     
@@ -63,7 +64,7 @@ extension TUICallState: TUICallObserver {
         User.getUserInfosFromIM(userIDs: remoteUsersId) { inviteeList in
             var remoteUsers: [User] = Array()
             for invitee in inviteeList {
-                invitee.callRole.value = .called
+                invitee.callRole.value = TUICallRole.called
                 invitee.callStatus.value = .waiting
                 if invitee.id.value != TUICallState.instance.selfUser.value.id.value {
                     remoteUsers.append(invitee)
@@ -84,8 +85,8 @@ extension TUICallState: TUICallObserver {
         }        
         TUICallState.instance.mediaType.value = callMediaType
 
-        TUICallState.instance.selfUser.value.callRole.value = .called
-        TUICallState.instance.selfUser.value.callStatus.value = .waiting
+        TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
+        TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
         
         CallingBellFeature.instance.playCallingBell(type: .CallingBellTypeCalled)
     }
@@ -107,14 +108,22 @@ extension TUICallState: TUICallObserver {
     
     func onUserJoin(userId: String) {
         for user in TUICallState.instance.remoteUserList.value where user.id.value == userId {
-            user.callStatus.value = .accept
+            user.callStatus.value = TUICallStatus.accept
             return
         }
         
+        let remoteUser = User()
+        remoteUser.id.value = userId
+        remoteUser.callStatus.value = TUICallStatus.accept
+        TUICallState.instance.remoteUserList.value.append(remoteUser)
+
         User.getUserInfosFromIM(userIDs: [userId]) { users in
             guard let user = users.first else { return }
-            user.callStatus.value = .accept
-            TUICallState.instance.remoteUserList.value.append(user)
+            for remote in TUICallState.instance.remoteUserList.value where user.id.value == remote.id.value {
+                remote.avatar.value = user.avatar.value
+                remote.nickname.value = user.nickname.value
+                return
+            }
         }
     }
     
@@ -202,7 +211,7 @@ extension TUICallState: TUICallObserver {
         TUICallState.instance.roomId.value = roomId
         TUICallState.instance.mediaType.value = callMediaType
         TUICallState.instance.selfUser.value.callRole.value = callRole
-        TUICallState.instance.selfUser.value.callStatus.value = .accept
+        TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.accept
         
         timerName = GCDTimer.start(interval: 1, repeats: true, async: true) {
             TUICallState.instance.timeCount.value += 1
@@ -231,8 +240,8 @@ extension TUICallState {
         TUICallState.instance.roomId.value = TUIRoomId()
         TUICallState.instance.groupId.value = ""
         
-        TUICallState.instance.selfUser.value.callRole.value = .none
-        TUICallState.instance.selfUser.value.callStatus.value = .none
+        TUICallState.instance.selfUser.value.callRole.value = TUICallRole.none
+        TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.none
         
         TUICallState.instance.timeCount.value = 0
         

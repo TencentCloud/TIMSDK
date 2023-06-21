@@ -1,19 +1,22 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <AVFoundation/AVFoundation.h>
 
-#import "TUIMessageBaseDataProvider.h"
-#import <TIMCommon/TUIMessageCell.h>
-#import "TUITypingStatusCellData.h"
-#import <TIMCommon/TUITagsModel.h>
-#import <TIMCommon/TIMDefine.h>
-#import <TUICore/TUITool.h>
-#import <TUICore/TUILogin.h>
-#import <TUICore/TUICore.h>
-#import <TUICore/NSString+TUIUtil.h>
-#import "TUIMessageProgressManager.h"
-#import "TUICloudCustomDataTypeCenter.h"
-#import "TUIChatConfig.h"
 #import <TIMCommon/NSString+TUIEmoji.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIMessageCell.h>
+#import <TIMCommon/TUITagsModel.h>
+#import <TUICore/NSString+TUIUtil.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUILogin.h>
+#import <TUICore/TUITool.h>
+#import "TUIChatConfig.h"
+#import "TUICloudCustomDataTypeCenter.h"
+#import "TUIMessageBaseDataProvider.h"
+#import "TUIMessageProgressManager.h"
+#import "TUITypingStatusCellData.h"
 
 /**
  * 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
@@ -21,16 +24,16 @@
  */
 #define MaxDateMessageDelay 5 * 60
 
-@interface TUIMessageBaseDataProvider ()<V2TIMAdvancedMsgListener, TUIMessageProgressManagerDelegate>
-@property (nonatomic, strong) TUIChatConversationModel *conversationModel;
-@property (nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs_;
-@property (nonatomic, strong) NSMutableSet<NSString *> *sentReadGroupMsgSet;
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *heightCache_;
-@property (nonatomic, assign) BOOL isLoadingData;
-@property (nonatomic, assign) BOOL isNoMoreMsg;
-@property (nonatomic, assign) BOOL isFirstLoad;
-@property (nonatomic, strong) V2TIMMessage *lastMsg;
-@property (nonatomic, strong) V2TIMMessage *msgForDate;
+@interface TUIMessageBaseDataProvider () <V2TIMAdvancedMsgListener, TUIMessageProgressManagerDelegate>
+@property(nonatomic, strong) TUIChatConversationModel *conversationModel;
+@property(nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs_;
+@property(nonatomic, strong) NSMutableSet<NSString *> *sentReadGroupMsgSet;
+@property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *heightCache_;
+@property(nonatomic, assign) BOOL isLoadingData;
+@property(nonatomic, assign) BOOL isNoMoreMsg;
+@property(nonatomic, assign) BOOL isFirstLoad;
+@property(nonatomic, strong) V2TIMMessage *lastMsg;
+@property(nonatomic, strong) V2TIMMessage *msgForDate;
 @end
 
 @implementation TUIMessageBaseDataProvider
@@ -66,7 +69,7 @@
     return _uiMsgs_;
 }
 
-- (NSMutableDictionary<NSString *,NSNumber *> *)heightCache_ {
+- (NSMutableDictionary<NSString *, NSNumber *> *)heightCache_ {
     if (_heightCache_ == nil) {
         _heightCache_ = [NSMutableDictionary dictionary];
     }
@@ -76,88 +79,96 @@
 - (NSArray<TUIMessageCellData *> *)uiMsgs {
     return _uiMsgs_;
 }
-- (NSDictionary<NSString *,NSNumber *> *)heightCache {
+- (NSDictionary<NSString *, NSNumber *> *)heightCache {
     return _heightCache_;
 }
 
 #pragma mark - TUIKitNotification
 - (void)registerTUIKitNotification {
     [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMessageStatusChanged:) name:TUIKitNotification_onMessageStatusChanged object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onMessageStatusChanged:)
+                                                 name:TUIKitNotification_onMessageStatusChanged
+                                               object:nil];
 }
 
-- (void)onMessageStatusChanged:(NSNotification *)notification
-{
-    NSString *msgId = notification.object;
+- (void)onMessageStatusChanged:(NSNotification *)notification {
+    V2TIMMessage *targetMsg = notification.object;
+    NSString *msgId = targetMsg.msgID;
     TUIMessageCellData *uiMsg = nil;
+    BOOL isMatch = NO;
     for (uiMsg in self.uiMsgs) {
         if ([uiMsg.msgID isEqualToString:msgId]) {
             [self.dataSource dataProviderDataSourceWillChange:self];
             NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
             [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload atIndex:index animation:YES];
             [self.dataSource dataProviderDataSourceDidChange:self];
-            return;
+            isMatch = YES;
+            break;
         }
+    }
+    if (!isMatch) {
+        // Need insert UI Message
+        [self onRecvNewMessage:targetMsg];
     }
 }
 
 #pragma mark - V2TIMAdvancedMsgListener
 - (void)onRecvNewMessage:(V2TIMMessage *)msg {
     // immsg -> uimsg
-    NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[msg]];
+    NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[ msg ]];
     if (cellDataList.count == 0) {
         return;
     }
-    
+
     TUIMessageCellData *lastObj = cellDataList.lastObject;
-    
+
     if ([lastObj isKindOfClass:TUITypingStatusCellData.class]) {
-        
         if (![TUIChatConfig defaultConfig].enableTypingStatus) {
             return;
         }
-        
-        TUITypingStatusCellData * stastusData = (TUITypingStatusCellData *)lastObj;
-        
+
+        TUITypingStatusCellData *stastusData = (TUITypingStatusCellData *)lastObj;
+
         if (!NSThread.isMainThread) {
             @weakify(self);
             dispatch_async(dispatch_get_main_queue(), ^{
-                @strongify(self);
-                [self dealTypingByStatusCellData:stastusData];
+              @strongify(self);
+              [self dealTypingByStatusCellData:stastusData];
             });
             return;
-        }
-        else {
+        } else {
             [self dealTypingByStatusCellData:stastusData];
         }
-        
+
         return;
     }
-    
-    @weakify(self)
-    [self preProcessMessage:cellDataList callback:^{
-        @strongify(self)
-        [self.dataSource dataProviderDataSourceWillChange:self];
-        @autoreleasepool {        
-            for (TUIMessageCellData *uiMsg in cellDataList) {
-                [self addUIMsg:uiMsg];
-                [self.dataSource dataProviderDataSourceChange:self
-                                                     withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
-                                                      atIndex:(self.uiMsgs_.count - 1)
-                                                    animation:YES];
-            }
-        }
-        [self.dataSource dataProviderDataSourceDidChange:self];
-        
-        if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
-            /**
-             * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
-             * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
-             */
-            [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.lastObject];
-        }
-    }];
+
+    @weakify(self);
+    [self preProcessMessage:cellDataList
+                   callback:^{
+                     @strongify(self);
+                     [self.dataSource dataProviderDataSourceWillChange:self];
+                     @autoreleasepool {
+                         for (TUIMessageCellData *uiMsg in cellDataList) {
+                             [self addUIMsg:uiMsg];
+                             [self.dataSource dataProviderDataSourceChange:self
+                                                                  withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
+                                                                   atIndex:(self.uiMsgs_.count - 1)
+                                                                 animation:YES];
+                         }
+                     }
+                     [self.dataSource dataProviderDataSourceDidChange:self];
+
+                     if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
+                         /**
+                          * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
+                          * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
+                          */
+                         [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.lastObject];
+                     }
+                   }];
 }
 
 - (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs {
@@ -171,7 +182,7 @@
         if (![msg.userID isEqualToString:self.conversationModel.userID] && ![msg.groupID isEqualToString:self.conversationModel.groupID]) {
             continue;
         }
-        
+
         TUIMessageCellData *cellData = nil;
         /**
          * 判断是否为外部的自定义消息
@@ -180,7 +191,7 @@
         if ([self.dataSource respondsToSelector:@selector(dataProvider:CustomCellDataFromNewIMMessage:)]) {
             cellData = [self.dataSource dataProvider:self CustomCellDataFromNewIMMessage:msg];
         }
-        
+
         /**
          * 判断是否为组件内部消息
          * Determine whether it is a component internal message
@@ -218,33 +229,37 @@
         if ([dict.allKeys containsObject:data.innerMessage.msgID]) {
             V2TIMMessageReceipt *receipt = dict[data.innerMessage.msgID];
             data.messageReceipt = receipt;
-            if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveReadMsgWithGroupID:msgID:readCount:unreadCount:)]){
-                [self.dataSource dataProvider:self ReceiveReadMsgWithGroupID:receipt.groupID msgID:receipt.msgID readCount:receipt.readCount unreadCount:receipt.unreadCount];
+            if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveReadMsgWithGroupID:msgID:readCount:unreadCount:)]) {
+                [self.dataSource dataProvider:self
+                    ReceiveReadMsgWithGroupID:receipt.groupID
+                                        msgID:receipt.msgID
+                                    readCount:receipt.readCount
+                                  unreadCount:receipt.unreadCount];
             }
         }
     }
 }
 
 - (void)onRecvMessageRevoked:(NSString *)msgID {
-    @weakify(self)
+    @weakify(self);
     [TUITool dispatchMainAsync:^{
-        @strongify(self)
-        TUIMessageCellData *uiMsg = nil;
-        for (uiMsg in self.uiMsgs) {
-            if ([uiMsg.msgID isEqualToString:msgID]) {
-                [self.dataSource dataProviderDataSourceWillChange:self];
-                NSUInteger index = [self.uiMsgs indexOfObject:uiMsg];
-                TUIMessageCellData *revokeCellData = [self.class getRevokeCellData:uiMsg.innerMessage];
-                [self replaceUIMsg:revokeCellData atIndex:index];
-                [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload atIndex:index animation:YES];
-                [self.dataSource dataProviderDataSourceDidChange:self];
-                break;
-            }
-        }
-        
-        if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveRevokeUIMsg:)]) {
-            [self.dataSource dataProvider:self ReceiveRevokeUIMsg:uiMsg];
-        }
+      @strongify(self);
+      TUIMessageCellData *uiMsg = nil;
+      for (uiMsg in self.uiMsgs) {
+          if ([uiMsg.msgID isEqualToString:msgID]) {
+              [self.dataSource dataProviderDataSourceWillChange:self];
+              NSUInteger index = [self.uiMsgs indexOfObject:uiMsg];
+              TUIMessageCellData *revokeCellData = [self.class getRevokeCellData:uiMsg.innerMessage];
+              [self replaceUIMsg:revokeCellData atIndex:index];
+              [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload atIndex:index animation:YES];
+              [self.dataSource dataProviderDataSourceDidChange:self];
+              break;
+          }
+      }
+
+      if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveRevokeUIMsg:)]) {
+          [self.dataSource dataProvider:self ReceiveRevokeUIMsg:uiMsg];
+      }
     }];
 }
 
@@ -253,56 +268,55 @@
     if (imMsg == nil || ![imMsg isKindOfClass:V2TIMMessage.class]) {
         return;
     }
-    
-    @weakify(self)
+
+    @weakify(self);
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.msgID isEqualToString:imMsg.msgID]) {
-            NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[imMsg]];
+            NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[ imMsg ]];
             for (TUIMessageCellData *cellData in cellDataList) {
                 if ([cellData.msgID isEqualToString:imMsg.msgID]) {
                     cellData.messageReceipt = uiMsg.messageReceipt;
                     break;
                 }
             }
-            [self preProcessMessage:cellDataList callback:^{
-                @strongify(self)
-                if (cellDataList.count > 0) {
-                    /**
-                     * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
-                     * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
-                     */
-                    TUIMessageCellData *cellData = cellDataList.lastObject;
-                    NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-                    if (index < self.uiMsgs.count) {
-                        [self.dataSource dataProviderDataSourceWillChange:self];
-                        [self replaceUIMsg:cellData atIndex:index];
-                        [self.dataSource dataProviderDataSourceChange:self
-                                                             withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
-                                                              atIndex:index
-                                                            animation:YES];
-                        [self.dataSource dataProviderDataSourceDidChange:self];
-                    }
-                }
-            }];
+            [self preProcessMessage:cellDataList
+                           callback:^{
+                             @strongify(self);
+                             if (cellDataList.count > 0) {
+                                 /**
+                                  * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
+                                  * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
+                                  */
+                                 TUIMessageCellData *cellData = cellDataList.lastObject;
+                                 NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
+                                 if (index < self.uiMsgs.count) {
+                                     [self.dataSource dataProviderDataSourceWillChange:self];
+                                     [self replaceUIMsg:cellData atIndex:index];
+                                     [self.dataSource dataProviderDataSourceChange:self
+                                                                          withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
+                                                                           atIndex:index
+                                                                         animation:YES];
+                                     [self.dataSource dataProviderDataSourceDidChange:self];
+                                 }
+                             }
+                           }];
             return;
         }
     }
 }
 - (void)dealTypingByStatusCellData:(TUITypingStatusCellData *)stastusData {
-    
     if (1 == stastusData.typingStatus) {
-        //再次收到对方输入中的通知 则重新计时
-        //The timer is retimed upon receipt of the notification from the other party's input
+        // 再次收到对方输入中的通知 则重新计时
+        // The timer is retimed upon receipt of the notification from the other party's input
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTypingStatus) object:nil];
-        
+
         self.conversationModel.otherSideTyping = YES;
-        self.conversationModel.title = [NSString stringWithFormat:@"%@...",TIMCommonLocalizableString(TUIKitTyping)];
-        
-        //如果对方没有继续输入，每隔5秒结束状态
-        //If the other party does not continue typing, end the status every 5 seconds
+        self.conversationModel.title = [NSString stringWithFormat:@"%@...", TIMCommonLocalizableString(TUIKitTyping)];
+
+        // 如果对方没有继续输入，每隔5秒结束状态
+        // If the other party does not continue typing, end the status every 5 seconds
         [self performSelector:@selector(resetTypingStatus) withObject:nil afterDelay:5.0];
-    }
-    else {
+    } else {
         self.conversationModel.otherSideTyping = NO;
     }
 }
@@ -312,92 +326,87 @@
 }
 
 #pragma mark - Msgs
-- (void)loadMessageSucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock FailBlock:(V2TIMFail)FailBlock
-{
-    if(self.isLoadingData || self.isNoMoreMsg) {
-        FailBlock(ERR_SUCC, @"refreshing");
+- (void)loadMessageSucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))succeedBlock
+                      FailBlock:(V2TIMFail)failBlock {
+    if (self.isLoadingData || self.isNoMoreMsg) {
+        failBlock(ERR_SUCC, @"refreshing");
         return;
     }
     self.isLoadingData = YES;
-    
-    @weakify(self)
+
+    @weakify(self);
     if (self.conversationModel.userID.length > 0) {
-        
         [[V2TIMManager sharedInstance] getC2CHistoryMessageList:self.conversationModel.userID
-                                                          count:self.pageCount
-                                                        lastMsg:self.lastMsg
-                                                           succ:^(NSArray<V2TIMMessage *> *msgs) {
-            @strongify(self);
-            if(msgs.count != 0){
-                self.lastMsg = msgs[msgs.count - 1];
+            count:self.pageCount
+            lastMsg:self.lastMsg
+            succ:^(NSArray<V2TIMMessage *> *msgs) {
+              @strongify(self);
+              if (msgs.count != 0) {
+                  self.lastMsg = msgs[msgs.count - 1];
+              }
+              [self loadMessages:msgs SucceedBlock:succeedBlock];
             }
-            [self loadMessages:msgs SucceedBlock:SucceedBlock];
-        }
-                                                           fail:^(int code, NSString *desc) {
-            @strongify(self)
-            self.isLoadingData = NO;
-            if (FailBlock) {
-                FailBlock(code, desc);
-            }
-        }];
-    }
-    else if (self.conversationModel.groupID.length > 0) {
-        
+            fail:^(int code, NSString *desc) {
+              @strongify(self);
+              self.isLoadingData = NO;
+              if (failBlock) {
+                  failBlock(code, desc);
+              }
+            }];
+    } else if (self.conversationModel.groupID.length > 0) {
         [[V2TIMManager sharedInstance] getGroupHistoryMessageList:self.conversationModel.groupID
-                                                            count:self.pageCount
-                                                          lastMsg:self.lastMsg
-                                                             succ:^(NSArray<V2TIMMessage *> *msgs) {
-            @strongify(self);
-            if(msgs.count != 0) {
-                self.lastMsg = msgs[msgs.count - 1];
+            count:self.pageCount
+            lastMsg:self.lastMsg
+            succ:^(NSArray<V2TIMMessage *> *msgs) {
+              @strongify(self);
+              if (msgs.count != 0) {
+                  self.lastMsg = msgs[msgs.count - 1];
+              }
+              [self loadMessages:msgs SucceedBlock:succeedBlock];
             }
-            [self loadMessages:msgs SucceedBlock:SucceedBlock];
-        }
-                                                             fail:^(int code, NSString *desc) {
-            @strongify(self)
-            self.isLoadingData = NO;
-            if (FailBlock) {
-                FailBlock(code, desc);
-            }
-        }];
+            fail:^(int code, NSString *desc) {
+              @strongify(self);
+              self.isLoadingData = NO;
+              if (failBlock) {
+                  failBlock(code, desc);
+              }
+            }];
     }
 }
 
 - (void)loadMessages:(NSArray<V2TIMMessage *> *)msgs
-        SucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))SucceedBlock
-{
+        SucceedBlock:(void (^)(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs))succeedBlock {
     NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
-    @weakify(self)
-    [self preProcessMessage:uiMsgs callback:^{
-        @strongify(self)
-        if(msgs.count < self.pageCount) {
-            self.isNoMoreMsg = YES;
-        }
-        if(uiMsgs.count != 0) {
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
-            [self insertUIMsgs:uiMsgs atIndexes:indexSet];
-        }
-        
-        self.isLoadingData = NO;
-        if (SucceedBlock) {
-            SucceedBlock(self.isFirstLoad, self.isNoMoreMsg, uiMsgs);
-        }
-        self.isFirstLoad = NO;
-    }];
+    @weakify(self);
+    [self preProcessMessage:uiMsgs
+                   callback:^{
+                     @strongify(self);
+                     if (msgs.count < self.pageCount) {
+                         self.isNoMoreMsg = YES;
+                     }
+                     if (uiMsgs.count != 0) {
+                         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, uiMsgs.count)];
+                         [self insertUIMsgs:uiMsgs atIndexes:indexSet];
+                     }
+
+                     self.isLoadingData = NO;
+                     if (succeedBlock) {
+                         succeedBlock(self.isFirstLoad, self.isNoMoreMsg, uiMsgs);
+                     }
+                     self.isFirstLoad = NO;
+                   }];
 }
 
-- (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs
-                 callback:(void(^)(void))callback   {
-    @weakify(self)
-    [self preProcessReactMessage:uiMsgs reactCallback:^{
-        @strongify(self)
-        [self preProcessReplyMessageV2:uiMsgs callback:callback];
-    }];
-    
+- (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback {
+    @weakify(self);
+    [self preProcessReactMessage:uiMsgs
+                   reactCallback:^{
+                     @strongify(self);
+                     [self preProcessReplyMessageV2:uiMsgs callback:callback];
+                   }];
 }
 
-- (void)preProcessReactMessage:(NSArray<TUIMessageCellData *> *)uiMsgs reactCallback:(void(^)(void))reactCallback
-{
+- (void)preProcessReactMessage:(NSArray<TUIMessageCellData *> *)uiMsgs reactCallback:(void (^)(void))reactCallback {
     if (uiMsgs.count == 0) {
         if (reactCallback) {
             reactCallback();
@@ -406,231 +415,230 @@
     }
     dispatch_group_t group = dispatch_group_create();
     NSArray *arrayWithoutDuplicates = [self getIDsAboutWhoUseModifyMessage:uiMsgs];
-    NSMutableDictionary * modifyUserMap = [NSMutableDictionary dictionaryWithCapacity:3];
-    
+    NSMutableDictionary *modifyUserMap = [NSMutableDictionary dictionaryWithCapacity:3];
+
     dispatch_group_enter(group);
-    if (self.conversationModel.groupID.length>0 && arrayWithoutDuplicates.count > 0) {
-        [[V2TIMManager sharedInstance] getGroupMembersInfo:self.conversationModel.groupID  memberList:arrayWithoutDuplicates succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-            [memberList enumerateObjectsUsingBlock:^(V2TIMGroupMemberFullInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                TUITagsUserModel * userModel = [[TUITagsUserModel alloc] init];
+    if (self.conversationModel.groupID.length > 0 && arrayWithoutDuplicates.count > 0) {
+        [[V2TIMManager sharedInstance] getGroupMembersInfo:self.conversationModel.groupID
+            memberList:arrayWithoutDuplicates
+            succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+              [memberList enumerateObjectsUsingBlock:^(V2TIMGroupMemberFullInfo *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                TUITagsUserModel *userModel = [[TUITagsUserModel alloc] init];
                 userModel.userID = obj.userID;
                 userModel.friendRemark = obj.friendRemark;
                 userModel.nameCard = obj.nameCard;
                 userModel.nickName = obj.nickName;
                 userModel.faceURL = obj.faceURL;
-                if (userModel && userModel.userID.length >0 ) {
+                if (userModel && userModel.userID.length > 0) {
                     [modifyUserMap setObject:userModel forKey:userModel.userID];
                 }
+              }];
+              dispatch_group_leave(group);
+            }
+            fail:^(int code, NSString *desc) {
+              dispatch_group_leave(group);
             }];
-            dispatch_group_leave(group);
-        } fail:^(int code, NSString *desc) {
-            dispatch_group_leave(group);
-        }];
-    }
-    else  {
-        [[V2TIMManager sharedInstance] getFriendsInfo:arrayWithoutDuplicates succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
-            [resultList enumerateObjectsUsingBlock:^(V2TIMFriendInfoResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                TUITagsUserModel * userModel = [[TUITagsUserModel alloc] init];
+    } else {
+        [[V2TIMManager sharedInstance] getFriendsInfo:arrayWithoutDuplicates
+            succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
+              [resultList enumerateObjectsUsingBlock:^(V2TIMFriendInfoResult *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                TUITagsUserModel *userModel = [[TUITagsUserModel alloc] init];
                 userModel.userID = obj.friendInfo.userID;
                 userModel.nickName = obj.friendInfo.userFullInfo.nickName;
                 userModel.friendRemark = obj.friendInfo.friendRemark;
                 userModel.faceURL = obj.friendInfo.userFullInfo.faceURL;
-                if (userModel && userModel.userID.length >0 ) {
+                if (userModel && userModel.userID.length > 0) {
                     [modifyUserMap setObject:userModel forKey:userModel.userID];
                 }
+              }];
+
+              dispatch_group_leave(group);
+            }
+            fail:^(int code, NSString *desc) {
+              dispatch_group_leave(group);
             }];
-            
-            dispatch_group_leave(group);
-            
-        } fail:^(int code, NSString *desc) {
-            dispatch_group_leave(group);
-            
-        }];
-        
     }
-    
-    
+
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        for (TUIMessageCellData *cellData in uiMsgs) {
-            TUIMessageCellData *myData = (TUIMessageCellData *)cellData;
-            
-            if([modifyUserMap allKeys].count > 0) {
-                myData.messageModifyUserInfos = modifyUserMap;
-            }
-            
-            __weak typeof(myData) weakMyData = myData;
-            static TUIMessageCell * cell = nil;
-            if (cell == nil) {
-                cell = [[TUIMessageCell alloc] initWithFrame:CGRectZero];
-            }
-            if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count >0 ) {
-                [cell prepareReactTagUI:cell.container];
-                [cell fillWithData:myData];
-                [cell layoutIfNeeded];
-                [cell.tagView updateView];
-                weakMyData.messageModifyReactsSize = cell.tagView.frame.size;
-            }
-        }
-        
-        if (reactCallback) {
-            reactCallback();
-        }
+      for (TUIMessageCellData *cellData in uiMsgs) {
+          TUIMessageCellData *myData = (TUIMessageCellData *)cellData;
+
+          if ([modifyUserMap allKeys].count > 0) {
+              myData.messageModifyUserInfos = modifyUserMap;
+          }
+
+          __weak typeof(myData) weakMyData = myData;
+          static TUIMessageCell *cell = nil;
+          if (cell == nil) {
+              cell = [[TUIMessageCell alloc] initWithFrame:CGRectZero];
+          }
+          if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count > 0) {
+              [cell prepareReactTagUI:cell.container];
+              [cell fillWithData:myData];
+              [cell layoutIfNeeded];
+              [cell.tagView updateView];
+              weakMyData.messageModifyReactsSize = cell.tagView.frame.size;
+          }
+      }
+
+      if (reactCallback) {
+          reactCallback();
+      }
     });
 }
 
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback
-{
+- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback {
     return;
 }
 
 // Find all ids that who use React Emoji / reply
 - (NSArray *)getIDsAboutWhoUseModifyMessage:(NSArray<TUIMessageCellData *> *)uiMsgs {
     NSMutableArray *hasReactArray = [NSMutableArray arrayWithCapacity:3];
-    
+
     for (TUIMessageCellData *cellData in uiMsgs) {
         TUIMessageCellData *myData = (TUIMessageCellData *)cellData;
-        
+
         // Emoji React
-        if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count >0 ) {
-            [myData.messageModifyReacts enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-                
-                if (obj &&[obj isKindOfClass:NSArray.class] ) {
-                    NSArray *arr = (NSArray *)obj;
-                    if (arr.count >0) {
-                        [hasReactArray addObjectsFromArray:obj];
-                    }
-                }
+        if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count > 0) {
+            [myData.messageModifyReacts enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
+              if (obj && [obj isKindOfClass:NSArray.class]) {
+                  NSArray *arr = (NSArray *)obj;
+                  if (arr.count > 0) {
+                      [hasReactArray addObjectsFromArray:obj];
+                  }
+              }
             }];
         }
-        
+
         // Replies
-        if ([myData.messageModifyReplies isKindOfClass:NSArray.class] && myData.messageModifyReplies.count >0 ) {
-            [myData.messageModifyReplies enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (obj &&[obj isKindOfClass:NSDictionary.class] ) {
-                    NSDictionary *dic = (NSDictionary *)obj;
-                    if (IS_NOT_EMPTY_NSSTRING(dic[@"messageSender"])) {
-                        [hasReactArray addObject:dic[@"messageSender"]];
-                    }
-                }
+        if ([myData.messageModifyReplies isKindOfClass:NSArray.class] && myData.messageModifyReplies.count > 0) {
+            [myData.messageModifyReplies enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+              if (obj && [obj isKindOfClass:NSDictionary.class]) {
+                  NSDictionary *dic = (NSDictionary *)obj;
+                  if (IS_NOT_EMPTY_NSSTRING(dic[@"messageSender"])) {
+                      [hasReactArray addObject:dic[@"messageSender"]];
+                  }
+              }
             }];
         }
     }
-    
+
     NSSet *set = [NSSet setWithArray:hasReactArray];
     NSArray *arrayWithoutOrder = [set allObjects];
     return arrayWithoutOrder;
 }
 
 - (void)sendUIMsg:(TUIMessageCellData *)uiMsg
-   toConversation:(TUIChatConversationModel *)conversationData
-    willSendBlock:(void(^)(BOOL isReSend, TUIMessageCellData *dateUIMsg))willSendBlock
-        SuccBlock:(nullable V2TIMSucc)succ
-        FailBlock:(nullable V2TIMFail)fail
-{
-    [self preProcessMessage:@[uiMsg] callback:^{
-        [TUITool dispatchMainAsync:^{
-            V2TIMMessage *imMsg = uiMsg.innerMessage;
-            TUIMessageCellData *dateMsg = nil;
-            BOOL isReSent = NO;
-            if (uiMsg.status == Msg_Status_Init) {
-                // New message
-                dateMsg = [self getSystemMsgFromDate:imMsg.timestamp];
-            } else if (imMsg) {
-                // Re-sent
-                isReSent = YES;
-                dateMsg = [self getSystemMsgFromDate:[NSDate date]];
-            } else {
-                if (fail) {
-                    fail(ERR_INVALID_PARAMETERS, @"Unknown message state");
-                }
-                return;
-            }
-            
-            imMsg.isExcludedFromUnreadCount = [TUIConfig defaultConfig].isExcludedFromUnreadCount;
-            imMsg.isExcludedFromLastMessage = [TUIConfig defaultConfig].isExcludedFromLastMessage;
-            
-            // Update send status
-            uiMsg.status = Msg_Status_Sending;
-            
-            // Update sender
-            uiMsg.identifier = [TUILogin getUserID];
-            
-            [self.dataSource dataProviderDataSourceWillChange:self];
-            
-            // Handle data
-            if (isReSent) {
-                NSInteger row = [self.uiMsgs indexOfObject:uiMsg];
-                [self removeUImsgAtIndex:row];
-                [self.dataSource dataProviderDataSourceChange:self
-                                                     withType:TUIMessageBaseDataProviderDataSourceChangeTypeDelete
-                                                      atIndex:row
-                                                    animation:YES];
-            }
-            if (dateMsg) {
-                [self addUIMsg:dateMsg];
-                [self.dataSource dataProviderDataSourceChange:self
-                                                     withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
-                                                      atIndex:(self.uiMsgs.count - 1)
-                                                    animation:YES];
-            }
-            [self addUIMsg:uiMsg];
-            [self.dataSource dataProviderDataSourceChange:self
-                                                 withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
-                                                  atIndex:(self.uiMsgs.count - 1)
-                                                animation:self];
-            
-            [self.dataSource dataProviderDataSourceDidChange:self];
-            
-            if (willSendBlock) {
-                willSendBlock(isReSent, dateMsg);
-            }
-            
-            if (dateMsg) {
-                self.msgForDate = imMsg;
-            }
-            
-            uiMsg.msgID = [self.class sendMessage:imMsg
-                                    toConversation:conversationData
-                                    isSendPushInfo:YES
-                                   isOnlineUserOnly:NO
-                                           priority:V2TIM_PRIORITY_NORMAL
-                                           Progress:^(uint32_t progress) {
-                [TUIMessageProgressManager.shareManager appendProgress:uiMsg.msgID progress:progress];
-            }
-                                        
-                                        SuccBlock:^{
-                                                        if (succ) {
-                                                            succ();
-                                                        }
-                                                        [TUIMessageProgressManager.shareManager notifyMessageSendingResult:uiMsg.msgID
-                                                                                                                    result:TUIMessageSendingResultTypeSucc];
-                                                    } FailBlock:^(int code, NSString *desc) {
-                                                        if (fail) {
-                                                            fail(code, desc);
-                                                        }
-                                                        [TUIMessageProgressManager.shareManager notifyMessageSendingResult:uiMsg.msgID
-                                                                                                                    result:TUIMessageSendingResultTypeFail];
-                                                    }];
-            uiMsg.name = [self.class getShowName:uiMsg.innerMessage];
-            
-            /**
-             * 注意：innerMessage.faceURL 在sendMessage 内部赋值，所以需要放在最后面。 TUIMessageCell 内部监听了 avatarUrl 的变更,所以不需要再次刷新。
-             * Notes: innerMessage.faceURL is assigned inside sendMessage, so it needs to be last. TUIMessageCell internally monitors changes to avatarUrl, so it doesn't need to be refreshed again.
-             */
-            uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
-            
-            /**
-             * 发送消息需要携带【identifier】，否则再次发送消息，点击【我】的头像会导致无法进入的个人信息页面
-             * Sending a message needs to carry [identifier], otherwise sending the message again, clicking on the avatar of [Me] will result in an inaccessible personal information page
-             */
-            uiMsg.identifier = [uiMsg.innerMessage sender];
-        }];
-    }];
+    toConversation:(TUIChatConversationModel *)conversationData
+     willSendBlock:(void (^)(BOOL isReSend, TUIMessageCellData *dateUIMsg))willSendBlock
+         SuccBlock:(nullable V2TIMSucc)succ
+         FailBlock:(nullable V2TIMFail)fail {
+    [self preProcessMessage:@[ uiMsg ]
+                   callback:^{
+                     [TUITool dispatchMainAsync:^{
+                       V2TIMMessage *imMsg = uiMsg.innerMessage;
+                       TUIMessageCellData *dateMsg = nil;
+                       BOOL isReSent = NO;
+                       if (uiMsg.status == Msg_Status_Init) {
+                           // New message
+                           dateMsg = [self getSystemMsgFromDate:imMsg.timestamp];
+                       } else if (imMsg) {
+                           // Re-sent
+                           isReSent = YES;
+                           dateMsg = [self getSystemMsgFromDate:[NSDate date]];
+                       } else {
+                           if (fail) {
+                               fail(ERR_INVALID_PARAMETERS, @"Unknown message state");
+                           }
+                           return;
+                       }
+
+                       imMsg.isExcludedFromUnreadCount = [TUIConfig defaultConfig].isExcludedFromUnreadCount;
+                       imMsg.isExcludedFromLastMessage = [TUIConfig defaultConfig].isExcludedFromLastMessage;
+
+                       // Update send status
+                       uiMsg.status = Msg_Status_Sending;
+
+                       // Update sender
+                       uiMsg.identifier = [TUILogin getUserID];
+
+                       [self.dataSource dataProviderDataSourceWillChange:self];
+
+                       // Handle data
+                       if (isReSent) {
+                           NSInteger row = [self.uiMsgs indexOfObject:uiMsg];
+                           [self removeUImsgAtIndex:row];
+                           [self.dataSource dataProviderDataSourceChange:self
+                                                                withType:TUIMessageBaseDataProviderDataSourceChangeTypeDelete
+                                                                 atIndex:row
+                                                               animation:YES];
+                       }
+                       if (dateMsg) {
+                           [self addUIMsg:dateMsg];
+                           [self.dataSource dataProviderDataSourceChange:self
+                                                                withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
+                                                                 atIndex:(self.uiMsgs.count - 1)
+                                                               animation:YES];
+                       }
+                       [self addUIMsg:uiMsg];
+                       [self.dataSource dataProviderDataSourceChange:self
+                                                            withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
+                                                             atIndex:(self.uiMsgs.count - 1)
+                                                           animation:self];
+
+                       [self.dataSource dataProviderDataSourceDidChange:self];
+
+                       if (willSendBlock) {
+                           willSendBlock(isReSent, dateMsg);
+                       }
+
+                       if (dateMsg) {
+                           self.msgForDate = imMsg;
+                       }
+
+                       TUISendMessageAppendParams *appendParams = [[TUISendMessageAppendParams alloc] init];
+                       appendParams.isSendPushInfo = YES;
+                       appendParams.isOnlineUserOnly = NO;
+                       appendParams.priority = V2TIM_PRIORITY_NORMAL;
+                       uiMsg.msgID = [self.class sendMessage:imMsg
+                           toConversation:conversationData
+                           appendParams:appendParams
+                           Progress:^(uint32_t progress) {
+                             [TUIMessageProgressManager.shareManager appendUploadProgress:uiMsg.msgID progress:progress];
+                           }
+
+                           SuccBlock:^{
+                             if (succ) {
+                                 succ();
+                             }
+                             [TUIMessageProgressManager.shareManager notifyMessageSendingResult:uiMsg.msgID result:TUIMessageSendingResultTypeSucc];
+                           }
+                           FailBlock:^(int code, NSString *desc) {
+                             if (fail) {
+                                 fail(code, desc);
+                             }
+                             [TUIMessageProgressManager.shareManager notifyMessageSendingResult:uiMsg.msgID result:TUIMessageSendingResultTypeFail];
+                           }];
+                       uiMsg.name = [self.class getShowName:uiMsg.innerMessage];
+
+                       /**
+                        * 注意：innerMessage.faceURL 在sendMessage 内部赋值，所以需要放在最后面。 TUIMessageCell 内部监听了 avatarUrl
+                        * 的变更,所以不需要再次刷新。 Notes: innerMessage.faceURL is assigned inside sendMessage, so it needs to be last. TUIMessageCell
+                        * internally monitors changes to avatarUrl, so it doesn't need to be refreshed again.
+                        */
+                       uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
+
+                       /**
+                        * 发送消息需要携带【identifier】，否则再次发送消息，点击【我】的头像会导致无法进入的个人信息页面
+                        * Sending a message needs to carry [identifier], otherwise sending the message again, clicking on the avatar of [Me] will result in an
+                        * inaccessible personal information page
+                        */
+                       uiMsg.identifier = [uiMsg.innerMessage sender];
+                     }];
+                   }];
 }
 
-- (void)revokeUIMsg:(TUIMessageCellData *)uiMsg
-          SuccBlock:(nullable V2TIMSucc)succ
-          FailBlock:(nullable V2TIMFail)fail {
+- (void)revokeUIMsg:(TUIMessageCellData *)uiMsg SuccBlock:(nullable V2TIMSucc)succ FailBlock:(nullable V2TIMFail)fail {
     V2TIMMessage *imMsg = uiMsg.innerMessage;
     if (imMsg == nil) {
         if (fail) {
@@ -645,23 +653,21 @@
         }
         return;
     }
-    
+
     @weakify(self);
-    [self.class revokeMessage:imMsg succ:^{
-        @strongify(self);
-        [self onRecvMessageRevoked:imMsg.msgID];
-        if (succ) {
-            succ();
-        }
-    } fail:fail];
+    [self.class revokeMessage:imMsg
+                         succ:^{
+                           @strongify(self);
+                           [self onRecvMessageRevoked:imMsg.msgID];
+                           if (succ) {
+                               succ();
+                           }
+                         }
+                         fail:fail];
 }
 
-- (void)deleteUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs
-           SuccBlock:(nullable V2TIMSucc)succ
-           FailBlock:(nullable V2TIMFail)fail {
-    
+- (void)deleteUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs SuccBlock:(nullable V2TIMSucc)succ FailBlock:(nullable V2TIMFail)fail {
 }
-
 
 - (void)addUIMsg:(TUIMessageCellData *)cellData {
     [self.uiMsgs_ addObject:cellData];
@@ -770,7 +776,7 @@
 }
 
 - (void)sendLatestMessageReadReceipt {
-    [self sendMessageReadReceiptAtIndexes:@[@(self.uiMsgs.count - 1)]];
+    [self sendMessageReadReceiptAtIndexes:@[ @(self.uiMsgs.count - 1) ]];
 }
 
 - (void)sendMessageReadReceiptAtIndexes:(NSArray *)indexes {
@@ -811,7 +817,7 @@
 }
 
 - (NSInteger)getIndexOfMessage:(NSString *)msgID {
-    if (msgID.length == 0){
+    if (msgID.length == 0) {
         return -1;
     }
     for (int i = 0; i < self.uiMsgs.count; i++) {
@@ -824,8 +830,7 @@
 }
 
 - (nullable TUIMessageCellData *)getSystemMsgFromDate:(NSDate *)date {
-    if (self.msgForDate == nil
-       || fabs([date timeIntervalSinceDate:self.msgForDate.timestamp]) > MaxDateMessageDelay) {
+    if (self.msgForDate == nil || fabs([date timeIntervalSinceDate:self.msgForDate.timestamp]) > MaxDateMessageDelay) {
         TUIMessageCellData *system = [self.class getSystemMsgFromDate:date];
         return system;
     }
@@ -834,53 +839,54 @@
 
 @end
 
-
 @implementation TUIMessageBaseDataProvider (IMSDK)
 
 + (NSString *)sendMessage:(V2TIMMessage *)message
            toConversation:(TUIChatConversationModel *)conversationData
-           isSendPushInfo:(BOOL)isSendPushInfo
-         isOnlineUserOnly:(BOOL)isOnlineUserOnly
-                 priority:(V2TIMMessagePriority)priority
+             appendParams:(TUISendMessageAppendParams *)appendParams
                  Progress:(nullable V2TIMProgress)progress
                 SuccBlock:(nullable V2TIMSucc)succ
-                FailBlock:(nullable V2TIMFail)fail
-{
+                FailBlock:(nullable V2TIMFail)fail {
     NSString *userID = conversationData.userID;
     NSString *groupID = conversationData.groupID;
     NSAssert(userID || groupID, @"userID and groupID cannot be null at same time");
     NSString *conversationID = @"";
-    
+    if (!appendParams) {
+        NSLog(@"appendParams cannot be nil");
+    }
+    BOOL isSendPushInfo = appendParams.isSendPushInfo;
+    BOOL isOnlineUserOnly = appendParams.isOnlineUserOnly;
+    V2TIMMessagePriority priority = appendParams.priority;
     if (IS_NOT_EMPTY_NSSTRING(userID)) {
         conversationID = [NSString stringWithFormat:@"c2c_%@", userID];
     }
-    
+
     if (IS_NOT_EMPTY_NSSTRING(groupID)) {
-        conversationID = [NSString stringWithFormat:@"group_%@",groupID];
+        conversationID = [NSString stringWithFormat:@"group_%@", groupID];
     }
-    
+
     if (IS_NOT_EMPTY_NSSTRING(conversationData.conversationID)) {
         conversationID = conversationData.conversationID;
     }
-    
+
     NSParameterAssert(message);
-    
+
     V2TIMOfflinePushInfo *pushInfo = nil;
     if (isSendPushInfo) {
         pushInfo = [[V2TIMOfflinePushInfo alloc] init];
         BOOL isGroup = groupID.length > 0;
         NSString *senderId = isGroup ? (groupID) : ([TUILogin getUserID]);
-        senderId = senderId?:@"";
-        NSString *nickName = isGroup ? (conversationData.title) : ([TUILogin getNickName]?:[TUILogin getUserID]);
+        senderId = senderId ?: @"";
+        NSString *nickName = isGroup ? (conversationData.title) : ([TUILogin getNickName] ?: [TUILogin getUserID]);
         nickName = nickName ?: @"";
         NSDictionary *ext = @{
-            @"entity": @{
-                    @"action": @1,
-                    @"content": [self getDisplayString:message]?:@"",
-                    @"sender": senderId,
-                    @"nickname": nickName,
-                    @"faceUrl": [TUILogin getFaceUrl]?:@"",
-                    @"chatType": isGroup?@(V2TIM_GROUP):@(V2TIM_C2C)
+            @"entity" : @{
+                @"action" : @1,
+                @"content" : [self getDisplayString:message] ?: @"",
+                @"sender" : senderId,
+                @"nickname" : nickName,
+                @"faceUrl" : [TUILogin getFaceUrl] ?: @"",
+                @"chatType" : isGroup ? @(V2TIM_GROUP) : @(V2TIM_C2C)
             }
         };
         NSData *data = [NSJSONSerialization dataWithJSONObject:ext options:NSJSONWritingPrettyPrinted error:nil];
@@ -890,42 +896,41 @@
         pushInfo.AndroidHuaWeiCategory = @"IM";
         pushInfo.AndroidVIVOCategory = @"IM";
     }
-    if ([self isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] ||
-        [self isGroupAVChatRoom:conversationData.groupType]) {
+    if ([self isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] || [self isGroupAVChatRoom:conversationData.groupType]) {
         message.needReadReceipt = NO;
     }
-    
+
     // 被隐藏的会话从通讯录入口唤起聊天页面-发送消息，需要清空被隐藏标记
     // Hidden conversation evokes the chat page from the address book entry - to send a message, the hidden flag needs to be cleared
-    if (conversationID.length>0) {
-        [V2TIMManager.sharedInstance markConversation:@[conversationID] markType:@(V2TIM_CONVERSATION_MARK_TYPE_HIDE) enableMark:NO succ:nil fail:nil];
+    if (conversationID.length > 0) {
+        [V2TIMManager.sharedInstance markConversation:@[ conversationID ] markType:@(V2TIM_CONVERSATION_MARK_TYPE_HIDE) enableMark:NO succ:nil fail:nil];
     }
-    
+
     if (conversationData.userID.length > 0) {
-        //C2C
-        NSDictionary * cloudCustomDataDic = @{
-                @"needTyping":@1,
-                @"version":@1,
+        // C2C
+        NSDictionary *cloudCustomDataDic = @{
+            @"needTyping" : @1,
+            @"version" : @1,
         };
         [message setCloudCustomData:cloudCustomDataDic forType:messageFeature];
     }
-    
+
     return [V2TIMManager.sharedInstance sendMessage:message
-                                           receiver:userID
-                                            groupID:groupID
-                                           priority:priority
-                                     onlineUserOnly:isOnlineUserOnly
-                                    offlinePushInfo:pushInfo
-                                           progress:progress
-                                               succ:^{
-        succ();
-    }
-                                               fail:^(int code, NSString *desc) {
-        if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-            [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead)];
+        receiver:userID
+        groupID:groupID
+        priority:priority
+        onlineUserOnly:isOnlineUserOnly
+        offlinePushInfo:pushInfo
+        progress:progress
+        succ:^{
+          succ();
         }
-        fail(code, desc);
-    }];
+        fail:^(int code, NSString *desc) {
+          if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+              [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead)];
+          }
+          fail(code, desc);
+        }];
 }
 
 + (BOOL)isGroupCommunity:(NSString *)groupType groupID:(NSString *)groupID {
@@ -936,47 +941,40 @@
     return [groupType isEqualToString:@"AVChatRoom"];
 }
 
-+ (void)markC2CMessageAsRead:(NSString *)userID
-                        succ:(nullable V2TIMSucc)succ
-                        fail:(nullable V2TIMFail)fail {
++ (void)markC2CMessageAsRead:(NSString *)userID succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail {
     [[V2TIMManager sharedInstance] markC2CMessageAsRead:userID succ:succ fail:fail];
 }
 
-+ (void)markGroupMessageAsRead:(NSString *)groupID
-                          succ:(nullable V2TIMSucc)succ
-                          fail:(nullable V2TIMFail)fail {
++ (void)markGroupMessageAsRead:(NSString *)groupID succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail {
     [[V2TIMManager sharedInstance] markGroupMessageAsRead:groupID succ:succ fail:fail];
 }
 
-+ (void)markConversationAsUndead:(NSArray<NSString *> *)conversationIDList enableMark:(BOOL)enableMark  {
++ (void)markConversationAsUndead:(NSArray<NSString *> *)conversationIDList enableMark:(BOOL)enableMark {
     [V2TIMManager.sharedInstance markConversation:conversationIDList markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD) enableMark:enableMark succ:nil fail:nil];
 }
 
-+ (void)revokeMessage:(V2TIMMessage *)msg
-                 succ:(nullable V2TIMSucc)succ
-                 fail:(nullable V2TIMFail)fail {
++ (void)revokeMessage:(V2TIMMessage *)msg succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail {
     [[V2TIMManager sharedInstance] revokeMessage:msg succ:succ fail:fail];
 }
 
-+ (void)deleteMessages:(NSArray<V2TIMMessage *>*)msgList
-                  succ:(nullable V2TIMSucc)succ
-                  fail:(nullable V2TIMFail)fail{
++ (void)deleteMessages:(NSArray<V2TIMMessage *> *)msgList succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail {
     [[V2TIMManager sharedInstance] deleteMessages:msgList succ:succ fail:fail];
 }
 
-+ (void)modifyMessage:(V2TIMMessage *)msg
-           completion:(V2TIMMessageModifyCompletion)completion {
++ (void)modifyMessage:(V2TIMMessage *)msg completion:(V2TIMMessageModifyCompletion)completion {
     [[V2TIMManager sharedInstance] modifyMessage:msg completion:completion];
 }
 
 + (void)sendMessageReadReceipts:(NSArray *)msgs {
-    [[V2TIMManager sharedInstance] sendMessageReadReceipts:msgs succ:^{
-        NSLog(@"sendMessageReadReceipts succeed");
-    } fail:^(int code, NSString *desc) {
-        if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-            [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead)];
+    [[V2TIMManager sharedInstance] sendMessageReadReceipts:msgs
+        succ:^{
+          NSLog(@"sendMessageReadReceipts succeed");
         }
-    }];
+        fail:^(int code, NSString *desc) {
+          if (code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+              [TUITool postUnsupportNotificationOfService:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead)];
+          }
+        }];
 }
 
 + (void)getReadMembersOfMessage:(V2TIMMessage *)msg
@@ -984,24 +982,22 @@
                         nextSeq:(NSUInteger)nextSeq
                      completion:(void (^)(int code, NSString *desc, NSArray *members, NSUInteger nextSeq, BOOL isFinished))block {
     [[V2TIMManager sharedInstance] getGroupMessageReadMemberList:msg
-                                                          filter:filter
-                                                         nextSeq:nextSeq
-                                                           count:100
-                                                            succ:^(NSMutableArray<V2TIMGroupMemberInfo *> *members, uint64_t nextSeq, BOOL isFinished) {
-        if (block) {
-            block(0, nil, members, nextSeq, isFinished);
+        filter:filter
+        nextSeq:nextSeq
+        count:100
+        succ:^(NSMutableArray<V2TIMGroupMemberInfo *> *members, uint64_t nextSeq, BOOL isFinished) {
+          if (block) {
+              block(0, nil, members, nextSeq, isFinished);
+          }
         }
-    } fail:^(int code, NSString *desc) {
-        if (block) {
-            block(code, desc, nil, 0, NO);
-        }
-    }];
+        fail:^(int code, NSString *desc) {
+          if (block) {
+              block(code, desc, nil, 0, NO);
+          }
+        }];
 }
 
-
-+ (void)getMessageReadReceipt:(NSArray *)messages
-                         succ:(nullable V2TIMMessageReadReceiptsSucc)succ
-                         fail:(nullable V2TIMFail)fail {
++ (void)getMessageReadReceipt:(NSArray *)messages succ:(nullable V2TIMMessageReadReceiptsSucc)succ fail:(nullable V2TIMFail)fail {
     if (messages.count == 0) {
         if (fail) {
             fail(-1, @"messages empty");
@@ -1011,7 +1007,7 @@
     [[V2TIMManager sharedInstance] getMessageReadReceipts:messages succ:succ fail:fail];
 }
 
-+ (TUIMessageCellData * __nullable)getCellData:(V2TIMMessage *)message {
++ (TUIMessageCellData *__nullable)getCellData:(V2TIMMessage *)message {
     // subclass override required
     return nil;
 }
@@ -1033,21 +1029,20 @@
 
 + (NSString *)getRevokeDispayString:(V2TIMMessage *)message {
     NSString *str = nil;
-    if(message.isSelf){
+    if (message.isSelf) {
         str = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
-    }
-    else if(message.groupID != nil){
-        NSString *userString = message.nameCard;;
-        if(userString.length == 0){
+    } else if (message.groupID != nil) {
+        NSString *userString = message.nameCard;
+        ;
+        if (userString.length == 0) {
             userString = message.nickName;
         }
         if (userString.length == 0) {
             userString = message.sender;
         }
         str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString];
-    }
-    else if(message.userID != nil){
-        str = TIMCommonLocalizableString(TUIkitMessageTipsOthersRecallMessage);
+    } else if (message.userID != nil) {
+        str = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
     }
     return str;
 }
@@ -1058,171 +1053,144 @@
     NSMutableArray<NSString *> *userList = [self getUserNameList:tips.memberList];
     NSString *str = nil;
     switch (tips.type) {
-            case V2TIM_GROUP_TIPS_TYPE_JOIN:
-            {
-                if (opUser.length > 0) {
-                    if ((userList.count == 0) ||
-                        (userList.count == 1 && [opUser isEqualToString:userList.firstObject])) {
-                        str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser];
-                    } else {
-                        NSString *users = [userList componentsJoinedByString:@"、"];
-                        str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
-                    }
-                }
-            }
-                break;
-            case V2TIM_GROUP_TIPS_TYPE_INVITE:
-            {
-                if (userList.count > 0) {
+        case V2TIM_GROUP_TIPS_TYPE_JOIN: {
+            if (opUser.length > 0) {
+                if ((userList.count == 0) || (userList.count == 1 && [opUser isEqualToString:userList.firstObject])) {
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsJoinGroupFormat), opUser];
+                } else {
                     NSString *users = [userList componentsJoinedByString:@"、"];
                     str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
                 }
             }
-                break;
-            case V2TIM_GROUP_TIPS_TYPE_QUIT:
-            {
-                if (opUser.length > 0) {
-                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser];
-                }
+        } break;
+        case V2TIM_GROUP_TIPS_TYPE_INVITE: {
+            if (userList.count > 0) {
+                NSString *users = [userList componentsJoinedByString:@"、"];
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsInviteJoinGroupFormat), opUser, users];
             }
-                break;
-            case V2TIM_GROUP_TIPS_TYPE_KICKED:
-            {
-                if (userList.count > 0) {
-                    NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users];
-                }
+        } break;
+        case V2TIM_GROUP_TIPS_TYPE_QUIT: {
+            if (opUser.length > 0) {
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsLeaveGroupFormat), opUser];
             }
-                break;
-            case V2TIM_GROUP_TIPS_TYPE_SET_ADMIN:
-            {
-                if (userList.count > 0) {
-                    NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsSettAdminFormat), users];
-                }
+        } break;
+        case V2TIM_GROUP_TIPS_TYPE_KICKED: {
+            if (userList.count > 0) {
+                NSString *users = [userList componentsJoinedByString:@"、"];
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsKickoffGroupFormat), opUser, users];
             }
-                break;
-            case V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN:
-            {
-                if (userList.count > 0) {
-                    NSString *users = [userList componentsJoinedByString:@"、"];
-                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsCancelAdminFormat), users];
-                }
+        } break;
+        case V2TIM_GROUP_TIPS_TYPE_SET_ADMIN: {
+            if (userList.count > 0) {
+                NSString *users = [userList componentsJoinedByString:@"、"];
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsSettAdminFormat), users];
             }
-                break;
-            case V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE:
-            {
-                str = [NSString stringWithFormat:@"\"%@\"", opUser];
-                for (V2TIMGroupChangeInfo *info in tips.groupChangeInfoList) {
-                    switch (info.type) {
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME:
-                        {
-                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value];
-                        }
-                            break;
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION:
-                        {
-                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value];
-                        }
-                            break;
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION:
-                        {
-                            if (info.value.length) {
-                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value];
-                            } else {
-                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsDeleteGroupAnnounceFormat), str];
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE:
-                        {
-                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str];
-                        }
-                            break;
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
-                        {
-                            if (userList.count) {
-                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
-                            } else {
-                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value];
-                            }
-
-                        }
-                            break;
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL:
-                        {
-                            if (info.boolValue) {
-                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSetShutupAllFormat), opUser];
-                            } else {
-                                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitCancelShutupAllFormat), opUser];
-                            }
-                        }
-                            break;
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT:
-                        {
-                            uint32_t addOpt = info.intValue;
-                            NSString *addOptDesc = @"unknown";
-                            if (addOpt == V2TIM_GROUP_ADD_FORBID) {
-                                addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileJoinDisable);
-                            } else if (addOpt == V2TIM_GROUP_ADD_AUTH) {
-                                addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAdminApprove);
-                            } else if (addOpt == V2TIM_GROUP_ADD_ANY) {
-                                addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAutoApproval);
-                            }
-                            str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAddOptFormat), str, addOptDesc];
-                        }
-                            break;
-                        case V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_APPROVE_OPT:
-                        {
-                            uint32_t addOpt = info.intValue;
-                            NSString *addOptDesc = @"unknown";
-                            if (addOpt == V2TIM_GROUP_ADD_FORBID) {
-                                addOptDesc = TUIKitLocalizableString(TUIKitGroupProfileJoinDisable);
-                            } else if (addOpt == V2TIM_GROUP_ADD_AUTH) {
-                                addOptDesc = TUIKitLocalizableString(TUIKitGroupProfileAdminApprove);
-                            } else if (addOpt == V2TIM_GROUP_ADD_ANY) {
-                                addOptDesc = TUIKitLocalizableString(TUIKitGroupProfileAutoApproval);
-                            }
-                            str = [NSString stringWithFormat:TUIKitLocalizableString(TUIKitMessageTipsEditGroupInviteOptFormat), str, addOptDesc];
-                        }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                if (str.length > 0) {
-                    str = [str substringToIndex:str.length - 1];
-                }
+        } break;
+        case V2TIM_GROUP_TIPS_TYPE_CANCEL_ADMIN: {
+            if (userList.count > 0) {
+                NSString *users = [userList componentsJoinedByString:@"、"];
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsCancelAdminFormat), users];
             }
-                break;
-        case V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE:
-        {
+        } break;
+        case V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE: {
+            str = [self opGroupInfoChagedFormatStr:opUser ofUserList:userList ofTips:tips];
+            if (str.length > 0) {
+                str = [str substringToIndex:str.length - 1];
+            }
+        } break;
+        case V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE: {
             for (V2TIMGroupChangeInfo *info in tips.memberChangeInfoList) {
                 if ([info isKindOfClass:V2TIMGroupMemberChangeInfo.class]) {
                     NSString *userId = [(V2TIMGroupMemberChangeInfo *)info userID];
                     int32_t muteTime = [(V2TIMGroupMemberChangeInfo *)info muteTime];
                     NSString *myId = V2TIMManager.sharedInstance.getLoginUser;
                     NSString *showName = [self.class getUserName:tips with:userId];
-                    str = [NSString stringWithFormat:@"%@ %@", [userId isEqualToString:myId] ? TIMCommonLocalizableString(You) : showName, muteTime == 0 ? TIMCommonLocalizableString(TUIKitMessageTipsUnmute): TIMCommonLocalizableString(TUIKitMessageTipsMute)];
+                    str = [NSString stringWithFormat:@"%@ %@", [userId isEqualToString:myId] ? TIMCommonLocalizableString(You) : showName,
+                                                     muteTime == 0 ? TIMCommonLocalizableString(TUIKitMessageTipsUnmute)
+                                                                   : TIMCommonLocalizableString(TUIKitMessageTipsMute)];
                     break;
                 }
             }
-        }
+        } break;
+        default:
             break;
-            default:
-                break;
-        }
+    }
     return str;
 }
-
 
 + (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data {
     return [[V2TIMManager sharedInstance] createCustomMessage:data];
 }
 
-+ (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info{
++ (NSString *)opGroupInfoChagedFormatStr:(NSString *)opUser ofUserList:(NSMutableArray<NSString *> *)userList ofTips:(V2TIMGroupTipsElem *)tips{
+    NSString *str = nil;
+    str = [NSString stringWithFormat:@"\"%@\"", opUser];
+    for (V2TIMGroupChangeInfo *info in tips.groupChangeInfoList) {
+        switch (info.type) {
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME: {
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIkitMessageTipsEditGroupNameFormat), str, info.value];
+            } break;
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION: {
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupIntroFormat), str, info.value];
+            } break;
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION: {
+                if (info.value.length) {
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAnnounceFormat), str, info.value];
+                } else {
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsDeleteGroupAnnounceFormat), str];
+                }
+            } break;
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_FACE: {
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAvatarFormat), str];
+            } break;
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER: {
+                if (userList.count) {
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, userList.firstObject];
+                } else {
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupOwnerFormat), str, info.value];
+                }
+
+            } break;
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL: {
+                if (info.boolValue) {
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSetShutupAllFormat), opUser];
+                } else {
+                    str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitCancelShutupAllFormat), opUser];
+                }
+            } break;
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT: {
+                uint32_t addOpt = info.intValue;
+                NSString *addOptDesc = @"unknown";
+                if (addOpt == V2TIM_GROUP_ADD_FORBID) {
+                    addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileJoinDisable);
+                } else if (addOpt == V2TIM_GROUP_ADD_AUTH) {
+                    addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAdminApprove);
+                } else if (addOpt == V2TIM_GROUP_ADD_ANY) {
+                    addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAutoApproval);
+                }
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupAddOptFormat), str, addOptDesc];
+            } break;
+            case V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_APPROVE_OPT: {
+                uint32_t addOpt = info.intValue;
+                NSString *addOptDesc = @"unknown";
+                if (addOpt == V2TIM_GROUP_ADD_FORBID) {
+                    addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileInviteDisable);
+                } else if (addOpt == V2TIM_GROUP_ADD_AUTH) {
+                    addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAdminApprove);
+                } else if (addOpt == V2TIM_GROUP_ADD_ANY) {
+                    addOptDesc = TIMCommonLocalizableString(TUIKitGroupProfileAutoApproval);
+                }
+                str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsEditGroupInviteOptFormat), str, addOptDesc];
+            } break;
+            default:
+                break;
+        }
+    }
+    return str;
+}
++ (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info {
     NSString *opUser;
-    if (info.nameCard.length > 0){
+    if (info.nameCard.length > 0) {
         opUser = info.nameCard;
     } else if (info.nickName.length > 0) {
         opUser = info.nickName;
@@ -1232,14 +1200,14 @@
     return opUser;
 }
 
-+ (NSMutableArray *)getUserNameList:(NSArray<V2TIMGroupMemberInfo *> *)infoList{
++ (NSMutableArray *)getUserNameList:(NSArray<V2TIMGroupMemberInfo *> *)infoList {
     NSMutableArray<NSString *> *userNameList = [NSMutableArray array];
     for (V2TIMGroupMemberInfo *info in infoList) {
-        if(info.nameCard.length > 0) {
+        if (info.nameCard.length > 0) {
             [userNameList addObject:info.nameCard];
-        } else if (info.nickName.length > 0){
+        } else if (info.nickName.length > 0) {
             [userNameList addObject:info.nickName];
-        }else{
+        } else {
             if (info.userID.length > 0) {
                 [userNameList addObject:info.userID];
             }
@@ -1248,7 +1216,7 @@
     return userNameList;
 }
 
-+ (NSMutableArray *)getUserIDList:(NSArray<V2TIMGroupMemberInfo *> *)infoList{
++ (NSMutableArray *)getUserIDList:(NSArray<V2TIMGroupMemberInfo *> *)infoList {
     NSMutableArray<NSString *> *userIDList = [NSMutableArray array];
     for (V2TIMGroupMemberInfo *info in infoList) {
         if (info.userID.length > 0) {
@@ -1270,7 +1238,7 @@
     return showName;
 }
 
-+ (NSString *)getUserName:(V2TIMGroupTipsElem *)tips with:(NSString *)userId{
++ (NSString *)getUserName:(V2TIMGroupTipsElem *)tips with:(NSString *)userId {
     NSString *str = @"";
     for (V2TIMGroupMemberInfo *info in tips.memberList) {
         if ([info.userID isEqualToString:userId]) {
@@ -1280,14 +1248,13 @@
                 str = info.friendRemark;
             } else if (info.nickName.length > 0) {
                 str = info.nickName;
-            }
-            else {
+            } else {
                 str = userId;
             }
             break;
         }
-  }
-  return str;
+    }
+    return str;
 }
 
 @end

@@ -11,42 +11,36 @@
 #import <TUICore/TUIThemeManager.h>
 
 @implementation TUIMenuCell
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#EBF0F6");
     _menu = [[UIImageView alloc] init];
     _menu.backgroundColor = [UIColor clearColor];
     [self addSubview:_menu];
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
 }
 
-- (void)setData:(TUIMenuCellData *)data
-{
-    //set data
+- (void)setData:(TUIMenuCellData *)data {
+    // set data
     _menu.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
-    if(data.isSelected){
+    if (data.isSelected) {
         self.backgroundColor = TUIChatDynamicColor(@"chat_face_menu_select_color", @"#FFFFFF");
-    }
-    else{
+    } else {
         self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
     }
-    //update layout
+    // update layout
     CGSize size = self.frame.size;
     _menu.frame = CGRectMake(TMenuCell_Margin, TMenuCell_Margin, size.width - 2 * TMenuCell_Margin, size.height - 2 * TMenuCell_Margin);
     _menu.contentMode = UIViewContentModeScaleAspectFit;
-
 }
 @end

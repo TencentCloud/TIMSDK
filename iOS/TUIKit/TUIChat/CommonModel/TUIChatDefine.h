@@ -3,36 +3,36 @@
 //  Pods
 //
 //  Created by xiangzhang on 2022/10/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #ifndef TUIChatDefine_h
 #define TUIChatDefine_h
 
-static NSString * const kMemberCellReuseId = @"kMemberCellReuseId";
+static NSString* const kMemberCellReuseId = @"kMemberCellReuseId";
 
-typedef void(^TUIImageMessageDownloadCallback)(void);
+typedef void (^TUIImageMessageDownloadCallback)(void);
 
-typedef void(^TUIVideoMessageDownloadCallback)(void);
+typedef void (^TUIVideoMessageDownloadCallback)(void);
 
-typedef void(^TUIReplyAsyncLoadFinish)(void);
+typedef void (^TUIReplyAsyncLoadFinish)(void);
 
-typedef void(^TUIInputPreviewBarCallback)(void);
+typedef void (^TUIInputPreviewBarCallback)(void);
 
-typedef void(^TUIReplyQuoteAsyncLoadFinish)(void);
+typedef void (^TUIReplyQuoteAsyncLoadFinish)(void);
 
-typedef void(^TUIChatSelectAllContentCallback)(BOOL);
+typedef void (^TUIChatSelectAllContentCallback)(BOOL);
 
-typedef void(^TUIReferenceSelectAllContentCallback)(BOOL);
+typedef void (^TUIReferenceSelectAllContentCallback)(BOOL);
 
-typedef void(^TUIReplySelectAllContentCallback)(BOOL);
-
+typedef void (^TUIReplySelectAllContentCallback)(BOOL);
 
 typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
     /**
      * 获取所有选中的结果
      * Get all selected results
      */
-    TUIMultiResultOptionAll     = 0,
+    TUIMultiResultOptionAll = 0,
     /**
      * 过滤掉不支持转发的数据
      * Filter out data that does not support forwarding
@@ -41,11 +41,11 @@ typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
 };
 
 typedef NS_ENUM(NSInteger, TUIMessageReadViewTag) {
-    TUIMessageReadViewTagUnknown = 0,   // unknown
-    TUIMessageReadViewTagRead,          // read group members
-    TUIMessageReadViewTagUnread,        // unread group members
-    TUIMessageReadViewTagReadDisable,   // disable read group members
-    TUIMessageReadViewTagC2C,           // c2c member
+    TUIMessageReadViewTagUnknown = 0,  // unknown
+    TUIMessageReadViewTagRead,         // read group members
+    TUIMessageReadViewTagUnread,       // unread group members
+    TUIMessageReadViewTagReadDisable,  // disable read group members
+    TUIMessageReadViewTagC2C,          // c2c member
 };
 
 typedef NS_ENUM(NSUInteger, InputStatus) {
@@ -64,7 +64,7 @@ typedef NS_ENUM(NSUInteger, RecordStatus) {
     Record_Status_Cancel,
 };
 
-typedef NS_ENUM(NSInteger,TUIChatSmallTongueType) {
+typedef NS_ENUM(NSInteger, TUIChatSmallTongueType) {
     TUIChatSmallTongueType_None,
     TUIChatSmallTongueType_ScrollToBoom,
     TUIChatSmallTongueType_ReceiveNewMsg,

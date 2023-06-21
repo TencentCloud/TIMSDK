@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 #import <UIKit/UIKit.h>
 #import "TUIGroupMembersCellData.h"
 
@@ -8,7 +11,6 @@
 //                        TUIGroupMembersCellDelegate
 //
 /////////////////////////////////////////////////////////////////////////////////
-
 
 @protocol TUIGroupMembersCellDelegate <NSObject>
 
@@ -23,13 +25,13 @@
 
 @interface TUIGroupMembersCell : UITableViewCell
 
-@property (nonatomic, strong) UICollectionView *memberCollectionView;
+@property(nonatomic, strong) UICollectionView *memberCollectionView;
 
-@property (nonatomic, strong) UICollectionViewFlowLayout *memberFlowLayout;
+@property(nonatomic, strong) UICollectionViewFlowLayout *memberFlowLayout;
 
-@property (nonatomic, weak) id<TUIGroupMembersCellDelegate> delegate;
+@property(nonatomic, weak) id<TUIGroupMembersCellDelegate> delegate;
 
-@property (nonatomic) TUIGroupMembersCellData *data;
+@property(nonatomic) TUIGroupMembersCellData *data;
 
 + (CGFloat)getHeight:(TUIGroupMembersCellData *)data;
 

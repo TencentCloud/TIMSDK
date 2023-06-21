@@ -3,44 +3,43 @@
 //  UIKit
 //
 //  Created by annidyfeng on 2019/5/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIBaseChatViewController.h"
-#import <MobileCoreServices/MobileCoreServices.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <Photos/Photos.h>
-#import "ReactiveObjC/ReactiveObjC.h"
-#import "TUIBaseMessageController.h"
-#import "TUIImageMessageCellData.h"
-#import "TUIVideoMessageCellData.h"
-#import "TUIFileMessageCellData.h"
-#import "TUIVoiceMessageCellData.h"
-#import "TUITextMessageCellData.h"
-#import "TUIReplyMessageCellData.h"
-#import <TIMCommon/TIMDefine.h>
-#import "TUIMessageMultiChooseView.h"
-#import "TUIMessageController.h"
-#import "TUIChatDataProvider.h"
-#import "TUIMessageDataProvider.h"
-#import "TUICameraViewController.h"
-#import <TUICore/TUITool.h>
-#import <TUICore/TUICore.h>
+#import <TIMCommon/NSString+TUIEmoji.h>
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/NSDictionary+TUISafe.h>
-#import <TIMCommon/NSString+TUIEmoji.h>
-#import <TUICore/TUIThemeManager.h>
-#import "TUIChatMediaDataProvider.h"
-#import "TUIMessageReadViewController.h"
-#import "TUIJoinGroupMessageCell.h"
-#import "TUICloudCustomDataTypeCenter.h"
+#import <TUICore/TUICore.h>
 #import <TUICore/TUILogin.h>
-#import "TUIChatConfig.h"
-#import "TUIChatModifyMessageHelper.h"
+#import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUITool.h>
+#import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIAIDenoiseSignatureManager.h"
-#import <TIMCommon/NSString+TUIEmoji.h>
+#import "TUIBaseMessageController.h"
+#import "TUICameraViewController.h"
+#import "TUIChatConfig.h"
+#import "TUIChatDataProvider.h"
+#import "TUIChatMediaDataProvider.h"
+#import "TUIChatModifyMessageHelper.h"
+#import "TUICloudCustomDataTypeCenter.h"
+#import "TUIFileMessageCellData.h"
+#import "TUIImageMessageCellData.h"
+#import "TUIJoinGroupMessageCell.h"
+#import "TUIMessageController.h"
+#import "TUIMessageDataProvider.h"
+#import "TUIMessageMultiChooseView.h"
+#import "TUIMessageReadViewController.h"
+#import "TUIReplyMessageCellData.h"
+#import "TUITextMessageCellData.h"
+#import "TUIVideoMessageCellData.h"
+#import "TUIVoiceMessageCellData.h"
 
-static UIView *customTopView;
+static UIView *gCustomTopView;
 
 @interface TUIBaseChatViewController () <TUIBaseMessageControllerDelegate,
                                          TUIInputControllerDelegate,
@@ -53,26 +52,21 @@ static UIView *customTopView;
                                          TUIJoinGroupMessageCellDelegate,
                                          V2TIMConversationListener,
                                          TUINavigationControllerDelegate,
-                                         TUIChatMediaDataListener>
+                                         TUIChatMediaDataListener,
+                                         TIMInputViewMoreActionProtocol>
 
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
-@property (nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
-@property (nonatomic, assign) BOOL responseKeyboard;
-@property (nonatomic, strong) TUIChatDataProvider *dataProvider;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
+@property(nonatomic, assign) BOOL responseKeyboard;
+@property(nonatomic, strong) TUIChatDataProvider *dataProvider;
 
-@property (nonatomic, weak) UIViewController *forwardConversationSelectVC;
-@property (nonatomic) NSArray<TUIMessageCellData *> *forwardSelectUIMsgs;
-@property (nonatomic) BOOL isMergeForward;
+@property(nonatomic, assign) BOOL firstAppear;
 
-@property (nonatomic, assign) BOOL firstAppear;
+@property(nonatomic, copy) NSString *mainTitle;
 
-@property (nonatomic, copy) NSString *mainTitle;
+@property(nonatomic, strong) UIImageView *backgroudView;
 
-@property (nonatomic, strong) UIImageView *backgroudView;
-
-@property (nonatomic, copy) NSString *forwardText;
-
-@property (nonatomic, strong) TUIChatMediaDataProvider *mediaProvider;
+@property(nonatomic, strong) TUIChatMediaDataProvider *mediaProvider;
 
 @end
 
@@ -94,20 +88,17 @@ static UIView *customTopView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     // data provider
     self.dataProvider = [[TUIChatDataProvider alloc] init];
     self.dataProvider.delegate = self;
-    
+
     // setupUI
     self.firstAppear = YES;
     self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#FFFFFF");
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self configBackgroundView];
     [self setupNavigator];
-    if (customTopView) {
-        [self setupCustomTopView];
-    }
     [self setupMessageController];
     [self setupInputController];
 
@@ -115,6 +106,12 @@ static UIView *customTopView;
     [self configNotify];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (gCustomTopView) {
+        [self setupCustomTopView];
+    }
+}
 - (void)dealloc {
     [TUICore unRegisterEventByObject:self];
 }
@@ -127,13 +124,13 @@ static UIView *customTopView;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+
     self.responseKeyboard = YES;
     if (self.firstAppear) {
         [self loadDraft];
         self.firstAppear = NO;
     }
-    
+
     if (self.needScrollToBottom) {
         [self.messageController scrollToBottom:YES];
         self.needScrollToBottom = NO;
@@ -149,17 +146,16 @@ static UIView *customTopView;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
-    if (self.inputController.status == Input_Status_Input ||
-        self.inputController.status == Input_Status_Input_Keyboard) {
+
+    if (self.inputController.status == Input_Status_Input || self.inputController.status == Input_Status_Input_Keyboard) {
         CGPoint offset = self.messageController.tableView.contentOffset;
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            strongSelf.responseKeyboard = YES;
-            [UIApplication.sharedApplication.keyWindow endEditing:YES];
-            [strongSelf inputController:strongSelf.inputController didChangeHeight:CGRectGetMaxY(strongSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
-            [strongSelf.messageController.tableView setContentOffset:offset];
+          __strong typeof(weakSelf) strongSelf = weakSelf;
+          strongSelf.responseKeyboard = YES;
+          [UIApplication.sharedApplication.keyWindow endEditing:YES];
+          [strongSelf inputController:strongSelf.inputController didChangeHeight:CGRectGetMaxY(strongSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
+          [strongSelf.messageController.tableView setContentOffset:offset];
         });
     }
 }
@@ -172,27 +168,29 @@ static UIView *customTopView;
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
-    __weak typeof (self)weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     [[RACObserve(_conversationData, title) distinctUntilChanged] subscribeNext:^(NSString *title) {
-        [weakSelf.titleView setTitle:title];
+      [weakSelf.titleView setTitle:title];
     }];
-    
+
     [[RACObserve(_conversationData, otherSideTyping) distinctUntilChanged] subscribeNext:^(id otherSideTyping) {
-        BOOL otherSideTypingFlag =  [otherSideTyping boolValue];
-        if (!otherSideTypingFlag) {
-            [weakSelf checkTitle:YES];
-        }
+      BOOL otherSideTypingFlag = [otherSideTyping boolValue];
+      if (!otherSideTypingFlag) {
+          [weakSelf checkTitle:YES];
+      }
     }];
-    
+
     [self checkTitle:NO];
-    
-    [TUIChatDataProvider getTotalUnreadMessageCountWithSuccBlock:^(UInt64 totalCount) {
-        [weakSelf onChangeUnReadCount:totalCount];
-    } fail:nil];
-    
+
+    [TUIChatDataProvider
+        getTotalUnreadMessageCountWithSuccBlock:^(UInt64 totalCount) {
+          [weakSelf onChangeUnReadCount:totalCount];
+        }
+                                           fail:nil];
+
     _unRead = [[TUIUnReadView alloc] init];
 
-    CGSize itemSize = CGSizeMake(30, 30);
+    CGSize itemSize = CGSizeMake(25, 25);
     NSMutableArray *rightBarButtonList = [NSMutableArray array];
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     if (self.conversationData.userID.length > 0) {
@@ -207,6 +205,8 @@ static UIView *customTopView;
     for (TUIExtensionInfo *info in extensionList) {
         if (info.icon && info.onClicked) {
             UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, itemSize.width, itemSize.height)];
+            [button.widthAnchor constraintEqualToConstant:itemSize.width].active = YES;
+            [button.heightAnchor constraintEqualToConstant:itemSize.height].active = YES;
             button.tui_extValueObj = info;
             [button addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
             [button setImage:info.icon forState:UIControlStateNormal];
@@ -227,8 +227,7 @@ static UIView *customTopView;
     _messageController = vc;
     _messageController.delegate = self;
     [_messageController setConversation:self.conversationData];
-    _messageController.view.frame = CGRectMake(0,  [self topMarginByCustomView],
-                                               self.view.frame.size.width,
+    _messageController.view.frame = CGRectMake(0, [self topMarginByCustomView], self.view.frame.size.width,
                                                self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight - [self topMarginByCustomView]);
     [self addChildViewController:_messageController];
     [self.view addSubview:_messageController.view];
@@ -236,53 +235,52 @@ static UIView *customTopView;
 }
 
 - (void)setupCustomTopView {
-    [self.view addSubview:customTopView];
-    customTopView.mm_top(0).mm_left(0);
+    if (gCustomTopView.superview != self.view) {
+        [self.view addSubview:gCustomTopView];
+    }
+    gCustomTopView.mm_top(0).mm_left(0);
 }
 
 - (void)setupInputController {
     _inputController = [[TUIInputController alloc] init];
     _inputController.delegate = self;
-    @weakify(self)
+    @weakify(self);
     [RACObserve(self, moreMenus) subscribeNext:^(NSArray *x) {
-        @strongify(self)
-        [self.inputController.moreView setData:x];
+      @strongify(self);
+      [self.inputController.moreView setData:x];
     }];
-    _inputController.view.frame = CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
+    _inputController.view.frame =
+        CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
-    
+
     self.moreMenus = [self.dataProvider moreMenuCellDataArray:self.conversationData.groupID
                                                        userID:self.conversationData.userID
-                                              isNeedVideoCall:[TUIChatConfig defaultConfig].enableVideoCall
-                                              isNeedAudioCall:[TUIChatConfig defaultConfig].enableAudioCall
-                                              isNeedGroupLive:NO
-                                                   isNeedLink:[TUIChatConfig defaultConfig].enableWelcomeCustomMessage];
+                                             actionController:self];
 }
 
 - (void)configBackgroundView {
     self.backgroudView = [[UIImageView alloc] init];
-    self.backgroudView.backgroundColor = TUIChatConfig.defaultConfig.backgroudColor ? TUIChatConfig.defaultConfig.backgroudColor : TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    self.backgroudView.backgroundColor =
+        TUIChatConfig.defaultConfig.backgroudColor ? TUIChatConfig.defaultConfig.backgroudColor : TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     NSString *conversationID = [self getConversationID];
     NSString *imgUrl = [self getBackgroundImageUrlByConversationID:conversationID];
 
     if (TUIChatConfig.defaultConfig.backgroudImage) {
         self.backgroudView.backgroundColor = UIColor.clearColor;
         self.backgroudView.image = TUIChatConfig.defaultConfig.backgroudImage;
-    }
-    else if (IS_NOT_EMPTY_NSSTRING(imgUrl)) {
+    } else if (IS_NOT_EMPTY_NSSTRING(imgUrl)) {
         [self.backgroudView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:nil];
     }
-    self.backgroudView.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
-    
+    self.backgroudView.frame =
+        CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
+
     [self.view insertSubview:self.backgroudView atIndex:0];
 }
 
 - (void)configNotify {
-
     [[V2TIMManager sharedInstance] addConversationListener:self];
-    [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_SelectConversationSubKey object:self];
     [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey object:self];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
 
@@ -298,30 +296,29 @@ static UIView *customTopView;
 
 - (void)saveDraft {
     NSString *content = [self.inputController.inputBar.inputTextView.textStorage getPlainString];
-    
-    TUIReplyPreviewData * previewData = nil;
+
+    TUIReplyPreviewData *previewData = nil;
     if (self.inputController.referenceData) {
-        previewData  = self.inputController.referenceData;
-    }
-    else if(self.inputController.replyData) {
-        previewData  = self.inputController.replyData;
+        previewData = self.inputController.referenceData;
+    } else if (self.inputController.replyData) {
+        previewData = self.inputController.replyData;
     }
     if (previewData) {
-        
         NSDictionary *dict = @{
-            @"content" : content?:@"",
+            @"content" : content ?: @"",
             @"messageReply" : @{
-                    @"messageID"       : previewData.msgID?:@"",
-                    @"messageAbstract" : [previewData.msgAbstract?:@"" getInternationalStringWithfaceContent],
-                    @"messageSender"   : previewData.sender?:@"",
-                    @"messageType"     : @(previewData.type),
-                    @"messageTime"     : @(previewData.originMessage.timestamp ? [previewData.originMessage.timestamp timeIntervalSince1970] : 0),  // Compatible for web
-                    @"messageSequence" : @(previewData.originMessage.seq),// Compatible for web
-                    @"version"         : @(kDraftMessageReplyVersion),
+                @"messageID" : previewData.msgID ?: @"",
+                @"messageAbstract" : [previewData.msgAbstract ?: @"" getInternationalStringWithfaceContent],
+                @"messageSender" : previewData.sender ?: @"",
+                @"messageType" : @(previewData.type),
+                @"messageTime" :
+                    @(previewData.originMessage.timestamp ? [previewData.originMessage.timestamp timeIntervalSince1970] : 0),  // Compatible for web
+                @"messageSequence" : @(previewData.originMessage.seq),                                                         // Compatible for web
+                @"version" : @(kDraftMessageReplyVersion),
             },
         };
         NSMutableDictionary *mudic = [NSMutableDictionary dictionaryWithDictionary:dict];
-        
+
         if (IS_NOT_EMPTY_NSSTRING(previewData.messageRootID)) {
             [mudic setObject:previewData.messageRootID forKey:@"messageRootID"];
         }
@@ -332,7 +329,6 @@ static UIView *customTopView;
         }
     }
     [TUIChatDataProvider saveDraftWithConversationID:self.conversationData.conversationID Text:content];
-
 }
 
 - (void)loadDraft {
@@ -340,28 +336,30 @@ static UIView *customTopView;
     if (draft.length == 0) {
         return;
     }
-    
+
     NSError *error = nil;
     NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:[draft dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
     if (error || jsonDict == nil) {
-                
-        NSMutableAttributedString *formatEmojiString = [draft getAdvancedFormatEmojiStringWithFont:kTUIInputNoramlFont textColor:kTUIInputNormalTextColor emojiLocations:nil];
+        NSMutableAttributedString *formatEmojiString = [draft getAdvancedFormatEmojiStringWithFont:kTUIInputNoramlFont
+                                                                                         textColor:kTUIInputNormalTextColor
+                                                                                    emojiLocations:nil];
 
-        
         [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:formatEmojiString atIndex:0];
         return;
     }
-    
+
     /**
      * 显示草稿
      * Display draft
      */
     NSString *draftContent = [jsonDict.allKeys containsObject:@"content"] ? jsonDict[@"content"] : @"";
-    
-    NSMutableAttributedString *formatEmojiString = [draftContent getAdvancedFormatEmojiStringWithFont:kTUIInputNoramlFont textColor:kTUIInputNormalTextColor emojiLocations:nil];
+
+    NSMutableAttributedString *formatEmojiString = [draftContent getAdvancedFormatEmojiStringWithFont:kTUIInputNoramlFont
+                                                                                            textColor:kTUIInputNormalTextColor
+                                                                                       emojiLocations:nil];
 
     [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:formatEmojiString atIndex:0];
-    
+
     NSString *messageRootID = [jsonDict.allKeys containsObject:@"messageRootID"] ? jsonDict[@"messageRootID"] : @"";
 
     /**
@@ -370,30 +368,24 @@ static UIView *customTopView;
      */
     if ([jsonDict isKindOfClass:NSDictionary.class] && [jsonDict.allKeys containsObject:@"messageReply"]) {
         NSDictionary *reply = jsonDict[@"messageReply"];
-        if ([reply isKindOfClass:NSDictionary.class] &&
-            [reply.allKeys containsObject:@"messageID"] &&
-            [reply.allKeys containsObject:@"messageAbstract"] &&
-            [reply.allKeys containsObject:@"messageSender"] &&
-            [reply.allKeys containsObject:@"messageType"] &&
-            [reply.allKeys containsObject:@"version"]) {
+        if ([reply isKindOfClass:NSDictionary.class] && [reply.allKeys containsObject:@"messageID"] && [reply.allKeys containsObject:@"messageAbstract"] &&
+            [reply.allKeys containsObject:@"messageSender"] && [reply.allKeys containsObject:@"messageType"] && [reply.allKeys containsObject:@"version"]) {
             NSInteger version = [reply[@"version"] integerValue];
             if (version <= kDraftMessageReplyVersion) {
-
                 if (IS_NOT_EMPTY_NSSTRING(messageRootID)) {
                     TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
-                    replyData.msgID       = reply[@"messageID"];
+                    replyData.msgID = reply[@"messageID"];
                     replyData.msgAbstract = reply[@"messageAbstract"];
-                    replyData.sender      = reply[@"messageSender"];
-                    replyData.type        = [reply[@"messageType"] integerValue];
+                    replyData.sender = reply[@"messageSender"];
+                    replyData.type = [reply[@"messageType"] integerValue];
                     replyData.messageRootID = messageRootID;
                     [self.inputController showReplyPreview:replyData];
-                }
-                else {
+                } else {
                     TUIReferencePreviewData *replyData = [[TUIReferencePreviewData alloc] init];
-                    replyData.msgID       = reply[@"messageID"];
+                    replyData.msgID = reply[@"messageID"];
                     replyData.msgAbstract = reply[@"messageAbstract"];
-                    replyData.sender      = reply[@"messageSender"];
-                    replyData.type        = [reply[@"messageType"] integerValue];
+                    replyData.sender = reply[@"messageSender"];
+                    replyData.type = [reply[@"messageType"] integerValue];
                     [self.inputController showReferencePreview:replyData];
                 }
             }
@@ -402,11 +394,11 @@ static UIView *customTopView;
 }
 
 + (void)setCustomTopView:(UIView *)view {
-    customTopView = view;
+    gCustomTopView = view;
 }
 
 + (UIView *)customTopView {
-    return customTopView;
+    return gCustomTopView;
 }
 
 #pragma mark - Getters & Setters
@@ -416,56 +408,58 @@ static UIView *customTopView;
 }
 
 - (CGFloat)topMarginByCustomView {
-    return customTopView ? customTopView.mm_h: 0;
+    return gCustomTopView ? gCustomTopView.mm_h : 0;
 }
 
 #pragma mark - Event Response
 - (void)onChangeUnReadCount:(UInt64)totalCount {
     /**
      * 此处异步的原因：当前聊天页面连续频繁收到消息，可能还没标记已读，此时也会收到未读数变更。理论上此时未读数不会包括当前会话的。
-     * The reason for the asynchrony here: The current chat page receives messages continuously and frequently, it may not be marked as read, and unread changes will also be received at this time. In theory, the unreads at this time will not include the current session.
+     * The reason for the asynchrony here: The current chat page receives messages continuously and frequently, it may not be marked as read, and unread changes
+     * will also be received at this time. In theory, the unreads at this time will not include the current session.
      */
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf.unRead setNum:totalCount];
+      [weakSelf.unRead setNum:totalCount];
     });
 }
 
 - (void)checkTitle:(BOOL)force {
-    
     if (force || self.conversationData.title.length == 0) {
         if (self.conversationData.userID.length > 0) {
             self.conversationData.title = self.conversationData.userID;
             @weakify(self);
-            
+
             [TUIChatDataProvider getFriendInfoWithUserId:self.conversationData.userID
-                                             SuccBlock:^(V2TIMFriendInfoResult * _Nonnull friendInfoResult) {
-                @strongify(self);
-                if (friendInfoResult.relation & V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST
-                    && friendInfoResult.friendInfo.friendRemark.length > 0) {
-                    self.conversationData.title = friendInfoResult.friendInfo.friendRemark;
-                } else {
-                    [TUIChatDataProvider getUserInfoWithUserId:friendInfoResult.friendInfo.userID
-                                                   SuccBlock:^(V2TIMUserFullInfo * _Nonnull userInfo) {
-                        if (userInfo.nickName.length > 0) {
-                            self.conversationData.title = userInfo.nickName;
-                        }
-                    } failBlock:nil];
-                }
-            } failBlock:nil];
-        }
-        else if (self.conversationData.groupID.length > 0) {
+                                               SuccBlock:^(V2TIMFriendInfoResult *_Nonnull friendInfoResult) {
+                                                 @strongify(self);
+                                                 if (friendInfoResult.relation & V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST &&
+                                                     friendInfoResult.friendInfo.friendRemark.length > 0) {
+                                                     self.conversationData.title = friendInfoResult.friendInfo.friendRemark;
+                                                 } else {
+                                                     [TUIChatDataProvider getUserInfoWithUserId:friendInfoResult.friendInfo.userID
+                                                                                      SuccBlock:^(V2TIMUserFullInfo *_Nonnull userInfo) {
+                                                                                        if (userInfo.nickName.length > 0) {
+                                                                                            self.conversationData.title = userInfo.nickName;
+                                                                                        }
+                                                                                      }
+                                                                                      failBlock:nil];
+                                                 }
+                                               }
+                                               failBlock:nil];
+        } else if (self.conversationData.groupID.length > 0) {
             [TUIChatDataProvider getGroupInfoWithGroupID:self.conversationData.groupID
-                                             SuccBlock:^(V2TIMGroupInfoResult * _Nonnull groupResult) {
-                if (groupResult.info.groupName.length > 0) {
-                    self.conversationData.title = groupResult.info.groupName;
-                }
-            } failBlock:nil];
+                                               SuccBlock:^(V2TIMGroupInfoResult *_Nonnull groupResult) {
+                                                 if (groupResult.info.groupName.length > 0) {
+                                                     self.conversationData.title = groupResult.info.groupName;
+                                                 }
+                                               }
+                                               failBlock:nil];
         }
     }
 }
 
--(void)leftBarButtonClick {
+- (void)leftBarButtonClick {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -480,16 +474,14 @@ static UIView *customTopView;
     } else if (self.conversationData.groupID.length > 0) {
         param[TUICore_TUIChatExtension_NavigationMoreItem_GroupID] = self.conversationData.groupID;
     }
-    
+
     if (self.navigationController) {
         param[TUICore_TUIChatExtension_NavigationMoreItem_PushVC] = self.navigationController;
     }
     info.onClicked(param);
 }
 
-- (void)getUserOrFriendProfileVCWithUserID:(NSString *)userID
-                                 succBlock:(void(^)(UIViewController *vc))succ
-                                 failBlock:(nullable V2TIMFail)fail {
+- (void)getUserOrFriendProfileVCWithUserID:(NSString *)userID succBlock:(void (^)(UIViewController *vc))succ failBlock:(nullable V2TIMFail)fail {
     NSDictionary *param = @{
         TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey: userID ? : @"",
         TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey: succ ? : ^(UIViewController *vc){},
@@ -501,42 +493,14 @@ static UIView *customTopView;
 #pragma mark - TUICore notify
 
 - (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
-    if ([key isEqualToString:TUICore_TUIConversationNotify]
-        && [subKey isEqualToString:TUICore_TUIConversationNotify_SelectConversationSubKey]
-        && self.forwardConversationSelectVC == anObject) {
-        NSArray<NSDictionary *> *selectList = param[TUICore_TUIConversationNotify_SelectConversationSubKey_ConversationListKey];
-        
-        NSMutableArray<TUIChatConversationModel *> *targetList = [NSMutableArray arrayWithCapacity:selectList.count];
-        for (NSDictionary *selectItem in selectList) {
-            TUIChatConversationModel *model = [TUIChatConversationModel new];
-            model.title = selectItem[TUICore_TUIConversationNotify_SelectConversationSubKey_ItemTitleKey];
-            model.userID = selectItem[TUICore_TUIConversationNotify_SelectConversationSubKey_ItemUserIDKey];
-            model.groupID = selectItem[TUICore_TUIConversationNotify_SelectConversationSubKey_ItemGroupIDKey];
-            model.conversationID = selectItem[TUICore_TUIConversationNotify_SelectConversationSubKey_ItemConversationIDKey];
-            [targetList addObject:model];
-        }
-        
-        [self forwardMessages:self.forwardSelectUIMsgs toTargets:targetList merge:self.isMergeForward];
-        self.forwardSelectUIMsgs = nil;
-        
-        if (self.forwardText.length > 0) {
-            [self forwardText:self.forwardText toConverations:targetList];
-            self.forwardText = nil;
-        }
-    }
-    
-    else if ([key isEqualToString:TUICore_TUIConversationNotify] && [subKey isEqualToString:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey]) {
+    if ([key isEqualToString:TUICore_TUIConversationNotify] && [subKey isEqualToString:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey]) {
         [self.messageController clearUImsg];
-    }
-    else if ([key isEqualToString:TUICore_TUIContactNotify]
-             && [subKey isEqualToString:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey]) {
+    } else if ([key isEqualToString:TUICore_TUIContactNotify] && [subKey isEqualToString:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey]) {
         NSString *conversationID = param[TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey_ConversationID];
         if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
             [self updateBackgroundImageUrlByConversationID:conversationID];
         }
-    }
-    else if ([key isEqualToString:TUICore_TUIGroupNotify]
-             && [subKey isEqualToString:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey]) {
+    } else if ([key isEqualToString:TUICore_TUIGroupNotify] && [subKey isEqualToString:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey]) {
         NSString *conversationID = param[TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID];
         if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
             [self updateBackgroundImageUrlByConversationID:conversationID];
@@ -545,13 +509,12 @@ static UIView *customTopView;
 }
 
 - (void)updateBackgroundImageUrlByConversationID:(NSString *)conversationID {
-    if ([[self getConversationID]  isEqualToString:conversationID]) {
+    if ([[self getConversationID] isEqualToString:conversationID]) {
         self.backgroudView.backgroundColor = UIColor.clearColor;
         NSString *imgUrl = [self getBackgroundImageUrlByConversationID:conversationID];
         if (IS_NOT_EMPTY_NSSTRING(imgUrl)) {
-             [self.backgroudView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:nil];
-        }
-        else {
+            [self.backgroudView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:nil];
+        } else {
             self.backgroudView.image = nil;
         }
     }
@@ -565,7 +528,7 @@ static UIView *customTopView;
     if (dict == nil) {
         dict = @{};
     }
-    NSString *conversationID_UserID = [NSString stringWithFormat:@"%@_%@",targerConversationID,[TUILogin getUserID]];
+    NSString *conversationID_UserID = [NSString stringWithFormat:@"%@_%@", targerConversationID, [TUILogin getUserID]];
     if (![dict isKindOfClass:NSDictionary.class] || ![dict.allKeys containsObject:conversationID_UserID]) {
         return nil;
     }
@@ -576,12 +539,10 @@ static UIView *customTopView;
     NSString *conversationID = @"";
     if (self.conversationData.conversationID.length > 0) {
         conversationID = self.conversationData.conversationID;
-    }
-    else if (self.conversationData.userID.length > 0) {
-        conversationID = [NSString stringWithFormat:@"c2c_%@",self.conversationData.userID];
-    }
-    else if (self.conversationData.groupID.length > 0) {
-        conversationID = [NSString stringWithFormat:@"group_%@",self.conversationData.groupID];
+    } else if (self.conversationData.userID.length > 0) {
+        conversationID = [NSString stringWithFormat:@"c2c_%@", self.conversationData.userID];
+    } else if (self.conversationData.groupID.length > 0) {
+        conversationID = [NSString stringWithFormat:@"group_%@", self.conversationData.groupID];
     }
     return conversationID;
 }
@@ -591,17 +552,21 @@ static UIView *customTopView;
     if (!self.responseKeyboard) {
         return;
     }
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        CGRect msgFrame = self.messageController.view.frame;
-        msgFrame.size.height = self.view.frame.size.height - height - [self topMarginByCustomView];
-        self.messageController.view.frame = msgFrame;
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                       CGRect msgFrame = self.messageController.view.frame;
+                       msgFrame.size.height = self.view.frame.size.height - height - [self topMarginByCustomView];
+                       self.messageController.view.frame = msgFrame;
 
-        CGRect inputFrame = self.inputController.view.frame;
-        inputFrame.origin.y = msgFrame.origin.y + msgFrame.size.height;
-        inputFrame.size.height = height;
-        self.inputController.view.frame = inputFrame;
-        [self.messageController scrollToBottom:NO];
-    } completion:nil];
+                       CGRect inputFrame = self.inputController.view.frame;
+                       inputFrame.origin.y = msgFrame.origin.y + msgFrame.size.height;
+                       inputFrame.size.height = height;
+                       self.inputController.view.frame = inputFrame;
+                       [self.messageController scrollToBottom:NO];
+                     }
+                     completion:nil];
 }
 
 - (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg {
@@ -623,12 +588,11 @@ static UIView *customTopView;
 }
 
 - (void)inputControllerBeginTyping:(TUIInputController *)inputController {
-    
-    //for C2CChatVC
+    // for C2CChatVC
 }
 
 - (void)inputControllerEndTyping:(TUIInputController *)inputController {
-    //for C2CChatVC
+    // for C2CChatVC
 }
 
 - (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell {
@@ -640,7 +604,7 @@ static UIView *customTopView;
     if (data == nil || data.onClicked == nil) {
         return;
     }
-    
+
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     if (self.conversationData.userID.length > 0) {
         param[TUICore_TUIChatExtension_InputViewMoreItem_UserID] = self.conversationData.userID;
@@ -660,7 +624,7 @@ static UIView *customTopView;
 }
 
 - (BOOL)messageController:(TUIBaseMessageController *)controller willShowMenuInCell:(TUIMessageCell *)cell {
-    if([self.inputController.inputBar.inputTextView isFirstResponder]){
+    if ([self.inputController.inputBar.inputTextView isFirstResponder]) {
         self.inputController.inputBar.inputTextView.overrideNextResponder = cell;
         return YES;
     }
@@ -676,20 +640,36 @@ static UIView *customTopView;
 }
 
 - (void)messageController:(TUIBaseMessageController *)controller willDisplayCell:(TUIMessageCell *)cell withData:(TUIMessageCellData *)cellData {
-    if([cell isKindOfClass:[TUIJoinGroupMessageCell class]]){
+    if ([cell isKindOfClass:[TUIJoinGroupMessageCell class]]) {
         TUIJoinGroupMessageCell *joinCell = (TUIJoinGroupMessageCell *)cell;
         joinCell.joinGroupDelegate = self;
     }
 }
 
 - (void)messageController:(TUIBaseMessageController *)controller onSelectMessageAvatar:(TUIMessageCell *)cell {
-    if (cell.messageData.identifier == nil) {
+    NSString *userID = nil;
+    if (cell.messageData.innerMessage.groupID.length > 0) {
+        userID = cell.messageData.innerMessage.sender;
+    } else {
+        if (cell.messageData.isUseMsgReceiverAvatar) {
+            if (cell.messageData.innerMessage.isSelf) {
+                userID = cell.messageData.innerMessage.userID;
+            } else {
+                userID = V2TIMManager.sharedInstance.getLoginUser;
+            }
+        } else {
+            userID = cell.messageData.innerMessage.sender;
+        }
+    }
+    
+    if (userID == nil) {
         return;
     }
-    [self getUserOrFriendProfileVCWithUserID:cell.messageData.identifier
+    [self getUserOrFriendProfileVCWithUserID:userID
                                    succBlock:^(UIViewController *vc) {
-        [self.navigationController pushViewController:vc animated:YES];
-    } failBlock:nil];
+                                     [self.navigationController pushViewController:vc animated:YES];
+                                   }
+                                   failBlock:nil];
 }
 
 - (void)messageController:(TUIBaseMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell {
@@ -756,8 +736,7 @@ static UIView *customTopView;
     }
 }
 
-- (void)navigationControllerDidSideSlideReturn:(TUINavigationController *)controller
-                            fromViewController:(UIViewController *)fromViewController {
+- (void)navigationControllerDidSideSlideReturn:(TUINavigationController *)controller fromViewController:(UIViewController *)fromViewController {
     if ([fromViewController isEqual:self]) {
         [self.messageController readReport];
     }
@@ -771,18 +750,18 @@ static UIView *customTopView;
         if (data == nil) {
             return;
         }
-        NSMutableArray *uiMsgs = [NSMutableArray arrayWithArray:@[data]];
+        NSMutableArray *uiMsgs = [NSMutableArray arrayWithArray:@[ data ]];
         [self prepareForwardMessages:uiMsgs];
     }
 }
 
 - (void)openMultiChooseBoard:(BOOL)open {
     [self.view endEditing:YES];
-    
+
     if (_multiChooseView) {
         [_multiChooseView removeFromSuperview];
     }
-    
+
     if (open) {
         _multiChooseView = [[TUIMessageMultiChooseView alloc] init];
         _multiChooseView.frame = UIScreen.mainScreen.bounds;
@@ -825,7 +804,7 @@ static UIView *customTopView;
         [TUITool makeToast:TIMCommonLocalizableString(TUIKitRelayNoMessageTips)];
         return;
     }
-    
+
     [self.messageController deleteMessages:uiMsgs];
     [self openMultiChooseBoard:NO];
     [self.messageController enableMultiSelectedMode:NO];
@@ -836,7 +815,7 @@ static UIView *customTopView;
         [TUITool makeToast:TIMCommonLocalizableString(TUIKitRelayNoMessageTips)];
         return;
     }
-    
+
     BOOL hasSendFailedMsg = NO;
     BOOL canForwardMsg = YES;
     for (TUIMessageCellData *data in uiMsgs) {
@@ -848,139 +827,173 @@ static UIView *customTopView;
             break;
         }
     }
-    
+
     if (hasSendFailedMsg) {
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayUnsupportForward) message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            
-        }]];
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayUnsupportForward)
+                                                                    message:nil
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *_Nonnull action){
+
+                                                      }]];
         [self presentViewController:vc animated:YES completion:nil];
         return;
     }
-    
+
     if (!canForwardMsg) {
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayPluginNotAllowed) message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            
-        }]];
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayPluginNotAllowed)
+                                                                    message:nil
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *_Nonnull action){
+
+                                                      }]];
         [self presentViewController:vc animated:YES completion:nil];
         return;
     }
-    
+
     __weak typeof(self) weakSelf = self;
-    void(^chooseTarget)(BOOL) = ^(BOOL mergeForward) {
-        
-        UIViewController * vc = (UIViewController *)[TUICore createObject:TUICore_TUIConversationObjectFactory key:TUICore_TUIConversationObjectFactory_GetConversationSelectControllerMethod param:nil];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)vc];
-        nav.modalPresentationStyle = UIModalPresentationFullScreen;
-        weakSelf.forwardConversationSelectVC = (UIViewController *)vc;
-        weakSelf.forwardSelectUIMsgs = uiMsgs;
-        weakSelf.isMergeForward = mergeForward;
-        [weakSelf presentViewController:nav animated:YES completion:nil];
-    };
-    
     UIAlertController *tipsVc = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    /**
-     * 逐条转发
-     * Forward one-by-one
-     */
-    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayOneByOneForward) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        if (uiMsgs.count <= 30) {
-            chooseTarget(NO);
-            return;
-        }
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayOneByOnyOverLimit) message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
-        [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            chooseTarget(YES);
-        }]];
-        [weakSelf presentViewController:vc animated:YES completion:nil];
-    }]];
-    
-    /**
-     * 合并转发
-     * Merge-forward
-     */
-    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayCombineForwad) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        chooseTarget(YES);
-    }]];
+    // 逐条转发 Forward one-by-one
+    [tipsVc
+        tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayOneByOneForward)
+                                                    style:UIAlertActionStyleDefault
+                                                  handler:^(UIAlertAction *_Nonnull action) {
+                                                    if (uiMsgs.count <= 30) {
+                                                        [weakSelf selectTarget:NO toForwardMessage:uiMsgs orForwardText:nil];
+                                                        return;
+                                                    }
+                                                    UIAlertController *vc =
+                                                        [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitRelayOneByOnyOverLimit)
+                                                                                            message:nil
+                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                                                    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel)
+                                                                                                    style:UIAlertActionStyleDefault
+                                                                                                  handler:nil]];
+                                                    [vc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayCombineForwad)
+                                                                                                    style:UIAlertActionStyleDefault
+                                                                                                  handler:^(UIAlertAction *_Nonnull action) {
+                                                                                                    [weakSelf selectTarget:YES
+                                                                                                          toForwardMessage:uiMsgs
+                                                                                                             orForwardText:nil];
+                                                                                                  }]];
+                                                    [weakSelf presentViewController:vc animated:YES completion:nil];
+                                                  }]];
+    // 合并转发 Merge-forward
+    [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitRelayCombineForwad)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+                                                        [weakSelf selectTarget:YES toForwardMessage:uiMsgs orForwardText:nil];
+                                                      }]];
     [tipsVc tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:tipsVc animated:YES completion:nil];
 }
 
-- (void)forwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs
-              toTargets:(NSArray<TUIChatConversationModel *> *)targets
-                  merge:(BOOL)merge {
+- (void)selectTarget:(BOOL)mergeForward toForwardMessage:(NSArray<TUIMessageCellData *> *)uiMsgs orForwardText:(NSString *)forwardText {
+    __weak typeof(self) weakSelf = self;
+    UINavigationController *nav = [[UINavigationController alloc] init];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:TUICore_TUIConversationObjectFactory_ConversationSelectVC_Classic
+                          param:nil
+                       embbedIn:nav
+                      forResult:^(NSDictionary *_Nonnull param) {
+                        NSArray<NSDictionary *> *selectList = param[TUICore_TUIConversationObjectFactory_ConversationSelectVC_ResultList];
+
+                        NSMutableArray<TUIChatConversationModel *> *targetList = [NSMutableArray arrayWithCapacity:selectList.count];
+                        for (NSDictionary *selectItem in selectList) {
+                            TUIChatConversationModel *model = [[TUIChatConversationModel alloc] init];
+                            model.title = selectItem[TUICore_TUIConversationObjectFactory_ConversationSelectVC_ResultList_Title];
+                            model.userID = selectItem[TUICore_TUIConversationObjectFactory_ConversationSelectVC_ResultList_UserID];
+                            model.groupID = selectItem[TUICore_TUIConversationObjectFactory_ConversationSelectVC_ResultList_GroupID];
+                            model.conversationID = selectItem[TUICore_TUIConversationObjectFactory_ConversationSelectVC_ResultList_ConversationID];
+                            [targetList addObject:model];
+                        }
+
+                        if (uiMsgs.count > 0) {
+                            [weakSelf forwardMessages:uiMsgs toTargets:targetList merge:mergeForward];
+                        } else if (forwardText.length > 0) {
+                            [weakSelf forwardText:forwardText toConverations:targetList];
+                        }
+                      }];
+}
+
+- (void)forwardMessages:(NSArray<TUIMessageCellData *> *)uiMsgs toTargets:(NSArray<TUIChatConversationModel *> *)targets merge:(BOOL)merge {
     if (uiMsgs.count == 0 || targets.count == 0) {
-        return ;
+        return;
     }
-    
+
     @weakify(self);
     [self.dataProvider getForwardMessageWithCellDatas:uiMsgs
-                                            toTargets:targets
-                                                Merge:merge
-                                          ResultBlock:^(TUIChatConversationModel * _Nonnull targetConversation, NSArray<V2TIMMessage *> * _Nonnull msgs) {
-        @strongify(self);
-        
-        TUIChatConversationModel *convCellData = targetConversation;
-        NSTimeInterval timeInterval = convCellData.groupID.length?0.09:0.05;
-        
-        /**
-         * 发送到当前聊天窗口
-         * Forward to currernt chat vc
-         */
-        if ([convCellData.conversationID isEqualToString:self.conversationData.conversationID]) {
-            for (V2TIMMessage *imMsg in msgs) {
-                dispatch_async(dispatch_get_main_queue(), ^{
+        toTargets:targets
+        Merge:merge
+        ResultBlock:^(TUIChatConversationModel *_Nonnull targetConversation, NSArray<V2TIMMessage *> *_Nonnull msgs) {
+          @strongify(self);
+
+          TUIChatConversationModel *convCellData = targetConversation;
+          NSTimeInterval timeInterval = convCellData.groupID.length ? 0.09 : 0.05;
+
+          /**
+           * 发送到当前聊天窗口
+           * Forward to currernt chat vc
+           */
+          if ([convCellData.conversationID isEqualToString:self.conversationData.conversationID]) {
+              for (V2TIMMessage *imMsg in msgs) {
+                  dispatch_async(dispatch_get_main_queue(), ^{
                     /**
                      * 下面的函数涉及到 UI 的刷新，要放在主线程操作
                      * The following functions involve the refresh of the UI and should be called on the main thread
                      */
                     [self.messageController sendMessage:imMsg];
-                });
-                
-                /**
-                 * 此处的延时操作是为了在批量逐条转发时，尽可能保证接收端的顺序
-                 * The delay here is to ensure the order of the receiving end as much as possible when forwarding in batches one by one
-                 */
-                [NSThread sleepForTimeInterval:timeInterval];
-            }
-            return;
+                  });
+
+                  /**
+                   * 此处的延时操作是为了在批量逐条转发时，尽可能保证接收端的顺序
+                   * The delay here is to ensure the order of the receiving end as much as possible when forwarding in batches one by one
+                   */
+                  [NSThread sleepForTimeInterval:timeInterval];
+              }
+              return;
+          }
+
+          /**
+           * 发送到其他聊天
+           * Forward to other chat user
+           */
+        TUISendMessageAppendParams *appendParams = [[TUISendMessageAppendParams alloc] init];
+        appendParams.isSendPushInfo = YES;
+        appendParams.isOnlineUserOnly = NO;
+        appendParams.priority = V2TIM_PRIORITY_NORMAL;
+          for (V2TIMMessage *message in msgs) {
+              message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
+              [TUIMessageDataProvider sendMessage:message
+                  toConversation:convCellData
+                  appendParams:appendParams
+                  Progress:nil
+                  SuccBlock:^{
+                    /**
+                     * 发送到其他聊天的消息需要广播消息发送状态，方便进入对应聊天后刷新消息状态
+                     * Messages sent to other chats need to broadcast the message sending status, which is convenient to refresh the message status after
+                     * entering the corresponding chat
+                     */
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message];
+                  }
+                  FailBlock:^(int code, NSString *desc) {
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message];
+                  }];
+
+              /**
+               * 此处的延时操作是为了在批量逐条转发时，尽可能保证接收端的顺序
+               * The delay here is to ensure the order of the receiving end as much as possible when forwarding in batches one by one
+               */
+              [NSThread sleepForTimeInterval:timeInterval];
+          }
         }
-        
-        /**
-         * 发送到其他聊天
-         * Forward to other chat user
-         */
-        for (V2TIMMessage *message in msgs) {
-            message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
-            [TUIMessageDataProvider sendMessage:message
-                                 toConversation:convCellData
-                                 isSendPushInfo:YES
-                               isOnlineUserOnly:NO
-                                       priority:V2TIM_PRIORITY_NORMAL
-                                       Progress:nil
-                                      SuccBlock:^{
-                /**
-                 * 发送到其他聊天的消息需要广播消息发送状态，方便进入对应聊天后刷新消息状态
-                 * Messages sent to other chats need to broadcast the message sending status, which is convenient to refresh the message status after entering the corresponding chat
-                 */
-                [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message.msgID];
-            } FailBlock:^(int code, NSString *desc) {
-                [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message.msgID];
-            }];
-            
-            /**
-             * 此处的延时操作是为了在批量逐条转发时，尽可能保证接收端的顺序
-             * The delay here is to ensure the order of the receiving end as much as possible when forwarding in batches one by one
-             */
-            [NSThread sleepForTimeInterval:timeInterval];
-        }
-    } fail:^(int code, NSString *desc) {
-        NSLog(@"%@", desc);
-        NSAssert(NO, desc);
-    }];
+        fail:^(int code, NSString *desc) {
+          NSLog(@"%@", desc);
+          NSAssert(NO, desc);
+        }];
 }
 
 - (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
@@ -989,42 +1002,41 @@ static UIView *customTopView;
 
 #pragma mark - Message reply
 - (void)messageController:(TUIBaseMessageController *)controller onRelyMessage:(nonnull TUIMessageCellData *)data {
-    @weakify(self)
+    @weakify(self);
     [self.inputController exitReplyAndReference:^{
-        @strongify(self)
-        NSString *desc = @"";
-        desc = [self replyReferenceMessageDesc:data];
-        
-        TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
-        replyData.msgID = data.msgID;
-        replyData.msgAbstract = desc;
-        replyData.sender = data.name;
-        replyData.type = (NSInteger)data.innerMessage.elemType;
-        replyData.originMessage = data.innerMessage;
-        
-        NSMutableDictionary *cloudResultDic = [[NSMutableDictionary alloc] initWithCapacity:5];
-        if (replyData.originMessage.cloudCustomData) {
-            NSDictionary * originDic = [TUITool jsonData2Dictionary:replyData.originMessage.cloudCustomData];
-            if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {
-                [cloudResultDic addEntriesFromDictionary:originDic];
-            }
-        }
-        NSString * messageParentReply = cloudResultDic[@"messageReply"];
-        NSString * messageRootID = [messageParentReply valueForKey:@"messageRootID"];
-        if (!IS_NOT_EMPTY_NSSTRING(messageRootID)) {
-            /**
-             * 源消息没有 messageRootID， 则需要将当前源消息的 msgID 作为 root
-             * If the original message does not have messageRootID, you need to make the msgID of the current original message as the root
-             */
-            if (IS_NOT_EMPTY_NSSTRING(replyData.originMessage.msgID)) {
-                messageRootID = replyData.originMessage.msgID;
-            }
-        }
-        
-        replyData.messageRootID =  messageRootID;
-        [self.inputController showReplyPreview:replyData];
+      @strongify(self);
+      NSString *desc = @"";
+      desc = [self replyReferenceMessageDesc:data];
+
+      TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
+      replyData.msgID = data.msgID;
+      replyData.msgAbstract = desc;
+      replyData.sender = data.name;
+      replyData.type = (NSInteger)data.innerMessage.elemType;
+      replyData.originMessage = data.innerMessage;
+
+      NSMutableDictionary *cloudResultDic = [[NSMutableDictionary alloc] initWithCapacity:5];
+      if (replyData.originMessage.cloudCustomData) {
+          NSDictionary *originDic = [TUITool jsonData2Dictionary:replyData.originMessage.cloudCustomData];
+          if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {
+              [cloudResultDic addEntriesFromDictionary:originDic];
+          }
+      }
+      NSString *messageParentReply = cloudResultDic[@"messageReply"];
+      NSString *messageRootID = [messageParentReply valueForKey:@"messageRootID"];
+      if (!IS_NOT_EMPTY_NSSTRING(messageRootID)) {
+          /**
+           * 源消息没有 messageRootID， 则需要将当前源消息的 msgID 作为 root
+           * If the original message does not have messageRootID, you need to make the msgID of the current original message as the root
+           */
+          if (IS_NOT_EMPTY_NSSTRING(replyData.originMessage.msgID)) {
+              messageRootID = replyData.originMessage.msgID;
+          }
+      }
+
+      replyData.messageRootID = messageRootID;
+      [self.inputController showReplyPreview:replyData];
     }];
-    
 }
 - (NSString *)replyReferenceMessageDesc:(TUIMessageCellData *)data {
     NSString *desc = @"";
@@ -1041,19 +1053,19 @@ static UIView *customTopView;
 }
 #pragma mark - Message quote
 - (void)messageController:(TUIBaseMessageController *)controller onReferenceMessage:(TUIMessageCellData *)data {
-    @weakify(self)
+    @weakify(self);
     [self.inputController exitReplyAndReference:^{
-        @strongify(self)
-        NSString *desc = @"";
-        desc = [self replyReferenceMessageDesc:data];
-        
-        TUIReferencePreviewData *referenceData = [[TUIReferencePreviewData alloc] init];
-        referenceData.msgID = data.msgID;
-        referenceData.msgAbstract = desc;
-        referenceData.sender = data.name;
-        referenceData.type = (NSInteger)data.innerMessage.elemType;
-        referenceData.originMessage = data.innerMessage;
-        [self.inputController showReferencePreview:referenceData];
+      @strongify(self);
+      NSString *desc = @"";
+      desc = [self replyReferenceMessageDesc:data];
+
+      TUIReferencePreviewData *referenceData = [[TUIReferencePreviewData alloc] init];
+      referenceData.msgID = data.msgID;
+      referenceData.msgAbstract = desc;
+      referenceData.sender = data.name;
+      referenceData.type = (NSInteger)data.innerMessage.elemType;
+      referenceData.originMessage = data.innerMessage;
+      [self.inputController showReferencePreview:referenceData];
     }];
 }
 
@@ -1071,8 +1083,7 @@ static UIView *customTopView;
      "version": "1",
  }
  */
-- (void)messageController:(TUIBaseMessageController *)controller modifyMessage:(nonnull TUIMessageCellData *)cellData reactEmoji:(NSString *)emojiName{
-    
+- (void)messageController:(TUIBaseMessageController *)controller modifyMessage:(nonnull TUIMessageCellData *)cellData reactEmoji:(NSString *)emojiName {
     V2TIMMessage *rootMsg = cellData.innerMessage;
 
     [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg reactEmoji:emojiName];
@@ -1083,42 +1094,34 @@ static UIView *customTopView;
     if (text.length == 0) {
         return;
     }
-    self.forwardText = text;
-    [self presentConverationSelectVC];
+    [self selectTarget:NO toForwardMessage:nil orForwardText:text];
 }
 
-- (void)presentConverationSelectVC {
-    UIViewController *vc = (UIViewController *)[TUICore createObject:TUICore_TUIConversationObjectFactory key:TUICore_TUIConversationObjectFactory_GetConversationSelectControllerMethod param:nil];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)vc];
-    nav.modalPresentationStyle = UIModalPresentationFullScreen;
-    self.forwardConversationSelectVC = (UIViewController *)vc;
-    [self presentViewController:nav animated:YES completion:nil];
-}
-
-- (void)forwardText:(NSString *)text toConverations:(NSArray <TUIChatConversationModel *> *)conversations {
+- (void)forwardText:(NSString *)text toConverations:(NSArray<TUIChatConversationModel *> *)conversations {
+    TUISendMessageAppendParams *appendParams = [[TUISendMessageAppendParams alloc] init];
+    appendParams.isSendPushInfo = YES;
+    appendParams.isOnlineUserOnly = NO;
+    appendParams.priority = V2TIM_PRIORITY_NORMAL;
     for (TUIChatConversationModel *conversation in conversations) {
         V2TIMMessage *message = [[V2TIMManager sharedInstance] createTextMessage:text];
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([conversation.conversationID isEqualToString:self.conversationData.conversationID]) {
-                // Send forward text to myself
-                [self.messageController sendMessage:message];
-            } else {
-                // Send to other conversation
-                message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
-                [TUIMessageDataProvider sendMessage:message
-                                     toConversation:conversation
-                                     isSendPushInfo:YES
-                                   isOnlineUserOnly:NO
-                                           priority:V2TIM_PRIORITY_NORMAL
-                                           Progress:nil
-                                          SuccBlock:^{
-                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged
-                                                                      object:message.msgID];
-                } FailBlock:^(int code, NSString *desc) {
-                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged
-                                                                      object:message.msgID];
-                }];
-            }
+          if ([conversation.conversationID isEqualToString:self.conversationData.conversationID]) {
+              // Send forward text to myself
+              [self.messageController sendMessage:message];
+          } else {
+              // Send to other conversation
+              message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
+              [TUIMessageDataProvider sendMessage:message
+                  toConversation:conversation
+                  appendParams:appendParams
+                  Progress:nil
+                  SuccBlock:^{
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message];
+                  }
+                  FailBlock:^(int code, NSString *desc) {
+                    [NSNotificationCenter.defaultCenter postNotificationName:TUIKitNotification_onMessageStatusChanged object:message];
+                  }];
+          }
         });
     }
 }
@@ -1126,36 +1129,38 @@ static UIView *customTopView;
 #pragma mark - Private Methods
 + (void)createCachePath {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if(![fileManager fileExistsAtPath:TUIKit_Image_Path]){
+    if (![fileManager fileExistsAtPath:TUIKit_Image_Path]) {
         [fileManager createDirectoryAtPath:TUIKit_Image_Path withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    if(![fileManager fileExistsAtPath:TUIKit_Video_Path]){
+    if (![fileManager fileExistsAtPath:TUIKit_Video_Path]) {
         [fileManager createDirectoryAtPath:TUIKit_Video_Path withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    if(![fileManager fileExistsAtPath:TUIKit_Voice_Path]){
+    if (![fileManager fileExistsAtPath:TUIKit_Voice_Path]) {
         [fileManager createDirectoryAtPath:TUIKit_Voice_Path withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    if(![fileManager fileExistsAtPath:TUIKit_File_Path]){
+    if (![fileManager fileExistsAtPath:TUIKit_File_Path]) {
         [fileManager createDirectoryAtPath:TUIKit_File_Path withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    if(![fileManager fileExistsAtPath:TUIKit_DB_Path]){
+    if (![fileManager fileExistsAtPath:TUIKit_DB_Path]) {
         [fileManager createDirectoryAtPath:TUIKit_DB_Path withIntermediateDirectories:YES attributes:nil error:nil];
     }
 }
 
 #pragma mark - TUIJoinGroupMessageCellDelegate
-- (void)didTapOnRestNameLabel:(TUIJoinGroupMessageCell *)cell withIndex:(NSInteger)index{
+- (void)didTapOnRestNameLabel:(TUIJoinGroupMessageCell *)cell withIndex:(NSInteger)index {
     NSString *userId = cell.joinData.userIDList[index];
-    
-    [self getUserOrFriendProfileVCWithUserID:userId succBlock:^(UIViewController *vc) {
-        [self.navigationController pushViewController:vc animated:YES];
-    } failBlock:^(int code, NSString *desc) {
-        [TUITool makeToastError:code msg:desc];
-    }];
+
+    [self getUserOrFriendProfileVCWithUserID:userId
+        succBlock:^(UIViewController *vc) {
+          [self.navigationController pushViewController:vc animated:YES];
+        }
+        failBlock:^(int code, NSString *desc) {
+          [TUITool makeToastError:code msg:desc];
+        }];
 }
 
 #pragma mark - V2TIMConversationListener
-- (void)onConversationChanged:(NSArray<V2TIMConversation*> *) conversationList {
+- (void)onConversationChanged:(NSArray<V2TIMConversation *> *)conversationList {
     for (V2TIMConversation *conv in conversationList) {
         if ([conv.conversationID isEqualToString:self.conversationData.conversationID]) {
             if (!self.conversationData.otherSideTyping) {
@@ -1191,7 +1196,10 @@ static UIView *customTopView;
 }
 
 - (void)onProvideVideo:(NSString *)videoUrl snapshot:(NSString *)snapshotUrl duration:(NSInteger)duration {
-    V2TIMMessage *message = [V2TIMManager.sharedInstance createVideoMessage:videoUrl type:videoUrl.pathExtension duration:(int)duration snapshotPath:snapshotUrl];
+    V2TIMMessage *message = [V2TIMManager.sharedInstance createVideoMessage:videoUrl
+                                                                       type:videoUrl.pathExtension
+                                                                   duration:(int)duration
+                                                               snapshotPath:snapshotUrl];
     [self sendMessage:message];
 }
 

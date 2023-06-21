@@ -3,6 +3,7 @@
 //  TUIGroup
 //
 //  Created by harvy on 2022/1/11.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIGroupNoticeCell.h"
@@ -10,31 +11,28 @@
 
 @implementation TUIGroupNoticeCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.descLabel];
-    
+
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
     tapRecognizer.delegate = self;
     tapRecognizer.cancelsTouchesInView = NO;
     [self.contentView addGestureRecognizer:tapRecognizer];
 }
 
-- (void)tapGesture:(UIGestureRecognizer *)gesture
-{
+- (void)tapGesture:(UIGestureRecognizer *)gesture {
     if (self.cellData.selector && self.cellData.target) {
         if ([self.cellData.target respondsToSelector:self.cellData.selector]) {
 #pragma clang diagnostic push
@@ -45,31 +43,28 @@
     }
 }
 
-- (void)setCellData:(TUIGroupNoticeCellData *)cellData
-{
+- (void)setCellData:(TUIGroupNoticeCellData *)cellData {
     _cellData = cellData;
-    
+
     self.nameLabel.text = cellData.name;
     self.descLabel.text = cellData.desc;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     [self.nameLabel sizeToFit];
     self.nameLabel.mm_x = 20.0;
     self.nameLabel.mm_y = 12.0;
     self.nameLabel.mm_flexToRight(20);
-    
+
     [self.descLabel sizeToFit];
     self.descLabel.mm_y = CGRectGetMaxY(self.nameLabel.frame) + 4;
     self.descLabel.mm_x = self.nameLabel.mm_x;
     self.descLabel.mm_flexToRight(30);
 }
 
-- (UILabel *)nameLabel
-{
+- (UILabel *)nameLabel {
     if (_nameLabel == nil) {
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.text = @"";
@@ -79,8 +74,7 @@
     return _nameLabel;
 }
 
-- (UILabel *)descLabel
-{
+- (UILabel *)descLabel {
     if (_descLabel == nil) {
         _descLabel = [[UILabel alloc] init];
         _descLabel.text = @"neirong";

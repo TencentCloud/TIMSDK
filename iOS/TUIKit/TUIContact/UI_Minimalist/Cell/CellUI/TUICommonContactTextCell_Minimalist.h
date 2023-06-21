@@ -3,11 +3,12 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,14 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property BOOL enableMultiLineValue;
 
-@property (nonatomic, assign) UIEdgeInsets keyEdgeInsets;
+@property(nonatomic, assign) UIEdgeInsets keyEdgeInsets;
 
 @end
 
 @interface TUICommonContactTextCell_Minimalist : TUICommonTableViewCell
 @property UILabel *keyLabel;
 @property UILabel *valueLabel;
-@property (readonly) TUICommonContactTextCellData_Minimalist *textData;
+@property(readonly) TUICommonContactTextCellData_Minimalist *textData;
 
 - (void)fillWithData:(TUICommonContactTextCellData_Minimalist *)data;
 

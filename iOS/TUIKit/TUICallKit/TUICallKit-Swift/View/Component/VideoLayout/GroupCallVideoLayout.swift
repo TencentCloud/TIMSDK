@@ -80,9 +80,8 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     func remoteUserChanged() {
         viewModel.remoteUserList.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
-            self.colleeCollectionView.performBatchUpdates {
-                self.colleeCollectionView.reloadData()
-            }
+            self.colleeCollectionView.reloadData()
+            self.colleeCollectionView.layoutIfNeeded()
         })
     }
 }
@@ -91,7 +90,7 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
 extension GroupCallVideoLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.remoteUserList.value.count == 0 ? 0 : viewModel.remoteUserList.value.count + 1
+        return viewModel.remoteUserList.value.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

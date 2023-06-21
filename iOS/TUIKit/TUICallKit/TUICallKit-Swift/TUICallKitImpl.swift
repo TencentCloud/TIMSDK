@@ -7,8 +7,14 @@
 
 import Foundation
 import TUICore
-import TXLiteAVSDK_TRTC
 import UIKit
+import TUICallEngine
+
+#if USE_TRTC
+import TXLiteAVSDK_TRTC
+#else
+import TXLiteAVSDK_Professional
+#endif
 
 class TUICallKitImpl: TUICallKit {
     
@@ -174,6 +180,10 @@ private extension TUICallKitImpl {
                                                selector: #selector(logoutSuccessNotification),
                                                name: NSNotification.Name.TUILogoutSuccess,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(showViewControllerNotification),
+                                               name: NSNotification.Name(Constants.EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER),
+                                               object: nil)
     }
     
     @objc func loginSuccessNotification(noti: Notification) {
@@ -185,6 +195,12 @@ private extension TUICallKitImpl {
     
     @objc func logoutSuccessNotification(noti: Notification) {
         CallEngineManager.instance.removeObserver(TUICallState.instance)
+    }
+    
+    @objc func showViewControllerNotification(noti: Notification) {
+        TUICallState.instance.audioDevice.value = .earpiece
+        CallEngineManager.instance.setAudioPlaybackDevice(device: .earpiece)
+        WindowManager.instance.showCallWindow()
     }
     
     func initEngine() {
@@ -220,15 +236,15 @@ private extension TUICallKitImpl {
     
     func registerObserveState() {
         TUICallState.instance.selfUser.value.callStatus.addObserver(selfUserCallStatusObserver, closure: { newValue, _ in
-            if TUICallState.instance.selfUser.value.callRole.value != .none &&
-                TUICallState.instance.selfUser.value.callStatus.value == .waiting {
-                TUICallState.instance.audioDevice.value = .earpiece
-                CallEngineManager.instance.setAudioPlaybackDevice(device: .earpiece)
+            if TUICallState.instance.selfUser.value.callRole.value != TUICallRole.none &&
+                TUICallState.instance.selfUser.value.callStatus.value == TUICallStatus.waiting {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+                CallEngineManager.instance.setAudioPlaybackDevice(device: TUIAudioPlaybackDevice.earpiece)
                 WindowManager.instance.showCallWindow()
             }
 
-            if TUICallState.instance.selfUser.value.callRole.value == .none &&
-                TUICallState.instance.selfUser.value.callStatus.value == .none {
+            if TUICallState.instance.selfUser.value.callRole.value == TUICallRole.none &&
+                TUICallState.instance.selfUser.value.callStatus.value == TUICallStatus.none {
                 WindowManager.instance.closeCallWindow()
                 WindowManager.instance.closeFloatWindow()
             }

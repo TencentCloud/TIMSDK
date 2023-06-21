@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by xia on 2022/3/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIMemberCellData.h"
@@ -21,7 +22,7 @@
         _avatarUrL = [NSURL URLWithString:avatarUrl];
     }
     _detail = detail;
-    
+
     if (nameCard.length > 0) {
         _title = nameCard;
     } else if (friendRemark.length > 0) {

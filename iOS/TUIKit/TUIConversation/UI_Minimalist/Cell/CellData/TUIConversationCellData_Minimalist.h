@@ -3,6 +3,7 @@
 //  TUIConversation
 //
 //  Created by wyl on 2022/10/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIConversationCellData.h"

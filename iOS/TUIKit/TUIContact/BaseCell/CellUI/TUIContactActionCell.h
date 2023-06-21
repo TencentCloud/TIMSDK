@@ -3,12 +3,13 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/6/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "TUIContactActionCellData.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <UIKit/UIKit.h>
+#import "TUIContactActionCellData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property UILabel *titleLabel;
 @property TUIUnReadView *unRead;
 
-@property (readonly) TUIContactActionCellData *actionData;
+@property(readonly) TUIContactActionCellData *actionData;
 
 - (void)fillWithData:(TUIContactActionCellData *)contactData;
 

@@ -7,8 +7,9 @@
 //
 
 #import "TUICallingCommon.h"
+#import <AVFoundation/AVCaptureDevice.h>
 #import "TUICallEngineHeader.h"
-#import "ImSDK_Plus/ImSDK_Plus.h"
+#import "TUICallKitHeader.h"
 #import "TUICallingUserModel.h"
 #import "CallingLocalized.h"
 
@@ -104,7 +105,21 @@
     return dstUser;
 }
 
-+ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType {
++ (BOOL)checkAuthorizationStatusIsDenied:(TUICallMediaType)callMediaType {
+    AVAuthorizationStatus statusAudio = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+    AVAuthorizationStatus statusVideo = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if ((callMediaType == TUICallMediaTypeVideo) && (statusVideo == AVAuthorizationStatusDenied)) {
+        return YES;
+    }
+    if (statusAudio == AVAuthorizationStatusDenied) {
+        return YES;
+    }
+    return NO;
+}
+
++ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType
+            openSettingHandler:(void(^)(void))openSettingHandler
+                 cancelHandler:(void(^)(void))cancelHandler {
     NSString *title = @"";
     NSString *message = @"";
     NSString *laterMessage = @"";
@@ -130,16 +145,28 @@
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:laterMessage style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        if (cancelHandler) {
+            cancelHandler();
+        }
+    }]];
     [alertController addAction:[UIAlertAction actionWithTitle:openSettingMessage
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
+        if (openSettingHandler) {
+            openSettingHandler();
+        }
         UIApplication *app = [UIApplication sharedApplication];
         NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         if ([app canOpenURL:settingsURL]) {
-            [app openURL:settingsURL];
+            if (@available(iOS 10.0, *)) {
+                [[UIApplication sharedApplication] openURL:settingsURL options:@{} completionHandler:nil];
+            } else {
+                [app openURL:settingsURL];
+            }
         }
     }]];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
     });

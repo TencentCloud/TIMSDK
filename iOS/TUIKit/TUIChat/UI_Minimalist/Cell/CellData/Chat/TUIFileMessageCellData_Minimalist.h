@@ -1,15 +1,19 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUIFileMessageCellData_Minimalist : TUIBubbleMessageCellData_Minimalist<TUIMessageCellDataFileUploadProtocol, TUIMessageCellDataFileDownloadProtocol>
+@interface TUIFileMessageCellData_Minimalist
+    : TUIBubbleMessageCellData_Minimalist <TUIMessageCellDataFileUploadProtocol, TUIMessageCellDataFileDownloadProtocol>
 
 /**
  *  文件存储路径
  *
  *  File path
  */
-@property (nonatomic, strong) NSString *path;
+@property(nonatomic, strong) NSString *path;
 
 /**
  *  文件名称
@@ -17,14 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  File name, including suffix.
  */
-@property (nonatomic, strong) NSString *fileName;
+@property(nonatomic, strong) NSString *fileName;
 
 /**
  *  文件内部 ID
  *
  *  Inner ID for file
  */
-@property (nonatomic, strong) NSString *uuid;
+@property(nonatomic, strong) NSString *uuid;
 
 /**
  *  文件长度
@@ -32,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  File size, used to display the data volume information of the file.
  */
-@property (nonatomic, assign) int length;
+@property(nonatomic, assign) int length;
 
 /**
  *  文件上传进度
@@ -40,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The progress of file uploading, which maintained by the cellData.
  */
-@property (nonatomic, assign) NSUInteger uploadProgress;
+@property(nonatomic, assign) NSUInteger uploadProgress;
 
 /**
  *  文件下载进度
@@ -48,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  The progress of file downloading, which maintained by the cellData.
  */
-@property (nonatomic, assign) NSUInteger downladProgress;
+@property(nonatomic, assign) NSUInteger downladProgress;
 
 /**
  *  下载标识符
@@ -57,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The flag of indicating whether the file is downloading
  *  YES: dowloading;  NO: not download
  */
-@property (nonatomic, assign) BOOL isDownloading;
+@property(nonatomic, assign) BOOL isDownloading;
 
 /**
  *  下载文件
@@ -71,7 +75,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  Downloading the file
  *  This method integrates and calls the IM SDK, and obtains the file through the interface provided by the SDK.
  *  1. Before downloading the file from server, it will try to read file from local when the file exists in the local.
- *  2. When the file not exists in the local, it will download from server through the api provided by IMSDK. But if there is downloading task, it will wait for the task finished.
+ *  2. When the file not exists in the local, it will download from server through the api provided by IMSDK. But if there is downloading task, it will wait for
+ * the task finished.
  *    - The download progress (percentage value) is updated through the callback of the IMSDK.
  *    - There are two parameters which is @curSize and @totalSize in the callback of IMSDK. The progress value equals to curSize * 100 / totalSize.
  *  3. When finished download, the file will be storaged to the @path.
@@ -86,7 +91,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  This method will first try to get the file path from the local, if the acquisition is successful, record the path and return YES. Otherwise return NO.
  */
 - (BOOL)isLocalExist;
-
 
 /**
  *  获取文件路径

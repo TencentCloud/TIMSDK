@@ -62,6 +62,7 @@
 		31D9464BA2C65FF16C2FDFD5 /* Pods_TIMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C81F4B46B1481B60E98731D4 /* Pods_TIMCommon.framework */; };
 		9346F8B92A0396EA00D54003 /* TUIGroupAvatar+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9346F8B72A0396EA00D54003 /* TUIGroupAvatar+Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9346F8BA2A0396EA00D54003 /* TUIGroupAvatar+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9346F8B82A0396EA00D54003 /* TUIGroupAvatar+Helper.m */; };
+		935F15922A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 935F15912A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,6 +123,7 @@
 		794E9563E5CF845D94EB0030 /* Pods-TIMCommon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TIMCommon.debug.xcconfig"; path = "Target Support Files/Pods-TIMCommon/Pods-TIMCommon.debug.xcconfig"; sourceTree = "<group>"; };
 		9346F8B72A0396EA00D54003 /* TUIGroupAvatar+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TUIGroupAvatar+Helper.h"; sourceTree = "<group>"; };
 		9346F8B82A0396EA00D54003 /* TUIGroupAvatar+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TUIGroupAvatar+Helper.m"; sourceTree = "<group>"; };
+		935F15912A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIMInputViewMoreActionProtocol.h; sourceTree = "<group>"; };
 		C66DD3F144DEE7E1E956FD7A /* Pods-TUICore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICore.debug.xcconfig"; path = "Target Support Files/Pods-TUICore/Pods-TUICore.debug.xcconfig"; sourceTree = "<group>"; };
 		C81F4B46B1481B60E98731D4 /* Pods_TIMCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TIMCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2D738DBAE3BB6797A7473EB /* Pods-TUICore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUICore.release.xcconfig"; path = "Target Support Files/Pods-TUICore/Pods-TUICore.release.xcconfig"; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 		162B82E729F7F1BC00443117 /* CommonModel */ = {
 			isa = PBXGroup;
 			children = (
+				935F15912A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h */,
 				9346F8B72A0396EA00D54003 /* TUIGroupAvatar+Helper.h */,
 				9346F8B82A0396EA00D54003 /* TUIGroupAvatar+Helper.m */,
 				162B82E829F7F1BC00443117 /* TIMPopActionProtocol.h */,
@@ -378,6 +381,7 @@
 				162B832829F7F1BD00443117 /* TUIFitButton.h in Headers */,
 				162B831D29F7F1BD00443117 /* TUIFloatViewController.h in Headers */,
 				9346F8B92A0396EA00D54003 /* TUIGroupAvatar+Helper.h in Headers */,
+				935F15922A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h in Headers */,
 				162B830029F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

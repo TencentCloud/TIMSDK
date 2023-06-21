@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by xia on 2022/6/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIEvaluationCell_Minimalist.h"
@@ -20,7 +21,7 @@
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _titleLabel.textColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
         [self.container addSubview:_titleLabel];
-       
+
         for (int i = 0; i < 5; i++) {
             UIImageView *imageView = [[UIImageView alloc] init];
             [imageView setImage:TUIChatBundleThemeImage(@"chat_custom_evaluation_message_img", @"message_custom_evaluation")];
@@ -39,10 +40,10 @@
 
 - (void)fillWithData:(TUIEvaluationCellData_Minimalist *)data {
     [super fillWithData:data];
-    
+
     self.titleLabel.text = data.desc;
     self.commentLabel.text = data.comment;
-    
+
     // Configure all StarViews to avoid UI cache clutter
     for (int i = 0; i < self.starImageArray.count; i++) {
         UIImageView *starView = [self.starImageArray objectAtIndex:i];
@@ -52,9 +53,9 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     self.titleLabel.mm_top(10).mm_left(10).mm_width(225).mm_height(18);
-    
+
     UIImageView *leftView = nil;
     for (UIImageView *starView in self.starImageArray) {
         if (leftView == nil) {
@@ -64,21 +65,17 @@
         }
         leftView = starView;
     }
-    
+
     UIImageView *starView = self.starImageArray.firstObject;
-    
+
     self.commentLabel.hidden = self.commentLabel.text.length == 0;
     if (self.commentLabel.text.length > 0) {
         CGRect rect = [self.commentLabel.text boundingRectWithSize:CGSizeMake(225, MAXFLOAT)
                                                            options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                        attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:15] }
+                                                        attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}
                                                            context:nil];
         CGSize size = CGSizeMake(225, ceilf(rect.size.height));
-        self.commentLabel
-            .mm_width(size.width)
-            .mm_height(size.height)
-            .mm_left(10)
-            .mm_top(starView.mm_y + starView.mm_h + 6);
+        self.commentLabel.mm_width(size.width).mm_height(size.height).mm_left(10).mm_top(starView.mm_y + starView.mm_h + 6);
     }
 }
 

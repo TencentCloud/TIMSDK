@@ -3,11 +3,12 @@
 //  TUIChat
 //
 //  Created by xiangzhang on 2022/1/6.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIChatSmallTongueView.h"
-#import <TUICore/TUIThemeManager.h>
 #import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIThemeManager.h>
 
 #define TongueHeight 35.f
 #define TongueImageWidth 12.f
@@ -17,15 +18,14 @@
 #define TongueRightSpace 10.f
 #define TongueFontSize 13
 
-@interface TUIChatSmallTongueView()
+@interface TUIChatSmallTongueView ()
 
 @property(nonatomic, strong) UIImageView *imageView;
 @property(nonatomic, strong) UILabel *label;
 
 @end
 
-@implementation TUIChatSmallTongueView
-{
+@implementation TUIChatSmallTongueView {
     TUIChatSmallTongue *_tongue;
 }
 
@@ -33,10 +33,9 @@
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onThemeChanged:) name:TUIDidApplyingThemeChangedNotfication object:nil];
 }
 
-- (instancetype) initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.backgroundColor = TUIChatDynamicColor(@"chat_small_tongue_bg_color", @"#FFFFFF");
         // 边框
         self.layer.borderWidth = 0.2;
@@ -83,7 +82,11 @@
 
 + (CGFloat)getTongueWidth:(TUIChatSmallTongue *)tongue {
     NSString *tongueText = [self getTongueText:tongue];
-    CGSize titleSize = [tongueText boundingRectWithSize:CGSizeMake(MAXFLOAT,TongueHeight) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:TongueFontSize]} context:nil].size;
+    CGSize titleSize = [tongueText boundingRectWithSize:CGSizeMake(MAXFLOAT, TongueHeight)
+                                                options:NSStringDrawingUsesLineFragmentOrigin
+                                             attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:TongueFontSize]}
+                                                context:nil]
+                           .size;
     CGFloat tongueWidth = TongueLeftSpace + TongueImageWidth + TongueMiddleSpace + titleSize.width + TongueRightSpace;
     return tongueWidth;
 }
@@ -96,31 +99,31 @@
         [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatNewMessages) forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
         [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatTipsAtMe) forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
     }
-    
+
     if (tongue.type == TUIChatSmallTongueType_ReceiveNewMsg) {
-        return [NSString stringWithFormat:[titleCacheFormat objectForKey:@(TUIChatSmallTongueType_ReceiveNewMsg)], tongue.unreadMsgCount > 99 ? @"99+" : @(tongue.unreadMsgCount)];
+        return [NSString stringWithFormat:[titleCacheFormat objectForKey:@(TUIChatSmallTongueType_ReceiveNewMsg)],
+                                          tongue.unreadMsgCount > 99 ? @"99+" : @(tongue.unreadMsgCount)];
     } else {
         return [titleCacheFormat objectForKey:@(tongue.type)];
     }
 }
 
-static NSMutableDictionary *imageCache;
+static NSMutableDictionary *gImageCache;
 + (UIImage *)getTongueImage:(TUIChatSmallTongue *)tongue {
-    if (imageCache == nil) {
-        imageCache = [NSMutableDictionary dictionary];
-        [imageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down")?:UIImage.new forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
-        [imageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down")?:UIImage.new forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
-        [imageCache setObject:TUIChatBundleThemeImage(@"chat_pull_up_img", @"pull_up")?:UIImage.new forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
+    if (gImageCache == nil) {
+        gImageCache = [NSMutableDictionary dictionary];
+        [gImageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down") ?: UIImage.new forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
+        [gImageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down") ?: UIImage.new forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
+        [gImageCache setObject:TUIChatBundleThemeImage(@"chat_pull_up_img", @"pull_up") ?: UIImage.new forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
     }
-    return [imageCache objectForKey:@(tongue.type)];
+    return [gImageCache objectForKey:@(tongue.type)];
 }
 
 + (void)onThemeChanged:(NSNotification *)notice {
-    imageCache = nil;
+    gImageCache = nil;
 }
 
 @end
-
 
 @implementation TUIChatSmallTongue
 
@@ -134,63 +137,62 @@ static NSMutableDictionary *imageCache;
 
 @end
 
-static TUIChatSmallTongueView *g_tongueView = nil;
-static TUIChatSmallTongue *g_tongue = nil;
-static UIWindow *g_window = nil;
+static TUIChatSmallTongueView *gTongueView = nil;
+static TUIChatSmallTongue *gTongue = nil;
+static UIWindow *gWindow = nil;
 
 @implementation TUIChatSmallTongueManager
 
-+ (void)showTongue:(TUIChatSmallTongue *)tongue delegate:(id<TUIChatSmallTongueViewDelegate>) delegate {
-    if (tongue.type == g_tongue.type
-        && tongue.unreadMsgCount == g_tongue.unreadMsgCount
-        && tongue.atMsgSeqs == g_tongue.atMsgSeqs) {
++ (void)showTongue:(TUIChatSmallTongue *)tongue delegate:(id<TUIChatSmallTongueViewDelegate>)delegate {
+    if (tongue.type == gTongue.type && tongue.unreadMsgCount == gTongue.unreadMsgCount && tongue.atMsgSeqs == gTongue.atMsgSeqs) {
         return;
     }
-    g_tongue = tongue;
-    
-    if (!g_window) {
-        g_window = [[UIWindow alloc] initWithFrame:CGRectZero];
-        g_window.windowLevel = UIWindowLevelAlert;
-        g_window.backgroundColor = [UIColor clearColor];
-        
+    gTongue = tongue;
+
+    if (!gWindow) {
+        gWindow = [[UIWindow alloc] initWithFrame:CGRectZero];
+        gWindow.windowLevel = UIWindowLevelAlert;
+        gWindow.backgroundColor = [UIColor clearColor];
+
         if (@available(iOS 13.0, *)) {
             for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
                 if (windowScene.activationState == UISceneActivationStateForegroundActive) {
-                    g_window.windowScene = windowScene;
+                    gWindow.windowScene = windowScene;
                     break;
                 }
             }
         }
     }
-    CGFloat tongueWidth = [TUIChatSmallTongueView getTongueWidth:g_tongue];
-    g_window.frame = CGRectMake(Screen_Width -  tongueWidth - 16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight, tongueWidth, TongueHeight);
+    CGFloat tongueWidth = [TUIChatSmallTongueView getTongueWidth:gTongue];
+    gWindow.frame =
+        CGRectMake(Screen_Width - tongueWidth - 16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight, tongueWidth, TongueHeight);
 
-    if (!g_tongueView) {
-        g_tongueView = [[TUIChatSmallTongueView alloc] initWithFrame:CGRectZero];
-        [g_window addSubview:g_tongueView];
-        g_window.hidden = NO;
+    if (!gTongueView) {
+        gTongueView = [[TUIChatSmallTongueView alloc] initWithFrame:CGRectZero];
+        [gWindow addSubview:gTongueView];
+        gWindow.hidden = NO;
     }
-    g_tongueView.frame = g_window.bounds;
-    g_tongueView.delegate = delegate;
-    [g_tongueView setTongue:g_tongue];
+    gTongueView.frame = gWindow.bounds;
+    gTongueView.delegate = delegate;
+    [gTongueView setTongue:gTongue];
 }
 
 + (void)removeTongue:(TUIChatSmallTongueType)type {
-    if (type != g_tongue.type) {
+    if (type != gTongue.type) {
         return;
     }
     [self removeTongue];
 }
 
 + (void)removeTongue {
-    g_tongue = nil;
-    g_tongueView =  nil;
-    g_window = nil;
+    gTongue = nil;
+    gTongueView = nil;
+    gWindow = nil;
 }
 
 + (void)hideTongue:(BOOL)isHidden {
-    if (g_tongueView) {
-        g_tongueView.hidden = isHidden;
+    if (gTongueView) {
+        gTongueView.hidden = isHidden;
     }
 }
 

@@ -15,21 +15,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIEmojiCellData : NSObject
 
-@property (nonatomic, copy) NSString *emojiName;
+@property(nonatomic, copy) NSString *emojiName;
 
-@property (nonatomic, copy) NSString *emojiPath;
+@property(nonatomic, copy) NSString *emojiPath;
 
-@property (nonatomic, assign) CGFloat cellHeight;
+@property(nonatomic, assign) CGFloat cellHeight;
 
-@property (nonatomic, copy) NSString *friendRemark;
+@property(nonatomic, copy) NSString *friendRemark;
 
-@property (nonatomic, copy) NSString *nickName;
+@property(nonatomic, copy) NSString *nickName;
 
-@property (nonatomic, copy) NSString *faceURL;
+@property(nonatomic, copy) NSString *faceURL;
 
-@property (nonatomic, copy) NSString *userID;
+@property(nonatomic, copy) NSString *userID;
 
-@property (nonatomic, assign) BOOL isCurrentUser;
+@property(nonatomic, assign) BOOL isCurrentUser;
 
 - (NSString *)displayName;
 

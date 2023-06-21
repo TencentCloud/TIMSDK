@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明了 TUIBubbleMessageCell 类。
@@ -8,10 +11,11 @@
  *  This document declares the TUIBubbleMessageCell class.
  *  Bubble messages, the most common type of messages that contain strings and emoticons.
  *  Both TUIFileMessageCell and TUIVoiceMessageCell inherit from this class and implement the userinterface of bubble messages.
- *  If developers want to customize the bubble message, they can also refer to the implementation methods of the above two message units to implement their own bubble message unit.
+ *  If developers want to customize the bubble message, they can also refer to the implementation methods of the above two message units to implement their own
+ * bubble message unit.
  */
-#import "TUIMessageCell.h"
 #import "TUIBubbleMessageCellData.h"
+#import "TUIMessageCell.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIBubbleMessageCell : TUIMessageCell
@@ -20,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  气泡图像视图，即消息的气泡图标，在 UI 上作为气泡的背景板包裹消息的内容。
  *  The bubble image view, the message's bubble icon, wraps the message's content on the UI as a background panel for the bubble.
  */
-@property (nonatomic, strong) UIImageView *bubbleView;
+@property(nonatomic, strong) UIImageView *bubbleView;
 
 @property TUIBubbleMessageCellData *bubbleData;
 

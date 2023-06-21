@@ -1,4 +1,7 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <Foundation/Foundation.h>
 @import UIKit;
 
@@ -20,23 +23,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The insets of message
  */
-@property (nonatomic, assign) UIEdgeInsets messageInsets;
+@property(nonatomic, assign) UIEdgeInsets messageInsets;
 
 /**
  * The insets of bubble content.
  */
-@property (nonatomic, assign) UIEdgeInsets bubbleInsets;
+@property(nonatomic, assign) UIEdgeInsets bubbleInsets;
 
 /**
  * The insets of avatar
  */
-@property (nonatomic, assign) UIEdgeInsets avatarInsets;
+@property(nonatomic, assign) UIEdgeInsets avatarInsets;
 
 /**
  * The size of avatar
  */
-@property (nonatomic, assign) CGSize avatarSize;
-
+@property(nonatomic, assign) CGSize avatarSize;
 
 /////////////////////////////////////////////////////////////////////////////////
 //                      Text Message Layout
@@ -56,7 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (TUIMessageCellLayout *)outgoingTextMessageLayout;
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //                      Voice Message Layout
 /////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +74,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  Getting voice message (send) layout
  */
 + (TUIMessageCellLayout *)outgoingVoiceMessageLayout;
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //                      System Message Layout

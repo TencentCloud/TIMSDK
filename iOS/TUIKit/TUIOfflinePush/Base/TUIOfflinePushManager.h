@@ -3,6 +3,7 @@
 //  TUIOfflinePush
 //
 //  Created by harvy on 2022/5/6.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 // ================ Apple 提供的 APNs 推送通道接入步骤 ================
 // 1. 集成 APNS 离线推送库。
@@ -14,7 +15,8 @@
 // 4. 本组件已支持离线推送内容解析，如果您想实现自定义跳转，您只需要在您的 AppDelegate 中实现如下方法即可：
 //    - (void)navigateToTUIChatViewController:(NSString *)userID groupID:(NSString *)groupID
 //
-// 注意：如果您登录后依然收不到推送，请检查您的 App 是否使用了 TUI 组件（TUIChat、TUIContact、TUIConversation、TUIGroup、TUISearch、TUICore、TUICalling 中的任意一个）。
+// 注意：如果您登录后依然收不到推送，请检查您的 App 是否使用了 TUI 组件（TUIChat、TUIContact、TUIConversation、TUIGroup、TUISearch、TUICore、TUICalling
+// 中的任意一个）。
 //  - 如果您不想使用 TUI 组件，但依然想接收离线推送，可参考 TUIOfflinePushManager+Advance 的高级用法。
 //  - 如果您使用了 TUI 组件，依然收不到推送，请加入 QQ 群（592465424）反馈。
 // ================================================================
@@ -29,12 +31,11 @@
 // 4. 本组件已支持离线推送内容解析，如果您想实现自定义跳转，您只需要在您的 AppDelegate 中实现如下方法即可：
 //    - (void)navigateToTUIChatViewController:(NSString *)userID groupID:(NSString *)groupID
 //
-// 注意：如果您登录后依然收不到推送，请检查您的 App 是否使用了 TUI 组件（TUIChat、TUIContact、TUIConversation、TUIGroup、TUISearch、TUICore、TUICalling 中的任意一个）。
+// 注意：如果您登录后依然收不到推送，请检查您的 App 是否使用了 TUI 组件（TUIChat、TUIContact、TUIConversation、TUIGroup、TUISearch、TUICore、TUICalling
+// 中的任意一个）。
 //  - 如果您不想使用 TUI 组件，但依然想接收离线推送，可参考 TUIOfflinePushManager+Advance 的高级用法。
 //  - 如果您使用了 TUI 组件，依然收不到推送，请加入 QQ 群（592465424）反馈。
 // ===================================================================
-
-
 
 // ================ The access steps of APNS ================
 // 1. Integrate APNS offline push component.
@@ -53,7 +54,8 @@
 // Note:
 //  If you still cannot receive push notifications after logging in,
 //  please check if your app uses TUI components (any of TUIChat, TUIContact, TUIConversation, TUIGroup, TUISearch, TUICore, TUICalling).
-//  - If you don't want to use the above TUI components, but still want to receive offline push, you can refer to the advanced usage of TUIOfflinePushManager+Advance.
+//  - If you don't want to use the above TUI components, but still want to receive offline push, you can refer to the advanced usage of
+//  TUIOfflinePushManager+Advance.
 //  - If you are using the TUI component and still cannot receive the push, please issue.
 // =======================================================================================
 
@@ -74,7 +76,8 @@
 // Note:
 //  If you still cannot receive push notifications after logging in,
 //  please check if your app uses TUI components (any of TUIChat, TUIContact, TUIConversation, TUIGroup, TUISearch, TUICore, TUICalling).
-//  - If you don't want to use the above TUI components, but still want to receive offline push, you can refer to the advanced usage of TUIOfflinePushManager+Advance.
+//  - If you don't want to use the above TUI components, but still want to receive offline push, you can refer to the advanced usage of
+//  TUIOfflinePushManager+Advance.
 //  - If you are using the TUI component and still cannot receive the push, please issue.
 // ===================================================================
 
@@ -129,14 +132,14 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @note
  * - If YES is returned, the component will no longer execute the default parsing logic, and will be completely handled by the business layer
- * - If it returns NO, the component will continue to execute the default resolution logic and continue to call back - navigateToTUIChatViewController:groupID: method
+ * - If it returns NO, the component will continue to execute the default resolution logic and continue to call back - navigateToTUIChatViewController:groupID:
+ * method
  */
 - (BOOL)processTUIOfflinePushNotification:(NSDictionary *)notification;
 
 @end
 
 @interface TUIOfflinePushManager : UIResponder <UIApplicationDelegate>
-
 
 @end
 

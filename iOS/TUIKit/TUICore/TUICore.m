@@ -1,435 +1,565 @@
-#import "TUICore.h"
-#import <objc/runtime.h>
-#include <mach-o/getsect.h>
-#include <mach-o/loader.h>
-#include <mach-o/dyld.h>
-#include <dlfcn.h>
-#import <objc/runtime.h>
-#import <objc/message.h>
-#include <mach-o/ldsyms.h>
-#import "TUIThemeManager.h"
-#import "TUIDefine.h"
 
-static NSMutableArray *serviceList = nil;
-static NSMutableArray<NSDictionary *> *eventList = nil;
-static NSMutableArray<NSDictionary *> *extensionList = nil;
-static NSMutableArray *objectFactoryList = nil;
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+#import "TUICore.h"
+
+#import <objc/runtime.h>
+
+#import "TUIDefine.h"
+#import "TUIThemeManager.h"
+#import "TUIWeakProxy.h"
 
 @implementation TUICore
 
 + (void)initialize {
-    serviceList = [NSMutableArray array];
-    eventList = [NSMutableArray array];
-    extensionList = [NSMutableArray array];
-    objectFactoryList = [NSMutableArray array];
     TUIRegisterThemeResourcePath(TUICoreThemePath, TUIThemeModuleCore);
-    TUIRegisterThemeResourcePath(TUIBundlePath(@"TUICoreTheme_Minimalist",TUICoreBundle_Key_Class), TUIThemeModuleCore_Minimalist);
-
+    TUIRegisterThemeResourcePath(TUIBundlePath(@"TUICoreTheme_Minimalist", TUICoreBundle_Key_Class), TUIThemeModuleCore_Minimalist);
 }
 
 + (void)registerService:(NSString *)serviceName object:(id<TUIServiceProtocol>)object {
-    if (serviceName.length == 0) {
-        NSLog(@"invalid serviceName");
-        return;
-    }
-    if (object == nil) {
-        NSLog(@"invalid object");
-        return;
-    }
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    param[@"serviceName"] = serviceName;
-    param[@"object"] = object;
-    [serviceList addObject:param];
+    [TUIServiceManager.shareInstance registerService:serviceName service:object];
 }
 
-+ (nullable id<TUIServiceProtocol>)getService:(NSString *)serviceName {
-    if (serviceName.length == 0) {
-        NSLog(@"invalid serviceName");
-        NSAssert(NO, @"invalid serviceName");
-        return nil;
-    }
-    
-    for (NSDictionary *service in serviceList) {
-        NSString *pServiceName = service[@"serviceName"];
-        if ([pServiceName isEqualToString:serviceName]) {
-            id<TUIServiceProtocol> pObject = service[@"object"];
-            return pObject;
-        }
-    }
-    
-    return nil;
++ (void)unregisterService:(NSString *)serviceName {
+    [TUIServiceManager.shareInstance unregisterService:serviceName];
+}
+
++ (id<TUIServiceProtocol>)getService:(NSString *)serviceName {
+    return [TUIServiceManager.shareInstance getService:serviceName];
 }
 
 + (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param {
-    return [self.class callService:serviceName method:method param:param resultCallback:nil];
+    return [TUIServiceManager.shareInstance callService:serviceName method:method param:param resultCallback:nil];
 }
 
-+ (id)callService:(NSString *)serviceName method:(NSString *)method param:(nullable NSDictionary *)param resultCallback:(nullable TUICallServiceResultCallback) resultCallback{
-    if (serviceName.length == 0) {
-        NSLog(@"invalid serviceName");
-        NSAssert(NO, @"invalid serviceName");
-        return nil;
-    }
-    if (method.length == 0) {
-        NSLog(@"invalid method");
-        NSAssert(NO, @"invalid method");
-        return nil;
-    }
-    for (NSDictionary *service in serviceList) {
-        NSString *pServiceName = service[@"serviceName"];
-        if ([pServiceName isEqualToString:serviceName]) {
-            id<TUIServiceProtocol> pObject = service[@"object"];
-            if(resultCallback){
-                if (pObject && [pObject respondsToSelector:@selector(onCall:param:resultCallback:)]) {
-                    return [pObject onCall:method param:param resultCallback:resultCallback];
-                }
-            }
-            else {
-                if (pObject && [pObject respondsToSelector:@selector(onCall:param:)]) {
-                    return [pObject onCall:method param:param];
-                }
-            }
-        }
-    }
-    
-    return nil;
-    
++ (id)callService:(NSString *)serviceName
+            method:(NSString *)method
+             param:(nullable NSDictionary *)param
+    resultCallback:(nullable TUICallServiceResultCallback)resultCallback {
+    return [TUIServiceManager.shareInstance callService:serviceName method:method param:param resultCallback:resultCallback];
 }
 
 + (void)registerEvent:(NSString *)key subKey:(NSString *)subKey object:(id<TUINotificationProtocol>)object {
-    if (key.length == 0) {
-        NSLog(@"invalid key");
-        return;
-    }
-    if (subKey.length == 0) {
-        subKey = @"";
-    }
-    
-    if (object == nil) {
-        NSLog(@"invalid object");
-        return;
-    }
-    
-    NSDictionary *event = @{
-        @"key"    : [key copy],
-        @"subKey" : [subKey copy],
-        @"object" : [TUIWeakProxy proxyWithTarget:object]
-    };
-    
-    @synchronized (eventList) {
-        [eventList addObject:event];
-    }
+    [TUIEventManager.shareInstance registerEvent:key subKey:subKey object:object];
 }
 
 + (void)unRegisterEventByObject:(id<TUINotificationProtocol>)object {
-    [self unRegisterEvent:nil subKey:nil object:object];
+    [TUIEventManager.shareInstance unRegisterEvent:object];
 }
 + (void)unRegisterEvent:(nullable NSString *)key subKey:(nullable NSString *)subKey object:(nullable id<TUINotificationProtocol>)object {
-    
-    @synchronized (eventList) {
-        
+    [TUIEventManager.shareInstance unRegisterEvent:key subKey:subKey object:object];
+}
+
++ (void)notifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(nullable NSDictionary *)param {
+    [TUIEventManager.shareInstance notifyEvent:key subKey:subKey object:anObject param:param];
+}
+
++ (void)registerExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object {
+    [TUIExtensionManager.shareInstance registerExtension:extensionID extension:object];
+}
+
++ (void)unRegisterExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object {
+    [TUIExtensionManager.shareInstance unRegisterExtension:extensionID extension:object];
+}
+
++ (NSDictionary *)getExtensionInfo:(NSString *)extensionID param:(nullable NSDictionary *)param {
+    return [TUIExtensionManager.shareInstance getExtensionInfo:extensionID param:param];
+}
+
++ (NSArray<TUIExtensionInfo *> *)getExtensionList:(NSString *)extensionID param:(nullable NSDictionary *)param {
+    return [TUIExtensionManager.shareInstance getExtensionList:extensionID param:param];
+}
+
++ (BOOL)raiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param {
+    return [TUIExtensionManager.shareInstance raiseExtension:extensionID parentView:parentView param:param];
+}
+
++ (void)registerObjectFactory:(NSString *)factoryName objectFactory:(id<TUIObjectProtocol>)objectFactory {
+    [TUIObjectFactoryManager.shareInstance registerObjectFactory:factoryName objectFactory:objectFactory];
+}
+
++ (void)unRegisterObjectFactory:(NSString *)factoryName {
+    [TUIObjectFactoryManager.shareInstance unRegisterObjectFactory:factoryName];
+}
+
++ (id)createObject:(NSString *)factoryName key:(NSString *)key param:(NSDictionary *)param {
+    return [TUIObjectFactoryManager.shareInstance createObject:factoryName method:key param:param];
+}
+
+@end
+
+#pragma mark - TUIRoute
+
+static const void *navigateValueCallback = @"navigateValueCallback";
+
+@implementation NSObject (TUIRoute)
+
+- (void)setNavigateValueCallback:(TUIValueResultCallback)callback {
+    objc_setAssociatedObject(self, navigateValueCallback, callback, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (TUIValueResultCallback)navigateValueCallback {
+    return objc_getAssociatedObject(self, navigateValueCallback);
+}
+
+@end
+
+@implementation UIViewController (TUIRoute)
+
+- (void)pushViewController:(NSString *)viewControllerKey param:(nullable NSDictionary *)param forResult:(nullable TUIValueResultCallback)callback {
+    NSAssert([self isKindOfClass:UINavigationController.class], @"self must be a navigation controller");
+    UIViewController *vc = [TUIObjectFactoryManager.shareInstance createObject:viewControllerKey param:param];
+    if ([vc isKindOfClass:UIViewController.class]) {
+        vc.navigateValueCallback = callback;
+        [(UINavigationController *)self pushViewController:vc animated:YES];
+    } else {
+        NSAssert(false, @"viewControllerKey not exists or invalid");
+    }
+}
+
+- (void)presentViewController:(NSString *)viewControllerKey param:(nullable NSDictionary *)param forResult:(nullable TUIValueResultCallback)callback {
+    [self presentViewController:viewControllerKey param:param embbedIn:nil forResult:callback];
+}
+
+- (void)presentViewController:(NSString *)viewControllerKey
+                        param:(nullable NSDictionary *)param
+                     embbedIn:(nullable UINavigationController *)navigationVC
+                    forResult:(nullable TUIValueResultCallback)callback {
+    UIViewController *vc = [TUIObjectFactoryManager.shareInstance createObject:viewControllerKey param:param];
+    if ([vc isKindOfClass:UIViewController.class]) {
+        vc.navigateValueCallback = callback;
+        if (navigationVC) {
+            if ([navigationVC isKindOfClass:UINavigationController.class]) {
+                NSMutableArray *arrayM = [NSMutableArray array];
+                if (navigationVC.viewControllers.count > 0) {
+                    [arrayM addObjectsFromArray:navigationVC.viewControllers];
+                }
+                [arrayM addObject:vc];
+                navigationVC.viewControllers = [NSArray arrayWithArray:arrayM];
+                [self presentViewController:navigationVC animated:YES completion:nil];
+            } else {
+                NSAssert(false, @"navigationVC must be a navigation controller");
+            }
+        } else {
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+    } else {
+        NSAssert(false, @"viewControllerKey not exists or invalid");
+    }
+}
+
+@end
+
+#pragma mark - TUIService
+
+@interface TUIServiceManager ()
+
+@property(nonatomic, strong) NSMapTable<NSString *, id<TUIServiceProtocol>> *serviceMap;
+
+@end
+
+@implementation TUIServiceManager
+
++ (instancetype)shareInstance {
+    static id instance = nil;
+    if (instance == nil) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+          instance = [[self alloc] init];
+        });
+    }
+    return instance;
+}
+
+- (void)registerService:(NSString *)serviceName service:(id<TUIServiceProtocol>)service {
+    NSAssert(serviceName.length > 0, @"invalid service name");
+    NSAssert(service != nil, @"invalid service");
+
+    if (serviceName && service) {
+        @synchronized(self.serviceMap) {
+            [self.serviceMap setObject:service forKey:serviceName];
+        }
+    }
+}
+
+- (void)unregisterService:(NSString *)serviceName {
+    NSAssert(serviceName.length > 0, @"invalid service name");
+
+    if (serviceName) {
+        @synchronized(self.serviceMap) {
+            [self.serviceMap removeObjectForKey:serviceName];
+        }
+    }
+}
+
+- (nullable id<TUIServiceProtocol>)getService:(NSString *)serviceName {
+    id<TUIServiceProtocol> service = nil;
+    @synchronized(self.serviceMap) {
+        service = [self.serviceMap objectForKey:serviceName];
+    }
+    return service;
+}
+
+- (nullable id)callService:(NSString *)serviceName
+                    method:(NSString *)method
+                     param:(nullable NSDictionary *)param
+            resultCallback:(nullable TUICallServiceResultCallback)resultCallback {
+    NSAssert(serviceName.length > 0, @"invalid service name");
+    NSAssert(method.length > 0, @"invalid method");
+
+    id<TUIServiceProtocol> service = [self getService:serviceName];
+    id result = nil;
+    if (resultCallback) {
+        if (service && [service respondsToSelector:@selector(onCall:param:resultCallback:)]) {
+            result = [service onCall:method param:param resultCallback:resultCallback];
+        }
+    } else {
+        if (service && [service respondsToSelector:@selector(onCall:param:)]) {
+            result = [service onCall:method param:param];
+        }
+    }
+
+    return result;
+}
+
+- (NSMapTable<NSString *, id<TUIServiceProtocol>> *)serviceMap {
+    if (_serviceMap == nil) {
+        _serviceMap = [NSMapTable strongToWeakObjectsMapTable];
+    }
+    return _serviceMap;
+}
+
+@end
+
+#pragma mark - TUIEvent
+
+@interface TUIEventManager ()
+
+@property(nonatomic, strong) NSMutableArray<NSDictionary *> *eventList;
+
+@end
+
+@implementation TUIEventManager
+
++ (instancetype)shareInstance {
+    static id instance = nil;
+    if (instance == nil) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+          instance = [[self alloc] init];
+        });
+    }
+    return instance;
+}
+
+- (void)registerEvent:(NSString *)key subKey:(NSString *)subKey object:(id<TUINotificationProtocol>)object {
+    NSAssert(key.length > 0, @"invalid key");
+    NSAssert(object != nil, @"invalid object");
+
+    if (subKey.length == 0) {
+        subKey = @"";
+    }
+
+    if (key && subKey && object) {
+        NSDictionary *event = @{@"key" : [key copy], @"subKey" : [subKey copy], @"object" : [TUIWeakProxy proxyWithTarget:object]};
+
+        @synchronized(self.eventList) {
+            [self.eventList addObject:event];
+        }
+    }
+}
+
+- (void)unRegisterEvent:(id<TUINotificationProtocol>)object {
+    [self unRegisterEvent:nil subKey:nil object:object];
+}
+
+- (void)unRegisterEvent:(nullable NSString *)key subKey:(nullable NSString *)subKey object:(nullable id<TUINotificationProtocol>)object {
+    @synchronized(self.eventList) {
         NSMutableArray *removeEventList = [NSMutableArray array];
-        for (NSDictionary *event in eventList) {
+        for (NSDictionary *event in self.eventList) {
             NSString *pkey = [event objectForKey:@"key"];
             NSString *pSubKey = [event objectForKey:@"subKey"];
             id pObject = [event objectForKey:@"object"];
-            
+
             if (pObject == nil || [(TUIWeakProxy *)pObject target] == nil) {
                 [removeEventList addObject:event];
             }
             if (key == nil && subKey == nil && pObject == object) {
                 [removeEventList addObject:event];
-            }
-            else if ([pkey isEqualToString:key] && subKey == nil && object == nil) {
+            } else if ([pkey isEqualToString:key] && subKey == nil && object == nil) {
                 [removeEventList addObject:event];
-            }
-            else if ([pkey isEqualToString:key] && [subKey isEqualToString:pSubKey] && object == nil) {
+            } else if ([pkey isEqualToString:key] && [subKey isEqualToString:pSubKey] && object == nil) {
                 [removeEventList addObject:event];
-            }
-            else if ([pkey isEqualToString:key] && [subKey isEqualToString:pSubKey] && pObject == object) {
+            } else if ([pkey isEqualToString:key] && [subKey isEqualToString:pSubKey] && pObject == object) {
                 [removeEventList addObject:event];
             }
         }
-        [eventList removeObjectsInArray:removeEventList];
+        [self.eventList removeObjectsInArray:removeEventList];
     }
 }
 
-+ (void)notifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)anObject param:(nullable NSDictionary *)param {
-    if (key.length == 0) {
-        NSLog(@"invalid key");
-        return;
-    }
+- (void)notifyEvent:(NSString *)key subKey:(NSString *)subKey object:(nullable id)object param:(nullable NSDictionary *)param {
+    NSAssert(key.length > 0, @"invalid key");
+
     if (subKey.length == 0) {
         subKey = @"";
     }
-    
-    @synchronized (eventList) {
-        for (NSDictionary *event in eventList) {
+
+    @synchronized(self.eventList) {
+        for (NSDictionary *event in self.eventList) {
             NSString *pkey = [event objectForKey:@"key"];
             NSString *pSubKey = [event objectForKey:@"subKey"];
-            
+
             if ([pkey isEqualToString:key] && [pSubKey isEqualToString:subKey]) {
                 id<TUINotificationProtocol> pObject = [event objectForKey:@"object"];
                 if (pObject) {
-                    [pObject onNotifyEvent:key subKey:subKey object:anObject param:param];
+                    [pObject onNotifyEvent:key subKey:subKey object:object param:param];
                 }
             }
         }
     }
 }
 
-+ (void)registerExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object {
-    if (extensionID.length == 0) {
-        NSLog(@"invalid extensionID");
-        return;
+- (NSMutableArray<NSDictionary *> *)eventList {
+    if (_eventList == nil) {
+        _eventList = [NSMutableArray array];
     }
-    if (object == nil) {
-        NSLog(@"invalid object");
-        return;
-    }
-    
-    NSDictionary *extension = @{
-        @"extensionID" : [extensionID copy],
-        @"object" : [TUIWeakProxy proxyWithTarget:object]
-    };
-    
-    @synchronized (extensionList) {
-        [extensionList addObject:extension];
-    }
-}
-
-+ (void)unRegisterExtension:(NSString *)extensionID object:(id<TUIExtensionProtocol>)object {
-    if (extensionID.length == 0) {
-        NSLog(@"invalid extensionID");
-        return;
-    }
-    
-    @synchronized (extensionList) {
-        NSMutableArray *removeExtensionList = [NSMutableArray array];
-        for (NSDictionary *extension in extensionList) {
-            NSString *pkey = [extension objectForKey:@"extensionID"];
-            id pObject = [extension objectForKey:@"object"];
-            
-            if (pObject == nil || [(TUIWeakProxy *)pObject target] == nil) {
-                [removeExtensionList addObject:extension];
-            }
-            else if ([pkey isEqualToString:extensionID]) {
-                [removeExtensionList addObject:extension];
-            }
-        }
-        [extensionList removeObjectsInArray:removeExtensionList];
-    }
-}
-
-+ (NSDictionary *)getExtensionInfo:(NSString *)extensionID param:(nullable NSDictionary *)param {
-    if (extensionID.length == 0) {
-        NSLog(@"invalid extensionID");
-        return nil;
-    }
-    
-    @synchronized (extensionList) {
-        for (NSDictionary *extension in extensionList) {
-            NSString *pkey = [extension objectForKey:@"extensionID"];
-            if ([pkey isEqualToString:extensionID]) {
-                id<TUIExtensionProtocol> pObject = [extension objectForKey:@"object"];
-                if (pObject && [pObject respondsToSelector:@selector(getExtensionInfo:param:)]) {
-                    NSDictionary *info = [pObject getExtensionInfo:extensionID param:param];
-                    if (info) {
-                        return info;
-                    }
-                }
-            }
-        }
-    }
-    return nil;
-}
-
-+ (NSArray<TUIExtensionInfo *> *)getExtensionList:(NSString *)extensionID param:(nullable NSDictionary *)param {
-    if (extensionID.length == 0) {
-        NSLog(@"invalid extensionID");
-        return @[];
-    }
-    
-    @synchronized (extensionList) {
-        NSMutableArray *resultExtensionInfoList = [NSMutableArray array];
-        for (NSDictionary *extension in extensionList) {
-            NSString *pkey = [extension objectForKey:@"extensionID"];
-            if ([pkey isEqualToString:extensionID]) {
-                id<TUIExtensionProtocol> pObject = [extension objectForKey:@"object"];
-                if (pObject && [pObject respondsToSelector:@selector(onGetExtension:param:)]) {
-                    NSArray<TUIExtensionInfo *> *infoList = [pObject onGetExtension:extensionID param:param];
-                    if (infoList) {
-                        [resultExtensionInfoList addObjectsFromArray:infoList];
-                    }
-                }
-            }
-        }
-        
-        // sort
-        NSArray *result = [resultExtensionInfoList sortedArrayUsingComparator:^NSComparisonResult(TUIExtensionInfo *obj1, TUIExtensionInfo *obj2) {
-            if (obj1.weight > obj2.weight) {
-                return NSOrderedAscending;
-            } else {
-                return NSOrderedDescending;
-            }
-        }];
-        return result;
-    }
-    return @[];
-}
-
-+ (void)raiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param {
-    if (extensionID.length == 0) {
-        NSLog(@"invalid extensionID");
-        return ;
-    }
-    @synchronized (extensionList) {
-        for (NSDictionary *extension in extensionList) {
-            NSString *pkey = [extension objectForKey:@"extensionID"];
-            if ([pkey isEqualToString:extensionID]) {
-                id<TUIExtensionProtocol> pObject = [extension objectForKey:@"object"];
-                if (pObject && [pObject respondsToSelector:@selector(onRaiseExtension:parentView:param:)]) {
-                    return [pObject onRaiseExtension:extensionID parentView:parentView param:param];
-                }
-            }
-        }
-    }
-
-}
-
-+ (void)registerObjectFactoryName:(NSString *)factoryName objectFactory:(id<TUIObjectProtocol>)objectFactory {
-    if (factoryName.length == 0) {
-        NSLog(@"invalid factoryName");
-        return;
-    }
-    if (objectFactory == nil) {
-        NSLog(@"invalid objectFactory");
-        return;
-    }
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    param[@"factoryName"] = factoryName;
-    param[@"objectFactory"] = objectFactory;
-    [objectFactoryList addObject:param];
-}
-
-+ (void)unRegisterObjectFactory:(NSString *)factoryName {
-    @synchronized (objectFactoryList) {
-        
-        NSMutableArray *removeObjectFactoryList = [NSMutableArray array];
-        for (NSDictionary *objectFactory in objectFactoryList) {
-            NSString *pFactoryName = [objectFactory objectForKey:@"factoryName"];
-            id pFactoryObject = [objectFactory objectForKey:@"objectFactory"];
-            
-            if ([pFactoryName isEqualToString:factoryName] && pFactoryObject != nil){
-                [removeObjectFactoryList addObject:pFactoryObject];
-            }
-        }
-        [objectFactoryList removeObjectsInArray:removeObjectFactoryList];
-    }
-}
-
-+ (id)createObject:(NSString *)factoryName key:(NSString *)key param:(NSDictionary *)param  {
-    return [self _createObject:factoryName key:key param:param];
-}
-
-+ (id)_createObject:(NSString *)factoryName key:(NSString *)key param:(NSDictionary *)param {
-    if (factoryName.length == 0) {
-        NSLog(@"invalid factoryName");
-        NSAssert(NO, @"invalid factoryName");
-        return nil;
-    }
-    if (key.length == 0) {
-        NSLog(@"invalid key");
-        NSAssert(NO, @"invalid key");
-        return nil;
-    }
-    for (NSDictionary *factory in objectFactoryList) {
-        NSString *pFactoryName = factory[@"factoryName"];
-        if ([pFactoryName isEqualToString:factoryName]) {
-            id<TUIObjectProtocol> pObject = factory[@"objectFactory"];
-            if (pObject && [pObject respondsToSelector:@selector(onCreateObject:param:)]) {
-                return [pObject onCreateObject:key param:param];
-            }
-        }
-    }
-    
-    return nil;
+    return _eventList;
 }
 
 @end
 
-
-@implementation TUIWeakProxy
-
-- (instancetype)initWithTarget:(id)target {
-    _target = target;
-    return self;
-}
-
-+ (instancetype)proxyWithTarget:(id)target {
-    return [[self alloc] initWithTarget:target];
-}
-
-- (id)forwardingTargetForSelector:(SEL)selector {
-    return _target;
-}
-
-- (void)forwardInvocation:(NSInvocation *)invocation {
-    void *null = NULL;
-    [invocation setReturnValue:&null];
-}
-
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
-    return [NSObject instanceMethodSignatureForSelector:@selector(init)];
-}
-
-- (BOOL)respondsToSelector:(SEL)aSelector {
-    return [_target respondsToSelector:aSelector];
-}
-
-- (BOOL)isEqual:(id)object {
-    return [_target isEqual:object];
-}
-
-- (NSUInteger)hash {
-    return [_target hash];
-}
-
-- (Class)superclass {
-    return [_target superclass];
-}
-
-- (Class)class {
-    return [_target class];
-}
-
-- (BOOL)isKindOfClass:(Class)aClass {
-    return [_target isKindOfClass:aClass];
-}
-
-- (BOOL)isMemberOfClass:(Class)aClass {
-    return [_target isMemberOfClass:aClass];
-}
-
-- (BOOL)conformsToProtocol:(Protocol *)aProtocol {
-    return [_target conformsToProtocol:aProtocol];
-}
-
-- (BOOL)isProxy {
-    return YES;
-}
-
-- (NSString *)description {
-    return [_target description];
-}
-
-- (NSString *)debugDescription {
-    return [_target debugDescription];
-}
-
-@end
-
+#pragma mark - TUIExtension
 
 @implementation TUIExtensionInfo
+
+@end
+
+@interface TUIExtensionManager ()
+
+@property(nonatomic, strong) NSMutableDictionary<NSString *, NSHashTable<id<TUIExtensionProtocol>> *> *extensionMap;
+
+@end
+
+@implementation TUIExtensionManager
+
++ (instancetype)shareInstance {
+    static id instance = nil;
+    if (instance == nil) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+          instance = [[self alloc] init];
+        });
+    }
+    return instance;
+}
+
+- (void)registerExtension:(NSString *)extensionID extension:(id<TUIExtensionProtocol>)extension {
+    NSAssert(extensionID.length > 0, @"invalid extension id");
+    NSAssert(extension != nil, @"invalid extension");
+
+    if (extensionID && extension) {
+        @synchronized(self.extensionMap) {
+            NSHashTable *list = [self.extensionMap objectForKey:extensionID];
+            if (list == nil) {
+                list = [NSHashTable weakObjectsHashTable];
+            }
+            [list addObject:extension];
+            [self.extensionMap setObject:list forKey:extensionID];
+        }
+    }
+}
+
+- (void)unRegisterExtension:(NSString *)extensionID extension:(id<TUIExtensionProtocol>)extension {
+    NSAssert(extensionID.length > 0, @"invalid extension id");
+    NSAssert(extension != nil, @"invalid extension");
+
+    if (extensionID && extension) {
+        @synchronized(self.extensionMap) {
+            NSHashTable *list = [self.extensionMap objectForKey:extensionID];
+            if (list == nil) {
+                list = [NSHashTable weakObjectsHashTable];
+            }
+            [list removeObject:extension];
+            [self.extensionMap setObject:list forKey:extensionID];
+        }
+    }
+}
+
+- (NSArray<TUIExtensionInfo *> *)getExtensionList:(NSString *)extensionID param:(nullable NSDictionary *)param {
+    NSAssert(extensionID.length > 0, @"invalid extension id");
+
+    NSHashTable *list = nil;
+    @synchronized(self.extensionMap) {
+        list = [self.extensionMap objectForKey:extensionID];
+    }
+    if (list == nil || list.count == 0) {
+        return @[];
+    }
+
+    // get
+    NSMutableArray *resultExtensionInfoList = [NSMutableArray array];
+    for (id<TUIExtensionProtocol> observer in list) {
+        if (observer && [observer respondsToSelector:@selector(onGetExtension:param:)]) {
+            NSArray<TUIExtensionInfo *> *infoList = [observer onGetExtension:extensionID param:param];
+            if (infoList) {
+                [resultExtensionInfoList addObjectsFromArray:infoList];
+            }
+        }
+    }
+
+    // sort
+    NSArray *result = [resultExtensionInfoList sortedArrayUsingComparator:^NSComparisonResult(TUIExtensionInfo *obj1, TUIExtensionInfo *obj2) {
+      if (obj1.weight > obj2.weight) {
+          return NSOrderedAscending;
+      } else {
+          return NSOrderedDescending;
+      }
+    }];
+
+    return result;
+}
+
+- (BOOL)raiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param {
+    NSAssert(extensionID.length > 0, @"invalid extension id");
+    NSAssert(parentView != nil, @"invalid parent view");
+
+    NSHashTable *list = nil;
+    @synchronized(self.extensionMap) {
+        list = [self.extensionMap objectForKey:extensionID];
+    }
+    if (list == nil || list.count == 0) {
+        return NO;
+    }
+
+    BOOL isResponserExist = NO;
+    for (id<TUIExtensionProtocol> observer in list) {
+        if (observer && [observer respondsToSelector:@selector(onRaiseExtension:parentView:param:)]) {
+            isResponserExist = [observer onRaiseExtension:extensionID parentView:parentView param:param];
+            if (isResponserExist) {
+                break;
+            }
+        }
+    }
+    return isResponserExist;
+}
+
+- (NSDictionary *)getExtensionInfo:(NSString *)extensionID param:(nullable NSDictionary *)param {
+    NSAssert(extensionID.length > 0, @"invalid extension id");
+
+    NSHashTable *list = nil;
+    @synchronized(self.extensionMap) {
+        list = [self.extensionMap objectForKey:extensionID];
+    }
+    if (list == nil || list.count == 0) {
+        return nil;
+    }
+
+    for (id<TUIExtensionProtocol> observer in list) {
+        if (observer && [observer respondsToSelector:@selector(onGetExtensionInfo:param:)]) {
+            NSDictionary *info = [observer onGetExtensionInfo:extensionID param:param];
+            if (info) {
+                return info;
+            }
+        }
+    }
+    return nil;
+}
+
+- (NSMutableDictionary<NSString *, NSHashTable<id<TUIExtensionProtocol>> *> *)extensionMap {
+    if (_extensionMap == nil) {
+        _extensionMap = [NSMutableDictionary dictionary];
+    }
+    return _extensionMap;
+}
+@end
+
+#pragma mark - TUIObjectFactory
+
+@interface TUIObjectFactoryManager ()
+
+@property(nonatomic, strong) NSMapTable<NSString *, id<TUIObjectProtocol>> *objectFactoryMap;
+
+@end
+
+@implementation TUIObjectFactoryManager : NSObject
+
++ (instancetype)shareInstance {
+    static id instance = nil;
+    if (instance == nil) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+          instance = [[self alloc] init];
+        });
+    }
+    return instance;
+}
+
+- (void)registerObjectFactory:(NSString *)factoryName objectFactory:(id<TUIObjectProtocol>)objectFactory {
+    NSAssert(factoryName.length > 0, @"invalid factory name");
+    NSAssert(objectFactory != nil, @"invalid object factory");
+
+    if (factoryName && objectFactory) {
+        @synchronized(self.objectFactoryMap) {
+            [self.objectFactoryMap setObject:objectFactory forKey:factoryName];
+        }
+    }
+}
+
+- (void)unRegisterObjectFactory:(NSString *)factoryName {
+    NSAssert(factoryName.length > 0, @"invalid factory name");
+
+    if (factoryName) {
+        @synchronized(self.objectFactoryMap) {
+            [self.objectFactoryMap removeObjectForKey:factoryName];
+        }
+    }
+}
+
+- (nullable id)createObject:(NSString *)factoryName method:(NSString *)method param:(nullable NSDictionary *)param {
+    NSAssert(factoryName.length > 0, @"invalid factory name");
+    NSAssert(method.length > 0, @"invalid method");
+
+    id<TUIObjectProtocol> factory = nil;
+    @synchronized(self.objectFactoryMap) {
+        factory = [self.objectFactoryMap objectForKey:factoryName];
+    }
+
+    if (factory && [factory respondsToSelector:@selector(onCreateObject:param:)]) {
+        return [factory onCreateObject:method param:param];
+    }
+
+    return nil;
+}
+
+- (nullable id)createObject:(NSString *)method param:(NSDictionary *)param {
+    NSAssert(method.length > 0, @"invalid method");
+
+    NSArray<id<TUIObjectProtocol>> *list = nil;
+    @synchronized(self.objectFactoryMap) {
+        list = self.objectFactoryMap.objectEnumerator.allObjects;
+    }
+    if (list == nil || list.count == 0) {
+        return nil;
+    }
+
+    for (id<TUIObjectProtocol> factory in list) {
+        if (factory && [factory respondsToSelector:@selector(onCreateObject:param:)]) {
+            id obj = [factory onCreateObject:method param:param];
+            if (obj) {
+                return obj;
+            }
+        }
+    }
+
+    return nil;
+}
+
+- (NSMapTable<NSString *, id<TUIObjectProtocol>> *)objectFactoryMap {
+    if (_objectFactoryMap == nil) {
+        _objectFactoryMap = [NSMapTable strongToWeakObjectsMapTable];
+    }
+    return _objectFactoryMap;
+}
 
 @end

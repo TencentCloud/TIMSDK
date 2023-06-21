@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by harvy on 2020/12/23.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -18,17 +19,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)searchBar:(TUISearchBar *)searchBar searchText:(NSString *)key;
 @end
 
-
 @interface TUISearchBar : UIView
 
-@property (nonatomic, strong, readonly) UISearchBar *searchBar;
+@property(nonatomic, strong, readonly) UISearchBar *searchBar;
 
-@property (nonatomic, weak) id<TUISearchBarDelegate> delegate;
-
-@property (nonatomic, strong) UIViewController *parentVC;
+@property(nonatomic, weak) id<TUISearchBarDelegate> delegate;
+// use weak, prevent circular references
+@property(nonatomic, weak) UIViewController *parentVC;
 
 - (void)setEntrance:(BOOL)isEntrance;
-
 
 @end
 

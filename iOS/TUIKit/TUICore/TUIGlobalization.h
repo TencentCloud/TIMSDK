@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by harvy on 2020/10/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -12,35 +13,26 @@
  * TUIKit 字符串国际化
  * Get localized strings in TUIKit
  */
-#define TUIKitLocalizableString(key)    \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TUIKitLocalizableBundle]
+#define TUIKitLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIKitLocalizableBundle]
 
-#define TUICoreLocalizableString(key)   \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TUICoreLocalizableBundle]
+#define TUICoreLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUICoreLocalizableBundle]
 
-#define TUIChatLocalizableString(key)   \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TUIChatLocalizableBundle]
+#define TUIChatLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIChatLocalizableBundle]
 
-#define TUIConversationLocalizableString(key)   \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TUIConversationLocalizableBundle]
+#define TUIConversationLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIConversationLocalizableBundle]
 
-#define TUIContactLocalizableString(key)   \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TUIContactLocalizableBundle]
+#define TUIContactLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIContactLocalizableBundle]
 
-#define TUIGroupLocalizableString(key)   \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TUIGroupLocalizableBundle]
+#define TUIGroupLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIGroupLocalizableBundle]
 
-#define TUISearchLocalizableString(key)   \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TUISearchLocalizableBundle]
+#define TUISearchLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUISearchLocalizableBundle]
 
-#define TIMCommonLocalizableString(key)   \
-    [TUIGlobalization getLocalizedStringForKey:@""#key""  bundle:TIMCommonLocalizableBundle]
-
+#define TIMCommonLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TIMCommonLocalizableBundle]
 
 #define TUICustomLanguageKey @"TUICustomLanguageKey"
 #define TUIChangeLanguageNotification @"TUIChangeLanguageNotification"
 
-@interface TUIGlobalization:NSObject
+@interface TUIGlobalization : NSObject
 
 /**
  * 获取本地化字符串
@@ -71,4 +63,3 @@
 + (NSString *)tk_localizableLanguageKey __attribute__((deprecated("use getPreferredLanguage")));
 
 @end
-

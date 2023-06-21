@@ -3,6 +3,7 @@
 //  TUIConversation
 //
 //  Created by harvy on 2022/7/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

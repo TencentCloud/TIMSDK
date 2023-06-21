@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by harvy on 2022/5/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIOfflinePushManager.h"
@@ -23,14 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onReportToken:(NSData *)deviceToken;
 - (void)onReceiveOfflinePushEntity:(NSDictionary *)entity;
 
-@property (nonatomic, assign, readonly) int apnsCertificateID;
+@property(nonatomic, assign, readonly) int apnsCertificateID;
 
-@property (nonatomic, copy, readonly) NSString *tpnsConfigDomain;
-@property (nonatomic, assign, readonly) int tpnsConfigAccessID;
-@property (nonatomic, copy, readonly) NSString *tpnsConfigAccessKey;
+@property(nonatomic, copy, readonly) NSString *tpnsConfigDomain;
+@property(nonatomic, assign, readonly) int tpnsConfigAccessID;
+@property(nonatomic, copy, readonly) NSString *tpnsConfigAccessKey;
 
-@property (nonatomic, strong, nullable) id<UIApplicationDelegate> applicationDelegate;
-@property (nonatomic, assign) BOOL serviceRegistered;
+@property(nonatomic, strong, nullable) id<UIApplicationDelegate> applicationDelegate;
+@property(nonatomic, assign) BOOL serviceRegistered;
 - (void)loadApplicationDelegateIfNeeded;
 - (void)unloadApplicationDelegateIfNeeded;
 

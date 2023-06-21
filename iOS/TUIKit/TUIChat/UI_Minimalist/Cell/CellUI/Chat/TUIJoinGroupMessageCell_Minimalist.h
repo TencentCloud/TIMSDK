@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 #import <TIMCommon/TUISystemMessageCell.h>
 #import "TUIJoinGroupMessageCellData_Minimalist.h"
 NS_ASSUME_NONNULL_BEGIN
@@ -18,13 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIJoinGroupMessageCell_Minimalist : TUISystemMessageCell
 
-
 @property TUIJoinGroupMessageCellData_Minimalist *joinData;
 
-@property (nonatomic,weak) id<TUIJoinGroupMessageCellDelegate_Minimalist> joinGroupDelegate;
+@property(nonatomic, weak) id<TUIJoinGroupMessageCellDelegate_Minimalist> joinGroupDelegate;
 
 @end
-
-
 
 NS_ASSUME_NONNULL_END

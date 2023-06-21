@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by harvy on 2022/6/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #ifndef TUIGroup_h

@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by xiangzhang on 2021/6/25.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -16,10 +17,10 @@ typedef NS_ENUM(NSUInteger, TUIAddCellState) {
 };
 
 @interface TUIAddCellData : NSObject
-@property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSString *head;
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, assign) TUIAddCellState state;
+@property(nonatomic, strong) NSString *identifier;
+@property(nonatomic, strong) NSString *head;
+@property(nonatomic, strong) NSString *name;
+@property(nonatomic, assign) TUIAddCellState state;
 @end
 
 NS_ASSUME_NONNULL_END

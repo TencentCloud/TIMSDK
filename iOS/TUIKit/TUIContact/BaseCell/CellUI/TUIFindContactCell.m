@@ -3,17 +3,18 @@
 //  TUIContact
 //
 //  Created by harvy on 2021/12/13.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIFindContactCell.h"
-#import <TUICore/UIView+TUILayout.h>
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import <TUICore/UIView+TUILayout.h>
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
 @implementation TUIFindContactCell
 
--  (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self setupView];
     }
@@ -29,19 +30,19 @@
 
 - (void)setData:(TUIFindContactCellModel *)data {
     _data = data;
-    
+
     self.mainTitleLabel.text = data.mainTitle;
     self.subTitleLabel.text = data.subTitle;
     self.descLabel.text = data.desc;
-    UIImage *placeHolder =  (data.type == TUIFindContactTypeC2C)?DefaultAvatarImage:DefaultGroupAvatarImageByGroupType(data.groupInfo.groupType);
-    [self.avatarView sd_setImageWithURL:data.avatarUrl placeholderImage:data.avatar?:placeHolder];
-    
+    UIImage *placeHolder = (data.type == TUIFindContactTypeC2C) ? DefaultAvatarImage : DefaultGroupAvatarImageByGroupType(data.groupInfo.groupType);
+    [self.avatarView sd_setImageWithURL:data.avatarUrl placeholderImage:data.avatar ?: placeHolder];
+
     self.descLabel.hidden = (data.type == TUIFindContactTypeC2C);
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     self.avatarView.mm_left(16 * kScale).mm_top(12 * kScale).mm_width(48 * kScale).mm_height(48 * kScale);
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatarView.layer.masksToBounds = YES;
@@ -50,17 +51,17 @@
         self.avatarView.layer.masksToBounds = YES;
         self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
-    
+
     self.mainTitleLabel.mm_sizeToFit();
     self.mainTitleLabel.mm_x = CGRectGetMaxX(self.avatarView.frame) + 12 * kScale;
     self.mainTitleLabel.mm_y = self.avatarView.mm_y;
     self.mainTitleLabel.mm_flexToRight(12 * kScale);
-    
+
     self.subTitleLabel.mm_sizeToFit();
     self.subTitleLabel.mm_x = self.mainTitleLabel.mm_x;
     self.subTitleLabel.mm_y = CGRectGetMaxY(self.mainTitleLabel.frame) + 2 * kScale;
     self.subTitleLabel.mm_flexToRight(12 * kScale);
-    
+
     self.descLabel.mm_sizeToFit();
     self.descLabel.mm_x = self.mainTitleLabel.mm_x;
     self.descLabel.mm_y = CGRectGetMaxY(self.subTitleLabel.frame) + 2 * kScale;
@@ -90,7 +91,7 @@
     if (_subTitleLabel == nil) {
         _subTitleLabel = [[UILabel alloc] init];
         _subTitleLabel.text = @"subTitle";
-        _subTitleLabel.textColor =  TIMCommonDynamicColor(@"form_subtitle_color", @"#888888");
+        _subTitleLabel.textColor = TIMCommonDynamicColor(@"form_subtitle_color", @"#888888");
         _subTitleLabel.font = [UIFont systemFontOfSize:13.0 * kScale];
     }
     return _subTitleLabel;

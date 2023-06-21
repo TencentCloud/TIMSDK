@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/5/24.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <TIMCommon/TUIBubbleMessageCell.h>
@@ -23,17 +24,17 @@ NS_ASSUME_NONNULL_BEGIN
  * 引用的边框
  * Border of quote view
  */
-@property (nonatomic, strong) CALayer *quoteBorderLayer;
+@property(nonatomic, strong) CALayer *quoteBorderLayer;
 
-@property (nonatomic, strong) UIView *quoteView;
+@property(nonatomic, strong) UIView *quoteView;
 
-@property (nonatomic, strong) UILabel *senderLabel;
+@property(nonatomic, strong) UILabel *senderLabel;
 
-@property (nonatomic, strong) TUIReferenceMessageCellData *referenceData;
+@property(nonatomic, strong) TUIReferenceMessageCellData *referenceData;
 
-@property (nonatomic, strong) TUITextView *textView;
-@property (nonatomic, strong) NSString *selectContent;
-@property (nonatomic, strong) TUIReferenceSelectAllContentCallback selectAllContentContent;
+@property(nonatomic, strong) TUITextView *textView;
+@property(nonatomic, strong) NSString *selectContent;
+@property(nonatomic, strong) TUIReferenceSelectAllContentCallback selectAllContentContent;
 
 - (void)fillWithData:(TUIReferenceMessageCellData *)data;
 

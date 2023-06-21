@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 #import "TUISearchService.h"
 
 #import <TIMCommon/TIMDefine.h>
@@ -14,9 +17,9 @@
 
 + (TUISearchService *)shareInstance {
     static dispatch_once_t onceToken;
-    static TUISearchService * g_sharedInstance = nil;
+    static TUISearchService *g_sharedInstance = nil;
     dispatch_once(&onceToken, ^{
-        g_sharedInstance = [[TUISearchService alloc] init];
+      g_sharedInstance = [[TUISearchService alloc] init];
     });
     return g_sharedInstance;
 }

@@ -3,20 +3,20 @@
 //  UIKit
 //
 //  Created by annidyfeng on 2019/5/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUISystemMessageCell.h"
 #import <TIMCommon/TIMDefine.h>
 
 @interface TUISystemMessageCell ()
-@property (nonatomic, strong) UILabel *messageLabel;
+@property(nonatomic, strong) UILabel *messageLabel;
 @property TUISystemMessageCellData *systemData;
 @end
 
 @implementation TUISystemMessageCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _messageLabel = [[UILabel alloc] init];
@@ -45,8 +45,7 @@
     [self.indicator stopAnimating];
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     self.container.center = self.contentView.center;
     self.messageLabel.frame = self.container.bounds;

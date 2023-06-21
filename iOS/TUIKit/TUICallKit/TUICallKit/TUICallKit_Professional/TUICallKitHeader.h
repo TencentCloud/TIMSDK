@@ -9,7 +9,8 @@
 #ifndef TUICallKitHeader_h
 #define TUICallKitHeader_h
 
-@import TXLiteAVSDK_Professional;
+#import <TXLiteAVSDK_Professional/TXLiteAVSDK.h>
+
 @import ImSDK_Plus;
 
 #endif /* TUICallKitHeader_h */

@@ -11,16 +11,13 @@
 @implementation TUITagsUserModel
 
 - (NSString *)getDisplayName {
-    if(IS_NOT_EMPTY_NSSTRING(self.nameCard)) {
+    if (IS_NOT_EMPTY_NSSTRING(self.nameCard)) {
         return self.nameCard;
-    }
-    else if (IS_NOT_EMPTY_NSSTRING(self.friendRemark)) {
+    } else if (IS_NOT_EMPTY_NSSTRING(self.friendRemark)) {
         return self.friendRemark;
-    }
-    else if (IS_NOT_EMPTY_NSSTRING(self.nickName)) {
+    } else if (IS_NOT_EMPTY_NSSTRING(self.nickName)) {
         return self.nickName;
-    }
-    else {
+    } else {
         return self.userID;
     }
     return @"";
@@ -51,10 +48,10 @@
 }
 
 - (NSString *)descriptionFollowUserStr {
-    if (self.followUserNames.count <=0) {
+    if (self.followUserNames.count <= 0) {
         return @"";
     }
-    
+
     NSString *str = [self.followUserNames componentsJoinedByString:@","];
     return str;
 }

@@ -28,6 +28,13 @@ class VideoFactory {
         return videoView
     }
     
+    func isExistVideoView(videoView: VideoView) -> Bool {
+        let isExist = false
+        for view in viewMap where view.value.videoView == videoView {
+            return true
+        }
+        return isExist
+    }
 }
 
 class UserVideoEntity {

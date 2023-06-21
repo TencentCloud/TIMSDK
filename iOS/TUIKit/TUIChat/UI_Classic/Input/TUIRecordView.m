@@ -10,18 +10,16 @@
 #import <TIMCommon/TIMDefine.h>
 
 @implementation TUIRecordView
-- (id)init
-{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = [UIColor clearColor];
 
     _background = [[UIView alloc] init];
@@ -45,12 +43,11 @@
     [_background addSubview:_title];
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
     CGSize backSize = Record_Background_Size;
     _title.text = TIMCommonLocalizableString(TUIKitInputRecordSlideToCancel);
     CGSize titleSize = [_title sizeThatFits:CGSizeMake(Screen_Width, Screen_Height)];
-    if(titleSize.width > backSize.width){
+    if (titleSize.width > backSize.width) {
         backSize.width = titleSize.width + 2 * Record_Margin;
     }
 
@@ -61,29 +58,24 @@
     _title.frame = CGRectMake(0, titley, backSize.width, backSize.height - titley);
 }
 
-- (void)setStatus:(RecordStatus)status
-{
+- (void)setStatus:(RecordStatus)status {
     switch (status) {
-        case Record_Status_Recording:
-        {
+        case Record_Status_Recording: {
             _title.text = TIMCommonLocalizableString(TUIKitInputRecordSlideToCancel);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }
-        case Record_Status_Cancel:
-        {
+        case Record_Status_Cancel: {
             _title.text = TIMCommonLocalizableString(TUIKitInputRecordReleaseToCancel);
             _title.backgroundColor = Record_Title_Background_Color;
             break;
         }
-        case Record_Status_TooShort:
-        {
+        case Record_Status_TooShort: {
             _title.text = TIMCommonLocalizableString(TUIKitInputRecordTimeshort);
             _title.backgroundColor = [UIColor clearColor];
             break;
         }
-        case Record_Status_TooLong:
-        {
+        case Record_Status_TooLong: {
             _title.text = TIMCommonLocalizableString(TUIKitInputRecordTimeLong);
             _title.backgroundColor = [UIColor clearColor];
             break;
@@ -93,26 +85,21 @@
     }
 }
 
-- (void)setPower:(NSInteger)power
-{
+- (void)setPower:(NSInteger)power {
     NSString *imageName = [self getRecordImage:power];
     _recordImage.image = [UIImage imageNamed:TUIChatImagePath(imageName)];
 }
 
-- (NSString *)getRecordImage:(NSInteger)power
-{
+- (NSString *)getRecordImage:(NSInteger)power {
     power = power + 60;
     int index = 0;
-    if (power < 25){
+    if (power < 25) {
         index = 1;
-    } else{
+    } else {
         index = ceil((power - 25) / 5.0) + 1;
     }
     index = MIN(index, 8);
     return [NSString stringWithFormat:@"record_%d", index];
 }
-
-
-
 
 @end

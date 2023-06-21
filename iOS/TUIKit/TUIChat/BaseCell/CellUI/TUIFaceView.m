@@ -12,28 +12,26 @@
 #import <TUICore/TUIThemeManager.h>
 
 @interface TUIFaceView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) NSMutableArray *sectionIndexInGroup;
-@property (nonatomic, strong) NSMutableArray *pageCountInGroup;
-@property (nonatomic, strong) NSMutableArray *groupIndexInSection;
-@property (nonatomic, strong) NSMutableDictionary *itemIndexs;
-@property (nonatomic, assign) NSInteger sectionCount;
-@property (nonatomic, assign) NSInteger curGroupIndex;
+@property(nonatomic, strong) NSMutableArray *sectionIndexInGroup;
+@property(nonatomic, strong) NSMutableArray *pageCountInGroup;
+@property(nonatomic, strong) NSMutableArray *groupIndexInSection;
+@property(nonatomic, strong) NSMutableDictionary *itemIndexs;
+@property(nonatomic, assign) NSInteger sectionCount;
+@property(nonatomic, assign) NSInteger curGroupIndex;
 @end
 
 @implementation TUIFaceView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _faceFlowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -64,19 +62,16 @@
     [self addSubview:_pageControl];
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
     _lineView.frame = CGRectMake(0, 0, self.frame.size.width, TLine_Heigh);
     _pageControl.frame = CGRectMake(0, self.frame.size.height - TFaceView_Page_Height, self.frame.size.width, TFaceView_Page_Height);
-    _faceCollectionView.frame = CGRectMake(0, _lineView.frame.origin.y + _lineView.frame.size.height + TFaceView_Margin, self.frame.size.width, self.frame.size.height - _pageControl.frame.size.height - _lineView.frame.size.height - 2 * TFaceView_Margin);
+    _faceCollectionView.frame = CGRectMake(0, _lineView.frame.origin.y + _lineView.frame.size.height + TFaceView_Margin, self.frame.size.width,
+                                           self.frame.size.height - _pageControl.frame.size.height - _lineView.frame.size.height - 2 * TFaceView_Margin);
 }
 
-
-- (void)setData:(NSMutableArray *)data
-{
+- (void)setData:(NSMutableArray *)data {
     _faceGroups = data;
     [self defaultLayout];
-
 
     _sectionIndexInGroup = [NSMutableArray array];
     _groupIndexInSection = [NSMutableArray array];
@@ -88,7 +83,7 @@
         TUIFaceGroup *group = _faceGroups[groupIndex];
         [_sectionIndexInGroup addObject:@(sectionIndex)];
         int itemCount = group.rowCount * group.itemCountPerRow;
-        int sectionCount = ceil(group.faces.count * 1.0 / (itemCount  - (group.needBackDelete ? 1 : 0)));
+        int sectionCount = ceil(group.faces.count * 1.0 / (itemCount - (group.needBackDelete ? 1 : 0)));
         [_pageCountInGroup addObject:@(sectionCount)];
         for (int sectionIndex = 0; sectionIndex < sectionCount; ++sectionIndex) {
             [_groupIndexInSection addObject:@(groupIndex)];
@@ -96,7 +91,6 @@
         sectionIndex += sectionCount;
     }
     _sectionCount = sectionIndex;
-
 
     for (NSInteger curSection = 0; curSection < _sectionCount; ++curSection) {
         NSNumber *groupIndex = _groupIndexInSection[curSection];
@@ -114,83 +108,74 @@
     }
 
     _curGroupIndex = 0;
-    if(_pageCountInGroup.count != 0){
+    if (_pageCountInGroup.count != 0) {
         _pageControl.numberOfPages = [_pageCountInGroup[0] intValue];
     }
     [_faceCollectionView reloadData];
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return _sectionCount;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     int groupIndex = [_groupIndexInSection[section] intValue];
     TUIFaceGroup *group = _faceGroups[groupIndex];
     return group.rowCount * group.itemCountPerRow;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     TUIFaceCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:TFaceCell_ReuseId forIndexPath:indexPath];
     int groupIndex = [_groupIndexInSection[indexPath.section] intValue];
     TUIFaceGroup *group = _faceGroups[groupIndex];
     int itemCount = group.rowCount * group.itemCountPerRow;
-    if(indexPath.row == itemCount - 1 && group.needBackDelete){
+    if (indexPath.row == itemCount - 1 && group.needBackDelete) {
         TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
         data.path = TUIChatFaceImagePath(@"del_normal");
         [cell setData:data];
-    }
-    else{
+    } else {
         NSNumber *index = [_itemIndexs objectForKey:indexPath];
-        if(index.integerValue < group.faces.count){
+        if (index.integerValue < group.faces.count) {
             TUIFaceCellData *data = group.faces[index.integerValue];
             [cell setData:data];
-        }
-        else{
+        } else {
             [cell setData:nil];
         }
     }
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     int groupIndex = [_groupIndexInSection[indexPath.section] intValue];
     TUIFaceGroup *faces = _faceGroups[groupIndex];
     int itemCount = faces.rowCount * faces.itemCountPerRow;
-    if(indexPath.row == itemCount - 1 && faces.needBackDelete){
-        if(_delegate && [_delegate respondsToSelector:@selector(faceViewDidBackDelete:)]){
+    if (indexPath.row == itemCount - 1 && faces.needBackDelete) {
+        if (_delegate && [_delegate respondsToSelector:@selector(faceViewDidBackDelete:)]) {
             [_delegate faceViewDidBackDelete:self];
         }
-    }
-    else{
+    } else {
         NSNumber *index = [_itemIndexs objectForKey:indexPath];
-        if(index.integerValue < faces.faces.count){
-            if(_delegate && [_delegate respondsToSelector:@selector(faceView:didSelectItemAtIndexPath:)]){
+        if (index.integerValue < faces.faces.count) {
+            if (_delegate && [_delegate respondsToSelector:@selector(faceView:didSelectItemAtIndexPath:)]) {
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index.integerValue inSection:groupIndex];
                 [_delegate faceView:self didSelectItemAtIndexPath:indexPath];
             }
-        }
-        else{
-
+        } else {
         }
     }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     int groupIndex = [_groupIndexInSection[indexPath.section] intValue];
     TUIFaceGroup *group = _faceGroups[groupIndex];
     CGFloat width = (self.frame.size.width - TFaceView_Page_Padding * 2 - TFaceView_Margin * (group.itemCountPerRow - 1)) / group.itemCountPerRow;
-    CGFloat height = (collectionView.frame.size.height -  TFaceView_Margin * (group.rowCount - 1)) / group.rowCount;
+    CGFloat height = (collectionView.frame.size.height - TFaceView_Margin * (group.rowCount - 1)) / group.rowCount;
     return CGSizeMake(width, height);
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSInteger curSection = round(scrollView.contentOffset.x / scrollView.frame.size.width);
     if (curSection >= _groupIndexInSection.count) {
         return;
@@ -198,29 +183,28 @@
     NSNumber *groupIndex = _groupIndexInSection[curSection];
     NSNumber *startSection = _sectionIndexInGroup[groupIndex.integerValue];
     NSNumber *pageCount = _pageCountInGroup[groupIndex.integerValue];
-    if(_curGroupIndex != groupIndex.integerValue){
+    if (_curGroupIndex != groupIndex.integerValue) {
         _curGroupIndex = groupIndex.integerValue;
         _pageControl.numberOfPages = pageCount.integerValue;
-        if(_delegate && [_delegate respondsToSelector:@selector(faceView:scrollToFaceGroupIndex:)]){
+        if (_delegate && [_delegate respondsToSelector:@selector(faceView:scrollToFaceGroupIndex:)]) {
             [_delegate faceView:self scrollToFaceGroupIndex:_curGroupIndex];
         }
     }
     _pageControl.currentPage = curSection - startSection.integerValue;
 }
 
-
-- (void)scrollToFaceGroupIndex:(NSInteger)index
-{
-    if(index > _sectionIndexInGroup.count){
+- (void)scrollToFaceGroupIndex:(NSInteger)index {
+    if (index > _sectionIndexInGroup.count) {
         return;
     }
     NSNumber *start = _sectionIndexInGroup[index];
     NSNumber *count = _pageCountInGroup[index];
     NSInteger curSection = ceil(_faceCollectionView.contentOffset.x / _faceCollectionView.frame.size.width);
-    if(curSection > start.integerValue && curSection < start.integerValue + count.integerValue){
+    if (curSection > start.integerValue && curSection < start.integerValue + count.integerValue) {
         return;
     }
-    CGRect rect = CGRectMake(start.integerValue * _faceCollectionView.frame.size.width, 0, _faceCollectionView.frame.size.width, _faceCollectionView.frame.size.height);
+    CGRect rect =
+        CGRectMake(start.integerValue * _faceCollectionView.frame.size.width, 0, _faceCollectionView.frame.size.width, _faceCollectionView.frame.size.height);
     [_faceCollectionView scrollRectToVisible:rect animated:NO];
     [self scrollViewDidScroll:_faceCollectionView];
 }

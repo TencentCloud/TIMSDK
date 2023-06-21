@@ -6,25 +6,25 @@
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
 #import "TUIFriendRequestViewController_Minimalist.h"
-#import <TUICore/UIView+TUILayout.h>
-#import "TUICommonContactProfileCardCell.h"
 #import <TIMCommon/TIMCommonModel.h>
-#import "TUICommonContactSwitchCell.h"
-#import "TUIContactAvatarViewController_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import <TUICore/UIView+TUILayout.h>
+#import "TUICommonContactProfileCardCell.h"
+#import "TUICommonContactSwitchCell.h"
+#import "TUIContactAvatarViewController_Minimalist.h"
 #import "TUIContactButtonCell_Minimalist.h"
 #import "UIView+TUIToast.h"
 
 @interface TUIFriendRequestViewController_Minimalist () <UITableViewDataSource, UITableViewDelegate>
 @property UITableView *tableView;
-@property UITextView  *addWordTextView;
+@property UITextView *addWordTextView;
 @property UITextField *nickTextField;
 @property UILabel *groupNameLabel;
 @property BOOL keyboardShown;
 @property TUICommonContactProfileCardCellData *cardCellData;
 @property TUICommonContactSwitchCellData *singleSwitchData;
-@property (nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @end
 
 @implementation TUIFriendRequestViewController_Minimalist
@@ -51,26 +51,26 @@
     paragraphStyle.lineSpacing = 5;
     paragraphStyle.firstLineHeadIndent = kScale390(12.5);
     paragraphStyle.alignment = NSTextAlignmentLeft;
-    NSDictionary *attributes = @{
-                   NSFontAttributeName:[UIFont systemFontOfSize:kScale390(16)],
-                   NSParagraphStyleAttributeName:paragraphStyle
-                   };
-    NSString * selfUserID = [[V2TIMManager sharedInstance] getLoginUser];
-    [[V2TIMManager sharedInstance] getUsersInfo:@[selfUserID] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-            if (infoList && infoList.count > 0) {
-                V2TIMUserFullInfo * userInfo = [infoList firstObject];
-                if (userInfo) {
-                    NSString *text = [NSString stringWithFormat:TIMCommonLocalizableString(FriendRequestFormat), userInfo.nickName?userInfo.nickName:userInfo.userID];
-                    self.addWordTextView.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attributes];
-                }
-            }
-        } fail:^(int code, NSString *desc) {
-            
-        }];
+    NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:kScale390(16)], NSParagraphStyleAttributeName : paragraphStyle};
+    NSString *selfUserID = [[V2TIMManager sharedInstance] getLoginUser];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[ selfUserID ]
+                                           succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                                             if (infoList && infoList.count > 0) {
+                                                 V2TIMUserFullInfo *userInfo = [infoList firstObject];
+                                                 if (userInfo) {
+                                                     NSString *text = [NSString stringWithFormat:TIMCommonLocalizableString(FriendRequestFormat),
+                                                                                                 userInfo.nickName ? userInfo.nickName : userInfo.userID];
+                                                     self.addWordTextView.attributedText = [[NSAttributedString alloc] initWithString:text
+                                                                                                                           attributes:attributes];
+                                                 }
+                                             }
+                                           }
+                                           fail:^(int code, NSString *desc){
+
+                                           }];
 
     self.nickTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.nickTextField.textAlignment = NSTextAlignmentRight;
-
 
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:TIMCommonLocalizableString(FriendRequestFillInfo)];
@@ -81,39 +81,33 @@
     data.name = [self.profile showName];
     data.genderString = [self.profile showGender];
     data.identifier = self.profile.userID;
-    data.signature =  [self.profile showSignature];
+    data.signature = [self.profile showSignature];
     data.avatarImage = DefaultAvatarImage;
     data.avatarUrl = [NSURL URLWithString:self.profile.faceURL];
     data.showSignature = YES;
     self.cardCellData = data;
 
-
     self.singleSwitchData = [TUICommonContactSwitchCellData new];
     self.singleSwitchData.title = TIMCommonLocalizableString(FriendOneWay);
 
+    @weakify(self);
+    [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillShowNotification object:nil] filter:^BOOL(NSNotification *value) {
+      @strongify(self);
+      return !self.keyboardShown;
+    }] subscribeNext:^(NSNotification *x) {
+      @strongify(self);
+      self.keyboardShown = YES;
+      [self adjustContentOffsetDuringKeyboardAppear:YES withNotification:x];
+    }];
 
-    @weakify(self)
-    [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillShowNotification object:nil]
-      filter:^BOOL(NSNotification *value) {
-          @strongify(self);
-          return !self.keyboardShown;
-      }]
-     subscribeNext:^(NSNotification *x) {
-         @strongify(self);
-         self.keyboardShown = YES;
-         [self adjustContentOffsetDuringKeyboardAppear:YES withNotification:x];
-     }];
-
-    [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillHideNotification object:nil]
-      filter:^BOOL(NSNotification *value) {
-          @strongify(self);
-          return self.keyboardShown;
-      }]
-     subscribeNext:^(NSNotification *x) {
-         @strongify(self);
-         self.keyboardShown = NO;
-         [self adjustContentOffsetDuringKeyboardAppear:NO withNotification:x];
-     }];
+    [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillHideNotification object:nil] filter:^BOOL(NSNotification *value) {
+      @strongify(self);
+      return self.keyboardShown;
+    }] subscribeNext:^(NSNotification *x) {
+      @strongify(self);
+      self.keyboardShown = NO;
+      [self adjustContentOffsetDuringKeyboardAppear:NO withNotification:x];
+    }];
 }
 
 #pragma mark - Keyboard
@@ -124,14 +118,17 @@
     CGRect keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGFloat keyboardHeight = CGRectGetHeight(keyboardEndFrame);
 
-
     CGSize contentSize = self.tableView.contentSize;
-    contentSize.height += appear? -keyboardHeight : keyboardHeight;
+    contentSize.height += appear ? -keyboardHeight : keyboardHeight;
 
-    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-        self.tableView.contentSize = contentSize;
-        [self.view layoutIfNeeded];
-    } completion:nil];
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:UIViewAnimationOptionBeginFromCurrentState | curve
+                     animations:^{
+                       self.tableView.contentSize = contentSize;
+                       [self.view layoutIfNeeded];
+                     }
+                     completion:nil];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -146,12 +143,9 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-{
-    return 4;
-}
+{ return 4; }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UILabel *label = [[UILabel alloc] init];
     label.textColor = [UIColor tui_colorWithHex:@"#000000"];
     label.font = [UIFont systemFontOfSize:14.0];
@@ -163,23 +157,21 @@
     return label;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return section == 0 ? 0 : 38;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 2) {
         return 2;
     }
     return 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        TUICommonContactProfileCardCell *cell = [[TUICommonContactProfileCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TPersonalCommonCell_ReuseId"];
+        TUICommonContactProfileCardCell *cell = [[TUICommonContactProfileCardCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                                                       reuseIdentifier:@"TPersonalCommonCell_ReuseId"];
         cell.delegate = self;
         [cell fillWithData:self.cardCellData];
         return cell;
@@ -195,16 +187,15 @@
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"NickName"];
             cell.textLabel.text = TIMCommonLocalizableString(Alia);
             [cell.contentView addSubview:self.nickTextField];
-            
+
             UIView *separtor = [[UIView alloc] init];
             separtor.backgroundColor = [UIColor groupTableViewBackgroundColor];
             [cell.contentView addSubview:separtor];
             separtor.mm_width(tableView.mm_w).mm_bottom(0).mm_left(0).mm_height(1);
-            
-            self.nickTextField.mm_width(cell.contentView.mm_w/2).mm_height(cell.contentView.mm_h).mm_right(20);
-            self.nickTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-            
-            
+
+            self.nickTextField.mm_width(cell.contentView.mm_w / 2).mm_height(cell.contentView.mm_h).mm_right(20);
+            self.nickTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+
             return cell;
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupName"];
@@ -212,12 +203,12 @@
             cell.textLabel.text = TIMCommonLocalizableString(Group);
             cell.detailTextLabel.text = TIMCommonLocalizableString(my_friend);
             self.groupNameLabel = cell.detailTextLabel;
-            
+
             UIView *separtor = [[UIView alloc] init];
             separtor.backgroundColor = [UIColor groupTableViewBackgroundColor];
             [cell.contentView addSubview:separtor];
             separtor.mm_width(tableView.mm_w).mm_bottom(0).mm_left(0).mm_height(1);
-            
+
             return cell;
         }
     }
@@ -227,30 +218,29 @@
         data.style = ButtonBule;
         data.title = TIMCommonLocalizableString(Send);
         data.cselector = @selector(onSend);
-        data.textColor = TIMCommonDynamicColor(@"primary_theme_color", @"147AFF"); //[UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
+        data.textColor =
+            TIMCommonDynamicColor(@"primary_theme_color", @"147AFF");  //[UIColor colorWithRed:20/255.0 green:122/255.0 blue:255/255.0 alpha:1/1.0];
         [cell fillWithData:data];
-        
+
         return cell;
     }
 
     return nil;
 }
 
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     return NO;
 }
 
-- (void)onSend
-{
+- (void)onSend {
     [self.view endEditing:YES];
     // display toast with an activity spinner
     [TUITool makeToastActivity];
-    
+
     V2TIMFriendAddApplication *application = [[V2TIMFriendAddApplication alloc] init];
     application.addWording = self.addWordTextView.text;
     application.friendRemark = self.nickTextField.text;
-    //application.group = self.groupNameLabel.text;
+    // application.group = self.groupNameLabel.text;
     application.userID = self.profile.userID;
     application.addSource = @"iOS";
     if (self.singleSwitchData.on) {
@@ -258,76 +248,77 @@
     } else {
         application.addType = V2TIM_FRIEND_TYPE_BOTH;
     }
-    
-    [[V2TIMManager sharedInstance] addFriend:application succ:^(V2TIMFriendOperationResult *result) {
-        NSString *msg = nil;
-        BOOL isSuccessFlag = NO;
-        if (ERR_SUCC == result.resultCode) {
-            msg = TIMCommonLocalizableString(FriendAddResultSuccess);
-            isSuccessFlag = YES;
+
+    [[V2TIMManager sharedInstance] addFriend:application
+        succ:^(V2TIMFriendOperationResult *result) {
+          NSString *msg = nil;
+          BOOL isSuccessFlag = NO;
+          if (ERR_SUCC == result.resultCode) {
+              msg = TIMCommonLocalizableString(FriendAddResultSuccess);
+              isSuccessFlag = YES;
+          } else if (ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS == result.resultCode) {
+              if ([result.resultInfo isEqualToString:@"Err_SNS_FriendAdd_Friend_Exist"]) {
+                  msg = TIMCommonLocalizableString(FriendAddResultExists);
+              }
+          } else {
+              if (result.resultCode == ERR_SVR_FRIENDSHIP_ALLOW_TYPE_NEED_CONFIRM) {
+                  isSuccessFlag = YES;
+              }
+              msg = [TUITool convertIMError:result.resultCode msg:result.resultInfo];
+          }
+
+          if (msg.length == 0) {
+              msg = [NSString stringWithFormat:@"%ld", (long)result.resultCode];
+          }
+
+          [TUITool hideToastActivity];
+          [self showHud:isSuccessFlag msgText:msg];
         }
-        else if (ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS == result.resultCode) {
-            if ([result.resultInfo isEqualToString:@"Err_SNS_FriendAdd_Friend_Exist"]) {
-                msg = TIMCommonLocalizableString(FriendAddResultExists);
-            }
-        }
-        else {
-            if(result.resultCode == ERR_SVR_FRIENDSHIP_ALLOW_TYPE_NEED_CONFIRM) {
-                isSuccessFlag = YES;
-            }
-            msg = [TUITool convertIMError:result.resultCode msg:result.resultInfo];
-        }
-        
-        if (msg.length == 0) {
-            msg = [NSString stringWithFormat:@"%ld", (long)result.resultCode];
-        }
-        
-        [TUITool hideToastActivity];
-        [self showHud:isSuccessFlag msgText:msg];
-    } fail:^(int code, NSString *desc) {
-        [TUITool hideToastActivity];
-        [TUITool makeToastError:code msg:desc];
-    }];
+        fail:^(int code, NSString *desc) {
+          [TUITool hideToastActivity];
+          [TUITool makeToastError:code msg:desc];
+        }];
 }
-- (void)showHud:(BOOL)isSuccess msgText:(NSString *)msgText{
-    
-    UIView * hudView = [[UIView alloc] init];
+- (void)showHud:(BOOL)isSuccess msgText:(NSString *)msgText {
+    UIView *hudView = [[UIView alloc] init];
     hudView.frame = CGRectMake(0, 0, Screen_Width, Screen_Height);
     hudView.backgroundColor = [UIColor tui_colorWithHex:@"#000000" alpha:0.6];
-    
+
     UIView *msgView = [[UIView alloc] init];
     [hudView addSubview:msgView];
     msgView.layer.masksToBounds = YES;
     msgView.layer.cornerRadius = kScale390(10);
-    msgView.backgroundColor =  [UIColor tui_colorWithHex:@"FFFFFF"];
-    
+    msgView.backgroundColor = [UIColor tui_colorWithHex:@"FFFFFF"];
+
     UIImageView *icon = [[UIImageView alloc] init];
     [msgView addSubview:icon];
-    icon.image = isSuccess?[UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_add_success")]:[UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_add_failed")];
-    
+    icon.image = isSuccess ? [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_add_success")]
+                           : [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_add_failed")];
+
     UILabel *descLabel = [[UILabel alloc] init];
     [msgView addSubview:descLabel];
     descLabel.font = [UIFont systemFontOfSize:kScale390(14)];
     descLabel.text = msgText;
     [descLabel sizeToFit];
-    
+
     icon.frame = CGRectMake(kScale390(12), kScale390(10), kScale390(16), kScale390(16));
-    descLabel.frame = CGRectMake(icon.frame.origin.x + icon.frame.size.width +kScale390(8), kScale390(8), descLabel.frame.size.width, kScale390(20));
-    msgView.frame = CGRectMake(0, 0, descLabel.frame.origin.x + descLabel.frame.size.width + kScale390(12) , kScale390(36));
+    descLabel.frame = CGRectMake(icon.frame.origin.x + icon.frame.size.width + kScale390(8), kScale390(8), descLabel.frame.size.width, kScale390(20));
+    msgView.frame = CGRectMake(0, 0, descLabel.frame.origin.x + descLabel.frame.size.width + kScale390(12), kScale390(36));
     msgView.mm__centerX(hudView.mm_centerX);
     msgView.mm__centerY(hudView.mm_centerY);
 
-    
-    [[UIApplication sharedApplication].keyWindow showToast:hudView duration:3.0 position:TUICSToastPositionCenter completion:^(BOOL didTap) {
-        
-    }];
+    [[UIApplication sharedApplication].keyWindow showToast:hudView
+                                                  duration:3.0
+                                                  position:TUICSToastPositionCenter
+                                                completion:^(BOOL didTap){
+
+                                                }];
 }
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.view endEditing:YES];
 }
 
--(void)didTapOnAvatar:(TUICommonContactProfileCardCell *)cell{
+- (void)didTapOnAvatar:(TUICommonContactProfileCardCell *)cell {
     TUIContactAvatarViewController_Minimalist *image = [[TUIContactAvatarViewController_Minimalist alloc] init];
     image.avatarData = cell.cardData;
     [self.navigationController pushViewController:image animated:YES];

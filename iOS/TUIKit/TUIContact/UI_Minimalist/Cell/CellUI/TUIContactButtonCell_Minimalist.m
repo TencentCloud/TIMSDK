@@ -3,33 +3,32 @@
 //  TUIContact
 //
 //  Created by wyl on 2022/12/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactButtonCell_Minimalist.h"
 #import <TUICore/TUIThemeManager.h>
 
-@implementation TUIContactButtonCell_Minimalist{
+@implementation TUIContactButtonCell_Minimalist {
     UIView *_line;
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(self){
+    if (self) {
         [self setupViews];
         self.changeColorWhenTouched = YES;
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = [UIColor tui_colorWithHex:@"#f9f9f9"];
     self.contentView.backgroundColor = [UIColor tui_colorWithHex:@"#f9f9f9"];
 
     _button = [UIButton buttonWithType:UIButtonTypeCustom];
     [_button.titleLabel setFont:[UIFont systemFontOfSize:16]];
-    
+
     [_button addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.contentView addSubview:_button];
@@ -37,15 +36,13 @@
     [self setSeparatorInset:UIEdgeInsetsMake(0, Screen_Width, 0, 0)];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     self.changeColorWhenTouched = YES;
-    
+
     _line = [[UIView alloc] initWithFrame:CGRectZero];
     [self.contentView addSubview:_line];
     _line.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
 }
 
-
-- (void)fillWithData:(TUIContactButtonCellData_Minimalist *)data
-{
+- (void)fillWithData:(TUIContactButtonCellData_Minimalist *)data {
     [super fillWithData:data];
     self.buttonData = data;
     [_button setTitle:data.title forState:UIControlStateNormal];
@@ -57,20 +54,18 @@
             [_button setTitleColor:TIMCommonDynamicColor(@"form_green_button_text_color", @"#FFFFFF") forState:UIControlStateNormal];
             _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
             [_button setBackgroundImage:[self imageWithColor:TIMCommonDynamicColor(@"", @"#f9f9f9")] forState:UIControlStateHighlighted];
-        }
-            break;
+        } break;
         case ButtonWhite: {
             [_button setTitleColor:TIMCommonDynamicColor(@"form_white_button_text_color", @"#000000") forState:UIControlStateNormal];
             _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
-        }
-            break;
+        } break;
         case ButtonRedText: {
             [_button setTitleColor:TIMCommonDynamicColor(@"form_redtext_button_text_color", @"#FF0000") forState:UIControlStateNormal];
             _button.backgroundColor = TIMCommonDynamicColor(@"", @"#f9f9f9");
 
             break;
         }
-        case ButtonBule:{
+        case ButtonBule: {
             [_button.titleLabel setTextColor:[UIColor tui_colorWithHex:@"147AFF"]];
             _button.backgroundColor = [UIColor tui_colorWithHex:@"#f9f9f9"];
             _button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -78,34 +73,26 @@
             _button.layer.masksToBounds = YES;
             self.backgroundColor = [UIColor clearColor];
             self.contentView.backgroundColor = [UIColor clearColor];
-        }
-            break;
+        } break;
         default:
             break;
     }
-    
+
     if (data.textColor) {
         [_button setTitleColor:data.textColor forState:UIControlStateNormal];
     }
-    
+
     _line.hidden = data.hideSeparatorLine;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    _button.mm_width(Screen_Width - 2 * kScale390(20))
-    .mm_height(self.mm_h - TButtonCell_Margin)
-    .mm_left(kScale390(20));
-    
-    _line.mm_width(Screen_Width)
-    .mm_height(0.2)
-    .mm_left(20)
-    .mm_bottom(0);
+    _button.mm_width(Screen_Width - 2 * kScale390(20)).mm_height(self.mm_h - TButtonCell_Margin).mm_left(kScale390(20));
+
+    _line.mm_width(Screen_Width).mm_height(0.2).mm_left(20).mm_bottom(0);
 }
 
-- (void)onClick:(UIButton *)sender
-{
+- (void)onClick:(UIButton *)sender {
     if (self.buttonData.cbuttonSelector) {
         UIViewController *vc = self.mm_viewController;
         if ([vc respondsToSelector:self.buttonData.cbuttonSelector]) {
@@ -117,16 +104,14 @@
     }
 }
 
-- (void)didAddSubview:(UIView *)subview
-{
+- (void)didAddSubview:(UIView *)subview {
     [super didAddSubview:subview];
     if (subview != self.contentView) {
         [subview removeFromSuperview];
     }
 }
 
-- (UIImage *)imageWithColor:(UIColor *)color
-{
+- (UIImage *)imageWithColor:(UIColor *)color {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -139,8 +124,5 @@
 
     return image;
 }
-
-
-
 
 @end

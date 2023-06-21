@@ -37,6 +37,9 @@
 "Demo.TRTC.calling.invitetoaudiocall" = "invites you to a voice call";
 "Demo.TRTC.Streaming.call" = "Call";
 
+"TUICallKit.Audio.call" = "Voice Call";
+"TUICallKit.Video.call" = "Video Call";
+
 "Demo.TRTC.Calling.waitaccept" = "Waiting for the user to accept...";
 "Demo.TRTC.Calling.hangup" = "Hang Up";
 "Demo.TRTC.Calling.decline" = "Decline";

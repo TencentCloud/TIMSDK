@@ -1,4 +1,7 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 
 @import Foundation;
 @import UIKit;
@@ -32,18 +35,19 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface TUIGroupInfoDataProvider : NSObject
-@property (nonatomic, weak) id<TUIGroupInfoDataProviderDelegate> delegate;
-@property (nonatomic, strong) V2TIMGroupInfo *groupInfo;
-@property (nonatomic, strong) NSMutableArray *dataList;
-@property (nonatomic, strong) NSMutableArray<TUIGroupMemberCellData *> *membersData;
-@property (nonatomic, strong) TUIGroupMembersCellData *groupMembersCellData;
-@property (nonatomic, strong, readonly) V2TIMGroupMemberFullInfo *selfInfo;
-@property (nonatomic, strong, readonly) TUIProfileCardCellData *profileCellData;
+@property(nonatomic, weak) id<TUIGroupInfoDataProviderDelegate> delegate;
+@property(nonatomic, strong) V2TIMGroupInfo *groupInfo;
+@property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, strong) NSMutableArray<TUIGroupMemberCellData *> *membersData;
+@property(nonatomic, strong) TUIGroupMembersCellData *groupMembersCellData;
+@property(nonatomic, strong, readonly) V2TIMGroupMemberFullInfo *selfInfo;
+@property(nonatomic, strong, readonly) TUIProfileCardCellData *profileCellData;
 
 - (instancetype)initWithGroupID:(NSString *)groupID;
 - (void)loadData;
 - (void)updateGroupInfo;
 - (void)setGroupAddOpt:(V2TIMGroupAddOpt)opt;
+- (void)setGroupApproveOpt:(V2TIMGroupAddOpt)opt;
 - (void)setGroupReceiveMessageOpt:(V2TIMReceiveMessageOpt)opt Succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)setGroupName:(NSString *)groupName;
 - (void)setGroupNotification:(NSString *)notification;
@@ -52,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)quitGroup:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)clearAllHistory:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 - (void)updateGroupAvatar:(NSString *)url succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
-- (void)transferGroupOwner:(NSString*)groupID member:(NSString*)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+- (void)transferGroupOwner:(NSString *)groupID member:(NSString *)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 + (BOOL)isMeOwner:(V2TIMGroupInfo *)groupInfo;
 @end
 

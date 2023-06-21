@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUISearchGroupViewController : UIViewController
 
-@property (nonatomic,retain) UISearchController *searchController;
+@property(nonatomic, retain) UISearchController *searchController;
 
 @end
 

@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 //  TUIAIDenoiseSignatureManager.h
 //  TUIChat
@@ -9,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIAIDenoiseSignatureManager : NSObject
 
-@property (nonatomic, copy, readonly) NSString *signature;
+@property(nonatomic, copy, readonly) NSString *signature;
 
 + (instancetype)sharedInstance;
 

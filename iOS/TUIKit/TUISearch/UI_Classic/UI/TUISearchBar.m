@@ -3,21 +3,21 @@
 //  Pods
 //
 //  Created by harvy on 2020/12/23.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUISearchBar.h"
-#import "TUISearchViewController.h"
-#import <TUICore/TUIGlobalization.h>
-#import <TUICore/TUIGlobalization.h>
-#import <TUICore/TUIDarkModel.h>
-#import <TUICore/UIView+TUILayout.h>
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
+#import <TUICore/UIView+TUILayout.h>
+#import "TUISearchViewController.h"
 
 @interface TUISearchBar () <UISearchBarDelegate>
-@property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic, assign) BOOL isEntrance;
+@property(nonatomic, strong) UISearchBar *searchBar;
+@property(nonatomic, assign) BOOL isEntrance;
 @end
 
 @implementation TUISearchBar
@@ -28,14 +28,11 @@
     [self setupViews];
 }
 
-- (UIColor *)bgColorOfSearchBar
-{
+- (UIColor *)bgColorOfSearchBar {
     return TIMCommonDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
 }
 
-- (void)setupViews
-{
-    
+- (void)setupViews {
     self.backgroundColor = self.bgColorOfSearchBar;
     _searchBar = [[UISearchBar alloc] init];
     _searchBar.placeholder = TIMCommonLocalizableString(Search);
@@ -51,16 +48,14 @@
     [self enableCancelButton];
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     self.searchBar.frame = CGRectMake(10, 5, self.mm_w - 10 - 10, self.mm_h - 5 - 5);
-    
+
     [self updateSearchIcon];
 }
 
-- (void)updateSearchIcon
-{
+- (void)updateSearchIcon {
     if ([self.searchBar isFirstResponder] || self.searchBar.text.length || !self.isEntrance) {
         [self.searchBar setPositionAdjustment:UIOffsetZero forSearchBarIcon:UISearchBarIconSearch];
         self.backgroundColor = self.superview.backgroundColor;
@@ -74,68 +69,66 @@
     TUISearchViewController *vc = [[TUISearchViewController alloc] init];
     TUINavigationController *nav = [[TUINavigationController alloc] initWithRootViewController:(UIViewController *)vc];
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self.parentVC presentViewController:nav animated:NO completion:nil];
+
+    UIViewController *parentVC = self.parentVC;
+    if (parentVC) {
+        [parentVC presentViewController:nav animated:NO completion:nil];
+    }
 }
 
 #pragma mark - UISearchBarDelegate
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
-{
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     [self showSearchVC];
-    
+
     if (self.isEntrance && [self.delegate respondsToSelector:@selector(searchBarDidEnterSearch:)]) {
         [self.delegate searchBarDidEnterSearch:self];
     }
-    
+
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf updateSearchIcon];
+      [weakSelf updateSearchIcon];
     });
     return !self.isEntrance;
 }
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     if ([self.delegate respondsToSelector:@selector(searchBarDidCancelClicked:)]) {
         [self.delegate searchBarDidCancelClicked:self];
     }
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
-{
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     if ([self.delegate respondsToSelector:@selector(searchBar:searchText:)]) {
         [self.delegate searchBar:self searchText:searchBar.text];
     }
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
-{
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     if ([self.delegate respondsToSelector:@selector(searchBar:searchText:)]) {
         [self.delegate searchBar:self searchText:searchBar.text];
     }
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
-{
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
     [self enableCancelButton];
 }
 
-- (void)enableCancelButton
-{
+- (void)enableCancelButton {
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIButton *cancelBtn = [weakSelf.searchBar valueForKeyPath:@"cancelButton"];
-        for (UIButton *view in cancelBtn.subviews) {
-            if ([view isKindOfClass:UIButton.class]) {
-                view.userInteractionEnabled = YES;
-                view.enabled = YES;
-            }
-        }
-        cancelBtn.enabled = YES;
-        cancelBtn.userInteractionEnabled = YES;
+      UIButton *cancelBtn = [weakSelf.searchBar valueForKeyPath:@"cancelButton"];
+      for (UIButton *view in cancelBtn.subviews) {
+          if ([view isKindOfClass:UIButton.class]) {
+              view.userInteractionEnabled = YES;
+              view.enabled = YES;
+          }
+      }
+      cancelBtn.enabled = YES;
+      cancelBtn.userInteractionEnabled = YES;
 
-        [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]].title = TIMCommonLocalizableString(TUIKitSearchItemCancel);;
+      [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[ [UISearchBar class] ]].title = TIMCommonLocalizableString(TUIKitSearchItemCancel);
+      ;
     });
 }
-
 
 @end

@@ -3,16 +3,17 @@
 //  Pods
 //
 //  Created by harvy on 2020/10/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIGlobalization.h"
-#import "TUIDefine.h"
 #import <objc/runtime.h>
+#import "TUIDefine.h"
 
 @implementation TUIGlobalization
 
-static NSString *_customLanguage = nil;
-static BOOL ignoreTraditionChinese = YES;
+static NSString *gCustomLanguage = nil;
+static BOOL gIgnoreTraditionChinese = YES;
 
 + (NSString *)getLocalizedStringForKey:(NSString *)key bundle:(NSString *)bundleName {
     return [self getLocalizedStringForKey:key value:nil bundle:bundleName];
@@ -29,36 +30,35 @@ static BOOL ignoreTraditionChinese = YES;
     NSBundle *bundle = [bundleCache objectForKey:cacheKey];
     if (bundle == nil) {
         bundle = [NSBundle bundleWithPath:[TUIKitLocalizable(bundleName) pathForResource:language ofType:@"lproj"]];
-        if (bundle) {        
+        if (bundle) {
             [bundleCache setObject:bundle forKey:cacheKey];
         }
     }
     value = [bundle localizedStringForKey:key value:value table:nil];
-    
+
     // It's not necessary to query at main bundle, cause it's a long-time operation
     // NSString *resultStr = [[NSBundle mainBundle] localizedStringForKey:key value:value table:nil];
     return value ?: @"";
-
 }
 
 + (NSString *)getPreferredLanguage {
     // Custom language in app
-    if (_customLanguage == nil) {
-        _customLanguage = [NSUserDefaults.standardUserDefaults objectForKey:TUICustomLanguageKey];
+    if (gCustomLanguage == nil) {
+        gCustomLanguage = [NSUserDefaults.standardUserDefaults objectForKey:TUICustomLanguageKey];
     }
-    if (_customLanguage.length > 0) {
-        return _customLanguage;
+    if (gCustomLanguage.length > 0) {
+        return gCustomLanguage;
     }
-    
+
     // Follow system changes by default
     NSString *language = [NSLocale preferredLanguages].firstObject;
     if ([language hasPrefix:@"en"]) {
         language = @"en";
     } else if ([language hasPrefix:@"zh"]) {
         if ([language rangeOfString:@"Hans"].location != NSNotFound) {
-            language = @"zh-Hans"; // Simplified Chinese
-        } else { // zh-Hant\zh-HK\zh-TW
-            language = @"zh-Hant"; // Traditional Chinese
+            language = @"zh-Hans";  // Simplified Chinese
+        } else {                    // zh-Hant\zh-HK\zh-TW
+            language = @"zh-Hant";  // Traditional Chinese
         }
     } else if ([language hasPrefix:@"ko"]) {
         language = @"ko";
@@ -69,27 +69,27 @@ static BOOL ignoreTraditionChinese = YES;
     } else {
         language = @"en";
     }
-    
+
     // Since traditional Chinese is not supported for the time being, avoid using English in traditional Chinese, and force the use of simplified Chinese here
-    if (ignoreTraditionChinese && [language hasPrefix:@"zh"]) {
+    if (gIgnoreTraditionChinese && [language hasPrefix:@"zh"]) {
         language = @"zh-Hans";
     }
-    
+
     return language;
 }
 
 + (void)setPreferredLanguage:(NSString *)language {
-    _customLanguage = language;
-    [NSUserDefaults.standardUserDefaults setObject:language?:@"" forKey:TUICustomLanguageKey];
+    gCustomLanguage = language;
+    [NSUserDefaults.standardUserDefaults setObject:language ?: @"" forKey:TUICustomLanguageKey];
     [NSUserDefaults.standardUserDefaults synchronize];
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        [NSNotificationCenter.defaultCenter postNotificationName:TUIChangeLanguageNotification object:nil];
+      [NSNotificationCenter.defaultCenter postNotificationName:TUIChangeLanguageNotification object:nil];
     });
 }
 
 + (void)ignoreTraditionChinese:(BOOL)ignore {
-    ignoreTraditionChinese = ignore;
+    gIgnoreTraditionChinese = ignore;
 }
 
 #pragma mark - Deprecated
@@ -102,8 +102,6 @@ static BOOL ignoreTraditionChinese = YES;
 }
 
 @end
-
-
 
 @interface TUIBundle : NSBundle
 
@@ -150,9 +148,8 @@ static BOOL ignoreTraditionChinese = YES;
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        object_setClass([NSBundle mainBundle], [TUIBundle class]);
+      object_setClass([NSBundle mainBundle], [TUIBundle class]);
     });
 }
 
 @end
-

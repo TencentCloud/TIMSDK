@@ -3,17 +3,17 @@
 //  TUIChat
 //
 //  Created by harvy on 2021/11/25.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIVideoReplyQuoteView_Minimalist.h"
-#import "TUIVideoReplyQuoteViewData_Minimalist.h"
-#import <TUICore/TUIDarkModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIDarkModel.h>
+#import "TUIVideoReplyQuoteViewData_Minimalist.h"
 
 @implementation TUIVideoReplyQuoteView_Minimalist
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         _playView = [[UIImageView alloc] init];
         _playView.image = TUIChatCommonBundleImage(@"play_normal");
@@ -23,16 +23,14 @@
     return self;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     self.playView.center = self.imageView.center;
 }
 
-- (void)fillWithData:(TUIReplyQuoteViewData_Minimalist *)data
-{
+- (void)fillWithData:(TUIReplyQuoteViewData_Minimalist *)data {
     [super fillWithData:data];
-    
+
     if (![data isKindOfClass:TUIVideoReplyQuoteViewData_Minimalist.class]) {
         return;
     }

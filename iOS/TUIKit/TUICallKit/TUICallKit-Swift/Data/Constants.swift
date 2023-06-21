@@ -25,8 +25,14 @@ public let kMicroAudioViewRect = CGRectMake(Screen_Width - kMicroAudioViewWidth,
 public let kMicroVideoViewRect = CGRectMake(Screen_Width - kMicroVideoViewWidth, 150, kMicroVideoViewWidth, kMicroVideoViewHeight)
 public let kMicroVideoDisAvailableViewRect = CGRectMake(Screen_Width - kMicroVideoViewWidth, 150, kMicroVideoViewWidth, kMicroVideoViewHeight - 10)
 
+// MARK: IM
+let TMoreCell_Image_Size = CGSizeMake(65, 65)
+
+
 let TUI_CALLING_BELL_KEY = "CallingBell"
-
 let MAX_USER = 9
-
 let ENABLE_MUTEMODE_USERDEFAULT = "ENABLE_MUTEMODE_USERDEFAULT"
+
+class Constants {
+    static let EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER = "eventShowTUICallKitViewController"
+}

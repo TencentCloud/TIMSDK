@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 #import <UIKit/UIKit.h>
 #import "TUIBlackListViewDataProvider_Minimalist.h"
 
@@ -18,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property TUIBlackListViewDataProvider_Minimalist *viewModel;
 
-@property (nonatomic, copy) void (^didSelectCellBlock)(TUICommonContactCell_Minimalist *cell);
+@property(nonatomic, copy) void (^didSelectCellBlock)(TUICommonContactCell_Minimalist *cell);
 @end
 
 NS_ASSUME_NONNULL_END

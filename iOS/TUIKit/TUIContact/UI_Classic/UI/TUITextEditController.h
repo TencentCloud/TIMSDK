@@ -17,5 +17,3 @@
 - (instancetype)initWithText:(NSString *)text;
 
 @end
-
-

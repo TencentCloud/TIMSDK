@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  腾讯云通讯服务界面组件 TUIKIT - 用户信息视图界面
@@ -10,9 +13,9 @@
  *  If friend, use TUIFriendProfileController
  */
 
-#import <UIKit/UIKit.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <UIKit/UIKit.h>
 #import "TUICommonPendencyCellData.h"
 #import "TUICommonPendencyCellData_Minimalist.h"
 
@@ -34,4 +37,3 @@ typedef enum : NSUInteger {
 @property ProfileControllerAction_Minimalist actionType;
 
 @end
-

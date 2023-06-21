@@ -3,20 +3,21 @@
 //  TUIChat
 //
 //  Created by xia on 2022/3/11.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIMemberCell_Minimalist.h"
-#import "TUIMemberCellData_Minimalist.h"
 #import <TIMCommon/TIMCommonModel.h>
-#import <TUICore/TUIThemeManager.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUIThemeManager.h>
+#import "TUIMemberCellData_Minimalist.h"
 
-@interface TUIMemberDescribeCell_Minimalist()
-@property (nonatomic, strong) UIView *containerView;
+@interface TUIMemberDescribeCell_Minimalist ()
+@property(nonatomic, strong) UIView *containerView;
 
-@property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UIImageView *icon;
-@property (nonatomic, strong) TUIMemberDescribeCellData_Minimalist *cellData;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UIImageView *icon;
+@property(nonatomic, strong) TUIMemberDescribeCellData_Minimalist *cellData;
 
 @end
 
@@ -34,15 +35,15 @@
     self.containerView.backgroundColor = [UIColor tui_colorWithHex:@"#F9F9F9"];
     self.containerView.layer.cornerRadius = kScale390(20);
     [self addSubview:self.containerView];
-    
+
     self.icon = [[UIImageView alloc] initWithFrame:CGRectZero];
     [self.containerView addSubview:self.icon];
-    
+
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.titleLabel.textAlignment = NSTextAlignmentLeft;
     self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     [self.containerView addSubview:self.titleLabel];
-    
+
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 }
 
@@ -51,7 +52,8 @@
     CGFloat margin = kScale390(16);
     self.containerView.frame = CGRectMake(margin, 0, self.contentView.frame.size.width - 2 * margin, kScale390(57));
     self.icon.frame = CGRectMake(kScale390(20), kScale390(20), kScale390(16), kScale390(16));
-    self.titleLabel.frame = CGRectMake( self.icon.frame.origin.x + self.icon.frame.size.width + kScale390(11), kScale390(20), self.containerView.frame.size.width * 0.5, kScale390(17));
+    self.titleLabel.frame = CGRectMake(self.icon.frame.origin.x + self.icon.frame.size.width + kScale390(11), kScale390(20),
+                                       self.containerView.frame.size.width * 0.5, kScale390(17));
 }
 
 #pragma mark - Public
@@ -61,17 +63,16 @@
 
     self.titleLabel.text = cellData.title;
     [self.icon setImage:cellData.icon];
-    
 }
 
 @end
 
-@interface TUIMemberCell_Minimalist()
+@interface TUIMemberCell_Minimalist ()
 
-@property (nonatomic, strong) UIImageView *avatarView;
-@property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UILabel *detailLabel;
-@property (nonatomic, strong) TUIMemberCellData_Minimalist *cellData;
+@property(nonatomic, strong) UIImageView *avatarView;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UILabel *detailLabel;
+@property(nonatomic, strong) TUIMemberCellData_Minimalist *cellData;
 
 @end
 
@@ -82,7 +83,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
-        
+
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
         self.avatarView.mm_width(kScale390(32)).mm_height(kScale390(32)).mm__centerY(28).mm_left(kScale390(24));
@@ -98,8 +99,8 @@
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         self.titleLabel.font = [UIFont boldSystemFontOfSize:kScale390(14)];
-        self.titleLabel.mm_left(self.avatarView.mm_maxX+kScale390(4)).mm_height(kScale390(17)).mm_width(200).mm__centerY(self.avatarView.mm_centerY);
-        
+        self.titleLabel.mm_left(self.avatarView.mm_maxX + kScale390(4)).mm_height(kScale390(17)).mm_width(200).mm__centerY(self.avatarView.mm_centerY);
+
         self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
         [self.contentView addSubview:self.detailLabel];
         self.detailLabel.textAlignment = NSTextAlignmentRight;
@@ -125,8 +126,7 @@
     self.cellData = cellData;
 
     self.titleLabel.text = cellData.title;
-    [self.avatarView sd_setImageWithURL:cellData.avatarUrL
-                       placeholderImage:DefaultAvatarImage];
+    [self.avatarView sd_setImageWithURL:cellData.avatarUrL placeholderImage:DefaultAvatarImage];
     self.detailLabel.hidden = cellData.detail.length == 0;
     self.detailLabel.text = cellData.detail;
 }

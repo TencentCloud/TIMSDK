@@ -12,5 +12,14 @@ import TUICore
 extension NSObject {
     @objc class func swiftLoad() {
         TUICore.registerService(TUICore_TUICallingService, object: TUICallKitService.instance)
+        
+        TUICore.registerExtension(TUICore_TUIChatExtension_NavigationMoreItem_MinimalistExtensionID, object: TUICallKitService.instance)
+        TUICore.registerExtension(TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID, object: TUICallKitService.instance)
+        TUICore.registerExtension(TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID, object: TUICallKitService.instance)
+        TUICore.registerExtension(TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID, object: TUICallKitService.instance)
+        TUICore.registerExtension(TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID, object: TUICallKitService.instance)
+        
+        guard let themePath = TUIGetBundlePath("TUICallKitTheme", TUICallKitBundle_Key_Class) else { return }
+        TUIThemeManager.share().registerThemeResourcePath(themePath, for: TUIThemeModule.calling)
     }
 }

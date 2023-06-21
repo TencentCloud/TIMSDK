@@ -1,6 +1,9 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+#import <TIMCommon/TUIBubbleMessageCell.h>
 #import <TIMCommon/TUIMessageCell.h>
 #import "TUIFileMessageCellData.h"
-#import <TIMCommon/TUIBubbleMessageCell.h>
 
 @interface TUIFileMessageCell : TUIMessageCell
 
@@ -10,7 +13,7 @@
  *
  *  File bubble view, used to wrap messages on the UI
  */
-@property (nonatomic, strong) UIImageView *bubble;
+@property(nonatomic, strong) UIImageView *bubble;
 
 /**
  *  文件名标签
@@ -19,7 +22,7 @@
  *  Label for displaying filename
  *  As the main label of the file message, it displays the file information (including the suffix).
  */
-@property (nonatomic, strong) UILabel *fileName;
+@property(nonatomic, strong) UILabel *fileName;
 
 /**
  *  文件长度
@@ -28,13 +31,15 @@
  *  Label for displaying file size
  *  As the secondary label of the file message, it further displays the secondary information of the file.
  */
-@property (nonatomic, strong) UILabel *length;
+@property(nonatomic, strong) UILabel *length;
 
 /**
  *  文件图标
  *  File icon
  */
-@property (nonatomic, strong) UIImageView *image;
+@property(nonatomic, strong) UIImageView *image;
+
+@property(nonatomic, strong) UIImageView *downloadIcon;
 
 @property TUIFileMessageCellData *fileData;
 

@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIFileMessageCellData.h"
@@ -11,8 +12,8 @@
 #import "TUIMessageProgressManager.h"
 
 @interface TUIFileMessageCellData ()
-@property (nonatomic, strong) NSMutableArray *progressBlocks;
-@property (nonatomic, strong) NSMutableArray *responseBlocks;
+@property(nonatomic, strong) NSMutableArray *progressBlocks;
+@property(nonatomic, strong) NSMutableArray *responseBlocks;
 @end
 
 @implementation TUIFileMessageCellData
@@ -29,21 +30,18 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TIMCommonLocalizableString(TUIkitMessageTypeFile); // @"[文件]";
+    return TIMCommonLocalizableString(TUIkitMessageTypeFile);  // @"[文件]";
 }
 
-- (Class)getReplyQuoteViewDataClass
-{
+- (Class)getReplyQuoteViewDataClass {
     return NSClassFromString(@"TUIFileReplyQuoteViewData");
 }
 
-- (Class)getReplyQuoteViewClass
-{
+- (Class)getReplyQuoteViewClass {
     return NSClassFromString(@"TUIFileReplyQuoteView");
 }
 
-- (int)length
-{
+- (int)length {
     if (self.innerMessage) {
         _length = self.innerMessage.fileElem.fileSize;
     }
@@ -62,80 +60,79 @@
     return self;
 }
 
-- (void)downloadFile
-{
-
+- (void)downloadFile {
     BOOL isExist = NO;
     NSString *path = [self getFilePath:&isExist];
-    if(isExist){
+    if (isExist) {
         return;
     }
-    
-    NSInteger progress = [TUIMessageProgressManager.shareManager progressForMessage:self.msgID];
+
+    NSInteger progress = [TUIMessageProgressManager.shareManager downloadProgressForMessage:self.msgID];
     if (progress != 0) {
         return;
     }
-    
-    if (self.isDownloading)
-        return;
+
+    if (self.isDownloading) return;
     self.isDownloading = YES;
-    @weakify(self)
+    @weakify(self);
     if (self.innerMessage.elemType == V2TIM_ELEM_TYPE_FILE) {
         NSString *msgID = self.msgID;
-        [self.innerMessage.fileElem downloadFile:path progress:^(NSInteger curSize, NSInteger totalSize) {
-            @strongify(self)
-            NSInteger progress = curSize * 100 / totalSize;
-            [self updateDownalodProgress:progress];
-            [TUIMessageProgressManager.shareManager appendProgress:msgID progress:progress];
-        } succ:^{
-            @strongify(self)
-            self.isDownloading = NO;
-            [self updateDownalodProgress:100];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.path = path;
-            });
-        } fail:^(int code, NSString *msg) {
-            @strongify(self)
-            self.isDownloading = NO;
-        }];
+        [self.innerMessage.fileElem downloadFile:path
+            progress:^(NSInteger curSize, NSInteger totalSize) {
+              @strongify(self);
+              NSInteger progress = curSize * 100 / totalSize;
+              [self updateDownalodProgress:MIN(progress, 99)];
+              [TUIMessageProgressManager.shareManager appendDownloadProgress:msgID progress:MIN(progress, 99)];
+            }
+            succ:^{
+              @strongify(self);
+              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.isDownloading = NO;
+                [self updateDownalodProgress:100];
+                [TUIMessageProgressManager.shareManager appendDownloadProgress:msgID progress:100];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                  self.path = path;
+                });
+              });
+            }
+            fail:^(int code, NSString *msg) {
+              @strongify(self);
+              self.isDownloading = NO;
+            }];
     }
 }
 
-- (void)updateDownalodProgress:(NSUInteger)progress
-{
+- (void)updateDownalodProgress:(NSUInteger)progress {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.downladProgress = progress;
+      self.downladProgress = progress;
     });
 }
 
-
-- (BOOL)isLocalExist
-{
+- (BOOL)isLocalExist {
     BOOL isExist;
     [self getFilePath:&isExist];
     return isExist;
 }
 
-- (NSString *)getFilePath:(BOOL *)isExist
-{
+- (NSString *)getFilePath:(BOOL *)isExist {
     NSString *path = nil;
     BOOL isDir = NO;
     *isExist = NO;
-    if(self.direction == MsgDirectionOutgoing){
+    if (self.direction == MsgDirectionOutgoing) {
         // 上传方本地原图是否有效
         // The origin file path is valid when uploading
         path = [NSString stringWithFormat:@"%@%@", TUIKit_File_Path, _path.lastPathComponent];
-        if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-            if(!isDir){
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+            if (!isDir) {
                 *isExist = YES;
             }
         }
     }
 
-    if(!*isExist){
+    if (!*isExist) {
         path = [NSString stringWithFormat:@"%@%@", TUIKit_File_Path, _fileName];
-        if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-            if(!isDir){
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+            if (!isDir) {
                 *isExist = YES;
             }
         }
@@ -149,9 +146,7 @@
     return path;
 }
 
-- (CGSize)contentSize
-{
+- (CGSize)contentSize {
     return TFileMessageCell_Container_Size;
 }
 @end
-

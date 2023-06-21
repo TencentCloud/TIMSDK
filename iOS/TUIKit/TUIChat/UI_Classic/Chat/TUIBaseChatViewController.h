@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  * 腾讯云通讯服务界面组件 TUIKIT - 聊天界面组件
  *
@@ -14,15 +17,15 @@
  * - Message display area: that is, the bubble display area.
  * - Message input area: that is, the part that allows users to input message text, emoticons, pictures and videos.
  *
- * The TUIBaseChatViewController class is used to implement the general controller of the chat view, which is responsible for unified control of input, message controller, and more views.
- * The classes and protocols declared in this file can effectively help you implement custom message formats.
+ * The TUIBaseChatViewController class is used to implement the general controller of the chat view, which is responsible for unified control of input, message
+ * controller, and more views. The classes and protocols declared in this file can effectively help you implement custom message formats.
  *
  */
-#import <UIKit/UIKit.h>
-#import "TUIInputController.h"
-#import "TUIBaseMessageController.h"
 #import <TIMCommon/TIMCommonModel.h>
+#import <UIKit/UIKit.h>
+#import "TUIBaseMessageController.h"
 #import "TUIChatConversationModel.h"
+#import "TUIInputController.h"
 @class TUIBaseChatViewController;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +39,8 @@
  *
  * 【功能说明】负责实现聊天界面的 UI 组件，包括消息展示区和消息输入区。
  *
- *  TUIBaseChatViewController 类用于实现聊天视图的总控制器，负责将聊天消息控制器（TUIBaseMessageController）、信息输入控制器（TUIInputController）和更多视图进行统一控制。
+ *  TUIBaseChatViewController
+ * 类用于实现聊天视图的总控制器，负责将聊天消息控制器（TUIBaseMessageController）、信息输入控制器（TUIInputController）和更多视图进行统一控制。
  *
  *  聊天消息控制器负责在您接收到新消息或者发送消息时在 UI 作出响应，并响应您在消息气泡上的交互操作，详情参考:Section\Chat\TUIBaseMessageController.h
  *  信息输入控制器负责接收您的输入，向你提供输入内容的编辑功能并进行消息的发送，详情参考:Section\Chat\Input\TUIInputController.h
@@ -49,20 +53,22 @@
  * 【Module name】TUIBaseChatViewController
  * 【Function description】Responsible for implementing the UI components of the chat interface, including the message display area and the message input area.
  *
- *  The TUIBaseChatViewController class is used to implement the overall controller of the chat view, and is responsible for unified control of the chat message controller (TUIBaseMessageController), the information input controller (TUIInputController) and more views.
+ *  The TUIBaseChatViewController class is used to implement the overall controller of the chat view, and is responsible for unified control of the chat message
+ * controller (TUIBaseMessageController), the information input controller (TUIInputController) and more views.
  *
- *  The chat message controller is responsible for responding in the UI when you receive a new message or sending a message, and respond to your interactions on the message bubble, see: Section\Chat\TUIBaseMessageController.h
- *  The information input controller is responsible for receiving your input, providing you with the editing function of the input content and sending messages. For details, please refer to: Section\Chat\Input\TUIInputController.h
- *  This class contains the "more" view, that is, when you click the "+" button in the UI, more buttons can be displayed to satisfy your further operations. For details, please refer to: Section\Chat\TUIMoreView.h
+ *  The chat message controller is responsible for responding in the UI when you receive a new message or sending a message, and respond to your interactions on
+ * the message bubble, see: Section\Chat\TUIBaseMessageController.h The information input controller is responsible for receiving your input, providing you with
+ * the editing function of the input content and sending messages. For details, please refer to: Section\Chat\Input\TUIInputController.h This class contains the
+ * "more" view, that is, when you click the "+" button in the UI, more buttons can be displayed to satisfy your further operations. For details, please refer
+ * to: Section\Chat\TUIMoreView.h
  *
  *  Q: How to implement custom messages?
- *  A: If you want to implement a message style that TUIKit does not support, such as adding a voting link to the message style, you can refer to the documentation:
- *    https://cloud.tencent.com/document/product/269/37067
+ *  A: If you want to implement a message style that TUIKit does not support, such as adding a voting link to the message style, you can refer to the
+ * documentation: https://cloud.tencent.com/document/product/269/37067
  */
 @interface TUIBaseChatViewController : UIViewController
 
-
-@property (nonatomic, strong) TUIChatConversationModel *conversationData;
+@property(nonatomic, strong) TUIChatConversationModel *conversationData;
 
 /**
  * 高亮文本
@@ -71,7 +77,7 @@
  * Highlight text
  * In the search scenario, when highlightKeyword is not empty and matches @locateMessage, opening the chat session page will highlight the current cell
  */
-@property (nonatomic, copy) NSString *highlightKeyword;
+@property(nonatomic, copy) NSString *highlightKeyword;
 
 /**
  * 定位消息
@@ -80,7 +86,7 @@
  * Locate message
  * In the search scenario, when locateMessage is not empty, opening the chat session page will automatically scroll to here
  */
-@property (nonatomic, strong) V2TIMMessage *locateMessage;
+@property(nonatomic, strong) V2TIMMessage *locateMessage;
 
 /**
  * 未读数展示 view
@@ -94,8 +100,9 @@
  *  聊天消息控制器的详细信息请参考 TUIChat\UI\Chat\TUIBaseMessageController.h
  *
  *  TUIKit message controller
- *  It is responsible for the display of message bubbles, and at the same time, it is responsible for responding to the user's interaction with the message bubbles, such as: clicking on the avatar of the message sender, tapping the message, and long-pressing the message.
- *  For more information about the chat message controller, please refer to TUIChat\UI\Chat\TUIBaseMessageController.h
+ *  It is responsible for the display of message bubbles, and at the same time, it is responsible for responding to the user's interaction with the message
+ * bubbles, such as: clicking on the avatar of the message sender, tapping the message, and long-pressing the message. For more information about the chat
+ * message controller, please refer to TUIChat\UI\Chat\TUIBaseMessageController.h
  */
 @property TUIBaseMessageController *messageController;
 
@@ -128,8 +135,7 @@
  *  Need to scroll to the bottom
  *  It is usually used to push to another VC and need to scroll to the bottom after returning.
  */
-@property (nonatomic, assign) BOOL needScrollToBottom;
-
+@property(nonatomic, assign) BOOL needScrollToBottom;
 
 - (void)sendMessage:(V2TIMMessage *)message;
 

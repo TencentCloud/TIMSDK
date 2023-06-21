@@ -1,19 +1,23 @@
- /**
-  *  本文件声明了 TUIInputBarDelegate 协议和 TUIInputBar 类。
-  *  TUI 输入条，用于检测、获取用户输入的 UI 组件。
-  *  TUIInputBar，即位于聊天消息最下方的 UI 组件。包括文本输入框、表情按钮、语音按钮和“+”按钮（“更多”按钮）。
-  *  TUIInputBarDelegate 提供了输入条各种情况下的回调委托，包括点击输入条的表情、“更多”视图、语音按钮的回调。以及发送消息、发送语音、更改输入高度的回调。
-  *
-  *  This file declares the TUIInputBarDelegate protocol and the TUIInputBar class.
-  *  TUI input bar, a UI component used to detect and obtain user input.
-  *  TUIInputBar, the UI component at the bottom of the chat message. Includes text input box, emoji button, voice button, and "+" button ("More" button)
-  *  TUIInputBarDelegate provides callbacks for various situations of the input bar, including the callback for the emoticon of clicking the input bar, the "more" view, and the voice button. And callbacks to send message, send voice, change input height.
-  */
 
-#import <UIKit/UIKit.h>
-#import "TUIResponderTextView.h"
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+/**
+ *  本文件声明了 TUIInputBarDelegate 协议和 TUIInputBar 类。
+ *  TUI 输入条，用于检测、获取用户输入的 UI 组件。
+ *  TUIInputBar，即位于聊天消息最下方的 UI 组件。包括文本输入框、表情按钮、语音按钮和“+”按钮（“更多”按钮）。
+ *  TUIInputBarDelegate 提供了输入条各种情况下的回调委托，包括点击输入条的表情、“更多”视图、语音按钮的回调。以及发送消息、发送语音、更改输入高度的回调。
+ *
+ *  This file declares the TUIInputBarDelegate protocol and the TUIInputBar class.
+ *  TUI input bar, a UI component used to detect and obtain user input.
+ *  TUIInputBar, the UI component at the bottom of the chat message. Includes text input box, emoji button, voice button, and "+" button ("More" button)
+ *  TUIInputBarDelegate provides callbacks for various situations of the input bar, including the callback for the emoticon of clicking the input bar, the
+ * "more" view, and the voice button. And callbacks to send message, send voice, change input height.
+ */
+
 #import <TIMCommon/TIMCommonModel.h>
 #import <TUICore/TUIThemeManager.h>
+#import <UIKit/UIKit.h>
+#import "TUIResponderTextView.h"
 
 #define kTUIInputNoramlFont [UIFont systemFontOfSize:16.0]
 #define kTUIInputNormalTextColor TUIChatDynamicColor(@"chat_input_text_color", @"#000000")
@@ -64,7 +68,8 @@
  *  Callback when input bar height changes
  *  This callback is fired when the InputBar height changes when you click the voice button, emoji button, "+" button, or call out/retract the keyboard
  *  You can use this callback to achieve: UI layout adjustment when InputBar height changes through this callback function.
- *  In the default implementation of TUIKit, this callback function further calls the didChangeHeight delegate in TUIInputController to adjust the height of the UI layout after processing the appearance of the expression view and more views.
+ *  In the default implementation of TUIKit, this callback function further calls the didChangeHeight delegate in TUIInputController to adjust the height of the
+ * UI layout after processing the appearance of the expression view and more views.
  */
 - (void)inputBar:(TUIInputBar *)textView didChangeInputHeight:(CGFloat)offset;
 
@@ -77,7 +82,8 @@
  *  Callback when sending a text message.
  *  This callback is fired when you send a text message through the InputBar (click the send button from the keyboard).
  *  You can use this callback to get the content of the InputBar and send the message.
- *  In the default implementation of TUIKit, this callback further calls the didSendMessage delegate in TUIInputController for further logical processing of message sending after processing the appearance of the expression view and more views.
+ *  In the default implementation of TUIKit, this callback further calls the didSendMessage delegate in TUIInputController for further logical processing of
+ * message sending after processing the appearance of the expression view and more views.
  */
 - (void)inputBar:(TUIInputBar *)textView didSendText:(NSString *)text;
 
@@ -90,7 +96,8 @@
  *  Callback when sending voice
  *  This callback is triggered when you long press and release the voice button.
  *  You can use this callback to process the recorded voice information and send the voice message.
- *  In the default implementation of TUIKit, this callback function further calls the didSendMessage delegate in TUIInputController for further logical processing of message sending after processing the appearance of the expression view and more views.
+ *  In the default implementation of TUIKit, this callback function further calls the didSendMessage delegate in TUIInputController for further logical
+ * processing of message sending after processing the appearance of the expression view and more views.
  */
 - (void)inputBar:(TUIInputBar *)textView didSendVoice:(NSString *)path;
 
@@ -112,8 +119,8 @@
  *  您可以通过该回调实现：隐藏当前显示的表情视图或者更多视图，并浮现键盘。
  *
  *  Callback after keyboard button click
- *  After clicking the emoticon button, the "smiley face" icon at the corresponding position will become the "keyboard" icon, which is the keyboard button at this time.
- *  You can use this callback to: hide the currently displayed emoticon view or more views, and open the keyboard.
+ *  After clicking the emoticon button, the "smiley face" icon at the corresponding position will become the "keyboard" icon, which is the keyboard button at
+ * this time. You can use this callback to: hide the currently displayed emoticon view or more views, and open the keyboard.
  */
 - (void)inputBarDidTouchKeyboard:(TUIInputBar *)textView;
 
@@ -129,7 +136,6 @@
 
 @end
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                              TUIInputBar
@@ -142,7 +148,7 @@
  *  分割线
  *  Separtor
  */
-@property (nonatomic, strong) UIView *lineView;
+@property(nonatomic, strong) UIView *lineView;
 
 /**
  *  语音按钮
@@ -151,7 +157,7 @@
  *  Voice button
  *  Switch to voice input state after clicking
  */
-@property (nonatomic, strong) UIButton *micButton;
+@property(nonatomic, strong) UIButton *micButton;
 
 /**
  *  键盘按钮
@@ -160,13 +166,13 @@
  *  Keyboard button
  *  Switch to keyboard input state after clicking
  */
-@property (nonatomic, strong) UIButton *keyboardButton;
+@property(nonatomic, strong) UIButton *keyboardButton;
 
 /**
  *  文本输入视图
  *  Input view
  */
-@property (nonatomic, strong) TUIResponderTextView *inputTextView;
+@property(nonatomic, strong) TUIResponderTextView *inputTextView;
 
 /**
  *  表情按钮
@@ -175,7 +181,7 @@
  *  Emoticon button
  *  Switch to emoji input state after clicking
  */
-@property (nonatomic, strong) UIButton *faceButton;
+@property(nonatomic, strong) UIButton *faceButton;
 
 /**
  *  更多按钮
@@ -184,16 +190,15 @@
  *  More  button
  *  A button that, when clicked, opens up more menu options
  */
-@property (nonatomic, strong) UIButton *moreButton;
+@property(nonatomic, strong) UIButton *moreButton;
 
 /**
  *  录音按钮，长按该按钮开始录音
  *  Record button, long press the button to start recording
  */
-@property (nonatomic, strong) UIButton *recordButton;
+@property(nonatomic, strong) UIButton *recordButton;
 
-
-@property (nonatomic, weak) id<TUIInputBarDelegate> delegate;
+@property(nonatomic, weak) id<TUIInputBarDelegate> delegate;
 
 /**
  *  添加表情

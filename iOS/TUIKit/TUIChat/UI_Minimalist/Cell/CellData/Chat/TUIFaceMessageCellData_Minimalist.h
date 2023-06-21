@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明了 TUIFaceMessageCellData_Minimalist 类。
@@ -20,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 【Function description】Emoticon message unit data source.
  *  - The emoticon message unit is the message unit used and displayed when displaying animated emoticons.
  *  - The emoticon message unit data source is a class that provides a series of required data for the display of the emoticon message unit.
-*/
+ */
 @interface TUIFaceMessageCellData_Minimalist : TUIBubbleMessageCellData_Minimalist
 
 /**
@@ -30,21 +33,21 @@ NS_ASSUME_NONNULL_BEGIN
  *  The index of emoticon groups
  *  - The subscript of the group where the emoticon is located, which is used to locate the emoticon group where the emoticon is located.
  */
-@property (nonatomic, assign) NSInteger groupIndex;
+@property(nonatomic, assign) NSInteger groupIndex;
 
 /**
  *  表情所在路径
  *
  *  The path of the emoticon file
  */
-@property (nonatomic, strong) NSString *path;
+@property(nonatomic, strong) NSString *path;
 
 /**
  *  表情名称
  *
  *  The name of emoticon.
  */
-@property (nonatomic, strong) NSString *faceName;
+@property(nonatomic, strong) NSString *faceName;
 
 @end
 

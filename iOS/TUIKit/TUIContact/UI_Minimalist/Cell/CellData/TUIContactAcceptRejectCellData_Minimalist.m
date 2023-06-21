@@ -3,6 +3,7 @@
 //  TUIContact
 //
 //  Created by wyl on 2023/1/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactAcceptRejectCellData_Minimalist.h"

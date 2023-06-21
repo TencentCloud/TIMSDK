@@ -3,55 +3,60 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/4/27.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIRepliesDetailViewController.h"
-#import "TUIMessageDataProvider.h"
-#import "TUIChatDataProvider.h"
-#import "TUITextMessageCellData.h"
 #import <TIMCommon/TUIMessageCell.h>
-#import "TUITextMessageCell.h"
-
-#import <TUICore/TUIGlobalization.h>
-#import "TUITextMessageCell.h"
-#import <TIMCommon/TUISystemMessageCell.h>
-#import "TUIVoiceMessageCell.h"
-#import "TUIImageMessageCell.h"
-#import "TUIFaceMessageCell.h"
-#import "TUIVideoMessageCell.h"
-#import "TUIFileMessageCell.h"
-#import "TUIJoinGroupMessageCell.h"
-#import "TUIMergeMessageCell.h"
-#import "TUILinkCell.h"
-#import "TUILinkCell.h"
-#import "TUIReplyMessageCell.h"
-#import <TUICore/TUIDarkModel.h>
-#import "TUIFileViewController.h"
+#import "TUIChatDataProvider.h"
 #import "TUIMessageDataProvider.h"
-#import "TUIMediaView.h"
+#import "TUITextMessageCell.h"
+#import "TUITextMessageCellData.h"
+
 #import <TIMCommon/TIMDefine.h>
-#import "TUIReplyMessageCellData.h"
-#import "TUIReferenceMessageCell.h"
-#import <TUICore/TUIThemeManager.h>
-#import "TUIMergeMessageListController.h"
+#import <TIMCommon/TUISystemMessageCell.h>
 #import <TUICore/TUICore.h>
+#import <TUICore/TUIDarkModel.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
+#import "TUIFaceMessageCell.h"
+#import "TUIFileMessageCell.h"
+#import "TUIFileViewController.h"
+#import "TUIImageMessageCell.h"
+#import "TUIJoinGroupMessageCell.h"
+#import "TUILinkCell.h"
+#import "TUIMediaView.h"
+#import "TUIMergeMessageCell.h"
+#import "TUIMergeMessageListController.h"
+#import "TUIMessageDataProvider.h"
+#import "TUIReferenceMessageCell.h"
+#import "TUIReplyMessageCell.h"
+#import "TUIReplyMessageCellData.h"
+#import "TUITextMessageCell.h"
+#import "TUIVideoMessageCell.h"
+#import "TUIVoiceMessageCell.h"
 
-@interface TUIRepliesDetailViewController ()<TUIInputControllerDelegate,UITableViewDelegate,UITableViewDataSource,TUIMessageBaseDataProviderDataSource,TUIMessageCellDelegate, TUINotificationProtocol>
+@interface TUIRepliesDetailViewController () <TUIInputControllerDelegate,
+                                              UITableViewDelegate,
+                                              UITableViewDataSource,
+                                              TUIMessageBaseDataProviderDataSource,
+                                              TUIMessageCellDelegate,
+                                              TUINotificationProtocol>
 
-@property (nonatomic, strong) TUIMessageCellData *cellData;
-@property (nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
-@property (nonatomic, strong) UIView *headerView;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray<V2TIMMessage *> *imMsgs;
-@property (nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs;
-@property (nonatomic, assign) BOOL responseKeyboard;
-@property (nonatomic, strong) TUIChatConversationModel *conversationData;
+@property(nonatomic, strong) TUIMessageCellData *cellData;
+@property(nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
+@property(nonatomic, strong) UIView *headerView;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) NSArray<V2TIMMessage *> *imMsgs;
+@property(nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs;
+@property(nonatomic, assign) BOOL responseKeyboard;
+@property(nonatomic, strong) TUIChatConversationModel *conversationData;
 
 @property(nonatomic, strong) TUIMessageCellLayout *originCellLayout;
 @property TMsgDirection direction;
-@property (nonatomic, assign) BOOL showName;
-@property (nonatomic, assign) BOOL showMessageTime;
-@property (nonatomic) BOOL isMsgNeedReadReceipt;
+@property(nonatomic, assign) BOOL showName;
+@property(nonatomic, assign) BOOL showMessageTime;
+@property(nonatomic) BOOL isMsgNeedReadReceipt;
 
 @end
 
@@ -64,18 +69,18 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self setupViews];
-    
+
     [self setupInputViewController];
-    
+
     [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [self updateRootMsg];
 
     [self applyData];
- 
+
     [self updateTableViewConstraint];
 }
 
@@ -93,20 +98,18 @@
         self.willCloseCallback();
     }
 }
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
-    if (self.inputController.status == Input_Status_Input ||
-        self.inputController.status == Input_Status_Input_Keyboard) {
+
+    if (self.inputController.status == Input_Status_Input || self.inputController.status == Input_Status_Input_Keyboard) {
         CGPoint offset = self.tableView.contentOffset;
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            strongSelf.responseKeyboard = YES;
-            [UIApplication.sharedApplication.keyWindow endEditing:YES];
-            [strongSelf inputController:strongSelf.inputController didChangeHeight:CGRectGetMaxY(strongSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
-            [strongSelf.tableView setContentOffset:offset];
+          __strong typeof(weakSelf) strongSelf = weakSelf;
+          strongSelf.responseKeyboard = YES;
+          [UIApplication.sharedApplication.keyWindow endEditing:YES];
+          [strongSelf inputController:strongSelf.inputController didChangeHeight:CGRectGetMaxY(strongSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
+          [strongSelf.tableView setContentOffset:offset];
         });
     }
 }
@@ -117,41 +120,42 @@
 }
 
 - (void)applyData {
-    NSArray * messageModifyReplies = self.cellData.messageModifyReplies;
-    NSMutableArray * msgIDArray =  [NSMutableArray array];
-    if (messageModifyReplies.count >0) {
-        for (NSDictionary * dic in messageModifyReplies) {
+    NSArray *messageModifyReplies = self.cellData.messageModifyReplies;
+    NSMutableArray *msgIDArray = [NSMutableArray array];
+    if (messageModifyReplies.count > 0) {
+        for (NSDictionary *dic in messageModifyReplies) {
             if (dic) {
-                NSString * messageID = dic[@"messageID"];
+                NSString *messageID = dic[@"messageID"];
                 if (IS_NOT_EMPTY_NSSTRING(messageID)) {
                     [msgIDArray addObject:messageID];
                 }
             }
         }
     }
-    
+
     // When the only reply is retracted, go back to the previous controller
     if (msgIDArray.count <= 0) {
         [self.navigationController popViewControllerAnimated:YES];
     }
-    
-    __weak typeof(self)weakSelf = self;
-    [TUIChatDataProvider findMessages:msgIDArray callback:^(BOOL succ, NSString * _Nonnull error_message, NSArray * _Nonnull msgs) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        if (succ) {
-            if (msgs.count >0) {
-                strongSelf.imMsgs = msgs;
-                strongSelf.uiMsgs = [self transUIMsgFromIMMsg:msgs];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if(strongSelf.uiMsgs.count != 0){
-                        [strongSelf.tableView reloadData];
-                        [strongSelf.tableView layoutIfNeeded];
-                        [strongSelf scrollToBottom:YES];
-                    }
-                });
-            }
-        }
-    }];
+
+    __weak typeof(self) weakSelf = self;
+    [TUIChatDataProvider findMessages:msgIDArray
+                             callback:^(BOOL succ, NSString *_Nonnull error_message, NSArray *_Nonnull msgs) {
+                               __strong typeof(weakSelf) strongSelf = weakSelf;
+                               if (succ) {
+                                   if (msgs.count > 0) {
+                                       strongSelf.imMsgs = msgs;
+                                       strongSelf.uiMsgs = [self transUIMsgFromIMMsg:msgs];
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                         if (strongSelf.uiMsgs.count != 0) {
+                                             [strongSelf.tableView reloadData];
+                                             [strongSelf.tableView layoutIfNeeded];
+                                             [strongSelf scrollToBottom:YES];
+                                         }
+                                       });
+                                   }
+                               }
+                             }];
 }
 
 - (void)updateTableViewConstraint {
@@ -161,8 +165,7 @@
     self.tableView.frame = msgFrame;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.title = TIMCommonLocalizableString(TUIKitRepliesDetailTitle);
     self.view.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     self.tableView.scrollsToTop = NO;
@@ -179,7 +182,7 @@
     [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
     [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
     [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
-    
+
     NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
     for (NSDictionary *messageInfo in customMessageInfo) {
         NSString *bussinessID = messageInfo[BussinessID];
@@ -189,30 +192,36 @@
             [self.tableView registerClass:cls forCellReuseIdentifier:bussinessID];
         }
     }
-    
+
     self.tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
-    
 }
 - (void)setupInputViewController {
     _inputController = [[TUIInputController alloc] init];
     _inputController.delegate = self;
-    _inputController.view.frame = CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
+    _inputController.view.frame =
+        CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
     TUIFaceGroup *group = TIMConfig.defaultConfig.faceGroups[0];
-    [_inputController.faceView setData:(id)@[group]];
+    [_inputController.faceView setData:(id) @[ group ]];
     TUIMenuCellData *data = [[TUIMenuCellData alloc] init];
     data.path = group.menuPath;
     data.isSelected = YES;
-    [_inputController.menuView setData:(id)@[data]];
-    
+    [_inputController.menuView setData:(id) @[ data ]];
+
     CGFloat margin = 20;
     CGFloat padding = 10;
-    _inputController.inputBar.inputTextView.frame = CGRectMake(margin, _inputController.inputBar.inputTextView.frame.origin.y, _inputController.inputBar.frame.size.width - _inputController.inputBar.faceButton.frame.size.width - margin *2  - padding, _inputController.inputBar.inputTextView.frame.size.height);
-    
-    _inputController.inputBar.faceButton.frame = CGRectMake(_inputController.inputBar.frame.size.width - _inputController.inputBar.faceButton.frame.size.width - margin, _inputController.inputBar.faceButton.frame.origin.y, _inputController.inputBar.faceButton.frame.size.width , _inputController.inputBar.faceButton.frame.size.height);
-    
+    _inputController.inputBar.inputTextView.frame =
+        CGRectMake(margin, _inputController.inputBar.inputTextView.frame.origin.y,
+                   _inputController.inputBar.frame.size.width - _inputController.inputBar.faceButton.frame.size.width - margin * 2 - padding,
+                   _inputController.inputBar.inputTextView.frame.size.height);
+
+    _inputController.inputBar.faceButton.frame =
+        CGRectMake(_inputController.inputBar.frame.size.width - _inputController.inputBar.faceButton.frame.size.width - margin,
+                   _inputController.inputBar.faceButton.frame.origin.y, _inputController.inputBar.faceButton.frame.size.width,
+                   _inputController.inputBar.faceButton.frame.size.height);
+
     if (_inputController.inputBar.micButton) {
         [_inputController.inputBar.micButton removeFromSuperview];
     }
@@ -226,21 +235,21 @@
     self.direction = self.cellData.direction;
     self.showName = self.cellData.showName;
     self.showMessageTime = self.cellData.showMessageTime;
-    
+
     TUIMessageCellData *data = self.cellData;
     TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
     if ([data isKindOfClass:TUITextMessageCellData.class]) {
         layout = TUIMessageCellLayout.incommingTextMessageLayout;
-        TUITextMessageCellData * textData = (TUITextMessageCellData *)data;
+        TUITextMessageCellData *textData = (TUITextMessageCellData *)data;
         textData.textColor = [TUITextMessageCellData incommingTextColor];
         textData.textFont = [TUITextMessageCellData incommingTextFont];
     }
-    if( [data isKindOfClass:TUIReferenceMessageCellData.class]) {
+    if ([data isKindOfClass:TUIReferenceMessageCellData.class]) {
         layout = TUIMessageCellLayout.incommingTextMessageLayout;
-        TUIReferenceMessageCellData * textData = (TUIReferenceMessageCellData *)data;
+        TUIReferenceMessageCellData *textData = (TUIReferenceMessageCellData *)data;
         textData.textColor = [TUITextMessageCellData incommingTextColor];
     }
-    if ([data isKindOfClass:TUIVoiceMessageCellData.class] ) {
+    if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
         layout = [TUIMessageCellLayout incommingVoiceMessageLayout];
     }
     self.cellData.cellLayout = layout;
@@ -248,7 +257,6 @@
     self.cellData.showName = YES;
     self.cellData.showMessageModifyReplies = NO;
     self.cellData.showMessageTime = YES;
-    
 }
 - (void)revertRootMsg {
     self.cellData.cellLayout = self.originCellLayout;
@@ -258,9 +266,7 @@
     self.cellData.showMessageTime = self.showMessageTime;
 }
 
-
-- (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs
-{
+- (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs {
     NSMutableArray *uiMsgs = [NSMutableArray array];
     for (NSInteger k = 0; k < msgs.count; k++) {
         V2TIMMessage *msg = msgs[k];
@@ -268,41 +274,40 @@
         TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
         if ([data isKindOfClass:TUITextMessageCellData.class]) {
             layout = TUIMessageCellLayout.incommingTextMessageLayout;
-            TUITextMessageCellData * textData = (TUITextMessageCellData *)data;
+            TUITextMessageCellData *textData = (TUITextMessageCellData *)data;
             textData.textColor = [TUITextMessageCellData incommingTextColor];
             textData.textFont = [TUITextMessageCellData incommingTextFont];
         }
         data.cellLayout = layout;
         data.direction = MsgDirectionIncoming;
         data.showName = YES;
-        if(data) {
+        if (data) {
             data.innerMessage = msg;
             data.msgID = msg.msgID;
             data.identifier = msg.sender;
             data.name = data.identifier;
             if (msg.nameCard.length > 0) {
                 data.name = msg.nameCard;
-            } else if (msg.nickName.length > 0){
+            } else if (msg.nickName.length > 0) {
                 data.name = msg.nickName;
             }
             data.avatarUrl = [NSURL URLWithString:msg.faceURL];
             [uiMsgs addObject:data];
         }
     }
-    
-    NSArray * sortedArray = [uiMsgs sortedArrayUsingComparator:^NSComparisonResult(TUIMessageCellData *obj1, TUIMessageCellData *obj2) {
-        if ([obj1.innerMessage.timestamp timeIntervalSince1970] == [obj2.innerMessage.timestamp timeIntervalSince1970]) {
-            return obj1.innerMessage.seq > obj2.innerMessage.seq;
-        } else {
-            return [obj1.innerMessage.timestamp compare:obj2.innerMessage.timestamp];
-        }
+
+    NSArray *sortedArray = [uiMsgs sortedArrayUsingComparator:^NSComparisonResult(TUIMessageCellData *obj1, TUIMessageCellData *obj2) {
+      if ([obj1.innerMessage.timestamp timeIntervalSince1970] == [obj2.innerMessage.timestamp timeIntervalSince1970]) {
+          return obj1.innerMessage.seq > obj2.innerMessage.seq;
+      } else {
+          return [obj1.innerMessage.timestamp compare:obj2.innerMessage.timestamp];
+      }
     }];
-    
+
     uiMsgs = [NSMutableArray arrayWithArray:sortedArray];
-    
+
     return uiMsgs;
 }
-
 
 #pragma mark - tableView
 
@@ -327,16 +332,13 @@
     return 0;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    
     if (section == 1) {
         UIView *view = [[UIView alloc] init];
         view.backgroundColor = [UIColor clearColor];
         return view;
     }
-    return  nil;
-    
+    return nil;
 }
-
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section == 0) {
@@ -351,19 +353,16 @@
         return line;
     }
     return nil;
-    
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
         return 1;
     }
     return _uiMsgs.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         return [self.cellData heightOfWidth:Screen_Width];
     }
@@ -392,7 +391,7 @@
     cell.delegate = self;
     [cell notifyBottomContainerReadyOfData:nil];
     if ([cell isKindOfClass:TUIBubbleMessageCell.class]) {
-        TUIBubbleMessageCell * bubbleCell = (TUIBubbleMessageCell *)cell;
+        TUIBubbleMessageCell *bubbleCell = (TUIBubbleMessageCell *)cell;
         if (bubbleCell.bubbleView) {
             bubbleCell.bubbleView.image = nil;
         }
@@ -404,48 +403,45 @@
 }
 #pragma mark - TUIInputControllerDelegate
 
-- (void)inputController:(TUIInputController *)inputController didChangeHeight:(CGFloat)height
-{
+- (void)inputController:(TUIInputController *)inputController didChangeHeight:(CGFloat)height {
     if (!self.responseKeyboard) {
         return;
     }
-    
-    if (self.inputController.replyData ==  nil) {
+
+    if (self.inputController.replyData == nil) {
         [self onRelyMessage:self.cellData];
     }
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        CGRect msgFrame = self.tableView.frame;
-        msgFrame.size.height = self.view.frame.size.height - height;
-        self.tableView.frame = msgFrame;
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                       CGRect msgFrame = self.tableView.frame;
+                       msgFrame.size.height = self.view.frame.size.height - height;
+                       self.tableView.frame = msgFrame;
 
-        CGRect inputFrame = self.inputController.view.frame;
-        inputFrame.origin.y = msgFrame.origin.y + msgFrame.size.height;
-        inputFrame.size.height = height;
-        self.inputController.view.frame = inputFrame;
+                       CGRect inputFrame = self.inputController.view.frame;
+                       inputFrame.origin.y = msgFrame.origin.y + msgFrame.size.height;
+                       inputFrame.size.height = height;
+                       self.inputController.view.frame = inputFrame;
 
-                
-        [self scrollToBottom:NO];
-    } completion:nil];
+                       [self scrollToBottom:NO];
+                     }
+                     completion:nil];
 }
-
 
 - (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg {
     [self sendMessage:msg];
 }
 
-- (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell
-{
+- (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell {
     cell.disableDefaultSelectAction = NO;
-    
+
     if (cell.disableDefaultSelectAction) {
         return;
     }
-
 }
 
-
-- (void)sendMessage:(V2TIMMessage *)message
-{
+- (void)sendMessage:(V2TIMMessage *)message {
     TUIMessageCellData *cellData = nil;
     if (!cellData) {
         cellData = [TUIMessageDataProvider getCellData:message];
@@ -459,45 +455,44 @@
 - (void)sendUIMessage:(TUIMessageCellData *)cellData {
     @weakify(self);
     [self.parentPageDataProvider sendUIMsg:cellData
-                         toConversation:self.conversationData
-                          willSendBlock:^(BOOL isReSend, TUIMessageCellData * _Nonnull dateUIMsg) {
-        @strongify(self);
-        
-        int delay = 1;
-        if ([cellData isKindOfClass:[TUIImageMessageCellData class]]) {
-            delay = 0;
-        }
-        
-        @weakify(self)
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            @strongify(self)
+        toConversation:self.conversationData
+        willSendBlock:^(BOOL isReSend, TUIMessageCellData *_Nonnull dateUIMsg) {
+          @strongify(self);
+
+          int delay = 1;
+          if ([cellData isKindOfClass:[TUIImageMessageCellData class]]) {
+              delay = 0;
+          }
+
+          @weakify(self);
+          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            @strongify(self);
             if (cellData.status == Msg_Status_Sending) {
                 [self changeMsg:cellData status:Msg_Status_Sending_2];
             }
-        });
-        
-    } SuccBlock:^{
-        @strongify(self);
-        [self changeMsg:cellData status:Msg_Status_Succ];
-        [self scrollToBottom:YES];
-    } FailBlock:^(int code, NSString *desc) {
-        @strongify(self)
-        [TUITool makeToastError:code msg:desc];
-        [self changeMsg:cellData status:Msg_Status_Fail];
-    }];
+          });
+        }
+        SuccBlock:^{
+          @strongify(self);
+          [self changeMsg:cellData status:Msg_Status_Succ];
+          [self scrollToBottom:YES];
+        }
+        FailBlock:^(int code, NSString *desc) {
+          @strongify(self);
+          [TUITool makeToastError:code msg:desc];
+          [self changeMsg:cellData status:Msg_Status_Fail];
+        }];
 }
 
-- (void)scrollToBottom:(BOOL)animated{
+- (void)scrollToBottom:(BOOL)animated {
     if (self.uiMsgs.count > 0) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.uiMsgs.count - 1 inSection:1]
                               atScrollPosition:UITableViewScrollPositionBottom
                                       animated:animated];
     }
-
 }
 
-- (void)changeMsg:(TUIMessageCellData *)msg status:(TMsgStatus)status
-{
+- (void)changeMsg:(TUIMessageCellData *)msg status:(TMsgStatus)status {
     msg.status = status;
     NSInteger index = [self.uiMsgs indexOfObject:msg];
     if ([self.tableView numberOfRowsInSection:0] > index) {
@@ -506,22 +501,22 @@
     } else {
         NSLog(@"lack of cell");
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyMessageStatusChanged" object:nil userInfo:@{
-        @"msg": msg,
-        @"status": [NSNumber numberWithUnsignedInteger:status],
-        @"msgSender": self,
-    }];
-}
 
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kTUINotifyMessageStatusChanged"
+                                                        object:nil
+                                                      userInfo:@{
+                                                          @"msg" : msg,
+                                                          @"status" : [NSNumber numberWithUnsignedInteger:status],
+                                                          @"msgSender" : self,
+                                                      }];
+}
 
 #pragma mark - Message reply
 
-- (void)onRelyMessage:(nonnull TUIMessageCellData *)data
-{
+- (void)onRelyMessage:(nonnull TUIMessageCellData *)data {
     NSString *desc = @"";
     desc = [self replyReferenceMessageDesc:data];
-    
+
     TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
     replyData.msgID = data.msgID;
     replyData.msgAbstract = desc;
@@ -545,8 +540,7 @@
 }
 
 #pragma mark - TUIMessageCellDelegate
-- (void)onSelectMessage:(TUIMessageCell *)cell
-{
+- (void)onSelectMessage:(TUIMessageCell *)cell {
     if ([cell isKindOfClass:[TUIImageMessageCell class]]) {
         [self showImageMessage:(TUIImageMessageCell *)cell];
     }
@@ -568,12 +562,12 @@
     if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];
     }
-//    if ([cell isKindOfClass:[TUIReplyMessageCell class]]) {
-//        [self showReplyMessage:(TUIReplyMessageCell *)cell];
-//    }
-//    if ([cell isKindOfClass:[TUIReferenceMessageCell class]]) {
-//        [self showReplyMessage:(TUIReplyMessageCell *)cell];
-//    }
+    //    if ([cell isKindOfClass:[TUIReplyMessageCell class]]) {
+    //        [self showReplyMessage:(TUIReplyMessageCell *)cell];
+    //    }
+    //    if ([cell isKindOfClass:[TUIReferenceMessageCell class]]) {
+    //        [self showReplyMessage:(TUIReplyMessageCell *)cell];
+    //    }
 
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageContent:)]) {
         [self.delegate messageController:nil onSelectMessageContent:cell];
@@ -582,13 +576,11 @@
 
 #pragma mark - dataProviderDataChange
 - (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider {
-    
 }
 - (void)dataProviderDataSourceChange:(TUIMessageDataProvider *)dataProvider
                             withType:(TUIMessageBaseDataProviderDataSourceChangeType)type
                              atIndex:(NSUInteger)index
                            animation:(BOOL)animation {
-    
 }
 - (void)dataProviderDataSourceDidChange:(TUIMessageDataProvider *)dataProvider {
     for (TUIMessageCellData *cellData in dataProvider.uiMsgs) {
@@ -597,48 +589,39 @@
             break;
         }
     }
-    
-    [self applyData];
-    
-    
-   
-}
 
+    [self applyData];
+}
 
 #pragma mark - action
 
-- (void)showImageMessage:(TUIImageMessageCell *)cell
-{
+- (void)showImageMessage:(TUIImageMessageCell *)cell {
     CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
     TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
     [mediaView setThumb:cell.thumb frame:frame];
-    [mediaView setCurMessage:cell.messageData.innerMessage allMessages:@[self.cellData.innerMessage]];
+    [mediaView setCurMessage:cell.messageData.innerMessage allMessages:@[ self.cellData.innerMessage ]];
     [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
-- (void)playVoiceMessage:(TUIVoiceMessageCell *)cell
-{
-        TUIVoiceMessageCellData *uiMsg = (TUIVoiceMessageCellData *)self.cellData;
-        if(uiMsg == cell.voiceData){
-            [uiMsg playVoiceMessage];
-            cell.voiceReadPoint.hidden = YES;
-        }
-        else{
-            [uiMsg stopVoiceMessage];
-        }
+- (void)playVoiceMessage:(TUIVoiceMessageCell *)cell {
+    TUIVoiceMessageCellData *uiMsg = (TUIVoiceMessageCellData *)self.cellData;
+    if (uiMsg == cell.voiceData) {
+        [uiMsg playVoiceMessage];
+        cell.voiceReadPoint.hidden = YES;
+    } else {
+        [uiMsg stopVoiceMessage];
+    }
 }
 
-- (void)showVideoMessage:(TUIVideoMessageCell *)cell
-{
+- (void)showVideoMessage:(TUIVideoMessageCell *)cell {
     CGRect frame = [cell.thumb convertRect:cell.thumb.bounds toView:[UIApplication sharedApplication].delegate.window];
     TUIMediaView *mediaView = [[TUIMediaView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Height)];
     [mediaView setThumb:cell.thumb frame:frame];
-    [mediaView setCurMessage:cell.messageData.innerMessage allMessages:@[self.cellData.innerMessage]];
+    [mediaView setCurMessage:cell.messageData.innerMessage allMessages:@[ self.cellData.innerMessage ]];
     [[UIApplication sharedApplication].keyWindow addSubview:mediaView];
 }
 
-- (void)showFileMessage:(TUIFileMessageCell *)cell
-{
+- (void)showFileMessage:(TUIFileMessageCell *)cell {
     TUIFileViewController *file = [[TUIFileViewController alloc] init];
     file.data = [cell fileData];
     [self.navigationController pushViewController:file animated:YES];
@@ -659,27 +642,23 @@
     }
     [self loadMessage];
 }
-- (void)loadMessage
-{
+- (void)loadMessage {
     if (self.msgDataProvider.isLoadingData || self.msgDataProvider.isNoMoreMsg) {
         return;
     }
-    
-    [self.msgDataProvider loadMessageSucceedBlock:^(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> * _Nonnull newMsgs) {
-        
-    } FailBlock:^(int code, NSString *desc) {
-        [TUITool makeToastError:code msg:desc];
-    }];
+
+    [self.msgDataProvider
+        loadMessageSucceedBlock:^(BOOL isFirstLoad, BOOL isNoMoreMsg, NSArray<TUIMessageCellData *> *_Nonnull newMsgs) {
+
+        }
+        FailBlock:^(int code, NSString *desc) {
+          [TUITool makeToastError:code msg:desc];
+        }];
 }
 
 #pragma mark - TUINotificationProtocol
-- (void)onNotifyEvent:(NSString *)key
-               subKey:(NSString *)subKey
-               object:(id)anObject
-                param:(NSDictionary *)param {
-    if ([key isEqualToString:TUICore_TUITranslationNotify]
-        && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
-        
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUITranslationNotify] && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
         TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
         [data clearCachedCellHeight];
         [self.parentPageDataProvider removeHeightCacheOfData:data];
@@ -690,37 +669,34 @@
 - (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
     // Dispatch the task to RunLoop to ensure that they are executed after the UITableView refresh is complete.
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self reloadCellOfMessage:messageID section:section];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self scrollCellToBottomOfMessage:messageID section:section];
-        });
+      [self reloadCellOfMessage:messageID section:section];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self scrollCellToBottomOfMessage:messageID section:section];
+      });
     });
 }
 
 - (void)reloadCellOfMessage:(NSString *)messageID section:(NSInteger)section {
     NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
-    
+
     // Disable animation when loading to avoid cell jumping.
     if (indexPath == nil) {
         return;
     }
     [UIView performWithoutAnimation:^{
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath]
-                              withRowAnimation:UITableViewRowAnimationNone];
+      [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
     }];
 }
 
 - (void)scrollCellToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
     NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
-    
+
     // Scroll the tableView only if the bottom of the cell is invisible.
     CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
     CGRect tableViewRect = self.tableView.bounds;
     BOOL isBottomInvisible = cellRect.origin.y < CGRectGetMaxY(tableViewRect) && CGRectGetMaxY(cellRect) > CGRectGetMaxY(tableViewRect);
     if (isBottomInvisible) {
-        [self.tableView scrollToRowAtIndexPath:indexPath
-                              atScrollPosition:UITableViewScrollPositionBottom
-                                      animated:YES];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }
 }
 

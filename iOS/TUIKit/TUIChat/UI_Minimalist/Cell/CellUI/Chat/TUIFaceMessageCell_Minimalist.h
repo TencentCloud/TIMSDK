@@ -1,6 +1,9 @@
 
-#import "TUIFaceMessageCellData_Minimalist.h"
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
+#import "TUIFaceMessageCellData_Minimalist.h"
 
 @interface TUIFaceMessageCell_Minimalist : TUIBubbleMessageCell_Minimalist
 /**
@@ -9,7 +12,7 @@
  *
  *  Image view for the resource of emticon
  */
-@property (nonatomic, strong) UIImageView *face;
+@property(nonatomic, strong) UIImageView *face;
 
 @property TUIFaceMessageCellData_Minimalist *faceData;
 

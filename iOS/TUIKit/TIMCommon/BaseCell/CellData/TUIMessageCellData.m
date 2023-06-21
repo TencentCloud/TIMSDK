@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIMessageCellData.h"
@@ -10,35 +11,29 @@
 
 @interface TUIMessageCellData ()
 
-@property (nonatomic, assign) CGFloat cellHeight;
+@property(nonatomic, assign) CGFloat cellHeight;
 
 @end
 
 @implementation TUIMessageCellData
 
-+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message
-{
++ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     return nil;
 }
 
-+ (NSString *)getDisplayString:(V2TIMMessage *)message
-{
++ (NSString *)getDisplayString:(V2TIMMessage *)message {
     return nil;
 }
 
-- (Class)getReplyQuoteViewDataClass
-{
-
+- (Class)getReplyQuoteViewDataClass {
     return nil;
 }
 
-- (Class)getReplyQuoteViewClass
-{
+- (Class)getReplyQuoteViewClass {
     return nil;
 }
 
-- (instancetype)initWithDirection:(TMsgDirection)direction
-{
+- (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super init];
     if (self) {
         _direction = direction;
@@ -66,14 +61,12 @@
     }
 }
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     if (self.cellHeight) {
         return self.cellHeight;
     }
-    
-    CGFloat height = 0;
 
+    CGFloat height = 0;
 
     if (self.showName) {
         height += 20;
@@ -89,15 +82,13 @@
     height += containerSize.height;
     height += self.cellLayout.messageInsets.top + self.cellLayout.messageInsets.bottom;
 
-    if (height < 55)
-        height = 55;
+    if (height < 55) height = 55;
 
     self.cellHeight = height;
     return self.cellHeight;
 }
 
-- (CGSize)contentSize
-{
+- (CGSize)contentSize {
     return CGSizeZero;
 }
 
@@ -109,63 +100,55 @@
     self.cellHeight = 0;
 }
 
-static UIColor *sOutgoingNameColor;
+static UIColor *gOutgoingNameColor;
 
-+ (UIColor *)outgoingNameColor
-{
-    if (!sOutgoingNameColor) {
-        sOutgoingNameColor = [UIColor d_systemGrayColor];
++ (UIColor *)outgoingNameColor {
+    if (!gOutgoingNameColor) {
+        gOutgoingNameColor = [UIColor d_systemGrayColor];
     }
-    return sOutgoingNameColor;
+    return gOutgoingNameColor;
 }
 
-+ (void)setOutgoingNameColor:(UIColor *)outgoingNameColor
-{
-    sOutgoingNameColor = outgoingNameColor;
++ (void)setOutgoingNameColor:(UIColor *)outgoingNameColor {
+    gOutgoingNameColor = outgoingNameColor;
 }
 
-static UIFont *sOutgoingNameFont;
+static UIFont *gOutgoingNameFont;
 
-+ (UIFont *)outgoingNameFont
-{
-    if (!sOutgoingNameFont) {
-        sOutgoingNameFont = [UIFont systemFontOfSize:14];
++ (UIFont *)outgoingNameFont {
+    if (!gOutgoingNameFont) {
+        gOutgoingNameFont = [UIFont systemFontOfSize:14];
     }
-    return sOutgoingNameFont;
+    return gOutgoingNameFont;
 }
 
-+ (void)setOutgoingNameFont:(UIFont *)outgoingNameFont
-{
-    sOutgoingNameFont = outgoingNameFont;
++ (void)setOutgoingNameFont:(UIFont *)outgoingNameFont {
+    gOutgoingNameFont = outgoingNameFont;
 }
 
-static UIColor *sIncommingNameColor;
+static UIColor *gIncommingNameColor;
 
-+ (UIColor *)incommingNameColor
-{
-    if (!sIncommingNameColor) {
-        sIncommingNameColor = [UIColor d_systemGrayColor];
++ (UIColor *)incommingNameColor {
+    if (!gIncommingNameColor) {
+        gIncommingNameColor = [UIColor d_systemGrayColor];
     }
-    return sIncommingNameColor;
+    return gIncommingNameColor;
 }
 
-+ (void)setIncommingNameColor:(UIColor *)incommingNameColor
-{
-    sIncommingNameColor = incommingNameColor;
++ (void)setIncommingNameColor:(UIColor *)incommingNameColor {
+    gIncommingNameColor = incommingNameColor;
 }
 
-static UIFont *sIncommingNameFont;
+static UIFont *gIncommingNameFont;
 
-+ (UIFont *)incommingNameFont
-{
-    if (!sIncommingNameFont) {
-        sIncommingNameFont = [UIFont systemFontOfSize:14];
++ (UIFont *)incommingNameFont {
+    if (!gIncommingNameFont) {
+        gIncommingNameFont = [UIFont systemFontOfSize:14];
     }
-    return sIncommingNameFont;
+    return gIncommingNameFont;
 }
 
-+ (void)setIncommingNameFont:(UIFont *)incommingNameFont
-{
-    sIncommingNameFont = incommingNameFont;
++ (void)setIncommingNameFont:(UIFont *)incommingNameFont {
+    gIncommingNameFont = incommingNameFont;
 }
 @end

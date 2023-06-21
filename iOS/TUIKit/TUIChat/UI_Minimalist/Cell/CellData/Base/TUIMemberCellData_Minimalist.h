@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /******************************************************************************
  *
  *  本文件声明了 TUIMemberCellData_Minimalist 类。
@@ -14,17 +17,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMemberDescribeCellData_Minimalist : TUICommonCellData
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) UIImage *icon;
+@property(nonatomic, copy) NSString *title;
+@property(nonatomic, copy) UIImage *icon;
 
 @end
 
 @interface TUIMemberCellData_Minimalist : TUICommonCellData
 
-@property (nonatomic, copy) NSString *title;  // member's display name
-@property (nonatomic, copy) NSURL *avatarUrL; // member's avatar image url
-@property (nonatomic, copy) NSString *detail; // optional, used to display more info
-@property (nonatomic, copy) NSString *userID;
+@property(nonatomic, copy) NSString *title;   // member's display name
+@property(nonatomic, copy) NSURL *avatarUrL;  // member's avatar image url
+@property(nonatomic, copy) NSString *detail;  // optional, used to display more info
+@property(nonatomic, copy) NSString *userID;
 
 - (instancetype)initWithUserID:(nonnull NSString *)userID
                       nickName:(nullable NSString *)nickName
@@ -36,4 +39,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-

@@ -3,11 +3,12 @@
 //  Pods
 //
 //  Created by harvy on 2020/12/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIMergeMessageCellData.h"
-#import "TUITextMessageCellData.h"
 #import <TIMCommon/TIMDefine.h>
+#import "TUITextMessageCellData.h"
 
 #ifndef CGFLOAT_CEIL
 #ifdef CGFLOAT_IS_DOUBLE
@@ -26,7 +27,7 @@
         limitCell.content = TIMCommonLocalizableString(TUIKitRelayLayerLimitTips);
         return limitCell;
     }
-    
+
     TUIMergeMessageCellData *relayData = [[TUIMergeMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     relayData.title = elem.title;
     relayData.abstractList = [NSArray arrayWithArray:elem.abstractList];
@@ -39,20 +40,18 @@
     return [NSString stringWithFormat:@"[%@]", TIMCommonLocalizableString(TUIKitRelayChatHistory)];
 }
 
-- (Class)getReplyQuoteViewDataClass
-{
+- (Class)getReplyQuoteViewDataClass {
     return NSClassFromString(@"TUIMergeReplyQuoteViewData");
 }
 
-- (Class)getReplyQuoteViewClass
-{
+- (Class)getReplyQuoteViewClass {
     return NSClassFromString(@"TUIMergeReplyQuoteView");
 }
 
-
-- (CGSize)contentSize
-{
-    CGRect rect = [[self abstractAttributedString] boundingRectWithSize:CGSizeMake(200 - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+- (CGSize)contentSize {
+    CGRect rect = [[self abstractAttributedString] boundingRectWithSize:CGSizeMake(200 - 20, MAXFLOAT)
+                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                                context:nil];
     CGSize size = CGSizeMake(CGFLOAT_CEIL(rect.size.width), CGFLOAT_CEIL(rect.size.height) - 10);
     self.abstractSize = size;
     CGFloat height = size.height;
@@ -65,16 +64,15 @@
     return CGSizeMake(200, height);
 }
 
-- (NSAttributedString *)abstractAttributedString
-{
+- (NSAttributedString *)abstractAttributedString {
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.lineSpacing = 4;
     NSDictionary *attribute = @{
-        NSForegroundColorAttributeName : [UIColor colorWithRed:187/255.0 green:187/255.0 blue:187/255.0 alpha:1/1.0],
+        NSForegroundColorAttributeName : [UIColor colorWithRed:187 / 255.0 green:187 / 255.0 blue:187 / 255.0 alpha:1 / 1.0],
         NSFontAttributeName : [UIFont systemFontOfSize:12.0],
         NSParagraphStyleAttributeName : style
     };
-    
+
     NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithString:@""];
     int i = 0;
     for (NSString *ab in self.abstractList) {
@@ -87,6 +85,5 @@
     }
     return abstr;
 }
-
 
 @end

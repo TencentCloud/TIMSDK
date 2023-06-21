@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * 创建 TUICallKit 实例（单例模式）
- *
- * @param context 仅适用于 Android 平台，TUICallKit 内部会将其转化为 Android 平台的 ApplicationContext。
  */
 + (instancetype)createInstance NS_SWIFT_NAME(createInstance());
 
@@ -84,25 +82,25 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param filePath 被叫用户铃声地址
  */
-- (void)setCallingBell:(NSString *)filePath NS_SWIFT_NAME(setCallingBell(filePath:))NS_SWIFT_NAME(setCallingBell(filePath:));
+- (void)setCallingBell:(NSString *)filePath NS_SWIFT_NAME(setCallingBell(filePath:));
 
 /**
  * 开启/关闭静音模式
  */
-- (void)enableMuteMode:(BOOL)enable NS_SWIFT_NAME(enableMuteMode(enable:))NS_SWIFT_NAME(enableMuteMode(enable:));
+- (void)enableMuteMode:(BOOL)enable NS_SWIFT_NAME(enableMuteMode(enable:));
 
 /**
  * 开启/关闭悬浮窗功能
  * 默认为NO，通话界面左上角的悬浮窗按钮隐藏，设置为 YES 后显示。
  */
-- (void)enableFloatWindow:(BOOL)enable NS_SWIFT_NAME(enableFloatWindow(enable:))NS_SWIFT_NAME(enableFloatWindow(enable:));
+- (void)enableFloatWindow:(BOOL)enable NS_SWIFT_NAME(enableFloatWindow(enable:));
 
 /**
  * 支持自定义View
  *
  * @param enable 支持自定义View
  */
-- (void)enableCustomViewRoute:(BOOL)enable NS_SWIFT_NAME(enableCustomViewRoute(enable:))NS_SWIFT_NAME(enableCustomViewRoute(enable:));
+- (void)enableCustomViewRoute:(BOOL)enable NS_SWIFT_NAME(enableCustomViewRoute(enable:));
 
 - (UIViewController *_Nullable)getCallViewController NS_SWIFT_NAME(getCallViewController());
 

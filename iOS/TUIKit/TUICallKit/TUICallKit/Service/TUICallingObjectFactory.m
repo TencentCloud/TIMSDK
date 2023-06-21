@@ -17,7 +17,7 @@
 @implementation TUICallingObjectFactory
 
 + (void)load {
-    [TUICore registerObjectFactoryName:TUICore_TUICallingObjectFactory objectFactory:TUICallingObjectFactory.shareInstance];
+    [TUICore registerObjectFactory:TUICore_TUICallingObjectFactory objectFactory:TUICallingObjectFactory.shareInstance];
 }
 
 + (instancetype)shareInstance {

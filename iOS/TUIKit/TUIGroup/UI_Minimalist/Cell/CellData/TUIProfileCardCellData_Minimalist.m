@@ -3,6 +3,7 @@
 //  Masonry
 //
 //  Created by wyl on 2022/12/6.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIProfileCardCellData_Minimalist.h"
@@ -11,8 +12,7 @@
 
 @implementation TUIProfileCardCellData_Minimalist
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.avatarImage = DefaultAvatarImage;
@@ -20,8 +20,7 @@
     return self;
 }
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
+- (CGFloat)heightOfWidth:(CGFloat)width {
     return kScale390(86);
 }
 

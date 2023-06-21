@@ -3,15 +3,15 @@
 //  TUIContact
 //
 //  Created by wyl on 2023/1/18.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIContactUserPanelHeaderView_Minimalist.h"
 #import "TUIDefine.h"
 
-@implementation TUIContactPanelCell_Minimalist
-{
+@implementation TUIContactPanelCell_Minimalist {
     UIImageView *_imageView;
-    UILabel * _nameLabel;
+    UILabel *_nameLabel;
     UIImageView *_imageIcon;
 }
 
@@ -23,11 +23,11 @@
         _imageView.backgroundColor = [UIColor clearColor];
         _imageView.contentMode = UIViewContentModeScaleToFill;
         [self addSubview:_imageView];
-        
+
         _imageIcon = [[UIImageView alloc] initWithFrame:CGRectZero];
         _imageIcon.image = [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_del_icon")];
         [self addSubview:_imageIcon];
-        
+
         _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _nameLabel.font = [UIFont systemFontOfSize:kScale390(12)];
         [self addSubview:_nameLabel];
@@ -38,10 +38,10 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.layer.masksToBounds = YES;
-    
+
     [_nameLabel sizeToFit];
-    
-    _imageView.frame = CGRectMake((self.bounds.size.width - kScale390(40) )*0.5, 0, kScale390(40), kScale390(40));
+
+    _imageView.frame = CGRectMake((self.bounds.size.width - kScale390(40)) * 0.5, 0, kScale390(40), kScale390(40));
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         _imageView.layer.masksToBounds = YES;
         _imageView.layer.cornerRadius = _imageView.frame.size.height / 2;
@@ -49,29 +49,28 @@
         _imageView.layer.masksToBounds = YES;
         _imageView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
-    _imageIcon.frame = CGRectMake(_imageView.frame.origin.x + _imageView.frame.size.width - kScale390(12), _imageView.frame.origin.y, kScale390(12), kScale390(12));
-    
+    _imageIcon.frame =
+        CGRectMake(_imageView.frame.origin.x + _imageView.frame.size.width - kScale390(12), _imageView.frame.origin.y, kScale390(12), kScale390(12));
+
     _nameLabel.frame = CGRectMake(0, _imageView.frame.size.height + kScale390(2), _nameLabel.frame.size.width, kScale390(17));
     _nameLabel.mm__centerX(_imageView.center.x);
     _nameLabel.textAlignment = NSTextAlignmentCenter;
     _nameLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    
 }
-- (void)fillWithData:(TUICommonContactSelectCellData *)model
-{
-    [_imageView sd_setImageWithURL:model.avatarUrl placeholderImage:[UIImage imageNamed:TIMCommonImagePath(@"default_c2c_head")] options:SDWebImageHighPriority];
+- (void)fillWithData:(TUICommonContactSelectCellData *)model {
+    [_imageView sd_setImageWithURL:model.avatarUrl
+                  placeholderImage:[UIImage imageNamed:TIMCommonImagePath(@"default_c2c_head")]
+                           options:SDWebImageHighPriority];
     _nameLabel.text = model.title;
-
 }
 
 @end
-
 
 @implementation TUIContactUserPanelHeaderView_Minimalist
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if (self){
+    if (self) {
         CGFloat topPadding = 44.f;
         if (@available(iOS 11.0, *)) {
             UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -123,23 +122,31 @@
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString* cellIdentifier = @"TUIContactPanelCell_Minimalist";
-    TUIContactPanelCell_Minimalist *cell = (TUIContactPanelCell_Minimalist *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    static NSString *cellIdentifier = @"TUIContactPanelCell_Minimalist";
+    TUIContactPanelCell_Minimalist *cell = (TUIContactPanelCell_Minimalist *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier
+                                                                                                                       forIndexPath:indexPath];
     if (indexPath.row < self.selectedUsers.count) {
         [cell fillWithData:self.selectedUsers[indexPath.row]];
     }
     return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     TUICommonContactSelectCellData *model = self.selectedUsers[indexPath.row];
-   
-    CGSize size = [model.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 20) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:kScale390(12)]} context:nil].size;
+
+    CGSize size = [model.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 20)
+                                            options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                         attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:kScale390(12)]}
+                                            context:nil]
+                      .size;
     return CGSizeMake(MAX(kScale390(60), size.width), kScale390(60));
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section {
     return UIEdgeInsetsMake(0, kScale390(16), 0, kScale390(16));
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -154,7 +161,6 @@
                 self.clickCallback();
             }
         }
-
     }
 }
 

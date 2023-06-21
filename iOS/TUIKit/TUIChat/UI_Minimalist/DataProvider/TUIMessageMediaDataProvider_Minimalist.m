@@ -3,11 +3,12 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by kayev on 2021/7/8.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIMessageMediaDataProvider_Minimalist.h"
-#import "TUIMessageBaseDataProvider+ProtectedAPI.h"
 #import "TUIImageMessageCellData_Minimalist.h"
+#import "TUIMessageBaseDataProvider+ProtectedAPI.h"
 #import "TUIVideoMessageCellData_Minimalist.h"
 
 @implementation TUIMessageMediaDataProvider_Minimalist

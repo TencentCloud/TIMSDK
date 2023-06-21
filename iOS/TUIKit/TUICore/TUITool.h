@@ -1,7 +1,10 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#define IS_NOT_EMPTY_NSSTRING(__X__)            (__X__ && [__X__ isKindOfClass:[NSString class]] && ![__X__ isEqualToString:@""])
+#define IS_NOT_EMPTY_NSSTRING(__X__) (__X__ && [__X__ isKindOfClass:[NSString class]] && ![__X__ isEqualToString:@""])
 
 typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 
@@ -22,7 +25,7 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (void)makeToastActivity;
 + (void)hideToastActivity;
 
-+(void)dispatchMainAsync:(dispatch_block_t) block;
++ (void)dispatchMainAsync:(dispatch_block_t)block;
 
 // date
 + (NSString *)convertDateToStr:(NSDate *)date;
@@ -38,14 +41,11 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (NSString *)genVoiceName:(NSString *)uuid withExtension:(NSString *)extent;
 + (void)asyncDecodeImage:(NSString *)path complete:(TAsyncImageComplete)complete;
 
-
 + (NSString *)deviceModel;
 + (NSString *)deviceVersion;
 + (NSString *)deviceName;
 
-
 + (void)openLinkWithURL:(NSURL *)url;
-
 
 + (void)showUnsupportAlertOfService:(NSString *)service onVC:(UIViewController *)vc;
 + (void)postUnsupportNotificationOfService:(NSString *)service;
@@ -59,7 +59,7 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc;
 + (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly;
 
-+ (void)checkCommercialAbility:(long long)param succ:(void(^)(BOOL enabled))succ fail:(void(^)(int code, NSString *desc))fail;
++ (void)checkCommercialAbility:(long long)param succ:(void (^)(BOOL enabled))succ fail:(void (^)(int code, NSString *desc))fail;
 
 + (UIWindow *)applicationKeywindow;
 

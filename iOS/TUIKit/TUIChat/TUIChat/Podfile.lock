@@ -1,0 +1,39 @@
+PODS:
+  - ReactiveObjC (3.1.1)
+  - SDWebImage (5.15.8):
+    - SDWebImage/Core (= 5.15.8)
+  - SDWebImage/Core (5.15.8)
+  - TIMCommon (7.1.3925)
+  - TUICore (7.1.3925)
+  - TXIMSDK_Plus_iOS (7.2.4123)
+
+DEPENDENCIES:
+  - ReactiveObjC (= 3.1.1)
+  - SDWebImage (= 5.15.8)
+  - TIMCommon (from `../../TIMCommon/TIMCommon`)
+  - TUICore (from `../../TUICore/TUICore`)
+  - TXIMSDK_Plus_iOS (from `../../../../tuikit/ios/ImSDK/`)
+
+SPEC REPOS:
+  trunk:
+    - ReactiveObjC
+    - SDWebImage
+
+EXTERNAL SOURCES:
+  TIMCommon:
+    :path: "../../TIMCommon/TIMCommon"
+  TUICore:
+    :path: "../../TUICore/TUICore"
+  TXIMSDK_Plus_iOS:
+    :path: "../../../../tuikit/ios/ImSDK/"
+
+SPEC CHECKSUMS:
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
+  TIMCommon: 604f9c0d674945b24aed6ca4f2bcb04d0c2677db
+  TUICore: a012458557b7588f7bcc883c5b073e3451dbc00d
+  TXIMSDK_Plus_iOS: c059c9dd64d656b2a9556f9081ab87702182ed5f
+
+PODFILE CHECKSUM: f178a3b6dbe62f403665b6df028143a2165fcbcc
+
+COCOAPODS: 1.12.1

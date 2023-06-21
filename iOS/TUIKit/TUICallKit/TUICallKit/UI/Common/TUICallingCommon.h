@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "TUICallEngineHeader.h"
 
 @class V2TIMUserFullInfo, CallingUserModel;
 
@@ -57,8 +58,11 @@ typedef NS_ENUM(NSUInteger, AuthorizationDeniedType ) {
 
 + (CallingUserModel *)convertUser:(V2TIMUserFullInfo *)user volume:(NSUInteger)volume isEnter:(BOOL)isEnter;
 
-+ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType;
++ (BOOL)checkAuthorizationStatusIsDenied:(TUICallMediaType)callMediaType;
 
++ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType
+            openSettingHandler:(void(^)(void))openSettingHandler
+                 cancelHandler:(void(^)(void))cancelHandler;
 @end
 
 NS_ASSUME_NONNULL_END

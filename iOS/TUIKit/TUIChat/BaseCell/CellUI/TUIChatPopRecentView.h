@@ -3,11 +3,12 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/5/25.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@class  TUIChatPopRecentView;
+@class TUIChatPopRecentView;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,13 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIChatPopRecentView : UIView
 
-@property (nonatomic, strong, readonly) NSMutableArray *faceGroups;
-@property (nonatomic, assign) BOOL needShowbottomLine;
-@property (nonatomic, strong) UIButton *arrowButton;
+@property(nonatomic, strong, readonly) NSMutableArray *faceGroups;
+@property(nonatomic, assign) BOOL needShowbottomLine;
+@property(nonatomic, strong) UIButton *arrowButton;
 
 - (void)setData:(NSMutableArray *)data;
 
-@property (nonatomic, weak) id<TUIChatPopRecentEmojiDelegate> delegate;
+@property(nonatomic, weak) id<TUIChatPopRecentEmojiDelegate> delegate;
 
 @end
 

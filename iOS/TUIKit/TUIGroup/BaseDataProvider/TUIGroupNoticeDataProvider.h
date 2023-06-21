@@ -3,6 +3,7 @@
 //  TUIGroup
 //
 //  Created by harvy on 2022/1/12.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -12,12 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIGroupNoticeDataProvider : NSObject
 
-@property (nonatomic, strong, readonly) V2TIMGroupInfo *groupInfo;
-@property (nonatomic, copy) NSString *groupID;
+@property(nonatomic, strong, readonly) V2TIMGroupInfo *groupInfo;
+@property(nonatomic, copy) NSString *groupID;
 
 - (void)getGroupInfo:(dispatch_block_t)callback;
 - (BOOL)canEditNotice;
-- (void)updateNotice:(NSString *)notice callback:(void(^)(int, NSString *))callback;
+- (void)updateNotice:(NSString *)notice callback:(void (^)(int, NSString *))callback;
 
 @end
 

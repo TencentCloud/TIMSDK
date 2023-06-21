@@ -19,7 +19,8 @@
  * TUIConfig implements the default initialization of the configuration file, you can change the default configuration here according to your needs
  * Configuration file include emoticons, default icons, and more
  *
- * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace them with your own emoticons when you go online, otherwise you will face legal risks.
+ * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace
+ * them with your own emoticons when you go online, otherwise you will face legal risks.
  */
 
 #import <Foundation/Foundation.h>
@@ -43,25 +44,25 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  *  头像类型
  *  Type of avatar
  */
-@property (nonatomic, assign) TUIKitAvatarType avatarType;
+@property(nonatomic, assign) TUIKitAvatarType avatarType;
 
 /**
  *  头像圆角大小
  *  The size of the rounded corners of the avatar
  */
-@property (nonatomic, assign) CGFloat avatarCornerRadius;
+@property(nonatomic, assign) CGFloat avatarCornerRadius;
 
 /**
  *  默认头像图片
  *  Default user avatar
  */
-@property (nonatomic, strong) UIImage *defaultAvatarImage;
+@property(nonatomic, strong) UIImage *defaultAvatarImage;
 
 /**
  *  默认群组头像图片
  *  Default group avatar
  */
-@property (nonatomic, strong) UIImage *defaultGroupAvatarImage;
+@property(nonatomic, strong) UIImage *defaultGroupAvatarImage;
 
 /**
  * 发消息不计入未读数，默认为 NO
@@ -99,10 +100,8 @@ typedef NS_ENUM(NSInteger, TUIKitAvatarType) {
  */
 @property(nonatomic, assign) BOOL enableGroupGridAvatar;
 
-
-
 - (UIImage *)getGroupAvatarImageByGroupType:(NSString *)groupType;
 
-- (void)setSceneOptimizParams:(NSString *)path;//(For RTC,Don't delete)
+- (void)setSceneOptimizParams:(NSString *)path;  //(For RTC,Don't delete)
 
 @end

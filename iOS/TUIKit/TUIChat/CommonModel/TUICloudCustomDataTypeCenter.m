@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by wyl on 2022/4/29.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUICloudCustomDataTypeCenter.h"
@@ -18,155 +19,144 @@ TUICustomType messageFeature = @"messageFeature";
     return YES;
 }
 
-- (void)doThingsInContainsCloudCustomOfDataType:(TUICloudCustomDataType)type
-                                     callback:(void(^)(BOOL isContains, id obj))callback{
- 
+- (void)doThingsInContainsCloudCustomOfDataType:(TUICloudCustomDataType)type callback:(void (^)(BOOL isContains, id obj))callback {
     if (self.cloudCustomData == nil) {
         if (callback) {
-            callback(NO,nil);
+            callback(NO, nil);
         }
     }
-    
+
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:self.cloudCustomData options:0 error:&error];
-    NSString * typeStr =  [TUICloudCustomDataTypeCenter convertType2String:type];
-    
-    
-    if (![typeStr isKindOfClass:[NSString class]] ||typeStr.length <=0) {
+    NSString *typeStr = [TUICloudCustomDataTypeCenter convertType2String:type];
+
+    if (![typeStr isKindOfClass:[NSString class]] || typeStr.length <= 0) {
         if (callback) {
-            callback(NO,nil);
+            callback(NO, nil);
         }
     }
     if (error || dict == nil || ![dict isKindOfClass:NSDictionary.class] || ![dict.allKeys containsObject:typeStr]) {
         if (callback) {
-            callback(NO,nil);
+            callback(NO, nil);
         }
         return;
     }
-    
-    
-    //extra condition
+
+    // extra condition
     if (type == TUICloudCustomDataType_MessageReply) {
         NSDictionary *reply = [dict valueForKey:typeStr];
         if (reply == nil || ![reply isKindOfClass:NSDictionary.class]) {
             if (callback) {
-                callback(NO,nil);
+                callback(NO, nil);
             }
             return;
         }
-        if (![reply.allKeys containsObject:@"version"] ||
-            [reply[@"version"] intValue]>kMessageReplyVersion ) {
+        if (![reply.allKeys containsObject:@"version"] || [reply[@"version"] intValue] > kMessageReplyVersion) {
             NSLog(@"not match the version of message rely");
             if (callback) {
-                callback(NO,nil);
+                callback(NO, nil);
             }
             return;
         }
         if (callback) {
-            callback(YES,reply);
+            callback(YES, reply);
         }
     }
-    
+
     if (type == TUICloudCustomDataType_MessageReference) {
         NSDictionary *reply = [dict valueForKey:typeStr];
         if (reply == nil || ![reply isKindOfClass:NSDictionary.class]) {
             if (callback) {
-                callback(NO,nil);
+                callback(NO, nil);
             }
             return;
         }
-        
-        if (![reply.allKeys containsObject:@"version"] ||
-            [reply[@"version"] intValue]>kMessageReplyVersion ) {
+
+        if (![reply.allKeys containsObject:@"version"] || [reply[@"version"] intValue] > kMessageReplyVersion) {
             NSLog(@"not match the version of message rely");
             if (callback) {
-                callback(NO,nil);
+                callback(NO, nil);
             }
             return;
         }
         if ([reply.allKeys containsObject:@"messageRootID"]) {
             if (callback) {
-                callback(NO,nil);
+                callback(NO, nil);
             }
             return;
         }
         if (callback) {
-            callback(YES,reply);
+            callback(YES, reply);
         }
         return;
     }
-    
-    if (type == TUICloudCustomDataType_MessageReact)  {
+
+    if (type == TUICloudCustomDataType_MessageReact) {
         NSDictionary *messageReact = [dict valueForKey:typeStr];
-        NSDictionary * reacts = [messageReact valueForKey:@"reacts"];
+        NSDictionary *reacts = [messageReact valueForKey:@"reacts"];
         if (reacts == nil || ![reacts isKindOfClass:NSDictionary.class]) {
-            return ;
+            return;
         }
-        if (![messageReact.allKeys containsObject:@"version"] ||
-            [messageReact[@"version"] intValue]>kMessageReplyVersion ) {
+        if (![messageReact.allKeys containsObject:@"version"] || [messageReact[@"version"] intValue] > kMessageReplyVersion) {
             NSLog(@"not match the version of react");
-            return ;
+            return;
         }
-        
+
         if (callback) {
-            callback(YES,reacts);
+            callback(YES, reacts);
         }
         return;
     }
-    
-    if (type == TUICloudCustomDataType_MessageReplies)  {
+
+    if (type == TUICloudCustomDataType_MessageReplies) {
         NSDictionary *messageReplies = [dict valueForKey:typeStr];
         NSArray *reply = [messageReplies valueForKey:@"replies"];
         if (reply == nil || ![reply isKindOfClass:NSArray.class]) {
             if (callback) {
-                callback(NO,nil);
+                callback(NO, nil);
             }
             return;
         }
-        if (reply.count<=0) {
+        if (reply.count <= 0) {
             if (callback) {
-                callback(NO,nil);
+                callback(NO, nil);
             }
             return;
         }
-        
+
         if (callback) {
-            callback(YES,dict);
+            callback(YES, dict);
         }
         return;
     }
 
     return;
-
 }
 - (BOOL)isContainsCloudCustomOfDataType:(TUICloudCustomDataType)type {
- 
     if (self.cloudCustomData == nil) {
         return NO;
     }
-    
+
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:self.cloudCustomData options:0 error:&error];
-    NSString * typeStr =  [TUICloudCustomDataTypeCenter convertType2String:type];
-//    NSDictionary *customElemDic = [NSJSONSerialization JSONObjectWithData:self.customElem.data options:0 error:&error];
-    
-    if (![typeStr isKindOfClass:[NSString class]] ||typeStr.length <=0) {
+    NSString *typeStr = [TUICloudCustomDataTypeCenter convertType2String:type];
+    //    NSDictionary *customElemDic = [NSJSONSerialization JSONObjectWithData:self.customElem.data options:0 error:&error];
+
+    if (![typeStr isKindOfClass:[NSString class]] || typeStr.length <= 0) {
         return NO;
     }
     if (error || dict == nil || ![dict isKindOfClass:NSDictionary.class] || ![dict.allKeys containsObject:typeStr]) {
         return NO;
     }
-    
-    //extra condition
+
+    // extra condition
     if (type == TUICloudCustomDataType_MessageReply) {
-        
         NSDictionary *reply = [dict valueForKey:typeStr];
         if (reply == nil || ![reply isKindOfClass:NSDictionary.class]) {
             return NO;
         }
-        
-        if (![reply.allKeys containsObject:@"version"] ||
-            [reply[@"version"] intValue]>kMessageReplyVersion ) {
+
+        if (![reply.allKeys containsObject:@"version"] || [reply[@"version"] intValue] > kMessageReplyVersion) {
             NSLog(@"not match the version of message rely");
             return NO;
         }
@@ -174,17 +164,14 @@ TUICustomType messageFeature = @"messageFeature";
             return NO;
         }
         return YES;
-
     }
     if (type == TUICloudCustomDataType_MessageReference) {
-        
         NSDictionary *reply = [dict valueForKey:typeStr];
         if (reply == nil || ![reply isKindOfClass:NSDictionary.class]) {
             return NO;
         }
-        
-        if (![reply.allKeys containsObject:@"version"] ||
-            [reply[@"version"] intValue]>kMessageReplyVersion ) {
+
+        if (![reply.allKeys containsObject:@"version"] || [reply[@"version"] intValue] > kMessageReplyVersion) {
             NSLog(@"not match the version of message rely");
             return NO;
         }
@@ -192,37 +179,33 @@ TUICustomType messageFeature = @"messageFeature";
             return NO;
         }
         return YES;
-
     }
-    
-    if (type == TUICloudCustomDataType_MessageReact)  {
+
+    if (type == TUICloudCustomDataType_MessageReact) {
         NSDictionary *messageReact = [dict valueForKey:typeStr];
-        NSDictionary * reacts = [messageReact valueForKey:@"reacts"];
+        NSDictionary *reacts = [messageReact valueForKey:@"reacts"];
         if (reacts == nil || ![reacts isKindOfClass:NSDictionary.class]) {
-            return NO ;
+            return NO;
         }
-        if (![messageReact.allKeys containsObject:@"version"] ||
-            [messageReact[@"version"] intValue]>kMessageReplyVersion ) {
+        if (![messageReact.allKeys containsObject:@"version"] || [messageReact[@"version"] intValue] > kMessageReplyVersion) {
             NSLog(@"not match the version of react");
             return NO;
         }
-        
-        return YES;
 
+        return YES;
     }
-    if (type == TUICloudCustomDataType_MessageReplies)  {
+    if (type == TUICloudCustomDataType_MessageReplies) {
         NSDictionary *messageReplies = [dict valueForKey:typeStr];
         NSArray *reply = [messageReplies valueForKey:@"replies"];
         if (reply == nil || ![reply isKindOfClass:NSArray.class]) {
             return NO;
         }
-        if (reply.count<=0) {
-            return  NO;
+        if (reply.count <= 0) {
+            return NO;
         }
         return YES;
-
     }
-    
+
     return NO;
 }
 
@@ -230,14 +213,14 @@ TUICustomType messageFeature = @"messageFeature";
     if (self.cloudCustomData == nil || customType.length == 0) {
         return nil;
     }
-    
+
     NSError *error = nil;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:self.cloudCustomData options:0 error:&error];
-    
+
     if (error || dict == nil || ![dict isKindOfClass:NSDictionary.class] || ![dict.allKeys containsObject:customType]) {
         return nil;
     }
-    
+
     return [dict objectForKey:customType];
 }
 
@@ -245,26 +228,26 @@ TUICustomType messageFeature = @"messageFeature";
     if (jsonData == nil || customType.length == 0) {
         return;
     }
-    
+
     NSDictionary *dict = @{};
-    
+
     if (self.cloudCustomData) {
         dict = [NSJSONSerialization JSONObjectWithData:self.cloudCustomData options:0 error:nil];
         if (dict == nil) {
             dict = @{};
         }
     }
-    
+
     if (![dict isKindOfClass:NSDictionary.class]) {
         return;
     }
-    
+
     NSMutableDictionary *originDataDict = [NSMutableDictionary dictionaryWithDictionary:dict];
     if ([originDataDict.allKeys containsObject:customType]) {
         [originDataDict removeObjectForKey:customType];
     }
     [originDataDict setObject:jsonData forKey:customType];
-    
+
     NSData *data = [NSJSONSerialization dataWithJSONObject:originDataDict options:0 error:nil];
     if (data) {
         self.cloudCustomData = data;
@@ -276,7 +259,6 @@ TUICustomType messageFeature = @"messageFeature";
 }
 
 @end
-
 
 @implementation TUICloudCustomDataTypeCenter
 
@@ -300,54 +282,47 @@ TUICustomType messageFeature = @"messageFeature";
 }
 @end
 
-
 @implementation TUIReactModelMessageReact
 
-- (void)applyWithDic:(NSDictionary *)orignMessageReactDic
-           emojiName:(NSString *)emojiName
-           loginUser:(NSString *)loginUser {
+- (void)applyWithDic:(NSDictionary *)orignMessageReactDic emojiName:(NSString *)emojiName loginUser:(NSString *)loginUser {
     self.version = orignMessageReactDic[@"version"];
     self.reacts = [NSMutableArray arrayWithCapacity:3];
-    
+
     if ([orignMessageReactDic[@"reacts"] objectForKey:emojiName]) {
-        for (NSString * key in orignMessageReactDic[@"reacts"]) {
-            TUIReactModelReacts * react = [[TUIReactModelReacts alloc] init];
+        for (NSString *key in orignMessageReactDic[@"reacts"]) {
+            TUIReactModelReacts *react = [[TUIReactModelReacts alloc] init];
             react.emojiKey = key;
             react.emojiIdArray = orignMessageReactDic[@"reacts"][key];
-            if ([key isEqualToString: emojiName]) {
+            if ([key isEqualToString:emojiName]) {
                 if ([react.emojiIdArray containsObject:loginUser]) {
                     [react.emojiIdArray removeObject:loginUser];
-                }
-                else {
+                } else {
                     [react.emojiIdArray addObject:loginUser];
                 }
             }
-            if (react.emojiIdArray.count >0) {
+            if (react.emojiIdArray.count > 0) {
                 [self.reacts addObject:react];
             }
-         }
-    }
-    else {
-        for (NSString * key in orignMessageReactDic[@"reacts"]) {
-            TUIReactModelReacts * react = [[TUIReactModelReacts alloc] init];
+        }
+    } else {
+        for (NSString *key in orignMessageReactDic[@"reacts"]) {
+            TUIReactModelReacts *react = [[TUIReactModelReacts alloc] init];
             react.emojiKey = key;
             react.emojiIdArray = orignMessageReactDic[@"reacts"][key];
             [self.reacts addObject:react];
-         }
-        TUIReactModelReacts * react = [[TUIReactModelReacts alloc] init];
+        }
+        TUIReactModelReacts *react = [[TUIReactModelReacts alloc] init];
         react.emojiKey = emojiName;
         react.emojiIdArray = [NSMutableArray array];
         [react.emojiIdArray addObject:loginUser];
         [self.reacts addObject:react];
     }
-    
-    
 }
 - (NSDictionary *)descriptionDic {
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+
     [dic setValue:self.version forKey:@"version"];
-    NSMutableDictionary * reacts = [NSMutableDictionary dictionary];
+    NSMutableDictionary *reacts = [NSMutableDictionary dictionary];
     for (TUIReactModelReacts *react in self.reacts) {
         [reacts setObject:react.emojiIdArray forKey:react.emojiKey];
     }

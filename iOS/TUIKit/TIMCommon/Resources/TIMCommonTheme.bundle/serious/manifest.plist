@@ -20,6 +20,8 @@
 	<string>#26CB3E</string>
 	<key>error_tips_color</key>
 	<string>#FF584C</string>
+	<key>nodata_tips_color</key>
+	<string>#999999</string>
 	<key>bubble_bg_color</key>
 	<string>#DCEAFD</string>
 	<key>head_bg_gradient_start_color</key>
@@ -120,5 +122,15 @@
 	<string>#000000</string>
 	<key>chat_message_translation_text_color_minimalist</key>
 	<string>#000000</string>
+	<key>second_confirm_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>second_confirm_title_color</key>
+	<string>#000000</string>
+	<key>second_confirm_line_color</key>
+	<string>#DDDDDD</string>
+	<key>second_confirm_cancel_btn_title_color</key>
+	<string>#000000</string>
+	<key>second_confirm_confirm_btn_title_color</key>
+	<string>#FF584C</string>
 </dict>
 </plist>

@@ -3,6 +3,7 @@
 //  TUIGroup
 //
 //  Created by harvy on 2022/1/11.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIGroupNoticeController.h"
@@ -11,9 +12,9 @@
 
 @interface TUIGroupNoticeController ()
 
-@property (nonatomic, strong) UITextView *textView;
-@property (nonatomic, weak) UIButton *rightButton;
-@property (nonatomic, strong) TUIGroupNoticeDataProvider *dataProvider;
+@property(nonatomic, strong) UITextView *textView;
+@property(nonatomic, weak) UIButton *rightButton;
+@property(nonatomic, strong) TUIGroupNoticeDataProvider *dataProvider;
 
 @end
 
@@ -21,10 +22,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     [self.view addSubview:self.textView];
-    
+
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightBtn setTitleColor:TIMCommonDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateNormal];
     [rightBtn setTitleColor:TIMCommonDynamicColor(@"nav_title_text_color", @"#000000") forState:UIControlStateSelected];
@@ -35,41 +36,38 @@
     self.rightButton = rightBtn;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
     self.rightButton.hidden = YES;
-    
+
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = TIMCommonLocalizableString(TUIKitGroupNotice);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
     titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
-    
+
     __weak typeof(self) weakSelf = self;
     self.dataProvider.groupID = self.groupID;
     [self.dataProvider getGroupInfo:^{
-        weakSelf.textView.text = weakSelf.dataProvider.groupInfo.notification;
-        weakSelf.textView.editable = NO;
-        weakSelf.rightButton.hidden = !weakSelf.dataProvider.canEditNotice;
+      weakSelf.textView.text = weakSelf.dataProvider.groupInfo.notification;
+      weakSelf.textView.editable = NO;
+      weakSelf.rightButton.hidden = !weakSelf.dataProvider.canEditNotice;
     }];
 }
 
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    
+
     self.textView.frame = self.view.bounds;
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+
     if (self.dataProvider.canEditNotice && self.textView.text.length == 0) {
         [self onClickRight:self.rightButton];
     }
 }
 
-- (void)onClickRight:(UIButton *)button
-{
+- (void)onClickRight:(UIButton *)button {
     if (button.isSelected) {
         self.textView.editable = NO;
         [self.textView resignFirstResponder];
@@ -81,22 +79,21 @@
     button.selected = !button.isSelected;
 }
 
-- (void)updateNotice
-{
+- (void)updateNotice {
     __weak typeof(self) weakSelf = self;
-    [self.dataProvider updateNotice:self.textView.text callback:^(int code, NSString *desc) {
-        if (code != 0) {
-            [TUITool makeToastError:code msg:desc];
-            return;
-        }
-        if (weakSelf.onNoticeChanged) {
-            weakSelf.onNoticeChanged();
-        }
-    }];
+    [self.dataProvider updateNotice:self.textView.text
+                           callback:^(int code, NSString *desc) {
+                             if (code != 0) {
+                                 [TUITool makeToastError:code msg:desc];
+                                 return;
+                             }
+                             if (weakSelf.onNoticeChanged) {
+                                 weakSelf.onNoticeChanged();
+                             }
+                           }];
 }
 
-- (UITextView *)textView
-{
+- (UITextView *)textView {
     if (_textView == nil) {
         _textView = [[UITextView alloc] init];
         _textView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
@@ -106,13 +103,11 @@
     return _textView;
 }
 
-- (TUIGroupNoticeDataProvider *)dataProvider
-{
+- (TUIGroupNoticeDataProvider *)dataProvider {
     if (_dataProvider == nil) {
         _dataProvider = [[TUIGroupNoticeDataProvider alloc] init];
     }
     return _dataProvider;
 }
-
 
 @end

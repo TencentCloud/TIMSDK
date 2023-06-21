@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by xia on 2022/6/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIOrderCellData.h"
@@ -10,9 +11,7 @@
 @implementation TUIOrderCellData
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
-    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data
-                                                          options:NSJSONReadingAllowFragments
-                                                            error:nil];
+    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data options:NSJSONReadingAllowFragments error:nil];
     TUIOrderCellData *cellData = [[TUIOrderCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
     cellData.innerMessage = message;
     cellData.msgID = message.msgID;

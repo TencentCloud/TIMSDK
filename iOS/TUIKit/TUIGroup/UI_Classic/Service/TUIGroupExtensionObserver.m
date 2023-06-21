@@ -3,11 +3,12 @@
 //  TUIGroup
 //
 //  Created by harvy on 2023/3/29.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIGroupExtensionObserver.h"
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMCommonModel.h>
+#import <TUICore/TUICore.h>
 
 #import "TUIGroupInfoController.h"
 
@@ -25,7 +26,7 @@
     static dispatch_once_t onceToken;
     static id instance = nil;
     dispatch_once(&onceToken, ^{
-        instance = [[self alloc] init];
+      instance = [[self alloc] init];
     });
     return instance;
 }
@@ -50,15 +51,15 @@
     if (groupID.length > 0) {
         TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
         info.icon = TUIGroupBundleThemeImage(@"chat_nav_more_menu_img", @"chat_nav_more_menu");
-        info.onClicked = ^(NSDictionary * _Nonnull param) {
-            UINavigationController *pushVC = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_PushVC asClass:UINavigationController.class];
-            if (pushVC) {
-                TUIGroupInfoController *vc = [[TUIGroupInfoController alloc] init];
-                vc.groupId = groupID;
-                [pushVC pushViewController:vc animated:YES];
-            }
+        info.onClicked = ^(NSDictionary *_Nonnull param) {
+          UINavigationController *pushVC = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_PushVC asClass:UINavigationController.class];
+          if (pushVC) {
+              TUIGroupInfoController *vc = [[TUIGroupInfoController alloc] init];
+              vc.groupId = groupID;
+              [pushVC pushViewController:vc animated:YES];
+          }
         };
-        return @[info];
+        return @[ info ];
     } else {
         return nil;
     }

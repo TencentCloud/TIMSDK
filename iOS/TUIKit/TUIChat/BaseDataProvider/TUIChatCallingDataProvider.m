@@ -3,15 +3,16 @@
 //  TUIChat
 //
 //  Created by harvy on 2022/12/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIChatCallingDataProvider.h"
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 #import "TUIMessageBaseDataProvider.h"
 
-typedef NSString * TUIChatMessageID;
-typedef NSDictionary * TUIChatCallingJsonData;
+typedef NSString *TUIChatMessageID;
+typedef NSDictionary *TUIChatCallingJsonData;
 
 // ********************************************************************
 //                          TUIChatCallingInfo
@@ -19,11 +20,11 @@ typedef NSDictionary * TUIChatCallingJsonData;
 
 @interface TUIChatCallingInfo : NSObject <TUIChatCallingInfoProtocol>
 
-@property (nonatomic, strong) TUIChatMessageID msgID;
-@property (nonatomic, strong, nullable) TUIChatCallingJsonData jsonData;
-@property (nonatomic, strong, nullable) V2TIMSignalingInfo *signalingInfo;
-@property (nonatomic, strong, nullable) V2TIMMessage *innerMessage;
-@property (nonatomic, assign) TUIChatCallingMessageAppearance style;
+@property(nonatomic, strong) TUIChatMessageID msgID;
+@property(nonatomic, strong, nullable) TUIChatCallingJsonData jsonData;
+@property(nonatomic, strong, nullable) V2TIMSignalingInfo *signalingInfo;
+@property(nonatomic, strong, nullable) V2TIMMessage *innerMessage;
+@property(nonatomic, assign) TUIChatCallingMessageAppearance style;
 
 @end
 
@@ -37,7 +38,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
     }
 
     TUICallProtocolType type = TUICallProtocolTypeUnknown;
-    
+
     switch (self.signalingInfo.actionType) {
         case SignalingActionType_Invite: {
             NSDictionary *data = [self.jsonData objectForKey:@"data"];
@@ -63,19 +64,16 @@ typedef NSDictionary * TUIChatCallingJsonData;
             } else {
                 // Compatiable
                 NSNumber *callEnd = [self.jsonData objectForKey:@"call_end"];
-                if (callEnd &&
-                    [callEnd isKindOfClass:NSNumber.class]) {
+                if (callEnd && [callEnd isKindOfClass:NSNumber.class]) {
                     type = TUICallProtocolTypeHangup;
                 } else {
                     type = TUICallProtocolTypeSend;
                 }
             }
-        }
-            break;
+        } break;
         case SignalingActionType_Cancel_Invite: {
             type = TUICallProtocolTypeCancel;
-        }
-            break;
+        } break;
         case SignalingActionType_Accept_Invite: {
             NSDictionary *data = [self.jsonData objectForKey:@"data"];
             if (data && [data isKindOfClass:NSDictionary.class]) {
@@ -95,20 +93,17 @@ typedef NSDictionary * TUIChatCallingJsonData;
                 // Compatiable
                 type = TUICallProtocolTypeAccept;
             }
-        }
-            break;
+        } break;
         case SignalingActionType_Reject_Invite: {
             if ([self.jsonData objectForKey:@"line_busy"]) {
                 type = TUICallProtocolTypeLineBusy;
             } else {
                 type = TUICallProtocolTypeReject;
             }
-        }
-            break;
+        } break;
         case SignalingActionType_Invite_Timeout: {
             type = TUICallProtocolTypeTimeout;
-        }
-            break;
+        } break;
         default:
             type = TUICallProtocolTypeUnknown;
             break;
@@ -121,7 +116,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
     if (protocolType == TUICallProtocolTypeUnknown) {
         return TUICallStreamMediaTypeUnknown;
     }
-    
+
     // Default type
     TUICallStreamMediaType type = TUICallStreamMediaTypeUnknown;
     NSNumber *callType = [self.jsonData objectForKey:@"call_type"];
@@ -132,7 +127,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
             type = TUICallStreamMediaTypeVideo;
         }
     }
-    
+
     // Read from special protocol
     if (protocolType == TUICallProtocolTypeSend) {
         NSDictionary *data = [self.jsonData objectForKey:@"data"];
@@ -144,11 +139,10 @@ typedef NSDictionary * TUIChatCallingJsonData;
                 type = TUICallStreamMediaTypeVideo;
             }
         }
-    } else if (protocolType == TUICallProtocolTypeSwitchToAudio ||
-               protocolType == TUICallProtocolTypeSwitchToAudioConfirm) {
+    } else if (protocolType == TUICallProtocolTypeSwitchToAudio || protocolType == TUICallProtocolTypeSwitchToAudioConfirm) {
         type = TUICallStreamMediaTypeVideo;
     }
-    
+
     return type;
 }
 
@@ -156,7 +150,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
     if (self.protocolType == TUICallProtocolTypeUnknown) {
         return TUICallParticipantTypeUnknown;
     }
-    
+
     if (self.signalingInfo.groupID.length > 0) {
         return TUICallParticipantTypeGroup;
     } else {
@@ -179,9 +173,8 @@ typedef NSDictionary * TUIChatCallingJsonData;
     return callerID;
 }
 
-
 - (TUICallParticipantRole)participantRole {
-    if ([self.caller isEqualToString: V2TIMManager.sharedInstance.getLoginUser]) {
+    if ([self.caller isEqualToString:V2TIMManager.sharedInstance.getLoginUser]) {
         return TUICallParticipantRoleCaller;
     } else {
         return TUICallParticipantRoleCallee;
@@ -190,9 +183,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
 
 - (BOOL)excludeFromHistory {
     if (self.style == TUIChatCallingMessageAppearanceSimplify) {
-        return self.protocolType != TUICallProtocolTypeUnknown &&
-               self.innerMessage.isExcludedFromLastMessage &&
-               self.innerMessage.isExcludedFromUnreadCount;
+        return self.protocolType != TUICallProtocolTypeUnknown && self.innerMessage.isExcludedFromLastMessage && self.innerMessage.isExcludedFromUnreadCount;
     } else {
         return NO;
     }
@@ -218,14 +209,10 @@ typedef NSDictionary * TUIChatCallingJsonData;
     if (self.excludeFromHistory) {
         return NO;
     }
-    return (self.innerMessage.localCustomInt == 0) &&
-           (self.participantRole == TUICallParticipantRoleCallee) &&
+    return (self.innerMessage.localCustomInt == 0) && (self.participantRole == TUICallParticipantRoleCallee) &&
            (self.participantType == TUICallParticipantTypeC2C) &&
-           (
-                self.protocolType == TUICallProtocolTypeCancel ||
-                self.protocolType == TUICallProtocolTypeTimeout ||
-                self.protocolType == TUICallProtocolTypeLineBusy
-           );
+           (self.protocolType == TUICallProtocolTypeCancel || self.protocolType == TUICallProtocolTypeTimeout ||
+            self.protocolType == TUICallProtocolTypeLineBusy);
 }
 
 - (BOOL)isUseReceiverAvatar {
@@ -240,14 +227,14 @@ typedef NSDictionary * TUIChatCallingJsonData;
 - (NSString *)contentForDetailsAppearance {
     TUICallProtocolType protocolType = self.protocolType;
     BOOL isGroup = (self.participantType == TUICallParticipantTypeGroup);
-    
+
     if (protocolType == TUICallProtocolTypeUnknown) {
         return TIMCommonLocalizableString(TUIkitSignalingUnrecognlize);
     }
-    
+
     NSString *display = TIMCommonLocalizableString(TUIkitSignalingUnrecognlize);
     NSString *showName = [TUIMessageBaseDataProvider getShowName:self.innerMessage];
-    
+
     if (protocolType == TUICallProtocolTypeSend) {
         // Launch call
         display = isGroup ? [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingNewGroupCallFormat), showName]
@@ -267,9 +254,10 @@ typedef NSDictionary * TUIChatCallingJsonData;
     } else if (protocolType == TUICallProtocolTypeHangup) {
         // Hang up
         NSUInteger duration = [[self.jsonData objectForKey:@"call_end"] unsignedIntegerValue];
-        display = isGroup ? TIMCommonLocalizableString(TUIKitSignalingFinishGroupChat)
-                          : [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat), duration / 60, duration % 60];
-                
+        display = isGroup
+                      ? TIMCommonLocalizableString(TUIKitSignalingFinishGroupChat)
+                      : [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat), duration / 60, duration % 60];
+
     } else if (protocolType == TUICallProtocolTypeTimeout) {
         // Call timeout
         NSMutableString *mutableContent = [NSMutableString string];
@@ -296,7 +284,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
         // Confirm the change of video-voice-call
         display = TIMCommonLocalizableString(TUIKitSignalingComfirmSwitchToAudio);
     }
-    
+
     return display;
 }
 
@@ -317,31 +305,27 @@ typedef NSDictionary * TUIChatCallingJsonData;
     if (self.excludeFromHistory) {
         return nil;
     }
-    
+
     TUICallParticipantType participantType = self.participantType;
     TUICallProtocolType protocolType = self.protocolType;
     BOOL isCaller = (self.participantRole == TUICallParticipantRoleCaller);
-    
+
     NSString *display = nil;
     NSString *showName = [TUIMessageBaseDataProvider getShowName:self.innerMessage];
-    
+
     if (participantType == TUICallParticipantTypeC2C) {
         // C2C shown: reject、cancel、hangup、timeout、line_busy
         if (protocolType == TUICallProtocolTypeReject) {
-            display = isCaller ? TUIChatLocalizableString(TUIChatCallRejectInCaller)
-                               : TUIChatLocalizableString(TUIChatCallRejectInCallee);
+            display = isCaller ? TUIChatLocalizableString(TUIChatCallRejectInCaller) : TUIChatLocalizableString(TUIChatCallRejectInCallee);
         } else if (protocolType == TUICallProtocolTypeCancel) {
-            display = isCaller ? TUIChatLocalizableString(TUIChatCallCancelInCaller)
-                               : TUIChatLocalizableString(TUIChatCallCancelInCallee);
+            display = isCaller ? TUIChatLocalizableString(TUIChatCallCancelInCaller) : TUIChatLocalizableString(TUIChatCallCancelInCallee);
         } else if (protocolType == TUICallProtocolTypeHangup) {
             NSInteger duration = [[self.jsonData objectForKey:@"call_end"] integerValue];
             display = [NSString stringWithFormat:TUIChatLocalizableString(TUIChatCallDurationFormat), duration / 60, duration % 60];
-        } else if (protocolType== TUICallProtocolTypeTimeout) {
-            display = isCaller ? TUIChatLocalizableString(TUIChatCallTimeoutInCaller)
-                               : TUIChatLocalizableString(TUIChatCallTimeoutInCallee);
+        } else if (protocolType == TUICallProtocolTypeTimeout) {
+            display = isCaller ? TUIChatLocalizableString(TUIChatCallTimeoutInCaller) : TUIChatLocalizableString(TUIChatCallTimeoutInCallee);
         } else if (protocolType == TUICallProtocolTypeLineBusy) {
-            display = isCaller ? TUIChatLocalizableString(TUIChatCallLinebusyInCaller)
-                               : TUIChatLocalizableString(TUIChatCallLinebusyInCallee);
+            display = isCaller ? TUIChatLocalizableString(TUIChatCallLinebusyInCaller) : TUIChatLocalizableString(TUIChatCallLinebusyInCallee);
         }
         // C2C compatiable
         else if (protocolType == TUICallProtocolTypeSend) {
@@ -363,8 +347,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
             display = TUIChatLocalizableString(TUIChatGroupCallEnd);
         } else if (protocolType == TUICallProtocolTypeHangup) {
             display = TUIChatLocalizableString(TUIChatGroupCallEnd);
-        } else if (protocolType == TUICallProtocolTypeTimeout ||
-                   protocolType == TUICallProtocolTypeLineBusy) {
+        } else if (protocolType == TUICallProtocolTypeTimeout || protocolType == TUICallProtocolTypeLineBusy) {
             NSMutableString *mutableContent = [NSMutableString string];
             if (participantType == TUICallParticipantTypeGroup) {
                 for (NSString *invitee in self.signalingInfo.inviteeList) {
@@ -434,15 +417,13 @@ typedef NSDictionary * TUIChatCallingJsonData;
 
 // ********************************************************************
 
-
-
 // ********************************************************************
 //                       TUIChatCallingDataProvider
 // ********************************************************************
 @interface TUIChatCallingDataProvider ()
 
-@property (nonatomic, assign) TUIChatCallingMessageAppearance style;
-@property (nonatomic, strong) NSCache<TUIChatMessageID, TUIChatCallingInfo *> *callingCache;
+@property(nonatomic, assign) TUIChatCallingMessageAppearance style;
+@property(nonatomic, strong) NSCache<TUIChatMessageID, TUIChatCallingInfo *> *callingCache;
 
 @end
 
@@ -465,33 +446,29 @@ typedef NSDictionary * TUIChatCallingJsonData;
     if ([self isCallingMessage:innerMessage callingInfo:&callingInfo]) {
         if (callingInfo.streamMediaType == TUICallStreamMediaTypeVoice) {
             param = @{
-                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[innerMessage.userID],
+                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[ innerMessage.userID ],
                 TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"0"
             };
         } else if (callingInfo.streamMediaType == TUICallStreamMediaTypeVideo) {
             param = @{
-                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[innerMessage.userID],
+                TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey : @[ innerMessage.userID ],
                 TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey : @"1"
             };
         }
         if (param) {
-            [TUICore callService:TUICore_TUICallingService
-                          method:TUICore_TUICallingService_ShowCallingViewMethod
-                           param:param];
+            [TUICore callService:TUICore_TUICallingService method:TUICore_TUICallingService_ShowCallingViewMethod param:param];
         }
     }
 }
 
-- (BOOL)isCallingMessage:(V2TIMMessage *)innerMessage
-             callingInfo:(id<TUIChatCallingInfoProtocol> __nullable * __nullable)callingInfo {
-    
+- (BOOL)isCallingMessage:(V2TIMMessage *)innerMessage callingInfo:(id<TUIChatCallingInfoProtocol> __nullable *__nullable)callingInfo {
     TUIChatCallingInfo *item = [self callingInfoForMesssage:innerMessage];
     if (item == nil) {
         if (callingInfo) {
             *callingInfo = nil;
         }
         return NO;
-        
+
     } else {
         if (callingInfo) {
             *callingInfo = item;
@@ -500,7 +477,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
     }
 }
 
-- (TUIChatCallingInfo * __nullable)callingInfoForMesssage:(V2TIMMessage *)innerMessage {
+- (TUIChatCallingInfo *__nullable)callingInfoForMesssage:(V2TIMMessage *)innerMessage {
     // 1. Fetch from cache
     TUIChatMessageID msgID = innerMessage.msgID ?: @"";
     TUIChatCallingInfo *item = [self.callingCache objectForKey:msgID];
@@ -520,9 +497,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
     }
 
     NSError *err = nil;
-    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:data
-                                                          options:NSJSONReadingMutableContainers
-                                                            error:&err];
+    NSDictionary *param = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&err];
     if (param == nil || ![param isKindOfClass:NSDictionary.class]) {
         return nil;
     }
@@ -534,7 +509,7 @@ typedef NSDictionary * TUIChatCallingJsonData;
     if (![businessID isEqualToString:@"av_call"]) {
         return nil;
     }
-    
+
     // 3 Cached and return
     item = [[TUIChatCallingInfo alloc] init];
     item.style = self.style;

@@ -3,6 +3,7 @@
 //  TUICore
 //
 //  Created by gg on 2021/10/9.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "UIView+TUIUtil.h"

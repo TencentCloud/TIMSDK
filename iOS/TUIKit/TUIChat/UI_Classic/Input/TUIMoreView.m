@@ -7,32 +7,30 @@
 //
 
 #import "TUIMoreView.h"
-#import "TUIInputMoreCell.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import "TUIInputMoreCell.h"
 
 @interface TUIMoreView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) NSArray *data;
-@property (nonatomic, strong) NSMutableDictionary *itemIndexs;
-@property (nonatomic, assign) NSInteger sectionCount;
-@property (nonatomic, assign) NSInteger itemsInSection;
-@property (nonatomic, assign) NSInteger rowCount;
+@property(nonatomic, strong) NSArray *data;
+@property(nonatomic, strong) NSMutableDictionary *itemIndexs;
+@property(nonatomic, assign) NSInteger sectionCount;
+@property(nonatomic, assign) NSInteger itemsInSection;
+@property(nonatomic, assign) NSInteger rowCount;
 @end
 
 @implementation TUIMoreView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if(self){
+    if (self) {
         [self setupViews];
         [self defaultLayout];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
     _moreFlowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -54,7 +52,7 @@
     [self addSubview:_moreCollectionView];
 
     _lineView = [[UIView alloc] init];
-    _lineView.backgroundColor =  TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
+    _lineView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     [self addSubview:_lineView];
 
     _pageControl = [[UIPageControl alloc] init];
@@ -63,22 +61,22 @@
     [self addSubview:_pageControl];
 }
 
-- (void)defaultLayout
-{
+- (void)defaultLayout {
     CGSize cellSize = [TUIInputMoreCell getSize];
     CGFloat collectionHeight = cellSize.height * _rowCount + TMoreView_Margin * (_rowCount - 1);
 
     _lineView.frame = CGRectMake(0, 0, self.frame.size.width, TLine_Heigh);
-    _moreCollectionView.frame = CGRectMake(0, _lineView.frame.origin.y + _lineView.frame.size.height + TMoreView_Margin, self.frame.size.width, collectionHeight);
+    _moreCollectionView.frame =
+        CGRectMake(0, _lineView.frame.origin.y + _lineView.frame.size.height + TMoreView_Margin, self.frame.size.width, collectionHeight);
 
-    if(_sectionCount > 1){
-        _pageControl.frame = CGRectMake(0, _moreCollectionView.frame.origin.y + _moreCollectionView.frame.size.height, self.frame.size.width, TMoreView_Page_Height);
+    if (_sectionCount > 1) {
+        _pageControl.frame =
+            CGRectMake(0, _moreCollectionView.frame.origin.y + _moreCollectionView.frame.size.height, self.frame.size.width, TMoreView_Page_Height);
         _pageControl.hidden = NO;
-    }
-    else{
+    } else {
         _pageControl.hidden = YES;
     }
-    if(_rowCount > 1){
+    if (_rowCount > 1) {
         _moreFlowLayout.minimumInteritemSpacing = (_moreCollectionView.frame.size.height - cellSize.height * _rowCount) / (_rowCount - 1);
     }
 
@@ -88,7 +86,7 @@
     _moreFlowLayout.sectionInset = UIEdgeInsetsMake(0, margin, 0, margin);
 
     CGFloat height = _moreCollectionView.frame.origin.y + _moreCollectionView.frame.size.height + TMoreView_Margin;
-    if(_sectionCount > 1){
+    if (_sectionCount > 1) {
         height = _pageControl.frame.origin.y + _pageControl.frame.size.height;
     }
     CGRect frame = self.frame;
@@ -96,14 +94,12 @@
     self.frame = frame;
 }
 
-- (void)setData:(NSArray *)data
-{
+- (void)setData:(NSArray *)data {
     _data = data;
 
-    if(_data.count > TMoreView_Column_Count){
+    if (_data.count > TMoreView_Column_Count) {
         _rowCount = 2;
-    }
-    else{
+    } else {
         _rowCount = 1;
     }
     _itemsInSection = TMoreView_Column_Count * _rowCount;
@@ -126,52 +122,48 @@
     [self defaultLayout];
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return _sectionCount;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return _itemsInSection;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     TUIInputMoreCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:TMoreCell_ReuseId forIndexPath:indexPath];
     TUIInputMoreCellData *data;
     NSNumber *index = _itemIndexs[indexPath];
-    if(index.integerValue >= _data.count){
+    if (index.integerValue >= _data.count) {
         data = nil;
-    }
-    else{
+    } else {
         data = _data[index.integerValue];
     }
     [cell fillWithData:data];
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewCell *cell =[collectionView cellForItemAtIndexPath:indexPath];
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
 
-    if(_delegate && [_delegate respondsToSelector:@selector(moreView:didSelectMoreCell:)]){
+    if (_delegate && [_delegate respondsToSelector:@selector(moreView:didSelectMoreCell:)]) {
         if ([cell isKindOfClass:[TUIInputMoreCell class]]) {
-            [_delegate moreView:self didSelectMoreCell:(TUIInputMoreCell *)cell];;
+            [_delegate moreView:self didSelectMoreCell:(TUIInputMoreCell *)cell];
+            ;
         }
     }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return [TUIInputMoreCell getSize];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat contentOffset = scrollView.contentOffset.x;
     float page = contentOffset / scrollView.frame.size.width;
-    if((int)(page * 10) % 10 == 0){
+    if ((int)(page * 10) % 10 == 0) {
         _pageControl.currentPage = page;
     }
 }

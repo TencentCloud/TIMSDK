@@ -22,6 +22,7 @@
 "File" = "Files";
 "Download" = "Download";
 "Unsetted" = "Not set";
+"Show" = "Show";
 
 "Monday" = "Mon";
 "Tuesday" = "Tue";
@@ -41,15 +42,14 @@
 "Delete" = "Delete";
 "Revoke" = "Recall";
 "Retry" = "Retry";
-"Re-send" = "Resend";
-"Make-a-call" = "Start Call";
+"Re_send" = "Resend";
+"Make_a_call" = "Start Call";
 "Done" = "OK";
 "All" = "All";
 "Agreed" = "Agreed";
 "Disclined" = "Declined";
 "Agree" = "Agree";
-"Have-been-sent" = "Sent";
-"View-the-original" = "View Full Image";
+"Have_been_sent" = "Sent";
 
 "OK" = "OK";
 "None" = "None";
@@ -81,18 +81,16 @@
 "ChatsNewChatText"    = "New Chat";
 "ChatsNewGroupText"  = "Create Group Chat";
 "ChatsSelectContact" = "Select Contact";
+
 "ContactsJoinGroup"  = "Add Group";
 "ContactsAddFriends" = "Add to Contacts";
-"ChatsCreatePrivateGroupTips" = "Create Discussion Group";
-"ChatsCreateGroupTips" = "Create Group Chat";
-"ChatsCreateChatRoomTips" = "Create Chat Room";
-"ChatsCreateDefaultTips" = "Create Group";
-"ChatsCreateCommunityTips" = "Create Community";
+
 "GroupJoin" = "Add Group";
 "GroupRequestJoinGroupFormat" = "%@ requests to join group chat.";
 "GroupDeleteFriend" = "Delete Contact";
 "GroupAddFirend" = "Add Contact";
 "GroupMember" = "Group Members";
+
 "ProfileAlia" = "Alias";
 "ProfileMessageDoNotDisturb" = "Mute Notifications";
 "ProfileStickyonTop" = "Pin";
@@ -188,6 +186,7 @@
 "TUIKitGroupProfileMemberCountlu" = "%lu member(s)";
 "TUIKitGroupProfileType" = "Group Type";
 "TUIKitGroupProfileJoinType" = "Group Joining Method";
+"TUIKitGroupProfileInviteType" = "Group inviting method";
 "TUIKitGroupProfileInviteJoin" = "Invite";
 "TUIKitGroupProfileAutoApproval" = "Auto Approval";
 "TUIKitGroupProfileAlias" = "My Alias in Group";
@@ -196,6 +195,7 @@
 "TUIKitGroupProfileDeleteAndExit" = "Delete and Leave";
 "TUIKitGroupProfileDissolve" = "Disband Group";
 "TUIKitGroupProfileJoinDisable" = "Prohibited from Joining";
+"TUIKitGroupProfileInviteDisable" = "Prohibited from inviting";
 "TUIKitGroupProfileAdminApprove" = "Admin Approval";
 "TUIKitGroupProfileEditAlias" = "Edit My Alias in Group";
 "TUIKitGroupProfileEditAliasDesc" = "Only letters, digits, underscores, and Chinese characters.";
@@ -221,7 +221,7 @@
 "TUIKitMessageTipsYouRecallMessage" = "You recalled a message.";
 "TUIKitMessageTipsReEditMessage" = "re-edit";
 "TUIKitMessageTipsRecallMessageFormat" = "\"%@\" recalled a message.";
-"TUIkitMessageTipsOthersRecallMessage" = "The other user recalled a message.";
+"TUIKitMessageTipsOthersRecallMessage" = "The other user recalled a message.";
 "TUIKitMessageTipsJoinGroupFormat" = "\"%@\" joined the group.";
 "TUIKitMessageTipsInviteJoinGroupFormat" = "\"%@\" invited \"%@\" to join the group.";
 "TUIKitMessageTipsLeaveGroupFormat" = "\"%@\" left the group chat.";
@@ -303,6 +303,7 @@
 "TUIKitConversationTipsAtMe" = "[You were mentioned]";
 "TUIKitConversationTipsAtAll" = "[@All]";
 "TUIKitConversationTipsAtMeAndAll" = "[I was mentioned][@All]";
+"TUIKitConversationTipsDelete" = "This conversation and history message will all be deleted";
 
 "TUIKitPublicGroup" = "Public Group";
 "TUIKitWorkGroup" = "Discussion Group";
@@ -638,6 +639,42 @@
 "TUIGroupNoteNotDatePickerSAT" = " Sat";
 "TUIGroupNoteNotDatePickerSUN" = " Sun";
 
+"TUIConversationGroupAll" = "All";
+"TUIConversationGroupUnread" = "Unread";
+"TUIConversationGroupAtMe" = "@ Me";
+"TUIConversationGroupGroup" = "Group";
+"TUIConversationGroupC2C" = "C2C";
+"TUIConversationGroupInputGroupName" = "Please input a group name";
+"TUIConversationGroupCreateGroup" = "Create new conversation group";
+"TUIConversationGroupNewGroup" = "Create new group";
+"TUIConversationGroupAddGroup" = "Add to group";
+"TUIConversationGroupMoveGroup" = "Move group";
+"TUIConversationGroupRemoveGroup" = "Remove group";
+"TUIConversationGroupShowGroup" = "Show conversation group";
+"TUIConversationGroupHideGroup" = "Hide conversation group";
+"TUIConversationGroupEditGroup" = "Group settings";
+"TUIConversationGroupEdit" = "Edit";
+"TUIConversationGroupSave" = "Save";
+"TUIConversationGroupSaveSucc" = "Group save success";
+"TUIConversationGroupCreate" = "Create";
+"TUIConversationGroupNameIsNull" = "Group name cannot be empty！";
+"TUIConversationGroupNameIsInvalid" = "Group name cannot be the preset default group name";
+"TUIConversationGroupConversationIsNull" = "Conversation name cannot be empty！";
+"TUIConversationGroupCreateSucc" = "Group created successfully";
+"TUIConversationGroupModifySucc" = "Group modified successfully";
+"TUIConversationGroupName" = "Group name";
+"TUIConversationGroupIncludeConversation" = "Contains conversation";
+"TUIConversationGroupAddConversation" = "Add conversation";
+"TUIConversationGroup" = "Conversation group";
+"TUIConversationGroupManager" = "Manager";
+"TUIConversationGroupSelectGroup" = "Select conversation group";
+"TUIConversationGroupUnlogined" = "Unlogined，save failed ！";
+
+"TUIConversationMark" = "Mark";
+"TUIConversationMarkCancel" = "Unmark";
+
+"TUIConversationNone" = "No %@ conversation yet";
+
 //----timApp---
 "TIMAppMainTitle" = "TencentCloud·IM";
 "TIMAppMainConnectingTitle" = "Connecting…";
@@ -675,3 +712,9 @@
 "TIMAppCancel" = "Cancel";
 "TIMChangeLanguage" = "Language";
 //----timApp---
+"TUIKitTickledMe" = "I";
+"TUIKitTickledActionVaule" = " tickled ";
+"TUIKitTickledMyself" = "myself";
+"TUIKitImageViewOrigin" = "Original image";
+"TUIGroupCreateTipsMessage" = "Create Group";
+"TUICommunityCreateTipsMessage" = "Create Community";

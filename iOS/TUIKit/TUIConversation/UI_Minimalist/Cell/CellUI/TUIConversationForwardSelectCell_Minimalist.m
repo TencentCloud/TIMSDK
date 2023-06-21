@@ -3,11 +3,12 @@
 //  TUIConversation
 //
 //  Created by wyl on 2023/1/31.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIConversationForwardSelectCell_Minimalist.h"
 #import <TIMCommon/TUIGroupAvatar+Helper.h>
-@interface TUIConversationForwardSelectCell_Minimalist()
+@interface TUIConversationForwardSelectCell_Minimalist ()
 
 @end
 
@@ -27,7 +28,7 @@
         [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_selected_disable")] forState:UIControlStateDisabled];
         self.selectButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         self.selectButton.userInteractionEnabled = NO;
-        
+
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
         self.avatarView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -40,8 +41,8 @@
 
         self.avatarView.mm_width(kScale390(40)).mm_height(kScale390(40)).mm__centerY(self.mm_centerY).mm_left(kScale390(16));
         self.selectButton.mm_sizeToFit().mm__centerY(self.mm_centerY).mm_right(kScale390(kScale390(42)));
-        self.titleLabel.mm_left(self.avatarView.mm_maxX+12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
-        
+        self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
+
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -65,16 +66,13 @@
     [self.selectButton setSelected:selectData.selected];
     if (selectData.showCheckBox) {
         self.selectButton.hidden = NO;
-    }
-    else {
+    } else {
         self.selectButton.hidden = YES;
     }
-//    self.selectButton.enabled = selectData.enabled;
+    //    self.selectButton.enabled = selectData.enabled;
 }
 
-
 - (void)configHeadImageView:(TUIConversationCellData *)convData {
-    
     /**
      * 修改默认头像
      * Setup default avatar
@@ -86,28 +84,27 @@
          */
         convData.avatarImage = [TUIGroupAvatar getNormalGroupCacheAvatar:convData.groupID groupType:convData.groupType];
     }
-    
+
     @weakify(self);
 
-    [[RACObserve(convData,faceUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *faceUrl) {
-        @strongify(self)
-        NSString * groupID = convData.groupID?:@"";
-        NSString * pFaceUrl = convData.faceUrl?:@"";
-        NSString * groupType = convData.groupType?:@"";
-        UIImage * originAvatarImage = nil;
-        if (convData.groupID.length > 0) {
-            originAvatarImage = convData.avatarImage?:DefaultGroupAvatarImageByGroupType(groupType);
-        }
-        else {
-            originAvatarImage = convData.avatarImage?:DefaultAvatarImage;
-        }
-        NSDictionary *param =  @{
-            @"groupID":groupID,
-            @"faceUrl":pFaceUrl,
-            @"groupType":groupType,
-            @"originAvatarImage":originAvatarImage,
-        };
-        [TUIGroupAvatar configAvatarByParam:param targetView:self.avatarView];
+    [[RACObserve(convData, faceUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *faceUrl) {
+      @strongify(self);
+      NSString *groupID = convData.groupID ?: @"";
+      NSString *pFaceUrl = convData.faceUrl ?: @"";
+      NSString *groupType = convData.groupType ?: @"";
+      UIImage *originAvatarImage = nil;
+      if (convData.groupID.length > 0) {
+          originAvatarImage = convData.avatarImage ?: DefaultGroupAvatarImageByGroupType(groupType);
+      } else {
+          originAvatarImage = convData.avatarImage ?: DefaultAvatarImage;
+      }
+      NSDictionary *param = @{
+          @"groupID" : groupID,
+          @"faceUrl" : pFaceUrl,
+          @"groupType" : groupType,
+          @"originAvatarImage" : originAvatarImage,
+      };
+      [TUIGroupAvatar configAvatarByParam:param targetView:self.avatarView];
     }];
 }
 @end

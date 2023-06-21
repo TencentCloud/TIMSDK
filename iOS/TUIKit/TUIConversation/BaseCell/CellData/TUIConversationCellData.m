@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/16.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIConversationCellData.h"
@@ -18,9 +19,12 @@
 @synthesize draftText;
 @synthesize faceUrl;
 
-- (CGFloat)heightOfWidth:(CGFloat)width
-{
-    return TConversationCell_Height;
+- (CGFloat)heightOfWidth:(CGFloat)width {
+    if (self.isLiteMode) {
+        return TConversationCell_Height_LiteMode;
+    } else {
+        return TConversationCell_Height;
+    }
 }
 
 + (BOOL)isMarkedByHideType:(NSArray *)markList {

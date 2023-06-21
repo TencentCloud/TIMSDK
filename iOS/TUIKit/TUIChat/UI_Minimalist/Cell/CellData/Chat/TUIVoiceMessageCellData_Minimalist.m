@@ -3,26 +3,28 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIVoiceMessageCellData_Minimalist.h"
-#import <TIMCommon/TUIMessageCellLayout.h>
-#import "EMVoiceConverter.h"
-#import <TUICore/TUIThemeManager.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIMessageCellLayout.h>
+#import <TUICore/TUIThemeManager.h>
+#import "EMVoiceConverter.h"
 @import AVFoundation;
 
-@interface TUIVoiceMessageCellData_Minimalist ()<AVAudioPlayerDelegate>
+@interface TUIVoiceMessageCellData_Minimalist () <AVAudioPlayerDelegate>
 @property AVAudioPlayer *audioPlayer;
 @property NSString *wavPath;
-@property(nonatomic,strong)NSTimer *timer;
+@property(nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation TUIVoiceMessageCellData_Minimalist
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     V2TIMSoundElem *elem = message.soundElem;
-    TUIVoiceMessageCellData_Minimalist *soundData = [[TUIVoiceMessageCellData_Minimalist alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    TUIVoiceMessageCellData_Minimalist *soundData =
+        [[TUIVoiceMessageCellData_Minimalist alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     soundData.duration = elem.duration;
     soundData.length = elem.dataSize;
     soundData.uuid = elem.uuid;
@@ -32,21 +34,18 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TIMCommonLocalizableString(TUIKitMessageTypeVoice); // @"[语音]";
+    return TIMCommonLocalizableString(TUIKitMessageTypeVoice);  // @"[语音]";
 }
 
-- (Class)getReplyQuoteViewDataClass
-{
+- (Class)getReplyQuoteViewDataClass {
     return NSClassFromString(@"TUIVoiceReplyQuoteViewData_Minimalist");
 }
 
-- (Class)getReplyQuoteViewClass
-{
+- (Class)getReplyQuoteViewClass {
     return NSClassFromString(@"TUIVoiceReplyQuoteView_Minimalist");
 }
 
-- (instancetype)initWithDirection:(TMsgDirection)direction
-{
+- (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
     if (self) {
         if (direction == MsgDirectionIncoming) {
@@ -62,27 +61,26 @@
     return self;
 }
 
-- (NSString *)getVoicePath:(BOOL *)isExist
-{
+- (NSString *)getVoicePath:(BOOL *)isExist {
     NSString *path = nil;
     BOOL isDir = false;
     *isExist = NO;
-    if(self.direction == MsgDirectionOutgoing) {
+    if (self.direction == MsgDirectionOutgoing) {
         if (_path.length) {
             path = [NSString stringWithFormat:@"%@%@", TUIKit_Voice_Path, _path.lastPathComponent];
-            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                if(!isDir){
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+                if (!isDir) {
                     *isExist = YES;
                 }
             }
         }
     }
 
-    if(!*isExist) {
+    if (!*isExist) {
         if (_uuid.length) {
             path = [NSString stringWithFormat:@"%@%@.amr", TUIKit_Voice_Path, _uuid];
-            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                if(!isDir){
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+                if (!isDir) {
                     *isExist = YES;
                 }
             }
@@ -91,8 +89,7 @@
     return path;
 }
 
-- (V2TIMSoundElem *)getIMSoundElem
-{
+- (V2TIMSoundElem *)getIMSoundElem {
     V2TIMMessage *imMsg = self.innerMessage;
     if (imMsg.elemType == V2TIM_ELEM_TYPE_SOUND) {
         return imMsg.soundElem;
@@ -100,21 +97,18 @@
     return nil;
 }
 
-- (CGSize)contentSize
-{
+- (CGSize)contentSize {
     return CGSizeMake((self.voiceHeight + kScale390(5)) * 6 + kScale390(82), _voiceHeight + self.voiceTop * 3 + self.msgStatusSize.height);
 }
 
-- (void)playVoiceMessage
-{
+- (void)playVoiceMessage {
     if (self.isPlaying) {
         [self stopVoiceMessage];
         return;
     }
     self.isPlaying = YES;
-    
-    if(self.innerMessage.localCustomInt == 0)
-        self.innerMessage.localCustomInt = 1;
+
+    if (self.innerMessage.localCustomInt == 0) self.innerMessage.localCustomInt = 1;
 
     V2TIMSoundElem *imSound = [self getIMSoundElem];
     BOOL isExist = NO;
@@ -122,34 +116,35 @@
         self.uuid = imSound.uuid;
     }
     NSString *path = [self getVoicePath:&isExist];
-    if(isExist) {
+    if (isExist) {
         [self playInternal:path];
     } else {
-        if(self.isDownloading) {
+        if (self.isDownloading) {
             return;
         }
-        //网络下载
+        // 网络下载
         self.isDownloading = YES;
-        @weakify(self)
-        [imSound downloadSound:path progress:^(NSInteger curSize, NSInteger totalSize) {
-            
-        }  succ:^{
-            @strongify(self)
-            self.isDownloading = NO;
-            [self playInternal:path];
-        } fail:^(int code, NSString *msg) {
-            @strongify(self)
-            self.isDownloading= NO;
-            [self stopVoiceMessage];
-        }];
+        @weakify(self);
+        [imSound downloadSound:path
+            progress:^(NSInteger curSize, NSInteger totalSize) {
+
+            }
+            succ:^{
+              @strongify(self);
+              self.isDownloading = NO;
+              [self playInternal:path];
+            }
+            fail:^(int code, NSString *msg) {
+              @strongify(self);
+              self.isDownloading = NO;
+              [self stopVoiceMessage];
+            }];
     }
 }
 
-- (void)playInternal:(NSString *)path
-{
-    if (!self.isPlaying)
-        return;
-    //play current
+- (void)playInternal:(NSString *)path {
+    if (!self.isPlaying) return;
+    // play current
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     NSURL *url = [NSURL fileURLWithPath:path];
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
@@ -164,35 +159,36 @@
         self.audioPlayer.delegate = self;
         [self.audioPlayer play];
     }
-    
-   @weakify(self)
-   if (@available(iOS 10.0, *)) {
-       self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-           @strongify(self)
-           [self updateProgress];
-       }];
-   } else {
-       // Fallback on earlier versions
-   }
+
+    @weakify(self);
+    if (@available(iOS 10.0, *)) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                     repeats:YES
+                                                       block:^(NSTimer *_Nonnull timer) {
+                                                         @strongify(self);
+                                                         [self updateProgress];
+                                                       }];
+    } else {
+        // Fallback on earlier versions
+    }
 }
 
 - (void)updateProgress {
-    @weakify(self)
+    @weakify(self);
     dispatch_async(dispatch_get_main_queue(), ^{
-        @strongify(self)
-        if (self.playTime) {
-            self.playTime(self.audioPlayer.currentTime);
-        }
+      @strongify(self);
+      if (self.playTime) {
+          self.playTime(self.audioPlayer.currentTime);
+      }
     });
 }
 
-- (void)stopVoiceMessage
-{
+- (void)stopVoiceMessage {
     if ([self.audioPlayer isPlaying]) {
         [self.audioPlayer stop];
         self.audioPlayer = nil;
     }
-    if (self.timer ) {
+    if (self.timer) {
         [self.timer invalidate];
         self.timer = nil;
     }
@@ -205,29 +201,24 @@
     [[NSFileManager defaultManager] removeItemAtPath:self.wavPath error:nil];
 }
 
+static CGFloat gIncommingVoiceTop = 8;
 
-static CGFloat s_incommingVoiceTop = 8;
-
-+ (void)setIncommingVoiceTop:(CGFloat)incommingVoiceTop
-{
-    s_incommingVoiceTop = incommingVoiceTop;
++ (void)setIncommingVoiceTop:(CGFloat)incommingVoiceTop {
+    gIncommingVoiceTop = incommingVoiceTop;
 }
 
-+ (CGFloat)incommingVoiceTop
-{
-    return s_incommingVoiceTop;
++ (CGFloat)incommingVoiceTop {
+    return gIncommingVoiceTop;
 }
 
-static CGFloat s_outgoingVoiceTop = 8;
+static CGFloat gOutgoingVoiceTop = 8;
 
-+ (void)setOutgoingVoiceTop:(CGFloat)outgoingVoiceTop
-{
-    s_outgoingVoiceTop = outgoingVoiceTop;
++ (void)setOutgoingVoiceTop:(CGFloat)outgoingVoiceTop {
+    gOutgoingVoiceTop = outgoingVoiceTop;
 }
 
-+ (CGFloat)outgoingVoiceTop
-{
-    return s_outgoingVoiceTop;
++ (CGFloat)outgoingVoiceTop {
+    return gOutgoingVoiceTop;
 }
 
 @end

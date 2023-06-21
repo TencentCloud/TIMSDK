@@ -3,11 +3,12 @@
 //  TUIContact
 //
 //  Created by wyl on 2023/3/29.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import <TUICore/TUICore.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 
 NS_ASSUME_NONNULL_BEGIN
 /**
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * > 创建用户资料 VC：
  * factoryName: TUICore_TUIContactObjectFactory_Minimalist
- * key: TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod
+ * key: TUICore_TUIContactObjectFactory_UserProfileController_Minimalist
  *
  * > 根据 userID 获取好友或用户资料 VC：
  * factoryName: TUICore_TUIContactObjectFactory_Minimalist
@@ -56,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  > Create user profile view controller:
  *  factoryName: TUICore_TUIContactObjectFactory_Minimalist
- *  key: TUICore_TUIContactObjectFactory_GetUserProfileControllerMethod
+ *  key: TUICore_TUIContactObjectFactory_UserProfileController_Minimalist
  *
  *  > Get friend or user profile view controller based on userID:
  *  factoryName: TUICore_TUIContactObjectFactory_Minimalist

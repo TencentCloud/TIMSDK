@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *  本文件声明了用于实现“更多”视图的组件。
  *  更多视图，即在您点击聊天窗口右下角的“+”按钮浮现出的窗口。
@@ -9,8 +12,9 @@
  *
  *  This file declares the components used to implement the "more" view.
  *  More view, the window that appears when you click the "+" button in the lower right corner of the chat window.
- *  More view are usually responsible for providing some additional important functions, such as sending pictures, taking pictures and sending, sending videos, sending files, etc.
- *  Currently TUIKit implements and provides the above four functions. If the above 4 functions cannot meet your functional requirements, you can also add your custom unit in this view.
+ *  More view are usually responsible for providing some additional important functions, such as sending pictures, taking pictures and sending, sending videos,
+ * sending files, etc. Currently TUIKit implements and provides the above four functions. If the above 4 functions cannot meet your functional requirements, you
+ * can also add your custom unit in this view.
  *
  *  TUIMoreView provides an entry for sending multimedia messages such as videos, pictures, and files based on the existing text messaging.
  *  The TUIMoreViewDelegate protocol provides callbacks for more views in response to user actions.
@@ -27,13 +31,11 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-
 @protocol TUIMoreViewDelegate <NSObject>
 
 - (void)moreView:(TUIMoreView *)moreView didSelectMoreCell:(TUIInputMoreCell *)cell;
 
 @end
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -60,15 +62,15 @@
  */
 @interface TUIMoreView : UIView
 
-@property (nonatomic, strong) UIView *lineView;
+@property(nonatomic, strong) UIView *lineView;
 
-@property (nonatomic, strong) UICollectionView *moreCollectionView;
+@property(nonatomic, strong) UICollectionView *moreCollectionView;
 
-@property (nonatomic, strong) UICollectionViewFlowLayout *moreFlowLayout;
+@property(nonatomic, strong) UICollectionViewFlowLayout *moreFlowLayout;
 
-@property (nonatomic, strong) UIPageControl *pageControl;
+@property(nonatomic, strong) UIPageControl *pageControl;
 
-@property (nonatomic, weak) id<TUIMoreViewDelegate> delegate;
+@property(nonatomic, weak) id<TUIMoreViewDelegate> delegate;
 
 - (void)setData:(NSArray *)data;
 

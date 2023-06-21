@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明了用于实现表情菜单视图的组件。
@@ -8,11 +11,12 @@
  *  您可以通过表情菜单视图在不同组别的表情下切换，或是发送表情。
  *
  *  This file declares the components used to implement the emoji menu view.
- *  The emoji menu view, the bright white view at the bottom of the emoji view, is responsible for displaying individual emoji groups and their thumbnails, and providing a "Send" button.
+ *  The emoji menu view, the bright white view at the bottom of the emoji view, is responsible for displaying individual emoji groups and their thumbnails, and
+ * providing a "Send" button.
  *
  *  The TUIMenuViewDelegate protocol provides the emoticon menu view with event callbacks for sending messages and cell selection.
- *  The TUIMenuView class, the "ontology" of the emoticon menu view, is responsible for displaying it in the form of a view in the UI, and at the same time serving as a "container" for each component.
- *  You can switch between different groups of emoticons or send emoticons through the emoticon menu view.
+ *  The TUIMenuView class, the "ontology" of the emoticon menu view, is responsible for displaying it in the form of a view in the UI, and at the same time
+ * serving as a "container" for each component. You can switch between different groups of emoticons or send emoticons through the emoticon menu view.
  */
 #import <UIKit/UIKit.h>
 #import "TUIMenuCellData_Minimalist.h"
@@ -32,7 +36,8 @@
  *  您可以通过该回调实现：响应用户的点击，根据用户选择的 menuCell 切换到对应的表情分组视图下。
  *
  *  Callback after clicking on a specific menuCell
- *  You can use this callback to achieve: in response to the user's click, switch to the corresponding emoticon group view according to the menuCell selected by the user.
+ *  You can use this callback to achieve: in response to the user's click, switch to the corresponding emoticon group view according to the menuCell selected by
+ * the user.
  */
 - (void)menuView:(TUIMenuView_Minimalist *)menuView didSelectItemAtIndex:(NSInteger)index;
 
@@ -51,7 +56,6 @@
 
 @end
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                              TUIMenuView
@@ -60,14 +64,13 @@
 ///
 @interface TUIMenuView_Minimalist : UIView
 
-@property (nonatomic, strong) UIButton *sendButton;
+@property(nonatomic, strong) UIButton *sendButton;
 
-@property (nonatomic, strong) UICollectionView *menuCollectionView;
+@property(nonatomic, strong) UICollectionView *menuCollectionView;
 
-@property (nonatomic, strong) UICollectionViewFlowLayout *menuFlowLayout;
+@property(nonatomic, strong) UICollectionViewFlowLayout *menuFlowLayout;
 
-@property (nonatomic, weak) id<TUIMenuViewDelegate_Minimalist> delegate;
-
+@property(nonatomic, weak) id<TUIMenuViewDelegate_Minimalist> delegate;
 
 - (void)scrollToMenuIndex:(NSInteger)index;
 

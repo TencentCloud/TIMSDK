@@ -3,6 +3,7 @@
 //  TIMCommon
 //
 //  Created by wyl on 2023/4/27.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <TUICore/TUIDefine.h>

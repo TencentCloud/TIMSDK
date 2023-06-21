@@ -3,6 +3,7 @@
 //  TUICore
 //
 //  Created by harvy on 2022/1/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 /**
  *  每个模块主题的存储结构
@@ -72,11 +73,12 @@ NS_ASSUME_NONNULL_BEGIN
  * 获取动态颜色
  * Get dynamic colors that change with theme
  */
-#define TUIDynamicColor(colorKey, themeModule, defaultHex)  [TUITheme dynamicColor:colorKey module:themeModule defaultColor:defaultHex]
+#define TUIDynamicColor(colorKey, themeModule, defaultHex) [TUITheme dynamicColor:colorKey module:themeModule defaultColor:defaultHex]
 #define TUIDemoDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleDemo, defaultHex)
 #define TUICoreDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleCore, defaultHex)
 #define TUIChatDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleChat, defaultHex)
 #define TUIConversationDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleConversation, defaultHex)
+#define TUIConversationGroupDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleConversationGroup, defaultHex)
 #define TUIContactDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleContact, defaultHex)
 #define TUIGroupDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleGroup, defaultHex)
 #define TUISearchDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleSearch, defaultHex)
@@ -90,24 +92,25 @@ NS_ASSUME_NONNULL_BEGIN
  * 动态获取图片
  * Get dynamic image that change with theme
  */
-#define TUIDemoBundleThemeImage(imageKey,defaultImageName) TUIDemoDynamicImage(imageKey,TUIDemoCommonBundleImage(defaultImageName))
-#define TUICoreBundleThemeImage(imageKey,defaultImageName) TUICoreDynamicImage(imageKey,TUICoreCommonBundleImage(defaultImageName))
-#define TUIChatBundleThemeImage(imageKey,defaultImageName) TUIChatDynamicImage(imageKey,TUIChatCommonBundleImage(defaultImageName))
-#define TUIConversationBundleThemeImage(imageKey,defaultImageName) TUIConversationDynamicImage(imageKey,TUIConversationCommonBundleImage(defaultImageName))
-#define TUIContactBundleThemeImage(imageKey,defaultImageName) TUIContactDynamicImage(imageKey,TUIContactCommonBundleImage(defaultImageName))
-#define TUIGroupBundleThemeImage(imageKey,defaultImageName) TUIGroupDynamicImage(imageKey,TUIGroupCommonBundleImage(defaultImageName))
-#define TUISearchBundleThemeImage(imageKey,defaultImageName) TUISearchDynamicImage(imageKey,TUISearchCommonBundleImage(defaultImageName))
-#define TUICallingBundleThemeImage(imageKey,defaultImageName) TUICallingDynamicImage(imageKey,TUICallingCommonBundleImage(defaultImageName))
-#define TUIPollBundleThemeImage(imageKey,defaultImageName) TUIPollDynamicImage(imageKey,TUIPollCommonBundleImage(defaultImageName))
-#define TUIGroupNoteBundleThemeImage(imageKey,defaultImageName) TUIGroupNoteDynamicImage(imageKey,TUIGroupNoteCommonBundleImage(defaultImageName))
-#define TIMCommonBundleThemeImage(imageKey,defaultImageName) TIMCommonDynamicImage(imageKey,TIMCommonBundleImage(defaultImageName))
-#define TUITranslationBundleThemeImage(imageKey,defaultImageName) TUITranslationDynamicImage(imageKey,TUITranslationCommonBundleImage(defaultImageName))
+#define TUIDemoBundleThemeImage(imageKey, defaultImageName) TUIDemoDynamicImage(imageKey, TUIDemoCommonBundleImage(defaultImageName))
+#define TUICoreBundleThemeImage(imageKey, defaultImageName) TUICoreDynamicImage(imageKey, TUICoreCommonBundleImage(defaultImageName))
+#define TUIChatBundleThemeImage(imageKey, defaultImageName) TUIChatDynamicImage(imageKey, TUIChatCommonBundleImage(defaultImageName))
+#define TUIConversationBundleThemeImage(imageKey, defaultImageName) TUIConversationDynamicImage(imageKey, TUIConversationCommonBundleImage(defaultImageName))
+#define TUIContactBundleThemeImage(imageKey, defaultImageName) TUIContactDynamicImage(imageKey, TUIContactCommonBundleImage(defaultImageName))
+#define TUIGroupBundleThemeImage(imageKey, defaultImageName) TUIGroupDynamicImage(imageKey, TUIGroupCommonBundleImage(defaultImageName))
+#define TUISearchBundleThemeImage(imageKey, defaultImageName) TUISearchDynamicImage(imageKey, TUISearchCommonBundleImage(defaultImageName))
+#define TUICallingBundleThemeImage(imageKey, defaultImageName) TUICallingDynamicImage(imageKey, TUICallingCommonBundleImage(defaultImageName))
+#define TUIPollBundleThemeImage(imageKey, defaultImageName) TUIPollDynamicImage(imageKey, TUIPollCommonBundleImage(defaultImageName))
+#define TUIGroupNoteBundleThemeImage(imageKey, defaultImageName) TUIGroupNoteDynamicImage(imageKey, TUIGroupNoteCommonBundleImage(defaultImageName))
+#define TIMCommonBundleThemeImage(imageKey, defaultImageName) TIMCommonDynamicImage(imageKey, TIMCommonBundleImage(defaultImageName))
+#define TUITranslationBundleThemeImage(imageKey, defaultImageName) TUITranslationDynamicImage(imageKey, TUITranslationCommonBundleImage(defaultImageName))
 
 #define TUIDynamicImage(imageKey, themeModule, defaultImg) [TUITheme dynamicImage:imageKey module:themeModule defaultImage:defaultImg]
 #define TUIDemoDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleDemo, defaultImg)
 #define TUICoreDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleCore, defaultImg)
 #define TUIChatDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleChat, defaultImg)
 #define TUIConversationDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleConversation, defaultImg)
+#define TUIConversationGroupDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleConversationGroup, defaultImg)
 #define TUIContactDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleContact, defaultImg)
 #define TUIGroupDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleGroup, defaultImg)
 #define TUISearchDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleSearch, defaultImg)
@@ -136,39 +139,40 @@ NS_ASSUME_NONNULL_BEGIN
  * The module of the theme
  */
 typedef NS_ENUM(NSInteger, TUIThemeModule) {
-    TUIThemeModuleAll          = 0xFFFFFF,
-    TUIThemeModuleDemo         = 0x1 << 0,
-    TUIThemeModuleCore         = 0x1 << 1,
-    TUIThemeModuleChat         = 0x1 << 2,
+    TUIThemeModuleAll = 0xFFFFFF,
+    TUIThemeModuleDemo = 0x1 << 0,
+    TUIThemeModuleCore = 0x1 << 1,
+    TUIThemeModuleChat = 0x1 << 2,
     TUIThemeModuleConversation = 0x1 << 3,
-    TUIThemeModuleContact      = 0x1 << 4,
-    TUIThemeModuleGroup        = 0x1 << 5,
-    TUIThemeModuleSearch       = 0x1 << 6,
-    TUIThemeModuleCalling      = 0x1 << 7,
-    
-    TUIThemeModuleDemo_Minimalist         = 0x1 << 8,
-    TUIThemeModuleCore_Minimalist         = 0x1 << 9,
-    TUIThemeModuleChat_Minimalist         = 0x1 << 10,
+    TUIThemeModuleContact = 0x1 << 4,
+    TUIThemeModuleGroup = 0x1 << 5,
+    TUIThemeModuleSearch = 0x1 << 6,
+    TUIThemeModuleCalling = 0x1 << 7,
+
+    TUIThemeModuleDemo_Minimalist = 0x1 << 8,
+    TUIThemeModuleCore_Minimalist = 0x1 << 9,
+    TUIThemeModuleChat_Minimalist = 0x1 << 10,
     TUIThemeModuleConversation_Minimalist = 0x1 << 11,
-    TUIThemeModuleContact_Minimalist      = 0x1 << 12,
-    TUIThemeModuleGroup_Minimalist        = 0x1 << 13,
-    TUIThemeModuleSearch_Minimalist       = 0x1 << 14,
-    TUIThemeModuleCalling_Minimalist      = 0x1 << 15,
+    TUIThemeModuleContact_Minimalist = 0x1 << 12,
+    TUIThemeModuleGroup_Minimalist = 0x1 << 13,
+    TUIThemeModuleSearch_Minimalist = 0x1 << 14,
+    TUIThemeModuleCalling_Minimalist = 0x1 << 15,
 
     // UI Plugins
-    TUIThemeModulePoll                    = 0x1 << 16,
-    TUIThemeModuleGroupNote               = 0x1 << 17,
-    TUIThemeModuleTIMCommon               = 0x1 << 18,
-    TUIThemeModuleTranslation             = 0x1 << 19,
+    TUIThemeModulePoll = 0x1 << 16,
+    TUIThemeModuleGroupNote = 0x1 << 17,
+    TUIThemeModuleTIMCommon = 0x1 << 18,
+    TUIThemeModuleTranslation = 0x1 << 19,
+    TUIThemeModuleConversationGroup = 0x1 << 20,
 };
 
 @interface TUITheme : NSObject
 
-@property (nonatomic, copy) NSString *themeID;
-@property (nonatomic, assign) TUIThemeModule module;
-@property (nonatomic, copy, nullable) NSString *themeDesc;
-@property (nonatomic, strong) NSDictionary *manifest;
-@property (nonatomic, copy) NSString *resourcePath;
+@property(nonatomic, copy) NSString *themeID;
+@property(nonatomic, assign) TUIThemeModule module;
+@property(nonatomic, copy, nullable) NSString *themeDesc;
+@property(nonatomic, strong) NSDictionary *manifest;
+@property(nonatomic, copy) NSString *resourcePath;
 
 + (UIColor *__nullable)dynamicColor:(NSString *)colorKey module:(TUIThemeModule)module defaultColor:(NSString *)hex;
 + (UIImage *__nullable)dynamicImage:(NSString *)imageKey module:(TUIThemeModule)module defaultImage:(UIImage *)image;

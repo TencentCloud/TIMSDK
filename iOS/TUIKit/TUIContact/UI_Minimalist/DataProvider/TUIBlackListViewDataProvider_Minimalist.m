@@ -3,12 +3,13 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIBlackListViewDataProvider_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
 
-@interface TUIBlackListViewDataProvider_Minimalist()
+@interface TUIBlackListViewDataProvider_Minimalist ()
 @property NSArray<TUICommonContactCellData_Minimalist *> *blackListData;
 @property BOOL isLoadFinished;
 @property BOOL isLoading;
@@ -16,26 +17,26 @@
 
 @implementation TUIBlackListViewDataProvider_Minimalist
 
-- (void)loadBlackList
-{
-    if (self.isLoading)
-        return;
+- (void)loadBlackList {
+    if (self.isLoading) return;
     self.isLoading = YES;
     self.isLoadFinished = NO;
-    @weakify(self)
-    [[V2TIMManager sharedInstance] getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
-        @strongify(self)
-        NSMutableArray *list = @[].mutableCopy;
-        for (V2TIMFriendInfo *fd in infoList) {
-            TUICommonContactCellData_Minimalist *data = [[TUICommonContactCellData_Minimalist alloc] initWithFriend:fd];
-            [list addObject:data];
+    @weakify(self);
+    [[V2TIMManager sharedInstance]
+        getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
+          @strongify(self);
+          NSMutableArray *list = @[].mutableCopy;
+          for (V2TIMFriendInfo *fd in infoList) {
+              TUICommonContactCellData_Minimalist *data = [[TUICommonContactCellData_Minimalist alloc] initWithFriend:fd];
+              [list addObject:data];
+          }
+          self.blackListData = list;
+          self.isLoadFinished = YES;
+          self.isLoading = NO;
         }
-        self.blackListData = list;
-        self.isLoadFinished = YES;
-        self.isLoading = NO;
-    } fail:^(int code, NSString *msg) {
-        self.isLoading = NO;
-    }];
+        fail:^(int code, NSString *msg) {
+          self.isLoading = NO;
+        }];
 }
 
 @end

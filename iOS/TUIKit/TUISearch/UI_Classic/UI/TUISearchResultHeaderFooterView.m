@@ -3,65 +3,61 @@
 //  Pods
 //
 //  Created by harvy on 2020/12/24.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUISearchResultHeaderFooterView.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
 
-
 @interface TUISearchResultHeaderFooterView ()
 
-@property (nonatomic, strong) UIImageView *iconView;
-@property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UIImageView *accessoryView;
-@property (nonatomic, strong) UIView *separtorView;
+@property(nonatomic, strong) UIImageView *iconView;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) UIImageView *accessoryView;
+@property(nonatomic, strong) UIView *separtorView;
 
 @end
 
 @implementation TUISearchResultHeaderFooterView
 
-- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithReuseIdentifier:reuseIdentifier]) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
+- (void)setupViews {
     [self.contentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)]];
     self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     _iconView = [[UIImageView alloc] init];
     _iconView.image = [UIImage imageNamed:TUISearchImagePath(@"search")];
     [self.contentView addSubview:_iconView];
-    
+
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.text = @"";
     _titleLabel.font = [UIFont systemFontOfSize:12.0];
     [self.contentView addSubview:_titleLabel];
-    
+
     _accessoryView = [[UIImageView alloc] init];
     _accessoryView.image = [UIImage imageNamed:TUISearchImagePath(@"right")];
     [self.contentView addSubview:_accessoryView];
-    
+
     _separtorView = [[UIView alloc] init];
     _separtorView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#DBDBDB");
     [self.contentView addSubview:_separtorView];
 }
 
-- (void)tap:(UITapGestureRecognizer *)tap
-{
+- (void)tap:(UITapGestureRecognizer *)tap {
     if (self.onTap) {
         self.onTap();
     }
 }
 
-- (void)setIsFooter:(BOOL)isFooter
-{
+- (void)setIsFooter:(BOOL)isFooter {
     _isFooter = isFooter;
-    
+
     self.iconView.hidden = !self.isFooter;
     self.iconView.hidden = !self.isFooter;
     self.accessoryView.hidden = !self.isFooter;
@@ -69,16 +65,14 @@
     self.titleLabel.textColor = self.isFooter ? footerColor : [UIColor darkGrayColor];
 }
 
-- (void)setTitle:(NSString *)title
-{
+- (void)setTitle:(NSString *)title {
     _title = title;
     self.titleLabel.text = title;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     if (self.isFooter) {
         self.iconView.mm_height(20).mm_width(20);
         self.iconView.mm_centerY = self.contentView.mm_centerY;
@@ -90,7 +84,7 @@
         self.accessoryView.mm_centerY = self.contentView.mm_centerY;
         self.accessoryView.mm_r = 10;
         self.separtorView.frame = CGRectMake(10, 0, self.contentView.mm_w, 1);
-    }else {
+    } else {
         [self.titleLabel sizeToFit];
         self.titleLabel.mm_centerY = self.contentView.mm_centerY;
         self.titleLabel.mm_x = 10;
@@ -98,8 +92,7 @@
     }
 }
 
-- (void)setFrame:(CGRect)frame
-{
+- (void)setFrame:(CGRect)frame {
     if (self.isFooter) {
         CGSize size = frame.size;
         size.height -= 10;

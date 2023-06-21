@@ -10,9 +10,9 @@
 #import "TUIAddCellData.h"
 
 @interface TUIAddCell : UITableViewCell
-@property (nonatomic, strong) UIImageView *selectImageView;
-@property (nonatomic, strong) UIImageView *headImageView;
-@property (nonatomic, strong) UILabel *nameLabel;
+@property(nonatomic, strong) UIImageView *selectImageView;
+@property(nonatomic, strong) UIImageView *headImageView;
+@property(nonatomic, strong) UILabel *nameLabel;
 + (CGFloat)getHeight;
 - (void)setData:(TUIAddCellData *)data;
 @end

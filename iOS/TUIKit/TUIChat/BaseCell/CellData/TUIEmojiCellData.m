@@ -13,11 +13,9 @@
 - (NSString *)displayName {
     if (IS_NOT_EMPTY_NSSTRING(self.friendRemark)) {
         return self.friendRemark;
-    }
-    else if (IS_NOT_EMPTY_NSSTRING(self.nickName)) {
+    } else if (IS_NOT_EMPTY_NSSTRING(self.nickName)) {
         return self.nickName;
-    }
-    else {
+    } else {
         return self.userID;
     }
     return @"";

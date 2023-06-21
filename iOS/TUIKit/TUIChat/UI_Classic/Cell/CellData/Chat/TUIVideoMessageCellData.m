@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIVideoMessageCellData.h"
@@ -13,10 +14,10 @@
 #define TVideo_Block_Response @"TVideo_Block_Response";
 
 @interface TUIVideoMessageCellData ()
-@property (nonatomic, strong) NSString *videoUrl;
-@property (nonatomic, assign) BOOL isDownloadingSnapshot;
-@property (nonatomic, assign) BOOL isDownloadingVideo;
-@property (nonatomic, copy) TUIVideoMessageDownloadCallback onFinish;
+@property(nonatomic, strong) NSString *videoUrl;
+@property(nonatomic, assign) BOOL isDownloadingSnapshot;
+@property(nonatomic, assign) BOOL isDownloadingVideo;
+@property(nonatomic, copy) TUIVideoMessageDownloadCallback onFinish;
 @end
 
 @implementation TUIVideoMessageCellData
@@ -35,7 +36,7 @@
 
     videoData.snapshotItem = [[TUISnapshotItem alloc] init];
     videoData.snapshotItem.uuid = elem.snapshotUUID;
-//    videoData.snapshotItem.type = elem.snaps;
+    //    videoData.snapshotItem.type = elem.snaps;
     videoData.snapshotItem.length = elem.snapshotSize;
     videoData.snapshotItem.size = CGSizeMake(elem.snapshotWidth, elem.snapshotHeight);
     videoData.reuseId = TVideoMessageCell_ReuseId;
@@ -46,16 +47,13 @@
     return TIMCommonLocalizableString(TUIkitMessageTypeVideo);
 }
 
-- (Class)getReplyQuoteViewDataClass
-{
+- (Class)getReplyQuoteViewDataClass {
     return NSClassFromString(@"TUIVideoReplyQuoteViewData");
 }
 
-- (Class)getReplyQuoteViewClass
-{
+- (Class)getReplyQuoteViewClass {
     return NSClassFromString(@"TUIVideoReplyQuoteView");
 }
-
 
 - (instancetype)initWithDirection:(TMsgDirection)direction {
     self = [super initWithDirection:direction];
@@ -67,15 +65,12 @@
     return self;
 }
 
-- (void)downloadThumb:(TUIVideoMessageDownloadCallback)finish
-{
+- (void)downloadThumb:(TUIVideoMessageDownloadCallback)finish {
     self.onFinish = finish;
     [self downloadThumb];
 }
 
-- (void)downloadThumb
-{
-
+- (void)downloadThumb {
     BOOL isExist = NO;
     NSString *path = [self getSnapshotPath:&isExist];
     if (isExist) {
@@ -83,145 +78,147 @@
         return;
     }
 
-    if(self.isDownloadingSnapshot) {
+    if (self.isDownloadingSnapshot) {
         return;
     }
     self.isDownloadingSnapshot = YES;
 
-
-    @weakify(self)
+    @weakify(self);
     V2TIMMessage *imMsg = self.innerMessage;
     if (imMsg.elemType == V2TIM_ELEM_TYPE_VIDEO) {
-        [imMsg.videoElem downloadSnapshot:path progress:^(NSInteger curSize, NSInteger totalSize) {
-            [self updateThumbProgress:curSize * 100 / totalSize];
-        } succ:^{
-            @strongify(self)
-            self.isDownloadingSnapshot = NO;
-            [self updateThumbProgress:100];
-            [self decodeThumb];
-        } fail:^(int code, NSString *msg) {
-            @strongify(self)
-            self.isDownloadingSnapshot = NO;
-        }];
+        // Avoid large files that slow down callback progress.
+        [self updateThumbProgress:1];
+        [imMsg.videoElem downloadSnapshot:path
+            progress:^(NSInteger curSize, NSInteger totalSize) {
+              [self updateThumbProgress:MAX(1, curSize * 100 / totalSize)];
+            }
+            succ:^{
+              @strongify(self);
+              self.isDownloadingSnapshot = NO;
+              [self updateThumbProgress:100];
+              [self decodeThumb];
+            }
+            fail:^(int code, NSString *msg) {
+              @strongify(self);
+              self.isDownloadingSnapshot = NO;
+            }];
     }
 }
 
-- (void)updateThumbProgress:(NSUInteger)progress
-{
+- (void)updateThumbProgress:(NSUInteger)progress {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.thumbProgress = progress;
+      self.thumbProgress = progress;
     });
 }
 
-- (void)decodeThumb
-{
+- (void)decodeThumb {
     BOOL isExist = NO;
     NSString *path = [self getSnapshotPath:&isExist];
     if (!isExist) {
         return;
     }
-    @weakify(self)
-    [TUITool asyncDecodeImage:path complete:^(NSString *path, UIImage *image) {
-        @strongify(self)
-        @weakify(self)
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self)
-            self.thumbImage = image;
-            self.thumbProgress = 100;
-            if (self.onFinish) {
-                self.onFinish();
-            }
-        });
-    }];
+    @weakify(self);
+    [TUITool asyncDecodeImage:path
+                     complete:^(NSString *path, UIImage *image) {
+                       @strongify(self);
+                       @weakify(self);
+                       dispatch_async(dispatch_get_main_queue(), ^{
+                         @strongify(self);
+                         self.thumbImage = image;
+                         self.thumbProgress = 100;
+                         if (self.onFinish) {
+                             self.onFinish();
+                         }
+                       });
+                     }];
 }
 
-- (void)downloadVideo
-{
+- (void)downloadVideo {
     BOOL isExist = NO;
     NSString *path = [self getVideoPath:&isExist];
     if (isExist) {
         return;
     }
 
-    if(self.isDownloadingVideo) {
+    if (self.isDownloadingVideo) {
         return;
     }
     self.isDownloadingVideo = YES;
 
-    @weakify(self)
+    @weakify(self);
     V2TIMMessage *imMsg = self.innerMessage;
     if (imMsg.elemType == V2TIM_ELEM_TYPE_VIDEO) {
-        [imMsg.videoElem downloadVideo:path progress:^(NSInteger curSize, NSInteger totalSize) {
-            @strongify(self)
-            [self updateVideoProgress:curSize * 100 / totalSize];
-        } succ:^{
-            @strongify(self)
-            self.isDownloadingVideo = NO;
-            [self updateThumbProgress:100];
-            dispatch_async(dispatch_get_main_queue(), ^{
+        [imMsg.videoElem downloadVideo:path
+            progress:^(NSInteger curSize, NSInteger totalSize) {
+              @strongify(self);
+              [self updateVideoProgress:curSize * 100 / totalSize];
+            }
+            succ:^{
+              @strongify(self);
+              self.isDownloadingVideo = NO;
+              [self updateVideoProgress:100];
+              dispatch_async(dispatch_get_main_queue(), ^{
                 self.videoPath = path;
-            });
-        } fail:^(int code, NSString *msg) {
-            @strongify(self)
-            self.isDownloadingVideo = NO;
-        }];
+              });
+            }
+            fail:^(int code, NSString *msg) {
+              @strongify(self);
+              self.isDownloadingVideo = NO;
+            }];
     }
 }
 
-- (void)updateVideoProgress:(NSUInteger)progress
-{
+- (void)updateVideoProgress:(NSUInteger)progress {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.videoProgress = progress;
+      self.videoProgress = progress;
     });
 }
 
-- (void)getVideoUrl:(void(^)(NSString *url))urlCallBack {
+- (void)getVideoUrl:(void (^)(NSString *url))urlCallBack {
     if (!urlCallBack) {
         return;
     }
     if (self.videoUrl) {
         urlCallBack(self.videoUrl);
     }
-    @weakify(self)
+    @weakify(self);
     V2TIMMessage *imMsg = self.innerMessage;
     if (imMsg.elemType == V2TIM_ELEM_TYPE_VIDEO) {
         [imMsg.videoElem getVideoUrl:^(NSString *url) {
-            @strongify(self)
-            self.videoUrl = url;
-            urlCallBack(self.videoUrl);
+          @strongify(self);
+          self.videoUrl = url;
+          urlCallBack(self.videoUrl);
         }];
     }
 }
 
-- (BOOL)isVideoExist
-{
+- (BOOL)isVideoExist {
     BOOL isExist;
     [self getVideoPath:&isExist];
     return isExist;
 }
 
-- (NSString *)getVideoPath:(BOOL *)isExist
-{
+- (NSString *)getVideoPath:(BOOL *)isExist {
     NSString *path = nil;
     BOOL isDir = NO;
     *isExist = NO;
-    if(self.direction == MsgDirectionOutgoing){
+    if (self.direction == MsgDirectionOutgoing) {
         if (_videoPath && _videoPath.lastPathComponent.length) {
             path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _videoPath.lastPathComponent];
-            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                if(!isDir){
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+                if (!isDir) {
                     *isExist = YES;
                 }
             }
         }
     }
 
-    if(!*isExist){
-        if(_videoItem){
+    if (!*isExist) {
+        if (_videoItem) {
             if (_videoItem.uuid && _videoItem.uuid.length && _videoItem.type && _videoItem.type.length) {
                 path = [NSString stringWithFormat:@"%@%@.%@", TUIKit_Video_Path, _videoItem.uuid, _videoItem.type];
-                if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                    if(!isDir){
+                if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+                    if (!isDir) {
                         *isExist = YES;
                     }
                 }
@@ -235,29 +232,28 @@
     return path;
 }
 
-- (NSString *)getSnapshotPath:(BOOL *)isExist
-{
+- (NSString *)getSnapshotPath:(BOOL *)isExist {
     NSString *path = nil;
     BOOL isDir = NO;
     *isExist = NO;
-    if(self.direction == MsgDirectionOutgoing){
+    if (self.direction == MsgDirectionOutgoing) {
         if (_snapshotPath && _snapshotPath.length) {
             path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _snapshotPath.lastPathComponent];
-            if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                if(!isDir){
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+                if (!isDir) {
                     *isExist = YES;
                 }
             }
         }
     }
 
-    if(!*isExist){
-        if(_snapshotItem){
+    if (!*isExist) {
+        if (_snapshotItem) {
             if (_snapshotItem.uuid && _snapshotItem.uuid.length) {
                 path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _snapshotItem.uuid];
                 path = [TUIKit_Video_Path stringByAppendingString:_snapshotItem.uuid];
-                if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]){
-                    if(!isDir){
+                if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+                    if (!isDir) {
                         *isExist = YES;
                     }
                 }
@@ -268,32 +264,27 @@
     return path;
 }
 
-- (CGSize)contentSize
-{
+- (CGSize)contentSize {
     CGSize size = CGSizeZero;
     BOOL isDir = NO;
-    if(![self.snapshotPath isEqualToString:@""] &&
-       [[NSFileManager defaultManager] fileExistsAtPath:self.snapshotPath isDirectory:&isDir]){
-        if(!isDir){
+    if (![self.snapshotPath isEqualToString:@""] && [[NSFileManager defaultManager] fileExistsAtPath:self.snapshotPath isDirectory:&isDir]) {
+        if (!isDir) {
             size = [UIImage imageWithContentsOfFile:self.snapshotPath].size;
         }
-    }
-    else{
+    } else {
         size = self.snapshotItem.size;
     }
-    if(CGSizeEqualToSize(size, CGSizeZero)){
+    if (CGSizeEqualToSize(size, CGSizeZero)) {
         return size;
     }
-    if(size.height > size.width){
+    if (size.height > size.width) {
         size.width = size.width / size.height * TVideoMessageCell_Image_Height_Max;
         size.height = TVideoMessageCell_Image_Height_Max;
-    }
-    else{
+    } else {
         size.height = size.height / size.width * TVideoMessageCell_Image_Width_Max;
         size.width = TVideoMessageCell_Image_Width_Max;
     }
     return size;
 }
-
 
 @end

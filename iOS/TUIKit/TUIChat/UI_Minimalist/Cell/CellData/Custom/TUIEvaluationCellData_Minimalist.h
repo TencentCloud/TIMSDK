@@ -3,6 +3,7 @@
 //  TUIChat
 //
 //  Created by xia on 2022/6/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <TIMCommon/TUIBubbleMessageCellData_Minimalist.h>
@@ -11,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIEvaluationCellData_Minimalist : TUIBubbleMessageCellData_Minimalist
 
-@property (nonatomic, assign) NSInteger score;
-@property (nonatomic, copy) NSString *desc;
-@property (nonatomic, copy) NSString *comment;
+@property(nonatomic, assign) NSInteger score;
+@property(nonatomic, copy) NSString *desc;
+@property(nonatomic, copy) NSString *comment;
 
 @end
 

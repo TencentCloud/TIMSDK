@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
  *  本文件声明了用于实现会话单元数据源的模块。
@@ -5,8 +8,9 @@
  *  数据源中还包含了部分的业务逻辑，如获取并生成消息概览（subTitle），更新会话信息（群消息或用户消息更新）等逻辑。
  *
  *  This file declares the modules used to implement the conversation unit data source.
- *  The conversation unit data source (hereinafter referred to as the "data source") contains a series of information and data required for the display of the conversation unit, which will be described further below.
- *  The data source also contains some business logic, such as getting and generating message overview (subTitle), updating conversation information (group message or user message update) and other logic.
+ *  The conversation unit data source (hereinafter referred to as the "data source") contains a series of information and data required for the display of the
+ * conversation unit, which will be described further below. The data source also contains some business logic, such as getting and generating message overview
+ * (subTitle), updating conversation information (group message or user message update) and other logic.
  */
 
 #import <TIMCommon/TIMCommonModel.h>
@@ -15,11 +19,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
-    TUIConversationOnlineStatusUnknown  = 0,
-    TUIConversationOnlineStatusOnline   = 1,
-    TUIConversationOnlineStatusOffline  = 2,
+    TUIConversationOnlineStatusUnknown = 0,
+    TUIConversationOnlineStatusOnline = 1,
+    TUIConversationOnlineStatusOffline = 2,
 };
-
 
 /**
  * 【模块名称】会话单元数据源（TUIConversationCellData）
@@ -46,28 +49,28 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
  *  5. Conversation time (receive/send time of the latest message).
  *  6. Conversation unread count.
  *  7. Conversation top logo.
- *  The data source also contains some business logic, such as getting and generating message overview (subTitle), updating conversation information (group message or user message update) and other logic.
+ *  The data source also contains some business logic, such as getting and generating message overview (subTitle), updating conversation information (group
+ * message or user message update) and other logic.
  */
 @interface TUIConversationCellData : TUICommonCellData
 
-@property (nonatomic, strong) NSString *conversationID;
+@property(nonatomic, strong) NSString *conversationID;
 
-@property (nonatomic, strong) NSString *groupID;
+@property(nonatomic, strong) NSString *groupID;
 
-@property (nonatomic, strong) NSString *groupType;
+@property(nonatomic, strong) NSString *groupType;
 
-@property (nonatomic, strong) NSString *userID;
+@property(nonatomic, strong) NSString *userID;
 
-@property (nonatomic, strong) NSString *title;
+@property(nonatomic, strong) NSString *title;
 
-@property (nonatomic, strong) NSString *faceUrl;
+@property(nonatomic, strong) NSString *faceUrl;
 
-@property (nonatomic, strong) UIImage *avatarImage;
+@property(nonatomic, strong) UIImage *avatarImage;
 
-@property (nonatomic, strong) NSString *draftText;
+@property(nonatomic, strong) NSString *draftText;
 
-@property (nonatomic, assign) int unreadCount;
-
+@property(nonatomic, assign) int unreadCount;
 
 /**
  *  会话消息概览（下标题）
@@ -79,16 +82,17 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
  *  Overview of conversation messages (sub title)
  *  The overview is responsible for displaying the content/type of the latest message for the corresponding conversation.
  *  When the latest message is a text message/system message, the content of the overview is the text content of the message
- *  When the latest message is a multimedia message, the content of the overview is in the corresponding multimedia form, such as: "[Animation Expression]" / "[File]" / "[Voice]" / "[Picture]" / "[Video]", etc.
- *  If there is a draft in the current conversation, the overview content is: "[Draft]XXXXX", where XXXXX is the draft content.
+ *  When the latest message is a multimedia message, the content of the overview is in the corresponding multimedia form, such as: "[Animation Expression]" /
+ * "[File]" / "[Voice]" / "[Picture]" / "[Video]", etc. If there is a draft in the current conversation, the overview content is: "[Draft]XXXXX", where XXXXX is
+ * the draft content.
  */
-@property (nonatomic, strong) NSMutableAttributedString *subTitle;
+@property(nonatomic, strong) NSMutableAttributedString *subTitle;
 
 /**
  *  群@ 消息 seq 列表
  *  Sequence list of group-at message
  */
-@property (nonatomic, strong) NSMutableArray<NSNumber *> *atMsgSeqs;
+@property(nonatomic, strong) NSMutableArray<NSNumber *> *atMsgSeqs;
 
 /**
  *  最新消息时间
@@ -97,7 +101,7 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
  *  The time of the latest message
  *  Recording the receive/send time of the latest message in the conversation.
  */
-@property (nonatomic, strong) NSDate *time;
+@property(nonatomic, strong) NSDate *time;
 
 /**
  *  会话置顶位
@@ -106,7 +110,7 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
  *  The flag indicating whether the session is pinned
  *  YES: Conversation is pinned; NO: Conversation not pinned
  */
-@property (nonatomic, assign) BOOL isOnTop;
+@property(nonatomic, assign) BOOL isOnTop;
 
 /**
  * 显示消息多选flag
@@ -117,67 +121,92 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
  *
  * Indicates whether to display the message checkbox
  * In the conversation list, the message checkbox is not displayed by default.
- * In the message forwarding scenario, the list cell is multiplexed to the select conversation page. When the "Multiple Choice" button is clicked, the conversation list becomes multi-selectable.
- * YES: Multiple selection is enable, multiple selection views are displayed; NO: Multiple selection is disable, the default view is displayed
+ * In the message forwarding scenario, the list cell is multiplexed to the select conversation page. When the "Multiple Choice" button is clicked, the
+ * conversation list becomes multi-selectable. YES: Multiple selection is enable, multiple selection views are displayed; NO: Multiple selection is disable, the
+ * default view is displayed
  */
-@property (nonatomic, assign) BOOL showCheckBox;
+@property(nonatomic, assign) BOOL showCheckBox;
+
+/**
+ * 是否不允许选中 flag，默认是 NO
+ * Indicates whether the current message is disable selected, the default is NO
+ */
+@property(nonatomic, assign) BOOL disableSelected;
 
 /**
  * 显示是否选中 flag，默认是 NO
  * Indicates whether the current message is selected, the default is NO
  */
-@property (nonatomic, assign) BOOL selected;
+@property(nonatomic, assign) BOOL selected;
+
+/**
+ * 是否精简模式显示，默认是 NO
+ * Indicates whether the cell is displayed in lite mode, the default is NO
+ */
+@property(nonatomic, assign) BOOL isLiteMode;
 
 /**
  *  消息是否免打扰
  *  Whether the current conversation is marked as do-not-disturb for new messages
  */
-@property (nonatomic, assign) BOOL isNotDisturb;
+@property(nonatomic, assign) BOOL isNotDisturb;
 
 /**
  * 会话排序的 orderKey
  * key by which to sort the conversation list
  */
-@property (nonatomic, assign) NSUInteger orderKey;
+@property(nonatomic, assign) NSUInteger orderKey;
+
+/**
+ * 会话分组列表 conversation group list
+ * conversation group list
+ */
+@property(nonatomic, strong) NSArray *conversationGroupList;
+
+/**
+ * 会话分组列表 conversation mark list
+ * conversation mark list
+ */
+@property(nonatomic, strong) NSArray *conversationMarkList;
 
 /**
  * 在线状态
  * The user's online status
  */
-@property (nonatomic, assign) TUIConversationOnlineStatus onlineStatus;
-
+@property(nonatomic, assign) TUIConversationOnlineStatus onlineStatus;
 
 /**
  * 会话标记- 当前会话被标记为未读
  * Conversation Mark -  The current conversation is marked as unread
  */
-@property (nonatomic, assign) BOOL isMarkAsUnread;
+@property(nonatomic, assign) BOOL isMarkAsUnread;
 
 /**
  * 会话标记- 当前会话被标记为隐藏
  * Conversation Mark - The current conversation is marked as hidden
  */
-@property (nonatomic, assign) BOOL isMarkAsHide;
+@property(nonatomic, assign) BOOL isMarkAsHide;
 
 /**
  * 会话标记- 当前会话被标记为折叠
  * Conversation Mark - The current conversation is marked as folded
  */
-@property (nonatomic, assign) BOOL isMarkAsFolded;
+@property(nonatomic, assign) BOOL isMarkAsFolded;
 
 /**
  * 会话标记- 会话折叠，当存在被折叠的会话时，本地会产生一条折叠群组去收纳他们，此标记是折叠群组标记
- * Conversation Mark - Conversation folded, when there are folded conversations, a folded group will be generated locally to accommodate them, this tag is the folded group tag
+ * Conversation Mark - Conversation folded, when there are folded conversations, a folded group will be generated locally to accommodate them, this tag is the
+ * folded group tag
  */
-@property (nonatomic, assign) BOOL isLocalConversationFoldList;
+@property(nonatomic, assign) BOOL isLocalConversationFoldList;
 
 /**
  * 会话折叠的子标题： 格式为  “群名 : 最后一条消息”
  * Conversation collapsed subtitle: in the format "group name: last message"
  */
-@property (nonatomic, strong) NSMutableAttributedString *foldSubTitle;
+@property(nonatomic, strong) NSMutableAttributedString *foldSubTitle;
 
-@property (nonatomic, strong) V2TIMMessage *lastMessage;
+@property(nonatomic, strong) V2TIMMessage *lastMessage;
 
 + (BOOL)isMarkedByHideType:(NSArray *)markList;
 

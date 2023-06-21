@@ -1,5 +1,8 @@
-#import "TUIFileMessageCellData_Minimalist.h"
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 #import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
+#import "TUIFileMessageCellData_Minimalist.h"
 
 @interface TUIFileMessageCell_Minimalist : TUIBubbleMessageCell_Minimalist
 
@@ -9,7 +12,7 @@
  *
  *  File bubble view, used to wrap messages on the UI
  */
-@property (nonatomic, strong) UIImageView *bubble;
+@property(nonatomic, strong) UIImageView *bubble;
 
 /**
  *  文件名标签
@@ -18,7 +21,7 @@
  *  Label for displaying filename
  *  As the main label of the file message, it displays the file information (including the suffix).
  */
-@property (nonatomic, strong) UILabel *fileName;
+@property(nonatomic, strong) UILabel *fileName;
 
 /**
  *  文件长度
@@ -27,19 +30,19 @@
  *  Label for displaying file size
  *  As the secondary label of the file message, it further displays the secondary information of the file.
  */
-@property (nonatomic, strong) UILabel *length;
+@property(nonatomic, strong) UILabel *length;
 
 /**
  *  文件图标
  *  File icon
  */
-@property (nonatomic, strong) UIImageView *fileImage;
+@property(nonatomic, strong) UIImageView *fileImage;
 
 /**
  *  下载图标
  *  Download icon
  */
-@property (nonatomic, strong) UIImageView *downloadImage;
+@property(nonatomic, strong) UIImageView *downloadImage;
 
 @property TUIFileMessageCellData_Minimalist *fileData;
 

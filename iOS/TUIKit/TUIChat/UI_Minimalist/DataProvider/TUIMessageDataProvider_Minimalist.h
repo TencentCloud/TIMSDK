@@ -1,4 +1,7 @@
 
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <Foundation/Foundation.h>
 #import "TUIMessageBaseDataProvider.h"
 
@@ -14,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class TUIChatCallingDataProvider;
 
 @interface TUIMessageDataProvider_Minimalist : TUIMessageBaseDataProvider
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback;
+- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;
 
 + (NSMutableArray *)getCustomMessageInfo;
 
@@ -22,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TUIChatCallingDataProvider *)callingDataProvider;
 
-+ (TUIMessageCellData * __nullable)getCellData:(V2TIMMessage *)message;
++ (TUIMessageCellData *__nullable)getCellData:(V2TIMMessage *)message;
 
 + (nullable TUIMessageCellData *)getSystemMsgFromDate:(NSDate *)date;
 

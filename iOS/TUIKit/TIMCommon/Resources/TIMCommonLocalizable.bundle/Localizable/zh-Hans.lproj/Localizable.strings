@@ -23,6 +23,7 @@
 "File" = "文件";
 "Download" = "下载";
 "Unsetted" = "未设置";
+"Show" = "展示";
 
 "Monday" = "星期一";
 "Tuesday" = "星期二";
@@ -42,15 +43,14 @@
 "Delete" = "删除";
 "Revoke" = "撤回";
 "Retry" = "重试";
-"Re-send" = "重发";
-"Make-a-call" = "发起呼叫"; 
+"Re_send" = "重发";
+"Make_a_call" = "发起呼叫";
 "Done" = "完成";
 "All" = "所有人";
 "Agreed" = "已同意";
 "Disclined" = "已拒绝";
 "Agree" = "同意";
-"Have-been-sent" = "已发送";
-"View-the-original" = "查看原图";
+"Have_been_sent" = "已发送";
 
 "OK" = "好";
 "None" = "无";
@@ -85,11 +85,6 @@
 "ChatsNewChatText"    = "发起会话";
 "ChatsNewGroupText"  = "创建群聊";
 "ChatsSelectContact" = "选择联系人";
-"ChatsCreatePrivateGroupTips" = "创建讨论组";
-"ChatsCreateGroupTips" = "创建群聊";
-"ChatsCreateChatRoomTips" = "创建聊天室";
-"ChatsCreateDefaultTips" = "创建群组";
-"ChatsCreateCommunityTips" = "创建社群";
 
 "GroupJoin" = "添加群组";
 "GroupRequestJoinGroupFormat" = "%@ 申请加入群聊";
@@ -195,7 +190,8 @@
 "TUIKitGroupProfileMemberCount" = "%d 人";
 "TUIKitGroupProfileMemberCountlu" = "%lu人";
 "TUIKitGroupProfileType" = "群类型";
-"TUIKitGroupProfileJoinType" = "加群方式";
+"TUIKitGroupProfileJoinType" = "主动加群方式";
+"TUIKitGroupProfileInviteType" = "邀请进群方式";
 "TUIKitGroupProfileInviteJoin" = "邀请加入";
 "TUIKitGroupProfileAutoApproval" = "自动审批";
 "TUIKitGroupProfileAlias" = "我的群昵称";
@@ -204,6 +200,7 @@
 "TUIKitGroupProfileDeleteAndExit" = "删除并退出";
 "TUIKitGroupProfileDissolve" = "解散该群";
 "TUIKitGroupProfileJoinDisable" = "禁止加群";
+"TUIKitGroupProfileInviteDisable" = "禁止邀请";
 "TUIKitGroupProfileAdminApprove" = "管理员审批";
 "TUIKitGroupProfileEditAlias" = "修改我的群昵称";
 "TUIKitGroupProfileEditAliasDesc" = "仅限中文、字母、数字和下划线";
@@ -229,7 +226,7 @@
 "TUIKitMessageTipsYouRecallMessage" = "您撤回了一条消息";
 "TUIKitMessageTipsReEditMessage" = "重新编辑";
 "TUIKitMessageTipsRecallMessageFormat" = "\"%@\"撤回了一条消息";
-"TUIkitMessageTipsOthersRecallMessage" = "对方撤回了一条消息";
+"TUIKitMessageTipsOthersRecallMessage" = "对方撤回了一条消息";
 "TUIKitMessageTipsJoinGroupFormat" = "\"%@\"加入群组";
 "TUIKitMessageTipsInviteJoinGroupFormat" = "\"%@\"邀请\"%@\"加入群组";
 "TUIKitMessageTipsLeaveGroupFormat" = "\"%@\"退出了群聊";
@@ -306,6 +303,7 @@
 "TUIKitConversationTipsAtMe" = "[有人@我]";
 "TUIKitConversationTipsAtAll" = "[@所有人]";
 "TUIKitConversationTipsAtMeAndAll" = "[有人@我][@所有人]";
+"TUIKitConversationTipsDelete" = "此会话及聊天记录将全部被删除";
 
 "TUIKitPublicGroup" = "公开群";
 "TUIKitWorkGroup" = "讨论组";
@@ -456,8 +454,8 @@
 "StickyonTop" = "置顶";
 "CancelStickonTop" = "取消置顶";
 "ClearHistoryChatMessage" = "清空消息";
-"MarkAsRead" = "标记已读";
-"MarkAsUnRead" = "标记未读";
+"MarkAsRead" = "标为已读";
+"MarkAsUnRead" = "标为未读";
 "MarkHide" = "不显示";
 "MinimizeGroup" = "会话折叠";
 "More" = "更多";
@@ -637,6 +635,42 @@
 "TUIGroupNoteNotDatePickerSAT" = " 周六";
 "TUIGroupNoteNotDatePickerSUN" = " 周日";
 
+"TUIConversationGroupAll" = "全部";
+"TUIConversationGroupUnread" = "未读";
+"TUIConversationGroupAtMe" = "@ 我";
+"TUIConversationGroupGroup" = "群聊";
+"TUIConversationGroupC2C" = "单聊";
+"TUIConversationGroupInputGroupName" = "请输入分组名";
+"TUIConversationGroupCreateGroup" = "创建会话分组";
+"TUIConversationGroupNewGroup" = "新增分组";
+"TUIConversationGroupAddGroup" = "添加分组";
+"TUIConversationGroupMoveGroup" = "移动分组";
+"TUIConversationGroupRemoveGroup" = "移除分组";
+"TUIConversationGroupShowGroup" = "展示会话分组";
+"TUIConversationGroupHideGroup" = "隐藏会话分组";
+"TUIConversationGroupEditGroup" = "会话分组设置";
+"TUIConversationGroupEdit" = "编辑";
+"TUIConversationGroupSave" = "保存";
+"TUIConversationGroupSaveSucc" = "分组保存成功";
+"TUIConversationGroupCreate" = "创建";
+"TUIConversationGroupNameIsNull" = "分组名不能为空！";
+"TUIConversationGroupNameIsInvalid" = "分组名不能是预置的默认分组名";
+"TUIConversationGroupConversationIsNull" = "会话不能为空！";
+"TUIConversationGroupCreateSucc" = "分组创建成功";
+"TUIConversationGroupModifySucc" = "分组修改成功";
+"TUIConversationGroupName" = "分组名称";
+"TUIConversationGroupIncludeConversation" = "包含会话";
+"TUIConversationGroupAddConversation" = "添加会话";
+"TUIConversationGroup" = "会话分组";
+"TUIConversationGroupManager" = "管理";
+"TUIConversationGroupSelectGroup" = "选择会话分组";
+"TUIConversationGroupUnlogined" = "未登录，保存失败！";
+
+"TUIConversationMark" = "标记";
+"TUIConversationMarkCancel" = "取消标记";
+
+"TUIConversationNone" = "暂无%@的会话";
+
 //----timApp---
 "TIMAppMainTitle" = "腾讯云·IM";
 "TIMAppMainConnectingTitle" = "连接中...";
@@ -674,3 +708,9 @@
 "TIMAppCancel" = "取消";
 "TIMChangeLanguage" = "切换语言";
 //----timApp---
+"TUIKitTickledMe" = "我";
+"TUIKitTickledActionVaule" = "拍了拍";
+"TUIKitTickledMyself" = "自己";
+"TUIKitImageViewOrigin" = "查看原图";
+"TUIGroupCreateTipsMessage" = "创建群组";
+"TUICommunityCreateTipsMessage" = "创建社群";

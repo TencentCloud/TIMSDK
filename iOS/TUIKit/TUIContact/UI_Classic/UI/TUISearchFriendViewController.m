@@ -6,22 +6,20 @@
 //  Copyright © 2016年 AlexiChen. All rights reserved.
 //
 #import "TUISearchFriendViewController.h"
-#import "TUIFriendRequestViewController.h"
 #import <TUICore/TUIThemeManager.h>
 #import "TUIDefine.h"
+#import "TUIFriendRequestViewController.h"
 
 @interface AddFriendUserView : UIView
-@property (nonatomic) V2TIMUserFullInfo *profile;
+@property(nonatomic) V2TIMUserFullInfo *profile;
 @end
 
-@implementation AddFriendUserView
-{
+@implementation AddFriendUserView {
     UILabel *_idLabel;
-    UIView  *_line;
+    UIView *_line;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
 
     _idLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -31,12 +29,10 @@
     _line.backgroundColor = [UIColor grayColor];
     [self addSubview:_line];
 
-
     return self;
 }
 
-- (void)setProfile:(V2TIMUserFullInfo *)profile
-{
+- (void)setProfile:(V2TIMUserFullInfo *)profile {
     _profile = profile;
     if (_profile) {
         _idLabel.text = profile.userID;
@@ -51,22 +47,20 @@
 
 @end
 
-@interface TUISearchFriendViewController()<UISearchResultsUpdating>
+@interface TUISearchFriendViewController () <UISearchResultsUpdating>
 
-@property (nonatomic,strong) AddFriendUserView *userView;;
+@property(nonatomic, strong) AddFriendUserView *userView;
+;
 
 @end
 
-
-
-@interface TUISearchFriendViewController() <UISearchControllerDelegate,UISearchResultsUpdating,UISearchResultsUpdating>
+@interface TUISearchFriendViewController () <UISearchControllerDelegate, UISearchResultsUpdating, UISearchResultsUpdating>
 
 @end
 
 @implementation TUISearchFriendViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     self.title = TIMCommonLocalizableString(ContactsAddFriends);
 
@@ -88,18 +82,16 @@
     self.userView = [[AddFriendUserView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.userView];
 
-    UITapGestureRecognizer *singleFingerTap =
-    [[UITapGestureRecognizer alloc] initWithTarget:self
-                                            action:@selector(handleUserTap:)];
+    UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleUserTap:)];
     [self.userView addGestureRecognizer:singleFingerTap];
 }
 
-- (void)setSearchIconCenter:(BOOL)center
-{
+- (void)setSearchIconCenter:(BOOL)center {
     if (center) {
-        CGSize size = [self.searchController.searchBar.placeholder sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14.0]}];
+        CGSize size = [self.searchController.searchBar.placeholder sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14.0]}];
         CGFloat width = size.width + 60;
-        [self.searchController.searchBar setPositionAdjustment:UIOffsetMake(0.5  *(self.searchController.searchBar.bounds.size.width - width), 0) forSearchBarIcon:UISearchBarIconSearch];
+        [self.searchController.searchBar setPositionAdjustment:UIOffsetMake(0.5 * (self.searchController.searchBar.bounds.size.width - width), 0)
+                                              forSearchBarIcon:UISearchBarIconSearch];
     } else {
         [self.searchController.searchBar setPositionAdjustment:UIOffsetZero forSearchBarIcon:UISearchBarIconSearch];
     }
@@ -107,13 +99,11 @@
 
 #pragma mark - UISearchControllerDelegate
 
-- (void)willPresentSearchController:(UISearchController *)searchController
-{
+- (void)willPresentSearchController:(UISearchController *)searchController {
     [self setSearchIconCenter:NO];
 }
 
-- (void)didPresentSearchController:(UISearchController *)searchController
-{
+- (void)didPresentSearchController:(UISearchController *)searchController {
     NSLog(@"didPresentSearchController");
     [self.view addSubview:self.searchController.searchBar];
 
@@ -121,13 +111,11 @@
     self.userView.mm_top(self.searchController.searchBar.mm_maxY).mm_height(44).mm_width(Screen_Width);
 }
 
-- (void)willDismissSearchController:(UISearchController *)searchController
-{
+- (void)willDismissSearchController:(UISearchController *)searchController {
     [self setSearchIconCenter:YES];
 }
 
-- (CGFloat)safeAreaTopGap
-{
+- (CGFloat)safeAreaTopGap {
     NSNumber *gap;
     if (gap == nil) {
         if (@available(iOS 11, *)) {
@@ -139,21 +127,22 @@
     return gap.floatValue;
 }
 
-- (void)didDismissSearchController:(UISearchController *)searchController
-{
+- (void)didDismissSearchController:(UISearchController *)searchController {
     NSLog(@"didDismissSearchController");
     self.searchController.searchBar.mm_top(0);
     self.userView.profile = nil;
 }
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    NSString *inputStr = searchController.searchBar.text ;
+    NSString *inputStr = searchController.searchBar.text;
     NSLog(@"serach %@", inputStr);
-    [[V2TIMManager sharedInstance] getUsersInfo:@[inputStr] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        self.userView.profile = infoList.firstObject;
-    } fail:^(int code, NSString *msg) {
-        self.userView.profile = nil;
-    }];
+    [[V2TIMManager sharedInstance] getUsersInfo:@[ inputStr ]
+        succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+          self.userView.profile = infoList.firstObject;
+        }
+        fail:^(int code, NSString *msg) {
+          self.userView.profile = nil;
+        }];
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
@@ -165,10 +154,8 @@
     self.searchController.active = NO;
 }
 
-- (void)handleUserTap:(id)sender
-{
-    if (self.userView.profile.userID.length > 0)
-    {
+- (void)handleUserTap:(id)sender {
+    if (self.userView.profile.userID.length > 0) {
         TUIFriendRequestViewController *frc = [[TUIFriendRequestViewController alloc] init];
         frc.profile = self.userView.profile;
         [self.navigationController pushViewController:frc animated:YES];

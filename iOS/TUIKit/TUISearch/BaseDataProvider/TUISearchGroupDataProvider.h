@@ -3,6 +3,7 @@
 //  Pods
 //
 //  Created by harvy on 2021/3/30.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,55 +14,53 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TUISearchGroupMatchField) {
-    TUISearchGroupMatchFieldGroupID         = 0x1 << 1,
-    TUISearchGroupMatchFieldGroupName       = 0x1 << 2,
-    TUISearchGroupMatchFieldMember          = 0x1 << 3,
+    TUISearchGroupMatchFieldGroupID = 0x1 << 1,
+    TUISearchGroupMatchFieldGroupName = 0x1 << 2,
+    TUISearchGroupMatchFieldMember = 0x1 << 3,
 };
 
 typedef NS_ENUM(NSInteger, TUISearchGroupMemberMatchField) {
-    TUISearchGroupMemberMatchFieldUserID    = 0x1 << 1,
-    TUISearchGroupMemberMatchFieldNickName  = 0x1 << 2,
-    TUISearchGroupMemberMatchFieldRemark    = 0x1 << 3,
-    TUISearchGroupMemberMatchFieldNameCard  = 0x1 << 4,
+    TUISearchGroupMemberMatchFieldUserID = 0x1 << 1,
+    TUISearchGroupMemberMatchFieldNickName = 0x1 << 2,
+    TUISearchGroupMemberMatchFieldRemark = 0x1 << 3,
+    TUISearchGroupMemberMatchFieldNameCard = 0x1 << 4,
 };
 
-typedef void(^TUISearchGroupResultListSucc)(NSArray<TUISearchGroupResult *> *resultSet);
-typedef void(^TUISearchGroupResultListFail)(NSInteger code, NSString *desc);
+typedef void (^TUISearchGroupResultListSucc)(NSArray<TUISearchGroupResult *> *resultSet);
+typedef void (^TUISearchGroupResultListFail)(NSInteger code, NSString *desc);
 
 #pragma mark - Paramter
 @interface TUISearchGroupParam : NSObject
 
-@property (nonatomic, copy) NSArray<NSString *> *keywordList;
+@property(nonatomic, copy) NSArray<NSString *> *keywordList;
 
-@property (nonatomic, assign) BOOL isSearchGroupID;
-@property (nonatomic, assign) BOOL isSearchGroupName;
-@property (nonatomic, assign) BOOL isSearchGroupMember;
+@property(nonatomic, assign) BOOL isSearchGroupID;
+@property(nonatomic, assign) BOOL isSearchGroupName;
+@property(nonatomic, assign) BOOL isSearchGroupMember;
 
-
-@property (nonatomic, assign) BOOL isSearchMemberUserID;
-@property (nonatomic, assign) BOOL isSearchMemberNickName;
-@property (nonatomic, assign) BOOL isSearchMemberRemark;
-@property (nonatomic, assign) BOOL isSearchMemberNameCard;
+@property(nonatomic, assign) BOOL isSearchMemberUserID;
+@property(nonatomic, assign) BOOL isSearchMemberNickName;
+@property(nonatomic, assign) BOOL isSearchMemberRemark;
+@property(nonatomic, assign) BOOL isSearchMemberNameCard;
 
 @end
 
 #pragma mark - Group member match result
 @interface TUISearchGroupMemberMatchResult : NSObject
 
-@property (nonatomic, strong, readonly) V2TIMGroupMemberFullInfo *memberInfo;
-@property (nonatomic, assign, readonly) TUISearchGroupMemberMatchField memberMatchField;
-@property (nonatomic, copy, readonly) NSString *memberMatchValue;
+@property(nonatomic, strong, readonly) V2TIMGroupMemberFullInfo *memberInfo;
+@property(nonatomic, assign, readonly) TUISearchGroupMemberMatchField memberMatchField;
+@property(nonatomic, copy, readonly) NSString *memberMatchValue;
 
 @end
-
 
 #pragma mark - Group match result
 @interface TUISearchGroupResult : NSObject
 
-@property (nonatomic, strong, readonly) V2TIMGroupInfo *groupInfo;
-@property (nonatomic, assign, readonly) TUISearchGroupMatchField matchField;
-@property (nonatomic, copy, readonly) NSString * __nullable matchValue;
-@property (nonatomic, strong, readonly) NSArray<TUISearchGroupMemberMatchResult *> * __nullable matchMembers;
+@property(nonatomic, strong, readonly) V2TIMGroupInfo *groupInfo;
+@property(nonatomic, assign, readonly) TUISearchGroupMatchField matchField;
+@property(nonatomic, copy, readonly) NSString *__nullable matchValue;
+@property(nonatomic, strong, readonly) NSArray<TUISearchGroupMemberMatchResult *> *__nullable matchMembers;
 
 @end
 

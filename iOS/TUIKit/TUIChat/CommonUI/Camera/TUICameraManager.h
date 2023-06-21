@@ -1,14 +1,15 @@
 
-#import <Foundation/Foundation.h>
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
+
 #import <AVFoundation/AVFoundation.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUICameraManager : NSObject
 
-- (AVCaptureDeviceInput *)switchCamera:(AVCaptureSession *)session
-                                   old:(AVCaptureDeviceInput *)oldinput
-                                   new:(AVCaptureDeviceInput *)newinput;
+- (AVCaptureDeviceInput *)switchCamera:(AVCaptureSession *)session old:(AVCaptureDeviceInput *)oldinput new:(AVCaptureDeviceInput *)newinput;
 
 - (id)resetFocusAndExposure:(AVCaptureDevice *)device;
 

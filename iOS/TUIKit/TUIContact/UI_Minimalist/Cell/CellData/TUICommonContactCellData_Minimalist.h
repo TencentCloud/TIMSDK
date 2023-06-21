@@ -3,6 +3,7 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/7.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -15,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TUIContactOnlineStatus_Minimalist) {
     TUIContactOnlineStatusUnknown_Minimalist = 0,
-    TUIContactOnlineStatusOnline_Minimalist  = 1,
+    TUIContactOnlineStatusOnline_Minimalist = 1,
     TUIContactOnlineStatusOffline_Minimalist = 2
 };
 
@@ -31,13 +32,13 @@ typedef NS_ENUM(NSInteger, TUIContactOnlineStatus_Minimalist) {
 @property NSString *title;
 @property UIImage *avatarImage;
 
-@property (nonatomic, copy) NSString *userID;
-@property (nonatomic, copy) NSString *groupID;
-@property (nonatomic, copy) NSString *groupType;
-@property (nonatomic, copy) NSString *faceUrl;
+@property(nonatomic, copy) NSString *userID;
+@property(nonatomic, copy) NSString *groupID;
+@property(nonatomic, copy) NSString *groupType;
+@property(nonatomic, copy) NSString *faceUrl;
 
 // The flag of indicating the user's online status
-@property (nonatomic, assign) TUIContactOnlineStatus_Minimalist onlineStatus;
+@property(nonatomic, assign) TUIContactOnlineStatus_Minimalist onlineStatus;
 
 @end
 

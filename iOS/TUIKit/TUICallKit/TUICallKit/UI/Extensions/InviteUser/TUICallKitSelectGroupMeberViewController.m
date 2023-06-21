@@ -37,7 +37,6 @@
         _remoteMemberList = [[NSMutableArray alloc] init];
         _selfInfo = [[TUICallKitGroupMemberInfo alloc] init];
         _selfInfo.userId = [TUICallingUserManager getSelfUserId];
-        [self updateMemberList];
     }
     return self;
 }
@@ -66,6 +65,8 @@
     [leftBtn setImage:TIMCommonDynamicImage(@"nav_back_img", defaultImage) forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftBtn];
     self.navigationItem.leftBarButtonItem = leftItem;
+    
+    [self updateMemberList];
 }
 
 - (void)constructViewHierarchy {
@@ -81,6 +82,7 @@
 - (void)updateMemberList {
     NSString *groupId = [[TUICallingStatusManager shareInstance] groupId];
     if (!groupId) {
+        [TUITool makeToast: @"groupId unavailable"];
         return;
     }
     [[V2TIMManager sharedInstance] getGroupMemberList:groupId
@@ -116,7 +118,7 @@
         [self.selectTableView reloadData];
         [self.view layoutIfNeeded];
     } fail:^(int code, NSString *desc) {
-        
+        [TUITool makeToast: @"get group members file"];
     }];
 }
 

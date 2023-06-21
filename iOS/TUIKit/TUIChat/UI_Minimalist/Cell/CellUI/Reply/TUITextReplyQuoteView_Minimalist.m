@@ -3,17 +3,17 @@
 //  TUIChat
 //
 //  Created by harvy on 2021/11/25.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUITextReplyQuoteView_Minimalist.h"
-#import "TUITextReplyQuoteViewData_Minimalist.h"
 #import <TIMCommon/NSString+TUIEmoji.h>
 #import <TUICore/TUIThemeManager.h>
+#import "TUITextReplyQuoteViewData_Minimalist.h"
 
 @implementation TUITextReplyQuoteView_Minimalist
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         _textLabel = [[UILabel alloc] init];
         _textLabel.font = [UIFont systemFontOfSize:10.0];
@@ -24,14 +24,12 @@
     return self;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     self.textLabel.frame = self.bounds;
 }
 
-- (void)fillWithData:(TUIReplyQuoteViewData_Minimalist *)data
-{
+- (void)fillWithData:(TUIReplyQuoteViewData_Minimalist *)data {
     [super fillWithData:data];
     if (![data isKindOfClass:TUITextReplyQuoteViewData_Minimalist.class]) {
         return;
@@ -40,10 +38,8 @@
     self.textLabel.attributedText = [myData.text getFormatEmojiStringWithFont:self.textLabel.font emojiLocations:nil];
 }
 
-- (void)reset
-{
+- (void)reset {
     self.textLabel.text = @"";
 }
-
 
 @end

@@ -17,5 +17,5 @@
 @end
 
 @interface TUIResponderTextView_Minimalist : UITextView
-@property (nonatomic, weak) UIResponder *overrideNextResponder;
+@property(nonatomic, weak) UIResponder *overrideNextResponder;
 @end

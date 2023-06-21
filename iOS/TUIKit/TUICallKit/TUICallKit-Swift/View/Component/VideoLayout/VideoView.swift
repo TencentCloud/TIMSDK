@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import TUICallEngine
 
 @objc protocol VideoViewDelegate: NSObjectProtocol {
     @objc optional func tapGestureAction(tapGesture: UITapGestureRecognizer)

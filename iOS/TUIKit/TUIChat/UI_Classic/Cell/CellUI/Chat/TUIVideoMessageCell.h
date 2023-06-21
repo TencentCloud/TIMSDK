@@ -1,3 +1,6 @@
+
+//  Created by Tencent on 2023/06/09.
+//  Copyright © 2023 Tencent. All rights reserved.
 /**
  *  本文件声明了 TUIVideoMessageCell 单元，负责实现视频消息的显示。
  *  视频消息单元，在收发视频消息时展示的单元，能够向用户展示视频封面、视频时长等，同时能够响应用户操作，提供视频播放的操作入口。
@@ -8,9 +11,9 @@
  *  and at the same time, can respond to user operations and provide an operation entry for video playback.
  *  When you tap the video message, you will enter the video playback interface.
  */
+#import <TIMCommon/TUIBubbleMessageCell.h>
 #import <TIMCommon/TUIMessageCell.h>
 #import "TUIVideoMessageCellData.h"
-#import <TIMCommon/TUIBubbleMessageCell.h>
 /**
  * 【模块名称】TUIVideoMessageCell
  * 【功能说明】视频消息单元
@@ -19,7 +22,8 @@
  *
  * 【Module name】TUIVideoMessageCell
  * 【Function description】 Video message unit
- *  - The video message unit provides the function of extracting and displaying thumbnails of video messages, and can display the video length and video download/upload progress.
+ *  - The video message unit provides the function of extracting and displaying thumbnails of video messages, and can display the video length and video
+ * download/upload progress.
  *  - At the same time, the network acquisition and local acquisition of video messages (if it exists in the local cache) are integrated in the message unit.
  */
 @interface TUIVideoMessageCell : TUIBubbleMessageCell
@@ -31,13 +35,13 @@
  *  Video thumbnail
  *  Display the thumbnail of the video when it is not playing, so that users can get general information about the video without playing the video.
  */
-@property (nonatomic, strong) UIImageView *thumb;
+@property(nonatomic, strong) UIImageView *thumb;
 
 /**
  *  视频时长标签
  *  Label for displaying video duration
  */
-@property (nonatomic, strong) UILabel *duration;
+@property(nonatomic, strong) UILabel *duration;
 
 /**
  *  播放图标
@@ -45,7 +49,7 @@
  *
  *  Play icon, that is, the "arrow icon" displayed in the UI.
  */
-@property (nonatomic, strong) UIImageView *play;
+@property(nonatomic, strong) UIImageView *play;
 
 /**
  *  视频进度标签
@@ -54,8 +58,7 @@
  *  Label for displaying video doadloading/uploading progress
  *
  */
-@property (nonatomic, strong) UILabel *progress;
-
+@property(nonatomic, strong) UILabel *progress;
 
 @property TUIVideoMessageCellData *videoData;
 

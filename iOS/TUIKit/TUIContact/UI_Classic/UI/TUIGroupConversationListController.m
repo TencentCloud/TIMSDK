@@ -3,19 +3,23 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/6/10.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIGroupConversationListController.h"
-#import <TUICore/TUICore.h>
-#import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TIMCommonModel.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 #import <TUICore/TUIThemeManager.h>
 
-static NSString *kConversationCell_ReuseId = @"TConversationCell";
+static NSString *gConversationCell_ReuseId = @"TConversationCell";
 
-@interface TUIGroupConversationListController ()<UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate>
+@interface TUIGroupConversationListController () <UIGestureRecognizerDelegate,
+                                                  UITableViewDelegate,
+                                                  UITableViewDataSource,
+                                                  UIPopoverPresentationControllerDelegate>
 
-@property (nonatomic, strong) UILabel *noDataTipsLabel;
+@property(nonatomic, strong) UILabel *noDataTipsLabel;
 
 @end
 
@@ -23,7 +27,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = TIMCommonLocalizableString(TUIKitContactsGroupChats);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
@@ -31,7 +35,6 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     [titleLabel sizeToFit];
 
     self.navigationItem.titleView = titleLabel;
-    
 
     self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     CGRect rect = self.view.bounds;
@@ -50,29 +53,26 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
 
     _tableView.separatorInset = UIEdgeInsetsMake(0, 58, 0, 0);
 
-    [_tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:kConversationCell_ReuseId];
-
+    [_tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:gConversationCell_ReuseId];
 
     self.viewModel = [TUIGroupConversationListViewDataProvider new];
     [self updateConversations];
 
-    @weakify(self)
-    [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id  _Nullable x) {
-        @strongify(self)
-        [self.tableView reloadData];
+    @weakify(self);
+    [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id _Nullable x) {
+      @strongify(self);
+      [self.tableView reloadData];
     }];
-    
+
     self.noDataTipsLabel.frame = CGRectMake(10, 60, self.view.bounds.size.width - 20, 40);
     [self.tableView addSubview:self.noDataTipsLabel];
 }
-
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)updateConversations
-{
+- (void)updateConversations {
     [self.viewModel loadConversation];
 }
 
@@ -88,34 +88,28 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     return self.viewModel.dataDict[self.viewModel.groupList[section]].count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     TUICommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
     return [data heightOfWidth:Screen_Width];
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewCellEditingStyleDelete;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return TIMCommonLocalizableString(Delete);
 }
 
-- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [tableView beginUpdates];
         TUICommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
@@ -125,15 +119,11 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     }
 }
 
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 #define TEXT_TAG 1
     static NSString *headerViewId = @"ContactDrawerView";
     UITableViewHeaderFooterView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headerViewId];
-    if (!headerView)
-    {
+    if (!headerView) {
         headerView = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:headerViewId];
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
@@ -144,34 +134,30 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section];
-    headerView.backgroundColor = [UIColor whiteColor];
-    headerView.contentView.backgroundColor = [UIColor whiteColor];
+    headerView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
+    headerView.contentView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     return headerView;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 33;
 }
 
-- (void)didSelectConversation:(TUICommonContactCell *)cell
-{
+- (void)didSelectConversation:(TUICommonContactCell *)cell {
     if (self.onSelect) {
         self.onSelect(cell.contactData);
         return;
     }
-    
+
     NSDictionary *param = @{
-        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_TitleKey : cell.contactData.title ?: @"",
-        TUICore_TUIChatObjectFactory_GetChatViewControllerMethod_GroupIDKey : cell.contactData.identifier ?: @"",
+        TUICore_TUIChatObjectFactory_ChatViewController_Title : cell.contactData.title ?: @"",
+        TUICore_TUIChatObjectFactory_ChatViewController_GroupID : cell.contactData.identifier ?: @"",
     };
-    
-    UIViewController *chatVC = (UIViewController *)[TUICore createObject:TUICore_TUIChatObjectFactory key:TUICore_TUIChatObjectFactory_GetChatViewControllerMethod param:param];
-    [self.navigationController pushViewController:(UIViewController *)chatVC animated:YES];
+    [self.navigationController pushViewController:TUICore_TUIChatObjectFactory_ChatViewController_Classic param:param forResult:nil];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TUICommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:kConversationCell_ReuseId forIndexPath:indexPath];
+    TUICommonContactCell *cell = [tableView dequeueReusableCellWithIdentifier:gConversationCell_ReuseId forIndexPath:indexPath];
     TUICommonContactCellData *data = self.viewModel.dataDict[self.viewModel.groupList[indexPath.section]][indexPath.row];
     if (!data.cselector) {
         data.cselector = @selector(didSelectConversation:);
@@ -180,19 +166,17 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
     return UIModalPresentationNone;
 }
 
-- (UILabel *)noDataTipsLabel
-{
+- (UILabel *)noDataTipsLabel {
     if (_noDataTipsLabel == nil) {
         _noDataTipsLabel = [[UILabel alloc] init];
-        _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
+        _noDataTipsLabel.textColor = TIMCommonDynamicColor(@"nodata_tips_color", @"#999999");
         _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
         _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
         _noDataTipsLabel.text = TIMCommonLocalizableString(TUIKitContactNoGroupChats);

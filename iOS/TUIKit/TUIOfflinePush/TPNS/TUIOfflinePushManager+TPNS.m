@@ -3,11 +3,12 @@
 //  Pods
 //
 //  Created by harvy on 2022/5/6.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
-#import "TUIOfflinePushManager+TPNS.h"
-#import "TUIOfflinePushManager+Inner.h"
 #import <TPNS-iOS/XGPushPrivate.h>
+#import "TUIOfflinePushManager+Inner.h"
+#import "TUIOfflinePushManager+TPNS.h"
 
 @implementation TUIOfflinePushManager (TPNS)
 
@@ -16,8 +17,8 @@
 {
     // 向 TPNS 上报当前 IM 的未读数，用于 TPNS 推送时角标累加
     [V2TIMManager.sharedInstance addConversationListener:self];
-    
-    //打开 debug 开关
+
+    // 打开 debug 开关
 #if DEBUG
     [[XGPush defaultManager] setEnableDebug:YES];
 #endif
@@ -30,13 +31,13 @@
      * 上海：tpns.sh.tencent.com
      * 新加坡：tpns.sgp.tencent.com
      * 中国香港：tpns.hk.tencent.com
-    */
-    
+     */
+
     // 检查参数
     if (self.tpnsConfigAccessID == 0 || self.tpnsConfigAccessKey.length == 0) {
         NSLog(@"[TUIOfflinePushManager][TPNS][Error] invalid config, check it!!!!!!!!");
     }
-    
+
     if (self.tpnsConfigDomain.length) {
         [[XGPush defaultManager] configureClusterDomainName:self.tpnsConfigDomain];
     }
@@ -44,61 +45,57 @@
     NSLog(@"[TUIOfflinePushManager][TPNS] %s", __func__);
 }
 
-- (void)unregisterService
-{
+- (void)unregisterService {
     self.serviceRegistered = NO;
-    
+
     /**
      * Continue to take over, for the following reasons：
-     * 1. The UIApplication not keep strong refrence to the delegate object, and When UIApplication.sharedApplication.delegate is set to self.applicationDelegate,
-     *   the reference count of the delegate object will not be incremented.
+     * 1. The UIApplication not keep strong refrence to the delegate object, and When UIApplication.sharedApplication.delegate is set to
+     * self.applicationDelegate, the reference count of the delegate object will not be incremented.
      * 2. The delegate object will be dealloced if TUIOfflinePush try to recover delegate and self.applicationDelegate setted to nil.
      *
      * For component stability considerations，delegate recovery is ignored. Do noting...
      * // [self unloadApplicationDelegateIfNeeded];
      */
-    
+
     // 移除前后台监听
     [V2TIMManager.sharedInstance removeConversationListener:self];
-    
+
     // 解绑账号
     [self unbindAccount];
-    
+
     // 反初始化
     [[XGPush defaultManager] stopXGNotification];
 }
 
-- (BOOL)supportTPNS
-{
+- (BOOL)supportTPNS {
     return YES;
 }
 
 #pragma mark - 账号绑定/解绑
 // 绑定账号
-- (void)bindAccount
-{
+- (void)bindAccount {
     NSString *userID = V2TIMManager.sharedInstance.getLoginUser;
-    [XGPushTokenManager.defaultTokenManager upsertAccountsByDict:@{ @(0): userID?:@"" }];
+    [XGPushTokenManager.defaultTokenManager upsertAccountsByDict:@{@(0) : userID ?: @""}];
     NSLog(@"[TUIOfflinePushManager][TPNS] %s:%@", __func__, userID);
 }
 
 // 解绑账号
-- (void)unbindAccount
-{
+- (void)unbindAccount {
     [XGPushTokenManager.defaultTokenManager delAccountsByKeys:[NSSet setWithObject:@(0)]];
     NSLog(@"[TUIOfflinePushManager][TPNS] %s", __func__);
 }
 
 #pragma mark - IM 和 TPNS 角标同步
-- (void)onTotalUnreadMessageCountChanged:(UInt64)totalUnreadCount
-{
+- (void)onTotalUnreadMessageCountChanged:(UInt64)totalUnreadCount {
     [[XGPush defaultManager] setBadge:totalUnreadCount];
     NSLog(@"[TUIOfflinePushManager][TPNS] %s, badge:%llu", __func__, totalUnreadCount);
 }
 
 #pragma mark - 系统的通知相关回调
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
+- (void)application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     if (self.serviceRegistered && userInfo && [userInfo.allKeys containsObject:@"ext"]) {
         NSDictionary *extParam = [self jsonSring2Dictionary:userInfo[@"ext"]];
         if (extParam && [extParam.allKeys containsObject:@"entity"]) {
@@ -106,17 +103,18 @@
             [self onReceiveOfflinePushEntity:entity];
         }
     }
-    
-    
+
     // Forward
     __block BOOL callback = NO;
     if ([self.applicationDelegate respondsToSelector:@selector(application:didReceiveRemoteNotification:fetchCompletionHandler:)]) {
-        [self.applicationDelegate application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:^(UIBackgroundFetchResult result) {
-            completionHandler(result);
-            callback = YES;
-        }];
+        [self.applicationDelegate application:application
+                 didReceiveRemoteNotification:userInfo
+                       fetchCompletionHandler:^(UIBackgroundFetchResult result) {
+                         completionHandler(result);
+                         callback = YES;
+                       }];
     }
-    
+
     if (!callback) {
         completionHandler(UIBackgroundFetchResultNewData);
     }
@@ -131,14 +129,13 @@
 @param error 错误信息，若 error 为 nil 则注册推送服务成功
 @note TPNS SDK1.2.6.0+
 */
-- (void)xgPushDidRegisteredDeviceToken:(nullable NSString *)deviceToken xgToken:(nullable NSString *)xgToken error:(nullable NSError *)error
-{
+- (void)xgPushDidRegisteredDeviceToken:(nullable NSString *)deviceToken xgToken:(nullable NSString *)xgToken error:(nullable NSError *)error {
     NSLog(@"[TUIOfflinePushManager][TPNS] %s, deviceToken:%@, xgToken:%@, error:%@", __func__, deviceToken, xgToken, error);
     if (error == nil) {
         // 1. 上报 token
         NSData *data = [xgToken dataUsingEncoding:NSUTF8StringEncoding];
         [self onReportToken:data];
-        
+
         // 2. 绑定账号
         [self bindAccount];
     }
@@ -147,22 +144,19 @@
 /// 注册推送服务失败回调
 /// @param error 注册失败错误信息
 /// @note TPNS SDK1.2.7.1+
-- (void)xgPushDidFailToRegisterDeviceTokenWithError:(nullable NSError *)error
-{
+- (void)xgPushDidFailToRegisterDeviceTokenWithError:(nullable NSError *)error {
     NSLog(@"[TUIOfflinePushManager][TPNS] %s, %@", __func__, error);
 }
-
 
 /// 统一接收消息的回调
 /// @param notification 消息对象(有2种类型NSDictionary和UNNotification具体解析参考示例代码)
 /// @note 此回调为前台收到通知消息及所有状态下收到静默消息的回调（消息点击需使用统一点击回调）
 /// 区分消息类型说明：xg字段里的msgtype为1则代表通知消息msgtype为2则代表静默消息
-- (void)xgPushDidReceiveRemoteNotification:(nonnull id)notification withCompletionHandler:(nullable void (^)(NSUInteger))completionHandler
-{
+- (void)xgPushDidReceiveRemoteNotification:(nonnull id)notification withCompletionHandler:(nullable void (^)(NSUInteger))completionHandler {
     /// code
     NSLog(@"[TUIOfflinePushManager][TPNS] %s, %@", __func__, notification);
 }
- /// 统一点击回调
+/// 统一点击回调
 /// @param response 如果iOS 10+/macOS 10.14+则为UNNotificationResponse，低于目标版本则为NSDictionary
 - (void)xgPushDidReceiveNotificationResponse:(nonnull id)response withCompletionHandler:(nonnull void (^)(void))completionHandler {
     /// code
@@ -181,19 +175,19 @@
         NSLog(@"notification dic: %@", response);
         custom = response;
     }
-    
+
     if (custom == nil || ![custom isKindOfClass:NSDictionary.class]) {
         completionHandler();
         return;
     }
-    
+
     if (![custom.allKeys containsObject:@"entity"]) {
         completionHandler();
         return;
     }
-    
+
     [self onReceiveOfflinePushEntity:custom[@"entity"]];
-    
+
     completionHandler();
 }
 

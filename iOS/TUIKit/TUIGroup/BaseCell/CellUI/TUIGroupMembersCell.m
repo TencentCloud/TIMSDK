@@ -7,33 +7,29 @@
 //
 
 #import "TUIGroupMembersCell.h"
-#import "TUIGroupMemberCell.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import "TUIGroupMemberCell.h"
 
 @interface TUIGroupMembersCell () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @end
 
-
 @implementation TUIGroupMembersCell
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(self){
+    if (self) {
         [self setupViews];
     }
     return self;
 }
 
-- (void)setupViews
-{
-    self.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#F2F3F5");
+- (void)setupViews {
     _memberFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-//    _memberFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
     CGSize cellSize = [TUIGroupMemberCell getSize];
     _memberFlowLayout.itemSize = cellSize;
-    _memberFlowLayout.minimumInteritemSpacing = (Screen_Width - cellSize.width * TGroupMembersCell_Column_Count - 2*20) / (TGroupMembersCell_Column_Count - 1);
+    _memberFlowLayout.minimumInteritemSpacing =
+        (Screen_Width - cellSize.width * TGroupMembersCell_Column_Count - 2 * 20) / (TGroupMembersCell_Column_Count - 1);
     _memberFlowLayout.minimumLineSpacing = TGroupMembersCell_Margin;
     _memberFlowLayout.sectionInset = UIEdgeInsetsMake(TGroupMembersCell_Margin, 20, TGroupMembersCell_Margin, 20);
 
@@ -50,40 +46,36 @@
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 }
 
-- (void)updateLayout
-{
+- (void)updateLayout {
     CGFloat height = [TUIGroupMembersCell getHeight:_data];
     _memberCollectionView.frame = CGRectMake(0, 0, Screen_Width, height);
 }
 
-- (void)setData:(TUIGroupMembersCellData *)data
-{
+- (void)setData:(TUIGroupMembersCellData *)data {
     _data = data;
 
     [self updateLayout];
     [_memberCollectionView reloadData];
 }
 
-+ (CGFloat)getHeight:(TUIGroupMembersCellData *)data{
++ (CGFloat)getHeight:(TUIGroupMembersCellData *)data {
     NSInteger row = ceil(data.members.count * 1.0 / TGroupMembersCell_Column_Count);
-    if(row > TGroupMembersCell_Row_Count){
+    if (row > TGroupMembersCell_Row_Count) {
         row = TGroupMembersCell_Row_Count;
     }
     CGFloat height = row * [TUIGroupMemberCell getSize].height + (row + 1) * TGroupMembersCell_Margin;
     return height;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return _data.members.count;
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     TUIGroupMemberCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:TGroupMemberCell_ReuseId forIndexPath:indexPath];
     TUIGroupMemberCellData *data = nil;
     data = _data.members[indexPath.item];
@@ -91,15 +83,15 @@
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if(_delegate && [_delegate respondsToSelector:@selector(groupMembersCell:didSelectItemAtIndex:)]){
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (_delegate && [_delegate respondsToSelector:@selector(groupMembersCell:didSelectItemAtIndex:)]) {
         [_delegate groupMembersCell:self didSelectItemAtIndex:indexPath.section * TGroupMembersCell_Column_Count + indexPath.row];
     }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                    layout:(UICollectionViewLayout *)collectionViewLayout
+    sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return [TUIGroupMemberCell getSize];
 }
 @end

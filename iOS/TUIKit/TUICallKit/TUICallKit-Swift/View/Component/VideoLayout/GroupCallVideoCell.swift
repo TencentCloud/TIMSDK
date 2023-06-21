@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import TUICallEngine
+import SnapKit
 
 class GroupCallVideoCell: UICollectionViewCell {
     
@@ -216,10 +218,16 @@ class GroupCallVideoCell: UICollectionViewCell {
         
         if viewModel.mediaType.value == .video {
             if viewModel.selfUserStatus.value == .waiting {
-                renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRectZero)
-                renderView.isHidden = false
-                viewModel.openCamera(videoView: renderView)
+                if !VideoFactory.instance.isExistVideoView(videoView: renderView) {
+                    renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRectZero)
+                    renderView.isHidden = false
+                    viewModel.openCamera(videoView: renderView)
+                }
             } else if viewModel.selfUserStatus.value == .accept {
+                if !VideoFactory.instance.isExistVideoView(videoView: renderView) {
+                    renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRectZero)
+                    viewModel.openCamera(videoView: renderView)
+                }
                 if viewModel.isCameraOpen.value == true {
                     renderView.isHidden = false
                 } else {
@@ -291,8 +299,10 @@ class GroupCallVideoCell: UICollectionViewCell {
             if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
                 avatarImageView.image = image
             }
+        } else if let image = TUICallKitCommon.getUrlImage(url: viewModel.remoteUser.avatar.value){
+            avatarImageView.image = image
         } else {
-            if let image = TUICallKitCommon.getUrlImage(url: viewModel.remoteUser.avatar.value) {
+            if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
                 avatarImageView.image = image
             }
         }

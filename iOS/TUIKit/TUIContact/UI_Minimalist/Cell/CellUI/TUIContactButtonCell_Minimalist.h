@@ -3,6 +3,7 @@
 //  TUIContact
 //
 //  Created by wyl on 2022/12/14.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <TIMCommon/TIMCommonModel.h>
@@ -11,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIContactButtonCell_Minimalist : TUICommonTableViewCell
-@property (nonatomic, strong) UIButton *button;
+@property(nonatomic, strong) UIButton *button;
 @property TUIContactButtonCellData_Minimalist *buttonData;
 
 - (void)fillWithData:(TUIContactButtonCellData_Minimalist *)data;

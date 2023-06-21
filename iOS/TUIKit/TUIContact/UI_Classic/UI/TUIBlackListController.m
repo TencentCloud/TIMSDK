@@ -3,16 +3,17 @@
 //  TXIMSDK_TUIKit_iOS
 //
 //  Created by annidyfeng on 2019/5/5.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUIBlackListController.h"
-#import "ReactiveObjC.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import "ReactiveObjC.h"
 
-@interface TUIBlackListController ()<V2TIMFriendshipListener>
+@interface TUIBlackListController () <V2TIMFriendshipListener>
 
-@property (nonatomic, strong) UILabel *noDataTipsLabel;
+@property(nonatomic, strong) UILabel *noDataTipsLabel;
 
 @end
 
@@ -38,11 +39,10 @@
 
     if (!self.viewModel) {
         self.viewModel = TUIBlackListViewDataProvider.new;
-        @weakify(self)
+        @weakify(self);
         [RACObserve(self.viewModel, isLoadFinished) subscribeNext:^(id finished) {
-            @strongify(self)
-            if ([(NSNumber *)finished boolValue])
-                [self.tableView reloadData];
+          @strongify(self);
+          if ([(NSNumber *)finished boolValue]) [self.tableView reloadData];
         }];
         [self.viewModel loadBlackList];
     }
@@ -50,9 +50,9 @@
     [self.tableView registerClass:[TUICommonContactCell class] forCellReuseIdentifier:@"FriendCell"];
     self.tableView.tableFooterView = [UIView new];
     self.tableView.backgroundColor = self.view.backgroundColor;
-    
+
     [[V2TIMManager sharedInstance] addFriendListener:self];
-    
+
     [self.tableView addSubview:self.noDataTipsLabel];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -61,11 +61,11 @@
 }
 
 #pragma mark - V2TIMFriendshipListener
-- (void)onBlackListAdded:(NSArray<V2TIMFriendInfo *>*)infoList {
+- (void)onBlackListAdded:(NSArray<V2TIMFriendInfo *> *)infoList {
     [self.viewModel loadBlackList];
 }
 
-- (void)onBlackListDeleted:(NSArray*)userIDList {
+- (void)onBlackListDeleted:(NSArray *)userIDList {
     [self.viewModel loadBlackList];
 }
 
@@ -88,23 +88,20 @@
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 56;
 }
 
--(void)didSelectBlackList:(TUICommonContactCell *)cell
-{
+- (void)didSelectBlackList:(TUICommonContactCell *)cell {
     if (self.didSelectCellBlock) {
         self.didSelectCellBlock(cell);
     }
 }
 
-- (UILabel *)noDataTipsLabel
-{
+- (UILabel *)noDataTipsLabel {
     if (_noDataTipsLabel == nil) {
         _noDataTipsLabel = [[UILabel alloc] init];
-        _noDataTipsLabel.textColor = TUIContactDynamicColor(@"contact_add_contact_nodata_tips_text_color", @"#999999");
+        _noDataTipsLabel.textColor = TIMCommonDynamicColor(@"nodata_tips_color", @"#999999");
         _noDataTipsLabel.font = [UIFont systemFontOfSize:14.0];
         _noDataTipsLabel.textAlignment = NSTextAlignmentCenter;
         _noDataTipsLabel.text = TIMCommonLocalizableString(TUIKitContactNoBlockList);
