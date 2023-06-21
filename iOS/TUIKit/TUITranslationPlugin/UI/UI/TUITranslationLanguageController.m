@@ -3,6 +3,7 @@
 //  TUITranslation
 //
 //  Created by xia on 2023/4/7.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUITranslationLanguageController.h"
@@ -12,10 +13,10 @@
 
 @interface TUITranslationLanguageController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, copy) NSArray *languageCodeList;
-@property (nonatomic, copy) NSArray *languageNameList;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSIndexPath *currentIndex;
+@property(nonatomic, copy) NSArray *languageCodeList;
+@property(nonatomic, copy) NSArray *languageNameList;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) NSIndexPath *currentIndex;
 
 @end
 
@@ -23,7 +24,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.title = TIMCommonLocalizableString(TranslateMessage);
     [self.view addSubview:self.tableView];
 }
@@ -65,7 +66,7 @@
     UITableViewCell *lastCell = [tableView cellForRowAtIndexPath:self.currentIndex];
     lastCell.accessoryType = UITableViewCellAccessoryNone;
     self.currentIndex = indexPath;
-    
+
     [TUITranslationConfig defaultConfig].targetLanguageCode = self.languageCodeList[indexPath.row];
     if (self.onSelectedLanguage) {
         self.onSelectedLanguage(self.languageNameList[indexPath.row]);
@@ -97,15 +98,14 @@
  Hindi language
  */
 - (NSArray *)languageNameList {
-    return @[@"简体中文", @"繁體中文", @"English", @"日本語", @"한국어", @"Français", @"Español", @"Italiano", @"Deutsch",
-             @"Türkçe", @"Русский", @"Português", @"Tiếng Việt", @"Bahasa Indonesia", @"ภาษาไทย", @"Bahasa Melayu",
-             @"हिन्दी"];
+    return @[
+        @"简体中文", @"繁體中文", @"English", @"日本語", @"한국어", @"Français", @"Español", @"Italiano", @"Deutsch", @"Türkçe", @"Русский", @"Português",
+        @"Tiếng Việt", @"Bahasa Indonesia", @"ภาษาไทย", @"Bahasa Melayu", @"हिन्दी"
+    ];
 }
 
 - (NSArray *)languageCodeList {
-    return @[@"zh", @"zh-TW",  @"en",  @"ja", @"ko", @"fr", @"es", @"it", @"de",
-             @"tr", @"ru", @"pt", @"vi", @"id", @"th", @"ms",
-             @"hi"];
+    return @[ @"zh", @"zh-TW", @"en", @"ja", @"ko", @"fr", @"es", @"it", @"de", @"tr", @"ru", @"pt", @"vi", @"id", @"th", @"ms", @"hi" ];
 }
 
 @end

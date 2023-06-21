@@ -3,13 +3,14 @@
 //  TUITranslation
 //
 //  Created by xia on 2023/4/7.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUITranslationConfig.h"
 
-static NSString * const kTransaltionTargetLanguageCode = @"translation_target_language_code";
+static NSString *const kTransaltionTargetLanguageCode = @"translation_target_language_code";
 
-@interface TUITranslationConfig()
+@interface TUITranslationConfig ()
 @property(nonatomic, copy, readwrite) NSString *targetLanguageName;
 @end
 
@@ -19,7 +20,7 @@ static NSString * const kTransaltionTargetLanguageCode = @"translation_target_la
     static dispatch_once_t onceToken;
     static TUITranslationConfig *config;
     dispatch_once(&onceToken, ^{
-        config = [[TUITranslationConfig alloc] init];
+      config = [[TUITranslationConfig alloc] init];
     });
     return config;
 }
@@ -68,24 +69,24 @@ static NSString * const kTransaltionTargetLanguageCode = @"translation_target_la
 
 - (NSDictionary *)languageDict {
     return @{
-        @"zh": @"简体中文",
-        @"zh-TW": @"繁體中文",
-        @"en": @"English",
-        @"ja": @"日本語",
-        @"ko": @"한국어",
-        @"fr": @"Français",
-        @"es": @"Español",
-        @"it": @"Italiano",
-        @"de": @"Deutsch",
-        @"tr": @"Türkçe",
-        @"ru": @"Русский",
-        @"pt": @"Português",
-        @"vi": @"Tiếng Việt",
-        @"id": @"Bahasa Indonesia",
-        @"th": @"ภาษาไทย",
-        @"ms": @"Bahasa Melayu",
-        @"hi": @"हिन्दी"
+        @"zh" : @"简体中文",
+        @"zh-TW" : @"繁體中文",
+        @"en" : @"English",
+        @"ja" : @"日本語",
+        @"ko" : @"한국어",
+        @"fr" : @"Français",
+        @"es" : @"Español",
+        @"it" : @"Italiano",
+        @"de" : @"Deutsch",
+        @"tr" : @"Türkçe",
+        @"ru" : @"Русский",
+        @"pt" : @"Português",
+        @"vi" : @"Tiếng Việt",
+        @"id" : @"Bahasa Indonesia",
+        @"th" : @"ภาษาไทย",
+        @"ms" : @"Bahasa Melayu",
+        @"hi" : @"हिन्दी"
     };
 }
- 
+
 @end

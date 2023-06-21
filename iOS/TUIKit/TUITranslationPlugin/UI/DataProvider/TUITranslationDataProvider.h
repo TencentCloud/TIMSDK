@@ -3,11 +3,12 @@
 //  TUITranslation
 //
 //  Created by xia on 2023/3/21.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import <TUICore/TUIDefine.h>
 #import <TIMCommon/TUIMessageCellData.h>
+#import <TUICore/TUIDefine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,12 +23,9 @@ typedef void (^TUITranslateMessageCompletion)(NSInteger code, NSString *desc, TU
 
 @interface TUITranslationDataProvider : NSObject
 
-+ (void)translateMessage:(TUIMessageCellData *)data
-              completion:(TUITranslateMessageCompletion _Nullable)completion;
++ (void)translateMessage:(TUIMessageCellData *)data completion:(TUITranslateMessageCompletion _Nullable)completion;
 
-+ (void)saveTranslationResult:(V2TIMMessage *)message
-                         text:(NSString *)text
-                       status:(TUITranslationViewStatus)status;
++ (void)saveTranslationResult:(V2TIMMessage *)message text:(NSString *)text status:(TUITranslationViewStatus)status;
 
 + (BOOL)shouldShowTranslation:(V2TIMMessage *)message;
 + (NSString *)getTranslationText:(V2TIMMessage *)message;

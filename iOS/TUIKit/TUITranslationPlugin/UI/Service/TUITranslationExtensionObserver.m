@@ -3,43 +3,44 @@
 //  TUITranslation
 //
 //  Created by xia on 2023/4/4.
+//  Copyright © 2023 Tencent. All rights reserved.
 //
 
 #import "TUITranslationExtensionObserver.h"
 
-#import <TUICore/TUICore.h>
-#import <TUICore/TUIDefine.h>
 #import <TIMCommon/TIMPopActionProtocol.h>
 #import <TIMCommon/TUIMessageCell.h>
-#import <TUIChat/TUITextMessageCell.h>
 #import <TUIChat/TUIReferenceMessageCell.h>
-#import <TUIChat/TUIReplyMessageCell.h>
-#import <TUIChat/TUITextMessageCell_Minimalist.h>
 #import <TUIChat/TUIReferenceMessageCell_Minimalist.h>
+#import <TUIChat/TUIReplyMessageCell.h>
 #import <TUIChat/TUIReplyMessageCell_Minimalist.h>
+#import <TUIChat/TUITextMessageCell.h>
+#import <TUIChat/TUITextMessageCell_Minimalist.h>
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIDefine.h>
 #import "TUITranslationConfig.h"
+#import "TUITranslationDataProvider.h"
 #import "TUITranslationLanguageController.h"
 #import "TUITranslationView.h"
-#import "TUITranslationDataProvider.h"
 
 @interface TUITranslationExtensionObserver () <TUIExtensionProtocol>
 
-@property (nonatomic, weak) UINavigationController *navVC;
-@property (nonatomic, weak) TUICommonTextCellData *cellData;
+@property(nonatomic, weak) UINavigationController *navVC;
+@property(nonatomic, weak) TUICommonTextCellData *cellData;
 
 @end
 
 @implementation TUITranslationExtensionObserver
 
-static id _instance = nil;
+static id gShareInstance = nil;
 
 + (void)load {
     TUIRegisterThemeResourcePath(TUITranslationThemePath, TUIThemeModuleTranslation);
-    
+
     // UI extensions in pop menu when message is long pressed.
     [TUICore registerExtension:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID object:TUITranslationExtensionObserver.shareInstance];
     [TUICore registerExtension:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID object:TUITranslationExtensionObserver.shareInstance];
-    
+
     // UI extensions of setting.
     [TUICore registerExtension:TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID object:TUITranslationExtensionObserver.shareInstance];
     [TUICore registerExtension:TUICore_TUIContactExtension_MeSettingMenu_MinimalistExtensionID object:TUITranslationExtensionObserver.shareInstance];
@@ -48,9 +49,9 @@ static id _instance = nil;
 + (instancetype)shareInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [[self alloc] init];
+      gShareInstance = [[self alloc] init];
     });
-    return _instance;
+    return gShareInstance;
 }
 
 - (instancetype)init {
@@ -62,29 +63,31 @@ static id _instance = nil;
 }
 
 #pragma mark - TUIExtensionProtocol
-- (void)onRaiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param {
+- (BOOL)onRaiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param {
     if ([extensionID isEqualToString:TUICore_TUIChatExtension_BottomContainer_ClassicExtensionID] ||
         [extensionID isEqualToString:TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID]) {
         NSObject *data = [param objectForKey:TUICore_TUIChatExtension_BottomContainer_CellData];
         if (![parentView isKindOfClass:UIView.class] || ![data isKindOfClass:TUIMessageCellData.class]) {
-            return;
+            return NO;
         }
-        
+
         TUIMessageCellData *cellData = (TUIMessageCellData *)data;
         if (cellData.innerMessage.elemType != V2TIM_ELEM_TYPE_TEXT) {
-            return;
+            return NO;
         }
-        
+
         TUITranslationView *view = [[TUITranslationView alloc] initWithData:cellData];
         [parentView addSubview:view];
+        return YES;
     }
+    return NO;
 }
 
 - (NSArray<TUIExtensionInfo *> *)onGetExtension:(NSString *)extensionID param:(NSDictionary *)param {
     if (![extensionID isKindOfClass:NSString.class]) {
         return nil;
     }
-    
+
     if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID] ||
         [extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID]) {
         // Extension entrance in pop menu when message is long pressed.
@@ -93,14 +96,12 @@ static id _instance = nil;
         }
         TUIMessageCell *cell = param[TUICore_TUIChatExtension_PopMenuActionItem_ClickCell];
         if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID]) {
-            if (![cell isKindOfClass:TUITextMessageCell.class] &&
-                ![cell isKindOfClass:TUIReferenceMessageCell.class] &&
+            if (![cell isKindOfClass:TUITextMessageCell.class] && ![cell isKindOfClass:TUIReferenceMessageCell.class] &&
                 ![cell isKindOfClass:TUIReplyMessageCell.class]) {
                 return nil;
             }
         } else if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID]) {
-            if (![cell isKindOfClass:TUITextMessageCell_Minimalist.class] &&
-                ![cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class] &&
+            if (![cell isKindOfClass:TUITextMessageCell_Minimalist.class] && ![cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class] &&
                 ![cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
                 return nil;
             }
@@ -114,7 +115,7 @@ static id _instance = nil;
         if (![self isSelectAllContentOfMessage:cell]) {
             return nil;
         }
-        
+
         TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
         info.weight = 2000;
         info.text = TIMCommonLocalizableString(TUIKitTranslate);
@@ -123,22 +124,20 @@ static id _instance = nil;
         } else if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID]) {
             info.icon = [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_translate")];
         }
-        info.onClicked = ^(NSDictionary * _Nonnull action) {
-            TUIMessageCellData *cellData = cell.messageData;
-            V2TIMMessage *message = cellData.innerMessage;
-            if (message.elemType != V2TIM_ELEM_TYPE_TEXT) {
-                return;
-            }
-            [TUITranslationDataProvider translateMessage:cellData
-                                              completion:^(NSInteger code, NSString * _Nonnull desc, TUIMessageCellData * _Nonnull data, NSInteger status, NSString * _Nonnull text) {
-                NSDictionary *param = @{TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data: cellData};
-                [TUICore notifyEvent:TUICore_TUITranslationNotify
-                              subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey
-                              object:nil
-                               param:param];
-            }];
+        info.onClicked = ^(NSDictionary *_Nonnull action) {
+          TUIMessageCellData *cellData = cell.messageData;
+          V2TIMMessage *message = cellData.innerMessage;
+          if (message.elemType != V2TIM_ELEM_TYPE_TEXT) {
+              return;
+          }
+          [TUITranslationDataProvider
+              translateMessage:cellData
+                    completion:^(NSInteger code, NSString *_Nonnull desc, TUIMessageCellData *_Nonnull data, NSInteger status, NSString *_Nonnull text) {
+                      NSDictionary *param = @{TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data : cellData};
+                      [TUICore notifyEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:nil param:param];
+                    }];
         };
-        return @[info];
+        return @[ info ];
     } else if ([extensionID isEqualToString:TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID] ||
                [extensionID isEqualToString:TUICore_TUIContactExtension_MeSettingMenu_MinimalistExtensionID]) {
         // Extension entrance in Me setting VC.
@@ -171,15 +170,15 @@ static id _instance = nil;
             [param setObject:data forKey:TUICore_TUIContactExtension_MeSettingMenu_Data];
         }
         info.data = param;
-        return @[info];
+        return @[ info ];
     }
     return nil;
 }
 
 - (void)onClickedTargetLanguageCell:(TUICommonTextCell *)cell {
     TUITranslationLanguageController *vc = [[TUITranslationLanguageController alloc] init];
-    vc.onSelectedLanguage = ^(NSString * _Nonnull languageName) {
-        self.cellData.value = languageName;
+    vc.onSelectedLanguage = ^(NSString *_Nonnull languageName) {
+      self.cellData.value = languageName;
     };
     if (self.navVC) {
         [self.navVC pushViewController:vc animated:YES];
@@ -221,8 +220,7 @@ static id _instance = nil;
             return selectedString.length == replyCell.textView.attributedText.length;
         }
     }
-    if ([cell isKindOfClass:TUITextMessageCell_Minimalist.class] ||
-        [cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class] ||
+    if ([cell isKindOfClass:TUITextMessageCell_Minimalist.class] || [cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class] ||
         [cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
         return YES;
     }
@@ -230,4 +228,3 @@ static id _instance = nil;
 }
 
 @end
-
