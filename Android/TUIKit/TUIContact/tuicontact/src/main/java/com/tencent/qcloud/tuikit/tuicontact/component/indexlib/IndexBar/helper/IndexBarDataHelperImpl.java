@@ -1,14 +1,11 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper;
+package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.helper;
 
 import android.text.TextUtils;
-
 import com.github.promeg.pinyinhelper.Pinyin;
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
-
+import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.bean.BaseIndexPinyinBean;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 
 public class IndexBarDataHelperImpl implements IIndexBarDataHelper {
     @Override
@@ -28,16 +25,16 @@ public class IndexBarDataHelperImpl implements IIndexBarDataHelper {
                     continue;
                 }
                 for (int i1 = 0; i1 < target.length(); i1++) {
-                    //利用TinyPinyin将char转成拼音
-                    //查看源码，方法内 如果char为汉字，则返回大写拼音
-                    //如果c不是汉字，则返回String.valueOf(c)
-                    // Convert char to Pinyin using TinyPinyin
-                    // If char is Chinese characters, return uppercase pinyin. If c is not a Chinese character, return String.valueOf(c)
+                    // 利用TinyPinyin将char转成拼音
+                    // 查看源码，方法内 如果char为汉字，则返回大写拼音
+                    // 如果c不是汉字，则返回String.valueOf(c)
+                    //  Convert char to Pinyin using TinyPinyin
+                    //  If char is Chinese characters, return uppercase pinyin. If c is not a Chinese character, return String.valueOf(c)
                     pySb.append(Pinyin.toPinyin(target.charAt(i1)).toUpperCase());
                 }
                 indexPinyinBean.setBaseIndexPinyin(pySb.toString());
             } else {
-                //pySb.append(indexPinyinBean.getBaseIndexPinyin());
+                // pySb.append(indexPinyinBean.getBaseIndexPinyin());
             }
         }
         return this;

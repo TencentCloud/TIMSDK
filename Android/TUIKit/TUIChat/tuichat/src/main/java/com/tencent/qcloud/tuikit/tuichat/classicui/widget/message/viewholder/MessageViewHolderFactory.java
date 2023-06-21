@@ -3,27 +3,22 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.ClassicUIService;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class MessageViewHolderFactory {
-
     public static RecyclerView.ViewHolder getInstance(ViewGroup parent, ICommonMessageAdapter adapter, int viewType) {
-
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder holder = null;
         View view = null;
 
         if (viewType == MessageBaseHolder.MSG_TYPE_HEADER_VIEW) {
-            view = inflater.inflate(R.layout.loading_progress_bar, parent, false);
+            view = inflater.inflate(R.layout.chat_loading_progress_bar, parent, false);
             holder = new MessageHeaderHolder(view);
             return holder;
         }
@@ -45,7 +40,8 @@ public class MessageViewHolderFactory {
     }
 
     private static RecyclerView.ViewHolder getViewHolder(View view, int viewType) {
-        Class<? extends MessageBaseHolder> messageHolderClazz = ClassicUIService.getInstance().getMessageViewHolderClass(viewType);;
+        Class<? extends MessageBaseHolder> messageHolderClazz = ClassicUIService.getInstance().getMessageViewHolderClass(viewType);
+        ;
         if (messageHolderClazz != null) {
             Constructor<? extends MessageBaseHolder> constructor;
             try {
@@ -63,5 +59,4 @@ public class MessageViewHolderFactory {
         }
         return null;
     }
-
 }

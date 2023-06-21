@@ -7,7 +7,6 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import java.io.Serializable;
 
 public class ReplyPreviewBean implements Serializable {
-
     public static final int VERSION = 1;
 
     private String messageID;

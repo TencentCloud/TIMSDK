@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageMessageHolder extends MessageContentHolder {
-
     protected static final int DEFAULT_MAX_SIZE = 540;
     protected static final int DEFAULT_RADIUS = 0;
     protected final List<String> downloadEles = new ArrayList<>();
@@ -107,8 +106,7 @@ public class ImageMessageHolder extends MessageContentHolder {
                     img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
                         @Override
                         public void onProgress(long currentSize, long totalSize) {
-                            TUIChatLog.i("downloadImage progress current:",
-                                    currentSize + ", total:" + totalSize);
+                            TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                         }
 
                         @Override

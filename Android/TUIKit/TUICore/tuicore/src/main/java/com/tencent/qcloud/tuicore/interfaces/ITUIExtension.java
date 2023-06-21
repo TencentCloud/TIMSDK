@@ -9,7 +9,13 @@ import java.util.Map;
 
 public interface ITUIExtension {
     @Deprecated
-    default Map<String, Object> onGetExtensionInfo(String key, Map<String, Object> param) {return new HashMap<>();}
+    default Map<String, Object> onGetExtensionInfo(String key, Map<String, Object> param) {
+        return new HashMap<>();
+    }
+
     default void onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {}
-    default List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {return new ArrayList<>();}
+    
+    default List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
+        return new ArrayList<>();
+    }
 }

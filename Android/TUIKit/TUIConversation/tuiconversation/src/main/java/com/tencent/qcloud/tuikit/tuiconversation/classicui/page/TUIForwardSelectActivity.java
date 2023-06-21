@@ -2,9 +2,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.classicui.page;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
@@ -25,7 +23,8 @@ public class TUIForwardSelectActivity extends BaseLightActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         TUIConversationLog.i(TAG, "onNewIntent");
-        super.onNewIntent(intent);;
+        super.onNewIntent(intent);
+        ;
     }
 
     @Override
@@ -37,6 +36,5 @@ public class TUIForwardSelectActivity extends BaseLightActivity {
     private void init() {
         mTUIForwardSelectFragment = new TUIForwardSelectFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, mTUIForwardSelectFragment).commitAllowingStateLoss();
-
     }
 }

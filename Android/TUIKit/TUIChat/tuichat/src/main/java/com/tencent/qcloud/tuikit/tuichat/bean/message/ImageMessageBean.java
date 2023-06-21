@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
 import android.net.Uri;
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMImageElem;
@@ -13,29 +12,27 @@ import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageMessageBean  extends TUIMessageBean {
-
+public class ImageMessageBean extends TUIMessageBean {
     /**
      * ## 原图
-     * 
+     *
      * original image
      */
     public static final int IMAGE_TYPE_ORIGIN = V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN;
     /**
      * ## 缩略图
-     * 
+     *
      * thumbnail
      */
     public static final int IMAGE_TYPE_THUMB = V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB;
     /**
      * ## 大图
-     * 
+     *
      * big picture
      */
     public static final int IMAGE_TYPE_LARGE = V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE;
@@ -60,7 +57,7 @@ public class ImageMessageBean  extends TUIMessageBean {
         List<V2TIMImageElem.V2TIMImage> imageList = imageElem.getImageList();
         if (imageList != null) {
             List<ImageBean> imageBeans = new ArrayList<>();
-            for(V2TIMImageElem.V2TIMImage v2TIMImage : imageList) {
+            for (V2TIMImageElem.V2TIMImage v2TIMImage : imageList) {
                 ImageBean imageBean = new ImageBean();
                 imageBean.setV2TIMImage(v2TIMImage);
                 imageBeans.add(imageBean);
@@ -71,7 +68,7 @@ public class ImageMessageBean  extends TUIMessageBean {
         String localPath = imageElem.getPath();
         if (isSelf() && !TextUtils.isEmpty(localPath) && new File(localPath).exists()) {
             dataPath = localPath;
-            int size[] = ImageUtil.getImageSize(localPath);
+            int[] size = ImageUtil.getImageSize(localPath);
             imgWidth = size[0];
             imgHeight = size[1];
         }
@@ -99,7 +96,7 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的数据源
-     * 
+     *
      * Get the data source of the multimedia message
      *
      * @return
@@ -114,7 +111,7 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的数据源
-     * 
+     *
      * Set the data source of the multimedia message
      *
      * @param dataUri
@@ -127,7 +124,7 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的保存路径
-     * 
+     *
      * Get the save path of multimedia messages
      *
      * @return
@@ -138,7 +135,7 @@ public class ImageMessageBean  extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的保存路径
-     * 
+     *
      * Set the save path of multimedia messages
      *
      * @param dataPath
@@ -176,7 +173,7 @@ public class ImageMessageBean  extends TUIMessageBean {
     }
 
     public String getPath() {
-        if(imageElem != null) {
+        if (imageElem != null) {
             return imageElem.getPath();
         }
         return "";
@@ -261,7 +258,6 @@ public class ImageMessageBean  extends TUIMessageBean {
                 });
             }
         }
-
 
         public interface ImageDownloadCallback {
             void onProgress(long currentSize, long totalSize);

@@ -1,12 +1,11 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
-
-import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;

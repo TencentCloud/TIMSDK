@@ -16,11 +16,11 @@ import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
 public class BlackListActivity extends BaseLightActivity {
-
     private TitleBarLayout mTitleBar;
     private ContactListView mListView;
 
     private ContactPresenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

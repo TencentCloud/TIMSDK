@@ -15,11 +15,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -157,20 +155,21 @@ public class CommunityDetailView extends FrameLayout implements ICommunityDetail
         popText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TUIKitDialog(getContext()).builder()
-                        .setTitle(getResources().getString(R.string.community_delete_topic_category))
-                        .setPositiveButton(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                communityPresenter.deleteCategory(communityBean.getGroupId(), node.getNodeName());
-                                topicPresenter.deleteCategory(node);
-                            }
-                        })
-                        .setNegativeButton(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {}
-                        })
-                        .show();
+                new TUIKitDialog(getContext())
+                    .builder()
+                    .setTitle(getResources().getString(R.string.community_delete_topic_category))
+                    .setPositiveButton(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            communityPresenter.deleteCategory(communityBean.getGroupId(), node.getNodeName());
+                            topicPresenter.deleteCategory(node);
+                        }
+                    })
+                    .setNegativeButton(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {}
+                    })
+                    .show();
                 popupWindow.dismiss();
             }
         });
@@ -207,7 +206,6 @@ public class CommunityDetailView extends FrameLayout implements ICommunityDetail
         communityMorePopupView.setCommunityBean(communityBean);
         BottomPopupCard bottomPopupCard = new BottomPopupCard((Activity) getContext(), communityMorePopupView);
         bottomPopupCard.show(this);
-
     }
 
     private void showSharePopup() {
@@ -225,6 +223,7 @@ public class CommunityDetailView extends FrameLayout implements ICommunityDetail
 
     public interface OnTopicClickListener {
         void onClick(TopicBean topicBean);
+
         void onCategoryLongClick(View view, TreeNode<ITopicBean> node);
     }
 }

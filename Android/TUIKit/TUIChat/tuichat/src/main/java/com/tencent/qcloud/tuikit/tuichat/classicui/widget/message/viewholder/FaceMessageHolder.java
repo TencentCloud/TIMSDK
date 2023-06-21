@@ -5,9 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
@@ -44,11 +42,13 @@ public class FaceMessageHolder extends MessageContentHolder {
     }
 
     private void performCustomFace(final FaceMessageBean msg) {
-        int defaultFaceSize = ScreenUtil.dip2px(DEFAULT_FACE_MAX_SIZE);
         videoPlayBtn.setVisibility(View.GONE);
         videoDurationText.setVisibility(View.GONE);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        ViewGroup.LayoutParams params = contentImage.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(0, 0);
+        }
+        int defaultFaceSize = ScreenUtil.dip2px(DEFAULT_FACE_MAX_SIZE);
         params.width = defaultFaceSize;
         params.height = defaultFaceSize;
         contentImage.setLayoutParams(params);
@@ -74,5 +74,4 @@ public class FaceMessageHolder extends MessageContentHolder {
             drawable.setColorFilter(null);
         }
     }
-
 }

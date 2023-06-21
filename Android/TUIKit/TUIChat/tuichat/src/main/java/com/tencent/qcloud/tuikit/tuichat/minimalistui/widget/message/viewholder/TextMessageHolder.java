@@ -11,7 +11,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 
 public class TextMessageHolder extends MessageContentHolder {
-
     public TextMessageHolder(View itemView) {
         super(itemView);
         timeInLineTextLayout = itemView.findViewById(R.id.text_message_layout);
@@ -50,5 +49,4 @@ public class TextMessageHolder extends MessageContentHolder {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), TUIChatService.getAppContext().getString(R.string.no_support_msg), false);
         }
     }
-
 }

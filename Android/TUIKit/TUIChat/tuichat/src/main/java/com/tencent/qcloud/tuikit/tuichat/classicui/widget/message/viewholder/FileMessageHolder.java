@@ -31,7 +31,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
 
 public class FileMessageHolder extends MessageContentHolder {
-
     private TextView fileNameText;
     private TextView fileSizeText;
     private TextView fileStatusText;
@@ -114,8 +113,7 @@ public class FileMessageHolder extends MessageContentHolder {
             });
         }
 
-        if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS
-                && message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADED) {
+        if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS && message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADED) {
             fileStatusText.setText(R.string.sended);
         } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             fileStatusText.setText(R.string.sending);
@@ -155,7 +153,7 @@ public class FileMessageHolder extends MessageContentHolder {
             }
         };
         TUIChatService.getInstance().registerNetworkListener(networkConnectionListener);
-        ProgressPresenter.getInstance().registerProgressListener(msg.getId(), progressListener);
+        ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
     }
 
     private void downloadFile(FileMessageBean message, String path, String fileName, boolean isUserClick) {
@@ -173,7 +171,7 @@ public class FileMessageHolder extends MessageContentHolder {
             @Override
             public void onProgress(long currentSize, long totalSize) {
                 int progress = (int) (currentSize * 100 / totalSize);
-                ProgressPresenter.getInstance().updateProgress(message.getId(), progress);
+                ProgressPresenter.updateProgress(message.getId(), progress);
             }
 
             @Override
@@ -232,14 +230,14 @@ public class FileMessageHolder extends MessageContentHolder {
             return;
         }
 
-
         Drawable drawable = msgArea.getBackground();
         if (drawable != null) {
             if (progressDrawable == null) {
                 progressDrawable = new ProgressDrawable();
                 progressDrawable.setProgress(progress);
                 Context context = itemView.getContext();
-                progressDrawable.setPaintColor(context.getResources().getColor(TUIThemeManager.getAttrResId(context, com.tencent.qcloud.tuicore.R.attr.core_bubble_bg_color)));
+                progressDrawable.setPaintColor(
+                    context.getResources().getColor(TUIThemeManager.getAttrResId(context, com.tencent.qcloud.tuicore.R.attr.core_bubble_bg_color)));
                 progressDrawable.setBorderColor(context.getResources().getColor(R.color.chat_message_bubble_bg_stoke_color));
                 progressDrawable.setSelf(msg.isSelf());
                 progressDrawable.setBackgroundDrawable(drawable);
@@ -262,7 +260,7 @@ public class FileMessageHolder extends MessageContentHolder {
             progressDrawable.invalidateSelf();
         }
     }
-    
+
     @Override
     public void clearHighLightBackground() {
         if (normalBackground != null) {
@@ -278,11 +276,10 @@ public class FileMessageHolder extends MessageContentHolder {
     public void onRecycled() {
         super.onRecycled();
         progressListener = null;
-        ProgressPresenter.getInstance().unregisterProgressListener(msgId, progressListener);
+        ProgressPresenter.unregisterProgressListener(msgId, progressListener);
     }
 
     static class ProgressDrawable extends Drawable {
-
         private Drawable backgroundDrawable;
         private int progress;
         private boolean isSelf;
@@ -341,32 +338,25 @@ public class FileMessageHolder extends MessageContentHolder {
             if (progress == 0) {
                 return;
             }
-            Rect rect = backgroundDrawable.getBounds();
-            int width = rect.right;
-            int height = rect.bottom;
-
-            int solidWidth = width * progress / 100;
 
             float[] radius;
             float normalRadius = ScreenUtil.dip2px(10.96f);
             float specialRadius = ScreenUtil.dip2px(2.19f);
             if (isSelf) {
-                radius = new float[]{normalRadius, normalRadius,
-                        specialRadius, specialRadius,
-                        normalRadius, normalRadius,
-                        normalRadius, normalRadius};
+                radius = new float[] {normalRadius, normalRadius, specialRadius, specialRadius, normalRadius, normalRadius, normalRadius, normalRadius};
             } else {
-                radius = new float[]{specialRadius, specialRadius,
-                        normalRadius, normalRadius,
-                        normalRadius, normalRadius,
-                        normalRadius, normalRadius};
+                radius = new float[] {specialRadius, specialRadius, normalRadius, normalRadius, normalRadius, normalRadius, normalRadius, normalRadius};
             }
             rectPath.reset();
             solidPath.reset();
             highLightPath.reset();
+            Rect rect = backgroundDrawable.getBounds();
+            int height = rect.bottom;
+            int width = rect.right;
             rectPath.addRoundRect(new RectF(borderWidth / 2, borderWidth / 2, width - borderWidth / 2, height - borderWidth / 2), radius, Path.Direction.CW);
             highLightPath.set(rectPath);
             canvas.drawPath(rectPath, borderPaint);
+            int solidWidth = width * progress / 100;
             solidPath.addRect(new RectF(borderWidth / 2, borderWidth / 2, solidWidth - borderWidth / 2, height - borderWidth / 2), Path.Direction.CW);
             rectPath.op(solidPath, Path.Op.INTERSECT);
             canvas.drawPath(rectPath, paint);
@@ -374,14 +364,10 @@ public class FileMessageHolder extends MessageContentHolder {
         }
 
         @Override
-        public void setAlpha(int alpha) {
-
-        }
+        public void setAlpha(int alpha) {}
 
         @Override
-        public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-        }
+        public void setColorFilter(@Nullable ColorFilter colorFilter) {}
 
         @Override
         public int getOpacity() {

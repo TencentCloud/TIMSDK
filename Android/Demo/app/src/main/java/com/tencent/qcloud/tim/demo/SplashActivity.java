@@ -9,7 +9,6 @@ import android.view.WindowManager;
 
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.config.AppConfig;
-import com.tencent.qcloud.tim.demo.config.InitSetting;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
 import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;

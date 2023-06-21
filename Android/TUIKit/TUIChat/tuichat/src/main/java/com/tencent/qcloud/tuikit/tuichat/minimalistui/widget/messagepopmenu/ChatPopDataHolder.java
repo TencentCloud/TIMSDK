@@ -10,11 +10,9 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class ChatPopDataHolder {
-
     private static final ChatPopDataHolder instance = new ChatPopDataHolder();
 
-    private ChatPopDataHolder() {
-    }
+    private ChatPopDataHolder() {}
 
     private WeakReference<ChatPopActivity.EmojiOnClickListener> emojiOnClickListener;
 

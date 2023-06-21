@@ -14,9 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
@@ -24,12 +22,10 @@ import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.interfaces.ISearchResultAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ISearchResultAdapter {
     private Context context;
@@ -42,7 +38,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private boolean mIsShowAll = false;
     private int mTotalCount = 0;
 
-    //data list
+    // data list
     private List<SearchDataBean> mDataList;
 
     public void setText(String text) {
@@ -121,15 +117,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             String title = searchDataBean.getTitle();
             String subTitle = searchDataBean.getSubTitle();
             String subTitleLabel = searchDataBean.getSubTitleLabel();
-            String path = searchDataBean.getIconPath();
 
             contactViewHolder.mSubTvLabelText.setText(subTitleLabel);
             if (TextUtils.isEmpty(subTitle)) {
-                RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams layoutParams =
+                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
                 contactViewHolder.mTvText.setLayoutParams(layoutParams);
             } else {
-                RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams layoutParams =
+                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 contactViewHolder.mTvText.setLayoutParams(layoutParams);
             }
 
@@ -137,8 +134,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (searchDataBean.isGroup()) {
                 avatarDefaultIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
             } else {
-                avatarDefaultIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
+                avatarDefaultIconResID = TUIThemeManager.getAttrResId(
+                    contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
             }
+            String path = searchDataBean.getIconPath();
             if (!TextUtils.isEmpty(path)) {
                 GlideEngine.loadImageSetDefault(contactViewHolder.mUserIconView, path, avatarDefaultIconResID);
             } else {
@@ -185,13 +184,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return mViewType;
     }
 
-    public interface onItemClickListener {
+    public interface OnItemClickListener {
         void onClick(View view, int pos);
     }
 
-    private onItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
-    public void setOnItemClickListener(SearchResultAdapter.onItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -226,5 +225,4 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         return spannableString;
     }
-
 }

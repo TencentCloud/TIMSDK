@@ -186,13 +186,13 @@
 
     <!--  权限相关 start -->
     <string name="demo_permission_mic_reason_title">%s申请获取麦克风权限</string>
-    <string name="demo_permission_mic_reason">为方便您发送语音消息，进行摄像和音视频通话，请允许我们访问麦克风。</string>
+    <string name="demo_permission_mic_reason">为方便您发送语音消息，进行摄像和音视频通话、使用快速会议功能，请允许我们访问麦克风。</string>
     <string name="demo_permission_camera_reason_title">%s申请获取相机权限</string>
-    <string name="demo_permission_camera_reason">为方便您拍摄照片或视频以发送给朋友，以及进行视频通话，请允许我们访问摄像头。</string>
+    <string name="demo_permission_camera_reason">为方便您拍摄照片或视频以发送给朋友、进行视频通话和使用快速会议功能，请允许我们访问摄像头。</string>
     <string name="demo_permission_storage_reason_title">%s申请获取存储权限</string>
     <string name="demo_permission_storage_reason">为方便您保存照片和视频到设备，请允许我们写入照片和视频到设备。</string>
-    <string name="demo_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像和音视频通话功能</string>
-    <string name="demo_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像和视频通话功能</string>
+    <string name="demo_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像、音视频通话和快速会议功能</string>
+    <string name="demo_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像、视频通话和快速会议功能</string>
     <string name="demo_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用保存照片和视频功能</string>
     <!--  权限相关 end -->
 

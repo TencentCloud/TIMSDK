@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.presenter;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Pair;
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListFilter;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
@@ -24,7 +22,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.model.ConversationProvider;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,27 +32,27 @@ import java.util.Map;
 public class ConversationPresenter {
     private static final String TAG = ConversationPresenter.class.getSimpleName();
 
-    public final static int SHOW_TYPE_CONVERSATION_LIST = 0;
-    public final static int SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD = 1;
+    public static final int SHOW_TYPE_CONVERSATION_LIST = 0;
+    public static final int SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD = 1;
 
-    private int showType = SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD;
+    protected int showType = SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD;
 
-    private final static int GET_CONVERSATION_COUNT = 100;
+    protected static final int GET_CONVERSATION_COUNT = 100;
 
-    ConversationEventListener conversationEventListener;
+    protected ConversationEventListener conversationEventListener;
 
     private final ConversationProvider provider;
 
-    private IConversationListAdapter adapter;
+    protected IConversationListAdapter adapter;
 
-    private final List<ConversationInfo> loadedConversationInfoList = new ArrayList<>();
+    protected final List<ConversationInfo> loadedConversationInfoList = new ArrayList<>();
     private List<ConversationInfo> foldConversationInfoList = new ArrayList<>();
 
     private ConversationInfo mUIFoldConversation;
 
-    private HashMap<String, ConversationInfo> markUnreadAndHiddenMap = new HashMap<>();
+    protected HashMap<String, ConversationInfo> markUnreadAndHiddenMap = new HashMap<>();
 
-    private long totalUnreadCount;
+    protected long totalUnreadCount;
 
     private boolean hideFoldItem;
     private boolean isUnreadStatusOfFoldItem;
@@ -63,10 +60,10 @@ public class ConversationPresenter {
     public ConversationPresenter() {
         provider = new ConversationProvider();
         String loginUserID = TUILogin.getLoginUser();
-        hideFoldItem = SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME).
-                getBoolean(TUIConversationConstants.HIDE_FOLD_ITEM_SP_KEY_PREFIX + loginUserID, false);
-        isUnreadStatusOfFoldItem = SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME).
-                getBoolean(TUIConversationConstants.FOLD_ITEM_IS_UNREAD_SP_KEY_PREFIX + loginUserID, false);
+        hideFoldItem = SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME)
+                           .getBoolean(TUIConversationConstants.HIDE_FOLD_ITEM_SP_KEY_PREFIX + loginUserID, false);
+        isUnreadStatusOfFoldItem = SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME)
+                                       .getBoolean(TUIConversationConstants.FOLD_ITEM_IS_UNREAD_SP_KEY_PREFIX + loginUserID, false);
     }
 
     public void setConversationListener() {
@@ -104,8 +101,6 @@ public class ConversationPresenter {
             @Override
             public void onSyncServerFinish() {
                 TUIConversationLog.i(TAG, "onSyncServerFinish");
-                reloadConversation();
-                ConversationPresenter.this.loadMarkedConversation();
             }
 
             @Override
@@ -153,8 +148,18 @@ public class ConversationPresenter {
             public void onMessageSendForHideConversation(String conversationID) {
                 ConversationPresenter.this.onMessageSendForHideConversation(conversationID);
             }
+
+            @Override
+            public void onConversationDeleted(List<String> conversationIDList) {
+                ConversationPresenter.this.onConversationDeleted(conversationIDList);
+            }
         };
         TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
+    }
+
+    public void destroy() {
+        TUIConversationService.getInstance().setConversationEventListenerNull();
+        this.conversationEventListener = null;
     }
 
     public void setAdapter(IConversationListAdapter adapter) {
@@ -177,36 +182,21 @@ public class ConversationPresenter {
                 if (adapter != null) {
                     adapter.onLoadingStateChanged(false);
                 }
-
             }
         });
     }
 
-    public void reloadConversation() {
-        provider.reloadConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
-            @Override
-            public void onSuccess(List<ConversationInfo> data) {
-                onLoadConversationCompleted(data);
-            }
+    public void reLoadConversation() {}
 
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                if (adapter != null) {
-                    adapter.onLoadingStateChanged(false);
-                }
-
-            }
-        });
-    }
-
-    private void onLoadConversationCompleted(List<ConversationInfo> conversationInfoList) {
+    protected void onLoadConversationCompleted(List<ConversationInfo> conversationInfoList) {
         onNewConversation(conversationInfoList, false);
         if (adapter != null) {
             adapter.onLoadingStateChanged(false);
+            adapter.onViewNeedRefresh();
         }
     }
 
-    private void refreshUnreadCount() {
+    protected void refreshUnreadCount() {
         provider.getTotalUnreadMessageCount(new IUIKitCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
@@ -215,18 +205,15 @@ public class ConversationPresenter {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
 
-    private void loadMarkedConversation() {
+    public void loadMarkedConversation() {
         TUIConversationLog.i(TAG, "loadMarkedConversation");
         V2TIMConversationListFilter filter = new V2TIMConversationListFilter();
-        long markType = V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD |
-                V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD |
-                V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE;
+        long markType = V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD | V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD
+            | V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE;
         filter.setMarkType(markType);
         provider.getMarkConversationList(filter, 0, GET_CONVERSATION_COUNT, true, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
@@ -277,7 +264,7 @@ public class ConversationPresenter {
         });
     }
 
-    private boolean updateMarkedUnreadAndHiddenList(List<ConversationInfo> conversationList) {
+    protected boolean updateMarkedUnreadAndHiddenList(List<ConversationInfo> conversationList) {
         boolean isChanged = false;
         for (ConversationInfo conversationInfo : conversationList) {
             if (conversationInfo.isMarkUnread() || conversationInfo.isMarkHidden()) {
@@ -309,7 +296,7 @@ public class ConversationPresenter {
         });
 
         List<String> userIdList = new ArrayList<>();
-        for(ConversationInfo conversationInfo : conversationInfoList) {
+        for (ConversationInfo conversationInfo : conversationInfoList) {
             if (conversationInfo.isGroup()) {
                 continue;
             }
@@ -434,12 +421,13 @@ public class ConversationPresenter {
             return;
         }
 
-        adapter.onConversationChanged(changedInfoList);
+        if (adapter != null) {
+            adapter.onConversationChanged(changedInfoList);
+        }
         refreshChangedInfo(uiSourceInfoList, changedInfoList);
     }
 
-    private void refreshChangedInfo(List<ConversationInfo> uiSourceInfoList,
-                                    ArrayList<ConversationInfo> changedInfoList) {
+    private void refreshChangedInfo(List<ConversationInfo> uiSourceInfoList, ArrayList<ConversationInfo> changedInfoList) {
         Collections.sort(changedInfoList);
 
         HashMap<ConversationInfo, Integer> indexMap = new HashMap<>();
@@ -447,7 +435,7 @@ public class ConversationPresenter {
             ConversationInfo update = changedInfoList.get(j);
             for (int i = 0; i < uiSourceInfoList.size(); i++) {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
-                //单个会话刷新时找到老的会话数据，替换
+                // 单个会话刷新时找到老的会话数据，替换
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
                     if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
@@ -551,8 +539,8 @@ public class ConversationPresenter {
     private ArrayList<ConversationInfo> processConversationListWithFold(List<ConversationInfo> conversationInfoList) {
         ArrayList<ConversationInfo> changedInfoList = new ArrayList<>();
         ArrayList<ConversationInfo> addInfoList = new ArrayList<>();
-        // 会话列表处理：折叠列表新增/折叠列表更新替换/折叠列表删除/UI加载列表新增/UI加载列表更新替换  process conversation list: add to fold list/update fold list/delete from fold list/add to ui list/update in ui list
-        // 1、存在于折叠列表  exist in fold list
+        // 会话列表处理：折叠列表新增/折叠列表更新替换/折叠列表删除/UI加载列表新增/UI加载列表更新替换  process conversation list: add to fold list/update fold
+        // list/delete from fold list/add to ui list/update in ui list 1、存在于折叠列表  exist in fold list
         //  1.1 是折叠的，替换折叠列表中的对应会话  is folded status, replace it from fold list
         //  1.2 非折叠的，从折叠列表删除该会话，并收集到新增列表中 is not folded status, delete it from fold list, and collect it in added list
         // 2、不存在于折叠列表  not exist in fold list
@@ -616,8 +604,9 @@ public class ConversationPresenter {
         // 1、折叠列表有会话  fold list size > 0
         //  1.1 排序后取出第一个非隐藏会话，并与 UI 折叠会话比较  sort list, then compare the first which not mark hidden and fold this item in ui
         //   1.1.1 与 UI 折叠会话是同一个会话，添加到待更新列表中，并更新 UI 折叠会话  is the same conversation, insert to changed list, and replace cache info
-        //   1.1.2 与 UI 折叠会话不是一个会话，从 UI 先删除折叠的会话，添加新的折叠会话到新增列表中，并更新 UI 折叠会话  is not the same conversation, delete the fold item from ui first, then insert it to added list and update cache info
-        //   1.1.3 UI 的不存在，则插入到新增会话列表，并赋值给 UI 折叠会话  cache info not exist, insert it to added list, and update cache info
+        //   1.1.2 与 UI 折叠会话不是一个会话，从 UI 先删除折叠的会话，添加新的折叠会话到新增列表中，并更新 UI 折叠会话  is not the same conversation, delete
+        //   the fold item from ui first, then insert it to added list and update cache info 1.1.3 UI 的不存在，则插入到新增会话列表，并赋值给 UI 折叠会话 cache
+        //   info not exist, insert it to added list, and update cache info
         // 2、折叠列表无会话，且 UI 会话存在，则从 UI 先删除折叠的会话，然后清空 UI 会话  fold list is empty, delete fold item from ui and clear cache info
         if (!hideFoldItem) {
             ConversationInfo firstChangedFoldInfo = getFirstFoldInfo();
@@ -659,15 +648,15 @@ public class ConversationPresenter {
         }
 
         if (!addInfoList.isEmpty()) {
-            onNewConversation(addInfoList,true);
+            onNewConversation(addInfoList, true);
         }
 
         return changedInfoList;
     }
 
-    private void processNewMessage(String conversationID, boolean isTypingMessage) {
+    protected void processNewMessage(String conversationID, boolean isTypingMessage) {
         if (TextUtils.isEmpty(conversationID)) {
-           return;
+            return;
         }
         if (isTypingMessage) {
             return;
@@ -712,9 +701,7 @@ public class ConversationPresenter {
                 }
 
                 @Override
-                public void onError(String module, int errCode, String errMsg) {
-
-                }
+                public void onError(String module, int errCode, String errMsg) {}
             });
 
             // if new message is belong to one of the foldedConversationInfoList, then show fold item
@@ -726,8 +713,8 @@ public class ConversationPresenter {
 
     public void hideFoldItem(boolean needHide) {
         String loginUserID = TUILogin.getLoginUser();
-        SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME).
-                put(TUIConversationConstants.HIDE_FOLD_ITEM_SP_KEY_PREFIX + loginUserID, needHide);
+        SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME)
+            .put(TUIConversationConstants.HIDE_FOLD_ITEM_SP_KEY_PREFIX + loginUserID, needHide);
         hideFoldItem = needHide;
         if (needHide) {
             hideFoldItemFromUI();
@@ -749,8 +736,8 @@ public class ConversationPresenter {
 
     public void setUnreadStatusOfFoldItem(boolean isUnread) {
         String loginUserID = TUILogin.getLoginUser();
-        SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME).
-                put(TUIConversationConstants.FOLD_ITEM_IS_UNREAD_SP_KEY_PREFIX + loginUserID, isUnread);
+        SPUtils.getInstance(TUIConversationConstants.CONVERSATION_SETTINGS_SP_NAME)
+            .put(TUIConversationConstants.FOLD_ITEM_IS_UNREAD_SP_KEY_PREFIX + loginUserID, isUnread);
         isUnreadStatusOfFoldItem = isUnread;
         if (mUIFoldConversation == null) {
             return;
@@ -775,7 +762,7 @@ public class ConversationPresenter {
         return firstChangedFoldInfo;
     }
 
-    private void updateTotalUnreadMessageCount(long sdkUnreadCount) {
+    protected void updateTotalUnreadMessageCount(long sdkUnreadCount) {
         int markUnreadCount = 0;
         int markHiddenCount = 0;
         Iterator<Map.Entry<String, ConversationInfo>> iterator = markUnreadAndHiddenMap.entrySet().iterator();
@@ -793,12 +780,14 @@ public class ConversationPresenter {
             }
         }
 
-        TUIConversationLog.i(TAG, "updateTotalUnreadMessageCount sdkUnreadCount:" + sdkUnreadCount + ", markUnreadCount:" + markUnreadCount + ", markHiddenCount:" + markHiddenCount);
+        TUIConversationLog.i(TAG,
+            "updateTotalUnreadMessageCount sdkUnreadCount:" + sdkUnreadCount + ", markUnreadCount:" + markUnreadCount + ", markHiddenCount:" + markHiddenCount);
 
         totalUnreadCount = sdkUnreadCount + markUnreadCount - markHiddenCount;
         if (totalUnreadCount < 0) {
             totalUnreadCount = 0;
         }
+        TUIConversationService.getInstance().setConversationAllGroupUnreadDiff(markUnreadCount - markHiddenCount);
         updateUnreadTotal(totalUnreadCount);
     }
 
@@ -820,13 +809,37 @@ public class ConversationPresenter {
         LocalBroadcastManager.getInstance(TUIConversationService.getAppContext()).sendBroadcast(intent);
     }
 
+    public void updateUnreadTotalByDiff(int diff) {
+        provider.getTotalUnreadMessageCount(new IUIKitCallback<Long>() {
+            @Override
+            public void onSuccess(Long data) {
+                int sdkUnreadCount = data.intValue();
+                TUIConversationLog.i(TAG, "updateUnreadTotalByDiff:" + sdkUnreadCount);
+                totalUnreadCount = sdkUnreadCount + diff;
+                HashMap<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnreadCount);
+                TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, param);
+
+                Intent intent = new Intent();
+                intent.setAction(TUIConstants.CONVERSATION_UNREAD_COUNT_ACTION);
+                intent.putExtra(TUIConstants.UNREAD_COUNT_EXTRA, totalUnreadCount);
+                LocalBroadcastManager.getInstance(TUIConversationService.getAppContext()).sendBroadcast(intent);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {}
+        });
+    }
+
     /**
      * 将某个会话置顶
      *
      * @param conversation
      */
     public void setConversationTop(final ConversationInfo conversation, final IUIKitCallback<Void> callBack) {
-        TUIConversationLog.i(TAG, "setConversationTop" + "|conversation:" + conversation);
+        TUIConversationLog.i(TAG,
+            "setConversationTop"
+                + "|conversation:" + conversation);
         final boolean setTop = !conversation.isTop();
 
         provider.setConversationTop(conversation.getConversationId(), setTop, new IUIKitCallback<Void>() {
@@ -843,7 +856,6 @@ public class ConversationPresenter {
                 }
             }
         });
-
     }
 
     /**
@@ -913,6 +925,13 @@ public class ConversationPresenter {
                     adapter.onItemRemoved(index);
                 }
 
+                String conversationId = conversation.getConversationId();
+                ConversationInfo cacheConversation = markUnreadAndHiddenMap.get(conversationId);
+                if (cacheConversation != null) {
+                    markUnreadAndHiddenMap.remove(conversationId);
+                    refreshUnreadCount();
+                }
+
                 if (mUIFoldConversation == null) {
                     return;
                 }
@@ -920,13 +939,13 @@ public class ConversationPresenter {
                 Iterator<ConversationInfo> iterator = foldConversationInfoList.iterator();
                 while (iterator.hasNext()) {
                     ConversationInfo cacheConversationInfo = iterator.next();
-                    if (TextUtils.equals(conversation.getConversationId(), cacheConversationInfo.getConversationId())) {
+                    if (TextUtils.equals(conversationId, cacheConversationInfo.getConversationId())) {
                         iterator.remove();
                         break;
                     }
                 }
 
-                if (!TextUtils.equals(conversation.getConversationId(), mUIFoldConversation.getConversationId())) {
+                if (!TextUtils.equals(conversationId, mUIFoldConversation.getConversationId())) {
                     return;
                 }
 
@@ -936,106 +955,17 @@ public class ConversationPresenter {
                         mUIFoldConversation = conversationInfo;
                         ArrayList<ConversationInfo> addInfoList = new ArrayList<>();
                         addInfoList.add(mUIFoldConversation);
-                        onNewConversation(addInfoList,true);
+                        onNewConversation(addInfoList, true);
                         break;
                     }
                 }
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
-        });
-
-    }
-
-    /**
-     * 清空会话
-     *
-     * @param conversation 会话信息
-     */
-    public void clearConversationMessage(ConversationInfo conversation) {
-        if (conversation == null || TextUtils.isEmpty(conversation.getConversationId())) {
-            TUIConversationLog.e(TAG, "clearConversationMessage error: invalid conversation");
-            return;
-        }
-
-        provider.clearHistoryMessage(conversation.getId(), conversation.isGroup(), new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
 
-    /**
-     * 隐藏会话
-     * hide conversation
-     * @param conversationInfo 会话信息 conversation info
-     */
-    public void markConversationHidden(ConversationInfo conversationInfo, boolean isHidden) {
-        if (conversationInfo == null || TextUtils.isEmpty(conversationInfo.getConversationId())) {
-            TUIConversationLog.e(TAG, "markConversationHidden error: invalid conversationInfo");
-            return;
-        }
-
-        provider.markConversationHidden(conversationInfo.getConversationId(), isHidden, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                conversationInfo.setMarkHidden(isHidden);
-                TUIConversationLog.i(TAG, "markConversationHidden success, conversationID:" +
-                        conversationInfo.getConversationId() + ", isHidden:" + isHidden);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIConversationLog.e(TAG, "markConversationHidden error, conversationID:" +
-                        conversationInfo.getConversationId() + ", code:" + errCode + "|msg:" + errMsg);
-            }
-        });
-    }
-
-    public void markConversationUnread(ConversationInfo conversationInfo, boolean markUnread) {
-        if (conversationInfo == null || TextUtils.isEmpty(conversationInfo.getConversationId())) {
-            TUIConversationLog.e(TAG, "markConversationUnread error: invalid conversationInfo");
-            return;
-        }
-
-        provider.markConversationUnread(conversationInfo, markUnread, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                conversationInfo.setMarkUnread(markUnread);
-                TUIConversationLog.i(TAG, "markConversationRead success, conversationID:" +
-                        conversationInfo.getConversationId());
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIConversationLog.e(TAG, "markConversationRead error, conversationID:" +
-                        conversationInfo.getConversationId() + ", code:" + errCode + "|msg:" + errMsg);
-            }
-        });
-    }
-
-    public void clearConversationMessage(String chatId, boolean isGroup) {
-        provider.clearHistoryMessage(chatId, isGroup, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
-        });
-    }
 
     /**
      * 删除会话，只删除数据源中的会话信息
@@ -1067,6 +997,83 @@ public class ConversationPresenter {
         deleteConversation(conversationInfo);
     }
 
+    /**
+     * 清空会话
+     *
+     * @param conversation 会话信息
+     */
+    public void clearConversationMessage(ConversationInfo conversation) {
+        if (conversation == null || TextUtils.isEmpty(conversation.getConversationId())) {
+            TUIConversationLog.e(TAG, "clearConversationMessage error: invalid conversation");
+            return;
+        }
+
+        provider.clearHistoryMessage(conversation.getId(), conversation.isGroup(), new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {}
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {}
+        });
+    }
+
+    public void clearConversationMessage(String chatId, boolean isGroup) {
+        provider.clearHistoryMessage(chatId, isGroup, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {}
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {}
+        });
+    }
+
+    /**
+     * 隐藏会话
+     * hide conversation
+     * @param conversationInfo 会话信息 conversation info
+     */
+    public void markConversationHidden(ConversationInfo conversationInfo, boolean isHidden) {
+        if (conversationInfo == null || TextUtils.isEmpty(conversationInfo.getConversationId())) {
+            TUIConversationLog.e(TAG, "markConversationHidden error: invalid conversationInfo");
+            return;
+        }
+
+        provider.markConversationHidden(conversationInfo.getConversationId(), isHidden, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                conversationInfo.setMarkHidden(isHidden);
+                TUIConversationLog.i(TAG, "markConversationHidden success, conversationID:" + conversationInfo.getConversationId() + ", isHidden:" + isHidden);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIConversationLog.e(
+                    TAG, "markConversationHidden error, conversationID:" + conversationInfo.getConversationId() + ", code:" + errCode + "|msg:" + errMsg);
+            }
+        });
+    }
+
+    public void markConversationUnread(ConversationInfo conversationInfo, boolean markUnread) {
+        if (conversationInfo == null || TextUtils.isEmpty(conversationInfo.getConversationId())) {
+            TUIConversationLog.e(TAG, "markConversationUnread error: invalid conversationInfo");
+            return;
+        }
+
+        provider.markConversationUnread(conversationInfo, markUnread, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                conversationInfo.setMarkUnread(markUnread);
+                TUIConversationLog.i(TAG, "markConversationRead success, conversationID:" + conversationInfo.getConversationId());
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIConversationLog.e(
+                    TAG, "markConversationRead error, conversationID:" + conversationInfo.getConversationId() + ", code:" + errCode + "|msg:" + errMsg);
+            }
+        });
+    }
+
     public void clearFoldMarkAndDeleteConversation(String conversationId) {
         if (TextUtils.isEmpty(conversationId)) {
             return;
@@ -1094,8 +1101,7 @@ public class ConversationPresenter {
 
                 @Override
                 public void onError(String module, int errCode, String errMsg) {
-                    TUIConversationLog.e(TAG, "markConversationFold error, conversationID:" +
-                            conversationId + ", code:" + errCode + "|msg:" + errMsg);
+                    TUIConversationLog.e(TAG, "markConversationFold error, conversationID:" + conversationId + ", code:" + errCode + "|msg:" + errMsg);
                 }
             });
         } else {
@@ -1128,7 +1134,7 @@ public class ConversationPresenter {
 
         boolean isHide = false;
         ConversationInfo conversationInfo = markUnreadAndHiddenMap.get(id);
-        if (conversationInfo!= null && conversationInfo.isMarkHidden()) {
+        if (conversationInfo != null && conversationInfo.isMarkHidden()) {
             isHide = true;
         }
 
@@ -1139,14 +1145,13 @@ public class ConversationPresenter {
         provider.markConversationHidden(id, false, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                TUIConversationLog.i(TAG, "onMessageSendForHideConversation markConversationHidden success, conversationID:" +
-                        id + ", isHidden:false");
+                TUIConversationLog.i(TAG, "onMessageSendForHideConversation markConversationHidden success, conversationID:" + id + ", isHidden:false");
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                TUIConversationLog.e(TAG, "onMessageSendForHideConversation markConversationHidden error, conversationID:" +
-                        id + ", code:" + errCode + "|msg:" + errMsg);
+                TUIConversationLog.e(
+                    TAG, "onMessageSendForHideConversation markConversationHidden error, conversationID:" + id + ", code:" + errCode + "|msg:" + errMsg);
             }
         });
     }
@@ -1157,11 +1162,11 @@ public class ConversationPresenter {
         }
         HashMap<String, Pair<Integer, ConversationInfo>> dataSourceMap = new HashMap<>();
         int index = 0;
-        for(ConversationInfo itemBean : loadedConversationInfoList) {
+        for (ConversationInfo itemBean : loadedConversationInfoList) {
             dataSourceMap.put(itemBean.getId(), Pair.create(index++, itemBean));
         }
 
-        for(V2TIMUserStatus timUserStatus : userStatusList) {
+        for (V2TIMUserStatus timUserStatus : userStatusList) {
             String userid = timUserStatus.getUserID();
             Pair<Integer, ConversationInfo> beanPair = dataSourceMap.get(userid);
             if (beanPair == null) {
@@ -1182,14 +1187,10 @@ public class ConversationPresenter {
     public void clearAllUnreadMessage() {
         provider.clearAllUnreadMessage(new IUIKitCallback<Void>() {
             @Override
-            public void onSuccess(Void data) {
-
-            }
+            public void onSuccess(Void data) {}
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
 
@@ -1202,4 +1203,70 @@ public class ConversationPresenter {
         }
     }
 
+    public void onConversationDeleted(List<String> conversationIdList) {
+        if (conversationIdList == null || conversationIdList.isEmpty()) {
+            return;
+        }
+
+        for (String conversationId : conversationIdList) {
+            deleteConversationById(conversationId);
+        }
+    }
+
+    public void onDeleteConversation(List<ConversationInfo> conversationInfoList) {
+        if (conversationInfoList == null || conversationInfoList.isEmpty()) {
+            return;
+        }
+
+        for (ConversationInfo conversation : conversationInfoList) {
+            deleteConversationById(conversation.getConversationId());
+        }
+    }
+
+    private void deleteConversationById(String conversationId) {
+        for (int i = 0; i < loadedConversationInfoList.size(); i++) {
+            ConversationInfo info = loadedConversationInfoList.get(i);
+            if (info.getConversationId().equals(conversationId)) {
+                loadedConversationInfoList.remove(i);
+                if (adapter != null) {
+                    adapter.onItemRemoved(i);
+                }
+                break;
+            }
+        }
+
+        ConversationInfo cacheConversation = markUnreadAndHiddenMap.get(conversationId);
+        if (cacheConversation != null) {
+            markUnreadAndHiddenMap.remove(conversationId);
+            refreshUnreadCount();
+        }
+
+        if (mUIFoldConversation == null) {
+            return;
+        }
+
+        if (!TextUtils.equals(conversationId, mUIFoldConversation.getConversationId())) {
+            return;
+        }
+
+        mUIFoldConversation = null;
+        Iterator<ConversationInfo> iterator = foldConversationInfoList.iterator();
+        while (iterator.hasNext()) {
+            ConversationInfo cacheConversationInfo = iterator.next();
+            if (TextUtils.equals(conversationId, cacheConversationInfo.getConversationId())) {
+                iterator.remove();
+                break;
+            }
+        }
+
+        for (ConversationInfo conversationInfo : foldConversationInfoList) {
+            if (!conversationInfo.isMarkHidden()) {
+                mUIFoldConversation = conversationInfo;
+                ArrayList<ConversationInfo> addInfoList = new ArrayList<>();
+                addInfoList.add(mUIFoldConversation);
+                onNewConversation(addInfoList, true);
+                break;
+            }
+        }
+    }
 }

@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
 import android.widget.EditText;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,7 +73,7 @@ public class TIMMentionEditText extends EditText {
             return;
         }
 
-        //forbid cursor located in the mention string.
+        // forbid cursor located in the mention string.
         if (selStart == selEnd) {
             setSelection(nearbyRange.getAnchorPosition(selStart));
         } else {
@@ -194,17 +193,15 @@ public class TIMMentionEditText extends EditText {
         return null;
     }
 
-
     private class MentionTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
         @Override
         public void onTextChanged(CharSequence charSequence, int index, int i1, int count) {
             if (count == 1 && !TextUtils.isEmpty(charSequence) && hasFocus()) {
                 char mentionChar = charSequence.toString().charAt(index);
-                for (String mentionTag: mentionTagList) {
+                for (String mentionTag : mentionTagList) {
                     if (mentionTag.equals(String.valueOf(mentionChar)) && mOnMentionInputListener != null) {
                         mOnMentionInputListener.onMentionCharacterInput(mentionTag);
                     }
@@ -213,10 +210,8 @@ public class TIMMentionEditText extends EditText {
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
-        }
+        public void afterTextChanged(Editable editable) {}
     }
-
 
     private class HackInputConnection extends InputConnectionWrapper {
         private EditText editText;
@@ -256,7 +251,7 @@ public class TIMMentionEditText extends EditText {
         public boolean deleteSurroundingText(int beforeLength, int afterLength) {
             if (beforeLength == 1 && afterLength == 0) {
                 return sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
-                        && sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+                    && sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
             }
             return super.deleteSurroundingText(beforeLength, afterLength);
         }
@@ -297,5 +292,4 @@ public class TIMMentionEditText extends EditText {
     public interface OnMentionInputListener {
         void onMentionCharacterInput(String tag);
     }
-
 }

@@ -1,14 +1,12 @@
 package com.tencent.qcloud.tuikit.tuichat.component;
 
 import android.media.MediaPlayer;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class AudioPlayer {
-
     private static final String TAG = AudioPlayer.class.getSimpleName();
     private static AudioPlayer sInstance = new AudioPlayer();
     private Callback mPlayCallback;
@@ -16,8 +14,7 @@ public class AudioPlayer {
     private String mAudioRecordPath;
     private MediaPlayer mPlayer;
 
-    private AudioPlayer() {
-    }
+    private AudioPlayer() {}
 
     public static AudioPlayer getInstance() {
         return sInstance;
@@ -81,5 +78,4 @@ public class AudioPlayer {
     public interface Callback {
         void onCompletion(Boolean success);
     }
-
 }

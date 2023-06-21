@@ -19,7 +19,6 @@ import java.net.URL;
  * TUI configuration, such as file path configuration, user information
  */
 public class TUIConfig {
-
     private static Context appContext;
 
     private static String appDir = "";
@@ -34,8 +33,9 @@ public class TUIConfig {
 
     private static final String RECORD_DIR_SUFFIX = "/record/";
     private static final String RECORD_DOWNLOAD_DIR_SUFFIX = "/record/download/";
+    public static final String VIDEO_BASE_DIR_SUFFIX = "/video/";
     private static final String VIDEO_DOWNLOAD_DIR_SUFFIX = "/video/download/";
-    private static final String IMAGE_BASE_DIR_SUFFIX = "/image/";
+    public static final String IMAGE_BASE_DIR_SUFFIX = "/image/";
     private static final String IMAGE_DOWNLOAD_DIR_SUFFIX = "/image/download/";
     private static final String MEDIA_DIR_SUFFIX = "/media/";
     private static final String FILE_DOWNLOAD_DIR_SUFFIX = "/file/download/";
@@ -46,8 +46,8 @@ public class TUIConfig {
     private static int defaultAvatarImage;
     private static int defaultGroupAvatarImage;
 
-    public final static int TUI_HOST_TYPE_IMAPP = 0;
-    public final static int TUI_HOST_TYPE_RTCUBE = 1;
+    public static final int TUI_HOST_TYPE_IMAPP = 0;
+    public static final int TUI_HOST_TYPE_RTCUBE = 1;
     // 0,im app; 1,rtcube app
     private static int tuiHostType = TUI_HOST_TYPE_IMAPP;
 
@@ -87,6 +87,10 @@ public class TUIConfig {
 
     public static String getRecordDownloadDir() {
         return getDefaultAppDir() + RECORD_DOWNLOAD_DIR_SUFFIX;
+    }
+
+    public static String getVideoBaseDir() {
+        return getDefaultAppDir() + VIDEO_BASE_DIR_SUFFIX;
     }
 
     public static String getVideoDownloadDir() {
@@ -281,6 +285,16 @@ public class TUIConfig {
             f.mkdirs();
         }
 
+        f = new File(getImageBaseDir());
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+
+        f = new File(getVideoBaseDir());
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+
         f = new File(getFileDownloadDir());
         if (!f.exists()) {
             f.mkdirs();
@@ -296,15 +310,13 @@ public class TUIConfig {
         return appContext;
     }
 
-    public static void setSceneOptimizParams(final String scene){
+    public static void setSceneOptimizParams(final String scene) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     String packageName = "";
-                    String sdkAPPId = TUILogin.getSdkAppId() + "";
-                    String userId = TUILogin.getUserId();
-                    if(getAppContext() != null){
+                    if (getAppContext() != null) {
                         packageName = getAppContext().getPackageName();
                     }
 
@@ -318,12 +330,14 @@ public class TUIConfig {
                     conn.setRequestMethod("POST");
                     conn.setRequestProperty("Content-Type", "application/json");
 
+                    String sdkAPPId = TUILogin.getSdkAppId() + "";
                     JSONObject msgObject = new JSONObject();
                     msgObject.put("sdkappid", sdkAPPId);
                     msgObject.put("bundleId", "");
                     msgObject.put("component", scene);
                     msgObject.put("package", packageName);
 
+                    String userId = TUILogin.getUserId();
                     JSONObject bodyObject = new JSONObject();
                     bodyObject.put("userId", userId);
                     bodyObject.put("event", "useScenario");
@@ -338,7 +352,7 @@ public class TUIConfig {
                         InputStream is = conn.getInputStream();
                         ByteArrayOutputStream message = new ByteArrayOutputStream();
                         int len = 0;
-                        byte buffer[] = new byte[1024];
+                        byte[] buffer = new byte[1024];
                         while ((len = is.read(buffer)) != -1) {
                             message.write(buffer, 0, len);
                         }

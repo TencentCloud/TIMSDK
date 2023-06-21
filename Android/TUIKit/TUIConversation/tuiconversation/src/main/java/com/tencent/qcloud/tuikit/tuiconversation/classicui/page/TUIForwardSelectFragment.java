@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
@@ -29,7 +27,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ForwardConvers
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ForwardSelectLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TUIForwardSelectFragment extends BaseFragment {
-
     private View mBaseView;
     private TitleBarLayout mTitleBarLayout;
     private ForwardSelectLayout mForwardLayout;
@@ -74,22 +70,22 @@ public class TUIForwardSelectFragment extends BaseFragment {
         mForwardLayout.getConversationList().setOnConversationAdapterListener(new OnConversationAdapterListener() {
             @Override
             public void onItemClick(View view, int viewType, ConversationInfo conversationInfo) {
-                if (viewType == ConversationInfo.TYPE_RECENT_LABEL){
+                if (viewType == ConversationInfo.TYPE_RECENT_LABEL) {
                     return;
-                } else if (viewType == ConversationInfo.TYPE_FORWAR_SELECT){
-                    if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))){
+                } else if (viewType == ConversationInfo.TYPE_FORWAR_SELECT) {
+                    if (mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))) {
                         selectContactsToForward();
-                    }else if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))){
+                    } else if (mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))) {
                         createNewConversationToForward();
-                    }else{
-                        TUIConversationLog.d(TAG,"Titlebar exception");
+                    } else {
+                        TUIConversationLog.d(TAG, "Titlebar exception");
                     }
                 } else {
-                    if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))) {
+                    if (mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))) {
                         mDataSource = mForwardLayout.getConversationList().getAdapter().getSelectedItem();
                         checkRepeat();
                         refreshSelectConversations();
-                    } else if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))){
+                    } else if (mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))) {
                         forwardMessages(conversationInfo);
                     } else {
                         forwardMessages(conversationInfo);
@@ -98,14 +94,10 @@ public class TUIForwardSelectFragment extends BaseFragment {
             }
 
             @Override
-            public void OnItemLongClick(View view, ConversationInfo conversationInfo) {
-
-            }
+            public void onItemLongClick(View view, ConversationInfo conversationInfo) {}
 
             @Override
-            public void onConversationChanged(List<ConversationInfo> dataSource) {
-
-            }
+            public void onConversationChanged(List<ConversationInfo> dataSource) {}
         });
 
         mForwardSelectlistViewLayout = view.findViewById(R.id.forward_select_list_layout);
@@ -119,15 +111,15 @@ public class TUIForwardSelectFragment extends BaseFragment {
             @Override
             public void onClick(View view, int position) {
                 boolean needFresh = false;
-                if (mDataSource != null && mDataSource.size() != 0){
-                    if(position < mDataSource.size()) {
+                if (mDataSource != null && mDataSource.size() != 0) {
+                    if (position < mDataSource.size()) {
                         mDataSource.remove(position);
                         mForwardLayout.getConversationList().getAdapter().setSelectConversations(mDataSource);
                         needFresh = true;
                     }
                 }
 
-                if(!needFresh) {
+                if (!needFresh) {
                     if (mContactDataSource != null && mContactDataSource.size() != 0) {
                         int dataSourcePosition = mDataSource == null ? 0 : mDataSource.size();
                         if (position - dataSourcePosition < mContactDataSource.size()) {
@@ -148,14 +140,14 @@ public class TUIForwardSelectFragment extends BaseFragment {
             public void onClick(View v) {
                 if (getActivity() != null) {
                     HashMap<String, Boolean> conversationMap = new HashMap<>();
-                    if (mDataSource != null && mDataSource.size() != 0){
-                        for (int i=0;i<mDataSource.size();i++){
+                    if (mDataSource != null && mDataSource.size() != 0) {
+                        for (int i = 0; i < mDataSource.size(); i++) {
                             conversationMap.put(mDataSource.get(i).getId(), mDataSource.get(i).isGroup());
                         }
                     }
 
-                    if (mContactDataSource != null && mContactDataSource.size() != 0){
-                        for (int i=0;i<mContactDataSource.size();i++){
+                    if (mContactDataSource != null && mContactDataSource.size() != 0) {
+                        for (int i = 0; i < mContactDataSource.size(); i++) {
                             conversationMap.put(mContactDataSource.get(i).getId(), mContactDataSource.get(i).isGroup());
                         }
                     }
@@ -198,16 +190,16 @@ public class TUIForwardSelectFragment extends BaseFragment {
                 if (result.getData() == null) {
                     return;
                 }
-                HashMap<String, String> conversationMap = (HashMap<String, String>) result.getData()
-                        .getSerializableExtra(TUIConversationConstants.FORWARD_SELECT_CONVERSATION_KEY);
-                if (conversationMap == null || conversationMap.isEmpty()){
+                HashMap<String, String> conversationMap =
+                    (HashMap<String, String>) result.getData().getSerializableExtra(TUIConversationConstants.FORWARD_SELECT_CONVERSATION_KEY);
+                if (conversationMap == null || conversationMap.isEmpty()) {
                     mContactDataSource.clear();
                     refreshSelectConversations();
                     return;
                 }
 
                 mContactDataSource.clear();
-                for (Map.Entry<String, String> entry: conversationMap.entrySet()){
+                for (Map.Entry<String, String> entry : conversationMap.entrySet()) {
                     ConversationInfo conversationInfo = new ConversationInfo();
                     List<Object> iconList = new ArrayList<>();
                     iconList.add(entry.getValue());
@@ -223,21 +215,21 @@ public class TUIForwardSelectFragment extends BaseFragment {
         });
     }
 
-    private void refreshSelectConversations(){
+    private void refreshSelectConversations() {
         mAllSelectedConversations.clear();
 
         mDataSource = mForwardLayout.getConversationList().getAdapter().getSelectedItem();
 
-        if (mDataSource != null && mDataSource.size() != 0){
+        if (mDataSource != null && mDataSource.size() != 0) {
             mAllSelectedConversations.addAll(mDataSource);
         }
-        if (mContactDataSource != null && mContactDataSource.size() != 0){
+        if (mContactDataSource != null && mContactDataSource.size() != 0) {
             mAllSelectedConversations.addAll(mContactDataSource);
         }
 
         mAdapter.setDataSource(mAllSelectedConversations);
 
-        if (mAllSelectedConversations == null || mAllSelectedConversations.size() == 0){
+        if (mAllSelectedConversations == null || mAllSelectedConversations.size() == 0) {
             mSureView.setText(getString(com.tencent.qcloud.tuicore.R.string.sure));
             mSureView.setVisibility(View.GONE);
             mForwardSelectlistViewLayout.setVisibility(View.GONE);
@@ -248,7 +240,7 @@ public class TUIForwardSelectFragment extends BaseFragment {
         }
     }
 
-    private void forwardMessages(final ConversationInfo conversationInfo){
+    private void forwardMessages(final ConversationInfo conversationInfo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("");
         builder.setMessage(getString(R.string.forward_alert_title));
@@ -279,7 +271,7 @@ public class TUIForwardSelectFragment extends BaseFragment {
         dialog.show();
     }
 
-    private void customizeConversation(){
+    private void customizeConversation() {
         mTitleBarLayout = mForwardLayout.getTitleBar();
         mTitleBarLayout.setTitle("", TitleBarLayout.Position.MIDDLE);
         mTitleBarLayout.getLeftGroup().setVisibility(View.VISIBLE);
@@ -288,14 +280,13 @@ public class TUIForwardSelectFragment extends BaseFragment {
         mTitleBarLayout.setTitle(getString(R.string.titlebar_mutiselect), TitleBarLayout.Position.RIGHT);
         mTitleBarLayout.getLeftIcon().setVisibility(View.GONE);
         mTitleBarLayout.getRightIcon().setVisibility(View.GONE);
-
     }
 
     private void initTitleAction() {
         mForwardLayout.getTitleBar().setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))){
+                if (mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_cancle))) {
                     mTitleBarLayout.getRightGroup().setVisibility(View.VISIBLE);
                     mTitleBarLayout.setTitle(getString(R.string.titlebar_close), TitleBarLayout.Position.LEFT);
                     mTitleBarLayout.setTitle(getString(R.string.titlebar_mutiselect), TitleBarLayout.Position.RIGHT);
@@ -307,10 +298,10 @@ public class TUIForwardSelectFragment extends BaseFragment {
                     mForwardSelectlistViewLayout.setVisibility(View.GONE);
                     mAdapter.setDataSource(null);
                     mAllSelectedConversations.clear();
-                }else if(mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))){
+                } else if (mTitleBarLayout.getLeftTitle().getText().equals(getString(R.string.titlebar_close))) {
                     getActivity().finish();
-                }else{
-                    TUIConversationLog.d(TAG,"Titlebar exception");
+                } else {
+                    TUIConversationLog.d(TAG, "Titlebar exception");
                 }
             }
         });
@@ -342,5 +333,4 @@ public class TUIForwardSelectFragment extends BaseFragment {
             }
         }
     }
-
 }

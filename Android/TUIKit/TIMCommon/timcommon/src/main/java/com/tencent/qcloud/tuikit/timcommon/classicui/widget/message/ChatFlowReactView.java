@@ -10,17 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.ReactUserBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +26,7 @@ public class ChatFlowReactView extends RecyclerView {
     private ChatFlowReactLayoutManager layoutManager;
     private ChatFlowReactAdapter adapter;
     private int themeColorId;
+
     public ChatFlowReactView(@NonNull Context context) {
         super(context);
         initView();
@@ -45,7 +43,6 @@ public class ChatFlowReactView extends RecyclerView {
     }
 
     private void initView() {
-
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float spacingVertical = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7.68f, displayMetrics);
         float spacingHorizontal = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5.76f, displayMetrics);
@@ -78,6 +75,7 @@ public class ChatFlowReactView extends RecyclerView {
         private MessageReactBean data;
         private ReactOnClickListener reactOnClickListener;
         private int themeColorId;
+
         public void setReactOnClickListener(ReactOnClickListener reactOnClickListener) {
             this.reactOnClickListener = reactOnClickListener;
         }
@@ -101,11 +99,10 @@ public class ChatFlowReactView extends RecyclerView {
         public void onBindViewHolder(@NonNull ChatFlowReactViewHolder holder, int position) {
             Map.Entry<String, Set<String>> entry = new ArrayList<>(data.getReacts().entrySet()).get(position);
             String emojiId = entry.getKey();
-            Set<String> userIds = entry.getValue();
-
             Bitmap bitmap = FaceManager.getEmoji(emojiId);
             holder.faceImageView.setImageBitmap(bitmap);
-
+            Set<String> userIds = entry.getValue();
+            holder.userTextView.setText(formatDisplayUserName(userIds));
             holder.faceImageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -118,19 +115,18 @@ public class ChatFlowReactView extends RecyclerView {
                 holder.userTextView.setTextColor(holder.userTextView.getResources().getColor(themeColorId));
                 holder.userTextView.setTextColor(holder.userTextView.getResources().getColor(themeColorId));
             } else {
-                holder.userTextView.setTextColor(holder.userTextView.getResources().getColor(
-                        TUIThemeManager.getAttrResId(holder.userTextView.getContext(), R.attr.chat_react_text_color)));
-                holder.userTextView.setTextColor(holder.userTextView.getResources().getColor(
-                        TUIThemeManager.getAttrResId(holder.userTextView.getContext(), R.attr.chat_react_text_color)));
+                holder.userTextView.setTextColor(
+                    holder.userTextView.getResources().getColor(TUIThemeManager.getAttrResId(holder.userTextView.getContext(), R.attr.chat_react_text_color)));
+                holder.userTextView.setTextColor(
+                    holder.userTextView.getResources().getColor(TUIThemeManager.getAttrResId(holder.userTextView.getContext(), R.attr.chat_react_text_color)));
             }
-            holder.userTextView.setText(formatDisplayUserName(userIds));
         }
 
         private String getUserDisplayName(String id) {
             if (data.getReactUserBeanMap() == null) {
                 return id;
             } else {
-                ReactUserBean reactUserBean = data.getReactUserBeanMap().get(id);
+                UserBean reactUserBean = data.getReactUserBeanMap().get(id);
                 if (reactUserBean == null) {
                     return id;
                 } else {
@@ -146,7 +142,7 @@ public class ChatFlowReactView extends RecyclerView {
             }
             return 0;
         }
-        
+
         private String formatDisplayUserName(Set<String> userIds) {
             StringBuilder stringBuilder = new StringBuilder();
             int index = 0;
@@ -168,13 +164,13 @@ public class ChatFlowReactView extends RecyclerView {
     static class ChatFlowReactViewHolder extends ViewHolder {
         public TextView userTextView;
         public ImageView faceImageView;
+
         public ChatFlowReactViewHolder(@NonNull View itemView) {
             super(itemView);
             userTextView = itemView.findViewById(R.id.users_tv);
             faceImageView = itemView.findViewById(R.id.face_iv);
         }
     }
-
 
     // ChatReactView is just a simple flowLayout
     static class ChatFlowReactLayoutManager extends LayoutManager {
@@ -216,10 +212,8 @@ public class ChatFlowReactView extends RecyclerView {
                 addView(childView);
                 measureChildWithMargins(childView, 0, 0);
                 int childMeasuredWidth = getDecoratedMeasuredWidth(childView);
-                int childMeasuredHeight = getDecoratedMeasuredHeight(childView);
 
-                if (i != 0 && offsetRight + horizontalSpacing + childMeasuredWidth >
-                        getWidth() - getPaddingStart() - getPaddingEnd()) {
+                if (i != 0 && offsetRight + horizontalSpacing + childMeasuredWidth > getWidth() - getPaddingStart() - getPaddingEnd()) {
                     // switch a new line
                     isLineFirstItem = true;
                     isFirstLine = false;
@@ -237,6 +231,7 @@ public class ChatFlowReactView extends RecyclerView {
                 } else {
                     offsetTop = currentMaxBottom + verticalSpacing;
                 }
+                int childMeasuredHeight = getDecoratedMeasuredHeight(childView);
 
                 offsetRight = offsetLeft + childMeasuredWidth;
                 offsetBottom = offsetTop + childMeasuredHeight;

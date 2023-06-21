@@ -44,7 +44,7 @@ public class AIDenoiseSignatureManager {
                 }
 
                 if (expiredTimeObject != null) {
-                    String expiredTimeString = (String)expiredTimeObject;
+                    String expiredTimeString = (String) expiredTimeObject;
                     expiredTime = Integer.parseInt(expiredTimeString);
                 }
             }

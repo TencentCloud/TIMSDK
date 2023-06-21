@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuikit.timcommon.R;
 
 public class MinimalistTitleBar extends TitleBarLayout {
-
     public MinimalistTitleBar(Context context) {
         super(context);
         initView(context);

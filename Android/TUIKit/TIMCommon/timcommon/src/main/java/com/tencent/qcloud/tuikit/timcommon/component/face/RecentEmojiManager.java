@@ -2,9 +2,7 @@ package com.tencent.qcloud.tuikit.timcommon.component.face;
 
 import android.text.TextUtils;
 import android.util.Base64;
-
 import com.tencent.qcloud.tuicore.util.SPUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,9 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 
-
 public class RecentEmojiManager {
-    public static final String PREFERENCE_NAME = "recentFace";//"preference";
+    public static final String PREFERENCE_NAME = "recentFace"; //"preference";
 
     private static final RecentEmojiManager instance = new RecentEmojiManager();
 
@@ -32,7 +29,6 @@ public class RecentEmojiManager {
         SPUtils.getInstance(PREFERENCE_NAME).put(key, value);
         return this;
     }
-
 
     public RecentEmojiManager putCollection(String key, Collection collection) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

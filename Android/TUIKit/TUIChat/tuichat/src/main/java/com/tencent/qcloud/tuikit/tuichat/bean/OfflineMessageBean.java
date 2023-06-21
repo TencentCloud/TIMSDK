@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.tencent.imsdk.v2.V2TIMConversation;
 
 public class OfflineMessageBean {
-
     public static final int REDIRECT_ACTION_CHAT = 1;
     public static final int REDIRECT_ACTION_CALL = 2;
 
@@ -23,15 +22,8 @@ public class OfflineMessageBean {
     @NonNull
     @Override
     public String toString() {
-        return  "OfflineMessageBean{" +
-                "version=" + version +
-                ", chatType='" + chatType + '\'' +
-                ", action=" + action +
-                ", sender=" + sender +
-                ", nickname=" + nickname +
-                ", faceUrl=" + faceUrl +
-                ", content=" + content +
-                ", sendTime=" + sendTime +
-                '}';
+        return "OfflineMessageBean{"
+            + "version=" + version + ", chatType='" + chatType + '\'' + ", action=" + action + ", sender=" + sender + ", nickname=" + nickname
+            + ", faceUrl=" + faceUrl + ", content=" + content + ", sendTime=" + sendTime + '}';
     }
 }

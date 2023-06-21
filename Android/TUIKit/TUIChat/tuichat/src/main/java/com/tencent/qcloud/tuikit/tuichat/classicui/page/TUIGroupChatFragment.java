@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -21,7 +19,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,14 +84,13 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString(TUIConstants.TUIChat.CHAT_ID, info.getId());
                 TUICore.startActivity("FriendProfileActivity", bundle);
-
             }
 
             @Override
             public void onUserIconLongClick(View view, int position, TUIMessageBean messageBean) {
-                String result_id = messageBean.getV2TIMMessage().getSender();
-                String result_name = messageBean.getV2TIMMessage().getNickName();
-                chatView.getInputLayout().addInputText(result_name, result_id);
+                String resultId = messageBean.getV2TIMMessage().getSender();
+                String resultName = messageBean.getV2TIMMessage().getNickName();
+                chatView.getInputLayout().addInputText(resultName, resultId);
             }
 
             @Override
@@ -103,7 +99,7 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
                     return;
                 }
                 int messageType = messageInfo.getMsgType();
-                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
                     chatView.getInputLayout().appendText(messageInfo.getV2TIMMessage().getTextElem().getText());
                 } else {
                     TUIChatLog.e(TAG, "error type: " + messageType);
@@ -158,7 +154,6 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
                 }
             });
         }
-
     }
 
     public void setPresenter(GroupChatPresenter presenter) {

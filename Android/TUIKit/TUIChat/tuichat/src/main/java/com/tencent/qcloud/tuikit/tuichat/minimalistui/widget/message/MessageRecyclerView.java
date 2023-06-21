@@ -16,14 +16,12 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -56,7 +54,6 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.Chat
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -176,7 +173,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         rect.bottom = rect.top + view.getHeight();
         ChatPopDataHolder.setMessageViewGlobalRect(rect);
         view.setVisibility(INVISIBLE);
-        View decorView = ((Activity)getContext()).getWindow().getDecorView();
+        View decorView = ((Activity) getContext()).getWindow().getDecorView();
         Bitmap dialogBgBitmap = Bitmap.createBitmap(decorView.getWidth(), decorView.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas();
         canvas.setBitmap(dialogBgBitmap);
@@ -185,7 +182,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         ChatPopDataHolder.setChatPopBgBitmap(dialogBgBitmap);
 
         emojiOnClickListener = new ChatPopActivity.EmojiOnClickListener() {
-
             @Override
             public void onClick(Emoji emoji) {
                 if (menuEmojiOnClickListener != null) {
@@ -215,8 +211,9 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     }
 
     public boolean isDisplayJumpMessageLayout() {
-        TUIChatLog.d(TAG, "computeVerticalScrollRange() = " + computeVerticalScrollRange() + ", computeVerticalScrollExtent() = "
-                + computeVerticalScrollExtent() + ", computeVerticalScrollOffset() = " + computeVerticalScrollOffset());
+        TUIChatLog.d(TAG,
+            "computeVerticalScrollRange() = " + computeVerticalScrollRange() + ", computeVerticalScrollExtent() = " + computeVerticalScrollExtent()
+                + ", computeVerticalScrollOffset() = " + computeVerticalScrollOffset());
         int toBottom = computeVerticalScrollRange() - computeVerticalScrollExtent() - computeVerticalScrollOffset();
         TUIChatLog.d(TAG, "toBottom = " + toBottom);
         if (toBottom > 0 && toBottom >= 2 * computeVerticalScrollExtent()) {
@@ -259,7 +256,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         ChatPopActivity.ChatPopMenuAction revokeAction = null;
         ChatPopActivity.ChatPopMenuAction deleteAction = null;
         ChatPopActivity.ChatPopMenuAction infoAction = null;
-
 
         boolean textIsAllSelected = true;
         if (msg instanceof TextMessageBean || msg instanceof QuoteMessageBean) {
@@ -326,7 +322,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 quoteAction.setActionName(getContext().getString(R.string.quote_button));
                 quoteAction.setActionIcon(R.drawable.chat_minimalist_pop_menu_quote);
                 quoteAction.setActionClickListener(() -> mOnPopActionClickListener.onQuoteMessageClick(msg));
-
             }
         }
 
@@ -400,7 +395,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
 
         return actionList;
-
     }
 
     @Override
@@ -416,7 +410,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                         ((MessageAdapter) getAdapter()).showLoading();
                     }
                     mHandler.loadMore(TUIChatConstants.GET_MESSAGE_FORWARD);
-                } else if (isListEnd(lastPosition)){
+                } else if (isListEnd(lastPosition)) {
                     if (getAdapter() instanceof MessageAdapter) {
                         ((MessageAdapter) getAdapter()).showLoading();
                     }
@@ -447,7 +441,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     }
 
     private boolean isListEnd(int lastPosition) {
-       return mHandler.isListEnd(lastPosition);
+        return mHandler.isListEnd(lastPosition);
     }
 
     public void scrollToEnd() {
@@ -561,7 +555,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {
                 if (messageBean instanceof ReplyMessageBean) {
                     showRootMessageReplyDetail(((ReplyMessageBean) messageBean).getMsgRootId());
-                } else if (messageBean instanceof QuoteMessageBean){
+                } else if (messageBean instanceof QuoteMessageBean) {
                     locateOriginMessage(((QuoteMessageBean) messageBean).getOriginMsgId());
                 }
             }
@@ -579,24 +573,24 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             @Override
             public void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {
                 new TUIKitDialog(getContext())
-                        .builder()
-                        .setCancelable(true)
-                        .setCancelOutside(true)
-                        .setTitle(getContext().getString(R.string.resend_tips))
-                        .setDialogWidth(0.75f)
-                        .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), new OnClickListener() {
+                    .builder()
+                    .setCancelable(true)
+                    .setCancelOutside(true)
+                    .setTitle(getContext().getString(R.string.resend_tips))
+                    .setDialogWidth(0.75f)
+                    .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
+                        new OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mOnPopActionClickListener.onSendMessageClick(messageInfo, true);
                             }
                         })
-                        .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), new OnClickListener() {
+                    .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                        new OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-
-                            }
+                            public void onClick(View v) {}
                         })
-                        .show();
+                    .show();
             }
 
             @Override
@@ -637,9 +631,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         presenter.locateMessage(originMsgId, new IUIKitCallback<Void>() {
             @Override
-            public void onSuccess(Void data) {
-
-            }
+            public void onSuccess(Void data) {}
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
@@ -653,7 +645,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         replyDialogFragment.setOriginMessage(messageBean);
         replyDialogFragment.setChatInfo(presenter.getChatInfo());
         replyDialogFragment.show(getActivity().getSupportFragmentManager(), "reply");
-
     }
 
     private void showRootMessageReplyDetail(String rootMessageId) {
@@ -678,7 +669,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip) + " code = " + errCode + " message = " + errMsg);
             }
         });
-
     }
 
     @Override
@@ -904,14 +894,19 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         void onClick(Emoji emoji, TUIMessageBean messageBean);
     }
 
-
     public interface OnLoadMoreHandler {
         void loadMore(int type);
+
         boolean isListEnd(int position);
+
         void displayBackToLastMessage(boolean display);
+
         void displayBackToNewMessage(boolean display, String messageId, int count);
+
         void hideBackToAtMessage();
+
         void loadMessageFinish();
+
         void scrollMessageFinish();
     }
 

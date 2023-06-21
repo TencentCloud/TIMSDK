@@ -3,13 +3,12 @@ package com.tencent.qcloud.tuikit.timcommon.component.swipe;
 import java.util.List;
 
 public interface SwipeItemMangerInterface {
-
     void openItem(int position);
 
     void closeItem(int position);
 
     void closeAllExcept(SwipeLayout layout);
-    
+
     void closeAllSwipeItems();
 
     List<Integer> getOpenItems();

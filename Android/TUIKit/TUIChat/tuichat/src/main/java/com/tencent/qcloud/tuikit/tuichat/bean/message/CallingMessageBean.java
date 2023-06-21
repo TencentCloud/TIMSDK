@@ -4,10 +4,9 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 
-
 public class CallingMessageBean extends TextMessageBean {
     private String text;
-    private int callType; //1：audio; 2:video
+    private int callType; // 1：audio; 2:video
     private boolean isCaller;
     private boolean isShowUnreadPoint;
     public static final int ACTION_ID_AUDIO_CALL = 1;

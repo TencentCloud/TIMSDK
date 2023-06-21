@@ -160,7 +160,6 @@ public class MessageReplyDetailActivity extends BaseLightActivity implements Inp
         }
     }
 
-
     @Override
     public void scrollToEnd() {
         if (repliesList.getAdapter() != null) {
@@ -190,5 +189,4 @@ public class MessageReplyDetailActivity extends BaseLightActivity implements Inp
             }
         });
     }
-
 }

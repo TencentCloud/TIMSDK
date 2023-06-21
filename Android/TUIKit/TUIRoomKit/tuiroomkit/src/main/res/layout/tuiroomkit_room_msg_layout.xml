@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="200dp"
+    android:layout_height="151dp"
+    android:background="@drawable/tuiroomkit_room_msg_bg">
+
+    <androidx.constraintlayout.utils.widget.ImageFilterButton
+        android:id="@+id/tuiroomkit_room_msg_full_join_btn"
+        android:background="@android:color/transparent"
+        android:layout_width="190dp"
+        android:layout_height="140dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/tuiroomkit_room_msg_title_ll"
+        android:layout_width="match_parent"
+        android:layout_height="21dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <ImageView
+            android:id="@+id/tuiroomkit_room_msg_title_icon_iv"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/tuiroomkit_room_msg_icon_during" />
+
+        <TextView
+            android:id="@+id/tuiroomkit_room_msg_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginStart="6dp"
+            android:text="@string/tuiroomkit_room_msg_meeting"
+            android:textColor="#15B72D"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tuiroomkit_room_msg_manager_tv"
+        android:layout_width="match_parent"
+        android:layout_height="21dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/tuiroomkit_room_msg_display_suffix"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.33" />
+
+    <LinearLayout
+        android:id="@+id/tuiroomkit_user_list_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.582">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/tuiroomkit_room_msg_joined_first_iv"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            app:round="4dp"
+            android:visibility="gone"/>
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/tuiroomkit_room_msg_joined_second_iv"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            app:round="4dp"
+            android:visibility="gone" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/tuiroomkit_room_msg_joined_third_iv"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            app:round="4dp"
+            android:visibility="gone" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/tuiroomkit_room_msg_joined_fourth_iv"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            app:round="4dp"
+            android:visibility="gone" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/tuiroomkit_room_msg_joined_fifth_iv"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            app:round="4dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tuiroomkit_room_msg_joined_more_tv"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:gravity="bottom|center_horizontal"
+            android:visibility="gone"
+            android:text="..." />
+    </LinearLayout>
+
+    <androidx.constraintlayout.utils.widget.ImageFilterButton
+        android:id="@+id/tuiroomkit_room_msg_invite_btn"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="1dp"
+        android:visibility="gone"
+        app:round="4dp"
+        android:background="@drawable/tuiroomkit_room_msg_invite"
+        app:layout_constraintStart_toEndOf="@+id/tuiroomkit_user_list_ll"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintTop_toTopOf="@id/tuiroomkit_user_list_ll"
+        app:layout_constraintBottom_toBottomOf="@id/tuiroomkit_user_list_ll"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@drawable/tuiroomkit_room_msg_bottom_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <ProgressBar
+            android:id="@+id/tuiroomkit_room_msg_creating_pb"
+            style="@style/TUIRoomMsgLoadingAnim"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tuiroomkit_room_msg_room_state_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/tuiroomkit_room_msg_room_state_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_chat_access_room_creating"
+            android:textSize="12sp"
+            android:visibility="visible"
+            android:layout_marginStart="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tuiroomkit_room_msg_creating_pb"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/tuiroomkit_room_msg_joined_members_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:text="@string/tuiroomkit_room_msg_members_has_joined" />
+
+        <TextView
+            android:id="@+id/tuiroomkit_room_msg_join_btn"
+            android:layout_width="70dp"
+            android:layout_height="27dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/tuiroomkit_room_msg_btn_join"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:text="@string/tuiroomkit_room_msg_join"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

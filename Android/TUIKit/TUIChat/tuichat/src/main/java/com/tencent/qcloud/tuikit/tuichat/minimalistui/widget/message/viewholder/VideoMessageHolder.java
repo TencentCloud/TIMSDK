@@ -10,18 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class VideoMessageHolder extends ImageMessageHolder {
-
     public VideoMessageHolder(View itemView) {
         super(itemView);
     }
@@ -47,14 +47,13 @@ public class VideoMessageHolder extends ImageMessageHolder {
         return params;
     }
 
-
     private void performVideo(final VideoMessageBean msg, final int position) {
         contentImage.setLayoutParams(getImageParams(contentImage.getLayoutParams(), msg));
 
         videoPlayBtn.setVisibility(View.VISIBLE);
 
-        if (!TextUtils.isEmpty(msg.getDataPath())) {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+        if (!TextUtils.isEmpty(msg.getSnapshotPath()) && new File(msg.getSnapshotPath()).exists()) {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getSnapshotPath(), null, DEFAULT_RADIUS);
         } else {
             GlideEngine.clear(contentImage);
             synchronized (downloadEles) {
@@ -79,8 +78,8 @@ public class VideoMessageHolder extends ImageMessageHolder {
                 @Override
                 public void onSuccess() {
                     downloadEles.remove(msg.getSnapshotUUID());
-                    msg.setDataPath(path);
-                    GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), null, DEFAULT_RADIUS);
+                    msg.setSnapshotPath(path);
+                    GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getSnapshotPath(), null, DEFAULT_RADIUS);
                 }
             });
         }

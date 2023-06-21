@@ -117,8 +117,8 @@ public class RoundCornerImageView extends AppCompatImageView {
         canvas.setDrawFilter(aliasFilter);
         rectF.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
         // left-top -> right-top -> right-bottom -> left-bottom
-        float[] radius = {leftTopRadius, leftTopRadius, rightTopRadius, rightTopRadius,
-                rightBottomRadius, rightBottomRadius, leftBottomRadius, leftBottomRadius};
+        float[] radius = {
+            leftTopRadius, leftTopRadius, rightTopRadius, rightTopRadius, rightBottomRadius, rightBottomRadius, leftBottomRadius, leftBottomRadius};
         path.addRoundRect(rectF, radius, Path.Direction.CW);
         canvas.clipPath(path);
         super.onDraw(canvas);

@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -63,8 +62,7 @@ public class FoldedConversationLayout extends RelativeLayout implements IConvers
     }
 
     @Override
-    public void setConversationTop(ConversationInfo conversation, IUIKitCallback callBack) {
-    }
+    public void setConversationTop(ConversationInfo conversation, IUIKitCallback callBack) {}
 
     @Override
     public void deleteConversation(ConversationInfo conversation) {
@@ -74,9 +72,7 @@ public class FoldedConversationLayout extends RelativeLayout implements IConvers
     }
 
     @Override
-    public void clearConversationMessage(ConversationInfo conversation) {
-
-    }
+    public void clearConversationMessage(ConversationInfo conversation) {}
 
     @Override
     public void markConversationHidden(ConversationInfo conversation) {
@@ -93,14 +89,10 @@ public class FoldedConversationLayout extends RelativeLayout implements IConvers
     }
 
     @Override
-    public void hideFoldedItem(boolean needHide) {
-        
-    }
+    public void hideFoldedItem(boolean needHide) {}
 
     @Override
-    public void clearUnreadStatusOfFoldItem() {
-
-    }
+    public void clearUnreadStatusOfFoldItem() {}
 
     @Override
     public TitleBarLayout getTitleBar() {
@@ -108,7 +100,5 @@ public class FoldedConversationLayout extends RelativeLayout implements IConvers
     }
 
     @Override
-    public void setParentLayout(Object parent) {
-
-    }
+    public void setParentLayout(Object parent) {}
 }

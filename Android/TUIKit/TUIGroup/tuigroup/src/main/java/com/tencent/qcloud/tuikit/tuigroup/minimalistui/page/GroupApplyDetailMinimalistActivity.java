@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
@@ -22,8 +20,6 @@ import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupApplyLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
 
 public class GroupApplyDetailMinimalistActivity extends BaseMinimalistLightActivity implements IGroupApplyLayout {
-
-
     private static final String TAG = GroupApplyDetailMinimalistActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -122,7 +118,5 @@ public class GroupApplyDetailMinimalistActivity extends BaseMinimalistLightActiv
                 });
             }
         });
-
     }
-
 }

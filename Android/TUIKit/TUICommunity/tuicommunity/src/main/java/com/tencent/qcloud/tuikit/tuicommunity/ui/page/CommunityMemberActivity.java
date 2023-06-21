@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuicommunity.ui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -17,13 +15,10 @@ import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityMemberActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityMemberList;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CommunityMemberActivity extends BaseLightActivity implements ICommunityMemberActivity {
-
     private static final int REQUEST_CODE_INVITE_MEMBER = 1;
 
     private CommunityMemberList memberListLayout;
@@ -41,22 +36,20 @@ public class CommunityMemberActivity extends BaseLightActivity implements ICommu
     }
 
     private void init() {
-        Intent intent = getIntent();
         presenter = new CommunityPresenter();
         memberListLayout.setPresenter(presenter);
         memberListLayout.setCommunityMemberListener(this);
+        Intent intent = getIntent();
         communityBean = (CommunityBean) intent.getSerializableExtra(CommunityConstants.COMMUNITY_BEAN);
         memberListLayout.setCommunityBean(communityBean);
         presenter.setCommunityMemberListView(memberListLayout);
         memberListLayout.loadMemberList();
 
-        int limit = getIntent().getIntExtra(CommunityConstants.LIMIT, Integer.MAX_VALUE);
-
         isSelectMode = intent.getBooleanExtra(CommunityConstants.IS_SELECT_MODE, false);
 
         String title = intent.getStringExtra(CommunityConstants.TITLE);
 
-//        int filter = intent.getIntExtra(CommunityConstants.FILTER, CommunityBean.GROUP_MEMBER_FILTER_ALL);
+        //        int filter = intent.getIntExtra(CommunityConstants.FILTER, CommunityBean.GROUP_MEMBER_FILTER_ALL);
         memberListLayout.setSelectMode(isSelectMode);
         memberListLayout.setTitle(title);
 
@@ -67,8 +60,8 @@ public class CommunityMemberActivity extends BaseLightActivity implements ICommu
             }
         });
 
+        int limit = getIntent().getIntExtra(CommunityConstants.LIMIT, Integer.MAX_VALUE);
         memberListLayout.setGroupMemberListener(new CommunityMemberList.MemberListListener() {
-
             @Override
             public void setSelectedMember(ArrayList<String> members) {
                 if (members == null || members.isEmpty()) {
@@ -85,7 +78,6 @@ public class CommunityMemberActivity extends BaseLightActivity implements ICommu
                 finish();
             }
         });
-
     }
 
     private void inviteGroupMembers(List<String> friends) {
@@ -111,7 +103,6 @@ public class CommunityMemberActivity extends BaseLightActivity implements ICommu
         TUICore.startActivity(this, "StartGroupMemberSelectActivity", param, REQUEST_CODE_INVITE_MEMBER);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -122,5 +113,4 @@ public class CommunityMemberActivity extends BaseLightActivity implements ICommu
             }
         }
     }
-
 }

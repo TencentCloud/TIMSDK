@@ -11,10 +11,12 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
@@ -29,9 +31,12 @@ import com.tencent.qcloud.tuikit.tuiconversation.classicui.util.TUIConversationU
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.FoldedConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationFoldPresenter;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TUIFoldedConversationFragment extends BaseFragment {
     private View mBaseView;
@@ -77,15 +82,19 @@ public class TUIFoldedConversationFragment extends BaseFragment {
             }
 
             @Override
-            public void OnItemLongClick(View view, ConversationInfo conversationInfo) {
+            public void onItemLongClick(View view, ConversationInfo conversationInfo) {
                 showItemPopMenu(view, conversationInfo);
             }
 
             @Override
             public void onConversationChanged(List<ConversationInfo> dataSource) {
-                if (dataSource == null)return;
+                if (dataSource == null) {
+                    return;
+                }
                 ConversationInfo conversationInfo = dataSource.get(0);
-                if (conversationInfo == null)return;
+                if (conversationInfo == null) {
+                    return;
+                }
 
                 if (!TextUtils.isEmpty(popWindowConversationId) && popWindowConversationId.equals(conversationInfo.getConversationId())) {
                     if (mConversationPopWindow != null) {
@@ -100,9 +109,9 @@ public class TUIFoldedConversationFragment extends BaseFragment {
 
     private void initPopMenuAction() {
         // 设置长按conversation显示PopAction
-        List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.not_display));
+        action.setWeight(800);
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int index, Object data) {
@@ -110,6 +119,7 @@ public class TUIFoldedConversationFragment extends BaseFragment {
                 mFoldedLayout.markConversationHidden((ConversationInfo) data);
             }
         });
+        List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         conversationPopActions.add(action);
 
         action = new PopMenuAction();
@@ -120,6 +130,7 @@ public class TUIFoldedConversationFragment extends BaseFragment {
             }
         });
         action.setActionName(getResources().getString(R.string.chat_delete));
+        action.setWeight(700);
         conversationPopActions.add(action);
 
         mConversationPopActions.clear();
@@ -127,8 +138,7 @@ public class TUIFoldedConversationFragment extends BaseFragment {
     }
 
     private void restoreConversationItemBackground() {
-        if (mFoldedLayout.getConversationList().getAdapter() !=  null &&
-                mFoldedLayout.getConversationList().getAdapter().isClick()) {
+        if (mFoldedLayout.getConversationList().getAdapter() != null && mFoldedLayout.getConversationList().getAdapter().isClick()) {
             mFoldedLayout.getConversationList().getAdapter().setClick(false);
             mFoldedLayout.getConversationList().getAdapter().notifyItemChanged(mFoldedLayout.getConversationList().getAdapter().getCurrentPosition());
         }
@@ -147,6 +157,7 @@ public class TUIFoldedConversationFragment extends BaseFragment {
         } else {
             action.setActionName(getResources().getString(R.string.mark_read));
         }
+        action.setWeight(900);
         mConversationPopActions.add(0, action);
     }
 
@@ -162,6 +173,14 @@ public class TUIFoldedConversationFragment extends BaseFragment {
                 addMarkUnreadPopMenuAction(true);
             }
         }
+
+        mConversationPopActions.addAll(addMoreConversationAction(conversationInfo));
+        Collections.sort(mConversationPopActions, new Comparator<PopMenuAction>() {
+            @Override
+            public int compare(PopMenuAction o1, PopMenuAction o2) {
+                return o2.getWeight() - o1.getWeight();
+            }
+        });
 
         View itemPop = LayoutInflater.from(getActivity()).inflate(R.layout.conversation_pop_menu_layout, null);
         mConversationPopList = itemPop.findViewById(R.id.pop_menu_list);
@@ -187,7 +206,6 @@ public class TUIFoldedConversationFragment extends BaseFragment {
                 if (action.getActionName().equals(getResources().getString(R.string.quit_chat_top))) {
                     action.setActionName(getResources().getString(R.string.chat_top));
                 }
-
             }
         }
         mConversationPopAdapter = new PopDialogAdapter();
@@ -207,11 +225,48 @@ public class TUIFoldedConversationFragment extends BaseFragment {
             }
         });
         int x = view.getWidth() / 2;
-        int y = - view.getHeight() / 3;
+        int y = -view.getHeight() / 3;
         int popHeight = ScreenUtil.dip2px(45) * 3;
         if (y + popHeight + view.getY() + view.getHeight() > mFoldedLayout.getBottom()) {
             y = y - popHeight;
         }
         mConversationPopWindow.showAsDropDown(view, x, y, Gravity.TOP | Gravity.START);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (presenter != null) {
+            presenter.destroy();
+            presenter = null;
+        }
+    }
+
+    protected List<PopMenuAction> addMoreConversationAction(ConversationInfo conversationInfo) {
+        List<PopMenuAction> settingsList = new ArrayList<>();
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIConversation.CONTEXT, getContext());
+        param.put(TUIConstants.TUIConversation.KEY_CONVERSATION_INFO, conversationInfo);
+        List<TUIExtensionInfo> extensionList = TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationPopMenu.CLASSIC_EXTENSION_ID, param);
+        for (TUIExtensionInfo extensionInfo : extensionList) {
+            String text = extensionInfo.getText();
+            if (!TextUtils.isEmpty(text)) {
+                PopMenuAction action = new PopMenuAction();
+                action.setActionClickListener(new PopActionClickListener() {
+                    @Override
+                    public void onActionClick(int index, Object data) {
+                        TUIExtensionEventListener listener = extensionInfo.getExtensionListener();
+                        if (listener != null) {
+                            listener.onClicked(null);
+                        }
+                    }
+                });
+                action.setWeight(extensionInfo.getWeight());
+                action.setActionName(text);
+                settingsList.add(action);
+            }
+        }
+
+        return settingsList;
     }
 }

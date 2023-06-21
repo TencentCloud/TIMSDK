@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public final class TUICallKitImpl extends TUICallKit implements ITUINotification {
     private static final String TAG = "TUICallKit";
@@ -132,10 +131,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         PermissionRequest.requestPermissions(mContext, callMediaType, new PermissionCallback() {
             @Override
             public void onGranted() {
-                TUICommonDefine.RoomId roomId = new TUICommonDefine.RoomId();
-                roomId.intRoomId = generateRoomId();
-
-                TUICallEngine.createInstance(mContext).call(roomId, userId, callMediaType, params,
+                TUICallEngine.createInstance(mContext).call(userId, callMediaType, params,
                         new TUICommonDefine.Callback() {
                             @Override
                             public void onSuccess() {
@@ -212,10 +208,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         PermissionRequest.requestPermissions(mContext, callMediaType, new PermissionCallback() {
             @Override
             public void onGranted() {
-                TUICommonDefine.RoomId roomId = new TUICommonDefine.RoomId();
-                roomId.intRoomId = generateRoomId();
-
-                TUICallEngine.createInstance(mContext).groupCall(roomId, groupId, userIdList, callMediaType, params,
+                TUICallEngine.createInstance(mContext).groupCall(groupId, userIdList, callMediaType, params,
                         new TUICommonDefine.Callback() {
                             @Override
                             public void onSuccess() {
@@ -271,7 +264,8 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         TUILog.i(TAG, "joinInGroupCall, roomId: " + roomId + " ,groupId: " + groupId + " ,mediaType: " + mediaType);
 
         int intRoomId = (roomId != null) ? roomId.intRoomId : 0;
-        if (intRoomId <= 0 || intRoomId >= Constants.ROOM_ID_MAX) {
+        String strRoomId = (roomId != null) ? roomId.strRoomId : "";
+        if (intRoomId <= 0 && TextUtils.isEmpty(strRoomId)) {
             TUILog.e(TAG, "joinInGroupCall failed, roomId is invalid");
             return;
         }
@@ -339,7 +333,23 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
     public void queryOfflineCall() {
         if (Status.None.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())) {
-            TUICallEngine.createInstance(mContext).queryOfflineCall();
+            TUICallDefine.Role role = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
+            TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
+            if (TUICallDefine.Role.None.equals(role) || TUICallDefine.MediaType.Unknown.equals(mediaType)) {
+                return;
+            }
+            PermissionRequest.requestPermissions(mContext, mediaType, new PermissionCallback() {
+                @Override
+                public void onGranted() {
+                    showCallingView();
+                }
+
+                @Override
+                public void onDenied() {
+                    TUICallEngine.createInstance(mContext).reject(null);
+                    resetCall();
+                }
+            });
         }
     }
 
@@ -368,6 +378,26 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 return;
             }
 
+            mInviter.userId = callerId;
+            for (String userId : calleeIdList) {
+                if (!TextUtils.isEmpty(userId)) {
+                    CallingUserModel model = new CallingUserModel();
+                    model.userId = userId;
+                    mInviteeList.add(model);
+                }
+            }
+
+            Scene scene;
+            if (!TextUtils.isEmpty(groupId)) {
+                scene = Scene.GROUP_CALL;
+            } else {
+                scene = (calleeIdList.size() > 1) ? Scene.MULTI_CALL : Scene.SINGLE_CALL;
+            }
+            TUICallingStatusManager.sharedInstance(mContext).setMediaType(callMediaType);
+            TUICallingStatusManager.sharedInstance(mContext).setCallRole(TUICallDefine.Role.Called);
+            TUICallingStatusManager.sharedInstance(mContext).setCallScene(scene);
+            TUICallingStatusManager.sharedInstance(mContext).setGroupId(groupId);
+
             //when app comes back to foreground, start the call
             if (!DeviceUtils.isAppRunningForeground(mContext) && !PermissionUtils.hasPermission(mContext)) {
                 TUILog.w(TAG, "App is in background");
@@ -375,34 +405,11 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 return;
             }
 
-            mInviter.userId = callerId;
+            TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.Waiting);
 
             PermissionRequest.requestPermissions(mContext, callMediaType, new PermissionCallback() {
                 @Override
                 public void onGranted() {
-                    if (TextUtils.isEmpty(mInviter.userId)) {
-                        return;
-                    }
-
-                    for (String userId : calleeIdList) {
-                        if (!TextUtils.isEmpty(userId)) {
-                            CallingUserModel model = new CallingUserModel();
-                            model.userId = userId;
-                            mInviteeList.add(model);
-                        }
-                    }
-
-                    Scene scene;
-                    if (!TextUtils.isEmpty(groupId)) {
-                        scene = Scene.GROUP_CALL;
-                    } else {
-                        scene = (calleeIdList.size() > 1) ? Scene.MULTI_CALL : Scene.SINGLE_CALL;
-                    }
-                    TUICallingStatusManager.sharedInstance(mContext).setMediaType(callMediaType);
-                    TUICallingStatusManager.sharedInstance(mContext).setCallRole(TUICallDefine.Role.Called);
-                    TUICallingStatusManager.sharedInstance(mContext).setCallScene(scene);
-                    TUICallingStatusManager.sharedInstance(mContext).setGroupId(groupId);
-
                     showCallingView();
                     mCallingBellFeature.startRing();
                 }
@@ -480,6 +487,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             if (userModel == null) {
                 userModel = new CallingUserModel();
                 userModel.userId = userId;
+                mInviteeList.add(userModel);
             }
             mCallingViewManager.userEnter(userModel);
         }
@@ -736,10 +744,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 mOtherUserLowQualityTime = currentTime;
             }
         }
-    }
-
-    private int generateRoomId() {
-        return new Random().nextInt(Constants.ROOM_ID_MAX - Constants.ROOM_ID_MIN + 1) + Constants.ROOM_ID_MIN;
     }
 
     private void initCallEngine() {

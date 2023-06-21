@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
@@ -17,11 +15,9 @@ import com.tencent.qcloud.tuikit.tuicontact.interfaces.INewFriendActivity;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.NewFriendListAdapter;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.NewFriendPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
 import java.util.List;
 
 public class NewFriendApplicationMinimalistActivity extends BaseMinimalistLightActivity implements INewFriendActivity {
-
     private static final String TAG = NewFriendApplicationMinimalistActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -30,6 +26,7 @@ public class NewFriendApplicationMinimalistActivity extends BaseMinimalistLightA
     private TextView notFoundTip;
 
     private NewFriendPresenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,14 +54,10 @@ public class NewFriendApplicationMinimalistActivity extends BaseMinimalistLightA
         presenter.setFriendActivity(this);
         presenter.setFriendApplicationListAllRead(new IUIKitCallback<Void>() {
             @Override
-            public void onSuccess(Void data) {
-
-            }
+            public void onSuccess(Void data) {}
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
         mNewFriendLv = findViewById(R.id.new_friend_list);
         notFoundTip = findViewById(R.id.not_found_tip);
@@ -95,5 +88,4 @@ public class NewFriendApplicationMinimalistActivity extends BaseMinimalistLightA
     public void finish() {
         super.finish();
     }
-
 }

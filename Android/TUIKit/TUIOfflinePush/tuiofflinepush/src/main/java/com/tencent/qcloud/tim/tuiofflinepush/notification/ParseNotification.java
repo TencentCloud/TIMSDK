@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushConfig;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
-
 import java.util.Map;
 import java.util.Set;
 
 public class ParseNotification {
-
     private static final String TAG = "TUIOfflinePush-" + ParseNotification.class.getSimpleName();
     private static final String OEMMessageKey = "ext";
     private static final String XIAOMIMessageKey = "key_message";

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
@@ -16,20 +15,15 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GroupApplyAdapter extends BaseAdapter {
-
     private List<GroupApplyInfo> mGroupMembers = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
     private GroupApplyPresenter presenter;
 
-    public GroupApplyAdapter() {
-
-    }
+    public GroupApplyAdapter() {}
 
     public void setPresenter(GroupApplyPresenter presenter) {
         this.presenter = presenter;
@@ -177,8 +171,9 @@ public class GroupApplyAdapter extends BaseAdapter {
 
     private class MyViewHolder {
         private ImageView memberIcon;
-        private TextView memberName, reason;
-        private TextView accept, refuse;
+        private TextView memberName;
+        private TextView reason;
+        private TextView accept;
+        private TextView refuse;
     }
-
 }

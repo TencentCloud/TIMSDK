@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuisearch.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.tencent.imsdk.v2.V2TIMMessage;
 
 public class SearchDataBean implements Parcelable {
@@ -26,8 +25,7 @@ public class SearchDataBean implements Parcelable {
 
     private V2TIMMessage locateTimMessage;
 
-    public SearchDataBean(){}
-
+    public SearchDataBean() {}
 
     protected SearchDataBean(Parcel in) {
         title = in.readString();
@@ -74,13 +72,11 @@ public class SearchDataBean implements Parcelable {
         return subTitleLabel;
     }
 
-    public String getIconPath()
-    {
+    public String getIconPath() {
         return this.iconPath;
     }
 
-    public void setIconPath(String iconPath)
-    {
+    public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
     }
 

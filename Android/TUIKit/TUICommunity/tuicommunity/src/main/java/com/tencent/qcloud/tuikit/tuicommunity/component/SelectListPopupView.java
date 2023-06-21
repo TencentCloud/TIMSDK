@@ -9,17 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.component.bottompopupcard.IPopupCard;
 import com.tencent.qcloud.tuikit.tuicommunity.component.bottompopupcard.IPopupView;
-
 import java.util.List;
 
 public class SelectListPopupView extends FrameLayout implements IPopupView {
@@ -35,6 +32,7 @@ public class SelectListPopupView extends FrameLayout implements IPopupView {
     private OnSelectListener onSelectListener;
     private String selected;
     private IPopupCard popupCard;
+
     public SelectListPopupView(Context context) {
         super(context);
         init(context, null);
@@ -79,7 +77,7 @@ public class SelectListPopupView extends FrameLayout implements IPopupView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
-        if(maxHeightPx > 0 && maxHeightPx < measuredHeight) {
+        if (maxHeightPx > 0 && maxHeightPx < measuredHeight) {
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeightPx, MeasureSpec.AT_MOST);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -111,7 +109,6 @@ public class SelectListPopupView extends FrameLayout implements IPopupView {
     }
 
     class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.SelectViewHolder> {
-
         @NonNull
         @Override
         public SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -153,6 +150,7 @@ public class SelectListPopupView extends FrameLayout implements IPopupView {
 
         class SelectViewHolder extends RecyclerView.ViewHolder {
             private final TextView textView;
+
             public SelectViewHolder(@NonNull View itemView) {
                 super(itemView);
                 textView = itemView.findViewById(R.id.item_text);

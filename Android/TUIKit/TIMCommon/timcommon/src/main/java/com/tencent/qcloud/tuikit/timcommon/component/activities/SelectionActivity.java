@@ -11,20 +11,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
-
 import java.util.ArrayList;
 
 public class SelectionActivity extends BaseLightActivity {
-
     private static OnResultReturnListener sOnResultReturnListener;
 
     private RecyclerView selectListView;
@@ -91,7 +87,7 @@ public class SelectionActivity extends BaseLightActivity {
                     input.setSelection(defaultString.length());
                 }
                 if (limit > 0) {
-                    input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(limit)});
+                    input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(limit)});
                 }
                 break;
             case Selection.TYPE_LIST:
@@ -152,6 +148,8 @@ public class SelectionActivity extends BaseLightActivity {
                     sOnResultReturnListener.onReturn(selectedItem);
                 }
                 break;
+            default:
+                break;
         }
         if (returnNow) {
             finish();
@@ -180,7 +178,7 @@ public class SelectionActivity extends BaseLightActivity {
         @NonNull
         @Override
         public SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(SelectionActivity.this).inflate(R.layout.core_select_item_layout,parent, false);
+            View view = LayoutInflater.from(SelectionActivity.this).inflate(R.layout.core_select_item_layout, parent, false);
             return new SelectViewHolder(view);
         }
 
@@ -206,9 +204,10 @@ public class SelectionActivity extends BaseLightActivity {
             return data.size();
         }
 
-        class SelectViewHolder extends RecyclerView.ViewHolder{
+        class SelectViewHolder extends RecyclerView.ViewHolder {
             TextView name;
             ImageView selectedIcon;
+
             public SelectViewHolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.name);
@@ -238,6 +237,5 @@ public class SelectionActivity extends BaseLightActivity {
         public static final String RETURN_NOW = "returnNow";
         public static final int TYPE_TEXT = 1;
         public static final int TYPE_LIST = 2;
-
     }
 }

@@ -8,7 +8,6 @@ import com.tencent.qcloud.tuikit.tuisearch.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
 
 public class MinimalistSearchUtils {
-
     public static void startChatActivity(ChatInfo chatInfo) {
         Bundle param = new Bundle();
         param.putInt(TUIConstants.TUIChat.CHAT_TYPE, chatInfo.getType());

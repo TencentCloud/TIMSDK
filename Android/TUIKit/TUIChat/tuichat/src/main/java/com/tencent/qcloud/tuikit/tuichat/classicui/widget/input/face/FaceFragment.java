@@ -13,10 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.tencent.qcloud.tuikit.timcommon.component.face.ChatFace;
 import com.tencent.qcloud.tuikit.timcommon.component.face.CustomFace;
 import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
@@ -26,18 +24,16 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.BaseInputFragment;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FaceFragment extends BaseInputFragment {
-
     ViewPager faceViewPager;
     EmojiIndicatorView faceIndicator;
     FaceGroupIcon mCurrentSelected;
     LinearLayout faceGroup;
-    ArrayList<View> ViewPagerItems = new ArrayList<>();
+    ArrayList<View> viewPagerItems = new ArrayList<>();
     ArrayList<Emoji> recentlyEmojiList;
     List<FaceGroup> faceGroups;
     private int mCurrentGroupIndex = 0;
@@ -125,20 +121,18 @@ public class FaceFragment extends BaseInputFragment {
 
     private void initViewPager(ArrayList<? extends ChatFace> list, int columns, int rows) {
         intiIndicator(list, columns, rows);
-        ViewPagerItems.clear();
+        viewPagerItems.clear();
         int pageCont = getPagerCount(list, columns, rows);
         for (int i = 0; i < pageCont; i++) {
-            ViewPagerItems.add(getViewPagerItem(i, list, columns, rows));
+            viewPagerItems.add(getViewPagerItem(i, list, columns, rows));
         }
-        FaceVPAdapter mVpAdapter = new FaceVPAdapter(ViewPagerItems);
+        FaceVPAdapter mVpAdapter = new FaceVPAdapter(viewPagerItems);
         faceViewPager.setAdapter(mVpAdapter);
         faceViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int oldPosition = 0;
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
@@ -147,9 +141,7 @@ public class FaceFragment extends BaseInputFragment {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
     }
 
@@ -159,7 +151,7 @@ public class FaceFragment extends BaseInputFragment {
 
     /**
      * 根据表情数量以及GridView设置的行数和列数计算Pager数量
-     * 
+     *
      * Calculate the number of Pagers based on the number of expressions and the number of rows and columns set by the GridView
      *
      * @return
@@ -167,10 +159,10 @@ public class FaceFragment extends BaseInputFragment {
     private int getPagerCount(ArrayList<? extends ChatFace> list, int columns, int rows) {
         int count = list.size();
         int dit = 1;
-        if (mCurrentGroupIndex > 0)
+        if (mCurrentGroupIndex > 0) {
             dit = 0;
-        return count % (columns * rows - dit) == 0 ? count / (columns * rows - dit)
-                : count / (columns * rows - dit) + 1;
+        }
+        return count % (columns * rows - dit) == 0 ? count / (columns * rows - dit) : count / (columns * rows - dit) + 1;
     }
 
     private View getViewPagerItem(int position, ArrayList<? extends ChatFace> list, int columns, int rows) {
@@ -180,21 +172,20 @@ public class FaceFragment extends BaseInputFragment {
         gridview.setNumColumns(columns);
         /**
          * 注：因为每一页末尾都有一个删除图标，所以每一页的实际表情columns *　rows　－　1; 空出最后一个位置给删除图标
-         * 
-         * Because there is a delete icon at the end of each page, the actual emoji of each page columns *　rows　－　1, Empty the last position for the delete icon
+         *
+         * Because there is a delete icon at the end of each page, the actual emoji of each page columns *　rows　－　1, Empty the last position for the delete
+         * icon
          * */
         final List<ChatFace> subList = new ArrayList<>();
         int dit = 1;
-        if (mCurrentGroupIndex > 0)
+        if (mCurrentGroupIndex > 0) {
             dit = 0;
-        subList.addAll(list.subList(position * (columns * rows - dit),
-                (columns * rows - dit) * (position + 1) > list
-                        .size() ? list.size() : (columns
-                        * rows - dit)
-                        * (position + 1)));
+        }
+        subList.addAll(list.subList(
+            position * (columns * rows - dit), (columns * rows - dit) * (position + 1) > list.size() ? list.size() : (columns * rows - dit) * (position + 1)));
         /**
          * 末尾添加删除图标
-         * 
+         *
          * Add delete icon at the end
          * */
         if (mCurrentGroupIndex == 0 && subList.size() < (columns * rows - dit)) {

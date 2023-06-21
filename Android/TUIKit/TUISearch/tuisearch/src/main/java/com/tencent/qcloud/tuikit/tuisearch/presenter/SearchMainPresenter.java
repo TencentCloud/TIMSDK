@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuisearch.presenter;
 
 import android.text.TextUtils;
 import android.util.Pair;
-
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuisearch.R;
@@ -17,7 +16,6 @@ import com.tencent.qcloud.tuikit.tuisearch.interfaces.ISearchResultAdapter;
 import com.tencent.qcloud.tuikit.tuisearch.model.SearchDataProvider;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,7 +65,7 @@ public class SearchMainPresenter {
         }
 
         final List<SearchDataBean> contactSearchDataList = new ArrayList<>();
-        //search contact
+        // search contact
         contactProvider.searchContact(keywordList, new IUIKitCallback<List<SearchDataBean>>() {
             @Override
             public void onSuccess(List<SearchDataBean> searchDataBeanList) {
@@ -80,7 +78,6 @@ public class SearchMainPresenter {
                     }
                     return;
                 }
-
 
                 for (int i = 0; i < searchDataBeanList.size(); i++) {
                     SearchDataBean searchDataBean = searchDataBeanList.get(i);
@@ -138,7 +135,6 @@ public class SearchMainPresenter {
         searchParam.setSearchMemberRemark(true);
 
         groupProvider.searchGroups(searchParam, new IUIKitCallback<List<TUISearchGroupResult>>() {
-
             @Override
             public void onSuccess(List<TUISearchGroupResult> tuiSearchGroupResults) {
                 groupSearchDataList.clear();
@@ -153,7 +149,6 @@ public class SearchMainPresenter {
                 }
 
                 TUISearchLog.d(TAG, "tuiSearchGroupResults.size() = " + tuiSearchGroupResults.size());
-
 
                 for (int i = 0; i < tuiSearchGroupResults.size(); i++) {
                     TUISearchGroupResult searchGroupResult = tuiSearchGroupResults.get(i);
@@ -176,7 +171,8 @@ public class SearchMainPresenter {
                         dataBean.setTitle(groupInfo.getGroupName());
                         if (searchGroupResult.getMatchMembers() != null && !searchGroupResult.getMatchMembers().isEmpty()) {
                             TUISearchGroupResult.TUISearchGroupMemberMatchResult searchGroupMemberMatchResult = searchGroupResult.getMatchMembers().get(0);
-                            if (searchGroupMemberMatchResult.getMemberMatchField() != TUISearchGroupParam.TUISearchGroupMemberMatchField.SEARCH_FIELD_MEMBER_NONE) {
+                            if (searchGroupMemberMatchResult.getMemberMatchField()
+                                != TUISearchGroupParam.TUISearchGroupMemberMatchField.SEARCH_FIELD_MEMBER_NONE) {
                                 dataBean.setSubTitleLabel(ServiceInitializer.getAppContext().getString(R.string.include_group_member));
                                 dataBean.setSubTitle(searchGroupMemberMatchResult.getMemberMatchValue());
                             } else {
@@ -243,7 +239,6 @@ public class SearchMainPresenter {
                 conversationProvider.getConversationList(conversationIdList, new IUIKitCallback<List<ConversationInfo>>() {
                     @Override
                     public void onSuccess(List<ConversationInfo> conversationInfoList) {
-
                         for (ConversationInfo conversationInfo : conversationInfoList) {
                             SearchDataBean searchDataBean = new SearchDataBean();
                             searchDataBean.setConversationID(conversationInfo.getConversationId());
@@ -260,16 +255,17 @@ public class SearchMainPresenter {
                         TUISearchLog.i(TAG, "searchDataBeans.size() = " + conversationSearchDataBeans.size());
                         TUISearchLog.i(TAG, "mMsgsInConversationMap.size() = " + msgCountInConversationMap.size());
                         if (conversationSearchDataBeans.size() > 0) {
-
                             for (int i = 0; i < conversationSearchDataBeans.size(); i++) {
                                 SearchMessageBean searchMessageBean = msgCountInConversationMap.get(conversationSearchDataBeans.get(i).getConversationID());
                                 if (searchMessageBean != null) {
                                     int count = searchMessageBean.getMessageCount();
                                     if (count == 1) {
-                                        conversationSearchDataBeans.get(i).setSubTitle(conversationProvider.getMessageText(searchMessageBean.getMessageInfoList().get(0)));
+                                        conversationSearchDataBeans.get(i).setSubTitle(
+                                            conversationProvider.getMessageText(searchMessageBean.getMessageInfoList().get(0)));
                                         conversationSearchDataBeans.get(i).setSubTextMatch(1);
                                     } else if (count > 1) {
-                                        conversationSearchDataBeans.get(i).setSubTitle(count + ServiceInitializer.getAppContext().getString(R.string.chat_records));
+                                        conversationSearchDataBeans.get(i).setSubTitle(
+                                            count + ServiceInitializer.getAppContext().getString(R.string.chat_records));
                                         conversationSearchDataBeans.get(i).setSubTextMatch(0);
                                     }
                                 }
@@ -295,5 +291,4 @@ public class SearchMainPresenter {
             }
         });
     }
-
 }

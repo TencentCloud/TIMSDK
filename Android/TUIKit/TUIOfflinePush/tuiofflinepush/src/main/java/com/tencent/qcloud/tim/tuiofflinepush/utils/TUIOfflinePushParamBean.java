@@ -1,14 +1,22 @@
 package com.tencent.qcloud.tim.tuiofflinepush.utils;
 
 public class TUIOfflinePushParamBean {
-    public String huaweiPushBussinessId, huaweiBadgeClassName;
-    public String xiaomiPushBussinessId, xiaomiPushAppId, xiaomiPushAppKey;
-    public String meizuPushBussinessId, meizuPushAppId, meizuPushAppKey;
+    public String huaweiPushBussinessId;
+    public String huaweiBadgeClassName;
+    public String xiaomiPushBussinessId;
+    public String xiaomiPushAppId;
+    public String xiaomiPushAppKey;
+    public String meizuPushBussinessId;
+    public String meizuPushAppId;
+    public String meizuPushAppKey;
     public String vivoPushBussinessId;
     public String fcmPushBussinessId;
-    public String oppoPushBussinessId, oppoPushAppKey, oppoPushAppSecret;
+    public String oppoPushBussinessId;
+    public String oppoPushAppKey;
+    public String oppoPushAppSecret;
     public String honorPushBussinessId;
-    public String fcmPushChannelId, fcmPushChannelSoundName;
+    public String fcmPushChannelId;
+    public String fcmPushChannelSoundName;
 
     // huawei
     public String getHuaweiPushBussinessId() {

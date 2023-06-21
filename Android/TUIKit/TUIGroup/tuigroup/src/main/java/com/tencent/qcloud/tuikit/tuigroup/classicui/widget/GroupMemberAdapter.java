@@ -9,10 +9,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -27,12 +25,10 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberChangedCallback;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.GroupMemberViewHodler> {
-
     private IGroupMemberChangedCallback mCallback;
     private GroupInfo mGroupInfo;
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
@@ -44,6 +40,7 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
     private ArrayList<String> selectedMember = new ArrayList<>();
     private ArrayList<String> excludeList;
     private ArrayList<String> alreadySelectedList;
+
     public void setSelectMode(boolean selectMode) {
         isSelectMode = selectMode;
     }
@@ -135,7 +132,7 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                     int padding = ScreenUtil.getPxByDp(10);
                     delete.setPadding(padding, padding, padding, padding);
                     delete.setBackgroundResource(R.drawable.text_border);
-                    int location[] = new int[2];
+                    int[] location = new int[2];
                     v.getLocationInWindow(location);
                     final PopupWindow window = PopWindowUtil.popupWindow(delete, holder.itemView, location[0], location[1] + v.getMeasuredHeight() / 3);
                     delete.setOnClickListener(new View.OnClickListener() {

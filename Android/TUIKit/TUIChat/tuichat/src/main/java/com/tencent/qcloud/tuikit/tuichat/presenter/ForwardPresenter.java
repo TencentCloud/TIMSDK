@@ -1,17 +1,15 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
-
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +59,6 @@ public class ForwardPresenter extends ChatPresenter {
                                 onMergeMessageDownloaded(mergeMessageData);
                             }
                         });
-
                     }
 
                     @Override
@@ -69,7 +66,6 @@ public class ForwardPresenter extends ChatPresenter {
                         TUIChatLog.e(TAG, "downloadMergerMessage error , code = " + errCode + "  message = " + errMsg);
                     }
                 });
-
             }
         }
     }

@@ -4,22 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.BrandUtil;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
-import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushParamBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
+import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushParamBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushUtils;
-
 import io.dcloud.feature.uniapp.annotation.UniJSMethod;
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
 import io.dcloud.feature.uniapp.common.UniModule;
 
-
 public class TUIOfflinePushModule extends UniModule {
-
     public static final String TAG = TUIOfflinePushModule.class.getSimpleName();
     public static int REQUEST_CODE = 1000;
 
@@ -40,7 +36,6 @@ public class TUIOfflinePushModule extends UniModule {
     private long bussinessId = 0;
 
     public Context mContext = null;
-
 
     /*
      *  注册推送服务，回调推送 token
@@ -93,10 +88,10 @@ public class TUIOfflinePushModule extends UniModule {
      *      }
      *
      */
-    //run ui thread
+    // run ui thread
     @UniJSMethod(uiThread = true)
     public void getDeviceToken(JSONObject options, UniJSCallback callback) {
-        TUIOfflinePushLog.d(TAG, "getDeviceToken--"+options);
+        TUIOfflinePushLog.d(TAG, "getDeviceToken--" + options);
         JSONObject data = new JSONObject();
         if (options == null || options.isEmpty()) {
             if (callback != null) {
@@ -143,23 +138,23 @@ public class TUIOfflinePushModule extends UniModule {
 
                 @Override
                 public void invokeAndKeepAlive(Object o) {
-                    if(callback != null) {
+                    if (callback != null) {
                         if (o instanceof TUIOfflinePushErrorBean) {
                             TUIOfflinePushErrorBean errorBean = (TUIOfflinePushErrorBean) o;
                             data.put(RESPONSE_CODE_KEY, errorBean.getErrorCode());
                             data.put(RESPONSE_MSG_KEY, errorBean.getErrorDescription());
-                            TUIOfflinePushLog.e(TAG, "invokeAndKeepAlive--"+data);
+                            TUIOfflinePushLog.e(TAG, "invokeAndKeepAlive--" + data);
                             callback.invokeAndKeepAlive(data);
                         } else {
                             data.put(RESPONSE_CODE_KEY, RESPONSE_CODE_SUCCESS);
                             data.put(RESPONSE_MSG_KEY, "");
 
-                            JSONObject data_data = new JSONObject();
-                            data_data.put(RESPONSE_DATA_DEVICE_TOKEN_KEY, (String) o);
-                            data_data.put(RESPONSE_DATA_DEVICE_TYPE_KEY, BrandUtil.getInstanceType());
-                            data_data.put(RESPONSE_DATA_BUSSINESSID_KEY, bussinessId);
+                            JSONObject dataData = new JSONObject();
+                            dataData.put(RESPONSE_DATA_DEVICE_TOKEN_KEY, (String) o);
+                            dataData.put(RESPONSE_DATA_DEVICE_TYPE_KEY, BrandUtil.getInstanceType());
+                            dataData.put(RESPONSE_DATA_BUSSINESSID_KEY, bussinessId);
 
-                            data.put(RESPONSE_DATA_KEY, data_data);
+                            data.put(RESPONSE_DATA_KEY, dataData);
                             TUIOfflinePushLog.d(TAG, "invokeAndKeepAlive--" + data);
                             callback.invokeAndKeepAlive(data);
                         }
@@ -184,9 +179,9 @@ public class TUIOfflinePushModule extends UniModule {
      *   主要是为了和 tuikitDemo 互通
      *
      */
-    //run JS thread
-    @UniJSMethod (uiThread = false)
-    public void setOfflinePushListener(UniJSCallback callback){
+    // run JS thread
+    @UniJSMethod(uiThread = false)
+    public void setOfflinePushListener(UniJSCallback callback) {
         TUIOfflinePushLog.d(TAG, "setOfflinePushListener--");
         if (callback != null) {
             TUIOfflinePushManager.getInstance().setJsNotificationCallback(callback);
@@ -204,9 +199,9 @@ public class TUIOfflinePushModule extends UniModule {
      *      }
      *
      */
-    //run JS thread
-    @UniJSMethod (uiThread = false)
-    public JSONObject getDeviceType(){
+    // run JS thread
+    @UniJSMethod(uiThread = false)
+    public JSONObject getDeviceType() {
         JSONObject data = new JSONObject();
         data.put(RESPONSE_DATA_DEVICE_TYPE_KEY, BrandUtil.getInstanceType());
         return data;
@@ -221,9 +216,9 @@ public class TUIOfflinePushModule extends UniModule {
      *      }
      *
      */
-    //run JS thread
-    @UniJSMethod (uiThread = false)
-    public void setAppShowListener(UniJSCallback callback){
+    // run JS thread
+    @UniJSMethod(uiThread = false)
+    public void setAppShowListener(UniJSCallback callback) {
         TUIOfflinePushLog.d(TAG, "setAppShowListener--");
         if (callback != null) {
             TUIOfflinePushManager.getInstance().setJsLifeCycleCallback(callback);
@@ -249,16 +244,16 @@ public class TUIOfflinePushModule extends UniModule {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_CODE && data.hasExtra("respond")) {
-            Log.e("TestModule", "原生页面返回----"+data.getStringExtra("respond"));
+        if (requestCode == REQUEST_CODE && data.hasExtra("respond")) {
+            Log.e("TestModule", "原生页面返回----" + data.getStringExtra("respond"));
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @UniJSMethod (uiThread = true)
-    public void gotoNativePage(){
-        if(mUniSDKInstance != null && mUniSDKInstance.getContext() instanceof Activity) {
+    public void gotoNativePage() {
+        if (mUniSDKInstance != null && mUniSDKInstance.getContext() instanceof Activity) {
             /*Intent intent = new Intent(mUniSDKInstance.getContext(), NativePageActivity.class);
             ((Activity)mUniSDKInstance.getContext()).startActivityForResult(intent, REQUEST_CODE);*/
         }

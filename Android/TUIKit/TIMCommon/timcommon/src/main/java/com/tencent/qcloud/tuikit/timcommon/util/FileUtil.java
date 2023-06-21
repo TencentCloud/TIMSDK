@@ -15,27 +15,20 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.R;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Random;
 
 public class FileUtil {
-
-
     public static final String DOCUMENTS_DIR = "documents";
 
     public static final String FILE_PROVIDER_AUTH = ".timcommon.fileprovider";
@@ -45,22 +38,10 @@ public class FileUtil {
     public static final int SIZETYPE_MB = 3;
     public static final int SIZETYPE_GB = 4;
 
-    public static String saveBitmap(String dir, Bitmap b) {
-        String jpegName = TUIConfig.getMediaDir() + "picture_" + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + ".jpg";
-        try {
-            FileOutputStream fout = new FileOutputStream(jpegName);
-            BufferedOutputStream bos = new BufferedOutputStream(fout);
-            b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
-            return jpegName;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
     public static boolean deleteFile(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
         boolean result = false;
         File file = new File(url);
         if (file.exists()) {
@@ -98,7 +79,7 @@ public class FileUtil {
         } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
             data = uri.getPath();
         } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            Cursor cursor = TUILogin.getAppContext().getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            Cursor cursor = TUILogin.getAppContext().getContentResolver().query(uri, new String[] {MediaStore.Images.ImageColumns.DATA}, null, null, null);
             if (null != cursor) {
                 if (cursor.moveToFirst()) {
                     int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
@@ -115,7 +96,8 @@ public class FileUtil {
     public static Uri getUriFromPath(String path) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return FileProvider.getUriForFile(TUIConfig.getAppContext(), TUIConfig.getAppContext().getApplicationInfo().packageName + FILE_PROVIDER_AUTH, new File(path));
+                return FileProvider.getUriForFile(
+                    TUIConfig.getAppContext(), TUIConfig.getAppContext().getApplicationInfo().packageName + FILE_PROVIDER_AUTH, new File(path));
             } else {
                 return Uri.fromFile(new File(path));
             }
@@ -128,18 +110,16 @@ public class FileUtil {
 
     /**
      * 专为Android4.4以上设计的从Uri获取文件路径
-     * 
+     *
      * Get file path from Uri specially designed for Android4.4 and above
      */
     public static String getPath(final Context context, final Uri uri) {
-
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
-
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -152,17 +132,13 @@ public class FileUtil {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
                 final String id = DocumentsContract.getDocumentId(uri);
                 if (id.startsWith("raw:")) {
                     final String path = id.replaceFirst("raw:", "");
                     return path;
                 }
-                String[] contentUriPrefixesToTry = new String[]{
-                        "content://downloads/public_downloads",
-                        "content://downloads/my_downloads",
-                        "content://downloads/all_downloads"
-                };
+                String[] contentUriPrefixesToTry =
+                    new String[] {"content://downloads/public_downloads", "content://downloads/my_downloads", "content://downloads/all_downloads"};
 
                 for (String contentUriPrefix : contentUriPrefixesToTry) {
                     Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.parseLong(id));
@@ -182,7 +158,6 @@ public class FileUtil {
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
-
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -197,7 +172,7 @@ public class FileUtil {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{split[1]};
+                final String[] selectionArgs = new String[] {split[1]};
 
                 String path = getDataColumn(context, contentUri, selection, selectionArgs);
                 if (TextUtils.isEmpty(path) || Build.VERSION.SDK_INT >= 29) {
@@ -275,7 +250,6 @@ public class FileUtil {
             return null;
         }
 
-
         return file;
     }
 
@@ -286,8 +260,7 @@ public class FileUtil {
         if (mimeType == null && context != null) {
             filename = getName(uri.toString());
         } else {
-            Cursor returnCursor = context.getContentResolver().query(uri, null,
-                    null, null, null);
+            Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
             if (returnCursor != null) {
                 int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 returnCursor.moveToFirst();
@@ -299,12 +272,12 @@ public class FileUtil {
         return filename;
     }
 
-    private static String getName(String filename) {
-        if (filename == null) {
+    public static String getName(String filePath) {
+        if (filePath == null) {
             return null;
         }
-        int index = filename.lastIndexOf('/');
-        return filename.substring(index + 1);
+        int index = filePath.lastIndexOf('/');
+        return filePath.substring(index + 1);
     }
 
     public static File getDocumentCacheDir(@NonNull Context context) {
@@ -333,8 +306,12 @@ public class FileUtil {
             return false;
         } finally {
             try {
-                if (is != null) is.close();
-                if (bos != null) bos.close();
+                if (is != null) {
+                    is.close();
+                }
+                if (bos != null) {
+                    bos.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -352,16 +329,13 @@ public class FileUtil {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         final String column = "_data";
         final String[] projection = {column};
 
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
@@ -400,10 +374,9 @@ public class FileUtil {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-
     /**
      * 转换文件大小
-     * 
+     *
      * Convert file size to string
      *
      * @param fileS
@@ -428,7 +401,6 @@ public class FileUtil {
         return fileSizeString;
     }
 
-
     // 修复 android.webkit.MimeTypeMap 的 getFileExtensionFromUrl 方法不支持中文的问题
     // fix the problem that getFileExtensionFromUrl does not support Chinese
     public static String getFileExtensionFromUrl(String url) {
@@ -444,13 +416,12 @@ public class FileUtil {
             }
 
             int filenamePos = url.lastIndexOf('/');
-            String filename =
-                    0 <= filenamePos ? url.substring(filenamePos + 1) : url;
+            String filename = 0 <= filenamePos ? url.substring(filenamePos + 1) : url;
 
             // if the filename contains special characters, we don't
             // consider it valid for our matching purposes:
             // 去掉正则表达式判断以添加中文支持
-//          if (!filename.isEmpty() && Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", filename))
+            //          if (!filename.isEmpty() && Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", filename))
             if (!filename.isEmpty()) {
                 int dotPos = filename.lastIndexOf('.');
                 if (0 <= dotPos) {
@@ -463,9 +434,8 @@ public class FileUtil {
     }
 
     public static void openFile(String path, String fileName) {
-        Uri uri = FileProvider.getUriForFile(TUIConfig.getAppContext(),
-                TUIConfig.getAppContext().getApplicationInfo().packageName + FILE_PROVIDER_AUTH,
-                new File(path));
+        Uri uri = FileProvider.getUriForFile(
+            TUIConfig.getAppContext(), TUIConfig.getAppContext().getApplicationInfo().packageName + FILE_PROVIDER_AUTH, new File(path));
         if (uri == null) {
             Log.e("FileUtil", "openFile failed , uri is null");
             return;
@@ -495,5 +465,47 @@ public class FileUtil {
             return file.length();
         }
         return 0;
+    }
+
+    public static String generateImageFilePath() {
+        String name = System.nanoTime() + "_" + Math.abs(new Random().nextInt());
+        return TUIConfig.getImageBaseDir() + name + ".jpg";
+    }
+
+    public static String generateExternalStorageImageFilePath() {
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + TUIConfig.getAppContext().getPackageName()
+            + TUIConfig.IMAGE_BASE_DIR_SUFFIX);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir.getAbsolutePath() + File.separatorChar + System.nanoTime() + "_" + Math.abs(new Random().nextInt()) + ".jpg";
+    }
+
+    public static String generateVideoFilePath() {
+        String name = System.nanoTime() + "_" + Math.abs(new Random().nextInt());
+        return TUIConfig.getVideoBaseDir() + name + ".mp4";
+    }
+
+    public static String generateExternalStorageVideoFilePath() {
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + TUIConfig.getAppContext().getPackageName()
+            + TUIConfig.VIDEO_BASE_DIR_SUFFIX);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir.getAbsolutePath() + File.separatorChar + System.nanoTime() + "_" + Math.abs(new Random().nextInt()) + ".mp4";
+    }
+
+    public static boolean saveBitmap(String path, Bitmap b) {
+        try {
+            FileOutputStream fout = new FileOutputStream(path);
+            BufferedOutputStream bos = new BufferedOutputStream(fout);
+            b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

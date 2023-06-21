@@ -79,7 +79,7 @@ public class TUISearchGroupParam {
 
     /**
      * 搜索关键字列表，最多支持 5 个
-     * 
+     *
      * Search keyword list, supports up to 5
      */
     private List<String> keywordList;
@@ -91,5 +91,4 @@ public class TUISearchGroupParam {
     public List<String> getKeywordList() {
         return keywordList;
     }
-
 }

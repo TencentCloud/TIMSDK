@@ -85,6 +85,7 @@
     <string name="revoke_tips_other">A message is recalled.</string>
 
     <string name="create_group">Create Group</string>
+    <string name="create_community">Create Community</string>
     <string name="etc">, etc.</string>
     <string name="join_group">Join Group</string>
     <string name="invite_joined_group">is invited to the group.</string>
@@ -106,6 +107,7 @@
     <string name="group_add_opt_auto_approval">Auto Approval</string>
     <string name="group_add_opt_admin_approve">Admin Approval</string>
     <string name="group_add_opt_join_disable">Prohibited from Joining</string>
+    <string name="group_add_opt_invite_disable">Prohibited from Inviting</string>
 
     <string name="typing">Typing...</string>
     <string name="titlebar_mutiselect">Select</string>
@@ -251,4 +253,10 @@
     <string name="chat_group_call_accept_format">Answered by %s</string>
     <string name="chat_group_call_switch_to_audio_format">Switch to audio call by %s</string>
     <string name="chat_group_call_confirm_switch_to_audio_format">Confirm to audio call by %s</string>
+
+    <string name="chat_quick_tap_message_default_action_name">tickled</string>
+    <string name="chat_quick_tap_message_action_from_me">I %s "%s"</string>
+    <string name="chat_quick_tap_message_action_to_me">"%s" %s me</string>
+    <string name="chat_quick_tap_message_action">"%s" %s "%s"</string>
+
 </resources>

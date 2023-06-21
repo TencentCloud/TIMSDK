@@ -10,7 +10,6 @@ import com.tencent.qcloud.tuikit.timcommon.R;
 import java.util.List;
 
 public class UserIconView extends RelativeLayout {
-
     private SynthesizedImageView mIconView;
     private int mDefaultImageResId;
     private int mIconRadius;
@@ -63,5 +62,4 @@ public class UserIconView extends RelativeLayout {
     public void setIconUrls(List<Object> iconUrls) {
         mIconView.displayImage(iconUrls).load(null);
     }
-
 }

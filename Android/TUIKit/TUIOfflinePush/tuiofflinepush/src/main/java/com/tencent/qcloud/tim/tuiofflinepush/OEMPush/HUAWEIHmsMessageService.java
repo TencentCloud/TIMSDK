@@ -7,7 +7,6 @@ import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class HUAWEIHmsMessageService extends HmsMessageService {
-
     private static final String TAG = HUAWEIHmsMessageService.class.getSimpleName();
 
     @Override

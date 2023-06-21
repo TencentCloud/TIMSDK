@@ -7,9 +7,7 @@ public class TUIOfflinePushConfig {
     private static TUIOfflinePushConfig instance;
     private boolean isAndroidPrivateRing;
 
-    private TUIOfflinePushConfig() {
-
-    }
+    private TUIOfflinePushConfig() {}
 
     public static TUIOfflinePushConfig getInstance() {
         if (instance == null) {

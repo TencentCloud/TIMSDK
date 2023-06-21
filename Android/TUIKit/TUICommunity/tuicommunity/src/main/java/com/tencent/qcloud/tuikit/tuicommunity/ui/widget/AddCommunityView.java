@@ -8,18 +8,15 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.component.banner.BannerView;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.page.CreateCommunityActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.page.JoinCommunityActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,5 +95,4 @@ public class AddCommunityView extends FrameLayout {
         bannerItems.add(imNew);
         bannerView.setBannerData(bannerItems);
     }
-
 }

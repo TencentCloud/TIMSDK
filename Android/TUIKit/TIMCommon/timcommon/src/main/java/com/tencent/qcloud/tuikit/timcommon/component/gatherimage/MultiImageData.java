@@ -12,22 +12,21 @@ import java.util.Map;
  * Multiple image data
  */
 
-public class MultiImageData implements Cloneable{
-    final static int maxSize = 9;
+public class MultiImageData implements Cloneable {
+    static final int maxSize = 9;
     List<Object> imageUrls;
     int defaultImageResId;
     Map<Integer, Bitmap> bitmapMap;
     int bgColor = Color.parseColor("#cfd3d8");
 
-
     int targetImageSize;
-    int maxWidth, maxHeight;
+    int maxWidth;
+    int maxHeight;
     int rowCount;
     int columnCount;
     int gap = 6;
 
-    public MultiImageData() {
-    }
+    public MultiImageData() {}
 
     public MultiImageData(int defaultImageResId) {
         this.defaultImageResId = defaultImageResId;

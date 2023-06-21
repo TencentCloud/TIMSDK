@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/tuiroomkit_invite_user_face_iv"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.235"
+        app:round="12dp" />
+
+    <TextView
+        android:id="@+id/tuiroomkit_invite_user_name_tv"
+        android:layout_width="250dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_invite_user_face_iv"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/tuiroomkit_chat_access_room_invite_to_join"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_invite_user_name_tv"
+        app:layout_constraintVertical_bias="0" />
+
+    <androidx.constraintlayout.utils.widget.ImageFilterButton
+        android:id="@+id/tuiroomkit_room_reject_invite_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/tuiroomkit_room_invited_reject"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.301"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.879"
+        app:round="50dp" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/tuiroomkit_chat_access_room_invite_reject"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tuiroomkit_room_reject_invite_btn"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_room_reject_invite_btn"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_room_reject_invite_btn"
+        app:layout_constraintVertical_bias="0" />
+
+    <androidx.constraintlayout.utils.widget.ImageFilterButton
+        android:id="@+id/tuiroomkit_room_accept_invite_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/tuiroomkit_room_invited_accept"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.772"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.879"
+        app:round="50dp" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/tuiroomkit_chat_access_room_invite_accept"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tuiroomkit_room_accept_invite_btn"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_room_accept_invite_btn"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_room_accept_invite_btn"
+        app:layout_constraintVertical_bias="0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

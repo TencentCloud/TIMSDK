@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuicontact.presenter;
 
 import android.text.TextUtils;
 import android.util.Pair;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.R;
@@ -12,7 +11,6 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IAddMoreActivity;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +20,7 @@ public class AddMorePresenter {
     private ContactProvider provider;
 
     private IAddMoreActivity addMoreActivity;
+
     public AddMorePresenter() {
         provider = new ContactProvider();
     }
@@ -31,7 +30,6 @@ public class AddMorePresenter {
     }
 
     public void addFriend(String userId, String addWording) {
-
         provider.addFriend(userId, addWording, new IUIKitCallback<Pair<Integer, String>>() {
             @Override
             public void onSuccess(Pair<Integer, String> data) {
@@ -42,8 +40,8 @@ public class AddMorePresenter {
                     case FriendApplicationBean.ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS:
                         if (TextUtils.equals(data.second, "Err_SNS_FriendAdd_Friend_Exist")) {
                             ToastUtil.toastShortMessage(addMoreActivity.getString(R.string.have_be_friend));
-                            break;
                         }
+                        break;
                     case FriendApplicationBean.ERR_SVR_FRIENDSHIP_COUNT_LIMIT:
                         ToastUtil.toastShortMessage(addMoreActivity.getString(R.string.friend_limit));
                         break;
@@ -89,7 +87,6 @@ public class AddMorePresenter {
         });
     }
 
-
     public void getUserInfo(String userId, IUIKitCallback<ContactItemBean> callback) {
         List<String> userIdList = new ArrayList<>();
         userIdList.add(userId);
@@ -124,9 +121,7 @@ public class AddMorePresenter {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 ContactUtils.callbackOnError(callback, errCode, errMsg);
-
             }
         });
     }
-
 }

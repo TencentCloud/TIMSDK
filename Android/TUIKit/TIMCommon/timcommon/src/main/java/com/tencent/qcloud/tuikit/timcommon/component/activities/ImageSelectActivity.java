@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.timcommon.component.activities;
 
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,12 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -34,11 +31,9 @@ import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
-
 
 public class ImageSelectActivity extends BaseLightActivity {
     private static final String TAG = ImageSelectActivity.class.getSimpleName();
@@ -74,7 +69,6 @@ public class ImageSelectActivity extends BaseLightActivity {
         setContentView(R.layout.core_activity_image_select_layout);
         Intent intent = getIntent();
         String title = intent.getStringExtra(TITLE);
-        boolean needDownload = intent.getBooleanExtra(NEED_DOWLOAD_LOCAL, false);
         titleBarLayout = findViewById(R.id.image_select_title);
         titleBarLayout.setTitle(title, ITitleBarLayout.Position.MIDDLE);
         titleBarLayout.setTitle(getString(com.tencent.qcloud.tuicore.R.string.sure), ITitleBarLayout.Position.RIGHT);
@@ -87,6 +81,7 @@ public class ImageSelectActivity extends BaseLightActivity {
                 finish();
             }
         });
+        boolean needDownload = intent.getBooleanExtra(NEED_DOWLOAD_LOCAL, false);
         titleBarLayout.setOnRightClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +89,7 @@ public class ImageSelectActivity extends BaseLightActivity {
                     return;
                 }
                 if (needDownload) {
-                    DownloadUrl();
+                    downloadUrl();
                 } else {
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra(DATA, (Serializable) selected);
@@ -133,7 +128,7 @@ public class ImageSelectActivity extends BaseLightActivity {
         gridAdapter.notifyDataSetChanged();
     }
 
-    private void DownloadUrl() {
+    private void downloadUrl() {
         if (selected == null) {
             return;
         }
@@ -157,7 +152,6 @@ public class ImageSelectActivity extends BaseLightActivity {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
             @Override
             public void onDismiss(DialogInterface dialog) {
                 // TODO Auto-generated method stub
@@ -169,29 +163,29 @@ public class ImageSelectActivity extends BaseLightActivity {
 
         ImageBean finalBean = selected;
         Glide.with(this)
-                .downloadOnly()
-                .load(url)
-                .listener(new RequestListener<File>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
-                        dialog.cancel();
-                        Log.e(TAG, "DownloadUrl onLoadFailed e = " + e);
-                        ToastUtil.toastShortMessage(getResources().getString(R.string.setting_fail));
-                        return false;
-                    }
+            .downloadOnly()
+            .load(url)
+            .listener(new RequestListener<File>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
+                    dialog.cancel();
+                    Log.e(TAG, "DownloadUrl onLoadFailed e = " + e);
+                    ToastUtil.toastShortMessage(getResources().getString(R.string.setting_fail));
+                    return false;
+                }
 
-                    @Override
-                    public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
-                        dialog.cancel();
-                        String path = resource.getAbsolutePath();
-                        Log.e(TAG, "DownloadUrl resource path = " + path);
-                        finalBean.setLocalPath(path);
-                        setResult(finalBean);
-                        ToastUtil.toastShortMessage(getResources().getString(R.string.setting_success));
-                        return false;
-                    }
-                })
-                .preload();
+                @Override
+                public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
+                    dialog.cancel();
+                    String path = resource.getAbsolutePath();
+                    Log.e(TAG, "DownloadUrl resource path = " + path);
+                    finalBean.setLocalPath(path);
+                    setResult(finalBean);
+                    ToastUtil.toastShortMessage(getResources().getString(R.string.setting_success));
+                    return false;
+                }
+            })
+            .preload();
     }
 
     private void setResult(ImageBean bean) {
@@ -204,7 +198,8 @@ public class ImageSelectActivity extends BaseLightActivity {
     private void setSelectedStatus() {
         if (selected != null && data != null && data.contains(selected)) {
             titleBarLayout.getRightTitle().setEnabled(true);
-            titleBarLayout.getRightTitle().setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_primary_color)));
+            titleBarLayout.getRightTitle().setTextColor(
+                getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_primary_color)));
         } else {
             titleBarLayout.getRightTitle().setEnabled(false);
             titleBarLayout.getRightTitle().setTextColor(0xFF666666);
@@ -281,11 +276,12 @@ public class ImageSelectActivity extends BaseLightActivity {
                 imageView.setImageResource(android.R.color.transparent);
             } else {
                 holder.defaultLayout.setVisibility(View.GONE);
-                Glide.with(holder.itemView.getContext()).asBitmap()
-                        .load(imageBean.getThumbnailUri())
-                        .placeholder(placeHolder)
-                        .apply(new RequestOptions().error(placeHolder))
-                        .into(imageView);
+                Glide.with(holder.itemView.getContext())
+                    .asBitmap()
+                    .load(imageBean.getThumbnailUri())
+                    .placeholder(placeHolder)
+                    .apply(new RequestOptions().error(placeHolder))
+                    .into(imageView);
             }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -345,7 +341,6 @@ public class ImageSelectActivity extends BaseLightActivity {
      * add spacing
      */
     public static class GridDecoration extends RecyclerView.ItemDecoration {
-
         private final int columnNum; // span count
         private final int leftRightSpace; // vertical spacing
         private final int topBottomSpace; // horizontal spacing
@@ -375,7 +370,7 @@ public class ImageSelectActivity extends BaseLightActivity {
         void onClick(ImageBean obj);
     }
 
-    public static class ImageBean implements Serializable{
+    public static class ImageBean implements Serializable {
         String thumbnailUri; // for display
         String imageUri; // for download
         String localPath; // for local path
@@ -383,9 +378,7 @@ public class ImageSelectActivity extends BaseLightActivity {
         List<Object> groupGridAvatar = null; // for group grid avatar
         String imageId;
 
-        public ImageBean() {
-
-        }
+        public ImageBean() {}
 
         public ImageBean(String thumbnailUri, String imageUri, boolean isDefault) {
             this.thumbnailUri = thumbnailUri;

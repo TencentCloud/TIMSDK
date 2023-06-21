@@ -5,13 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +18,7 @@ public class StyleSelectAdapter extends RecyclerView.Adapter<StyleSelectAdapter.
     int selectedItem = -1;
     private List<String> styleList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
-    private SelectViewHolder mViewHolder;
+    private StyleSelectAdapter.SelectViewHolder mViewHolder;
 
     public void setSelectedItem(int selectedItem) {
         this.selectedItem = selectedItem;
@@ -29,13 +26,13 @@ public class StyleSelectAdapter extends RecyclerView.Adapter<StyleSelectAdapter.
 
     @NonNull
     @Override
-    public SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public StyleSelectAdapter.SelectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(com.tencent.qcloud.tuikit.timcommon.R.layout.core_select_item_layout, parent, false);
-        return new SelectViewHolder(view);
+        return new StyleSelectAdapter.SelectViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SelectViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StyleSelectAdapter.SelectViewHolder holder, int position) {
         String language = styleList.get(position);
         holder.name.setText(language);
         if (selectedItem == position) {
@@ -67,7 +64,7 @@ public class StyleSelectAdapter extends RecyclerView.Adapter<StyleSelectAdapter.
 
     public void refreshViewByThemeChanged() {
         if (mViewHolder == null) {
-            DemoLog.e(TAG,"mViewHolder is null");
+            DemoLog.e(TAG, "mViewHolder is null");
             return;
         }
 

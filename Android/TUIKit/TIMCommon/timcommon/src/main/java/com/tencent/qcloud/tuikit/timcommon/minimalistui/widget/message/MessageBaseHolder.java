@@ -11,9 +11,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
@@ -21,7 +19,6 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.MessageProperties;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -129,21 +126,21 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        long dayStartTimeInMillis = calendar.getTimeInMillis();
         calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        long weekStartTimeInMillis = calendar.getTimeInMillis();
         calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_YEAR, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+        long dayStartTimeInMillis = calendar.getTimeInMillis();
         long yearStartTimeInMillis = calendar.getTimeInMillis();
+        long weekStartTimeInMillis = calendar.getTimeInMillis();
         long outTimeMillis = date.getTime();
         if (outTimeMillis < yearStartTimeInMillis) {
             timeText = String.format(locale, "%1$tY/%1$tm/%1$td", date);
@@ -171,12 +168,12 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     protected boolean isShowAvatar(TUIMessageBean messageBean) {
         return false;
     }
+    
     public void startHighLight() {
         int highLightColorDark = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_dark_color);
         int highLightColorLight = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_light_color);
 
         if (highLightAnimator == null) {
-            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
             highLightAnimator = new ValueAnimator();
             highLightAnimator.setIntValues(highLightColorDark, highLightColorLight);
             highLightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -188,9 +185,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
             });
             highLightAnimator.addListener(new Animator.AnimatorListener() {
                 @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
+                public void onAnimationStart(Animator animation) {}
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -203,10 +198,9 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
                 }
 
                 @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
+                public void onAnimationRepeat(Animator animation) {}
             });
+            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
             highLightAnimator.setEvaluator(argbEvaluator);
             highLightAnimator.setRepeatCount(3);
             highLightAnimator.setDuration(250);
@@ -228,5 +222,4 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
             drawable.setColorFilter(null);
         }
     }
-
 }

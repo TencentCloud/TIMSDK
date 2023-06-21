@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.page;
 
 import android.os.Bundle;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -15,6 +14,7 @@ public class TUIC2CChatActivity extends TUIBaseChatActivity {
 
     private TUIC2CChatFragment chatFragment;
     private C2CChatPresenter presenter;
+
     @Override
     public void initChat(ChatInfo chatInfo) {
         TUIChatLog.i(TAG, "inti chat " + chatInfo);

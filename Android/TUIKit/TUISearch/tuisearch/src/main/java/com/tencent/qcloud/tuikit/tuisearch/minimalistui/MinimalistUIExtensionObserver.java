@@ -5,19 +5,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.tuisearch.R;
-
 import java.util.List;
 import java.util.Map;
 
 public class MinimalistUIExtensionObserver extends ServiceInitializer implements ITUIExtension {
-
     @Override
     public void init(Context context) {
         super.init(context);
@@ -31,7 +28,7 @@ public class MinimalistUIExtensionObserver extends ServiceInitializer implements
             if (parentView instanceof ViewGroup) {
                 viewGroup = (ViewGroup) parentView;
             }
-            if (viewGroup  == null) {
+            if (viewGroup == null) {
                 return;
             }
             View searchView = LayoutInflater.from(getAppContext()).inflate(R.layout.minimalist_search_view_layout, null);
@@ -65,5 +62,4 @@ public class MinimalistUIExtensionObserver extends ServiceInitializer implements
         }
         return defaultValue;
     }
-
 }

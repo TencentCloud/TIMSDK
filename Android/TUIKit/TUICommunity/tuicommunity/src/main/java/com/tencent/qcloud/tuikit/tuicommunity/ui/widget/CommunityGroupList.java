@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
@@ -21,11 +19,9 @@ import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityGroupIconList;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.page.TUICommunityFragment;
-
 import java.util.List;
 
 public class CommunityGroupList extends RecyclerView implements ICommunityGroupIconList {
-
     private CommunityGroupIconListAdapter adapter;
     private LinearLayoutManager layoutManager;
     private CommunityPresenter presenter;
@@ -112,10 +108,10 @@ public class CommunityGroupList extends RecyclerView implements ICommunityGroupI
     }
 
     static class CommunityGroupIconListAdapter extends Adapter<CommunityGroupIconListAdapter.CommunityGroupIconViewHolder> {
-
         private List<CommunityBean> data;
         private TUICommunityFragment.OnCommunityClickListener onCommunityClickListener;
         private int selectedPosition = -1;
+
         public void setData(List<CommunityBean> data) {
             this.data = data;
         }
@@ -143,7 +139,7 @@ public class CommunityGroupList extends RecyclerView implements ICommunityGroupI
         public void onBindViewHolder(@NonNull CommunityGroupIconViewHolder holder, int position) {
             CommunityBean communityBean = data.get(position);
             GlideEngine.loadImageSetDefault(holder.imageView, communityBean.getGroupFaceUrl(),
-                    TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
+                TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_group_icon_community));
             if (position == selectedPosition) {
                 holder.selectedBorder.setVisibility(VISIBLE);
             } else {
@@ -170,6 +166,7 @@ public class CommunityGroupList extends RecyclerView implements ICommunityGroupI
         static class CommunityGroupIconViewHolder extends ViewHolder {
             private final ImageView imageView;
             private final View selectedBorder;
+
             public CommunityGroupIconViewHolder(@NonNull View itemView) {
                 super(itemView);
                 imageView = itemView.findViewById(R.id.face_url);

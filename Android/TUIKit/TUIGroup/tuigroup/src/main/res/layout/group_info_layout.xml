@@ -137,7 +137,7 @@
             <LinearLayout
                 android:id="@+id/group_notice"
                 android:layout_width="match_parent"
-                android:layout_height="69dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:paddingLeft="@dimen/group_profile_face_margin_left"
                 android:paddingRight="20dp"
@@ -172,8 +172,8 @@
                         android:textSize="11.52sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
                         android:background="@drawable/arrow_right" />
 
                 </LinearLayout>
@@ -211,6 +211,13 @@
                 android:layout_height="@dimen/group_profile_item_height"
                 app:isTop="true"
                 app:name="@string/join_group_type" />
+
+            <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
+                android:id="@+id/invite_type_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/group_profile_item_height"
+                app:isTop="true"
+                app:name="@string/invite_group_type" />
 
             <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
                 android:id="@+id/self_nickname_bar"

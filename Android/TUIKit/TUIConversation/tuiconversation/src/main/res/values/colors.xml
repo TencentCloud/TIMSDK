@@ -35,4 +35,6 @@
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
 
+    <color name="conversation_tab_bg_color">#EBECF0</color>
+
 </resources>

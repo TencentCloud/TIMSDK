@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuikit.timcommon.R;
 
 public class MaxWidthLinearLayout extends LinearLayout {
-
     int maxWidthPx;
 
     public MaxWidthLinearLayout(@NonNull Context context) {
@@ -37,7 +36,7 @@ public class MaxWidthLinearLayout extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
-        if(maxWidthPx > 0 && maxWidthPx < measuredWidth) {
+        if (maxWidthPx > 0 && maxWidthPx < measuredWidth) {
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(maxWidthPx, MeasureSpec.AT_MOST);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

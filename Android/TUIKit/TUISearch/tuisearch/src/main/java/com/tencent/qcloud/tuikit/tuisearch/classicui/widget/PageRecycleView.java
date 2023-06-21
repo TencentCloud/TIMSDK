@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PageRecycleView extends RecyclerView {
-
     protected OnLoadMoreHandler mHandler;
 
     public PageRecycleView(Context context) {
@@ -34,7 +33,7 @@ public class PageRecycleView extends RecyclerView {
             if (mHandler != null) {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
                 int lastPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastPosition == getAdapter().getItemCount() -1 && !mHandler.isListEnd(lastPosition)){
+                if (lastPosition == getAdapter().getItemCount() - 1 && !mHandler.isListEnd(lastPosition)) {
                     mHandler.loadMore();
                 }
             }
@@ -43,6 +42,7 @@ public class PageRecycleView extends RecyclerView {
 
     public interface OnLoadMoreHandler {
         void loadMore();
+        
         boolean isListEnd(int position);
     }
 }

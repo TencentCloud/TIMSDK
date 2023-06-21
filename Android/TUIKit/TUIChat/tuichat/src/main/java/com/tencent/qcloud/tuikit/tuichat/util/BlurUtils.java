@@ -11,10 +11,9 @@ import android.renderscript.ScriptIntrinsicBlur;
 import androidx.annotation.RequiresApi;
 
 public class BlurUtils {
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Bitmap fastBlur(Context context, Bitmap bitmap) {
-        if (context == null || bitmap ==  null) {
+        if (context == null || bitmap == null) {
             return null;
         }
         RenderScript renderScript = RenderScript.create(context);

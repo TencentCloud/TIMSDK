@@ -17,20 +17,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAdapter;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
-
     private static final int SHADOW_WIDTH = 10;
     private static final int Y_OFFSET = 4;
 
@@ -94,8 +90,6 @@ public class Menu {
 
         int itemWidth = mActivity.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_item_width);
         int itemHeight = mActivity.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_item_height);
-        float anchorWidth = mAttachView.getWidth();
-        float anchorHeight = mAttachView.getHeight();
 
         mMenuWindow.getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
@@ -106,7 +100,7 @@ public class Menu {
 
         int popWidth = itemWidth + paddingLeftRight * 2 - SHADOW_WIDTH;
         int popHeight = itemHeight * rowCount + paddingTopBottom * 2 - SHADOW_WIDTH;
-
+        float anchorWidth = mAttachView.getWidth();
         float indicatorX = anchorWidth / 2;
         int screenWidth = ScreenUtil.getScreenWidth(mActivity);
         int x = location[0];
@@ -117,7 +111,7 @@ public class Menu {
             indicatorX = popWidth - anchorWidth / 2 - xOffset;
             x = (int) (location[0] + anchorWidth - popWidth + xOffset);
         }
-
+        float anchorHeight = mAttachView.getHeight();
         y = (int) (location[1] + anchorHeight) + Y_OFFSET;
         popHeight = popHeight - indicatorHeight;
 
@@ -138,14 +132,14 @@ public class Menu {
 
         Path path = new Path();
         Drawable drawable = new Drawable() {
-
             @Override
             public void draw(@NonNull Canvas canvas) {
                 Paint paint = new Paint();
                 paint.setColor(Color.WHITE);
                 paint.setStyle(Paint.Style.FILL);
-                paint.setShadowLayer(borderWidth, 0,0,0xFFAAAAAA);
-                path.addRoundRect(new RectF(borderWidth, indicatorHeight + borderWidth, widthPixel - borderWidth, heightPixel + indicatorHeight - borderWidth), radius, radius, Path.Direction.CW);
+                paint.setShadowLayer(borderWidth, 0, 0, 0xFFAAAAAA);
+                path.addRoundRect(new RectF(borderWidth, indicatorHeight + borderWidth, widthPixel - borderWidth, heightPixel + indicatorHeight - borderWidth),
+                    radius, radius, Path.Direction.CW);
                 path.moveTo(indicatorX - indicatorHeight, indicatorHeight + borderWidth);
                 path.lineTo(indicatorX, borderWidth);
                 path.lineTo(indicatorX + indicatorHeight, indicatorHeight + borderWidth);
@@ -154,14 +148,10 @@ public class Menu {
             }
 
             @Override
-            public void setAlpha(int alpha) {
-
-            }
+            public void setAlpha(int alpha) {}
 
             @Override
-            public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-            }
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {}
 
             @Override
             public int getOpacity() {

@@ -12,10 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
@@ -23,7 +21,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.interfaces.ISearchMoreMsgAdapter;
-
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,7 +35,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private int mViewType = -1;
 
-    //data list
+    // data list
     private List<SearchDataBean> mDataList;
 
     private int mTotalCount = 0;
@@ -122,7 +119,8 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (searchDataBean.isGroup()) {
                     avatarIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
                 } else {
-                    avatarIconResID = TUIThemeManager.getAttrResId(contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
+                    avatarIconResID = TUIThemeManager.getAttrResId(
+                        contactViewHolder.mUserIconView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
                 }
                 GlideEngine.loadImage(contactViewHolder.mUserIconView, avatarIconResID);
             }
@@ -163,13 +161,13 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mViewType;
     }
 
-    public interface onItemClickListener {
+    public interface OnItemClickListener {
         void onClick(View view, int pos);
     }
 
-    private SearchMoreMsgAdapter.onItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
-    public void setOnItemClickListener(SearchMoreMsgAdapter.onItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -187,7 +185,8 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (searchDataBean.isGroup()) {
             avatarDefaultIconResID = TUIUtil.getDefaultGroupIconResIDByGroupType(context, searchDataBean.getGroupType());
         } else {
-            avatarDefaultIconResID = TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
+            avatarDefaultIconResID =
+                TUIThemeManager.getAttrResId(holder.itemView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
         }
         GlideEngine.loadImageSetDefault(holder.conversationIcon, searchDataBean.getIconPath(), avatarDefaultIconResID);
         holder.conversationTitle.setText(searchDataBean.getTitle());
@@ -223,6 +222,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         private View conversationLayout;
         private ImageView conversationIcon;
         private TextView conversationTitle;
+
         public SearchMessageHeaderHolder(@NonNull View itemView) {
             super(itemView);
             conversationLayout = itemView.findViewById(R.id.conversation_layout);

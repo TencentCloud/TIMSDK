@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -28,11 +26,9 @@ import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityDetailView;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityGroupList;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunitySelfView;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
-
 import java.util.List;
 
 public class TUICommunityFragment extends Fragment implements ICommunityFragment {
-
     private View baseView;
     private ViewPager2 communityContentViewPager;
     private CommunityFragmentAdapter communityFragmentAdapter;
@@ -53,8 +49,7 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         baseView = inflater.inflate(R.layout.community_main_fragment_layout, container, false);
         initView();
         initData();
@@ -253,7 +248,7 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
         @Override
         public void onBindViewHolder(@NonNull FragmentContentViewHolder holder, int position) {
             if (holder.itemView instanceof CommunityDetailView) {
-//                ((CommunityDetailView) holder.itemView).hideTopicList();
+                //                ((CommunityDetailView) holder.itemView).hideTopicList();
                 CommunityBean communityBean = data.get(position - 1);
                 ((CommunityDetailView) holder.itemView).setCommunityBean(communityBean);
             }
@@ -290,7 +285,6 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
                 super(itemView);
             }
         }
-
     }
 
     public abstract static class OnCommunityClickListener {

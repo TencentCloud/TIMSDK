@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ISearchMoreMsgAdapter {
     void onDataSourceChanged(List<SearchDataBean> searchDataBeanList);
+
     void onTotalCountChanged(int totalCount);
 }

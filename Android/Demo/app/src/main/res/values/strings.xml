@@ -187,13 +187,13 @@
     <string name="demo_choose_avatar">Choose Avatar</string>
 
     <string name="demo_permission_mic_reason_title">%s applies for access to the microphone</string>
-    <string name="demo_permission_mic_reason">In order for you to send voice messages, make video and audio and video calls, please allow us to access the microphone.</string>
+    <string name="demo_permission_mic_reason">In order for you to send voice messages, make camera and audio and video calls, and use the quick meeting function, please allow us to access the microphone.</string>
     <string name="demo_permission_camera_reason_title">%s applies for camera permission</string>
-    <string name="demo_permission_camera_reason">In order for you to take photos or videos to send to friends, and to make video calls, please allow us to access the webcam.</string>
+    <string name="demo_permission_camera_reason">In order for you to take photos or videos to send to friends, make video calls and use the quick meeting function, please allow us to access the camera.</string>
     <string name="demo_permission_storage_reason_title">%s applies for storage permission</string>
     <string name="demo_permission_storage_reason">In order for you to save photos and videos to your device, please allow us to write photos and videos to your device.</string>
-    <string name="demo_permission_mic_dialog_alert">Allow microphone access in Settings->Apps->%s to use voice messages, video cameras, and audio and video calls as normal</string>
-    <string name="demo_permission_camera_dialog_alert">Allow camera access in Settings->Apps->%s to use the photo, video and video calling functions as normal</string>
+    <string name="demo_permission_mic_dialog_alert">Allow microphone access in Settings->Apps->%s to use voice messages, camera, audio and video calls and quick meeting functions normally</string>
+    <string name="demo_permission_camera_dialog_alert">Allow camera access in Settings->Apps->%s to use camera, video, video call and quick meeting functions normally</string>
     <string name="demo_permission_storage_dialog_alert">Allow storage access in Settings->Apps->%s to use the function of saving photos and videos normally</string>
 
     <string name="upgrade_sure">Upgrade</string>

@@ -1,9 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message.reply;
 
 import com.tencent.imsdk.v2.V2TIMSoundElem;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 public class SoundReplyQuoteBean extends TUIReplyQuoteBean {
     private String dataPath;
@@ -23,5 +23,4 @@ public class SoundReplyQuoteBean extends TUIReplyQuoteBean {
         }
         return 0;
     }
-
 }

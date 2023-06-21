@@ -32,5 +32,4 @@ public abstract class TUIReplyQuoteBean<T extends TUIMessageBean> implements Ser
     public String getDefaultAbstract() {
         return defaultAbstract;
     }
-
 }

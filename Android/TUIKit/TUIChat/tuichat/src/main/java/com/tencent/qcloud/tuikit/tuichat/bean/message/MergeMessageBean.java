@@ -54,5 +54,4 @@ public class MergeMessageBean extends TUIMessageBean {
     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
         return MergeReplyQuoteBean.class;
     }
-
 }

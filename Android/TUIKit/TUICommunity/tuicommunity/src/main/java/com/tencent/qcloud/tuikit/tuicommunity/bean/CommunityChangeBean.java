@@ -1,4 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicommunity.bean;
+
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 
 public class CommunityChangeBean {

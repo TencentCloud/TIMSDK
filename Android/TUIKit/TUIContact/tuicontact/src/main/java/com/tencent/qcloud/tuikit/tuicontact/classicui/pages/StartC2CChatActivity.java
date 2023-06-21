@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuicontact.classicui.pages;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
@@ -15,12 +13,10 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ContactStartChatUtils;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class StartC2CChatActivity extends BaseLightActivity {
-
     private static final String TAG = StartC2CChatActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -29,6 +25,7 @@ public class StartC2CChatActivity extends BaseLightActivity {
     private List<ContactItemBean> mContacts = new ArrayList<>();
 
     private ContactPresenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +60,7 @@ public class StartC2CChatActivity extends BaseLightActivity {
             @Override
             public void onSelectChanged(ContactItemBean contact, boolean selected) {
                 if (selected) {
-                    if (mSelectedItem == contact) {
-                        
-                    } else {
+                    if (mSelectedItem != contact) {
                         if (mSelectedItem != null) {
                             mSelectedItem.setSelected(false);
                         }

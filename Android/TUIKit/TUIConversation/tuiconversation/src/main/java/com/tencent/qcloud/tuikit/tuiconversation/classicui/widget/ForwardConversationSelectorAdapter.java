@@ -4,16 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
-
 import java.util.List;
 
-public class ForwardConversationSelectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ForwardConversationSelectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<ConversationInfo> list;
     private OnItemClickListener mOnItemClickListener;
@@ -45,7 +42,6 @@ public class ForwardConversationSelectorAdapter extends RecyclerView.Adapter<Rec
                 mOnItemClickListener.onClick(v, position);
             }
         });
-
     }
 
     public void setDataSource(List<ConversationInfo> dataSource) {
@@ -75,11 +71,10 @@ public class ForwardConversationSelectorAdapter extends RecyclerView.Adapter<Rec
 
     static class ConversationViewHolder extends RecyclerView.ViewHolder {
         public ConversationIconView conversationUserIconView;
+
         public ConversationViewHolder(View itemView) {
             super(itemView);
             conversationUserIconView = itemView.findViewById(R.id.conversation_user_icon_view);
         }
     }
 }
-
-

@@ -42,5 +42,4 @@ public class ContactStartChatUtils {
             TUICore.startActivity("TUIC2CChatMinimalistActivity", bundle);
         }
     }
-
 }

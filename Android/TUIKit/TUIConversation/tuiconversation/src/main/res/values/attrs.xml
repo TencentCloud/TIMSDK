@@ -17,4 +17,6 @@
         <!--多图片之间的空隙间隔-->
         <attr name="synthesized_image_gap" format="dimension" />
     </declare-styleable>
+
+    <attr name="conversation_tab_selected" format="reference|color"/>
 </resources>

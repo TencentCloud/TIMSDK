@@ -7,7 +7,7 @@
     <attr name="iconRight" format="reference" />
     <attr name="duration_max" format="integer" />
 
-    <declare-styleable name="JCameraView">
+    <declare-styleable name="CameraView">
         <attr name="iconSize" />
         <attr name="iconMargin" />
         <attr name="iconSrc" />

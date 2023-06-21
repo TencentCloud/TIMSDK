@@ -14,10 +14,8 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
@@ -34,12 +32,10 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
-
     private TitleBarLayout titleBarLayout;
     private MinimalistLineControllerView muteAllView;
     private View addMuteMemberView;
@@ -85,31 +81,31 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
         muteAllView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    presenter.muteAll(groupInfo.getId(), isChecked, new IUIKitCallback<Void>() {
-                        @Override
-                        public void onSuccess(Void data) {
-                            if (isChecked) {
-                                addMuteMemberView.setVisibility(View.GONE);
-                                mutedList.setVisibility(View.GONE);
-                            } else {
-                                addMuteMemberView.setVisibility(View.VISIBLE);
-                                mutedList.setVisibility(View.VISIBLE);
-                            }
+                presenter.muteAll(groupInfo.getId(), isChecked, new IUIKitCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void data) {
+                        if (isChecked) {
+                            addMuteMemberView.setVisibility(View.GONE);
+                            mutedList.setVisibility(View.GONE);
+                        } else {
+                            addMuteMemberView.setVisibility(View.VISIBLE);
+                            mutedList.setVisibility(View.VISIBLE);
                         }
+                    }
 
-                        @Override
-                        public void onError(String module, int errCode, String errMsg) {
-                            ToastUtil.toastShortMessage(errCode + ", " + errMsg);
-                        }
-                    });
-                }
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastShortMessage(errCode + ", " + errMsg);
+                    }
+                });
+            }
         });
 
         addMuteMemberView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (TextUtils.equals(groupInfo.getGroupType(), GroupInfo.GROUP_TYPE_AVCHATROOM)
-                        || TextUtils.equals(groupInfo.getGroupType(), GroupInfo.GROUP_TYPE_WORK)) {
+                    || TextUtils.equals(groupInfo.getGroupType(), GroupInfo.GROUP_TYPE_WORK)) {
                     ToastUtil.toastShortMessage(getString(R.string.group_not_support_mute_member));
                     return;
                 }
@@ -168,7 +164,7 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
                     }
                 });
                 int x = view.getWidth() / 2;
-                int y = - view.getHeight() / 3;
+                int y = -view.getHeight() / 3;
                 int popHeight = ScreenUtil.dip2px(45) * 3;
                 if (y + popHeight + view.getY() + view.getHeight() > mutedList.getBottom()) {
                     y = y - popHeight;
@@ -176,7 +172,6 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
                 popupWindow.showAsDropDown(view, x, y, Gravity.TOP | Gravity.START);
             }
         });
-
     }
 
     private void loadMutedMember() {
@@ -217,7 +212,6 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
     }
 
     class MutedMemberAdapter extends RecyclerView.Adapter<MutedMemberAdapter.MutedMemberViewHolder> {
-
         private List<GroupMemberInfo> groupMemberInfoList;
 
         private OnItemLongClickListener onItemLongClickListener;
@@ -276,6 +270,7 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
         class MutedMemberViewHolder extends RecyclerView.ViewHolder {
             ShadeImageView faceIcon;
             TextView managerName;
+
             public MutedMemberViewHolder(@NonNull View itemView) {
                 super(itemView);
                 faceIcon = itemView.findViewById(R.id.group_manager_face);
@@ -299,5 +294,4 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
     interface OnItemLongClickListener {
         void onClick(View view, GroupMemberInfo groupMemberInfo);
     }
-
 }

@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
@@ -32,11 +30,9 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIForwardChatMinimal
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.ReplyDetailsView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ReplyPresenter;
-
 import java.util.Map;
 
 public class ChatReplyDialogFragment extends DialogFragment implements IReplyMessageHandler {
-
     private BottomSheetDialog dialog;
 
     private TUIMessageBean originMessage;
@@ -128,7 +124,6 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
                     dismiss();
                 }
             });
-
         }
     }
 
@@ -147,5 +142,4 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
             repliesList.setData(messageBeanMap);
         }
     }
-
 }

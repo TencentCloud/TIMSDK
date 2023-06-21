@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
@@ -19,13 +17,11 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberChangedCallback;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.GroupMemberViewHodler> {
-
     private IGroupMemberChangedCallback mCallback;
     private GroupInfo mGroupInfo;
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();

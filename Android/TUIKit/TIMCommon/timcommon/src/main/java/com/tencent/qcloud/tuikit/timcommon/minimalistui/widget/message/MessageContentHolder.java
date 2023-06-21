@@ -9,9 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
@@ -28,14 +26,12 @@ import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public abstract class MessageContentHolder extends MessageBaseHolder {
-
     protected static final int READ_STATUS_UNREAD = 1;
     protected static final int READ_STATUS_PART_READ = 2;
     protected static final int READ_STATUS_ALL_READ = 3;
@@ -102,7 +98,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
 
         List<TUIMessageBean> mediaSource = new ArrayList<>();
-        for(TUIMessageBean messageBean : dataSource) {
+        for (TUIMessageBean messageBean : dataSource) {
             int type = messageBean.getMsgType();
             if (type == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE || type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
                 mediaSource.add(messageBean);
@@ -312,7 +308,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, recyclerView);
         param.put(TUIConstants.TUIChat.FRAGMENT, fragment);
 
-        TUICore.raiseExtension(TUIConstants.TUITranslation.Extension.TranslationView.MINIMALIST_EXTENSION_ID, translationContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.MINIMALIST_EXTENSION_ID, translationContentFrameLayout, param);
     }
 
     private void loadAvatar(TUIMessageBean msg) {
@@ -371,8 +367,6 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
     }
 
-
-
     protected boolean isNeedChangedBackground() {
         return true;
     }
@@ -390,9 +384,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         if (nextMessage != null) {
             if (TextUtils.equals(messageBean.getSender(), nextMessage.getSender())) {
                 boolean longPeriod = nextMessage.getMessageTime() - messageBean.getMessageTime() >= 5 * 60;
-                if (!isShowAvatar(nextMessage)
-                        && nextMessage.getStatus() != TUIMessageBean.MSG_STATUS_REVOKE
-                        && !longPeriod) {
+                if (!isShowAvatar(nextMessage) && nextMessage.getStatus() != TUIMessageBean.MSG_STATUS_REVOKE && !longPeriod) {
                     isShowAvatar = false;
                 }
             }
@@ -454,8 +446,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(leftUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon));
-            rightUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(rightUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon));
+            leftUserIcon.setDefaultImageResId(
+                TUIThemeManager.getAttrResId(leftUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon));
+            rightUserIcon.setDefaultImageResId(
+                TUIThemeManager.getAttrResId(rightUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon));
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());

@@ -8,15 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -101,7 +98,7 @@ public class GroupTypeSelectMinimalistActivity extends AppCompatActivity {
         finish();
     }
 
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private List<String> mDatas;
 
         public MyAdapter(List<String> datas) {
@@ -118,7 +115,7 @@ public class GroupTypeSelectMinimalistActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             String type = this.mDatas.get(position);
-            switch(type) {
+            switch (type) {
                 case TUIContactConstants.GroupType.TYPE_WORK:
                     holder.textView.setText(getString(R.string.group_work_type));
                     holder.subTextView.setText(getString(R.string.group_work_content));
@@ -161,8 +158,12 @@ public class GroupTypeSelectMinimalistActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             View rootView;
-            TextView textView, subTextView;
-            View selectedBorder, notSelectedBorder, selectedIcon;
+            TextView textView;
+            TextView subTextView;
+            View selectedBorder;
+            View notSelectedBorder;
+            View selectedIcon;
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 rootView = itemView;
@@ -186,5 +187,4 @@ public class GroupTypeSelectMinimalistActivity extends AppCompatActivity {
             }
         }
     }
-
 }

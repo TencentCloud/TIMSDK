@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="center_vertical" android:top="1dp" android:bottom="1dp"  android:left="1dp"  android:right="1dp">
+        <shape>
+            <!-- 上下边距合计1dp 高度减少1dp -->
+            <size android:height="28dp" />
+            <corners android:radius="999dp" />
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</layer-list>

@@ -227,6 +227,13 @@
                 app:name="@string/join_group_type" />
 
             <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
+                android:id="@+id/invite_type_bar"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="1dp"
+                app:name="@string/invite_group_type" />
+
+            <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/self_nickname_bar"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"

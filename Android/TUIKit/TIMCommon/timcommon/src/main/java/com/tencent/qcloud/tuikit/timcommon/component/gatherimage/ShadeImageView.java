@@ -22,7 +22,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
 @SuppressLint("AppCompatCustomView")
 public class ShadeImageView extends ImageView {
-
     private static SparseArray<Bitmap> sRoundBitmapArray = new SparseArray();
     private Paint mShadePaint = new Paint();
     private Bitmap mRoundBitmap;
@@ -82,7 +81,6 @@ public class ShadeImageView extends ImageView {
         return output;
     }
 
-
     public int getRadius() {
         return radius;
     }
@@ -90,6 +88,4 @@ public class ShadeImageView extends ImageView {
     public void setRadius(int radius) {
         this.radius = radius;
     }
-
-
 }

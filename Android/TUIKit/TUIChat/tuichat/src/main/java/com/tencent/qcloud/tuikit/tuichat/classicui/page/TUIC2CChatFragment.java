@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
@@ -15,7 +13,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +22,7 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
 
     private ChatInfo chatInfo;
     private C2CChatPresenter presenter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +48,6 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
         super.initView();
 
         setTitleBarExtension();
-
 
         chatView.setPresenter(presenter);
         presenter.setChatInfo(chatInfo);
@@ -78,7 +75,6 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
                 }
             });
         }
-
     }
 
     public void setPresenter(C2CChatPresenter presenter) {

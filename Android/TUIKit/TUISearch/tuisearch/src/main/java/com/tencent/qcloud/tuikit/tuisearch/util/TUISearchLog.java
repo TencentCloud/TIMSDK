@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuisearch.util;
 import com.tencent.imsdk.common.IMLog;
 
 public class TUISearchLog extends IMLog {
-
     private static final String PRE = "TUISearch-";
 
     private static String mixTag(String tag) {
@@ -29,9 +28,8 @@ public class TUISearchLog extends IMLog {
     public static void w(String strTag, String strInfo, Throwable e) {
         IMLog.w(mixTag(strTag), strInfo + e.getMessage());
     }
-    
+
     public static void e(String strTag, String strInfo) {
         IMLog.e(mixTag(strTag), strInfo);
     }
-
 }

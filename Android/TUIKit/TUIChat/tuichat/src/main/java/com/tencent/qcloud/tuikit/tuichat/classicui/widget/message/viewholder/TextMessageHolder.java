@@ -13,7 +13,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 
 public class TextMessageHolder extends MessageContentHolder {
-
     protected TextView msgBodyText;
 
     public TextMessageHolder(View itemView) {
@@ -59,12 +58,12 @@ public class TextMessageHolder extends MessageContentHolder {
         }
 
         msgArea.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    selectableTextHelper.selectAll();
-                    return true;
-                }
-            });
+            @Override
+            public boolean onLongClick(View v) {
+                selectableTextHelper.selectAll();
+                return true;
+            }
+        });
         boolean isEmoji = false;
         if (textMessageBean.getText() != null) {
             isEmoji = FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getText(), false);
@@ -78,5 +77,4 @@ public class TextMessageHolder extends MessageContentHolder {
         }
         setSelectableTextHelper(msg, msgBodyText, position, isEmoji);
     }
-
 }

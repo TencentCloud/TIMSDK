@@ -6,9 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -22,12 +20,10 @@ import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     protected List<ContactItemBean> mData;
     private ContactListView.OnSelectChangedListener mOnSelectChangedListener;
     private ContactListView.OnItemClickListener mOnClickListener;
@@ -111,9 +107,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfig.getInstance().isShowUserStatus()) {
                 itemViewHolder.userStatusView.setVisibility(View.VISIBLE);
                 if (contactBean.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
-                    itemViewHolder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_online));
+                    itemViewHolder.userStatusView.setBackgroundResource(
+                        TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_online));
                 } else {
-                    itemViewHolder.userStatusView.setBackgroundResource(TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_offline));
+                    itemViewHolder.userStatusView.setBackgroundResource(
+                        TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_offline));
                 }
             } else {
                 itemViewHolder.userStatusView.setVisibility(View.GONE);
@@ -259,7 +257,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             avatar.setRadius(ScreenUtil.dip2px(20));
         }
     }
-
 
     public static class ContactControllerViewHolder extends RecyclerView.ViewHolder {
         TextView controllerName;

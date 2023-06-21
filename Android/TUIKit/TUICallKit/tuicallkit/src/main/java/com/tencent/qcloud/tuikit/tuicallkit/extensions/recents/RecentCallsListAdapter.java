@@ -178,7 +178,7 @@ public class RecentCallsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return null;
         }
         List<TUICallDefine.CallRecords> selectList = new ArrayList<>();
-        for (int i = 0; i < getItemCount() - 1; i++) {
+        for (int i = 0; i < getItemCount(); i++) {
             TUICallDefine.CallRecords records = getItem(i);
             if (records != null && isItemChecked(records.callId)) {
                 selectList.add(records);

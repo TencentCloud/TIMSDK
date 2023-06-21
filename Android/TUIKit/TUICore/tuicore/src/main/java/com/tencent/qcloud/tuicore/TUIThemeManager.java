@@ -11,13 +11,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.webkit.WebView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,7 +104,7 @@ public class TUIThemeManager {
 
         try {
             final Method declaredMethod = Class.forName("android.app.ActivityThread", false, Application.class.getClassLoader())
-                    .getDeclaredMethod("currentProcessName", (Class<?>[]) new Class[0]);
+                                              .getDeclaredMethod("currentProcessName", (Class<?>[]) new Class[0]);
             declaredMethod.setAccessible(true);
             final Object invoke = declaredMethod.invoke(null, new Object[0]);
             if (invoke instanceof String) {
@@ -119,6 +116,7 @@ public class TUIThemeManager {
 
         return currentProcessName;
     }
+
     private void notifySetLanguageEvent() {
         TUICore.notifyEvent(TUIConstants.TUICore.LANGUAGE_EVENT, TUIConstants.TUICore.LANGUAGE_EVENT_SUB_KEY, null);
     }
@@ -168,6 +166,7 @@ public class TUIThemeManager {
     public static void addLivelyTheme(int resId) {
         addTheme(THEME_LIVELY, resId);
     }
+
     public static void addSeriousTheme(int resId) {
         addTheme(THEME_SERIOUS, resId);
     }
@@ -234,8 +233,7 @@ public class TUIThemeManager {
 
         if (Build.VERSION.SDK_INT >= 25) {
             context = context.createConfigurationContext(configuration);
-            context.getResources().updateConfiguration(configuration,
-                resources.getDisplayMetrics());
+            context.getResources().updateConfiguration(configuration, resources.getDisplayMetrics());
         }
     }
 
@@ -285,7 +283,7 @@ public class TUIThemeManager {
 
     /**
      * Get resources for skinning
-     * 
+     *
      * @param context   context
      * @param attrId    custom attribute
      * @return resources for skinning
@@ -300,42 +298,29 @@ public class TUIThemeManager {
     }
 
     static class ThemeAndLanguageCallback implements Application.ActivityLifecycleCallbacks {
-
         @Override
         public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             TUIThemeManager.getInstance().applyTheme(activity);
             TUIThemeManager.getInstance().applyLanguage(activity);
+            TUIThemeManager.getInstance().applyLanguage(activity.getApplicationContext());
         }
 
         @Override
-        public void onActivityStarted(@NonNull Activity activity) {
-
-        }
+        public void onActivityStarted(@NonNull Activity activity) {}
 
         @Override
-        public void onActivityResumed(@NonNull Activity activity) {
-
-        }
+        public void onActivityResumed(@NonNull Activity activity) {}
 
         @Override
-        public void onActivityPaused(@NonNull Activity activity) {
-
-        }
+        public void onActivityPaused(@NonNull Activity activity) {}
 
         @Override
-        public void onActivityStopped(@NonNull Activity activity) {
-
-        }
+        public void onActivityStopped(@NonNull Activity activity) {}
 
         @Override
-        public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-
-        }
+        public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {}
 
         @Override
-        public void onActivityDestroyed(@NonNull Activity activity) {
-
-        }
+        public void onActivityDestroyed(@NonNull Activity activity) {}
     }
-
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIConversationLightTheme" parent="TUIBaseLightTheme">
+        <item name="conversation_tab_selected">@color/conversation_tab_selected_light</item>
+    </style>
+</resources>

@@ -7,15 +7,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.R;
 
-
 public class TimeInLineTextLayout extends FrameLayout {
-
     private TextView textView;
     private MessageStatusTimeView statusArea;
 
@@ -97,7 +93,8 @@ public class TimeInLineTextLayout extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int maxWidth, maxHeight;
+        int maxWidth;
+        int maxHeight;
         // measure text view
         measureChildren(widthMeasureSpec, heightMeasureSpec);
 

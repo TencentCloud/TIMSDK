@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuikit.tuichat.R;
 
 public class NoticeLayout extends RelativeLayout implements INoticeLayout {
-
     private RelativeLayout mNoticeLayout;
     private TextView mContentText;
     private TextView mContentExtraText;

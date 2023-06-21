@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo.main;
 
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -10,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class TabRecyclerView extends RecyclerView {
-
     boolean isNeedIntercept = true;
     public TabRecyclerView(@NonNull Context context) {
         super(context);

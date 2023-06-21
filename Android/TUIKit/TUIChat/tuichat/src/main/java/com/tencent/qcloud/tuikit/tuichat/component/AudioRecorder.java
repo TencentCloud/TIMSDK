@@ -5,7 +5,6 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -17,12 +16,10 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.model.AIDenoiseSignatureManager;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class AudioRecorder {
-
     private static final String TAG = AudioRecorder.class.getSimpleName();
     private static AudioRecorder sInstance = new AudioRecorder();
     private static String CURRENT_RECORD_FILE = TUIConfig.getRecordDir() + "auto_";
@@ -36,6 +33,7 @@ public class AudioRecorder {
 
     private boolean mIsCallkitRecorder;
     private TUIServiceCallback mCallkitAudioRecordValueCallback;
+
     private AudioRecorder() {
         mHandler = new Handler();
         initCallkitAudioRecordListener();
@@ -173,7 +171,8 @@ public class AudioRecorder {
         audioRecordParam.put(TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE, signature);
         audioRecordParam.put(TUIConstants.TUICalling.PARAM_NAME_SDK_APP_ID, TUILogin.getSdkAppId());
         audioRecordParam.put(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH, mAudioRecordPath);
-        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_START_RECORD_AUDIO_MESSAGE, audioRecordParam, mCallkitAudioRecordValueCallback);
+        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_START_RECORD_AUDIO_MESSAGE, audioRecordParam,
+            mCallkitAudioRecordValueCallback);
 
         mIsCallkitRecorder = true;
         TUIChatLog.i(TAG, "use callkit recorder");
@@ -218,7 +217,8 @@ public class AudioRecorder {
 
     private void stopCallkitRecord() {
         mHandler.removeCallbacksAndMessages(null);
-        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE, null, mCallkitAudioRecordValueCallback);
+        TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME_AUDIO_RECORD, TUIConstants.TUICalling.METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE, null,
+            mCallkitAudioRecordValueCallback);
     }
 
     private void stopMediaRecord() {
@@ -280,8 +280,8 @@ public class AudioRecorder {
 
     private void updateMicStatus() {
         if (mRecorder != null) {
-            double ratio = (double) mRecorder.getMaxAmplitude() / 1;   // 参考振幅为 1
-            double db = 0;// 分贝
+            double ratio = (double) mRecorder.getMaxAmplitude() / 1; // 参考振幅为 1
+            double db = 0; // 分贝
             if (ratio > 1) {
                 db = 20 * Math.log10(ratio);
             }
@@ -300,8 +300,9 @@ public class AudioRecorder {
     };
 
     public interface Callback {
+
         void onCompletion(Boolean success);
+
         void onVoiceDb(double db);
     }
-
 }

@@ -1,8 +1,7 @@
 package com.tencent.qcloud.tuikit.timcommon.component.interfaces;
 
 public abstract class IUIKitCallback<T> {
-
-    public void onSuccess(T data) {};
+    public void onSuccess(T data){}
 
     public void onError(String module, int errCode, String errMsg) {}
 
@@ -21,5 +20,4 @@ public abstract class IUIKitCallback<T> {
             callback.onError(errCode, errMsg, data);
         }
     }
-
 }

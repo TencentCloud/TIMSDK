@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TUIConversationSeriousTheme" parent="TUIBaseSeriousTheme">
+        <item name="conversation_tab_selected">@color/conversation_tab_selected_serious</item>
+    </style>
+</resources>

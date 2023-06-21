@@ -54,7 +54,6 @@ import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
-import com.tencent.qcloud.tuikit.tuitranslation.TUITranslationConfigs;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +62,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ProfileMinamalistLayout extends FrameLayout implements View.OnClickListener {
-
     private static final String TAG = ProfileMinamalistLayout.class.getSimpleName();
 
     private ShadeImageView userIcon;
@@ -117,7 +115,6 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
         super(context, attrs, defStyleAttr);
         init();
     }
-
 
     private void init() {
         inflate(getContext(), R.layout.minimalist_profile_layout, this);
@@ -202,8 +199,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
             }
         });
-        boolean isEnableRecentCalls = SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME)
-                .getBoolean(TUIKitConstants.MINIMALIST_RECENT_CALLS_ENABLE, true);
+        boolean isEnableRecentCalls = SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME).getBoolean(TUIKitConstants.MINIMALIST_RECENT_CALLS_ENABLE, true);
         showRecentCalls.setChecked(isEnableRecentCalls);
 
         changeStyleView = selectStyleView.findViewById(R.id.select_style);
@@ -274,9 +270,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
             }
 
             @Override
-            public void onError(int code, String desc) {
-
-            }
+            public void onError(int code, String desc) {}
         });
         setUserInfoListener();
 
@@ -385,7 +379,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
 
     private void initMessageReadStatus() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE );
-        boolean messageReadStatus = sharedPreferences.getBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS, true);
+        boolean messageReadStatus = sharedPreferences.getBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS, false);
         setMessageReadStatus(messageReadStatus, false);
         messageReadStatusSwitch.setChecked(messageReadStatus);
     }
@@ -500,10 +494,10 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
         MainMinimalistActivity.finishMainActivity();
         if (style == 0) {
             intent = new Intent(getContext(), MainActivity.class);
-//            intent.putExtra(Constants.IM_MAIN_ITEM_SELECTED, MainMinimalistActivity.ITEM_TYPE_PROFILE);
+            //            intent.putExtra(Constants.IM_MAIN_ITEM_SELECTED, MainMinimalistActivity.ITEM_TYPE_PROFILE);
         } else {
             intent = new Intent(getContext(), MainMinimalistActivity.class);
-//            intent.putExtra(Constants.IM_MAIN_ITEM_SELECTED, MainMinimalistActivity.ITEM_TYPE_PROFILE);
+            //            intent.putExtra(Constants.IM_MAIN_ITEM_SELECTED, MainMinimalistActivity.ITEM_TYPE_PROFILE);
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -529,5 +523,4 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
             }
         });
     }
-
 }

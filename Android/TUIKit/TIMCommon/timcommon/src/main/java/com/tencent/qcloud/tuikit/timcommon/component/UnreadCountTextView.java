@@ -13,9 +13,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.tencent.qcloud.tuikit.timcommon.R;
 
-
 public class UnreadCountTextView extends AppCompatTextView {
-
     private int mNormalSize;
     private Paint mPaint;
 
@@ -65,7 +63,6 @@ public class UnreadCountTextView extends AppCompatTextView {
             canvas.drawRoundRect(new RectF(0, 0, getMeasuredWidth(), getMeasuredHeight()), getMeasuredHeight() / 2, getMeasuredHeight() / 2, mPaint);
         }
         super.onDraw(canvas);
-
     }
 
     @Override
@@ -80,6 +77,6 @@ public class UnreadCountTextView extends AppCompatTextView {
 
     private int dp2px(float dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        return  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
     }
 }

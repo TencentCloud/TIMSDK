@@ -2,22 +2,20 @@ package com.tencent.qcloud.tuicore;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultCaller;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.interfaces.TUIServiceCallback;
-
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +101,7 @@ public class TUICore {
      * @param starter         Initiator, either {@link Context} or {@link Fragment}
      * @param activityName    activity name，such as "TUIGroupChatActivity"
      * @param param           pass parameters
-     * @param requestCode     The request value passed to the Activity, used to return the result in the initiator's 
+     * @param requestCode     The request value passed to the Activity, used to return the result in the initiator's
      *                        onActivityResult method when the Activity ends, greater than or equal to 0 is valid.
      * @note The method has been deprecated：use {@link #startActivityForResult}
      */
@@ -119,7 +117,8 @@ public class TUICore {
      * @param param           pass parameters
      * @param resultCallback  the result callback
      */
-    public static void startActivityForResult(@Nullable ActivityResultCaller caller, String activityName, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
+    public static void startActivityForResult(
+        @Nullable ActivityResultCaller caller, String activityName, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
         TUIRouter.startActivityForResult(caller, activityName, param, resultCallback);
     }
 
@@ -130,8 +129,19 @@ public class TUICore {
      * @param param           pass parameters
      * @param resultCallback  the result callback
      */
-    public static void startActivityForResult(@Nullable ActivityResultCaller caller, Class<? extends Activity> activityClazz, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
+    public static void startActivityForResult(
+        @Nullable ActivityResultCaller caller, Class<? extends Activity> activityClazz, Bundle param, ActivityResultCallback<ActivityResult> resultCallback) {
         TUIRouter.startActivityForResult(caller, activityClazz, param, resultCallback);
+    }
+
+    /**
+     * Start the activity and get the result asynchronously
+     * @param caller          {@link androidx.activity.result.ActivityResultCaller}
+     * @param intent          the intent
+     * @param resultCallback  the result callback
+     */
+    public static void startActivityForResult(@Nullable ActivityResultCaller caller, Intent intent, ActivityResultCallback<ActivityResult> resultCallback) {
+        TUIRouter.startActivityForResult(caller, intent, resultCallback);
     }
 
     /**
@@ -198,7 +208,6 @@ public class TUICore {
     public static void raiseExtension(String key, View parentView, Map<String, Object> param) {
         ExtensionManager.getInstance().raiseExtension(key, parentView, param);
     }
-
 
     /**
      *  Register object factory

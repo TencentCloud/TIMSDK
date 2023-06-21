@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +37,6 @@ public class FileUtil {
         }
     }
 
-
     public static boolean saveVideoToGalleryByMediaStore(Context context, String videoPath) {
         if (TextUtils.isEmpty(videoPath) || context == null) {
             TUIChatLog.e(TAG, "param invalid");
@@ -51,11 +49,10 @@ public class FileUtil {
         ContentValues videoImageValues = new ContentValues();
         videoImageValues.put(MediaStore.Video.Media.DATE_ADDED, now / 1000);
         videoImageValues.put(MediaStore.Video.Media.DATE_MODIFIED, now / 1000);
-        videoImageValues.put(MediaStore.Video.Media.DISPLAY_NAME,videoFileName);
+        videoImageValues.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
         videoImageValues.put(MediaStore.Video.Media.MIME_TYPE, videoMimeType);
         // insert to gallery
-        Uri videoExternalContentUri = MediaStore.Video.Media
-                .getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+        Uri videoExternalContentUri = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
         videoImageValues.put(MediaStore.Video.Media.IS_PENDING, 1);
         videoImageValues.put(MediaStore.Video.Media.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + "/" + getAppName(context) + "/");
 
@@ -81,7 +78,7 @@ public class FileUtil {
         resolver.update(uri, videoImageValues, null, null);
 
         // update system gallery
-        MediaScannerConnection.scanFile(context, new String[]{uri.toString()}, new String[]{videoMimeType}, null);
+        MediaScannerConnection.scanFile(context, new String[] {uri.toString()}, new String[] {videoMimeType}, null);
         return true;
     }
 
@@ -102,7 +99,7 @@ public class FileUtil {
             return false;
         }
         String videoMimeType = getMimeType(videoPath);
-        MediaScannerConnection.scanFile(context, new String[]{outputPath}, new String[]{videoMimeType}, null);
+        MediaScannerConnection.scanFile(context, new String[] {outputPath}, new String[] {videoMimeType}, null);
         return true;
     }
 
@@ -119,7 +116,7 @@ public class FileUtil {
         ContentValues newImageValues = new ContentValues();
         newImageValues.put(MediaStore.Images.Media.DATE_ADDED, now / 1000);
         newImageValues.put(MediaStore.Images.Media.DATE_MODIFIED, now / 1000);
-        newImageValues.put(MediaStore.Images.Media.DISPLAY_NAME,imageFileName);
+        newImageValues.put(MediaStore.Images.Media.DISPLAY_NAME, imageFileName);
         newImageValues.put(MediaStore.Images.Media.MIME_TYPE, imageMimeType);
         // insert to gallery
         Uri imageExternalContentUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
@@ -148,7 +145,7 @@ public class FileUtil {
         resolver.update(uri, newImageValues, null, null);
 
         // update system gallery
-        MediaScannerConnection.scanFile(context, new String[]{uri.toString()}, new String[]{imageMimeType}, null);
+        MediaScannerConnection.scanFile(context, new String[] {uri.toString()}, new String[] {imageMimeType}, null);
         return true;
     }
 
@@ -172,7 +169,7 @@ public class FileUtil {
             return false;
         }
         String imageMimeType = getMimeType(imagePath);
-        MediaScannerConnection.scanFile(context, new String[]{outputPath}, new String[]{imageMimeType}, null);
+        MediaScannerConnection.scanFile(context, new String[] {outputPath}, new String[] {imageMimeType}, null);
         return true;
     }
 
@@ -202,8 +199,12 @@ public class FileUtil {
             return false;
         } finally {
             try {
-                if (is != null) is.close();
-                if (bos != null) bos.close();
+                if (is != null) {
+                    is.close();
+                }
+                if (bos != null) {
+                    bos.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -227,8 +228,12 @@ public class FileUtil {
             return false;
         } finally {
             try {
-                if (is != null) is.close();
-                if (bos != null) bos.close();
+                if (is != null) {
+                    is.close();
+                }
+                if (bos != null) {
+                    bos.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -240,6 +245,4 @@ public class FileUtil {
         ApplicationInfo applicationInfo = context.getApplicationInfo();
         return String.valueOf(context.getPackageManager().getApplicationLabel(applicationInfo));
     }
-
 }
-

@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.classicui;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -71,7 +70,6 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.Sou
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TextMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TipsMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.VideoMessageHolder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,7 +107,7 @@ public class ClassicUIService extends ServiceInitializer implements ITUIExtensio
     }
 
     private void initExtension() {
-        TUICore.registerExtension( TUIConstants.TUIContact.Extension.FriendProfileItem.CLASSIC_EXTENSION_ID, this);
+        TUICore.registerExtension(TUIConstants.TUIContact.Extension.FriendProfileItem.CLASSIC_EXTENSION_ID, this);
     }
 
     public void initMessage() {
@@ -215,7 +213,6 @@ public class ClassicUIService extends ServiceInitializer implements ITUIExtensio
     }
 
     private List<TUIExtensionInfo> getClassicFriendProfileExtension(Map<String, Object> param) {
-        List<TUIExtensionInfo> extensionInfoList = new ArrayList<>();
         TUIExtensionInfo chatExtension = new TUIExtensionInfo();
         chatExtension.setWeight(400);
         chatExtension.setText(getAppContext().getString(R.string.chat_contact_profile_message));
@@ -230,10 +227,10 @@ public class ClassicUIService extends ServiceInitializer implements ITUIExtensio
                 getAppContext().startActivity(intent);
             }
         });
+        List<TUIExtensionInfo> extensionInfoList = new ArrayList<>();
         extensionInfoList.add(chatExtension);
         return extensionInfoList;
     }
-
 
     private <T> T getOrDefault(Map map, Object key, T defaultValue) {
         if (map == null || map.isEmpty()) {
@@ -262,7 +259,8 @@ public class ClassicUIService extends ServiceInitializer implements ITUIExtensio
         String businessID = (String) param.get(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BUSINESS_ID);
         Class<? extends TUIMessageBean> messageBeanClass = getOrDefault(param, TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BEAN_CLASS, null);
         Class messageViewHolderClass = getOrDefault(param, TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_VIEW_HOLDER_CLASS, null);
-        Class<? extends TUIReplyQuoteBean> messageReplyBeanClass = getOrDefault(param, TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_BEAN_CLASS, null);
+        Class<? extends TUIReplyQuoteBean> messageReplyBeanClass =
+            getOrDefault(param, TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_BEAN_CLASS, null);
         Class messageReplyViewClass = getOrDefault(param, TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_VIEW_CLASS, null);
         boolean isNeedEmptyViewGroup = getOrDefault(param, TUIConstants.TUIChat.Method.RegisterCustomMessage.IS_NEED_EMPTY_VIEW_GROUP, false);
         TUIChatService.getInstance().addCustomMessageType(businessID, messageBeanClass, false);

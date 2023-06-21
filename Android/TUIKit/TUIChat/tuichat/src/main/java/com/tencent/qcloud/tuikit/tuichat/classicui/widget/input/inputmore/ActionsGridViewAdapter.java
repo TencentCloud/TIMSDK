@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore;
 
-
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,14 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
-
 import java.util.List;
 
 public class ActionsGridViewAdapter extends BaseAdapter {
-
     private Context context;
 
     private List<InputMoreActionUnit> baseActions;
@@ -65,4 +61,3 @@ public class ActionsGridViewAdapter extends BaseAdapter {
         return itemLayout;
     }
 }
-

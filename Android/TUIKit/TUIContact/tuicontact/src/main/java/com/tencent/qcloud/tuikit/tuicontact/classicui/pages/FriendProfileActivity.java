@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuicontact.classicui.pages;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -20,16 +18,15 @@ import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ContactStartChatUtils
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.FriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FriendProfileActivity extends BaseLightActivity {
-
     private FriendProfilePresenter presenter;
     private FriendProfileLayout layout;
     private String mChatId;
     private String mChatBackgroundThumbnailUrl;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +93,8 @@ public class FriendProfileActivity extends BaseLightActivity {
                 intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
                 intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
                 intent.putExtra(ImageSelectActivity.DATA, faceList);
-                if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl) || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
+                if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
+                    || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
                     intent.putExtra(ImageSelectActivity.SELECTED, defaultFace);
                 } else {
                     intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
@@ -122,14 +120,13 @@ public class FriendProfileActivity extends BaseLightActivity {
 
             String backgroundUri = imageBean.getLocalPath();
             String thumbnailUri = imageBean.getThumbnailUri();
-            String dataUri = thumbnailUri + "," + backgroundUri;
             TUIContactLog.d("FriendProfileActivity", "onActivityResult backgroundUri = " + backgroundUri);
             mChatBackgroundThumbnailUrl = thumbnailUri;
             HashMap<String, Object> param = new HashMap<>();
             param.put(TUIConstants.TUIChat.CHAT_ID, mChatId);
+            String dataUri = thumbnailUri + "," + backgroundUri;
             param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
             TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);
         }
     }
-
 }

@@ -6,21 +6,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class PopMenuAdapter extends BaseAdapter {
-
     private List<PopMenuAction> dataSource = new ArrayList<>();
 
-    public PopMenuAdapter() {
-
-    }
+    public PopMenuAdapter() {}
 
     public void setDataSource(final List datas) {
         dataSource = datas;
@@ -49,39 +44,38 @@ public class PopMenuAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(TUIConfig.getAppContext()).inflate(R.layout.pop_menu_adapter, parent, false);
             holder = new ViewHolder();
-            holder.menu_icon = convertView.findViewById(R.id.pop_menu_icon);
+            holder.menuIcon = convertView.findViewById(R.id.pop_menu_icon);
 
             int iconSize = convertView.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_icon_size);
-            ViewGroup.LayoutParams params = holder.menu_icon.getLayoutParams();
+            ViewGroup.LayoutParams params = holder.menuIcon.getLayoutParams();
             params.width = iconSize;
             params.height = iconSize;
-            holder.menu_icon.setLayoutParams(params);
+            holder.menuIcon.setLayoutParams(params);
 
-            holder.menu_lable = convertView.findViewById(R.id.pop_menu_label);
+            holder.menuLable = convertView.findViewById(R.id.pop_menu_label);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         PopMenuAction action = (PopMenuAction) getItem(position);
-        holder.menu_icon.setVisibility(View.VISIBLE);
+        holder.menuIcon.setVisibility(View.VISIBLE);
         if (action.getIcon() != null) {
-            holder.menu_icon.setImageBitmap(action.getIcon());
+            holder.menuIcon.setImageBitmap(action.getIcon());
         } else if (action.getIconResId() > 0) {
-            holder.menu_icon.setImageResource(action.getIconResId());
+            holder.menuIcon.setImageResource(action.getIconResId());
         } else {
-            holder.menu_icon.setVisibility(View.GONE);
+            holder.menuIcon.setVisibility(View.GONE);
         }
-        holder.menu_lable.setText(action.getActionName());
+        holder.menuLable.setText(action.getActionName());
         return convertView;
     }
 
     static class ViewHolder {
-        TextView menu_lable;
-        ImageView menu_icon;
+        TextView menuLable;
+        ImageView menuIcon;
     }
 }

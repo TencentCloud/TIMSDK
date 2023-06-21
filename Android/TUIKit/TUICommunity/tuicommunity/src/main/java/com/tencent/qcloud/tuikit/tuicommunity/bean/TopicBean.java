@@ -1,14 +1,12 @@
 package com.tencent.qcloud.tuikit.tuicommunity.bean;
 
 import android.text.Html;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMTopicInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuicommunity.interfaces.ITopicBean;
-
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -17,7 +15,7 @@ public class TopicBean implements Serializable, ITopicBean {
 
     public static final int TOPIC_TYPE_TEXT = 1;
 
-    private String ID;
+    private String id;
     private String topicName;
     private String faceUrl;
     private String draftText;
@@ -30,11 +28,11 @@ public class TopicBean implements Serializable, ITopicBean {
     private boolean isAllMute = false;
 
     public String getID() {
-        return ID;
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setID(String id) {
+        this.id = id;
     }
 
     public String getTopicName() {
@@ -76,7 +74,7 @@ public class TopicBean implements Serializable, ITopicBean {
     public void setLastMessage(V2TIMMessage lastMessage) {
         this.lastMessage = lastMessage;
         HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.V2TIMMESSAGE,lastMessage);
+        param.put(TUIConstants.TUIChat.V2TIMMESSAGE, lastMessage);
         String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
         // 获取要显示的字符
         // Get the characters to display

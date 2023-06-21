@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
@@ -20,12 +19,10 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.ClassicUIService;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.reply.TextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class ReplyMessageHolder extends MessageContentHolder {
-
     private View originMsgLayout;
 
     private TextView senderNameTv;
@@ -136,7 +133,6 @@ public class ReplyMessageHolder extends MessageContentHolder {
                 }
             }
         });
-
     }
 
     private void performNotFound(TUIReplyQuoteBean replyQuoteBean, ReplyMessageBean replyMessageBean) {

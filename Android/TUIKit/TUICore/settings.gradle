@@ -1,5 +1,0 @@
-rootProject.name = "TUICore"
-include ':tuicore'
-
-include ':imsdk-plus'
-project(':imsdk-plus').projectDir = new File(settingsDir, '../../../../../imsdk/src/platform/android/imsdk')

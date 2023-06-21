@@ -6,16 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuicontact.R;
-
 import java.util.List;
 
-public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<String> list;
     private RecyclerView mRecycleView;
@@ -28,7 +25,7 @@ public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<Recycler
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecycleView = (RecyclerView) recyclerView;
-        //mRecycleView.setItemViewCacheSize(5);
+        // mRecycleView.setItemViewCacheSize(5);
     }
 
     @Override
@@ -39,12 +36,11 @@ public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ContactViewHolder viewHolder = (ContactViewHolder) holder;
-        if (viewHolder != null){
+        if (viewHolder != null) {
             if (!TextUtils.isEmpty(list.get(position))) {
                 GlideEngine.loadImage(viewHolder.userIconView, list.get(position));
             }
         }
-
     }
 
     public void setDataSource(List<String> provider) {
@@ -63,12 +59,13 @@ public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<Recycler
     public int getItemCount() {
         return list == null ? 0 : list.size();
     }
-}
 
-class ContactViewHolder extends RecyclerView.ViewHolder {
-    public ImageView userIconView;
-    public ContactViewHolder(View itemView) {
-        super(itemView);
-        userIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
+    class ContactViewHolder extends RecyclerView.ViewHolder {
+        public ImageView userIconView;
+
+        public ContactViewHolder(View itemView) {
+            super(itemView);
+            userIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
+        }
     }
 }

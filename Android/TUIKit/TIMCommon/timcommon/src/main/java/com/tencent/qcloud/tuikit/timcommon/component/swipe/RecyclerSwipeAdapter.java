@@ -6,15 +6,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public abstract class RecyclerSwipeAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements SwipeItemMangerInterface, SwipeAdapterInterface {
-
+public abstract class RecyclerSwipeAdapter<VH extends RecyclerView.ViewHolder>
+    extends RecyclerView.Adapter<VH> implements SwipeItemMangerInterface, SwipeAdapterInterface {
     public SwipeItemMangerImpl mItemManger = new SwipeItemMangerImpl(this);
 
-    @Override
-    public abstract VH onCreateViewHolder(ViewGroup parent, int viewType);
+    @Override public abstract VH onCreateViewHolder(ViewGroup parent, int viewType);
 
-    @Override
-    public abstract void onBindViewHolder(VH viewHolder, final int position);
+    @Override public abstract void onBindViewHolder(VH viewHolder, final int position);
 
     @Override
     public void notifyDatasetChanged() {

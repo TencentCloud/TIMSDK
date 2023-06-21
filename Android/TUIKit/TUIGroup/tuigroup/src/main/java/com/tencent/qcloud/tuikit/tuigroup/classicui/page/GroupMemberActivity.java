@@ -3,9 +3,7 @@ package com.tencent.qcloud.tuikit.tuigroup.classicui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -19,14 +17,12 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GroupMemberActivity extends BaseLightActivity {
-
     private GroupMemberLayout mMemberLayout;
     private String groupID;
     private GroupInfoPresenter presenter;
@@ -35,6 +31,7 @@ public class GroupMemberActivity extends BaseLightActivity {
     private ArrayList<String> excludeList;
     private ArrayList<String> alreadySelectedList;
     private String userData;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,19 +43,18 @@ public class GroupMemberActivity extends BaseLightActivity {
     private void init() {
         Intent intent = getIntent();
         groupID = intent.getStringExtra(TUIConstants.TUIGroup.GROUP_ID);
-        int limit = getIntent().getIntExtra(TUIConstants.TUIGroup.LIMIT, Integer.MAX_VALUE);
         isSelectMode = intent.getBooleanExtra(TUIConstants.TUIGroup.IS_SELECT_MODE, true);
-        String title = intent.getStringExtra(TUIConstants.TUIGroup.TITLE);
         excludeList = intent.getStringArrayListExtra(TUIConstants.TUIGroup.EXCLUDE_LIST);
         alreadySelectedList = intent.getStringArrayListExtra(TUIConstants.TUIGroup.SELECTED_LIST);
         userData = intent.getStringExtra(TUIConstants.TUIGroup.USER_DATA);
-        int filter = intent.getIntExtra(TUIConstants.TUIGroup.FILTER, GroupInfo.GROUP_MEMBER_FILTER_ALL);
         mMemberLayout.setSelectMode(isSelectMode);
+        String title = intent.getStringExtra(TUIConstants.TUIGroup.TITLE);
         mMemberLayout.setTitle(title);
         mMemberLayout.setExcludeList(excludeList);
         mMemberLayout.setAlreadySelectedList(alreadySelectedList);
         presenter = new GroupInfoPresenter(mMemberLayout);
         mMemberLayout.setPresenter(presenter);
+        int filter = intent.getIntExtra(TUIConstants.TUIGroup.FILTER, GroupInfo.GROUP_MEMBER_FILTER_ALL);
         presenter.loadGroupInfo(groupID, filter);
 
         mMemberLayout.getTitleBar().setOnLeftClickListener(new View.OnClickListener() {
@@ -67,8 +63,9 @@ public class GroupMemberActivity extends BaseLightActivity {
                 finish();
             }
         });
-        mMemberLayout.setGroupMemberListener(new IGroupMemberListener() {
+        int limit = getIntent().getIntExtra(TUIConstants.TUIGroup.LIMIT, Integer.MAX_VALUE);
 
+        mMemberLayout.setGroupMemberListener(new IGroupMemberListener() {
             @Override
             public void setSelectedMember(ArrayList<String> members) {
                 if (members == null || members.isEmpty()) {
@@ -92,9 +89,7 @@ public class GroupMemberActivity extends BaseLightActivity {
             }
 
             @Override
-            public void forwardListMember(GroupInfo info) {
-
-            }
+            public void forwardListMember(GroupInfo info) {}
 
             @Override
             public void forwardAddMember(GroupInfo info) {
@@ -142,9 +137,7 @@ public class GroupMemberActivity extends BaseLightActivity {
                     }
 
                     @Override
-                    public void onError(String module, int errCode, String errMsg) {
-
-                    }
+                    public void onError(String module, int errCode, String errMsg) {}
                 });
             }
         }
@@ -171,5 +164,4 @@ public class GroupMemberActivity extends BaseLightActivity {
             }
         }
     }
-
 }

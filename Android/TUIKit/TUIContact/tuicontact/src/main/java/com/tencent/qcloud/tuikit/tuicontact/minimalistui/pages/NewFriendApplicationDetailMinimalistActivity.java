@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
@@ -20,7 +18,6 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.NewFriendPresenter;
 
 public class NewFriendApplicationDetailMinimalistActivity extends BaseMinimalistLightActivity {
-
     private static final String TAG = NewFriendApplicationDetailMinimalistActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -107,6 +104,5 @@ public class NewFriendApplicationDetailMinimalistActivity extends BaseMinimalist
                 });
             }
         });
-
     }
 }

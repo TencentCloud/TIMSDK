@@ -6,7 +6,6 @@ import com.tencent.imsdk.BaseConstants;
  * TUI constants
  */
 public final class TUIConstants {
-
     public static final class GroupType {
         public static final String TYPE = "type";
         public static final String IS_GROUP = "isGroup";
@@ -35,7 +34,13 @@ public final class TUIConstants {
         public static final String TUI_DEMO = "TIMAppService";
         public static final String TUI_POLL = "TUIPollService";
         public static final String TUI_GROUP_NOTE = "TUIGroupNoteService";
-        public static final String TUI_TRANSLATION = "TUITranslation";
+        public static final String TUI_CONVERSATION_GROUP = "TUIConversationGroupService";
+        public static final String TUI_CONVERSATION_MARK = "TUIConversationMarkService";
+    }
+
+    public static final class ObjectFactory {
+        public static final String FACTORY_CONVERSATION_GROUP = "objectConversationGroup";
+        public static final String FACTORY_CONVERSATION_MARK = "objectConversationMark";
     }
 
     public static final class TUICore {
@@ -44,7 +49,6 @@ public final class TUIConstants {
     }
 
     public static final class TUILogin {
-
         // User login status change broadcast
         public static final String EVENT_LOGIN_STATE_CHANGED = "eventLoginStateChanged";
         // User kicked offline
@@ -151,8 +155,10 @@ public final class TUIConstants {
         public static final String INPUT_MORE_VIEW = "inputMoreView";
 
         // Background
-        public static final String CHAT_CONVERSATION_BACKGROUND_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s_full.png";
-        public static final String CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s.png";
+        public static final String CHAT_CONVERSATION_BACKGROUND_URL =
+            "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s_full.png";
+        public static final String CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL =
+            "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s.png";
         public static final int CHAT_CONVERSATION_BACKGROUND_COUNT = 7;
         public static final String CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL = "chat/conversation/background/default/url";
         public static final int CHAT_REQUEST_BACKGROUND_CODE = 1001;
@@ -177,11 +183,11 @@ public final class TUIConstants {
                 public static final String CLASSIC_EXTENSION_ID = "ChatInputMoreExtensionClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ChatInputMoreExtensionMinimalistID";
                 public static final String FILTER_VOICE_CALL = "ChatInputMoreExtensionFilterAudioCall";
-                public static final String FILTER_VIDEO_CALL= "ChatInputMoreExtensionFilterVideoCall";
+                public static final String FILTER_VIDEO_CALL = "ChatInputMoreExtensionFilterVideoCall";
                 public static final String CONTEXT = "ChatContext";
                 public static final String USER_ID = "ChatInputMoreUserID";
                 public static final String GROUP_ID = "ChatInputMoreGroupID";
-
+                public static final String INPUT_MORE_LISTENER = "ChatInputMoreListener";
             }
 
             // Message long press pop-up window extension
@@ -197,8 +203,8 @@ public final class TUIConstants {
                 public static final String CLASSIC_EXTENSION_ID = "ChatNavigationMoreItemExtensionClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ChatNavigationMoreItemExtensionMinimalistID";
 
-                public static final String FILTER_VOICE_CALL= "ChatNavigationMoreItemFilterAudioCall";
-                public static final String FILTER_VIDEO_CALL= "ChatNavigationMoreItemFilterVideoCall";
+                public static final String FILTER_VOICE_CALL = "ChatNavigationMoreItemFilterAudioCall";
+                public static final String FILTER_VIDEO_CALL = "ChatNavigationMoreItemFilterVideoCall";
 
                 public static final String CHAT_BACKGROUND_URI = "ChatBackgroundUri";
                 public static final String USER_ID = "ChatUserID";
@@ -206,7 +212,6 @@ public final class TUIConstants {
                 public static final String TOPIC_ID = "ChatTopicID";
                 public static final String CONTEXT = "ChatContext";
             }
-
         }
 
         public static class Method {
@@ -229,13 +234,10 @@ public final class TUIConstants {
             public static final String CLASSIC_SERVICE_NAME = "ChatClassicService";
             public static final String MINIMALIST_SERVICE_NAME = "ChatMinimalistService";
         }
-
-
     }
 
     public static final class TUIConversation {
         public static final String SERVICE_NAME = Service.TUI_CONVERSATION;
-
 
         public static final String METHOD_IS_TOP_CONVERSATION = "isTopConversation";
         public static final String METHOD_SET_TOP_CONVERSATION = "setTopConversation";
@@ -258,6 +260,7 @@ public final class TUIConstants {
         public static final String TOTAL_UNREAD_COUNT = "totalUnreadCount";
         public static final String CONTEXT = "context";
         public static final String SEARCH_VIEW = "searchView";
+        public static final String KEY_CONVERSATION_INFO = "keyConversationInfo";
 
         public static final String CONVERSATION_C2C_PREFIX = "c2c_";
         public static final String CONVERSATION_GROUP_PREFIX = "group_";
@@ -272,8 +275,20 @@ public final class TUIConstants {
                 public static final String MINIMALIST_EXTENSION_ID = "TUIConversationListHeaderMinimalistID";
                 public static final String HEADER_CONTAINER = "TUIConversationListHeaderContainer";
             }
-        }
 
+            // Conversation popmenu Extension
+            public static class ConversationPopMenu {
+                public static final String CLASSIC_EXTENSION_ID = "ConversationPopMenuExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ConversationPopMenuExtensionMinimalistID";
+            }
+
+            // Conversation group Extension
+            public static class ConversationGroupBean {
+                public static final String CLASSIC_EXTENSION_ID = "ConversationGroupPopMenuExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ConversationGroupPopMenuExtensionMinimalistID";
+                public static final String KEY_DATA = "conversationGroupBeanData";
+            }
+        }
     }
 
     public static final class TUIContact {
@@ -303,7 +318,6 @@ public final class TUIConstants {
 
         public static class Extension {
             public static class FriendProfileItem {
-
                 public static final String CLASSIC_EXTENSION_ID = "ContactFriendProfileItemClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ContactFriendProfileItemMinimalistID";
                 public static final String USER_ID = "ContactFriendProfileUserID";
@@ -313,7 +327,6 @@ public final class TUIConstants {
         public static class StartActivity {
             // Group members selector
             public static class GroupMemberSelect {
-
                 public static final String CLASSIC_ACTIVITY_NAME = "StartGroupMemberSelectActivity";
                 public static final String MINIMALIST_ACTIVITY_NAME = "StartGroupMemberSelectMinimalistActivity";
                 public static final String GROUP_ID = "ContactGroupMemberSelectGroupID";
@@ -365,52 +378,51 @@ public final class TUIConstants {
         public static final String EVENT_KEY_NAME = "event_name";
         public static final String EVENT_ACTIVE_HANGUP = "active_hangup";
 
-        public static final String SERVICE_NAME_AUDIO_RECORD              = Service.TUI_AUDIO_RECORD;
+        public static final String SERVICE_NAME_AUDIO_RECORD = Service.TUI_AUDIO_RECORD;
         public static final String METHOD_NAME_START_RECORD_AUDIO_MESSAGE = "methodStartRecordAudioMessage";
-        public static final String METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE  = "methodStopRecordAudioMessage";
+        public static final String METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE = "methodStopRecordAudioMessage";
 
         public static final String EVENT_KEY_RECORD_AUDIO_MESSAGE = "eventRecordAudioMessage";
-        public static final String EVENT_SUB_KEY_RECORD_START     = "eventSubKeyStartRecordAudioMessage";
-        public static final String EVENT_SUB_KEY_RECORD_STOP      = "eventSubKeyStopRecordAudioMessage";
+        public static final String EVENT_SUB_KEY_RECORD_START = "eventSubKeyStartRecordAudioMessage";
+        public static final String EVENT_SUB_KEY_RECORD_STOP = "eventSubKeyStopRecordAudioMessage";
 
-        public static final String PARAM_NAME_SDK_APP_ID      = "sdkappid";
+        public static final String PARAM_NAME_SDK_APP_ID = "sdkappid";
         public static final String PARAM_NAME_AUDIO_SIGNATURE = "signature";
-        public static final String PARAM_NAME_AUDIO_PATH      = "path";
+        public static final String PARAM_NAME_AUDIO_PATH = "path";
 
-        //Error Code
-        public static final int ERROR_NONE                       = 0;     // init success or record success
-        public static final int ERROR_INVALID_PARAM              = -1001; // param is invalid
-        public static final int ERROR_STATUS_IN_CALL             = -1002; // recording rejected, currently in call
-        public static final int ERROR_STATUS_IS_AUDIO_RECORDING  = -1003; // recording rejected, the current recording is not finished
-        public static final int ERROR_MIC_PERMISSION_REFUSED     = -1004; // recording rejected, failed to obtain microphone permission
+        // Error Code
+        public static final int ERROR_NONE = 0; // init success or record success
+        public static final int ERROR_INVALID_PARAM = -1001; // param is invalid
+        public static final int ERROR_STATUS_IN_CALL = -1002; // recording rejected, currently in call
+        public static final int ERROR_STATUS_IS_AUDIO_RECORDING = -1003; // recording rejected, the current recording is not finished
+        public static final int ERROR_MIC_PERMISSION_REFUSED = -1004; // recording rejected, failed to obtain microphone permission
         public static final int ERROR_REQUEST_AUDIO_FOCUS_FAILED = -1005; // recording rejected, failed to obtain audio focus
-        public static final int ERROR_RECORD_INIT_FAILED         = -2001; // -1, init failed(onLocalRecordBegin)
-        public static final int ERROR_PATH_FORMAT_NOT_SUPPORT    = -2002; // -2, file format is invalid(onLocalRecordBegin)
-        public static final int ERROR_RECORD_FAILED              = -2003; // -1, record failed(onLocalRecordComplete)
-        public static final int ERROR_NO_MESSAGE_TO_RECORD       = -2004; // -3, The audio data has not arrived(onLocalRecordComplete)
-        public static final int ERROR_SIGNATURE_ERROR            = -3001; // -4, signature error(onLocalRecordBegin)
-        public static final int ERROR_SIGNATURE_EXPIRED          = -3002; // -5, signature expired(onLocalRecordBegin)
-        //TRTC-SDK MIC Error Code
-        public static final int ERR_MIC_START_FAIL               = -1302; // start microphone failed
-        public static final int ERR_MIC_NOT_AUTHORIZED           = -1317; // microphone authorize failed
-        public static final int ERR_MIC_SET_PARAM_FAIL           = -1318; // microphone param is invalid
-        public static final int ERR_MIC_OCCUPY                   = -1319; // microphone is occupied
+        public static final int ERROR_RECORD_INIT_FAILED = -2001; // -1, init failed(onLocalRecordBegin)
+        public static final int ERROR_PATH_FORMAT_NOT_SUPPORT = -2002; // -2, file format is invalid(onLocalRecordBegin)
+        public static final int ERROR_RECORD_FAILED = -2003; // -1, record failed(onLocalRecordComplete)
+        public static final int ERROR_NO_MESSAGE_TO_RECORD = -2004; // -3, The audio data has not arrived(onLocalRecordComplete)
+        public static final int ERROR_SIGNATURE_ERROR = -3001; // -4, signature error(onLocalRecordBegin)
+        public static final int ERROR_SIGNATURE_EXPIRED = -3002; // -5, signature expired(onLocalRecordBegin)
+        // TRTC-SDK MIC Error Code
+        public static final int ERR_MIC_START_FAIL = -1302; // start microphone failed
+        public static final int ERR_MIC_NOT_AUTHORIZED = -1317; // microphone authorize failed
+        public static final int ERR_MIC_SET_PARAM_FAIL = -1318; // microphone param is invalid
+        public static final int ERR_MIC_OCCUPY = -1319; // microphone is occupied
 
         public static class ObjectFactory {
             public static final String FACTORY_NAME = "TUICallingObjectFactory";
+
             public static class RecentCalls {
                 public static final String OBJECT_NAME = "TUICallingRecentCallsFragment";
                 public static final String UI_STYLE = "TUICallingRecentCallsFragmentUIStyle";
                 public static final String UI_STYLE_CLASSIC = "ClassicStyle";
                 public static final String UI_STYLE_MINIMALIST = "MinimalistStyle";
-
             }
         }
     }
 
     public static final class TUILive {
         public static final String SERVICE_NAME = Service.TUI_LIVE;
-
 
         public static final String METHOD_LOGIN = "methodLogin";
         public static final String METHOD_LOGOUT = "methodLogout";
@@ -424,23 +436,21 @@ public final class TUIConstants {
 
         public static final String GROUP_ID = "groupId";
         public static final String ROOM_ID = "roomId";
-        public static final String ROOM_NAME    = "roomName";
+        public static final String ROOM_NAME = "roomName";
         public static final String ROOM_STATUS = "roomStatus";
-        public static final String ROOM_COVER     = "roomCover";
-        public static final String USE_CDN_PLAY  = "use_cdn_play";
-        public static final String ANCHOR_ID     = "anchorId";
-        public static final String ANCHOR_NAME     = "anchorName";
-        public static final String PUSHER_NAME   = "pusherName";
-        public static final String COVER_PIC     = "coverPic";
+        public static final String ROOM_COVER = "roomCover";
+        public static final String USE_CDN_PLAY = "use_cdn_play";
+        public static final String ANCHOR_ID = "anchorId";
+        public static final String ANCHOR_NAME = "anchorName";
+        public static final String PUSHER_NAME = "pusherName";
+        public static final String COVER_PIC = "coverPic";
         public static final String PUSHER_AVATAR = "pusherAvatar";
 
         public static final int ACTION_ID_LIVE = 0;
-
     }
 
     public static final class TUIGroup {
         public static final String SERVICE_NAME = Service.TUI_GROUP;
-
 
         public static final String EVENT_GROUP = "eventGroup";
         public static final String EVENT_SUB_KEY_EXIT_GROUP = "eventExitGroup";
@@ -458,8 +468,8 @@ public final class TUIConstants {
         public static final String GROUP_FACE_URL = "groupFaceUrl";
         public static final String GROUP_OWNER = "groupOwner";
         public static final String GROUP_INTRODUCTION = "groupIntroduction";
-        public static final String GROUP_NOTIFICATION= "groupNotification";
-        public static final String GROUP_MEMBER_ID_LIST= "groupMemberIdList";
+        public static final String GROUP_NOTIFICATION = "groupNotification";
+        public static final String GROUP_MEMBER_ID_LIST = "groupMemberIdList";
 
         public static final String SELECT_FRIENDS = "select_friends";
         public static final String SELECT_FOR_CALL = "isSelectForCall";
@@ -477,7 +487,6 @@ public final class TUIConstants {
 
         public static class Extension {
             public static class GroupProfileItem {
-
                 public static final String CLASSIC_EXTENSION_ID = "GroupProfileItemClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "GroupProfileItemMinimalistID";
                 public static final String GROUP_ID = "GroupProfileGroupID";
@@ -491,25 +500,23 @@ public final class TUIConstants {
                 public static final String SUB_KEY_GROUP_APPLICATION_NUM_CHANGED = "groupApplicationNumChanged";
             }
         }
-
     }
-
 
     public static final class TUIBeauty {
         public static final String SERVICE_NAME = Service.TUI_BEAUTY;
 
-        public static final String PARAM_NAME_CONTEXT        = "context";
-        public static final String PARAM_NAME_LICENSE_KEY    = "licenseKey";
-        public static final String PARAM_NAME_LICENSE_URL    = "licenseUrl";
-        public static final String PARAM_NAME_FRAME_WIDTH    = "frameWidth";
-        public static final String PARAM_NAME_FRAME_HEIGHT   = "frameHeight";
+        public static final String PARAM_NAME_CONTEXT = "context";
+        public static final String PARAM_NAME_LICENSE_KEY = "licenseKey";
+        public static final String PARAM_NAME_LICENSE_URL = "licenseUrl";
+        public static final String PARAM_NAME_FRAME_WIDTH = "frameWidth";
+        public static final String PARAM_NAME_FRAME_HEIGHT = "frameHeight";
         public static final String PARAM_NAME_SRC_TEXTURE_ID = "srcTextureId";
 
         public static final String METHOD_PROCESS_VIDEO_FRAME = "processVideoFrame";
-        public static final String METHOD_INIT_XMAGIC         = "setLicense";
-        public static final String METHOD_DESTROY_XMAGIC      = "destroy";
+        public static final String METHOD_INIT_XMAGIC = "setLicense";
+        public static final String METHOD_DESTROY_XMAGIC = "destroy";
     }
-    
+
     public static final class TUIOfflinePush {
         public static final String SERVICE_NAME = Service.TUI_OFFLINEPUSH;
         public static final String METHOD_UNREGISTER_PUSH = "unRegiterPush";
@@ -527,7 +534,7 @@ public final class TUIConstants {
 
         public static final String TOPIC_ID = "topic_id";
 
-        public static final String EVENT_KEY_COMMUNITY_EXPERIENCE= "eventKeyCommunityExperience";
+        public static final String EVENT_KEY_COMMUNITY_EXPERIENCE = "eventKeyCommunityExperience";
         public static final String EVENT_SUB_KEY_ADD_COMMUNITY = "eventSubKeyAddCommunity";
         public static final String EVENT_SUB_KEY_CREATE_COMMUNITY = "eventSubKeyCreateCommunity";
         public static final String EVENT_SUB_KEY_DISBAND_COMMUNITY = "eventSubKeyDisbandCommunity";
@@ -551,7 +558,7 @@ public final class TUIConstants {
         public static final String KEY_EXTENSIONS = "key_extensions";
     }
 
-    public static final class TUIPoll {
+    public static final class TUIPollPlugin {
         public static final String SERVICE_NAME = Service.TUI_POLL;
         public static final int ACTION_ID_POLL = 3;
 
@@ -570,7 +577,7 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_POLL_VOTE_CHANGED = "eventSubKeyVoteChanged";
     }
 
-    public static final class TUIGroupNote {
+    public static final class TUIGroupNotePlugin {
         public static final String SERVICE_NAME = Service.TUI_GROUP_NOTE;
 
         public static final int ACTION_ID_GROUP_NOTE = 4;
@@ -586,10 +593,6 @@ public final class TUIConstants {
 
         public static final String METHOD_GET_GROUP_NOTE_MESSAGE_LAYOUT = "getGroupNoteMessageLayout";
         public static final String METHOD_GET_GROUP_NOTE_TIPS_MESSAGE_LAYOUT = "getGroupNoteTipsMessageLayout";
-
-        public static final String EVENT_KEY_GROUP_NOTE_MESSAGE_LAYOUT = "eventKeyGroupNoteMessageLayout";
-        public static final String EVENT_SUB_KEY_REFRESH_GROUP_NOTE_MESSAGE_LAYOUT = "eventKeyRefreshGroupNoteMessageLayout";
-        public static final String EVENT_SUB_KEY_REFRESH_GROUP_NOTE_TIPS_MESSAGE_LAYOUT = "eventKeyRefreshGroupNoteTipsMessageLayout";
 
         public static final String EVENT_KEY_GROUP_NOTE_EVENT = "eventKeyGroupNoteEvent";
         public static final String EVENT_SUB_KEY_GROUP_NOTE_CHANGED = "eventSubKeyGroupNoteChanged";
@@ -626,7 +629,7 @@ public final class TUIConstants {
         }
     }
 
-    public static final class TUITranslation {
+    public static final class TUITranslationPlugin {
         public static class Extension {
             // TranslationView Extension
             public static class TranslationView {
@@ -634,12 +637,50 @@ public final class TUIConstants {
                 public static final String MINIMALIST_EXTENSION_ID = "TUITranslationViewMinimalistID";
             }
         }
+
         // show translation view
         public static final String EVENT_KEY_TRANSLATION_EVENT = "eventKeyTranslationEvent";
         public static final String EVENT_SUB_KEY_TRANSLATION_CHANGED = "eventSubKeyTranslationChanged";
         // select target language
         public static final String METHOD_SELECT_TRANSLATION_LANGUAGE = "selectTranslationLanguage";
         public static final String LANGUAGE_NAME = "languageName";
+    }
+
+    public static final class TUIConversationGroupPlugin {
+        public static final String SERVICE_NAME = Service.TUI_CONVERSATION_GROUP;
+        public static final String OBJECT_FACTORY_NAME = ObjectFactory.FACTORY_CONVERSATION_GROUP;
+        public static final String CONTEXT = "context";
+        public static final String EXTENSION_GROUP_SETTING_MENU = "extensionGroupSettingMenu";
+        public static final String OBJECT_CONVERSATION_GROUP_FRAGMENT = "objectConversationGroupFragment";
+
+        public static class Extension {
+            // ConversationGroup popmenu Extension
+            public static class ConversationPopMenu {
+                public static final String CLASSIC_EXTENSION_ID = "ConversationGroupPopMenuExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ConversationGroupPopMenuExtensionMinimalistID";
+            }
+        }
+    }
+
+    public static final class TUIConversationMarkPlugin {
+        public static final String SERVICE_NAME = Service.TUI_CONVERSATION_MARK;
+        public static final String OBJECT_FACTORY_NAME = ObjectFactory.FACTORY_CONVERSATION_MARK;
+        public static final String CONTEXT = "context";
+        public static final String OBJECT_CONVERSATION_MARK_BEANS = "objectConversationMarkBeans";
+        public static final String OBJECT_CONVERSATION_MARK_FRAGMENT = "objectConversationMarkFragment";
+
+        public static class Extension {
+            // ConversationMark popmenu Extension
+            public static class ConversationPopMenu {
+                public static final String CLASSIC_EXTENSION_ID = "ConversationMarkPopMenuExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ConversationMarkPopMenuExtensionMinimalistID";
+            }
+
+            public static class ConversationGroupBean {
+                public static final String CLASSIC_EXTENSION_ID = "ConversationGroupPopMenuExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ConversationGroupPopMenuExtensionMinimalistID";
+            }
+        }
     }
 
     public static final class Message {
@@ -649,11 +690,10 @@ public final class TUIConstants {
 
     public static final class NetworkConnection {
         public static final String EVENT_CONNECTION_STATE_CHANGED = "eventConnectionStateChanged";
-        public static final String EVENT_SUB_KEY_CONNECTING       = "eventSubKeyConnecting";
-        public static final String EVENT_SUB_KEY_CONNECT_SUCCESS  = "eventSubKeyConnectSuccess";
-        public static final String EVENT_SUB_KEY_CONNECT_FAILED   = "eventSubKeyConnectFailed";
+        public static final String EVENT_SUB_KEY_CONNECTING = "eventSubKeyConnecting";
+        public static final String EVENT_SUB_KEY_CONNECT_SUCCESS = "eventSubKeyConnectSuccess";
+        public static final String EVENT_SUB_KEY_CONNECT_FAILED = "eventSubKeyConnectFailed";
     }
-
 
     public static final class BuyingFeature {
         public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
@@ -661,8 +701,8 @@ public final class TUIConstants {
         public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
 
         public static final String BUYING_PRICE_DESC_EN = "https://www.tencentcloud.com/document/product/1047/34349#basic-services";
-        public static final String BUYING_PRICE_DESC = "https://cloud.tencent.com/document/product/269/11673?from=17219#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
-
+        public static final String BUYING_PRICE_DESC =
+            "https://cloud.tencent.com/document/product/269/11673?from=17219#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
 
         public static final String BUYING_FEATURE_MESSAGE_RECEIPT = "buying_chat_message_read_receipt";
         public static final String BUYING_FEATURE_COMMUNITY = "buying_community";
@@ -673,6 +713,17 @@ public final class TUIConstants {
     public static final class TUIVideoSeat {
         public static final String SERVICE_VIDEO_SEAT = "com.tencent.cloud.tuikit.videoseat.core.TUIVideoSeatExtension";
         public static final String METHOD_SWITCH_VIDEO_LAYOUT = "switchVideoLayout";
+    }
+
+    public static final class Privacy {
+        public static class PermissionsFactory {
+            public static final String FACTORY_NAME = "PrivacyPermissionsFactory";
+
+            public static class PermissionsName {
+                public static final String CAMERA_PERMISSIONS = "CameraPermissions";
+                public static final String MICROPHONE_PERMISSIONS = "MicrophonePermissions";
+            }
+        }
     }
 
     // localBroadcast

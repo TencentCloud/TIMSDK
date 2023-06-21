@@ -14,18 +14,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.tuigroup.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class BottomSelectSheet {
-
     private List<String> selectList = new ArrayList<>();
     private Dialog dialog;
     private ArrayAdapter<String> listAdapter;
     private BottomSelectSheetOnClickListener onClickListener;
+
     public BottomSelectSheet(Context context) {
         View view = View.inflate(context, R.layout.bottom_select_sheet, null);
         dialog = new Dialog(context, R.style.BottomSelectSheet);
@@ -41,7 +39,7 @@ public class BottomSelectSheet {
         p.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         window.setAttributes(p);
         window.setGravity(Gravity.BOTTOM);
-        window.setWindowAnimations(R.style.BottomSelectSheet_Anim);  //添加动画
+        window.setWindowAnimations(R.style.BottomSelectSheet_Anim); // 添加动画
 
         final ListView listView = view.findViewById(R.id.item_list);
         listAdapter = new ArrayAdapter<>(context, R.layout.bottom_sheet_item, R.id.sheet_item, selectList);

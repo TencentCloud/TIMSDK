@@ -8,8 +8,11 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
 public interface IConversationLayout extends ILayout {
     View getConversationList();
+
     void setConversationTop(ConversationInfo conversation, IUIKitCallback callBack);
+
     void deleteConversation(ConversationInfo conversation);
+
     void clearConversationMessage(ConversationInfo conversation);
 
     /**

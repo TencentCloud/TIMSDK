@@ -30,20 +30,16 @@ import android.view.ViewTreeObserver;
 import android.widget.Magnifier;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
-
 import com.tencent.qcloud.tuikit.timcommon.classicui.component.BeginnerGuidePage;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class SelectTextHelper {
     private static final String TAG = SelectTextHelper.class.getSimpleName();
@@ -63,7 +59,7 @@ public class SelectTextHelper {
 
     private int mTouchX;
     private int mTouchY;
-    private int mTextViewMarginStart = 0;// textView的marginStart值
+    private int mTextViewMarginStart = 0; // textView的marginStart值
 
     private int mSelectedColor;
     private int mCursorHandleColor;
@@ -77,7 +73,7 @@ public class SelectTextHelper {
     private int mPopArrowImg;
     private boolean mIsEmoji = false;
     private List<Pair<Integer, String>> itemTextList;
-    private List<Builder.onSeparateItemClickListener> itemListenerList = new LinkedList<>();
+    private List<Builder.OnSeparateItemClickListener> itemListenerList = new LinkedList<>();
 
     private BackgroundColorSpan mSpan;
     private boolean isHideWhenScroll;
@@ -88,25 +84,24 @@ public class SelectTextHelper {
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
     private View.OnTouchListener mRootTouchListener;
 
-
     public interface OnSelectListener {
-        void onClick(View v);// 点击textView
+        void onClick(View v); // 点击textView
 
-        void onLongClick(View v);// 长按textView
+        void onLongClick(View v); // 长按textView
 
-        void onTextSelected(CharSequence content);// 选中文本回调
+        void onTextSelected(CharSequence content); // 选中文本回调
 
-        void onDismiss();// 解除弹窗回调
+        void onDismiss(); // 解除弹窗回调
 
-        void onClickUrl(String url);// 点击文本里的url回调
+        void onClickUrl(String url); // 点击文本里的url回调
 
-        void onSelectAllShowCustomPop();// 全选显示自定义弹窗回调
+        void onSelectAllShowCustomPop(); // 全选显示自定义弹窗回调
 
-        void onReset();// 重置回调
+        void onReset(); // 重置回调
 
-        void onDismissCustomPop();// 解除自定义弹窗回调
+        void onDismissCustomPop(); // 解除自定义弹窗回调
 
-        void onScrolling();// 正在滚动回调
+        void onScrolling(); // 正在滚动回调
     }
 
     public static class Builder {
@@ -123,7 +118,7 @@ public class SelectTextHelper {
         private int mPopArrowImg = 0;
         private boolean mIsEmoji = false;
         private List<Pair<Integer, String>> itemTextList = new LinkedList<>();
-        private List<onSeparateItemClickListener> itemListenerList = new LinkedList<>();
+        private List<OnSeparateItemClickListener> itemListenerList = new LinkedList<>();
 
         public Builder(TextView textView) {
             mTextView = textView;
@@ -207,13 +202,13 @@ public class SelectTextHelper {
             return this;
         }
 
-        public Builder addItem(@DrawableRes int drawableId, @StringRes int textResId, onSeparateItemClickListener listener) {
+        public Builder addItem(@DrawableRes int drawableId, @StringRes int textResId, OnSeparateItemClickListener listener) {
             itemTextList.add(new Pair<>(drawableId, mTextView.getContext().getResources().getString(textResId)));
             itemListenerList.add(listener);
             return this;
         }
 
-        public Builder addItem(@DrawableRes int drawableId, String itemText, onSeparateItemClickListener listener) {
+        public Builder addItem(@DrawableRes int drawableId, String itemText, OnSeparateItemClickListener listener) {
             itemTextList.add(new Pair<>(drawableId, itemText));
             itemListenerList.add(listener);
             return this;
@@ -223,7 +218,7 @@ public class SelectTextHelper {
             return new SelectTextHelper(this);
         }
 
-        public interface onSeparateItemClickListener {
+        public interface OnSeparateItemClickListener {
             void onClick();
         }
     }
@@ -259,7 +254,6 @@ public class SelectTextHelper {
             mSelectListener.onReset();
         }
     }
-
 
     /**
      * 选择文本监听
@@ -329,8 +323,7 @@ public class SelectTextHelper {
             private void onLongTextViewClick() {
                 mTextView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                     @Override
-                    public void onViewAttachedToWindow(View v) {
-                    }
+                    public void onViewAttachedToWindow(View v) {}
 
                     @Override
                     public void onViewDetachedFromWindow(View v) {
@@ -416,7 +409,9 @@ public class SelectTextHelper {
     private final Runnable mShowSelectViewRunnable = new Runnable() {
         @Override
         public void run() {
-            if (isHide) return;
+            if (isHide) {
+                return;
+            }
             if (mStartHandle != null) {
                 showCursorHandle(mStartHandle);
             }
@@ -451,9 +446,12 @@ public class SelectTextHelper {
     private void showSelectView(int x, int y) {
         reset();
         isHide = false;
-        if (mStartHandle == null) mStartHandle = new CursorHandle(true);
-        if (mEndHandle == null) mEndHandle = new CursorHandle(false);
-
+        if (mStartHandle == null) {
+            mStartHandle = new CursorHandle(true);
+        }
+        if (mEndHandle == null) {
+            mEndHandle = new CursorHandle(false);
+        }
         int startOffset = getPreciseOffset(mTextView, x, y);
         int endOffset = startOffset + DEFAULT_SELECTION_LENGTH;
         if (mTextView.getText() instanceof Spannable) {
@@ -474,8 +472,12 @@ public class SelectTextHelper {
     private void showAllView() {
         reset();
         isHide = false;
-        if (mStartHandle == null) mStartHandle = new CursorHandle(true);
-        if (mEndHandle == null) mEndHandle = new CursorHandle(false);
+        if (mStartHandle == null) {
+            mStartHandle = new CursorHandle(true);
+        }
+        if (mEndHandle == null) {
+            mEndHandle = new CursorHandle(false);
+        }
 
         if (mTextView.getText() instanceof Spannable) {
             mSpannable = (Spannable) mTextView.getText();
@@ -521,7 +523,7 @@ public class SelectTextHelper {
             }
 
             if (mIsEmoji) {
-                //handlerEmojiSelectText();
+                // handlerEmojiSelectText();
             }
         }
     }
@@ -535,11 +537,10 @@ public class SelectTextHelper {
             String emojiName = m.group();
             Bitmap bitmap = FaceManager.getEmoji(emojiName);
             if (bitmap != null) {
-
                 Drawable drawable = new BitmapDrawable(bitmap);
                 ShapeDrawable background = new ShapeDrawable();
                 background.getPaint().setColor(mTextView.getContext().getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.text_select_color));
-                LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, drawable});
+                LayerDrawable layerDrawable = new LayerDrawable(new Drawable[] {background, drawable});
                 layerDrawable.setBounds(0, 0, 64, 64);
                 ImageSpan image = new ImageSpan(layerDrawable, ImageSpan.ALIGN_BASELINE);
                 mSpannable.setSpan(image, mSelectionInfo.mStart, mSelectionInfo.mEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -551,14 +552,13 @@ public class SelectTextHelper {
      * 游标
      */
     private class CursorHandle extends View {
-
         private PopupWindow mPopupWindow;
         private Paint mPaint;
 
         private int mCircleRadius = mCursorHandleSize / 2;
         private int mWidth = mCursorHandleSize;
         private int mHeight = mCursorHandleSize;
-        private int mPadding = 32;// 游标padding
+        private int mPadding = 32; // 游标padding
         private boolean isLeft;
 
         public CursorHandle(boolean isLeft) {
@@ -603,8 +603,7 @@ public class SelectTextHelper {
                 case MotionEvent.ACTION_CANCEL:
                     if (mMagnifierShow) {
                         // android 9 放大镜
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                                && null != mMagnifier) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && null != mMagnifier) {
                             mMagnifier.dismiss();
                         }
                     }
@@ -616,8 +615,7 @@ public class SelectTextHelper {
                     int rawX = (int) event.getRawX();
                     int rawY = (int) event.getRawY();
                     // x y不准 x 减去textView距离x轴距离值  y减去字体大小的像素值
-                    update(rawX + mAdjustX - mWidth - mTextViewMarginStart,
-                            rawY + mAdjustY - mHeight - (int) mTextView.getTextSize());
+                    update(rawX + mAdjustX - mWidth - mTextViewMarginStart, rawY + mAdjustY - mHeight - (int) mTextView.getTextSize());
                     if (mMagnifierShow) {
                         // android 9 放大镜功能
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -632,6 +630,8 @@ public class SelectTextHelper {
                             mMagnifier.show(magnifierX, Math.max(magnifierY, 0));
                         }
                     }
+                    break;
+                default:
                     break;
             }
             return true;
@@ -696,10 +696,10 @@ public class SelectTextHelper {
             Layout layout = mTextView.getLayout();
             if (isLeft) {
                 mPopupWindow.update((int) layout.getPrimaryHorizontal(mSelectionInfo.mStart) - mWidth + getExtraX(),
-                        layout.getLineBottom(layout.getLineForOffset(mSelectionInfo.mStart)) + getExtraY(), -1, -1);
+                    layout.getLineBottom(layout.getLineForOffset(mSelectionInfo.mStart)) + getExtraY(), -1, -1);
             } else {
                 mPopupWindow.update((int) layout.getPrimaryHorizontal(mSelectionInfo.mEnd) + getExtraX(),
-                        layout.getLineBottom(layout.getLineForOffset(mSelectionInfo.mEnd)) + getExtraY(), -1, -1);
+                    layout.getLineBottom(layout.getLineForOffset(mSelectionInfo.mEnd)) + getExtraY(), -1, -1);
             }
         }
 
@@ -736,15 +736,13 @@ public class SelectTextHelper {
      * 处理内容链接跳转
      */
     private class LinkMovementMethodInterceptor extends LinkMovementMethod {
-
         private long downLinkTime;
 
         @Override
         public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
             int action = event.getAction();
 
-            if (action == MotionEvent.ACTION_UP ||
-                    action == MotionEvent.ACTION_DOWN) {
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
 
@@ -758,8 +756,7 @@ public class SelectTextHelper {
                 int line = layout.getLineForVertical(y);
                 int off = layout.getOffsetForHorizontal(line, x);
 
-                ClickableSpan[] links =
-                        buffer.getSpans(off, off, ClickableSpan.class);
+                ClickableSpan[] links = buffer.getSpans(off, off, ClickableSpan.class);
 
                 if (links.length != 0) {
                     if (action == MotionEvent.ACTION_UP) {
@@ -782,9 +779,7 @@ public class SelectTextHelper {
                         }
                     } else if (action == MotionEvent.ACTION_DOWN) {
                         downLinkTime = System.currentTimeMillis();
-                        Selection.setSelection(buffer,
-                                buffer.getSpanStart(links[0]),
-                                buffer.getSpanEnd(links[0]));
+                        Selection.setSelection(buffer, buffer.getSpanStart(links[0]), buffer.getSpanEnd(links[0]));
                     }
                     return true;
                 } else {
@@ -794,7 +789,6 @@ public class SelectTextHelper {
 
             return super.onTouchEvent(widget, buffer, event);
         }
-
     }
 
     // util
@@ -819,7 +813,9 @@ public class SelectTextHelper {
 
     public static int getHysteresisOffset(TextView textView, int x, int y, int previousOffset) {
         final Layout layout = textView.getLayout();
-        if (layout == null) return -1;
+        if (layout == null) {
+            return -1;
+        }
 
         int line = layout.getLineForVertical(y);
 
@@ -855,9 +851,8 @@ public class SelectTextHelper {
 
         // If new line is just before or after previous line and y position is less than
         // hysteresisThreshold away from previous line, keep cursor on previous line.
-        if (((line == previousLine + 1) && ((y - previousLineBottom) < hysteresisThreshold)) || ((line == previousLine - 1) && ((
-                previousLineTop
-                        - y) < hysteresisThreshold))) {
+        if (((line == previousLine + 1) && ((y - previousLineBottom) < hysteresisThreshold))
+            || ((line == previousLine - 1) && ((previousLineTop - y) < hysteresisThreshold))) {
             line = previousLine;
         }
 

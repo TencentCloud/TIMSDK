@@ -1,20 +1,17 @@
 package com.tencent.qcloud.tim.demo.bean;
 
 import android.content.SharedPreferences;
-
 import com.google.gson.Gson;
 import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
-
 import java.io.Serializable;
 
 public class UserInfo implements Serializable {
-
     private final static String PER_USER_MODEL = "per_user_model";
 
     private static UserInfo sUserInfo;
 
-    private int  sdkAppId;
+    private int sdkAppId;
     private String zone;
     private String phone;
     private String token;
@@ -37,9 +34,7 @@ public class UserInfo implements Serializable {
         return sUserInfo;
     }
 
-    private UserInfo() {
-
-    }
+    private UserInfo() {}
 
     public void setUserInfo(UserInfo info) {
         SharedPreferences shareInfo = TIMAppService.getAppContext().getSharedPreferences(TUIKitConstants.USERINFO, 0);
@@ -148,5 +143,4 @@ public class UserInfo implements Serializable {
         autoLogin = false;
         setUserInfo(this);
     }
-
 }

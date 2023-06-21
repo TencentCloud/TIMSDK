@@ -818,7 +818,7 @@ public class TUICallingViewManager implements ITUINotification {
     }
 
     private void loadUserInfo(CallingUserModel model) {
-        UserLayout userLayout = mUserLayoutFactory.allocUserLayout(model);
+        UserLayout userLayout = mUserLayoutFactory.findUserLayout(model.userId);
         if (userLayout == null) {
             return;
         }

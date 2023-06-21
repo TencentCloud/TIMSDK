@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message.reply;
 
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 
 public class TextReplyQuoteBean extends TUIReplyQuoteBean {
@@ -21,5 +21,4 @@ public class TextReplyQuoteBean extends TUIReplyQuoteBean {
             text = ((TextMessageBean) messageBean).getText();
         }
     }
-
 }

@@ -1,12 +1,15 @@
 package com.tencent.qcloud.tuikit.tuichat.config;
 
 public class GeneralConfig {
-
-    public final static int DEFAULT_AUDIO_RECORD_MAX_TIME = 60;
-    public final static int DEFAULT_VIDEO_RECORD_MAX_TIME = 15;
+    public static final int DEFAULT_AUDIO_RECORD_MAX_TIME = 60;
+    public static final int DEFAULT_VIDEO_RECORD_MAX_TIME = 15;
     private int audioRecordMaxTime = DEFAULT_AUDIO_RECORD_MAX_TIME;
     private int videoRecordMaxTime = DEFAULT_VIDEO_RECORD_MAX_TIME;
 
+    /**
+     * 拍照和摄像功能是否使用系统自带相机
+     * Whether to use the built-in camera of the system to take photos and video
+     */
     private boolean useSystemCamera = false;
 
     private boolean excludedFromUnreadCount;
@@ -21,11 +24,11 @@ public class GeneralConfig {
     private boolean replyEnable = true;
     private boolean quoteEnable = true;
 
-
     private boolean enableWelcomeCustomMessage = true;
 
     private boolean enableVoiceCall = true;
     private boolean enableVideoCall = true;
+    private boolean enableRoomKit = true;
 
     private boolean enableFloatWindowForCall = true;
     private boolean enableMultiDeviceForCall = false;
@@ -92,9 +95,17 @@ public class GeneralConfig {
         return enableVoiceCall;
     }
 
+    public void setEnableRoomKit(boolean enableRoomKit) {
+        this.enableRoomKit = enableRoomKit;
+    }
+
+    public boolean isEnableRoomKit() {
+        return enableRoomKit;
+    }
+
     /**
      * 获取录音最大时长
-     * 
+     *
      * Get the maximum duration of the recording
      *
      * @return
@@ -105,7 +116,7 @@ public class GeneralConfig {
 
     /**
      * 录音最大时长
-     * 
+     *
      * Maximum recording time
      *
      * @param audioRecordMaxTime
@@ -118,7 +129,7 @@ public class GeneralConfig {
 
     /**
      * 获取录像最大时长
-     * 
+     *
      * Get the maximum duration of the recording
      *
      * @return
@@ -129,7 +140,7 @@ public class GeneralConfig {
 
     /**
      * 摄像最大时长
-     * 
+     *
      * Maximum camera time
      *
      * @param videoRecordMaxTime
@@ -141,7 +152,7 @@ public class GeneralConfig {
 
     /**
      * 对方已读的 view 是否展示
-     * 
+     *
      * Whether the view read by the other party is displayed
      *
      */
@@ -151,7 +162,7 @@ public class GeneralConfig {
 
     /**
      * 设置对方已读的 view 是否展示
-     * 
+     *
      * Set whether the view read by the other party is displayed
      *
      */
@@ -161,7 +172,7 @@ public class GeneralConfig {
 
     /**
      * 获取消息是否不计入会话未读数：默认为 false，表明需要计入会话未读数，设置为 true，表明不需要计入会话未读数
-     * 
+     *
      * Get whether messages are not counted as conversation unread: false, need to be counted; true, do not need to be counted
      */
     public boolean isExcludedFromUnreadCount() {
@@ -170,7 +181,7 @@ public class GeneralConfig {
 
     /**
      * 设置消息是否不计入会话未读数：默认为 false，表明需要计入会话未读数，设置为 true，表明不需要计入会话未读数
-     * 
+     *
      * Set whether messages are not counted as conversation unread: false, need to be counted; true, do not need to be counted
      */
     public void setExcludedFromUnreadCount(boolean excludedFromUnreadCount) {
@@ -179,7 +190,7 @@ public class GeneralConfig {
 
     /**
      * 获取消息是否不计入会话 lastMsg：默认为 false，表明需要计入会话 lastMsg，设置为 true，表明不需要计入会话 lastMessage
-     * 
+     *
      * Get whether the message does not count as the last message of the session: false, need to be counted; true, do not need to be counted
      */
     public boolean isExcludedFromLastMessage() {
@@ -188,7 +199,7 @@ public class GeneralConfig {
 
     /**
      * 设置消息是否不计入会话 lastMsg：默认为 false，表明需要计入会话 lastMsg，设置为 true，表明不需要计入会话 lastMessage
-     * 
+     *
      * Set whether the message does not count as the last message of the session: false, need to be counted; true, do not need to be counted
      */
     public void setExcludedFromLastMessage(boolean excludedFromLastMessage) {
@@ -197,7 +208,7 @@ public class GeneralConfig {
 
     /**
      * 获取离线推送提示铃音是否为自定义铃音
-     * 
+     *
      * Get whether the offline push notification ringtone is a custom ringtone
      */
     public boolean isAndroidPrivateRing() {
@@ -206,7 +217,7 @@ public class GeneralConfig {
 
     /**
      * 设置离线推送提示铃音是否为自定义铃音
-     * 
+     *
      * Set whether the offline push notification ringtone is a custom ringtone
      */
     public void setAndroidPrivateRing(boolean ring) {
@@ -238,14 +249,15 @@ public class GeneralConfig {
     public boolean isEnableWelcomeCustomMessage() {
         return enableWelcomeCustomMessage;
     }
-    
+
     public void setEnableWelcomeCustomMessage(boolean enableWelcomeCustomMessage) {
         this.enableWelcomeCustomMessage = enableWelcomeCustomMessage;
     }
 
     /**
      * 消息可撤回时间，单位秒，默认 120 秒。如果想调整该配置，请同步修改 IM 控制台设置。
-     * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings synchronously.
+     * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings
+     * synchronously.
      *
      * https://cloud.tencent.com/document/product/269/38656#.E6.B6.88.E6.81.AF.E6.92.A4.E5.9B.9E.E8.AE.BE.E7.BD.AE
      */
@@ -255,5 +267,13 @@ public class GeneralConfig {
 
     public int getTimeIntervalForMessageRecall() {
         return timeIntervalForMessageRecall;
+    }
+
+    public void setUseSystemCamera(boolean useSystemCamera) {
+        this.useSystemCamera = useSystemCamera;
+    }
+
+    public boolean isUseSystemCamera() {
+        return useSystemCamera;
     }
 }

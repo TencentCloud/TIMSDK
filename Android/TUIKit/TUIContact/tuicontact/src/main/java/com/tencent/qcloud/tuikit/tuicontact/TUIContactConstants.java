@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuicontact;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 
 public class TUIContactConstants {
-
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
     public static final int FORWARD_SELECT_MEMBERS_CODE = 102;
     public static final int FORWARD_CREATE_GROUP_CODE = 103;
@@ -16,19 +15,18 @@ public class TUIContactConstants {
      * 2: iOS支持的视频通话版本，后续已经不兼容
      * 3: 未发布版本
      * 4: Android/iOS/Web互通的视频通话版本
-     * 
+     *
      * 1: Just a text message with a link
      * 2: The video calling version supported by iOS is no longer compatible
      * 3: unreleased version
      * 4: Android/iOS/Web interoperable version for video call
      */
     public static final int JSON_VERSION_UNKNOWN = 0;
-    public static final int JSON_VERSION_1       = 1;
-    public static final int JSON_VERSION_4       = 4;
+    public static final int JSON_VERSION_1 = 1;
+    public static final int JSON_VERSION_4 = 4;
     public static int version = JSON_VERSION_4;
 
     public static final class Group {
-
         public static final String GROUP_ID = "group_id";
     }
 
@@ -70,5 +68,4 @@ public class TUIContactConstants {
         public static final String TYPE_WORK = "Work";
         public static final String TYPE_COMMUNITY = "Community";
     }
-
 }

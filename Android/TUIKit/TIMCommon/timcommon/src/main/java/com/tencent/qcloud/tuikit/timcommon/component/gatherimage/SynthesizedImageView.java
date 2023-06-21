@@ -11,11 +11,10 @@ import com.tencent.qcloud.tuikit.timcommon.R;
 
 import java.util.List;
 
-
 public class SynthesizedImageView extends ShadeImageView {
     /**
      * 群聊头像合成器
-     * 
+     *
      * Group Chat Avatar Synthesizer
      */
     TeamHeadSynthesizer teamHeadSynthesizer;
@@ -86,5 +85,4 @@ public class SynthesizedImageView extends ShadeImageView {
     public void clear() {
         teamHeadSynthesizer.clearImage();
     }
-
 }

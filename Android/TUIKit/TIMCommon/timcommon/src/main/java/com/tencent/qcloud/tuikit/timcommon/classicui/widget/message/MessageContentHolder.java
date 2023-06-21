@@ -9,9 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
@@ -29,14 +27,12 @@ import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonLog;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class MessageContentHolder extends MessageBaseHolder {
-
+public abstract class MessageContentHolder<T extends TUIMessageBean> extends MessageBaseHolder<T> {
     public UserIconView leftUserIcon;
     public UserIconView rightUserIcon;
     public TextView usernameText;
@@ -89,7 +85,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
 
         List<TUIMessageBean> mediaSource = new ArrayList<>();
-        for(TUIMessageBean messageBean : dataSource) {
+        for (TUIMessageBean messageBean : dataSource) {
             int type = messageBean.getMsgType();
             if (type == V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE || type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
                 mediaSource.add(messageBean);
@@ -109,103 +105,13 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     }
 
     @Override
-    public void layoutViews(final TUIMessageBean msg, final int position) {
+    public void layoutViews(final T msg, final int position) {
         super.layoutViews(msg, position);
 
-        if (isForwardMode || isReplyDetailMode) {
-            leftUserIcon.setVisibility(View.VISIBLE);
-            rightUserIcon.setVisibility(View.GONE);
-        } else {
-            if (msg.isSelf()) {
-                leftUserIcon.setVisibility(View.GONE);
-                rightUserIcon.setVisibility(View.VISIBLE);
-            } else {
-                leftUserIcon.setVisibility(View.VISIBLE);
-                rightUserIcon.setVisibility(View.GONE);
-            }
-        }
-        if (properties.getAvatar() != 0) {
-            leftUserIcon.setDefaultImageResId(properties.getAvatar());
-            rightUserIcon.setDefaultImageResId(properties.getAvatar());
-        } else {
-            leftUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(leftUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon));
-            rightUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(rightUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon));
-        }
-        if (properties.getAvatarRadius() != 0) {
-            leftUserIcon.setRadius(properties.getAvatarRadius());
-            rightUserIcon.setRadius(properties.getAvatarRadius());
-        } else {
-            int radius = ScreenUtil.dip2px(4);
-            leftUserIcon.setRadius(radius);
-            rightUserIcon.setRadius(radius);
-        }
-        if (properties.getAvatarSize() != null && properties.getAvatarSize().length == 2) {
-            ViewGroup.LayoutParams params = leftUserIcon.getLayoutParams();
-            params.width = properties.getAvatarSize()[0];
-            params.height = properties.getAvatarSize()[1];
-            leftUserIcon.setLayoutParams(params);
-
-            params = rightUserIcon.getLayoutParams();
-            params.width = properties.getAvatarSize()[0];
-            params.height = properties.getAvatarSize()[1];
-            rightUserIcon.setLayoutParams(params);
-        }
-
-        if (isForwardMode || isReplyDetailMode) {
-            usernameText.setVisibility(View.VISIBLE);
-        } else {
-            if (msg.isSelf()) {
-                if (properties.getRightNameVisibility() == 0) {
-                    usernameText.setVisibility(View.GONE);
-                } else {
-                    usernameText.setVisibility(properties.getRightNameVisibility());
-                }
-            } else {
-                if (properties.getLeftNameVisibility() == 0) {
-                    if (msg.isGroup()) {
-                        usernameText.setVisibility(View.VISIBLE);
-                    } else {
-                        usernameText.setVisibility(View.GONE);
-                    }
-                } else {
-                    usernameText.setVisibility(properties.getLeftNameVisibility());
-                }
-            }
-        }
-        if (properties.getNameFontColor() != 0) {
-            usernameText.setTextColor(properties.getNameFontColor());
-        }
-        if (properties.getNameFontSize() != 0) {
-            usernameText.setTextSize(properties.getNameFontSize());
-        }
-
-        if (!TextUtils.isEmpty(msg.getNameCard())) {
-            usernameText.setText(msg.getNameCard());
-        } else if (!TextUtils.isEmpty(msg.getFriendRemark())) {
-            usernameText.setText(msg.getFriendRemark());
-        } else if (!TextUtils.isEmpty(msg.getNickName())) {
-            usernameText.setText(msg.getNickName());
-        } else {
-            usernameText.setText(msg.getSender());
-        }
-
+        setUserIcon(msg);
+        setUserName(msg);
         loadAvatar(msg);
-
-        if (isForwardMode || isReplyDetailMode) {
-            sendingProgress.setVisibility(View.GONE);
-        } else {
-            if (msg.isSelf()) {
-                if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL
-                        || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS
-                        || msg.isPeerRead()) {
-                    sendingProgress.setVisibility(View.GONE);
-                } else {
-                    sendingProgress.setVisibility(View.VISIBLE);
-                }
-            } else {
-                sendingProgress.setVisibility(View.GONE);
-            }
-        }
+        setSendingProgress(msg);
 
         if (isForwardMode || isReplyDetailMode) {
             msgArea.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
@@ -224,74 +130,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     msgArea.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
                 }
             }
-
-            if (onItemClickListener != null) {
-                msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        onItemClickListener.onMessageLongClick(v, position, msg);
-                        return true;
-                    }
-                });
-
-                msgArea.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        onItemClickListener.onMessageLongClick(msgArea, position, msg);
-                        return true;
-                    }
-                });
-
-                leftUserIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onItemClickListener.onUserIconClick(view, position, msg);
-                    }
-                });
-                leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        onItemClickListener.onUserIconLongClick(view, position, msg);
-                        return true;
-                    }
-                });
-                rightUserIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onItemClickListener.onUserIconClick(view, position, msg);
-                    }
-                });
-            }
-
-            if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-                statusImage.setVisibility(View.VISIBLE);
-                msgContentFrame.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onMessageLongClick(msgContentFrame, position, msg);
-                        }
-                    }
-                });
-                statusImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onSendFailBtnClick(statusImage, position, msg);
-                        }
-                    }
-                });
-            } else {
-                msgContentFrame.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onMessageClick(msgContentFrame, position, msg);
-                        }
-                    }
-                });
-                statusImage.setVisibility(View.GONE);
-            }
+            setOnClickListener(msg, position);
         }
 
         if (isForwardMode || isReplyDetailMode) {
@@ -352,13 +191,185 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         layoutVariableViews(msg, position);
     }
 
+    private void setOnClickListener(T msg, int position) {
+        if (onItemClickListener != null) {
+            msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onMessageLongClick(v, position, msg);
+                    return true;
+                }
+            });
+
+            msgArea.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onMessageLongClick(msgArea, position, msg);
+                    return true;
+                }
+            });
+
+            leftUserIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.onUserIconClick(view, position, msg);
+                }
+            });
+            leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    onItemClickListener.onUserIconLongClick(view, position, msg);
+                    return true;
+                }
+            });
+            rightUserIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.onUserIconClick(view, position, msg);
+                }
+            });
+        }
+
+        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            statusImage.setVisibility(View.VISIBLE);
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageLongClick(msgContentFrame, position, msg);
+                    }
+                }
+            });
+            statusImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onSendFailBtnClick(statusImage, position, msg);
+                    }
+                }
+            });
+        } else {
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(msgContentFrame, position, msg);
+                    }
+                }
+            });
+            statusImage.setVisibility(View.GONE);
+        }
+    }
+
+    private void setSendingProgress(T msg) {
+
+        if (isForwardMode || isReplyDetailMode) {
+            sendingProgress.setVisibility(View.GONE);
+        } else {
+            if (msg.isSelf()) {
+                if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS || msg.isPeerRead()) {
+                    sendingProgress.setVisibility(View.GONE);
+                } else {
+                    sendingProgress.setVisibility(View.VISIBLE);
+                }
+            } else {
+                sendingProgress.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void setUserName(T msg) {
+
+        if (isForwardMode || isReplyDetailMode) {
+            usernameText.setVisibility(View.VISIBLE);
+        } else {
+            if (msg.isSelf()) {
+                if (properties.getRightNameVisibility() == 0) {
+                    usernameText.setVisibility(View.GONE);
+                } else {
+                    usernameText.setVisibility(properties.getRightNameVisibility());
+                }
+            } else {
+                if (properties.getLeftNameVisibility() == 0) {
+                    if (msg.isGroup()) {
+                        usernameText.setVisibility(View.VISIBLE);
+                    } else {
+                        usernameText.setVisibility(View.GONE);
+                    }
+                } else {
+                    usernameText.setVisibility(properties.getLeftNameVisibility());
+                }
+            }
+        }
+        if (properties.getNameFontColor() != 0) {
+            usernameText.setTextColor(properties.getNameFontColor());
+        }
+        if (properties.getNameFontSize() != 0) {
+            usernameText.setTextSize(properties.getNameFontSize());
+        }
+
+        if (!TextUtils.isEmpty(msg.getNameCard())) {
+            usernameText.setText(msg.getNameCard());
+        } else if (!TextUtils.isEmpty(msg.getFriendRemark())) {
+            usernameText.setText(msg.getFriendRemark());
+        } else if (!TextUtils.isEmpty(msg.getNickName())) {
+            usernameText.setText(msg.getNickName());
+        } else {
+            usernameText.setText(msg.getSender());
+        }
+    }
+
+    private void setUserIcon(T msg) {
+
+        if (isForwardMode || isReplyDetailMode) {
+            leftUserIcon.setVisibility(View.VISIBLE);
+            rightUserIcon.setVisibility(View.GONE);
+        } else {
+            if (msg.isSelf()) {
+                leftUserIcon.setVisibility(View.GONE);
+                rightUserIcon.setVisibility(View.VISIBLE);
+            } else {
+                leftUserIcon.setVisibility(View.VISIBLE);
+                rightUserIcon.setVisibility(View.GONE);
+            }
+        }
+        if (properties.getAvatar() != 0) {
+            leftUserIcon.setDefaultImageResId(properties.getAvatar());
+            rightUserIcon.setDefaultImageResId(properties.getAvatar());
+        } else {
+            leftUserIcon.setDefaultImageResId(
+                TUIThemeManager.getAttrResId(leftUserIcon.getContext(), R.attr.core_default_user_icon));
+            rightUserIcon.setDefaultImageResId(
+                TUIThemeManager.getAttrResId(rightUserIcon.getContext(), R.attr.core_default_user_icon));
+        }
+        if (properties.getAvatarRadius() != 0) {
+            leftUserIcon.setRadius(properties.getAvatarRadius());
+            rightUserIcon.setRadius(properties.getAvatarRadius());
+        } else {
+            int radius = ScreenUtil.dip2px(4);
+            leftUserIcon.setRadius(radius);
+            rightUserIcon.setRadius(radius);
+        }
+        if (properties.getAvatarSize() != null && properties.getAvatarSize().length == 2) {
+            ViewGroup.LayoutParams params = leftUserIcon.getLayoutParams();
+            params.width = properties.getAvatarSize()[0];
+            params.height = properties.getAvatarSize()[1];
+            leftUserIcon.setLayoutParams(params);
+
+            params = rightUserIcon.getLayoutParams();
+            params.width = properties.getAvatarSize()[0];
+            params.height = properties.getAvatarSize()[1];
+            rightUserIcon.setLayoutParams(params);
+        }
+    }
+
     private void setTranslationContent(TUIMessageBean msg) {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, recyclerView);
         param.put(TUIConstants.TUIChat.FRAGMENT, fragment);
 
-        TUICore.raiseExtension(TUIConstants.TUITranslation.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
     }
 
     private void loadAvatar(TUIMessageBean msg) {
@@ -500,7 +511,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             if (msg.isAllRead()) {
                 isReadText.setText(R.string.has_all_read);
             } else if (msg.isUnread()) {
-                isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                isReadText.setTextColor(
+                    isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
                 isReadText.setText(R.string.unread);
                 isReadText.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -512,7 +524,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 long readCount = msg.getReadCount();
                 if (readCount > 0) {
                     isReadText.setText(isReadText.getResources().getString(R.string.someone_has_read, readCount));
-                    isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                    isReadText.setTextColor(
+                        isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
                     isReadText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -527,7 +540,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 isReadText.setText(R.string.has_read);
             } else {
                 isReadText.setText(R.string.unread);
-                isReadText.setTextColor(isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
+                isReadText.setTextColor(
+                    isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
                 isReadText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -538,7 +552,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
     }
 
-    public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
+    public abstract void layoutVariableViews(final T msg, final int position);
 
     public void onRecycled() {
         if (selectableTextHelper != null) {
@@ -556,26 +570,23 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         if (selectableTextHelper != null) {
             selectableTextHelper.destroy();
         }
-        selectableTextHelper = new SelectTextHelper
-                .Builder(textView)
-                .setCursorHandleColor(TIMCommonService.getAppContext().getResources().getColor(R.color.font_blue))
-                .setCursorHandleSizeInDp(18)
-                .setSelectedColor(TIMCommonService.getAppContext().getResources().getColor(R.color.test_blue))
-                .setSelectAll(true)
-                .setIsEmoji(isEmoji)
-                .setScrollShow(false)
-                .setSelectedAllNoPop(true)
-                .setMagnifierShow(false)
-                .build();
+        selectableTextHelper = new SelectTextHelper.Builder(textView)
+                                   .setCursorHandleColor(TIMCommonService.getAppContext().getResources().getColor(R.color.font_blue))
+                                   .setCursorHandleSizeInDp(18)
+                                   .setSelectedColor(TIMCommonService.getAppContext().getResources().getColor(R.color.test_blue))
+                                   .setSelectAll(true)
+                                   .setIsEmoji(isEmoji)
+                                   .setScrollShow(false)
+                                   .setSelectedAllNoPop(true)
+                                   .setMagnifierShow(false)
+                                   .build();
 
         selectableTextHelper.setSelectListener(new SelectTextHelper.OnSelectListener() {
             @Override
-            public void onClick(View v) {
-            }
+            public void onClick(View v) {}
 
             @Override
-            public void onLongClick(View v) {
-            }
+            public void onLongClick(View v) {}
 
             @Override
             public void onTextSelected(CharSequence content) {
@@ -593,12 +604,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             }
 
             @Override
-            public void onClickUrl(String url) {
-            }
+            public void onClickUrl(String url) {}
 
             @Override
-            public void onSelectAllShowCustomPop() {
-            }
+            public void onSelectAllShowCustomPop() {}
 
             @Override
             public void onReset() {
@@ -607,12 +616,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             }
 
             @Override
-            public void onDismissCustomPop() {
-            }
+            public void onDismissCustomPop() {}
 
             @Override
-            public void onScrolling() {
-            }
+            public void onScrolling() {}
         });
     }
 

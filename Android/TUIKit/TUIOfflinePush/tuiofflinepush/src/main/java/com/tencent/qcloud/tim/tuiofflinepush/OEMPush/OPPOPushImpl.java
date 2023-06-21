@@ -4,13 +4,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
-
 import com.heytap.msp.push.callback.ICallBackResultService;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushErrorBean;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class OPPOPushImpl implements ICallBackResultService {
-
     private static final String TAG = OPPOPushImpl.class.getSimpleName();
 
     @Override

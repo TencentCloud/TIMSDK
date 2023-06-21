@@ -1,12 +1,10 @@
 package com.tencent.qcloud.tuikit.tuicommunity.component;
 
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.graphics.drawable.shapes.Shape;
@@ -29,6 +27,7 @@ public class SelectTextButton extends AppCompatTextView {
     private int rightTopRadius;
     private int rightBottomRadius;
     private int leftBottomRadius;
+    
     public SelectTextButton(@NonNull Context context) {
         super(context);
         init(context, null);
@@ -75,8 +74,8 @@ public class SelectTextButton extends AppCompatTextView {
     }
 
     private void setBackground() {
-        float[] radius = {leftTopRadius, leftTopRadius, rightTopRadius, rightTopRadius,
-                rightBottomRadius, rightBottomRadius, leftBottomRadius, leftBottomRadius};
+        float[] radius = {
+            leftTopRadius, leftTopRadius, rightTopRadius, rightTopRadius, rightBottomRadius, rightBottomRadius, leftBottomRadius, leftBottomRadius};
         RectF rectF = new RectF(borderWidth, borderWidth, borderWidth, borderWidth);
         RoundRectShape shape = new RoundRectShape(radius, rectF, radius);
         ShapeDrawable shapeDrawable = new ShapeDrawable(shape) {

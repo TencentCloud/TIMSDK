@@ -64,5 +64,4 @@ public class TIMCommonConfig {
     public static void setDefaultGroupAvatarImage(int defaultGroupAvatarImage) {
         TIMCommonConfig.defaultGroupAvatarImage = defaultGroupAvatarImage;
     }
-
 }

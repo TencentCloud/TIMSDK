@@ -14,7 +14,8 @@ import androidx.core.app.NotificationCompat;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils;
 
 /**
- * TUICalling组件保活, 确保应用在后台不被系统杀死, 如不需要,可删除.
+ * TUICallKit are kept alive to ensure that applications are not killed by the system in the background.
+ * You can delete them if they are not needed.
  */
 public class TUICallService extends Service {
     private static final int NOTIFICATION_ID = 1001;
@@ -47,26 +48,17 @@ public class TUICallService extends Service {
 
     private Notification createForegroundNotification() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // 唯一的通知通道的id.
         String notificationChannelId = "notification_channel_id_01";
-        // Android8.0以上的系统，新建消息通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //用户可见的通道名称
             String channelName = "TRTC Foreground Service Notification";
-            //通道的重要程度
-            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(
-                    notificationChannelId, channelName, importance);
+                    notificationChannelId, channelName, NotificationManager.IMPORTANCE_LOW);
             notificationChannel.setDescription("Channel description");
-            //震动
-            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-            notificationChannel.enableVibration(true);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(notificationChannel);
             }
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, notificationChannelId);
-        //创建通知并返回
         return builder.build();
     }
 

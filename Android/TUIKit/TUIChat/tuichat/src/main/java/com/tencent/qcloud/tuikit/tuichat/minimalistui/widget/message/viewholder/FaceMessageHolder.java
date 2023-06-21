@@ -71,5 +71,4 @@ public class FaceMessageHolder extends MessageContentHolder {
             drawable.setColorFilter(null);
         }
     }
-
 }

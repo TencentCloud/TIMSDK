@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.timcommon.component.interfaces;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 
 public interface ILayout {
-
     /**
      * get title bar
      *

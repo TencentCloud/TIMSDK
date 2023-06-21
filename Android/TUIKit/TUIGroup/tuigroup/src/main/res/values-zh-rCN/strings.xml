@@ -14,7 +14,8 @@
     <string name="group_set_admin">设置为管理员</string>
     <string name="group_plus_add_group_member">+ 添加成员</string>
     <string name="remove_group_member">移除成员</string>
-    <string name="join_group_type">加群方式</string>
+    <string name="join_group_type">主动加群方式</string>
+    <string name="invite_group_type">邀请进群方式</string>
     <string name="in_group_nick_name">我的群昵称</string>
     <string name="dissolve">解散该群</string>
     <string name="clear_message">清除聊天记录</string>
@@ -63,11 +64,13 @@
     <string name="invite">邀请</string>
 
     <string name="forbid_join">禁止加群</string>
+    <string name="forbid_invite">禁止邀请</string>
     <string name="manager_judge">管理员审批</string>
     <string name="auto_judge">自动审批</string>
 
     <string name="modify_group_name">修改群名称</string>
-    <string name="group_join_type">加群方式</string>
+    <string name="group_join_type">主动加群方式</string>
+    <string name="group_invite_type">邀请进群方式</string>
 
     <string name="group_validation_message">验证消息</string>
     <string name="group_group_application_detail_title">详情</string>

@@ -2,18 +2,17 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
 
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 
 import java.util.Collections;
 import java.util.List;
-
 
 public class ReactPresenter {
     private ChatProvider provider;
@@ -41,7 +40,6 @@ public class ReactPresenter {
             chatPresenter = new GroupChatPresenter();
             ((GroupChatPresenter) chatPresenter).setGroupInfo((GroupInfo) chatInfo);
         }
-
     }
 
     public void setMessageId(String messageId) {
@@ -51,7 +49,6 @@ public class ReactPresenter {
     public void setChatEventListener() {
         if (chatPresenter instanceof C2CChatPresenter) {
             c2CChatEventListener = new C2CChatEventListener() {
-
                 @Override
                 public void onRecvMessageModified(TUIMessageBean messageBean) {
                     if (TextUtils.equals(messageBean.getId(), messageId)) {
@@ -62,7 +59,6 @@ public class ReactPresenter {
             TUIChatService.getInstance().addC2CChatEventListener(c2CChatEventListener);
         } else {
             groupChatEventListener = new GroupChatEventListener() {
-
                 @Override
                 public void onRecvMessageModified(TUIMessageBean messageBean) {
                     if (TextUtils.equals(messageBean.getId(), messageId)) {
@@ -95,5 +91,4 @@ public class ReactPresenter {
     public void setMessageListener(OnMessageChangedListener listener) {
         this.onMessageChangedListener = listener;
     }
-
 }

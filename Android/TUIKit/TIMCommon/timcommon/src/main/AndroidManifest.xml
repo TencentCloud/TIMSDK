@@ -18,6 +18,13 @@
             android:name="com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".util.ActivityResultResolver$ActivityResultProxyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:multiprocess="true"
+            android:launchMode="singleTask"
+            android:theme="@style/CoreActivityTranslucent"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"/>
+        
         <provider
             android:name=".util.FileProvider"
             android:authorities="${applicationId}.timcommon.fileprovider"

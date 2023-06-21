@@ -3,8 +3,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.commonutil;
 import com.tencent.imsdk.common.IMLog;
 
 public class TUIConversationLog extends IMLog {
-
-    private static final String PRE = "TUIKit-";
+    private static final String PRE = "TUIConversation-";
 
     private static String mixTag(String tag) {
         return PRE + tag;
@@ -33,5 +32,4 @@ public class TUIConversationLog extends IMLog {
     public static void e(String strTag, String strInfo) {
         IMLog.e(mixTag(strTag), strInfo);
     }
-
 }

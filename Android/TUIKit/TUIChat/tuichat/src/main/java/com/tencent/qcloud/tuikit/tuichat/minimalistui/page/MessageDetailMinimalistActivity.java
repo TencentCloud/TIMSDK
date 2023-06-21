@@ -9,12 +9,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
@@ -36,12 +34,10 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.
 import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ReplyPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity {
-
     private static final String TAG = MessageDetailMinimalistActivity.class.getSimpleName();
 
     private MessageReceiptPresenter presenter;
@@ -282,7 +278,6 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
     }
 
     static class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> {
-
         private List<GroupMemberInfo> data;
 
         public void setData(List<GroupMemberInfo> data) {
@@ -344,5 +339,4 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
             return displayName;
         }
     }
-
 }

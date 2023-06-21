@@ -13,7 +13,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAda
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 public class ForwardSelectLayout extends RelativeLayout {
-
     private ConversationListLayout conversationList;
     private ConversationPresenter presenter;
     private TextView cancelButton;
@@ -69,5 +68,4 @@ public class ForwardSelectLayout extends RelativeLayout {
     public ConversationListLayout getConversationList() {
         return conversationList;
     }
-
 }

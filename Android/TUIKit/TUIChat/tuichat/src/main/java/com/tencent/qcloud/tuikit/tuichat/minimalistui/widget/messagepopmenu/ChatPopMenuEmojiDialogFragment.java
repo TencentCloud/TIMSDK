@@ -8,24 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-
 import java.util.List;
 
 public class ChatPopMenuEmojiDialogFragment extends DialogFragment {
-
     public static final int SPAN_COUNT = 7;
 
     private BottomSheetDialog dialog;
@@ -67,9 +63,9 @@ public class ChatPopMenuEmojiDialogFragment extends DialogFragment {
             @Override
             public void run() {
                 FaceGridDecoration decoration = new FaceGridDecoration(SPAN_COUNT)
-                        .setTopBottomSpace(ScreenUtil.dip2px(10))
-                        .setWidth(emojiGridList.getWidth())
-                        .setItemWidth(emojiGridList.getChildAt(0).getWidth());
+                                                    .setTopBottomSpace(ScreenUtil.dip2px(10))
+                                                    .setWidth(emojiGridList.getWidth())
+                                                    .setItemWidth(emojiGridList.getChildAt(0).getWidth());
                 emojiGridList.addItemDecoration(decoration);
             }
         });
@@ -80,7 +76,6 @@ public class ChatPopMenuEmojiDialogFragment extends DialogFragment {
     }
 
     class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.EmojiHolder> {
-
         @NonNull
         @Override
         public EmojiHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -123,7 +118,6 @@ public class ChatPopMenuEmojiDialogFragment extends DialogFragment {
     }
 
     static class FaceGridDecoration extends RecyclerView.ItemDecoration {
-
         private final int columnNum;
         private int topBottomSpace;
         private int width;
@@ -138,12 +132,10 @@ public class ChatPopMenuEmojiDialogFragment extends DialogFragment {
             return this;
         }
 
-
         public FaceGridDecoration setWidth(int width) {
             this.width = width;
             return this;
         }
-
 
         public FaceGridDecoration setItemWidth(int itemWidth) {
             this.itemWidth = itemWidth;
@@ -170,5 +162,4 @@ public class ChatPopMenuEmojiDialogFragment extends DialogFragment {
     interface EmojiClickListener {
         void onClick(Emoji emoji);
     }
-
 }

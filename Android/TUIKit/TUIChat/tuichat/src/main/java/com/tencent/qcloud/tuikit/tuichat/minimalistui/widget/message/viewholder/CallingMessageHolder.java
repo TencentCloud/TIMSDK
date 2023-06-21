@@ -6,13 +6,11 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.View;
-
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 public class CallingMessageHolder extends TextMessageHolder {
-
     public CallingMessageHolder(View itemView) {
         super(itemView);
     }
@@ -47,8 +45,8 @@ public class CallingMessageHolder extends TextMessageHolder {
             unreadAudioText.setVisibility(callingMessageBean.isShowUnreadPoint() ? View.VISIBLE : View.GONE);
         }
 
-        if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL ||
-                callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
+        if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_AUDIO_CALL
+            || callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
             timeInLineTextLayout.getTextView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -82,9 +80,9 @@ public class CallingMessageHolder extends TextMessageHolder {
         } else {
             imageSpan = new ImageSpan(itemView.getContext(), resID);
             stringBuilder.append("Aicon");
-            stringBuilder.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), stringBuilder.length() - "Aicon".length(), stringBuilder.length() - "icon".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            stringBuilder.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), stringBuilder.length() - "Aicon".length(),
+                stringBuilder.length() - "icon".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             stringBuilder.setSpan(imageSpan, stringBuilder.length() - "icon".length(), stringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
-
 }

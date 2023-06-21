@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
@@ -13,7 +12,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -110,8 +108,8 @@ public class C2CChatPresenter extends ChatPresenter {
      * 拉取消息
      * @param type 向前，向后或者前后同时拉取
      * @param lastMessageInfo 拉取消息的起始点
-     * 
-     * 
+     *
+     *
      * pull message
      * @param type Pull forward, backward, or both
      * @param lastMessageInfo The starting point for pulling messages
@@ -128,7 +126,6 @@ public class C2CChatPresenter extends ChatPresenter {
         // Pull older messages forward
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
             provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<TUIMessageBean>>() {
-
                 @Override
                 public void onSuccess(List<TUIMessageBean> data) {
                     TUIChatLog.i(TAG, "load c2c message success " + data.size());
@@ -148,7 +145,7 @@ public class C2CChatPresenter extends ChatPresenter {
                     TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                 }
             });
-        } else { 
+        } else {
             // 向后拉更新的消息 或者 前后同时拉消息
             // Pull the updated message backward or pull the message forward and backward at the same time
             loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
@@ -198,7 +195,6 @@ public class C2CChatPresenter extends ChatPresenter {
         }
     }
 
-
     public void onReadReport(List<MessageReceiptInfo> receiptList) {
         if (chatInfo != null) {
             List<MessageReceiptInfo> processReceipts = new ArrayList<>();
@@ -226,9 +222,7 @@ public class C2CChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
 
@@ -243,35 +237,35 @@ public class C2CChatPresenter extends ChatPresenter {
         }
 
         String msgId = provider.sendTypingStatusMessage(message, receiver, new IUIKitCallback<TUIMessageBean>() {
-                    @Override
-                    public void onSuccess(TUIMessageBean data) {
-                        TUIChatLog.v(TAG, "sendTypingStatusMessage onSuccess:" + data.getId());
-                        if (!safetyCall()) {
-                            TUIChatLog.w(TAG, "sendTypingStatusMessage unSafetyCall");
-                            return;
-                        }
-                        message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
-                        TUIChatUtils.callbackOnSuccess(callBack, data);
-                    }
+            @Override
+            public void onSuccess(TUIMessageBean data) {
+                TUIChatLog.v(TAG, "sendTypingStatusMessage onSuccess:" + data.getId());
+                if (!safetyCall()) {
+                    TUIChatLog.w(TAG, "sendTypingStatusMessage unSafetyCall");
+                    return;
+                }
+                message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
+                TUIChatUtils.callbackOnSuccess(callBack, data);
+            }
 
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        TUIChatLog.v(TAG, "sendTypingStatusMessage fail:" + errCode + "=" + errMsg);
-                        if (!safetyCall()) {
-                            TUIChatLog.w(TAG, "sendTypingStatusMessage unSafetyCall");
-                            return;
-                        }
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatLog.v(TAG, "sendTypingStatusMessage fail:" + errCode + "=" + errMsg);
+                if (!safetyCall()) {
+                    TUIChatLog.w(TAG, "sendTypingStatusMessage unSafetyCall");
+                    return;
+                }
 
-                        TUIChatUtils.callbackOnError(callBack, TAG, errCode, errMsg);
-                        message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
-                    }
+                TUIChatUtils.callbackOnError(callBack, TAG, errCode, errMsg);
+                message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
+            }
 
-                    @Override
-                    public void onProgress(Object data) {
-                        TUIChatUtils.callbackOnProgress(callBack, data);
-                    }
-                });
-        //消息先展示，通过状态来确认发送是否成功
+            @Override
+            public void onProgress(Object data) {
+                TUIChatUtils.callbackOnProgress(callBack, data);
+            }
+        });
+        // 消息先展示，通过状态来确认发送是否成功
         TUIChatLog.i(TAG, "sendTypingStatusMessage msgID:" + msgId);
         message.setId(msgId);
         message.setStatus(TUIMessageBean.MSG_STATUS_SENDING);
@@ -283,7 +277,7 @@ public class C2CChatPresenter extends ChatPresenter {
         }
 
         int size = loadedMessageInfoList.size();
-        for (int i = size - 1; i >= 0 ; i--) {
+        for (int i = size - 1; i >= 0; i--) {
             TUIMessageBean tuiMessageBean = loadedMessageInfoList.get(i);
             if (!tuiMessageBean.isSelf()) {
                 MessageFeature messageFeature = tuiMessageBean.isSupportTyping();
@@ -300,7 +294,6 @@ public class C2CChatPresenter extends ChatPresenter {
         }
         return false;
     }
-
 
     @Override
     public void getChatName(String chatID, IUIKitCallback<String> callback) {
@@ -335,5 +328,4 @@ public class C2CChatPresenter extends ChatPresenter {
             });
         }
     }
-
 }

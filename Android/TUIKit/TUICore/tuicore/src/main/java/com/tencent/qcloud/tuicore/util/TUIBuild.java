@@ -4,18 +4,17 @@ import android.os.Build;
 import android.util.Log;
 
 public final class TUIBuild {
-
     private static final String TAG = "TUIBuild";
 
-    private static String MODEL = ""; //Build.MODEL;
-    private static String BRAND = ""; //Build.BRAND;
-    private static String DEVICE = ""; //Build.DEVICE;
-    private static String MANUFACTURER = ""; //Build.MANUFACTURER;
-    private static String HARDWARE = ""; //Build.HARDWARE;
-    private static String VERSION = ""; //Build.VERSION.RELEASE;
-    private static String BOARD  = ""; //Build.BOARD;
-    private static String VERSION_INCREMENTAL = ""; //Build.VERSION.INCREMENTAL
-    private static int VERSION_INT = 0;  //Build.VERSION.SDK_INT;
+    private static String MODEL = ""; // Build.MODEL;
+    private static String BRAND = ""; // Build.BRAND;
+    private static String DEVICE = ""; // Build.DEVICE;
+    private static String MANUFACTURER = ""; // Build.MANUFACTURER;
+    private static String HARDWARE = ""; // Build.HARDWARE;
+    private static String VERSION = ""; // Build.VERSION.RELEASE;
+    private static String BOARD = ""; // Build.BOARD;
+    private static String VERSION_INCREMENTAL = ""; // Build.VERSION.INCREMENTAL
+    private static int VERSION_INT = 0; // Build.VERSION.SDK_INT;
 
     public static void setModel(final String model) {
         synchronized (TUIBuild.class) {
@@ -149,9 +148,9 @@ public final class TUIBuild {
         return VERSION_INT;
     }
 
-    public static void setVersionIncremental(final String version_incremental) {
+    public static void setVersionIncremental(final String versionIncremental) {
         synchronized (TUIBuild.class) {
-            VERSION_INCREMENTAL = version_incremental;
+            VERSION_INCREMENTAL = versionIncremental;
         }
     }
 

@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.EventLog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -49,7 +48,7 @@ public class PermissionActivity extends Activity {
     private ImageView mPermissionIconIv;
     private PermissionRequester.RequestData mRequestData;
 
-    private boolean mIsGranted = false;
+    private PermissionRequester.Result mResult = PermissionRequester.Result.Denied;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,12 +57,12 @@ public class PermissionActivity extends Activity {
         mRequestData = getPermissionRequest();
         if (mRequestData == null || mRequestData.isPermissionsExistEmpty()) {
             Log.e(TAG, "onCreate mRequestData exist empty permission");
-            finishWithResult(false);
+            finishWithResult(PermissionRequester.Result.Denied);
             return;
         }
         Log.i(TAG, "onCreate : " + mRequestData.toString());
         if (TUIBuild.getVersionInt() < Build.VERSION_CODES.M) {
-            finishWithResult(true);
+            finishWithResult(PermissionRequester.Result.Granted);
             return;
         }
 
@@ -75,14 +74,12 @@ public class PermissionActivity extends Activity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         hidePermissionRationale();
         if (isAllPermissionsGranted(grantResults)) {
-            finishWithResult(true);
+            finishWithResult(PermissionRequester.Result.Granted);
             return;
         }
         showSettingsTip();
@@ -99,18 +96,18 @@ public class PermissionActivity extends Activity {
         TextView negativeBtn = tipLayout.findViewById(R.id.negative_btn);
         tipsTv.setText(mRequestData.getSettingsTip());
 
-        Dialog permissionTipDialog = new AlertDialog.Builder(this)
-                .setView(tipLayout)
-                .setCancelable(false)
-                .setOnDismissListener(dialog -> finishWithResult(false))
-                .create();
+        Dialog permissionTipDialog = new AlertDialog.Builder(this).setView(tipLayout).setCancelable(false).create();
 
         positiveBtn.setOnClickListener(v -> {
             permissionTipDialog.dismiss();
             launchAppDetailsSettings();
+            finishWithResult(PermissionRequester.Result.Requesting);
         });
 
-        negativeBtn.setOnClickListener(v -> permissionTipDialog.dismiss());
+        negativeBtn.setOnClickListener(v -> {
+            permissionTipDialog.dismiss();
+            finishWithResult(PermissionRequester.Result.Denied);
+        });
         permissionTipDialog.setOnKeyListener((dialog, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
                 permissionTipDialog.dismiss();
@@ -143,9 +140,12 @@ public class PermissionActivity extends Activity {
         startActivity(intent);
     }
 
-    private void finishWithResult(boolean isGranted) {
-        Log.i(TAG, "finishWithResult : " + isGranted);
-        mIsGranted = isGranted;
+    private void finishWithResult(PermissionRequester.Result result) {
+        Log.i(TAG, "finishWithResult : " + result);
+        mResult = result;
+        Map<String, Object> map = new HashMap<>(1);
+        map.put(PERMISSION_RESULT, result);
+        TUICore.notifyEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, map);
         finish();
     }
 
@@ -157,7 +157,7 @@ public class PermissionActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         Map<String, Object> result = new HashMap<>(1);
-        result.put(PERMISSION_RESULT, mIsGranted);
+        result.put(PERMISSION_RESULT, mResult);
         TUICore.notifyEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, result);
     }
 

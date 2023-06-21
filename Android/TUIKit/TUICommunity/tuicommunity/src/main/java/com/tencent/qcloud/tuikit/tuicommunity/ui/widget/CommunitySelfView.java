@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
@@ -23,13 +21,11 @@ import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunitySelfView;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class CommunitySelfView extends FrameLayout implements ICommunitySelfView {
-
     private BannerView bannerView;
     private CommunityExperienceView createCommunityExperience;
     private CommunityExperienceView addCommunityExperience;

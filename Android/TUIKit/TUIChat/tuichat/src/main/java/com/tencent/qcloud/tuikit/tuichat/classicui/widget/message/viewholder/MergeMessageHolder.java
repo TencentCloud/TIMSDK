@@ -3,14 +3,12 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
-
 import java.util.List;
 
 public class MergeMessageHolder extends MessageContentHolder {
@@ -33,7 +31,7 @@ public class MergeMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
-        if (msg == null){
+        if (msg == null) {
             return;
         }
         reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.chat_react_other_text_color));
@@ -58,7 +56,7 @@ public class MergeMessageHolder extends MessageContentHolder {
 
         MergeMessageBean messageBean = (MergeMessageBean) msg;
         String title = messageBean.getTitle();
-        List<String> abstractList= messageBean.getAbstractList();
+        List<String> abstractList = messageBean.getAbstractList();
         msgForwardTitle.setText(title);
         String content = "";
         for (int i = 0; i < abstractList.size(); i++) {
@@ -99,8 +97,7 @@ public class MergeMessageHolder extends MessageContentHolder {
                 }
             }
         });
-        
+
         setMessageAreaPadding();
     }
-
 }

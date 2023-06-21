@@ -14,12 +14,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultCaller;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -47,16 +45,13 @@ import com.tencent.qcloud.tuikit.tuigroup.component.BottomSelectSheet;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout, View.OnClickListener {
-
     private static final String TAG = GroupInfoLayout.class.getSimpleName();
     private TitleBarLayout mTitleBar;
     private LineControllerView mMemberView;
@@ -73,6 +68,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private LineControllerView mGroupManageView;
     private LineControllerView mNickView;
     private LineControllerView mJoinTypeView;
+    private LineControllerView mInviteTypeView;
     private LineControllerView mTopSwitchView;
     private LineControllerView mMsgRevOptionSwitchView;
     private LineControllerView mFoldGroupChatSwitchView;
@@ -88,7 +84,9 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private GroupInfo mGroupInfo;
     private GroupInfoPresenter mPresenter;
     private ArrayList<String> mJoinTypes = new ArrayList<>();
+    private ArrayList<String> mInviteTypes = new ArrayList<>();
     private GroupInfoFragment.OnModifyGroupAvatarListener onModifyGroupAvatarListener;
+
     public GroupInfoLayout(Context context) {
         super(context);
         init();
@@ -134,6 +132,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
         groupDetailArea = findViewById(R.id.group_detail_area);
         groupDetailArea.setOnClickListener(this);
+
         // 群头像
         mGroupIcon = findViewById(R.id.group_icon);
         mGroupIcon.setOnClickListener(this);
@@ -154,6 +153,13 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mJoinTypeView.setOnClickListener(this);
         mJoinTypeView.setCanNav(true);
         mJoinTypes.addAll(Arrays.asList(getResources().getStringArray(R.array.group_join_type)));
+
+        // 邀请进群方式
+        mInviteTypeView = findViewById(R.id.invite_type_bar);
+        mInviteTypeView.setOnClickListener(this);
+        mInviteTypeView.setCanNav(true);
+        mInviteTypes.addAll(Arrays.asList(getResources().getStringArray(R.array.group_invite_type)));
+
         // 群昵称
         mNickView = findViewById(R.id.self_nickname_bar);
         mNickView.setOnClickListener(this);
@@ -168,8 +174,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 }
                 mPresenter.setTopConversation(mGroupInfo.getId(), isChecked, new IUIKitCallback<Void>() {
                     @Override
-                    public void onSuccess(Void data) {
-                    }
+                    public void onSuccess(Void data) {}
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
@@ -204,7 +209,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
     private void initView() {
         int radius = ScreenUtil.dip2px(5);
-        GlideEngine.loadUserIcon(mGroupIcon, mGroupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), mGroupInfo.getGroupType()), radius);
+        GlideEngine.loadUserIcon(
+            mGroupIcon, mGroupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), mGroupInfo.getGroupType()), radius);
         if (!mGroupInfo.isCanManagerGroup()) {
             mGroupDetailArrow.setVisibility(GONE);
         }
@@ -236,7 +242,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             if (!mGroupInfo.isCanManagerGroup()) {
                 return;
             }
-            PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             BottomSelectSheet sheet = new BottomSelectSheet(getContext());
             List<String> stringList = new ArrayList<>();
             String modifyGroupName = getResources().getString(R.string.modify_group_name);
@@ -244,6 +249,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             stringList.add(modifyGroupName);
             stringList.add(modifyGroupNotice);
             sheet.setSelectList(stringList);
+            PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             sheet.setOnClickListener(new BottomSelectSheet.BottomSelectSheetOnClickListener() {
                 @Override
                 public void onSheetClick(int index) {
@@ -300,7 +306,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             popupInputCard.setContent(mNickView.getContent());
             popupInputCard.setTitle(getResources().getString(R.string.modify_nick_name_in_goup));
-            popupInputCard.setRule("^[a-zA-Z0-9_\u4e00-\u9fa5]*$");
+            popupInputCard.setRule("^[a-zA-Z0-9_一-龥]*$");
             popupInputCard.setOnPositive((result -> {
                 mPresenter.modifyMyGroupNickname(result);
                 mNickView.setContent(result);
@@ -322,17 +328,29 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                     mPresenter.modifyGroupInfo((Integer) text, TUIGroupConstants.Group.MODIFY_GROUP_JOIN_TYPE);
                 }
             });
+        } else if (v.getId() == R.id.invite_type_bar) {
+            Bundle bundle = new Bundle();
+            bundle.putString(SelectionActivity.Selection.TITLE, getResources().getString(R.string.group_invite_type));
+            bundle.putStringArrayList(SelectionActivity.Selection.LIST, mInviteTypes);
+            bundle.putInt(SelectionActivity.Selection.DEFAULT_SELECT_ITEM_INDEX, mGroupInfo.getInviteType());
+            SelectionActivity.startListSelection((Activity) getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
+                @Override
+                public void onReturn(final Object text) {
+                    mPresenter.modifyGroupInfo((Integer) text, TUIGroupConstants.Group.MODIFY_GROUP_INVITE_TYPE);
+                }
+            });
         } else if (v.getId() == R.id.group_dissolve_button) {
-            if (mGroupInfo.isOwner() &&
-                    (!mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_WORK)
-                            && !mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_PRIVATE))) {
+            if (mGroupInfo.isOwner()
+                && (!mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_WORK)
+                    && !mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_PRIVATE))) {
                 new TUIKitDialog(getContext())
-                        .builder()
-                        .setCancelable(true)
-                        .setCancelOutside(true)
-                        .setTitle(getContext().getString(R.string.dismiss_group_tip))
-                        .setDialogWidth(0.75f)
-                        .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), new View.OnClickListener() {
+                    .builder()
+                    .setCancelable(true)
+                    .setCancelOutside(true)
+                    .setTitle(getContext().getString(R.string.dismiss_group_tip))
+                    .setDialogWidth(0.75f)
+                    .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
+                        new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mPresenter.deleteGroup(new IUIKitCallback<Void>() {
@@ -348,21 +366,21 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                                 });
                             }
                         })
-                        .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), new View.OnClickListener() {
+                    .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                        new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-
-                            }
+                            public void onClick(View v) {}
                         })
-                        .show();
+                    .show();
             } else {
                 new TUIKitDialog(getContext())
-                        .builder()
-                        .setCancelable(true)
-                        .setCancelOutside(true)
-                        .setTitle(getContext().getString(R.string.quit_group_tip))
-                        .setDialogWidth(0.75f)
-                        .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), new View.OnClickListener() {
+                    .builder()
+                    .setCancelable(true)
+                    .setCancelOutside(true)
+                    .setTitle(getContext().getString(R.string.quit_group_tip))
+                    .setDialogWidth(0.75f)
+                    .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
+                        new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mPresenter.quitGroup(new IUIKitCallback<Void>() {
@@ -379,37 +397,35 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                                 });
                             }
                         })
-                        .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), new View.OnClickListener() {
+                    .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                        new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-
-                            }
+                            public void onClick(View v) {}
                         })
-                        .show();
+                    .show();
             }
         } else if (v.getId() == R.id.group_clear_msg_button) {
             new TUIKitDialog(getContext())
-                    .builder()
-                    .setCancelable(true)
-                    .setCancelOutside(true)
-                    .setTitle(getContext().getString(R.string.clear_group_msg_tip))
-                    .setDialogWidth(0.75f)
-                    .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), new View.OnClickListener() {
+                .builder()
+                .setCancelable(true)
+                .setCancelOutside(true)
+                .setTitle(getContext().getString(R.string.clear_group_msg_tip))
+                .setDialogWidth(0.75f)
+                .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
+                    new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Map<String, Object> hashMap = new HashMap<>();
                             hashMap.put(TUIConstants.TUIGroup.GROUP_ID, mGroupInfo.getId());
-                            TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP,
-                                    TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, hashMap);
+                            TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, hashMap);
                         }
                     })
-                    .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), new View.OnClickListener() {
+                .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                    new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
-
-                        }
+                        public void onClick(View v) {}
                     })
-                    .show();
+                .show();
         } else if (v.getId() == R.id.group_manage) {
             Intent intent = new Intent(getContext(), ManageGroupActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -462,9 +478,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
 
@@ -492,6 +506,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
         mGroupTypeView.setContent(convertGroupText(info.getGroupType()));
         mJoinTypeView.setContent(mJoinTypes.get(info.getJoinType()));
+        mInviteTypeView.setContent(mInviteTypes.get(info.getInviteType()));
         mNickView.setContent(mPresenter.getNickName());
         mTopSwitchView.setChecked(mGroupInfo.isTopChat());
 
@@ -507,7 +522,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             } else {
                 mLayoutFold.setVisibility(View.GONE);
             }
-            
+
             mMsgRevOptionSwitchView.setChecked(mGroupInfo.getMessageReceiveOption());
             mMsgRevOptionSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -588,13 +603,15 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mClearMsgBtn.setText(R.string.clear_message);
         if (mGroupInfo.isOwner()) {
             mJoinTypeView.setVisibility(VISIBLE);
-            if (mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_WORK)
-                    || mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_PRIVATE)) {
+            if (mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_WORK) || mGroupInfo.getGroupType().equals(TUIConstants.GroupType.TYPE_PRIVATE)) {
                 mDissolveBtn.setText(R.string.exit_group);
+                mJoinTypeView.setCanNav(false);
             }
         } else {
             mJoinTypeView.setCanNav(false);
             mJoinTypeView.setOnClickListener(null);
+            mInviteTypeView.setCanNav(false);
+            mInviteTypeView.setOnClickListener(null);
             mDissolveBtn.setText(R.string.exit_group);
         }
 
@@ -610,13 +627,11 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         if (TextUtils.isEmpty(groupType)) {
             return groupText;
         }
-        if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_PRIVATE)
-                || TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_WORK)) {
+        if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_PRIVATE) || TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_WORK)) {
             groupText = getContext().getString(R.string.private_group);
         } else if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_PUBLIC)) {
             groupText = getContext().getString(R.string.public_group);
-        } else if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_CHAT_ROOM)
-                || TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_MEETING)) {
+        } else if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_CHAT_ROOM) || TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_MEETING)) {
             groupText = getContext().getString(R.string.chat_room);
         } else if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_COMMUNITY)) {
             groupText = getContext().getString(R.string.community_group);
@@ -645,6 +660,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 ToastUtil.toastLongMessage(getResources().getString(R.string.modify_nickname_success));
                 mNickView.setContent(value.toString());
                 break;
+            default:
+                break;
         }
     }
 
@@ -667,7 +684,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage(TUIGroupService.getAppContext().getString(R.string.modify_icon_fail) + ", code = " + errCode + ", info = " + errMsg);
+                ToastUtil.toastShortMessage(
+                    TUIGroupService.getAppContext().getString(R.string.modify_icon_fail) + ", code = " + errCode + ", info = " + errMsg);
             }
         });
     }
@@ -683,17 +701,15 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     }
 
     @Override
-    public void setParentLayout(Object parent) {
-
-    }
+    public void setParentLayout(Object parent) {}
 
     public void setOnButtonClickListener(OnButtonClickListener l) {
         mListener = l;
     }
 
     public interface OnButtonClickListener {
-        default void onSetChatBackground() {};
-        default void onChangeGroupOwner(String newOwnerID) {};
-    }
+        default void onSetChatBackground() {}
 
+        default void onChangeGroupOwner(String newOwnerID) {}
+    }
 }

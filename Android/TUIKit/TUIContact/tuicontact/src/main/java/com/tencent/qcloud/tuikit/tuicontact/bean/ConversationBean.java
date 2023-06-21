@@ -8,32 +8,27 @@ public class ConversationBean implements Parcelable {
     private int isGroup;
     private String title;
 
-    public ConversationBean()
-    {}
+    public ConversationBean() {}
 
-    public ConversationBean(String conversationID, int isGroup, String title)
-    {
+    public ConversationBean(String conversationID, int isGroup, String title) {
         this.conversationID = conversationID;
         this.isGroup = isGroup;
         this.title = title;
     }
-    public String getConversationID()
-    {
+
+    public String getConversationID() {
         return this.conversationID;
     }
 
-    public void setConversationID(String conversationID)
-    {
+    public void setConversationID(String conversationID) {
         this.conversationID = conversationID;
     }
 
-    public int getIsGroup()
-    {
+    public int getIsGroup() {
         return this.isGroup;
     }
 
-    public void setIsGroup(int isGroup)
-    {
+    public void setIsGroup(int isGroup) {
         this.isGroup = isGroup;
     }
 
@@ -45,11 +40,11 @@ public class ConversationBean implements Parcelable {
         this.title = title;
     }
 
-    @Override public int describeContents() {
-
+    @Override
+    public int describeContents() {
         return 0;
     }
-    
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(conversationID);
@@ -60,13 +55,12 @@ public class ConversationBean implements Parcelable {
     public static final Creator<ConversationBean> CREATOR = new Creator<ConversationBean>() {
         @Override
         public ConversationBean createFromParcel(Parcel source) {
-            return new ConversationBean(source.readString(), source.readInt(),source.readString());
+            return new ConversationBean(source.readString(), source.readInt(), source.readString());
         }
+
         @Override
         public ConversationBean[] newArray(int size) {
-
             return new ConversationBean[size];
         }
-
     };
 }

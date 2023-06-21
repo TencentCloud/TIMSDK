@@ -65,8 +65,8 @@
 
                 <ImageView
                     android:id="@+id/rightArrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10.56dp"
                     android:src="@drawable/arrow_right" />

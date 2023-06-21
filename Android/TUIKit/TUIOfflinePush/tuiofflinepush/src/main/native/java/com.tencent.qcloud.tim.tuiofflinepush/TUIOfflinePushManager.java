@@ -6,9 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -25,7 +23,6 @@ import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
-
 import java.util.HashMap;
 
 public class TUIOfflinePushManager {
@@ -39,10 +36,8 @@ public class TUIOfflinePushManager {
     private Intent mNotificationIntent;
     private long mBussinessId = 0;
     private boolean mAutoRegisterPush = true;
-    
-    private TUIOfflinePushManager() {
 
-    }
+    private TUIOfflinePushManager() {}
 
     public static TUIOfflinePushManager getInstance() {
         if (instance == null) {
@@ -56,12 +51,13 @@ public class TUIOfflinePushManager {
      *
      *  @note 请注意：
      *  如果您没有使用 TUILogin 提供的接口，您需要在完成登录操作后，手动调用该接口即可开启推送服务
-     * 
-     * 
+     *
+     *
      *  Register offline push service, called when IM account login is successful
-     * 
+     *
      *  @note
-     *  If you do not use the interface provided by TUILogin, you need to manually call the interface after completing the login operation to enable the push service
+     *  If you do not use the interface provided by TUILogin, you need to manually call the interface after completing the login operation to enable the push
+     * service
      */
     public void registerPush(Context context) {
         if (!mAutoRegisterPush) {
@@ -75,13 +71,15 @@ public class TUIOfflinePushManager {
     /**
      *  手动注册离线推送服务, IM 账号登录成功时调用,调用该接口不需要再填充参数到组件的 PrivateConstants 里。
      *
-     *  Register offline push service, called when IM account login is successful.Calling this interface does not require filling parameters into the component's PrivateConstants.
+     *  Register offline push service, called when IM account login is successful.Calling this interface does not require filling parameters into the
+     * component's PrivateConstants.
      *
      *  @param  json：
      * {
      *    // huawei
      *   "huaweiPushBussinessId": "",    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
-     *   "huaweiBadgeClassName": "", // 角标参数，默认为应用的 launcher 界面的类名 // Angular parameter, defaults to the class name of the application's launcher interface
+     *   "huaweiBadgeClassName": "", // 角标参数，默认为应用的 launcher 界面的类名 // Angular parameter, defaults to the class name of the application's
+     * launcher interface
      *
      *   // xiaomi
      *   "xiaomiPushBussinessId": "",// 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
@@ -130,16 +128,16 @@ public class TUIOfflinePushManager {
      *
      *  @note 请注意：
      *  如果您没有使用 TUILogin 提供的接口，您需要在完成登出操作后，手动调用该接口即可关闭推送服务
-     * 
+     *
      *  Unregister offline push service
-     * 
+     *
      *  @note
-     *  If you do not use the interface provided by TUILogin, you need to manually call this interface after completing the logout operation to close the push service
+     *  If you do not use the interface provided by TUILogin, you need to manually call this interface after completing the logout operation to close the push
+     * service
      */
     public void unRegisterPush() {
         unInitPush();
     }
-
 
     //************* 以下为组件内部调用  The following is the internal call of the component*************
     private String getPushToken() {
@@ -189,7 +187,7 @@ public class TUIOfflinePushManager {
         pushSetting.initPush(context);
     }
 
-    private void unInitPush(){
+    private void unInitPush() {
         if (pushSetting == null) {
             pushSetting = new OEMPushSetting();
         }
@@ -197,7 +195,7 @@ public class TUIOfflinePushManager {
         pushSetting.setPushCallback(null);
     }
 
-    void initConfig(Context context){
+    void initConfig(Context context) {
         TUIOfflinePushConfig.getInstance().setContext(context);
     }
 
@@ -230,7 +228,7 @@ public class TUIOfflinePushManager {
         LocalBroadcastManager.getInstance(TUIOfflinePushService.appContext).sendBroadcast(intent);
 
         // callback intent
-        //notifyNotificationEvent(mNotificationIntent);
+        // notifyNotificationEvent(mNotificationIntent);
 
         /*Intent intent = new Intent();
         intent.setAction(TUIConstants.TUIOfflinePush.NOTIFICATION_BROADCAST_ACTION);
@@ -321,7 +319,7 @@ public class TUIOfflinePushManager {
         }
 
         v2TIMOfflinePushConfig = new V2TIMOfflinePushConfig(mBussinessId, pushToken);
-        TUIOfflinePushLog.d(TAG, "setOfflinePushConfig businessID = " + mBussinessId +  " pushToken = " + pushToken);
+        TUIOfflinePushLog.d(TAG, "setOfflinePushConfig businessID = " + mBussinessId + " pushToken = " + pushToken);
 
         V2TIMManager.getOfflinePushManager().setOfflinePushConfig(v2TIMOfflinePushConfig, new V2TIMCallback() {
             @Override

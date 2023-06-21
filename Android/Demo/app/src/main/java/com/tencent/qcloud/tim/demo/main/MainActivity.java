@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,7 +24,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
@@ -63,8 +61,7 @@ import com.tencent.qcloud.tuikit.tuicommunity.ui.page.TUICommunityFragment;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.pages.TUIContactFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
-import com.tencent.qcloud.tuikit.tuiconversation.classicui.page.TUIConversationFragment;
-
+import com.tencent.qcloud.tuikit.tuiconversation.classicui.page.TUIConversationFragmentContainer;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +72,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends BaseLightActivity {
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TabRecyclerView tabList;
@@ -150,10 +146,9 @@ public class MainActivity extends BaseLightActivity {
     private void onRecentCallsStatusChanged(boolean isEnable) {
         if (isEnable) {
             Map<String, Object> param = new HashMap<>();
-            param.put(TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE,
-                    TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE_CLASSIC);
-            Object object = TUICore.createObject(TUIConstants.TUICalling.ObjectFactory.FACTORY_NAME,
-                    TUIConstants.TUICalling.ObjectFactory.RecentCalls.OBJECT_NAME, param);
+            param.put(TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE, TUIConstants.TUICalling.ObjectFactory.RecentCalls.UI_STYLE_CLASSIC);
+            Object object =
+                TUICore.createObject(TUIConstants.TUICalling.ObjectFactory.FACTORY_NAME, TUIConstants.TUICalling.ObjectFactory.RecentCalls.OBJECT_NAME, param);
             if (object instanceof Fragment) {
                 recentCallsBean = new TabBean();
                 recentCallsBean.weight = 95;
@@ -193,7 +188,7 @@ public class MainActivity extends BaseLightActivity {
         conversationBean.normalIcon = R.attr.demo_main_tab_conversation_normal_bg;
         conversationBean.selectedIcon = R.attr.demo_main_tab_conversation_selected_bg;
         conversationBean.text = R.string.tab_conversation_tab_text;
-        conversationBean.fragment = new TUIConversationFragment();
+        conversationBean.fragment = new TUIConversationFragmentContainer();
         conversationBean.showUnread = true;
         conversationBean.unreadClearEnable = true;
         conversationBean.weight = 100;
@@ -267,7 +262,6 @@ public class MainActivity extends BaseLightActivity {
         };
     }
 
-
     private void initMenuAction() {
         int titleBarIconSize = getResources().getDimensionPixelSize(R.dimen.demo_title_bar_icon_size);
         mainTitleBar.getLeftIcon().setMaxHeight(titleBarIconSize);
@@ -289,12 +283,11 @@ public class MainActivity extends BaseLightActivity {
         });
     }
 
-
     private void triggerClearAllUnreadMessage() {
-        V2TIMManager.getMessageManager().markAllMessageAsRead(new V2TIMCallback() {
+        V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount("", 0, 0, new V2TIMCallback() {
             @Override
             public void onSuccess() {
-                DemoLog.i(TAG, "markAllMessageAsRead success");
+                DemoLog.i(TAG, "cleanConversationUnreadMessageCount success");
                 if (conversationBean != null) {
                     conversationBean.unreadCount = 0;
                     onTabBeanChanged(conversationBean);
@@ -304,8 +297,9 @@ public class MainActivity extends BaseLightActivity {
 
             @Override
             public void onError(int code, String desc) {
-                DemoLog.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                ToastUtil.toastShortMessage(MainActivity.this.getString(R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
+                DemoLog.i(TAG, "cleanConversationUnreadMessageCount error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                ToastUtil.toastShortMessage(
+                    MainActivity.this.getString(R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
             }
         });
 
@@ -324,37 +318,38 @@ public class MainActivity extends BaseLightActivity {
                     unreadConversationIDList.add(entry.getKey());
                 }
 
-                V2TIMManager.getConversationManager().markConversation(unreadConversationIDList,
-                        V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD,
-                        false,
-                        new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
-                    @Override
-                    public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
-                        for (V2TIMConversationOperationResult result : v2TIMConversationOperationResults) {
-                            if (result.getResultCode() == BaseConstants.ERR_SUCC) {
-                                V2TIMConversation v2TIMConversation = markUnreadMap.get(result.getConversationID());
-                                if (!v2TIMConversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE)) {
-                                    markUnreadMap.remove(result.getConversationID());
+                V2TIMManager.getConversationManager().markConversation(unreadConversationIDList, V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD, false,
+                    new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+                        @Override
+                        public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                            for (V2TIMConversationOperationResult result : v2TIMConversationOperationResults) {
+                                if (result.getResultCode() == BaseConstants.ERR_SUCC) {
+                                    V2TIMConversation v2TIMConversation = markUnreadMap.get(result.getConversationID());
+                                    if (!v2TIMConversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_HIDE)) {
+                                        markUnreadMap.remove(result.getConversationID());
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(int code, String desc) {
-                        DemoLog.e(TAG, "triggerClearAllUnreadMessage->markConversation error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                    }
-                });
+                        @Override
+                        public void onError(int code, String desc) {
+                            DemoLog.e(TAG,
+                                "triggerClearAllUnreadMessage->markConversation error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                        }
+                    });
             }
 
             @Override
             public void onError(int code, String desc) {
-                DemoLog.e(TAG, "triggerClearAllUnreadMessage->getMarkUnreadConversationList error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                DemoLog.e(TAG,
+                    "triggerClearAllUnreadMessage->getMarkUnreadConversationList error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
             }
         });
     }
 
-    private void getMarkUnreadConversationList(V2TIMConversationListFilter filter, long nextSeq, int count, boolean fromStart, V2TIMValueCallback<HashMap<String, V2TIMConversation>> callback) {
+    private void getMarkUnreadConversationList(
+        V2TIMConversationListFilter filter, long nextSeq, int count, boolean fromStart, V2TIMValueCallback<HashMap<String, V2TIMConversation>> callback) {
         if (fromStart) {
             markUnreadMap.clear();
         }
@@ -415,7 +410,6 @@ public class MainActivity extends BaseLightActivity {
             return;
         }
         tabAdapter.notifyItemChanged(prePosition);
-
     }
 
     private void setCommunityBackground() {
@@ -499,6 +493,7 @@ public class MainActivity extends BaseLightActivity {
                     bundle.putInt(TUIConversationConstants.GroupType.TYPE, TUIConversationConstants.GroupType.COMMUNITY);
                     TUIUtils.startActivity("StartGroupChatActivity", bundle);
                 }
+
                 menu.hide();
             }
         };
@@ -567,7 +562,8 @@ public class MainActivity extends BaseLightActivity {
     private void setRecentCallsTitleBar() {
         mainTitleBar.setVisibility(View.GONE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_header_start_color)));
+            getWindow().setStatusBarColor(
+                getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_header_start_color)));
         }
     }
 
@@ -581,7 +577,8 @@ public class MainActivity extends BaseLightActivity {
 
     private void resetMenuState() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_header_start_color)));
+            getWindow().setStatusBarColor(
+                getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_header_start_color)));
         }
         navigationBar.setBackgroundResource(TUIThemeManager.getAttrResId(this, R.attr.demo_navigate_bar_bg));
     }
@@ -720,9 +717,7 @@ public class MainActivity extends BaseLightActivity {
             }
 
             @Override
-            public void onError(int code, String desc) {
-
-            }
+            public void onError(int code, String desc) {}
         });
     }
 
@@ -813,7 +808,6 @@ public class MainActivity extends BaseLightActivity {
     }
 
     class TabAdapter extends RecyclerView.Adapter<TabAdapter.TabViewHolder> {
-
         @NonNull
         @Override
         public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -830,7 +824,8 @@ public class MainActivity extends BaseLightActivity {
             holder.textView.setText(tabBean.text);
             if (selectedItem == tabBean) {
                 holder.imageView.setBackgroundResource(TUIThemeManager.getAttrResId(MainActivity.this, tabBean.selectedIcon));
-                holder.textView.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(MainActivity.this, R.attr.demo_main_tab_selected_text_color)));
+                holder.textView.setTextColor(
+                    getResources().getColor(TUIThemeManager.getAttrResId(MainActivity.this, R.attr.demo_main_tab_selected_text_color)));
             } else {
                 holder.imageView.setBackgroundResource(TUIThemeManager.getAttrResId(MainActivity.this, tabBean.normalIcon));
                 holder.textView.setTextColor(getResources().getColor(TUIThemeManager.getAttrResId(MainActivity.this, R.attr.demo_main_tab_normal_text_color)));
@@ -844,6 +839,8 @@ public class MainActivity extends BaseLightActivity {
                 }
                 if (tabBean.unreadClearEnable) {
                     prepareToClearAllUnreadMessage(holder.unreadCountTextView, tabBean);
+                } else {
+                    holder.unreadCountTextView.setOnTouchListener(null);
                 }
             } else {
                 holder.unreadCountTextView.setVisibility(View.GONE);
@@ -855,7 +852,6 @@ public class MainActivity extends BaseLightActivity {
                 }
             });
         }
-
 
         @SuppressLint("ClickableViewAccessibility")
         private void prepareToClearAllUnreadMessage(UnreadCountTextView unreadCountTextView, TabBean tabBean) {
@@ -883,7 +879,7 @@ public class MainActivity extends BaseLightActivity {
                             view.setTranslationX(translationX);
                             view.setTranslationY(translationY);
                             // If the moved x and y axis coordinates exceed a certain pixel, it will trigger one-click to clear all unread sessions
-                            if (Math.abs(translationX) > 200|| Math.abs(translationY) > 200) {
+                            if (Math.abs(translationX) > 200 || Math.abs(translationY) > 200) {
                                 isTriggered = true;
                                 unreadCountTextView.setVisibility(View.GONE);
                                 onTabEventListener.onTabUnreadCleared(tabBean);
@@ -930,9 +926,7 @@ public class MainActivity extends BaseLightActivity {
                     }
 
                     @Override
-                    public void onViewDetachedFromWindow(View v) {
-
-                    }
+                    public void onViewDetachedFromWindow(View v) {}
                 });
             }
 
@@ -960,7 +954,7 @@ public class MainActivity extends BaseLightActivity {
             int columnNum = tabBeanList.size();
             int column = parent.getChildAdapterPosition(view);
             int screenWidth = ScreenUtil.getScreenWidth(MainActivity.this);
-            int columnWidth =  parent.getResources().getDimensionPixelSize(R.dimen.demo_tab_bottom_item_width);
+            int columnWidth = parent.getResources().getDimensionPixelSize(R.dimen.demo_tab_bottom_item_width);
             if (columnNum > 1) {
                 int leftRightSpace = (screenWidth - columnNum * columnWidth) / (columnNum - 1);
                 outRect.left = column * leftRightSpace / columnNum;
@@ -973,5 +967,4 @@ public class MainActivity extends BaseLightActivity {
         void onTabSelected(TabBean tabBean);
         void onTabUnreadCleared(TabBean tabBean);
     }
-
 }

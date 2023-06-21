@@ -5,15 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
-
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.agconnect.config.LazyInputStream;
-
+import io.dcloud.feature.uniapp.UniAppHookProxy;
 import java.io.IOException;
 import java.io.InputStream;
-
-import io.dcloud.feature.uniapp.UniAppHookProxy;
-
 
 public class TUIOfflinePushAppProxy implements UniAppHookProxy {
     public static final String TAG = TUIOfflinePushAppProxy.class.getSimpleName();
@@ -23,11 +19,11 @@ public class TUIOfflinePushAppProxy implements UniAppHookProxy {
         Log.d(TAG, "TUIOfflinePushAppProxy onCreate");
         Context context = application.getApplicationContext();
 
-        init(context);
+        // init(context);
     }
 
     private void init(Context context) {
-        //可写初始化触发逻辑
+        // 可写初始化触发逻辑
         Log.d(TAG, "onCreate--");
         AGConnectServicesConfig config = AGConnectServicesConfig.fromContext(context);
         config.overlayWith(new LazyInputStream(context) {
@@ -41,10 +37,10 @@ public class TUIOfflinePushAppProxy implements UniAppHookProxy {
             }
         });
 
-        String package_name=context.getPackageName();
+        String packageName = context.getPackageName();
         PackageManager packageManager = context.getPackageManager();
-        Intent intent = packageManager.getLaunchIntentForPackage(package_name);
-        Log.d(TAG, "TUIOfflinePushAppProxy onCreate package_name = " + package_name);
+        Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+        Log.d(TAG, "TUIOfflinePushAppProxy onCreate package_name = " + packageName);
         if (intent != null) {
             Log.d(TAG, "TUIOfflinePushAppProxy startActivity begin");
             context.startActivity(intent);
@@ -60,7 +56,7 @@ public class TUIOfflinePushAppProxy implements UniAppHookProxy {
 
     @Override
     public void onSubProcessCreate(Application application) {
-        //子进程初始化回调
+        // 子进程初始化回调
         Log.d(TAG, "TUIOfflinePushAppProxy onSubProcessCreate");
     }
 }

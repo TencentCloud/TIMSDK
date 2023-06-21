@@ -14,15 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -47,12 +46,10 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class TUIBaseChatFragment extends BaseFragment {
     private static final String TAG = TUIBaseChatFragment.class.getSimpleName();
@@ -76,11 +73,11 @@ public class TUIBaseChatFragment extends BaseFragment {
         TUIChatLog.i(TAG, "oncreate view " + this);
 
         baseView = inflater.inflate(R.layout.chat_fragment, container, false);
-//        // TODO 通过api设置ChatLayout各种属性的样例
-//        // Example of setting various properties of ChatLayout through api
-//        ChatLayoutSetting helper = new ChatLayoutSetting(getActivity());
-//        helper.setGroupId(mChatInfo.getId());
-//        helper.customizeChatLayout(mChatLayout);
+        //        // TODO 通过api设置ChatLayout各种属性的样例
+        //        // Example of setting various properties of ChatLayout through api
+        //        ChatLayoutSetting helper = new ChatLayoutSetting(getActivity());
+        //        helper.setGroupId(mChatInfo.getId());
+        //        helper.customizeChatLayout(mChatLayout);
         return baseView;
     }
 
@@ -97,7 +94,7 @@ public class TUIBaseChatFragment extends BaseFragment {
             }
         });
 
-        chatView.setForwardSelectActivityListener(new ChatView.ForwardSelectActivityListener(){
+        chatView.setForwardSelectActivityListener(new ChatView.ForwardSelectActivityListener() {
             @Override
             public void onStartForwardSelectActivity(int mode, List<TUIMessageBean> msgIds) {
                 mForwardMode = mode;
@@ -113,13 +110,13 @@ public class TUIBaseChatFragment extends BaseFragment {
                                 return;
                             }
 
-                            HashMap<String, Boolean> chatMap = (HashMap<String, Boolean>) data.getSerializableExtra(TUIChatConstants.FORWARD_SELECT_CONVERSATION_KEY);
+                            HashMap<String, Boolean> chatMap =
+                                (HashMap<String, Boolean>) data.getSerializableExtra(TUIChatConstants.FORWARD_SELECT_CONVERSATION_KEY);
                             if (chatMap == null || chatMap.isEmpty()) {
                                 return;
                             }
 
                             for (Map.Entry<String, Boolean> entry : chatMap.entrySet()) {
-                                boolean isGroup = entry.getValue();
                                 String id = entry.getKey();
                                 String title = "";
                                 ChatInfo chatInfo = getChatInfo();
@@ -142,13 +139,14 @@ public class TUIBaseChatFragment extends BaseFragment {
                                     } else {
                                         chatName = getChatInfo().getId();
                                     }
-                                    title = senderName + getString(R.string.and_text) + chatName + getString(R.string.forward_chats_c2c);                    }
+                                    title = senderName + getString(R.string.and_text) + chatName + getString(R.string.forward_chats_c2c);
+                                }
 
                                 boolean selfConversation = false;
                                 if (id != null && id.equals(chatInfo.getId())) {
                                     selfConversation = true;
                                 }
-
+                                boolean isGroup = entry.getValue();
                                 ChatPresenter chatPresenter = getPresenter();
                                 chatPresenter.forwardMessage(mForwardSelectMsgInfos, isGroup, id, title, mForwardMode, selfConversation, new IUIKitCallback() {
                                     @Override
@@ -170,7 +168,6 @@ public class TUIBaseChatFragment extends BaseFragment {
         });
 
         chatView.getMessageLayout().setOnItemClickListener(new OnItemClickListener() {
-
             @Override
             public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
                 if (messageBean instanceof MergeMessageBean && getChatInfo() != null) {
@@ -195,10 +192,27 @@ public class TUIBaseChatFragment extends BaseFragment {
                     return;
                 }
 
-                Bundle bundle = new Bundle();
-                bundle.putString(TUIConstants.TUIChat.CHAT_ID, message.getSender());
-                TUICore.startActivity("FriendProfileActivity", bundle);
+                String userID = null;
+                if (message.getV2TIMMessage().getGroupID() != null) {
+                    userID = message.getSender();
+                } else {
+                    if (message.isUseMsgReceiverAvatar()) {
+                        if (message.getV2TIMMessage().isSelf()) {
+                            userID = message.getV2TIMMessage().getUserID();
+                        } else {
+                            userID = V2TIMManager.getInstance().getLoginUser();
+                        }
+                    } else {
+                        userID = message.getSender();
+                    }
+                }
+                if (null == userID) {
+                    return;
+                }
 
+                Bundle bundle = new Bundle();
+                bundle.putString(TUIConstants.TUIChat.CHAT_ID, userID);
+                TUICore.startActivity("FriendProfileActivity", bundle);
             }
 
             @Override
@@ -207,7 +221,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                     return;
                 }
                 int messageType = messageInfo.getMsgType();
-                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
                     chatView.getInputLayout().appendText(messageInfo.getV2TIMMessage().getTextElem().getText());
                 } else {
                     TUIChatLog.e(TAG, "error type: " + messageType);
@@ -228,7 +242,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                     callTypeString = TUIConstants.TUICalling.TYPE_AUDIO;
                 }
                 Map<String, Object> map = new HashMap<>();
-                map.put(TUIConstants.TUICalling.PARAM_NAME_USERIDS, new String[]{messageInfo.getUserId()});
+                map.put(TUIConstants.TUICalling.PARAM_NAME_USERIDS, new String[] {messageInfo.getUserId()});
                 map.put(TUIConstants.TUICalling.PARAM_NAME_TYPE, callTypeString);
                 TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_CALL, map);
             }
@@ -257,9 +271,9 @@ public class TUIBaseChatFragment extends BaseFragment {
                 param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, getChatInfo().getId());
                 TUICore.startActivityForResult(TUIBaseChatFragment.this, "StartGroupMemberSelectActivity", param, result -> {
                     if (result.getData() != null) {
-                        ArrayList<String> result_ids = result.getData().getStringArrayListExtra(TUIChatConstants.Selection.USER_ID_SELECT);
-                        ArrayList<String> result_names = result.getData().getStringArrayListExtra(TUIChatConstants.Selection.USER_NAMECARD_SELECT);
-                        chatView.getInputLayout().updateInputText(result_names, result_ids);
+                        ArrayList<String> resultIds = result.getData().getStringArrayListExtra(TUIChatConstants.Selection.USER_ID_SELECT);
+                        ArrayList<String> resultNames = result.getData().getStringArrayListExtra(TUIChatConstants.Selection.USER_NAMECARD_SELECT);
+                        chatView.getInputLayout().updateInputText(resultNames, resultIds);
                     }
                 });
             }
@@ -335,7 +349,7 @@ public class TUIBaseChatFragment extends BaseFragment {
         }, String.class);
     }
 
-    protected void setChatViewBackground(String uri){
+    protected void setChatViewBackground(String uri) {
         TUIChatLog.d(TAG, "setChatViewBackground uri = " + uri);
         if (TextUtils.isEmpty(uri)) {
             return;
@@ -393,9 +407,7 @@ public class TUIBaseChatFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
+                    public void onLoadCleared(@Nullable Drawable placeholder) {}
                 });
             }
         });

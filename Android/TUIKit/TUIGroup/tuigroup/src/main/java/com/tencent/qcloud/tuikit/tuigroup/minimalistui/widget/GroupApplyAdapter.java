@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
@@ -15,20 +14,15 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupApplyPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GroupApplyAdapter extends BaseAdapter {
-
     private List<GroupApplyInfo> mGroupMembers = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
     private GroupApplyPresenter presenter;
 
-    public GroupApplyAdapter() {
-
-    }
+    public GroupApplyAdapter() {}
 
     public void setPresenter(GroupApplyPresenter presenter) {
         this.presenter = presenter;
@@ -141,7 +135,7 @@ public class GroupApplyAdapter extends BaseAdapter {
     public void updateItemData(GroupApplyInfo info) {
         for (GroupApplyInfo item : mGroupMembers) {
             if (TextUtils.equals(item.getGroupApplication().getFromUser(), info.getGroupApplication().getFromUser())
-                    && TextUtils.equals(item.getGroupID(), info.getGroupID())) {
+                && TextUtils.equals(item.getGroupID(), info.getGroupID())) {
                 item.setStatus(info.getStatus());
                 notifyDataSetChanged();
                 break;
@@ -178,8 +172,10 @@ public class GroupApplyAdapter extends BaseAdapter {
 
     private static class ApplyViewHolder {
         private ShadeImageView memberIcon;
-        private TextView memberName, reason;
-        private TextView accept, refuse, resultTv;
+        private TextView memberName;
+        private TextView reason;
+        private TextView accept;
+        private TextView refuse;
+        private TextView resultTv;
     }
-
 }

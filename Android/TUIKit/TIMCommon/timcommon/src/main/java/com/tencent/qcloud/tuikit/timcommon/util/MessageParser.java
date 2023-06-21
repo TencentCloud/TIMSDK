@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.timcommon.util;
 
 import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -9,7 +8,6 @@ import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +66,6 @@ public class MessageParser {
         return null;
     }
 
-
     public static MessageFeature isSupportTyping(TUIMessageBean messageBean) {
         String cloudCustomData = messageBean.getV2TIMMessage().getCloudCustomData();
         if (TextUtils.isEmpty(cloudCustomData)) {
@@ -96,5 +93,4 @@ public class MessageParser {
         }
         return null;
     }
-
 }

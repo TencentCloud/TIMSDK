@@ -15,23 +15,35 @@ import android.widget.PopupWindow;
 
 import androidx.annotation.Nullable;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
-import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.util.TUIConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TUIConversationFragment extends BaseFragment {
+    private static final String TAG = TUIConversationFragment.class.getSimpleName();
+
     private View mBaseView;
     private ConversationLayout mConversationLayout;
     private ListView mConversationPopList;
@@ -41,12 +53,25 @@ public class TUIConversationFragment extends BaseFragment {
     private List<PopMenuAction> mConversationPopActions = new ArrayList<>();
 
     private ConversationPresenter presenter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        TUIConversationLog.d(TAG, "TUIConversationFragment onCreateView");
         mBaseView = inflater.inflate(R.layout.conversation_fragment, container, false);
         initView();
         return mBaseView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TUIConversationLog.d(TAG, "TUIConversationFragment onResume");
+    }
+
+    public static TUIConversationFragment newInstance() {
+        TUIConversationFragment fragment = new TUIConversationFragment();
+        return fragment;
     }
 
     private void initView() {
@@ -61,13 +86,12 @@ public class TUIConversationFragment extends BaseFragment {
         // 会话列表面板的默认UI和交互初始化
         mConversationLayout.initDefault();
         // 通过API设置ConversataonLayout各种属性的样例，开发者可以打开注释，体验效果
-//        ConversationLayoutSetting.customizeConversation(mConversationLayout);
+        //        ConversationLayoutSetting.customizeConversation(mConversationLayout);
 
         mConversationLayout.getConversationList().setOnConversationAdapterListener(new OnConversationAdapterListener() {
-
             @Override
             public void onItemClick(View view, int viewType, ConversationInfo conversationInfo) {
-                //此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
+                // 此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
                 if (conversationInfo.isMarkFold()) {
                     mConversationLayout.clearUnreadStatusOfFoldItem();
                     startFoldedConversationActivity();
@@ -77,15 +101,19 @@ public class TUIConversationFragment extends BaseFragment {
             }
 
             @Override
-            public void OnItemLongClick(View view, ConversationInfo conversationInfo) {
+            public void onItemLongClick(View view, ConversationInfo conversationInfo) {
                 showItemPopMenu(view, conversationInfo);
             }
 
             @Override
             public void onConversationChanged(List<ConversationInfo> dataSource) {
-                if (dataSource == null)return;
+                if (dataSource == null) {
+                    return;
+                }
                 ConversationInfo conversationInfo = dataSource.get(0);
-                if (conversationInfo == null)return;
+                if (conversationInfo == null) {
+                    return;
+                }
 
                 if (!TextUtils.isEmpty(popWindowConversationId) && popWindowConversationId.equals(conversationInfo.getConversationId())) {
                     if (mConversationPopWindow != null) {
@@ -99,18 +127,18 @@ public class TUIConversationFragment extends BaseFragment {
     }
 
     public void restoreConversationItemBackground() {
-        if (mConversationLayout.getConversationList().getAdapter() !=  null &&
-                mConversationLayout.getConversationList().getAdapter().isClick()) {
+        if (mConversationLayout.getConversationList().getAdapter() != null && mConversationLayout.getConversationList().getAdapter().isClick()) {
             mConversationLayout.getConversationList().getAdapter().setClick(false);
-            mConversationLayout.getConversationList().getAdapter().notifyItemChanged(mConversationLayout.getConversationList().getAdapter().getCurrentPosition());
+            mConversationLayout.getConversationList().getAdapter().notifyItemChanged(
+                mConversationLayout.getConversationList().getAdapter().getCurrentPosition());
         }
     }
 
     private void initPopMenuAction() {
         // 设置长按conversation显示PopAction
-        List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.not_display));
+        action.setWeight(800);
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int index, Object data) {
@@ -122,6 +150,7 @@ public class TUIConversationFragment extends BaseFragment {
                 }
             }
         });
+        List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         conversationPopActions.add(action);
 
         mConversationPopActions.clear();
@@ -141,6 +170,7 @@ public class TUIConversationFragment extends BaseFragment {
         } else {
             action.setActionName(getResources().getString(R.string.mark_read));
         }
+        action.setWeight(900);
         mConversationPopActions.add(0, action);
     }
 
@@ -149,10 +179,29 @@ public class TUIConversationFragment extends BaseFragment {
         action.setActionClickListener(new PopActionClickListener() {
             @Override
             public void onActionClick(int index, Object data) {
-                mConversationLayout.deleteConversation((ConversationInfo) data);
+                TUIKitDialog tipsDialog =
+                    new TUIKitDialog(getContext())
+                        .builder()
+                        .setCancelable(true)
+                        .setCancelOutside(true)
+                        .setTitle(getContext().getString(R.string.conversation_delete_tips))
+                        .setDialogWidth(0.75f)
+                        .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mConversationLayout.deleteConversation((ConversationInfo) data);
+                                }
+                            })
+                        .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {}
+                        });
+                tipsDialog.show();
             }
         });
         action.setActionName(getResources().getString(R.string.chat_delete));
+        action.setWeight(700);
         mConversationPopActions.add(action);
     }
 
@@ -176,6 +225,14 @@ public class TUIConversationFragment extends BaseFragment {
             }
 
             addDeletePopMenuAction();
+
+            mConversationPopActions.addAll(addMoreConversationAction(conversationInfo));
+            Collections.sort(mConversationPopActions, new Comparator<PopMenuAction>() {
+                @Override
+                public int compare(PopMenuAction o1, PopMenuAction o2) {
+                    return o2.getWeight() - o1.getWeight();
+                }
+            });
         }
 
         View itemPop = LayoutInflater.from(getActivity()).inflate(R.layout.conversation_pop_menu_layout, null);
@@ -202,7 +259,6 @@ public class TUIConversationFragment extends BaseFragment {
                 if (action.getActionName().equals(getResources().getString(R.string.quit_chat_top))) {
                     action.setActionName(getResources().getString(R.string.chat_top));
                 }
-
             }
         }
         mConversationPopAdapter = new PopDialogAdapter();
@@ -222,7 +278,7 @@ public class TUIConversationFragment extends BaseFragment {
             }
         });
         int x = view.getWidth() / 2;
-        int y = - view.getHeight() / 3;
+        int y = -view.getHeight() / 3;
         int popHeight = ScreenUtil.dip2px(45) * 3;
         if (y + popHeight + view.getY() + view.getHeight() > mConversationLayout.getBottom()) {
             y = y - popHeight;
@@ -235,4 +291,40 @@ public class TUIConversationFragment extends BaseFragment {
         startActivity(intent);
     }
 
+    protected List<PopMenuAction> addMoreConversationAction(ConversationInfo conversationInfo) {
+        List<PopMenuAction> settingsList = new ArrayList<>();
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIConversation.CONTEXT, getContext());
+        param.put(TUIConstants.TUIConversation.KEY_CONVERSATION_INFO, conversationInfo);
+        List<TUIExtensionInfo> extensionList = TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationPopMenu.CLASSIC_EXTENSION_ID, param);
+        for (TUIExtensionInfo extensionInfo : extensionList) {
+            String text = extensionInfo.getText();
+            if (!TextUtils.isEmpty(text)) {
+                PopMenuAction action = new PopMenuAction();
+                action.setActionClickListener(new PopActionClickListener() {
+                    @Override
+                    public void onActionClick(int index, Object data) {
+                        TUIExtensionEventListener listener = extensionInfo.getExtensionListener();
+                        if (listener != null) {
+                            listener.onClicked(null);
+                        }
+                    }
+                });
+                action.setWeight(extensionInfo.getWeight());
+                action.setActionName(text);
+                settingsList.add(action);
+            }
+        }
+
+        return settingsList;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (presenter != null) {
+            presenter.destroy();
+            presenter = null;
+        }
+    }
 }

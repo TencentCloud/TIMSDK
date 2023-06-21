@@ -14,18 +14,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.tuichat.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChatBottomSelectSheet {
-
     private List<String> selectList = new ArrayList<>();
     private Dialog dialog;
     private ArrayAdapter<String> listAdapter;
     private BottomSelectSheetOnClickListener onClickListener;
+
     public ChatBottomSelectSheet(Context context) {
         View view = View.inflate(context, R.layout.chat_minimalist_bottom_select_sheet, null);
         dialog = new Dialog(context, R.style.ChatBottomSelectSheet);
@@ -41,7 +39,7 @@ public class ChatBottomSelectSheet {
         p.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         window.setAttributes(p);
         window.setGravity(Gravity.BOTTOM);
-        window.setWindowAnimations(R.style.ChatBottomSelectSheet_Anim);  //添加动画
+        window.setWindowAnimations(R.style.ChatBottomSelectSheet_Anim); // 添加动画
 
         final ListView listView = view.findViewById(R.id.item_list);
         listAdapter = new ArrayAdapter<>(context, R.layout.chat_minimalist_bottom_sheet_item, R.id.sheet_item, selectList);

@@ -88,6 +88,16 @@
             android:textSize="11.52sp"
             android:lineHeight="15.84sp"/>
 
+        <ImageView
+            android:id="@+id/mark_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/conversation_list_time_margin_right"
+            android:src="@drawable/conversation_mark_banner"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/conversation_at_all"
             android:layout_width="wrap_content"

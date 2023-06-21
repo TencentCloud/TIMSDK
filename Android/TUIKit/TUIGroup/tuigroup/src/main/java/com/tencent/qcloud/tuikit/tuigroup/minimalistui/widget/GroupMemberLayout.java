@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
@@ -29,10 +27,8 @@ import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberChangedCallback;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayout {
     // 取一个足够大的偏移保证能一次性滚动到最底部
@@ -76,14 +72,13 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
         mTitleBar = findViewById(R.id.group_member_title_bar);
         mAdapter = new GroupMemberAdapter();
         mAdapter.setMemberChangedCallback(new IGroupMemberChangedCallback() {
-
             @Override
             public void onMemberRemoved(GroupMemberInfo memberInfo) {
                 if (!TextUtils.isEmpty(title)) {
                     mTitleBar.setTitle(title, ITitleBarLayout.Position.MIDDLE);
                 } else {
-                    mTitleBar.setTitle(getContext().getString(R.string.group_members) +
-                            "(" + mGroupInfo.getMemberCount() + ")", TitleBarLayout.Position.MIDDLE);
+                    mTitleBar.setTitle(
+                        getContext().getString(R.string.group_members) + "(" + mGroupInfo.getMemberCount() + ")", TitleBarLayout.Position.MIDDLE);
                 }
             }
         });
@@ -117,9 +112,7 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
                                     }
 
                                     @Override
-                                    public void onError(String module, int errCode, String errMsg) {
-
-                                    }
+                                    public void onError(String module, int errCode, String errMsg) {}
                                 });
                             }
                         }
@@ -190,9 +183,7 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
     }
 
     @Override
-    public void setParentLayout(Object parent) {
-
-    }
+    public void setParentLayout(Object parent) {}
 
     public void setTitle(String title) {
         this.title = title;
@@ -214,23 +205,19 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
             if (!TextUtils.isEmpty(title)) {
                 mTitleBar.setTitle(title, ITitleBarLayout.Position.MIDDLE);
             } else {
-                mTitleBar.setTitle(getContext().getString(R.string.group_members) +
-                        "(" + groupInfo.getMemberCount() + ")", TitleBarLayout.Position.MIDDLE);
+                mTitleBar.setTitle(getContext().getString(R.string.group_members) + "(" + groupInfo.getMemberCount() + ")", TitleBarLayout.Position.MIDDLE);
             }
         }
     }
 
     @Override
-    public void onGroupInfoModified(Object value, int type) {
-
-    }
+    public void onGroupInfoModified(Object value, int type) {}
 
     private void buildPopMenu(GroupMemberInfo groupMemberInfo) {
         if (mGroupInfo == null) {
             return;
         }
 
-        BottomSelectSheet sheet = new BottomSelectSheet(getContext());
         List<String> stringList = new ArrayList<>();
         String showInfo = getResources().getString(R.string.group_member_info);
         String setAdminRole = getResources().getString(R.string.group_set_admin);
@@ -243,6 +230,7 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
             stringList.add(setAdminRole);
             stringList.add(removeMember);
         }
+        BottomSelectSheet sheet = new BottomSelectSheet(getContext());
         sheet.setSelectList(stringList);
         sheet.setOnClickListener(new BottomSelectSheet.BottomSelectSheetOnClickListener() {
             @Override
@@ -317,17 +305,12 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
     }
 
     public abstract static class OnGroupMemberClickListener {
-        public void onClick(GroupMemberInfo groupMemberInfo) {
-        }
+        public void onClick(GroupMemberInfo groupMemberInfo) {}
 
-        public void onShowInfo(GroupMemberInfo groupMemberInfo) {
-        }
+        public void onShowInfo(GroupMemberInfo groupMemberInfo) {}
 
-        public void onAdminRoleChanged(GroupMemberInfo groupMemberInfo) {
-        }
+        public void onAdminRoleChanged(GroupMemberInfo groupMemberInfo) {}
 
-        public void onDelete(GroupMemberInfo groupMemberInfo) {
-        }
+        public void onDelete(GroupMemberInfo groupMemberInfo) {}
     }
-
 }

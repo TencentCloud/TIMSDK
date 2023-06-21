@@ -1,28 +1,21 @@
 package com.tencent.qcloud.tuikit.timcommon.component.swipe;
 
 public class SimpleSwipeListener implements SwipeLayout.SwipeListener {
+    @Override
+    public void onStartOpen(SwipeLayout layout) {}
 
     @Override
-    public void onStartOpen(SwipeLayout layout) {
-    }
+    public void onOpen(SwipeLayout layout) {}
 
     @Override
-    public void onOpen(SwipeLayout layout) {
-    }
+    public void onStartClose(SwipeLayout layout) {}
 
     @Override
-    public void onStartClose(SwipeLayout layout) {
-    }
+    public void onClose(SwipeLayout layout) {}
 
     @Override
-    public void onClose(SwipeLayout layout) {
-    }
+    public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {}
 
     @Override
-    public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-    }
-
-    @Override
-    public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-    }
+    public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {}
 }

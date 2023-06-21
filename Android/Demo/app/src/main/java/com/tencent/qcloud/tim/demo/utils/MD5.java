@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MD5 {
-
     public static String md5Password(String password) {
         try {
             // get a message digester
@@ -29,5 +28,4 @@ public class MD5 {
             return "";
         }
     }
-
 }

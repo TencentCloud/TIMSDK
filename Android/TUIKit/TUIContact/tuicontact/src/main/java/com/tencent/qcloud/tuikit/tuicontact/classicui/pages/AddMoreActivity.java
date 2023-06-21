@@ -9,9 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
@@ -28,7 +26,6 @@ import com.tencent.qcloud.tuikit.tuicontact.interfaces.IAddMoreActivity;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.AddMorePresenter;
 
 public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivity {
-
     private static final String TAG = AddMoreActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -48,7 +45,6 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
 
     private AddMorePresenter presenter;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +63,8 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
         groupTypeTagView = findViewById(R.id.group_type_tag);
 
         mTitleBar = findViewById(R.id.add_friend_titlebar);
-        mTitleBar.setTitle(mIsGroup ? getResources().getString(R.string.add_group) : getResources().getString(R.string.add_friend), ITitleBarLayout.Position.MIDDLE);
+        mTitleBar.setTitle(
+            mIsGroup ? getResources().getString(R.string.add_group) : getResources().getString(R.string.add_friend), ITitleBarLayout.Position.MIDDLE);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,14 +150,10 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
 
         searchEdit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -170,13 +163,11 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
                 }
             }
         });
-
     }
 
     private void setGroupDetail(GroupInfo groupInfo) {
         int radius = getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
-        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(),
-                TUIUtil.getDefaultGroupIconResIDByGroupType(this, groupInfo.getGroupType()), radius);
+        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(this, groupInfo.getGroupType()), radius);
         idTextView.setText(groupInfo.getId());
         nickNameView.setText(groupInfo.getGroupName());
         groupTypeTagView.setVisibility(View.VISIBLE);

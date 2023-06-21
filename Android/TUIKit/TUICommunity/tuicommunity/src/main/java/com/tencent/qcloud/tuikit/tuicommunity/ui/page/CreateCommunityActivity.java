@@ -7,9 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.bumptech.glide.Glide;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
@@ -20,11 +18,9 @@ import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.component.SelectTextButton;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
-
 import java.util.ArrayList;
 
 public class CreateCommunityActivity extends BaseLightActivity {
-
     private static final int COVER_REQUEST_CODE = 1;
     private static final int FACE_REQUEST_CODE = 2;
 
@@ -42,6 +38,7 @@ public class CreateCommunityActivity extends BaseLightActivity {
 
     private String coverUrl = CommunityConstants.DEFAULT_COVER_URL;
     private String faceUrl = CommunityConstants.DEFAULT_GROUP_FACE_URL;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +77,7 @@ public class CreateCommunityActivity extends BaseLightActivity {
             public void onClick(View v) {
                 ArrayList<ImageSelectActivity.ImageBean> coverList = new ArrayList<>();
                 for (int i = 0; i < CommunityConstants.COVER_COUNT; i++) {
-                    ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                    ImageSelectActivity.ImageBean imageBean = new ImageSelectActivity.ImageBean();
                     imageBean.setThumbnailUri(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
                     imageBean.setImageUri(String.format(CommunityConstants.COVER_URL, (i + 1) + ""));
                     coverList.add(imageBean);
@@ -100,7 +97,7 @@ public class CreateCommunityActivity extends BaseLightActivity {
             public void onClick(View v) {
                 ArrayList<ImageSelectActivity.ImageBean> faceList = new ArrayList<>();
                 for (int i = 0; i < CommunityConstants.GROUP_FACE_COUNT; i++) {
-                    ImageSelectActivity.ImageBean imageBean= new ImageSelectActivity.ImageBean();
+                    ImageSelectActivity.ImageBean imageBean = new ImageSelectActivity.ImageBean();
                     imageBean.setThumbnailUri(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
                     imageBean.setImageUri(String.format(CommunityConstants.GROUP_FACE_URL, (i + 1) + ""));
                     faceList.add(imageBean);

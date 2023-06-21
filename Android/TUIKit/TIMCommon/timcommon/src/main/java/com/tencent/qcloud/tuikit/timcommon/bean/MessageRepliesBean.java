@@ -13,8 +13,9 @@ public class MessageRepliesBean implements Serializable {
         private String messageID;
         private String messageAbstract;
         private String messageSender;
-        transient private String senderFaceUrl;
-        transient private String senderShowName;
+        private transient String senderFaceUrl;
+        private transient String senderShowName;
+
         public String getMessageID() {
             return messageID;
         }

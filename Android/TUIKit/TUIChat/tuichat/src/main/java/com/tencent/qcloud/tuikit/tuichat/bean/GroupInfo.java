@@ -8,9 +8,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GroupInfo extends ChatInfo {
-
     public static final String GROUP_TYPE_PUBLIC = V2TIMManager.GROUP_TYPE_PUBLIC;
     public static final String GROUP_TYPE_WORK = V2TIMManager.GROUP_TYPE_WORK;
     public static final String GROUP_TYPE_AVCHATROOM = V2TIMManager.GROUP_TYPE_AVCHATROOM;
@@ -32,7 +30,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 获取群名称
-     * 
+     *
      * Get the group name
      *
      * @return
@@ -43,7 +41,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 设置群名称
-     * 
+     *
      * Set the group name
      *
      * @param groupName
@@ -54,7 +52,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 获取群公告
-     * 
+     *
      * Get the group notice
      *
      * @return
@@ -65,7 +63,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 设置群公告
-     * 
+     *
      * Set the group notice
      *
      * @param signature
@@ -76,7 +74,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 获取加群验证方式
-     * 
+     *
      * Get the group joining approval type
      *
      * @return
@@ -87,7 +85,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 设置加群验证方式
-     * 
+     *
      * Set the group joining approval type
      *
      * @param joinType
@@ -98,7 +96,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 获取群类型，Public/Private/ChatRoom
-     * 
+     *
      * Get the group type
      *
      * @return
@@ -109,7 +107,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 设置群类型
-     * 
+     *
      * Set the group type
      *
      * @param groupType
@@ -120,7 +118,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 获取成员详细信息
-     * 
+     *
      * Get member details
      *
      * @return
@@ -131,7 +129,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 设置成员详细信息
-     * 
+     *
      * Set member details
      *
      * @param memberDetails
@@ -154,7 +152,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 设置群成员数量
-     * 
+     *
      * Get the number of members that have joined the group
      *
      * @param memberCount
@@ -165,7 +163,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 返回是否是群主
-     * 
+     *
      * Returns whether it is the owner of the group
      *
      * @return
@@ -176,7 +174,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 设置是否是群主
-     * 
+     *
      * Set the owner of the group
      *
      * @param owner
@@ -187,7 +185,7 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 获取消息接收选项
-     * 
+     *
      * Get the current user's message receiving option in the group. To modify the group message receiving option, please call the setReceiveMessageOpt API.
      *
      * @return
@@ -199,8 +197,8 @@ public class GroupInfo extends ChatInfo {
     /**
      * 设置消息接收选项
      * @param messageReceiveOption, true,免打扰； false，接收消息
-     * 
-     * 
+     *
+     *
      * Set the current user's message receiving option in the group.
      * @param messageReceiveOption, true,no message will be received； false，messages will be received.
      */

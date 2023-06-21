@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
@@ -17,16 +16,15 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.TextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class ReplyMessageHolder extends MessageContentHolder {
-
     private View originMsgLayout;
 
     private TextView senderNameTv;
     private FrameLayout quoteFrameLayout;
+
     public ReplyMessageHolder(View itemView) {
         super(itemView);
         senderNameTv = itemView.findViewById(R.id.sender_tv);
@@ -62,7 +60,6 @@ public class ReplyMessageHolder extends MessageContentHolder {
         super.setGravity(isStart);
     }
 
-
     private void performMsgAbstract(ReplyMessageBean replyMessageBean, int position) {
         TUIMessageBean originMessage = replyMessageBean.getOriginMessageBean();
 
@@ -91,7 +88,6 @@ public class ReplyMessageHolder extends MessageContentHolder {
                 return true;
             }
         });
-
     }
 
     private void performNotFound(TUIReplyQuoteBean replyQuoteBean, ReplyMessageBean replyMessageBean) {

@@ -1,7 +1,6 @@
-package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.helper;
+package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.helper;
 
-
-import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.IndexBar.bean.BaseIndexPinyinBean;
+import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.bean.BaseIndexPinyinBean;
 
 import java.util.List;
 
@@ -11,8 +10,8 @@ import java.util.List;
  * 2 填充indexTag
  * 3 排序源数据源
  * 4 根据排序后的源数据源->indexBar的数据源
- * 
- * 
+ *
+ *
  * Introduction: Data-related helper classes for IndexBar
  * 1 Convert Chinese to Pinyin
  * 2 filling indexTag

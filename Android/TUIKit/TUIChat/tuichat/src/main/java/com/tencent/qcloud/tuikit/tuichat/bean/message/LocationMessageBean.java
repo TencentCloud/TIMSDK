@@ -6,7 +6,6 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.LocationReplyQuoteBean;
 
 public class LocationMessageBean extends TUIMessageBean {
-
     private String desc;
     private double latitude;
     private double longitude;

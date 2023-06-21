@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -69,14 +67,13 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
                 Bundle bundle = new Bundle();
                 bundle.putString(TUIConstants.TUIChat.CHAT_ID, info.getId());
                 TUICore.startActivity("FriendProfileMinimalistActivity", bundle);
-
             }
 
             @Override
             public void onUserIconLongClick(View view, int position, TUIMessageBean messageBean) {
-                String result_id = messageBean.getV2TIMMessage().getSender();
-                String result_name = messageBean.getV2TIMMessage().getNickName();
-                chatView.getInputLayout().addInputText(result_name, result_id);
+                String resultId = messageBean.getV2TIMMessage().getSender();
+                String resultName = messageBean.getV2TIMMessage().getNickName();
+                chatView.getInputLayout().addInputText(resultName, resultId);
             }
 
             @Override
@@ -85,7 +82,7 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
                     return;
                 }
                 int messageType = messageInfo.getMsgType();
-                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT){
+                if (messageType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
                     chatView.getInputLayout().appendText(messageInfo.getV2TIMMessage().getTextElem().getText());
                 } else {
                     TUIChatLog.e(TAG, "error type: " + messageType);
@@ -93,9 +90,7 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
             }
 
             @Override
-            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
-
-            }
+            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {}
 
             @Override
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
@@ -115,7 +110,6 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
                     startActivity(intent);
                 }
             }
-
 
             @Override
             public void onMessageReadStatusClick(View view, TUIMessageBean messageBean) {

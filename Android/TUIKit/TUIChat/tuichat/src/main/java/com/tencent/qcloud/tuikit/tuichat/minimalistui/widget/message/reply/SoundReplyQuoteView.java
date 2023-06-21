@@ -15,6 +15,7 @@ public class SoundReplyQuoteView extends TUIReplyQuoteView {
     private View soundMsgLayout;
     private ImageView soundMsgIcon;
     private TextView soundMsgTv;
+    
     public SoundReplyQuoteView(Context context) {
         super(context);
         soundMsgLayout = findViewById(R.id.sound_msg_layout);
@@ -38,9 +39,11 @@ public class SoundReplyQuoteView extends TUIReplyQuoteView {
     @Override
     public void setSelf(boolean isSelf) {
         if (!isSelf) {
-            soundMsgTv.setTextColor(soundMsgTv.getResources().getColor(TUIThemeManager.getAttrResId(soundMsgTv.getContext(), R.attr.chat_other_reply_quote_text_color)));
+            soundMsgTv.setTextColor(
+                soundMsgTv.getResources().getColor(TUIThemeManager.getAttrResId(soundMsgTv.getContext(), R.attr.chat_other_reply_quote_text_color)));
         } else {
-            soundMsgTv.setTextColor(soundMsgTv.getResources().getColor(TUIThemeManager.getAttrResId(soundMsgTv.getContext(), R.attr.chat_self_reply_quote_text_color)));
+            soundMsgTv.setTextColor(
+                soundMsgTv.getResources().getColor(TUIThemeManager.getAttrResId(soundMsgTv.getContext(), R.attr.chat_self_reply_quote_text_color)));
         }
     }
 }

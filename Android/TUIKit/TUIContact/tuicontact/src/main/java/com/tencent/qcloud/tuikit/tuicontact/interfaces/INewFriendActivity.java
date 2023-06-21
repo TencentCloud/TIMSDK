@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.interfaces;
 
-
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 
 import java.util.List;

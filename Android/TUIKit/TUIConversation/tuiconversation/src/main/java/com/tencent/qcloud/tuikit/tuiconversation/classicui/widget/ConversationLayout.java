@@ -2,11 +2,7 @@ package com.tencent.qcloud.tuikit.tuiconversation.classicui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -16,10 +12,9 @@ import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAda
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 public class ConversationLayout extends RelativeLayout implements IConversationLayout {
-
     private ConversationListLayout mConversationList;
-    private ViewGroup headerContainer;
     private ConversationPresenter presenter;
+
     public ConversationLayout(Context context) {
         super(context);
         init();
@@ -48,13 +43,11 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     private void init() {
         inflate(getContext(), R.layout.conversation_layout, this);
         mConversationList = findViewById(R.id.conversation_list);
-        headerContainer = findViewById(R.id.header_container);
     }
 
     public void initDefault() {
         final ConversationListAdapter adapter = new ConversationListAdapter();
         if (presenter != null) {
-            initHeaderView();
             adapter.setShowFoldedStyle(true);
         }
         mConversationList.setAdapter((IConversationListAdapter) adapter);
@@ -62,16 +55,11 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
             presenter.setAdapter(adapter);
         }
         mConversationList.loadConversation();
-    }
-
-    public void initHeaderView() {
-        TUICore.raiseExtension(TUIConstants.TUIConversation.Extension.ConversationListHeader.CLASSIC_EXTENSION_ID, headerContainer, null);
+        mConversationList.loadMarkedConversation();
     }
 
     @Override
-    public void setParentLayout(Object parent) {
-
-    }
+    public void setParentLayout(Object parent) {}
 
     @Override
     public ConversationListLayout getConversationList() {

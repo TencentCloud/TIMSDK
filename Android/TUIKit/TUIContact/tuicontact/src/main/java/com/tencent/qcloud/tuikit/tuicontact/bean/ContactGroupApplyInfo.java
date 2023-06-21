@@ -5,7 +5,6 @@ import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import java.io.Serializable;
 
 public class ContactGroupApplyInfo implements Serializable {
-
     private String fromUser;
     private String fromUserNickName;
     private String requestMsg;

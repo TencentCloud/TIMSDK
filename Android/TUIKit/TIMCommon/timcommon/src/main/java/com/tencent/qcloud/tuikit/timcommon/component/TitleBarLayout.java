@@ -12,16 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
 public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
-
     private LinearLayout mLeftGroup;
     private LinearLayout mRightGroup;
     private TextView mLeftTitle;
@@ -125,6 +122,8 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
                 break;
             case MIDDLE:
                 mCenterTitle.setText(title);
+                break;
+            default:
                 break;
         }
     }

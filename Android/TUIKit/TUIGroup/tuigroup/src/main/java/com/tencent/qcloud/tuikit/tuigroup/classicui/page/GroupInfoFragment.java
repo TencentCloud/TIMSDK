@@ -6,11 +6,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -27,11 +25,9 @@ import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListe
 import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupInfoLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class GroupInfoFragment extends BaseFragment {
     private static final int CHOOSE_AVATAR_REQUEST_CODE = 101;
@@ -90,6 +86,11 @@ public class GroupInfoFragment extends BaseFragment {
             public void forwardDeleteMember(GroupInfo info) {
                 startDeleteMember(info);
             }
+
+            @Override
+            public void forwardShowMemberDetail(GroupMemberInfo info) {
+                startShowMemberDetail(info);
+            }
         });
 
         groupInfoLayout.setOnButtonClickListener(new GroupInfoLayout.OnButtonClickListener() {
@@ -103,6 +104,12 @@ public class GroupInfoFragment extends BaseFragment {
                 changeGroupOwner(newOwnerID);
             }
         });
+    }
+
+    private void startShowMemberDetail(GroupMemberInfo info) {
+        Bundle bundle = new Bundle();
+        bundle.putString(TUIConstants.TUIChat.CHAT_ID, info.getAccount());
+        TUICore.startActivity("FriendProfileActivity", bundle);
     }
 
     private void startSetChatBackground() {
@@ -123,7 +130,8 @@ public class GroupInfoFragment extends BaseFragment {
         intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
         intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
         intent.putExtra(ImageSelectActivity.DATA, faceList);
-        if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl) || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
+        if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
+            || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
             intent.putExtra(ImageSelectActivity.SELECTED, defaultFace);
         } else {
             intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
@@ -144,16 +152,15 @@ public class GroupInfoFragment extends BaseFragment {
 
                 String backgroundUri = imageBean.getLocalPath();
                 String thumbnailUri = imageBean.getThumbnailUri();
-                String dataUri = thumbnailUri + "," + backgroundUri;
                 TUIGroupLog.d("GroupInfoFragment", "onActivityResult backgroundUri = " + backgroundUri);
                 mChatBackgroundThumbnailUrl = thumbnailUri;
                 HashMap<String, Object> param = new HashMap<>();
                 param.put(TUIConstants.TUIChat.CHAT_ID, groupId);
+                String dataUri = thumbnailUri + "," + backgroundUri;
                 param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
                 TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);
             }
         });
-
     }
 
     private void startDeleteMember(GroupInfo info) {
@@ -225,7 +232,6 @@ public class GroupInfoFragment extends BaseFragment {
         });
     }
 
-
     private void modifyGroupAvatar(String avatarUrl) {
         groupInfoLayout.modifyGroupAvatar(avatarUrl);
     }
@@ -240,9 +246,7 @@ public class GroupInfoFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onError(String module, int errCode, String errMsg) {
-
-                    }
+                    public void onError(String module, int errCode, String errMsg) {}
                 });
             }
         }
@@ -276,15 +280,11 @@ public class GroupInfoFragment extends BaseFragment {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
-
 
     public interface OnModifyGroupAvatarListener {
         void onModifyGroupAvatar(String originAvatarUrl);
     }
-
 }

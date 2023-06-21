@@ -6,15 +6,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PopDialogAdapter extends BaseAdapter {
-
     private List<PopMenuAction> dataSource = new ArrayList<>();
 
     public void setDataSource(final List datas) {
@@ -44,7 +43,6 @@ public class PopDialogAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(TUIConfig.getAppContext()).inflate(R.layout.pop_dialog_adapter, parent, false);

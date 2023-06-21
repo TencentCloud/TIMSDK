@@ -27,7 +27,6 @@ import com.tencent.qcloud.tuikit.timcommon.R;
 import java.lang.ref.WeakReference;
 
 public class TUIKitDialog {
-
     private Context mContext;
     protected Dialog dialog;
     private LinearLayout mBackgroundLayout;
@@ -41,9 +40,8 @@ public class TUIKitDialog {
     private boolean showTitle = false;
     private boolean showPosBtn = false;
     private boolean showNegBtn = false;
-    
-    private float dialogWidth = 0.7f;
 
+    private float dialogWidth = 0.7f;
 
     public TUIKitDialog(Context context) {
         this.mContext = context;
@@ -72,7 +70,6 @@ public class TUIKitDialog {
         return this;
     }
 
-
     public TUIKitDialog setTitle(@NonNull CharSequence title) {
         showTitle = true;
         mTitleTv.setText(title);
@@ -100,8 +97,12 @@ public class TUIKitDialog {
         return this;
     }
 
-    public TUIKitDialog setPositiveButton(CharSequence text,
-                                          final OnClickListener listener) {
+    public TUIKitDialog setPositiveButton(final OnClickListener listener) {
+        setPositiveButton(TUIConfig.getAppContext().getString(com.tencent.qcloud.tuicore.R.string.sure), listener);
+        return this;
+    }
+
+    public TUIKitDialog setPositiveButton(CharSequence text, final OnClickListener listener) {
         showPosBtn = true;
         mSureButton.setText(text);
         mSureButton.setOnClickListener(new OnClickListener() {
@@ -118,13 +119,7 @@ public class TUIKitDialog {
         mTitleTv.setGravity(gravity);
     }
 
-    public TUIKitDialog setPositiveButton(final OnClickListener listener) {
-        setPositiveButton(TUIConfig.getAppContext().getString(com.tencent.qcloud.tuicore.R.string.sure), listener);
-        return this;
-    }
-
-    public TUIKitDialog setNegativeButton(CharSequence text,
-                                          final OnClickListener listener) {
+    public TUIKitDialog setNegativeButton(CharSequence text, final OnClickListener listener) {
         showNegBtn = true;
         mCancelButton.setText(text);
         mCancelButton.setOnClickListener(new OnClickListener() {
@@ -141,7 +136,6 @@ public class TUIKitDialog {
         setNegativeButton(TUIConfig.getAppContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), listener);
         return this;
     }
-
 
     private void setLayout() {
         if (!showTitle) {
@@ -207,7 +201,6 @@ public class TUIKitDialog {
     }
 
     public static class TUIIMUpdateDialog {
-
         private static final class TUIIMUpdateDialogHolder {
             private static final TUIIMUpdateDialog instance = new TUIIMUpdateDialog();
         }
@@ -221,7 +214,7 @@ public class TUIKitDialog {
         private WeakReference<TUIKitDialog> tuiKitDialog;
 
         public static TUIIMUpdateDialog getInstance() {
-           return TUIIMUpdateDialogHolder.instance;
+            return TUIIMUpdateDialogHolder.instance;
         }
 
         private TUIIMUpdateDialog() {

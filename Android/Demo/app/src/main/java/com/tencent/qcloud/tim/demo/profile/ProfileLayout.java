@@ -15,10 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
@@ -52,7 +50,6 @@ import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -60,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ProfileLayout extends FrameLayout implements View.OnClickListener {
-
     private static final String TAG = ProfileLayout.class.getSimpleName();
 
     private ShadeImageView userIcon;
@@ -188,8 +184,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
             }
         });
-        boolean isEnableRecentCalls = SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME)
-                .getBoolean(TUIKitConstants.RECENT_CALLS_ENABLE, false);
+        boolean isEnableRecentCalls = SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME).getBoolean(TUIKitConstants.RECENT_CALLS_ENABLE, false);
         showRecentCalls.setChecked(isEnableRecentCalls);
 
         changeStyleView = selectStyleView.findViewById(R.id.select_style);
@@ -200,7 +195,6 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         changeThemeView.setOnClickListener(this);
 
         logoutButton = findViewById(R.id.logout_btn);
-
 
         joinTypeTextList.add(getResources().getString(R.string.allow_type_allow_any));
         joinTypeTextList.add(getResources().getString(R.string.allow_type_deny_any));
@@ -261,9 +255,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
             }
 
             @Override
-            public void onError(int code, String desc) {
-
-            }
+            public void onError(int code, String desc) {}
         });
         setUserInfoListener();
     }
@@ -462,7 +454,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
             intent.putExtra(Constants.IM_MAIN_ITEM_SELECTED, 3);
         } else {
             intent = new Intent(getContext(), MainMinimalistActivity.class);
-//            intent.putExtra(Constants.IM_MAIN_ITEM_SELECTED, MainMinimalistActivity.ITEM_TYPE_PROFILE);
+            //            intent.putExtra(Constants.IM_MAIN_ITEM_SELECTED, MainMinimalistActivity.ITEM_TYPE_PROFILE);
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -488,5 +480,4 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
             }
         });
     }
-
 }

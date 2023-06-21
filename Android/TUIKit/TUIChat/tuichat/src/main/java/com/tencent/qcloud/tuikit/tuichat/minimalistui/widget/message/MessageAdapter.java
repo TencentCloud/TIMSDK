@@ -28,9 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdapter, ICommonMessageAdapter {
-
     private static final String TAG = MessageAdapter.class.getSimpleName();
     private static final int ITEM_POSITION_UNKNOWN = -1;
 
@@ -90,7 +88,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (!isShowMultiSelectCheckBox && mSelectedPositions != null) {
             mSelectedPositions.clear();
         }
-
     }
 
     public boolean isShowMultiSelectCheckBox() {
@@ -213,8 +210,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
             baseHolder.setOnItemClickListener(new OnItemClickListener() {
                 @Override
-                public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
-                }
+                public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {}
 
                 @Override
                 public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
@@ -227,14 +223,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 }
 
                 @Override
-                public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
-
-                }
+                public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {}
 
                 @Override
-                public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
-
-                }
+                public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {}
 
                 @Override
                 public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {
@@ -440,7 +432,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         mDataSource = dataSource;
     }
 
-
     @Override
     public void onScrollToEnd() {
         if (mRecycleView != null) {
@@ -498,9 +489,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         return new ArrayList<>(mDataSource.subList(first - 1, last));
     }
 
-
     public interface OnCheckListChangedListener {
         void onCheckListChanged(List<TUIMessageBean> checkedList);
     }
-
 }

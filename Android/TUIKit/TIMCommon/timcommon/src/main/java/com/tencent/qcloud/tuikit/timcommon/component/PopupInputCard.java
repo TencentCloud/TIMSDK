@@ -17,11 +17,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.util.SoftKeyBoardUtil;
-
 import java.util.regex.Pattern;
 
 public class PopupInputCard {
@@ -40,6 +38,7 @@ public class PopupInputCard {
     private String rule;
     private String notMachRuleTip;
     private ByteLengthFilter lengthFilter = new ByteLengthFilter();
+
     public PopupInputCard(Activity activity) {
         View popupView = LayoutInflater.from(activity).inflate(R.layout.layout_popup_card, null);
         titleTv = popupView.findViewById(R.id.popup_card_title);
@@ -118,14 +117,10 @@ public class PopupInputCard {
         editText.setFilters(new InputFilter[] {lengthFilter});
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -138,10 +133,9 @@ public class PopupInputCard {
                 }
             }
         });
-
     }
+
     private void startAnimation(Window window, boolean isShow) {
-        LinearInterpolator interpolator = new LinearInterpolator();
         ValueAnimator animator;
         if (isShow) {
             animator = ValueAnimator.ofFloat(1.0f, 0.5f);
@@ -156,7 +150,7 @@ public class PopupInputCard {
                 window.setAttributes(lp);
             }
         });
-
+        LinearInterpolator interpolator = new LinearInterpolator();
         animator.setDuration(200);
         animator.setInterpolator(interpolator);
         animator.start();
@@ -218,8 +212,8 @@ public class PopupInputCard {
 
     class ByteLengthFilter implements InputFilter {
         private int length = Integer.MAX_VALUE;
-        public ByteLengthFilter() {
-        }
+
+        public ByteLengthFilter() {}
 
         public void setLength(int length) {
             this.length = length;
@@ -232,7 +226,7 @@ public class PopupInputCard {
             int sourceLength = 0;
             if (!TextUtils.isEmpty(dest)) {
                 destLength = dest.toString().getBytes().length;
-                destReplaceLength= dest.subSequence(dstart, dend).toString().getBytes().length;
+                destReplaceLength = dest.subSequence(dstart, dend).toString().getBytes().length;
             }
             if (!TextUtils.isEmpty(source)) {
                 sourceLength = source.subSequence(start, end).toString().getBytes().length;
@@ -271,7 +265,6 @@ public class PopupInputCard {
             }
             return sequence.subSequence(start, end);
         }
-
     }
 
     @FunctionalInterface

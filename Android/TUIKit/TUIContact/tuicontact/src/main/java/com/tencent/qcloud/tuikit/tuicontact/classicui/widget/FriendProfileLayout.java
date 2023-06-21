@@ -15,9 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -38,7 +36,6 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IFriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,10 +44,9 @@ import java.util.List;
 import java.util.Map;
 
 public class FriendProfileLayout extends LinearLayout implements View.OnClickListener, IFriendProfileLayout {
-
     private static final String TAG = FriendProfileLayout.class.getSimpleName();
 
-    private final int CHANGE_REMARK_CODE = 200;
+    private static final int CHANGE_REMARK_CODE = 200;
 
     private TitleBarLayout mTitleBar;
     private ImageView mHeadImageView;
@@ -187,7 +183,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             });
             extensionListView.addView(itemView);
         }
-
     }
 
     private void initEvent() {
@@ -285,7 +280,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         mSignatureTagView.setText(getResources().getString(R.string.contact_group_type_tag));
         mSignatureView.setText(groupInfo.getGroupType());
         int radius = getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
-        GlideEngine.loadUserIcon(mHeadImageView, groupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), groupInfo.getGroupType()), radius);
+        GlideEngine.loadUserIcon(
+            mHeadImageView, groupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), groupInfo.getGroupType()), radius);
         addFriendSendBtn.setVisibility(VISIBLE);
         addFriendArea.setVisibility(VISIBLE);
         remarkAndGroupTip.setVisibility(GONE);
@@ -375,12 +371,11 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 }
             }
         }
-
     }
 
     private void updateMessageOptionView() {
         mMessageOptionView.setVisibility(VISIBLE);
-        //get
+        // get
         final ArrayList<String> userIdList = new ArrayList<>();
         userIdList.add(mId);
 
@@ -396,7 +391,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             }
         });
 
-        //set
+        // set
         mMessageOptionView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -459,7 +454,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 ToastUtil.toastShortMessage("refuse Error code = " + errCode + ", desc = " + errMsg);
-
             }
         });
     }
@@ -522,31 +516,30 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     public void onClick(View v) {
         if (v == deleteFriendBtn) {
             delete();
-        }else if (v == clearMessageBtn) {
+        } else if (v == clearMessageBtn) {
             new TUIKitDialog(getContext())
-                    .builder()
-                    .setCancelable(true)
-                    .setCancelOutside(true)
-                    .setTitle(getContext().getString(R.string.clear_msg_tip))
-                    .setDialogWidth(0.75f)
-                    .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), new View.OnClickListener() {
+                .builder()
+                .setCancelable(true)
+                .setCancelOutside(true)
+                .setTitle(getContext().getString(R.string.clear_msg_tip))
+                .setDialogWidth(0.75f)
+                .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
+                    new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Map<String, Object> hashMap = new HashMap<>();
                             hashMap.put(TUIConstants.TUIContact.FRIEND_ID, mId);
-                            TUICore.notifyEvent(TUIConstants.TUIContact.EVENT_USER,
-                                    TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, hashMap);
+                            TUICore.notifyEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, hashMap);
                         }
                     })
-                    .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), new View.OnClickListener() {
+                .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                    new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
-
-                        }
+                        public void onClick(View v) {}
                     })
-                    .show();
+                .show();
         } else if (v == addFriendSendBtn) {
-            String addWording  = addWordingEditText.getText().toString();
+            String addWording = addWordingEditText.getText().toString();
             String friendGroup = "";
             String remark = addFriendRemarkLv.getContent();
 
@@ -592,7 +585,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             popupInputCard.setContent(mRemarkView.getContent());
             popupInputCard.setTitle(getResources().getString(R.string.profile_remark_edit));
             String description = getResources().getString(R.string.contact_modify_remark_rule);
-            popupInputCard.setRule("^[a-zA-Z0-9_\u4e00-\u9fa5]*$");
+            popupInputCard.setRule("^[a-zA-Z0-9_一-龥]*$");
             popupInputCard.setDescription(description);
             popupInputCard.setOnPositive((result -> {
                 mRemarkView.setContent(result);
@@ -622,9 +615,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
-
-            }
+            public void onError(String module, int errCode, String errMsg) {}
         });
     }
 
@@ -649,7 +640,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
         void onDeleteFriendClick(String id);
 
-        default void onSetChatBackground() {};
+        default void onSetChatBackground(){}
     }
-
 }

@@ -15,12 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -37,12 +35,10 @@ import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityMemberBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityMemberActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityMemberList;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommunityMemberList extends LinearLayout implements ICommunityMemberList {
-
     private TitleBarLayout titleBar;
     private GroupMemberAdapter adapter;
     private CommunityBean communityBean;
@@ -57,6 +53,7 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
     private ICommunityMemberActivity communityMemberActivity;
 
     private MemberListListener memberListListener;
+
     public CommunityMemberList(Context context) {
         super(context);
         init();
@@ -190,7 +187,6 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
     }
 
     public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.GroupMemberViewHolder> {
-
         private CommunityPresenter presenter;
         private boolean isSelectMode;
 
@@ -282,7 +278,7 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
                             }
                         });
                         int x = view.getWidth() / 2;
-                        int y = - view.getHeight() / 3;
+                        int y = -view.getHeight() / 3;
                         int popHeight = ScreenUtil.dip2px(45) * 3;
                         if (y + popHeight + view.getY() + view.getHeight() > CommunityMemberList.this.getBottom()) {
                             y = y - popHeight;
@@ -335,5 +331,4 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
             }
         }
     }
-
 }

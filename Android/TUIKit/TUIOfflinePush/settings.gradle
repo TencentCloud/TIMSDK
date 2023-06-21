@@ -1,5 +1,0 @@
-rootProject.name = "TUIOfflinePush"
-include ':tuiofflinepush'
-
-include ':tuicore'
-project(':tuicore').projectDir = new File(settingsDir, '../TUICore/tuicore')

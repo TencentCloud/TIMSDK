@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
 
-
 public class BaseLightActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,7 +22,8 @@ public class BaseLightActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_header_start_color)));
+            getWindow().setStatusBarColor(
+                getResources().getColor(TUIThemeManager.getAttrResId(this, com.tencent.qcloud.tuicore.R.attr.core_header_start_color)));
             getWindow().setNavigationBarColor(getResources().getColor(R.color.navigation_bar_color));
             int vis = getWindow().getDecorView().getSystemUiVisibility();
             vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;

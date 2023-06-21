@@ -2,9 +2,7 @@ package com.tencent.qcloud.tuicore;
 
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
@@ -22,7 +20,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,8 +85,7 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
         }
     }
 
-
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private List<String> mDatas;
 
         public MyAdapter(List<String> datas) {
@@ -107,7 +103,7 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
         public void onBindViewHolder(ViewHolder holder, int position) {
             String type = this.mDatas.get(position);
             holder.imageView.setImageResource(TUIUtil.getDefaultGroupIconResIDByGroupType(getApplicationContext(), type));
-            switch(type) {
+            switch (type) {
                 case V2TIMManager.GROUP_TYPE_WORK:
                     holder.textView.setText(getString(R.string.group_work_type));
                     holder.subTextView.setText(getString(R.string.group_work_content));
@@ -150,7 +146,8 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
             View rootView;
             RelativeLayout itemLayout;
             ImageView imageView;
-            TextView textView, subTextView;
+            TextView textView;
+            TextView subTextView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -162,6 +159,4 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
             }
         }
     }
-
-
 }

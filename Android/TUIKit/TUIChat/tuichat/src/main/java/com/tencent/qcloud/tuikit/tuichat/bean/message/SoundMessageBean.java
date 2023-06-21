@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMDownloadCallback;
 import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -13,12 +12,16 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.SoundReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.io.File;
 
 public class SoundMessageBean extends TUIMessageBean {
+    private static final int SOUND_HAS_NOT_PLAYED = 0;
+    private static final int SOUND_PLAYED = 1;
+
     private String dataPath;
     private V2TIMSoundElem soundElem;
+
+    private boolean isPlaying = false;
 
     @Override
     public String onGetDisplayString() {
@@ -68,7 +71,7 @@ public class SoundMessageBean extends TUIMessageBean {
 
     /**
      * 获取多媒体消息的保存路径
-     * 
+     *
      * Get the save path of multimedia messages
      *
      * @return
@@ -79,7 +82,7 @@ public class SoundMessageBean extends TUIMessageBean {
 
     /**
      * 设置多媒体消息的保存路径
-     * 
+     *
      * Set the save path of multimedia messages
      *
      * @param dataPath
@@ -88,19 +91,19 @@ public class SoundMessageBean extends TUIMessageBean {
         this.dataPath = dataPath;
     }
 
-    public void setCustomInt(int customInt) {
+    public void setPlayed() {
         if (getV2TIMMessage() != null) {
-            getV2TIMMessage().setLocalCustomInt(customInt);
+            getV2TIMMessage().setLocalCustomInt(SOUND_PLAYED);
         }
     }
 
-    public int getCustomInt() {
+    public boolean hasPlayed() {
         if (getV2TIMMessage() != null) {
-            return getV2TIMMessage().getLocalCustomInt();
+            int customInt = getV2TIMMessage().getLocalCustomInt();
+            return customInt == SOUND_PLAYED;
         }
-        return 0;
+        return false;
     }
-
 
     public void setSoundElem(V2TIMSoundElem soundElem) {
         this.soundElem = soundElem;
@@ -119,7 +122,6 @@ public class SoundMessageBean extends TUIMessageBean {
         }
         return 0;
     }
-
 
     public void downloadSound(String path, SoundDownloadCallback callback) {
         if (soundElem != null) {
@@ -148,6 +150,14 @@ public class SoundMessageBean extends TUIMessageBean {
         }
     }
 
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
     public interface SoundDownloadCallback {
         void onProgress(long currentSize, long totalSize);
 
@@ -160,5 +170,4 @@ public class SoundMessageBean extends TUIMessageBean {
     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
         return SoundReplyQuoteBean.class;
     }
-
 }

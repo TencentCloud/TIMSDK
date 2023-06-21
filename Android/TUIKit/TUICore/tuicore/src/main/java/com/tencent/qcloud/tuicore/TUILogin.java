@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
 /**
  * Login logic for IM and TRTC
  */
@@ -59,8 +58,7 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onConnecting();
             }
-            TUICore.notifyEvent(TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED,
-                    TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECTING, null);
+            TUICore.notifyEvent(TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED, TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECTING, null);
         }
 
         @Override
@@ -68,8 +66,8 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onConnectSuccess();
             }
-            TUICore.notifyEvent(TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED,
-                    TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECT_SUCCESS, null);
+            TUICore.notifyEvent(
+                TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED, TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECT_SUCCESS, null);
         }
 
         @Override
@@ -77,8 +75,8 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onConnectFailed(code, error);
             }
-            TUICore.notifyEvent(TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED,
-                    TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECT_FAILED, null);
+            TUICore.notifyEvent(
+                TUIConstants.NetworkConnection.EVENT_CONNECTION_STATE_CHANGED, TUIConstants.NetworkConnection.EVENT_SUB_KEY_CONNECT_FAILED, null);
         }
 
         @Override
@@ -86,8 +84,7 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onKickedOffline();
             }
-            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                    TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, null);
+            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, null);
         }
 
         @Override
@@ -95,8 +92,7 @@ public class TUILogin {
             for (TUILoginListener listener : listenerList) {
                 listener.onUserSigExpired();
             }
-            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                    TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, null);
+            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, null);
         }
 
         @Override
@@ -115,7 +111,7 @@ public class TUILogin {
      * @param userSig   Obtained from the business server
      * @param callback  login callback
      */
-    public static void login(@NonNull Context context, int sdkAppId, String  userId, String userSig, TUICallback callback) {
+    public static void login(@NonNull Context context, int sdkAppId, String userId, String userSig, TUICallback callback) {
         getInstance().internalLogin(context, sdkAppId, userId, userSig, null, callback);
     }
 
@@ -129,9 +125,50 @@ public class TUILogin {
      * @param config    log related configs
      * @param callback  login callback
      */
-    public static void login(@NonNull Context context, int sdkAppId, String  userId, String userSig, TUILoginConfig config, TUICallback callback) {
+    public static void login(@NonNull Context context, int sdkAppId, String userId, String userSig, TUILoginConfig config, TUICallback callback) {
         getInstance().internalLogin(context, sdkAppId, userId, userSig, config, callback);
     }
+
+
+    /**
+     * User Login
+     *
+     * @param userId   User ID
+     * @param userSig  Obtained from the business server
+     * @param callback  login callback
+     */
+    @Deprecated
+    public static void login(@NonNull String userId, @NonNull String userSig, @Nullable V2TIMCallback callback) {
+        getInstance().userId = userId;
+        getInstance().userSig = userSig;
+        if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
+            if (callback != null) {
+                callback.onSuccess();
+            }
+            getUserInfo(userId);
+            return;
+        }
+
+        V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                getInstance().hasLoginSuccess = true;
+                if (callback != null) {
+                    callback.onSuccess();
+                }
+                getUserInfo(userId);
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                if (callback != null) {
+                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
+                }
+            }
+        });
+    }
+
 
     /**
      * IMSDK logout
@@ -139,6 +176,35 @@ public class TUILogin {
      */
     public static void logout(TUICallback callback) {
         getInstance().internalLogout(callback);
+    }
+
+    /**
+     * User Logout
+     *
+     * @param callback  Logout callback
+     */
+    @Deprecated
+    public static void logout(@Nullable V2TIMCallback callback) {
+        V2TIMManager.getInstance().logout(new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                getInstance().userId = null;
+                getInstance().userSig = null;
+                if (callback != null) {
+                    callback.onSuccess();
+                }
+                TUIConfig.clearSelfInfo();
+
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                if (callback != null) {
+                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
+                }
+            }
+        });
     }
 
     public static void addLoginListener(TUILoginListener listener) {
@@ -149,7 +215,7 @@ public class TUILogin {
         getInstance().internalRemoveLoginListener(listener);
     }
 
-    private void internalLogin(Context context, final int sdkAppId, final String  userId, final String userSig, TUILoginConfig config, TUICallback callback) {
+    private void internalLogin(Context context, final int sdkAppId, final String userId, final String userSig, TUILoginConfig config, TUICallback callback) {
         if (this.sdkAppId != 0 && sdkAppId != this.sdkAppId) {
             logout((TUICallback) null);
         }
@@ -253,7 +319,7 @@ public class TUILogin {
      *
      * @param context      The context of the application, generally is ApplicationContext
      * @param sdkAppId     Assigned when you register your app with Tencent Cloud
-     * @param config       The related configuration items of IMSDK, generally use the default, 
+     * @param config       The related configuration items of IMSDK, generally use the default,
      *                     and need special configuration, please refer to the API documentation
      * @param listener     Listener of IMSDK init
      * @return true：init success；false：init failed
@@ -294,8 +360,7 @@ public class TUILogin {
                     listener.onKickedOffline();
                 }
                 setCurrentBusinessScene(TUIBusinessScene.NONE);
-                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                        TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, null);
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, null);
             }
 
             @Override
@@ -304,8 +369,7 @@ public class TUILogin {
                     listener.onUserSigExpired();
                 }
                 setCurrentBusinessScene(TUIBusinessScene.NONE);
-                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                        TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, null);
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, null);
             }
 
             @Override
@@ -329,74 +393,6 @@ public class TUILogin {
 
         V2TIMManager.getInstance().unInitSDK();
         TUIConfig.clearSelfInfo();
-    }
-
-    /**
-     * User Login
-     *
-     * @param userId   User ID
-     * @param userSig  Obtained from the business server
-     * @param callback  login callback
-     */
-    @Deprecated
-    public static void login(@NonNull String userId, @NonNull String userSig, @Nullable V2TIMCallback callback) {
-        getInstance().userId = userId;
-        getInstance().userSig = userSig;
-        if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
-            if (callback != null) {
-                callback.onSuccess();
-            }
-            getUserInfo(userId);
-            return;
-        }
-
-        V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                getInstance().hasLoginSuccess = true;
-                if (callback != null) {
-                    callback.onSuccess();
-                }
-                getUserInfo(userId);
-                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                if (callback != null) {
-                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
-                }
-            }
-        });
-    }
-
-    /**
-     * User Logout
-     *
-     * @param callback  Logout callback
-     */
-    @Deprecated
-    public static void logout(@Nullable V2TIMCallback callback) {
-        V2TIMManager.getInstance().logout(new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                getInstance().userId = null;
-                getInstance().userSig = null;
-                if (callback != null) {
-                    callback.onSuccess();
-                }
-                TUIConfig.clearSelfInfo();
-
-                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, null);
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                if (callback != null) {
-                    callback.onError(code, ErrorMessageConverter.convertIMError(code, desc));
-                }
-            }
-        });
     }
 
     private static void getUserInfo(String userId) {
@@ -432,8 +428,7 @@ public class TUILogin {
         param.put(TUIConstants.TUILogin.SELF_GENDER, userFullInfo.getGender());
         param.put(TUIConstants.TUILogin.SELF_LEVEL, userFullInfo.getLevel());
         param.put(TUIConstants.TUILogin.SELF_ALLOW_TYPE, userFullInfo.getAllowType());
-        TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_INFO_UPDATED, param);
+        TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_INFO_UPDATED, param);
     }
 
     public static int getSdkAppId() {

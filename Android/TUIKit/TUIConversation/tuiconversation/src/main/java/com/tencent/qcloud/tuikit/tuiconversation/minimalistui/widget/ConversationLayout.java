@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -24,12 +22,10 @@ import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConver
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.setting.ConversationLayoutSetting;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConversationLayout extends RelativeLayout implements IConversationLayout {
-
     private ConversationListLayout mConversationList;
     private ViewGroup headerContainer;
     private ConversationPresenter presenter;
@@ -40,7 +36,8 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     private boolean isMultiSelected = false;
     private List<ConversationInfo> mSelectConversations = new ArrayList<>();
     private ImageView homeView;
-    private TextView titleView, rtCubeTitleView;
+    private TextView titleView;
+    private TextView rtCubeTitleView;
 
     public ConversationLayout(Context context) {
         super(context);
@@ -152,6 +149,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     public void setOnClickListener(TUIConversationMinimalistFragment.OnClickListener listener) {
         mClickListener = listener;
     }
+
     public boolean isMultiSelected() {
         return isMultiSelected;
     }
@@ -203,9 +201,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     }
 
     @Override
-    public void setParentLayout(Object parent) {
-
-    }
+    public void setParentLayout(Object parent) {}
 
     @Override
     public ConversationListLayout getConversationList() {

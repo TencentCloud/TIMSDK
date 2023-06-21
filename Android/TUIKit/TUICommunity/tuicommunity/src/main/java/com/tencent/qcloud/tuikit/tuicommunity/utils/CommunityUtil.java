@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 
 public class CommunityUtil {
-
     public static <T> void callbackOnSuccess(IUIKitCallback<T> callback, T data) {
         if (callback != null) {
             callback.onSuccess(data);
@@ -17,7 +15,7 @@ public class CommunityUtil {
 
     public static <T> void callbackOnError(IUIKitCallback<T> callback, int errorCode, String errorMessage) {
         if (callback != null) {
-            callback.onError(null , errorCode, errorMessage);
+            callback.onError(null, errorCode, errorMessage);
         }
     }
 
@@ -47,5 +45,4 @@ public class CommunityUtil {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
-
 }

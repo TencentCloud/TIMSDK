@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuicommunity.presenter;
 
 import android.text.TextUtils;
 import android.util.Pair;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -23,7 +22,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunitySettingsAc
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICreateTopicActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,6 +46,7 @@ public class CommunityPresenter {
     private final CommunityEventListener communityEventListener;
 
     private CommunityBean currentCommunityBean;
+
     public CommunityPresenter() {
         provider = new CommunityProvider();
         communityEventListener = new CommunityEventListener() {
@@ -178,7 +177,6 @@ public class CommunityPresenter {
             }
         });
     }
-
 
     private void addCommunityGroup(String groupID, boolean isSwitch) {
         for (CommunityBean communityBean : joinedCommunityBeanList) {
@@ -444,19 +442,19 @@ public class CommunityPresenter {
     }
 
     private void createDefaultTopic(String groupID) {
-        String topicCategoryAnnouncement = TUICommunityService.getAppContext().getString(R.string.community_default_category_announcement);
-        String topicCategoryCommunication = TUICommunityService.getAppContext().getString(R.string.community_default_category_communication);
-        String topicNameNotice = TUICommunityService.getAppContext().getString(R.string.community_topic_important_notice);
-        String topicNameNewbie = TUICommunityService.getAppContext().getString(R.string.community_topic_newbie_report);
-        String topicNameChat = TUICommunityService.getAppContext().getString(R.string.community_topic_chat_hall);
         TopicBean topicBean = new TopicBean();
+        String topicNameNotice = TUICommunityService.getAppContext().getString(R.string.community_topic_important_notice);
         topicBean.setTopicName(topicNameNotice);
+        String topicCategoryAnnouncement = TUICommunityService.getAppContext().getString(R.string.community_default_category_announcement);
         topicBean.setCategory(topicCategoryAnnouncement);
         topicBean.setAllMute(true);
         provider.createTopic(groupID, topicBean, null);
+        String topicNameNewbie = TUICommunityService.getAppContext().getString(R.string.community_topic_newbie_report);
         topicBean.setTopicName(topicNameNewbie);
+        String topicCategoryCommunication = TUICommunityService.getAppContext().getString(R.string.community_default_category_communication);
         topicBean.setCategory(topicCategoryCommunication);
         provider.createTopic(groupID, topicBean, null);
+        String topicNameChat = TUICommunityService.getAppContext().getString(R.string.community_topic_chat_hall);
         topicBean.setTopicName(topicNameChat);
         topicBean.setCategory(topicCategoryCommunication);
         provider.createTopic(groupID, topicBean, null);
@@ -499,7 +497,8 @@ public class CommunityPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage(TUICommunityService.getAppContext().getString(R.string.community_create_topic_category_failed) + " code=" + errCode + " errMsg=" + errMsg);
+                ToastUtil.toastShortMessage(
+                    TUICommunityService.getAppContext().getString(R.string.community_create_topic_category_failed) + " code=" + errCode + " errMsg=" + errMsg);
             }
         });
     }

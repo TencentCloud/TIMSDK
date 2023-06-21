@@ -108,13 +108,10 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
                 popupInputCard.setContent(remarkController.getContent());
                 popupInputCard.setTitle(getResources().getString(R.string.profile_remark_edit));
                 String description = getResources().getString(R.string.contact_modify_remark_rule);
-                popupInputCard.setRule("^[a-zA-Z0-9_\u4e00-\u9fa5]*$");
+                popupInputCard.setRule("^[a-zA-Z0-9_一-龥]*$");
                 popupInputCard.setDescription(description);
                 popupInputCard.setOnPositive((result -> {
                     remarkController.setContent(result);
-                    if (TextUtils.isEmpty(result)) {
-                        result = "";
-                    }
                 }));
                 popupInputCard.show(remarkController, Gravity.BOTTOM);
             }
@@ -145,7 +142,7 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
                         public void onSuccess(Pair<Integer, String> data) {
                             int toastIconType = ContactToast.TOAST_ICON_NEGATIVE;
                             if (data.first == FriendApplicationBean.ERR_SVR_FRIENDSHIP_ALLOW_TYPE_NEED_CONFIRM
-                                    || data.first == FriendApplicationBean.ERR_SUCC) {
+                                || data.first == FriendApplicationBean.ERR_SUCC) {
                                 toastIconType = ContactToast.TOAST_ICON_POSITIVE;
                             }
                             ContactToast.showToast(getContext(), data.second, toastIconType);
@@ -164,8 +161,7 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
             setGroupDetail((GroupInfo) data);
             remarksArea.setVisibility(View.GONE);
         } else if (data instanceof ContactItemBean) {
-            setFriendDetail(((ContactItemBean) data).getAvatarUrl(),
-                    ((ContactItemBean) data).getId(), ((ContactItemBean) data).getNickName());
+            setFriendDetail(((ContactItemBean) data).getAvatarUrl(), ((ContactItemBean) data).getId(), ((ContactItemBean) data).getNickName());
         }
         validationEdit.setText(getString(R.string.contact_add_friend_default_validation, TUIConfig.getSelfNickName()));
         return view;
@@ -173,8 +169,8 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
 
     private void setGroupDetail(GroupInfo groupInfo) {
         int radius = ScreenUtil.dip2px(35);
-        GlideEngine.loadUserIcon(faceImgView, groupInfo.getFaceUrl(),
-                TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), groupInfo.getGroupType()), radius);
+        GlideEngine.loadUserIcon(
+            faceImgView, groupInfo.getFaceUrl(), TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), groupInfo.getGroupType()), radius);
         idTextView.setText(groupInfo.getId());
         nickNameView.setText(groupInfo.getGroupName());
         groupTypeTagView.setVisibility(View.VISIBLE);

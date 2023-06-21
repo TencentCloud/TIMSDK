@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicontact;
 
 import android.content.Context;
-
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
@@ -14,7 +13,6 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +44,6 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
         return null;
     }
 
-
     private void initService() {
         TUICore.registerService(TUIConstants.TUIContact.SERVICE_NAME, this);
     }
@@ -66,7 +63,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
                 String id = (String) param.get(TUIConstants.TUIContact.FRIEND_ID);
                 String remark = (String) param.get(TUIConstants.TUIContact.FRIEND_REMARK);
                 for (ContactEventListener contactEventListener : contactEventListenerList) {
-                    contactEventListener.onFriendRemarkChanged(id ,remark);
+                    contactEventListener.onFriendRemarkChanged(id, remark);
                 }
             }
         }
@@ -78,7 +75,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
             public void onFriendApplicationListAdded(List<V2TIMFriendApplication> applicationList) {
                 List<ContactEventListener> contactEventListenerList = getInstance().getContactEventListenerList();
                 List<FriendApplicationBean> friendApplicationBeanList = new ArrayList<>();
-                for(V2TIMFriendApplication v2TIMFriendApplication : applicationList) {
+                for (V2TIMFriendApplication v2TIMFriendApplication : applicationList) {
                     FriendApplicationBean friendApplicationBean = new FriendApplicationBean();
                     friendApplicationBean.convertFromTimFriendApplication(v2TIMFriendApplication);
                     friendApplicationBeanList.add(friendApplicationBean);
@@ -108,7 +105,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
             public void onFriendListAdded(List<V2TIMFriendInfo> users) {
                 List<ContactEventListener> contactEventListenerList = getInstance().getContactEventListenerList();
                 List<ContactItemBean> contactItemBeanList = new ArrayList<>();
-                for(V2TIMFriendInfo v2TIMFriendInfo : users) {
+                for (V2TIMFriendInfo v2TIMFriendInfo : users) {
                     ContactItemBean contactItemBean = new ContactItemBean();
                     contactItemBean.setFriend(true);
                     contactItemBean.covertTIMFriend(v2TIMFriendInfo);
@@ -127,15 +124,14 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
                 }
                 HashMap<String, Object> bundle = new HashMap<>();
                 bundle.put(TUIConstants.TUIContact.FRIEND_ID_LIST, new ArrayList<>(userList));
-                TUICore.notifyEvent(TUIConstants.TUIContact.EVENT_FRIEND_STATE_CHANGED,
-                        TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_DELETE, bundle);
+                TUICore.notifyEvent(TUIConstants.TUIContact.EVENT_FRIEND_STATE_CHANGED, TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_DELETE, bundle);
             }
 
             @Override
             public void onBlackListAdd(List<V2TIMFriendInfo> infoList) {
                 List<ContactEventListener> contactEventListenerList = getInstance().getContactEventListenerList();
                 List<ContactItemBean> contactItemBeanList = new ArrayList<>();
-                for(V2TIMFriendInfo v2TIMFriendInfo : infoList) {
+                for (V2TIMFriendInfo v2TIMFriendInfo : infoList) {
                     ContactItemBean contactItemBean = new ContactItemBean();
                     contactItemBean.covertTIMFriend(v2TIMFriendInfo);
                     contactItemBeanList.add(contactItemBean);
@@ -157,7 +153,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
             public void onFriendInfoChanged(List<V2TIMFriendInfo> infoList) {
                 List<ContactEventListener> contactEventListenerList = getInstance().getContactEventListenerList();
                 List<ContactItemBean> contactItemBeanList = new ArrayList<>();
-                for(V2TIMFriendInfo v2TIMFriendInfo : infoList) {
+                for (V2TIMFriendInfo v2TIMFriendInfo : infoList) {
                     ContactItemBean contactItemBean = new ContactItemBean();
                     contactItemBean.setFriend(true);
                     contactItemBean.covertTIMFriend(v2TIMFriendInfo);
@@ -184,7 +180,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
     public List<ContactEventListener> getContactEventListenerList() {
         List<ContactEventListener> contactEventListeners = new ArrayList<>();
         Iterator<WeakReference<ContactEventListener>> iterator = contactEventListenerList.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             WeakReference<ContactEventListener> weakReference = iterator.next();
             if (weakReference.get() == null) {
                 iterator.remove();
@@ -198,7 +194,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
     public void addContactEventListener(ContactEventListener contactEventListener) {
         WeakReference<ContactEventListener> reference = new WeakReference<>(contactEventListener);
         Iterator<WeakReference<ContactEventListener>> iterator = contactEventListenerList.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             WeakReference<ContactEventListener> weakReference = iterator.next();
             if (weakReference.get() == null) {
                 iterator.remove();
@@ -225,5 +221,4 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
     public int getSeriousThemeResId() {
         return R.style.TUIContactSeriousTheme;
     }
-
 }

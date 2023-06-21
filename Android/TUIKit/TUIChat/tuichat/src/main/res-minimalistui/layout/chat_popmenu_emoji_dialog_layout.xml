@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:minHeight="1000dp"
-    android:background="@drawable/chat_bottom_sheet_dialog_border"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@drawable/chat_bottom_sheet_dialog_border">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

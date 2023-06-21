@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
@@ -22,7 +21,6 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
 
 public class GroupNoticeMinimalistActivity extends BaseMinimalistLightActivity {
-
     private static OnGroupNoticeChangedListener changedListener;
 
     private EditText editText;
@@ -137,7 +135,7 @@ public class GroupNoticeMinimalistActivity extends BaseMinimalistLightActivity {
     // 兼容有导航键的情况
     private int getNavigateBarHeight() {
         DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager  = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         int usableHeight = metrics.heightPixels;
         windowManager.getDefaultDisplay().getRealMetrics(metrics);

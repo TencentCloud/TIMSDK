@@ -1,15 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/content_image_iv"
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout
+        android:id="@+id/image_round_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:clickable="false"
-        android:scaleType="fitCenter" />
+        app:corner_radius="8dp">
+
+        <ImageView
+            android:id="@+id/content_image_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:scaleType="fitCenter" />
+
+        <FrameLayout
+            android:id="@+id/progress_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="#80333333">
+
+            <com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar
+                android:id="@+id/file_progress_bar"
+                android:layout_gravity="center"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+            <TextView
+                android:id="@+id/file_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:text="0%"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/file_progress_icon"
+                android:scaleType="centerInside"
+                android:layout_gravity="center"
+                android:background="@drawable/chat_progress_download_icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:visibility="gone"
+                />
+
+        </FrameLayout>
+
+
+    </com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout>
+
 
     <ImageView
         android:id="@+id/video_play_btn"
@@ -17,17 +64,21 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:clickable="false"
+        android:visibility="gone"
         android:src="@drawable/ic_chat_play_icon" />
 
     <TextView
         android:id="@+id/video_duration_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/content_image_iv"
-        android:layout_alignRight="@+id/content_image_iv"
+        android:layout_alignBottom="@+id/image_round_container"
+        android:layout_alignRight="@+id/image_round_container"
         android:layout_marginBottom="4dp"
         android:layout_marginRight="6.5dp"
         android:textColor="@color/white"
+        android:visibility="gone"
         android:textSize="11sp" />
+
+
 
 </RelativeLayout>

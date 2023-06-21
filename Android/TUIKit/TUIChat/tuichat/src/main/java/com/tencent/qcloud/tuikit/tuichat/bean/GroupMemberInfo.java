@@ -8,7 +8,6 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import java.io.Serializable;
 
 public class GroupMemberInfo implements Serializable {
-
     private String iconUrl;
     private String account;
     private String signature;
@@ -144,7 +143,7 @@ public class GroupMemberInfo implements Serializable {
 
     public GroupMemberInfo covertTIMGroupMemberInfo(V2TIMGroupMemberInfo info) {
         if (info instanceof V2TIMGroupMemberFullInfo) {
-            V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = (V2TIMGroupMemberFullInfo)info;
+            V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = (V2TIMGroupMemberFullInfo) info;
             setJoinTime(v2TIMGroupMemberFullInfo.getJoinTime());
             setMemberType(v2TIMGroupMemberFullInfo.getRole());
         }

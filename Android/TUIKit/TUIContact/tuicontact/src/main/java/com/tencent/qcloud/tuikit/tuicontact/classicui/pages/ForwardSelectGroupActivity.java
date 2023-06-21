@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
@@ -27,13 +25,11 @@ import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ForwardContactSelectorAdapter;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ForwardSelectGroupActivity extends BaseLightActivity {
-
     private static final String TAG = ForwardSelectGroupActivity.class.getSimpleName();
 
     private TitleBarLayout mTitleBar;
@@ -56,6 +52,7 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
     private List<ConversationInfo> mContactDataSource = new ArrayList<>();
 
     private ContactPresenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,36 +61,36 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
         init();
     }
 
-    private String getMembersUserId(){
+    private String getMembersUserId() {
         if (mMembers.size() == 0) {
             return "";
         }
 
         String userIdString = "";
-        for(int i = 0; i < mMembers.size(); i++){
+        for (int i = 0; i < mMembers.size(); i++) {
             userIdString += mMembers.get(i).getAccount();
             userIdString += " ";
         }
         return userIdString;
     }
 
-    private void refreshMembers(){
-        if (mContactDataSource == null || mContactDataSource.size() ==0){
+    private void refreshMembers() {
+        if (mContactDataSource == null || mContactDataSource.size() == 0) {
             mMembers.clear();
             return;
         }
 
-        for (int i=0;i<mContactDataSource.size();i++){
+        for (int i = 0; i < mContactDataSource.size(); i++) {
             GroupMemberInfo memberInfo = new GroupMemberInfo();
             memberInfo.setAccount(mContactDataSource.get(i).getId());
-            memberInfo.setIconUrl((String)mContactDataSource.get(i).getIconUrlList().get(0));
+            memberInfo.setIconUrl((String) mContactDataSource.get(i).getIconUrlList().get(0));
             mMembers.add(memberInfo);
         }
     }
 
     private void init() {
         Intent intent = getIntent();
-        if (intent != null){
+        if (intent != null) {
             isCreateNewChat = intent.getBooleanExtra(TUIContactConstants.FORWARD_CREATE_NEW_CHAT, false);
         }
 
@@ -157,13 +154,13 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
         mSureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isCreateNewChat){
+                if (isCreateNewChat) {
                     createGroupChat();
                 } else {
                     Intent intent = new Intent();
                     HashMap<String, String> conversationMap = new HashMap<>();
-                    if (mMembers != null && mMembers.size() != 0){
-                        for (int i=0;i<mMembers.size();i++){
+                    if (mMembers != null && mMembers.size() != 0) {
+                        for (int i = 0; i < mMembers.size(); i++) {
                             conversationMap.put(mMembers.get(i).getAccount(), mMembers.get(i).getIconUrl());
                         }
                     }
@@ -179,16 +176,16 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
         refreshSelectConversations();
     }
 
-    private void refreshSelectConversations(){
+    private void refreshSelectConversations() {
         mSelectConversationIcons.clear();
-        if (mMembers != null && mMembers.size() != 0){
-            for (int i=0;i<mMembers.size();i++){
+        if (mMembers != null && mMembers.size() != 0) {
+            for (int i = 0; i < mMembers.size(); i++) {
                 mSelectConversationIcons.add(mMembers.get(i).getIconUrl());
             }
         }
         mAdapter.setDataSource(mSelectConversationIcons);
 
-        if (mSelectConversationIcons == null || mSelectConversationIcons.size() == 0){
+        if (mSelectConversationIcons == null || mSelectConversationIcons.size() == 0) {
             mSureView.setText(getString(com.tencent.qcloud.tuicore.R.string.sure));
             mSureView.setVisibility(View.GONE);
             mForwardSelectlistViewLayout.setVisibility(View.GONE);
@@ -223,8 +220,8 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
         if (mCreating || mMembers.isEmpty()) {
             return;
         }
-       
-        if (mMembers.size() == 1){
+
+        if (mMembers.size() == 1) {
             Intent intent = new Intent();
             HashMap<String, Boolean> conversationMap = new HashMap<>();
             conversationMap.put(mMembers.get(0).getAccount(), false);
@@ -253,7 +250,7 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
         groupInfo.setJoinType(0);
 
         mCreating = true;
-        
+
         presenter.createGroupChat(groupInfo, new IUIKitCallback<String>() {
             @Override
             public void onSuccess(String data) {
@@ -273,7 +270,5 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
                 ToastUtil.toastLongMessage("createGroupChat fail:" + errCode + "=" + errMsg);
             }
         });
-
     }
-
 }

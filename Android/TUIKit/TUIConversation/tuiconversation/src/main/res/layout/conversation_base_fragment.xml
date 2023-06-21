@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        app:elevation="0dp"
+        app:layout_insetEdge="none">
+
+        <FrameLayout
+            android:id="@+id/conversation_search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
+
+        <RelativeLayout
+            android:id="@+id/conversation_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="@dimen/page_margin"
+            android:background="@color/white">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/conversation_tabs"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="28dp"
+                android:background="@drawable/shape_tab_bg"
+                app:tabUnboundedRipple="true"
+                app:tabSelectedTextColor="@color/font_blue"
+                app:tabTextColor="@color/black"
+                app:tabMode="auto"
+                app:tabIndicatorColor="@color/white"
+                app:tabIndicator="@drawable/shape_full_tab_indicator"
+                app:tabMinWidth="64dp"
+                app:tabIndicatorGravity="center"
+                app:tabRippleColor="@color/conversation_tab_bg_color"
+                />
+
+            <LinearLayout
+                android:id="@+id/conversation_group_setting"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:orientation="horizontal" />
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/converstion_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

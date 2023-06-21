@@ -2,7 +2,6 @@ package com.tencent.qcloud.tim.tuiofflinepush.oempush;
 
 import android.content.Context;
 import android.content.Intent;
-
 import com.meizu.cloud.pushsdk.MzPushMessageReceiver;
 import com.meizu.cloud.pushsdk.handler.MzPushMessage;
 import com.meizu.cloud.pushsdk.notification.PushNotificationBuilder;
@@ -14,7 +13,6 @@ import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
 import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 
 public class MEIZUPushReceiver extends MzPushMessageReceiver {
-
     private static final String TAG = MEIZUPushReceiver.class.getSimpleName();
 
     @Override
@@ -59,9 +57,7 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
     }
 
     @Override
-    public void onPushStatus(Context context, PushSwitchStatus pushSwitchStatus) {
-
-    }
+    public void onPushStatus(Context context, PushSwitchStatus pushSwitchStatus) {}
 
     @Override
     public void onRegisterStatus(Context context, RegisterStatus registerStatus) {
@@ -73,26 +69,17 @@ public class MEIZUPushReceiver extends MzPushMessageReceiver {
     }
 
     @Override
-    public void onUnRegisterStatus(Context context, UnRegisterStatus unRegisterStatus) {
-
-    }
+    public void onUnRegisterStatus(Context context, UnRegisterStatus unRegisterStatus) {}
 
     @Override
-    public void onSubTagsStatus(Context context, SubTagsStatus subTagsStatus) {
-
-    }
+    public void onSubTagsStatus(Context context, SubTagsStatus subTagsStatus) {}
 
     @Override
-    public void onSubAliasStatus(Context context, SubAliasStatus subAliasStatus) {
-
-    }
+    public void onSubAliasStatus(Context context, SubAliasStatus subAliasStatus) {}
 
     @Override
-    public void onRegister(Context context, String s) {
-    }
+    public void onRegister(Context context, String s) {}
 
     @Override
-    public void onUnRegister(Context context, boolean b) {
-
-    }
+    public void onUnRegister(Context context, boolean b) {}
 }

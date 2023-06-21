@@ -1,19 +1,16 @@
 package com.tencent.qcloud.tuikit.tuicommunity.bean;
 
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.qcloud.tuicore.TUILogin;
-
 import java.io.Serializable;
 import java.util.List;
 
 public class CommunityBean implements Comparable<CommunityBean>, Serializable {
-
-     public static final int ROLE_UNDEFINED = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_UNDEFINED;
-     public static final int ROLE_ADMIN = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
-     public static final int ROLE_OWNER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER;
-     public static final int ROLE_MEMBER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
+    public static final int ROLE_UNDEFINED = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_UNDEFINED;
+    public static final int ROLE_ADMIN = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
+    public static final int ROLE_OWNER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER;
+    public static final int ROLE_MEMBER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
 
     private String groupId;
     private String groupFaceUrl;

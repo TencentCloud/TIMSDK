@@ -14,9 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuisearch.R;
@@ -30,7 +28,6 @@ import com.tencent.qcloud.tuikit.tuisearch.model.SearchDataProvider;
 import com.tencent.qcloud.tuikit.tuisearch.presenter.SearchMoreMsgPresenter;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchLog;
 import com.tencent.qcloud.tuikit.tuisearch.util.TUISearchUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +62,7 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
         init();
     }
 
-    private void init(){
+    private void init() {
         initView();
 
         if (mMessageRcSearchAdapter == null) {
@@ -124,14 +121,10 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
     private void setListener() {
         mEdtSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -155,7 +148,7 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
         });
 
         if (mMessageRcSearchAdapter != null) {
-            mMessageRcSearchAdapter.setOnItemClickListener(new SearchMoreMsgAdapter.onItemClickListener() {
+            mMessageRcSearchAdapter.setOnItemClickListener(new SearchMoreMsgAdapter.OnItemClickListener() {
                 @Override
                 public void onClick(View view, int pos) {
                     if (mSearchDataBean == null) {
@@ -197,16 +190,15 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
                 }
                 chatInfo.setChatName(chatName);
                 MinimalistSearchUtils.startChatActivity(chatInfo);
-
             }
         });
 
         mMessageRcSearch.setLoadMoreMessageHandler(new PageRecycleView.OnLoadMoreHandler() {
             @Override
             public void loadMore() {
-                final List<String> keywordList = new ArrayList<String>() {{
-                    add(mKeyWords);
-                }};
+                final List<String> keywordList = new ArrayList<String>() {
+                    { add(mKeyWords); }
+                };
 
                 presenter.searchMessage(keywordList, mConversationId, ++pageIndex, new IUIKitCallback<List<SearchDataBean>>() {
                     @Override
@@ -237,8 +229,9 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
                 }
 
                 int totalCount = mMessageRcSearchAdapter.getTotalCount();
-                int totalPage = (totalCount % SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE == 0) ?
-                        (totalCount / SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE) : (totalCount / SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE + 1);
+                int totalPage = (totalCount % SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE == 0)
+                    ? (totalCount / SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE)
+                    : (totalCount / SearchDataProvider.CONVERSATION_MESSAGE_PAGE_SIZE + 1);
                 if (pageIndex < totalPage) {
                     return false;
                 }
@@ -273,15 +266,15 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
     }
 
     private void initData(final String keyWords) {
-        if (keyWords == null || TextUtils.isEmpty(keyWords)){
+        if (keyWords == null || TextUtils.isEmpty(keyWords)) {
             mMessageLayout.setVisibility(View.GONE);
             notFoundArea.setVisibility(View.GONE);
             return;
         }
 
-        final List<String> keywordList = new ArrayList<String>() {{
-            add(keyWords);
-        }};
+        final List<String> keywordList = new ArrayList<String>() {
+            { add(keyWords); }
+        };
 
         presenter.searchMessage(keywordList, mConversationId, pageIndex, new IUIKitCallback<List<SearchDataBean>>() {
             @Override
@@ -320,8 +313,10 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
         if (v != null && (v instanceof EditText)) {
             int[] l = {0, 0};
             v.getLocationInWindow(l);
-            int left = l[0], top = l[1], bottom = top + v.getHeight(), right = left
-                    + v.getWidth();
+            int left = l[0];
+            int top = l[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
             if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
                 return false;
             } else {

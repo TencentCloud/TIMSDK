@@ -9,10 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -24,20 +22,19 @@ import com.tencent.qcloud.tuikit.tuicontact.minimalistui.interfaces.IContactLayo
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.AddMoreMinimalistDialogFragment;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.TUIContactMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ContactLayout extends LinearLayout implements IContactLayout {
-
     private static final String TAG = ContactLayout.class.getSimpleName();
 
     private ContactListView mContactListView;
     private View createNewButton;
     private Menu menu;
     private ImageView homeView;
-    private TextView titleView, rtCubeTitleView;
+    private TextView titleView;
+    private TextView rtCubeTitleView;
+
     private TUIContactMinimalistFragment.OnClickListener mClickListener = null;
 
     private ContactPresenter presenter;
@@ -109,7 +106,6 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
 
     private void initContactMenu() {
         menu = new Menu((Activity) getContext(), createNewButton);
-        List<PopMenuAction> menuActionList = new ArrayList<>(2);
         PopActionClickListener popActionClickListener = new PopActionClickListener() {
             @Override
             public void onActionClick(int index, Object data) {
@@ -131,6 +127,7 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
         action.setActionName(getResources().getString(R.string.add_friend));
         action.setIconResId(R.drawable.contact_add_friend);
         action.setActionClickListener(popActionClickListener);
+        List<PopMenuAction> menuActionList = new ArrayList<>(2);
         menuActionList.add(action);
 
         action = new PopMenuAction();
@@ -140,7 +137,6 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
         menuActionList.add(action);
         menu.setMenuAction(menuActionList);
     }
-
 
     public void initDefault() {
         mContactListView.setPresenter(presenter);
@@ -159,7 +155,5 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
     }
 
     @Override
-    public void setParentLayout(Object parent) {
-
-    }
+    public void setParentLayout(Object parent) {}
 }

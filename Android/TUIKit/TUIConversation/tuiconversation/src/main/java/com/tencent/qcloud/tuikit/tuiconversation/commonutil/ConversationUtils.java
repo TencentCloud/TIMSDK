@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuiconversation.commonutil;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -15,8 +14,8 @@ import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
-
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class ConversationUtils {
@@ -25,7 +24,7 @@ public class ConversationUtils {
     public static List<ConversationInfo> convertV2TIMConversationList(List<V2TIMConversation> conversationList) {
         List<ConversationInfo> conversationInfoList = new ArrayList<>();
         if (conversationList != null) {
-            for(V2TIMConversation conversation : conversationList) {
+            for (V2TIMConversation conversation : conversationList) {
                 conversationInfoList.add(convertV2TIMConversation(conversation));
             }
         }
@@ -36,8 +35,8 @@ public class ConversationUtils {
         if (conversation == null) {
             return null;
         }
-        TUIConversationLog.i(TAG, "TIMConversation2ConversationInfo id:" + conversation.getConversationID()
-                + "|name:" + conversation.getShowName()
+        TUIConversationLog.i(TAG,
+            "TIMConversation2ConversationInfo id:" + conversation.getConversationID() + "|name:" + conversation.getShowName()
                 + "|unreadNum:" + conversation.getUnreadCount());
         final ConversationInfo info = new ConversationInfo();
         info.setConversation(conversation);
@@ -45,8 +44,6 @@ public class ConversationUtils {
         if (type != V2TIMConversation.V2TIM_C2C && type != V2TIMConversation.V2TIM_GROUP) {
             return null;
         }
-
-        boolean isGroup = type == V2TIMConversation.V2TIM_GROUP;
 
         String draftText = conversation.getDraftText();
         if (!TextUtils.isEmpty(draftText)) {
@@ -65,7 +62,7 @@ public class ConversationUtils {
         }
 
         int atInfoType = getAtInfoType(conversation);
-        switch (atInfoType){
+        switch (atInfoType) {
             case V2TIMGroupAtInfo.TIM_AT_ME:
                 info.setAtInfoText(TUIConversationService.getAppContext().getString(R.string.ui_at_me));
                 info.setAtType(ConversationInfo.AT_TYPE_AT_ME);
@@ -85,6 +82,7 @@ public class ConversationUtils {
 
         info.setTitle(conversation.getShowName());
         List<Object> faceList = new ArrayList<>();
+        boolean isGroup = type == V2TIMConversation.V2TIM_GROUP;
         if (isGroup) {
             if (!TextUtils.isEmpty(conversation.getFaceUrl())) {
                 faceList.add(conversation.getFaceUrl());
@@ -113,7 +111,7 @@ public class ConversationUtils {
         }
         info.setConversationId(conversation.getConversationID());
         info.setGroup(isGroup);
-        
+
         if (!V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversation.getGroupType())) {
             info.setUnRead(conversation.getUnreadCount());
         }
@@ -135,42 +133,47 @@ public class ConversationUtils {
             } else {
                 info.setMarkHidden(false);
             }
+            if (conversation.getMarkList().contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_STAR)) {
+                info.setMarkStar(true);
+            } else {
+                info.setMarkStar(false);
+            }
         }
         return info;
     }
 
-    private static int getAtInfoType(V2TIMConversation conversation){
+    private static int getAtInfoType(V2TIMConversation conversation) {
         int atInfoType = 0;
         boolean atMe = false;
         boolean atAll = false;
 
         List<V2TIMGroupAtInfo> atInfoList = conversation.getGroupAtInfoList();
 
-        if (atInfoList == null || atInfoList.isEmpty()){
+        if (atInfoList == null || atInfoList.isEmpty()) {
             return V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
         }
 
-        for(V2TIMGroupAtInfo atInfo : atInfoList){
-            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ME){
+        for (V2TIMGroupAtInfo atInfo : atInfoList) {
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ME) {
                 atMe = true;
                 continue;
             }
-            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL){
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL) {
                 atAll = true;
                 continue;
             }
-            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME){
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME) {
                 atMe = true;
                 atAll = true;
                 continue;
             }
         }
 
-        if (atAll && atMe){
+        if (atAll && atMe) {
             atInfoType = V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME;
-        } else if (atAll){
+        } else if (atAll) {
             atInfoType = V2TIMGroupAtInfo.TIM_AT_ALL;
-        } else if (atMe){
+        } else if (atMe) {
             atInfoType = V2TIMGroupAtInfo.TIM_AT_ME;
         } else {
             atInfoType = V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
@@ -206,4 +209,16 @@ public class ConversationUtils {
         return maxWidth;
     }
 
+    public static void checkRepeatForList(List<?> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        LinkedHashSet hashSet = new LinkedHashSet<>(list);
+        list.clear();
+        list.addAll(hashSet);
+    }
+
+    public static String getConversationAllGroupName() {
+        return TUIConversationService.getAppContext().getResources().getString(R.string.conversation_page_all);
+    }
 }

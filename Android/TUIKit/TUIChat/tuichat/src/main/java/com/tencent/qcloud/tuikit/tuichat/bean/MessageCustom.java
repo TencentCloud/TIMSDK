@@ -8,4 +8,5 @@ public class MessageCustom {
     public String opUser;
     public String content;
     public String data;
+    public int cmd = -1;
 }

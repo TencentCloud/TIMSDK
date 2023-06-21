@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
@@ -17,7 +15,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.OnConve
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.ForwardSelectLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,34 +56,22 @@ public class TUIForwardSelectMinimalistFragment extends BaseFragment {
             }
 
             @Override
-            public void OnItemLongClick(View view, ConversationInfo conversationInfo) {
-
-            }
+            public void onItemLongClick(View view, ConversationInfo conversationInfo) {}
 
             @Override
-            public void onConversationChanged(List<ConversationInfo> dataSource) {
-
-            }
+            public void onConversationChanged(List<ConversationInfo> dataSource) {}
 
             @Override
-            public void onMarkConversationUnread(View view, ConversationInfo conversationInfo, boolean markUnread) {
-
-            }
+            public void onMarkConversationUnread(View view, ConversationInfo conversationInfo, boolean markUnread) {}
 
             @Override
-            public void onMarkConversationHidden(View view, ConversationInfo conversationInfo) {
-
-            }
+            public void onMarkConversationHidden(View view, ConversationInfo conversationInfo) {}
 
             @Override
-            public void onClickMoreView(View view, ConversationInfo conversationInfo) {
-
-            }
+            public void onClickMoreView(View view, ConversationInfo conversationInfo) {}
 
             @Override
-            public void onSwipeConversationChanged(ConversationInfo conversationInfo) {
-
-            }
+            public void onSwipeConversationChanged(ConversationInfo conversationInfo) {}
         });
 
         mSureView = view.findViewById(R.id.btn_msg_ok);
@@ -142,5 +127,4 @@ public class TUIForwardSelectMinimalistFragment extends BaseFragment {
         }
         return stringBuffer.substring(0, stringBuffer.length() - 1);
     }
-
 }

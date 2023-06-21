@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
 import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
@@ -31,7 +30,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,9 +171,7 @@ public class ChatMessageParser {
         try {
             String str = new String(data, "UTF-8");
             MessageTyping typing = new Gson().fromJson(str, MessageTyping.class);
-            if (typing != null
-                    && typing.userAction == MessageTyping.TYPE_TYPING
-                    && TextUtils.equals(typing.actionParam, MessageTyping.EDIT_START)) {
+            if (typing != null && typing.userAction == MessageTyping.TYPE_TYPING && TextUtils.equals(typing.actionParam, MessageTyping.EDIT_START)) {
                 return true;
             }
             return false;
@@ -186,7 +182,7 @@ public class ChatMessageParser {
     }
 
     private static String getCustomBusinessId(V2TIMMessage v2TIMMessage) {
-        V2TIMCustomElem customElem =  v2TIMMessage.getCustomElem();
+        V2TIMCustomElem customElem = v2TIMMessage.getCustomElem();
         if (customElem == null || customElem.getData() == null || customElem.getData().length == 0) {
             return null;
         }
@@ -212,7 +208,7 @@ public class ChatMessageParser {
 
     /**
      * 把 IMSDK 的消息 bean 列表转化为 TUIKit 的消息bean列表
-     * 
+     *
      * Convert IMSDK's message bean list to TUIKit's message bean list
      *
      * @param v2TIMMessageList IMSDK 的消息 bean 列表
@@ -238,7 +234,7 @@ public class ChatMessageParser {
         if (callModel == null) {
             return null;
         }
-        
+
         TUIMessageBean message;
         boolean isGroup = (callModel.getParticipantType() == CallModel.CALL_PARTICIPANT_TYPE_GROUP);
         if (isGroup) {
@@ -294,7 +290,15 @@ public class ChatMessageParser {
                     TipsMessageBean messageBean = new TipsMessageBean();
                     messageBean.setCommonAttribute(v2TIMMessage);
                     messageBean.setTipType(TipsMessageBean.MSG_TYPE_GROUP_CREATE);
-                    String message = TUIChatConstants.covert2HTMLString(getDisplayName(v2TIMMessage)) + messageCustom.content;
+                    String localizableContent = messageCustom.content;
+                    if (messageCustom.cmd >= 0) {
+                        if (messageCustom.cmd == 1) {
+                            localizableContent = TUIChatService.getAppContext().getString(R.string.create_community);
+                        } else {
+                            localizableContent = TUIChatService.getAppContext().getString(R.string.create_group);
+                        }
+                    }
+                    String message = TUIChatConstants.covert2HTMLString(getDisplayName(v2TIMMessage)) + localizableContent;
                     messageBean.setText(message);
                     messageBean.setExtra(message);
                     return messageBean;
@@ -327,7 +331,7 @@ public class ChatMessageParser {
      * 获取图片在本地的原始路径 (可能是沙盒中的路径)
      * @param messageBean 图片消息元组
      * @return 图片原始路径，如果不存在返回 null
-     * 
+     *
      * Get the original path of the image locally (maybe the path in the sandbox)
      * @param messageBean message bean
      * @return The original path of the image, or null if it does not exist
@@ -365,11 +369,8 @@ public class ChatMessageParser {
             if (messageBean.isSelf()) {
                 displayString = TUIChatService.getAppContext().getString(R.string.revoke_tips_you);
             } else if (messageBean.isGroup()) {
-                String message = TUIChatConstants.covert2HTMLString(
-                        TextUtils.isEmpty(messageBean.getNameCard())
-                                ? messageBean.getSender()
-                                : messageBean.getNameCard());
-                displayString = message + TUIChatService.getAppContext().getString(R.string.revoke_tips);
+                String sender = TUIChatConstants.covert2HTMLString(messageBean.getUserDisplayName());
+                displayString = sender + TUIChatService.getAppContext().getString(R.string.revoke_tips);
             } else {
                 displayString = TUIChatService.getAppContext().getString(R.string.revoke_tips_other);
             }
@@ -392,11 +393,8 @@ public class ChatMessageParser {
                 extra = ((FileMessageBean) messageBean).getFileName();
             } else if (messageBean instanceof CustomLinkMessageBean) {
                 extra = ((CustomLinkMessageBean) messageBean).getText();
-            } else if (messageBean instanceof SoundMessageBean
-                    || messageBean instanceof ImageMessageBean
-                    || messageBean instanceof VideoMessageBean
-                    || messageBean instanceof LocationMessageBean
-                    || messageBean instanceof FaceMessageBean) {
+            } else if (messageBean instanceof SoundMessageBean || messageBean instanceof ImageMessageBean || messageBean instanceof VideoMessageBean
+                || messageBean instanceof LocationMessageBean || messageBean instanceof FaceMessageBean) {
                 extra = "";
             } else {
                 extra = messageBean.getExtra();
@@ -443,5 +441,4 @@ public class ChatMessageParser {
         }
         return typeStr;
     }
-
 }

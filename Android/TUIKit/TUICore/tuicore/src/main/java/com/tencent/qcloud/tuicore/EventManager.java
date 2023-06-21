@@ -1,12 +1,9 @@
 package com.tencent.qcloud.tuicore;
 
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -86,10 +83,9 @@ class EventManager {
         Pair<String, String> keyPair = new Pair<>(key, subKey);
         List<ITUINotification> notificationList = eventMap.get(keyPair);
         if (notificationList != null) {
-            for(ITUINotification notification : notificationList) {
+            for (ITUINotification notification : notificationList) {
                 notification.onNotifyEvent(key, subKey, param);
             }
         }
     }
-
 }

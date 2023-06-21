@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.tuiofflinepush.utils;
 import com.tencent.imsdk.common.IMLog;
 
 public class TUIOfflinePushLog extends IMLog {
-
     private static final String PRE = "TUIOfflinePush-";
 
     private static String mixTag(String tag) {
@@ -29,5 +28,4 @@ public class TUIOfflinePushLog extends IMLog {
     public static void e(String strTag, String strInfo) {
         IMLog.e(mixTag(strTag), strInfo);
     }
-
 }

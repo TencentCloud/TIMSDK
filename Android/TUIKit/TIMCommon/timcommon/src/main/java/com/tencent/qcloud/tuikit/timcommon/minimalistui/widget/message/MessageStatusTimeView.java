@@ -59,5 +59,4 @@ public class MessageStatusTimeView extends FrameLayout {
     public void setTimeColor(int color) {
         timeView.setTextColor(color);
     }
-
 }

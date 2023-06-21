@@ -7,7 +7,6 @@ import com.tencent.qcloud.tuikit.tuicommunity.TUICommunityService;
 import com.tencent.qcloud.tuikit.tuicommunity.interfaces.CommunityEventListener;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunitySelfView;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ public class CommunityExperiencePresenter {
     private ICommunitySelfView iCommunitySelfView;
     private CommunityEventListener eventListener;
     private Map<String, Boolean> experienceMap;
+
     public CommunityExperiencePresenter() {
         setExperienceChangedListener();
         setExperience();
