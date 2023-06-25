@@ -34,7 +34,7 @@ English | [简体中文](./README_ZH.md)
 [Latest C API download](https://im.sdk.qcloud.com/download/plus/7.3.4358/cross_platform/ImSDK_iOS_C_7.3.4358.framework.zip)
 
 ### C++ API edition
-[Latest C++ API download](https:  // im.sdk.cloud.tencent.cn/download/plus/7.3.4358/cross_platform/ImSDK_iOS_CPP_7.3.4358.framework.zip)
+[Latest C++ API download](https://im.sdk.cloud.tencent.cn/download/plus/7.3.4358/cross_platform/ImSDK_iOS_CPP_7.3.4358.framework.zip)
 
 ## CocoaPods Integration
 If you are using the SDK basic edition, edit the Podfile as follows:
