@@ -72,11 +72,13 @@ Pod::Spec.new do |spec|
   
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
+    'GENERATE_INFOPLIST_FILE' => 'YES',
+    'DEFINES_MODULE' => 'YES'
   }
   spec.user_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
+    'GENERATE_INFOPLIST_FILE' => 'YES',
+    'DEFINES_MODULE' => 'YES'
   }
 end
 

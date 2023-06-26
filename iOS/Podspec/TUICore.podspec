@@ -28,11 +28,6 @@ Pod::Spec.new do |spec|
       ss.dependency 'TUICore/Base'
   end
   
-  spec.subspec 'ImSDK_Scenario' do |ss|
-      ss.dependency 'TXIMSDK_Customer_iOS','7.3.4358'
-      ss.dependency 'TUICore/Base'
-  end
-  
   spec.subspec 'Base' do |ss|
       ss.source_files = '**/TUICore/*.{h,m,mm,c}'
       ss.resource = [
@@ -43,12 +38,14 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
     'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) ENABLE_SCENARIO_SDK',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
+    'GENERATE_INFOPLIST_FILE' => 'YES',
+    'DEFINES_MODULE' => 'YES'
   }
   spec.user_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
     'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) ENABLE_SCENARIO_SDK',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
+    'GENERATE_INFOPLIST_FILE' => 'YES',
+    'DEFINES_MODULE' => 'YES'
   }
 end
 
