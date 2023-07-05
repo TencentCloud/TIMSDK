@@ -419,7 +419,11 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             leftUserIcon.setVisibility(View.INVISIBLE);
             rightUserIcon.setVisibility(View.INVISIBLE);
         }
-        rootLayout.setPadding(horizontalPadding, 0, horizontalPadding, verticalPadding);
+        if (nextMessage != null) {
+            rootLayout.setPadding(horizontalPadding, 0, horizontalPadding, verticalPadding);
+        } else {
+            rootLayout.setPadding(horizontalPadding, 0, horizontalPadding, ScreenUtil.dip2px(5));
+        }
         optimizeMessageContent(isShowAvatar);
     }
 

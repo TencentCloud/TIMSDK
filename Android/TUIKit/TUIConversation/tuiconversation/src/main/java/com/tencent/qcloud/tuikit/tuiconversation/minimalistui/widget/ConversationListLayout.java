@@ -130,6 +130,12 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
         }
     }
 
+    public void loadMarkedConversation() {
+        if (presenter != null) {
+            presenter.loadMarkedConversation();
+        }
+    }
+
     boolean isLoadCompleted() {
         if (presenter != null) {
             return presenter.isLoadFinished();

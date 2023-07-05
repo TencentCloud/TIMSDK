@@ -193,6 +193,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         }
         ConversationLayoutSetting.customizeConversation(this);
         mConversationList.loadConversation();
+        mConversationList.loadMarkedConversation();
     }
 
     public void initHeaderView() {
