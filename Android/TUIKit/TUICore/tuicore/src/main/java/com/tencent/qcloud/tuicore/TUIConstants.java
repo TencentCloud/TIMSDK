@@ -284,9 +284,15 @@ public final class TUIConstants {
 
             // Conversation group Extension
             public static class ConversationGroupBean {
-                public static final String CLASSIC_EXTENSION_ID = "ConversationGroupPopMenuExtensionClassicID";
-                public static final String MINIMALIST_EXTENSION_ID = "ConversationGroupPopMenuExtensionMinimalistID";
+                public static final String CLASSIC_EXTENSION_ID = "ConversationGroupBeanExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ConversationGroupBeanExtensionMinimalistID";
                 public static final String KEY_DATA = "conversationGroupBeanData";
+            }
+
+            public static class ConversationMarkBean {
+                public static final String CLASSIC_EXTENSION_ID = "ConversationMarkBeanExtensionClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ConversationMarkBeanExtensionMinimalistID";
+                public static final String KEY_DATA = "conversationMarkBeanData";
             }
         }
     }
@@ -675,11 +681,6 @@ public final class TUIConstants {
                 public static final String CLASSIC_EXTENSION_ID = "ConversationMarkPopMenuExtensionClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ConversationMarkPopMenuExtensionMinimalistID";
             }
-
-            public static class ConversationGroupBean {
-                public static final String CLASSIC_EXTENSION_ID = "ConversationGroupPopMenuExtensionClassicID";
-                public static final String MINIMALIST_EXTENSION_ID = "ConversationGroupPopMenuExtensionMinimalistID";
-            }
         }
     }
 
@@ -721,7 +722,9 @@ public final class TUIConstants {
 
             public static class PermissionsName {
                 public static final String CAMERA_PERMISSIONS = "CameraPermissions";
+                public static final String CAMERA_PERMISSIONS_TIP = "CameraPermissionsTip";
                 public static final String MICROPHONE_PERMISSIONS = "MicrophonePermissions";
+                public static final String MICROPHONE_PERMISSIONS_TIP = "MicrophonePermissionsTip";
             }
         }
     }

@@ -68,7 +68,7 @@ public class TUIConversationFragmentContainer extends BaseFragment {
         Map<String, Object> param = new HashMap<>();
         param.put(TUIConversationConstants.CONVERSATION_MARK_NAME_KEY, bean.getMarkType());
         Object markFragment = TUICore.createObject(
-            TUIConstants.TUIConversationMarkPlugin.OBJECT_FACTORY_NAME, TUIConstants.TUIConversationMarkPlugin.OBJECT_CONVERSATION_MARK_FRAGMENT, param);
+                TUIConstants.TUIConversationMarkPlugin.OBJECT_FACTORY_NAME, TUIConstants.TUIConversationMarkPlugin.OBJECT_CONVERSATION_MARK_FRAGMENT, param);
         if (markFragment instanceof Fragment) {
             return (Fragment) markFragment;
         }
@@ -80,7 +80,7 @@ public class TUIConversationFragmentContainer extends BaseFragment {
         Map<String, Object> param = new HashMap<>();
         param.put(TUIConversationConstants.CONVERSATION_GROUP_NAME_KEY, bean.getTitle());
         Object groupFragment = TUICore.createObject(
-            TUIConstants.TUIConversationGroupPlugin.OBJECT_FACTORY_NAME, TUIConstants.TUIConversationGroupPlugin.OBJECT_CONVERSATION_GROUP_FRAGMENT, param);
+                TUIConstants.TUIConversationGroupPlugin.OBJECT_FACTORY_NAME, TUIConstants.TUIConversationGroupPlugin.OBJECT_CONVERSATION_GROUP_FRAGMENT, param);
         if (groupFragment instanceof Fragment) {
             return (Fragment) groupFragment;
         }
@@ -100,7 +100,7 @@ public class TUIConversationFragmentContainer extends BaseFragment {
     private List<ConversationGroupBean> getGroupExtensionMoreSettings() {
         List<ConversationGroupBean> groupBeanList = new ArrayList<>();
         List<TUIExtensionInfo> extensionList =
-            TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationGroupBean.CLASSIC_EXTENSION_ID, null);
+                TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationGroupBean.CLASSIC_EXTENSION_ID, null);
         for (TUIExtensionInfo extensionInfo : extensionList) {
             Map<String, Object> paramMap = extensionInfo.getData();
             Object beanObjectList = paramMap.get(TUIConstants.TUIConversation.Extension.ConversationGroupBean.KEY_DATA);
@@ -115,10 +115,10 @@ public class TUIConversationFragmentContainer extends BaseFragment {
     private List<ConversationGroupBean> getMarkExtensionMoreSettings() {
         List<ConversationGroupBean> groupBeanList = new ArrayList<>();
         List<TUIExtensionInfo> extensionList =
-            TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationMarkBean.CLASSIC_EXTENSION_ID, null);
+                TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationGroupBean.CLASSIC_EXTENSION_ID, null);
         for (TUIExtensionInfo extensionInfo : extensionList) {
             Map<String, Object> paramMap = extensionInfo.getData();
-            Object beanObjectList = paramMap.get(TUIConstants.TUIConversation.Extension.ConversationMarkBean.KEY_DATA);
+            Object beanObjectList = paramMap.get(TUIConstants.TUIConversation.Extension.ConversationGroupBean.KEY_DATA);
             if (beanObjectList != null && beanObjectList instanceof List) {
                 groupBeanList = (List<ConversationGroupBean>) beanObjectList;
             }
@@ -131,7 +131,12 @@ public class TUIConversationFragmentContainer extends BaseFragment {
         if (hide) {
             mTabLayout.setVisibility(View.GONE);
         } else {
+            if (mTabLayout.getVisibility() == View.VISIBLE) {
+                return;
+            }
+
             mTabLayout.setVisibility(View.VISIBLE);
+
             HashMap<String, Object> param = new HashMap<>();
             param.put(TUIConstants.TUIConversationGroupPlugin.CONTEXT, getContext());
             TUICore.raiseExtension(TUIConstants.TUIConversationGroupPlugin.EXTENSION_GROUP_SETTING_MENU, mConversationGroupSettingLayout, param);
@@ -222,30 +227,30 @@ public class TUIConversationFragmentContainer extends BaseFragment {
         adapter.notifyDataSetChanged();
         // mViewPager.setUserInputEnabled(false);
         mediator =
-            new ConversationTabLayoutMediator(mConversationTabLayout, mViewPager, true, false, new ConversationTabLayoutMediator.TabConfigurationStrategy() {
-                @Override
-                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                    TUIConversationLog.d(TAG, "onConfigureTab position" + position);
-                    // 这里可以自定义TabView
-                    View layoutView = LayoutInflater.from(getContext()).inflate(R.layout.conversation_group_tab_item, null, false);
-                    TextView titileView = layoutView.findViewById(R.id.tab_title);
-                    TextView unreadView = layoutView.findViewById(R.id.tab_unread);
-                    titileView.setText(mConversationGroupBeans.get(position).getTitle());
-                    long count = mConversationGroupBeans.get(position).getUnReadCount();
-                    if (count == 0) {
-                        unreadView.setText("");
-                    } else if (count > 99) {
-                        unreadView.setText("99+");
-                    } else {
-                        unreadView.setText(String.valueOf(count));
-                    }
-                    tab.setCustomView(layoutView);
+                new ConversationTabLayoutMediator(mConversationTabLayout, mViewPager, true, false, new ConversationTabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        TUIConversationLog.d(TAG, "onConfigureTab position" + position);
+                        // 这里可以自定义TabView
+                        View layoutView = LayoutInflater.from(getContext()).inflate(R.layout.conversation_group_tab_item, null, false);
+                        TextView titileView = layoutView.findViewById(R.id.tab_title);
+                        TextView unreadView = layoutView.findViewById(R.id.tab_unread);
+                        titileView.setText(mConversationGroupBeans.get(position).getTitle());
+                        long count = mConversationGroupBeans.get(position).getUnReadCount();
+                        if (count == 0) {
+                            unreadView.setText("");
+                        } else if (count > 99) {
+                            unreadView.setText("99+");
+                        } else {
+                            unreadView.setText(String.valueOf(count));
+                        }
+                        tab.setCustomView(layoutView);
 
-                    if (position == selectedPosition) {
-                        titileView.setTextColor(selectedColor);
+                        if (position == selectedPosition) {
+                            titileView.setTextColor(selectedColor);
+                        }
                     }
-                }
-            });
+                });
         mediator.attach();
 
         conversationGroupNotifyListener = new ConversationGroupNotifyListener() {
