@@ -6,8 +6,12 @@ import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.ROOM
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomMsgManager;
@@ -25,6 +29,7 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 
 import java.lang.ref.WeakReference;
@@ -45,6 +50,7 @@ public class TUIRoomImAccessService extends ServiceInitializer implements ITUIEx
 
     private void initExtension() {
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID, this);
+        TUICore.registerExtension(TUIConstants.TIMAppKit.Extension.ProfileSettings.CLASSIC_EXTENSION_ID, this);
     }
 
     private void initRoomMessage() {
@@ -115,12 +121,12 @@ public class TUIRoomImAccessService extends ServiceInitializer implements ITUIEx
 
     @Override
     public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
-        if (TextUtils.isEmpty(extensionID) || param == null) {
-            Log.e(TAG, "onGetExtension params is illegal");
-            return null;
-        }
         if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID)
                 && !TextUtils.isEmpty((String) param.get(TUIConstants.TUIChat.Extension.InputMore.GROUP_ID))) {
+            if (TextUtils.isEmpty(extensionID) || param == null) {
+                Log.e(TAG, "onGetExtension TUIConstants.TUIChat.Extension.InputMore.GROUP_ID params is illegal");
+                return null;
+            }
             ChatInputMoreListener chatInputMoreListener =
                     (ChatInputMoreListener) param.get(TUIConstants.TUIChat.Extension.InputMore.INPUT_MORE_LISTENER);
             RoomMsgManager.setChatInputMoreListenerRef(new WeakReference<>(chatInputMoreListener));
@@ -134,6 +140,25 @@ public class TUIRoomImAccessService extends ServiceInitializer implements ITUIEx
             // 设置扩展被点击事件
             roomExtension.setExtensionListener(new RoomClickListener());
             return Collections.singletonList(roomExtension);
+        }
+        if (TextUtils.equals(extensionID, TUIConstants.TIMAppKit.Extension.ProfileSettings.CLASSIC_EXTENSION_ID)) {
+            View settingView = LayoutInflater.from(getAppContext())
+                    .inflate(R.layout.tuiroomkit_room_setting_extention_layout, null);
+            settingView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TUICore.startActivity("Chat2RoomExtensionSettingsActivity", new Bundle());
+                }
+            });
+
+            LineControllerView groupView = settingView.findViewById(R.id.tuiroomkit_extension_setting);
+            groupView.setCanNav(true);
+            HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put(TUIConstants.TIMAppKit.Extension.ProfileSettings.KEY_VIEW, settingView);
+            TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
+            extensionInfo.setData(paramMap);
+            extensionInfo.setWeight(501);
+            return Collections.singletonList(extensionInfo);
         }
         return null;
     }

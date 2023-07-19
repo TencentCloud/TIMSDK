@@ -46,6 +46,11 @@
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".imaccess.view.Chat2RoomExtensionSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <service
             android:name=".view.service.ForegroundService"
             android:enabled="true"

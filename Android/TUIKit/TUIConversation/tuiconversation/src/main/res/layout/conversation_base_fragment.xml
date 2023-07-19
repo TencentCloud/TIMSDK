@@ -25,8 +25,7 @@
             android:layout_marginTop="9dp"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginBottom="@dimen/page_margin"
-            android:background="@color/white">
+            android:layout_marginBottom="@dimen/page_margin" >
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/conversation_tabs"

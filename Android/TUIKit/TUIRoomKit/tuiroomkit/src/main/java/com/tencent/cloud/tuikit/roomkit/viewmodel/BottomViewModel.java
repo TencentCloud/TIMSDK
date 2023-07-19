@@ -1,6 +1,5 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import android.Manifest;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -9,6 +8,7 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
@@ -16,10 +16,8 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomItemData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomSelectItemData;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.view.component.BottomView;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
-import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -331,7 +329,6 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             }
             openMicrophone();
         } else {
-            mRoomEngine.stopPushLocalAudio();
             mRoomEngine.closeLocalMicrophone();
             updateAudioItemSelectStatus(false);
         }
@@ -365,7 +362,6 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             public void onGranted() {
                 updateAudioItemSelectStatus(true);
                 mRoomEngine.openLocalMicrophone(TUIRoomDefine.AudioQuality.DEFAULT, null);
-                mRoomEngine.startPushLocalAudio();
             }
 
             @Override
@@ -374,13 +370,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
-                .title(mContext.getString(R.string.tuiroomkit_permission_mic_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_mic_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_audio))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestAudioPermission(mContext, callback);
     }
 
     private void enableCamera(boolean enable) {
@@ -391,7 +381,6 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             }
             openCamera();
         } else {
-            mRoomEngine.stopPushLocalVideo();
             mRoomEngine.closeLocalCamera();
         }
     }
@@ -406,9 +395,8 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             @Override
             public void onGranted() {
                 updateVideoButtonSelectStatus(true);
-                mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_1080P,
+                mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_720P,
                         null);
-                mRoomEngine.startPushLocalVideo();
             }
 
             @Override
@@ -417,13 +405,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.CAMERA)
-                .title(mContext.getString(R.string.tuiroomkit_permission_camera_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_camera_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_camera))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestCameraPermission(mContext, callback);
     }
 
 

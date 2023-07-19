@@ -332,7 +332,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     }
 
     public void queryOfflineCall() {
-        if (Status.None.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())) {
+        if (!Status.Accept.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())) {
             TUICallDefine.Role role = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
             TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
             if (TUICallDefine.Role.None.equals(role) || TUICallDefine.MediaType.Unknown.equals(mediaType)) {
@@ -341,6 +341,9 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             PermissionRequest.requestPermissions(mContext, mediaType, new PermissionCallback() {
                 @Override
                 public void onGranted() {
+                    if (TextUtils.isEmpty(mInviter.userId)) {
+                        return;
+                    }
                     showCallingView();
                 }
 
@@ -410,6 +413,9 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             PermissionRequest.requestPermissions(mContext, callMediaType, new PermissionCallback() {
                 @Override
                 public void onGranted() {
+                    if (TextUtils.isEmpty(mInviter.userId)) {
+                        return;
+                    }
                     showCallingView();
                     mCallingBellFeature.startRing();
                 }

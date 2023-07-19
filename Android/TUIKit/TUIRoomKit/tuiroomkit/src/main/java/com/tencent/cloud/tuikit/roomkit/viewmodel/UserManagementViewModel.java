@@ -82,7 +82,6 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
 
     private void onMuteUserAudio(String userId) {
         if (userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.stopPushLocalAudio();
             mRoomEngine.closeLocalMicrophone();
             return;
         }
@@ -95,7 +94,6 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
     private void onUnMuteUserAudio(String userId) {
         if (userId.equals(mRoomStore.userModel.userId)) {
             mRoomEngine.openLocalMicrophone(TUIRoomDefine.AudioQuality.DEFAULT, null);
-            mRoomEngine.startPushLocalAudio();
             return;
         }
         if (!isOwner()) {
@@ -115,7 +113,6 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
 
     private void onMuteUserVideo(String userId) {
         if (userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.stopPushLocalVideo();
             mRoomEngine.closeLocalCamera();
             return;
         }
@@ -128,8 +125,7 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
 
     private void onUnMuteUserVideo(String userId) {
         if (userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.openLocalCamera(true, TUIRoomDefine.VideoQuality.Q_1080P, null);
-            mRoomEngine.startPushLocalVideo();
+            mRoomEngine.openLocalCamera(true, TUIRoomDefine.VideoQuality.Q_720P, null);
             return;
         }
         if (!isOwner()) {

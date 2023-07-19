@@ -1,20 +1,17 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 
-import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
-import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.utils.IntentUtils;
 import com.tencent.cloud.tuikit.roomkit.view.activity.PrepareActivity;
 import com.tencent.cloud.tuikit.roomkit.view.component.PrepareView;
@@ -22,7 +19,6 @@ import com.tencent.cloud.tuikit.roomkit.view.activity.CreateRoomActivity;
 import com.tencent.cloud.tuikit.roomkit.view.activity.EnterRoomActivity;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
-import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.trtc.TRTCCloudDef;
 
 import java.util.Locale;
@@ -82,13 +78,7 @@ public class PrepareViewModel {
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
-                .title(mContext.getString(R.string.tuiroomkit_permission_mic_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_mic_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_audio))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestAudioPermission(mContext, callback);
     }
 
     public void initRoomStore() {
@@ -154,7 +144,7 @@ public class PrepareViewModel {
             @Override
             public void onGranted() {
                 mPrepareView.updateVideoView(true);
-                mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_1080P,
+                mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_720P,
                         null);
                 mRoomInfo.isOpenCamera = true;
             }
@@ -166,13 +156,7 @@ public class PrepareViewModel {
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.CAMERA)
-                .title(mContext.getString(R.string.tuiroomkit_permission_camera_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_camera_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_camera))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestCameraPermission(mContext, callback);
     }
 
     private void openLocalMicrophone() {
@@ -189,12 +173,6 @@ public class PrepareViewModel {
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
-                .title(mContext.getString(R.string.tuiroomkit_permission_mic_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_mic_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_audio))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestAudioPermission(mContext, callback);
     }
 }

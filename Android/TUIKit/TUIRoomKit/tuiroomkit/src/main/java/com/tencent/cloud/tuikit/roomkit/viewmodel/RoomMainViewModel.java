@@ -1,9 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +9,7 @@ import android.view.View;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
@@ -19,14 +18,12 @@ import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ExtensionSettingManager;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.utils.DrawOverlaysPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.view.service.ForegroundService;
 import com.tencent.cloud.tuikit.roomkit.view.component.RoomMainView;
 import com.tencent.liteav.device.TXDeviceManager;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
-import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.trtc.TRTCCloudDef;
 
@@ -114,13 +111,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
                 }
             };
 
-            PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
-                    .title(mContext.getString(R.string.tuiroomkit_permission_mic_reason_title,
-                            CommonUtils.getAppName(mContext)))
-                    .description(mContext.getString(R.string.tuiroomkit_permission_mic_reason))
-                    .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_audio))
-                    .callback(callback)
-                    .request();
+            RoomPermissionUtil.requestAudioPermission(mContext, callback);
         } else if (mRoomStore.roomInfo.isOpenCamera
                 && !mRoomStore.roomInfo.isCameraDisableForAllUser) {
             requestCameraPermission();
@@ -135,13 +126,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.CAMERA)
-                .title(mContext.getString(R.string.tuiroomkit_permission_camera_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_camera_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_camera))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestCameraPermission(mContext, callback);
     }
 
     public void destroy() {
@@ -180,7 +165,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         if (enable) {
             openMicrophone();
         } else {
-            mRoomEngine.stopPushLocalAudio();
             mRoomEngine.closeLocalMicrophone();
         }
     }
@@ -194,24 +178,16 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
             @Override
             public void onGranted() {
                 mRoomEngine.openLocalMicrophone(TUIRoomDefine.AudioQuality.DEFAULT, null);
-                mRoomEngine.startPushLocalAudio();
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
-                .title(mContext.getString(R.string.tuiroomkit_permission_mic_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_mic_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_audio))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestAudioPermission(mContext, callback);
     }
 
     public void enableCamera(boolean enable) {
         if (enable) {
             openCamera();
         } else {
-            mRoomEngine.stopPushLocalVideo();
             mRoomEngine.closeLocalCamera();
         }
     }
@@ -225,19 +201,12 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         PermissionCallback callback = new PermissionCallback() {
             @Override
             public void onGranted() {
-                mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_1080P,
+                mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_720P,
                         null);
-                mRoomEngine.startPushLocalVideo();
             }
         };
 
-        PermissionRequester.newInstance(Manifest.permission.CAMERA)
-                .title(mContext.getString(R.string.tuiroomkit_permission_camera_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_camera_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_camera))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestCameraPermission(mContext, callback);
     }
 
     public View getVideoSeatView() {
@@ -490,7 +459,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         ToastUtil.toastShortMessage(mContext.getString(stringResId));
 
         if (isDisable) {
-            mRoomEngine.stopPushLocalVideo();
             mRoomEngine.closeLocalCamera();
         }
     }
@@ -511,7 +479,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         ToastUtil.toastShortMessage(mContext.getString(resId));
 
         if (isDisable) {
-            mRoomEngine.stopPushLocalAudio();
             mRoomEngine.closeLocalMicrophone();
         }
     }
@@ -528,8 +495,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     private void onUserScreenCaptureStopped() {
         ForegroundService.stop(mContext);
         if (!mRoomStore.roomInfo.isCameraDisableForAllUser && mRoomStore.roomInfo.isOpenCamera) {
-            mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_1080P, null);
-            mRoomEngine.startPushLocalVideo();
+            mRoomEngine.openLocalCamera(mRoomStore.videoModel.isFrontCamera, TUIRoomDefine.VideoQuality.Q_720P, null);
         }
     }
 

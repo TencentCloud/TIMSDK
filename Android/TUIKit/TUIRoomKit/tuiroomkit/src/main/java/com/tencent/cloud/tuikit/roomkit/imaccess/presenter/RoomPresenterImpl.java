@@ -2,14 +2,13 @@ package com.tencent.cloud.tuikit.roomkit.imaccess.presenter;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.SpeechMode.FREE_TO_SPEAK;
 import static com.tencent.cloud.tuikit.roomkit.TUIRoomKit.RoomScene.MEETING;
-import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.ROOM_SP_FILE_NAME;
-import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SP_ROOM_ID;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.JOINED_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.JOINING_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.LEAVING_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.NO_IN_ROOM;
-import android.text.TextUtils;
+
 import android.util.Log;
+
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
@@ -21,11 +20,11 @@ import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgUserEntity;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomObserver;
 import com.tencent.cloud.tuikit.roomkit.imaccess.utils.BusinessSceneUtil;
+import com.tencent.cloud.tuikit.roomkit.imaccess.utils.RoomSpUtil;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomFloatViewService;
 import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.util.SPUtils;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +35,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback {
 
     private static RoomPresenterImpl sRoomPresenter;
 
-    private static final long         WAIT_TIME_S = 10L;
+    private static final long         WAIT_TIME_S = 30L;
     private              IRoomManager mRoomManager;
     private              RoomObserver mRoomObserver;
 
@@ -184,12 +183,12 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback {
     private void waitUntilCreateRoom() {
         addObserver();
         RoomInfo roomInfo = new RoomInfo();
-        roomInfo.roomId = getUniqueRoomId();
+        roomInfo.roomId = RoomSpUtil.getUniqueRoomId();
         roomInfo.owner = TUILogin.getUserId();
         roomInfo.name = TUILogin.getNickName() + TUILogin.getAppContext().getResources()
                 .getString(R.string.tuiroomkit_room_msg_display_suffix);
-        roomInfo.isOpenCamera = true;
-        roomInfo.isOpenMicrophone = true;
+        roomInfo.isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
+        roomInfo.isOpenMicrophone = RoomSpUtil.getMicrophoneSwitchFromSp();
         roomInfo.isUseSpeaker = false;
         roomInfo.isMicrophoneDisableForAllUser = false;
         roomInfo.isCameraDisableForAllUser = false;
@@ -208,28 +207,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback {
         }
         Log.d(TAG, "waitUntilCreateRoom end");
         mSelfRoomStatus = JOINED_ROOM;
-        RoomFloatViewService.showFloatView(mRoomObserver.getRoomMsgData());
-    }
-
-    private String getUniqueRoomId() {
-        SPUtils sp = SPUtils.getInstance(ROOM_SP_FILE_NAME);
-        String roomId = sp.getString(SP_ROOM_ID);
-        if (TextUtils.isEmpty(roomId) || roomId.length() < 4) {
-            roomId = "100" + TUILogin.getUserId();
-            sp.put(SP_ROOM_ID, roomId);
-            return roomId;
-        }
-        String str = roomId.substring(0, 3);
-        int count = 100;
-        try {
-            count = Integer.parseInt(str) + 1;
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        count = count < 1000 ? count : 100;
-        roomId = count + TUILogin.getUserId();
-        sp.put(SP_ROOM_ID, roomId);
-        return roomId;
     }
 
     private void addObserver() {
@@ -288,8 +265,8 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback {
         addObserver();
         RoomInfo roomInfo = new RoomInfo();
         roomInfo.roomId = roomMsgData.getRoomId();
-        roomInfo.isOpenCamera = false;
-        roomInfo.isOpenMicrophone = false;
+        roomInfo.isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
+        roomInfo.isOpenMicrophone = RoomSpUtil.getMicrophoneSwitchFromSp();
         roomInfo.isUseSpeaker = false;
         roomInfo.isMicrophoneDisableForAllUser = false;
         roomInfo.isCameraDisableForAllUser = false;
@@ -345,7 +322,9 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback {
         if (result == AccessRoomConstants.RoomResult.FAILED) {
             mJoinRoomLatch.countDown();
             destroyInstance();
+            return;
         }
+        RoomFloatViewService.showFloatView(mRoomObserver.getRoomMsgData());
     }
 
     @Override

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
+        android:id="@+id/tuiroomkit_chat_settings_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <RelativeLayout
+        android:id="@+id/tuiroomkit_chat_settings_microphone_ll"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingStart="20dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_chat_settings_top_bar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tuiroomkit_chat_access_room_extension_settings_microphone"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <Switch
+            android:id="@+id/tuiroomkit_chat_settings_microphone"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:switchMinWidth="@dimen/switch_mini_width"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/switch_thumb"
+            android:track="@drawable/switch_track" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/tuiroomkit_chat_settings_microphone_separate"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#999999"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_chat_settings_microphone_ll"/>
+
+    <RelativeLayout
+        android:id="@+id/tuiroomkit_chat_settings_camera_ll"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingStart="20dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_chat_settings_microphone_separate">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/tuiroomkit_chat_access_room_extension_settings_camera"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <Switch
+            android:id="@+id/tuiroomkit_chat_settings_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:switchMinWidth="@dimen/switch_mini_width"
+            android:textOff=""
+            android:textOn=""
+            android:thumb="@drawable/switch_thumb"
+            android:track="@drawable/switch_track" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/tuiroomkit_chat_settings_camera_separate"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#999999"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_chat_settings_camera_ll"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

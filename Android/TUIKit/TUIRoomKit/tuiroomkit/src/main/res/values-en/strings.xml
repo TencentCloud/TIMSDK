@@ -143,5 +143,8 @@
     <string name="tuiroomkit_chat_access_room_invite_to_join">Invites you to a meeting</string>
     <string name="tuiroomkit_chat_access_room_invite_accept">Accept</string>
     <string name="tuiroomkit_chat_access_room_invite_reject">Reject</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings">Fast meeting settings</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_microphone">Join the conference and turn on the microphone</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_camera">Join the meeting and turn on the camera</string>
     <string name="tuiroomkit_can_not_join_room_tip">Audio and video are occupied by other functions, so cannot join the meeting</string>
 </resources>

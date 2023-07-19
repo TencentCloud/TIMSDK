@@ -1,6 +1,5 @@
 package com.tencent.cloud.tuikit.roomkit.model.manager;
 
-import android.Manifest;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,15 +8,13 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
-import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.TUIRoomKitImpl;
 import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
-import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
-import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 public class RoomEngineManager {
@@ -168,17 +165,10 @@ public class RoomEngineManager {
             @Override
             public void onGranted() {
                 mRoomEngine.openLocalMicrophone(TUIRoomDefine.AudioQuality.DEFAULT, null);
-                mRoomEngine.startPushLocalAudio();
                 mRoomStore.roomInfo.isOpenMicrophone = true;
             }
         };
-        PermissionRequester.newInstance(Manifest.permission.RECORD_AUDIO)
-                .title(mContext.getString(R.string.tuiroomkit_permission_mic_reason_title,
-                        CommonUtils.getAppName(mContext)))
-                .description(mContext.getString(R.string.tuiroomkit_permission_mic_reason))
-                .settingsTip(mContext.getString(R.string.tuiroomkit_tips_start_audio))
-                .callback(callback)
-                .request();
+        RoomPermissionUtil.requestAudioPermission(mContext, callback);
     }
 
     public void enterRoom(final RoomInfo roomInfo) {
@@ -281,8 +271,6 @@ public class RoomEngineManager {
             return;
         }
         TUIRoomEngine roomEngine = getRoomEngine();
-        roomEngine.stopPushLocalVideo();
-        roomEngine.stopPushLocalAudio();
         roomEngine.closeLocalCamera();
         roomEngine.closeLocalMicrophone();
         if (TUIRoomDefine.Role.ROOM_OWNER.equals(mRoomStore.userModel.role)) {

@@ -143,5 +143,8 @@
     <string name="tuiroomkit_chat_access_room_invite_to_join">邀请您进入会议</string>
     <string name="tuiroomkit_chat_access_room_invite_accept">接受</string>
     <string name="tuiroomkit_chat_access_room_invite_reject">拒绝</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings">快速会议设置</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_microphone">入会开启麦克风</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_camera">入会开启摄像头</string>
     <string name="tuiroomkit_can_not_join_room_tip">音视频已被其他功能占用，所以无法加入会议</string>
 </resources>

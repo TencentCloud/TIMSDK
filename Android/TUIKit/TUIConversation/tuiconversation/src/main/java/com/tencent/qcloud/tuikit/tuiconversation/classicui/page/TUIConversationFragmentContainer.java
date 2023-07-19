@@ -115,10 +115,10 @@ public class TUIConversationFragmentContainer extends BaseFragment {
     private List<ConversationGroupBean> getMarkExtensionMoreSettings() {
         List<ConversationGroupBean> groupBeanList = new ArrayList<>();
         List<TUIExtensionInfo> extensionList =
-            TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationGroupBean.CLASSIC_EXTENSION_ID, null);
+            TUICore.getExtensionList(TUIConstants.TUIConversation.Extension.ConversationMarkBean.CLASSIC_EXTENSION_ID, null);
         for (TUIExtensionInfo extensionInfo : extensionList) {
             Map<String, Object> paramMap = extensionInfo.getData();
-            Object beanObjectList = paramMap.get(TUIConstants.TUIConversation.Extension.ConversationGroupBean.KEY_DATA);
+            Object beanObjectList = paramMap.get(TUIConstants.TUIConversation.Extension.ConversationMarkBean.KEY_DATA);
             if (beanObjectList != null && beanObjectList instanceof List) {
                 groupBeanList = (List<ConversationGroupBean>) beanObjectList;
             }
@@ -131,12 +131,7 @@ public class TUIConversationFragmentContainer extends BaseFragment {
         if (hide) {
             mTabLayout.setVisibility(View.GONE);
         } else {
-            if (mTabLayout.getVisibility() == View.VISIBLE) {
-                return;
-            }
-
             mTabLayout.setVisibility(View.VISIBLE);
-
             HashMap<String, Object> param = new HashMap<>();
             param.put(TUIConstants.TUIConversationGroupPlugin.CONTEXT, getContext());
             TUICore.raiseExtension(TUIConstants.TUIConversationGroupPlugin.EXTENSION_GROUP_SETTING_MENU, mConversationGroupSettingLayout, param);
