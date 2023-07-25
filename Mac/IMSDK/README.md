@@ -5,7 +5,7 @@ English | [简体中文](./README_ZH.md)
 ## Download Links
 
 ### Enhanced Edition(Recommend)
-[Latest ImSDKForMac_Plus.framework download](https:  // im.sdk.qcloud.com/download/plus/7.3.4358/ImSDKForMac_Plus_7.3.4358.framework.zip)
+[Latest ImSDKForMac_Plus.framework download](https://im.sdk.qcloud.com/download/plus/7.3.4358/ImSDKForMac_Plus_7.3.4358.framework.zip)
 
 ### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
 [Latest ImSDKForMac_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/7.3.4358/ImSDKForMac_Plus_Pro_7.3.4358.framework.zip)
