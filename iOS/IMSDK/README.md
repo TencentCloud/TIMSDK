@@ -8,11 +8,11 @@ English | [简体中文](./README_ZH.md)
 
 #### Enhanced Edition(Recommend)
 
-[Latest ImSDK_Plus.framework download](https://im.sdk.cloud.tencent.cn/download/plus/7.3.4358/ImSDK_Plus_7.3.4358.framework.zip)
+[Latest ImSDK_Plus.framework download](https://im.sdk.qcloud.com/download/plus/7.3.4358/ImSDK_Plus_7.3.4358.framework.zip)
 
 #### Enhanced XCFramework edition (supporting Mac Catalyst)
 
-[Latest ImSDK_Plus.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/7.3.4358/ImSDK_Plus_7.3.4358.xcframework.zip)
+[Latest ImSDK_Plus.xcframework.zip download](https://im.sdk.qcloud.com/download/plus/7.3.4358/ImSDK_Plus_7.3.4358.xcframework.zip)
 
 #### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
 
@@ -22,7 +22,7 @@ English | [简体中文](./README_ZH.md)
 
 #### Enhanced XCFramework edition (supporting Mac Catalyst)
 
-[Latest ImSDK_Plus_Swift.xcframework.zip download](https://im.sdk.cloud.tencent.cn/download/plus/7.3.4358/ImSDK_Plus_Swift_7.3.4358.xcframework.zip)
+[Latest ImSDK_Plus_Swift.xcframework.zip download](https://im.sdk.qcloud.com/download/plus/7.3.4358/ImSDK_Plus_Swift_7.3.4358.xcframework.zip)
 
 ### Basic Edition
 
@@ -34,7 +34,7 @@ English | [简体中文](./README_ZH.md)
 [Latest C API download](https://im.sdk.qcloud.com/download/plus/7.3.4358/cross_platform/ImSDK_iOS_C_7.3.4358.framework.zip)
 
 ### C++ API edition
-[Latest C++ API download](https://im.sdk.cloud.tencent.cn/download/plus/7.3.4358/cross_platform/ImSDK_iOS_CPP_7.3.4358.framework.zip)
+[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.3.4358/cross_platform/ImSDK_iOS_CPP_7.3.4358.framework.zip)
 
 ## CocoaPods Integration
 If you are using the SDK basic edition, edit the Podfile as follows:
