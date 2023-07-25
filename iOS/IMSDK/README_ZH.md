@@ -23,7 +23,7 @@
 
 #### 增强版 xcframework 版本（支持 mac catalyst）
 
-[最新 ImSDK_Plus_Swift.xcframework.zip下载](https://im.sdk.cloud.tencent.cn/download/plus/7.3.4358/ImSDK_Plus_Swift_7.3.4358.xcframework.zip)
+[最新 ImSDK_Plus_Swift.xcframework.zip下载](https://im.sdk.qcloud.com/download/plus/7.3.4358/ImSDK_Plus_Swift_7.3.4358.xcframework.zip)
 
 
 ### 基础版 
@@ -33,7 +33,7 @@
 [最新 C 接口下载](https://im.sdk.qcloud.com/download/plus/7.3.4358/cross_platform/ImSDK_iOS_C_7.3.4358.framework.zip)
 
 ### C++ 接口版
-[最新 C++ 接口下载](https://im.sdk.cloud.tencent.cn/download/plus/7.3.4358/cross_platform/ImSDK_iOS_CPP_7.3.4358.framework.zip)
+[最新 C++ 接口下载](https://im.sdk.qcloud.com/download/plus/7.3.4358/cross_platform/ImSDK_iOS_CPP_7.3.4358.framework.zip)
 
 ### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
