@@ -210,8 +210,8 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ## Latest Enhanced Version 7.4.4643 @2023.08.11
 ### SDK
-- Support subscribing and unsubscribing users
 - Support Switch host platform
+- Support subscribing and unsubscribing users
 - Support emoji replies
 - Support voice-to-text capability
 - Support revoking messages in AVChatRoom
@@ -224,7 +224,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 - Optimized handling of SQLite file corruption
 
 ### TUIKit & Demo
-- Support storing conversation group information in the cloud
+- Support storing conversation group order information in the cloud
 - iOS optimized video sending process
 - Android fixed the issue of continuous voice messages failing to autoplay
 - Android fixed the issue of incorrect time display in the call record list
