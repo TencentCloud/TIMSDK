@@ -208,34 +208,27 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Edition 7.3.4358 @2023.06.21
+## Latest Enhanced Version 7.4.4643 @2023.08.11
 ### SDK
-- Support server message search
-- Support filtering conversation list and conversation total unread count by whether it contains unread messages
-- Support filtering conversation list and conversation total unread count by whether it contains @ messages
-- Adding online identification to group members obtained througn getMemberList API
-- Total number of online group members can be obtained for all type of groups
-- Optimize the reconnection speed when switching from the background to the foreground
-- Optimize the slow problem of pulling local messages in weak network
-- Fix the problem of missing the application list after marking the group application as read
-- Fix the problem that the conversation cannot be retrieved after sending the first message to a non-friend account
-- Fix the problem that the conversation personal information is the previous account information when switching accounts to log in
-- Fix the problem that the local field disappears occasionally when pulling historical messages
-- Fix the problem that signaling notifications are not throw out occasionally on iOS platform
-- Fix the problem that the conversation unread count callback does not take effect after clearing all unread messages
-- Fix the problem that detail information are not filled in conversation object when receiving conversation update notification after deleting or renaming the conversation group
-- Fix the problem that conversation mark and conversation group change notification are discarded for conversations which do not exist locally
-- Fix the problem of symbol conflict between SDK and user code
+- Support subscribing and unsubscribing users
+- Support Switch host platform
+- Support emoji replies
+- Support voice-to-text capability
+- Support revoking messages in AVChatRoom
+- Support setting global message reception options
+- Single forwarded message supports automatic renewal of rich media resources
+- Voice and video messages support security strike notifications
+- Message revoke supports "revoke reason" + "revoker"
+- Fixed the issue of inaccurate read status for the last message in a one-on-one chat session
+- Fixed the issue of friend remark information not being cleared in time after deleting a friend
+- Optimized handling of SQLite file corruption
 
 ### TUIKit & Demo
-- Support multiple conversation groups and conversation marks
-- Add quick meeting function
-- Adding the feature of playing the next voice message automatically
-- Picture and video viewing supports zooming in and out and adaptive horizontal and vertical screens
-- Picture and video upload and download support displaying progress
-- Picture and video messages support multi-select sending
-- The group information page supports modifying the invitation option
-- iOS supports adding suffix names when sending pictures
+- Support storing conversation group information in the cloud
+- iOS optimized video sending process
+- Android fixed the issue of continuous voice messages failing to autoplay
+- Android fixed the issue of incorrect time display in the call record list
+- Android fixed the issue of overlapping items in the Chat Lite message list
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
