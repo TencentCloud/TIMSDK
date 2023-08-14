@@ -7,9 +7,9 @@ public class RoomInfo {
     public String                   name;
     public String                   owner;
     public String                   roomId;
-    public boolean                  isOpenCamera;
-    public boolean                  isUseSpeaker;
-    public boolean                  isOpenMicrophone;
+    public boolean                  isOpenCamera                  = true;
+    public boolean                  isUseSpeaker                  = true;
+    public boolean                  isOpenMicrophone              = true;
     public boolean                  isCameraDisableForAllUser     = false;
     public boolean                  isMicrophoneDisableForAllUser = false;
     public boolean                  isMessageDisableForAllUser    = false;

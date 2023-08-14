@@ -1,4 +1,5 @@
 <resources>
+    <string name="tuiroomkit_app_running">Running</string>
     <string name="tuiroomkit_copy_room_id_success">Room ID copied successfully.</string>
     <string name="tuiroomkit_permission_mic_reason_title">%s applies for access to the microphone</string>
     <string name="tuiroomkit_permission_mic_reason">Needs access to your microphone, and it can be used for functions such as Interactive Video Streaming, Show Live, Video Call, Group Video Call, Multi-person audio and video room, etc.</string>
@@ -9,6 +10,7 @@
     <string name="tuiroomkit_tips_start_audio">Please turn on the microphone permission first</string>
     <string name="tuiroomkit_toast_end_room">Conference ended by initiator</string>
     <string name="tuiroomkit_kicked_by_master">You were removed by the room owner.</string>
+    <string name="tuiroomkit_you_have_transferred_master">You have transferred the master</string>
     <string name="tuiroomkit_mute_all_audio">Mute All</string>
     <string name="tuiroomkit_not_mute_all_audio">UnMute All</string>
     <string name="tuiroomkit_toast_not_mute_all_audio">The master turns off muted microphone for all members, and the audience can turn on the microphone by themselves</string>
@@ -62,6 +64,7 @@
     <string name="tuiroomkit_your_name">Your Name</string>
     <string name="tuiroomkit_turn_on_speaker">Speaker</string>
     <string name="tuiroomkit_logout">Logout</string>
+    <string name="tuiroomkit_kiecked_off_line">You are already logged in elsewhere</string>
     <string name="tuiroomkit_cancel">Cancel</string>
     <string name="tuiroomkit_microphone">Microphone</string>
     <string name="tuiroomkit_camera">Camera</string>
@@ -117,8 +120,8 @@
     <string name="tuiroomkit_agree">Agree</string>
     <string name="tuiroomkit_refuse">Refuse</string>
     <string name="tuiroomkit_leave_room_tips">If you don\'t want to end the meeting, \n please assign a new host before leaving the meeting</string>
-    <string name="tuiroomkit_leave_room">Leave Room</string>
-    <string name="tuiroomkit_finish_room">FinishRoom</string>
+    <string name="tuiroomkit_leave_room">Leave room</string>
+    <string name="tuiroomkit_finish_room">Finish room</string>
     <string name="tuiroomkit_assign_new_master">Assign new master</string>
     <string name="tuiroomkit_specify_and_leave">specify and leave</string>
     <string name="tuiroomkit_confirm_leave_tip">Are you sure you want to leave the meeting</string>
@@ -147,4 +150,5 @@
     <string name="tuiroomkit_chat_access_room_extension_settings_microphone">Join the conference and turn on the microphone</string>
     <string name="tuiroomkit_chat_access_room_extension_settings_camera">Join the meeting and turn on the camera</string>
     <string name="tuiroomkit_can_not_join_room_tip">Audio and video are occupied by other functions, so cannot join the meeting</string>
+    <string name="tuiroomkiy_multi_video_conferencing">多人视频会议</string>
 </resources>

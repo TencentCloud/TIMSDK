@@ -329,6 +329,7 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
                 && TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT.equals(subKey)) {
             TUICallKit.createInstance(appContext);
             adaptiveComponentReport();
+            setExcludeFromHistoryMessage();
         }
     }
 
@@ -349,6 +350,23 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
             jsonObject.put("params", params);
             TUICallEngine.createInstance(appContext).callExperimentalAPI(jsonObject.toString());
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setExcludeFromHistoryMessage() {
+        if (TUICore.getService(TUIConstants.TUIChat.SERVICE_NAME) == null) {
+            return;
+        }
+        try {
+            JSONObject params = new JSONObject();
+            params.put("excludeFromHistoryMessage", false);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("api", "setExcludeFromHistoryMessage");
+            jsonObject.put("params", params);
+            TUICallEngine.createInstance(appContext).callExperimentalAPI(jsonObject.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

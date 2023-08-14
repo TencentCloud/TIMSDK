@@ -762,6 +762,44 @@ public class ConversationPresenter {
         return firstChangedFoldInfo;
     }
 
+    protected List<ConversationInfo> getMarkUnreadConversationList() {
+        List<ConversationInfo> conversationInfos = new ArrayList<>();
+
+        Iterator<Map.Entry<String, ConversationInfo>> iterator = markUnreadAndHiddenMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, ConversationInfo> entry = iterator.next();
+            ConversationInfo conversationInfo = entry.getValue();
+            if (conversationInfo.isShowDisturbIcon()) {
+                continue;
+            }
+
+            if (conversationInfo.isMarkUnread()) {
+                conversationInfos.add(conversationInfo);
+            }
+        }
+
+        return conversationInfos;
+    }
+
+    protected int getMarkUnreadConversationNumber() {
+        int number = 0;
+
+        Iterator<Map.Entry<String, ConversationInfo>> iterator = markUnreadAndHiddenMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, ConversationInfo> entry = iterator.next();
+            ConversationInfo conversationInfo = entry.getValue();
+            if (conversationInfo.isShowDisturbIcon()) {
+                continue;
+            }
+
+            if (conversationInfo.isMarkUnread()) {
+                number++;
+            }
+        }
+
+        return number;
+    }
+
     protected void updateTotalUnreadMessageCount(long sdkUnreadCount) {
         int markUnreadCount = 0;
         int markHiddenCount = 0;

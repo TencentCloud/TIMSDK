@@ -5,17 +5,17 @@ public class ConversationGroupBean {
     public static final int CONVERSATION_GROUP_TYPE_MARK = 102;
     public static final int CONVERSATION_GROUP_TYPE_GROUP = 103;
 
-    public static final int CONVERSATION_ALL_GROUP_WEIGHT = 1;
+    public static final int CONVERSATION_ALL_GROUP_WEIGHT = 0;
     public static final int CONVERSATION_DEFAULT_GROUP_WEIGHT = 2;
     public static final int CONVERSATION_MARK_START_GROUP_WEIGHT = 4;
     public static final int CONVERSATION_GROUP_START_GROUP_WEIGHT = 5;
 
-    private String title;
-    private long unReadCount;
-    private long markType = -1;
-    private int weight;
-    private int groupType;
-    private boolean isHead;
+    private transient String title;
+    private int weight = 0;
+    private boolean isHide;
+    private transient int groupType;
+    private transient long unReadCount;
+    private transient long markType = -1;
 
     public long getUnReadCount() {
         return unReadCount;
@@ -57,12 +57,12 @@ public class ConversationGroupBean {
         this.groupType = groupType;
     }
 
-    public boolean getIsHead() {
-        return isHead;
+    public boolean getIsHide() {
+        return isHide;
     }
 
-    public void setIsHead(boolean head) {
-        this.isHead = head;
+    public void setIsHide(boolean head) {
+        this.isHide = head;
     }
 
     @Override
@@ -104,6 +104,6 @@ public class ConversationGroupBean {
     public String toString() {
         return "ConversationGroupBean{"
             + "title=" + title + ", unReadCount=" + unReadCount + ", markType='" + markType + '\'' + ", weight='" + weight + '\'' + ", groupType='" + groupType
-            + '\'' + ", isHead='" + isHead + '\'' + '}';
+            + '\'' + ", isHide='" + isHide + '\'' + '}';
     }
 }

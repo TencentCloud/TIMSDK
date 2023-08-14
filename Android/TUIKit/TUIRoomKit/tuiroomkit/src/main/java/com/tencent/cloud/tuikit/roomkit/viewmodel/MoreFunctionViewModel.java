@@ -3,6 +3,7 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -124,28 +125,7 @@ public class MoreFunctionViewModel implements RoomEventCenter.RoomEngineEventRes
     }
 
     public void showChatView() {
-        if (!TUILogin.isUserLogined()) {
-            TUILogin.login(mContext.getApplicationContext(),
-                    mRoomStore.loginInfo.sdkAppId,
-                    mRoomStore.loginInfo.userId,
-                    mRoomStore.loginInfo.userSig,
-                    new TUICallback() {
-                        @Override
-                        public void onSuccess() {
-                            showTUIChat();
-                        }
-
-                        @Override
-                        public void onError(int errorCode, String errorMessage) {
-                            Log.e(TAG, "TUIChat Login error,code:" + errorCode + ",msg:" + errorMessage);
-                        }
-                    });
-        } else {
-            showTUIChat();
-        }
-    }
-
-    private void showTUIChat() {
+        Log.d(TAG, "showChatView");
         Intent intent = new Intent();
         intent.setClassName(mContext, "com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIGroupChatActivity");
         intent.putExtra(TUIConstants.TUIChat.CHAT_TYPE, V2TIMConversation.V2TIM_GROUP);

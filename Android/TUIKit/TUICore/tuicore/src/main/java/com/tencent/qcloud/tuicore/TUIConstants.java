@@ -36,6 +36,7 @@ public final class TUIConstants {
         public static final String TUI_GROUP_NOTE = "TUIGroupNoteService";
         public static final String TUI_CONVERSATION_GROUP = "TUIConversationGroupService";
         public static final String TUI_CONVERSATION_MARK = "TUIConversationMarkService";
+        public static final String TUI_ADVANCED_SETTING   = "TUIAdvancedSettingService";
     }
 
     public static final class ObjectFactory {
@@ -111,6 +112,7 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS = "eventSubKeySendMessageSuccess";
         public static final String EVENT_SUB_KEY_SEND_MESSAGE_FAILED = "eventSubKeySendMessageFailed";
         public static final String EVENT_SUB_KEY_REPLY_MESSAGE_SUCCESS = "eventSubKeyReplyMessageSuccess";
+        public static final String EVENT_SUB_KEY_DISPLAY_MESSAGE_BEAN = "eventSubKeyDisplayMessageBean";
 
         public static final String C2C_CHAT_ACTIVITY_NAME = "TUIC2CChatActivity";
         public static final String GROUP_CHAT_ACTIVITY_NAME = "TUIGroupChatActivity";
@@ -714,6 +716,11 @@ public final class TUIConstants {
     public static final class TUIVideoSeat {
         public static final String SERVICE_VIDEO_SEAT = "com.tencent.cloud.tuikit.videoseat.core.TUIVideoSeatExtension";
         public static final String METHOD_SWITCH_VIDEO_LAYOUT = "switchVideoLayout";
+    }
+
+    public static final class AdvancedSetting {
+        public static final String SERVICE_ADVANCED_SETTING          = Service.TUI_ADVANCED_SETTING;
+        public static final String METHOD_SHOW_ADVANCED_SETTING_VIEW = "showAdvancedSettingView";
     }
 
     public static final class Privacy {

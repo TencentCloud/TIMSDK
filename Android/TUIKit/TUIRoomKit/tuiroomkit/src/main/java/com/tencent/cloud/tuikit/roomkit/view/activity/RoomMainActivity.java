@@ -1,8 +1,11 @@
 package com.tencent.cloud.tuikit.roomkit.view.activity;
 
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.ENTER_FLOAT_WINDOW;
+
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,6 +20,7 @@ import com.tencent.cloud.tuikit.roomkit.view.component.RoomMainView;
 import java.util.Map;
 
 public class RoomMainActivity extends AppCompatActivity implements RoomEventCenter.RoomKitUIEventResponder {
+    private static final String TAG = "RoomMainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +31,8 @@ public class RoomMainActivity extends AppCompatActivity implements RoomEventCent
         RoomMainView meetingView = new RoomMainView(this);
         ViewGroup rootView = findViewById(R.id.root_view);
         rootView.addView(meetingView);
-        RoomEventCenter.getInstance().subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_MEETING, this);
+
+        subscribeKitEvent();
     }
 
     @Override
@@ -38,14 +43,30 @@ public class RoomMainActivity extends AppCompatActivity implements RoomEventCent
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RoomEventCenter.getInstance().unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_MEETING, this);
+        unSubscribeKitEvent();
     }
 
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
-        if (RoomEventCenter.RoomKitUIEvent.EXIT_MEETING.equals(key)) {
-            finish();
+        switch (key) {
+            case RoomEventCenter.RoomKitUIEvent.EXIT_MEETING:
+            case ENTER_FLOAT_WINDOW:
+                finish();
+                break;
+            default:
+                Log.w(TAG, "onNotifyUIEvent not handle event : " + key);
+                break;
         }
+    }
+
+    private void subscribeKitEvent() {
+        RoomEventCenter.getInstance().subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_MEETING, this);
+        RoomEventCenter.getInstance().subscribeUIEvent(ENTER_FLOAT_WINDOW, this);
+    }
+
+    private void unSubscribeKitEvent() {
+        RoomEventCenter.getInstance().unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_MEETING, this);
+        RoomEventCenter.getInstance().unsubscribeUIEvent(ENTER_FLOAT_WINDOW, this);
     }
 
     private void initStatusBar() {

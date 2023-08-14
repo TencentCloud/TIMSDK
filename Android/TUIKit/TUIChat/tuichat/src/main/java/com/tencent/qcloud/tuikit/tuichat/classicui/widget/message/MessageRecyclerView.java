@@ -602,10 +602,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             getSound(messageBean);
             return;
         }
+
+        final boolean needPlayNext = !messageBean.hasPlayed() && !messageBean.isSelf();
         messageBean.setPlaying(true);
         messageBean.setPlayed();
         updateMessageView(messageBean);
-        boolean needPlayNext = !messageBean.hasPlayed() && !messageBean.isSelf();
         AudioPlayer.getInstance().startPlay(messageBean.getDataPath(), new AudioPlayer.Callback() {
             @Override
             public void onCompletion(Boolean success) {

@@ -115,6 +115,7 @@ public class TUICallingViewManager implements ITUINotification {
     //JoinInGroupCall
     public void createGroupCallingAcceptView() {
         initSelfModel();
+        initHomeWatcher();
         mUserLayoutFactory.allocUserLayout(mSelfUserModel);
         initGroupAcceptCallView();
     }
@@ -576,7 +577,9 @@ public class TUICallingViewManager implements ITUINotification {
         }
         UserLayout layout = mUserLayoutFactory.findUserLayout(model.userId);
         if (null != layout) {
-            layout.setUserName(model.userName);
+            if (Scene.GROUP_CALL.equals(TUICallingStatusManager.sharedInstance(mContext).getCallScene())) {
+                layout.setUserName(model.userName);
+            }
             ImageLoader.loadImage(mContext, layout.getAvatarImage(), model.userAvatar, R.drawable.tuicalling_ic_avatar);
         }
     }
@@ -832,7 +835,9 @@ public class TUICallingViewManager implements ITUINotification {
                         model.userName = tempModel.userName;
                     }
                 }
-                userLayout.setUserName(model.userName);
+                if (Scene.GROUP_CALL.equals(TUICallingStatusManager.sharedInstance(mContext).getCallScene())) {
+                    userLayout.setUserName(model.userName);
+                }
                 userLayout.setVideoAvailable(model.isVideoAvailable);
                 ImageLoader.loadImage(mContext, userLayout.getAvatarImage(), model.userAvatar,
                         R.drawable.tuicalling_ic_avatar);

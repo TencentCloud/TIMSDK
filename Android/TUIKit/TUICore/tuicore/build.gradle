@@ -45,7 +45,7 @@ dependencies {
     if (projects.contains("imsdk-plus")) {
         api project(':imsdk-plus')
     } else {
-        api rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:7.3.4358"
+        api rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:7.4.4643"
     }
 
 }

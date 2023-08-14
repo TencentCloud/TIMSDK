@@ -64,11 +64,9 @@ public class UserLayout extends RelativeLayout {
         if (available) {
             mTUIVideoView.setVisibility(VISIBLE);
             mLayoutImageHead.setVisibility(GONE);
-            mTextUserName.setVisibility(VISIBLE);
         } else {
             mTUIVideoView.setVisibility(GONE);
             mLayoutImageHead.setVisibility(VISIBLE);
-            mTextUserName.setVisibility(VISIBLE);
         }
     }
 

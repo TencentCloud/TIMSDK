@@ -36,7 +36,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_COMM_FILE_SIZE_EMPTY, R.string.TUIKitErrorEmptyFile);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_COMM_FILE_OPEN_FAILED, R.string.TUIKitErrorFileOpenFailed);
 
-        // 帐号错误码
+        // 账号错误码
         // Account error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NOT_LOGGED_IN, R.string.TUIKitErrorNotLogin);
         ERROR_CODE_MAP.put(BaseConstants.ERR_NO_PREVIOUS_LOGIN, R.string.TUIKitErrorNoPreviousLogin);
@@ -182,7 +182,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_COMM_SENSITIVE_TEXT, R.string.TUIKitErrorSVRCommonSensitiveText);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_COMM_BODY_SIZE_LIMIT, R.string.TUIKitErrorSVRCommonBodySizeLimit);
 
-        // 帐号错误码
+        // 账号错误码
         // Account error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_ACCOUNT_USERSIG_EXPIRED, R.string.TUIKitErrorSVRAccountUserSigExpired);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_ACCOUNT_USERSIG_EMPTY, R.string.TUIKitErrorSVRAccountUserSigEmpty);

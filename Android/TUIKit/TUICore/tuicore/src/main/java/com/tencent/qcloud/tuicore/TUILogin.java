@@ -41,7 +41,8 @@ public class TUILogin {
         return TUILoginHolder.loginInstance;
     }
 
-    private Context appContext;
+    private static Context appContext;
+
     private int sdkAppId = 0;
     private String userId;
     private String userSig;
@@ -312,6 +313,10 @@ public class TUILogin {
             return;
         }
         listenerList.remove(listener);
+    }
+
+    public static void init(Context context) {
+        appContext = context.getApplicationContext();
     }
 
     /**

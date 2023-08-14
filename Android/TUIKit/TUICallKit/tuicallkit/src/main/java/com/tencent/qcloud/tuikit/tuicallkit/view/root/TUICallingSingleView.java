@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
@@ -68,8 +69,12 @@ public class TUICallingSingleView extends BaseCallView {
                 if (layout == null) {
                     continue;
                 }
-                layout.setVideoAvailable(true);
-                if (!TUICallingStatusManager.sharedInstance(mContext).isCameraOpen()) {
+
+                boolean cameraOpen = TUICallingStatusManager.sharedInstance(mContext).isCameraOpen();
+                layout.setVideoAvailable(cameraOpen);
+
+                TUICallDefine.Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
+                if (!cameraOpen && !TUICallDefine.Status.Accept.equals(status)) {
                     TUICommonDefine.Camera camera = TUICallingStatusManager.sharedInstance(mContext).getFrontCamera();
                     mCallingAction.openCamera(camera, layout.getVideoView(), null);
                 }

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="tuivideoseat_color_indicator_un_select">#4DFFFFFF</color>
-
-    <color name="tuivideoseat_color_white">@android:color/white</color>
-    <color name="tuivideoseat_color_blue">#006EFF</color>
-    <color name="tuivideoseat_color_grey">#888888</color>
-    <color name="tuivideoseat_color_user_talking">#A5FE33</color>
-</resources>

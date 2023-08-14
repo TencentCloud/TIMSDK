@@ -25,11 +25,11 @@
     <string name="button_login">登录</string>
     <string name="password_login">密码登录</string>
     <string name="official_website">访问官网</string>
-    <string name="debug_mode_summary">IM 帐号直接登录界面，此只在 Debug 模式下显示</string>
+    <string name="debug_mode_summary">IM 账号直接登录界面，此只在 Debug 模式下显示</string>
     <string name="account_hint">任意非空字符即可，请参考类注释</string>
 
-    <string name="repeat_login_tip">您的帐号已在其它终端登录</string>
-    <string name="expired_login_tip">帐号已过期，请重新登录</string>
+    <string name="repeat_login_tip">您的账号已在其它终端登录</string>
+    <string name="expired_login_tip">账号已过期，请重新登录</string>
     <string name="failed_login_tip">登录失败</string>
 
     // "我"相关

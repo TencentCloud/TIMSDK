@@ -65,4 +65,6 @@
     <string name="tuicallkit_group_title_add_user">添加成员</string>
     <string name="tuicallkit_group_hint_you">(你)</string>
     <string name="tuicallkit_group_btn_ok">确定</string>
+
+    <string name="tuicallkit_float_permission_hint">请同时打开\"后台弹出界面\"和\"显示悬浮窗\"权限</string>
 </resources>

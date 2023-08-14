@@ -1,5 +1,5 @@
 <resources>
-    <string name="demo_app_name">Tencent IM</string>
+    <string name="demo_app_name">Tencent Chat</string>
 
     <string name="test_custom_message">View Details>></string>
 
@@ -18,15 +18,15 @@
     <string name="demo_search">Search</string>
 
 
-    <string name="login_title">Tencent Cloud IM</string>
-    <string name="login_sub_title">Welcome to use this APP to experience Tencent Cloud IM products and services</string>
+    <string name="login_title">Tencent Cloud Chat</string>
+    <string name="login_sub_title">Welcome to use this APP to experience Tencent Cloud Chat products and services</string>
     <string name="input_number">Enter mobile number</string>
     <string name="input_verification">Enter SMS verification code</string>
     <string name="verification_code">Send Code</string>
     <string name="button_login">Log In</string>
     <string name="password_login">Log in via password</string>
     <string name="official_website">Visit Us</string>
-    <string name="debug_mode_summary">IM login screen that is only visible in debug mode.</string>
+    <string name="debug_mode_summary">Chat login screen that is only visible in debug mode.</string>
     <string name="account_hint">Use any non-empty character. Refer to the class comments.</string>
 
     <string name="repeat_login_tip">Your account has been logged in on another device.</string>
@@ -45,7 +45,7 @@
     <string name="allow_type_deny_any">Decline friend request from any user</string>
     <string name="allow_type_need_confirm">Anyone upon Request</string>
     <string name="exit">Log Out</string>
-    <string name="about_im">About Tencent Cloud·IM</string>
+    <string name="about_im">About Tencent Cloud Chat</string>
     <string name="appkit_show_recent_calls">Show Recent Calls</string>
     <string name="appkit_recent_calls_tab_name">Calls</string>
     <string name="modify_birthday">Birthday</string>
@@ -101,7 +101,7 @@
     <string name="tab_community_tab_text">Community</string>
 
 
-    <string name="conversation_title">Tencent Cloud·IM</string>
+    <string name="conversation_title">Tencent Cloud Chat</string>
     <string name="contact_title">Contacts</string>
     <string name="add_friend">Add Contact</string>
     <string name="add_group">Add Group</string>
@@ -161,7 +161,7 @@
     <string name="im_statement">Disclaimer</string>
     <string name="im_user_agreement">User Agreement</string>
 
-    <string name="im_statement_content">Tencent Cloud Instant Messaging APP  (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, any pornography, abusive, violent, and politically related content is strictly prohibited during use.</string>
+    <string name="im_statement_content">Tencent Cloud Chat APP  (\"this product\") is a test product provided by Tencent Cloud, and Tencent Cloud enjoys the copyright and ownership of this product. This product is only used for functional experience and must not be used for any commercial purposes. In order to comply with the regulatory requirements of relevant departments, any pornography, abusive, violent, and politically related content is strictly prohibited during use.</string>
     <string name="im_privacy_tips">Read and agree to the agreement first</string>
     <string name="demo_im_privacy_dialog_tips">Welcome to Tencent Cloud Instant Messaging. To protect your personal information, we have updated the \"Privacy Policy\", involving improving the specific contents and purposes of collecting user information, and adding third-party SDKs.\n\n Please carefully read the \"User Agreement\",\"Summary of Privacy Policy\",\"Privacy Policy\",\"Personal Information Collected\" and \"Information Shared with Third Parties\", and tap Agree and Continue to use our products and services if you agree to them.</string>
     <string name="demo_im_privacy_agree">Agree and Continue</string>
@@ -205,18 +205,18 @@
     <string name="demo_no_more_reminders">No more reminders</string>
     <string name="demo_im_flagship">Ultimate Edition</string>
     <string name="demo_buying_guidelines">price description</string>
-    <string name="demo_im_flagship_edition_update_tip">%s function is the IM Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
+    <string name="demo_im_flagship_edition_update_tip">%s function is the Chat Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
     <string name="demo_buying_tips">This is the feature of ultimate edition</string>
 
-    <string name="chat_security_warning">[Security Reminder] This App is only used to experience the features of Tencent Cloud IM products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.</string>
+    <string name="chat_security_warning">[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.</string>
     <string name="chat_security_warning_report">Report</string>
 
 
     <string name="change_theme">Change Theme</string>
     <string name="change_style">Select Style</string>
     <string name="app_title">Instant Messaging</string>
-    <string name="app_title_content">Welcome to use this APP to experience Tencent Cloud IM products and services</string>
-    <string name="button_enter">Enter IM</string>
+    <string name="app_title_content">Welcome to use this APP to experience Tencent Cloud Chat products and services</string>
+    <string name="button_enter">Enter Chat</string>
     <string name="demo_style_sub_title">Chat styles</string>
     <string name="demo_ui_title">Theme</string>
     <string name="demo_ui_sub_title">Chat themes</string>

@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 
 public class ShareSettingView extends CoordinatorLayout {
 
@@ -25,7 +25,7 @@ public class ShareSettingView extends CoordinatorLayout {
     }
 
     private void initView() {
-        mShare = findViewById(R.id.share);
+        mShare = findViewById(R.id.tuiroomkit_btn_screen_share);
         mShare.setEnabled(mEnableShare);
         mShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +35,13 @@ public class ShareSettingView extends CoordinatorLayout {
                 }
             }
         });
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mShare.setText(RoomEngineManager.sharedInstance().getRoomStore().videoModel.isScreenSharing()
+                ? R.string.tuiroomkit_tv_stop_screen_capture : R.string.tuiroomkit_title_sharing);
     }
 
     public void setShareButtonClickListener(OnShareButtonClickListener listener) {

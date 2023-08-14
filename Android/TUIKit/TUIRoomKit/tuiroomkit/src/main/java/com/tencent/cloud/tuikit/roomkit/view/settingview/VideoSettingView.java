@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.entity.ExtensionSettingEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.ExtensionSettingManager;
+import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.settingitem.BaseSettingItem;
 import com.tencent.cloud.tuikit.roomkit.view.settingitem.SeekBarSettingItem;
 import com.tencent.cloud.tuikit.roomkit.view.settingitem.SelectionSettingItem;
@@ -36,11 +36,13 @@ public class VideoSettingView extends CoordinatorLayout {
     private int mCurRes;
     private int mAppScene = TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL;
 
-    private ExtensionSettingManager mExtensionSettingManager;
-    private OnItemChangeListener    mListener;
+    private OnItemChangeListener mListener;
 
-    public VideoSettingView(@NonNull Context context) {
+    private RoomStore mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
+
+    public VideoSettingView(@NonNull Context context, OnItemChangeListener listener) {
         super(context);
+        mListener = listener;
         LayoutInflater.from(context).inflate(R.layout.tuiroomkit_fragment_common_setting, this);
         initData();
         initView();
@@ -64,7 +66,6 @@ public class VideoSettingView extends CoordinatorLayout {
     private void initView() {
         mContentItem = findViewById(R.id.item_content);
         mSettingItemList = new ArrayList<>();
-        mExtensionSettingManager = ExtensionSettingManager.getInstance();
 
         BaseSettingItem.ItemText itemText = new BaseSettingItem
                 .ItemText(getContext().getString(R.string.tuiroomkit_title_bitrate), "");
@@ -73,16 +74,11 @@ public class VideoSettingView extends CoordinatorLayout {
             public void onSeekBarChange(int progress, boolean fromUser) {
                 int bitrate = getBitrate(progress, mCurRes);
                 mBitrateItem.setTips(bitrate + "kbps");
-                if (bitrate != mExtensionSettingManager.getExtensionSetting().videoBitrate) {
-                    mExtensionSettingManager.getExtensionSetting().videoBitrate = (bitrate);
-                    if (mListener != null) {
-                        mListener.onVideoBitrateChange(bitrate);
-                    }
-                }
+                mListener.onVideoBitrateChange(bitrate);
             }
         });
 
-        mCurRes = getResolutionPos(mExtensionSettingManager.getExtensionSetting().videoResolution);
+        mCurRes = getResolutionPos(mRoomStore.videoModel.resolution);
         itemText = new BaseSettingItem.ItemText(getContext().getString(R.string.tuiroomkit_title_resolution),
                 getResources().getStringArray(R.array.solution));
         mResolutionItem = new SelectionSettingItem(getContext(), itemText,
@@ -92,54 +88,26 @@ public class VideoSettingView extends CoordinatorLayout {
                         mCurRes = position;
                         updateSolution(mCurRes);
                         int resolution = getResolution(position);
-                        if (resolution != mExtensionSettingManager.getExtensionSetting().videoResolution) {
-                            ExtensionSettingEntity entity = mExtensionSettingManager.getExtensionSetting();
-                            entity.videoResolution = resolution;
-                            mExtensionSettingManager.setExtensionSetting(entity);
-                            if (mListener != null) {
-                                mListener.onVideoResolutionChange(resolution);
-                            }
-                        }
+                        mListener.onVideoResolutionChange(resolution);
                     }
                 }
         ).setSelect(mCurRes);
-        if (mListener != null) {
-            mListener.onVideoResolutionChange(getResolution(mCurRes));
-        }
         mSettingItemList.add(mResolutionItem);
 
         itemText = new BaseSettingItem.ItemText(getContext().getString(R.string.tuiroomkit_title_frame_rate),
                 getResources().getStringArray(R.array.video_fps));
-        mVideoFpsItem = new SelectionSettingItem(getContext(), itemText,
-                new SelectionSettingItem.Listener() {
-                    @Override
-                    public void onItemSelected(int position, String text) {
-                        int fps = getFps(position);
-                        if (fps != mExtensionSettingManager.getExtensionSetting().videoFps) {
-                            ExtensionSettingEntity entity = mExtensionSettingManager.getExtensionSetting();
-                            entity.videoFps = fps;
-                            mExtensionSettingManager.setExtensionSetting(entity);
-                            if (mListener != null) {
-                                mListener.onVideoFpsChange(fps);
-                            }
-                        }
-                    }
-                }
-        ).setSelect(getFpsPos(mExtensionSettingManager.getExtensionSetting().videoFps));
-        if (mListener != null) {
-            mListener.onVideoFpsChange(getFps(mVideoFpsItem.getSelected()));
-        }
+        mVideoFpsItem = new SelectionSettingItem(getContext(), itemText, new SelectionSettingItem.Listener() {
+            @Override
+            public void onItemSelected(int position, String text) {
+                int fps = getFps(position);
+                mListener.onVideoFpsChange(fps);
+            }
+        }).setSelect(getFpsPos(mRoomStore.videoModel.fps));
         mSettingItemList.add(mVideoFpsItem);
 
         updateSolution(mCurRes);
-        mBitrateItem.setProgress(getBitrateProgress(mExtensionSettingManager
-                .getExtensionSetting().videoBitrate, mCurRes));
-        mBitrateItem.setTips(getBitrate(mExtensionSettingManager
-                .getExtensionSetting().videoBitrate, mCurRes) + "kbps");
-        if (mListener != null) {
-            mListener.onVideoBitrateChange(getBitrate(mExtensionSettingManager
-                    .getExtensionSetting().videoBitrate, mCurRes));
-        }
+        mBitrateItem.setProgress(getBitrateProgress(mRoomStore.videoModel.bitrate, mCurRes));
+        mBitrateItem.setTips(getBitrate(mRoomStore.videoModel.bitrate, mCurRes) + "kbps");
         mSettingItemList.add(mBitrateItem);
 
         itemText =
@@ -149,14 +117,9 @@ public class VideoSettingView extends CoordinatorLayout {
         mMirrorTypeItem = new SwitchSettingItem(getContext(), itemText, new SwitchSettingItem.Listener() {
             @Override
             public void onSwitchChecked(boolean isChecked) {
-                ExtensionSettingEntity entity = mExtensionSettingManager.getExtensionSetting();
-                entity.isMirror = isChecked;
-                mExtensionSettingManager.setExtensionSetting(entity);
-                if (mListener != null) {
-                    mListener.onVideoMirrorChange(isChecked);
-                }
+                mListener.onVideoLocalMirrorChange(isChecked);
             }
-        }).setCheck(mExtensionSettingManager.getExtensionSetting().isMirror);
+        }).setCheck(mRoomStore.videoModel.isLocalMirror);
         mSettingItemList.add(mMirrorTypeItem);
 
         for (BaseSettingItem item : mSettingItemList) {
@@ -271,10 +234,6 @@ public class VideoSettingView extends CoordinatorLayout {
         }
     }
 
-    public void setListener(OnItemChangeListener listener) {
-        this.mListener = listener;
-    }
-
     public interface OnItemChangeListener {
         void onVideoBitrateChange(int bitrate);
 
@@ -282,6 +241,6 @@ public class VideoSettingView extends CoordinatorLayout {
 
         void onVideoFpsChange(int fps);
 
-        void onVideoMirrorChange(boolean mirror);
+        void onVideoLocalMirrorChange(boolean mirror);
     }
 }

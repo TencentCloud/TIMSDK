@@ -10,11 +10,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
-import com.tencent.cloud.tuikit.roomkit.viewmodel.SettingViewModel;
 import com.tencent.cloud.tuikit.roomkit.view.settingview.AudioSettingView;
 import com.tencent.cloud.tuikit.roomkit.view.settingview.ShareSettingView;
 import com.tencent.cloud.tuikit.roomkit.view.settingview.VideoSettingView;
+import com.tencent.cloud.tuikit.roomkit.viewmodel.SettingViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +68,7 @@ public class SettingView extends BaseBottomDialog {
     private void initFragment() {
         if (mFragmentList == null) {
             mFragmentList = new ArrayList<>();
-            mVideoSettingView = new VideoSettingView(getContext());
-            mVideoSettingView.setListener(new VideoSettingView.OnItemChangeListener() {
+            mVideoSettingView = new VideoSettingView(getContext(), new VideoSettingView.OnItemChangeListener() {
                 @Override
                 public void onVideoBitrateChange(int bitrate) {
                     mViewModel.setVideoBitrate(bitrate);
@@ -85,12 +85,11 @@ public class SettingView extends BaseBottomDialog {
                 }
 
                 @Override
-                public void onVideoMirrorChange(boolean mirror) {
-                    mViewModel.setVideoMirror(mirror);
+                public void onVideoLocalMirrorChange(boolean mirror) {
+                    mViewModel.setVideoLocalMirror(mirror);
                 }
             });
-            mAudioSettingView = new AudioSettingView(getContext());
-            mAudioSettingView.setListener(new AudioSettingView.OnItemChangeListener() {
+            mAudioSettingView = new AudioSettingView(getContext(), new AudioSettingView.OnItemChangeListener() {
                 @Override
                 public void onAudioCaptureVolumeChange(int volume) {
                     mViewModel.setAudioCaptureVolume(volume);
@@ -123,14 +122,17 @@ public class SettingView extends BaseBottomDialog {
             mShareSettingView.setShareButtonClickListener(new ShareSettingView.OnShareButtonClickListener() {
                 @Override
                 public void onClick() {
-                    mViewModel.startScreenShare();
+                    if (RoomEngineManager.sharedInstance().getRoomStore().videoModel.isScreenSharing()) {
+                        mViewModel.stopScreenShare();
+                    } else {
+                        mViewModel.startScreenShare();
+                    }
                     dismiss();
                 }
             });
             mShareSettingView.enableShareButton(mEnableShare);
         }
     }
-
 
     @Override
     public void onDetachedFromWindow() {

@@ -13,7 +13,7 @@
         android:src="@drawable/tuiroomkit_ic_share_screen" />
 
     <Button
-        android:id="@+id/share"
+        android:id="@+id/tuiroomkit_btn_screen_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

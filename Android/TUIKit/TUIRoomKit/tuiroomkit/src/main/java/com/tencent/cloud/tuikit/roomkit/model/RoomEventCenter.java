@@ -1,11 +1,16 @@
 package com.tencent.cloud.tuikit.roomkit.model;
 
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
+
 import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 
 import java.lang.ref.WeakReference;
@@ -35,8 +40,11 @@ public class RoomEventCenter {
         ROOM_DISMISSED,
         KICKED_OUT_OF_ROOM,
         ROOM_SPEECH_MODE_CHANGED,
+        GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM,
         REMOTE_USER_ENTER_ROOM,
         REMOTE_USER_LEAVE_ROOM,
+        LOCAL_USER_EXIT_ROOM,
+        LOCAL_USER_DESTROY_ROOM,
         USER_ROLE_CHANGED,
         USER_VIDEO_STATE_CHANGED,
         USER_AUDIO_STATE_CHANGED,
@@ -53,11 +61,17 @@ public class RoomEventCenter {
         KICKED_OFF_SEAT
     }
 
+    public interface RoomEngineMessage {
+        String ROOM_ENGINE_MSG = "ROOM_ENGINE_MSG";
+        String ROOM_ENTERED    = "ROOM_ENTERED";
+    }
+
     public static class RoomKitUIEvent {
         public static final String ROOM_KIT_EVENT        = "RoomKitEvent";
         public static final String CONFIGURATION_CHANGE  = "appConfigurationChange";
         public static final String EXIT_MEETING          = "exitMeeting";
         public static final String LEAVE_MEETING         = "leaveMeeting";
+        public static final String KICKED_OFF_LINE       = "kickedOffLine";
         public static final String EXIT_PREPARE_ACTIVITY = "exitPrepareActivity";
         public static final String EXIT_CREATE_ROOM      = "exitCreateRoom";
         public static final String EXIT_ENTER_ROOM       = "exitEnterRoom";
@@ -72,7 +86,13 @@ public class RoomEventCenter {
         public static final String SHOW_APPLY_LIST       = "showApplyList";
         public static final String SHOW_EXTENSION_VIEW   = "showExtensionView";
         public static final String SHOW_QRCODE_VIEW      = "showQRCodeView";
-        public static final String START_SCREEN_SHARE    = "startScreenShare";
+
+        public static final String LOCAL_SCREEN_SHARE_STATE_CHANGED = "LOCAL_SCREEN_SHARE_STATE_CHANGED";
+
+        public static final String ENTER_FLOAT_WINDOW = "ENTER_FLOAT_WINDOW";
+        public static final String EXIT_FLOAT_WINDOW  = "EXIT_FLOAT_WINDOW";
+
+        public static final String SEND_IM_MSG_COMPLETE = "SEND_IM_MSG_COMPLETE";
     }
 
     /**
@@ -185,11 +205,7 @@ public class RoomEventCenter {
         }
     }
 
-    public EngineEventCenter getEngineEventCent() {
-        return new EngineEventCenter();
-    }
-
-    private void notifyEngineEvent(RoomEngineEvent event, Map<String, Object> params) {
+    public void notifyEngineEvent(RoomEngineEvent event, Map<String, Object> params) {
         if (!mEngineResponderMap.containsKey(event)) {
             return;
         }
@@ -217,214 +233,6 @@ public class RoomEventCenter {
             if (mResponder.get() != null) {
                 mResponder.get().onNotifyUIEvent(subKey, param);
             }
-        }
-    }
-
-    private class EngineEventCenter extends TUIRoomObserver {
-
-        @Override
-        public void onError(TUICommonDefine.Error errorCode, String message) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ERROR_CODE, errorCode);
-            map.put(RoomEventConstant.KEY_MESSAGE, message);
-            notifyEngineEvent(RoomEngineEvent.ERROR, map);
-        }
-
-        @Override
-        public void onKickedOffLine(String message) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_MESSAGE, message);
-            notifyEngineEvent(RoomEngineEvent.KICKED_OFF_LINE, map);
-        }
-
-        @Override
-        public void onUserSigExpired() {
-            notifyEngineEvent(RoomEngineEvent.USER_SIG_EXPIRED, null);
-        }
-
-        @Override
-        public void onRoomNameChanged(String roomId, String roomName) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_ROOM_NAME, roomName);
-            notifyEngineEvent(RoomEngineEvent.ROOM_NAME_CHANGED, map);
-        }
-
-        @Override
-        public void onAllUserMicrophoneDisableChanged(String roomId, boolean isDisable) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_IS_DISABLE, isDisable);
-            notifyEngineEvent(RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, map);
-        }
-
-        @Override
-        public void onAllUserCameraDisableChanged(String roomId, boolean isDisable) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_IS_DISABLE, isDisable);
-            notifyEngineEvent(RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, map);
-        }
-
-        @Override
-        public void onSendMessageForAllUserDisableChanged(String roomId, boolean isDisable) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_IS_DISABLE, isDisable);
-            notifyEngineEvent(RoomEngineEvent.SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED, map);
-        }
-
-        @Override
-        public void onRoomDismissed(String roomId) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            notifyEngineEvent(RoomEngineEvent.ROOM_DISMISSED, map);
-        }
-
-        @Override
-        public void onKickedOutOfRoom(String roomId, String message) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_MESSAGE, message);
-            notifyEngineEvent(RoomEngineEvent.KICKED_OUT_OF_ROOM, map);
-        }
-
-        @Override
-        public void onRoomSpeechModeChanged(String roomId, TUIRoomDefine.SpeechMode speechMode) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_SPEECH_MODE, speechMode);
-            notifyEngineEvent(RoomEngineEvent.ROOM_SPEECH_MODE_CHANGED, map);
-        }
-
-        @Override
-        public void onRemoteUserEnterRoom(String roomId, TUIRoomDefine.UserInfo userInfo) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_USER_INFO, userInfo);
-            notifyEngineEvent(RoomEngineEvent.REMOTE_USER_ENTER_ROOM, map);
-        }
-
-        @Override
-        public void onRemoteUserLeaveRoom(String roomId, TUIRoomDefine.UserInfo userInfo) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_USER_INFO, userInfo);
-            notifyEngineEvent(RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, map);
-        }
-
-        @Override
-        public void onUserRoleChanged(String userId, TUIRoomDefine.Role role) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_USER_ID, userId);
-            map.put(RoomEventConstant.KEY_ROLE, role);
-            notifyEngineEvent(RoomEngineEvent.USER_ROLE_CHANGED, map);
-        }
-
-        @Override
-        public void onUserVideoStateChanged(String userId, TUIRoomDefine.VideoStreamType streamType, boolean hasVideo,
-                                            TUIRoomDefine.ChangeReason reason) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_USER_ID, userId);
-            map.put(RoomEventConstant.KEY_STREAM_TYPE, streamType);
-            map.put(RoomEventConstant.KEY_HAS_VIDEO, hasVideo);
-            map.put(RoomEventConstant.KEY_REASON, reason);
-            notifyEngineEvent(RoomEngineEvent.USER_VIDEO_STATE_CHANGED, map);
-        }
-
-        @Override
-        public void onUserAudioStateChanged(String userId, boolean hasAudio, TUIRoomDefine.ChangeReason reason) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_USER_ID, userId);
-            map.put(RoomEventConstant.KEY_HAS_AUDIO, hasAudio);
-            map.put(RoomEventConstant.KEY_REASON, reason);
-            notifyEngineEvent(RoomEngineEvent.USER_AUDIO_STATE_CHANGED, map);
-        }
-
-        @Override
-        public void onUserVoiceVolumeChanged(Map<String, Integer> volumeMap) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_VOLUME_MAP, volumeMap);
-            notifyEngineEvent(RoomEngineEvent.USER_VOICE_VOLUME_CHANGED, map);
-        }
-
-        @Override
-        public void onSendMessageForUserDisableChanged(String roomId, String userId, boolean isDisable) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_USER_ID, userId);
-            map.put(RoomEventConstant.KEY_IS_DISABLE, isDisable);
-            notifyEngineEvent(RoomEngineEvent.SEND_MESSAGE_FOR_USER_DISABLE_CHANGED, map);
-        }
-
-        @Override
-        public void onUserNetworkQualityChanged(Map<String, TUICommonDefine.NetworkInfo> networkMap) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_NETWORK_MAP, networkMap);
-            notifyEngineEvent(RoomEngineEvent.USER_NETWORK_QUALITY_CHANGED, map);
-        }
-
-        @Override
-        public void onUserScreenCaptureStopped(int reason) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_REASON, reason);
-            notifyEngineEvent(RoomEngineEvent.USER_SCREEN_CAPTURE_STOPPED, map);
-        }
-
-        @Override
-        public void onRoomMaxSeatCountChanged(String roomId, int maxSeatCount) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_MAX_SEAT_COUNT, maxSeatCount);
-            notifyEngineEvent(RoomEngineEvent.ROOM_MAX_SEAT_COUNT_CHANGED, map);
-        }
-
-        @Override
-        public void onSeatListChanged(List<TUIRoomDefine.SeatInfo> seatList, List<TUIRoomDefine.SeatInfo> seatedList,
-                                      List<TUIRoomDefine.SeatInfo> leftList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_SEAT_LIST, seatList);
-            map.put(RoomEventConstant.KEY_SEATED_LIST, seatedList);
-            map.put(RoomEventConstant.KEY_LEFT_LIST, leftList);
-            notifyEngineEvent(RoomEngineEvent.SEAT_LIST_CHANGED, map);
-        }
-
-        @Override
-        public void onRequestReceived(TUIRoomDefine.Request request) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_REQUEST, request);
-            notifyEngineEvent(RoomEngineEvent.REQUEST_RECEIVED, map);
-        }
-
-        @Override
-        public void onRequestCancelled(String requestId, String userId) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_REQUEST_ID, requestId);
-            map.put(RoomEventConstant.KEY_USER_ID, userId);
-            notifyEngineEvent(RoomEngineEvent.REQUEST_CANCELLED, map);
-        }
-
-        @Override
-        public void onReceiveTextMessage(String roomId, TUICommonDefine.Message message) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_MESSAGE, message);
-            notifyEngineEvent(RoomEngineEvent.RECEIVE_TEXT_MESSAGE, map);
-        }
-
-        @Override
-        public void onReceiveCustomMessage(String roomId, TUICommonDefine.Message message) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-            map.put(RoomEventConstant.KEY_MESSAGE, message);
-            notifyEngineEvent(RoomEngineEvent.RECEIVE_CUSTOM_MESSAGE, map);
-        }
-
-        @Override
-        public void onKickedOffSeat(String userId) {
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_USER_ID, userId);
-            notifyEngineEvent(RoomEngineEvent.KICKED_OFF_SEAT, map);
         }
     }
 }

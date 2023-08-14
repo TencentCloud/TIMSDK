@@ -15,6 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomMainViewModel;
@@ -60,7 +62,7 @@ public class RoomMainView extends RelativeLayout {
         mTextStopScreenShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopScreenShare();
+                mViewModel.stopScreenCapture();
             }
         });
 
@@ -80,7 +82,6 @@ public class RoomMainView extends RelativeLayout {
         mRaiseHandApplicationListView = new RaiseHandApplicationListView(mContext);
 
         mBottomView = new BottomView(mContext);
-        mViewModel.initCameraAndMicrophone();
         ViewGroup bottomLayout = findViewById(R.id.bottom_view);
         bottomLayout.addView(mBottomView);
 
@@ -91,6 +92,9 @@ public class RoomMainView extends RelativeLayout {
         setVideoSeatView(mViewModel.getVideoSeatView());
         setMoreFunctionView();
         showAlertUserLiveTips();
+        if (RoomEngineManager.sharedInstance().getRoomStore().videoModel.isScreenSharing()) {
+            onScreenShareStarted();
+        }
     }
 
     private void showAlertUserLiveTips() {
@@ -261,6 +265,21 @@ public class RoomMainView extends RelativeLayout {
         confirmDialog.show();
     }
 
+    public void showKickedOffLineDialog() {
+        final ConfirmDialog confirmDialog = new ConfirmDialog(mContext);
+        confirmDialog.setCancelable(true);
+        confirmDialog.setMessage(mContext.getString(R.string.tuiroomkit_kiecked_off_line));
+        confirmDialog.setPositiveText(mContext.getString(R.string.tuiroomkit_dialog_ok));
+        confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
+            @Override
+            public void onClick() {
+                RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.KICKED_OFF_LINE, null);
+                confirmDialog.dismiss();
+            }
+        });
+        confirmDialog.show();
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -277,33 +296,21 @@ public class RoomMainView extends RelativeLayout {
         }
     }
 
-    public void startScreenShare() {
+    public void onScreenShareStarted() {
         mLayoutVideoSeat.setVisibility(View.GONE);
         mScreenCaptureGroup.setVisibility(View.VISIBLE);
-        mBottomView.setVisibility(GONE);
-        mTopView.setVisibility(GONE);
-        mViewModel.startScreenShare();
 
         if (mFloatingWindow == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             mFloatingWindow = inflater.inflate(R.layout.tuiroomkit_screen_capture_floating_window, null, false);
-            mFloatingWindow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "onClick: 悬浮窗");
-                }
-            });
         }
         showFloatingWindow();
     }
 
-    private void stopScreenShare() {
+    public void onScreenShareStopped() {
         hideFloatingWindow();
-        mViewModel.stopScreenShare();
         mLayoutVideoSeat.setVisibility(View.VISIBLE);
         mScreenCaptureGroup.setVisibility(View.GONE);
-        mBottomView.setVisibility(View.VISIBLE);
-        mTopView.setVisibility(View.VISIBLE);
     }
 
     private void showFloatingWindow() {

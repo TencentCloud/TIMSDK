@@ -18,9 +18,17 @@ public class EnterRoomViewModel {
     private Context   mContext;
     private RoomStore mRoomStore;
 
+    private boolean mIsOpenCamera;
+    private boolean mIsOpenMicrophone;
+    private boolean mIsUseSpeaker;
+
     public EnterRoomViewModel(Context context) {
         mContext = context;
         mRoomStore = RoomEngineManager.sharedInstance(mContext).getRoomStore();
+
+        mIsOpenCamera = mRoomStore.roomInfo.isOpenCamera;
+        mIsOpenMicrophone = mRoomStore.roomInfo.isOpenMicrophone;
+        mIsUseSpeaker = mRoomStore.roomInfo.isUseSpeaker;
     }
 
     public void enterRoom(String roomId) {
@@ -29,15 +37,11 @@ public class EnterRoomViewModel {
         }
         RoomInfo roomInfo = new RoomInfo();
         roomInfo.roomId = roomId;
-        roomInfo.isOpenCamera = mRoomStore.roomInfo.isOpenCamera;
-        roomInfo.isOpenMicrophone = mRoomStore.roomInfo.isOpenMicrophone;
-        roomInfo.isUseSpeaker = mRoomStore.roomInfo.isUseSpeaker;
+        roomInfo.isOpenCamera = mIsOpenCamera;
+        roomInfo.isOpenMicrophone = mIsOpenMicrophone;
+        roomInfo.isUseSpeaker = mIsUseSpeaker;
         TUIRoomKit tuiRoomKit = TUIRoomKit.sharedInstance(mContext);
         tuiRoomKit.enterRoom(roomInfo);
-    }
-
-    public void finishActivity() {
-        RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_ENTER_ROOM, null);
     }
 
     public ArrayList<SwitchSettingItem> createSwitchSettingItemList() {
@@ -47,9 +51,9 @@ public class EnterRoomViewModel {
                 new SwitchSettingItem.Listener() {
                     @Override
                     public void onSwitchChecked(boolean isChecked) {
-                        mRoomStore.roomInfo.isOpenMicrophone = isChecked;
+                        mIsOpenMicrophone = isChecked;
                     }
-                }).setCheck(mRoomStore.roomInfo.isOpenMicrophone);
+                }).setCheck(mIsOpenMicrophone);
         ArrayList<SwitchSettingItem> settingItemList = new ArrayList<>();
         settingItemList.add(audioItem);
 
@@ -59,9 +63,9 @@ public class EnterRoomViewModel {
                 new SwitchSettingItem.Listener() {
                     @Override
                     public void onSwitchChecked(boolean isChecked) {
-                        mRoomStore.roomInfo.isUseSpeaker = isChecked;
+                        mIsUseSpeaker = isChecked;
                     }
-                }).setCheck(mRoomStore.roomInfo.isUseSpeaker);
+                }).setCheck(mIsUseSpeaker);
         settingItemList.add(speakerItem);
 
         BaseSettingItem.ItemText videoItemText =
@@ -70,9 +74,9 @@ public class EnterRoomViewModel {
                 new SwitchSettingItem.Listener() {
                     @Override
                     public void onSwitchChecked(boolean isChecked) {
-                        mRoomStore.roomInfo.isOpenCamera = isChecked;
+                        mIsOpenCamera = isChecked;
                     }
-                }).setCheck(mRoomStore.roomInfo.isOpenCamera);
+                }).setCheck(mIsOpenCamera);
         settingItemList.add(videoItem);
         return settingItemList;
     }

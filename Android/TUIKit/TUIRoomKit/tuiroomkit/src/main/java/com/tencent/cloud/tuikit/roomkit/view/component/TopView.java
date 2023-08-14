@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.utils.DrawOverlaysPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.TopViewModel;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 
@@ -17,7 +19,7 @@ public class TopView extends FrameLayout implements View.OnClickListener {
     private ImageView      mImgHeadset;
     private ImageView      mImageSwitchCamera;
     private ImageView      mImgReport;
-    private ImageView      mImgMirror;
+    private ImageView      mImgMinimizeRoom;
     private TextView       mTextTitle;
     private TextView       mTexTime;
     private RelativeLayout mLayoutMeetingInfo;
@@ -38,14 +40,14 @@ public class TopView extends FrameLayout implements View.OnClickListener {
         mTextTitle = itemView.findViewById(R.id.tv_title);
         mLayoutMeetingInfo = findViewById(R.id.rl_meeting_info);
         mImgReport = itemView.findViewById(R.id.btn_report);
-        mImgMirror = itemView.findViewById(R.id.img_video_mirror);
+        mImgMinimizeRoom = itemView.findViewById(R.id.tuiroomkit_minimize_room_iv);
 
         mTexTime = itemView.findViewById(R.id.tv_broadcast_time);
         mImgHeadset.setOnClickListener(this);
         mImageSwitchCamera.setOnClickListener(this);
         mLayoutMeetingInfo.setOnClickListener(this);
         mImgReport.setOnClickListener(this);
-        mImgMirror.setOnClickListener(this);
+        mImgMinimizeRoom.setOnClickListener(this);
     }
 
     public void showReportView(boolean isShow) {
@@ -94,8 +96,12 @@ public class TopView extends FrameLayout implements View.OnClickListener {
             mViewModel.showMeetingInfo();
         } else if (v.getId() == R.id.btn_report) {
             mViewModel.report();
-        } else if (v.getId() == R.id.img_video_mirror) {
-            mViewModel.setMirror();
+        } else if (v.getId() == R.id.tuiroomkit_minimize_room_iv) {
+            if (!DrawOverlaysPermissionUtil.isGrantedDrawOverlays()) {
+                DrawOverlaysPermissionUtil.requestDrawOverlays();
+                return;
+            }
+            RoomEngineManager.sharedInstance(mContext).enterFloatWindow();
         }
     }
 }

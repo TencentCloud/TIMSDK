@@ -47,7 +47,7 @@
     <string name="contact_add_more_info">详情</string>
 
     <!-- 好友资料 -->
-    <string name="profile_id">帐号</string>
+    <string name="profile_id">账号</string>
     <string name="profile_add_wording">验证消息</string>
     <string name="profile_remark">备注名</string>
     <string name="profile_black">加入黑名单</string>

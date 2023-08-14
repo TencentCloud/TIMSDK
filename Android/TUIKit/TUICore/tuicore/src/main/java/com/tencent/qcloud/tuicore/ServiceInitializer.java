@@ -55,6 +55,7 @@ public class ServiceInitializer extends ContentProvider {
             appContext = getContext().getApplicationContext();
         }
 
+        TUILogin.init(appContext);
         TUIRouter.init(appContext);
         TUIConfig.init(appContext);
         TUIThemeManager.addLightTheme(getLightThemeResId());

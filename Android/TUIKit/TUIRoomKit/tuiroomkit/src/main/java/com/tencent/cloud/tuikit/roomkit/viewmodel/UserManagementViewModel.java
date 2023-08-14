@@ -3,7 +3,9 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
@@ -12,12 +14,15 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.UserManagementView;
+import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.List;
 import java.util.Map;
 
 public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventResponder,
         RoomEventCenter.RoomKitUIEventResponder {
+    private static final String TAG = "UserManagementViewModel";
+
     private static final int SEAT_INDEX      = -1;
     private static final int INVITE_TIME_OUT = 0;
     private static final int REQ_TIME_OUT    = 15;
@@ -81,8 +86,8 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     private void onMuteUserAudio(String userId) {
-        if (userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.closeLocalMicrophone();
+        if (TextUtils.equals(userId, TUILogin.getUserId())) {
+            RoomEngineManager.sharedInstance().closeLocalMicrophone();
             return;
         }
         if (!isOwner()) {
@@ -92,8 +97,8 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     private void onUnMuteUserAudio(String userId) {
-        if (userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.openLocalMicrophone(TUIRoomDefine.AudioQuality.DEFAULT, null);
+        if (TextUtils.equals(userId, TUILogin.getUserId())) {
+            RoomEngineManager.sharedInstance().openLocalMicrophone(null);
             return;
         }
         if (!isOwner()) {
@@ -112,20 +117,18 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     private void onMuteUserVideo(String userId) {
-        if (userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.closeLocalCamera();
-            return;
+        if (TextUtils.equals(userId, TUILogin.getUserId())) {
+            RoomEngineManager.sharedInstance().closeLocalCamera();
         }
         if (!isOwner()) {
             return;
         }
         mRoomEngine.closeRemoteDeviceByAdmin(userId, TUIRoomDefine.MediaDevice.CAMERA, null);
-        ;
     }
 
     private void onUnMuteUserVideo(String userId) {
-        if (userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.openLocalCamera(true, TUIRoomDefine.VideoQuality.Q_720P, null);
+        if (TextUtils.equals(userId, TUILogin.getUserId())) {
+            RoomEngineManager.sharedInstance().openLocalCamera(null);
             return;
         }
         if (!isOwner()) {
@@ -139,7 +142,18 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (mUserModel == null) {
             return;
         }
-        mRoomEngine.changeUserRole(mUserModel.userId, TUIRoomDefine.Role.ROOM_OWNER, null);
+        mRoomEngine.changeUserRole(mUserModel.userId, TUIRoomDefine.Role.ROOM_OWNER,
+                new TUIRoomDefine.ActionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        mUserManagementView.showTransferRoomSuccessDialog();
+                    }
+
+                    @Override
+                    public void onError(TUICommonDefine.Error error, String s) {
+                        Log.e(TAG, "changeUserRole onError error=" + error + " s=" + s);
+                    }
+                });
     }
 
     public void muteUser() {

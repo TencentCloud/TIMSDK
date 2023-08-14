@@ -143,14 +143,12 @@ public class PermissionActivity extends Activity {
     private void finishWithResult(PermissionRequester.Result result) {
         Log.i(TAG, "finishWithResult : " + result);
         mResult = result;
-        Map<String, Object> map = new HashMap<>(1);
-        map.put(PERMISSION_RESULT, result);
-        TUICore.notifyEvent(PERMISSION_NOTIFY_EVENT_KEY, PERMISSION_NOTIFY_EVENT_SUB_KEY, map);
         finish();
     }
 
     /*
-     * APP 从异常中恢复时，有些 Activity 在 onCreate 时就会申请权限；同时对于异常恢复，所有 Activity 可能被干掉，从新走流程；
+     * 1、连续申请权限时，需要前一个权限申请完全结束；
+     * 2、APP 从异常中恢复时，有些 Activity 在 onCreate 时就会申请权限；同时对于异常恢复，所有 Activity 可能被干掉，从新走流程；
      * 所以可能导致本次权限申请过早结束，此时须在 onDestroy 中返回结果。
      */
     @Override

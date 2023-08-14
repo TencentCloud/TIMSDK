@@ -116,6 +116,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         if (animator != null) {
             animator.setSupportsChangeAnimations(false);
         }
+        setItemAnimator(null);
         setClickEmptySpaceEvent();
     }
 

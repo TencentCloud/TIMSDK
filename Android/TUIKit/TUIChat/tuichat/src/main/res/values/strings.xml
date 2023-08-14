@@ -119,6 +119,7 @@
     <string name="record_rejected_for_in_recording">The current recording is not over</string>
     <string name="play_error_tip">The voice file is damaged or does not exist</string>
     <string name="input_tip">No nickname. Enter again.</string>
+    <string name="chat_camera_occupied_tip">Other functions are using the camera.</string>
 
 
     <string name="delivered">Delivered to</string>

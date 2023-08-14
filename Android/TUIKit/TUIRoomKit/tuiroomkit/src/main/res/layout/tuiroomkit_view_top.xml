@@ -53,18 +53,18 @@
         android:layout_height="@dimen/tuiroomkit_top_item_view_height"
         android:layout_centerVertical="true"
         android:layout_marginEnd="20dp"
-        android:layout_toStartOf="@id/img_video_mirror"
-        android:layout_toLeftOf="@id/img_video_mirror"
+        android:layout_toStartOf="@id/tuiroomkit_minimize_room_iv"
+        android:layout_toLeftOf="@id/tuiroomkit_minimize_room_iv"
         android:src="@drawable/tuiroomkit_ic_camera_switch" />
 
     <ImageView
-        android:id="@+id/img_video_mirror"
+        android:id="@+id/tuiroomkit_minimize_room_iv"
         android:layout_width="@dimen/tuiroomkit_top_item_view_width"
         android:layout_height="@dimen/tuiroomkit_top_item_view_height"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/tuiroomkit_ic_mirror" />
+        android:src="@drawable/tuiroomkit_ic_minimize" />
 
     <ImageView
         android:id="@+id/btn_report"

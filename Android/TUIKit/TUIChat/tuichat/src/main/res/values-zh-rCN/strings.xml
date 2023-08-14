@@ -115,6 +115,7 @@
     <string name="record_rejected_for_in_recording">当前录音未结束</string>
     <string name="play_error_tip">语音文件已损坏或不存在</string>
     <string name="input_tip">没有输入昵称，请重新填写</string>
+    <string name="chat_camera_occupied_tip">摄像头被其他功能占用</string>
 
 
     <string name="delivered">已送达</string>

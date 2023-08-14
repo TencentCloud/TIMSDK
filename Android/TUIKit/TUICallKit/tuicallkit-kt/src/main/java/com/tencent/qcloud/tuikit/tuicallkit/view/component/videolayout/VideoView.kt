@@ -33,6 +33,12 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
         } else {
             tuiVideoView?.visibility = GONE
             imageAvatar?.visibility = VISIBLE
+            ImageLoader.loadImage(
+                context.applicationContext,
+                imageAvatar,
+                viewModel?.user?.avatar?.get(),
+                R.drawable.tuicallkit_ic_avatar
+            )
         }
     }
 
@@ -116,16 +122,29 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
     private fun refreshView() {
         if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()
             && TUICallDefine.Status.Waiting == viewModel?.user?.callStatus?.get()
-            && !viewModel?.user?.id.equals(TUILogin.getLoginUser())
         ) {
-            imageLoading?.visibility = VISIBLE
-            ImageLoader.loadImage(context.applicationContext, imageAvatar, viewModel?.user?.avatar?.get(), R.drawable.tuicallkit_ic_avatar)
-            textUserName?.text = if (TextUtils.isEmpty(viewModel?.user?.nickname?.get())) {
-                viewModel?.user?.id
+            if (viewModel?.user?.id.equals(TUILogin.getLoginUser())) {
+                ImageLoader.loadImage(
+                    context.applicationContext,
+                    imageAvatar,
+                    viewModel?.user?.avatar?.get(),
+                    R.drawable.tuicallkit_ic_avatar
+                )
             } else {
-                viewModel?.user?.nickname?.get()
+                imageLoading?.visibility = VISIBLE
+                ImageLoader.loadImage(
+                    context.applicationContext,
+                    imageAvatar,
+                    viewModel?.user?.avatar?.get(),
+                    R.drawable.tuicallkit_ic_avatar
+                )
+                textUserName?.text = if (TextUtils.isEmpty(viewModel?.user?.nickname?.get())) {
+                    viewModel?.user?.id
+                } else {
+                    viewModel?.user?.nickname?.get()
+                }
             }
-        } else if (TUICallDefine.Status.Accept == viewModel?.user?.callStatus?.get()){
+        } else if (TUICallDefine.Status.Accept == viewModel?.user?.callStatus?.get()) {
             if (viewModel?.user?.videoAvailable?.get() == true) {
                 tuiVideoView?.visibility = VISIBLE
                 imageAvatar?.visibility = GONE
@@ -147,7 +166,12 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
         imageLoading = findViewById<View>(R.id.img_loading) as ImageView
 
         ImageLoader.loadGifImage(context.applicationContext, imageLoading, R.drawable.tuicallkit_loading)
-        ImageLoader.loadImage(context.applicationContext, imageAvatar, viewModel?.user?.avatar?.get(), R.drawable.tuicallkit_ic_avatar)
+        ImageLoader.loadImage(
+            context.applicationContext,
+            imageAvatar,
+            viewModel?.user?.avatar?.get(),
+            R.drawable.tuicallkit_ic_avatar
+        )
         textUserName?.text = if (TextUtils.isEmpty(viewModel?.user?.nickname?.get())) {
             viewModel?.user?.id
         } else {

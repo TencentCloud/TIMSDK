@@ -71,7 +71,9 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatView extends LinearLayout implements IChatLayout {
     private static final String TAG = ChatView.class.getSimpleName();
@@ -356,7 +358,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                 int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 sendMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
-                markCallingMsgRead(firstVisiblePosition, lastVisiblePosition);
+                notifyMessageDisplayed(firstVisiblePosition, lastVisiblePosition);
             }
         });
 
@@ -409,6 +411,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         });
     }
 
+    // 待 TUICallKit 按照标准流程接入后删除
     private void markCallingMsgRead(int firstPosition, int lastPosition) {
         if (mAdapter == null || presenter == null) {
             return;
@@ -421,6 +424,24 @@ public class ChatView extends LinearLayout implements IChatLayout {
         }
 
         presenter.markCallingMsgRead(tuiMessageBeans);
+    }
+
+    private void notifyMessageDisplayed(int firstPosition, int lastPosition) {
+        // *******************************
+        // 待 TUICallKit 按照标准流程接入后删除
+        // *******************************
+        markCallingMsgRead(firstPosition, lastPosition);
+        // *******************************
+        // *******************************
+
+        if (mAdapter == null || presenter == null) {
+            return;
+        }
+        for (TUIMessageBean bean : mAdapter.getItemList(firstPosition, lastPosition)) {
+            Map<String, Object> param = new HashMap<>();
+            param.put(TUIConstants.TUIChat.MESSAGE_BEAN, bean);
+            TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_DISPLAY_MESSAGE_BEAN, param);
+        }
     }
 
     private void setTotalUnread() {

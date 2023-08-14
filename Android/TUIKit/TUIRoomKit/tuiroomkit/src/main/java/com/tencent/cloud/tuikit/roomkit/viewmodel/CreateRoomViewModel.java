@@ -24,11 +24,19 @@ public class CreateRoomViewModel implements RoomEventCenter.RoomKitUIEventRespon
     private CreateRoomView mCreateRoomView;
     private RoomStore      mRoomStore;
 
+    private boolean mIsOpenCamera;
+    private boolean mIsOpenMicrophone;
+    private boolean mIsUseSpeaker;
+
     public CreateRoomViewModel(Context context, CreateRoomView createRoomView) {
         mContext = context;
         mCreateRoomView = createRoomView;
         mRoomStore = RoomEngineManager.sharedInstance(mContext).getRoomStore();
         RoomEventCenter.getInstance().subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.ROOM_TYPE_CHANGE, this);
+
+        mIsOpenCamera = mRoomStore.roomInfo.isOpenCamera;
+        mIsOpenMicrophone = mRoomStore.roomInfo.isOpenMicrophone;
+        mIsUseSpeaker = mRoomStore.roomInfo.isUseSpeaker;
     }
 
     public void destroy() {
@@ -45,19 +53,15 @@ public class CreateRoomViewModel implements RoomEventCenter.RoomKitUIEventRespon
         roomInfo.roomId = roomId;
         roomInfo.owner = userModel.userId;
         roomInfo.name = userModel.userName + mContext.getString(R.string.tuiroomkit_meeting_title);
-        roomInfo.isOpenCamera = mRoomStore.roomInfo.isOpenCamera;
-        roomInfo.isOpenMicrophone = mRoomStore.roomInfo.isOpenMicrophone;
-        roomInfo.isUseSpeaker = mRoomStore.roomInfo.isUseSpeaker;
+        roomInfo.isOpenCamera = mIsOpenCamera;
+        roomInfo.isOpenMicrophone = mIsOpenMicrophone;
+        roomInfo.isUseSpeaker = mIsUseSpeaker;
         roomInfo.isMicrophoneDisableForAllUser = false;
         roomInfo.isCameraDisableForAllUser = false;
         roomInfo.isMessageDisableForAllUser = false;
         roomInfo.speechMode = mRoomStore.roomInfo.speechMode;
         TUIRoomKit tuiRoomKit = TUIRoomKit.sharedInstance(mContext);
         tuiRoomKit.createRoom(roomInfo, TUIRoomKit.RoomScene.MEETING);
-    }
-
-    public void finishActivity() {
-        RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_CREATE_ROOM, null);
     }
 
     public ArrayList<SwitchSettingItem> createSwitchSettingItemList() {
@@ -67,9 +71,9 @@ public class CreateRoomViewModel implements RoomEventCenter.RoomKitUIEventRespon
                 new SwitchSettingItem.Listener() {
                     @Override
                     public void onSwitchChecked(boolean isChecked) {
-                        mRoomStore.roomInfo.isOpenMicrophone = isChecked;
+                        mIsOpenMicrophone = isChecked;
                     }
-                }).setCheck(mRoomStore.roomInfo.isOpenMicrophone);
+                }).setCheck(mIsOpenMicrophone);
         ArrayList<SwitchSettingItem> settingItemList = new ArrayList<>();
         settingItemList.add(audioItem);
 
@@ -79,9 +83,9 @@ public class CreateRoomViewModel implements RoomEventCenter.RoomKitUIEventRespon
                 new SwitchSettingItem.Listener() {
                     @Override
                     public void onSwitchChecked(boolean isChecked) {
-                        mRoomStore.roomInfo.isUseSpeaker = isChecked;
+                        mIsUseSpeaker = isChecked;
                     }
-                }).setCheck(mRoomStore.roomInfo.isUseSpeaker);
+                }).setCheck(mIsUseSpeaker);
         settingItemList.add(speakerItem);
 
         BaseSettingItem.ItemText videoItemText =
@@ -90,9 +94,9 @@ public class CreateRoomViewModel implements RoomEventCenter.RoomKitUIEventRespon
                 new SwitchSettingItem.Listener() {
                     @Override
                     public void onSwitchChecked(boolean isChecked) {
-                        mRoomStore.roomInfo.isOpenCamera = isChecked;
+                        mIsOpenCamera = isChecked;
                     }
-                }).setCheck(mRoomStore.roomInfo.isOpenCamera);
+                }).setCheck(mIsOpenCamera);
         settingItemList.add(videoItem);
         return settingItemList;
     }

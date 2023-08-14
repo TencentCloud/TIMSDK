@@ -71,6 +71,9 @@
         android:id="@+id/group_screen_capture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/bottom_view"
+        android:layout_below="@id/top_view"
+        android:layout_marginBottom="@dimen/tuiroomkit_video_seat_bottom_margin"
         android:background="@color/tuiroomkit_color_black"
         android:visibility="gone">
 

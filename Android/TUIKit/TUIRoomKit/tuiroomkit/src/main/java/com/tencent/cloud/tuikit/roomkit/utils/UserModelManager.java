@@ -61,6 +61,7 @@ public class UserModelManager {
     }
 
     public synchronized void clearUserModel() {
+        mUserModel = null;
         try {
             SPUtils.getInstance(PER_DATA).put(PER_USER_MODEL, "");
         } catch (Exception e) {

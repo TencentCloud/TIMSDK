@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.CreateRoomViewModel;
 import com.tencent.cloud.tuikit.roomkit.view.settingitem.SwitchSettingItem;
 import com.tencent.cloud.tuikit.roomkit.utils.UserModel;
@@ -70,7 +71,7 @@ public class CreateRoomView extends RelativeLayout
         mToolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.finishActivity();
+                RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_CREATE_ROOM, null);
             }
         });
 

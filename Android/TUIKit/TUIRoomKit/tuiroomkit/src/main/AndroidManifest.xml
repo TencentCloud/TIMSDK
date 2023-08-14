@@ -52,16 +52,16 @@
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <service
-            android:name=".view.service.ForegroundService"
+            android:name=".service.KeepAliveService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name="com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomFloatViewService"
+            android:name="com.tencent.cloud.tuikit.roomkit.view.service.RoomFloatViewService"
             android:enabled="true"
             android:exported="false" />
         <provider
-            android:name=".imaccess.TUIRoomImAccessService"
+            android:name=".service.RoomServiceInitializer"
             android:authorities="${applicationId}.TUIRoom.Init"
             android:enabled="true"
             android:exported="false" />

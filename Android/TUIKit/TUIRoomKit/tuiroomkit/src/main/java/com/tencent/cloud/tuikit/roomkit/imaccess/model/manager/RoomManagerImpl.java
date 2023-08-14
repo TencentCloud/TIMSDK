@@ -1,6 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.model.manager;
 
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.KEY_INVITE_DATA;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.EXIT_FLOAT_WINDOW;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.IRoomManager;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.InviteToJoinRoomActivity;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.qcloud.tuicore.TUIConfig;
@@ -21,17 +23,20 @@ public class RoomManagerImpl implements IRoomManager {
 
     public RoomManagerImpl() {
         mRoomKit = TUIRoomKit.sharedInstance(TUILogin.getAppContext());
-        mRoomKit.login(TUILogin.getSdkAppId(), TUILogin.getUserId(), TUILogin.getUserSig());
     }
 
     @Override
-    public void raiseUi() {
-        mRoomKit.raiseUi();
+    public void enableAutoShowRoomMainUi(boolean enable) {
+        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).enableAutoShowRoomMainUi(enable);
+    }
+
+    @Override
+    public void showRoomMainUi() {
+        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).exitFloatWindow();
     }
 
     @Override
     public void createRoom(RoomInfo roomInfo, TUIRoomKit.RoomScene scene) {
-        mRoomKit.banAutoRaiseUiOnce();
         mRoomKit.createRoom(roomInfo, scene);
     }
 

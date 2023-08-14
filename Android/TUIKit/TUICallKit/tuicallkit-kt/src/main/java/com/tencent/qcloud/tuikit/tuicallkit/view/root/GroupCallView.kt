@@ -214,7 +214,7 @@ class GroupCallView(context: Context) : BaseCallView(context) {
             && TUICallDefine.Role.Called == viewModel.callRole.get()
         ) {
             layoutRender?.visibility = GONE
-        } else {
+        } else if (TUICallDefine.Status.Accept == viewModel.callStatus.get() || TUICallDefine.Status.Waiting == viewModel.callStatus.get()){
             layoutRender?.visibility = VISIBLE
             groupCallVideoLayout = GroupCallVideoLayout(context)
             layoutRender!!.removeAllViews()

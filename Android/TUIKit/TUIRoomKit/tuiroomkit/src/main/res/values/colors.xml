@@ -28,4 +28,11 @@
     <color name="tuiroomkit_room_msg_title_destroyed">#888888</color>
     <color name="tuiroomkit_room_msg_btn_text_color_join">#FFFFFF</color>
     <color name="tuiroomkit_room_msg_btn_text_color_joined">#999999</color>
+    <color name="tuiroomkit_color_float_Window_bg">#5C5C5C</color>
+
+    <color name="tuivideoseat_color_indicator_un_select">#4DFFFFFF</color>
+    <color name="tuivideoseat_color_white">@android:color/white</color>
+    <color name="tuivideoseat_color_blue">#006EFF</color>
+    <color name="tuivideoseat_color_grey">#888888</color>
+    <color name="tuivideoseat_color_user_talking">#A5FE33</color>
 </resources>

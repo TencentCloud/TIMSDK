@@ -9,9 +9,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
 import androidx.fragment.app.FragmentActivity;
+
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ActivityResultResolver;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -53,6 +57,12 @@ public class CameraActivity extends FragmentActivity {
             @Override
             public void onError(String errorMsg) {
                 TUIChatLog.e(TAG, "camera error " + errorMsg);
+                int currentBusinessScene = TUILogin.getCurrentBusinessScene();
+                if (currentBusinessScene != TUILogin.TUIBusinessScene.NONE) {
+                    String tipMsg = getString(R.string.chat_camera_occupied_tip);
+                    TUIChatLog.e(TAG, tipMsg);
+                    ToastUtil.toastShortMessage(tipMsg);
+                }
                 Intent intent = new Intent();
                 setResult(103, intent);
                 finish();

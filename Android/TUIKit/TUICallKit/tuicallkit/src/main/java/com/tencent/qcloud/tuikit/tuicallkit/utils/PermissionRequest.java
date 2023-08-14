@@ -13,11 +13,13 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.BrandUtils;
 import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +76,31 @@ public class PermissionRequest {
         if (PermissionUtils.hasPermission(context)) {
             return;
         }
-        startCommonSettings(context);
+        if (BrandUtils.isBrandXiaoMi()) {
+            startXiaomiPermissionSettings(context);
+        } else {
+            startCommonSettings(context);
+        }
+    }
+
+    private static void startXiaomiPermissionSettings(Context context) {
+        if (!isMiuiOptimization()) {
+            startCommonSettings(context);
+            return;
+        }
+
+        try {
+            Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            intent.setClassName("com.miui.securitycenter",
+                    "com.miui.permcenter.permissions.PermissionsEditorActivity");
+            intent.putExtra("extra_pkgname", context.getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
+            ToastUtil.toastShortMessage(context.getString(R.string.tuicallkit_float_permission_hint));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void startCommonSettings(Context context) {
@@ -88,6 +114,21 @@ public class PermissionRequest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //Check whether MIUI-optimization is enabled on Xiaomi phone(Developer option -> Enable MIUI-optimization)
+    public static boolean isMiuiOptimization() {
+        String miuiOptimization = "";
+        try {
+            Class systemProperties = Class.forName("android.os.systemProperties");
+            Method get = systemProperties.getDeclaredMethod("get", String.class, String.class);
+            miuiOptimization = (String) get.invoke(systemProperties, "persist.sys.miuiOptimization", "");
+            //The user has not adjusted the MIUI-optimization switch (default) | user open MIUI-optimization
+            return TextUtils.isEmpty(miuiOptimization) | "true".equals(miuiOptimization);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static void requestVivoFloatPermission(Context context) {

@@ -83,16 +83,6 @@ public class RoomObserver extends TUIRoomObserver implements TUIRoomKitListener 
     }
 
     @Override
-    public void onLogin(int code, String message) {
-        Log.d(TAG, "onLogin code=" + code + " message=" + message);
-        if (code == 0) {
-            mRoomCallback.onLoginSuccess();
-        } else {
-            Log.e(TAG, "onLogin code=" + code + " message=" + message);
-        }
-    }
-
-    @Override
     public void onRoomCreate(int code, String message) {
         Log.d(TAG, "onRoomCreate code=" + code + " message=" + message);
         AccessRoomConstants.RoomResult result =

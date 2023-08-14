@@ -14,7 +14,6 @@ import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.utils.RTCubeUtils;
 import com.tencent.cloud.tuikit.roomkit.view.component.TopView;
 import com.tencent.liteav.device.TXDeviceManager;
-import com.tencent.trtc.TRTCCloudDef;
 
 import java.lang.reflect.Method;
 
@@ -110,13 +109,5 @@ public class TopViewModel {
 
     public void showMeetingInfo() {
         RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO, null);
-    }
-
-    public void setMirror() {
-        mRoomStore.videoModel.isMirror = !mRoomStore.videoModel.isMirror;
-        TRTCCloudDef.TRTCRenderParams param = new TRTCCloudDef.TRTCRenderParams();
-        param.mirrorType = mRoomStore.videoModel.isMirror ? TRTCCloudDef.TRTC_VIDEO_MIRROR_TYPE_ENABLE
-                : TRTCCloudDef.TRTC_VIDEO_MIRROR_TYPE_DISABLE;
-        mRoomEngine.getTRTCCloud().setLocalRenderParams(param);
     }
 }

@@ -2,6 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
+
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
 import androidx.datastore.rxjava3.RxDataStore;
@@ -547,6 +549,10 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
      * @param beanClass  MessageBean type
      */
     public void addCustomMessageType(String businessId, Class<? extends TUIMessageBean> beanClass, boolean isDefault) {
+        if (customMessageMap.containsKey(businessId)) {
+            TUIChatLog.e(TAG, "addCustomMessageType: businessID can not be same with the exists: " + businessId);
+            return;
+        }
         customMessageMap.put(businessId, beanClass);
         if (!isDefault) {
             extensionMessageClass.add(beanClass);

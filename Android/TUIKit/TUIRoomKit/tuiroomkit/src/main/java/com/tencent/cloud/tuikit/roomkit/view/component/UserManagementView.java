@@ -12,7 +12,7 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.UserManagementViewModel;
-import com.tencent.cloud.tuikit.videoseat.ui.utils.ImageLoader;
+import com.tencent.cloud.tuikit.roomkit.videoseat.ui.utils.ImageLoader;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -109,6 +109,20 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
             mLayoutKickoffStage.setVisibility(View.GONE);
             mLayoutMuteMic.setVisibility(View.GONE);
         }
+    }
+
+    public void showTransferRoomSuccessDialog() {
+        ConfirmDialog confirmDialog = new ConfirmDialog(mContext);
+        confirmDialog.setCancelable(true);
+        confirmDialog.setMessage(mContext.getString(R.string.tuiroomkit_you_have_transferred_master));
+        confirmDialog.setPositiveText(mContext.getString(R.string.tuiroomkit_dialog_ok));
+        confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
+            @Override
+            public void onClick() {
+                confirmDialog.dismiss();
+            }
+        });
+        confirmDialog.show();
     }
 
     @Override

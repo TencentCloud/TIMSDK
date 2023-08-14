@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="tuivideoseat_page_dot_radius">3dp</dimen>
-    <dimen name="tuivideoseat_video_view_margin">92dp</dimen>
-    <dimen name="tuivideoseat_video_view_conor">16dp</dimen>
-    <dimen name="tuivideoseat_video_view_size_small">100dp</dimen>
-    <dimen name="tuivideoseat_video_view_size_middle">180dp</dimen>
-</resources>

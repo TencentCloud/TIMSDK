@@ -1,14 +1,18 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.model.manager;
 
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.MSG_MAX_SHOW_MEMBER_COUNT;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SEND_IM_MSG_COMPLETE;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomMessageBean;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.imsdk.v2.V2TIMCompleteCallback;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -33,6 +37,7 @@ public class RoomMsgManager {
 
     private V2TIMMessage mIMMsg;
     private Handler      mWorkHandler;
+    private Handler      mMainHandler;
 
     private CountDownLatch mSendMsgLatch;
     private CountDownLatch mModifyMsgLatch;
@@ -49,6 +54,7 @@ public class RoomMsgManager {
         HandlerThread handlerThread = new HandlerThread("RoomMsgManager-Thread");
         handlerThread.start();
         mWorkHandler = new Handler(handlerThread.getLooper());
+        mMainHandler = new Handler(Looper.getMainLooper());
     }
 
     public void destroyRoomMsgManager() {
@@ -98,18 +104,37 @@ public class RoomMsgManager {
                 roomMsgData.setGroupId(data.getGroupId());
                 roomMsgData.setMessageId(data.getV2TIMMessage().getMsgID());
                 mSendMsgLatch.countDown();
+                // 这里直接返回，imsdk 状态还没更新，执行 login 会报错7009，所以需要 post 一下进行延时；
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        RoomEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
+                    }
+                });
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 Log.e(TAG, "sendMessage onError module=" + module + " errCode=" + errCode + " errMsg=" + errMsg);
                 mSendMsgLatch.countDown();
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        RoomEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
+                    }
+                });
             }
 
             @Override
             public void onError(int errCode, String errMsg, TUIMessageBean data) {
                 Log.e(TAG, "sendMessage onError errCode=" + errCode + " errMsg=" + errMsg + " data=" + data);
                 mSendMsgLatch.countDown();
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        RoomEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
+                    }
+                });
             }
         });
         try {
@@ -218,6 +243,6 @@ public class RoomMsgManager {
     }
 
     private boolean isNeedIgnoreMessage(RoomMsgData data) {
-        return !TUILogin.getUserId().equals(data.getRoomManagerId());
+        return !TextUtils.equals(TUILogin.getUserId(), data.getRoomManagerId());
     }
 }

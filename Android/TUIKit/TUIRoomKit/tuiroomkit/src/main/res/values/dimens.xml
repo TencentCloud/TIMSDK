@@ -17,4 +17,12 @@
     <dimen name="tuiroomkit_enter_room_margin_bottom">20dp</dimen>
     <dimen name="tuiroomkit_video_seat_bottom_margin">15dp</dimen>
     <dimen name="tuiroomkit_room_float_view_size">50dp</dimen>
+    <dimen name="tuiroomkit_room_video_float_view_width">100dp</dimen>
+    <dimen name="tuiroomkit_room_video_float_view_height">180dp</dimen>
+
+    <dimen name="tuivideoseat_page_dot_radius">3dp</dimen>
+    <dimen name="tuivideoseat_video_view_margin">92dp</dimen>
+    <dimen name="tuivideoseat_video_view_conor">16dp</dimen>
+    <dimen name="tuivideoseat_video_view_size_small">100dp</dimen>
+    <dimen name="tuivideoseat_video_view_size_middle">180dp</dimen>
 </resources>
