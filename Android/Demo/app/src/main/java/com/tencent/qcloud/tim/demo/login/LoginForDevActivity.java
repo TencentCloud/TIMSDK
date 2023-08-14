@@ -115,7 +115,7 @@ public class LoginForDevActivity extends BaseLightActivity {
             @Override
             public void onClick(View view) {
                 TIMAppService.getInstance().initBeforeLogin(0);
-
+                mLoginView.setEnabled(false);
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
                 UserInfo.getInstance().setUserSig(userSig);
@@ -124,6 +124,7 @@ public class LoginForDevActivity extends BaseLightActivity {
                     public void onError(final int code, final String desc) {
                         runOnUiThread(new Runnable() {
                             public void run() {
+                                mLoginView.setEnabled(true);
                                 ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc);
                             }
                         });
