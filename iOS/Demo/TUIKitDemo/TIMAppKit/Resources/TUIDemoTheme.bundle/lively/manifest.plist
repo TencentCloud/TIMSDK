@@ -58,7 +58,11 @@
 	<string>#FFFFFF99</string>
 	<key>public_login_logo_img</key>
 	<string>public_login_logo.png</string>
+	<key>launch_page_logo_img</key>
+	<string>launch_page_logo.png</string>
 	<key>separator_color</key>
 	<string>#DBDBDB</string>
+	<key>launch_page_color</key>
+	<string>#FFFFFF</string>
 </dict>
 </plist>

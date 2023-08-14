@@ -62,5 +62,9 @@
 	<string>arrow_n</string>
 	<key>separator_color</key>
 	<string>#39393B</string>
+	<key>launch_page_logo_img</key>
+	<string>launch_page_logo.png</string>
+	<key>launch_page_color</key>
+	<string>#141516</string>
 </dict>
 </plist>

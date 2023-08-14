@@ -34,7 +34,7 @@
 "AppLoginSucc" = "已成功登录";
 "AppGetAccessAddressFail" = "服务异常，请检查网络后重试";
 "AppOfflineTitle" = "下线通知";
-"AppOfflineDesc" = "您的帐号于另一台手机上登录";
+"AppOfflineDesc" = "您的账号于另一台手机上登录";
 "AppCancelRelogin" = "退出";
 "AppConfirmRelogin" = "重新登录";
 
@@ -190,3 +190,5 @@
 "TabBarItemSettingText_mini" = "设置";
 "TabBarItemCallsRecordText_mini"  = "通话记录";
 //----------------Mini end------------
+
+"TUIStartPageTitle" = "腾讯云即时通信 IM";

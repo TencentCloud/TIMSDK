@@ -10,4 +10,4 @@
 "NSCameraUsageDescription"  =  "In order to facilitate you to send the photos or videos you have taken to your friends, as well as make video calls and quick meetings, please allow us to access the camera to take photos and videos.";
 "NSMicrophoneUsageDescription" = "In order to facilitate your sending voice messages, shooting videos, audio and video calls, and quick meetings, please allow us to use the microphone for recording.";
 "NSPhotoLibraryAddUsageDescription" = "In order for you to save photos and videos to your device, please allow us to write photos and videos to your device.";
-"CFBundleDisplayName" = "Tencent IM";
+"CFBundleDisplayName" = "Tencent Chat";

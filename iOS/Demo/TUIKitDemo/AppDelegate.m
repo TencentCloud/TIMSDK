@@ -185,7 +185,6 @@ void uncaughtExceptionHandler(NSException*exception) {
 }
 
 - (void)tryAutoLogin {
-    self.window.rootViewController = [self getLoginController];
     [[TCLoginModel sharedInstance] getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
         [self autoLoginIfNeeded];
     } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
@@ -193,6 +192,7 @@ void uncaughtExceptionHandler(NSException*exception) {
             [[TCLoginModel sharedInstance] getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
                 [self autoLoginIfNeeded];
             } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
+                self.window.rootViewController = [self getLoginController];
                 [[NSNotificationCenter defaultCenter] postNotificationName: @"TUILoginShowPrivacyPopViewNotfication" object:nil];
             }];
         });

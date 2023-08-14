@@ -972,7 +972,8 @@ static UIWindow *gImWindow = nil;
       self.dismissWindowBtn.hidden = (isMinimalist ? !isAppear : YES);
     };
     if (showCallsRecord && self.callingVC) {
-        NSString *title = isMinimalist ? NSLocalizedString(@"TabBarItemCallsRecordText_mini", nil) : NSLocalizedString(@"TabBarItemCallsRecordText_mini", nil);
+        NSString *title = isMinimalist ? TIMCommonLocalizableString(TIMAppTabBarItemCallsRecordText_mini) :
+                                         TIMCommonLocalizableString(TIMAppTabBarItemCallsRecordText_mini);
         UIImage *selected = isMinimalist
                                 ? TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"tab_calls_selected")])
                                 : TUIDemoDynamicImage(@"tab_calls_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"tab_calls_selected")]);

@@ -6,7 +6,7 @@
 "8jc-YP-vv6.normalTitle" = "Log In";
 
 /* Class = "UILabel"; text = "登录·即时通信"; ObjectID = "FYr-lV-7eY"; */
-"FYr-lV-7eY.text" = "Tencent Cloud IM";
+"FYr-lV-7eY.text" = "Tencent Cloud Chat";
 
 /* Class = "UIButton"; normalTitle = "+"; ObjectID = "GPZ-iZ-NTr"; */
 "GPZ-iZ-NTr.normalTitle" = "+";

@@ -7,7 +7,7 @@
  *  - 您可以在TUIKit的基础上做一些个性化拓展，即可轻松接入IM SDK
  *
  * Tencent Cloud TUIKit
- * - This class depends on the implementation of Tencent Cloud IM SDK
+ * - This class depends on the implementation of Tencent Cloud Chat SDK
  * - While implementing UI functions, components in TUIKit call corresponding interfaces of IM SDK to process IM-related logic and data
  * - You can make some customized extensions on the basis of TUIKit, and you can easily access the IM SDK
  */

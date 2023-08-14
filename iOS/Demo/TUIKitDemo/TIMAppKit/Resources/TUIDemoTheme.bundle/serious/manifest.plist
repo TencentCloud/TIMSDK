@@ -64,5 +64,9 @@
 	<string>new_chat.png</string>
 	<key>pop_icon_new_group</key>
 	<string>new_groupchat.png</string>
+	<key>launch_page_logo_img</key>
+	<string>launch_page_logo.png</string>
+	<key>launch_page_color</key>
+	<string>#FFFFFF</string>
 </dict>
 </plist>

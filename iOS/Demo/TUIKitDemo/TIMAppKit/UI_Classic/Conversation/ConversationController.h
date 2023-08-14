@@ -10,7 +10,7 @@
  *  - 本类依赖于腾讯云 TUIKit 和 IMSDK
  *
  *
- *  Tencent Cloud IM Demo Conversation List View
+ *  Tencent Cloud Chat Demo Conversation List View
  *  - This file implements the session list, the ViewController corresponding to the "message" tabItem
  *  - This class depends on Tencent Cloud TUIKit and IMSDK
  */

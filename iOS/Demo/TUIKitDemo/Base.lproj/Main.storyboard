@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Itl-9X-Waa">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,12 +21,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="userid" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DbQ-a4-Fjh">
-                                <rect key="frame" x="40" y="326" width="334" height="34"/>
+                                <rect key="frame" x="40" y="330" width="334" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iFd-U1-Nlo">
-                                <rect key="frame" x="40" y="410" width="334" height="44"/>
+                                <rect key="frame" x="40" y="414" width="334" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="1iB-iB-tXm"/>
                                 </constraints>
@@ -36,7 +36,7 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Rxn-Jx-5dp">
-                                <rect key="frame" x="107" y="144" width="200" height="132"/>
+                                <rect key="frame" x="107" y="148" width="200" height="132"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Rxn-Jx-5dp" secondAttribute="height" multiplier="261:172" id="a0I-tD-DJ5"/>
                                     <constraint firstAttribute="width" constant="200" id="jQ1-pn-vD7"/>
@@ -63,12 +63,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1172" y="-21.139430284857571"/>
+            <point key="canvasLocation" x="-1442" y="-21"/>
         </scene>
-        <!--View Controller-->
+        <!--Start Page View Controller-->
         <scene sceneID="MU1-3L-lOK">
             <objects>
-                <viewController id="Itl-9X-Waa" sceneMemberID="viewController">
+                <viewController id="Itl-9X-Waa" customClass="TUIStartPageViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="LDa-7O-52l"/>
                         <viewControllerLayoutGuide type="bottom" id="Orw-0E-jKC"/>
@@ -77,26 +77,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="flash" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W0c-h1-MOR">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ixs-9m-pnp">
+                                <rect key="frame" x="108" y="80" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="W0c-h1-MOR" firstAttribute="leading" secondItem="Yp7-vI-hcL" secondAttribute="leading" id="G1e-yI-2dw"/>
-                            <constraint firstAttribute="bottom" secondItem="W0c-h1-MOR" secondAttribute="bottom" id="oiR-cQ-GXZ"/>
-                            <constraint firstAttribute="trailing" secondItem="W0c-h1-MOR" secondAttribute="trailing" id="sMB-vH-K5i"/>
-                            <constraint firstItem="W0c-h1-MOR" firstAttribute="top" secondItem="Yp7-vI-hcL" secondAttribute="top" id="ydb-Wb-9cm"/>
-                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nH4-D8-0Ib" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-450" y="-21"/>
+            <point key="canvasLocation" x="-450.72463768115944" y="-21.428571428571427"/>
         </scene>
     </scenes>
     <resources>
-        <image name="flash" width="375" height="667"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
