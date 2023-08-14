@@ -10,9 +10,9 @@
 #import "TUIBaseChatViewController_Minimalist+ProtectedAPI.h"
 #import "TUIChatConfig.h"
 #import "TUICloudCustomDataTypeCenter.h"
-#import "TUILinkCellData_Minimalist.h"
+#import "TUILinkCellData.h"
 #import "TUIMessageController_Minimalist.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
 
 #define kC2CTypingTime 30.0
 
@@ -114,12 +114,12 @@
     };
     NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
 
-    V2TIMMessage *msg = [TUIMessageDataProvider_Minimalist getCustomMessageWithJsonData:data];
+    V2TIMMessage *msg = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
     TUISendMessageAppendParams *appendParams = [[TUISendMessageAppendParams alloc] init];
     appendParams.isSendPushInfo = NO;
     appendParams.isOnlineUserOnly = YES;
     appendParams.priority = V2TIM_PRIORITY_DEFAULT;
-    [TUIMessageDataProvider_Minimalist sendMessage:msg
+    [TUIMessageDataProvider sendMessage:msg
         toConversation:self.conversationData
         appendParams:appendParams
         Progress:^(uint32_t progress) {

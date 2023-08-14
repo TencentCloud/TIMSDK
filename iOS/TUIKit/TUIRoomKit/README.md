@@ -16,7 +16,6 @@ TUIRoomKit
     ├─ Login                    // 登录UI及业务逻辑代码文件夹
     └─ TXReplayKit_Screen       // 共享屏幕逻辑代码文件夹
 ├─ TUIRoomKit                   // 多人视频会议主要UI代码以及所需的图片、国际化字符串资源文件夹
-├─ TUIVideoSeat                 // 多人视频会议展示视频的UI代码文件夹
 ├─ TUIBarrage                   // 弹幕组件
 └─ TUIBeauty                    // 美颜组件
 ```

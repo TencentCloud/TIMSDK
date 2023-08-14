@@ -22,27 +22,28 @@
 #import <TUICore/TUILogin.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/TUITool.h>
+#import <TUICore/NSString+TUIUtil.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIAIDenoiseSignatureManager.h"
 #import "TUIBaseMessageController_Minimalist.h"
 #import "TUICameraViewController.h"
 #import "TUIChatConfig.h"
-#import "TUIChatDataProvider_Minimalist.h"
+#import "TUIChatDataProvider.h"
 #import "TUIChatMediaDataProvider.h"
 #import "TUIChatMembersReactController.h"
 #import "TUIChatModifyMessageHelper.h"
 #import "TUICloudCustomDataTypeCenter.h"
-#import "TUIFileMessageCellData_Minimalist.h"
-#import "TUIImageMessageCellData_Minimalist.h"
+#import "TUIFileMessageCellData.h"
+#import "TUIImageMessageCellData.h"
 #import "TUIJoinGroupMessageCell_Minimalist.h"
 #import "TUIMessageController_Minimalist.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
 #import "TUIMessageMultiChooseView_Minimalist.h"
 #import "TUIMessageReadViewController_Minimalist.h"
-#import "TUIReplyMessageCellData_Minimalist.h"
-#import "TUITextMessageCellData_Minimalist.h"
-#import "TUIVideoMessageCellData_Minimalist.h"
-#import "TUIVoiceMessageCellData_Minimalist.h"
+#import "TUIReplyMessageCellData.h"
+#import "TUITextMessageCellData.h"
+#import "TUIVideoMessageCellData.h"
+#import "TUIVoiceMessageCellData.h"
 #import "UIAlertController+TUICustomStyle.h"
 
 static UIView *gCustomTopView;
@@ -65,7 +66,7 @@ static UIView *gCustomTopView;
 @property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property(nonatomic, strong) TUIMessageMultiChooseView_Minimalist *multiChooseView;
 @property(nonatomic, assign) BOOL responseKeyboard;
-@property(nonatomic, strong) TUIChatDataProvider_Minimalist *dataProvider;
+@property(nonatomic, strong) TUIChatDataProvider *dataProvider;
 
 @property(nonatomic, assign) BOOL firstAppear;
 
@@ -119,7 +120,7 @@ static UIView *gCustomTopView;
     [self setupInputController];
 
     // data provider
-    self.dataProvider = [[TUIChatDataProvider_Minimalist alloc] init];
+    self.dataProvider = [[TUIChatDataProvider alloc] init];
     self.dataProvider.delegate = self;
 
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
@@ -434,11 +435,14 @@ static UIView *gCustomTopView;
 - (void)sendMessage:(V2TIMMessage *)message {
     [self.messageController sendMessage:message];
 }
+- (void)sendMessage:(V2TIMMessage *)message placeHolderCellData:(TUIMessageCellData *)placeHolderCellData {
+    [self.messageController sendMessage:message placeHolderCellData:placeHolderCellData];
+}
 
 - (void)saveDraft {
     NSString *content = [self.inputController.inputBar.inputTextView.textStorage getPlainString];
 
-    TUIReplyPreviewData_Minimalist *previewData = nil;
+    TUIReplyPreviewData *previewData = nil;
     if (self.inputController.referenceData) {
         previewData = self.inputController.referenceData;
     } else if (self.inputController.replyData) {
@@ -469,7 +473,7 @@ static UIView *gCustomTopView;
             content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         }
     }
-    [TUIChatDataProvider_Minimalist saveDraftWithConversationID:self.conversationData.conversationID Text:content];
+    [TUIChatDataProvider saveDraftWithConversationID:self.conversationData.conversationID Text:content];
 }
 
 - (void)loadDraft {
@@ -514,7 +518,7 @@ static UIView *gCustomTopView;
             NSInteger version = [reply[@"version"] integerValue];
             if (version <= kDraftMessageReplyVersion) {
                 if (IS_NOT_EMPTY_NSSTRING(messageRootID)) {
-                    TUIReplyPreviewData_Minimalist *replyData = [[TUIReplyPreviewData_Minimalist alloc] init];
+                    TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
                     replyData.msgID = reply[@"messageID"];
                     replyData.msgAbstract = reply[@"messageAbstract"];
                     replyData.sender = reply[@"messageSender"];
@@ -522,7 +526,7 @@ static UIView *gCustomTopView;
                     replyData.messageRootID = messageRootID;
                     [self.inputController showReplyPreview:replyData];
                 } else {
-                    TUIReferencePreviewData_Minimalist *replyData = [[TUIReferencePreviewData_Minimalist alloc] init];
+                    TUIReferencePreviewData *replyData = [[TUIReferencePreviewData alloc] init];
                     replyData.msgID = reply[@"messageID"];
                     replyData.msgAbstract = reply[@"messageAbstract"];
                     replyData.sender = reply[@"messageSender"];
@@ -563,7 +567,7 @@ static UIView *gCustomTopView;
             self.conversationData.title = self.conversationData.userID;
             @weakify(self);
 
-            [TUIChatDataProvider_Minimalist getFriendInfoWithUserId:self.conversationData.userID
+            [TUIChatDataProvider getFriendInfoWithUserId:self.conversationData.userID
                                                           SuccBlock:^(V2TIMFriendInfoResult *_Nonnull friendInfoResult) {
                                                             @strongify(self);
                                                             if (friendInfoResult.relation & V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST &&
@@ -571,7 +575,7 @@ static UIView *gCustomTopView;
                                                                 self.conversationData.title = friendInfoResult.friendInfo.friendRemark;
                                                                 self.conversationData.faceUrl = friendInfoResult.friendInfo.userFullInfo.faceURL;
                                                             } else {
-                                                                [TUIChatDataProvider_Minimalist
+                                                                [TUIChatDataProvider
                                                                     getUserInfoWithUserId:friendInfoResult.friendInfo.userID
                                                                                 SuccBlock:^(V2TIMUserFullInfo *_Nonnull userInfo) {
                                                                                   if (userInfo.nickName.length > 0) {
@@ -584,7 +588,7 @@ static UIView *gCustomTopView;
                                                           }
                                                           failBlock:nil];
         } else if (self.conversationData.groupID.length > 0) {
-            [TUIChatDataProvider_Minimalist getGroupInfoWithGroupID:self.conversationData.groupID
+            [TUIChatDataProvider getGroupInfoWithGroupID:self.conversationData.groupID
                                                           SuccBlock:^(V2TIMGroupInfoResult *_Nonnull groupResult) {
                                                             if (groupResult.info.groupName.length > 0) {
                                                                 self.conversationData.title = groupResult.info.groupName;
@@ -1097,7 +1101,7 @@ static UIView *gCustomTopView;
            */
           for (V2TIMMessage *message in msgs) {
               message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
-              [TUIMessageDataProvider_Minimalist sendMessage:message
+              [TUIMessageDataProvider sendMessage:message
                   toConversation:convCellData
                   appendParams:appendParams
                   Progress:nil
@@ -1138,7 +1142,7 @@ static UIView *gCustomTopView;
       NSString *desc = @"";
       desc = [self replyReferenceMessageDesc:data];
 
-      TUIReplyPreviewData_Minimalist *replyData = [[TUIReplyPreviewData_Minimalist alloc] init];
+      TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
       replyData.msgID = data.msgID;
       replyData.msgAbstract = desc;
       replyData.sender = data.name;
@@ -1175,7 +1179,7 @@ static UIView *gCustomTopView;
     } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_MERGER) {
         desc = data.innerMessage.mergerElem.title;
     } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
-        desc = [TUIMessageDataProvider_Minimalist getDisplayString:data.innerMessage];
+        desc = [TUIMessageDataProvider getDisplayString:data.innerMessage];
     } else if (data.innerMessage.elemType == V2TIM_ELEM_TYPE_TEXT) {
         desc = data.innerMessage.textElem.text;
     }
@@ -1189,7 +1193,7 @@ static UIView *gCustomTopView;
       NSString *desc = @"";
       desc = [self replyReferenceMessageDesc:data];
 
-      TUIReferencePreviewData_Minimalist *referenceData = [[TUIReferencePreviewData_Minimalist alloc] init];
+      TUIReferencePreviewData *referenceData = [[TUIReferencePreviewData alloc] init];
       referenceData.msgID = data.msgID;
       referenceData.msgAbstract = desc;
       referenceData.sender = data.name;
@@ -1337,12 +1341,25 @@ static UIView *gCustomTopView;
     [TUITool makeToast:errorMessage];
 }
 
-- (void)onProvideVideo:(NSString *)videoUrl snapshot:(NSString *)snapshotUrl duration:(NSInteger)duration {
+- (void)onProvidePlaceholderVideoSnapshot:(NSString *)snapshotUrl
+                        SnapImage:(UIImage *)image
+                       Completion:(void (^__nullable)(BOOL finished, TUIMessageCellData *placeHolderCellData))completion {
+    TUIMessageCellData *videoCellData = [TUIVideoMessageCellData placeholderCellDataWithSnapshotUrl:snapshotUrl thubImage:image];
+    [self.messageController sendPlaceHolderUIMessage:videoCellData];
+    if (completion) {
+        completion(YES,videoCellData);
+    }
+}
+
+- (void)onProvideVideo:(NSString *)videoUrl
+               snapshot:(NSString *)snapshotUrl
+               duration:(NSInteger)duration
+    placeHolderCellData:(TUIMessageCellData *)placeHolderCellData {
     V2TIMMessage *message = [V2TIMManager.sharedInstance createVideoMessage:videoUrl
                                                                        type:videoUrl.pathExtension
                                                                    duration:(int)duration
                                                                snapshotPath:snapshotUrl];
-    [self sendMessage:message];
+    [self sendMessage:message placeHolderCellData:placeHolderCellData];
 }
 
 - (void)onProvideVideoError:(NSString *)errorMessage {

@@ -11,10 +11,9 @@
 #import "TUICore.h"
 #import "TUIDefine.h"
 #import "NSDictionary+TUISafe.h"
-#import "TUILog.h"
+#import "TUICallEngineHeader.h"
 #import "TUILogin.h"
 #import "TUICallKitHeader.h"
-#import "TUICallObserver.h"
 #import "TUICallingCommon.h"
 #import "TUICallingStatusManager.h"
 

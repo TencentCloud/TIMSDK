@@ -20,10 +20,13 @@ class RouteContext {
     init() {}
 }
 
-class RoomRouter {
+class RoomRouter: NSObject {
     static let shared = RoomRouter()
     private let context: RouteContext = RouteContext()
-    private init() {}
+    private override init() {
+        super.init()
+        subscribeUIEvent()
+    }
     
     class RoomNavigationDelegate: NSObject {
         
@@ -31,6 +34,16 @@ class RoomRouter {
     
     var navController: RoomKitNavigationController? {
         return context.rootNavigation
+    }
+    
+    private func subscribeUIEvent() {
+        EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_ShowRoomMainView, responder: self)
+        EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_ShowRoomFloatView, responder: self)
+    }
+    
+    private func unsubscribeEvent() {
+        EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_ShowRoomMainView, responder: self)
+        EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_ShowRoomFloatView, responder: self)
     }
     
     func pushToChatController(user: UserModel, roomInfo: RoomInfo) {
@@ -61,24 +74,9 @@ class RoomRouter {
         }
     }
     
-    func pushPrePareViewController(enablePrePareView: Bool) {
-        let prepareVC = makePrePareViewController(enablePrepareView: enablePrePareView)
-        createRootNavigationAndPresent(controller: prepareVC)
-    }
-    
     func pushMainViewController(roomId: String) {
         let vc = makeMainViewController(roomId: roomId)
         push(viewController: vc)
-    }
-    
-    func pushCreateRoomViewController() {
-        let createRoomVC = makeCreateRoomViewController()
-        push(viewController: createRoomVC)
-    }
-    
-    func pushJoinRoomViewController() {
-        let joinRoomVC = makeJoinRoomViewController()
-        push(viewController: joinRoomVC)
     }
     
     func presentPopUpViewController(viewType: PopUpViewType, height: CGFloat?, backgroundColor: UIColor = UIColor(0x1B1E26)) {
@@ -161,7 +159,18 @@ class RoomRouter {
         shared.getCurrentWindowViewController()?.view.makeToast(toast)
     }
     
+    class func getCurrentWindow() -> UIWindow? {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if let keyWindow = windowScene.windows.first {
+                return keyWindow
+            }
+        }
+        return UIApplication.shared.windows.first(where: { $0.windowLevel == .normal && $0.isHidden == false &&
+            CGRectEqualToRect($0.bounds , UIScreen.main.bounds )})
+    }
+    
     deinit {
+        unsubscribeEvent()
         debugPrint("deinit \(self)")
     }
 }
@@ -239,23 +248,8 @@ extension RoomRouter {
         return viewController
     }
     
-    private func makePrePareViewController(enablePrepareView: Bool) -> UIViewController {
-        let viewController = RoomPrePareViewController(roomPrePareViewModelFactory: self, enablePrepareView: enablePrepareView)
-        return viewController
-    }
-    
     private func makeMainViewController(roomId: String) -> UIViewController {
         let controller = RoomMainViewController(roomMainViewModelFactory: self)
-        return controller
-    }
-    
-    private func makeCreateRoomViewController() -> UIViewController {
-        let controller = RoomEntranceViewController(roomMainViewModelFactory: self, isCreateRoom: true)
-        return controller
-    }
-    
-    private func makeJoinRoomViewController() -> UIViewController {
-        let controller = RoomEntranceViewController(roomMainViewModelFactory: self, isCreateRoom: false)
         return controller
     }
     
@@ -277,30 +271,10 @@ extension RoomRouter.RoomNavigationDelegate: UINavigationControllerDelegate {
     }
 }
 
-extension RoomRouter: RoomPrePareViewModelFactory {
-    func makePrePareViewModel(enablePrepareView: Bool) -> PrePareViewModel {
-        let model = PrePareViewModel()
-        model.enablePrePareView = enablePrepareView
-        return model
-    }
-}
-
 extension RoomRouter: RoomMainViewModelFactory {
     func makeRoomMainViewModel() -> RoomMainViewModel {
         let model = RoomMainViewModel()
         return model
-    }
-}
-
-extension RoomRouter: RoomEntranceViewModelFactory {
-    func makeRootView(isCreateRoom: Bool) -> UIView {
-        if isCreateRoom {
-            let model = CreateRoomViewModel()
-            return CreateRoomView(viewModel: model)
-        } else {
-            let model = EnterRoomViewModel()
-            return EnterRoomView(viewModel: model)
-        }
     }
 }
 
@@ -309,5 +283,20 @@ extension RoomRouter: PopUpViewModelFactory {
         let viewModel = PopUpViewModel(viewType: viewType, height: height)
         viewModel.backgroundColor = backgroundColor
         return viewModel
+    }
+}
+
+extension RoomRouter: RoomKitUIEventResponder {
+    func onNotifyUIEvent(key: EngineEventCenter.RoomUIEvent, Object: Any?, info: [AnyHashable : Any]?) {
+        switch key {
+        case .TUIRoomKitService_ShowRoomFloatView:
+            dismissAllRoomPopupViewController()
+            popToRoomEntranceViewController()
+            RoomFloatView.show()
+        case .TUIRoomKitService_ShowRoomMainView:
+            RoomFloatView.dismiss()
+            self.pushMainViewController(roomId: EngineManager.createInstance().store.roomInfo.roomId)
+        default: break
+        }
     }
 }

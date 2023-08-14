@@ -7,7 +7,8 @@
 #import <TUICore/TUILogin.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatConfig.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
+#import "TUIMessageCellConfig_Minimalist.h"
 
 @interface TUIChatService_Minimalist () <TUINotificationProtocol, TUIExtensionProtocol>
 
@@ -49,7 +50,7 @@
 }
 
 - (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return [TUIMessageDataProvider_Minimalist getDisplayString:message];
+    return [TUIMessageDataProvider getDisplayString:message];
 }
 
 #pragma mark - TUIServiceProtocol
@@ -70,17 +71,11 @@
           }
         }];
     } else if ([method isEqualToString:TUICore_TUIChatService_AppendCustomMessageMethod]) {
-        NSMutableArray *customMessageInfo = [TUIMessageDataProvider_Minimalist getCustomMessageInfo];
-        NSMutableArray *pluginMessageInfo = [TUIMessageDataProvider_Minimalist getPluginCustomMessageInfo];
         if ([param isKindOfClass:NSDictionary.class]) {
             NSString *businessID = param[BussinessID];
             NSString *cellName = param[TMessageCell_Name];
             NSString *cellDataName = param[TMessageCell_Data_Name];
-            if (IS_NOT_EMPTY_NSSTRING(businessID) && IS_NOT_EMPTY_NSSTRING(cellName) && IS_NOT_EMPTY_NSSTRING(cellDataName)) {
-                [customMessageInfo addObject:@{BussinessID : businessID, TMessageCell_Name : cellName, TMessageCell_Data_Name : cellDataName}];
-
-                [pluginMessageInfo addObject:@{BussinessID : businessID, TMessageCell_Name : cellName, TMessageCell_Data_Name : cellDataName}];
-            }
+            [TUIMessageCellConfig_Minimalist registerCustomMessageCell:cellName messageCellData:cellDataName forBusinessID:businessID isPlugin:YES];
         }
     }
 

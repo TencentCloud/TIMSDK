@@ -34,6 +34,7 @@
 @property(nonatomic, strong) UIView *groupAnimationView;
 @property(nonatomic, strong) UIView *groupBtnContainer;
 @property(nonatomic, strong) NSMutableArray *groupItemList;
+@property(nonatomic, strong) TUIConversationGroupItem *allGroupItem;
 @end
 
 @implementation TUIConversationListController
@@ -149,9 +150,7 @@
                 [self.tableViewContainer setFrame:CGRectMake(0, self.groupView.mm_maxY, self.view.mm_w, self.viewHeight - self.groupView.mm_maxY)];
 
                 self.groupItemList = [NSMutableArray array];
-                TUIConversationGroupItem *allGroupItem = [[TUIConversationGroupItem alloc] init];
-                allGroupItem.groupName = TIMCommonLocalizableString(TUIConversationGroupAll);
-                [self addGroup:allGroupItem];
+                [self addGroup:self.allGroupItem];
 
                 for (TUIExtensionInfo *info in extensionList) {
                     TUIConversationGroupItem *groupItem = info.data[TUICore_TUIConversationExtension_ConversationGroupListBanner_GroupItemKey];
@@ -159,7 +158,7 @@
                         [self addGroup:groupItem];
                     }
                 }
-                [self onSelectGroup:allGroupItem];
+                [self onSelectGroup:self.allGroupItem];
             } else {
                 self.tableViewContainer.frame = CGRectMake(0, self.bannerView.mm_maxY, self.view.mm_w, self.viewHeight - self.bannerView.mm_maxY);
                 self.tableViewForAll.frame = self.tableViewContainer.bounds;
@@ -171,6 +170,14 @@
         self.tableViewContainer.frame = CGRectMake(0, self.bannerView.mm_maxY, self.view.mm_w, self.viewHeight - self.bannerView.mm_maxY);
         self.tableViewForAll.frame = self.tableViewContainer.bounds;
     }
+}
+
+- (TUIConversationGroupItem *)allGroupItem {
+    if (!_allGroupItem) {
+        _allGroupItem = [[TUIConversationGroupItem alloc] init];
+        _allGroupItem.groupName = TIMCommonLocalizableString(TUIConversationGroupAll);
+    }
+    return _allGroupItem;
 }
 
 - (UIView *)bannerView {
@@ -283,20 +290,21 @@
     }
 }
 
-- (void)loadGroupList:(NSArray<TUIConversationGroupItem *> *)groupItemList {
-    NSString *selectGroup = @"";
+- (void)reloadGroupList:(NSArray<TUIConversationGroupItem *> *)groupItemList {
+    NSString *currentSelectGroup = @"";
     for (TUIConversationGroupItem *groupItem in self.groupItemList) {
         if (groupItem.groupBtn.isSelected) {
-            selectGroup = groupItem.groupName;
+            currentSelectGroup = groupItem.groupName;
         }
         [groupItem.groupBtn removeFromSuperview];
     }
     [self.groupItemList removeAllObjects];
     [self.groupScrollView setContentSize:CGSizeZero];
 
+    [self addGroup:self.allGroupItem];
     for (TUIConversationGroupItem *groupItem in groupItemList) {
         [self addGroup:groupItem];
-        if ([groupItem.groupName isEqualToString:selectGroup]) {
+        if ([groupItem.groupName isEqualToString:currentSelectGroup]) {
             groupItem.groupBtn.selected = YES;
             self.groupAnimationView.frame = groupItem.groupBtn.frame;
         }
@@ -467,10 +475,10 @@
         }
     }
     if ([key isEqualToString:TUICore_TUIConversationGroupNotify]) {
-        if ([param objectForKey:TUICore_TUIConversationGroupNotify_GroupListLoadKey]) {
-            NSArray *groupItemList = [param objectForKey:TUICore_TUIConversationGroupNotify_GroupListLoadKey];
+        if ([param objectForKey:TUICore_TUIConversationGroupNotify_GroupListReloadKey]) {
+            NSArray *groupItemList = [param objectForKey:TUICore_TUIConversationGroupNotify_GroupListReloadKey];
             if (groupItemList && groupItemList.count > 0) {
-                [self loadGroupList:groupItemList];
+                [self reloadGroupList:groupItemList];
             }
         } else if ([param objectForKey:TUICore_TUIConversationGroupNotify_GroupAddKey]) {
             TUIConversationGroupItem *groupItem = [param objectForKey:TUICore_TUIConversationGroupNotify_GroupAddKey];
@@ -510,7 +518,7 @@
 
 #pragma TUIConversationTableViewDelegate
 - (void)tableViewDidScroll:(CGFloat)offsetY {
-    if (!self.bannerView || self.bannerView.hidden) {
+    if (!self.bannerView || self.bannerView.hidden || !self.isShowBanner) {
         return;
     }
     UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;

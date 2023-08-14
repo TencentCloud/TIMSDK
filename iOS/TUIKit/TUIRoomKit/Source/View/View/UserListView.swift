@@ -48,10 +48,6 @@ class UserListView: UIView {
         button.clipsToBounds = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.adjustsImageWhenHighlighted = false
-        let userRole = EngineManager.shared.store.currentUser.userRole
-        let roomInfo = EngineManager.shared.store.roomInfo
-        button.isHidden = (userRole != .roomOwner)
-        button.isSelected = roomInfo.isMicrophoneDisableForAllUser
         return button
     }()
     
@@ -67,10 +63,6 @@ class UserListView: UIView {
         button.clipsToBounds = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.adjustsImageWhenHighlighted = false
-        let userRole = EngineManager.shared.store.currentUser.userRole
-        let roomInfo = EngineManager.shared.store.roomInfo
-        button.isHidden = (userRole != .roomOwner)
-        button.isSelected = roomInfo.isCameraDisableForAllUser
         return button
     }()
     
@@ -149,12 +141,23 @@ class UserListView: UIView {
     
     func bindInteraction() {
         viewModel.viewResponder = self
+        setupViewState()
         searchController.delegate = self
         searchController.searchResultsUpdater = self
         backButton.addTarget(self, action: #selector(backAction(sender:)), for: .touchUpInside)
         muteAllVideoButton.addTarget(self, action: #selector(muteAllVideoAction(sender:)), for: .touchUpInside)
         muteAllAudioButton.addTarget(self, action: #selector(muteAllAudioAction(sender:)), for: .touchUpInside)
     }
+    
+    func setupViewState() {
+        let userRole = viewModel.engineManager.store.currentUser.userRole
+        let roomInfo = viewModel.engineManager.store.roomInfo
+        muteAllAudioButton.isHidden = (userRole != .roomOwner)
+        muteAllAudioButton.isSelected = roomInfo.isMicrophoneDisableForAllUser
+        muteAllVideoButton.isHidden = (userRole != .roomOwner)
+        muteAllVideoButton.isSelected = roomInfo.isCameraDisableForAllUser
+    }
+        
     @objc func backAction(sender: UIButton) {
         searchController.searchBar.endEditing(true)
         searchController.isActive = false
@@ -176,7 +179,7 @@ class UserListView: UIView {
 
 extension UserListView: UISearchControllerDelegate, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        let searchArray = EngineManager.shared.store.attendeeList.filter({ model -> Bool in
+        let searchArray = viewModel.engineManager.store.attendeeList.filter({ model -> Bool in
             if let searchText = searchController.searchBar.text {
                 return (model.userName == searchText)
             } else {
@@ -188,7 +191,7 @@ extension UserListView: UISearchControllerDelegate, UISearchResultsUpdating {
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {
-        viewModel.attendeeList = EngineManager.shared.store.attendeeList
+        viewModel.attendeeList = viewModel.engineManager.store.attendeeList
         userListTableView.reloadData()
     }
 }
@@ -229,9 +232,8 @@ extension UserListView: UserListViewResponder {
     }
     
     func updateUIWhenRoomOwnerChanged(roomOwner: String) {
-        let userInfo = EngineManager.shared.store.currentUser
-        muteAllAudioButton.isHidden = roomOwner != userInfo.userId
-        muteAllVideoButton.isHidden = roomOwner != userInfo.userId
+        muteAllAudioButton.isHidden = roomOwner != viewModel.currentUser.userId
+        muteAllVideoButton.isHidden = roomOwner != viewModel.currentUser.userId
     }
     
     func reloadUserListView() {
@@ -368,7 +370,7 @@ class UserListCell: UITableViewCell {
         } else {
             avatarImageView.image = placeholder
         }
-        if item.userId == EngineManager.shared.store.currentUser.userId {
+        if item.userId == viewModel.currentUser.userId {
             userLabel.text = item.userName + "(" + .meText + ")"
         } else {
             userLabel.text = item.userName
@@ -376,11 +378,11 @@ class UserListCell: UITableViewCell {
         muteAudioButton.isSelected = !item.hasAudioStream
         muteVideoButton.isSelected = !item.hasVideoStream
         //判断是否显示邀请上台的按钮(房主在举手发言房间中可以邀请其他没有上台的用户)
-        switch EngineManager.shared.store.roomInfo.speechMode {
+        switch viewModel.roomInfo.speechMode {
         case .freeToSpeak:
             changeInviteStageButtonHidden(isHidden: true)
         case .applySpeakAfterTakingSeat:
-            switch EngineManager.shared.store.currentUser.userRole {
+            switch viewModel.currentUser.userRole {
             case .roomOwner:
                 if attendeeModel.userRole != .roomOwner && !attendeeModel.isOnSeat {
                     changeInviteStageButtonHidden(isHidden: false)

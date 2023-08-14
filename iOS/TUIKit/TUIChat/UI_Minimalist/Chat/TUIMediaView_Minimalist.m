@@ -13,7 +13,7 @@
 #import <TUICore/TUIGlobalization.h>
 #import "TUIChatConversationModel.h"
 #import "TUIImageCollectionCell_Minimalist.h"
-#import "TUIMessageMediaDataProvider_Minimalist.h"
+#import "TUIMessageMediaDataProvider.h"
 #import "TUIVideoCollectionCell_Minimalist.h"
 
 #define ANIMATION_TIME 0.2
@@ -23,7 +23,7 @@
                                        UICollectionViewDelegateFlowLayout,
                                        UIScrollViewDelegate,
                                        TUIMediaCollectionCellDelegate_Minimalist>
-@property(strong, nonatomic) TUIMessageMediaDataProvider_Minimalist *dataProvider;
+@property(strong, nonatomic) TUIMessageMediaDataProvider *dataProvider;
 @property(strong, nonatomic) UICollectionView *menuCollectionView;
 @property(strong, nonatomic) UIImage *saveBackgroundImage;
 @property(strong, nonatomic) UIImage *saveShadowImage;
@@ -100,7 +100,7 @@
     TUIChatConversationModel *model = [[TUIChatConversationModel alloc] init];
     model.userID = _curMessage.userID;
     model.groupID = _curMessage.groupID;
-    self.dataProvider = [[TUIMessageMediaDataProvider_Minimalist alloc] initWithConversationModel:model];
+    self.dataProvider = [[TUIMessageMediaDataProvider alloc] initWithConversationModel:model];
     [self.dataProvider loadMediaWithMessage:_curMessage];
 
     @weakify(self);
@@ -123,13 +123,13 @@
 
     NSMutableArray *medias = [NSMutableArray array];
     for (V2TIMMessage *message in allMessages) {
-        TUIMessageCellData *data = [TUIMessageMediaDataProvider_Minimalist getMediaCellData:message];
+        TUIMessageCellData *data = [TUIMessageMediaDataProvider getMediaCellData:message];
         if (data) {
             [medias addObject:data];
         }
     }
 
-    self.dataProvider = [[TUIMessageMediaDataProvider_Minimalist alloc] initWithConversationModel:nil];
+    self.dataProvider = [[TUIMessageMediaDataProvider alloc] initWithConversationModel:nil];
     self.dataProvider.medias = medias;
 
     [self.menuCollectionView reloadData];

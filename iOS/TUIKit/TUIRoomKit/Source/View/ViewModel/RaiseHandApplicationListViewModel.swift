@@ -15,7 +15,7 @@ protocol RaiseHandApplicationListViewResponder: NSObject {
 
 class RaiseHandApplicationListViewModel: NSObject {
     weak var viewResponder: RaiseHandApplicationListViewResponder? = nil
-    let engineManager: EngineManager = EngineManager.shared
+    let engineManager: EngineManager = EngineManager.createInstance()
     var inviteSeatList: [UserModel] = []
     
     override init() {

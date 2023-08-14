@@ -13,7 +13,7 @@
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIEmojiCell.h"
 #import "TUIEmojiCellData.h"
-#import "TUIMessageDataProvider_Minimalist.h"  //-->provier
+#import "TUIMessageDataProvider.h"
 
 @implementation TUIChatMembersReactSubController
 
@@ -91,7 +91,7 @@
 
 @property(nonatomic, strong) TUIChatMembersSegementScrollView *scrollview;
 
-@property(nonatomic, strong) TUIMessageDataProvider_Minimalist *provider;
+@property(nonatomic, strong) TUIMessageDataProvider *provider;
 
 @property(nonatomic, strong) NSMutableArray *tabItems;
 
@@ -130,7 +130,7 @@
 - (void)setConversation:(TUIChatConversationModel *)conversationData {
     self.conversationData = conversationData;
     if (!self.provider) {
-        self.provider = [[TUIMessageDataProvider_Minimalist alloc] initWithConversationModel:conversationData];
+        self.provider = [[TUIMessageDataProvider alloc] initWithConversationModel:conversationData];
         self.provider.dataSource = self;
     }
 }
@@ -213,7 +213,7 @@
     NSString *msgID = msg.msgID;
 
     if ([msgID isEqualToString:self.originData.msgID]) {
-        TUIMessageCellData *data = [TUIMessageDataProvider_Minimalist getCellData:msg];
+        TUIMessageCellData *data = [TUIMessageDataProvider getCellData:msg];
         @weakify(self);
 
         [self.provider preProcessMessage:@[ data ]

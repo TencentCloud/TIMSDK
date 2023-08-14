@@ -14,13 +14,13 @@
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatConfig.h"
-#import "TUIChatDataProvider_Minimalist.h"
+#import "TUIChatDataProvider.h"
 #import "TUIChatModifyMessageHelper.h"
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIFaceMessageCell_Minimalist.h"
-#import "TUIMenuCellData_Minimalist.h"
+#import "TUIMenuCellData.h"
 #import "TUIMenuCell_Minimalist.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
 #import "TUITextMessageCell_Minimalist.h"
 #import "TUIVoiceMessageCell_Minimalist.h"
 
@@ -304,7 +304,7 @@
         @"version" : @(kMessageReplyVersion)
     };
     if (messageRootID) {
-        [TUIChatDataProvider_Minimalist findMessages:@[ messageRootID ]
+        [TUIChatDataProvider findMessages:@[ messageRootID ]
                                             callback:^(BOOL succ, NSString *_Nonnull error_message, NSArray *_Nonnull msgs) {
                                               if (succ) {
                                                   if (msgs.count > 0) {
@@ -393,7 +393,7 @@
     }
 }
 
-- (void)showReferencePreview:(TUIReferencePreviewData_Minimalist *)data {
+- (void)showReferencePreview:(TUIReferencePreviewData *)data {
     self.referenceData = data;
     [self.referencePreviewBar removeFromSuperview];
     [self.view addSubview:self.referencePreviewBar];
@@ -423,7 +423,7 @@
     }
 }
 
-- (void)showReplyPreview:(TUIReplyPreviewData_Minimalist *)data {
+- (void)showReplyPreview:(TUIReplyPreviewData *)data {
     self.replyData = data;
     [self.replyPreviewBar removeFromSuperview];
     [self.view addSubview:self.replyPreviewBar];
@@ -558,7 +558,7 @@
         NSMutableArray *menus = [NSMutableArray array];
         for (NSInteger i = 0; i < config.faceGroups.count; ++i) {
             TUIFaceGroup *group = config.faceGroups[i];
-            TUIMenuCellData_Minimalist *data = [[TUIMenuCellData_Minimalist alloc] init];
+            TUIMenuCellData *data = [[TUIMenuCellData alloc] init];
             data.path = group.menuPath;
             data.isSelected = NO;
             if (i == 0) {

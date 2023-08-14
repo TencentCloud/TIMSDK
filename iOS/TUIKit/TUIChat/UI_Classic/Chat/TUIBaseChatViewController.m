@@ -18,6 +18,7 @@
 #import <TUICore/TUILogin.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/TUITool.h>
+#import <TUICore/NSString+TUIUtil.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIAIDenoiseSignatureManager.h"
 #import "TUIBaseMessageController.h"
@@ -114,6 +115,10 @@ static UIView *gCustomTopView;
 }
 - (void)dealloc {
     [TUICore unRegisterEventByObject:self];
+}
+
+- (void)appWillResignActive:(NSNotification *)notification {
+    [self saveDraft];
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
@@ -283,7 +288,7 @@ static UIView *gCustomTopView;
     [[V2TIMManager sharedInstance] addConversationListener:self];
     [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey object:self];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
-
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey object:self];
     [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey object:self];
 }
@@ -292,6 +297,9 @@ static UIView *gCustomTopView;
 
 - (void)sendMessage:(V2TIMMessage *)message {
     [self.messageController sendMessage:message];
+}
+- (void)sendMessage:(V2TIMMessage *)message placeHolderCellData:(TUIMessageCellData *)placeHolderCellData {
+    [self.messageController sendMessage:message placeHolderCellData:placeHolderCellData];
 }
 
 - (void)saveDraft {
@@ -1195,14 +1203,25 @@ static UIView *gCustomTopView;
     [TUITool makeToast:errorMessage];
 }
 
-- (void)onProvideVideo:(NSString *)videoUrl snapshot:(NSString *)snapshotUrl duration:(NSInteger)duration {
+- (void)onProvidePlaceholderVideoSnapshot:(NSString *)snapshotUrl
+                        SnapImage:(UIImage *)image
+                       Completion:(void (^__nullable)(BOOL finished, TUIMessageCellData *placeHolderCellData))completion {
+    TUIMessageCellData *videoCellData = [TUIVideoMessageCellData placeholderCellDataWithSnapshotUrl:snapshotUrl thubImage:image];
+    [self.messageController sendPlaceHolderUIMessage:videoCellData];
+    if (completion) {
+        completion(YES,videoCellData);
+    }
+}
+- (void)onProvideVideo:(NSString *)videoUrl
+               snapshot:(NSString *)snapshotUrl
+               duration:(NSInteger)duration
+    placeHolderCellData:(TUIMessageCellData *)placeHolderCellData {
     V2TIMMessage *message = [V2TIMManager.sharedInstance createVideoMessage:videoUrl
                                                                        type:videoUrl.pathExtension
                                                                    duration:(int)duration
                                                                snapshotPath:snapshotUrl];
-    [self sendMessage:message];
+    [self sendMessage:message placeHolderCellData:placeHolderCellData];
 }
-
 - (void)onProvideVideoError:(NSString *)errorMessage {
     [TUITool makeToast:errorMessage];
 }

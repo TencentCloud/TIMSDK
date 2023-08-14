@@ -14,7 +14,7 @@
  *  需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险
  *
  *
- * This class depends on the implementation of Tencent Cloud IM SDK
+ * This class depends on the implementation of Tencent Cloud Chat SDK
  *
  * TUIConfig implements the default initialization of the configuration file, you can change the default configuration here according to your needs
  * Configuration file include emoticons, default icons, and more

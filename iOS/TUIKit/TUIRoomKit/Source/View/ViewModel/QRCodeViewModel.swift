@@ -11,6 +11,9 @@ import PhotosUI
 
 class QRCodeViewModel {
     let urlString: String
+    var store: RoomStore {
+        EngineManager.createInstance().store
+    }
     
     init(urlString: String) {
         self.urlString = urlString

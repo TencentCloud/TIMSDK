@@ -8,15 +8,15 @@
 
 #import "TUIBaseMessageController_Minimalist.h"
 #import "TUIChatConversationModel.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
 
-@class TUIMessageCellData_Minimalist;
+@class TUIMessageCellData;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIBaseMessageController_Minimalist () <TUIMessageBaseDataProviderDataSource>
 
-@property(nonatomic, strong) TUIMessageDataProvider_Minimalist *messageDataProvider;
+@property(nonatomic, strong) TUIMessageDataProvider *messageDataProvider;
 @property(nonatomic, strong) TUIChatConversationModel *conversationData;
 @property(nonatomic, strong) UIActivityIndicatorView *indicatorView;
 

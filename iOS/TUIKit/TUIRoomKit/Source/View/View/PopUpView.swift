@@ -109,7 +109,7 @@ class PopUpView: UIView {
             rootView = TransferMasterView(viewModel: model)
         case .QRCodeViewType:
             let model = QRCodeViewModel(urlString: "https://web.sdk.qcloud.com/component/tuiroom/index.html#/" + "#/room?roomId=" +
-                                        EngineManager.shared.store.roomInfo.roomId)
+                                        EngineManager.createInstance().store.roomInfo.roomId)
             rootView = QRCodeView(viewModel: model)
         default: break
         }

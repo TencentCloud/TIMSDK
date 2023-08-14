@@ -10,7 +10,7 @@
 #import "TUIFileMessageCell_Minimalist.h"
 
 @interface TUIFileViewController_Minimalist : UIViewController
-@property(nonatomic, strong) TUIFileMessageCellData_Minimalist *data;
+@property(nonatomic, strong) TUIFileMessageCellData *data;
 @property(nonatomic, copy) void (^dismissClickCallback)(void);
 
 @end

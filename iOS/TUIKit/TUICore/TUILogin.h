@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^TFail)(int code, NSString *msg);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^TFail)(int code, NSString * __nullable msg);
 typedef void (^TSucc)(void);
 typedef NS_ENUM(NSInteger, TUILogLevel) {
     /**
@@ -92,7 +94,7 @@ FOUNDATION_EXTERN NSString *const TUILogoutFailNotification;
  * SDK 连接服务器失败
  * Callback for SDK connection to server failure
  */
-- (void)onConnectFailed:(int)code err:(NSString *)err;
+- (void)onConnectFailed:(int)code err:(NSString * __nullable)err;
 
 /**
  * 当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。
@@ -114,7 +116,7 @@ FOUNDATION_EXTERN NSString *const TUILogoutFailNotification;
 
 @property(nonatomic, assign) TUILogLevel logLevel;
 
-@property(nonatomic, copy) void (^onLog)(NSInteger logLevel, NSString *logContent);
+@property(nonatomic, copy, nullable) void (^onLog)(NSInteger logLevel, NSString * __nullable logContent);
 
 @end
 
@@ -124,14 +126,24 @@ FOUNDATION_EXTERN NSString *const TUILogoutFailNotification;
 
 + (void)login:(NSString *)userID
       userSig:(NSString *)userSig
-         succ:(TSucc)succ
-         fail:(TFail)fail __attribute__((deprecated("use login:userID:userSig:succ:fail:")));
+         succ:(__nullable TSucc)succ
+         fail:(__nullable TFail)fail __attribute__((deprecated("use login:userID:userSig:succ:fail:")));
 
-+ (void)login:(int)sdkAppID userID:(NSString *)userID userSig:(NSString *)userSig succ:(TSucc)succ fail:(TFail)fail;
++ (void)login:(int)sdkAppID
+       userID:(NSString *)userID
+      userSig:(NSString *)userSig
+         succ:(__nullable TSucc)succ
+         fail:(__nullable TFail)fail;
 
-+ (void)login:(int)sdkAppID userID:(NSString *)userID userSig:(NSString *)userSig config:(TUILoginConfig *)config succ:(TSucc)succ fail:(TFail)fail;
++ (void)login:(int)sdkAppID
+       userID:(NSString *)userID
+      userSig:(NSString *)userSig
+       config:(TUILoginConfig * __nullable)config
+         succ:(__nullable TSucc)succ
+         fail:(__nullable TFail)fail;
 
-+ (void)logout:(TSucc)succ fail:(TFail)fail;
++ (void)logout:(__nullable TSucc)succ
+          fail:(__nullable TFail)fail;
 
 + (void)addLoginListener:(id<TUILoginListener>)listener;
 + (void)removeLoginListener:(id<TUILoginListener>)listener;
@@ -139,11 +151,11 @@ FOUNDATION_EXTERN NSString *const TUILogoutFailNotification;
 + (int)getSdkAppID;
 + (BOOL)isUserLogined;
 
-+ (NSString *)getUserID;
-+ (NSString *)getUserSig;
++ (NSString * __nullable)getUserID;
++ (NSString * __nullable)getUserSig;
 
-+ (NSString *)getNickName;
-+ (NSString *)getFaceUrl;
++ (NSString * __nullable)getNickName;
++ (NSString * __nullable)getFaceUrl;
 
 /**
  * No-thread-safe
@@ -152,3 +164,5 @@ FOUNDATION_EXTERN NSString *const TUILogoutFailNotification;
 + (TUIBusinessScene)getCurrentBusinessScene;
 
 @end
+
+NS_ASSUME_NONNULL_END

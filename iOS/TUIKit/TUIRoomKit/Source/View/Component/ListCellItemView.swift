@@ -73,7 +73,6 @@ class ListCellItemView: UIView {
     init(itemData: ListCellItemData) {
         self.itemData = itemData
         super.init(frame: .zero)
-        EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_ResignFirstResponder, responder: self)
     }
     
     required init?(coder: NSCoder) {
@@ -222,18 +221,7 @@ class ListCellItemView: UIView {
     }
     
     deinit {
-        EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_ResignFirstResponder, responder: self)
         debugPrint("deinit \(self)")
-    }
-}
-
-extension ListCellItemView: RoomKitUIEventResponder {
-    func onNotifyUIEvent(key: EngineEventCenter.RoomUIEvent, Object: Any?, info: [AnyHashable : Any]?) {
-        if key == .TUIRoomKitService_ResignFirstResponder {
-            if textField.isFirstResponder {
-                textField.resignFirstResponder()
-            }
-        }
     }
 }
 

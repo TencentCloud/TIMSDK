@@ -101,9 +101,9 @@
  * 当前正在回复的消息
  * Message currently being replied to
  */
-@property(nonatomic, strong) TUIReplyPreviewData_Minimalist *replyData;
+@property(nonatomic, strong) TUIReplyPreviewData *replyData;
 
-@property(nonatomic, strong) TUIReferencePreviewData_Minimalist *referenceData;
+@property(nonatomic, strong) TUIReferencePreviewData *referenceData;
 
 /**
  *  输入条
@@ -152,8 +152,8 @@
  * 显示/隐藏消息回复输入框的预览条
  * Show/hide preview bar of message reply input box
  */
-- (void)showReplyPreview:(TUIReplyPreviewData_Minimalist *)data;
-- (void)showReferencePreview:(TUIReferencePreviewData_Minimalist *)data;
+- (void)showReplyPreview:(TUIReplyPreviewData *)data;
+- (void)showReferencePreview:(TUIReferencePreviewData *)data;
 - (void)exitReplyAndReference:(void (^__nullable)(void))finishedCallback;
 
 /**

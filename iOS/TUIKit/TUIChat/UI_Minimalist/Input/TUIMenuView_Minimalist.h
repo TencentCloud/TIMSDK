@@ -19,7 +19,7 @@
  * serving as a "container" for each component. You can switch between different groups of emoticons or send emoticons through the emoticon menu view.
  */
 #import <UIKit/UIKit.h>
-#import "TUIMenuCellData_Minimalist.h"
+#import "TUIMenuCellData.h"
 
 @class TUIMenuView_Minimalist;
 
@@ -74,6 +74,6 @@
 
 - (void)scrollToMenuIndex:(NSInteger)index;
 
-- (void)setData:(NSMutableArray<TUIMenuCellData_Minimalist *> *)data;
+- (void)setData:(NSMutableArray<TUIMenuCellData *> *)data;
 
 @end

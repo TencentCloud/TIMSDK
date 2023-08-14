@@ -10,7 +10,7 @@
 #import <AVFoundation/AVCaptureDevice.h>
 #import "TUICallEngineHeader.h"
 #import "CallingLocalized.h"
-#import "TUICallingAudioPlayer.h"
+#import "TUICallKitAudioPlayer.h"
 #import "TUICallingFloatingWindowManager.h"
 #import "TUILogin.h"
 #import "TUIDefine.h"

@@ -13,7 +13,7 @@ class MoreFunctionViewModel {
     private(set) var viewItems: [ButtonItemData] = []
     
     var engineManager: EngineManager {
-        return EngineManager.shared
+        return EngineManager.createInstance()
     }
     var engineEventCenter: EngineEventCenter {
         return EngineEventCenter.shared
@@ -58,6 +58,18 @@ class MoreFunctionViewModel {
             self.settingAction(sender: button)
         }
         viewItems.append(settingItem)
+        
+        if hasDebugItem() {
+            let debugItem = ButtonItemData()
+            debugItem.normalIcon = "room_setting"
+            debugItem.normalTitle = .advancedSetting
+            debugItem.resourceBundle = tuiRoomKitBundle()
+            debugItem.action = { [weak self] sender in
+                guard let self = self, let button = sender as? UIButton else { return }
+                self.debugAction(sender: button)
+            }
+            viewItems.append(debugItem)
+        }
     }
     
     private func hasTUIChatItem() -> Bool {
@@ -65,6 +77,9 @@ class MoreFunctionViewModel {
     }
     private func hasBeautyItem() -> Bool {
         return TUICore.getService(TUICore_TUIBeautyService) != nil
+    }
+    private func hasDebugItem() -> Bool {
+        return TUICore.getService(TUICore_TUIDebugService) != nil
     }
     
     func beautyAction(sender: UIButton) {
@@ -88,6 +103,15 @@ class MoreFunctionViewModel {
         RoomRouter.shared.pushToChatController(user: user, roomInfo: roomInfo)
     }
     
+    func debugAction(sender: UIButton) {
+        RoomRouter.shared.dismissPopupViewController(viewType: .moreViewType) { [weak self] in
+            guard let self = self else { return }
+            TUICore.callService(TUICore_TUIDebugService,
+                                method: TUICore_TUIDebugService_ShowDebugView,
+                                param: ["roomEngine": self.engineManager.roomEngine])
+        }
+    }
+    
     deinit {
         debugPrint("deinit \(self)")
     }
@@ -102,5 +126,8 @@ private extension String {
     }
     static var chatText: String {
         localized("TUIRoom.chat")
+    }
+    static var advancedSetting: String {
+        localized("TUIRoom.advancedSetting")
     }
 }

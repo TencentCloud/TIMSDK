@@ -8,24 +8,18 @@
 
 "TUIRoom.create.room" = "Create Room";
 "TUIRoom.join.room" = "Join Room";
-"TUIRoom.logout.room" = "Leave";
 "TUIRoom.exit.login" = "Sign Out";
-"TUIRoom.user.name" = "Yourname";
 "TUIRoom.room.num" = "Room ID";
 "TUIRoom.room.link" = "Room Link";
 "TUIRoom.open.video" = "Open camera";
-"TUIRoom.open.mic" = "Turn mic on";
-"TUIRoom.open.speaker" = "Turn speaker on";
-"TUIRoom.room.type" = "Room type";
 "TUIRoom.freedom.speaker" = "Freedom Speaker Room";
 "TUIRoom.raise.speaker" = "Raise hand Speaker Room";
 "TUIRoom.host" = "Host";
 "TUIRoom.camera" = "Camera";
 "TUIRoom.mic" = "Microphone";
 "TUIRoom.input.room.num" = "Enter a room ID";
-"TUIRoom.sure.destroy.room" = "Are you sure you want to close the room?";
+"TUIRoom.sure.destroy.room" = "Are you sure you want to dismiss the meeting?";
 "TUIRoom.sure.leave.room" = "Are you sure you want to leave the room?";
-"TUIRoom.destroy.room.ok" = "Close";
 "TUIRoom.destroy.room.cancel" = "Cancel";
 "TUIRoom.ok" = "OK";
 "TUIRoom.cancel" = "Cancel";
@@ -66,8 +60,7 @@
 "TUIRoom.kick" = "Kick out of the room";
 "TUIRoom.step.down.seat" = "Please step down";
 "TUIRoom.invite.seat" = "Invite to stage";
-"TUIRoom.raise.speak.model" = "Raise hand speak model";
-"TUIRoom.freedom.speak.model" = "Freedom speak model";
+
 "TUIRoom.chat" = "chat";
 "TUIRoom.beauty" = "beauty";
 "TUIRoom.switch.layout" = "Switch layout";
@@ -102,7 +95,7 @@
 "TUIRoom.trans.master" = "Appoint a new master";
 "TUIRoom.appoint.master.and.leave.room" = "Appoint and leave";
 "TUIRoom.have.become.master" = "You have become the master";
-"TUIRoom.have.transferred.master.to.you" = "Has transferred the master privileges to you";
+"TUIRoom.have.transferred.master" = "You have transferred the master";
 "TUIRoom.mute.audio.seat.reason" = "Raise your hand to speak in the room, please raise your hand to apply for a microphone";
 "TUIRoom.mute.video.seat.reason" = "Raise your hand to speak in the room, please raise your hand to apply for a microphone";
 "TUIRoom.mute.audio.room.reason" = "The host has turned on the mute for all members, and the microphone cannot be turned on";
@@ -127,13 +120,13 @@
 "TUIRoom.video" = "Video";
 "TUIRoom.audio" = "Audio";
 "TUIRoom.setting" = "Settings";
+"TUIRoom.advancedSetting" = "Advanced Settings";
 "TUIRoom.frame.rate" = "Frame Rate";
 "TUIRoom.bitrate" = "Bitrate";
 "TUIRoom.local.mirror" = "Local Mirror";
 "TUIRoom.resolution.selected" = "Resolution selected";
 "TUIRoom.frame.rate.selected" = "Frame rate selected";
 "TUIRoom.version.too.low" = "Your system version is below 12.0. Please update.";
-"TUIRoom.input.error.room.num.toast" = "Enter a valid room ID.";
 
 "TUIRoom.quick.conference" = "Quick meeting";
 "TUIRoom.invite.meeting" = "Invite you to a meeting";
@@ -145,3 +138,19 @@
 "TUIRoom.starting.meeting" = "Starting meeting";
 "TUIRoom.waiting.members.enter.meeting" = "Waiting for members to enter the meeting";
 "TUIRoom.meeting.ended" = "Meeting ended";
+
+"TUIRoom.fail.microphone.permission.Title" = "No access to microphone";
+"TUIRoom.fail.microphone.permission.Tips"  = "Unable to use audio function, click \"Authorize Now\" to open the microphone permission.";
+"TUIRoom.fail.microphone.permission.Later" = "Later";
+"TUIRoom.fail.microphone.permission.Enable" = "Authorize Now";
+"TUIRoom.fail.camera.permission.Title" = "No access to camera";
+"TUIRoom.fail.camera.permission.Tips"  = "Unable to use the video function, click \"Authorize Now\" to open the camera permission.";
+"TUIRoom.fail.camera.permission.Later" = "Later";
+"TUIRoom.fail.camera.permission.Enable" = "Authorize Now";
+"TUIRoom.device.set" = "Meeting Settings";
+"TUIRoom.mic.set" = "Join the conference and turn on the microphone";
+"TUIRoom.camera.set" = "Join the conference and turn on the camera";
+"TUIRoom.sharing.screen" = "You are sharing your screen";
+"TUIRoom.stop.share.screen" = "Stop screen sharing";
+"TUIRoom.screen.recording" = "Screen recording";
+

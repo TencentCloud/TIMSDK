@@ -85,7 +85,8 @@
     req.HTTPMethod = @"POST";
     NSDictionary *msgData =
         @{@"sdkappid" : @([TUILogin getSdkAppID]), @"bundleId" : NSBundle.mainBundle.bundleIdentifier ?: @"", @"package" : @"", @"component" : path};
-    NSDictionary *param = @{@"userid" : [TUILogin getUserID], @"event" : @"useScenario", @"msg" : msgData};
+    NSString* userId =[TUILogin getUserID];
+    NSDictionary *param = @{@"userid" : (userId?:@""), @"event" : @"useScenario", @"msg" : msgData};
     NSData *data = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
     if (!data) {
         return;

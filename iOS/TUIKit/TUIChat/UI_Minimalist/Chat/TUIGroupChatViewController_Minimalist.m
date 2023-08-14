@@ -18,9 +18,9 @@
 #import "TUIGroupChatViewController_Minimalist.h"
 #import "TUIGroupPendencyController.h"
 #import "TUIGroupPendencyDataProvider.h"
-#import "TUILinkCellData_Minimalist.h"
-#import "TUIMessageDataProvider_Minimalist.h"
-#import "TUITextMessageCellData_Minimalist.h"
+#import "TUILinkCellData.h"
+#import "TUIMessageDataProvider.h"
+#import "TUITextMessageCellData.h"
 
 @interface TUIGroupChatViewController_Minimalist () <V2TIMGroupListener>
 

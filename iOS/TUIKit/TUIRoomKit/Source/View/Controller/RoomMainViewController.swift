@@ -40,6 +40,10 @@ class RoomMainViewController: UIViewController {
         self.view = rootView
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
@@ -60,7 +64,7 @@ class RoomMainViewController: UIViewController {
         } else {
             param.resMode = .portrait
         }
-        EngineManager.shared.roomEngine.getTRTCCloud().setVideoEncoderParam(param)
+        EngineManager.createInstance().roomEngine.getTRTCCloud().setVideoEncoderParam(param)
         rootView.updateRootViewOrientation(isLandscape: isLandscape)
     }
     

@@ -12,9 +12,9 @@
 #import "TUIChatConversationModel.h"
 #import "TUIChatFlexViewController.h"
 #import "TUIInputController_Minimalist.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
 
-@class TUIMessageDataProvider_Minimalist;
+@class TUIMessageDataProvider;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) V2TIMMergerElem *mergerElem;
 @property(nonatomic, copy) dispatch_block_t willCloseCallback;
 @property(nonatomic, strong) TUIInputController_Minimalist *inputController;
-@property(nonatomic, strong) TUIMessageDataProvider_Minimalist *parentPageDataProvider;
+@property(nonatomic, strong) TUIMessageDataProvider *parentPageDataProvider;
 
 @end
 

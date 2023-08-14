@@ -145,7 +145,7 @@ class RoomInfoView: UIView {
     }
     
     func setupViewState(item: RoomInfoViewModel) {
-        nameLabel.text = EngineManager.shared.store.roomInfo.name
+        nameLabel.text = EngineManager.createInstance().store.roomInfo.name
     }
     
     @objc func codeAction(sender: UIButton) {

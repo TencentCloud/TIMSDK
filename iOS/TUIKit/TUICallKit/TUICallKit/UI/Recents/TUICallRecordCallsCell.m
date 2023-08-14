@@ -12,7 +12,7 @@
 #import "TUICallingCommon.h"
 #import "UIImageView+WebCache.h"
 #import "TUIConfig.h"
-#import "TUICallDefine.h"
+#import "TUICallEngineHeader.h"
 #import "TUIThemeManager.h"
 
 static NSString *const gRecordCallsCellViewModelKVOAvatarImage = @"avatarImage";

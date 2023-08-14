@@ -9,6 +9,7 @@
 #import "TUIChatConfig.h"
 #import "TUIChatDefine.h"
 #import "TUIMessageDataProvider.h"
+#import "TUIMessageCellConfig.h"
 
 @interface TUIChatService () <TUINotificationProtocol, TUIExtensionProtocol>
 
@@ -78,16 +79,11 @@
           }
         }];
     } else if ([method isEqualToString:TUICore_TUIChatService_AppendCustomMessageMethod]) {
-        NSMutableArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
-        NSMutableArray *pluginMessageInfo = [TUIMessageDataProvider getPluginCustomMessageInfo];
         if ([param isKindOfClass:NSDictionary.class]) {
             NSString *businessID = param[BussinessID];
             NSString *cellName = param[TMessageCell_Name];
             NSString *cellDataName = param[TMessageCell_Data_Name];
-            if (IS_NOT_EMPTY_NSSTRING(businessID) && IS_NOT_EMPTY_NSSTRING(cellName) && IS_NOT_EMPTY_NSSTRING(cellDataName)) {
-                [customMessageInfo addObject:@{BussinessID : businessID, TMessageCell_Name : cellName, TMessageCell_Data_Name : cellDataName}];
-                [pluginMessageInfo addObject:@{BussinessID : businessID, TMessageCell_Name : cellName, TMessageCell_Data_Name : cellDataName}];
-            }
+            [TUIMessageCellConfig registerCustomMessageCell:cellName messageCellData:cellDataName forBusinessID:businessID isPlugin:YES];
         }
     }
 

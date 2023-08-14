@@ -14,7 +14,7 @@
 #import "TUIMenuCell_Minimalist.h"
 
 @interface TUIMenuView_Minimalist () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property(nonatomic, strong) NSMutableArray<TUIMenuCellData_Minimalist *> *data;
+@property(nonatomic, strong) NSMutableArray<TUIMenuCellData *> *data;
 @end
 
 @implementation TUIMenuView_Minimalist
@@ -27,7 +27,7 @@
     return self;
 }
 
-- (void)setData:(NSMutableArray<TUIMenuCellData_Minimalist *> *)data {
+- (void)setData:(NSMutableArray<TUIMenuCellData *> *)data {
     _data = data;
     [_menuCollectionView reloadData];
     [self defaultLayout];
@@ -97,7 +97,7 @@
         return;
     }
     for (NSInteger i = 0; i < _data.count; ++i) {
-        TUIMenuCellData_Minimalist *data = _data[i];
+        TUIMenuCellData *data = _data[i];
         data.isSelected = (i == indexPath.row / 2);
     }
     [_menuCollectionView reloadData];
@@ -119,7 +119,7 @@
 
 - (void)scrollToMenuIndex:(NSInteger)index {
     for (NSInteger i = 0; i < _data.count; ++i) {
-        TUIMenuCellData_Minimalist *data = _data[i];
+        TUIMenuCellData *data = _data[i];
         data.isSelected = (i == index);
     }
     [_menuCollectionView reloadData];

@@ -10,51 +10,59 @@ import Foundation
 import TUICore
 import TUIRoomEngine
 
+let roomHashNumber: Int = 0x3B9AC9FF
+
 class RoomStore: NSObject {
-    var currentLoginUser: UserModel = UserModel()
     var currentUser: UserModel = UserModel()
-    private(set) var roomInfo: RoomInfo = RoomInfo()
+    var roomInfo: RoomInfo = RoomInfo()
     var videoSetting: VideoModel = VideoModel()
     var audioSetting: AudioModel = AudioModel()
-    var roomScene: RoomScene = .meeting
     var attendeeList: [UserModel] = []//用户列表
     var inviteSeatList: [UserModel] = []//申请上麦的用户列表（针对举手发言房间）
     var inviteSeatMap: [String:String] = [:]
-    var isSomeoneSharing: Bool = false
-    var roomSpeechMode: TUISpeechMode
-    var isBanAutoRaise: Bool = false //是否禁止跳转页面
     var isChatAccessRoom: Bool = false //是否是由TUIChat跳转进来的
-    var engineManager: EngineManager {
-        EngineManager.shared
+    var isEnteredRoom: Bool = false //是否已经进入房间
+    var timeStampOnEnterRoom: Int = 0 //进入会议的时间戳
+    var isShowRoomMainViewAutomatically: Bool = true //true 调用createRoom或者enterRoom会自动进入主界面; false 需要调用 showRoomMainView 才能进入主界面。
+    var isOpenMicrophone: Bool {
+        didSet {
+            UserDefaults.standard.set(isOpenMicrophone, forKey: "isOpenMicrophone")
+            UserDefaults.standard.synchronize()
+        }
     }
-    override init() {
-        roomSpeechMode = roomInfo.speechMode
-    }
-    func update(roomInfo: RoomInfo) {
-        self.roomInfo = roomInfo
-    }
-    
-    func initialRoomCurrentUser() {
-        currentUser.userId = currentLoginUser.userId
-        engineManager.roomEngine.getUserInfo(currentLoginUser.userId) { [weak self] userInfo in
-            guard let self = self else { return }
-            guard let userInfo = userInfo else { return }
-            self.currentUser.update(userInfo: userInfo)
-        } onError: { code, message in
-            debugPrint("getUserInfo,code:\(code),message:\(message)")
+    var isOpenCamera: Bool {
+        didSet {
+            UserDefaults.standard.set(isOpenCamera, forKey: "isOpenCamera")
+            UserDefaults.standard.synchronize()
         }
     }
     
-    func refreshStore() {
-        isChatAccessRoom = false
-        videoSetting = VideoModel()
-        audioSetting = AudioModel()
-        roomScene = .meeting
-        attendeeList = []
-        inviteSeatList = []
-        isSomeoneSharing = false
-        currentUser = UserModel()
-        roomInfo = RoomInfo()
+    override init() {
+        if let isOpenMicrophoneValue = UserDefaults.standard.object(forKey: "isOpenMicrophone") as? Bool {
+            isOpenMicrophone = isOpenMicrophoneValue
+        } else {
+            isOpenMicrophone = true
+        }
+        if let isOpenCameraValue = UserDefaults.standard.object(forKey: "isOpenCamera") as? Bool {
+            isOpenCamera = isOpenCameraValue
+        } else {
+            isOpenCamera = true
+        }
+    }
+    
+    func initialRoomCurrentUser() {
+        EngineManager.createInstance().roomEngine.getUserInfo(currentUser.userId) { [weak self] userInfo in
+            guard let self = self else { return }
+            guard let userInfo = userInfo else { return }
+            self.currentUser.update(userInfo: userInfo)
+            if self.currentUser.userId == self.roomInfo.ownerId {
+                self.currentUser.userRole = .roomOwner
+            } else {
+                self.currentUser.userRole = .generalUser
+            }
+        } onError: { code, message in
+            debugPrint("getUserInfo,code:\(code),message:\(message)")
+        }
     }
 }
 
@@ -77,9 +85,9 @@ class RoomStore: NSObject {
         }
     }
     
-    public var isOpenMicrophone: Bool
-    public var isOpenCamera: Bool
-    public var isUseSpeaker: Bool
+    public var isOpenMicrophone: Bool = true
+    public var isOpenCamera: Bool = true
+    public var isUseSpeaker: Bool = true
     
     public var speechMode: TUISpeechMode {
         set {
@@ -117,7 +125,7 @@ class RoomStore: NSObject {
         }
     }
     
-    var roomType: TUIRoomType {
+    public var roomType: TUIRoomType {
         set {
             roomInfo.roomType = newValue
         }
@@ -128,20 +136,7 @@ class RoomStore: NSObject {
     
     public var ownerId: String = ""
     
-    private var roomInfo: TUIRoomInfo
-    public override init() {
-        isOpenMicrophone = true
-        isOpenCamera = true
-        isUseSpeaker = false
-        roomInfo = TUIRoomInfo()
-        super.init()
-    }
-    
-    convenience init(roomInfo: TUIRoomInfo) {
-        self.init()
-        self.roomInfo = roomInfo
-        self.ownerId = roomInfo.ownerId
-    }
+    private var roomInfo: TUIRoomInfo = TUIRoomInfo()
     
     public func update(engineRoomInfo: TUIRoomInfo) {
         roomInfo = engineRoomInfo

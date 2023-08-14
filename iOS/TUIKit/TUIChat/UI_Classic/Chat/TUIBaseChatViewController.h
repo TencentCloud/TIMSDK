@@ -139,6 +139,8 @@
 
 - (void)sendMessage:(V2TIMMessage *)message;
 
+- (void)sendMessage:(V2TIMMessage *)message placeHolderCellData:(TUIMessageCellData *)placeHolderCellData;
+
 /**
  * 在聊天界面顶部添加自定义视图，该视图会常驻在消息列表顶部，不会随着消息列表上滑而上滑。
  * 不设置则默认不显示。

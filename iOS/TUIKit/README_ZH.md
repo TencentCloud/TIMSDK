@@ -2,30 +2,27 @@
 
 # TUIKit（iOS）
 
-## 下载地址7.3.4358
+## 下载地址
 
-[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIChat.zip)
+[最新 TUIChat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUIChat.zip)
 
-[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIConversation.zip)
+[最新 TUIConversation 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUIConversation.zip)
 
-[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIContact.zip)
+[最新 TUIContact 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUIContact.zip)
 
-[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIGroup.zip)
+[最新 TUIGroup 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUIGroup.zip)
 
-[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUISearch.zip)
+[最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUISearch.zip)
 
-[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIOfflinePush.zip)
+[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUIOfflinePush.zip)
 
-[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUICore.zip)
+[最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUICore.zip)
 
-[最新 TIMCommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TIMCommon.zip)
+[最新 TIMCommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TIMCommon.zip)
 
-[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUICallKit.zip)
+[最新 TUICallKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUICallKit.zip)
 
-[最新 TUIRoomKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIRoomKit.zip)
-
-[最新 TUIVideoSeat 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIVideoSeat.zip)
-
+[最新 TUIRoomKit 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUIRoomKit.zip)
 
 
 ## 交流&反馈

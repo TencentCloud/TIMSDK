@@ -16,6 +16,7 @@
 
 #import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TUIUserAuthorizationCenter.h>
+#import <TIMCommon/NSTimer+TUISafe.h>
 #import <TUICore/TUITool.h>
 #import "TUICameraViewController.h"
 
@@ -211,33 +212,81 @@
             return;
         }
     }
+
     // mov to mp4
     AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
     AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPresetHighestQuality];
     exportSession.outputURL = newUrl;
     exportSession.outputFileType = AVFileTypeMPEG4;
     exportSession.shouldOptimizeForNetworkUse = YES;
+    
+    // intercept FirstTime VideoPicture
+    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts];
+    NSInteger duration = (NSInteger)urlAsset.duration.value / urlAsset.duration.timescale;
+    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:urlAsset];
+    gen.appliesPreferredTrackTransform = YES;
+    gen.maximumSize = CGSizeMake(192, 192);
+    NSError *error = nil;
+    CMTime actualTime;
+    CMTime time = CMTimeMakeWithSeconds(0.5, 30);
+    CGImageRef imageRef = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+        
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.listener respondsToSelector:@selector(onProvidePlaceholderVideoSnapshot:SnapImage:Completion:)]) {
+            [self.listener onProvidePlaceholderVideoSnapshot:@"" SnapImage:image Completion:^(BOOL finished, TUIMessageCellData * _Nonnull placeHolderCellData) {
+                [exportSession exportAsynchronouslyWithCompletionHandler:^{
+                  switch ([exportSession status]) {
+                      case AVAssetExportSessionStatusFailed:
+                          NSLog(@"Export session failed");
+                          break;
+                      case AVAssetExportSessionStatusCancelled:
+                          NSLog(@"Export canceled");
+                          break;
+                      case AVAssetExportSessionStatusCompleted: {
+                          // Video conversion finished
+                          NSLog(@"Successful!");
+                          [self handleVideoPick:succ message:message videoUrl:newUrl placeHolderCellData:placeHolderCellData];
+                      }
+                          break;
+                      default:
+                          break;
+                  }
+                }];
+                
+                [NSTimer tui_scheduledTimerWithTimeInterval:.1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+                    if (exportSession.status == AVAssetExportSessionStatusExporting) {
+                        NSLog(@"exportSession.progress:%f",exportSession.progress);
+                        placeHolderCellData.videoTranscodingProgress = exportSession.progress;
+                    }
+                }];
 
-    [exportSession exportAsynchronouslyWithCompletionHandler:^{
-      switch ([exportSession status]) {
-          case AVAssetExportSessionStatusFailed:
-              NSLog(@"Export session failed");
-              break;
-          case AVAssetExportSessionStatusCancelled:
-              NSLog(@"Export canceled");
-              break;
-          case AVAssetExportSessionStatusCompleted: {
-              // Video conversion finished
-              NSLog(@"Successful!");
-              [self handleVideoPick:succ message:message videoUrl:newUrl];
-          } break;
-          default:
-              break;
-      }
-    }];
+            }];
+        }
+        else {
+            [exportSession exportAsynchronouslyWithCompletionHandler:^{
+              switch ([exportSession status]) {
+                  case AVAssetExportSessionStatusCompleted: {
+                      // Video conversion finished
+                      NSLog(@"Successful!");
+                      [self handleVideoPick:succ message:message videoUrl:newUrl];
+                  } break;
+                  default:
+                      break;
+              }
+            }];
+        }
+    });
+
+    
 }
 
 - (void)handleVideoPick:(BOOL)succ message:(NSString *)message videoUrl:(NSURL *)videoUrl {
+    [self handleVideoPick:succ message:message videoUrl:videoUrl placeHolderCellData:nil];
+}
+- (void)handleVideoPick:(BOOL)succ message:(NSString *)message videoUrl:(NSURL *)videoUrl placeHolderCellData:(TUIMessageCellData*)placeHolderCellData{
     if (succ == NO || videoUrl == nil) {
         if ([self.listener respondsToSelector:@selector(onProvideVideoError:)]) {
             [self.listener onProvideVideoError:message];
@@ -246,7 +295,7 @@
     }
 
     NSData *videoData = [NSData dataWithContentsOfURL:videoUrl];
-    NSString *videoPath = [NSString stringWithFormat:@"%@%@.mp4", TUIKit_Video_Path, [TUITool genVideoName:nil]];
+    NSString *videoPath = [NSString stringWithFormat:@"%@%@_%u.mp4", TUIKit_Video_Path, [TUITool genVideoName:nil],arc4random()];
     [[NSFileManager defaultManager] createFileAtPath:videoPath contents:videoData attributes:nil];
 
     NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
@@ -263,11 +312,11 @@
     CGImageRelease(imageRef);
 
     NSData *imageData = UIImagePNGRepresentation(image);
-    NSString *imagePath = [TUIKit_Video_Path stringByAppendingString:[TUITool genSnapshotName:nil]];
+    NSString *imagePath = [TUIKit_Video_Path stringByAppendingFormat:@"%@_%u",[TUITool genSnapshotName:nil],arc4random()];
     [[NSFileManager defaultManager] createFileAtPath:imagePath contents:imageData attributes:nil];
 
-    if ([self.listener respondsToSelector:@selector(onProvideVideo:snapshot:duration:)]) {
-        [self.listener onProvideVideo:videoPath snapshot:imagePath duration:duration];
+    if ([self.listener respondsToSelector:@selector(onProvideVideo:snapshot:duration:placeHolderCellData:)]) {
+        [self.listener onProvideVideo:videoPath snapshot:imagePath duration:duration placeHolderCellData:placeHolderCellData];
     }
 }
 
@@ -324,7 +373,9 @@
                                                dispatch_async(dispatch_get_main_queue(), ^{
                                                  // 非 mp4 格式视频，暂时用 mov 后缀，后面会统一转换成 mp4 格式
                                                  // Non-mp4 format video, temporarily use mov suffix, will be converted to mp4 format later
-                                                 NSString *fileName = @"temp.mov";
+                                                 NSDate *datenow = [NSDate date];
+                                                 NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)([datenow timeIntervalSince1970]*1000)];
+                                                 NSString *fileName = [NSString stringWithFormat:@"%@_temp.mov",timeSp];
                                                  NSString *tempPath = NSTemporaryDirectory();
                                                  NSString *filePath = [tempPath stringByAppendingPathComponent:fileName];
                                                  if ([NSFileManager.defaultManager isDeletableFileAtPath:filePath]) {

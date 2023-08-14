@@ -37,7 +37,6 @@ class QRCodeView: UIView {
         label.font = UIFont(name: "PingFangSC-Regular", size: 28)
         label.textAlignment = .center
         label.backgroundColor = .clear
-        label.text = EngineManager.shared.store.roomInfo.name
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -54,7 +53,6 @@ class QRCodeView: UIView {
         label.font = UIFont(name: "PingFangSC-Regular", size: 20)
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = .center
-        label.text = EngineManager.shared.store.roomInfo.roomId
         return label
     }()
     
@@ -219,6 +217,8 @@ class QRCodeView: UIView {
     
     func setupViewState() {
         backgroundColor = UIColor(0x17181F)
+        titleLabel.text = viewModel.store.roomInfo.name
+        roomIdLabel.text = viewModel.store.roomInfo.roomId
         viewModel.createQRCodeImageView(url: viewModel.urlString, imageView: qrCodeImageView)
     }
     

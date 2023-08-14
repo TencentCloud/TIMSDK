@@ -53,6 +53,7 @@
 - (void)loginSuccessNotification {
     [TUICallKit createInstance];
     [self adaptiveComponentReport];
+    [self setExcludeFromHistoryMessage];
 }
 
 - (void)startCall:(NSString *)groupID userIDs:(NSArray *)userIDs callingType:(TUICallMediaType)callingType {
@@ -127,6 +128,22 @@
                                  @"language": @(4)}};
     }
     
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:NSJSONWritingPrettyPrinted error:&error];
+    if (error) {
+        NSAssert(NO, @"invalid jsonDic");
+        return;
+    }
+    [[TUICallEngine createInstance] callExperimentalAPI:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
+}
+
+- (void)setExcludeFromHistoryMessage {
+    if (![TUICore getService:TUICore_TUIChatService]) {
+        return;
+    }
+    
+    NSDictionary *jsonDic = @{@"api": @"setExcludeFromHistoryMessage",
+                              @"params": @{@"excludeFromHistoryMessage": @(NO)}};
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:NSJSONWritingPrettyPrinted error:&error];
     if (error) {

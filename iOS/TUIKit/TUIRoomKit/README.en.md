@@ -13,7 +13,6 @@ TUIRoomKit
     ├─ Login                  // Folder of the login UI and business logic code
     └─ TXReplayKit_Screen     // Folder of sharing screen
 ├─ TUIRoomKit                 // Folder of multi-person video conferencing UI code and used images and internationalization string resources
-├─ TUIVideoSeat               // Folder of multi-person video conferencing displaying video UI code 
 ├─ TUIBarrage                 // Barrage components
 └─ TUIBeauty                  // Beauty components
 ```

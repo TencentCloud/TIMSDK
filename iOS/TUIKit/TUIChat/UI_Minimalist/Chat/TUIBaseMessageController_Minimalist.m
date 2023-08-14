@@ -18,7 +18,7 @@
 #import <UIKit/UIWindow.h>
 #import "TUIChatCallingDataProvider.h"
 #import "TUIChatConversationModel.h"
-#import "TUIChatDataProvider_Minimalist.h"
+#import "TUIChatDataProvider.h"
 #import "TUIChatPopContextController.h"
 #import "TUIChatPopContextRecentView.h"
 #import "TUIChatPopMenu.h"
@@ -32,26 +32,32 @@
 #import "TUIMediaView_Minimalist.h"
 #import "TUIMergeMessageCell_Minimalist.h"
 #import "TUIMergeMessageListController_Minimalist.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
 #import "TUIMessageProgressManager.h"
 #import "TUIMessageReadViewController_Minimalist.h"
 #import "TUIOrderCell_Minimalist.h"
 #import "TUIReferenceMessageCell_Minimalist.h"
 #import "TUIRepliesDetailViewController_Minimalist.h"
-#import "TUIReplyMessageCellData_Minimalist.h"
+#import "TUIReplyMessageCellData.h"
 #import "TUIReplyMessageCell_Minimalist.h"
 #import "TUITextMessageCell_Minimalist.h"
 #import "TUIVideoMessageCell_Minimalist.h"
 #import "TUIVoiceMessageCell_Minimalist.h"
+#import "TUIMessageCellConfig_Minimalist.h"
+
+typedef NSString * CellDataClassName;
+typedef Class<TUIMessageCellProtocol> CellClass;
+typedef NSString * MessageID;
+typedef NSNumber * HeightNumber;
 
 @interface TUIBaseMessageController_Minimalist () <TUIMessageCellDelegate,
                                                    TUIJoinGroupMessageCellDelegate_Minimalist,
-                                                   TUIMessageBaseDataProviderDataSource,
+                                                   TUIMessageDataProviderDataSource,
                                                    TUIMessageProgressManagerDelegate,
                                                    TIMPopActionProtocol,
                                                    TUINotificationProtocol>
 
-@property(nonatomic, strong) TUIMessageDataProvider_Minimalist *messageDataProvider;
+@property(nonatomic, strong) TUIMessageDataProvider *messageDataProvider;
 @property(nonatomic, strong) TUIMessageCellData *menuUIMsg;
 @property(nonatomic, strong) TUIMessageCellData *reSendUIMsg;
 @property(nonatomic, strong) TUIChatConversationModel *conversationData;
@@ -61,20 +67,23 @@
 @property(nonatomic, assign) BOOL scrollingTriggeredByUser;
 @property(nonatomic, assign) BOOL isAutoScrolledToBottom;
 @property(nonatomic, strong) TUIChatPopContextController *popAlertController;
+@property(nonatomic, strong) TUIMessageCellConfig_Minimalist *messageCellConfig;
 @end
 
 @implementation TUIBaseMessageController_Minimalist
 
 #pragma mark - Life Cycle
++ (void)initialize {
+    [TUIMessageDataProvider setDataSourceClass:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
+    [self registerEvents];
     self.isActive = YES;
     [TUITool addUnsupportNotificationInVC:self];
     [TUIMessageProgressManager.shareManager addDelegate:self];
-
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_WillForwardTranslationSubKey object:self];
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
 }
 
 - (void)dealloc {
@@ -109,6 +118,27 @@
 }
 
 - (void)setupViews {
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
+    /**
+     * 解决触摸事件没有往下传递，导致手势和 collectionView didselect 冲突的问题
+     * Solve the problem that the touch event is not passed down, causing the gesture to conflict with the collectionView didselect
+     */
+    tap.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tap];
+
+    self.tableView.scrollsToTop = NO;
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
+    self.indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
+    self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+    self.tableView.tableHeaderView = self.indicatorView;
+
+    [self.messageCellConfig bindTableView:self.tableView];
+}
+
+- (void)registerEvents {
+    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_WillForwardTranslationSubKey object:self];
+    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationBecomeActive)
                                                  name:UIApplicationDidBecomeActiveNotification
@@ -121,52 +151,22 @@
                                              selector:@selector(applicationEnterBackground)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
+}
 
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
-    /**
-     * 解决触摸事件没有往下传递，导致手势和 collectionView didselect 冲突的问题
-     * Solve the problem that the touch event is not passed down, causing the gesture to conflict with the collectionView didselect
-     */
-    tap.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tap];
-
-    self.tableView.scrollsToTop = NO;
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
-
-    [self.tableView registerClass:[TUITextMessageCell_Minimalist class] forCellReuseIdentifier:TTextMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIVoiceMessageCell_Minimalist class] forCellReuseIdentifier:TVoiceMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIImageMessageCell_Minimalist class] forCellReuseIdentifier:TImageMessageCell_ReuseId];
-    [self.tableView registerClass:[TUISystemMessageCell class] forCellReuseIdentifier:TSystemMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIFaceMessageCell_Minimalist class] forCellReuseIdentifier:TFaceMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIVideoMessageCell_Minimalist class] forCellReuseIdentifier:TVideoMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIFileMessageCell_Minimalist class] forCellReuseIdentifier:TFileMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIJoinGroupMessageCell_Minimalist class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIMergeMessageCell_Minimalist class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
-    [self.tableView registerClass:[TUIReplyMessageCell_Minimalist class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIReferenceMessageCell_Minimalist class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
-
-    NSArray *customMessageInfo = [TUIMessageDataProvider_Minimalist getCustomMessageInfo];
-    for (NSDictionary *messageInfo in customMessageInfo) {
-        NSString *bussinessID = messageInfo[BussinessID];
-        NSString *cellName = messageInfo[TMessageCell_Name];
-        Class cls = NSClassFromString(cellName);
-        if (cls && bussinessID) {
-            [self.tableView registerClass:cls forCellReuseIdentifier:bussinessID];
-        }
+- (TUIMessageCellConfig_Minimalist *)messageCellConfig {
+    if (_messageCellConfig == nil) {
+        _messageCellConfig = [[TUIMessageCellConfig_Minimalist alloc] init];
     }
-
-    self.indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
-    self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
-    self.tableView.tableHeaderView = self.indicatorView;
+    return _messageCellConfig;
 }
 
 #pragma mark - Data Provider
 - (void)setConversation:(TUIChatConversationModel *)conversationData {
     self.conversationData = conversationData;
     if (!self.messageDataProvider) {
-        self.messageDataProvider = [[TUIMessageDataProvider_Minimalist alloc] initWithConversationModel:conversationData];
+        self.messageDataProvider = [[TUIMessageDataProvider alloc] initWithConversationModel:conversationData];
         self.messageDataProvider.dataSource = self;
+        self.messageDataProvider.enableMergeSender = YES;
     }
     [self loadMessage];
 }
@@ -279,6 +279,11 @@
     }
 }
 
+- (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData {
+    [self.messageDataProvider sendPlaceHolderUIMessage:cellData];
+    [self scrollToBottom:YES];
+}
+
 - (void)sendUIMessage:(TUIMessageCellData *)cellData {
     @weakify(self);
     cellData.innerMessage.needReadReceipt = self.isMsgNeedReadReceipt;
@@ -289,7 +294,7 @@
           [self scrollToBottom:YES];
 
           int delay = 1;
-          if ([cellData isKindOfClass:[TUIImageMessageCellData_Minimalist class]]) {
+          if ([cellData isKindOfClass:[TUIImageMessageCellData class]]) {
               delay = 0;
           }
 
@@ -314,15 +319,20 @@
 }
 
 - (void)sendMessage:(V2TIMMessage *)message {
+    [self sendMessage:message placeHolderCellData:nil];
+}
+
+- (void)sendMessage:(V2TIMMessage *)message placeHolderCellData:(TUIMessageCellData *)placeHolderCellData {
     TUIMessageCellData *cellData = nil;
     if (message.elemType == V2TIM_ELEM_TYPE_CUSTOM) {
         cellData = [self.delegate messageController:self onNewMessage:message];
         cellData.innerMessage = message;
     }
     if (!cellData) {
-        cellData = [TUIMessageDataProvider_Minimalist getCellData:message];
+        cellData = [TUIMessageDataProvider getCellData:message];
     }
     if (cellData) {
+        cellData.placeHolderCellData = placeHolderCellData;
         [self sendUIMessage:cellData];
     }
 }
@@ -375,8 +385,7 @@
 }
 
 - (void)clearAndReloadCellOfData:(TUIMessageCellData *)data {
-    [data clearCachedCellHeight];
-    [self.messageDataProvider removeHeightCacheOfData:data];
+    [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
     [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID];
 }
 
@@ -392,10 +401,15 @@
       }
     });
 }
+
 #pragma mark - TUIMessageBaseDataProviderDataSource
++ (Class)onGetCustomMessageCellDataClass:(NSString *)businessID {
+    return [TUIMessageCellConfig_Minimalist getCustomMessageCellDataClass:businessID];
+}
+
 static NSMutableArray *lastMsgIndexs = nil;
 static NSMutableArray *reloadMsgIndexs = nil;
-- (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider_Minimalist *)dataProvider {
+- (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider {
     [self.tableView beginUpdates];
 
     if (lastMsgIndexs) {
@@ -410,7 +424,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
         reloadMsgIndexs = [NSMutableArray array];
     }
 }
-- (void)dataProviderDataSourceChange:(TUIMessageDataProvider_Minimalist *)dataProvider
+- (void)dataProviderDataSourceChange:(TUIMessageDataProvider *)dataProvider
                             withType:(TUIMessageBaseDataProviderDataSourceChangeType)type
                              atIndex:(NSUInteger)index
                            animation:(BOOL)animation {
@@ -442,13 +456,13 @@ static NSMutableArray *reloadMsgIndexs = nil;
     }
 }
 
-- (void)dataProviderDataSourceDidChange:(TUIMessageDataProvider_Minimalist *)dataProvider {
+- (void)dataProviderDataSourceDidChange:(TUIMessageDataProvider *)dataProvider {
     for (NSNumber *number in lastMsgIndexs) {
         NSUInteger index = [number unsignedIntValue];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        if ([self.messageDataProvider removeHeightCache:index]) {
-            [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
-        }
+        TUIMessageCellData *cellData = self.messageDataProvider.uiMsgs[indexPath.row];
+        [self.messageCellConfig removeHeightCacheOfMessageCellData:cellData];
+        [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
     }
     [lastMsgIndexs removeAllObjects];
     [reloadMsgIndexs removeAllObjects];
@@ -456,7 +470,13 @@ static NSMutableArray *reloadMsgIndexs = nil;
     [self.tableView endUpdates];
 }
 
-- (nullable TUIMessageCellData *)dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg {
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider onRemoveHeightCache:(TUIMessageCellData *)cellData {
+    if (cellData) {
+        [self.messageCellConfig removeHeightCacheOfMessageCellData:cellData];
+    }
+}
+
+- (nullable TUIMessageCellData *)dataProvider:(TUIMessageDataProvider *)dataProvider CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg {
     if (![msg.userID isEqualToString:self.conversationData.userID] && ![msg.groupID isEqualToString:self.conversationData.groupID]) {
         return nil;
     }
@@ -475,7 +495,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     return nil;
 }
 
-- (void)dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider ReceiveReadMsgWithUserID:(NSString *)userId Time:(time_t)timestamp {
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveReadMsgWithUserID:(NSString *)userId Time:(time_t)timestamp {
     if (userId.length > 0 && [userId isEqualToString:self.conversationData.userID]) {
         for (int i = 0; i < self.messageDataProvider.uiMsgs.count; i++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messageDataProvider.uiMsgs.count - 1 - i inSection:0];
@@ -492,7 +512,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     }
 }
 
-- (void)dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider
     ReceiveReadMsgWithGroupID:(NSString *)groupID
                         msgID:(NSString *)msgID
                     readCount:(NSUInteger)readCount
@@ -509,7 +529,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     [cell updateReadLabelText];
 }
 
-- (void)dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
     /**
      * 查看历史消息的时候根据当前 contentOffset 判断是否需要滑动到底部
      * When viewing historical messages, judge whether you need to slide to the bottom according to the current contentOffset
@@ -524,7 +544,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     [self limitReadReport];
 }
 
-- (void)dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
     return;
 }
 
@@ -565,11 +585,11 @@ static NSMutableArray *reloadMsgIndexs = nil;
     if (self.isInVC && self.isActive) {
         NSString *userID = self.conversationData.userID;
         if (userID.length > 0) {
-            [TUIMessageDataProvider_Minimalist markC2CMessageAsRead:userID succ:nil fail:nil];
+            [TUIMessageDataProvider markC2CMessageAsRead:userID succ:nil fail:nil];
         }
         NSString *groupID = self.conversationData.groupID;
         if (groupID.length > 0) {
-            [TUIMessageDataProvider_Minimalist markGroupMessageAsRead:groupID succ:nil fail:nil];
+            [TUIMessageDataProvider markGroupMessageAsRead:groupID succ:nil fail:nil];
         }
 
         NSString *conversationID = @"";
@@ -586,7 +606,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
             conversationID = self.conversationData.conversationID;
         }
         if (conversationID.length > 0) {
-            [TUIMessageDataProvider_Minimalist markConversationAsUndead:@[ conversationID ] enableMark:NO];
+            [TUIMessageDataProvider markConversationAsUndead:@[ conversationID ] enableMark:NO];
         }
     }
 }
@@ -658,14 +678,21 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.messageDataProvider getCellDataHeightAtIndex:indexPath.row Width:Screen_Width];
+    if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
+        TUIMessageCellData *cellData = self.messageDataProvider.uiMsgs[indexPath.row];
+        return [self.messageCellConfig getHeightFromMessageCellData:cellData];
+    } else {
+        return 0;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.messageDataProvider respondsToSelector:@selector(getEstimatedHeightForRowAtIndex:)]) {
-        return [self.messageDataProvider getEstimatedHeightForRowAtIndex:indexPath.row];
+    if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
+        TUIMessageCellData *cellData = self.messageDataProvider.uiMsgs[indexPath.row];
+        return [self.messageCellConfig getEstimatedHeightFromMessageCellData:cellData];
+    } else {
+        return 44.f;
     }
-    return 44.f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -702,13 +729,18 @@ static NSMutableArray *reloadMsgIndexs = nil;
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
-        TUITextMessageCellData_Minimalist *cellData = (TUITextMessageCellData_Minimalist *)self.messageDataProvider.uiMsgs[indexPath.row];
-        if ([cellData isKindOfClass:TUITextMessageCellData_Minimalist.class]) {
+        TUITextMessageCellData *cellData = (TUITextMessageCellData *)self.messageDataProvider.uiMsgs[indexPath.row];
+        // 待 TUICallKit 按照标准流程接入后删除
+        if ([cellData isKindOfClass:TUITextMessageCellData.class]) {
             if ((cellData.isAudioCall || cellData.isVideoCall) && cellData.showUnreadPoint) {
                 cellData.innerMessage.localCustomInt = 1;
                 cellData.showUnreadPoint = NO;
             }
         }
+        [TUICore notifyEvent:TUICore_TUIChatNotify
+                              subKey:TUICore_TUIChatNotify_MessageDisplayedSubKey
+                              object:cellData
+                               param:nil];
     }
 }
 
@@ -869,17 +901,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 - (void)configItems:(TUIChatPopContextController *)alertController targetCell:(TUIMessageCell *)cell {
     TUIMessageCellData *data = cell.messageData;
     V2TIMMessage *imMsg = data.innerMessage;
-    NSMutableArray *pluginCustomMessageInfo = [TUIMessageDataProvider_Minimalist getPluginCustomMessageInfo];
-    BOOL isPluginCustomMessage = NO;
-    for (NSDictionary *messageInfo in pluginCustomMessageInfo) {
-        NSString *bussinessID = messageInfo[BussinessID];
-        if (bussinessID) {
-            if ([data.reuseId isEqualToString:bussinessID]) {
-                isPluginCustomMessage = YES;
-                break;
-            }
-        }
-    }
+    BOOL isPluginCustomMessage = [TUIMessageCellConfig_Minimalist isPluginCustomMessageCellData:data];
     BOOL isChatNoramlMessageOrCustomMessage = !isPluginCustomMessage;
 
     /**
@@ -917,7 +939,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     TUIChatPopContextExtionItem *deleteItem = [self setupDeleteAction:alertController targetCell:cell];
 
     if (isChatNoramlMessageOrCustomMessage) {
-        if ([data isKindOfClass:[TUITextMessageCellData_Minimalist class]] || [data isKindOfClass:TUIReferenceMessageCellData_Minimalist.class]) {
+        if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
             [items addObject:copyItem];
         }
         if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
@@ -1096,7 +1118,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data {
-    TUIMessageCellData *copyData = [TUIMessageDataProvider_Minimalist getCellData:data.innerMessage];
+    TUIMessageCellData *copyData = [TUIMessageDataProvider getCellData:data.innerMessage];
     @weakify(self);
     [self.messageDataProvider preProcessMessage:@[ copyData ]
                                        callback:^{
@@ -1186,7 +1208,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
         content = txtCell.textView.text;
     }
     if ([sender isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
-        TUIReferenceMessageCellData_Minimalist *replyMsg = (TUIReferenceMessageCellData_Minimalist *)sender;
+        TUIReferenceMessageCellData *replyMsg = (TUIReferenceMessageCellData *)sender;
         content = replyMsg.content;
     }
     if (content.length > 0) {
@@ -1254,7 +1276,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (BOOL)supportRelay:(TUIMessageCellData *)data {
-    if ([data isKindOfClass:TUIVoiceMessageCellData_Minimalist.class]) {
+    if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
         return NO;
     }
     return YES;
@@ -1301,7 +1323,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     if (0 == message.userID.length) {
         return;
     }
-    [TUIMessageDataProvider_Minimalist.callingDataProvider redialFromMessage:message];
+    [TUIMessageDataProvider.callingDataProvider redialFromMessage:message];
 }
 - (void)clickSystemMessage:(TUISystemMessageCell *)cell {
     TUISystemMessageCellData *data = (TUISystemMessageCellData *)cell.messageData;
@@ -1314,10 +1336,10 @@ static NSMutableArray *reloadMsgIndexs = nil;
 
 - (void)playVoiceMessage:(TUIVoiceMessageCell_Minimalist *)cell {
     for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
-        if (![cellData isKindOfClass:[TUIVoiceMessageCellData_Minimalist class]]) {
+        if (![cellData isKindOfClass:[TUIVoiceMessageCellData class]]) {
             continue;
         }
-        TUIVoiceMessageCellData_Minimalist *voiceMsg = (TUIVoiceMessageCellData_Minimalist *)cellData;
+        TUIVoiceMessageCellData *voiceMsg = (TUIVoiceMessageCellData *)cellData;
         if (voiceMsg == cell.voiceData) {
             [voiceMsg playVoiceMessage];
             cell.voiceReadPoint.hidden = YES;
@@ -1357,7 +1379,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 
 - (void)showFileMessage:(TUIFileMessageCell_Minimalist *)cell {
     [self hideKeyboardIfNeeded];
-    TUIFileMessageCellData_Minimalist *fileData = cell.fileData;
+    TUIFileMessageCellData *fileData = cell.fileData;
     if (![fileData isLocalExist]) {
         [fileData downloadFile];
         return;
@@ -1393,14 +1415,14 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (void)showLinkMessage:(TUILinkCell_Minimalist *)cell {
-    TUILinkCellData_Minimalist *cellData = cell.customData;
+    TUILinkCellData *cellData = cell.customData;
     if (cellData.link) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:cellData.link]];
     }
 }
 
 - (void)showOrderMessage:(TUIOrderCell_Minimalist *)cell {
-    TUIOrderCellData_Minimalist *cellData = cell.customData;
+    TUIOrderCellData *cellData = cell.customData;
     if (cellData.link) {
         [TUITool openLinkWithURL:[NSURL URLWithString:cellData.link]];
     }

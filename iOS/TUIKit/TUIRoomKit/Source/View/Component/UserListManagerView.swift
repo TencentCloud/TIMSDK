@@ -175,14 +175,35 @@ extension UserListManagerView: UserListManagerViewEventResponder {
             view.backgroundColor = item.backgroundColor ?? UIColor(0x2A2D38)
         }
     }
+    
     func makeToast(text : String) {
         RoomRouter.makeToast(toast: text)
+    }
+    
+    func showTransferredRoomOwnerAlert() {
+        let alertVC = UIAlertController(title: .haveTransferredMasterText,
+                                        message: nil,
+                                        preferredStyle: .alert)
+        let sureAction = UIAlertAction(title: .alertOkText, style: .cancel) { _ in
+        }
+        alertVC.addAction(sureAction)
+        RoomRouter.shared.presentAlert(alertVC)
+    }
+    
+    func setUserListManagerViewHidden(isHidden: Bool) {
+        self.isHidden = true
     }
 }
 
 private extension String {
     static var meText: String {
         localized("TUIRoom.me")
+    }
+    static var alertOkText: String {
+        localized("TUIRoom.ok")
+    }
+    static var haveTransferredMasterText: String {
+        localized("TUIRoom.have.transferred.master")
     }
 }
 

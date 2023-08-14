@@ -10,7 +10,7 @@ import TUICore
 
 class TUIRoomImAccessService: NSObject, TUIServiceProtocol  {
     static let shared = TUIRoomImAccessService()
-    var alreadyShownRoomInviteView: Bool = false
+    var isShownInvitedToJoinRoomView: Bool = false
     weak var inviteViewController: UIViewController? //邀请页面controller
     var inviteWindow: UIWindow?
     private override init() {
@@ -20,8 +20,8 @@ class TUIRoomImAccessService: NSObject, TUIServiceProtocol  {
     }
     func initRoomMessage() {
         TUICore.callService(TUICore_TUIChatService, method: TUICore_TUIChatService_AppendCustomMessageMethod, param:
-                                [BussinessID: BussinessID_GroupRoomMessage, TMessageCell_Name: "RoomMessageCell",
-                      TMessageCell_Data_Name:"RoomMessageCellModel",])
+                                [BussinessID: BussinessID_GroupRoomMessage, TMessageCell_Name: "RoomMessageBubbleCell",
+                      TMessageCell_Data_Name:"RoomMessageBubbleCellData",])
     }
     func initSignalingListener() {
         V2TIMManager.sharedInstance().addSignalingListener(listener: self)
@@ -54,14 +54,15 @@ extension TUIRoomImAccessService: V2TIMSignalingListener {
         guard inviteeList.contains(userId) else { return }
             let businessScene = TUILogin.getCurrentBusinessScene()
             guard businessScene == .None || businessScene == .InMeetingRoom else { return }
-            showRoomInviteView(inviterUserName: inviterUserName, inviteUserAvatarUrl: avatarUrl, roomId: roomId)
+            showInvitedToJoinRoomView(inviterUserName: inviterUserName, inviteUserAvatarUrl: avatarUrl, roomId: roomId)
     }
-    private func showRoomInviteView(inviterUserName: String, inviteUserAvatarUrl: String, roomId: String) {
-        if alreadyShownRoomInviteView {
+    private func showInvitedToJoinRoomView(inviterUserName: String, inviteUserAvatarUrl: String, roomId: String) {
+        if isShownInvitedToJoinRoomView {
             return
         }
-        alreadyShownRoomInviteView = true
-        let inviteViewController = RoomInviteViewController(inviteUserName: inviterUserName,inviteUserAvatarUrl: inviteUserAvatarUrl, roomId: roomId)
+        isShownInvitedToJoinRoomView = true
+        let inviteViewController = InvitedToJoinRoomViewController(inviteUserName: inviterUserName,inviteUserAvatarUrl:
+                                                                    inviteUserAvatarUrl, roomId: roomId)
         let nav = UINavigationController(rootViewController: inviteViewController)
         nav.setNavigationBarHidden(true, animated: true)
         inviteWindow = UIWindow(frame: UIScreen.main.bounds)

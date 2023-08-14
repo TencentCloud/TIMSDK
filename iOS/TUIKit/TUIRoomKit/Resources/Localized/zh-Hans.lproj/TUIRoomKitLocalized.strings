@@ -7,25 +7,18 @@
 //
 
 "TUIRoom.create.room" = "新建房间";
-"TUIRoom.join.room" = "加入房间";
-"TUIRoom.logout.room" = "退出房间";
 "TUIRoom.exit.login" = "退出登录";
-"TUIRoom.user.name" = "您的姓名";
 "TUIRoom.room.num" = "房间号";
 "TUIRoom.room.link" = "房间链接";
 "TUIRoom.open.video" = "开启视频";
-"TUIRoom.open.mic" = "开启麦克风";
-"TUIRoom.open.speaker" = "开启扬声器";
-"TUIRoom.room.type" = "房间类型";
 "TUIRoom.input.room.num" = "请输入房间号";
 "TUIRoom.freedom.speaker" = "自由发言房间";
 "TUIRoom.raise.speaker" = "举手发言房间";
 "TUIRoom.host" = "主持人";
 "TUIRoom.camera" = "摄像头";
 "TUIRoom.mic" = "麦克风";
-"TUIRoom.sure.destroy.room" = "你确定要解散房间吗？";
+"TUIRoom.sure.destroy.room" = "你确定要结束会议吗？";
 "TUIRoom.sure.leave.room" = "你确定要离开房间吗？";
-"TUIRoom.destroy.room.ok" = "解散房间";
 "TUIRoom.destroy.room.cancel" = "再等等";
 "TUIRoom.ok" = "确认";
 "TUIRoom.cancel" = "取消";
@@ -66,8 +59,7 @@
 "TUIRoom.kick" = "踢出房间";
 "TUIRoom.step.down.seat" = "请下台";
 "TUIRoom.invite.seat" = "邀请上台";
-"TUIRoom.raise.speak.model" = "举手发言模式";
-"TUIRoom.freedom.speak.model" = "自由发言模式";
+
 "TUIRoom.chat" = "聊天";
 "TUIRoom.beauty" = "美颜";
 "TUIRoom.switch.layout" = "切换布局";
@@ -101,7 +93,7 @@
 "TUIRoom.trans.master" = "指定一位新主持人";
 "TUIRoom.appoint.master.and.leave.room" = "指定并离开";
 "TUIRoom.have.become.master" = "您已成为主持人";
-"TUIRoom.have.transferred.master.to.you" = "已将主持人权限转交给您";
+"TUIRoom.have.transferred.master" = "您已转让了房主";
 "TUIRoom.raise.hand.apply" = "举手申请";
 "TUIRoom.mute.audio.seat.reason" = "举手发言房间，请先举手申请上麦";
 "TUIRoom.mute.video.seat.reason" = "举手发言房间，请先举手申请上麦";
@@ -127,13 +119,13 @@
 "TUIRoom.video" = "视频";
 "TUIRoom.audio" = "音频";
 "TUIRoom.setting" = "设置";
+"TUIRoom.advancedSetting" = "高级设置";
 "TUIRoom.frame.rate" = "帧率";
 "TUIRoom.bitrate" = "码率";
 "TUIRoom.local.mirror" = "本地镜像";
 "TUIRoom.resolution.selected" = "分辨率选择完毕";
 "TUIRoom.frame.rate.selected" = "帧率选择完毕";
 "TUIRoom.version.too.low" = "系统版本低于12.0，请升级系统";
-"TUIRoom.input.error.room.num.toast" = "请输入正确房间号";
 
 "TUIRoom.quick.conference" = "快速会议";
 "TUIRoom.invite.meeting" = "邀请你进入会议";
@@ -145,3 +137,17 @@
 "TUIRoom.starting.meeting" = "正在发起";
 "TUIRoom.waiting.members.enter.meeting" = "等待成员入会";
 "TUIRoom.meeting.ended" = "会议已结束";
+
+"TUIRoom.fail.microphone.permission.Title" = "麦克风权限未开启";
+"TUIRoom.fail.microphone.permission.Tips"  = "无法使用多人音视频语音功能，点击\"去开启\"打开麦克风权限";
+"TUIRoom.fail.camera.permission.Title" = "相机权限未开启";
+"TUIRoom.fail.camera.permission.Tips"  = "无法使用多人音视频视频功能，点击\"去开启\"打开相机权限";
+"TUIRoom.fail.permission.Later" = "以后再说";
+"TUIRoom.fail.permission.Enable" = "去开启";
+"TUIRoom.device.set" = "快速会议设置";
+"TUIRoom.mic.set" = "入会开启麦克风";
+"TUIRoom.camera.set" = "入会开启摄像头";
+"TUIRoom.sharing.screen" = "您正在共享屏幕";
+"TUIRoom.stop.share.screen" = "停止共享";
+"TUIRoom.screen.recording" = "屏幕录制中";
+

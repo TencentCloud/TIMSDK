@@ -9,11 +9,11 @@
 #import "TUIGroupCreateController_Minimalist.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIFloatViewController.h>
 #import <TUICore/TUILogin.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/UIView+TUILayout.h>
 #import "TUIContactUserPanelHeaderView_Minimalist.h"
-#import "TUIFloatViewController.h"
 #import "TUIGroupTypeListController_Minimalist.h"
 
 @interface TUIGroupPortraitSelectAvatarCollectionCell_Minimalist : UICollectionViewCell
@@ -783,6 +783,7 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (self.submitCallback) {
                 self.submitCallback(YES, self.createGroupInfo, self.submitShowImage);
+                [self dismissViewControllerAnimated:YES completion:nil];
             }
           });
         }
@@ -803,6 +804,7 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
           }
           if (self.submitCallback) {
               self.submitCallback(NO, self.createGroupInfo, self.submitShowImage);
+              [self dismissViewControllerAnimated:YES completion:nil];
           }
         }];
 }
@@ -813,7 +815,6 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 
 - (void)floatControllerRightButtonClick {
     [self finishTask];
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

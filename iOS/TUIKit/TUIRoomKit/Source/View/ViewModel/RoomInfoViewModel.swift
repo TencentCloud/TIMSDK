@@ -10,7 +10,12 @@ import Foundation
 
 class RoomInfoViewModel {
     private(set) var messageItems: [ListCellItemData] = []
-    
+    var store: RoomStore {
+        EngineManager.createInstance().store
+    }
+    var roomInfo: RoomInfo {
+        store.roomInfo
+    }
     init() {
         createSourceData()
     }
@@ -18,8 +23,8 @@ class RoomInfoViewModel {
     func createSourceData() {
         let roomHostItem = ListCellItemData()
         roomHostItem.titleText = .roomHostText
-        var userName = EngineManager.shared.store.roomInfo.ownerId
-        if let userModel = EngineManager.shared.store.attendeeList.first(where: { $0.userId == EngineManager.shared.store.roomInfo.ownerId}) {
+        var userName = roomInfo.ownerId
+        if let userModel = store.attendeeList.first(where: { $0.userId == roomInfo.ownerId}) {
             userName = userModel.userName
         }
         roomHostItem.messageText = userName
@@ -27,7 +32,7 @@ class RoomInfoViewModel {
         
         let roomTypeItem = ListCellItemData()
         roomTypeItem.titleText = .roomTypeText
-        switch EngineManager.shared.store.roomInfo.speechMode {
+        switch roomInfo.speechMode {
         case .freeToSpeak:
             roomTypeItem.messageText = .freedomSpeakText
         case .applySpeakAfterTakingSeat:
@@ -38,7 +43,7 @@ class RoomInfoViewModel {
         
         let roomIdItem = ListCellItemData()
         roomIdItem.titleText = .roomIdText
-        roomIdItem.messageText = EngineManager.shared.store.roomInfo.roomId
+        roomIdItem.messageText = roomInfo.roomId
         roomIdItem.hasButton = true
         roomIdItem.normalIcon = "room_copy"
         roomIdItem.resourceBundle = tuiRoomKitBundle()
@@ -51,7 +56,7 @@ class RoomInfoViewModel {
         let roomLinkItem = ListCellItemData()
         roomLinkItem.titleText = .roomLinkText
         roomLinkItem.messageText = "https://web.sdk.qcloud.com/component/tuiroom/index.html#/" + "room?roomId=" +
-        EngineManager.shared.store.roomInfo.roomId
+        roomInfo.roomId
         roomLinkItem.hasButton = true
         roomLinkItem.normalIcon = "room_copy"
         roomLinkItem.resourceBundle = tuiRoomKitBundle()

@@ -12,19 +12,21 @@ protocol TransferMasterViewResponder: NSObject {
     func searchControllerChangeActive(isActive: Bool)
 }
 
-class TransferMasterViewModel {
+class TransferMasterViewModel: NSObject {
     var attendeeList: [UserModel] = []
     var userId: String = ""
     weak var viewResponder: TransferMasterViewResponder? = nil
     var engineManager: EngineManager {
-        EngineManager.shared
+        EngineManager.createInstance()
     }
     let roomRouter: RoomRouter = RoomRouter.shared
-    init() {
+    override init() {
+        super.init()
         attendeeList = self.engineManager.store.attendeeList.filter({ [weak self] userModel in
             guard let self = self else { return true }
             return userModel.userId != self.engineManager.store.currentUser.userId
         })
+        EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_RenewUserList, responder: self)
     }
     
     func backAction() {
@@ -35,31 +37,20 @@ class TransferMasterViewModel {
         guard userId != "" else { return }
         engineManager.roomEngine.changeUserRole(userId: userId, role: .roomOwner) { [weak self] in
             guard let self = self else { return }
-            self.closeLocalDevice()
-            self.engineManager.exitRoom()
+            self.engineManager.exitRoom(onSuccess: nil, onError: nil)
             self.roomRouter.dismissAllRoomPopupViewController()
             self.roomRouter.popToRoomEntranceViewController()
         } onError: { [weak self] code, message in
             guard let self = self else { return }
-            self.closeLocalDevice()
-            self.engineManager.destroyRoom()
+            self.engineManager.destroyRoom(onSuccess: nil, onError: nil)
             self.roomRouter.dismissAllRoomPopupViewController()
             self.roomRouter.popToRoomEntranceViewController()
             debugPrint("changeUserRole:code:\(code),message:\(message)")
         }
     }
     
-    private func closeLocalDevice() {
-        let roomEngine = engineManager.roomEngine
-        roomEngine.closeLocalCamera()
-        roomEngine.closeLocalMicrophone()
-        roomEngine.stopPushLocalAudio()
-        roomEngine.stopPushLocalVideo()
-        roomEngine.stopScreenCapture()
-        roomEngine.getTRTCCloud().setLocalVideoProcessDelegete(nil, pixelFormat: ._Texture_2D, bufferType: .texture)
-    }
-    
     deinit {
+        EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_RenewUserList, responder: self)
         debugPrint("deinit \(self)")
     }
 }
@@ -73,5 +64,19 @@ extension TransferMasterViewModel: PopUpViewResponder {
     
     func searchControllerChangeActive(isActive: Bool) {
         viewResponder?.searchControllerChangeActive(isActive: isActive)
+    }
+}
+
+extension TransferMasterViewModel: RoomKitUIEventResponder {
+    func onNotifyUIEvent(key: EngineEventCenter.RoomUIEvent, Object: Any?, info: [AnyHashable : Any]?) {
+        switch key {
+        case .TUIRoomKitService_RenewUserList:
+            attendeeList = self.engineManager.store.attendeeList.filter({ [weak self] userModel in
+                guard let self = self else { return true }
+                return userModel.userId != self.engineManager.store.currentUser.userId
+            })
+            viewResponder?.reloadTransferMasterTableView()
+        default: break
+        }
     }
 }

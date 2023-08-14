@@ -5,7 +5,6 @@
 #ifndef THeader_h
 #define THeader_h
 
-#import <ReactiveObjC/ReactiveObjC.h>
 #import <SDWebImage/SDWebImage.h>
 #import "NSDictionary+TUISafe.h"
 #import "TUICommonModel.h"
@@ -19,6 +18,13 @@
 #import "UIView+TUIToast.h"
 
 @import ImSDK_Plus;
+
+#define tui_weakify(object) \
+    autoreleasepool {}         \
+    __weak typeof(object) weak##object = object;
+#define tui_strongify(object) \
+    autoreleasepool {}           \
+    __strong typeof(weak##object) object = weak##object;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -663,6 +669,9 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatNotify_SendMessageSubKey_Code @"TUICore_TUIChatNotify_SendMessageSubKey_Code"
 #define TUICore_TUIChatNotify_SendMessageSubKey_Desc @"TUICore_TUIChatNotify_SendMessageSubKey_Desc"
 #define TUICore_TUIChatNotify_SendMessageSubKey_Message @"TUICore_TUIChatNotify_SendMessageSubKey_Message"
+// 消息 cellData 被展示的通知
+// The notification of displaying the message cell data
+#define TUICore_TUIChatNotify_MessageDisplayedSubKey @"TUICore_TUIChatNotify_MessageDisplayedSubKey"
 
 #pragma mark - TUICore_TUIChat_Extension
 #define TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall @"TUICore_TUIChatExtension_GetMoreCellInfo_VideoCall"
@@ -801,12 +810,11 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 #pragma mark - TUICore_TUIConversationGroupNotify
 #define TUICore_TUIConversationGroupNotify @"TUICore_TUIConversationGroupNotify"
-#define TUICore_TUIConversationGroupNotify_GroupListLoadKey @"TUICore_TUIConversationGroupNotify_GroupListLoadKey"
+#define TUICore_TUIConversationGroupNotify_GroupListReloadKey @"TUICore_TUIConversationGroupNotify_GroupListReloadKey"
 #define TUICore_TUIConversationGroupNotify_GroupAddKey @"TUICore_TUIConversationGroupNotify_GroupAddKey"
 #define TUICore_TUIConversationGroupNotify_GroupUpdateKey @"TUICore_TUIConversationGroupNotify_GroupUpdateKey"
 #define TUICore_TUIConversationGroupNotify_GroupRenameKey @"TUICore_TUIConversationGroupNotify_GroupRenameKey"
 #define TUICore_TUIConversationGroupNotify_GroupDeleteKey @"TUICore_TUIConversationGroupNotify_GroupDeleteKey"
-#define TUICore_TUIConversationGroupNotify_GroupSortKey @"TUICore_TUIConversationGroupNotify_GroupSortKey"
 
 #pragma mark - UICore_TUIConversationGroupExtension
 #define TUICore_TUIConversationGroupExtension_ConversationGroupListSort_ClassicExtensionID \
@@ -1109,8 +1117,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 #pragma mark - TUICore_TUIRoomImAccessFactory
 #define TUICore_TUIRoomImAccessFactory @"TUICore_TUIRoomImAccessFactory"
-#define TUICore_TUIRoomImAccessFactory_GetRoomMessageContentViewMethod @"TUICore_TUIRoomImAccessFactory_GetRoomMessageContentViewMethod"
-#define TUICore_TUIRoomImAccessFactory_GetRoomMessageContentViewMethod_Message @"TUICore_TUIRoomImAccessFactory_GetRoomMessageContentViewMethod_Message"
+#define TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod @"TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod"
+#define TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod_Message @"TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod_Message"
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -1148,3 +1156,11 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     }
 
 #endif /* THeader_h */
+
+
+#pragma mark - TUICore_TUIDebugService
+#define TUICore_TUIDebugService @"TUICore_TUIDebugService"
+#define TUICore_TUIDebugService_ShowDebugView @"TUICore_TUIDebugService_ShowDebugView"
+
+#define TUICore_TUIDebugService_PrepareSetting @"TUICore_TUIDebugService_PrepareSetting"
+#define TUICore_TUIDebugService_PrepareSettingView @"TUICore_TUIDebugService_PrepareSettingView"

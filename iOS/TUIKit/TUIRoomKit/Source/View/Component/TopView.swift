@@ -29,7 +29,6 @@ class TopView: UIView {
     
     let meetingNameLabel: UILabel = {
         let label = UILabel()
-        label.text = EngineManager.shared.store.roomInfo.name
         label.textColor = UIColor(0xD1D9EC)
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
@@ -139,6 +138,7 @@ class TopView: UIView {
     
     func bindInteraction() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dropDownAction(sender:)))
+        meetingNameLabel.text = viewModel.engineManager.store.roomInfo.name
         meetingTitleView.addGestureRecognizer(tap)
         viewModel.viewResponder = self
         viewModel.updateTimerLabelText()
@@ -163,8 +163,7 @@ extension TopView: TopViewModelResponder {
 extension TopView {
 
     func injectReport() {
-        let roomInfo = EngineManager.shared.store.roomInfo
-        if EngineManager.shared.store.currentUser.userId == roomInfo.ownerId {
+        if viewModel.store.currentUser.userId == viewModel.store.roomInfo.roomId {
            return
         }
         guard let menuView =  menuButtons.first else{ return}
@@ -185,7 +184,7 @@ extension TopView {
     @objc func clickReport() {
         let selector = NSSelectorFromString("showReportAlertWithRoomId:ownerId:")
         if responds(to: selector) {
-            let roomInfo = EngineManager.shared.store.roomInfo
+            let roomInfo = viewModel.store.roomInfo
             perform(selector, with: roomInfo.roomId, with: roomInfo.ownerId)
         }
     }

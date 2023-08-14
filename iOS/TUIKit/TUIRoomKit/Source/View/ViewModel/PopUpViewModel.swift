@@ -31,9 +31,6 @@ class PopUpViewModel {
     let height: CGFloat?
     var backgroundColor: UIColor?
     weak var viewResponder: PopUpViewResponder?
-    var engineManager: EngineManager {
-        EngineManager.shared
-    }
     
     init(viewType: PopUpViewType, height: CGFloat?) {
         self.viewType = viewType

@@ -21,12 +21,13 @@ class TUIRoomImAccessFactory: NSObject {
 
 extension TUIRoomImAccessFactory: TUIObjectProtocol {
     func onCreateObject(_ method: String, param: [AnyHashable : Any]?) -> Any? {
-        if method == TUICore_TUIRoomImAccessFactory_GetRoomMessageContentViewMethod {
-            guard let message = param?[TUICore_TUIRoomImAccessFactory_GetRoomMessageContentViewMethod_Message] as?
+        if method == TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod {
+            guard let message = param?[TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod_Message] as?
                     V2TIMMessage else { return UIView(frame: .zero) }
-            let roomMessageModel = RoomMessageModel(message: message)
-            let viewModel = RoomMessageContentViewModel(message: roomMessageModel)
-            let view = RoomMessageContentView(viewModel: viewModel)
+            let roomMessageModel = RoomMessageModel()
+            roomMessageModel.updateMessage(message: message)
+            let viewModel = RoomMessageViewModel(message: roomMessageModel)
+            let view = RoomMessageView(viewModel: viewModel)
             return view
         }
         return nil

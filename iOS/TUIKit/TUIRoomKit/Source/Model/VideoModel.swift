@@ -18,7 +18,7 @@ class VideoModel {
     var videoFps: Int = 15
     var videoResolution: TRTCVideoResolution = ._960_540
     var videoBitrate: Int = 900
-    var isMirror: Bool = false
+    var isMirror: Bool = true
     var isFrontCamera: Bool = true
     var videoQuality: TUIVideoQuality = .quality540P
     var bitrate: BitrateTableData = BitrateTableData(resolutionName: "540 * 960",

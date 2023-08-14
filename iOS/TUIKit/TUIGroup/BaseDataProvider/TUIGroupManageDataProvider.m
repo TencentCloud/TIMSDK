@@ -34,6 +34,8 @@
     [V2TIMManager.sharedInstance setGroupInfo:groupInfo
         succ:^{
           weakSelf.muteAll = mute;
+          weakSelf.groupInfo.allMuted = mute;
+          [weakSelf setupGroupInfo:weakSelf.groupInfo];
           if (completion) {
               completion(0, nil);
           }

@@ -18,8 +18,6 @@ extension NSObject {
         TUICore.registerExtension(TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID, object: TUICallKitService.instance)
         TUICore.registerExtension(TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID, object: TUICallKitService.instance)
         TUICore.registerExtension(TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID, object: TUICallKitService.instance)
-        
-        guard let themePath = TUIGetBundlePath("TUICallKitTheme", TUICallKitBundle_Key_Class) else { return }
-        TUIThemeManager.share().registerThemeResourcePath(themePath, for: TUIThemeModule.calling)
+    
     }
 }

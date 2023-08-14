@@ -61,12 +61,15 @@
 
 - (void)sendMessage:(V2TIMMessage *)msg;
 
+- (void)sendMessage:(V2TIMMessage *)msg placeHolderCellData:(TUIMessageCellData *)placeHolderCellData;
+
 - (void)clearUImsg;
 
 - (void)scrollToBottom:(BOOL)animate;
 
 - (void)setConversation:(TUIChatConversationModel *)conversationData;
 
+- (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData;
 /**
  * 开启多选模式后，获取当前选中的结果
  * 如果多选模式关闭，返回空数组

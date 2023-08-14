@@ -8,14 +8,14 @@
 
 #import "TUIContactController_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIFloatViewController.h>
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIThemeManager.h>
-#import "ReactiveObjC.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 #import "TUIBlackListController_Minimalist.h"
 #import "TUICommonContactCell_Minimalist.h"
 #import "TUIContactActionCell_Minimalist.h"
 #import "TUIFindContactViewController_Minimalist.h"
-#import "TUIFloatViewController.h"
 #import "TUIFriendProfileController_Minimalist.h"
 #import "TUIFriendRequestViewController_Minimalist.h"
 #import "TUIGroupConversationListController_Minimalist.h"

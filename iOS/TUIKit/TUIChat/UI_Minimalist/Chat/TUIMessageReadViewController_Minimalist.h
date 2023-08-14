@@ -13,7 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class TUIMessageDataProvider_Minimalist;
+@class TUIMessageDataProvider;
+
 @interface TUIMessageReadViewController_Minimalist : UIViewController
 @property(nonatomic, strong) Class alertCellClass;
 @property(nonatomic, strong) TUIMessageCellData *alertViewCellData;
@@ -23,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(copy, nonatomic) void (^viewDidShowHandler)(TUIMessageCell *alertView);
 
 - (instancetype)initWithCellData:(TUIMessageCellData *)data
-                    dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider
+                    dataProvider:(TUIMessageDataProvider *)dataProvider
            showReadStatusDisable:(BOOL)showReadStatusDisable
                  c2cReceiverName:(NSString *)name
                c2cReceiverAvatar:(NSString *)avatarUrl;

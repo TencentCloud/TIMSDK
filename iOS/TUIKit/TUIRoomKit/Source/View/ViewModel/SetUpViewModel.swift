@@ -40,7 +40,13 @@ class SetUpViewModel {
     let filePath: String
     let appGroupString: String
     var engineManager: EngineManager {
-        EngineManager.shared
+        EngineManager.createInstance()
+    }
+    var videoSetting: VideoModel {
+        engineManager.store.videoSetting
+    }
+    var audioSetting: AudioModel {
+        engineManager.store.audioSetting
     }
     
     let bitrateTable = [BitrateTableData](
@@ -149,7 +155,7 @@ class SetUpViewModel {
     func createVideoItem() {
         let resolutionItem = ListCellItemData()
         resolutionItem.titleText = .resolutionText
-        resolutionItem.messageText = engineManager.store.videoSetting.bitrate.resolutionName
+        resolutionItem.messageText = videoSetting.bitrate.resolutionName
         resolutionItem.hasOverAllAction = true
         resolutionItem.action = { [weak self] sender in
             guard let self = self else { return }
@@ -159,7 +165,7 @@ class SetUpViewModel {
         
         let frameRateItem = ListCellItemData()
         frameRateItem.titleText = .frameRateText
-        frameRateItem.messageText = String(engineManager.store.videoSetting.videoFps)
+        frameRateItem.messageText = String(videoSetting.videoFps)
         frameRateItem.hasOverAllAction = true
         frameRateItem.action = { [weak self] sender in
             guard let self = self else { return }
@@ -171,11 +177,11 @@ class SetUpViewModel {
         bitrateItem.titleText = .bitrateText
         bitrateItem.hasSlider = true
         bitrateItem.hasSliderLabel = true
-        bitrateItem.minimumValue = engineManager.store.videoSetting.bitrate.minBitrate
-        bitrateItem.maximumValue = engineManager.store.videoSetting.bitrate.maxBitrate
+        bitrateItem.minimumValue = videoSetting.bitrate.minBitrate
+        bitrateItem.maximumValue = videoSetting.bitrate.maxBitrate
         bitrateItem.sliderUnit = "kbps"
-        bitrateItem.sliderStep = engineManager.store.videoSetting.bitrate.stepBitrate
-        bitrateItem.sliderDefault = Float(engineManager.store.videoSetting.videoBitrate)
+        bitrateItem.sliderStep = videoSetting.bitrate.stepBitrate
+        bitrateItem.sliderDefault = Float(videoSetting.videoBitrate)
         bitrateItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISlider else { return }
             self.bitrateAction(sender: view)
@@ -185,7 +191,7 @@ class SetUpViewModel {
         let localMirrorItem = ListCellItemData()
         localMirrorItem.titleText = .localMirrorText
         localMirrorItem.hasSwitch = true
-        localMirrorItem.isSwitchOn = engineManager.store.videoSetting.isMirror
+        localMirrorItem.isSwitchOn = videoSetting.isMirror
         localMirrorItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISwitch else { return }
             self.localMirrorAction(sender: view)
@@ -198,11 +204,11 @@ class SetUpViewModel {
     }
     
     func changeResolutionAction(index: Int) {
-        engineManager.store.videoSetting.bitrate = bitrateTable[index]
-        engineManager.store.videoSetting.videoBitrate = Int(engineManager.store.videoSetting.bitrate.defaultBitrate)
-        engineManager.store.videoSetting.videoResolution = bitrateTable[index].resolution
+        videoSetting.bitrate = bitrateTable[index]
+        videoSetting.videoBitrate = Int(videoSetting.bitrate.defaultBitrate)
+        videoSetting.videoResolution = bitrateTable[index].resolution
         guard let videoItem = videoItems[safe: VideoItemType.resolutionItemType.rawValue] else { return }
-        videoItem.messageText = engineManager.store.videoSetting.bitrate.resolutionName
+        videoItem.messageText = videoSetting.bitrate.resolutionName
         updateSetUpItemView(item: videoItem, listIndex: VideoItemType.resolutionItemType.rawValue, pageIndex: SetUpItemType.videoType.rawValue)
         updateBitrateItemView(index: index)
     }
@@ -211,27 +217,27 @@ class SetUpViewModel {
         guard let videoItem = videoItems[safe: VideoItemType.frameRateItemType.rawValue] else { return }
         videoItem.messageText = String(frameRateArray[index])
         updateSetUpItemView(item: videoItem, listIndex: VideoItemType.frameRateItemType.rawValue, pageIndex: SetUpItemType.videoType.rawValue)
-        engineManager.store.videoSetting.videoFps = frameRateArray[index]
+        videoSetting.videoFps = frameRateArray[index]
         updateVideoEncoderParam()
     }
     
     func updateBitrateItemView(index: Int) {
-        engineManager.store.videoSetting.bitrate = bitrateTable[index]
-        engineManager.store.videoSetting.videoBitrate = Int(engineManager.store.videoSetting.bitrate.defaultBitrate)
+        videoSetting.bitrate = bitrateTable[index]
+        videoSetting.videoBitrate = Int(videoSetting.bitrate.defaultBitrate)
         updateVideoEncoderParam()
         guard let bitrateItem = videoItems[safe: VideoItemType.bitrateItemType.rawValue] else { return }
-        bitrateItem.minimumValue = engineManager.store.videoSetting.bitrate.minBitrate
-        bitrateItem.maximumValue = engineManager.store.videoSetting.bitrate.maxBitrate
-        bitrateItem.sliderDefault = engineManager.store.videoSetting.bitrate.defaultBitrate
-        bitrateItem.sliderStep = engineManager.store.videoSetting.bitrate.stepBitrate
+        bitrateItem.minimumValue = videoSetting.bitrate.minBitrate
+        bitrateItem.maximumValue = videoSetting.bitrate.maxBitrate
+        bitrateItem.sliderDefault = videoSetting.bitrate.defaultBitrate
+        bitrateItem.sliderStep = videoSetting.bitrate.stepBitrate
         updateSetUpItemView(item: bitrateItem, listIndex: VideoItemType.bitrateItemType.rawValue, pageIndex: SetUpItemType.videoType.rawValue)
     }
     
     func updateVideoEncoderParam() {
         let param = TRTCVideoEncParam()
-        param.videoResolution = engineManager.store.videoSetting.videoResolution
-        param.videoBitrate = Int32(engineManager.store.videoSetting.videoBitrate)
-        param.videoFps = Int32(engineManager.store.videoSetting.videoFps)
+        param.videoResolution = videoSetting.videoResolution
+        param.videoBitrate = Int32(videoSetting.videoBitrate)
+        param.videoFps = Int32(videoSetting.videoFps)
         param.enableAdjustRes = true
         engineManager.roomEngine.getTRTCCloud().setVideoEncoderParam(param)
     }
@@ -241,17 +247,17 @@ class SetUpViewModel {
     }
     
     func bitrateAction(sender: UISlider) {
-        let bitrate = Int(sender.value) * Int(engineManager.store.videoSetting.bitrate.stepBitrate)
-        engineManager.store.videoSetting.videoBitrate = bitrate
+        let bitrate = Int(sender.value) * Int(videoSetting.bitrate.stepBitrate)
+        videoSetting.videoBitrate = bitrate
         updateVideoEncoderParam()
     }
     
     func localMirrorAction(sender: UISwitch) {
-        engineManager.store.videoSetting.isMirror = sender.isOn
+        videoSetting.isMirror = sender.isOn
         let params = TRTCRenderParams()
         params.fillMode = .fill
         params.rotation = ._0
-        if engineManager.store.videoSetting.isMirror {
+        if videoSetting.isMirror {
             params.mirrorType = .enable
         } else {
             params.mirrorType = .disable
@@ -267,7 +273,7 @@ class SetUpViewModel {
         captureVolumeItem.minimumValue = 0
         captureVolumeItem.maximumValue = 100
         captureVolumeItem.sliderStep = 1
-        captureVolumeItem.sliderDefault = Float(engineManager.store.audioSetting.captureVolume)
+        captureVolumeItem.sliderDefault = Float(audioSetting.captureVolume)
         captureVolumeItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISlider else { return }
             self.captureVolumeAction(sender: view)
@@ -281,7 +287,7 @@ class SetUpViewModel {
         playingVolumeItem.minimumValue = 0
         playingVolumeItem.maximumValue = 100
         playingVolumeItem.sliderStep = 1
-        playingVolumeItem.sliderDefault = Float(engineManager.store.audioSetting.playVolume)
+        playingVolumeItem.sliderDefault = Float(audioSetting.playVolume)
         playingVolumeItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISlider else { return }
             self.playingVolumeAction(sender: view)
@@ -291,7 +297,7 @@ class SetUpViewModel {
         let volumePromptItem = ListCellItemData()
         volumePromptItem.titleText = .volumePromptText
         volumePromptItem.hasSwitch = true
-        volumePromptItem.isSwitchOn = engineManager.store.audioSetting.volumePrompt
+        volumePromptItem.isSwitchOn = audioSetting.volumePrompt
         volumePromptItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISwitch else { return }
             self.volumePromptAction(sender: view)
@@ -300,18 +306,18 @@ class SetUpViewModel {
     }
     
     func captureVolumeAction(sender: UISlider) {
-        engineManager.store.audioSetting.captureVolume = Int(sender.value)
-        engineManager.roomEngine.getTRTCCloud().setAudioCaptureVolume(engineManager.store.audioSetting.captureVolume)
+        audioSetting.captureVolume = Int(sender.value)
+        engineManager.roomEngine.getTRTCCloud().setAudioCaptureVolume(audioSetting.captureVolume)
     }
     
     func playingVolumeAction(sender: UISlider) {
-        engineManager.store.audioSetting.playVolume = Int(sender.value)
-        engineManager.roomEngine.getTRTCCloud().setAudioPlayoutVolume(engineManager.store.audioSetting.playVolume)
+        audioSetting.playVolume = Int(sender.value)
+        engineManager.roomEngine.getTRTCCloud().setAudioPlayoutVolume(audioSetting.playVolume)
     }
     
     func volumePromptAction(sender: UISwitch) {
-        engineManager.store.audioSetting.volumePrompt = sender.isOn
-        if engineManager.store.audioSetting.volumePrompt {
+        audioSetting.volumePrompt = sender.isOn
+        if audioSetting.volumePrompt {
             engineManager.roomEngine.getTRTCCloud().enableAudioVolumeEvaluation(300, enable_vad: true)
         } else {
             engineManager.roomEngine.getTRTCCloud().enableAudioVolumeEvaluation(0, enable_vad: false)
@@ -322,6 +328,7 @@ class SetUpViewModel {
         if #available(iOS 12.0, *) {
             engineManager.roomEngine.startScreenCapture(appGroup: appGroupString)
             BroadcastLauncher.launch()
+            ScreenCaptureMaskView.show()
         } else {
             viewResponder?.makeToast(text: .versionLowToastText)
         }

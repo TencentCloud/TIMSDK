@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "TUIBaseMessageControllerDelegate_Minimalist.h"
 #import "TUIChatConversationModel.h"
-#import "TUIMessageDataProvider_Minimalist.h"
+#import "TUIMessageDataProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) V2TIMMergerElem *mergerElem;
 @property(nonatomic, copy) dispatch_block_t willCloseCallback;
 @property(nonatomic, strong) TUIChatConversationModel *conversationData;
-@property(nonatomic, strong) TUIMessageDataProvider_Minimalist *parentPageDataProvider;
+@property(nonatomic, strong) TUIMessageDataProvider *parentPageDataProvider;
 
 @end
 

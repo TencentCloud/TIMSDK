@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <TIMCommon/TUIMessageCellData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,9 +28,14 @@ typedef void (^TUIChatMediaDataProviderResultCallback)(BOOL success, NSString *_
 - (void)onProvideImage:(NSString *)imageUrl;
 - (void)onProvideImageError:(NSString *)errorMessage;
 
-- (void)onProvideVideo:(NSString *)videoUrl snapshot:(NSString *)snapshotUrl duration:(NSInteger)duration;
+- (void)onProvideVideo:(NSString *)videoUrl
+               snapshot:(NSString *)snapshotUrl
+               duration:(NSInteger)duration
+    placeHolderCellData:(TUIMessageCellData *)placeHolderCellData;
+- (void)onProvidePlaceholderVideoSnapshot:(NSString *)snapshotUrl
+                                SnapImage:(UIImage *)img
+                               Completion:(void (^__nullable)(BOOL finished, TUIMessageCellData *placeHolderCellData))completion;
 - (void)onProvideVideoError:(NSString *)errorMessage;
-
 - (void)onProvideFile:(NSString *)fileUrl filename:(NSString *)filename fileSize:(NSInteger)fileSize;
 - (void)onProvideFileError:(NSString *)errorMessage;
 

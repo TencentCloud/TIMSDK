@@ -87,44 +87,60 @@ extension BottomView: BottomViewModelResponder {
         }
         view.backgroundColor = item.backgroundColor ?? UIColor(0x2A2D38)
     }
-    func showExitRoomAlert() {
-        let alertVC = UIAlertController(title: .audienceLogoutTitle,
-                                        message: nil,
-                                        preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: .destroyRoomCancelTitle, style: .cancel, handler: nil)
-        let sureAction = UIAlertAction(title: .logoutOkText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.viewModel.exitRoomLogic(isHomeowner: false)
-        }
-        alertVC.addAction(cancelAction)
-        alertVC.addAction(sureAction)
-        RoomRouter.shared.presentAlert(alertVC)
-    }
-    func showDestroyRoomAlert() {
-        let alertController = UIAlertController(title: .dismissMeetingTitleText, message: .appointNewHostText, preferredStyle: .actionSheet)
-        let leaveRoomAction = UIAlertAction(title: .leaveMeetingText, style: .default) { _ in
-            RoomRouter.shared.presentPopUpViewController(viewType: .transferMasterViewType,height: nil)
-        }
+    
+    func showExitRoomAlert(isRoomOwner: Bool, isOnlyOneUserInRoom: Bool) {
+        var title: String?
+        var message: String?
         let dismissRoomAction = UIAlertAction(title: .dismissMeetingText, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.viewModel.exitRoomLogic(isHomeowner: true)
+            self.viewModel.exitRoom(isHomeowner: true)
         }
-        let cancelAction = UIAlertAction(title: .cancelText, style: .cancel) { _ in
+        let transferMasterAction = UIAlertAction(title: .leaveMeetingText, style: .default) { _ in
+            RoomRouter.shared.presentPopUpViewController(viewType: .transferMasterViewType,height: nil)
         }
-        alertController.addAction(leaveRoomAction)
-        alertController.addAction(dismissRoomAction)
-        alertController.addAction(cancelAction)
-        RoomRouter.shared.presentAlert(alertController)
-        
+        let leaveRoomAction = UIAlertAction(title: .leaveMeetingText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.exitRoom(isHomeowner: false)
+        }
+        let cancelAction = UIAlertAction(title: .cancelText, style: .cancel, handler: nil)
+        let alertVC = UIAlertController(title: title,
+                                        message: message,
+                                        preferredStyle: .actionSheet)
+        if isRoomOwner {
+            if isOnlyOneUserInRoom {
+                title = .destroyRoomTitle
+                message = nil
+                alertVC.addAction(dismissRoomAction)
+                alertVC.addAction(cancelAction)
+            } else {
+                title = .dismissMeetingTitle
+                message = .appointNewHostText
+                alertVC.addAction(transferMasterAction)
+                alertVC.addAction(dismissRoomAction)
+                alertVC.addAction(cancelAction)
+            }
+        } else {
+            title = .leaveRoomTitle
+            message = nil
+            alertVC.addAction(leaveRoomAction)
+            alertVC.addAction(cancelAction)
+        }
+        alertVC.title = title
+        alertVC.message = message
+        RoomRouter.shared.presentAlert(alertVC)
     }
+    
     func makeToast(text: String) {
         RoomRouter.makeToast(toast: text)
     }
 }
 
 private extension String {
-    static var audienceLogoutTitle: String {
+    static var leaveRoomTitle: String {
         localized("TUIRoom.sure.leave.room")
+    }
+    static var destroyRoomTitle: String {
+        localized("TUIRoom.sure.destroy.room")
     }
     static var destroyRoomCancelTitle: String {
         localized("TUIRoom.destroy.room.cancel")
@@ -132,7 +148,7 @@ private extension String {
     static var logoutOkText: String {
         localized("TUIRoom.ok")
     }
-    static var dismissMeetingTitleText: String {
+    static var dismissMeetingTitle: String {
         localized("TUIRoom.dismiss.meeting.Title")
     }
     static var appointNewHostText: String {

@@ -11,7 +11,7 @@ import Foundation
 protocol RoomMainViewFactory {
     func makeBottomView() -> UIView
     func makeTopView() -> UIView
-    func makeMiddleView() -> UIView
+    func makeVideoSeatView() -> UIView
     func makeBeautyView() -> UIView?
     func makeRaiseHandNoticeView() -> UIView
 }
@@ -35,7 +35,7 @@ class RoomMainRootView: UIView {
     }()
     
     lazy var videoSeatView: UIView = {
-        return viewFactory.makeMiddleView()
+        return viewFactory.makeVideoSeatView()
     }()
     
     lazy var bottomView: UIView = {
@@ -134,9 +134,9 @@ class RoomMainRootView: UIView {
 extension RoomMainRootView: RoomMainViewResponder {
     func showSelfBecomeRoomOwnerAlert() {
         let alertVC = UIAlertController(title: .haveBecomeMasterText,
-                                        message: .haveTransferredMaster,
+                                        message: nil,
                                         preferredStyle: .alert)
-        let sureAction = UIAlertAction(title: .agreeText, style: .default) { _ in
+        let sureAction = UIAlertAction(title: .alertOkText, style: .cancel) { _ in
         }
         alertVC.addAction(sureAction)
         RoomRouter.shared.presentAlert(alertVC)
@@ -152,13 +152,10 @@ extension RoomMainRootView: RoomMainViewResponder {
 }
 
 private extension String {
-    static var agreeText: String {
-        localized("TUIRoom.agree")
+    static var alertOkText: String {
+        localized("TUIRoom.ok")
     }
     static var haveBecomeMasterText: String {
         localized("TUIRoom.have.become.master")
-    }
-    static var haveTransferredMaster: String {
-        localized("TUIRoom.have.transferred.master.to.you")
     }
 }

@@ -11,17 +11,17 @@
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/TUITool.h>
 #import <TUICore/UIColor+TUIHexColor.h>
-#import "TUIImageMessageCellData_Minimalist.h"
-#import "TUIMemberCellData_Minimalist.h"
+#import "TUIImageMessageCellData.h"
+#import "TUIMemberCellData.h"
 #import "TUIMemberCell_Minimalist.h"
-#import "TUIMessageDataProvider_Minimalist.h"
-#import "TUIVideoMessageCellData_Minimalist.h"
+#import "TUIMessageDataProvider.h"
+#import "TUIVideoMessageCellData.h"
 
 @interface TUIMessageReadViewController_Minimalist () <UITableViewDelegate, UITableViewDataSource>
 
 @property(nonatomic, strong) TUIMessageCellData *cellData;
 @property(nonatomic, assign) BOOL showReadStatusDisable;
-@property(nonatomic, strong) TUIMessageDataProvider_Minimalist *dataProvider;
+@property(nonatomic, strong) TUIMessageDataProvider *dataProvider;
 
 @property(nonatomic, strong) UIView *messageBackView;
 @property(nonatomic, strong) UITableView *tableView;
@@ -75,7 +75,7 @@
 
 #pragma mark - Public
 - (instancetype)initWithCellData:(TUIMessageCellData *)data
-                    dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider
+                    dataProvider:(TUIMessageDataProvider *)dataProvider
            showReadStatusDisable:(BOOL)showReadStatusDisable
                  c2cReceiverName:(NSString *)name
                c2cReceiverAvatar:(NSString *)avatarUrl {
@@ -162,7 +162,7 @@
 
 - (void)getReadMembersWithCompletion:(void (^)(int code, NSString *desc, NSArray *members, BOOL isFinished))completion {
     @weakify(self);
-    [TUIMessageDataProvider_Minimalist
+    [TUIMessageDataProvider
         getReadMembersOfMessage:self.cellData.innerMessage
                          filter:V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ
                         nextSeq:self.readSeq
@@ -182,7 +182,7 @@
 
 - (void)getUnreadMembersWithCompletion:(void (^)(int code, NSString *desc, NSArray *members, BOOL isFinished))completion {
     @weakify(self);
-    [TUIMessageDataProvider_Minimalist
+    [TUIMessageDataProvider
         getReadMembersOfMessage:self.cellData.innerMessage
                          filter:V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_UNREAD
                         nextSeq:self.unreadSeq
@@ -214,14 +214,14 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     TUICommonCellData *data = [self members][indexPath.row];
     @weakify(self);
-    if ([data isKindOfClass:TUIMemberDescribeCellData_Minimalist.class]) {
+    if ([data isKindOfClass:TUIMemberDescribeCellData.class]) {
         return;
-    } else if ([data isKindOfClass:TUIMemberCellData_Minimalist.class]) {
+    } else if ([data isKindOfClass:TUIMemberCellData.class]) {
         if ([self isGroupMessageRead]) {
             if (indexPath.row >= [self members].count) {
                 return;
             }
-            TUIMemberCellData_Minimalist *currentData = (TUIMemberCellData_Minimalist *)data;
+            TUIMemberCellData *currentData = (TUIMemberCellData *)data;
             [self getUserOrFriendProfileVCWithUserID:currentData.userID
                                            SuccBlock:^(UIViewController *vc) {
                                              @strongify(self);
@@ -251,7 +251,7 @@
     TUICommonCellData *data = [self members][indexPath.row];
     TUICommonTableViewCell *cell = nil;
 
-    if ([data isKindOfClass:TUIMemberDescribeCellData_Minimalist.class]) {
+    if ([data isKindOfClass:TUIMemberDescribeCellData.class]) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"TUIMemberDescribeCell_Minimalist" forIndexPath:indexPath];
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:kMemberCellReuseId forIndexPath:indexPath];
@@ -262,7 +262,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     TUICommonCellData *data = [self members][indexPath.row];
-    if ([data isKindOfClass:TUIMemberDescribeCellData_Minimalist.class]) {
+    if ([data isKindOfClass:TUIMemberDescribeCellData.class]) {
         return kScale390(57);
     } else {
         return kScale390(57);
@@ -275,13 +275,13 @@
 
     if ([self isGroupMessageRead]) {
         if (self.readMembers.count > 0) {
-            TUIMemberDescribeCellData_Minimalist *describeCellData = [[TUIMemberDescribeCellData_Minimalist alloc] init];
+            TUIMemberDescribeCellData *describeCellData = [[TUIMemberDescribeCellData alloc] init];
             describeCellData.title = TIMCommonLocalizableString(GroupReadBy);
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_all_people_read")];
             [dataArray addObject:describeCellData];
 
             for (V2TIMGroupMemberInfo *member in self.readMembers) {
-                TUIMemberCellData_Minimalist *data = [[TUIMemberCellData_Minimalist alloc] initWithUserID:member.userID
+                TUIMemberCellData *data = [[TUIMemberCellData alloc] initWithUserID:member.userID
                                                                                                  nickName:member.nickName
                                                                                              friendRemark:member.friendRemark
                                                                                                  nameCard:member.nameCard
@@ -292,14 +292,14 @@
         }
 
         if (self.unreadMembers.count > 0) {
-            TUIMemberDescribeCellData_Minimalist *describeCellData = [[TUIMemberDescribeCellData_Minimalist alloc] init];
+            TUIMemberDescribeCellData *describeCellData = [[TUIMemberDescribeCellData alloc] init];
             describeCellData.title = TIMCommonLocalizableString(GroupDeliveredTo);
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_some_people_read")];
 
             [dataArray addObject:describeCellData];
 
             for (V2TIMGroupMemberInfo *member in self.unreadMembers) {
-                TUIMemberCellData_Minimalist *data = [[TUIMemberCellData_Minimalist alloc] initWithUserID:member.userID
+                TUIMemberCellData *data = [[TUIMemberCellData alloc] initWithUserID:member.userID
                                                                                                  nickName:member.nickName
                                                                                              friendRemark:member.friendRemark
                                                                                                  nameCard:member.nameCard
@@ -315,7 +315,7 @@
         NSString *detail = nil;
         BOOL isPeerRead = self.cellData.messageReceipt.isPeerRead;
 
-        TUIMemberDescribeCellData_Minimalist *describeCellData = [[TUIMemberDescribeCellData_Minimalist alloc] init];
+        TUIMemberDescribeCellData *describeCellData = [[TUIMemberDescribeCellData alloc] init];
         if (isPeerRead) {
             describeCellData.title = TIMCommonLocalizableString(C2CReadBy);
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_all_people_read")];
@@ -324,7 +324,7 @@
             describeCellData.icon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_status_some_people_read")];
         }
 
-        TUIMemberCellData_Minimalist *data = [[TUIMemberCellData_Minimalist alloc] initWithUserID:self.cellData.innerMessage.userID
+        TUIMemberCellData *data = [[TUIMemberCellData alloc] initWithUserID:self.cellData.innerMessage.userID
                                                                                          nickName:nil
                                                                                      friendRemark:self.c2cReceiverName
                                                                                          nameCard:nil

@@ -101,7 +101,7 @@
 "TUIKitErrorSVRA2UpInvalid" = "Ticket 过期。Ticket 是根据 UserSig 生成的内部票据，Ticket 的有效期小于或等于 UserSig 的有效期。请重新调用 TIMManager.getInstance().login 登录接口生成新的 Ticket。";
 "TUIKitErrorSVRA2DownInvalid" = "票据验证没通过或者被安全打击。请重新调用 TIMManager.getInstance().login 登录接口生成新的票据。";
 "TUIKitErrorSVRSSOEmpeyKey" = "不允许空 Key。";
-"TUIKitErrorSVRSSOUinInvalid" = "Key 中的帐号和请求包头的帐号不匹配。";
+"TUIKitErrorSVRSSOUinInvalid" = "Key 中的账号和请求包头的账号不匹配。";
 "TUIKitErrorSVRSSOVCodeTimeout" = "验证码下发超时。";
 "TUIKitErrorSVRSSONoImeiAndA2" = "需要带上 Key 和 Ticket。";
 "TUIKitErrorSVRSSOCookieInvalid" = "Cookie 检查不匹配。";
@@ -135,11 +135,11 @@
 "TUIKitErrorSVRCommonRestFreqLimit" = "REST 接口调用频率超过限制，请降低请求频率。";
 "TUIKitErrorSVRCommonRequestTimeout" = "服务请求超时或 HTTP 请求格式错误，请检查并重试。";
 "TUIKitErrorSVRCommonInvalidRes" = "请求资源错误，请检查请求 URL。";
-"TUIKitErrorSVRCommonIDNotAdmin" = "REST API 请求的 Identifier 字段请填写 App 管理员帐号。";
+"TUIKitErrorSVRCommonIDNotAdmin" = "REST API 请求的 Identifier 字段请填写 App 管理员账号。";
 "TUIKitErrorSVRCommonSdkappidFreqLimit" = "SDKAppID 请求频率超限，请降低请求频率。";
 "TUIKitErrorSVRCommonSdkappidMiss" = "REST 接口需要带 SDKAppID，请检查请求 URL 中的 SDKAppID。";
 "TUIKitErrorSVRCommonRspJsonParseFailed" = "HTTP 响应包 JSON 解析错误。";
-"TUIKitErrorSVRCommonExchangeAccountTimeout" = "置换帐号超时。";
+"TUIKitErrorSVRCommonExchangeAccountTimeout" = "置换账号超时。";
 "TUIKitErrorSVRCommonInvalidIdFormat" = "请求包体 Identifier 类型错误，请确认 Identifier 为字符串格式。";
 "TUIKitErrorSVRCommonSDkappidForbidden" = "SDKAppID 被禁用";
 "TUIKitErrorSVRCommonReqForbidden" = "请求被禁用";
@@ -156,7 +156,7 @@
 "TUIKitErrorSVRAccountUserSigPublicKeyNotFound" = "验证 UserSig 时公钥不存在";
 "TUIKitErrorSVRAccountUserSigSdkAppidNotFount" = "SDKAppID 未找到，请在云通信 IM 控制台确认应用信息。";
 "TUIKitErrorSVRAccountInvalidUserSig" = "UserSig 已经失效，请重新生成，再次尝试。";
-"TUIKitErrorSVRAccountNotFound" = "请求的用户帐号不存在。";
+"TUIKitErrorSVRAccountNotFound" = "请求的用户账号不存在。";
 "TUIKitErrorSVRAccountSecRstr" = "安全原因被限制。";
 "TUIKitErrorSVRAccountInternalTimeout" = "服务端内部超时，请重试。";
 "TUIKitErrorSVRAccountInvalidCount" = "请求中批量数量不合法。";
@@ -164,12 +164,12 @@
 "TUIKitErrorSVRAccountAdminRequired" = "请求需要 App 管理员权限。";
 "TUIKitErrorSVRAccountLowSDKVersion" = "您的SDK版本过低，请升级到最新版本。";
 "TUIKitErrorSVRAccountFreqLimit" = "因失败且重试次数过多导致被限制，请检查 UserSig 是否正确，一分钟之后再试。";
-"TUIKitErrorSVRAccountBlackList" = "帐号被拉入黑名单。";
-"TUIKitErrorSVRAccountCountLimit" = "创建帐号数量超过免费体验版数量限制，请升级为专业版。";
+"TUIKitErrorSVRAccountBlackList" = "账号被拉入黑名单。";
+"TUIKitErrorSVRAccountCountLimit" = "创建账号数量超过免费体验版数量限制，请升级为专业版。";
 "TUIKitErrorSVRAccountInternalError" = "服务端内部错误，请重试。";
 "TUIKitErrorSVRProfileInvalidParameters" = "请求参数错误，请根据错误描述检查请求是否正确。";
-"TUIKitErrorSVRProfileAccountMiss" = "请求参数错误，没有指定需要拉取资料的用户帐号。";
-"TUIKitErrorSVRProfileAccountNotFound" = "请求的用户帐号不存在。";
+"TUIKitErrorSVRProfileAccountMiss" = "请求参数错误，没有指定需要拉取资料的用户账号。";
+"TUIKitErrorSVRProfileAccountNotFound" = "请求的用户账号不存在。";
 "TUIKitErrorSVRProfileAdminRequired" = "请求需要 App 管理员权限。";
 "TUIKitErrorSVRProfileSensitiveText" = "资料字段中包含敏感词。";
 "TUIKitErrorSVRProfileInternalError" = "服务端内部错误，请稍后重试。";
@@ -180,7 +180,7 @@
 "TUIKitErrorSVRProfileInvalidValueFormat" = "资料字段的 Value 类型不匹配，详情可参见 标配资料字段。";
 "TUIKitErrorSVRFriendshipInvalidParameters" = "请求参数错误，请根据错误描述检查请求是否正确。";
 "TUIKitErrorSVRFriendshipInvalidSdkAppid" = "SDKAppID 不匹配。";
-"TUIKitErrorSVRFriendshipAccountNotFound" = "请求的用户帐号不存在。";
+"TUIKitErrorSVRFriendshipAccountNotFound" = "请求的用户账号不存在。";
 "TUIKitErrorSVRFriendshipAdminRequired" = "请求需要 App 管理员权限。";
 "TUIKitErrorSVRFriendshipSensitiveText" = "关系链字段中包含敏感词。";
 "TUIKitErrorSVRFriendshipNetTimeout" = "网络超时，请稍后重试。";
@@ -198,7 +198,7 @@
 "TUIKitErrorSVRFriendshipAddFriendSecRstr" = "添加好友请求被安全策略打击，请勿频繁发起添加好友请求。";
 "TUIKitErrorSVRFriendshipPendencyNotFound" = "请求的未决不存在。";
 "TUIKitErrorSVRFriendshipDelFriendSecRstr" = "删除好友请求被安全策略打击，请勿频繁发起删除好友请求。";
-"TUIKirErrorSVRFriendAccountNotFoundEx" = "请求的用户帐号不存在。";
+"TUIKirErrorSVRFriendAccountNotFoundEx" = "请求的用户账号不存在。";
 "TUIKitErrorSVRMsgPkgParseFailed" = "解析请求包失败。";
 "TUIKitErrorSVRMsgInternalAuthFailed" = "内部鉴权失败。";
 "TUIKitErrorSVRMsgInvalidId" = "Identifier 无效";
@@ -218,7 +218,7 @@
 "TUIKitErrorSVRMsgInvalidTimestamp" = "JSON 格式请求包体中缺少 MsgTimeStamp 字段或者 MsgTimeStamp 字段不是 Integer 类型";
 "TUIKitErrorSVRMsgBodyNotArray" = "JSON 格式请求包体中 MsgBody 类型不是 Array 类型";
 "TUIKitErrorSVRMsgInvalidJsonFormat" = "JSON 格式请求包不符合消息格式描述";
-"TUIKitErrorSVRMsgToAccountCountLimit" = "批量发消息目标帐号超过500";
+"TUIKitErrorSVRMsgToAccountCountLimit" = "批量发消息目标账号超过500";
 "TUIKitErrorSVRMsgToAccountNotFound" = "To_Account 没有注册或不存在";
 "TUIKitErrorSVRMsgTimeLimit" = "消息离线存储时间错误（最多不能超过7天）。";
 "TUIKitErrorSVRMsgInvalidSyncOtherMachine" = "JSON 格式请求包体中 SyncOtherMachine 字段不是 Integer 类型";
@@ -226,7 +226,7 @@
 "TUIKitErrorSVRMsgBodySizeLimit" = "JSON 数据包超长，消息包体请不要超过12k。";
 "TUIKitErrorSVRmsgLongPollingCountLimit" = "Web 端长轮询被踢（Web 端同时在线实例个数超出限制）。";
 "TUIKitErrorSVRGroupApiNameError" = "请求中的接口名称错误";
-"TUIKitErrorSVRGroupAccountCountLimit" = "请求包体中携带的帐号数量过多。";
+"TUIKitErrorSVRGroupAccountCountLimit" = "请求包体中携带的账号数量过多。";
 "TUIkitErrorSVRGroupFreqLimit" = "操作频率限制，请尝试降低调用的频率。";
 "TUIKitErrorSVRGroupPermissionDeny" = "操作权限不足";
 "TUIKitErrorSVRGroupInvalidReq" = "请求非法";
@@ -240,7 +240,7 @@
 "TUIKitErrorSVRGroupRejectFromThirdParty" = "App 后台通过第三方回调拒绝本次操作。";
 "TUIKitErrorSVRGroupShutDeny" = "因被禁言而不能发送消息，请检查发送者是否被设置禁言。";
 "TUIKitErrorSVRGroupRspSizeLimit" = "应答包长度超过最大包长";
-"TUIKitErrorSVRGroupAccountNotFound" = "请求的用户帐号不存在。";
+"TUIKitErrorSVRGroupAccountNotFound" = "请求的用户账号不存在。";
 "TUIKitErrorSVRGroupGroupIdInUse" = "群组 ID 已被使用，请选择其他的群组 ID。";
 "TUIKitErrorSVRGroupSendMsgFreqLimit" = "发消息的频率超限，请延长两次发消息时间的间隔。";
 "TUIKitErrorSVRGroupReqAllreadyBeenProcessed" = "此邀请或者申请请求已经被处理。";

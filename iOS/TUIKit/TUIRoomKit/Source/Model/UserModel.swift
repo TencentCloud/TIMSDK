@@ -10,9 +10,10 @@ import Foundation
 import TUIRoomEngine
 
 class UserModel {
-    private var userInfo: TUIUserInfo
-    var isOnSeat: Bool //是否上麦
-    var isMuteMessage: Bool //是否禁言
+    private var userInfo: TUIUserInfo = TUIUserInfo()
+    var isOnSeat: Bool = false //是否上麦
+    var isMuteMessage: Bool = false//是否禁言
+    var volume: Int = 0 //音量
     var hasVideoStream: Bool {
         set {
             userInfo.hasVideoStream = newValue
@@ -68,12 +69,6 @@ class UserModel {
         get {
             return userInfo.hasScreenStream
         }
-    }
-    
-    init() {
-        isOnSeat = false
-        isMuteMessage = false
-        userInfo = TUIUserInfo()
     }
     
     func update(userInfo: TUIUserInfo) {

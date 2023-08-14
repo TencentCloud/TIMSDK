@@ -7,10 +7,9 @@
 //
 
 #import "TUICallRecordCallsViewModel.h"
-#import "TUICallEngine.h"
+#import "TUICallEngineHeader.h"
 #import "TUIDefine.h"
 #import "TUICore.h"
-#import "TUICallDefine.h"
 #import "TUICallRecordCallsCellViewModel.h"
 #import "TUICallKit.h"
 #import "TUICallKitOfflinePushInfoConfig.h"
@@ -156,19 +155,23 @@
 }
 
 - (void)clearAllRecordCalls {
-    if (!self.dataSource || self.dataSource.count <= 0) {
+    NSArray *callIdList = [self getCallIdListWith:self.dataSource];
+    if (!callIdList || callIdList.count <= 0) {
         return;
     }
     
-    NSMutableArray *callIdList = @[].mutableCopy;
-    [self.dataSource enumerateObjectsUsingBlock:^(TUICallRecordCallsCellViewModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj.callRecord && obj.callRecord.callId) {
-            [callIdList addObject:obj.callRecord.callId];
-        }
-    }];
-    [self removeAllObject];
-    [self reloadDataSource];
+    __weak __typeof(self) weakSelf = self;
     [[TUICallEngine createInstance] deleteRecordCalls:[callIdList copy] succ:^(NSArray<NSString *> * _Nonnull succList) {
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.dataSource enumerateObjectsUsingBlock:^(TUICallRecordCallsCellViewModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([succList containsObject:obj.callRecord.callId]) {
+                [strongSelf removeObject:obj];
+            }
+        }];
+        [strongSelf.dataSource removeAllObjects];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf reloadDataSource];
+        });
     } fail:^{
     }];
 }
@@ -225,6 +228,21 @@
         default:
             break;
     }
+}
+
+- (NSArray *)getCallIdListWith:(NSArray<TUICallRecordCallsCellViewModel *> *)cellViewModelArray {
+    if (!cellViewModelArray || cellViewModelArray.count <= 0) {
+        return @[];
+    }
+    
+    NSMutableArray *callIdList = @[].mutableCopy;
+    [cellViewModelArray enumerateObjectsUsingBlock:^(TUICallRecordCallsCellViewModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.callRecord && obj.callRecord.callId) {
+            [callIdList addObject:obj.callRecord.callId];
+        }
+    }];
+    
+    return [callIdList copy];
 }
 
 #pragma mark - getter and setter

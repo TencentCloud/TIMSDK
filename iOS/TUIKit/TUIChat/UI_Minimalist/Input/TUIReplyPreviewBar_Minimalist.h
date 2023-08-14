@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TUIReplyPreviewData_Minimalist.h"
+#import "TUIReplyPreviewData.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIReplyPreviewBar_Minimalist : UIView
@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIButton *closeButton;
 @property(nonatomic, copy) TUIInputPreviewBarCallback onClose;
 
-@property(nonatomic, strong) TUIReplyPreviewData_Minimalist *previewData;
-@property(nonatomic, strong) TUIReferencePreviewData_Minimalist *previewReferenceData;
+@property(nonatomic, strong) TUIReplyPreviewData *previewData;
+@property(nonatomic, strong) TUIReferencePreviewData *previewReferenceData;
 
 @end
 

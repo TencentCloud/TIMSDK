@@ -10,7 +10,7 @@
  *  - 您可以在此处查看、并修改您的个人信息，或是执行退出登录等操作
  *  - 本类依赖于腾讯云 TUIKit和IMSDK
  *
- *  Tencent Cloud IM Demo settings main interface view
+ *  Tencent Cloud Chat Demo settings main interface view
  *  - This file implements the setting interface, that is, the view corresponding to the "Me" button in the TabBar.
  *  - Here you can view and modify your personal information, or perform operations such as logging out.
  *  - This class depends on Tencent Cloud TUIKit and IMSDK

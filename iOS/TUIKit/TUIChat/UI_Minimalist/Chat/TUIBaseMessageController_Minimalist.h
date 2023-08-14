@@ -61,7 +61,11 @@
 
 - (void)sendMessage:(V2TIMMessage *)msg;
 
+- (void)sendMessage:(V2TIMMessage *)msg placeHolderCellData:(TUIMessageCellData *)placeHolderCellData;
+
 - (void)clearUImsg;
+
+- (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData;
 
 - (void)scrollToBottom:(BOOL)animate;
 

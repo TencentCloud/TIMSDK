@@ -362,12 +362,12 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
 }
 
 + (void)fetchGroupAvatars:(NSString *)groupID placeholder:(UIImage *)placeholder callback:(void (^)(BOOL success, UIImage *image, NSString *groupID))callback {
-    @weakify(self);
+    @tui_weakify(self);
     [[V2TIMManager sharedInstance] getGroupMemberList:groupID
         filter:V2TIM_GROUP_MEMBER_FILTER_ALL
         nextSeq:0
         succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-          @strongify(self);
+          @tui_strongify(self);
           int i = 0;
           NSMutableArray *groupMemberAvatars = [NSMutableArray arrayWithCapacity:1];
           for (V2TIMGroupMemberFullInfo *member in memberList) {
@@ -395,7 +395,7 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
 
           [TUIGroupAvatar createGroupAvatar:groupMemberAvatars
                                    finished:^(UIImage *groupAvatar) {
-                                     @strongify(self);
+                                     @tui_strongify(self);
                                      UIImage *avatar = groupAvatar;
                                      [self cacheGroupAvatar:avatar number:(UInt32)groupMemberAvatars.count groupID:groupID];
 

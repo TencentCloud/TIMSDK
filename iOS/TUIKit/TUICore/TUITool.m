@@ -727,12 +727,10 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
         return;
     }
 
-    @weakify(vc);
     [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedUnsupportInterfaceError
                                                       object:nil
                                                        queue:nil
                                                   usingBlock:^(NSNotification *_Nonnull note) {
-                                                    @strongify(vc);
                                                     NSDictionary *userInfo = note.userInfo;
                                                     NSString *service = [userInfo objectForKey:@"service"];
                                                     NSString *serviceDesc = [userInfo objectForKey:@"serviceDesc"];
@@ -821,12 +819,10 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
         return;
     }
 
-    @weakify(vc);
     [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError
                                                       object:nil
                                                        queue:nil
                                                   usingBlock:^(NSNotification *_Nonnull note) {
-                                                    @strongify(vc);
                                                     NSDictionary *userInfo = note.userInfo;
                                                     NSString *service = [userInfo objectForKey:@"service"];
                                                     NSString *serviceDesc = [userInfo objectForKey:@"serviceDesc"];

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '7.3.4358'
+  spec.version      = '7.4.4643'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.3.4358/ios/TUIChat.zip?time=2'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TUIChat.zip?time=3'}
 
   spec.default_subspec = 'ALL'
 
@@ -28,92 +28,95 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIChat/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TXIMSDK_Plus_iOS','7.3.4358'
-    commonModel.dependency 'TUICore','7.3.4358'
-    commonModel.dependency 'TIMCommon','7.3.4358'
+    commonModel.dependency 'TXIMSDK_Plus_iOS','7.4.4643'
+    commonModel.dependency 'TUICore','7.4.4643'
+    commonModel.dependency 'TIMCommon','7.4.4643'
     #commonModel.dependency 'TUICore', :path => 'TUICore'
     commonModel.dependency "TUIChat/VoiceConvert"
     commonModel.dependency 'ReactiveObjC'
     commonModel.dependency 'SDWebImage'
   end
 
+  spec.subspec 'BaseCellData' do |baseCellData|
+       baseCellData.subspec 'Base' do |base|
+            base.source_files = '**/TUIChat/BaseCellData/Base/*.{h,m,mm}'
+            base.dependency "TUIChat/CommonModel"
+       end
+      baseCellData.subspec 'Chat' do |chat|
+            chat.source_files = '**/TUIChat/BaseCellData/Chat/*.{h,m,mm}'
+            chat.dependency "TUIChat/BaseCellData/Base"
+      end
+      baseCellData.subspec 'Custom' do |custom|
+            custom.source_files = '**/TUIChat/BaseCellData/Custom/*.{h,m,mm}'
+            custom.dependency "TUIChat/BaseCellData/Chat"
+      end
+      baseCellData.subspec 'Reply' do |reply|
+            reply.source_files = '**/TUIChat/BaseCellData/Reply/*.{h,m,mm}'
+            reply.dependency "TUIChat/BaseCellData/Custom"
+      end
+      baseCellData.subspec 'Emoji' do |emoji|
+          emoji.source_files = '**/TUIChat/BaseCellData/Emoji/*.{h,m,mm}'
+          emoji.dependency "TUIChat/BaseCellData/Custom"
+      end
+  end
+  
   spec.subspec 'BaseCell' do |baseCell|
-    baseCell.subspec 'CellData' do |cellData|
-      cellData.source_files = '**/TUIChat/BaseCell/CellData/*.{h,m,mm}'
-      cellData.dependency "TUIChat/CommonModel"
-    end
-    baseCell.subspec 'CellUI' do |cellUI|
-      cellUI.source_files = '**/TUIChat/BaseCell/CellUI/*.{h,m,mm}'
-      cellUI.dependency "TUIChat/BaseCell/CellData"
-    end
+      baseCell.source_files = '**/TUIChat/BaseCell/*.{h,m,mm}'
+      baseCell.dependency "TUIChat/BaseCellData"
   end
 
   spec.subspec 'BaseDataProvider' do |baseDataProvider|
-    baseDataProvider.source_files = '**/TUIChat/BaseDataProvider/*.{h,m,mm}'
-    baseDataProvider.dependency "TUIChat/BaseCell"
+      baseDataProvider.subspec 'Base' do |base|
+            base.source_files = '**/TUIChat/BaseDataProvider/Base/*.{h,m,mm}'
+            base.dependency "TUIChat/BaseCellData"
+      end
+      baseDataProvider.subspec 'Impl' do |impl|
+            impl.source_files = '**/TUIChat/BaseDataProvider/Impl/*.{h,m,mm}'
+            impl.dependency "TUIChat/BaseCellData"
+            impl.dependency "TUIChat/BaseDataProvider/Base"
+      end
   end
 
   spec.subspec 'CommonUI' do |commonUI|
     commonUI.subspec 'Camera' do |camera|
       camera.source_files = '**/TUIChat/CommonUI/Camera/*.{h,m,mm}'
       camera.dependency "TUIChat/BaseDataProvider"
+      camera.dependency "TUIChat/BaseCell"
     end
     commonUI.subspec 'Pendency' do |pendency|
       pendency.source_files = '**/TUIChat/CommonUI/Pendency/*.{h,m,mm}'
       pendency.dependency "TUIChat/BaseDataProvider"
+      pendency.dependency "TUIChat/BaseCell"
     end
     commonUI.subspec 'Pop' do |pop|
       pop.source_files = '**/TUIChat/CommonUI/Pop/*.{h,m,mm}'
       pop.dependency "TUIChat/BaseDataProvider"
+      pop.dependency "TUIChat/BaseCell"
     end
   end
 
   spec.subspec 'UI_Classic' do |uiClassic|
     uiClassic.subspec 'Cell' do |cell|
-      cell.subspec 'CellData' do |cellData|
-        cellData.subspec 'Base' do |base|
-          base.source_files = '**/TUIChat/UI_Classic/Cell/CellData/Base/*.{h,m,mm}'
+        cell.subspec 'Base' do |base|
+          base.source_files = '**/TUIChat/UI_Classic/Cell/Base/*.{h,m,mm}'
           base.dependency "TUIChat/CommonUI"
         end
-        cellData.subspec 'Chat' do |chat|
-          chat.source_files = '**/TUIChat/UI_Classic/Cell/CellData/Chat/*.{h,m,mm}'
-          chat.dependency "TUIChat/UI_Classic/Cell/CellData/Base"
+        cell.subspec 'Chat' do |chat|
+          chat.source_files = '**/TUIChat/UI_Classic/Cell/Chat/*.{h,m,mm}'
+          chat.dependency "TUIChat/UI_Classic/Cell/Base"
         end
-        cellData.subspec 'Custom' do |custom|
-          custom.source_files = '**/TUIChat/UI_Classic/Cell/CellData/Custom/*.{h,m,mm}'
-          custom.dependency "TUIChat/UI_Classic/Cell/CellData/Chat"
+        cell.subspec 'Custom' do |custom|
+          custom.source_files = '**/TUIChat/UI_Classic/Cell/Custom/*.{h,m,mm}'
+          custom.dependency "TUIChat/UI_Classic/Cell/Chat"
         end
-        cellData.subspec 'Reply' do |reply|
-          reply.source_files = '**/TUIChat/UI_Classic/Cell/CellData/Reply/*.{h,m,mm}'
-          reply.dependency "TUIChat/UI_Classic/Cell/CellData/Custom"
+        cell.subspec 'Reply' do |reply|
+          reply.source_files = '**/TUIChat/UI_Classic/Cell/Reply/*.{h,m,mm}'
+          reply.dependency "TUIChat/UI_Classic/Cell/Custom"
         end
-      end
-      cell.subspec 'CellUI' do |cellUI|
-        cellUI.subspec 'Base' do |base|
-          base.source_files = '**/TUIChat/UI_Classic/Cell/CellUI/Base/*.{h,m,mm}'
-          base.dependency "TUIChat/UI_Classic/Cell/CellData"
-        end
-        cellUI.subspec 'Chat' do |chat|
-          chat.source_files = '**/TUIChat/UI_Classic/Cell/CellUI/Chat/*.{h,m,mm}'
-          chat.dependency "TUIChat/UI_Classic/Cell/CellUI/Base"
-        end
-        cellUI.subspec 'Custom' do |custom|
-          custom.source_files = '**/TUIChat/UI_Classic/Cell/CellUI/Custom/*.{h,m,mm}'
-          custom.dependency "TUIChat/UI_Classic/Cell/CellUI/Chat"
-        end
-        cellUI.subspec 'Reply' do |reply|
-          reply.source_files = '**/TUIChat/UI_Classic/Cell/CellUI/Reply/*.{h,m,mm}'
-          reply.dependency "TUIChat/UI_Classic/Cell/CellUI/Custom"
-        end
-      end
-    end
-    uiClassic.subspec 'DataProvider' do |dataProvider|
-      dataProvider.source_files = '**/TUIChat/UI_Classic/DataProvider/*.{h,m,mm}'
-      dataProvider.dependency "TUIChat/UI_Classic/Cell"
     end
     uiClassic.subspec 'Input' do |input|
       input.source_files = '**/TUIChat/UI_Classic/Input/*.{h,m,mm}'
-      input.dependency "TUIChat/UI_Classic/DataProvider"
+      input.dependency "TUIChat/UI_Classic/Cell"
     end
     uiClassic.subspec 'Chat' do |chat|
       chat.source_files = '**/TUIChat/UI_Classic/Chat/*.{h,m,mm}'
@@ -134,50 +137,26 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'UI_Minimalist' do |uiMinimalist|
     uiMinimalist.subspec 'Cell' do |cell|
-      cell.subspec 'CellData' do |cellData|
-        cellData.subspec 'Base' do |base|
-          base.source_files = '**/TUIChat/UI_Minimalist/Cell/CellData/Base/*.{h,m,mm}'
+        cell.subspec 'Base' do |base|
+          base.source_files = '**/TUIChat/UI_Minimalist/Cell/Base/*.{h,m,mm}'
           base.dependency "TUIChat/CommonUI"
         end
-        cellData.subspec 'Chat' do |chat|
-          chat.source_files = '**/TUIChat/UI_Minimalist/Cell/CellData/Chat/*.{h,m,mm}'
-          chat.dependency "TUIChat/UI_Minimalist/Cell/CellData/Base"
+        cell.subspec 'Chat' do |chat|
+          chat.source_files = '**/TUIChat/UI_Minimalist/Cell/Chat/*.{h,m,mm}'
+          chat.dependency "TUIChat/UI_Minimalist/Cell/Base"
         end
-        cellData.subspec 'Custom' do |custom|
-          custom.source_files = '**/TUIChat/UI_Minimalist/Cell/CellData/Custom/*.{h,m,mm}'
-          custom.dependency "TUIChat/UI_Minimalist/Cell/CellData/Chat"
+        cell.subspec 'Custom' do |custom|
+          custom.source_files = '**/TUIChat/UI_Minimalist/Cell/Custom/*.{h,m,mm}'
+          custom.dependency "TUIChat/UI_Minimalist/Cell/Chat"
         end
-        cellData.subspec 'Reply' do |reply|
-          reply.source_files = '**/TUIChat/UI_Minimalist/Cell/CellData/Reply/*.{h,m,mm}'
-          reply.dependency "TUIChat/UI_Minimalist/Cell/CellData/Custom"
+        cell.subspec 'Reply' do |reply|
+          reply.source_files = '**/TUIChat/UI_Minimalist/Cell/Reply/*.{h,m,mm}'
+          reply.dependency "TUIChat/UI_Minimalist/Cell/Custom"
         end
-      end
-      cell.subspec 'CellUI' do |cellUI|
-        cellUI.subspec 'Base' do |base|
-          base.source_files = '**/TUIChat/UI_Minimalist/Cell/CellUI/Base/*.{h,m,mm}'
-          base.dependency "TUIChat/UI_Minimalist/Cell/CellData"
-        end
-        cellUI.subspec 'Chat' do |chat|
-          chat.source_files = '**/TUIChat/UI_Minimalist/Cell/CellUI/Chat/*.{h,m,mm}'
-          chat.dependency "TUIChat/UI_Minimalist/Cell/CellUI/Base"
-        end
-        cellUI.subspec 'Custom' do |custom|
-          custom.source_files = '**/TUIChat/UI_Minimalist/Cell/CellUI/Custom/*.{h,m,mm}'
-          custom.dependency "TUIChat/UI_Minimalist/Cell/CellUI/Chat"
-        end
-        cellUI.subspec 'Reply' do |reply|
-          reply.source_files = '**/TUIChat/UI_Minimalist/Cell/CellUI/Reply/*.{h,m,mm}'
-          reply.dependency "TUIChat/UI_Minimalist/Cell/CellUI/Custom"
-        end
-      end
-    end
-    uiMinimalist.subspec 'DataProvider' do |dataProvider|
-      dataProvider.source_files = '**/TUIChat/UI_Minimalist/DataProvider/*.{h,m,mm}'
-      dataProvider.dependency "TUIChat/UI_Minimalist/Cell"
     end
     uiMinimalist.subspec 'Input' do |input|
       input.source_files = '**/TUIChat/UI_Minimalist/Input/*.{h,m,mm}'
-      input.dependency "TUIChat/UI_Minimalist/DataProvider"
+      input.dependency "TUIChat/UI_Minimalist/Cell"
     end
     uiMinimalist.subspec 'Chat' do |chat|
       chat.source_files = '**/TUIChat/UI_Minimalist/Chat/*.{h,m,mm}'

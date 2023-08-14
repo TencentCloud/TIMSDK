@@ -29,14 +29,18 @@
 #import "TUITextMessageCell.h"
 #import "TUIVideoMessageCell.h"
 #import "TUIVoiceMessageCell.h"
+#import "TUIMessageCellConfig.h"
 
 #define STR(x) @ #x
 
-@interface TUIMergeMessageListController () <TUIMessageCellDelegate>
+@interface TUIMergeMessageListController () <TUIMessageCellDelegate, TUIMessageBaseDataProviderDataSource>
 @property(nonatomic, strong) NSArray<V2TIMMessage *> *imMsgs;
 @property(nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs;
 @property(nonatomic, strong) NSMutableDictionary *stylesCache;
 @property(nonatomic, strong) TUIMessageSearchDataProvider *msgDataProvider;
+
+@property(nonatomic, strong) TUIMessageCellConfig *messageCellConfig;
+
 @end
 
 @implementation TUIMergeMessageListController
@@ -57,29 +61,14 @@
 
 - (void)updateCellStyle:(BOOL)recover {
     if (recover) {
-        [TUIBubbleMessageCellData setOutgoingBubble:self.stylesCache[STR(outgoingBubble)]];
-        [TUIBubbleMessageCellData setIncommingBubble:self.stylesCache[STR(incomingBubble)]];
-        TUIMessageCellLayout.incommingTextMessageLayout.bubbleInsets = UIEdgeInsetsFromString(self.stylesCache[STR(incomingTextBubbleInsets)]);
         TUIMessageCellLayout.incommingMessageLayout.avatarInsets = UIEdgeInsetsFromString(self.stylesCache[STR(incomingAvatarInsets)]);
         TUIMessageCellLayout.incommingTextMessageLayout.avatarInsets = UIEdgeInsetsFromString(self.stylesCache[STR(incomingAvatarInsets)]);
         TUIMessageCellLayout.incommingVoiceMessageLayout.avatarInsets = UIEdgeInsetsFromString(self.stylesCache[STR(incomingAvatarInsets)]);
         TUIMessageCellLayout.incommingMessageLayout.messageInsets = UIEdgeInsetsFromString(self.stylesCache[STR(incommingMessageInsets)]);
-        [TUITextMessageCellData setOutgoingTextColor:self.stylesCache[STR(outgoingTextColor)]];
-        [TUITextMessageCellData setIncommingTextColor:self.stylesCache[STR(incomingTextColor)]];
+        [TUITextMessageCell setOutgoingTextColor:self.stylesCache[STR(outgoingTextColor)]];
+        [TUITextMessageCell setIncommingTextColor:self.stylesCache[STR(incomingTextColor)]];
         return;
     }
-
-    UIImage *outgoingBubble = [TUIBubbleMessageCellData outgoingBubble];
-    [TUIBubbleMessageCellData setOutgoingBubble:[UIImage new]];
-    [self.stylesCache setObject:outgoingBubble ?: [UIImage new] forKey:STR(outgoingBubble)];
-
-    UIImage *incomingBubble = [TUIBubbleMessageCellData incommingBubble];
-    [TUIBubbleMessageCellData setIncommingBubble:[self bubbleImage]];
-    [self.stylesCache setObject:incomingBubble ?: [UIImage new] forKey:STR(incomingBubble)];
-
-    UIEdgeInsets incomingTextBubbleInsets = TUIMessageCellLayout.incommingTextMessageLayout.bubbleInsets;
-    [TUIMessageCellLayout incommingTextMessageLayout].bubbleInsets = UIEdgeInsetsMake(5, 8, 0, 10);
-    [self.stylesCache setObject:NSStringFromUIEdgeInsets(incomingTextBubbleInsets) ?: @"" forKey:STR(incomingTextBubbleInsets)];
 
     UIEdgeInsets incomingAvatarInsets = TUIMessageCellLayout.incommingTextMessageLayout.avatarInsets;
     TUIMessageCellLayout.incommingMessageLayout.avatarInsets = UIEdgeInsetsMake(0, 10, 0, 10);
@@ -91,12 +80,12 @@
     TUIMessageCellLayout.incommingMessageLayout.messageInsets = UIEdgeInsetsMake(5, 5, 0, 0);
     [self.stylesCache setObject:NSStringFromUIEdgeInsets(incommingMessageInsets) forKey:STR(incommingMessageInsets)];
 
-    UIColor *outgoingTextColor = [TUITextMessageCellData outgoingTextColor];
-    [TUITextMessageCellData setOutgoingTextColor:TUIChatDynamicColor(@"chat_text_message_send_text_color", @"#000000")];
+    UIColor *outgoingTextColor = [TUITextMessageCell outgoingTextColor];
+    [TUITextMessageCell setOutgoingTextColor:TUIChatDynamicColor(@"chat_text_message_send_text_color", @"#000000")];
     [self.stylesCache setObject:outgoingTextColor forKey:STR(outgoingTextColor)];
 
-    UIColor *incomingTextColor = [TUITextMessageCellData incommingTextColor];
-    [TUITextMessageCellData setIncommingTextColor:TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000")];
+    UIColor *incomingTextColor = [TUITextMessageCell incommingTextColor];
+    [TUITextMessageCell setIncommingTextColor:TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000")];
     [self.stylesCache setObject:incomingTextColor forKey:STR(incomingTextColor)];
 }
 
@@ -165,9 +154,6 @@
 
         if ([data isKindOfClass:TUITextMessageCellData.class]) {
             layout = TUIMessageCellLayout.incommingTextMessageLayout;
-            TUITextMessageCellData *textData = (TUITextMessageCellData *)data;
-            textData.textColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
-            textData.textFont = [TUITextMessageCellData incommingTextFont];
         } else if ([data isKindOfClass:TUIReplyMessageCellData.class] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
             layout = TUIMessageCellLayout.incommingTextMessageLayout;
             TUIReferenceMessageCellData *textData = (TUIReferenceMessageCellData *)data;
@@ -211,31 +197,8 @@
     self.tableView.estimatedRowHeight = 0;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
-    ;
-
-    [self.tableView registerClass:[TUITextMessageCell class] forCellReuseIdentifier:TTextMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIVoiceMessageCell class] forCellReuseIdentifier:TVoiceMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIImageMessageCell class] forCellReuseIdentifier:TImageMessageCell_ReuseId];
-    [self.tableView registerClass:[TUISystemMessageCell class] forCellReuseIdentifier:TSystemMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIFaceMessageCell class] forCellReuseIdentifier:TFaceMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIVideoMessageCell class] forCellReuseIdentifier:TVideoMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIFileMessageCell class] forCellReuseIdentifier:TFileMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIJoinGroupMessageCell class] forCellReuseIdentifier:TJoinGroupMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIMergeMessageCell class] forCellReuseIdentifier:TRelayMessageCell_ReuserId];
-    [self.tableView registerClass:[TUIReplyMessageCell class] forCellReuseIdentifier:TReplyMessageCell_ReuseId];
-    [self.tableView registerClass:[TUIReferenceMessageCell class] forCellReuseIdentifier:TUIReferenceMessageCell_ReuseId];
-
-    NSArray *customMessageInfo = [TUIMessageDataProvider getCustomMessageInfo];
-    for (NSDictionary *messageInfo in customMessageInfo) {
-        NSString *bussinessID = messageInfo[BussinessID];
-        NSString *cellName = messageInfo[TMessageCell_Name];
-        Class cls = NSClassFromString(cellName);
-        if (cls && bussinessID) {
-            [self.tableView registerClass:cls forCellReuseIdentifier:bussinessID];
-        }
-    }
-
     self.tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
+    [self.messageCellConfig bindTableView:self.tableView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -243,9 +206,17 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TUIMessageCellData *data = _uiMsgs[indexPath.row];
-    CGFloat height = [data heightOfWidth:Screen_Width];
-    return height;
+    static CGFloat screenWidth = 0;
+    if (screenWidth == 0) {
+        screenWidth = Screen_Width;
+    }
+    if (indexPath.row < _uiMsgs.count) {
+        TUIMessageCellData *cellData = _uiMsgs[indexPath.row];
+        CGFloat height = [self.messageCellConfig getHeightFromMessageCellData:cellData];
+        return height;
+    } else {
+        return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -301,25 +272,33 @@
     }
 }
 
-- (void)scrollLocateMessage:(V2TIMMessage *)locateMessage {
+- (void)scrollLocateMessage:(V2TIMMessage *)locateMessage matchKeyword:(NSString *)msgAbstract {
     CGFloat offsetY = 0;
+    NSInteger index = 0;
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.innerMessage.msgID isEqualToString:locateMessage.msgID]) {
             break;
         }
         offsetY += [uiMsg heightOfWidth:Screen_Width];
+        index++;
     }
 
+    if (index == self.uiMsgs.count) {
+        return;
+    }
+    
     offsetY -= self.tableView.frame.size.height / 2.0;
     if (offsetY <= TMessageController_Header_Height) {
         offsetY = TMessageController_Header_Height + 0.1;
     }
 
     if (offsetY > TMessageController_Header_Height) {
-        if (self.tableView.contentOffset.y > offsetY) {
-            [self.tableView scrollRectToVisible:CGRectMake(0, offsetY, Screen_Width, self.tableView.bounds.size.height) animated:YES];
-        }
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
+                              atScrollPosition:UITableViewScrollPositionMiddle
+                                      animated:YES];
     }
+    
+    [self highlightKeyword:msgAbstract locateMessage:locateMessage];
 }
 
 - (void)highlightKeyword:(NSString *)keyword locateMessage:(V2TIMMessage *)locateMessage {
@@ -394,7 +373,7 @@
               if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
                   [self jumpDetailPageByMessage:message];
               } else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
-                  [self scrollLocateMessage:message];
+                  [self scrollLocateMessage:message matchKeyword:msgAbstract];
               }
             }];
 }
@@ -488,8 +467,38 @@
 - (TUIMessageSearchDataProvider *)msgDataProvider {
     if (_msgDataProvider == nil) {
         _msgDataProvider = [[TUIMessageSearchDataProvider alloc] init];
+        _msgDataProvider.dataSource = self;
     }
     return _msgDataProvider;
+}
+
+- (TUIMessageCellConfig *)messageCellConfig {
+    if (_messageCellConfig == nil) {
+        _messageCellConfig = [[TUIMessageCellConfig alloc] init];
+    }
+    return _messageCellConfig;
+}
+
+#pragma mark - TUIMessageBaseDataProviderDataSource
+- (void)dataProviderDataSourceWillChange:(TUIMessageBaseDataProvider *)dataProvider {
+    // do nothing
+}
+
+- (void)dataProviderDataSourceChange:(TUIMessageBaseDataProvider *)dataProvider
+                            withType:(TUIMessageBaseDataProviderDataSourceChangeType)type
+                             atIndex:(NSUInteger)index
+                           animation:(BOOL)animation {
+    // do nothing
+}
+
+- (void)dataProviderDataSourceDidChange:(TUIMessageBaseDataProvider *)dataProvider {
+    [self.tableView reloadData];
+}
+
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider onRemoveHeightCache:(TUIMessageCellData *)cellData {
+    if (cellData) {
+        [self.messageCellConfig removeHeightCacheOfMessageCellData:cellData];
+    }
 }
 
 @end

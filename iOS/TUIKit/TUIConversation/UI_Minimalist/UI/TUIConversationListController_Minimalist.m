@@ -8,11 +8,11 @@
 
 #import "TUIConversationListController_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIFloatViewController.h>
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIConversationCellData_Minimalist.h"
 #import "TUIConversationCell_Minimalist.h"
-#import "TUIFloatViewController.h"
 #import "TUIFoldListViewController_Minimalist.h"
 
 static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Minimalist_ReuseId";

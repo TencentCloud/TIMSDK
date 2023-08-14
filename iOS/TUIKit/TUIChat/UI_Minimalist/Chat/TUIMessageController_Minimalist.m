@@ -12,9 +12,9 @@
 #import "TUIChatConfig.h"
 #import "TUIChatModifyMessageHelper.h"
 #import "TUIChatSmallTongueView_Minimalist.h"
-#import "TUIMessageSearchDataProvider_Minimalist.h"
+#import "TUIMessageSearchDataProvider.h"
 #import "TUIReferenceMessageCell_Minimalist.h"
-#import "TUIReplyMessageCellData_Minimalist.h"
+#import "TUIReplyMessageCellData.h"
 #import "TUIReplyMessageCell_Minimalist.h"
 #import "TUITextMessageCell_Minimalist.h"
 
@@ -208,8 +208,9 @@
 #pragma mark - Getters & Setters
 - (void)setConversation:(TUIChatConversationModel *)conversationData {
     self.conversationData = conversationData;
-    self.messageDataProvider = [[TUIMessageSearchDataProvider_Minimalist alloc] initWithConversationModel:self.conversationData];
+    self.messageDataProvider = [[TUIMessageSearchDataProvider alloc] initWithConversationModel:self.conversationData];
     self.messageDataProvider.dataSource = self;
+    self.messageDataProvider.enableMergeSender = YES;
     if (self.locateMessage) {
         [self loadLocateMessages:NO];
     } else {
@@ -219,8 +220,8 @@
 }
 
 #pragma mark - Private Methods
-- (TUIMessageSearchDataProvider_Minimalist *)messageSearchDataProvider {
-    return (TUIMessageSearchDataProvider_Minimalist *)self.messageDataProvider;
+- (TUIMessageSearchDataProvider *)messageSearchDataProvider {
+    return (TUIMessageSearchDataProvider *)self.messageDataProvider;
 }
 
 - (void)loadLocateMessages:(BOOL)firstLoad {
@@ -424,17 +425,17 @@
     NSString *msgAbstract = @"";
     if ([cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
         TUIReplyMessageCell_Minimalist *acell = (TUIReplyMessageCell_Minimalist *)cell;
-        TUIReplyMessageCellData_Minimalist *cellData = acell.replyData;
+        TUIReplyMessageCellData *cellData = acell.replyData;
         originMsgID = cellData.messageRootID;
         msgAbstract = cellData.msgAbstract;
     } else if ([cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
         TUIReferenceMessageCell_Minimalist *acell = (TUIReferenceMessageCell_Minimalist *)cell;
-        TUIReferenceMessageCellData_Minimalist *cellData = acell.referenceData;
+        TUIReferenceMessageCellData *cellData = acell.referenceData;
         originMsgID = cellData.originMsgID;
         msgAbstract = cellData.msgAbstract;
     }
 
-    [(TUIMessageSearchDataProvider_Minimalist *)self.messageDataProvider
+    [(TUIMessageSearchDataProvider *)self.messageDataProvider
         findMessages:@[ originMsgID ?: @"" ]
             callback:^(BOOL success, NSString *_Nonnull desc, NSArray<V2TIMMessage *> *_Nonnull msgs) {
               if (!success) {
@@ -493,14 +494,14 @@
         return;
     }
 
-    TUIMessageSearchDataProvider_Minimalist *provider = (TUIMessageSearchDataProvider_Minimalist *)self.messageDataProvider;
+    TUIMessageSearchDataProvider *provider = (TUIMessageSearchDataProvider *)self.messageDataProvider;
     provider.isNewerNoMoreMsg = NO;
     provider.isOlderNoMoreMsg = NO;
     [self loadLocateMessages:NO];
 }
 
 #pragma mark - TUIMessageBaseDataProviderDataSource
-- (void)dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
     [super dataProvider:dataProvider ReceiveNewUIMsg:uiMsg];
     /**
      * 查看历史消息的时候，如果滚动超过两屏，收到新消息后，添加 "xxx条新消息"小舌头
@@ -519,7 +520,7 @@
     }
 }
 
-- (void)dataProvider:(TUIMessageDataProvider_Minimalist *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
+- (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
     /**
      * 撤回的消息要从 "xxx条新消息" 移除
      * Recalled messages need to be removed from "xxx new messages" bottom-banner-tips
@@ -542,14 +543,14 @@
      *  When the retracted message is a "reply" type of message, go to the root message to delete the currently retracted message.
      */
 
-    if ([uiMsg isKindOfClass:TUIReplyMessageCellData_Minimalist.class]) {
-        TUIReplyMessageCellData_Minimalist *cellData = (TUIReplyMessageCellData_Minimalist *)uiMsg;
+    if ([uiMsg isKindOfClass:TUIReplyMessageCellData.class]) {
+        TUIReplyMessageCellData *cellData = (TUIReplyMessageCellData *)uiMsg;
         NSString *messageRootID = @"";
         NSString *revokeMsgID = @"";
         messageRootID = cellData.messageRootID;
         revokeMsgID = cellData.msgID;
 
-        [(TUIMessageSearchDataProvider_Minimalist *)self.messageDataProvider
+        [(TUIMessageSearchDataProvider *)self.messageDataProvider
             findMessages:@[ messageRootID ?: @"" ]
                 callback:^(BOOL success, NSString *_Nonnull desc, NSArray<V2TIMMessage *> *_Nonnull msgs) {
                   if (success) {
