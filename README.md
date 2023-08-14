@@ -210,7 +210,6 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ## Latest Enhanced Version 7.4.4643 @2023.08.11
 ### SDK
-- Support Switch host platform
 - Support subscribing and unsubscribing users
 - Support emoji replies
 - Support voice-to-text capability
