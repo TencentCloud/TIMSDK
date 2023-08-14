@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUITranslationPlugin'
-  spec.version      = '7.3.4358'
+  spec.version      = '7.4.4643'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
