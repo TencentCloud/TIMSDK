@@ -6,7 +6,6 @@ English | [简体中文](./版本历史.md)
 ### SDK
 
 - Support subscribing and unsubscribing users
-- Support Switch host platform
 - Support emoji replies
 - Support voice-to-text capability
 - Support revoking messages in AVChatRoom
