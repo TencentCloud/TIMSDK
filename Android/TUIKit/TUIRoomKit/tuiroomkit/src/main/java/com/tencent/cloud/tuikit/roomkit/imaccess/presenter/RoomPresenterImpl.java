@@ -46,6 +46,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     private       AccessRoomConstants.SelfRoomStatus mSelfRoomStatus = NO_IN_ROOM;
     private final TUIRoomDefine.LoginUserInfo        mSelfInfo;
 
+    private CountDownLatch mLoginLatch;
     private CountDownLatch mLeaveRoomLatch;
     private CountDownLatch mJoinRoomLatch;
     private CountDownLatch mSendMsgLatch;
@@ -53,6 +54,19 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     private AtomicBoolean  mIsProcess  = new AtomicBoolean(false);
 
     private RoomPresenterImpl() {
+        mLoginLatch = new CountDownLatch(1);
+        RoomEngineManager.loginRoomEngine(new TUIRoomDefine.ActionCallback() {
+            @Override
+            public void onSuccess() {
+                mLoginLatch.countDown();
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String message) {
+                Log.e(TAG, "loginRoomEngine onError error=" + error + " message=" + message);
+                mLoginLatch.countDown();
+            }
+        });
         addObserver();
         mRoomManager = new RoomManagerImpl();
         mRoomTaskStoreHouse = new RoomTaskStoreHouse();
@@ -83,6 +97,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
+                waitUntilLogin();
                 processCreateRoom();
             }
         });
@@ -101,6 +116,14 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         waitUntilExitPreRoom();
         waitUntilCreateRoom();
         mIsProcess.set(false);
+    }
+
+    private void waitUntilLogin() {
+        try {
+            mLoginLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void waitUntilExitPreRoom() {
@@ -235,6 +258,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
+                waitUntilLogin();
                 processEnterRoom(roomMsgData);
             }
         });
@@ -305,6 +329,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
+                waitUntilLogin();
                 mRoomManager.inviteOtherMembersToJoin(roomMsgData, mSelfInfo);
             }
         });

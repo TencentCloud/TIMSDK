@@ -51,7 +51,6 @@ public class RoomServiceInitializer extends ServiceInitializer implements ITUIEx
         initExtension();
         initRoomMessage();
         initSignalingListener();
-        initLoginObserver();
     }
 
     private void initExtension() {
@@ -69,37 +68,6 @@ public class RoomServiceInitializer extends ServiceInitializer implements ITUIEx
         TUICore.callService(TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME,
                 TUIConstants.TUIChat.Method.RegisterCustomMessage.METHOD_NAME, roomMsgParam);
 
-    }
-
-    private void initLoginObserver() {
-        TUICore.registerEvent(EVENT_LOGIN_STATE_CHANGED, EVENT_SUB_KEY_USER_LOGIN_SUCCESS, new ITUINotification() {
-            @Override
-            public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
-                if (TextUtils.equals(key, EVENT_LOGIN_STATE_CHANGED) && TextUtils.equals(subKey,
-                        EVENT_SUB_KEY_USER_LOGIN_SUCCESS)) {
-                    loginRoomEngine();
-                }
-            }
-        });
-    }
-
-    private void loginRoomEngine() {
-        int sdkAppId = TUILogin.getSdkAppId();
-        String userId = TUILogin.getUserId();
-        String userSig = TUILogin.getUserSig();
-        Log.i(TAG, "TUIRoomEngine.login sdkAppId: " + sdkAppId + " userId=" + userId + " userSig=" + !TextUtils.isEmpty(
-                userSig) + " thread.name=" + Thread.currentThread().getName());
-        TUIRoomEngine.login(TUILogin.getAppContext(), sdkAppId, userId, userSig, new TUIRoomDefine.ActionCallback() {
-            @Override
-            public void onSuccess() {
-                Log.i(TAG, "TUIRoomEngine.login onSuccess thread.name=" + Thread.currentThread().getName());
-            }
-
-            @Override
-            public void onError(TUICommonDefine.Error code, String message) {
-                Log.e(TAG, "TUIRoomEngine.login onError code=" + code + " message=" + message);
-            }
-        });
     }
 
     private void initSignalingListener() {

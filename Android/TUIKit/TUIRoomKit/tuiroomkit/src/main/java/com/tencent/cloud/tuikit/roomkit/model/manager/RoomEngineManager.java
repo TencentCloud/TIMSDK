@@ -58,6 +58,11 @@ public class RoomEngineManager {
         return sInstance;
     }
 
+    public static void loginRoomEngine(TUIRoomDefine.ActionCallback callback) {
+        TUIRoomEngine.login(TUILogin.getAppContext(), TUILogin.getSdkAppId(), TUILogin.getUserId(),
+                TUILogin.getUserSig(), callback);
+    }
+
     public void startScreenCapture() {
         if (!DrawOverlaysPermissionUtil.isGrantedDrawOverlays()) {
             Log.w(TAG, "startScreenCapture no permission");
