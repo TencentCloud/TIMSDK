@@ -37,17 +37,6 @@ English | [简体中文](./README_ZH.md)
 [Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.4.4643/cross_platform/ImSDK_iOS_CPP_7.4.4643.framework.zip)
 
 ## CocoaPods Integration
-If you are using the SDK basic edition, edit the Podfile as follows:
-
-```
-platform :ios, '8.0'
-source 'https://github.com/CocoaPods/Specs.git'
-
-target 'App' do
-pod 'TXIMSDK_iOS'
-end
-```
-
 If you are using the SDK enhanced edition, edit the Podfile as follows:
 ```
 platform :ios, '8.0'
@@ -77,6 +66,17 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'App' do
 pod 'TXIMSDK_Plus_Pro_iOS'
+end
+```
+
+If you are using the SDK basic edition, edit the Podfile as follows:
+
+```
+platform :ios, '8.0'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'App' do
+pod 'TXIMSDK_iOS'
 end
 ```
 
