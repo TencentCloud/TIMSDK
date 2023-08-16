@@ -38,16 +38,6 @@
 ### [基础版与增强版差异对比](https://github.com/tencentyun/TIMSDK#%E5%9F%BA%E7%A1%80%E7%89%88%E4%B8%8E%E5%A2%9E%E5%BC%BA%E7%89%88%E5%B7%AE%E5%BC%82%E5%AF%B9%E6%AF%94)
 
 ## cocoaPods 集成
-如果使用基础版 SDK，请您按照如下方式设置 Podfile 文件
-
-```
-platform :ios, '8.0'
-source 'https://github.com/CocoaPods/Specs.git'
-
-target 'App' do
-pod 'TXIMSDK_iOS'
-end
-```
 
 如果使用增强版 SDK，请您按照如下方式设置 Podfile 文件
 ```
@@ -78,6 +68,16 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'App' do
 pod 'TXIMSDK_Plus_Pro_iOS'
+end
+```
+
+如果使用基础版 SDK，请您按照如下方式设置 Podfile 文件
+```
+platform :ios, '8.0'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'App' do
+pod 'TXIMSDK_iOS'
 end
 ```
 
