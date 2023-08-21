@@ -39,7 +39,6 @@
     NSString *faceUrl = param[@"faceUrl"];
     NSString *groupType = param[@"groupType"];
     UIImage *originAvatarImage = param[@"originAvatarImage"];
-    @weakify(self);
     if (groupID.length > 0) {
         /**
          * 群组头像
@@ -89,7 +88,6 @@
                 [targetView sd_setImageWithURL:nil placeholderImage:originAvatarImage];
                 [TUIGroupAvatar getCacheGroupAvatar:groupID
                                            callback:^(UIImage *avatar, NSString *groupID) {
-                                             @strongify(self);
                                              if ([groupID isEqualToString:groupID]) {
                                                  // 1.1 callback 回调时，cell 未被复用
                                                  // 1.1 When the callback is invoked, the cell is not reused
@@ -107,7 +105,6 @@
                                                          fetchGroupAvatars:groupID
                                                                placeholder:originAvatarImage
                                                                   callback:^(BOOL success, UIImage *image, NSString *groupID) {
-                                                                    @strongify(self);
                                                                     if ([groupID isEqualToString:groupID]) {
                                                                         // callback 回调时，cell 未被复用
                                                                         // When the callback is invoked, the cell is not reused

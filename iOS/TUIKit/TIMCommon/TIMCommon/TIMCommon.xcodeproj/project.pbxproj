@@ -7,40 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		162B82FA29F7F1BC00443117 /* TUIBubbleMessageCellData.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82BC29F7F1BC00443117 /* TUIBubbleMessageCellData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B82FB29F7F1BC00443117 /* TUIBubbleMessageCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82BD29F7F1BC00443117 /* TUIBubbleMessageCellData.m */; };
-		162B82FC29F7F1BC00443117 /* TUIBubbleMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82BF29F7F1BC00443117 /* TUIBubbleMessageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B82FD29F7F1BC00443117 /* TUIBubbleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82C029F7F1BC00443117 /* TUIBubbleMessageCell.m */; };
-		162B82FE29F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82C429F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.m */; };
-		162B82FF29F7F1BC00443117 /* TUIMessageCellData_Minimalist.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82C529F7F1BC00443117 /* TUIMessageCellData_Minimalist.m */; };
-		162B830029F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82C629F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B830129F7F1BC00443117 /* TUIMessageCellData_Minimalist.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82C729F7F1BC00443117 /* TUIMessageCellData_Minimalist.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B830229F7F1BC00443117 /* TUIMessageCell_Minimalist.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82C929F7F1BC00443117 /* TUIMessageCell_Minimalist.m */; };
-		162B830329F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82CA29F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.m */; };
-		162B830429F7F1BC00443117 /* TUIMessageCell_Minimalist.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82CB29F7F1BC00443117 /* TUIMessageCell_Minimalist.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B830529F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82CC29F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		162B830629F7F1BC00443117 /* TIMCommonLocalizable.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 162B82CE29F7F1BC00443117 /* TIMCommonLocalizable.bundle */; };
 		162B830729F7F1BC00443117 /* TIMCommonTheme.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 162B82CF29F7F1BC00443117 /* TIMCommonTheme.bundle */; };
 		162B830829F7F1BC00443117 /* TIMCommon.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 162B82D029F7F1BC00443117 /* TIMCommon.bundle */; };
 		162B830929F7F1BC00443117 /* TIMCommon_Minimalist.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 162B82D129F7F1BC00443117 /* TIMCommon_Minimalist.bundle */; };
-		162B830A29F7F1BC00443117 /* TUISystemMessageCellData.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82D429F7F1BC00443117 /* TUISystemMessageCellData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B830B29F7F1BC00443117 /* NSString+TUIEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82D529F7F1BC00443117 /* NSString+TUIEmoji.m */; };
-		162B830C29F7F1BC00443117 /* TUIMessageCellData.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82D629F7F1BC00443117 /* TUIMessageCellData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B830D29F7F1BD00443117 /* TUITagsModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82D729F7F1BC00443117 /* TUITagsModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B830E29F7F1BD00443117 /* TUIMessageCellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82D829F7F1BC00443117 /* TUIMessageCellLayout.m */; };
-		162B830F29F7F1BD00443117 /* NSString+TUIEmoji.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82D929F7F1BC00443117 /* NSString+TUIEmoji.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B831029F7F1BD00443117 /* TUISystemMessageCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82DA29F7F1BC00443117 /* TUISystemMessageCellData.m */; };
-		162B831129F7F1BD00443117 /* TUITagsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82DB29F7F1BC00443117 /* TUITagsModel.m */; };
-		162B831229F7F1BD00443117 /* TUIMessageCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82DC29F7F1BC00443117 /* TUIMessageCellData.m */; };
-		162B831329F7F1BD00443117 /* TUIMessageCellLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82DD29F7F1BC00443117 /* TUIMessageCellLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B831429F7F1BD00443117 /* TUITagsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82DF29F7F1BC00443117 /* TUITagsCell.m */; };
-		162B831529F7F1BD00443117 /* TUIMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82E029F7F1BC00443117 /* TUIMessageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B831629F7F1BD00443117 /* TUITagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82E129F7F1BC00443117 /* TUITagsView.m */; };
-		162B831729F7F1BD00443117 /* TUISystemMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82E229F7F1BC00443117 /* TUISystemMessageCell.m */; };
-		162B831829F7F1BD00443117 /* TUITagsCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82E329F7F1BC00443117 /* TUITagsCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B831929F7F1BD00443117 /* TUITagsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82E429F7F1BC00443117 /* TUITagsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		162B831A29F7F1BD00443117 /* TUIMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82E529F7F1BC00443117 /* TUIMessageCell.m */; };
-		162B831B29F7F1BD00443117 /* TUISystemMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82E629F7F1BC00443117 /* TUISystemMessageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		162B831C29F7F1BD00443117 /* TIMPopActionProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82E829F7F1BC00443117 /* TIMPopActionProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		162B831D29F7F1BD00443117 /* TUIFloatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82E929F7F1BC00443117 /* TUIFloatViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		162B831E29F7F1BD00443117 /* TUIAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 162B82EA29F7F1BC00443117 /* TUIAttributedLabel.m */; };
@@ -60,46 +30,42 @@
 		162B832C29F7F1BD00443117 /* TIMConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82F829F7F1BC00443117 /* TIMConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		162B832D29F7F1BD00443117 /* TIMDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 162B82F929F7F1BC00443117 /* TIMDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31D9464BA2C65FF16C2FDFD5 /* Pods_TIMCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C81F4B46B1481B60E98731D4 /* Pods_TIMCommon.framework */; };
+		48F747222A56BF6F00FEADC2 /* TUIBubbleMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747052A56BF6E00FEADC2 /* TUIBubbleMessageCell.h */; };
+		48F747232A56BF6F00FEADC2 /* TUIBubbleMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F747062A56BF6E00FEADC2 /* TUIBubbleMessageCell.m */; };
+		48F747242A56BF6F00FEADC2 /* TUITagsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F747082A56BF6E00FEADC2 /* TUITagsCell.m */; };
+		48F747252A56BF6F00FEADC2 /* TUIMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747092A56BF6E00FEADC2 /* TUIMessageCell.h */; };
+		48F747262A56BF6F00FEADC2 /* TUITagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7470A2A56BF6E00FEADC2 /* TUITagsView.m */; };
+		48F747272A56BF6F00FEADC2 /* TUISystemMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7470B2A56BF6E00FEADC2 /* TUISystemMessageCell.m */; };
+		48F747282A56BF6F00FEADC2 /* TUITagsCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7470C2A56BF6E00FEADC2 /* TUITagsCell.h */; };
+		48F747292A56BF6F00FEADC2 /* TUITagsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7470D2A56BF6E00FEADC2 /* TUITagsView.h */; };
+		48F7472A2A56BF6F00FEADC2 /* TUIMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7470E2A56BF6E00FEADC2 /* TUIMessageCell.m */; };
+		48F7472B2A56BF6F00FEADC2 /* TUISystemMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7470F2A56BF6E00FEADC2 /* TUISystemMessageCell.h */; };
+		48F7472C2A56BF6F00FEADC2 /* TUIMessageCell_Minimalist.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F747112A56BF6E00FEADC2 /* TUIMessageCell_Minimalist.m */; };
+		48F7472D2A56BF6F00FEADC2 /* TUIBubbleMessageCell_Minimalist.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F747122A56BF6E00FEADC2 /* TUIBubbleMessageCell_Minimalist.m */; };
+		48F7472E2A56BF6F00FEADC2 /* TUIMessageCell_Minimalist.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747132A56BF6E00FEADC2 /* TUIMessageCell_Minimalist.h */; };
+		48F7472F2A56BF6F00FEADC2 /* TUIBubbleMessageCell_Minimalist.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747142A56BF6E00FEADC2 /* TUIBubbleMessageCell_Minimalist.h */; };
+		48F747302A56BF6F00FEADC2 /* TUIBubbleMessageCellData.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747162A56BF6E00FEADC2 /* TUIBubbleMessageCellData.h */; };
+		48F747312A56BF6F00FEADC2 /* TUISystemMessageCellData.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747172A56BF6E00FEADC2 /* TUISystemMessageCellData.h */; };
+		48F747322A56BF6F00FEADC2 /* NSString+TUIEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F747182A56BF6E00FEADC2 /* NSString+TUIEmoji.m */; };
+		48F747332A56BF6F00FEADC2 /* TUIMessageCellData.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747192A56BF6E00FEADC2 /* TUIMessageCellData.h */; };
+		48F747342A56BF6F00FEADC2 /* TUITagsModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7471A2A56BF6E00FEADC2 /* TUITagsModel.h */; };
+		48F747352A56BF6F00FEADC2 /* TUIMessageCellLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7471B2A56BF6E00FEADC2 /* TUIMessageCellLayout.m */; };
+		48F747362A56BF6F00FEADC2 /* TUIBubbleMessageCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7471C2A56BF6E00FEADC2 /* TUIBubbleMessageCellData.m */; };
+		48F747372A56BF6F00FEADC2 /* NSString+TUIEmoji.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7471D2A56BF6E00FEADC2 /* NSString+TUIEmoji.h */; };
+		48F747382A56BF6F00FEADC2 /* TUISystemMessageCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7471E2A56BF6E00FEADC2 /* TUISystemMessageCellData.m */; };
+		48F747392A56BF6F00FEADC2 /* TUITagsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7471F2A56BF6E00FEADC2 /* TUITagsModel.m */; };
+		48F7473A2A56BF6F00FEADC2 /* TUIMessageCellData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F747202A56BF6E00FEADC2 /* TUIMessageCellData.m */; };
+		48F7473B2A56BF6F00FEADC2 /* TUIMessageCellLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F747212A56BF6E00FEADC2 /* TUIMessageCellLayout.h */; };
 		9346F8B92A0396EA00D54003 /* TUIGroupAvatar+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9346F8B72A0396EA00D54003 /* TUIGroupAvatar+Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9346F8BA2A0396EA00D54003 /* TUIGroupAvatar+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9346F8B82A0396EA00D54003 /* TUIGroupAvatar+Helper.m */; };
 		935F15922A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 935F15912A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		162B82BC29F7F1BC00443117 /* TUIBubbleMessageCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBubbleMessageCellData.h; sourceTree = "<group>"; };
-		162B82BD29F7F1BC00443117 /* TUIBubbleMessageCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBubbleMessageCellData.m; sourceTree = "<group>"; };
-		162B82BF29F7F1BC00443117 /* TUIBubbleMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBubbleMessageCell.h; sourceTree = "<group>"; };
-		162B82C029F7F1BC00443117 /* TUIBubbleMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBubbleMessageCell.m; sourceTree = "<group>"; };
-		162B82C429F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBubbleMessageCellData_Minimalist.m; sourceTree = "<group>"; };
-		162B82C529F7F1BC00443117 /* TUIMessageCellData_Minimalist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCellData_Minimalist.m; sourceTree = "<group>"; };
-		162B82C629F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBubbleMessageCellData_Minimalist.h; sourceTree = "<group>"; };
-		162B82C729F7F1BC00443117 /* TUIMessageCellData_Minimalist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCellData_Minimalist.h; sourceTree = "<group>"; };
-		162B82C929F7F1BC00443117 /* TUIMessageCell_Minimalist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCell_Minimalist.m; sourceTree = "<group>"; };
-		162B82CA29F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBubbleMessageCell_Minimalist.m; sourceTree = "<group>"; };
-		162B82CB29F7F1BC00443117 /* TUIMessageCell_Minimalist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCell_Minimalist.h; sourceTree = "<group>"; };
-		162B82CC29F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBubbleMessageCell_Minimalist.h; sourceTree = "<group>"; };
 		162B82CE29F7F1BC00443117 /* TIMCommonLocalizable.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TIMCommonLocalizable.bundle; sourceTree = "<group>"; };
 		162B82CF29F7F1BC00443117 /* TIMCommonTheme.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TIMCommonTheme.bundle; sourceTree = "<group>"; };
 		162B82D029F7F1BC00443117 /* TIMCommon.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TIMCommon.bundle; sourceTree = "<group>"; };
 		162B82D129F7F1BC00443117 /* TIMCommon_Minimalist.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TIMCommon_Minimalist.bundle; sourceTree = "<group>"; };
-		162B82D429F7F1BC00443117 /* TUISystemMessageCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUISystemMessageCellData.h; sourceTree = "<group>"; };
-		162B82D529F7F1BC00443117 /* NSString+TUIEmoji.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TUIEmoji.m"; sourceTree = "<group>"; };
-		162B82D629F7F1BC00443117 /* TUIMessageCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCellData.h; sourceTree = "<group>"; };
-		162B82D729F7F1BC00443117 /* TUITagsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITagsModel.h; sourceTree = "<group>"; };
-		162B82D829F7F1BC00443117 /* TUIMessageCellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCellLayout.m; sourceTree = "<group>"; };
-		162B82D929F7F1BC00443117 /* NSString+TUIEmoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TUIEmoji.h"; sourceTree = "<group>"; };
-		162B82DA29F7F1BC00443117 /* TUISystemMessageCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUISystemMessageCellData.m; sourceTree = "<group>"; };
-		162B82DB29F7F1BC00443117 /* TUITagsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITagsModel.m; sourceTree = "<group>"; };
-		162B82DC29F7F1BC00443117 /* TUIMessageCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCellData.m; sourceTree = "<group>"; };
-		162B82DD29F7F1BC00443117 /* TUIMessageCellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCellLayout.h; sourceTree = "<group>"; };
-		162B82DF29F7F1BC00443117 /* TUITagsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITagsCell.m; sourceTree = "<group>"; };
-		162B82E029F7F1BC00443117 /* TUIMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCell.h; sourceTree = "<group>"; };
-		162B82E129F7F1BC00443117 /* TUITagsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITagsView.m; sourceTree = "<group>"; };
-		162B82E229F7F1BC00443117 /* TUISystemMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUISystemMessageCell.m; sourceTree = "<group>"; };
-		162B82E329F7F1BC00443117 /* TUITagsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITagsCell.h; sourceTree = "<group>"; };
-		162B82E429F7F1BC00443117 /* TUITagsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITagsView.h; sourceTree = "<group>"; };
-		162B82E529F7F1BC00443117 /* TUIMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCell.m; sourceTree = "<group>"; };
-		162B82E629F7F1BC00443117 /* TUISystemMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUISystemMessageCell.h; sourceTree = "<group>"; };
 		162B82E829F7F1BC00443117 /* TIMPopActionProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIMPopActionProtocol.h; sourceTree = "<group>"; };
 		162B82E929F7F1BC00443117 /* TUIFloatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIFloatViewController.h; sourceTree = "<group>"; };
 		162B82EA29F7F1BC00443117 /* TUIAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIAttributedLabel.m; sourceTree = "<group>"; };
@@ -119,6 +85,32 @@
 		162B82F829F7F1BC00443117 /* TIMConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIMConfig.h; sourceTree = "<group>"; };
 		162B82F929F7F1BC00443117 /* TIMDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIMDefine.h; sourceTree = "<group>"; };
 		165186E829D137F000FB786D /* TIMCommon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TIMCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		48F747052A56BF6E00FEADC2 /* TUIBubbleMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBubbleMessageCell.h; sourceTree = "<group>"; };
+		48F747062A56BF6E00FEADC2 /* TUIBubbleMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBubbleMessageCell.m; sourceTree = "<group>"; };
+		48F747082A56BF6E00FEADC2 /* TUITagsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITagsCell.m; sourceTree = "<group>"; };
+		48F747092A56BF6E00FEADC2 /* TUIMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCell.h; sourceTree = "<group>"; };
+		48F7470A2A56BF6E00FEADC2 /* TUITagsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITagsView.m; sourceTree = "<group>"; };
+		48F7470B2A56BF6E00FEADC2 /* TUISystemMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUISystemMessageCell.m; sourceTree = "<group>"; };
+		48F7470C2A56BF6E00FEADC2 /* TUITagsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITagsCell.h; sourceTree = "<group>"; };
+		48F7470D2A56BF6E00FEADC2 /* TUITagsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITagsView.h; sourceTree = "<group>"; };
+		48F7470E2A56BF6E00FEADC2 /* TUIMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCell.m; sourceTree = "<group>"; };
+		48F7470F2A56BF6E00FEADC2 /* TUISystemMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUISystemMessageCell.h; sourceTree = "<group>"; };
+		48F747112A56BF6E00FEADC2 /* TUIMessageCell_Minimalist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCell_Minimalist.m; sourceTree = "<group>"; };
+		48F747122A56BF6E00FEADC2 /* TUIBubbleMessageCell_Minimalist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBubbleMessageCell_Minimalist.m; sourceTree = "<group>"; };
+		48F747132A56BF6E00FEADC2 /* TUIMessageCell_Minimalist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCell_Minimalist.h; sourceTree = "<group>"; };
+		48F747142A56BF6E00FEADC2 /* TUIBubbleMessageCell_Minimalist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBubbleMessageCell_Minimalist.h; sourceTree = "<group>"; };
+		48F747162A56BF6E00FEADC2 /* TUIBubbleMessageCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIBubbleMessageCellData.h; sourceTree = "<group>"; };
+		48F747172A56BF6E00FEADC2 /* TUISystemMessageCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUISystemMessageCellData.h; sourceTree = "<group>"; };
+		48F747182A56BF6E00FEADC2 /* NSString+TUIEmoji.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TUIEmoji.m"; sourceTree = "<group>"; };
+		48F747192A56BF6E00FEADC2 /* TUIMessageCellData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCellData.h; sourceTree = "<group>"; };
+		48F7471A2A56BF6E00FEADC2 /* TUITagsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUITagsModel.h; sourceTree = "<group>"; };
+		48F7471B2A56BF6E00FEADC2 /* TUIMessageCellLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCellLayout.m; sourceTree = "<group>"; };
+		48F7471C2A56BF6E00FEADC2 /* TUIBubbleMessageCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIBubbleMessageCellData.m; sourceTree = "<group>"; };
+		48F7471D2A56BF6E00FEADC2 /* NSString+TUIEmoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TUIEmoji.h"; sourceTree = "<group>"; };
+		48F7471E2A56BF6E00FEADC2 /* TUISystemMessageCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUISystemMessageCellData.m; sourceTree = "<group>"; };
+		48F7471F2A56BF6E00FEADC2 /* TUITagsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUITagsModel.m; sourceTree = "<group>"; };
+		48F747202A56BF6E00FEADC2 /* TUIMessageCellData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIMessageCellData.m; sourceTree = "<group>"; };
+		48F747212A56BF6E00FEADC2 /* TUIMessageCellLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIMessageCellLayout.h; sourceTree = "<group>"; };
 		66D550827CE1D0EB7DB0AA59 /* Pods-TIMCommon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TIMCommon.release.xcconfig"; path = "Target Support Files/Pods-TIMCommon/Pods-TIMCommon.release.xcconfig"; sourceTree = "<group>"; };
 		794E9563E5CF845D94EB0030 /* Pods-TIMCommon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TIMCommon.debug.xcconfig"; path = "Target Support Files/Pods-TIMCommon/Pods-TIMCommon.debug.xcconfig"; sourceTree = "<group>"; };
 		9346F8B72A0396EA00D54003 /* TUIGroupAvatar+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TUIGroupAvatar+Helper.h"; sourceTree = "<group>"; };
@@ -141,82 +133,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		162B82B929F7F1BC00443117 /* UI_Classic */ = {
-			isa = PBXGroup;
-			children = (
-				162B82BA29F7F1BC00443117 /* Cell */,
-			);
-			name = UI_Classic;
-			path = ../../UI_Classic;
-			sourceTree = "<group>";
-		};
-		162B82BA29F7F1BC00443117 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				162B82BB29F7F1BC00443117 /* CellData */,
-				162B82BE29F7F1BC00443117 /* CellUI */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
-		162B82BB29F7F1BC00443117 /* CellData */ = {
-			isa = PBXGroup;
-			children = (
-				162B82BC29F7F1BC00443117 /* TUIBubbleMessageCellData.h */,
-				162B82BD29F7F1BC00443117 /* TUIBubbleMessageCellData.m */,
-			);
-			path = CellData;
-			sourceTree = "<group>";
-		};
-		162B82BE29F7F1BC00443117 /* CellUI */ = {
-			isa = PBXGroup;
-			children = (
-				162B82BF29F7F1BC00443117 /* TUIBubbleMessageCell.h */,
-				162B82C029F7F1BC00443117 /* TUIBubbleMessageCell.m */,
-			);
-			path = CellUI;
-			sourceTree = "<group>";
-		};
-		162B82C129F7F1BC00443117 /* UI_Minimalist */ = {
-			isa = PBXGroup;
-			children = (
-				162B82C229F7F1BC00443117 /* Cell */,
-			);
-			name = UI_Minimalist;
-			path = ../../UI_Minimalist;
-			sourceTree = "<group>";
-		};
-		162B82C229F7F1BC00443117 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				162B82C329F7F1BC00443117 /* CellData */,
-				162B82C829F7F1BC00443117 /* CellUI */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
-		162B82C329F7F1BC00443117 /* CellData */ = {
-			isa = PBXGroup;
-			children = (
-				162B82C429F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.m */,
-				162B82C529F7F1BC00443117 /* TUIMessageCellData_Minimalist.m */,
-				162B82C629F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.h */,
-				162B82C729F7F1BC00443117 /* TUIMessageCellData_Minimalist.h */,
-			);
-			path = CellData;
-			sourceTree = "<group>";
-		};
-		162B82C829F7F1BC00443117 /* CellUI */ = {
-			isa = PBXGroup;
-			children = (
-				162B82C929F7F1BC00443117 /* TUIMessageCell_Minimalist.m */,
-				162B82CA29F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.m */,
-				162B82CB29F7F1BC00443117 /* TUIMessageCell_Minimalist.h */,
-				162B82CC29F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.h */,
-			);
-			path = CellUI;
-			sourceTree = "<group>";
-		};
 		162B82CD29F7F1BC00443117 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,48 +143,6 @@
 			);
 			name = Resources;
 			path = ../../Resources;
-			sourceTree = "<group>";
-		};
-		162B82D229F7F1BC00443117 /* BaseCell */ = {
-			isa = PBXGroup;
-			children = (
-				162B82D329F7F1BC00443117 /* CellData */,
-				162B82DE29F7F1BC00443117 /* CellUI */,
-			);
-			name = BaseCell;
-			path = ../../BaseCell;
-			sourceTree = "<group>";
-		};
-		162B82D329F7F1BC00443117 /* CellData */ = {
-			isa = PBXGroup;
-			children = (
-				162B82D429F7F1BC00443117 /* TUISystemMessageCellData.h */,
-				162B82D529F7F1BC00443117 /* NSString+TUIEmoji.m */,
-				162B82D629F7F1BC00443117 /* TUIMessageCellData.h */,
-				162B82D729F7F1BC00443117 /* TUITagsModel.h */,
-				162B82D829F7F1BC00443117 /* TUIMessageCellLayout.m */,
-				162B82D929F7F1BC00443117 /* NSString+TUIEmoji.h */,
-				162B82DA29F7F1BC00443117 /* TUISystemMessageCellData.m */,
-				162B82DB29F7F1BC00443117 /* TUITagsModel.m */,
-				162B82DC29F7F1BC00443117 /* TUIMessageCellData.m */,
-				162B82DD29F7F1BC00443117 /* TUIMessageCellLayout.h */,
-			);
-			path = CellData;
-			sourceTree = "<group>";
-		};
-		162B82DE29F7F1BC00443117 /* CellUI */ = {
-			isa = PBXGroup;
-			children = (
-				162B82DF29F7F1BC00443117 /* TUITagsCell.m */,
-				162B82E029F7F1BC00443117 /* TUIMessageCell.h */,
-				162B82E129F7F1BC00443117 /* TUITagsView.m */,
-				162B82E229F7F1BC00443117 /* TUISystemMessageCell.m */,
-				162B82E329F7F1BC00443117 /* TUITagsCell.h */,
-				162B82E429F7F1BC00443117 /* TUITagsView.h */,
-				162B82E529F7F1BC00443117 /* TUIMessageCell.m */,
-				162B82E629F7F1BC00443117 /* TUISystemMessageCell.h */,
-			);
-			path = CellUI;
 			sourceTree = "<group>";
 		};
 		162B82E729F7F1BC00443117 /* CommonModel */ = {
@@ -303,13 +177,72 @@
 		165186E929D1381D00FB786D /* TIMCommon */ = {
 			isa = PBXGroup;
 			children = (
-				162B82D229F7F1BC00443117 /* BaseCell */,
+				48F747072A56BF6E00FEADC2 /* BaseCell */,
+				48F747152A56BF6E00FEADC2 /* BaseCellData */,
+				48F747042A56BF6E00FEADC2 /* UI_Classic */,
+				48F747102A56BF6E00FEADC2 /* UI_Minimalist */,
 				162B82E729F7F1BC00443117 /* CommonModel */,
 				162B82CD29F7F1BC00443117 /* Resources */,
-				162B82B929F7F1BC00443117 /* UI_Classic */,
-				162B82C129F7F1BC00443117 /* UI_Minimalist */,
 			);
 			path = TIMCommon;
+			sourceTree = "<group>";
+		};
+		48F747042A56BF6E00FEADC2 /* UI_Classic */ = {
+			isa = PBXGroup;
+			children = (
+				48F747052A56BF6E00FEADC2 /* TUIBubbleMessageCell.h */,
+				48F747062A56BF6E00FEADC2 /* TUIBubbleMessageCell.m */,
+			);
+			name = UI_Classic;
+			path = ../../UI_Classic;
+			sourceTree = "<group>";
+		};
+		48F747072A56BF6E00FEADC2 /* BaseCell */ = {
+			isa = PBXGroup;
+			children = (
+				48F747082A56BF6E00FEADC2 /* TUITagsCell.m */,
+				48F747092A56BF6E00FEADC2 /* TUIMessageCell.h */,
+				48F7470A2A56BF6E00FEADC2 /* TUITagsView.m */,
+				48F7470B2A56BF6E00FEADC2 /* TUISystemMessageCell.m */,
+				48F7470C2A56BF6E00FEADC2 /* TUITagsCell.h */,
+				48F7470D2A56BF6E00FEADC2 /* TUITagsView.h */,
+				48F7470E2A56BF6E00FEADC2 /* TUIMessageCell.m */,
+				48F7470F2A56BF6E00FEADC2 /* TUISystemMessageCell.h */,
+			);
+			name = BaseCell;
+			path = ../../BaseCell;
+			sourceTree = "<group>";
+		};
+		48F747102A56BF6E00FEADC2 /* UI_Minimalist */ = {
+			isa = PBXGroup;
+			children = (
+				48F747112A56BF6E00FEADC2 /* TUIMessageCell_Minimalist.m */,
+				48F747122A56BF6E00FEADC2 /* TUIBubbleMessageCell_Minimalist.m */,
+				48F747132A56BF6E00FEADC2 /* TUIMessageCell_Minimalist.h */,
+				48F747142A56BF6E00FEADC2 /* TUIBubbleMessageCell_Minimalist.h */,
+			);
+			name = UI_Minimalist;
+			path = ../../UI_Minimalist;
+			sourceTree = "<group>";
+		};
+		48F747152A56BF6E00FEADC2 /* BaseCellData */ = {
+			isa = PBXGroup;
+			children = (
+				48F747162A56BF6E00FEADC2 /* TUIBubbleMessageCellData.h */,
+				48F747172A56BF6E00FEADC2 /* TUISystemMessageCellData.h */,
+				48F747182A56BF6E00FEADC2 /* NSString+TUIEmoji.m */,
+				48F747192A56BF6E00FEADC2 /* TUIMessageCellData.h */,
+				48F7471A2A56BF6E00FEADC2 /* TUITagsModel.h */,
+				48F7471B2A56BF6E00FEADC2 /* TUIMessageCellLayout.m */,
+				48F7471C2A56BF6E00FEADC2 /* TUIBubbleMessageCellData.m */,
+				48F7471D2A56BF6E00FEADC2 /* NSString+TUIEmoji.h */,
+				48F7471E2A56BF6E00FEADC2 /* TUISystemMessageCellData.m */,
+				48F7471F2A56BF6E00FEADC2 /* TUITagsModel.m */,
+				48F747202A56BF6E00FEADC2 /* TUIMessageCellData.m */,
+				48F747212A56BF6E00FEADC2 /* TUIMessageCellLayout.h */,
+			);
+			name = BaseCellData;
+			path = ../../BaseCellData;
 			sourceTree = "<group>";
 		};
 		D5D83ED329B82BD7007EE351 = {
@@ -356,33 +289,31 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				162B830129F7F1BC00443117 /* TUIMessageCellData_Minimalist.h in Headers */,
-				162B831829F7F1BD00443117 /* TUITagsCell.h in Headers */,
 				162B832D29F7F1BD00443117 /* TIMDefine.h in Headers */,
 				162B832129F7F1BD00443117 /* TIMCommonModel.h in Headers */,
-				162B831529F7F1BD00443117 /* TUIMessageCell.h in Headers */,
-				162B82FA29F7F1BC00443117 /* TUIBubbleMessageCellData.h in Headers */,
+				48F747372A56BF6F00FEADC2 /* NSString+TUIEmoji.h in Headers */,
 				162B832A29F7F1BD00443117 /* NSTimer+TUISafe.h in Headers */,
-				162B830F29F7F1BD00443117 /* NSString+TUIEmoji.h in Headers */,
+				48F747222A56BF6F00FEADC2 /* TUIBubbleMessageCell.h in Headers */,
 				162B831C29F7F1BD00443117 /* TIMPopActionProtocol.h in Headers */,
+				48F7472B2A56BF6F00FEADC2 /* TUISystemMessageCell.h in Headers */,
+				48F747252A56BF6F00FEADC2 /* TUIMessageCell.h in Headers */,
+				48F747332A56BF6F00FEADC2 /* TUIMessageCellData.h in Headers */,
 				162B832B29F7F1BD00443117 /* TUITextView.h in Headers */,
 				162B832C29F7F1BD00443117 /* TIMConfig.h in Headers */,
-				162B830529F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.h in Headers */,
-				162B830C29F7F1BC00443117 /* TUIMessageCellData.h in Headers */,
-				162B830D29F7F1BD00443117 /* TUITagsModel.h in Headers */,
-				162B831329F7F1BD00443117 /* TUIMessageCellLayout.h in Headers */,
 				162B832929F7F1BD00443117 /* TUIAttributedLabel.h in Headers */,
-				162B831B29F7F1BD00443117 /* TUISystemMessageCell.h in Headers */,
-				162B831929F7F1BD00443117 /* TUITagsView.h in Headers */,
-				162B830A29F7F1BC00443117 /* TUISystemMessageCellData.h in Headers */,
-				162B82FC29F7F1BC00443117 /* TUIBubbleMessageCell.h in Headers */,
-				162B830429F7F1BC00443117 /* TUIMessageCell_Minimalist.h in Headers */,
+				48F747312A56BF6F00FEADC2 /* TUISystemMessageCellData.h in Headers */,
+				48F747282A56BF6F00FEADC2 /* TUITagsCell.h in Headers */,
 				162B832029F7F1BD00443117 /* TUIUserAuthorizationCenter.h in Headers */,
 				162B832829F7F1BD00443117 /* TUIFitButton.h in Headers */,
+				48F747302A56BF6F00FEADC2 /* TUIBubbleMessageCellData.h in Headers */,
 				162B831D29F7F1BD00443117 /* TUIFloatViewController.h in Headers */,
+				48F7473B2A56BF6F00FEADC2 /* TUIMessageCellLayout.h in Headers */,
 				9346F8B92A0396EA00D54003 /* TUIGroupAvatar+Helper.h in Headers */,
 				935F15922A04EB8100E35113 /* TIMInputViewMoreActionProtocol.h in Headers */,
-				162B830029F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.h in Headers */,
+				48F7472E2A56BF6F00FEADC2 /* TUIMessageCell_Minimalist.h in Headers */,
+				48F7472F2A56BF6F00FEADC2 /* TUIBubbleMessageCell_Minimalist.h in Headers */,
+				48F747342A56BF6F00FEADC2 /* TUITagsModel.h in Headers */,
+				48F747292A56BF6F00FEADC2 /* TUITagsView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,30 +428,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48F747262A56BF6F00FEADC2 /* TUITagsView.m in Sources */,
 				9346F8BA2A0396EA00D54003 /* TUIGroupAvatar+Helper.m in Sources */,
-				162B82FD29F7F1BC00443117 /* TUIBubbleMessageCell.m in Sources */,
-				162B831129F7F1BD00443117 /* TUITagsModel.m in Sources */,
-				162B830B29F7F1BC00443117 /* NSString+TUIEmoji.m in Sources */,
-				162B82FF29F7F1BC00443117 /* TUIMessageCellData_Minimalist.m in Sources */,
-				162B82FB29F7F1BC00443117 /* TUIBubbleMessageCellData.m in Sources */,
 				162B832629F7F1BD00443117 /* TIMCommonModel.m in Sources */,
-				162B831A29F7F1BD00443117 /* TUIMessageCell.m in Sources */,
 				162B832429F7F1BD00443117 /* TIMConfig.m in Sources */,
-				162B831629F7F1BD00443117 /* TUITagsView.m in Sources */,
+				48F747352A56BF6F00FEADC2 /* TUIMessageCellLayout.m in Sources */,
+				48F747362A56BF6F00FEADC2 /* TUIBubbleMessageCellData.m in Sources */,
+				48F7473A2A56BF6F00FEADC2 /* TUIMessageCellData.m in Sources */,
+				48F747242A56BF6F00FEADC2 /* TUITagsCell.m in Sources */,
 				162B832729F7F1BD00443117 /* TUIUserAuthorizationCenter.m in Sources */,
+				48F7472A2A56BF6F00FEADC2 /* TUIMessageCell.m in Sources */,
+				48F747232A56BF6F00FEADC2 /* TUIBubbleMessageCell.m in Sources */,
 				162B831F29F7F1BD00443117 /* TUIFitButton.m in Sources */,
+				48F747382A56BF6F00FEADC2 /* TUISystemMessageCellData.m in Sources */,
 				162B832529F7F1BD00443117 /* TUIFloatViewController.m in Sources */,
+				48F747272A56BF6F00FEADC2 /* TUISystemMessageCell.m in Sources */,
 				162B832229F7F1BD00443117 /* TUITextView.m in Sources */,
-				162B830229F7F1BC00443117 /* TUIMessageCell_Minimalist.m in Sources */,
-				162B831229F7F1BD00443117 /* TUIMessageCellData.m in Sources */,
 				162B831E29F7F1BD00443117 /* TUIAttributedLabel.m in Sources */,
-				162B82FE29F7F1BC00443117 /* TUIBubbleMessageCellData_Minimalist.m in Sources */,
-				162B830E29F7F1BD00443117 /* TUIMessageCellLayout.m in Sources */,
-				162B831429F7F1BD00443117 /* TUITagsCell.m in Sources */,
-				162B830329F7F1BC00443117 /* TUIBubbleMessageCell_Minimalist.m in Sources */,
-				162B831029F7F1BD00443117 /* TUISystemMessageCellData.m in Sources */,
+				48F7472C2A56BF6F00FEADC2 /* TUIMessageCell_Minimalist.m in Sources */,
+				48F747392A56BF6F00FEADC2 /* TUITagsModel.m in Sources */,
 				162B832329F7F1BD00443117 /* NSTimer+TUISafe.m in Sources */,
-				162B831729F7F1BD00443117 /* TUISystemMessageCell.m in Sources */,
+				48F747322A56BF6F00FEADC2 /* NSString+TUIEmoji.m in Sources */,
+				48F7472D2A56BF6F00FEADC2 /* TUIBubbleMessageCell_Minimalist.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

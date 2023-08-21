@@ -688,7 +688,7 @@
 "TIMAppTabBarItemCallsRecordText_mini" = "Calls";
 "TIMAppChat" = "Chat";
 "TIMAppChatDisconnectTitle" = "Chat(not connected)";
-"TIMAppChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud IM products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
+"TIMAppChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
 "TIMAppChatSecurityWarningReport" = "Report";
 "TIMAppTencentCloudIM" = "TencentCloudIM";
 "TIMAppWelcomeToChat" = " Welcome to Chat demo!";

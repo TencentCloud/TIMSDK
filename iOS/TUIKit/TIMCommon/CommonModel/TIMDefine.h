@@ -9,10 +9,9 @@
 #ifndef TIMDefine_h
 #define TIMDefine_h
 
+#import <ReactiveObjC/ReactiveObjC.h>
 #import <TUICore/TUIDefine.h>
-
 #import "TIMConfig.h"
-
 #import "TIMCommonModel.h"
 
 #define kEnableAllRotationOrientationNotification @"kEnableAllRotationOrientationNotification"
