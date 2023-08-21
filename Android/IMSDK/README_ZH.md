@@ -22,12 +22,6 @@
 [最新C++接口下载](https://im.sdk.qcloud.com/download/plus/7.4.4643/cross_platform/ImSDK_Android_CPP_7.4.4643.zip)
 
 #### maven 集成 (Android 平台)
- 如果使用基础版 SDK，请在 gradle 里添加如下依赖
- ```
- dependencies {
-   api 'com.tencent.imsdk:imsdk:版本号'
- }
- ```
  如果使用增强版 SDK，请在 gradle 里添加如下依赖
  ```
  dependencies {
@@ -35,9 +29,15 @@
  }
  ```
  
-  如果使用增强版 Pro SDK，请在 gradle 里添加如下依赖
+ 如果使用增强版 Pro SDK，请在 gradle 里添加如下依赖
  ```
  dependencies {
    api 'com.tencent.imsdk:imsdk-plus-pro:版本号'
+ }
+ ```
+ 如果使用基础版 SDK，请在 gradle 里添加如下依赖
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:imsdk:版本号'
  }
  ```
