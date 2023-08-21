@@ -22,12 +22,6 @@ English | [简体中文](./README_ZH.md)
 [Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.4.4643/cross_platform/ImSDK_Android_CPP_7.4.4643.zip)
 
 #### Maven integration (Android)
- If you use the Basic Edition SDK, add the following dependencies to the `gradle` file:
- ```
- dependencies {
-   api 'com.tencent.imsdk:imsdk:Version number'
- }
- ```
  If you use the Enhanced Edition SDK, add the following dependencies to the `gradle` file:
  ```
  dependencies {
@@ -39,5 +33,11 @@ English | [简体中文](./README_ZH.md)
  ```
  dependencies {
    api 'com.tencent.imsdk:imsdk-plus-pro:Version number'
+ }
+ ```
+ If you use the Basic Edition SDK, add the following dependencies to the `gradle` file:
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:imsdk:Version number'
  }
  ```
