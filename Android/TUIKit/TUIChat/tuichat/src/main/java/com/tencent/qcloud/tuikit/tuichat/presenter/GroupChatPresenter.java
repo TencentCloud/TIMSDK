@@ -142,10 +142,10 @@ public class GroupChatPresenter extends ChatPresenter {
                 public void onSuccess(List<TUIMessageBean> data) {
                     TUIChatLog.i(TAG, "load group message success " + data.size());
                     if (lastMessageInfo == null) {
-                        isHaveMoreNewMessage = false;
+//                        isHaveMoreNewMessage = false;
                     }
                     if (data.size() < MSG_PAGE_COUNT) {
-                        isHaveMoreOldMessage = false;
+//                        isHaveMoreOldMessage = false;
                     }
                     onMessageLoadCompleted(data, type);
                     TUIChatUtils.callbackOnSuccess(callback, data);

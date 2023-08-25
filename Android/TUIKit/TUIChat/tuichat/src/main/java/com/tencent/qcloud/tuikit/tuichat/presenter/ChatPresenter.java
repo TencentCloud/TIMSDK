@@ -294,7 +294,7 @@ public abstract class ChatPresenter {
                             if (firstData.size() >= loadCount / 2) {
                                 isHaveMoreNewMessage = true;
                             } else {
-                                isHaveMoreNewMessage = false;
+//                                isHaveMoreNewMessage = false;
                             }
                             firstLoadedData.addAll(firstData);
                             latch.countDown();
@@ -320,7 +320,7 @@ public abstract class ChatPresenter {
                         @Override
                         public void onSuccess(List<TUIMessageBean> secondData) {
                             if (secondData.size() < loadCount / 2) {
-                                isHaveMoreOldMessage = false;
+//                                isHaveMoreOldMessage = false;
                             }
                             secondLoadedData.addAll(secondData);
                             latch.countDown();
@@ -385,7 +385,7 @@ public abstract class ChatPresenter {
                     if (firstData.size() >= loadCount) {
                         isHaveMoreNewMessage = true;
                     } else {
-                        isHaveMoreNewMessage = false;
+//                        isHaveMoreNewMessage = false;
                     }
                 }
                 onMessageLoadCompleted(firstData, getType);
@@ -685,9 +685,9 @@ public abstract class ChatPresenter {
 
     protected void onRecvNewMessage(TUIMessageBean msg) {
         TUIChatLog.i(TAG, "onRecvNewMessage msgID:" + msg.getId());
-        if (!isHaveMoreNewMessage) {
+//        if (!isHaveMoreNewMessage) {
             addMessage(msg);
-        }
+//        }
     }
 
     protected void addMessage(TUIMessageBean messageInfo) {
