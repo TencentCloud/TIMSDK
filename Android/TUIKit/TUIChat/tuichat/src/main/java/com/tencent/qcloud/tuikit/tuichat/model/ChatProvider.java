@@ -5,7 +5,6 @@ import static com.tencent.imsdk.BaseConstants.ERR_SUCC;
 import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 
 import com.google.gson.Gson;
@@ -57,7 +56,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInf
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
-import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
@@ -76,7 +74,7 @@ public class ChatProvider {
     public static final int ERR_REVOKE_TIME_LIMIT_SVR_GROUP = BaseConstants.ERR_SVR_GROUP_REVOKE_MSG_TIME_LIMIT;
     public static final int ERR_REVOKE_TIME_LIMIT_SVR_MESSAGE = BaseConstants.ERR_SVR_MSG_REVOKE_TIME_LIMIT;
 
-    public void loadC2CMessage(String userId, int count, TUIMessageBean lastMessageInfo, IUIKitCallback<List<TUIMessageBean>> callBack) {
+    public void loadC2CMessage(String userId, int count, TUIMessageBean lastMessageInfo, IUIKitCallback<Pair<List<TUIMessageBean>, Integer>> callBack) {
         V2TIMMessage lastTIMMsg = null;
         if (lastMessageInfo != null) {
             lastTIMMsg = lastMessageInfo.getV2TIMMessage();
@@ -92,12 +90,12 @@ public class ChatProvider {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(v2TIMMessages);
-                TUIChatUtils.callbackOnSuccess(callBack, messageInfoList);
+                TUIChatUtils.callbackOnSuccess(callBack, Pair.create(messageInfoList, v2TIMMessages.size()));
             }
         });
     }
 
-    public void loadGroupMessage(String groupId, int count, TUIMessageBean lastMessageInfo, IUIKitCallback<List<TUIMessageBean>> callBack) {
+    public void loadGroupMessage(String groupId, int count, TUIMessageBean lastMessageInfo, IUIKitCallback<Pair<List<TUIMessageBean>, Integer>> callBack) {
         V2TIMMessage lastTimMsg = null;
         if (lastMessageInfo != null) {
             lastTimMsg = lastMessageInfo.getV2TIMMessage();
@@ -113,13 +111,13 @@ public class ChatProvider {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(v2TIMMessages);
-                TUIChatUtils.callbackOnSuccess(callBack, messageInfoList);
+                TUIChatUtils.callbackOnSuccess(callBack, Pair.create(messageInfoList, v2TIMMessages.size()));
             }
         });
     }
 
-    public void loadHistoryMessageList(
-        String chatId, boolean isGroup, int loadCount, TUIMessageBean locateMessageInfo, int getType, IUIKitCallback<List<TUIMessageBean>> callBack) {
+    public void loadHistoryMessageList(String chatId, boolean isGroup, int loadCount, TUIMessageBean locateMessageInfo, int getType,
+        IUIKitCallback<Pair<List<TUIMessageBean>, Integer>> callBack) {
         V2TIMMessageListGetOption optionBackward = new V2TIMMessageListGetOption();
         optionBackward.setCount(loadCount);
         if (getType == TUIChatConstants.GET_MESSAGE_FORWARD) {
@@ -148,26 +146,26 @@ public class ChatProvider {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(v2TIMMessages);
-                TUIChatUtils.callbackOnSuccess(callBack, messageInfoList);
+                TUIChatUtils.callbackOnSuccess(callBack, Pair.create(messageInfoList, v2TIMMessages.size()));
             }
         });
     }
 
     public void c2cReadReport(String userId) {
-        V2TIMManager.getMessageManager().markC2CMessageAsRead(userId, new V2TIMCallback() {
+        String conversationID = TUIChatUtils.getConversationIdByChatId(userId, false);
+        V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount(conversationID, 0, 0, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
                 TUIChatLog.e(
-                    TAG, "markC2CMessageAsRead setReadMessage failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+                    TAG, "cleanConversationUnreadMessageCount failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
             public void onSuccess() {
-                TUIChatLog.d(TAG, "markC2CMessageAsRead setReadMessage success");
+                TUIChatLog.d(TAG, "cleanConversationUnreadMessageCount success");
             }
         });
 
-        String conversationID = "c2c_" + userId;
         List<String> conversationIDList = new ArrayList<>();
         conversationIDList.add(conversationID);
         V2TIMManager.getConversationManager().markConversation(
@@ -191,19 +189,20 @@ public class ChatProvider {
     }
 
     public void groupReadReport(String groupId) {
-        V2TIMManager.getMessageManager().markGroupMessageAsRead(groupId, new V2TIMCallback() {
+        String conversationID = TUIChatUtils.getConversationIdByChatId(groupId, true);
+        V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount(conversationID, 0, 0, new V2TIMCallback() {
             @Override
             public void onError(int code, String desc) {
-                TUIChatLog.e(TAG, "markGroupMessageAsRead failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+                TUIChatLog.e(
+                    TAG, "cleanConversationUnreadMessageCount failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
             }
 
             @Override
             public void onSuccess() {
-                TUIChatLog.d(TAG, "markGroupMessageAsRead success");
+                TUIChatLog.d(TAG, "cleanConversationUnreadMessageCount success");
             }
         });
 
-        String conversationID = "group_" + groupId;
         List<String> conversationIDList = new ArrayList<>();
         conversationIDList.add(conversationID);
         V2TIMManager.getConversationManager().markConversation(
@@ -325,31 +324,31 @@ public class ChatProvider {
         v2TIMMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
 
         String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,
-                V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
-                    @Override
-                    public void onProgress(int progress) {
-                        TUIChatUtils.callbackOnProgress(callBack, progress);
-                    }
+            V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
+                @Override
+                public void onProgress(int progress) {
+                    TUIChatUtils.callbackOnProgress(callBack, progress);
+                }
 
-                    @Override
-                    public void onError(int code, String desc) {
-                        TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
-                        Map<String, Object> param = new HashMap<>();
-                        param.put(TUIConstants.TUIChat.V2TIMMESSAGE, v2TIMMessage);
-                        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_FAILED, param);
-                    }
+                @Override
+                public void onError(int code, String desc) {
+                    TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
+                    Map<String, Object> param = new HashMap<>();
+                    param.put(TUIConstants.TUIChat.V2TIMMESSAGE, v2TIMMessage);
+                    TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_FAILED, param);
+                }
 
-                    @Override
-                    public void onSuccess(V2TIMMessage v2TIMMessage) {
-                        TUIChatLog.v(TAG, "sendMessage onSuccess:" + v2TIMMessage.getMsgID());
-                        message.setV2TIMMessage(v2TIMMessage);
-                        TUIChatUtils.callbackOnSuccess(callBack, message);
-                        Map<String, Object> param = new HashMap<>();
-                        param.put(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
-                        param.put(TUIConstants.TUIChat.V2TIMMESSAGE, v2TIMMessage);
-                        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS, param);
-                    }
-                });
+                @Override
+                public void onSuccess(V2TIMMessage v2TIMMessage) {
+                    TUIChatLog.v(TAG, "sendMessage onSuccess:" + v2TIMMessage.getMsgID());
+                    message.setV2TIMMessage(v2TIMMessage);
+                    TUIChatUtils.callbackOnSuccess(callBack, message);
+                    Map<String, Object> param = new HashMap<>();
+                    param.put(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
+                    param.put(TUIConstants.TUIChat.V2TIMMESSAGE, v2TIMMessage);
+                    TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_SEND_MESSAGE_SUCCESS, param);
+                }
+            });
         return msgID;
     }
 
@@ -431,43 +430,6 @@ public class ChatProvider {
                 TUIChatLog.e(TAG, "set drafts error : " + code + " " + ErrorMessageConverter.convertIMError(code, desc));
             }
         });
-    }
-
-    public void getConversationLastMessage(String conversationId, IUIKitCallback<TUIMessageBean> callback) {
-        V2TIMManager.getConversationManager().getConversation(conversationId, new V2TIMValueCallback<V2TIMConversation>() {
-            @Override
-            public void onError(int code, String desc) {
-                Log.e(TAG, "getConversationLastMessage error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-            }
-
-            @Override
-            public void onSuccess(V2TIMConversation v2TIMConversation) {
-                V2TIMMessage lastMessage = v2TIMConversation.getLastMessage();
-                TUIMessageBean messageInfo = ChatMessageParser.parseMessage(lastMessage);
-                TUIChatUtils.callbackOnSuccess(callback, messageInfo);
-            }
-        });
-    }
-
-    public void sendGroupTipsMessage(String groupId, String message, IUIKitCallback<TUIMessageBean> callback) {
-        V2TIMMessage createTips = ChatMessageBuilder.buildGroupCustomMessage(message);
-        V2TIMManager.getMessageManager().sendMessage(
-            createTips, null, groupId, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, null, new V2TIMSendCallback<V2TIMMessage>() {
-                @Override
-                public void onProgress(int progress) {}
-
-                @Override
-                public void onError(int code, String desc) {
-                    TUIChatUtils.callbackOnError(callback, TAG, code, desc);
-                }
-
-                @Override
-                public void onSuccess(V2TIMMessage v2TIMMessage) {
-                    TUIChatLog.i(TAG, "sendTipsMessage onSuccess");
-                    TUIMessageBean messageInfo = ChatMessageParser.parseMessage(v2TIMMessage);
-                    TUIChatUtils.callbackOnSuccess(callback, messageInfo);
-                }
-            });
     }
 
     public void addJoinGroupMessage(TUIMessageBean messageInfo, IUIKitCallback<List<GroupMemberInfo>> callback) {
@@ -587,7 +549,7 @@ public class ChatProvider {
         });
     }
 
-    public void getGroupMessageBySeq(String chatId, long seq, IUIKitCallback<List<TUIMessageBean>> callback) {
+    public void getGroupMessageBySeq(String chatId, long seq, IUIKitCallback<Pair<List<TUIMessageBean>, Integer>> callback) {
         V2TIMMessageListGetOption optionBackward = new V2TIMMessageListGetOption();
         optionBackward.setCount(1);
         optionBackward.setGetType(V2TIMMessageListGetOption.V2TIM_GET_LOCAL_OLDER_MSG);
@@ -604,7 +566,7 @@ public class ChatProvider {
             @Override
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(v2TIMMessages);
-                TUIChatUtils.callbackOnSuccess(callback, messageInfoList);
+                TUIChatUtils.callbackOnSuccess(callback, Pair.create(messageInfoList, v2TIMMessages.size()));
             }
         });
     }

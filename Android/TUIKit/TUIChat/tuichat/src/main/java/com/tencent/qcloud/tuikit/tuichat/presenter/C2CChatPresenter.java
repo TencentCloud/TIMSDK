@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
+import android.util.Pair;
+
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
@@ -12,6 +14,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -125,15 +128,16 @@ public class C2CChatPresenter extends ChatPresenter {
         // 向前拉取更旧的消息
         // Pull older messages forward
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
-            provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<TUIMessageBean>>() {
+            provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
                 @Override
-                public void onSuccess(List<TUIMessageBean> data) {
+                public void onSuccess(Pair<List<TUIMessageBean>, Integer> dataPair) {
+                    List<TUIMessageBean> data = dataPair.first;
                     TUIChatLog.i(TAG, "load c2c message success " + data.size());
                     if (lastMessageInfo == null) {
-//                        isHaveMoreNewMessage = false;
+                        isHaveMoreNewMessage = false;
                     }
-                    if (data.size() < MSG_PAGE_COUNT) {
-//                        isHaveMoreOldMessage = false;
+                    if (dataPair.second < MSG_PAGE_COUNT) {
+                        isHaveMoreOldMessage = false;
                     }
                     TUIChatUtils.callbackOnSuccess(callback, data);
                     onMessageLoadCompleted(data, type);

@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
@@ -174,9 +175,10 @@ public abstract class ChatPresenter {
             return;
         }
 
-        provider.getGroupMessageBySeq(chatId, seq, new IUIKitCallback<List<TUIMessageBean>>() {
+        provider.getGroupMessageBySeq(chatId, seq, new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
             @Override
-            public void onSuccess(List<TUIMessageBean> data) {
+            public void onSuccess(Pair<List<TUIMessageBean>, Integer> dataPair) {
+                List<TUIMessageBean> data = dataPair.first;
                 if (data == null || data.size() == 0) {
                     TUIChatUtils.callbackOnError(callback, -1, "null message");
                     return;
@@ -287,14 +289,15 @@ public abstract class ChatPresenter {
         Runnable forwardRunnable = new Runnable() {
             @Override
             public void run() {
-                provider.loadHistoryMessageList(
-                    chatId, isGroup, loadCount / 2, locateMessageInfo, TUIChatConstants.GET_MESSAGE_BACKWARD, new IUIKitCallback<List<TUIMessageBean>>() {
+                provider.loadHistoryMessageList(chatId, isGroup, loadCount / 2, locateMessageInfo, TUIChatConstants.GET_MESSAGE_BACKWARD,
+                    new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
                         @Override
-                        public void onSuccess(List<TUIMessageBean> firstData) {
-                            if (firstData.size() >= loadCount / 2) {
+                        public void onSuccess(Pair<List<TUIMessageBean>, Integer> firstDataPair) {
+                            List<TUIMessageBean> firstData = firstDataPair.first;
+                            if (firstDataPair.second >= loadCount / 2) {
                                 isHaveMoreNewMessage = true;
                             } else {
-//                                isHaveMoreNewMessage = false;
+                                isHaveMoreNewMessage = false;
                             }
                             firstLoadedData.addAll(firstData);
                             latch.countDown();
@@ -315,12 +318,13 @@ public abstract class ChatPresenter {
             public void run() {
                 // 拉取历史消息的时候不会把 lastMsg 返回，需要手动添加上
                 // LastMsg will not be returned when pulling historical messages, you need to add it manually
-                provider.loadHistoryMessageList(
-                    chatId, isGroup, loadCount / 2, locateMessageInfo, TUIChatConstants.GET_MESSAGE_FORWARD, new IUIKitCallback<List<TUIMessageBean>>() {
+                provider.loadHistoryMessageList(chatId, isGroup, loadCount / 2, locateMessageInfo, TUIChatConstants.GET_MESSAGE_FORWARD,
+                    new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
                         @Override
-                        public void onSuccess(List<TUIMessageBean> secondData) {
-                            if (secondData.size() < loadCount / 2) {
-//                                isHaveMoreOldMessage = false;
+                        public void onSuccess(Pair<List<TUIMessageBean>, Integer> secondDataPair) {
+                            List<TUIMessageBean> secondData = secondDataPair.first;
+                            if (secondDataPair.second < loadCount / 2) {
+                                isHaveMoreOldMessage = false;
                             }
                             secondLoadedData.addAll(secondData);
                             latch.countDown();
@@ -378,14 +382,15 @@ public abstract class ChatPresenter {
             return;
         }
 
-        provider.loadHistoryMessageList(chatId, isGroup, loadCount, locateMessageInfo, getType, new IUIKitCallback<List<TUIMessageBean>>() {
+        provider.loadHistoryMessageList(chatId, isGroup, loadCount, locateMessageInfo, getType, new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
             @Override
-            public void onSuccess(List<TUIMessageBean> firstData) {
+            public void onSuccess(Pair<List<TUIMessageBean>, Integer> firstDataPair) {
+                List<TUIMessageBean> firstData = firstDataPair.first;
                 if (getType == TUIChatConstants.GET_MESSAGE_BACKWARD) {
-                    if (firstData.size() >= loadCount) {
+                    if (firstDataPair.second >= loadCount) {
                         isHaveMoreNewMessage = true;
                     } else {
-//                        isHaveMoreNewMessage = false;
+                        isHaveMoreNewMessage = false;
                     }
                 }
                 onMessageLoadCompleted(firstData, getType);
@@ -399,7 +404,7 @@ public abstract class ChatPresenter {
         });
     }
 
-    protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType){}
+    protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {}
 
     protected void processLoadedMessage(List<TUIMessageBean> data, int type) {
         preProcessMessage(data, new IUIKitCallback<List<TUIMessageBean>>() {
@@ -685,9 +690,9 @@ public abstract class ChatPresenter {
 
     protected void onRecvNewMessage(TUIMessageBean msg) {
         TUIChatLog.i(TAG, "onRecvNewMessage msgID:" + msg.getId());
-//        if (!isHaveMoreNewMessage) {
+        if (!isHaveMoreNewMessage) {
             addMessage(msg);
-//        }
+        }
     }
 
     protected void addMessage(TUIMessageBean messageInfo) {
@@ -1036,12 +1041,7 @@ public abstract class ChatPresenter {
             return;
         }
 
-        boolean isGroup;
-        if (chatInfo.getType() == ChatInfo.TYPE_C2C) {
-            isGroup = false;
-        } else {
-            isGroup = true;
-        }
+        boolean isGroup = chatInfo.getType() != ChatInfo.TYPE_C2C;
         String chatId = chatInfo.getId();
         if (isGroup) {
             groupReadReport(chatId);
@@ -1490,6 +1490,8 @@ public abstract class ChatPresenter {
             return;
         }
 
+        assembleGroupMessage(message);
+
         Map<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.CHAT_ID, id);
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, message);
@@ -1590,12 +1592,8 @@ public abstract class ChatPresenter {
         if (chatInfo == null) {
             return;
         }
-        String conversationId = TUIChatUtils.getConversationIdByUserId(chatInfo.getId(), TUIChatUtils.isGroupChat(chatInfo.getType()));
+        String conversationId = TUIChatUtils.getConversationIdByChatId(chatInfo.getId(), TUIChatUtils.isGroupChat(chatInfo.getType()));
         provider.setDraft(conversationId, draft);
-    }
-
-    public void getConversationLastMessage(String conversationId, IUIKitCallback<TUIMessageBean> callback) {
-        provider.getConversationLastMessage(conversationId, callback);
     }
 
     public void findMessage(String msgId, IUIKitCallback<TUIMessageBean> callback) {

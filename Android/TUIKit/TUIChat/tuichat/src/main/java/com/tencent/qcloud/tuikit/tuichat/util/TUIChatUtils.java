@@ -55,7 +55,7 @@ public class TUIChatUtils {
         }
     }
 
-    public static String getConversationIdByUserId(String id, boolean isGroup) {
+    public static String getConversationIdByChatId(String id, boolean isGroup) {
         String conversationIdPrefix = isGroup ? CONVERSATION_GROUP_PREFIX : CONVERSATION_C2C_PREFIX;
         return conversationIdPrefix + id;
     }

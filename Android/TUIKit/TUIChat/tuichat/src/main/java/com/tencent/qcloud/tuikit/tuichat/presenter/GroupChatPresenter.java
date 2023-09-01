@@ -137,15 +137,16 @@ public class GroupChatPresenter extends ChatPresenter {
         isLoading = true;
         String chatId = groupInfo.getId();
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
-            provider.loadGroupMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<List<TUIMessageBean>>() {
+            provider.loadGroupMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
                 @Override
-                public void onSuccess(List<TUIMessageBean> data) {
+                public void onSuccess(Pair<List<TUIMessageBean>, Integer> dataPair) {
+                    List<TUIMessageBean> data = dataPair.first;
                     TUIChatLog.i(TAG, "load group message success " + data.size());
                     if (lastMessageInfo == null) {
-//                        isHaveMoreNewMessage = false;
+                        isHaveMoreNewMessage = false;
                     }
-                    if (data.size() < MSG_PAGE_COUNT) {
-//                        isHaveMoreOldMessage = false;
+                    if (dataPair.second < MSG_PAGE_COUNT) {
+                        isHaveMoreOldMessage = false;
                     }
                     onMessageLoadCompleted(data, type);
                     TUIChatUtils.callbackOnSuccess(callback, data);
@@ -168,20 +169,6 @@ public class GroupChatPresenter extends ChatPresenter {
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
         groupReadReport(groupInfo.getId());
         getMessageReadReceipt(data, getType);
-    }
-
-    private void sendGroupTipsMessage(String groupId, String message, final IUIKitCallback<String> callBack) {
-        provider.sendGroupTipsMessage(groupId, message, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                TUIChatUtils.callbackOnSuccess(callBack, groupId);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIChatUtils.callbackOnError(callBack, module, errCode, errMsg);
-            }
-        });
     }
 
     protected void addMessageInfo(TUIMessageBean messageInfo) {
