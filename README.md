@@ -208,26 +208,15 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.4.4643 @2023.08.11
+## Latest Enhanced Version 7.4.4655 @2023.09.01
 ### SDK
-- Support subscribing and unsubscribing users
-- Support emoji replies
-- Support voice-to-text capability
-- Support revoking messages in AVChatRoom
-- Support setting global message reception options
-- Single forwarded message supports automatic renewal of rich media resources
-- Voice and video messages support security strike notifications
-- Message revoke supports "revoke reason" + "revoker"
-- Fixed the issue of inaccurate read status for the last message in a one-on-one chat session
-- Fixed the issue of friend remark information not being cleared in time after deleting a friend
-- Optimized handling of SQLite file corruption
-
-### TUIKit & Demo
-- Support storing conversation group order information in the cloud
-- iOS optimized video sending process
-- Android fixed the issue of continuous voice messages failing to autoplay
-- Android fixed the issue of incorrect time display in the call record list
-- Android fixed the issue of overlapping items in the Chat Lite message list
+- Optimize server anti-isolation logic in the network module.
+- Optimize HTTP routing logic in the network module.
+- Optimize logic for fetching historical messages.
+- Improve system logs for conversation groups.
+- Fix the issue of occasional inaccuracy in the unread message count for group conversations.
+- Fix the issue of occasional inaccuracy in the unread message count for topics in the community.
+- Fix the occasional issue of not receiving notifications for conversation group creation.
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
