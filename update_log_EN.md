@@ -2,6 +2,16 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.4.4655 @2023.09.01 - Enhanced Version
+### SDK
+- Optimize server anti-isolation logic in the network module.
+- Optimize HTTP routing logic in the network module.
+- Optimize logic for fetching historical messages.
+- Improve system logs for conversation groups.
+- Fix the issue of occasional inaccuracy in the unread message count for group conversations.
+- Fix the issue of occasional inaccuracy in the unread message count for topics in the community.
+- Fix the occasional issue of not receiving notifications for conversation group creation.
+
 ## 7.4.4643 @2023.08.11 - Enhanced Version
 ### SDK
 
