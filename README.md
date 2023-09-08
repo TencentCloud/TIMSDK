@@ -208,15 +208,10 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.4.4655 @2023.09.01
+## Latest Enhanced Version 7.4.4661 @2023.09.08
 ### SDK
-- Optimize server anti-isolation logic in the network module.
-- Optimize HTTP routing logic in the network module.
-- Optimize logic for fetching historical messages.
-- Improve system logs for conversation groups.
-- Fix the issue of occasional inaccuracy in the unread message count for group conversations.
-- Fix the issue of occasional inaccuracy in the unread message count for topics in the community.
-- Fix the occasional issue of not receiving notifications for conversation group creation.
+- Fix the exception caused by clearing unread messages with one click.
+- Fix the occasional exception that occurs when searching for cloud messages.
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
