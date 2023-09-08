@@ -1,0 +1,66 @@
+# Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '13.0'
+install! 'cocoapods', :disable_input_output_paths => true
+
+### DevelopPods私有化集成方案
+# 1、从当前工程的指定文件夹/TIMSDK/ios/TUIKit/  复制TUIKit文件夹到您的工程下
+# 2、修改路径为您的TUIKit文件夹相对您工程Podfile文件的路径 如path => "../TUIKit/TUICore"
+# 3、Pod update
+
+### DevelopPods Private Integration Solution
+# 1. Copy the TUIKit folder from the specified folder/TIMSDK/ios/TUIKit/ in the current project to your project.
+# 2. Modify the path to your TUIKit folder relative to the Podfile path in your project, e.g. path => "../TUIKit/TUICore".
+# 3. Pod update.
+
+target 'TUIKitDemo' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  use_frameworks!
+  use_modular_headers!
+
+  # 注意:使用本地集成方案时，如需升级时需要从 https://github.com/TencentCloud/TIMSDK/tree/master/iOS/TUIKit 获取最新的组件代码，放置在本地指定目录下如/TIMSDK/ios/TUIKit/TUICore
+  # 注意:当私有化修改和远端有冲突时，需要手动合并，处理冲突。
+  
+  #Note: When using the local integration solution, if you need to upgrade, you need to obtain the latest component code from https://github.com/TencentCloud/TIMSDK/tree/master/iOS/TUIKit and place it in the specified local directory, such as /TIMSDK/ios/TUIKit/TUICore.
+  #Note: When there are conflicts between the private modification and the remote, manual merging and conflict resolution are required.
+  
+  pod 'TUICore', :path => "../TUIKit/TUICore"
+  pod 'TIMCommon', :path => "../TUIKit/TIMCommon"
+  pod 'TUIChat', :path => "../TUIKit/TUIChat"
+  pod 'TUIConversation', :path => "../TUIKit/TUIConversation"
+  pod 'TUIContact', :path => "../TUIKit/TUIContact"
+  pod 'TUIGroup', :path => "../TUIKit/TUIGroup"
+  pod 'TUISearch', :path => "../TUIKit/TUISearch"
+  pod 'TUIOfflinePush', :path => "../TUIKit/TUIOfflinePush"
+  
+  # 注意:插件需要跟随版本，需要和TUICore.spec中一致，正常情况下我们会帮您修改一致。
+  # Note:TUIKit plugins need to follow the version.
+  pod 'TUIPollPlugin', '7.4.4643'
+  pod 'TUIGroupNotePlugin', '7.4.4643'
+  pod 'TUITranslationPlugin', '7.4.4643'
+  pod 'TUIConversationGroupPlugin','7.4.4643'
+  pod 'TUIConversationMarkPlugin', '7.4.4643'
+  
+  # 其他 Pod
+  # Other Pod
+  pod 'TUICallKit'
+  pod 'TUIRoomKit','1.4.5'
+  pod 'MJRefresh'
+  pod 'Masonry'
+end
+
+
+
+#Pods config
+#Fix Xcode14 Bundle target error
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""
+            config.build_settings['CODE_SIGNING_REQUIRED'] = "NO"
+            config.build_settings['CODE_SIGNING_ALLOWED'] = "NO"
+            config.build_settings['ENABLE_BITCODE'] = "NO"
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = "13.0"
+        end
+    end
+end
