@@ -80,4 +80,4 @@ pod 'TXIMSDK_iOS'
 end
 ```
 
-For more integration modes, see <a href="https://intl.cloud.tencent.com/document/product/1047/34305">SDK Integration</a>.
+For more integration modes, see <a href="https://www.tencentcloud.com/document/product/1047/34307">SDK Integration</a>.
