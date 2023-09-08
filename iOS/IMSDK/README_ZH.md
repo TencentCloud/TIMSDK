@@ -81,4 +81,4 @@ pod 'TXIMSDK_iOS'
 end
 ```
 
-更多集成方式请参考 <a href="https://cloud.tencent.com/document/product/269/32673">集成 SDK</a>
+更多集成方式请参考 <a href="https://cloud.tencent.com/document/product/269/75284">集成 SDK</a>
