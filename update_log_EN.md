@@ -2,6 +2,11 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.4.4661 @2023.09.08 - Enhanced Version
+### SDK
+- Fix the exception caused by clearing unread messages with one click.
+- Fix the occasional exception that occurs when searching for cloud messages.
+
 ## 7.4.4655 @2023.09.01 - Enhanced Version
 ### SDK
 - Optimize server anti-isolation logic in the network module.
