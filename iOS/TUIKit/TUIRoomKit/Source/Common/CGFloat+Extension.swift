@@ -34,6 +34,7 @@ public let kDeviceSafeBottomHeight : CGFloat = {
 }()
 
 private let width = UIScreen.main.bounds.width
+private let height = UIScreen.main.bounds.height
 
 extension CGFloat {
     
@@ -45,6 +46,14 @@ extension CGFloat {
             return exceptPad ? self * 1.5 : self * (width / 375.00)
         }
         return self * (width / 375.00)
+    }
+    
+    public func scale375Height(exceptPad: Bool = true) -> CGFloat {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // TODO 此处的pad高度系数需要调研
+            return exceptPad ? self * 1.5 : self * (height / 812.00)
+        }
+        return self * (height / 812.00)
     }
     
     /// iPad比例适配
@@ -64,6 +73,14 @@ extension Int {
             return exceptPad ? CGFloat(self) * 1.5 : CGFloat(self) * (width / 375.00)
         }
         return CGFloat(self) * (width / 375.00)
+    }
+    
+    public func scale375Height(exceptPad: Bool = true) -> CGFloat {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            // TODO 此处的pad高度系数需要调研
+            return exceptPad ? CGFloat(self) * 1.5 : CGFloat(self) * (height / 812.00)
+        }
+        return CGFloat(self) * (height / 812.00)
     }
     
     /// iPad比例适配

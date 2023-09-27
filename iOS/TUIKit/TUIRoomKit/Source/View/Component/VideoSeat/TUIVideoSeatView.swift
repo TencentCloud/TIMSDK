@@ -40,6 +40,7 @@ class TUIVideoSeatView: UIView {
         guard !isViewReady else { return }
         constructViewHierarchy()
         activateConstraints()
+        bindInteraction()
         isViewReady = true
     }
 
@@ -102,11 +103,18 @@ class TUIVideoSeatView: UIView {
         addSubview(cell)
         return cell
     }()
+    
+    lazy var screenCaptureMaskView: ScreenCaptureMaskView = {
+        let view = ScreenCaptureMaskView(frameType: .fullScreen)
+        view.isHidden = true
+        return view
+    }()
 
     func constructViewHierarchy() {
         backgroundColor = .clear
         addSubview(attendeeCollectionView)
         addSubview(pageControl)
+        addSubview(screenCaptureMaskView)
     }
 
     func activateConstraints() {
@@ -118,6 +126,24 @@ class TUIVideoSeatView: UIView {
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-5)
         }
+        screenCaptureMaskView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    
+    func bindInteraction() {
+        //如果自己在进行屏幕共享，显示遮挡层
+        screenCaptureMaskView.isHidden = !EngineManager.createInstance().store.currentUser.hasScreenStream
+        addGesture()
+    }
+
+    private func addGesture() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(clickVideoSeat))
+        addGestureRecognizer(tap)
+    }
+
+    @objc private func clickVideoSeat() {
+        EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_ChangeToolBarHiddenState, param: [:])
     }
 
     func updatePageControl() {
@@ -166,11 +192,20 @@ extension TUIVideoSeatView: TUIVideoSeatViewResponder {
             }
         }
     }
-
+    
     func deleteItems(at indexPaths: [IndexPath]) {
         freshCollectionView {
             self.attendeeCollectionView.performBatchUpdates {
-                self.attendeeCollectionView.deleteItems(at: indexPaths)
+                var resultArray: [IndexPath] = []
+                let numberOfSections = self.attendeeCollectionView.numberOfSections
+                for indexPath in indexPaths {
+                    let section = indexPath.section
+                    let item = indexPath.item
+                    guard section < numberOfSections && item < self.attendeeCollectionView.numberOfItems(inSection: section)
+                    else { continue } // indexPath越界，不执行删除操作
+                    resultArray.append(indexPath)
+                }
+                self.attendeeCollectionView.deleteItems(at: resultArray)
             }
         }
     }
@@ -234,7 +269,6 @@ extension TUIVideoSeatView: TUIVideoSeatViewResponder {
         if item.isHasVideoStream {
             viewModel.startPlayVideo(item: item, renderView: moveMiniscreen.renderView)
         }
-        moveMiniscreen.superview?.bringSubviewToFront(moveMiniscreen)
     }
 
     func updateMiniscreenVolume(_ item: VideoSeatItem) {
@@ -243,6 +277,13 @@ extension TUIVideoSeatView: TUIVideoSeatViewResponder {
 
     func getMoveMiniscreen() -> TUIVideoSeatDragCell {
         return moveMiniscreen
+    }
+    
+    func showScreenCaptureMaskView(isShow: Bool) {
+        screenCaptureMaskView.isHidden = !isShow
+        if isShow {
+            screenCaptureMaskView.superview?.bringSubviewToFront(screenCaptureMaskView)
+        }
     }
 
     private func getNoLoadHasVideoItems() -> [VideoSeatItem] {

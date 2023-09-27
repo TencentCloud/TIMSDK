@@ -15,6 +15,7 @@ import TXLiteAVSDK_Professional
 #endif
 
 class VideoModel {
+    var isCameraOpened: Bool = true
     var videoFps: Int = 15
     var videoResolution: TRTCVideoResolution = ._960_540
     var videoBitrate: Int = 900

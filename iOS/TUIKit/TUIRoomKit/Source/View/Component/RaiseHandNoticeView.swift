@@ -58,13 +58,13 @@ class RaiseHandNoticeView: UIView {
         }
         label.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(12)
+            make.leading.equalToSuperview().offset(12)
             make.width.equalTo(250)
             make.height.equalTo(20)
         }
         dismissButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview().offset(-12)
+            make.trailing.equalToSuperview().offset(-12)
             make.width.height.equalTo(20)
         }
     }

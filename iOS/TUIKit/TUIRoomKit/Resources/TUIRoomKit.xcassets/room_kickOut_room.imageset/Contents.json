@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "kickOutRoom.png",
+      "filename" : "room_kickOut_room.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "kickOutRoom@2x.png",
+      "filename" : "room_kickOut_room@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "kickOutRoom@3x.png",
+      "filename" : "room_kickOut_room@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

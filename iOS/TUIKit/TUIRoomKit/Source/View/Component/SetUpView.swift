@@ -15,15 +15,16 @@ class SetUpView: UIView {
         guard let orientationIsLandscape = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation.isLandscape as? Bool else
         { return 0 }
         if orientationIsLandscape { //横屏
-           return UIScreen.main.bounds.width/2
+            return UIScreen.main.bounds.width/2
         } else { //竖屏
-           return UIScreen.main.bounds.width
+            return UIScreen.main.bounds.width
         }
     }
     var width: CGFloat {
-           return (rootViewWidth - 30 * 2 - 20 * 2) / 3
+        return (rootViewWidth - 30 * 2 - 20 * 2) / 3
     }
     private var viewArray: [SetUpItemView] = []
+    private var buttonArray: [ButtonItemView] = []
     
     lazy var segmentView: UIScrollView = {
         let view = UIScrollView(frame: CGRect.zero)
@@ -48,7 +49,6 @@ class SetUpView: UIView {
     
     let downView: UIView = {
         let view = UIView(frame: .zero)
-        view.backgroundColor = UIColor.red
         return view
     }()
     
@@ -79,10 +79,8 @@ class SetUpView: UIView {
     func initItemView() {
         let videoItemView = SetUpItemView(viewModel: viewModel, viewType: .videoType)
         let audioItemView = SetUpItemView(viewModel: viewModel, viewType: .audioType)
-        let shareItemView = SetUpItemView(viewModel: viewModel, viewType: .shareType)
         viewArray.append(videoItemView)
         viewArray.append(audioItemView)
-        viewArray.append(shareItemView)
     }
     
     private var isViewReady: Bool = false
@@ -97,9 +95,8 @@ class SetUpView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        roundedRect(rect: bounds,
-                    byRoundingCorners: [.topLeft, .topRight],
-                    cornerRadii: CGSize(width: 12, height: 12))
+        layer.cornerRadius = 12
+        layer.masksToBounds = true
     }
     
     func constructViewHierarchy() {
@@ -110,6 +107,7 @@ class SetUpView: UIView {
         for (index, item) in viewModel.topItems.enumerated() {
             let button = ButtonItemView(itemData: item)
             button.controlButton.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 15)
+            button.controlButton.titleLabel?.textAlignment = .center
             if selectedIndex == index {
                 button.controlButton.isSelected = true
             } else {
@@ -117,7 +115,7 @@ class SetUpView: UIView {
             }
             segmentView.addSubview(button)
             button.snp.makeConstraints { make in
-                make.left.equalToSuperview().offset(30 + CGFloat(index) * (width + 20))
+                make.left.equalToSuperview().offset(index==0 ? 50 : 220)
                 make.height.equalToSuperview()
                 make.width.equalTo(width)
             }
@@ -127,20 +125,21 @@ class SetUpView: UIView {
             segmentScrollView.addSubview(item)
             item.snp.makeConstraints { make in
                 make.left.equalToSuperview().offset(CGFloat(index) * (rootViewWidth))
-                make.top.equalToSuperview()
-                make.width.equalToSuperview()
-                make.height.equalToSuperview()
+                make.top.width.height.equalToSuperview()
             }
         }
     }
     
     func activateConstraints() {
         segmentView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.top.equalToSuperview()
             make.height.equalTo(41.scale375())
         }
         segmentScrollView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
             make.top.equalTo(segmentView.snp.bottom)
             make.bottom.equalToSuperview()
         }
@@ -202,7 +201,7 @@ extension SetUpView: SetUpViewEventResponder {
         segmentScrollView.setContentOffset(CGPoint(x: CGFloat(selectedIndex) * rootViewWidth, y: 0), animated: true)
     }
     func makeToast(text: String) {
-        makeToast(text)
+        RoomRouter.makeToastInCenter(toast: text, duration: 1)
     }
 }
 

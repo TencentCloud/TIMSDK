@@ -1,0 +1,172 @@
+//
+//  RoomKitLocalized.strings
+//  TUIRoomKit
+//
+//  Created by WesleyLei on 2022/09/15.
+//  Copyright © 2022 Tencent. All rights reserved.
+//
+
+"TUIRoom.create.room" = "إنشاء غرفة";
+"TUIRoom.join.room" = "انضم الى الغرفة";
+"TUIRoom.exit.login" = "خروج";
+"TUIRoom.room.num" = "معرف الغرفة";
+"TUIRoom.room.link" = "رابط الغرفة";
+"TUIRoom.open.video" = "افتح الكاميرا";
+
+"TUIRoom.freedom.speaker" = "غرفة حرية التعبير";
+"TUIRoom.raise.speaker" = "رفع الأيدي للتحدث في الغرفة";
+"TUIRoom.host" = "يستضيف";
+"TUIRoom.camera" = "آلة تصوير";
+"TUIRoom.mic" = "ميكروفون";
+
+"TUIRoom.sure.destroy.room" = "هل أنت متأكد أنك تريد إنهاء الاجتماع؟";
+"TUIRoom.sure.leave.room" = "هل أنت متأكد أنك تريد مغادرة الغرفة";
+"TUIRoom.destroy.room.cancel" = "يتمسك";
+"TUIRoom.ok" = "يتأكد";
+"TUIRoom.cancel" = "يلغي";
+"TUIRoom.invite.join" = "يمكنك مشاركة رقم الغرفة أو الرابط لدعوة المزيد من الأشخاص للانضمام إلى الغرفة";
+"TUIRoom.logout.member.list" = "قائمة الأعضاء";
+"TUIRoom.resolution" = "دقة";
+"TUIRoom.room.destroy" = "لقد تم تدمير الغرفة";
+"TUIRoom.all.mute.video" = "جميع اللوحات ممنوعة";
+"TUIRoom.all.unmute.video" = "رفع كافة أشكال الحظر على اللوحات";
+"TUIRoom.all.mute" = "كتم الكل";
+"TUIRoom.all.unmute" = "إلغاء كتم صوت الكل";
+"TUIRoom.kick.off.title" = "لقد تمت إزالتك من قبل المشرف";
+"TUIRoom.conference.member" = "مشاركون";
+"TUIRoom.kick.off.error.toast" = "فشلت إزالة xxx";
+"TUIRoom.suer.kick.off.xxx" = "هل أنت متأكد أنك تريد إزالة \"xxx\"؟";
+"TUIRoom.mute.audio.success.toast" = "تم إلغاء الحظر بنجاح";
+"TUIRoom.mute.video.success.toast" = "تم رفع الحظر بنجاح";
+"TUIRoom.copy.success" = "تم نسخ رقم الغرفة بنجاح";
+"TUIRoom.homeowners.notice.camera.turned.off" = "تم إيقاف تشغيل الكاميرا";
+"TUIRoom.homeowners.notice.camera.turned.on" = "قام المضيف بإلغاء حظر كاميرا الويب الخاصة بك";
+"TUIRoom.homeowners.notice.microphone.turned.off" = "لقد تم كتم صوت الميكروفون الخاص بك";
+"TUIRoom.homeowners.notice.microphone.turned.on" = "لقد قام المضيف بإلغاء قفل الميكروفون الخاص بك";
+"TUIRoom.homeowners.notice.message.turned.off" = "لقد تم حظرك";
+"TUIRoom.homeowners.notice.message.turned.on" = "لقد قام المشرف برفع الحظر عنك";
+"TUIRoom.mute.audio.error.toast" = "فشل حظر القمح";
+"TUIRoom.mute.video.error.toast" = "فشل الحظر";
+"TUIRoom.mute.audio.title" = "سيتم كتم صوت جميع الأعضاء المضافة حديثًا";
+"TUIRoom.mute.audio.message" = "السماح للأعضاء بإلغاء كتم صوتهم";
+"TUIRoom.mute.video.title" = "سيتم منع جميع الأعضاء الجدد من الرسم";
+"TUIRoom.mute.video.message" = "السماح للأعضاء بفك الحظر عن أنفسهم";
+"TUIRoom.video.conference" = "مؤتمرات الفيديو";
+"TUIRoom.mute" = "صامت";
+"TUIRoom.unmute" = "إلغاء كتم الصوت";
+"TUIRoom.close.video" = "إغلاق الفيديو";
+"TUIRoom.change.host" = "إلى الأمام لاستضافة";
+"TUIRoom.mute.message" = "المنع";
+"TUIRoom.unmute.message" = "إلغاء كتم الصوت";
+"TUIRoom.kick" = "طرد من الغرفة";
+"TUIRoom.step.down.seat" = "يرجى التنحي";
+"TUIRoom.invite.seat" = "دعوة إلى المسرح";
+
+"TUIRoom.chat" = "محادثة";
+"TUIRoom.beauty" = "جمال";
+"TUIRoom.switch.layout" = "تخطيط التبديل";
+
+"TUIRoom.leave" = "يترك";
+"TUIRoom.member" = "عضو";
+"TUIRoom.raise.hand" = "ارفع يدك";
+"TUIRoom.raise.hand.list" = "قائمة عرض الأيدي";
+"TUIRoom.leave.seat" = "انزل";
+"TUIRoom.hand.down" = "بدون بذل الكثير من الجهد";
+"TUIRoom.invite.to.speak" = "يدعوك المضيف للتحدث على المسرح";
+"TUIRoom.agree.to.speak" = "يدعوك المضيف للتحدث على المسرح، ويمكنك تشغيل الكاميرا والميكروفون بعد اعتلاء المسرح";
+"TUIRoom.decline" = "يرفض";
+"TUIRoom.agree" = "يوافق";
+"TUIRoom.quick.meeting" = "اجتماع سريع";
+"TUIRoom.agree.all" = "أتفق مع الجميع";
+"TUIRoom.search.meeting.member" = "البحث عن المشاركين";
+"TUIRoom.me" = "أنا";
+
+"TUIRoom.invite.members" = "دعوة الأعضاء إلى المسرح";
+"TUIRoom.agree.seat" = "توافق على الصعود على خشبة المسرح";
+"TUIRoom.disagree.seat" = "رفض الصعود على المسرح";
+"TUIRoom.code" = "رمز الاستجابة السريعة للغرفة";
+"TUIRoom.scan.code" = "قم بمسح الرمز ضوئيًا للدخول إلى الغرفة";
+"TUIRoom.save.into.album" = "حفظ في الألبوم";
+"TUIRoom.invite.turn.on.audio" = "يدعوك المضيف لبدء التحدث";
+"TUIRoom.invite.turn.on.video" = "يدعوك المضيف لفتح شاشة الفيديو";
+"TUIRoom.dismiss.meeting.Title" = "إذا كنت لا تريد إنهاء الاجتماع";
+"TUIRoom.appoint.new.host" = "الرجاء تعيين مضيف جديد قبل مغادرة الاجتماع";
+"TUIRoom.leave.meeting" = "ترك الاجتماع";
+"TUIRoom.dismiss.meeting" = "رفض الاجتماع";
+"TUIRoom.trans.master" = "تعيين مضيف جديد";
+"TUIRoom.appoint.master.and.leave.room" = "حدد واترك";
+"TUIRoom.have.become.master" = "لقد أصبحت مضيفًا";
+"TUIRoom.have.transferred.master" = "لقد قمت بنقل المالك";
+"TUIRoom.raise.hand.apply" = "أظهر يدك للتقديم";
+"TUIRoom.mute.audio.seat.reason" = "ارفع يدك للتحدث في الغرفة، ويرجى رفع يدك لتقديم طلب للحصول على ميكروفون";
+"TUIRoom.mute.video.seat.reason" = "ارفع يدك للتحدث في الغرفة، ويرجى رفع يدك لتقديم طلب للحصول على ميكروفون";
+"TUIRoom.mute.audio.room.reason" = "لقد قام المضيف بكتم صوت جميع الأعضاء ولا يمكنه تشغيل الميكروفون.";
+"TUIRoom.mute.video.room.reason" = "قام المضيف بتمكين جميع الأعضاء من حظر الصور ولا يمكنه تشغيل الكاميرا.";
+"TUIRoom.all.mute.video.prompt" = "تم تفعيل الحظر على الرسم ولن يتمكن الجمهور من تشغيل الكاميرا";
+"TUIRoom.all.mute.audio.prompt" = "تم تشغيل ميزة كتم الصوت بالكامل، ولن يتمكن الجمهور من تشغيل الميكروفون";
+"TUIRoom.all.unmute.video.prompt" = "يقوم المضيف بإيقاف حظر الفيديو لجميع الأعضاء، ويمكن للجمهور تشغيل الفيديو بأنفسهم";
+"TUIRoom.all.unmute.audio.prompt" = "يقوم المضيف بإيقاف كتم الصوت لجميع الأعضاء، ويمكن للجمهور تشغيل الميكروفون بأنفسهم";
+"TUIRoom.raiseHand.notice" = "إذا كنت تريد التحدث، يرجى رفع يدك أولاً لتقديم طلب للحصول على الميكروفون.";
+"TUIRoom.video.conference.title" = "مؤتمر عبر الفيديو";
+
+
+"TUIRoom.audio.recording" = "تسجيل الصوت";
+"TUIRoom.volume.prompt" = "موجه الحجم";
+"TUIRoom.capture.volume" = "جمع الحجم";
+"TUIRoom.play.volume" = "حجم التشغيل";
+"TUIRoom.share" = "شاشة المشاركة";
+"TUIRoom.video" = "فيديو";
+"TUIRoom.audio" = "صوتي";
+"TUIRoom.setting" = "يثبت";
+"TUIRoom.advancedSetting" = "إعدادات متقدمة";
+"TUIRoom.frame.rate" = "معدل الإطار";
+"TUIRoom.bitrate" = "معدل الكود";
+"TUIRoom.local.mirror" = "مرآة محلية";
+"TUIRoom.version.too.low" = "إصدار النظام أقل من 12.0، يرجى ترقية النظام";
+
+"TUIRoom.quick.conference" = "اجتماع سريع";
+"TUIRoom.invite.meeting" = "أدعوكم إلى الاجتماع";
+"TUIRoom.enter.meeting" = "أدخل الاجتماع";
+"TUIRoom.already.entered.meeting" = "انضم بالفعل";
+"TUIRoom.meeting" = "مقابلة";
+"TUIRoom.in.progress" = "في تَقَدم";
+"TUIRoom.people.entered.meeting" = "لقد انضم الناس إلى العضوية";
+"TUIRoom.starting.meeting" = "اعداد";
+"TUIRoom.waiting.members.enter.meeting" = "في انتظار انضمام الأعضاء إلى الاجتماع";
+"TUIRoom.meeting.ended" = "انتهى الاجتماع";
+
+"TUIRoom.fail.microphone.permission.Title" = "لم يتم تمكين إذن الميكروفون";
+"TUIRoom.fail.microphone.permission.Tips"  = "غير قادر على استخدام وظيفة الصوت والفيديو لعدة أشخاص، انقر فوق \"تمكين\" لتشغيل إذن الميكروفون";
+"TUIRoom.fail.camera.permission.Title" = "لم يتم تمكين إذن الكاميرا";
+"TUIRoom.fail.camera.permission.Tips"  = "غير قادر على استخدام وظائف الصوت والفيديو والفيديو متعددة الأشخاص، انقر فوق \"لفتح\" لفتح إذن الكاميرا";
+"TUIRoom.fail.permission.Later" = "الحديث عن ذلك في وقت لاحق";
+"TUIRoom.fail.permission.Enable" = "لتشغيل";
+"TUIRoom.device.set" = "الإعداد السريع للاجتماع";
+"TUIRoom.mic.set" = "قم بتشغيل الميكروفون عند الانضمام إلى اجتماع";
+"TUIRoom.camera.set" = "انضم إلى الاجتماع وقم بتشغيل الكاميرا";
+"TUIRoom.sharing.screen" = "شاشة المشاركة";
+"TUIRoom.stop.share.screen" = "التوقف عن المشاركة";
+
+"TUIRoom.dismiss.room" = "غرفة النهاية";
+"TUIRoom.leave.room" = "غادر الغرفة";
+"TUIRoom.exit" = "ينهي";
+"TUIRoom.float" = "نافذة عائمة";
+"TUIRoom.invite" = "يدعو";
+"TUIRoom.share.on" = "شاشة المشاركة";
+"TUIRoom.share.off" = "التوقف عن المشاركة";
+"TUIRoom.unfold" = "يوسع";
+"TUIRoom.drop" = "وضع بعيدا";
+"TUIRoom.leave.room.tip" = "إذا كنت لا ترغب في إنهاء الغرفة، فقم بتعيين مضيف جديد قبل مغادرة الغرفة";
+"TUIRoom.room.type" = "نوع الغرفة";
+"TUIRoom.more" = "أكثر";
+"TUIRoom.inviteMember" = "دعوة أعضاء";
+"TUIRoom.request.open.video" = "طلب فتح الفيديو";
+"TUIRoom.toast.shareScreen.title" = "شاشة حية";
+"TUIRoom.toast.shareScreen.message" = "هل تريد إيقاف البث المباشر لشاشة مشاركة شاشة TUIRoom؟";
+"TUIRoom.toast.shareScreen.cancel" = "يلغي";
+"TUIRoom.toast.shareScreen.stop" = "قف";
+"TUIRoom.put.hands.down" = "لقد وضعت يديك";
+"TUIRoom.raised.hand" = "لقد رفعت يدك، يرجى الانتظار حتى يتم تشغيل المشرف";
+"TUIRoom.rejected.take.seat" = "رفض المضيف طلبك للظهور على المسرح";
+"TUIRoom.taken.seat" = "لقد وافق المضيف على طلبك للظهور على المسرح";
+"TUIRoom.role.owner" = "صاحب المنزل";

@@ -9,15 +9,15 @@ import Foundation
 
 class TransferMasterView: UIView {
     let viewModel: TransferMasterViewModel
-    var attendeeList: [UserModel]
-    var searchArray: [UserModel] = []
+    var attendeeList: [UserEntity]
+    var searchArray: [UserEntity] = []
     
     let backButton: UIButton = {
         let button = UIButton()
         button.contentVerticalAlignment = .center
-        button.contentHorizontalAlignment = .left
+        button.contentHorizontalAlignment = isRTL ? .right : .left
         button.setTitleColor(UIColor(0xADB6CC), for: .normal)
-        let image = UIImage(named: "room_back_white", in: tuiRoomKitBundle(), compatibleWith: nil)
+        let image = UIImage(named: "room_back_white", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn()
         button.setImage(image, for: .normal)
         button.setTitle(.videoConferenceTitle, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)
@@ -197,7 +197,7 @@ extension  TransferMasterView: TransferMasterViewResponder {
 }
 
 class TransferMasterTableCell: UITableViewCell {
-    let attendeeModel: UserModel
+    let attendeeModel: UserEntity
     let viewModel: TransferMasterViewModel
     
     let avatarImageView: UIImageView = {
@@ -211,7 +211,7 @@ class TransferMasterTableCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor(0xD1D9EC)
         label.backgroundColor = UIColor.clear
-        label.textAlignment = .left
+        label.textAlignment = isRTL ? .right : .left
         label.font = UIFont.systemFont(ofSize: 16)
         label.numberOfLines = 1
         return label
@@ -230,7 +230,7 @@ class TransferMasterTableCell: UITableViewCell {
         return view
     }()
     
-    init(attendeeModel: UserModel ,viewModel: TransferMasterViewModel) {
+    init(attendeeModel: UserEntity ,viewModel: TransferMasterViewModel) {
         self.attendeeModel = attendeeModel
         self.viewModel = viewModel
         super.init(style: .default, reuseIdentifier: "TransferMasterTableCell")
@@ -265,18 +265,18 @@ class TransferMasterTableCell: UITableViewCell {
         }
         checkMarkButton.snp.makeConstraints { make in
             make.width.height.equalTo(36)
-            make.right.equalToSuperview().offset(-12)
+            make.trailing.equalToSuperview().offset(-12)
             make.centerY.equalTo(self.avatarImageView)
         }
         userLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(avatarImageView.snp.right).offset(12)
+            make.leading.equalTo(avatarImageView.snp.trailing).offset(12)
             make.width.equalTo(150.scale375())
             make.height.equalTo(48)
         }
         downLineView.snp.makeConstraints { make in
-            make.left.equalTo(userLabel)
-            make.right.equalToSuperview().offset(-12)
+            make.leading.equalTo(userLabel)
+            make.trailing.equalToSuperview().offset(-12)
             make.bottom.equalToSuperview()
             make.height.equalTo(0.3)
         }
@@ -287,7 +287,7 @@ class TransferMasterTableCell: UITableViewCell {
         setupViewState(item: attendeeModel)
     }
     
-    func setupViewState(item: UserModel) {
+    func setupViewState(item: UserEntity) {
         let placeholder = UIImage(named: "room_default_user", in: tuiRoomKitBundle(), compatibleWith: nil)
         if let url = URL(string: item.avatarUrl) {
             avatarImageView.sd_setImage(with: url, placeholderImage: placeholder)

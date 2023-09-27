@@ -28,8 +28,11 @@ class PopUpView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
+        guard !isViewReady else { return }
+        isViewReady = true
         constructViewHierarchy()
         activateConstraints()
         bindInteraction()
@@ -40,6 +43,7 @@ class PopUpView: UIView {
         setupViewState()
         guard let rootView = rootView else { return }
         addSubview(rootView)
+        rootView.layer.cornerRadius = 15
     }
     
     func activateConstraints() {
@@ -49,20 +53,11 @@ class PopUpView: UIView {
         guard let orientationIsLandscape = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation.isLandscape as? Bool
         else { return }
         if orientationIsLandscape { //横屏
-            if let height = viewModel.height {
-                rootView?.snp.makeConstraints { make in
-                    make.width.equalTo(UIScreen.main.bounds.size.height)
-                    make.bottom.equalToSuperview()
-                    make.height.equalTo(height)
-                    make.right.equalTo(safeAreaLayoutGuide.snp.right)
-                }
-            } else {
-                rootView?.snp.makeConstraints { make in
-                    make.width.equalTo(UIScreen.main.bounds.size.height)
-                    make.top.equalToSuperview()
-                    make.height.equalToSuperview()
-                    make.right.equalTo(safeAreaLayoutGuide.snp.right)
-                }
+            rootView?.snp.makeConstraints { make in
+                make.width.equalTo(UIScreen.main.bounds.size.height)
+                make.top.equalToSuperview()
+                make.height.equalToSuperview()
+                make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
             }
         } else { //竖屏
             if let height = viewModel.height {
@@ -88,16 +83,12 @@ class PopUpView: UIView {
         case .roomInfoViewType:
             let model = RoomInfoViewModel()
             rootView = RoomInfoView(viewModel: model)
-        case .moreViewType:
-            let model = MoreFunctionViewModel()
-            rootView = MoreFunctionView(viewModel: model)
         case .setUpViewType:
             let model = SetUpViewModel()
             let view = SetUpView(viewModel: model)
             rootView = view
         case .userListViewType:
             let model = UserListViewModel()
-            viewModel.viewResponder = model
             rootView = UserListView(viewModel: model)
         case .raiseHandApplicationListViewType:
             let model = RaiseHandApplicationListViewModel()
@@ -111,6 +102,12 @@ class PopUpView: UIView {
             let model = QRCodeViewModel(urlString: "https://web.sdk.qcloud.com/component/tuiroom/index.html#/" + "#/room?roomId=" +
                                         EngineManager.createInstance().store.roomInfo.roomId)
             rootView = QRCodeView(viewModel: model)
+        case .inviteViewType:
+            let model = MemberInviteViewModel()
+            rootView = MemberInviteView(viewModel: model)
+        case .exitRoomViewType:
+            let model = ExitRoomViewModel()
+            rootView = ExitRoomView(viewModel: model)
         default: break
         }
     }
@@ -119,20 +116,11 @@ class PopUpView: UIView {
     func updateRootViewOrientation(isLandscape: Bool) {
         viewModel.updateOrientation(isLandscape: isLandscape)
         if isLandscape { //横屏
-            if let height = viewModel.height {
-                rootView?.snp.remakeConstraints{ make in
-                    make.width.equalTo(UIScreen.main.bounds.size.width)
-                    make.bottom.equalToSuperview()
-                    make.height.equalTo(height)
-                    make.right.equalTo(safeAreaLayoutGuide.snp.right)
-                }
-            } else {
-                rootView?.snp.remakeConstraints{ make in
-                    make.width.equalTo(UIScreen.main.bounds.size.width)
-                    make.top.equalToSuperview()
-                    make.height.equalToSuperview()
-                    make.right.equalTo(safeAreaLayoutGuide.snp.right)
-                }
+            rootView?.snp.remakeConstraints{ make in
+                make.width.equalTo(UIScreen.main.bounds.size.width)
+                make.top.equalToSuperview()
+                make.height.equalToSuperview()
+                make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
             }
         } else {
             if let height = viewModel.height {

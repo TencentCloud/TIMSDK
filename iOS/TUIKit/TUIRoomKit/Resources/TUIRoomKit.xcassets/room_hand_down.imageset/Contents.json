@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "handDown.png",
+      "filename" : "room_hand_down.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "handDown@2x.png",
+      "filename" : "room_hand_down@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "handDown@3x.png",
+      "filename" : "room_hand_down@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "switchCamera.png",
+      "filename" : "room_switch_camera.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "switchCamera@2x.png",
+      "filename" : "room_switch_camera@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "switchCamera@3x.png",
+      "filename" : "room_switch_camera@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

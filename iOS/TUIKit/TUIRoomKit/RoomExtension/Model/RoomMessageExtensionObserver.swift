@@ -30,8 +30,8 @@ class RoomMessageExtensionObserver: NSObject {
 extension RoomMessageExtensionObserver: TUIExtensionProtocol {
     func onGetExtension(_ key: String, param: [AnyHashable : Any]?) -> [TUIExtensionInfo]? {
         if key == TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID {
-            guard let groupID = param?[TUICore_TUIChatExtension_InputViewMoreItem_GroupID] as? String else { return nil }
-            guard groupID != "" else { return nil }
+            guard let groupID = param?[TUICore_TUIChatExtension_InputViewMoreItem_GroupID] as? String, groupID != "" else { return nil }
+            guard let isNeedRoom = param?[TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom] as? Bool, !isNeedRoom else { return nil }
             let info = TUIExtensionInfo()
             info.weight = 200
             info.text = .meetingText

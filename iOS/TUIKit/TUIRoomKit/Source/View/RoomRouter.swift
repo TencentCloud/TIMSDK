@@ -8,6 +8,7 @@
 
 import Foundation
 import TUICore
+import TUIRoomEngine
 
 // 视图路由上下文
 class RouteContext {
@@ -46,7 +47,7 @@ class RoomRouter: NSObject {
         EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_ShowRoomFloatView, responder: self)
     }
     
-    func pushToChatController(user: UserModel, roomInfo: RoomInfo) {
+    func pushToChatController(user: UserEntity, roomInfo: TUIRoomInfo) {
         let config: [String : Any] = [
             TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey: false,
             TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey: false,
@@ -54,9 +55,12 @@ class RoomRouter: NSObject {
         ]
         TUICore.callService(TUICore_TUIChatService, method: TUICore_TUIChatService_SetChatExtensionMethod, param: config)
         let param : [String : Any] = [
-            TUICore_TUIChatObjectFactory_ChatViewController_Title : roomInfo.name,
+            TUICore_TUIChatObjectFactory_ChatViewController_Title : String.chatText,
             TUICore_TUIChatObjectFactory_ChatViewController_GroupID: roomInfo.roomId,
             TUICore_TUIChatObjectFactory_ChatViewController_AvatarUrl : user.avatarUrl,
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call : String(0),
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call : String(0),
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room : String(0),
         ]
         if let chatVC = TUICore.createObject(TUICore_TUIChatObjectFactory, key: TUICore_TUIChatObjectFactory_ChatViewController_Classic,
                                              param: param) as? UIViewController {
@@ -157,6 +161,11 @@ class RoomRouter: NSObject {
     
     class func makeToast(toast: String) {
         shared.getCurrentWindowViewController()?.view.makeToast(toast)
+    }
+    
+    class func makeToastInCenter(toast: String, duration:TimeInterval) {
+        guard let windowView = shared.getCurrentWindowViewController()?.view else {return}
+        windowView.makeToast(toast,duration: duration,position:windowView.center)
     }
     
     class func getCurrentWindow() -> UIWindow? {
@@ -298,5 +307,11 @@ extension RoomRouter: RoomKitUIEventResponder {
             self.pushMainViewController(roomId: EngineManager.createInstance().store.roomInfo.roomId)
         default: break
         }
+    }
+}
+
+private extension String {
+    static var chatText: String {
+        localized("TUIRoom.chat")
     }
 }

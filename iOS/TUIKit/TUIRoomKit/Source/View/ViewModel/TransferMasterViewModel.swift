@@ -13,7 +13,7 @@ protocol TransferMasterViewResponder: NSObject {
 }
 
 class TransferMasterViewModel: NSObject {
-    var attendeeList: [UserModel] = []
+    var attendeeList: [UserEntity] = []
     var userId: String = ""
     weak var viewResponder: TransferMasterViewResponder? = nil
     var engineManager: EngineManager {
@@ -35,7 +35,7 @@ class TransferMasterViewModel: NSObject {
     
     func appointMasterAction(sender: UIButton) {
         guard userId != "" else { return }
-        engineManager.roomEngine.changeUserRole(userId: userId, role: .roomOwner) { [weak self] in
+        engineManager.changeUserRole(userId: userId, role: .roomOwner) { [weak self] in
             guard let self = self else { return }
             self.engineManager.exitRoom(onSuccess: nil, onError: nil)
             self.roomRouter.dismissAllRoomPopupViewController()

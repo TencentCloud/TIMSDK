@@ -26,7 +26,6 @@ class SetUpViewModel {
     enum SetUpItemType: Int {
         case videoType
         case audioType
-        case shareType
     }
     enum VideoItemType: Int {
         case resolutionItemType
@@ -38,7 +37,6 @@ class SetUpViewModel {
     private(set) var audioItems: [ListCellItemData] = []
     weak var viewResponder: SetUpViewEventResponder? = nil
     let filePath: String
-    let appGroupString: String
     var engineManager: EngineManager {
         EngineManager.createInstance()
     }
@@ -104,7 +102,6 @@ class SetUpViewModel {
         filePath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory,
                                                         FileManager.SearchPathDomainMask.userDomainMask,
                                                         true).last?.appending("/test-record.aac") ?? ""
-        appGroupString = "com.tencent.TUIRoomTXReplayKit-Screen"
         createTopItem()
         createVideoItem()
         createAudioItem()
@@ -126,14 +123,6 @@ class SetUpViewModel {
             self.audioSetAction(sender: button)
         }
         topItems.append(audioSetItem)
-        
-        let shareItem = ButtonItemData()
-        shareItem.normalTitle = .shareText
-        shareItem.action = { [weak self] sender in
-            guard let self = self, let button = sender as? UIButton else { return }
-            self.shareAction(sender: button)
-        }
-        topItems.append(shareItem)
     }
     
     func updateSetUpItemView(item: ListCellItemData, listIndex: Int, pageIndex: Int) {
@@ -146,10 +135,6 @@ class SetUpViewModel {
     
     func audioSetAction(sender: UIButton) {
         viewResponder?.updateSegmentScrollView(selectedIndex: SetUpItemType.audioType.rawValue)
-    }
-    
-    func shareAction(sender: UIButton) {
-        viewResponder?.updateSegmentScrollView(selectedIndex: SetUpItemType.shareType.rawValue)
     }
     
     func createVideoItem() {
@@ -188,15 +173,15 @@ class SetUpViewModel {
         }
         videoItems.append(bitrateItem)
         
-        let localMirrorItem = ListCellItemData()
-        localMirrorItem.titleText = .localMirrorText
-        localMirrorItem.hasSwitch = true
-        localMirrorItem.isSwitchOn = videoSetting.isMirror
-        localMirrorItem.action = { [weak self] sender in
-            guard let self = self, let view = sender as? UISwitch else { return }
-            self.localMirrorAction(sender: view)
-        }
-        videoItems.append(localMirrorItem)
+//        let localMirrorItem = ListCellItemData()
+//        localMirrorItem.titleText = .localMirrorText
+//        localMirrorItem.hasSwitch = true
+//        localMirrorItem.isSwitchOn = videoSetting.isMirror
+//        localMirrorItem.action = { [weak self] sender in
+//            guard let self = self, let view = sender as? UISwitch else { return }
+//            self.localMirrorAction(sender: view)
+//        }
+//        videoItems.append(localMirrorItem)
     }
     
     func resolutionAction() {
@@ -239,7 +224,7 @@ class SetUpViewModel {
         param.videoBitrate = Int32(videoSetting.videoBitrate)
         param.videoFps = Int32(videoSetting.videoFps)
         param.enableAdjustRes = true
-        engineManager.roomEngine.getTRTCCloud().setVideoEncoderParam(param)
+        engineManager.setVideoEncoderParam(param)
     }
     
     func frameRateAction() {
@@ -252,18 +237,9 @@ class SetUpViewModel {
         updateVideoEncoderParam()
     }
     
-    func localMirrorAction(sender: UISwitch) {
-        videoSetting.isMirror = sender.isOn
-        let params = TRTCRenderParams()
-        params.fillMode = .fill
-        params.rotation = ._0
-        if videoSetting.isMirror {
-            params.mirrorType = .enable
-        } else {
-            params.mirrorType = .disable
-        }
-        engineManager.roomEngine.getTRTCCloud().setLocalRenderParams(params)
-    }
+//    func localMirrorAction(sender: UISwitch) {
+//        engineManager.switchMirror()
+//    }
     
     func createAudioItem() {
         let captureVolumeItem = ListCellItemData()
@@ -306,32 +282,15 @@ class SetUpViewModel {
     }
     
     func captureVolumeAction(sender: UISlider) {
-        audioSetting.captureVolume = Int(sender.value)
-        engineManager.roomEngine.getTRTCCloud().setAudioCaptureVolume(audioSetting.captureVolume)
+        engineManager.setAudioCaptureVolume(Int(sender.value))
     }
     
     func playingVolumeAction(sender: UISlider) {
-        audioSetting.playVolume = Int(sender.value)
-        engineManager.roomEngine.getTRTCCloud().setAudioPlayoutVolume(audioSetting.playVolume)
+        engineManager.setAudioPlayoutVolume(Int(sender.value))
     }
     
     func volumePromptAction(sender: UISwitch) {
-        audioSetting.volumePrompt = sender.isOn
-        if audioSetting.volumePrompt {
-            engineManager.roomEngine.getTRTCCloud().enableAudioVolumeEvaluation(300, enable_vad: true)
-        } else {
-            engineManager.roomEngine.getTRTCCloud().enableAudioVolumeEvaluation(0, enable_vad: false)
-        }
-    }
-    
-    func shareStartAction(sender: UIButton) {
-        if #available(iOS 12.0, *) {
-            engineManager.roomEngine.startScreenCapture(appGroup: appGroupString)
-            BroadcastLauncher.launch()
-            ScreenCaptureMaskView.show()
-        } else {
-            viewResponder?.makeToast(text: .versionLowToastText)
-        }
+        engineManager.enableAudioVolumeEvaluation(isVolumePrompt: sender.isOn)
     }
     
     deinit {
@@ -345,9 +304,6 @@ private extension String {
     }
     static var audioText: String {
         localized("TUIRoom.audio")
-    }
-    static var shareText: String {
-        localized("TUIRoom.share")
     }
     static var versionLowToastText: String {
         localized("TUIRoom.version.too.low")

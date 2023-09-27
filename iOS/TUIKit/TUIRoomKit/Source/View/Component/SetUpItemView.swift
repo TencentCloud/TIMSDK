@@ -23,35 +23,10 @@ class SetUpItemView: UIView {
         return view
     }()
     
-    let shareView: UIView = {
-        let view = UIView()
-        view.isHidden = true
-        return view
-    }()
-    
-    let shareImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "room_share_screen", in: tuiRoomKitBundle(), compatibleWith: nil))
-        return imageView
-    }()
-    
-    let shareStartButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle(.shareText, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 18)
-        button.setBackgroundImage(UIColor(0x006EFF).trans2Image(), for: .normal)
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.titleLabel?.minimumScaleFactor = 0.5
-        button.layer.cornerRadius = 20
-        button.clipsToBounds = true
-        return button
-    }()
-    
     init(viewModel: SetUpViewModel, viewType: SetUpViewModel.SetUpItemType) {
         self.viewModel = viewModel
         self.viewType = viewType
         super.init(frame: .zero)
-        EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_SomeoneSharing, responder: self)
     }
     
     required init?(coder: NSCoder) {
@@ -64,30 +39,22 @@ class SetUpItemView: UIView {
         guard !isViewReady else { return }
         constructViewHierarchy()
         activateConstraints()
-        bindInteraction()
         isViewReady = true
     }
     
     func constructViewHierarchy() {
         addSubview(stackView)
-        addSubview(shareView)
-        shareView.addSubview(shareImageView)
-        shareView.addSubview(shareStartButton)
         
         var viewItems: [ListCellItemData] = []
         switch viewType {
         case .videoType:
             viewItems = viewModel.videoItems
             stackView.isHidden = false
-            shareView.isHidden = true
         case .audioType:
             viewItems = viewModel.audioItems
             stackView.isHidden = false
-            shareView.isHidden = true
-        case .shareType:
-            stackView.isHidden = true
-            shareView.isHidden = false
         }
+        
         for item in viewItems {
             let view = ListCellItemView(itemData: item)
             viewArray.append(view)
@@ -103,29 +70,6 @@ class SetUpItemView: UIView {
         stackView.snp.makeConstraints { make in
             make.top.width.equalToSuperview()
         }
-        
-        shareView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        shareImageView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(40.scale375())
-            make.width.equalTo(84.scale375())
-            make.height.equalTo(90.scale375())
-        }
-        
-        shareStartButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.width.equalTo(120.scale375())
-            make.height.equalTo(40.scale375())
-            make.top.equalTo(shareImageView.snp.bottom).offset(20)
-        }
-    }
-    
-    func bindInteraction() {
-        shareStartButton.addTarget(self, action: #selector(shareStartAction(sender:)), for: .touchUpInside)
-        shareStartButton.isEnabled = viewModel.engineManager.store.attendeeList.first(where: { $0.hasScreenStream == true }) == nil
     }
     
     func updateStackView(item: ListCellItemData, index: Int) {
@@ -140,26 +84,8 @@ class SetUpItemView: UIView {
         }
     }
     
-    @objc func shareStartAction(sender: UIButton) {
-        viewModel.shareStartAction(sender: sender)
-    }
-    
     deinit {
-        EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_SomeoneSharing, responder: self)
         debugPrint("deinit \(self)")
     }
 }
 
-extension SetUpItemView: RoomKitUIEventResponder {
-    func onNotifyUIEvent(key: EngineEventCenter.RoomUIEvent, Object: Any?, info: [AnyHashable : Any]?) {
-        if key == .TUIRoomKitService_SomeoneSharing {
-            shareStartButton.isEnabled = viewModel.engineManager.store.attendeeList.first(where: { $0.hasScreenStream == true }) == nil
-        }
-    }
-}
-
-private extension String {
-    static var shareText: String {
-        localized("TUIRoom.share")
-    }
-}

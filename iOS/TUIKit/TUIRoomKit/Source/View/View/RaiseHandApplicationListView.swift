@@ -14,9 +14,9 @@ class RaiseHandApplicationListView: UIView {
     let backButton: UIButton = {
         let button = UIButton()
         button.contentVerticalAlignment = .center
-        button.contentHorizontalAlignment = .left
+        button.contentHorizontalAlignment = isRTL ? .right : .left
         button.setTitleColor(UIColor(0xADB6CC), for: .normal)
-        let image = UIImage(named: "room_back_white", in: tuiRoomKitBundle(), compatibleWith: nil)
+        let image = UIImage(named: "room_back_white", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn()
         button.setImage(image, for: .normal)
         button.setTitle(.videoConferenceTitle, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)
@@ -150,11 +150,12 @@ class RaiseHandApplicationListView: UIView {
     }
     
     private func setupViewState() {
-        let userRole = viewModel.engineManager.store.currentUser.userRole
+        let currentUser = viewModel.engineManager.store.currentUser
         let roomInfo = viewModel.engineManager.store.roomInfo
-        allAgreeButton.isHidden = (userRole != .roomOwner)
+        let isOwner: Bool = currentUser.userId == roomInfo.ownerId
+        allAgreeButton.isHidden = !isOwner
         allAgreeButton.isSelected = roomInfo.isMicrophoneDisableForAllUser
-        inviteMemberButton.isHidden = (userRole != .roomOwner)
+        inviteMemberButton.isHidden = !isOwner
         inviteMemberButton.isSelected = roomInfo.isCameraDisableForAllUser
     }
     
@@ -217,7 +218,7 @@ extension RaiseHandApplicationListView: RaiseHandApplicationListViewResponder {
 }
 
 class ApplyTableCell: UITableViewCell {
-    let attendeeModel: UserModel
+    let attendeeModel: UserEntity
     let viewModel: RaiseHandApplicationListViewModel
     
     let avatarImageView: UIImageView = {
@@ -231,7 +232,7 @@ class ApplyTableCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor(0xD1D9EC)
         label.backgroundColor = UIColor.clear
-        label.textAlignment = .left
+        label.textAlignment = isRTL ? .right : .left
         label.font = UIFont.systemFont(ofSize: 16)
         label.numberOfLines = 1
         return label
@@ -239,15 +240,15 @@ class ApplyTableCell: UITableViewCell {
     
     let muteAudioButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "room_mic_on", in: tuiRoomKitBundle(), compatibleWith: nil), for: .normal)
-        button.setImage(UIImage(named: "room_mic_off", in: tuiRoomKitBundle(), compatibleWith: nil), for: .selected)
+        button.setImage(UIImage(named: "room_mic_on", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .normal)
+        button.setImage(UIImage(named: "room_mic_off", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .selected)
         return button
     }()
     
     let muteVideoButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setImage(UIImage(named: "room_camera_on", in: tuiRoomKitBundle(), compatibleWith: nil), for: .normal)
-        button.setImage(UIImage(named: "room_camera_off", in: tuiRoomKitBundle(), compatibleWith: nil), for: .selected)
+        button.setImage(UIImage(named: "room_camera_on", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .normal)
+        button.setImage(UIImage(named: "room_camera_off", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .selected)
         return button
     }()
     
@@ -275,7 +276,7 @@ class ApplyTableCell: UITableViewCell {
         return view
     }()
     
-    init(attendeeModel: UserModel ,viewModel: RaiseHandApplicationListViewModel) {
+    init(attendeeModel: UserEntity ,viewModel: RaiseHandApplicationListViewModel) {
         self.attendeeModel = attendeeModel
         self.viewModel = viewModel
         super.init(style: .default, reuseIdentifier: "UserListCell")
@@ -312,35 +313,35 @@ class ApplyTableCell: UITableViewCell {
         }
         muteVideoButton.snp.makeConstraints { make in
             make.width.height.equalTo(36)
-            make.right.equalToSuperview().offset(-12)
+            make.trailing.equalToSuperview().offset(-12)
             make.centerY.equalTo(self.avatarImageView)
         }
         muteAudioButton.snp.makeConstraints { make in
             make.width.height.equalTo(36)
-            make.right.equalTo(self.muteVideoButton.snp.left).offset(-12)
+            make.trailing.equalTo(self.muteVideoButton.snp.leading).offset(-12)
             make.centerY.equalTo(self.avatarImageView)
         }
         disagreeStageButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-12)
+            make.trailing.equalToSuperview().offset(-12)
             make.centerY.equalTo(self.avatarImageView)
             make.width.height.equalTo(80.scale375())
             make.height.equalTo(24.scale375())
         }
         agreeStageButton.snp.makeConstraints { make in
-            make.right.equalTo(disagreeStageButton.snp.left).offset(-5)
+            make.trailing.equalTo(disagreeStageButton.snp.leading).offset(-5)
             make.centerY.equalTo(disagreeStageButton)
             make.width.height.equalTo(80.scale375())
             make.height.equalTo(24.scale375())
         }
         userLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(avatarImageView.snp.right).offset(12)
+            make.leading.equalTo(avatarImageView.snp.trailing).offset(12)
             make.width.equalTo(150.scale375())
             make.height.equalTo(48)
         }
         downLineView.snp.makeConstraints { make in
-            make.left.equalTo(userLabel)
-            make.right.equalToSuperview().offset(-12)
+            make.leading.equalTo(userLabel)
+            make.trailing.equalToSuperview().offset(-12)
             make.bottom.equalToSuperview()
             make.height.equalTo(0.3)
         }
@@ -353,14 +354,14 @@ class ApplyTableCell: UITableViewCell {
         disagreeStageButton.addTarget(self, action: #selector(disagreeStageAction(sender:)), for: .touchUpInside)
     }
     
-    func setupViewState(item: UserModel) {
+    func setupViewState(item: UserEntity) {
         let placeholder = UIImage(named: "room_default_user", in: tuiRoomKitBundle(), compatibleWith: nil)
         if let url = URL(string: item.avatarUrl) {
             avatarImageView.sd_setImage(with: url, placeholderImage: placeholder)
         } else {
             avatarImageView.image = placeholder
         }
-        if item.userRole == .roomOwner {
+        if item.userId == viewModel.roomInfo.ownerId {
             userLabel.text = item.userName + "(" + .meText + ")"
         } else {
             userLabel.text = item.userName

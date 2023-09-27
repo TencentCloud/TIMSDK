@@ -13,6 +13,18 @@ class RoomInfoView: UIView {
     private var isViewReady: Bool = false
     var viewArray: [UIView] = []
     
+    let dropView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(0x1B1E26)
+        return view
+    }()
+    
+    let dropImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "room_lineImage",in:tuiRoomKitBundle(),compatibleWith: nil)
+        return view
+    }()
+    
     let headView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(0x1B1E26)
@@ -21,9 +33,9 @@ class RoomInfoView: UIView {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(0xD1D9EC)
-        label.font = UIFont(name: "PingFangSC-Regular", size: 25)
-        label.textAlignment = .left
+        label.textColor = UIColor(0xD5E0F2)
+        label.font = UIFont(name: "PingFangSC-Regular", size: 18)
+        label.textAlignment = isRTL ? .right : .left
         return label
     }()
     
@@ -33,22 +45,6 @@ class RoomInfoView: UIView {
         button.setImage(image, for: .normal)
         button.isHidden = true
         return button
-    }()
-    
-    let footerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(0x1B1E26)
-        return view
-    }()
-    
-    let inviteLabel: UILabel = {
-        let label = UILabel()
-        label.text = .inviteJoinRoomText
-        label.textColor = UIColor(0x7C85A6)
-        label.font = UIFont(name: "PingFangSC-Regular", size: 17)
-        label.textAlignment = .left
-        label.adjustsFontSizeToFitWidth = true
-        return label
     }()
     
     let stackView: UIStackView = {
@@ -72,6 +68,7 @@ class RoomInfoView: UIView {
     
     override func didMoveToWindow() {
         super.didMoveToWindow()
+        backgroundColor = UIColor(0x1B1E26)
         guard !isViewReady else { return }
         constructViewHierarchy()
         activateConstraints()
@@ -81,58 +78,60 @@ class RoomInfoView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        roundedRect(rect: bounds,
-                    byRoundingCorners: [.topLeft, .topRight],
-                    cornerRadii: CGSize(width: 12, height: 12))
+        self.layer.cornerRadius = 12
     }
     
     func constructViewHierarchy() {
-        addSubview(footerView)
+        addSubview(dropView)
         addSubview(stackView)
         addSubview(headView)
+        dropView.addSubview(dropImageView)
         headView.addSubview(nameLabel)
         headView.addSubview(codeButton)
-        footerView.addSubview(inviteLabel)
     }
     
     func activateConstraints() {
-        footerView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
-            make.height.equalTo(80.scale375())
+        dropView.snp.makeConstraints{ make in
+            make.top.equalToSuperview()
+            make.height.equalTo(15.scale375())
+            make.leading.equalToSuperview()
             make.width.equalToSuperview()
         }
-        inviteLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10.scale375())
-            make.leading.equalToSuperview().offset(16.scale375())
-            make.trailing.equalToSuperview().offset(-16.scale375())
-            make.height.equalTo(20)
+        dropImageView.snp.makeConstraints{ make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(12.scale375())
+            make.width.equalTo(24.scale375())
+            make.height.equalTo(3.scale375())
         }
         stackView.snp.makeConstraints { make in
-            make.bottom.equalTo(footerView.snp.top)
-            make.width.equalToSuperview()
+            make.top.equalTo(headView.snp.bottom).offset(20.scale375())
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.height.equalTo(128.scale375())
         }
         headView.snp.makeConstraints { make in
-            make.bottom.equalTo(stackView.snp.top)
-            make.height.equalTo(50)
-            make.width.equalToSuperview()
+            make.top.equalToSuperview().offset(35.scale375())
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.height.equalTo(25.scale375())
         }
         codeButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-16.scale375())
-            make.width.height.equalTo(24.scale375())
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(25.scale375())
+            make.width.equalTo(68.scale375())
         }
         nameLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(16.scale375())
-            make.height.equalTo(30.scale375())
-            make.right.equalTo(codeButton.snp.left).offset(-10.scale375())
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(25.scale375())
         }
         for item in viewModel.messageItems {
             let view = ListCellItemView(itemData: item)
             viewArray.append(view)
             stackView.addArrangedSubview(view)
             view.snp.makeConstraints { make in
-                make.height.equalTo(40.scale375())
+                make.height.equalTo(20.scale375())
                 make.width.equalToSuperview()
             }
         }
@@ -142,10 +141,18 @@ class RoomInfoView: UIView {
         backgroundColor = UIColor(0x1B1E26)
         setupViewState(item: viewModel)
         codeButton.addTarget(self, action: #selector(codeAction(sender:)), for: .touchUpInside)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dropDownRoomInfoAction(sender:)))
+        dropView.addGestureRecognizer(tap)
+        dropView.isUserInteractionEnabled = true
+        viewModel.viewResponder = self
     }
     
     func setupViewState(item: RoomInfoViewModel) {
-        nameLabel.text = EngineManager.createInstance().store.roomInfo.name
+        nameLabel.text = EngineManager.createInstance().store.roomInfo.name + .quickMeetingText
+    }
+    
+    @objc func dropDownRoomInfoAction(sender: UIView) {
+        viewModel.dropDownAction(sender: sender)
     }
     
     @objc func codeAction(sender: UIButton) {
@@ -157,9 +164,22 @@ class RoomInfoView: UIView {
     }
 }
 
+extension RoomInfoView: RoomInfoResponder {
+    func showCopyToast(copyType: CopyType) {
+        RoomRouter.makeToastInCenter(toast: copyType == .copyRoomIdType ?
+            .copyRoomIdSuccess : .copyRoomLinkSuccess,duration: 0.5)
+    }
+}
+
 private extension String {
-    static var inviteJoinRoomText: String {
-        localized("TUIRoom.invite.join")
+    static var copyRoomIdSuccess: String {
+        localized("TUIRoom.copy.roomId.success")
+    }
+    static var copyRoomLinkSuccess: String {
+        localized("TUIRoom.copy.roomLink.success")
+    }
+    static var quickMeetingText: String {
+        localized("TUIRoom.video.conference")
     }
 }
 

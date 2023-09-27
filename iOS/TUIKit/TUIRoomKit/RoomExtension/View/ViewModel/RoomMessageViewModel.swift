@@ -68,11 +68,7 @@ class RoomMessageViewModel: NSObject {
     
     private func enterRoom() {
         if !engineManager.store.isEnteredRoom {
-            let roomInfo = RoomInfo()
-            roomInfo.roomId = message.roomId
-            roomInfo.isOpenCamera = engineManager.store.isOpenCamera
-            roomInfo.isOpenMicrophone = engineManager.store.isOpenMicrophone
-            roomManager.enterRoom(roomInfo: roomInfo)
+            roomManager.enterRoom(roomId: message.roomId)
         } else {
             EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_ShowRoomMainView, param: [:])
         }

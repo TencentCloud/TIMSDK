@@ -12,6 +12,17 @@ class UserListManagerView: UIView {
     var viewModel: UserListManagerViewModel
     private var isViewReady: Bool = false
     
+    let dropView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(0x17181F)
+        return view
+    }()
+    
+    let dropImageView: UIImageView = {
+        let view = UIImageView()
+        return view
+    }()
+    
     let avatarImageView: UIImageView = {
         let img = UIImageView()
         img.layer.cornerRadius = 20
@@ -21,17 +32,17 @@ class UserListManagerView: UIView {
     
     let userLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(0xADB6CC)
+        label.textColor = UIColor(0xD5E0F2)
         label.backgroundColor = UIColor.clear
-        label.textAlignment = .left
-        label.font = UIFont(name: "PingFangSC-Regular", size: 32)
+        label.textAlignment = isRTL ? .right : .left
+        label.font = UIFont(name: "PingFangSC-Regular", size: 16)
         label.numberOfLines = 1
         return label
     }()
     
     let headView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(0x2A2D38)
+        view.backgroundColor = UIColor(0x17181F)
         return view
     }()
     
@@ -46,7 +57,7 @@ class UserListManagerView: UIView {
     
     let bottomView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(0x2A2D38)
+        view.backgroundColor = UIColor(0x17181F)
         return view
     }()
     
@@ -54,8 +65,7 @@ class UserListManagerView: UIView {
     
     let backBlockView: UIView = {
         let view = UIView()
-        view.alpha = 0.5
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(0x17181F)
         return view
     }()
     
@@ -86,9 +96,10 @@ class UserListManagerView: UIView {
     
     func constructViewHierarchy() {
         addSubview(backBlockView)
-        addSubview(stackView)
+        addSubview(dropView)
         addSubview(headView)
-        addSubview(bottomView)
+        addSubview(stackView)
+        dropView.addSubview(dropImageView)
         headView.addSubview(avatarImageView)
         headView.addSubview(userLabel)
     }
@@ -97,40 +108,43 @@ class UserListManagerView: UIView {
         backBlockView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        bottomView.snp.makeConstraints { make in
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(52)
+        dropView.snp.makeConstraints { make in
+            make.top.left.right.equalTo(backBlockView)
+            make.height.equalTo(30.scale375())
         }
-        stackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.bottom.equalTo(bottomView.snp.top)
+        dropImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(12.scale375())
+            make.centerX.equalToSuperview()
+            make.height.equalTo(3.scale375())
+            make.width.equalTo(24.scale375())
         }
         headView.snp.makeConstraints { make in
-            make.bottom.equalTo(stackView.snp.top)
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.height.equalTo(60.scale375())
+            make.top.equalTo(backBlockView).offset(10.scale375())
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.height.equalTo(40.scale375())
         }
         avatarImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(15)
-            make.width.height.equalTo(36.scale375())
+            make.leading.equalToSuperview()
+            make.width.height.equalTo(40.scale375())
         }
         userLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(avatarImageView.snp.right).offset(10)
-            make.trailing.equalToSuperview().offset(-15)
-            make.height.equalTo(32.scale375())
+            make.leading.equalTo(avatarImageView.snp.trailing).offset(10.scale375())
+            make.trailing.equalToSuperview()
+            make.height.equalTo(22.scale375())
+        }
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(headView.snp.bottom).offset(20.scale375())
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
         }
     }
     
     func bindInteraction() {
         viewModel.viewResponder = self
         setupViewState()
-        let tap = UITapGestureRecognizer(target: self, action: #selector(backBlockAction(sender:)))
-        backBlockView.addGestureRecognizer(tap)
     }
     
     func setupViewState() {
@@ -168,16 +182,24 @@ extension UserListManagerView: UserListManagerViewEventResponder {
             let view = ButtonItemView(itemData: item)
             viewArray.append(view)
             stackView.addArrangedSubview(view)
-            view.snp.makeConstraints { make in
-                make.height.equalTo(40.scale375())
-                make.width.equalToSuperview()
+            
+            if view.itemData.buttonType == .muteMessageItemType {
+                view.snp.remakeConstraints { make in
+                    make.height.equalTo(60.scale375())
+                    make.width.equalToSuperview()
+                }
+            }else {
+                view.snp.makeConstraints { make in
+                    make.height.equalTo(53.scale375())
+                    make.width.equalToSuperview()
+                }
             }
-            view.backgroundColor = item.backgroundColor ?? UIColor(0x2A2D38)
+            view.backgroundColor = item.backgroundColor ?? UIColor(0x17181F)
         }
     }
     
     func makeToast(text : String) {
-        RoomRouter.makeToast(toast: text)
+        RoomRouter.makeToastInCenter(toast: text, duration: 0.5)
     }
     
     func showTransferredRoomOwnerAlert() {

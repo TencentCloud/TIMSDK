@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "dropDown.png",
+      "filename" : "room_drop_down.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "dropDown@2x.png",
+      "filename" : "room_drop_down@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "dropDown@3x.png",
+      "filename" : "room_drop_down@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -7,6 +7,11 @@
 
 import Foundation
 import AVFoundation
+import TUICore
+
+var isRTL: Bool {
+    TUIGlobalization.getRTLOption()
+}
 
 class RoomCommon {
     enum AuthorizationDeniedType {
@@ -19,23 +24,19 @@ class RoomCommon {
     class func checkAuthorCamaraStatusIsDenied() -> Bool {
         return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
     }
-    class func micStateActionWithPopCompletion(completion: @escaping () -> ()) {
+    class func micStateActionWithPopCompletion(completion: @escaping (Bool) -> ()) {
         if AVCaptureDevice.authorizationStatus(for: .audio) == .notDetermined {
             AVCaptureDevice.requestAccess(for: .audio) { granted in
-                if granted {
-                    completion()
-                }
+                completion(granted)
             }
         } else {
             showAuthorizationAlert(deniedType: .microphone)
         }
     }
-    class func cameraStateActionWithPopCompletion(completion: @escaping () -> ()) {
+    class func cameraStateActionWithPopCompletion(completion: @escaping (Bool) -> () ) {
         if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined {
             AVCaptureDevice.requestAccess(for: .video) { granted in
-                if granted {
-                    completion()
-                }
+                completion(granted)
             }
         } else {
             showAuthorizationAlert(deniedType: .camera)
@@ -71,7 +72,7 @@ class RoomCommon {
         }
     }
     
-    private class func getCurrentWindowViewController() -> UIViewController? {
+    class func getCurrentWindowViewController() -> UIViewController? {
         var keyWindow: UIWindow?
         for window in UIApplication.shared.windows {
             if window.isMember(of: UIWindow.self), window.isKeyWindow {

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "changeHost.png",
+      "filename" : "room_change_host.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "changeHost@2x.png",
+      "filename" : "room_change_host@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "changeHost@3x.png",
+      "filename" : "room_change_host@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "setting.png",
+      "filename" : "room_setting.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "setting@2x.png",
+      "filename" : "room_setting@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "setting@3x.png",
+      "filename" : "room_setting@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

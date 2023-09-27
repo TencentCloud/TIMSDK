@@ -18,7 +18,7 @@ func localized(_ key: String) -> String {
 }
 
 func localizedReplace(_ origin: String, replace: String) -> String {
-    return origin.replacingOccurrences(of: "xxx", with: replace)
+    return origin.replacingOccurrences(of: "xx", with: replace)
 }
 
 func tuiRoomKitBundle() -> Bundle {

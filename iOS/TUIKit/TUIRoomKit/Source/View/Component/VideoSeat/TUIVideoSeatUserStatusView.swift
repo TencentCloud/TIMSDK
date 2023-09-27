@@ -40,7 +40,7 @@ class TUIVideoSeatUserStatusView: UIView {
         let user = UILabel()
         user.textColor = .white
         user.backgroundColor = UIColor.clear
-        user.textAlignment = .left
+        user.textAlignment = isRTL ? .right : .left
         user.numberOfLines = 1
         user.font = UIFont(name: "PingFangSC-Regular", size: 12)
         return user
@@ -95,7 +95,7 @@ extension TUIVideoSeatUserStatusView {
             let volumeImageName = volume <= 0 ? "room_voice_volume1" : "room_voice_volume2"
             voiceVolumeImageView.image = UIImage(named: volumeImageName, in: tuiRoomKitBundle(), compatibleWith: nil)
         } else {
-            voiceVolumeImageView.image = UIImage(named: "room_mute_message", in: tuiRoomKitBundle(), compatibleWith: nil)
+            voiceVolumeImageView.image = UIImage(named: "room_mute_audio", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn()
         }
     }
 }

@@ -7,17 +7,55 @@
 //
 
 import Foundation
+import TUIRoomEngine
+
+enum CopyType {
+    case copyRoomIdType
+    case copyRoomLinkType
+}
+
+protocol RoomInfoResponder : NSObjectProtocol {
+    func showCopyToast(copyType: CopyType)
+}
 
 class RoomInfoViewModel {
     private(set) var messageItems: [ListCellItemData] = []
     var store: RoomStore {
         EngineManager.createInstance().store
     }
-    var roomInfo: RoomInfo {
+    var roomInfo: TUIRoomInfo {
         store.roomInfo
+    }
+    weak var viewResponder: RoomInfoResponder?
+    //房间链接
+    var roomLink: String? {
+        guard let bundleId = Bundle.main.bundleIdentifier else { return nil }
+        if bundleId == "com.tencent.tuiroom.apiexample" || bundleId == "com.tencent.fx.rtmpdemo" {
+            return "https://web.sdk.qcloud.com/trtc/webrtc/test/tuiroom-inner/index.html#/" + "room?roomId=" + roomInfo.roomId
+        } else if bundleId == "com.tencent.mrtc" {
+            return "https://web.sdk.qcloud.com/component/tuiroom/index.html#/" + "room?roomId=" + roomInfo.roomId
+        } else {
+            return nil
+        }
     }
     init() {
         createSourceData()
+    }
+    
+    func createListCellItemData(titleText: String, messageText: String,
+                                hasButton: Bool, copyType: CopyType) -> ListCellItemData {
+        let item = ListCellItemData()
+        item.titleText = titleText
+        item.messageText = messageText
+        item.hasRightButton = true
+        item.normalIcon = "room_copy"
+        item.normalText = .copyText
+        item.resourceBundle = tuiRoomKitBundle()
+        item.action = { [weak self] sender in
+            guard let self = self, let button = sender as? UIButton else { return }
+            self.copyAction(sender: button, text: item.messageText,copyType: copyType)
+        }
+        return item
     }
     
     func createSourceData() {
@@ -41,34 +79,22 @@ class RoomInfoViewModel {
         }
         messageItems.append(roomTypeItem)
         
-        let roomIdItem = ListCellItemData()
-        roomIdItem.titleText = .roomIdText
-        roomIdItem.messageText = roomInfo.roomId
-        roomIdItem.hasButton = true
-        roomIdItem.normalIcon = "room_copy"
-        roomIdItem.resourceBundle = tuiRoomKitBundle()
-        roomIdItem.action = { [weak self] sender in
-            guard let self = self, let button = sender as? UIButton else { return }
-            self.copyAction(sender: button, text: roomIdItem.messageText)
-        }
+        let roomIdItem = createListCellItemData(titleText: .roomIdText, messageText: roomInfo.roomId, hasButton: true, copyType: .copyRoomIdType)
         messageItems.append(roomIdItem)
         
-        let roomLinkItem = ListCellItemData()
-        roomLinkItem.titleText = .roomLinkText
-        roomLinkItem.messageText = "https://web.sdk.qcloud.com/component/tuiroom/index.html#/" + "room?roomId=" +
-        roomInfo.roomId
-        roomLinkItem.hasButton = true
-        roomLinkItem.normalIcon = "room_copy"
-        roomLinkItem.resourceBundle = tuiRoomKitBundle()
-        roomLinkItem.action = { [weak self] sender in
-            guard let self = self, let button = sender as? UIButton else { return }
-            self.copyAction(sender: button, text: roomLinkItem.messageText)
+        if let roomLink = roomLink {
+            let roomLinkItem = createListCellItemData(titleText: .roomLinkText, messageText: roomLink, hasButton: true, copyType: .copyRoomLinkType)
+            messageItems.append(roomLinkItem)
         }
-        messageItems.append(roomLinkItem)
     }
     
-    func copyAction(sender: UIButton, text: String) {
+    func dropDownAction(sender: UIView) {
+        RoomRouter.shared.dismissPopupViewController(viewType: .roomInfoViewType, animated: true)
+    }
+    
+    func copyAction(sender: UIButton, text: String, copyType: CopyType){
         UIPasteboard.general.string = text
+        viewResponder?.showCopyToast(copyType: copyType)
     }
     
     func codeAction(sender: UIButton) {
@@ -99,5 +125,8 @@ private extension String {
     }
     static var roomLinkText: String {
         localized("TUIRoom.room.link")
+    }
+    static var copyText: String {
+        localized("TUIRoom.room.copy")
     }
 }

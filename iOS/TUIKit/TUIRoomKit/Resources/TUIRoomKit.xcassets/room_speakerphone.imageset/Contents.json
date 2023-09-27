@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "speakerphone.png",
+      "filename" : "room_speakerphone.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "speakerphone@2x.png",
+      "filename" : "room_speakerphone@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "speakerphone@3x.png",
+      "filename" : "room_speakerphone@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

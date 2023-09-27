@@ -16,22 +16,22 @@ class TopView: UIView {
         let view = UIStackView()
         view.axis = .horizontal
         view.alignment = .center
-        view.distribution = .equalSpacing
-        view.spacing = 10
+        view.spacing = 24.scale375()
         return view
     }()
     
     let meetingTitleView: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear
         return view
     }()
     
     let meetingNameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(0xD1D9EC)
-        label.textAlignment = .left
+        label.textColor = UIColor(0xD5E0F2)
+        label.font = UIFont(name: "PingFangSC-Medium", size: 16)
+        label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -48,6 +48,27 @@ class TopView: UIView {
         label.textColor = UIColor(0xD1D9EC)
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
+        label.font = UIFont(name: "PingFangSC-Medium", size: 12)
+        return label
+    }()
+    
+    let exitView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    let exitImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "room_exit", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn()
+        return imageView
+    }()
+    
+    let exitLabel: UILabel = {
+        let label = UILabel()
+        label.text = .exitText
+        label.textColor = UIColor(0xED414D)
+        label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
         label.font = UIFont(name: "PingFangSC-Medium", size: 14)
         return label
     }()
@@ -56,6 +77,7 @@ class TopView: UIView {
         let view = UIView()
         return view
     }()
+
     
     var menuButtons: [UIView] = []
     
@@ -74,6 +96,7 @@ class TopView: UIView {
     override func didMoveToWindow() {
         super.didMoveToWindow()
         guard !isViewReady else { return }
+        backgroundColor = UIColor(0x0F1014)
         constructViewHierarchy()
         activateConstraints()
         bindInteraction()
@@ -89,12 +112,15 @@ class TopView: UIView {
         meetingTitleView.addSubview(meetingNameLabel)
         meetingTitleView.addSubview(dropDownButton)
         meetingTitleView.addSubview(timeLabel)
+        addSubview(exitView)
+        exitView.addSubview(exitImage)
+        exitView.addSubview(exitLabel)
         addSubview(downLineView)
         for item in viewModel.viewItems {
             let view = TopItemView(itemData: item)
             menuButtons.append(view)
             stackView.addArrangedSubview(view)
-            let size = item.size ?? CGSize(width: 40.scale375(), height: 40.scale375())
+            let size = item.size ?? CGSize(width: 20.scale375(), height: 20.scale375())
             view.snp.makeConstraints { make in
                 make.height.equalTo(size.height)
                 make.width.equalTo(size.width)
@@ -104,13 +130,14 @@ class TopView: UIView {
     
     func activateConstraints() {
         stackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(16.scale375())
             make.top.bottom.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-15)
+            make.width.equalTo(64.scale375())
         }
         meetingTitleView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(15)
+            make.width.equalTo(129.scale375())
             make.top.bottom.equalToSuperview()
-            make.right.equalTo(stackView.snp.left)
+            make.centerX.equalToSuperview()
         }
         meetingNameLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -119,38 +146,92 @@ class TopView: UIView {
             make.width.equalTo(111.scale375())
         }
         dropDownButton.snp.makeConstraints { make in
-            make.left.equalTo(meetingNameLabel.snp.right).offset(5)
+            make.leading.equalTo(meetingNameLabel.snp.trailing).offset(5)
             make.centerY.equalTo(meetingNameLabel)
-            make.width.height.equalTo(25.scale375())
+            make.width.height.equalTo(16.scale375())
         }
         timeLabel.snp.makeConstraints { make in
             make.top.equalTo(meetingNameLabel.snp.bottom).offset(5)
-            make.leading.equalToSuperview()
+            make.centerX.equalTo(meetingNameLabel.snp.centerX)
             make.height.equalTo(20)
         }
+        exitView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.width.equalTo(51.scale375())
+        }
+        exitImage.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview()
+            make.width.equalTo(20.scale375())
+            make.height.equalTo(20.scale375())
+        }
+        exitLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview()
+            make.width.equalTo(28.scale375())
+            make.height.equalTo(20.scale375())
+        }
         downLineView.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(15)
-            make.right.equalToSuperview().offset(-15)
+            make.leading.equalToSuperview().offset(15)
+            make.trailing.equalToSuperview().offset(-15)
             make.top.equalTo(timeLabel.snp.bottom).offset(2)
             make.height.equalTo(0.3)
         }
     }
     
     func bindInteraction() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dropDownAction(sender:)))
-        meetingNameLabel.text = viewModel.engineManager.store.roomInfo.name
-        meetingTitleView.addGestureRecognizer(tap)
+        let dropTap = UITapGestureRecognizer(target: self, action: #selector(dropDownAction(sender:)))
+        let exitTap = UITapGestureRecognizer(target: self, action: #selector(exitAction(sender:)))
+        var namelabel = viewModel.engineManager.store.roomInfo.name + .quickMeetingText
+        if namelabel.count > 10 {
+            namelabel = namelabel.prefix(9) + "..."
+        }
+        meetingNameLabel.text = namelabel
+        meetingTitleView.addGestureRecognizer(dropTap)
+        exitView.addGestureRecognizer(exitTap)
         viewModel.viewResponder = self
         viewModel.updateTimerLabelText()
+    }
+    
+    func updateRootViewOrientation(isLandscape: Bool) {
+        if isLandscape { //横屏时，会议时间放在会议名称的右边
+            timeLabel.snp.remakeConstraints() { make in
+                make.centerY.equalTo(dropDownButton)
+                make.leading.equalTo(dropDownButton.snp.trailing).offset(15)
+            }
+            meetingTitleView.snp.updateConstraints { make in
+                make.width.equalTo(150.scale375())
+            }
+        } else { //竖屏时，会议时间放在会议名称的下边
+            timeLabel.snp.remakeConstraints { make in
+                make.top.equalTo(meetingNameLabel.snp.bottom).offset(5)
+                make.centerX.equalTo(meetingNameLabel.snp.centerX)
+            }
+            meetingTitleView.snp.updateConstraints { make in
+                make.width.equalTo(129.scale375())
+            }
+        }
     }
     
     @objc func dropDownAction(sender: UIView) {
         viewModel.dropDownAction(sender: sender)
     }
     
+    @objc func exitAction(sender: UIView) {
+        viewModel.exitAction(sender: sender)
+    }
+    
     deinit {
         debugPrint("deinit \(self)")
     }
+}
+
+enum AlertAction {
+    case dismissRoomAction
+    case transferMasterAction
+    case leaveRoomAction
+    case cancelAction
 }
 
 extension TopView: TopViewModelResponder {
@@ -174,7 +255,7 @@ extension TopView {
         addSubview(reportBtn)
         reportBtn.snp.makeConstraints({ make in
             make.centerY.equalTo(menuView.snp.centerY)
-            make.right.equalTo(menuView.snp.left).offset(-10)
+            make.trailing.equalTo(menuView.snp.leading).offset(-10)
             make.width.height.equalTo(menuView)
         })
         reportBtn.addTarget(self, action: #selector(clickReport), for: .touchUpInside)
@@ -191,3 +272,34 @@ extension TopView {
     
 }
 #endif
+
+private extension String {
+    static var leaveRoomTitle: String {
+        localized("TUIRoom.sure.leave.room")
+    }
+    static var destroyRoomTitle: String {
+        localized("TUIRoom.sure.destroy.room")
+    }
+    static var dismissMeetingTitle: String {
+        localized("TUIRoom.dismiss.meeting.Title")
+    }
+    static var appointNewHostText: String {
+        localized("TUIRoom.appoint.new.host")
+    }
+    static var leaveMeetingText: String {
+        localized("TUIRoom.leave.meeting")
+    }
+    static var dismissMeetingText: String {
+        localized("TUIRoom.dismiss.meeting")
+    }
+    static var cancelText: String {
+        localized("TUIRoom.cancel")
+    }
+    static var exitText: String {
+        localized("TUIRoom.exit")
+    }
+    static var quickMeetingText: String {
+        localized("TUIRoom.video.conference")
+    }
+}
+

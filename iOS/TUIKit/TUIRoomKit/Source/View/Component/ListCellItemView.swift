@@ -14,7 +14,7 @@ class ListCellItemView: UIView {
     let titleLabel: UILabel = {
         let view = UILabel()
         view.backgroundColor = .clear
-        view.textColor = UIColor(0xD1D9EC)
+        view.textColor = UIColor(0x8F9AB2)
         view.font = UIFont(name: "PingFangSC-Medium", size: 14)
         view.minimumScaleFactor = 0.5
         return view
@@ -23,21 +23,10 @@ class ListCellItemView: UIView {
     let messageLabel: UILabel = {
         let view = UILabel()
         view.backgroundColor = .clear
-        view.textColor = UIColor(0xD1D9EC)
+        view.textColor = UIColor(0xD5E0F2)
         view.font = UIFont(name: "PingFangSC-Medium", size: 14)
         view.adjustsFontSizeToFitWidth = false
-        view.numberOfLines = 0
         view.minimumScaleFactor = 0.5
-        return view
-    }()
-    
-    let textField: UITextField = {
-        let view = UITextField()
-        view.backgroundColor = .clear
-        view.textColor = UIColor(0xD1D9EC)
-        view.font = UIFont(name: "PingFangSC-Regular", size: 14)
-        let color = UIColor(0xBBBBBB)
-        view.keyboardType = .numberPad
         return view
     }()
     
@@ -48,11 +37,12 @@ class ListCellItemView: UIView {
     
     let sliderLabel: UILabel = {
         let view = UILabel()
-        view.textAlignment = NSTextAlignment.left
+        view.textAlignment = isRTL ? .right : .left
         view.backgroundColor = .clear
         view.textColor = UIColor(0xD1D9EC)
         view.font = UIFont(name: "PingFangSC-Medium", size: 14)
         view.adjustsFontSizeToFitWidth = true
+        view.textAlignment = .center
         return view
     }()
     
@@ -67,6 +57,11 @@ class ListCellItemView: UIView {
         let button = UIButton(type: .custom)
         let normalIcon = UIImage(named: "room_drop_down", in: tuiRoomKitBundle(), compatibleWith: nil)
         button.setImage(normalIcon, for: .normal)
+        button.setTitleColor(UIColor(0xB2BBD1), for: .normal)
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 12)
+        button.backgroundColor = UIColor(0x6B758A).withAlphaComponent(0.7)
+        button.layer.cornerRadius = 4
+        button.layer.masksToBounds = true
         return button
     }()
     
@@ -92,7 +87,6 @@ class ListCellItemView: UIView {
     func constructViewHierarchy() {
         addSubview(titleLabel)
         addSubview(messageLabel)
-        addSubview(textField)
         addSubview(slider)
         addSubview(sliderLabel)
         addSubview(rightSwitch)
@@ -101,32 +95,28 @@ class ListCellItemView: UIView {
     
     func activateConstraints() {
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.width.equalTo(100.scale375())
+            make.width.equalTo(124.scale375())
+            make.height.equalTo(20.scale375())
         }
         
         messageLabel.snp.makeConstraints { make in
-            make.left.equalTo(titleLabel.snp.right).offset(10.scale375())
-            make.trailing.equalToSuperview().offset(-40)
+            make.leading.equalToSuperview().offset(80.scale375())
             make.centerY.equalToSuperview()
+            make.width.equalTo(188.scale375())
+            make.height.equalTo(20.scale375())
         }
         
-        textField.snp.makeConstraints { make in
-            make.left.equalTo(titleLabel.snp.right).offset(10)
-            make.trailing.equalToSuperview().offset(-100)
+        sliderLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(85.scale375())
+            make.trailing.equalToSuperview().offset(-185.scale375())
             make.centerY.equalToSuperview()
         }
         
         slider.snp.makeConstraints { make in
-            make.left.equalTo(titleLabel.snp.right).offset(10.scale375())
-            make.trailing.equalToSuperview().offset(-100.scale375())
-            make.centerY.equalToSuperview()
-        }
-        
-        sliderLabel.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-20.scale375())
-            make.width.equalTo(50.scale375())
+            make.trailing.equalToSuperview().offset(-12.scale375())
+            make.width.equalTo(152.scale375())
             make.centerY.equalToSuperview()
         }
         
@@ -134,10 +124,18 @@ class ListCellItemView: UIView {
             make.trailing.equalToSuperview().offset(-20)
             make.centerY.equalToSuperview()
         }
-        
-        rightButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-20)
+        if itemData.hasRightButton {
+            rightButton.snp.remakeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.trailing.equalToSuperview()
+                make.width.equalTo(60.scale375())
+                make.height.equalTo(26.scale375Height())
+            }
+        } else {
+            rightButton.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.trailing.equalToSuperview().offset(-20.scale375())
+            }
         }
     }
     
@@ -159,13 +157,10 @@ class ListCellItemView: UIView {
         if item.messageText.isEmpty {
             messageLabel.isHidden = true
         }
-        if !item.hasFieldView {
-            textField.isHidden = true
-        }
         if !item.hasSwitch {
             rightSwitch.isHidden = true
         }
-        if !item.hasButton {
+        if !item.hasRightButton {
             rightButton.isHidden = true
         }
         if !item.hasSlider {
@@ -187,16 +182,7 @@ class ListCellItemView: UIView {
         if let selectedImage = item.selectedImage {
             rightButton.setImage(selectedImage, for: .selected)
         }
-        textField.isUserInteractionEnabled = item.fieldEnable
-        textField.delegate = self
-        if item.fieldEnable {
-            let color = UIColor(0xBBBBBB)
-            textField.attributedPlaceholder = NSAttributedString(string: item.fieldPlaceholderText,attributes:
-                                                                    [NSAttributedString.Key.foregroundColor:color])
-            textField.becomeFirstResponder()
-        } else {
-            textField.text = item.fieldText
-        }
+        rightButton.setTitle(item.normalText, for: .normal)
     }
     
     @objc func overAllAction(sender: UIView) {
@@ -222,36 +208,5 @@ class ListCellItemView: UIView {
     
     deinit {
         debugPrint("deinit \(self)")
-    }
-}
-
-extension ListCellItemView: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let maxCount = 11
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) {
-            textField.text = textField.text?
-                .replacingOccurrences(of: " ",
-                                      with: "",
-                                      options: .literal,
-                                      range: nil)
-                .addIntervalSpace(intervalStr: " ", interval: 3)
-        }
-        
-        guard let textFieldText = textField.text,
-              let rangeOfTextToReplace = Range(range, in: textFieldText) else {
-            return false
-        }
-        let substringToReplace = textFieldText[rangeOfTextToReplace]
-        if substringToReplace.count > 0 && string.count == 0 {
-            return true
-        }
-        let count = textFieldText.count - substringToReplace.count + string.count
-        
-        let res = count <= maxCount
-        return res
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textFieldAction(sender: textField)
     }
 }

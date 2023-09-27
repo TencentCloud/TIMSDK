@@ -25,7 +25,7 @@ class MoreFunctionViewModel {
     
     func createBottomData() {
         //聊天
-        if hasTUIChatItem(), !engineManager.store.isChatAccessRoom {
+        if hasTUIChatItem() {
             let chatItem = ButtonItemData()
             chatItem.normalIcon = "room_chat"
             chatItem.normalTitle = .chatText
@@ -35,18 +35,6 @@ class MoreFunctionViewModel {
                 self.chatAction(sender: button)
             }
             viewItems.append(chatItem)
-        }
-        //美颜
-        if hasBeautyItem() {
-            let beautyItem = ButtonItemData()
-            beautyItem.normalIcon = "room_beauty"
-            beautyItem.normalTitle = .beautyText
-            beautyItem.resourceBundle = tuiRoomKitBundle()
-            beautyItem.action = { [weak self] sender in
-                guard let self = self, let button = sender as? UIButton else { return }
-                self.beautyAction(sender: button)
-            }
-            viewItems.append(beautyItem)
         }
         //设置
         let settingItem = ButtonItemData()
@@ -58,36 +46,10 @@ class MoreFunctionViewModel {
             self.settingAction(sender: button)
         }
         viewItems.append(settingItem)
-        
-        if hasDebugItem() {
-            let debugItem = ButtonItemData()
-            debugItem.normalIcon = "room_setting"
-            debugItem.normalTitle = .advancedSetting
-            debugItem.resourceBundle = tuiRoomKitBundle()
-            debugItem.action = { [weak self] sender in
-                guard let self = self, let button = sender as? UIButton else { return }
-                self.debugAction(sender: button)
-            }
-            viewItems.append(debugItem)
-        }
     }
     
     private func hasTUIChatItem() -> Bool {
         return TUICore.getService(TUICore_TUIChatService) != nil
-    }
-    private func hasBeautyItem() -> Bool {
-        return TUICore.getService(TUICore_TUIBeautyService) != nil
-    }
-    private func hasDebugItem() -> Bool {
-        return TUICore.getService(TUICore_TUIDebugService) != nil
-    }
-    
-    func beautyAction(sender: UIButton) {
-        sender.isSelected = !sender.isSelected
-        RoomRouter.shared.dismissPopupViewController(viewType: .moreViewType) { [weak self] in
-            guard let self = self else { return }
-            self.engineEventCenter.notifyUIEvent(key: .TUIRoomKitService_ShowBeautyView, param: [:])
-        }
     }
     
     func settingAction(sender: UIButton) {
@@ -103,31 +65,16 @@ class MoreFunctionViewModel {
         RoomRouter.shared.pushToChatController(user: user, roomInfo: roomInfo)
     }
     
-    func debugAction(sender: UIButton) {
-        RoomRouter.shared.dismissPopupViewController(viewType: .moreViewType) { [weak self] in
-            guard let self = self else { return }
-            TUICore.callService(TUICore_TUIDebugService,
-                                method: TUICore_TUIDebugService_ShowDebugView,
-                                param: ["roomEngine": self.engineManager.roomEngine])
-        }
-    }
-    
     deinit {
         debugPrint("deinit \(self)")
     }
 }
 
 private extension String {
-    static var beautyText: String {
-        localized("TUIRoom.beauty")
-    }
     static var settingText: String {
         localized("TUIRoom.setting")
     }
     static var chatText: String {
         localized("TUIRoom.chat")
-    }
-    static var advancedSetting: String {
-        localized("TUIRoom.advancedSetting")
     }
 }

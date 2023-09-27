@@ -21,7 +21,7 @@ class RoomUserStatusView: UIView {
         let user = UILabel()
         user.textColor = .white
         user.backgroundColor = UIColor.clear
-        user.textAlignment = .left
+        user.textAlignment = isRTL ? .right : .left
         user.numberOfLines = 1
         user.font = UIFont(name: "PingFangSC-Regular", size: 12)
         return user
@@ -84,20 +84,20 @@ class RoomUserStatusView: UIView {
 }
 
 extension RoomUserStatusView {
-    func updateUserStatus(userModel: UserModel) {
+    func updateUserStatus(userModel: UserEntity) {
         if !userModel.userName.isEmpty {
             userNameLabel.text = userModel.userName
         } else {
             userNameLabel.text = userModel.userId
         }
-        isOwner = userModel.userRole == .roomOwner
+        isOwner = userModel.userId == EngineManager.createInstance().store.roomInfo.ownerId
         updateViewConstraints()
-        updateUserVolume(hasAudio: userModel.hasAudioStream, volume: userModel.volume)
+        updateUserVolume(hasAudio: userModel.hasAudioStream, volume: userModel.userVoiceVolume)
     }
 
     func updateUserVolume(hasAudio: Bool, volume: Int) {
         if !hasAudio {
-            voiceVolumeImageView.image = UIImage(named: "room_mute_message", in: tuiRoomKitBundle(), compatibleWith: nil)
+            voiceVolumeImageView.image = UIImage(named: "room_mute_audio", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn()
         } else {
             let volumeImageName = volume <= 0 ? "room_voice_volume1" : "room_voice_volume2"
             voiceVolumeImageView.image = UIImage(named: volumeImageName, in: tuiRoomKitBundle(), compatibleWith: nil)

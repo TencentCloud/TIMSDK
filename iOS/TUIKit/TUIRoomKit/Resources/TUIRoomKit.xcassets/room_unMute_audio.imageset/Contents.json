@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "unMuteMic.png",
+      "filename" : "room_unMute_audio.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "unMuteMic@2x.png",
+      "filename" : "room_unMute_audio@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "unMuteMic@3x.png",
+      "filename" : "room_unMute_audio@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

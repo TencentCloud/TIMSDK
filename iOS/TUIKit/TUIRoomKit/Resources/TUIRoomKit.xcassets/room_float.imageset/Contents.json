@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "roomFloat.png",
+      "filename" : "room_float.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "roomFloat@2x.png",
+      "filename" : "room_float@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "roomFloat@3x.png",
+      "filename" : "room_float@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

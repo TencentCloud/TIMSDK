@@ -9,6 +9,7 @@
 import Foundation
 import TIMCommon
 import TUICore
+import TUIRoomEngine
 
 @objc(RoomMessageBubbleCellData)
 class RoomMessageBubbleCellData: TUIBubbleMessageCellData {
@@ -51,12 +52,10 @@ class RoomMessageBubbleCellData: TUIBubbleMessageCellData {
     }
     
     private class func createRoom(roomId: String) {
-        let roomInfo = RoomInfo()
+        let roomInfo = TUIRoomInfo()
         roomInfo.roomId = roomId
         roomInfo.name = TUILogin.getNickName() ?? (TUILogin.getUserID() ?? "") + .quickMeetingText
         roomInfo.speechMode = .freeToSpeak
-        roomInfo.isOpenCamera = EngineManager.createInstance().store.isOpenCamera
-        roomInfo.isOpenMicrophone = EngineManager.createInstance().store.isOpenMicrophone
         RoomManager.shared.createRoom(roomInfo: roomInfo)
     }
     
@@ -66,6 +65,6 @@ class RoomMessageBubbleCellData: TUIBubbleMessageCellData {
 }
 private extension String {
     static var quickMeetingText: String {
-        localized("TUIRoom.quick.meeting")
+        localized("TUIRoom.video.conference")
     }
 }

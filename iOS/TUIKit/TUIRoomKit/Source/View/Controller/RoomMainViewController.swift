@@ -64,7 +64,7 @@ class RoomMainViewController: UIViewController {
         } else {
             param.resMode = .portrait
         }
-        EngineManager.createInstance().roomEngine.getTRTCCloud().setVideoEncoderParam(param)
+        EngineManager.createInstance().setVideoEncoderParam(param)
         rootView.updateRootViewOrientation(isLandscape: isLandscape)
     }
     

@@ -8,37 +8,59 @@
 
 import Foundation
 
+enum ScreenCaptureMaskViewFrameType {
+    case fullScreen
+    case small
+}
+
 class ScreenCaptureMaskView: UIView {
+    private var dotsTimer: Timer = Timer()
+    
+    let frameType: ScreenCaptureMaskViewFrameType
+    
+    let contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    let sharingScreenView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    let sharingScreenImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "room_sharingScreen", in: tuiRoomKitBundle(), compatibleWith: nil)
+        return imageView
+    }()
+    
     let sharingScreenLabel: UILabel = {
         let label = UILabel()
         label.text = .sharingScreenText
-        label.textColor = .white
+        label.textColor = UIColor(0xB2BBD1)
+        label.font = UIFont(name: "PingFangSC-Regular", size: 16)
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
-        label.font = UIFont(name: "PingFangSC-Regular", size: 18)
         return label
     }()
     
     let stopScreenButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.backgroundColor = .red
-        button.setTitle(.stopShareScreen, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.isEnabled = true
-        button.layer.cornerRadius = 12
+        button.setTitle(.shareOffText, for: .normal)
+        button.backgroundColor = UIColor(0xCC3D47)
+        button.layer.cornerRadius = 6.scale375()
         return button
     }()
     
-    let screenRecordingLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.backgroundColor = .black
-        label.text = .screenRecordingText
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.font = UIFont(name: "PingFangSC-Regular", size: 18)
-        return label
-    }()
+    init(frameType: ScreenCaptureMaskViewFrameType) {
+        self.frameType = frameType
+        super.init(frame: .zero)
+        updateLabelText()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - view layout
     private var isViewReady: Bool = false
@@ -53,50 +75,92 @@ class ScreenCaptureMaskView: UIView {
     }
     
     private func constructViewHierarchy() {
-        addSubview(sharingScreenLabel)
-        addSubview(stopScreenButton)
-        addSubview(screenRecordingLabel)
+        addSubview(contentView)
+        contentView.addSubview(sharingScreenView)
+        contentView.addSubview(stopScreenButton)
+        sharingScreenView.addSubview(sharingScreenImageView)
+        sharingScreenView.addSubview(sharingScreenLabel)
     }
     
     private func activateConstraints() {
-        sharingScreenLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-40)
+        contentView.snp.makeConstraints{ make in
+            make.centerX.centerY.equalToSuperview()
+            make.width.equalTo(128.scale375())
+            make.height.equalTo(132.scale375())
+        }
+        sharingScreenView.snp.makeConstraints { make in
+            make.top.left.right.equalToSuperview()
+            make.height.equalTo(74.scale375())
         }
         stopScreenButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.height.equalTo(50)
-            make.width.equalTo(100)
-            make.centerY.equalToSuperview().offset(40)
+            make.bottom.equalToSuperview()
+            make.width.equalTo(102.scale375())
+            make.height.equalTo(34.scale375())
         }
-        screenRecordingLabel.snp.makeConstraints { make in
-            make.top.equalTo(sharingScreenLabel)
-            make.right.equalTo(safeAreaLayoutGuide.snp.right)
-            make.width.equalTo(30)
-            make.height.equalTo(150)
+        sharingScreenImageView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview()
+            make.height.equalTo(48.scale375())
+            make.width.equalTo(48.scale375())
+        }
+        sharingScreenLabel.snp.makeConstraints { make in
+            make.bottom.left.right.equalToSuperview()
+            make.height.equalTo(22.scale375())
+        }
+        stopScreenButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.height.equalTo(34.scale375())
+            make.width.equalTo(102.scale375())
         }
     }
     
     private func bindInteraction() {
         stopScreenButton.addTarget(self, action: #selector(stopScreenCaptureAction(sender:)), for: .touchUpInside)
+        addGesture()
+    }
+    
+    private func addGesture() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(clickMask))
+        addGestureRecognizer(tap)
     }
     
     @objc func stopScreenCaptureAction(sender: UIButton) {
-        EngineManager.createInstance().roomEngine.stopScreenCapture()
-        ScreenCaptureMaskView.dismiss()
-    }
-    
-    class func show() {
-        let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        let currentWindow = RoomRouter.getCurrentWindow()
-        currentWindow?.addSubview(ScreenCaptureMaskView(frame: frame))
-    }
-    
-    class func dismiss() {
-        guard let currentWindow = RoomRouter.getCurrentWindow() else { return }
-        for view in currentWindow.subviews where view is ScreenCaptureMaskView {
-            view.removeFromSuperview()
+        let alertVC = UIAlertController(title: .toastTitleText,
+                                        message: .toastMessageText,
+                                        preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: .toastCancelText, style: .cancel) { _ in
         }
+        let StopAction = UIAlertAction(title: .toastStopText, style: .default) { _ in
+            EngineEventCenter.shared.notifyEngineEvent(event: .onUserScreenCaptureStopped, param: [:])
+            EngineManager.createInstance().stopScreenCapture()
+        }
+        alertVC.addAction(cancelAction)
+        alertVC.addAction(StopAction)
+        RoomRouter.shared.presentAlert(alertVC)
+    }
+    
+    @objc func clickMask() {
+        EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_ChangeToolBarHiddenState, param: [:])
+    }
+    
+    func updateLabelText() {
+        var dots = ""
+        dotsTimer = Timer(timeInterval: 1.0, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            if dots.count == 3 {
+                dots.removeAll()
+            }
+            dots.append(".")
+            self.sharingScreenLabel.text? = .sharingScreenText + dots
+        }
+        RunLoop.current.add(dotsTimer, forMode: .default)
+    }
+    
+    deinit {
+        dotsTimer.invalidate()
+        debugPrint("deinit:\(self)")
     }
 }
 
@@ -104,10 +168,19 @@ private extension String {
     static var sharingScreenText: String {
         localized("TUIRoom.sharing.screen")
     }
-    static var stopShareScreen: String {
-        localized("TUIRoom.stop.share.screen")
+    static var shareOffText: String {
+        localized("TUIRoom.share.off")
     }
-    static var screenRecordingText: String {
-        localized("TUIRoom.screen.recording")
+    static var toastTitleText: String {
+        localized("TUIRoom.toast.shareScreen.title")
+    }
+    static var toastMessageText: String {
+        localized("TUIRoom.toast.shareScreen.message")
+    }
+    static var toastCancelText: String {
+        localized("TUIRoom.toast.shareScreen.cancel")
+    }
+    static var toastStopText: String {
+        localized("TUIRoom.toast.shareScreen.stop")
     }
 }

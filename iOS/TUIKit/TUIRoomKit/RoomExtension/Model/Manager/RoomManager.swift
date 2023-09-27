@@ -11,11 +11,10 @@ import TUICore
 
 class RoomManager {
     static let shared = RoomManager()
-    var isEngineLogin: Bool = false
     private var engineManager: EngineManager {
         EngineManager.createInstance()
     }
-    private var roomInfo: RoomInfo {
+    private var roomInfo: TUIRoomInfo {
         engineManager.store.roomInfo
     }
     private lazy var userId: String = {
@@ -51,30 +50,30 @@ class RoomManager {
         return roomInfo.roomId != roomId && roomInfo.roomId != ""
     }
     
-    func createRoom(roomInfo: RoomInfo) {
+    func createRoom(roomInfo: TUIRoomInfo) {
         roomId = roomInfo.roomId
         roomObserver.registerObserver()
-        engineManager.store.isChatAccessRoom = true
         engineManager.store.isShowRoomMainViewAutomatically = false
         TUIRoomKit.createInstance().createRoom(roomInfo: roomInfo) { [weak self] in
             guard let self = self else { return }
             self.roomObserver.createdRoom()
-            self.enterRoom(roomInfo: roomInfo)
+            self.enterRoom(roomId: roomInfo.roomId)
         } onError: { code, message in
+            RoomCommon.getCurrentWindowViewController()?.view.makeToast(message)
             debugPrint("createRoom:code:\(code),message:\(message)")
         }
     }
     
-    func enterRoom(roomInfo: RoomInfo) {
-        roomId = roomInfo.roomId
+    func enterRoom(roomId: String) {
         roomObserver.registerObserver()
-        engineManager.store.isChatAccessRoom = true
-        TUIRoomKit.createInstance().enterRoom(roomInfo: roomInfo) { [weak self] in
+        TUIRoomKit.createInstance().enterRoom(roomId: roomId, enableMic: engineManager.store.isOpenMicrophone,
+                                              enableCamera: engineManager.store.isOpenCamera, isSoundOnSpeaker: true, onSuccess: { [weak self] in
             guard let self = self else { return }
             self.roomObserver.enteredRoom()
-        } onError: { code, message in
+        }, onError: {code, message in
+            RoomCommon.getCurrentWindowViewController()?.view.makeToast(message)
             debugPrint("enterRoom:code:\(code),message:\(message)")
-        }
+        })
     }
     
     func exitRoom(onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
@@ -98,10 +97,6 @@ class RoomManager {
         engineManager.destroyRoom { [weak self] in
             guard let self = self else { return }
             self.roomObserver.messageModel.roomState = .destroyed
-            if self.roomObserver.messageModel.owner == self.userId {
-                self.messageManager.resendRoomMessage(message: self.roomObserver.messageModel, dic:
-                                                        ["roomState":RoomMessageModel.RoomState.destroyed.rawValue])
-            }
             self.refreshSource()
             self.messageManager.isReadyToSendMessage = true
             onSuccess()
@@ -120,10 +115,10 @@ class RoomManager {
     }
     
     private func changeUserRole(userId: String, role: TUIRole, onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        engineManager.roomEngine.changeUserRole(userId: userId, role: .roomOwner) {
+        engineManager.changeUserRole(userId: userId, role: .roomOwner) {
             onSuccess()
         } onError: { code, message in
-           onError(code, message)
+            onError(code, message)
         }
     }
     
@@ -146,20 +141,6 @@ class RoomManager {
         } else {
             //之前加入过房间，在快速会议前要先退出房间
             exitRoom(onSuccess: onSuccess, onError: onError)
-        }
-    }
-    
-    func loginEngine(onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        let sdkAppId = Int(TUILogin.getSdkAppID())
-        let userSig = TUILogin.getUserSig() ?? ""
-        V2TIMManager.sharedInstance().initSDK(Int32(sdkAppId), config: V2TIMSDKConfig())
-        TUIRoomEngine.login(sdkAppId: sdkAppId, userId: userId, userSig: userSig) { [weak self] in
-            guard let self = self else { return }
-            self.engineManager.store.currentUser.userId = self.userId
-            self.isEngineLogin = true
-            onSuccess()
-        } onError: { code, message in
-            onError(code, message)
         }
     }
 }

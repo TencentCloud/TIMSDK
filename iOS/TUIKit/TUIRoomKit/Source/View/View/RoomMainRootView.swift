@@ -9,16 +9,25 @@
 import Foundation
 
 protocol RoomMainViewFactory {
-    func makeBottomView() -> UIView
-    func makeTopView() -> UIView
+    func makeBottomView() -> BottomView
+    func makeTopView() -> TopView
     func makeVideoSeatView() -> UIView
-    func makeBeautyView() -> UIView?
     func makeRaiseHandNoticeView() -> UIView
+}
+
+struct RoomMainRootViewLayout { //横竖屏切换时的布局变化
+    let bottomViewLandscapeSpace: Float = 0
+    let bottomViewPortraitSpace: Float = 15.0
+    let topViewLandscapeHight: Float = 36.0
+    let topViewPortraitHight: Float = 53.0
+    let videoSeatViewPortraitSpace: Float = 73.0
+    let videoSeatViewLandscapeSpace: Float = 82.0
 }
 
 class RoomMainRootView: UIView {
     let viewModel: RoomMainViewModel
     let viewFactory: RoomMainViewFactory
+    let layout: RoomMainRootViewLayout = RoomMainRootViewLayout()
     init(viewModel: RoomMainViewModel,
          viewFactory: RoomMainViewFactory) {
         self.viewModel = viewModel
@@ -30,7 +39,7 @@ class RoomMainRootView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var topView: UIView = {
+    lazy var topView: TopView = {
         return viewFactory.makeTopView()
     }()
     
@@ -38,12 +47,8 @@ class RoomMainRootView: UIView {
         return viewFactory.makeVideoSeatView()
     }()
     
-    lazy var bottomView: UIView = {
+    lazy var bottomView: BottomView = {
         return viewFactory.makeBottomView()
-    }()
-    
-    lazy var beautyView: UIView? = {
-        return viewFactory.makeBeautyView()
     }()
     
     lazy var raiseHandNoticeView: UIView = {
@@ -55,7 +60,7 @@ class RoomMainRootView: UIView {
     override func didMoveToWindow() {
         super.didMoveToWindow()
         guard !isViewReady else { return }
-        backgroundColor = UIColor(0x1B1E26)
+        backgroundColor = UIColor(0x0F1014)
         constructViewHierarchy()
         activateConstraints()
         bindInteraction()
@@ -66,9 +71,6 @@ class RoomMainRootView: UIView {
         addSubview(videoSeatView)
         addSubview(topView)
         addSubview(bottomView)
-        if let beautyView = beautyView {
-            addSubview(beautyView)
-        }
         addSubview(raiseHandNoticeView)
     }
     
@@ -77,24 +79,18 @@ class RoomMainRootView: UIView {
             make.top.equalTo(safeAreaLayoutGuide.snp.top)
             make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
-            make.height.equalTo(53.scale375())
+            make.height.equalTo(layout.topViewPortraitHight)
         }
         bottomView.snp.makeConstraints { make in
-            make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalToSuperview().offset(-layout.bottomViewPortraitSpace)
             make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
-            make.height.equalTo(52.scale375())
+            make.height.equalTo(60.scale375())
         }
         videoSeatView.snp.makeConstraints { make in
-            make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
-            make.top.equalTo(topView.snp.bottom)
-            make.bottom.equalTo(bottomView.snp.top).offset(-5)
-        }
-        beautyView?.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(layout.videoSeatViewPortraitSpace)
+            make.bottom.equalTo(-layout.videoSeatViewPortraitSpace)
         }
         raiseHandNoticeView.snp.makeConstraints { make in
             make.bottom.equalTo(bottomView.snp.top).offset(-15)
@@ -107,26 +103,52 @@ class RoomMainRootView: UIView {
     private func bindInteraction() {
         viewModel.viewResponder = self
         viewModel.applyConfigs()
+        perform(#selector(hideToolBarWithAnimation),with: nil,afterDelay: 3.0)
     }
     
     func updateRootViewOrientation(isLandscape: Bool) {
-        if isLandscape { //横屏时，videoSeat扩展到整个页面
-            videoSeatView.snp.remakeConstraints { make in
-                make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
-                make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
+        videoSeatView.snp.remakeConstraints { make in
+            if isLandscape {
+                make.leading.equalTo(layout.videoSeatViewLandscapeSpace)
+                make.trailing.equalTo(-layout.videoSeatViewLandscapeSpace)
                 make.top.bottom.equalToSuperview()
+            } else {
+                make.leading.trailing.equalToSuperview()
+                make.top.equalTo(layout.videoSeatViewPortraitSpace)
+                make.bottom.equalTo(-layout.videoSeatViewPortraitSpace)
             }
-        } else {
-            videoSeatView.snp.remakeConstraints { make in
-                make.leading.equalTo(safeAreaLayoutGuide.snp.leading)
-                make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
-                make.top.equalTo(topView.snp.bottom)
-                make.bottom.equalTo(bottomView.snp.top).offset(-5)
+        }
+        topView.snp.updateConstraints() { make in
+            if isLandscape {
+                make.height.equalTo(layout.topViewLandscapeHight)
+            } else {
+                make.height.equalTo(layout.topViewPortraitHight)
             }
+        }
+        bottomView.snp.updateConstraints { make in
+            if isLandscape {
+                make.bottom.equalToSuperview().offset(layout.bottomViewLandscapeSpace)
+            } else {
+                make.bottom.equalToSuperview().offset(-layout.bottomViewPortraitSpace)
+            }
+        }
+        topView.updateRootViewOrientation(isLandscape: isLandscape)
+    }
+    
+    @objc func hideToolBarWithAnimation() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            guard let self = self else {return}
+            self.topView.alpha = 0
+            self.bottomView.alpha = 0
+        } completion: { [weak self] _ in
+            guard let self = self else {return}
+            self.topView.isHidden = true
+            self.bottomView.isHidden = true
         }
     }
     
     deinit {
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
         debugPrint("deinit \(self)")
     }
 }
@@ -142,12 +164,38 @@ extension RoomMainRootView: RoomMainViewResponder {
         RoomRouter.shared.presentAlert(alertVC)
     }
     
-    func showBeautyView() {
-        beautyView?.isHidden = false
+    func makeToast(text: String) {
+        RoomRouter.makeToastInCenter(toast: text, duration: 1)
     }
     
-    func makeToast(text: String) {
-        RoomRouter.makeToast(toast: text)
+    private func showToolBar() {
+        topView.alpha = 1
+        bottomView.alpha = 1
+        topView.isHidden = false
+        bottomView.isHidden = false
+    }
+    
+    private func hideToolBar() {
+        topView.alpha = 0
+        bottomView.alpha = 0
+        topView.isHidden = true
+        bottomView.isHidden = true
+    }
+    
+    func changeToolBarHiddenState() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(hideToolBarWithAnimation), object: nil)
+        if topView.isHidden {
+            showToolBar()
+            perform(#selector(hideToolBarWithAnimation),with: nil,afterDelay: 3.0)
+        } else {
+            hideToolBar()
+        }
+    }
+    
+    func setToolBarDelayHidden(isDelay: Bool) {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(hideToolBarWithAnimation), object: nil)
+        guard isDelay else { return }
+        perform(#selector(hideToolBarWithAnimation),with: nil,afterDelay: 3.0)
     }
 }
 

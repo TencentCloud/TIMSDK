@@ -40,7 +40,7 @@ class RoomMessageView: UIView {
     }()
     lazy var inviteUserButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "room_invite", in: tuiRoomKitBundle(), compatibleWith: nil), for: .normal)
+        button.setImage(UIImage(named: "room_chat_invite", in: tuiRoomKitBundle(), compatibleWith: nil), for: .normal)
         return button
     }()
     let userNumberLabel: UILabel = {
@@ -48,7 +48,7 @@ class RoomMessageView: UIView {
         label.font = UIFont(name: "PingFangSC-Regular", size: 15)
         label.adjustsFontSizeToFitWidth = true
         label.textColor = UIColor(0x888888)
-        label.textAlignment = .left
+        label.textAlignment = isRTL ? .right : .left
         return label
     }()
     let enterRoomButton: UIButton = {
@@ -113,7 +113,7 @@ class RoomMessageView: UIView {
         }
         roomStatusLabel.snp.makeConstraints { make in
             make.centerY.equalTo(roomStatusImageView)
-            make.left.equalTo(roomStatusImageView.snp.right).offset(4)
+            make.leading.equalTo(roomStatusImageView.snp.trailing).offset(4)
         }
         roomNameLabel.snp.makeConstraints { make in
             make.top.equalTo(roomStatusImageView.snp.bottom).offset(9)

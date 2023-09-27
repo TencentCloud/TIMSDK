@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import TUIRoomEngine
 
 protocol RaiseHandApplicationListViewResponder: NSObject {
     func reloadApplyListView()
@@ -16,7 +17,10 @@ protocol RaiseHandApplicationListViewResponder: NSObject {
 class RaiseHandApplicationListViewModel: NSObject {
     weak var viewResponder: RaiseHandApplicationListViewResponder? = nil
     let engineManager: EngineManager = EngineManager.createInstance()
-    var inviteSeatList: [UserModel] = []
+    var roomInfo: TUIRoomInfo {
+        EngineManager.createInstance().store.roomInfo
+    }
+    var inviteSeatList: [UserEntity] = []
     
     override init() {
         super.init()
@@ -27,12 +31,9 @@ class RaiseHandApplicationListViewModel: NSObject {
     func allAgreeStageAction(sender: UIButton, view: RaiseHandApplicationListView) {
         for userInfo in engineManager.store.inviteSeatList {
             guard let requestId = engineManager.store.inviteSeatMap[userInfo.userId] else { continue }
-            engineManager.roomEngine.responseRemoteRequest(requestId, agree: true) { [weak self] in
+            engineManager.responseRemoteRequest(requestId, agree: true) { [weak self] in
                 guard let self = self else { return }
-                self.engineManager.store.inviteSeatList = self.engineManager.store.inviteSeatList.filter { userModel in
-                    userModel.userId != userInfo.userId
-                }
-                self.engineManager.store.inviteSeatMap.removeValue(forKey: userInfo.userId)
+                self.engineManager.deleteInviteSeatUser(userInfo.userId)
                 self.reloadApplyListView()
             } onError: { _, _ in
                 debugPrint("")
@@ -47,12 +48,9 @@ class RaiseHandApplicationListViewModel: NSObject {
     
     func agreeStageAction(sender: UIButton, isAgree: Bool, userId: String) {
         guard let requestId = engineManager.store.inviteSeatMap[userId] else { return }
-        engineManager.roomEngine.responseRemoteRequest(requestId, agree: isAgree) { [weak self] in
+        engineManager.responseRemoteRequest(requestId, agree: isAgree) { [weak self] in
             guard let self = self else { return }
-            self.engineManager.store.inviteSeatList = self.engineManager.store.inviteSeatList.filter { userModel in
-                return userModel.userId != userId
-            }
-            self.engineManager.store.inviteSeatMap.removeValue(forKey: userId)
+            self.engineManager.deleteInviteSeatUser(userId)
             self.reloadApplyListView()
         } onError: { code, message in
             debugPrint("responseRemoteRequest:code:\(code),message:\(message)")
