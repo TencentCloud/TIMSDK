@@ -13,8 +13,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/image_select_grid"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
         android:layout_width="match_parent"

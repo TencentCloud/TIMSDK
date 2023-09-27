@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.component.userinfo.single
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
@@ -33,6 +34,18 @@ class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
         }
     }
 
+    private var avatarObserver = Observer<String> {
+        if (!TextUtils.isEmpty(it)) {
+            ImageLoader.loadImage(context.applicationContext, imageAvatar, it, R.drawable.tuicallkit_ic_avatar)
+        }
+    }
+
+    private var nicknameObserver = Observer<String> {
+        if (!TextUtils.isEmpty(it)) {
+            textUserName?.text = it
+        }
+    }
+
     init {
         initView()
         addObserver()
@@ -47,8 +60,8 @@ class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
         imageAvatar = findViewById(R.id.iv_user_avatar)
         textUserName = findViewById(R.id.tv_user_name)
         textInviteHint = findViewById(R.id.tv_video_tag)
-        ImageLoader.loadImage(context, imageAvatar, mViewModel.userAvatar, R.drawable.tuicallkit_ic_avatar)
-        textUserName!!.text = mViewModel.userName
+        ImageLoader.loadImage(context, imageAvatar, mViewModel.avatar.get(), R.drawable.tuicallkit_ic_avatar)
+        textUserName!!.text = mViewModel.nickname.get()
         textInviteHint!!.text = mViewModel.callTag
         val textColor = if (TUICallDefine.MediaType.Video == mViewModel.mediaType.get()) {
             context.resources.getColor(R.color.tuicalling_color_white)
@@ -68,10 +81,14 @@ class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
     private fun addObserver() {
         mViewModel.callStatus.observe(callStatusObserver)
         mViewModel.mediaType.observe(mediaTypeObserver)
+        mViewModel.avatar.observe(avatarObserver)
+        mViewModel.nickname.observe(nicknameObserver)
     }
 
     private fun removeObserver() {
         mViewModel.callStatus.removeObserver(callStatusObserver)
         mViewModel.mediaType.removeObserver(mediaTypeObserver)
+        mViewModel.avatar.removeObserver(avatarObserver)
+        mViewModel.nickname.removeObserver(nicknameObserver)
     }
 }

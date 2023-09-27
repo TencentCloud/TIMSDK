@@ -9,7 +9,7 @@
         android:id="@+id/pop_menu_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="11.5dp" />
+        android:layout_marginEnd="11.5dp" />
 
     <TextView
         android:id="@+id/pop_menu_label"

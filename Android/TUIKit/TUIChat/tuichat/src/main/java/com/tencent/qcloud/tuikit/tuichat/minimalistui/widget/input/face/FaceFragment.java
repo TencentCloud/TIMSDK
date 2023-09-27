@@ -378,6 +378,7 @@ public class FaceFragment extends BaseInputFragment {
                 if (isShowDelete) {
                     Emoji deleteEmoji = new Emoji();
                     deleteEmoji.setIcon(BitmapFactory.decodeResource(getResources(), R.drawable.face_delete));
+                    deleteEmoji.setAutoMirrored(true);
                     subList.add(deleteEmoji);
                 }
                 FaceGVAdapter adapter = (FaceGVAdapter) holder.faceGrid.getAdapter();

@@ -15,10 +15,14 @@ import android.view.ViewParent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.customview.widget.ViewDragHelper;
+
 import com.tencent.qcloud.tuikit.timcommon.R;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +87,11 @@ public class SwipeLayout extends FrameLayout {
         mEdgeSwipesOffset[DragEdge.Top.ordinal()] = a.getDimension(R.styleable.SwipeLayout_topEdgeSwipeOffset, 0);
         mEdgeSwipesOffset[DragEdge.Bottom.ordinal()] = a.getDimension(R.styleable.SwipeLayout_bottomEdgeSwipeOffset, 0);
         setClickToClose(a.getBoolean(R.styleable.SwipeLayout_clickToClose, mClickToClose));
-        int dragEdgeChoices = a.getInt(R.styleable.SwipeLayout_drag_edge, DRAG_RIGHT);
+        int defaultDragEdge = DRAG_RIGHT;
+        if (LayoutUtil.isRTL()) {
+            defaultDragEdge = DRAG_LEFT;
+        }
+        int dragEdgeChoices = a.getInt(R.styleable.SwipeLayout_drag_edge, defaultDragEdge);
         if ((dragEdgeChoices & DRAG_LEFT) == DRAG_LEFT) {
             mDragEdges.put(DragEdge.Left, null);
         }

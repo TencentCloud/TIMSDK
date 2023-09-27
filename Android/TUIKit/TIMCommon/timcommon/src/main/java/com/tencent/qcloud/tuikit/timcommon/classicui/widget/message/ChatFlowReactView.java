@@ -197,9 +197,10 @@ public class ChatFlowReactView extends RecyclerView {
                 return;
             }
 
+            boolean isRTL = getLayoutDirection() == LAYOUT_DIRECTION_RTL;
             int offsetTop;
             int offsetBottom;
-            int offsetLeft;
+            int offsetLeft = getPaddingEnd();
             int offsetRight = getPaddingStart();
 
             boolean isLineFirstItem = true;
@@ -213,17 +214,35 @@ public class ChatFlowReactView extends RecyclerView {
                 measureChildWithMargins(childView, 0, 0);
                 int childMeasuredWidth = getDecoratedMeasuredWidth(childView);
 
-                if (i != 0 && offsetRight + horizontalSpacing + childMeasuredWidth > getWidth() - getPaddingStart() - getPaddingEnd()) {
-                    // switch a new line
-                    isLineFirstItem = true;
-                    isFirstLine = false;
-                    currentMaxBottom = nextMaxBottom;
+                if (isRTL) {
+                    if (i != 0 && offsetLeft - horizontalSpacing - childMeasuredWidth < getPaddingEnd()) {
+                        // switch a new line
+                        isLineFirstItem = true;
+                        isFirstLine = false;
+                        currentMaxBottom = nextMaxBottom;
+                    }
+                } else {
+                    if (i != 0 && offsetRight + horizontalSpacing + childMeasuredWidth > getWidth() - getPaddingStart() - getPaddingEnd()) {
+                        // switch a new line
+                        isLineFirstItem = true;
+                        isFirstLine = false;
+                        currentMaxBottom = nextMaxBottom;
+                    }
                 }
 
                 if (isLineFirstItem) {
-                    offsetLeft = getPaddingStart();
+                    if (isRTL) {
+                        offsetLeft = getWidth() - childMeasuredWidth - getPaddingStart();
+                    } else {
+                        offsetLeft = getPaddingStart();
+                    }
                 } else {
-                    offsetLeft = offsetRight + horizontalSpacing;
+                    if (isRTL) {
+                        offsetLeft = offsetLeft - horizontalSpacing - childMeasuredWidth;
+
+                    } else {
+                        offsetLeft = offsetRight + horizontalSpacing;
+                    }
                 }
 
                 if (isFirstLine) {

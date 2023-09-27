@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
@@ -166,8 +167,9 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
                     intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.community_choose_avatar));
                     intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
                     intent.putExtra(ImageSelectActivity.PLACEHOLDER, com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light);
-                    intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
-                    intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+                    int itemWidth = (int) (ScreenUtil.getScreenWidth(CommunitySettingsActivity.this) * 0.2f);
+                    intent.putExtra(ImageSelectMinimalistActivity.ITEM_WIDTH, itemWidth);
+                    intent.putExtra(ImageSelectMinimalistActivity.ITEM_HEIGHT, itemWidth);
                     intent.putExtra(ImageSelectActivity.DATA, faceList);
                     intent.putExtra(ImageSelectActivity.SELECTED,
                         new ImageSelectActivity.ImageBean(communityBean.getGroupFaceUrl(), communityBean.getGroupFaceUrl(), false));
@@ -197,8 +199,10 @@ public class CommunitySettingsActivity extends BaseLightActivity implements ICom
                     intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.community_select_cover));
                     intent.putExtra(ImageSelectActivity.SPAN_COUNT, 2);
                     intent.putExtra(ImageSelectActivity.PLACEHOLDER, R.drawable.community_cover_default);
-                    intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(165));
-                    intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(79));
+                    int itemWidth = (int) (ScreenUtil.getScreenWidth(CommunitySettingsActivity.this) * 0.42f);
+                    int itemHeight = (int) (itemWidth / 2.0f);
+                    intent.putExtra(ImageSelectActivity.ITEM_WIDTH, itemWidth);
+                    intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, itemHeight);
                     intent.putExtra(ImageSelectActivity.DATA, coverList);
                     intent.putExtra(
                         ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(communityBean.getCoverUrl(), communityBean.getCoverUrl(), false));

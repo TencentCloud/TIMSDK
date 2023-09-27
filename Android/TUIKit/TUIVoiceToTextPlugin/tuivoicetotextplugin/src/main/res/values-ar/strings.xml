@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="convert_to_text">تحويل النص</string>
+    <string name="convert_to_text_failed_tips">فشل تحويل</string>
+    <string name="copy_action">نسخ</string>
+    <string name="forward_action">إعادة توجيه</string>
+    <string name="hide_action">إخفاء</string>
+    <string name="copy_success_tip">تم النسخ بنجاح</string>
+</resources>

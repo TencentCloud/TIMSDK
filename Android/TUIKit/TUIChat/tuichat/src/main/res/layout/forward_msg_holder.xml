@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
+    android:gravity="start"
     android:id="@+id/forward_msg_layout"
     android:orientation="vertical">
 
@@ -10,25 +10,25 @@
         android:id="@+id/msg_forward_title"
         android:layout_width="@dimen/forward_text_max_length"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|start"
         android:textColor="@color/black"
+        android:textDirection="locale"
         android:maxLines="1"
         android:maxWidth="@dimen/forward_text_max_length"
         android:ellipsize="end"
         android:textSize="15.36sp" />
 
-    <TextView
-        android:id="@+id/msg_forward_content"
+    <LinearLayout
         android:layout_width="@dimen/forward_text_max_length"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="#BBBBBB"
-        android:maxLines="4"
-        android:ellipsize="end"
-        android:maxWidth="@dimen/forward_text_max_length"
-        android:includeFontPadding="false"
-        android:lineHeight="20sp"
-        android:textSize="11.52sp" />
+        android:orientation="vertical">
+
+        <include android:id="@+id/first_line" layout="@layout/chat_forward_msg_content_line_layout"/>
+        <include android:id="@+id/second_line" layout="@layout/chat_forward_msg_content_line_layout"/>
+        <include android:id="@+id/third_line" layout="@layout/chat_forward_msg_content_line_layout"/>
+
+    </LinearLayout>
 
     <View
         android:background="@drawable/chat_divide_line"

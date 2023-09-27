@@ -18,6 +18,7 @@ import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationUserStatusBean;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
@@ -181,31 +182,18 @@ public class ConversationProvider {
             conversationIDList.add(conversationInfo.getConversationId());
         }
         if (!markUnread && conversationInfo.getUnRead() > 0) {
-            if (conversationInfo.isGroup()) {
-                V2TIMManager.getMessageManager().markGroupMessageAsRead(conversationInfo.getId(), new V2TIMCallback() {
-                    @Override
-                    public void onSuccess() {
-                        TUIConversationLog.i(TAG, "markConversationUnread->markGroupMessageAsRead success");
-                    }
+            V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount(conversationInfo.getConversationId(), 0, 0, new V2TIMCallback() {
+                @Override
+                public void onSuccess() {
+                    TUIConversationLog.i(TAG, "markConversationUnread->cleanConversationUnreadMessageCount success");
+                }
 
-                    @Override
-                    public void onError(int code, String desc) {
-                        TUIConversationLog.e(TAG, "markConversationUnread error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                    }
-                });
-            } else {
-                V2TIMManager.getMessageManager().markC2CMessageAsRead(conversationInfo.getId(), new V2TIMCallback() {
-                    @Override
-                    public void onSuccess() {
-                        TUIConversationLog.i(TAG, "markConversationUnread->markC2CMessageAsRead success");
-                    }
-
-                    @Override
-                    public void onError(int code, String desc) {
-                        TUIConversationLog.e(TAG, "markConversationUnread error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                    }
-                });
-            }
+                @Override
+                public void onError(int code, String desc) {
+                    TUIConversationLog.e(
+                        TAG, "cleanConversationUnreadMessageCount error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                }
+            });
         }
 
         if (markUnread != conversationInfo.isMarkUnread()) {
@@ -305,20 +293,18 @@ public class ConversationProvider {
             });
     }
 
-    public void loadConversationUserStatus(List<ConversationInfo> dataSource, IUIKitCallback<Void> callback) {
+    public void loadConversationUserStatus(List<ConversationInfo> dataSource, IUIKitCallback<Map<String, ConversationUserStatusBean>> callback) {
         if (dataSource == null || dataSource.size() == 0) {
             TUIConversationLog.d(TAG, "loadConversationUserStatus datasource is null");
             return;
         }
 
-        HashMap<String, ConversationInfo> dataSourceMap = new HashMap<>();
         List<String> userList = new ArrayList<>();
         for (ConversationInfo itemBean : dataSource) {
             if (itemBean.isGroup()) {
                 continue;
             }
             userList.add(itemBean.getId());
-            dataSourceMap.put(itemBean.getId(), itemBean);
         }
         if (userList.isEmpty()) {
             TUIConversationLog.d(TAG, "loadConversationUserStatus userList is empty");
@@ -328,14 +314,13 @@ public class ConversationProvider {
             @Override
             public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
                 TUIConversationLog.i(TAG, "getUserStatus success");
+                Map<String, ConversationUserStatusBean> userStatusBeanMap = new HashMap<>();
                 for (V2TIMUserStatus item : v2TIMUserStatuses) {
-                    ConversationInfo bean = dataSourceMap.get(item.getUserID());
-                    if (bean != null) {
-                        bean.setStatusType(item.getStatusType());
-                    }
+                    ConversationUserStatusBean conversationUserStatusBean = new ConversationUserStatusBean();
+                    conversationUserStatusBean.setV2TIMUserStatus(item);
+                    userStatusBeanMap.put(item.getUserID(), conversationUserStatusBean);
                 }
-
-                TUIConversationUtils.callbackOnSuccess(callback, null);
+                TUIConversationUtils.callbackOnSuccess(callback, userStatusBeanMap);
             }
 
             @Override
@@ -400,16 +385,16 @@ public class ConversationProvider {
     }
 
     public void clearAllUnreadMessage(IUIKitCallback<Void> callback) {
-        V2TIMManager.getMessageManager().markAllMessageAsRead(new V2TIMCallback() {
+        V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount("", 0, 0, new V2TIMCallback() {
             @Override
             public void onSuccess() {
-                TUIConversationLog.i(TAG, "markAllMessageAsRead success");
+                TUIConversationLog.i(TAG, "clearAllUnreadMessage success");
                 TUIConversationUtils.callbackOnSuccess(callback, null);
             }
 
             @Override
             public void onError(int code, String desc) {
-                TUIConversationLog.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                TUIConversationLog.i(TAG, "clearAllUnreadMessage error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
                 TUIConversationUtils.callbackOnError(callback, code, desc);
             }
         });

@@ -11,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/font_blue"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="23dp"
+        android:layout_marginEnd="23dp"
         android:text="@string/cancle"
         android:textSize="16sp" />
 
@@ -28,7 +28,7 @@
         android:layout_centerVertical="true"
         android:visibility="gone"
         tools:visibility="visible"
-        android:background="@drawable/search_minimalist_back_icon" />
+        android:background="@drawable/search_minimalist_back_icon_drawable" />
 
     <LinearLayout
         android:id="@+id/search_bar"
@@ -59,7 +59,8 @@
             android:layout_height="28dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAlignment="viewStart"
             android:background="@null"
             android:imeOptions="actionSearch"
             android:textCursorDrawable="@drawable/search_minimalist_cursor_shape"

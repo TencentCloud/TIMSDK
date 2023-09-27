@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function
 
 import com.tencent.qcloud.tuikit.TUICommonDefine
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
@@ -54,6 +55,10 @@ class AudioCallerWaitingAndAcceptedViewModel {
     }
 
     fun selectAudioPlaybackDevice(type: TUICommonDefine.AudioPlaybackDevice) {
-        CallEngineManager.instance.selectAudioPlaybackDevice(type)
+        if (TUICallDefine.Status.Accept == TUICallState.instance.selfUser.get().callStatus.get()) {
+            CallEngineManager.instance.selectAudioPlaybackDevice(type)
+        } else {
+            TUICallState.instance.audioPlayoutDevice.set(type)
+        }
     }
 }

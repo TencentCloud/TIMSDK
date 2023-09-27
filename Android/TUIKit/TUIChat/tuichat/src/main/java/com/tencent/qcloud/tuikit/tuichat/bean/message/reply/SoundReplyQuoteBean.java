@@ -6,13 +6,11 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 
 public class SoundReplyQuoteBean extends TUIReplyQuoteBean {
-    private String dataPath;
     private V2TIMSoundElem soundElem;
 
     @Override
     public void onProcessReplyQuoteBean(TUIMessageBean messageBean) {
         if (messageBean instanceof SoundMessageBean) {
-            dataPath = ((SoundMessageBean) messageBean).getDataPath();
             soundElem = messageBean.getV2TIMMessage().getSoundElem();
         }
     }

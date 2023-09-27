@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:background="@drawable/popup_card_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_marginTop="@dimen/core_popup_card_padding"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="@dimen/core_popup_card_padding"
+        android:layout_marginEnd="@dimen/core_popup_card_padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/popup_card_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/core_popup_card_title_size"
+            android:textColor="#000000"
+            tool:text="弹窗标题"/>
+
+        <ImageView
+            android:id="@+id/close_btn"
+            android:layout_gravity="end"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/core_close_icon" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="@dimen/core_popup_card_line_margin"
+        android:layout_marginTop="@dimen/core_popup_card_line_margin"
+        android:layout_marginStart="@dimen/core_popup_card_line_margin_left_right"
+        android:layout_marginEnd="@dimen/core_popup_card_line_margin_left_right"
+        android:layout_height="@dimen/core_popup_card_line_height"
+        android:background="@color/core_popup_card_line_bg" />
+
+    <EditText
+        android:id="@+id/popup_card_edit"
+        android:background="@drawable/core_edit_text_bg"
+        android:textSize="@dimen/core_popup_card_edit_text_size"
+        android:paddingStart="@dimen/core_popup_card_edit_padding_left_right"
+        android:paddingEnd="@dimen/core_popup_card_edit_padding_left_right"
+        android:textAlignment="viewStart"
+        android:layout_marginStart="@dimen/core_popup_card_padding"
+        android:layout_marginEnd="@dimen/core_popup_card_padding"
+        android:textCursorDrawable="@drawable/core_edit_cursor"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/core_popup_card_edit_height"/>
+
+    <TextView
+        android:id="@+id/popup_card_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/core_popup_card_desc_margin_top"
+        android:layout_marginStart="@dimen/core_popup_card_padding"
+        android:layout_marginEnd="@dimen/core_popup_card_padding"
+        tool:text="仅限中文、字母、数字和下划线，2-20个字"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/popup_card_positive_btn"
+        android:text="@string/sure"
+        android:textSize="@dimen/core_popup_card_btn_text_size"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/core_positive_btn_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/core_popup_card_btn_height"
+        android:layout_marginStart="@dimen/core_popup_card_btn_margin_left_right"
+        android:layout_marginEnd="@dimen/core_popup_card_btn_margin_left_right"
+        android:layout_marginTop="@dimen/core_popup_card_btn_margin_top"
+        android:layout_marginBottom="@dimen/core_popup_card_btn_margin_bottom" />
+
+</LinearLayout>

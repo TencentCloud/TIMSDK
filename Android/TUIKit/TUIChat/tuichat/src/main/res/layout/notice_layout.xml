@@ -21,7 +21,7 @@
             android:id="@+id/notice_content_extra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/page_margin"
+            android:layout_marginStart="@dimen/page_margin"
             android:text="@string/group_apply_click_handle"
             android:textColor="@color/font_blue"/>
 

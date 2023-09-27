@@ -9,25 +9,32 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-import java.io.File;
 import java.io.Serializable;
 
 public class VideoMessageHolder extends ImageMessageHolder {
+    private static final String TAG = "VideoMessageHolder";
+    private TUIValueCallback downloadCallback;
+
+    private String msgID;
+
     public VideoMessageHolder(View itemView) {
         super(itemView);
     }
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
+        msgID = msg.getId();
         performVideo((VideoMessageBean) msg, position);
     }
 
@@ -51,37 +58,29 @@ public class VideoMessageHolder extends ImageMessageHolder {
         contentImage.setLayoutParams(getImageParams(contentImage.getLayoutParams(), msg));
 
         videoPlayBtn.setVisibility(View.VISIBLE);
-
-        if (!TextUtils.isEmpty(msg.getSnapshotPath()) && new File(msg.getSnapshotPath()).exists()) {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getSnapshotPath(), null, DEFAULT_RADIUS);
+        String snapshotPath = ChatFileDownloadPresenter.getVideoSnapshotPath(msg);
+        if (FileUtil.isFileExists(snapshotPath)) {
+            loadViewSnapshotImage(msg, snapshotPath);
         } else {
             GlideEngine.clear(contentImage);
-            synchronized (downloadEles) {
-                if (!downloadEles.contains(msg.getSnapshotUUID())) {
-                    downloadEles.add(msg.getSnapshotUUID());
-                }
-            }
-
-            final String path = TUIConfig.getImageDownloadDir() + msg.getSnapshotUUID();
-            msg.downloadSnapshot(path, new VideoMessageBean.VideoDownloadCallback() {
+            downloadCallback = new TUIValueCallback() {
                 @Override
                 public void onProgress(long currentSize, long totalSize) {
-                    TUIChatLog.i("downloadSnapshot progress current:", currentSize + ", total:" + totalSize);
+                    TUIChatLog.i(TAG, "downloadSnapshot progress current:" + currentSize + ", total:" + totalSize);
                 }
 
                 @Override
                 public void onError(int code, String desc) {
-                    downloadEles.remove(msg.getSnapshotUUID());
-                    TUIChatLog.e("MessageAdapter video getImage", code + ":" + desc);
+                    TUIChatLog.e(TAG, "MessageAdapter video getImage" + code + ":" + desc);
                 }
 
                 @Override
-                public void onSuccess() {
-                    downloadEles.remove(msg.getSnapshotUUID());
-                    msg.setSnapshotPath(path);
-                    GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getSnapshotPath(), null, DEFAULT_RADIUS);
+                public void onSuccess(Object obj) {
+                    TUIChatLog.i(TAG, "downloadSnapshot success");
+                    loadViewSnapshotImage(msg, snapshotPath);
                 }
-            });
+            };
+            ChatFileDownloadPresenter.downloadVideoSnapshot(msg, downloadCallback);
         }
 
         if (isMultiSelectMode) {
@@ -113,6 +112,12 @@ public class VideoMessageHolder extends ImageMessageHolder {
         }
 
         setImagePadding(msg);
+    }
+
+    private void loadViewSnapshotImage(TUIMessageBean messageBean, String snapshotPath) {
+        if (TextUtils.equals(msgID, messageBean.getId())) {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, snapshotPath, null, DEFAULT_RADIUS);
+        }
     }
 
     @Override

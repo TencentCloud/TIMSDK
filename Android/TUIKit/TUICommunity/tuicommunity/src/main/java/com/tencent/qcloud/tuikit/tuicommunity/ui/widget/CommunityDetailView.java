@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -174,12 +175,12 @@ public class CommunityDetailView extends FrameLayout implements ICommunityDetail
             }
         });
         int x = view.getWidth() / 2;
-        int y = -view.getHeight() / 3;
+        int y = -view.getHeight() / 2;
         int popHeight = ScreenUtil.dip2px(45) * 3;
         if (y + popHeight + view.getY() + view.getHeight() > communityTopicList.getBottom()) {
             y = y - popHeight;
         }
-        popupWindow.showAsDropDown(view, x, y);
+        popupWindow.showAsDropDown(view, x, y, Gravity.CENTER);
     }
 
     public void hideTopicList() {

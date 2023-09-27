@@ -12,6 +12,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActiv
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
+import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.ContactStartChatUtils;
@@ -90,8 +91,10 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
                 Intent intent = new Intent(FriendProfileMinimalistActivity.this, ImageSelectActivity.class);
                 intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.chat_background_title));
                 intent.putExtra(ImageSelectActivity.SPAN_COUNT, 2);
-                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
-                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
+                int itemWidth = (int) (ScreenUtil.getScreenWidth(TUIContactService.getAppContext()) * 0.42f);
+                int itemHeight = (int) (itemWidth / 1.5f);
+                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, itemWidth);
+                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, itemHeight);
                 intent.putExtra(ImageSelectActivity.DATA, faceList);
                 if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
                     || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
@@ -99,7 +102,7 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
                 } else {
                     intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
                 }
-                intent.putExtra(ImageSelectActivity.NEED_DOWLOAD_LOCAL, true);
+                intent.putExtra(ImageSelectActivity.NEED_DOWNLOAD_LOCAL, true);
                 startActivityForResult(intent, TUIConstants.TUIChat.CHAT_REQUEST_BACKGROUND_CODE);
             }
         });

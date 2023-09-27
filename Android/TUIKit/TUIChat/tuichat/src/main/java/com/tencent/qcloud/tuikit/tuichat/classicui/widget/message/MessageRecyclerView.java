@@ -10,15 +10,18 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-import com.tencent.qcloud.tuicore.TUIConfig;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.component.BeginnerGuidePage;
@@ -29,6 +32,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -43,15 +47,15 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.page.MessageReplyDetailActivi
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,10 +77,8 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     protected OnChatPopActionClickListener mOnPopActionClickListener;
     private final MessageProperties properties = MessageProperties.getInstance();
 
-    private Set<String> downloadList = new HashSet<>();
-
     private OnMenuEmojiClickListener menuEmojiOnClickListener;
-
+    private TUIValueCallback downloadSoundCallback;
     private ChatPresenter presenter;
 
     private int mSelectedPosition = -1;
@@ -161,7 +163,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             mChatPopMenu = null;
         }
         mChatPopMenu = new ChatPopMenu(getContext());
-        mChatPopMenu.setShowFaces(TUIChatConfigs.getConfigs().getGeneralConfig().isReactEnable());
+        mChatPopMenu.setShowFaces(TUIChatConfigs.getConfigs().getGeneralConfig().isEnablePopMenuEmojiReactAction());
         mChatPopMenu.setChatPopMenuActionList(mPopActions);
         mChatPopMenu.setEmojiOnClickListener(new ChatPopMenu.EmojiOnClickListener() {
             @Override
@@ -231,6 +233,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         mPopActions.clear();
 
+        ChatPopMenu.ChatPopMenuAction speakerModeSwitchAction = null;
         ChatPopMenu.ChatPopMenuAction copyAction = null;
         ChatPopMenu.ChatPopMenuAction forwardAction = null;
         ChatPopMenu.ChatPopMenuAction multiSelectAction = null;
@@ -238,7 +241,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         ChatPopMenu.ChatPopMenuAction replyAction = null;
         ChatPopMenu.ChatPopMenuAction revokeAction = null;
         ChatPopMenu.ChatPopMenuAction deleteAction = null;
-
         boolean textIsAllSelected = true;
         if (msg instanceof TextMessageBean || msg instanceof QuoteMessageBean) {
             String selectText = msg.getSelectText();
@@ -248,6 +250,19 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                     textIsAllSelected = false;
                 }
             }
+        }
+        if (msg instanceof SoundMessageBean) {
+            speakerModeSwitchAction = new ChatPopMenu.ChatPopMenuAction();
+            int actionIcon = R.drawable.pop_menu_speaker;
+            String actionName = getContext().getString(R.string.chat_speaker_mode_on_action);
+            boolean isSpeakerMode = TUIChatConfigs.getConfigs().getGeneralConfig().isEnableSoundMessageSpeakerMode();
+            if (isSpeakerMode) {
+                actionIcon = R.drawable.pop_menu_ear;
+                actionName = getContext().getString(R.string.chat_speaker_mode_off_action);
+            }
+            speakerModeSwitchAction.setActionIcon(actionIcon);
+            speakerModeSwitchAction.setActionName(actionName);
+            speakerModeSwitchAction.setActionClickListener(() -> mOnPopActionClickListener.onSpeakerModeSwitchClick(msg));
         }
         if (msg instanceof TextMessageBean || msg instanceof QuoteMessageBean) {
             copyAction = new ChatPopMenu.ChatPopMenuAction();
@@ -300,15 +315,19 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             }
         }
 
+        if (speakerModeSwitchAction != null) {
+            speakerModeSwitchAction.setPriority(11000);
+            mPopActions.add(speakerModeSwitchAction);
+        }
         if (multiSelectAction != null) {
             multiSelectAction.setPriority(8000);
             mPopActions.add(multiSelectAction);
         }
-        if (quoteAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isQuoteEnable()) {
+        if (quoteAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isEnablePopMenuReferenceAction()) {
             quoteAction.setPriority(7000);
             mPopActions.add(quoteAction);
         }
-        if (replyAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isReplyEnable()) {
+        if (replyAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isEnablePopMenuReplyAction()) {
             replyAction.setPriority(6000);
             mPopActions.add(replyAction);
         }
@@ -590,14 +609,15 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
     private void onSoundMessageClicked(SoundMessageBean messageBean) {
         soundPlayHandler.removeCallbacksAndMessages(null);
+        String soundPath = ChatFileDownloadPresenter.getSoundPath(messageBean);
         if (AudioPlayer.getInstance().isPlaying()) {
             AudioPlayer.getInstance().stopPlay();
             soundPlayHandler.removeCallbacksAndMessages(null);
-            if (TextUtils.equals(AudioPlayer.getInstance().getPath(), messageBean.getDataPath())) {
+            if (TextUtils.equals(AudioPlayer.getInstance().getPath(), soundPath)) {
                 return;
             }
         }
-        if (TextUtils.isEmpty(messageBean.getDataPath())) {
+        if (!FileUtil.isFileExists(soundPath)) {
             ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.voice_play_tip));
             getSound(messageBean);
             return;
@@ -607,7 +627,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         messageBean.setPlaying(true);
         messageBean.setPlayed();
         updateMessageView(messageBean);
-        AudioPlayer.getInstance().startPlay(messageBean.getDataPath(), new AudioPlayer.Callback() {
+        AudioPlayer.getInstance().startPlay(soundPath, new AudioPlayer.Callback() {
             @Override
             public void onCompletion(Boolean success) {
                 messageBean.setPlaying(false);
@@ -647,36 +667,24 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     }
 
     private void getSound(final SoundMessageBean messageBean) {
-        if (downloadList.contains(messageBean.getUUID())) {
-            return;
-        }
-        downloadList.add(messageBean.getUUID());
-        final String path = TUIConfig.getRecordDownloadDir() + messageBean.getUUID();
-        File file = new File(path);
-        if (!file.exists()) {
-            messageBean.downloadSound(path, new SoundMessageBean.SoundDownloadCallback() {
-                @Override
-                public void onProgress(long currentSize, long totalSize) {
-                    TUIChatLog.i("downloadSound progress current:", currentSize + ", total:" + totalSize);
-                }
+        downloadSoundCallback = new TUIValueCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                onSoundMessageClicked(messageBean);
+            }
 
-                @Override
-                public void onError(int code, String desc) {
-                    downloadList.remove(messageBean.getUUID());
-                    TUIChatLog.e("getSoundToFile failed code = ", code + ", info = " + desc);
-                    ToastUtil.toastLongMessage("getSoundToFile failed code = " + code + ", info = " + desc);
-                }
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIChatLog.e("getSound failed code = ", errorCode + ", info = " + errorMessage);
+                ToastUtil.toastLongMessage(ErrorMessageConverter.convertIMError(errorCode, errorMessage));
+            }
 
-                @Override
-                public void onSuccess() {
-                    downloadList.remove(messageBean.getUUID());
-                    messageBean.setDataPath(path);
-                    onSoundMessageClicked(messageBean);
-                }
-            });
-        } else {
-            messageBean.setDataPath(path);
-        }
+            @Override
+            public void onProgress(long current, long total) {
+                TUIChatLog.d("getSound progress current:", current + ", total:" + total);
+            }
+        };
+        ChatFileDownloadPresenter.downloadSound(messageBean, downloadSoundCallback);
     }
 
     private void locateOriginMessage(String originMsgId) {

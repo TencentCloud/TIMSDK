@@ -17,8 +17,9 @@
         android:text="@string/group_owner_label"
         android:textSize="13.44sp"
         android:lineHeight="19.2dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:textAlignment="viewStart"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="30dp"/>
@@ -36,7 +37,7 @@
         <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
             android:id="@+id/set_group_manager_owner_face"
             android:scaleType="centerCrop"
-            android:layout_marginRight="11.52dp"
+            android:layout_marginEnd="11.52dp"
             android:layout_width="38.4dp"
             android:layout_height="38.4dp"/>
 
@@ -45,8 +46,9 @@
             android:textSize="17.28sp"
             android:textColor="#444444"
             android:lineHeight="23sp"
+            android:textAlignment="viewStart"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
@@ -57,16 +59,17 @@
         android:lineHeight="19.2dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAlignment="viewStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/set_group_manager_add_manager"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@color/white"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -77,23 +80,24 @@
             android:scaleType="centerCrop"
             android:layout_width="19.2dp"
             android:layout_height="19.2dp"
-            android:layout_marginRight="13.44dp"/>
+            android:layout_marginEnd="13.44dp"/>
 
         <TextView
             android:text="@string/group_add_manager_label"
             android:textSize="15.36sp"
             android:textColor="#444444"
             android:lineHeight="23sp"
+            android:textAlignment="viewStart"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
     <View
         android:background="@drawable/group_list_divider"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:layout_width="match_parent"
         android:layout_height="0.6dp"/>
 

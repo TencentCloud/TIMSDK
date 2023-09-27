@@ -2,8 +2,10 @@ package com.tencent.qcloud.tuikit.tuicallkit.extensions;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
@@ -79,6 +81,18 @@ public class CallingBellFeature {
                     mMediaPlayer.stop();
                 }
                 mMediaPlayer.reset();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    AudioAttributes attrs = new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .build();
+                    mMediaPlayer.setAudioAttributes(attrs);
+                }
+                AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager != null) {
+                    audioManager.setMode(AudioManager.MODE_NORMAL);
+                }
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
                 try {

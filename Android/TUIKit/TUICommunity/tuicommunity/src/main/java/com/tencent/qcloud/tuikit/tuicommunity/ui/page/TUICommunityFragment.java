@@ -248,7 +248,6 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
         @Override
         public void onBindViewHolder(@NonNull FragmentContentViewHolder holder, int position) {
             if (holder.itemView instanceof CommunityDetailView) {
-                //                ((CommunityDetailView) holder.itemView).hideTopicList();
                 CommunityBean communityBean = data.get(position - 1);
                 ((CommunityDetailView) holder.itemView).setCommunityBean(communityBean);
             }

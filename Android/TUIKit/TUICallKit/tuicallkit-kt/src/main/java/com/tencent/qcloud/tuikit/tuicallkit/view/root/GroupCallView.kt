@@ -166,7 +166,7 @@ class GroupCallView(context: Context) : BaseCallView(context) {
     }
 
     private fun refreshInviteUserIconView() {
-        if (TUICallDefine.Role.Caller == viewModel.callRole.get()) {
+        if (TUICallDefine.Role.Caller == viewModel.callRole.get() || TUICallDefine.Status.Accept == viewModel.callStatus.get()) {
             layoutInviteUserIcon?.removeAllViews()
             inviteUserButton?.clear()
             inviteUserButton = InviteUserButton(context)
@@ -214,7 +214,7 @@ class GroupCallView(context: Context) : BaseCallView(context) {
             && TUICallDefine.Role.Called == viewModel.callRole.get()
         ) {
             layoutRender?.visibility = GONE
-        } else if (TUICallDefine.Status.Accept == viewModel.callStatus.get() || TUICallDefine.Status.Waiting == viewModel.callStatus.get()){
+        } else if (TUICallDefine.Status.Accept == viewModel.callStatus.get() || TUICallDefine.Status.Waiting == viewModel.callStatus.get()) {
             layoutRender?.visibility = VISIBLE
             groupCallVideoLayout = GroupCallVideoLayout(context)
             layoutRender!!.removeAllViews()

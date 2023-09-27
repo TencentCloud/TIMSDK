@@ -34,11 +34,13 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MessageReceiptDetailActivity extends BaseLightActivity {
     private static final String TAG = MessageReceiptDetailActivity.class.getSimpleName();
@@ -173,8 +175,8 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             @Override
             public void onSuccess(List<MessageReceiptInfo> data) {
                 MessageReceiptInfo info = data.get(0);
-                readTitleTv.setText(getString(R.string.someone_have_read, info.getReadCount()));
-                unreadTitleTv.setText(getString(R.string.someone_unread, info.getUnreadCount()));
+                readTitleTv.setText(String.format(Locale.US, getString(R.string.someone_have_read), info.getReadCount()));
+                unreadTitleTv.setText(String.format(Locale.US, getString(R.string.someone_unread), info.getUnreadCount()));
             }
 
             @Override
@@ -212,9 +214,9 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             msgAbstractImg.setLayoutParams(getImageParams(msgAbstractImg.getLayoutParams(), messageBean));
             msgAbstractImg.setVisibility(View.VISIBLE);
             if (messageBean instanceof ImageMessageBean) {
-                GlideEngine.loadImage(msgAbstractImg, ((ImageMessageBean) messageBean).getDataPath());
+                GlideEngine.loadImage(msgAbstractImg, ChatFileDownloadPresenter.getImagePath((ImageMessageBean) messageBean));
             } else if (messageBean instanceof VideoMessageBean) {
-                GlideEngine.loadImage(msgAbstractImg, ((VideoMessageBean) messageBean).getSnapshotPath());
+                GlideEngine.loadImage(msgAbstractImg, ChatFileDownloadPresenter.getVideoSnapshotPath((VideoMessageBean) messageBean));
             }
             msgAbstract.setText("");
         } else {

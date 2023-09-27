@@ -109,26 +109,27 @@ dependencies {
     if (projects.contains("tuigroupnoteplugin")) {
         api project(':tuigroupnoteplugin')
     } else {
-        api "com.tencent.imsdk:tuigroupnote-plugin:7.4.4643"
+        api "com.tencent.imsdk:tuigroupnote-plugin:7.5.4852"
     }
 
     if (projects.contains("tuipollplugin")) {
         api project(':tuipollplugin')
     } else {
-        api "com.tencent.imsdk:tuipoll-plugin:7.4.4643"
+        api "com.tencent.imsdk:tuipoll-plugin:7.5.4852"
     }
 
     if (projects.contains("tuiconversationmarkplugin")) {
         api project(':tuiconversationmarkplugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationmark-plugin:7.4.4643"
+        api "com.tencent.imsdk:tuiconversationmark-plugin:7.5.4852"
     }
 
     if (projects.contains("tuiconversationgroupplugin")) {
         api project(':tuiconversationgroup-plugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationgroup-plugin:7.4.4643"
+        api "com.tencent.imsdk:tuiconversationgroup-plugin:7.5.4852"
     }
 
+    api project(':tuivoicetotextplugin')
     api project(':tuiroomkit')
 }

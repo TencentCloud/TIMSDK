@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
@@ -137,8 +138,9 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
         Bundle param = new Bundle();
         param.putString(ImageSelectMinimalistActivity.TITLE, getResources().getString(R.string.group_choose_avatar));
         param.putInt(ImageSelectMinimalistActivity.SPAN_COUNT, 4);
-        param.putInt(ImageSelectMinimalistActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
-        param.putInt(ImageSelectMinimalistActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+        int itemWidth = (int) (ScreenUtil.getScreenWidth(TUIGroupService.getAppContext()) * 0.2f);
+        param.putInt(ImageSelectMinimalistActivity.ITEM_WIDTH, itemWidth);
+        param.putInt(ImageSelectMinimalistActivity.ITEM_HEIGHT, itemWidth);
         param.putSerializable(ImageSelectMinimalistActivity.DATA, faceList);
         param.putSerializable(ImageSelectMinimalistActivity.SELECTED, new ImageSelectMinimalistActivity.ImageBean(originAvatarUrl, originAvatarUrl, false));
 
@@ -176,8 +178,10 @@ public class GroupInfoMinimalistFragment extends BaseFragment {
         Bundle param = new Bundle();
         param.putString(ImageSelectMinimalistActivity.TITLE, getResources().getString(R.string.chat_background_title));
         param.putInt(ImageSelectMinimalistActivity.SPAN_COUNT, 2);
-        param.putInt(ImageSelectMinimalistActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
-        param.putInt(ImageSelectMinimalistActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
+        int itemWidth = (int) (ScreenUtil.getScreenWidth(TUIGroupService.getAppContext()) * 0.42f);
+        int itemHeight = (int) (itemWidth / 1.5f);
+        param.putInt(ImageSelectActivity.ITEM_WIDTH, itemWidth);
+        param.putInt(ImageSelectActivity.ITEM_HEIGHT, itemHeight);
         param.putSerializable(ImageSelectMinimalistActivity.DATA, faceList);
         if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
             || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {

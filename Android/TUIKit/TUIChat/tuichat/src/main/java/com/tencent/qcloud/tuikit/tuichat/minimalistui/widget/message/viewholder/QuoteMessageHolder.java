@@ -7,17 +7,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.Nullable;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.tencent.qcloud.tuicore.TUIConfig;
+
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -30,11 +26,9 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.MergeReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.SoundReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import java.util.ArrayList;
-import java.util.List;
 
 public class QuoteMessageHolder extends TextMessageHolder {
     private final TextView senderNameTv;
@@ -47,7 +41,6 @@ public class QuoteMessageHolder extends TextMessageHolder {
     private final FrameLayout imageFrame;
     private final ImageView imageIv;
     private final ImageView playIv;
-    protected final List<String> downloadEles = new ArrayList<>();
     protected String mImagePath = null;
     // file
     private final FrameLayout fileFrame;
@@ -57,6 +50,9 @@ public class QuoteMessageHolder extends TextMessageHolder {
     private final FrameLayout soundFrame;
     private final TextView soundTimeTv;
     private final ImageView soundIconIv;
+
+    private TUIValueCallback downloadVideoSnapshotCallback;
+    private TUIValueCallback downloadImageCallback;
 
     public QuoteMessageHolder(View itemView) {
         super(itemView);
@@ -175,64 +171,28 @@ public class QuoteMessageHolder extends TextMessageHolder {
         } else if (replyQuoteBean instanceof ImageReplyQuoteBean) {
             ImageMessageBean messageBean = (ImageMessageBean) replyQuoteBean.getMessageBean();
             imageIv.setLayoutParams(getImageParams(imageIv.getLayoutParams(), messageBean.getImgWidth(), messageBean.getImgHeight()));
-            final List<ImageMessageBean.ImageBean> imgs = messageBean.getImageBeanList();
-            String imagePath = messageBean.getDataPath();
-            String originImagePath = TUIChatUtils.getOriginImagePath(messageBean);
-            if (!TextUtils.isEmpty(originImagePath)) {
-                imagePath = originImagePath;
-            }
-            if (!TextUtils.isEmpty(imagePath)) {
+            String imagePath = ChatFileDownloadPresenter.getImagePath(messageBean);
+            if (FileUtil.isFileExists(imagePath)) {
                 GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, imagePath, null, imageRadius);
             } else {
                 GlideEngine.clear(imageIv);
-                for (int i = 0; i < imgs.size(); i++) {
-                    final ImageMessageBean.ImageBean img = imgs.get(i);
-                    if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
-                        synchronized (downloadEles) {
-                            if (downloadEles.contains(img.getUUID())) {
-                                break;
-                            }
-                            downloadEles.add(img.getUUID());
-                        }
-                        final String path = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
-                        if (!path.equals(mImagePath)) {
-                            GlideEngine.clear(imageIv);
-                        }
-                        img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
-                            @Override
-                            public void onProgress(long currentSize, long totalSize) {
-                                TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
-                            }
-
-                            @Override
-                            public void onError(int code, String desc) {
-                                downloadEles.remove(img.getUUID());
-                                TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
-                            }
-
-                            @Override
-                            public void onSuccess() {
-                                downloadEles.remove(img.getUUID());
-                                messageBean.setDataPath(path);
-                                GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, messageBean.getDataPath(), new RequestListener() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
-                                        mImagePath = null;
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(
-                                        Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
-                                        mImagePath = path;
-                                        return false;
-                                    }
-                                }, imageRadius);
-                            }
-                        });
-                        break;
+                downloadImageCallback = new TUIValueCallback() {
+                    @Override
+                    public void onProgress(long currentSize, long totalSize) {
+                        TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                     }
-                }
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
+                    }
+
+                    @Override
+                    public void onSuccess(Object obj) {
+                        GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, imagePath, null, imageRadius);
+                    }
+                };
+                ChatFileDownloadPresenter.downloadImage(messageBean, downloadImageCallback);
             }
         } else if (replyQuoteBean instanceof VideoReplyQuoteBean) {
             VideoMessageBean messageBean = (VideoMessageBean) replyQuoteBean.getMessageBean();
@@ -240,18 +200,12 @@ public class QuoteMessageHolder extends TextMessageHolder {
             imageIv.setLayoutParams(layoutParams);
             playIv.setLayoutParams(layoutParams);
             playIv.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(messageBean.getSnapshotPath())) {
-                GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, messageBean.getSnapshotPath(), null, imageRadius);
+            String snapshotPath = ChatFileDownloadPresenter.getVideoSnapshotPath(messageBean);
+            if (FileUtil.isFileExists(snapshotPath)) {
+                GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, snapshotPath, null, imageRadius);
             } else {
                 GlideEngine.clear(imageIv);
-                synchronized (downloadEles) {
-                    if (!downloadEles.contains(messageBean.getSnapshotUUID())) {
-                        downloadEles.add(messageBean.getSnapshotUUID());
-                    }
-                }
-
-                final String path = TUIConfig.getImageDownloadDir() + messageBean.getSnapshotUUID();
-                messageBean.downloadSnapshot(path, new VideoMessageBean.VideoDownloadCallback() {
+                downloadVideoSnapshotCallback = new TUIValueCallback() {
                     @Override
                     public void onProgress(long currentSize, long totalSize) {
                         TUIChatLog.i("downloadSnapshot progress current:", currentSize + ", total:" + totalSize);
@@ -259,17 +213,15 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
                     @Override
                     public void onError(int code, String desc) {
-                        downloadEles.remove(messageBean.getSnapshotUUID());
                         TUIChatLog.e("MessageAdapter video getImage", code + ":" + desc);
                     }
 
                     @Override
-                    public void onSuccess() {
-                        downloadEles.remove(messageBean.getSnapshotUUID());
-                        messageBean.setSnapshotPath(path);
-                        GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, messageBean.getSnapshotPath(), null, imageRadius);
+                    public void onSuccess(Object obj) {
+                        GlideEngine.loadCornerImageWithoutPlaceHolder(imageIv, snapshotPath, null, imageRadius);
                     }
-                });
+                };
+                ChatFileDownloadPresenter.downloadVideoSnapshot(messageBean, downloadVideoSnapshotCallback);
             }
         }
     }

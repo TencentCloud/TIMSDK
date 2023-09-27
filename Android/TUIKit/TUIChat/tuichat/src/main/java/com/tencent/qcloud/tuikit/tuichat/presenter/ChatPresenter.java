@@ -6,7 +6,9 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.qcloud.tuicore.TUIConfig;
@@ -41,7 +43,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
@@ -55,12 +56,14 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -116,9 +119,9 @@ public abstract class ChatPresenter {
 
     protected boolean isLoading = false;
 
-    // 是否显示翻译的内容。合并转发的消息详情界面不用展示翻译内容。
-    // Whether to display the translated content. The merged-forwarded message details activity does not display the translated content.
-    protected boolean isNeedShowTranslation = true;
+    // 是否显示底部的内容。合并转发的消息详情界面不用展示底部内容。
+    // Whether to display the translated content. The merged-forwarded message details activity does not display the bottom content.
+    protected boolean isNeedShowBottom = true;
 
     private final Handler loadApplyHandler = new Handler();
 
@@ -823,12 +826,12 @@ public abstract class ChatPresenter {
         this.isChatFragmentShow = isChatFragmentShow;
     }
 
-    public boolean isNeedShowTranslation() {
-        return isNeedShowTranslation;
+    public boolean isNeedShowBottom() {
+        return isNeedShowBottom;
     }
 
-    public void setNeedShowTranslation(boolean needShowTranslation) {
-        isNeedShowTranslation = needShowTranslation;
+    public void setNeedShowBottom(boolean needShowBottom) {
+        isNeedShowBottom = needShowBottom;
     }
 
     private void notifyTyping() {
@@ -855,6 +858,8 @@ public abstract class ChatPresenter {
         if (message == null || message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             return null;
         }
+        boolean isNeedReadReceipt = TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt();
+        message.setNeedReadReceipt(isNeedReadReceipt);
         assembleGroupMessage(message);
         notifyConversationInfo(getChatInfo());
 
@@ -868,9 +873,6 @@ public abstract class ChatPresenter {
                     return;
                 }
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
-                if (message instanceof FileMessageBean) {
-                    message.setDownloadStatus(FileMessageBean.MSG_STATUS_DOWNLOADED);
-                }
                 TUIChatUtils.callbackOnSuccess(callBack, data);
                 updateMessageInfo(message, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
                 Map<String, Object> param = new HashMap<>();
@@ -1303,6 +1305,9 @@ public abstract class ChatPresenter {
             forwardMessageOneByOne(msgInfos, isGroup, id, offlineTitle, selfConversation, callBack);
         } else if (forwardMode == TUIChatConstants.FORWARD_MODE_MERGE) {
             forwardMessageMerge(msgInfos, isGroup, id, offlineTitle, selfConversation, callBack);
+        } else if (forwardMode == TUIChatConstants.FORWARD_MODE_NEW_MESSAGE) {
+            TUIMessageBean messageBean = msgInfos.get(0);
+            forwardMessageInternal(messageBean, isGroup, id, null, callBack);
         } else {
             TUIChatLog.d(TAG, "invalid forwardMode");
         }
@@ -1357,7 +1362,7 @@ public abstract class ChatPresenter {
                     // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
                     // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
                     offlinePushInfo.setAndroidOPPOChannelID("tuikit");
-                    if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
+                    if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {
                         offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
                     }
 
@@ -1424,25 +1429,21 @@ public abstract class ChatPresenter {
         for (int j = 0; j < msgInfos.size() && j < 3; j++) {
             TUIMessageBean messageBean = msgInfos.get(j);
             String userid = ChatMessageParser.getDisplayName(messageBean.getV2TIMMessage());
-            if (messageBean instanceof TipsMessageBean) {
-                // do nothing
-            } else if (messageBean instanceof TextMessageBean) {
-                abstractList.add(userid + ":" + messageBean.getExtra());
-            } else if (messageBean instanceof FaceMessageBean) {
-                abstractList.add(userid + ":" + context.getString(R.string.custom_emoji));
+            String messageAbstract = messageBean.getExtra();
+            if (messageBean instanceof FaceMessageBean) {
+                messageAbstract = context.getString(R.string.custom_emoji);
             } else if (messageBean instanceof SoundMessageBean) {
-                abstractList.add(userid + ":" + context.getString(R.string.audio_extra));
+                messageAbstract = context.getString(R.string.audio_extra);
             } else if (messageBean instanceof ImageMessageBean) {
-                abstractList.add(userid + ":" + context.getString(R.string.picture_extra));
+                messageAbstract = context.getString(R.string.picture_extra);
             } else if (messageBean instanceof VideoMessageBean) {
-                abstractList.add(userid + ":" + context.getString(R.string.video_extra));
+                messageAbstract = context.getString(R.string.video_extra);
             } else if (messageBean instanceof FileMessageBean) {
-                abstractList.add(userid + ":" + context.getString(R.string.file_extra));
+                messageAbstract = context.getString(R.string.file_extra);
             } else if (messageBean instanceof MergeMessageBean) {
-                abstractList.add(userid + ":" + context.getString(R.string.forward_extra));
-            } else {
-                abstractList.add(userid + ":" + messageBean.getExtra());
+                messageAbstract = context.getString(R.string.forward_extra);
             }
+            abstractList.add(String.format(Locale.US, "%1$s\u202C:%2$s", userid, messageAbstract));
         }
 
         // createMergerMessage
@@ -1476,7 +1477,7 @@ public abstract class ChatPresenter {
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
         // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
         offlinePushInfo.setAndroidOPPOChannelID("tuikit");
-        if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {
             offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
         }
 
@@ -1490,6 +1491,8 @@ public abstract class ChatPresenter {
             return;
         }
 
+        boolean isNeedReadReceipt = TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt();
+        message.setNeedReadReceipt(isNeedReadReceipt);
         assembleGroupMessage(message);
 
         Map<String, Object> param = new HashMap<>();

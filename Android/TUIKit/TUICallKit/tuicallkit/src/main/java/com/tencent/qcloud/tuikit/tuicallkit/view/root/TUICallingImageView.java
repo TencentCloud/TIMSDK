@@ -12,7 +12,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.R;
 
 public class TUICallingImageView extends BaseCallView {
     private Context        mContext;
-    private RelativeLayout mLayoutUserView;
+    private LinearLayout   mLayoutUserView;
     private LinearLayout   mLayoutOtherUserContainer;
     private RelativeLayout mLayoutFunction;
     private TextView       mTextTime;

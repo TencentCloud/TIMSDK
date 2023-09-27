@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_file_tips">اختيار التطبيق الذي تريد فتح هذا الملف به</string>
+
+    <string name="sure">موافق</string>
+    <string name="cancel">إلغاء</string>
+    <string name="core_permission_dialog_title">طلب الإذن</string>
+    <string name="core_permission_dialog_positive_setting_text">الذهاب إلى الإعدادات</string>
+    <string name="date_year_short">سنة</string>
+    <string name="date_month_short">شهر</string>
+    <string name="date_day_short">يوم</string>
+    <string name="date_hour_short">ساعة</string>
+    <string name="date_minute_short">دقيقة</string>
+    <string name="date_second_short">ثانية</string>
+    <string name="date_yesterday">أمس</string>
+
+</resources>

@@ -23,6 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+        android:textAlignment="viewStart"
         android:lines="1"
         android:maxEms="3"
         android:ellipsize="end"

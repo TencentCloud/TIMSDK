@@ -1,9 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.component;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class AudioPlayer {
@@ -23,8 +27,15 @@ public class AudioPlayer {
     public void startPlay(String filePath, Callback callback) {
         mAudioRecordPath = filePath;
         mPlayCallback = callback;
+        setSpeakerMode();
         try {
             mPlayer = new MediaPlayer();
+            boolean isEnableSoundMessageSpeakerMode = TUIChatConfigs.getConfigs().getGeneralConfig().isEnableSoundMessageSpeakerMode();
+            if (isEnableSoundMessageSpeakerMode) {
+                mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            } else {
+                mPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
+            }
             mPlayer.setDataSource(filePath);
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -41,6 +52,23 @@ public class AudioPlayer {
             stopInternalPlay();
             onPlayCompleted(false);
         }
+    }
+
+    public void setSpeakerMode() {
+        boolean isEnableSoundMessageSpeakerMode = TUIChatConfigs.getConfigs().getGeneralConfig().isEnableSoundMessageSpeakerMode();
+        AudioManager audioManager = (AudioManager) TUIChatService.getAppContext().getSystemService(Context.AUDIO_SERVICE);
+        if (isEnableSoundMessageSpeakerMode) {
+            audioManager.setMode(AudioManager.MODE_NORMAL);
+            audioManager.setSpeakerphoneOn(true);
+        } else {
+            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+            audioManager.setSpeakerphoneOn(false);
+        }
+    }
+
+    public void resetSpeakerMode() {
+        AudioManager audioManager = (AudioManager) TUIChatService.getAppContext().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setMode(AudioManager.MODE_NORMAL);
     }
 
     public void stopPlay() {
@@ -68,6 +96,7 @@ public class AudioPlayer {
         if (mPlayCallback != null) {
             mPlayCallback.onCompletion(success);
         }
+        resetSpeakerMode();
         mPlayer = null;
     }
 

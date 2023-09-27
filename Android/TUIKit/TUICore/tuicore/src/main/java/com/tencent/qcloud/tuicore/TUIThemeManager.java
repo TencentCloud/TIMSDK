@@ -11,10 +11,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +41,7 @@ public class TUIThemeManager {
 
     public static final String LANGUAGE_ZH_CN = "zh";
     public static final String LANGUAGE_EN = "en";
+    public static final String LANGUAGE_AR = "ar";
 
     private static final class ThemeManagerHolder {
         private static final TUIThemeManager instance = new TUIThemeManager();
@@ -59,6 +63,7 @@ public class TUIThemeManager {
     private TUIThemeManager() {
         languageMap.put(LANGUAGE_ZH_CN, Locale.SIMPLIFIED_CHINESE);
         languageMap.put(LANGUAGE_EN, Locale.ENGLISH);
+        languageMap.put(LANGUAGE_AR, new Locale("ar"));
     }
 
     public static void setTheme(Context context) {
@@ -226,9 +231,7 @@ public class TUIThemeManager {
         Resources resources = context.getResources();
         Configuration configuration = resources.getConfiguration();
         configuration.locale = locale;
-        if (TUIBuild.getVersionInt() >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            configuration.setLocale(locale);
-        }
+        configuration.setLocale(locale);
         resources.updateConfiguration(configuration, null);
 
         if (Build.VERSION.SDK_INT >= 25) {

@@ -44,6 +44,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
@@ -249,6 +250,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         mPopActions.clear();
 
+        ChatPopActivity.ChatPopMenuAction speakerModeSwitchAction = null;
         ChatPopActivity.ChatPopMenuAction copyAction = null;
         ChatPopActivity.ChatPopMenuAction forwardAction = null;
         ChatPopActivity.ChatPopMenuAction multiSelectAction = null;
@@ -274,6 +276,20 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             copyAction.setActionName(getContext().getString(R.string.copy_action));
             copyAction.setActionIcon(R.drawable.chat_minimalist_pop_menu_copy);
             copyAction.setActionClickListener(() -> mOnPopActionClickListener.onCopyClick(msg));
+        }
+
+        if (msg instanceof SoundMessageBean) {
+            speakerModeSwitchAction = new ChatPopActivity.ChatPopMenuAction();
+            int actionIcon = R.drawable.chat_minimalist_pop_menu_speaker;
+            String actionName = getContext().getString(R.string.chat_speaker_mode_on_action);
+            boolean isSpeakerMode = TUIChatConfigs.getConfigs().getGeneralConfig().isEnableSoundMessageSpeakerMode();
+            if (isSpeakerMode) {
+                actionIcon = R.drawable.chat_minimalist_pop_menu_ear;
+                actionName = getContext().getString(R.string.chat_speaker_mode_off_action);
+            }
+            speakerModeSwitchAction.setActionIcon(actionIcon);
+            speakerModeSwitchAction.setActionName(actionName);
+            speakerModeSwitchAction.setActionClickListener(() -> mOnPopActionClickListener.onSpeakerModeSwitchClick(msg));
         }
 
         if (textIsAllSelected) {
@@ -325,16 +341,19 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 quoteAction.setActionClickListener(() -> mOnPopActionClickListener.onQuoteMessageClick(msg));
             }
         }
-
+        if (speakerModeSwitchAction != null) {
+            speakerModeSwitchAction.setPriority(11000);
+            mPopActions.add(speakerModeSwitchAction);
+        }
         if (multiSelectAction != null) {
             multiSelectAction.setPriority(8000);
             mPopActions.add(multiSelectAction);
         }
-        if (quoteAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isQuoteEnable()) {
+        if (quoteAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isEnablePopMenuReferenceAction()) {
             quoteAction.setPriority(7000);
             mPopActions.add(quoteAction);
         }
-        if (replyAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isReplyEnable()) {
+        if (replyAction != null && TUIChatConfigs.getConfigs().getGeneralConfig().isEnablePopMenuReplyAction()) {
             replyAction.setPriority(6000);
             mPopActions.add(replyAction);
         }

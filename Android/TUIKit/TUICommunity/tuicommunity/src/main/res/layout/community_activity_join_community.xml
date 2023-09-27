@@ -39,14 +39,14 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:scaleType="centerCrop"
-                android:layout_marginLeft="18dp"
+                android:layout_marginStart="18dp"
                 android:background="@drawable/community_search_icon" />
 
             <EditText
                 android:id="@+id/community_id_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
                 android:background="@null"
                 android:maxLines="1"
                 android:inputType="text"
@@ -62,7 +62,7 @@
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:text="@string/community_cancel"
             android:textColor="#262626"
             android:textSize="14sp"

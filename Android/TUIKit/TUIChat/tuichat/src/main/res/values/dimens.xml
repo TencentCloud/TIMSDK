@@ -45,6 +45,8 @@
 
     <dimen name="chat_pop_menu_padding_top">15.48dp</dimen>
     <dimen name="chat_pop_menu_padding_left_right">16.32dp</dimen>
+    <dimen name="chat_pop_menu_item_top_space">16.32dp</dimen>
+    <dimen name="chat_pop_menu_recent_face_space">15dp</dimen>
     <dimen name="chat_pop_menu_padding_bottom">10.96dp</dimen>
     <dimen name="chat_pop_menu_item_height">35.8dp</dimen>
     <dimen name="chat_pop_menu_icon_size">19.2dp</dimen>

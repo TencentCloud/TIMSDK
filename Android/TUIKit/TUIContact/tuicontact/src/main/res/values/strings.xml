@@ -55,7 +55,7 @@
     <string name="profile_voice_chat">Voice Call</string>
     <string name="profile_video_chat">Video Call</string>
     <string name="profile_clear_message">Clear Chat History</string>
-    <string name="profile_chat_background">Background</string>
+    <string name="profile_chat_background">Chat background</string>
     <string name="chat_background_title">Background</string>
     <string name="contact_signature_tag">Status : </string>
     <string name="contact_no_status">No status</string>

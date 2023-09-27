@@ -25,10 +25,10 @@
             android:id="@+id/dialog_editor"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/editor_border_gray"
-            android:gravity="top|left"
+            android:gravity="top|start"
             android:textCursorDrawable="@drawable/my_cursor"
             android:padding="10dp" />
 

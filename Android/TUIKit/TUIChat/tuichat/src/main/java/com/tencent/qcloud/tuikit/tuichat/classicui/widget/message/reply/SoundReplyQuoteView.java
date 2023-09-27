@@ -20,6 +20,7 @@ public class SoundReplyQuoteView extends TUIReplyQuoteView {
         super(context);
         soundMsgLayout = findViewById(R.id.sound_msg_layout);
         soundMsgIcon = findViewById(R.id.sound_msg_icon_iv);
+        soundMsgIcon.getDrawable().setAutoMirrored(true);
         soundMsgTv = findViewById(R.id.sound_msg_time_tv);
     }
 

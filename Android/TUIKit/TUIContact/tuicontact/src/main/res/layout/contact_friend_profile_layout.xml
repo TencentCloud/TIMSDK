@@ -35,9 +35,9 @@
                     android:layout_width="@dimen/contact_profile_face_size"
                     android:layout_height="@dimen/contact_profile_face_size"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="@dimen/contact_profile_face_margin_left"
+                    android:layout_marginStart="@dimen/contact_profile_face_margin_left"
                     android:layout_marginTop="@dimen/contact_profile_face_margin_top"
-                    android:layout_marginRight="@dimen/contact_profile_face_margin_right"
+                    android:layout_marginEnd="@dimen/contact_profile_face_margin_right"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -61,6 +61,7 @@
                     android:layout_marginTop="@dimen/contact_profile_text_margin"
                     android:gravity="center_vertical"
                     android:text="@string/contact_account_tag"
+                    android:textDirection="locale"
                     android:textSize="@dimen/contact_profile_account_text_size" />
 
                 <TextView
@@ -82,6 +83,7 @@
                     android:layout_alignStart="@id/friend_account_tag"
                     android:layout_marginTop="@dimen/contact_profile_text_margin"
                     android:gravity="center_vertical"
+                    android:textDirection="locale"
                     android:text="@string/contact_signature_tag"
                     android:textSize="@dimen/contact_profile_account_text_size" />
 
@@ -113,7 +115,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15.36dp"
+                    android:layout_marginStart="15.36dp"
+                    android:textDirection="locale"
                     android:text="@string/contact_add_wording" />
 
                 <TextView
@@ -135,7 +138,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15.36dp"
+                    android:layout_marginStart="15.36dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="@string/contact_set_add_wording" />
@@ -152,7 +155,7 @@
                     android:id="@+id/remark_and_group_tip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15.36dp"
+                    android:layout_marginStart="15.36dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/contact_set_remark_and_group" />
 
@@ -230,7 +233,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/contact_add"
@@ -245,7 +247,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/accept"
@@ -270,7 +271,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/profile_chat"
@@ -285,7 +285,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/profile_clear_message"
@@ -300,7 +299,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="0.68dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/profile_delete_friend"
@@ -315,7 +313,6 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="0.6dp"
                     android:background="@drawable/btn_bg_color"
                     android:text="@string/refuse"

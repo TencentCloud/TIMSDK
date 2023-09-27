@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public abstract class MessageContentHolder<T extends TUIMessageBean> extends MessageBaseHolder<T> {
     public UserIconView leftUserIcon;
@@ -42,7 +43,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     public TextView isReadText;
     public TextView unreadAudioText;
     public TextView messageDetailsTimeTv;
-    private FrameLayout translationContentFrameLayout;
+    private FrameLayout bottomContentFrameLayout;
 
     public boolean isForwardMode = false;
     public boolean isReplyDetailMode = false;
@@ -50,9 +51,9 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
 
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
     protected SelectTextHelper selectableTextHelper;
-    // 是否显示翻译的内容。合并转发的消息详情界面不用展示翻译内容。
-    // Whether to display the translated content. The merged-forwarded message details activity does not display the translated content.
-    protected boolean isNeedShowTranslation = true;
+    // 是否显示底部的内容。合并转发的消息详情界面不用展示底部内容。
+    // Whether to display the bottom content. The merged-forwarded message details activity does not display the bottom content.
+    protected boolean isNeedShowBottomLayout = true;
     protected boolean isShowRead = false;
     private BaseFragment fragment;
     private RecyclerView recyclerView;
@@ -68,7 +69,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         isReadText = itemView.findViewById(R.id.is_read_tv);
         unreadAudioText = itemView.findViewById(R.id.audio_unread);
         messageDetailsTimeTv = itemView.findViewById(R.id.msg_detail_time_tv);
-        translationContentFrameLayout = itemView.findViewById(R.id.translate_content_fl);
+        bottomContentFrameLayout = itemView.findViewById(R.id.bottom_content_fl);
     }
 
     public void setFragment(BaseFragment fragment) {
@@ -114,20 +115,20 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         setSendingProgress(msg);
 
         if (isForwardMode || isReplyDetailMode) {
-            msgArea.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
+            setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
             statusImage.setVisibility(View.GONE);
         } else {
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());
+                    setMessageBubbleBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgArea.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_self_bg));
+                    setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_self_bg));
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    msgArea.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                    setMessageBubbleBackground(properties.getLeftBubble().getConstantState().newDrawable());
                 } else {
-                    msgArea.setBackgroundResource(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
+                    setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
                 }
             }
             setOnClickListener(msg, position);
@@ -182,11 +183,11 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
 
         setReplyContent(msg);
         setReactContent(msg);
-        if (isNeedShowTranslation) {
-            setTranslationContent(msg);
+        if (isNeedShowBottomLayout) {
+            setBottomContent(msg);
         }
 
-        setMessageAreaPadding();
+        setMessageBubbleDefaultPadding();
 
         layoutVariableViews(msg, position);
     }
@@ -262,7 +263,6 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     }
 
     private void setSendingProgress(T msg) {
-
         if (isForwardMode || isReplyDetailMode) {
             sendingProgress.setVisibility(View.GONE);
         } else {
@@ -279,7 +279,6 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     }
 
     private void setUserName(T msg) {
-
         if (isForwardMode || isReplyDetailMode) {
             usernameText.setVisibility(View.VISIBLE);
         } else {
@@ -320,7 +319,6 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     }
 
     private void setUserIcon(T msg) {
-
         if (isForwardMode || isReplyDetailMode) {
             leftUserIcon.setVisibility(View.VISIBLE);
             rightUserIcon.setVisibility(View.GONE);
@@ -337,10 +335,8 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
             leftUserIcon.setDefaultImageResId(properties.getAvatar());
             rightUserIcon.setDefaultImageResId(properties.getAvatar());
         } else {
-            leftUserIcon.setDefaultImageResId(
-                TUIThemeManager.getAttrResId(leftUserIcon.getContext(), R.attr.core_default_user_icon));
-            rightUserIcon.setDefaultImageResId(
-                TUIThemeManager.getAttrResId(rightUserIcon.getContext(), R.attr.core_default_user_icon));
+            leftUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(leftUserIcon.getContext(), R.attr.core_default_user_icon));
+            rightUserIcon.setDefaultImageResId(TUIThemeManager.getAttrResId(rightUserIcon.getContext(), R.attr.core_default_user_icon));
         }
         if (properties.getAvatarRadius() != 0) {
             leftUserIcon.setRadius(properties.getAvatarRadius());
@@ -363,13 +359,13 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         }
     }
 
-    private void setTranslationContent(TUIMessageBean msg) {
+    private void setBottomContent(TUIMessageBean msg) {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, recyclerView);
         param.put(TUIConstants.TUIChat.FRAGMENT, fragment);
 
-        TUICore.raiseExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID, bottomContentFrameLayout, param);
     }
 
     private void loadAvatar(TUIMessageBean msg) {
@@ -422,11 +418,11 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         }
     }
 
-    protected void setMessageAreaPadding() {
+    protected void setMessageBubbleDefaultPadding() {
         // after setting background, the padding will be reset
         int paddingHorizontal = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_left_right);
         int paddingVertical = itemView.getResources().getDimensionPixelSize(R.dimen.chat_message_area_padding_top_bottom);
-        msgArea.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
+        msgArea.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
     }
 
     protected void setGravity(boolean isStart) {
@@ -445,7 +441,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         MessageRepliesBean messageRepliesBean = messageBean.getMessageRepliesBean();
         if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
             TextView replyNumText = msgReplyDetailLayout.findViewById(R.id.reply_num);
-            replyNumText.setText(replyNumText.getResources().getString(R.string.chat_reply_num, messageRepliesBean.getRepliesSize()));
+            replyNumText.setText(String.format(Locale.US, replyNumText.getResources().getString(R.string.chat_reply_num), messageRepliesBean.getRepliesSize()));
             msgReplyDetailLayout.setVisibility(View.VISIBLE);
             msgReplyDetailLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -523,7 +519,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
             } else {
                 long readCount = msg.getReadCount();
                 if (readCount > 0) {
-                    isReadText.setText(isReadText.getResources().getString(R.string.someone_has_read, readCount));
+                    isReadText.setText(String.format(Locale.US, isReadText.getResources().getString(R.string.someone_has_read), readCount));
                     isReadText.setTextColor(
                         isReadText.getResources().getColor(TUIThemeManager.getAttrResId(isReadText.getContext(), R.attr.chat_read_receipt_text_color)));
                     isReadText.setOnClickListener(new View.OnClickListener() {
@@ -623,8 +619,8 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         });
     }
 
-    public void setNeedShowTranslation(boolean needShowTranslation) {
-        isNeedShowTranslation = needShowTranslation;
+    public void setNeedShowBottomLayout(boolean needShowBottomLayout) {
+        isNeedShowBottomLayout = needShowBottomLayout;
     }
 
     public void setShowRead(boolean showRead) {

@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     app:clickToClose="false">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/bottom_wrapper_2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -18,6 +18,7 @@
             android:id="@+id/more_view"
             android:layout_width="70dp"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
             android:background="@color/black"
             android:gravity="center">
 
@@ -37,8 +38,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeTextType="uniform"
                 android:text="@string/more_text"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
@@ -49,6 +53,7 @@
             android:id="@+id/mark_read"
             android:layout_width="70dp"
             android:layout_height="match_parent"
+            android:layout_toEndOf="@id/more_view"
             android:background="@color/conversation_mark_swipe_bg"
             android:gravity="center">
 
@@ -67,8 +72,11 @@
                 android:layout_centerInParent="true"
                 android:background="@color/transparent"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeTextType="uniform"
                 android:text="@string/mark_read"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
@@ -80,13 +88,17 @@
             android:layout_height="match_parent"
             android:background="@color/conversation_mark_swipe_bg"
             android:gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:layout_toEndOf="@id/mark_read"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:text="@string/not_display"
             android:textColor="@color/white"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeTextType="uniform"
             android:textSize="12sp"
             android:visibility="gone" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/item_left"
@@ -104,9 +116,9 @@
             android:id="@+id/select_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="6.23dp"
+            android:layout_marginEnd="6.23dp"
             android:button="@drawable/checkbox_selector"
             android:visibility="gone"
             tools:visibility="visible"/>

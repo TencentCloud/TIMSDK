@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.tencent.qcloud.tuicore.util.TUIBuild;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class ThemeSelectActivity extends BaseLightActivity {
 
         initData();
         int padding = ScreenUtil.dip2px(15.36f);
-        recyclerView.setPadding(padding, padding, padding, padding);
+        recyclerView.setPaddingRelative(padding, padding, padding, padding);
         recyclerView.addItemDecoration(new GridDecoration(2, ScreenUtil.dip2px(11.52f), ScreenUtil.dip2px(9.6f)));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter);
@@ -108,6 +110,10 @@ public class ThemeSelectActivity extends BaseLightActivity {
         titleBarLayout.setBackgroundColor(color);
         titleBarLayout.getMiddleTitle().setTextColor(titleColor);
         titleBarLayout.getLeftIcon().setBackgroundResource(backIconId);
+        Drawable leftIconDrawable = titleBarLayout.getLeftIcon().getBackground();
+        if (leftIconDrawable != null) {
+            leftIconDrawable.setAutoMirrored(true);
+        }
     }
 
     private void initData() {
@@ -173,8 +179,15 @@ public class ThemeSelectActivity extends BaseLightActivity {
             int position = parent.getChildAdapterPosition(view);
             int column = position % columnNum;
 
-            outRect.left = column * leftRightSpace / columnNum;
-            outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int left = column * leftRightSpace / columnNum;
+            if (LayoutUtil.isRTL()) {
+                outRect.right = left;
+                outRect.left = right;
+            } else {
+                outRect.left = left;
+                outRect.right = right;
+            }
 
             // Add top spacing when multiple lines
             if (position >= columnNum) {

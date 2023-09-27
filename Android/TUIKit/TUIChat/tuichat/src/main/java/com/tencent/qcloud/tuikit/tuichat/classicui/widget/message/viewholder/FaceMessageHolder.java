@@ -36,8 +36,8 @@ public class FaceMessageHolder extends MessageContentHolder {
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         performCustomFace((FaceMessageBean) msg);
         if (msg.getMessageReactBean() == null || msg.getMessageReactBean().getReactSize() <= 0) {
-            msgArea.setBackground(null);
-            msgArea.setPadding(0, 0, 0, 0);
+            setMessageBubbleBackground(null);
+            setMessageBubbleZeroPadding();
         }
     }
 

@@ -15,6 +15,11 @@
     <string name="revoke_action">撤回</string>
     <string name="resend_action">重发</string>
     <string name="hide_action">隐藏</string>
+    <string name="chat_speaker_mode_on_action">扬声器播放</string>
+    <string name="chat_speaker_mode_off_action">听筒播放</string>
+
+    <string name="chat_speaker_mode_on_tip">已切换为扬声器播放模式</string>
+    <string name="chat_speaker_mode_off_tip">已切换为听筒播放模式</string>
 
     <string name="copy_success_tip">复制成功</string>
 
@@ -82,23 +87,23 @@
     <string name="create_group">创建群组</string>
     <string name="create_community">创建社群</string>
     <string name="etc">等</string>
-    <string name="join_group">加入群组</string>
-    <string name="invite_joined_group">被邀请进群</string>
-    <string name="quit_group">退出群组</string>
-    <string name="kick_group_tip">被踢出群组</string>
-    <string name="be_group_manager">被设置管理员</string>
-    <string name="cancle_group_manager">被取消管理员</string>
-    <string name="modify_group_name_is">修改群名称为</string>
-    <string name="modify_notice">修改群公告为</string>
-    <string name="modify_introduction">修改群简介为</string>
-    <string name="modify_shut_up_all">禁言全员</string>
-    <string name="modify_cancel_shut_up_all">取消禁言全员</string>
-    <string name="move_owner">转让群主给</string>
-    <string name="modify_group_avatar">修改了群头像</string>
-    <string name="banned">被禁言</string>
-    <string name="cancle_banned">被取消禁言</string>
-    <string name="modify_group_add_opt">修改加群方式为</string>
-    <string name="modify_group_invite_opt">修改邀请进群方式为</string>
+    <string name="join_group">%s加入群组</string>
+    <string name="invite_joined_group">%s邀请%s加入群组</string>
+    <string name="quit_group">%s退出群组</string>
+    <string name="kick_group_tip">%s将%s踢出群组</string>
+    <string name="be_group_manager">%s被设置管理员</string>
+    <string name="cancle_group_manager">%s被取消管理员</string>
+    <string name="modify_group_name_is">%s把群名称修改为%s</string>
+    <string name="modify_notice">%s把群公告修改为%s</string>
+    <string name="modify_introduction">%s把群简介修改为%s</string>
+    <string name="modify_shut_up_all">%s禁言全员</string>
+    <string name="modify_cancel_shut_up_all">%s取消禁言全员</string>
+    <string name="move_owner">%s转让群主给%s</string>
+    <string name="modify_group_avatar">%s修改了群头像</string>
+    <string name="banned">%s被禁言%s</string>
+    <string name="cancle_banned">%s被取消禁言</string>
+    <string name="modify_group_add_opt">%s修改加群方式为%s</string>
+    <string name="modify_group_invite_opt">%s修改邀请进群方式为%s</string>
     <string name="group_add_opt_auto_approval">自动审批</string>
     <string name="group_add_opt_admin_approve">管理员审批</string>
     <string name="group_add_opt_join_disable">禁止加群</string>

@@ -29,8 +29,8 @@
                     android:layout_height="@dimen/demo_profile_face_size"
                     android:layout_gravity="start"
                     android:scaleType="centerCrop"
-                    android:layout_marginLeft="@dimen/demo_profile_face_margin_left"
-                    android:layout_marginRight="@dimen/demo_profile_face_margin_right"
+                    android:layout_marginStart="@dimen/demo_profile_face_margin_left"
+                    android:layout_marginEnd="@dimen/demo_profile_face_margin_right"
                     android:layout_marginTop="@dimen/demo_profile_face_margin_top" />
 
                 <TextView
@@ -55,6 +55,7 @@
                     android:layout_toEndOf="@id/self_icon"
                     android:layout_marginTop="-8dp"
                     android:gravity="center_vertical"
+                    android:textDirection="locale"
                     android:textSize="@dimen/demo_profile_account_text_size"
                     android:text="@string/demo_account_tag" />
 
@@ -77,6 +78,7 @@
                     android:layout_below="@id/self_account_tag"
                     android:layout_marginTop="3.8dp"
                     android:gravity="center_vertical"
+                    android:textDirection="locale"
                     android:textSize="@dimen/demo_profile_account_text_size"
                     android:text="@string/demo_signature_tag" />
 
@@ -96,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/self_account_tag"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/arrow_right" />
 
             </RelativeLayout>
@@ -115,7 +117,6 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_height="@dimen/demo_logout_btn_height"
-                android:layout_alignParentBottom="true"
                 android:background="@color/bg_negative_btn"
                 android:textSize="16.32sp"
                 android:lineHeight="24.96sp"

@@ -39,11 +39,13 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
     }
 
     private var mediaTypeObserver = Observer<TUICallDefine.MediaType> {
-        refreshUserInfoView()
-        refreshFunctionView()
-        refreshSwitchAudioView()
-        refreshRenderView()
-        refreshFloatView()
+        if (it != TUICallDefine.MediaType.Unknown) {
+            refreshUserInfoView()
+            refreshFunctionView()
+            refreshSwitchAudioView()
+            refreshRenderView()
+            refreshFloatView()
+        }
     }
 
     init {

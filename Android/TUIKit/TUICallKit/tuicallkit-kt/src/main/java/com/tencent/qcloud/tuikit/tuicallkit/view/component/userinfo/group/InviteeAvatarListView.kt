@@ -46,7 +46,7 @@ class InviteeAvatarListView(context: Context) : LinearLayout(context) {
             val imageView = ImageView(context)
             val layoutParams = LayoutParams(squareWidth, squareWidth)
             if (index != 0) {
-                layoutParams.leftMargin = leftMargin
+                layoutParams.marginStart = leftMargin
             }
             imageView.layoutParams = layoutParams
             ImageLoader.loadImage(context, imageView, user!!.avatar.get(), R.drawable.tuicallkit_ic_avatar)

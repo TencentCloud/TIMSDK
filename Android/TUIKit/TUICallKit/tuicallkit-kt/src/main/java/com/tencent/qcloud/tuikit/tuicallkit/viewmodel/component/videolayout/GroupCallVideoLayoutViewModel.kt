@@ -69,13 +69,13 @@ class GroupCallVideoLayoutViewModel {
         val grid4W = (size - margin * 2) / 2
         val grid4H = (size - margin * 2) / 2
         val layoutParams0 = RelativeLayout.LayoutParams(grid4W, grid4H)
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START)
         layoutParams0.addRule(RelativeLayout.CENTER_VERTICAL)
-        layoutParams0.leftMargin = margin
+        layoutParams0.marginStart = margin
         val layoutParams1 = RelativeLayout.LayoutParams(grid4W, grid4H)
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_END)
         layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL)
-        layoutParams1.rightMargin = margin
+        layoutParams1.marginEnd = margin
         val list = ArrayList<RelativeLayout.LayoutParams>()
         list.add(layoutParams0)
         list.add(layoutParams1)
@@ -90,15 +90,15 @@ class GroupCallVideoLayoutViewModel {
         val grid3W = (size - margin * 2) / 2
         val grid3H = (size - margin * 2) / 2
         val layoutParams0 = RelativeLayout.LayoutParams(grid3W, grid3H)
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START)
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         layoutParams0.topMargin = margin
-        layoutParams0.leftMargin = margin
+        layoutParams0.marginStart = margin
         val layoutParams1 = RelativeLayout.LayoutParams(grid3W, grid3H)
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_END)
         layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         layoutParams1.topMargin = margin
-        layoutParams1.rightMargin = margin
+        layoutParams1.marginEnd = margin
         val layoutParams2 = RelativeLayout.LayoutParams(grid3W, grid3H)
         layoutParams2.addRule(RelativeLayout.CENTER_HORIZONTAL)
         layoutParams2.bottomMargin = margin
@@ -118,25 +118,25 @@ class GroupCallVideoLayoutViewModel {
         val grid4W = (size - margin * 2) / 2
         val grid4H = (size - margin * 2) / 2
         val layoutParams0 = RelativeLayout.LayoutParams(grid4W, grid4H)
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START)
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         layoutParams0.topMargin = margin
-        layoutParams0.leftMargin = margin
+        layoutParams0.marginStart = margin
         val layoutParams1 = RelativeLayout.LayoutParams(grid4W, grid4H)
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_END)
         layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         layoutParams1.topMargin = margin
-        layoutParams1.rightMargin = margin
+        layoutParams1.marginEnd = margin
         val layoutParams2 = RelativeLayout.LayoutParams(grid4W, grid4H)
-        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_START)
         layoutParams2.bottomMargin = margin
         layoutParams2.topMargin = margin + grid4H
-        layoutParams2.leftMargin = margin
+        layoutParams2.marginStart = margin
         val layoutParams3 = RelativeLayout.LayoutParams(grid4W, grid4H)
-        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_END)
         layoutParams3.bottomMargin = margin
         layoutParams3.topMargin = margin + grid4H
-        layoutParams3.rightMargin = margin
+        layoutParams3.marginEnd = margin
         val list = ArrayList<RelativeLayout.LayoutParams>()
         list.add(layoutParams0)
         list.add(layoutParams1)
@@ -153,44 +153,44 @@ class GroupCallVideoLayoutViewModel {
         val grid9W = (size - margin * 2) / 3
         val grid9H = (size - margin * 2) / 3
         val layoutParams0 = RelativeLayout.LayoutParams(grid9W, grid9H)
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START)
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         layoutParams0.topMargin = margin
-        layoutParams0.leftMargin = margin
+        layoutParams0.marginStart = margin
         val layoutParams1 = RelativeLayout.LayoutParams(grid9W, grid9H)
         layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         layoutParams1.topMargin = margin
-        layoutParams1.leftMargin = margin + grid9W
+        layoutParams1.marginStart = margin + grid9W
         val layoutParams2 = RelativeLayout.LayoutParams(grid9W, grid9H)
-        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_END)
         layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         layoutParams2.topMargin = margin
-        layoutParams2.rightMargin = margin
+        layoutParams2.marginEnd = margin
         val layoutParams3 = RelativeLayout.LayoutParams(grid9W, grid9H)
-        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-        layoutParams3.leftMargin = margin
+        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_START)
+        layoutParams3.marginStart = margin
         layoutParams3.topMargin = margin + grid9H
         val layoutParams4 = RelativeLayout.LayoutParams(grid9W, grid9H)
         layoutParams4.topMargin = margin + grid9H
-        layoutParams4.leftMargin = margin + grid9W
+        layoutParams4.marginStart = margin + grid9W
         val layoutParams5 = RelativeLayout.LayoutParams(grid9W, grid9H)
-        layoutParams5.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        layoutParams5.addRule(RelativeLayout.ALIGN_PARENT_END)
         layoutParams5.topMargin = margin + grid9H
-        layoutParams5.rightMargin = margin
+        layoutParams5.marginEnd = margin
         val layoutParams6 = RelativeLayout.LayoutParams(grid9W, grid9H)
-        layoutParams6.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+        layoutParams6.addRule(RelativeLayout.ALIGN_PARENT_START)
         layoutParams6.bottomMargin = margin
-        layoutParams6.leftMargin = margin
+        layoutParams6.marginStart = margin
         layoutParams6.topMargin = margin + grid9H * 2
         val layoutParams7 = RelativeLayout.LayoutParams(grid9W, grid9H)
         layoutParams7.bottomMargin = margin
         layoutParams7.topMargin = margin + grid9H * 2
-        layoutParams7.leftMargin = margin + grid9W
+        layoutParams7.marginStart = margin + grid9W
         val layoutParams8 = RelativeLayout.LayoutParams(grid9W, grid9H)
-        layoutParams8.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        layoutParams8.addRule(RelativeLayout.ALIGN_PARENT_END)
         layoutParams8.bottomMargin = margin
         layoutParams8.topMargin = margin + grid9H * 2
-        layoutParams8.rightMargin = margin
+        layoutParams8.marginEnd = margin
         val list = ArrayList<RelativeLayout.LayoutParams>()
         list.add(layoutParams0)
         list.add(layoutParams1)

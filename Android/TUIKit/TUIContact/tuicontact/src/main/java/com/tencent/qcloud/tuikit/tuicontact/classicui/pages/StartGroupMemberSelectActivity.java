@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class StartGroupMemberSelectActivity extends BaseLightActivity {
     private static final String TAG = StartGroupMemberSelectActivity.class.getSimpleName();
@@ -166,7 +167,7 @@ public class StartGroupMemberSelectActivity extends BaseLightActivity {
 
     private void confirmAndFinish() {
         if (mMembers.size() > limit) {
-            String overLimitTip = getString(R.string.contact_over_limit_tip, limit);
+            String overLimitTip = String.format(Locale.US, getString(R.string.contact_over_limit_tip), limit);
             ToastUtil.toastShortMessage(overLimitTip);
             return;
         }

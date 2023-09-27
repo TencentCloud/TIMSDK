@@ -62,13 +62,13 @@ public class DateTimeUtil {
         long yearStartTimeInMillis = yearStartCalendar.getTimeInMillis();
         long outTimeMillis = date.getTime();
         if (outTimeMillis < yearStartTimeInMillis) {
-            timeText = String.format(locale, "%tD", date);
+            timeText = String.format(Locale.US, "%tD", date);
         } else if (outTimeMillis < weekStartTimeInMillis) {
-            timeText = String.format(locale, "%1$tm/%1$td", date);
+            timeText = String.format(Locale.US, "%1$tm/%1$td", date);
         } else if (outTimeMillis < dayStartTimeInMillis) {
             timeText = String.format(locale, "%tA", date);
         } else {
-            timeText = String.format(locale, "%tR", date);
+            timeText = String.format(Locale.US, "%tR", date);
         }
         return timeText;
     }

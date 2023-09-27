@@ -4,12 +4,13 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
@@ -26,6 +27,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,10 +48,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     public ImageView fileStatusImage;
     public UnreadCountTextView unreadAudioText;
     public LinearLayout extraInfoArea;
-    protected FrameLayout translationContentFrameLayout;
-    private ImageView translationLoadingImage;
-    protected LinearLayout translationResultLayout;
-    private RotateAnimation translationRotateAnimation;
+    protected FrameLayout bottomContentFrameLayout;
 
     public boolean isForwardMode = false;
     public boolean isMessageDetailMode = false;
@@ -62,9 +61,9 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     protected ReplyPreviewView replyPreviewView;
 
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
-    // 是否显示翻译的内容。合并转发的消息详情界面不用展示翻译内容。
-    // Whether to display the translated content. The merged-forwarded message details activity does not display the translated content.
-    protected boolean isNeedShowTranslation = true;
+    // 是否显示底部的内容。合并转发的消息详情界面不用展示底部内容。
+    // Whether to display the bottom content. The merged-forwarded message details activity does not display the bottom content.
+    protected boolean isNeedShowBottom = true;
     protected boolean isShowRead = false;
     private BaseFragment fragment;
     private RecyclerView recyclerView;
@@ -81,7 +80,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         unreadAudioText = itemView.findViewById(R.id.unread_audio_text);
         replyPreviewView = itemView.findViewById(R.id.msg_reply_preview);
         extraInfoArea = itemView.findViewById(R.id.extra_info_area);
-        translationContentFrameLayout = itemView.findViewById(R.id.translate_content_fl);
+        bottomContentFrameLayout = itemView.findViewById(R.id.bottom_content_fl);
     }
 
     public void setFragment(BaseFragment fragment) {
@@ -170,20 +169,20 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
 
         if (isForwardMode || isMessageDetailMode) {
-            msgArea.setBackgroundResource(R.drawable.chat_message_popup_stroke_border_left);
+            setMessageBubbleBackground(R.drawable.chat_message_popup_stroke_border_left);
             messageStatusImage.setVisibility(View.GONE);
         } else {
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());
+                    setMessageBubbleBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgArea.setBackgroundResource(R.drawable.chat_message_popup_fill_border_right);
+                    setMessageBubbleBackground(R.drawable.chat_message_popup_fill_border_right);
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    msgArea.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                    setMessageBubbleBackground(properties.getLeftBubble().getConstantState().newDrawable());
                 } else {
-                    msgArea.setBackgroundResource(R.drawable.chat_message_popup_stroke_border_left);
+                    setMessageBubbleBackground(R.drawable.chat_message_popup_stroke_border_left);
                 }
             }
 
@@ -279,12 +278,12 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         extraInfoArea.setVisibility(View.GONE);
         setReplyContent(msg);
         setReactContent(msg);
-        if (isNeedShowTranslation) {
-            setTranslationContent(msg);
+        if (isNeedShowBottom) {
+            setBottomContent(msg);
         }
-        setMessageAreaPadding();
+        setMessageBubbleDefaultPadding();
         if (floatMode) {
-            itemView.setPadding(0, 0, 0, 0);
+            itemView.setPaddingRelative(0, 0, 0, 0);
             leftUserIcon.setVisibility(View.GONE);
             rightUserIcon.setVisibility(View.GONE);
             usernameText.setVisibility(View.GONE);
@@ -302,13 +301,13 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         layoutVariableViews(msg, position);
     }
 
-    public void setTranslationContent(TUIMessageBean msg) {
+    public void setBottomContent(TUIMessageBean msg) {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, recyclerView);
         param.put(TUIConstants.TUIChat.FRAGMENT, fragment);
 
-        TUICore.raiseExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.MINIMALIST_EXTENSION_ID, translationContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageBottom.MINIMALIST_EXTENSION_ID, bottomContentFrameLayout, param);
     }
 
     private void loadAvatar(TUIMessageBean msg) {
@@ -397,21 +396,21 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 leftUserIcon.setVisibility(View.VISIBLE);
                 rightUserIcon.setVisibility(View.INVISIBLE);
                 if (needChangedBackground) {
-                    msgArea.setBackgroundResource(R.drawable.chat_message_popup_stroke_border_left);
+                    setMessageBubbleBackground(R.drawable.chat_message_popup_stroke_border_left);
                 }
             } else {
                 leftUserIcon.setVisibility(View.INVISIBLE);
                 rightUserIcon.setVisibility(View.VISIBLE);
                 if (needChangedBackground) {
-                    msgArea.setBackgroundResource(R.drawable.chat_message_popup_fill_border_right);
+                    setMessageBubbleBackground(R.drawable.chat_message_popup_fill_border_right);
                 }
             }
         } else {
             if (needChangedBackground) {
                 if (isShowStart) {
-                    msgArea.setBackgroundResource(R.drawable.chat_message_popup_stroke_border);
+                    setMessageBubbleBackground(R.drawable.chat_message_popup_stroke_border);
                 } else {
-                    msgArea.setBackgroundResource(R.drawable.chat_message_popup_fill_border);
+                    setMessageBubbleBackground(R.drawable.chat_message_popup_fill_border);
                 }
             }
             horizontalPadding = ScreenUtil.dip2px(16);
@@ -420,9 +419,9 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             rightUserIcon.setVisibility(View.INVISIBLE);
         }
         if (nextMessage != null) {
-            rootLayout.setPadding(horizontalPadding, 0, horizontalPadding, verticalPadding);
+            rootLayout.setPaddingRelative(horizontalPadding, 0, horizontalPadding, verticalPadding);
         } else {
-            rootLayout.setPadding(horizontalPadding, 0, horizontalPadding, ScreenUtil.dip2px(5));
+            rootLayout.setPaddingRelative(horizontalPadding, 0, horizontalPadding, ScreenUtil.dip2px(5));
         }
         optimizeMessageContent(isShowAvatar);
     }
@@ -523,11 +522,11 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
     }
 
-    protected void setMessageAreaPadding() {
+    protected void setMessageBubbleDefaultPadding() {
         // after setting background, the padding will be reset
         int paddingHorizontal = itemView.getResources().getDimensionPixelSize(R.dimen.chat_minimalist_message_area_padding_left_right);
         int paddingVertical = itemView.getResources().getDimensionPixelSize(R.dimen.chat_minimalist_message_area_padding_top_bottom);
-        msgArea.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
+        msgArea.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
     }
 
     protected void setGravity(boolean isStart) {
@@ -655,8 +654,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     public void onRecycled() {}
 
-    public void setNeedShowTranslation(boolean needShowTranslation) {
-        isNeedShowTranslation = needShowTranslation;
+    public void setNeedShowBottom(boolean needShowBottom) {
+        isNeedShowBottom = needShowBottom;
     }
 
     public void setShowRead(boolean showRead) {

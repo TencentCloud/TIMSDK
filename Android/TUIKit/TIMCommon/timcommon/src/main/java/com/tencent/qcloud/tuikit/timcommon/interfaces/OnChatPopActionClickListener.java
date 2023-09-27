@@ -20,4 +20,6 @@ public abstract class OnChatPopActionClickListener {
     public void onQuoteMessageClick(TUIMessageBean msg) {}
 
     public void onInfoMessageClick(TUIMessageBean msg) {}
+
+    public void onSpeakerModeSwitchClick(TUIMessageBean msg) {}
 }

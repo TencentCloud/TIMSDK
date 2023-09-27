@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pic">صورة</string>
+    <string name="photo">التقاط صورة</string>
+    <string name="video">تصوير فيديو</string>
+    <string name="file">ملف</string>
+
+    <string name="release_end">إنهاء الإصدار</string>
+    <string name="hold_say">اضغط للتحدث</string>
+
+    <string name="copy_action">نسخ</string>
+    <string name="translate_action">ترجمة</string>
+    <string name="delete_action">حذف</string>
+    <string name="revoke_action">إلغاء</string>
+    <string name="resend_action">إعادة الإرسال</string>
+    <string name="hide_action">إخفاء</string>
+    <string name="chat_speaker_mode_on_action">استخدام مكبر الصوت العالي</string>
+    <string name="chat_speaker_mode_off_action">استخدام مكبر الصوت السماعة</string>
+    <string name="chat_speaker_mode_on_tip">تم التبديل إلى وضع تشغيل مكبر الصوت</string>
+    <string name="chat_speaker_mode_off_tip">تم التبديل إلى وضع تشغيل السماعة</string>
+
+    <string name="copy_success_tip">تم النسخ بنجاح</string>
+
+    <string name="chat_message_detail">تفاصيل الرسالة</string>
+
+    <!-- تحويل الرسائل -->
+
+    <string name="titlebar_back">رجوع</string>
+    <string name="forward_tip">يرجى تحديد الرسالة التي تريد التعامل معها!</string>
+    <string name="forward_mode_onebyone">تحويل رسالة واحدة تلو الأخرى</string>
+    <string name="forward_mode_merge">تحويل مدمج</string>
+    <string name="forward_button">تحويل</string>
+    <string name="reply_button">الرد</string>
+    <string name="quote_button">اقتباس</string>
+    <string name="info_button">تفاصيل</string>
+    <string name="delete_button">حذف</string>
+    <string name="chat_delete_msg_tip">هل أنت متأكد من حذف الرسائل المحددة؟</string>
+    <string name="forward_chats">سجل المحادثة الجماعية</string>
+    <string name="and_text">و</string>
+    <string name="forward_chats_c2c">سجل المحادثة</string>
+    <string name="forward_compatible_text">لا يدعم تحويل الرسائل المدمجة، يرجى الترقية إلى الإصدار الجديد.</string>
+
+    <string name="forward_failed_tip">لا يمكن تحويل الرسائل التي فشلت في الإرسال!</string>
+    <string name="forward_group_note_or_poll_failed_tip">لا يمكن تحويل رسائل الاستطلاع أو الملاحظات في المحادثات الجماعية!</string>
+    <string name="forward_chat_record">سجل المحادثة</string>
+    <string name="forward_oneByOne_limit_number_tip">تم تحويل الرسائل بكمية كبيرة جدًا، لا يمكن تحويلها تلو الأخرى.</string>
+    <string name="and_and">و</string>
+    <string name="be_friend">أصبح صديقًا</string>
+
+    <string name="join_group_tip">لقد تمت دعوتك للانضمام إلى المجموعة: </string>
+    <string name="joined_tip">لقد انضممت إلى المجموعة: </string>
+    <string name="reject_join_tip">تم رفض طلب الانضمام إلى المجموعة: </string>
+    <string name="kick_group">لقد تم طردك من المجموعة: </string>
+
+    <string name="send_two_mins">تم تجاوز مهلة إرسال الرسالة لأكثر من 2 دقائق</string>
+    <string name="revoke_fail">فشل إلغاء الرسالة</string>
+
+    <string name="group_apply_tips">%1$d طلبات الانضمام إلى المجموعة</string>
+    <string name="wait_tip">يرجى المحاولة مرة أخرى في وقت لاحق</string>
+
+    <string name="dismiss_tip_before">المجموعة التي تنتمي إليها</string>
+    <string name="dismiss_tip_after">لم يعد موجود</string>
+    <string name="get_system_notice">تلقيت إشعار نظام مخصص: </string>
+
+    <string name="down_cancle_send">اسحب الإصبع للأعلى لإلغاء الإرسال</string>
+    <string name="say_time_short">مدة الكلام قصيرة جدًا</string>
+    <string name="record_fail">فشل التسجيل</string>
+    <string name="up_cancle_send">أفلت الإصبع لإلغاء الإرسال</string>
+
+    <string name="send">إرسال</string>
+
+    <string name="custom_msg">[رسالة مخصصة]</string>
+    <string name="custom_emoji">[رمز تعبيري مخصص]</string>
+    <string name="picture_extra">[صورة]</string>
+    <string name="video_extra">[فيديو]</string>
+    <string name="audio_extra">[صوت]</string>
+    <string name="file_extra">[ملف]</string>
+    <string name="location_extra">[موقع جغرافي]</string>
+
+    <string name="locate_origin_msg_failed_tip">تعذر تحديد موقع الرسالة الأصلية</string>
+
+    <string name="forward_extra">[سجل المحادثة]</string>
+
+    <string name="create_group">إنشاء مجموعة</string>
+    <string name="create_community">إنشاء مجتمع</string>
+    <string name="etc">إلخ</string>
+    <string name="join_group">%s انضم إلى المجموعة</string>
+    <string name="invite_joined_group">%s دعا %s للانضمام إلى المجموعة</string>
+    <string name="quit_group">%s غادر المجموعة</string>
+    <string name="kick_group_tip">%s قام بإزالة %s من المجموعة</string>
+    <string name="be_group_manager">%s تم تعيينه مديرًا للمجموعة</string>
+    <string name="cancle_group_manager">%s تم إزالة صلاحياته كمدير للمجموعة</string>
+    <string name="modify_group_name_is">%s قام بتغيير اسم المجموعة إلى %s</string>
+    <string name="modify_notice">%s قام بتغيير إعلان المجموعة إلى %s</string>
+    <string name="modify_introduction">%s قام بتغيير وصف المجموعة إلى %s</string>
+    <string name="modify_shut_up_all">%s قام بحظر الدردشة لجميع أعضاء المجموعة</string>
+    <string name="modify_cancel_shut_up_all">%s قام بإلغاء حظر الدردشة لجميع أعضاء المجموعة</string>
+    <string name="move_owner">%s قام بنقل ملكية المجموعة إلى %s</string>
+    <string name="modify_group_avatar">%s قام بتغيير صورة المجموعة</string>
+    <string name="banned">%s تم حظره لمدة %s</string>
+    <string name="cancle_banned">%s تم إلغاء حظر الدردشة له في المجموعة</string>
+    <string name="modify_group_add_opt">%s قام بتغيير طريقة الانضمام إلى المجموعة إلى %s</string>
+    <string name="modify_group_invite_opt">%s قام بتغيير طريقة الدعوة إلى المجموعة إلى %s</string>
+    <string name="group_add_opt_auto_approval">الموافقة التلقائية</string>
+    <string name="group_add_opt_admin_approve">الموافقة من قبل المدير</string>
+    <string name="group_add_opt_join_disable">منع الانضمام</string>
+    <string name="group_add_opt_invite_disable">منع الدعوة</string>
+
+    <string name="typing">الطرف الآخر يكتب...</string>
+    <string name="titlebar_mutiselect">التحديد المتعدد</string>
+    <string name="audio_permission_error">يجب فتح صلاحية التسجيل الصوتي</string>
+    <string name="record_occupied">جهاز التسجيل الصوتي مشغول</string>
+    <string name="record_null">نتيجة التسجيل الصوتي فارغة</string>
+    <string name="record_limit_tips">تم الوصول إلى الحد الأقصى لطول الصوت</string>
+    <string name="record_rejected_for_in_call">جاري المكالمة الصوتية أو المرئية، يرجى المحاولة لاحقًا</string>
+    <string name="record_rejected_for_in_recording">التسجيل الصوتي الحالي لم ينته بعد</string>
+    <string name="play_error_tip">ملف الصوت تالف أو غير موجود</string>
+    <string name="input_tip">لم تدخل الاسم المستعار، يرجى إعادة الملء</string>
+    <string name="chat_camera_occupied_tip">تم احتلال الكاميرا بواسطة وظيفة أخرى</string>
+
+
+    <string name="delivered">تم التوصيل</string>
+    <string name="someone_unread">%d غير مقروء</string>
+    <string name="someone_have_read">%d شخص قرأ</string>
+
+    <string name="un_download">لم يتم التنزيل</string>
+    <string name="downloaded">تم التنزيل</string>
+    <string name="downloading">جاري التنزيل...</string>
+    <string name="sended">تم الإرسال</string>
+    <string name="send_failed">فشل الإرسال</string>
+    <string name="send_failed_file_not_exists">فشل الإرسال، الملف غير موجود</string>
+    <string name="open_file_tips">اختر التطبيق الذي تريد فتح هذا الملف به</string>
+    <string name="sending">جاري الإرسال...</string>
+    <string name="download_file_error">فشل تنزيل الفيديو: </string>
+    <string name="voice_play_tip">لم يتم تنزيل ملف الصوت بعد</string>
+
+    <string name="device_info">نوع الهاتف:</string>
+    <string name="system_version">\nإصدار النظام:</string>
+    <string name="sdk_version">\nإصدار SDK:</string>
+
+    <string name="permission_content">لإستخدام هذه الخاصية، يجب تفعيل الصلاحيات، بما أنك قمت بإيقاف تفعيل الصلاحيات ذات الصلة، يرجى تفعيلها يدويًا</string>
+    <string name="setting">الإعدادات</string>
+
+    <string name="no_event_cancle_tip">في حالة التصفح، لا يوجد حدث cancle</string>
+    <string name="no_event_confirm_tip">في حالة التصفح، لا يوجد حدث confirm</string>
+
+    <string name="record_time_tip">مدة التسجيل قصيرة جدًا</string>
+    <string name="tap_tips">اضغط لالتقاط صورة، اضغط مع الاستمرار لتصوير فيديو</string>
+    <string name="tap_capture">انقر لالتقاط صورة</string>
+    <string name="tap_video">اضغط مع الاستمرار لتصوير فيديو</string>
+
+    <string name="completed">تم الانتهاء</string>
+    <string name="view_original_image">عرض الصورة الأصلية</string>
+
+    <string name="at_all">الجميع</string>
+    <string name="ui_at_all">[@الجميع]</string>
+    <string name="ui_at_me">[شخص ما @ لي]</string>
+    <string name="ui_at_all_me">[@الجميع][شخص ما @ لي]</string>
+    <string name="drafts">[مسودة]</string>
+
+    <string name="group_apply_click_handle">انقر للمعالجة</string>
+    <string name="no_support_msg">رسالة مخصصة غير مدعومة</string>
+
+    <string name="live">مباشر</string>
+    <string name="live_group_live_streaming">جاري البث المباشر</string>
+    <string name="live_group_live_end">إنهاء البث المباشر</string>
+    <string name="live_group_user_live">%s بث مباشر</string>
+    <string name="live_group_live">بث مباشر في المجموعة</string>
+
+
+    <string name="start_group_call">بدء مكالمة جماعية</string>
+    <string name="start_call">بدء مكالمة</string>
+    <string name="cancle_group_call">إلغاء مكالمة جماعية</string>
+    <string name="cancle_call">إلغاء المكالمة</string>
+    <string name="other_line_busy">خط الطرف الآخر مشغول</string>
+    <string name="reject_group_calls">رفض مكالمة جماعية</string>
+    <string name="no_response_call">لا يوجد رد</string>
+    <string name="accept_call">تم الرد</string>
+    <string name="stop_group_call">إنهاء المكالمة الجماعية</string>
+    <string name="stop_call_tip">مدة المكالمة:</string>
+    <string name="line_busy">الخط مشغول</string>
+    <string name="reject_call">رفض المكالمة</string>
+    <string name="invalid_command">أمر المكالمة غير معروف</string>
+    <string name="reject_calls">رفض المكالمات</string>
+    <string name="chat_calling_switch_to_audio">تحويل الفيديو إلى صوتي</string>
+    <string name="chat_calling_switch_to_audio_accept">تأكيد تحويل الفيديو إلى صوتي</string>
+    <string name="chat_calling_unknown_invitation">دعوة غير معروفة</string>
+
+    <string name="test_custom_message">عرض التفاصيل>></string>
+
+    <string name="test_custom_action">رسالة مخصصة</string>
+    <string name="welcome_tip">مرحبًا بك في عائلة Tencent Cloud Chat!</string>
+
+    <string name="resend_tips">هل تريد إعادة الإرسال؟</string>
+    <string name="delete_tips">هل تريد حذف هذه الرسالة؟</string>
+    <string name="reedit_msg">إعادة تحرير الرسالة</string>
+    <string name="save_success">تم الحفظ بنجاح</string>
+    <string name="save_failed">فشل الحفظ</string>
+    <string name="saving_tips">جاري الحفظ...</string>
+
+    <string name="back_to_lastmessage">العودة إلى المركز الأخير</string>
+    <string name="back_to_newmessage">رسالة جديدة</string>
+    <string name="back_to_atmessage_all">\@الجميع</string>
+    <string name="back_to_atmessage_me">شخص ما @ لي</string>
+
+    <!--  بداية الصلاحيات -->
+    <string name="chat_permission_mic_reason_title">%s يطلب الحصول على صلاحية الميكروفون</string>
+    <string name="chat_permission_mic_reason">لتسهيل إرسال رسائل الصوت، والتصوير وإجراء المكالمات الصوتية والمرئية، يرجى السماح لنا بالوصول إلى الميكروفون.</string>
+    <string name="chat_permission_camera_reason_title">%s يطلب الحصول على صلاحية الكاميرا</string>
+    <string name="chat_permission_camera_reason">لتسهيل التقاط الصور والفيديو لإرسالها للأصدقاء، وإجراء المكالمات الفيديو، يرجى السماح لنا بالوصول إلى الكاميرا.</string>
+    <string name="chat_permission_storage_reason_title">%s يطلب الحصول على صلاحية التخزين</string>
+    <string name="chat_permission_storage_reason">لتسهيل حفظ الصور والفيديو على الجهاز، يرجى السماح لنا بالوصول إلى التخزين.</string>
+    <string name="chat_permission_mic_dialog_alert">للسماح بالوصول إلى الميكروفون، اذهب إلى الإعدادات -> التطبيقات -> %s لاستخدام رسائل الصوت، وكاميرات الفيديو، ومكالمات الصوت والفيديو كالمعتاد.</string>
+    <string name="chat_permission_camera_dialog_alert">السماح بالوصول إلى الكاميرا في الإعدادات -> التطبيقات -> %s لاستخدام وظائف التصوير الفوتوغرافي والفيديو والمكالمات الفيديو كالمعتاد.</string>
+    <string name="chat_permission_storage_dialog_alert">السماح بالوصول إلى التخزين في الإعدادات -> التطبيقات -> %s لاستخدام وظيفة حفظ الصور والفيديو بشكل طبيعي.</string>
+    <!--  بداية الصلاحيات -->
+
+    <string name="chat_message_read_receipt">إيصال قراءة الرسالة</string>
+    <string name="chat_i_know">أنا أعلم</string>
+    <string name="chat_no_more_reminders">لا تذكرني مرة أخرى</string>
+    <string name="chat_im_flagship">النسخة الرائدة</string>
+    <string name="chat_buying_guidelines">توضيح الأسعار</string>
+    <string name="chat_im_flagship_edition_update_tip">%s هي وظيفة من وظائف النسخة الرائدة لـ IM، يمكن استخدامها بعد شراء باقة النسخة الرائدة، يرجى الرجوع إلى توضيح الأسعار للحصول على مزيد من المعلومات.</string>
+
+    <string name="chat_reply_detail">تفاصيل الرد</string>
+
+    <string name="chat_not_read">لم يتم القراءة بعد</string>
+
+    <string name="custom_evaluation_message">تقييم الخدمة الحالية</string>
+
+    <string name="chat_input_edit_hint_text">إرسال رسالة</string>
+    <string name="chat_header_not_desc">لا يوجد وصف متاح حاليًا</string>
+    <string name="chat_tips_not_login">غير مسجل الدخول</string>
+
+    <string name="chat_user_status_online">متصل</string>
+    <string name="chat_user_status_offline">غير متصل</string>
+    <string name="chat_user_status_unknown">غير معروف</string>
+
+    <string name="chat_start_audio_call">مكالمة صوتية</string>
+    <string name="chat_start_video_call">مكالمة فيديو</string>
+    <string name="chat_call_reject_caller">تم رفضه من الطرف الآخر</string>
+    <string name="chat_call_reject_callee">تم الرفض</string>
+    <string name="chat_call_cancel_caller">تم الإلغاء</string>
+    <string name="chat_call_cancel_callee">تم الإلغاء من الطرف الآخر</string>
+    <string name="chat_call_timeout_caller">لا يوجد رد من الطرف الآخر</string>
+    <string name="chat_call_timeout_callee">تم الإلغاء من الطرف الآخر</string>
+    <string name="chat_call_line_busy_caller">الخط مشغول عند الطرف الآخر</string>
+    <string name="chat_call_line_busy_callee">تم الإلغاء من الطرف الآخر</string>
+    <string name="chat_group_call_send">تم بدء مكالمة جماعية</string>
+    <string name="chat_group_call_end">تم إنهاء المكالمة</string>
+    <string name="chat_group_call_no_answer">لم يتم الرد</string>
+    <string name="chat_group_call_reject_format">%s رفض مكالمة جماعية</string>
+    <string name="chat_group_call_accept_format">%s قبل المكالمة</string>
+    <string name="chat_group_call_switch_to_audio_format">%s تحويل الفيديو إلى صوتي</string>
+    <string name="chat_group_call_confirm_switch_to_audio_format">%s تأكيد تحويل الفيديو إلى صوتي</string>
+
+    <string name="chat_quick_tap_message_default_action_name">لطمة</string>
+    <string name="chat_quick_tap_message_action_from_me">أنا %s "%s"</string>
+    <string name="chat_quick_tap_message_action_to_me">"%s" %s لي</string>
+    <string name="chat_quick_tap_message_action">"%s" %s "%s"</string>
+</resources>

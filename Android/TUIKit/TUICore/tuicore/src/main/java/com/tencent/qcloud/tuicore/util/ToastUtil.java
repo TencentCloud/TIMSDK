@@ -16,8 +16,16 @@ public class ToastUtil {
         toastMessage(message, true, Gravity.BOTTOM);
     }
 
+    public static void toastLongMessageCenter(final String message) {
+        toastMessage(message, true, Gravity.CENTER);
+    }
+
     public static void toastShortMessage(final String message) {
         toastMessage(message, false, Gravity.BOTTOM);
+    }
+
+    public static void toastShortMessageCenter(final String message) {
+        toastMessage(message, false, Gravity.CENTER);
     }
 
     public static void show(final String message, boolean isLong, int gravity) {

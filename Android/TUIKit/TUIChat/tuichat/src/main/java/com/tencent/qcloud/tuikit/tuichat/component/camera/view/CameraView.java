@@ -138,7 +138,6 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
         setFlashMode();
         mCaptureLayout = view.findViewById(R.id.capture_layout);
         mCaptureLayout.setDuration(duration);
-        mCaptureLayout.setIconSrc(iconLeft, iconRight);
         mFocusView = view.findViewById(R.id.focus_view);
         mVideoView.getHolder().addCallback(this);
 

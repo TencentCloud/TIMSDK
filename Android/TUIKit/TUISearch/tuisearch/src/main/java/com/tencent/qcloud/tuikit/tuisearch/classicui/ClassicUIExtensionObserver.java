@@ -22,14 +22,14 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
     }
 
     @Override
-    public void onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {
+    public boolean onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {
         if (TextUtils.equals(extensionID, TUIConstants.TUIConversation.Extension.ConversationListHeader.CLASSIC_EXTENSION_ID)) {
             ViewGroup viewGroup = null;
             if (parentView instanceof ViewGroup) {
                 viewGroup = (ViewGroup) parentView;
             }
             if (viewGroup == null) {
-                return;
+                return false;
             }
             View searchView = LayoutInflater.from(getAppContext()).inflate(R.layout.search_bar_layout, null);
             viewGroup.setVisibility(View.VISIBLE);
@@ -41,7 +41,10 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
                 }
             });
             viewGroup.addView(searchView);
+            return true;
         }
+
+        return false;
     }
 
     @Override

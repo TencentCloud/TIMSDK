@@ -1,10 +1,12 @@
 package com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget;
 
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
@@ -261,11 +263,17 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static class ContactControllerViewHolder extends RecyclerView.ViewHolder {
         TextView controllerName;
         TextView unreadText;
+        ImageView arrow;
 
         public ContactControllerViewHolder(View itemView) {
             super(itemView);
             controllerName = itemView.findViewById(R.id.controller_name);
             unreadText = itemView.findViewById(R.id.unread_count);
+            arrow = itemView.findViewById(R.id.arrow_icon);
+            Drawable arrowDrawable = arrow.getBackground();
+            if (arrowDrawable != null) {
+                arrowDrawable.setAutoMirrored(true);
+            }
             unreadText.setVisibility(View.GONE);
         }
     }

@@ -28,14 +28,14 @@ public class DisplayUtils {
         final int subHeight = dip2px(context, 180);
         for (int i = 2; i >= 0; i--) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(subWidth, subHeight);
-            layoutParams.leftMargin = width - lrMargin - subWidth;
+            layoutParams.setMarginStart(width - lrMargin - subWidth);
             layoutParams.topMargin = height - (bottomMargin + midMargin * (i + 1) + subHeight * i) - subHeight;
             list.add(layoutParams);
         }
 
         for (int i = 2; i >= 0; i--) {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(subWidth, subHeight);
-            layoutParams.leftMargin = lrMargin;
+            layoutParams.setMarginStart(lrMargin);
             layoutParams.topMargin = height - (bottomMargin + midMargin * (i + 1) + subHeight * i) - subHeight;
             list.add(layoutParams);
         }
@@ -62,14 +62,14 @@ public class DisplayUtils {
         int grid4H = (height - margin * 2) / 2;
 
         RelativeLayout.LayoutParams layoutParams0 = new RelativeLayout.LayoutParams(grid4W, grid4H);
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams0.addRule(RelativeLayout.CENTER_VERTICAL);
-        layoutParams0.leftMargin = margin;
+        layoutParams0.setMarginStart(margin);
 
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(grid4W, grid4H);
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL);
-        layoutParams1.rightMargin = margin;
+        layoutParams1.setMarginEnd(margin);
 
         ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);
@@ -84,16 +84,16 @@ public class DisplayUtils {
         int grid3H = (height - margin * 2) / 2;
 
         RelativeLayout.LayoutParams layoutParams0 = new RelativeLayout.LayoutParams(grid3W, grid3H);
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams0.topMargin = margin;
-        layoutParams0.leftMargin = margin;
+        layoutParams0.setMarginStart(margin);
 
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(grid3W, grid3H);
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams1.topMargin = margin;
-        layoutParams1.rightMargin = margin;
+        layoutParams1.setMarginEnd(margin);
 
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(grid3W, grid3H);
         layoutParams2.addRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -114,28 +114,28 @@ public class DisplayUtils {
         int grid4H = (height - margin * 2) / 2;
 
         RelativeLayout.LayoutParams layoutParams0 = new RelativeLayout.LayoutParams(grid4W, grid4H);
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams0.topMargin = margin;
-        layoutParams0.leftMargin = margin;
+        layoutParams0.setMarginStart(margin);
 
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(grid4W, grid4H);
-        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams1.topMargin = margin;
-        layoutParams1.rightMargin = margin;
+        layoutParams1.setMarginEnd(margin);
 
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(grid4W, grid4H);
-        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams2.bottomMargin = margin;
         layoutParams2.topMargin = margin + grid4H;
-        layoutParams2.leftMargin = margin;
+        layoutParams2.setMarginStart(margin);
 
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(grid4W, grid4H);
-        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams3.bottomMargin = margin;
         layoutParams3.topMargin = margin + grid4H;
-        layoutParams3.rightMargin = margin;
+        layoutParams3.setMarginEnd(margin);
 
         ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);
@@ -152,52 +152,52 @@ public class DisplayUtils {
         int grid9H = (height - margin * 2) / 3;
 
         RelativeLayout.LayoutParams layoutParams0 = new RelativeLayout.LayoutParams(grid9W, grid9H);
-        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams0.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams0.topMargin = margin;
-        layoutParams0.leftMargin = margin;
+        layoutParams0.setMarginStart(margin);
 
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(grid9W, grid9H);
         layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams1.topMargin = margin;
-        layoutParams1.leftMargin = margin + grid9W;
+        layoutParams1.setMarginStart(margin + grid9W);
 
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(grid9W, grid9H);
-        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         layoutParams2.topMargin = margin;
-        layoutParams2.rightMargin = margin;
+        layoutParams2.setMarginEnd(margin);
 
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(grid9W, grid9H);
-        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        layoutParams3.leftMargin = margin;
+        layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_START);
+        layoutParams3.setMarginStart(margin);
         layoutParams3.topMargin = margin + grid9H;
 
         RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(grid9W, grid9H);
         layoutParams4.topMargin = margin + grid9H;
-        layoutParams4.leftMargin = margin + grid9W;
+        layoutParams4.setMarginStart(margin + grid9W);
 
         RelativeLayout.LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(grid9W, grid9H);
-        layoutParams5.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams5.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams5.topMargin = margin + grid9H;
-        layoutParams5.rightMargin = margin;
+        layoutParams5.setMarginEnd(margin);
 
         RelativeLayout.LayoutParams layoutParams6 = new RelativeLayout.LayoutParams(grid9W, grid9H);
-        layoutParams6.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams6.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams6.bottomMargin = margin;
-        layoutParams6.leftMargin = margin;
+        layoutParams6.setMarginStart(margin);
         layoutParams6.topMargin = margin + grid9H * 2;
 
         RelativeLayout.LayoutParams layoutParams7 = new RelativeLayout.LayoutParams(grid9W, grid9H);
         layoutParams7.bottomMargin = margin;
         layoutParams7.topMargin = margin + grid9H * 2;
-        layoutParams7.leftMargin = margin + grid9W;
+        layoutParams7.setMarginStart(margin + grid9W);
 
         RelativeLayout.LayoutParams layoutParams8 = new RelativeLayout.LayoutParams(grid9W, grid9H);
-        layoutParams8.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams8.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams8.bottomMargin = margin;
         layoutParams8.topMargin = margin + grid9H * 2;
-        layoutParams8.rightMargin = margin;
+        layoutParams8.setMarginEnd(margin);
 
         ArrayList<RelativeLayout.LayoutParams> list = new ArrayList<>();
         list.add(layoutParams0);

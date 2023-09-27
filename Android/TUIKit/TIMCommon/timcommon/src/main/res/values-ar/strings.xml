@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_file_tips">اختر التطبيق الذي تريد استخدامه لفتح هذا الملف</string>
+
+    <string name="date_year_short">سنة</string>
+    <string name="date_month_short">شهر</string>
+    <string name="date_day_short">يوم</string>
+    <string name="date_hour_short">ساعة</string>
+    <string name="date_minute_short">دقيقة</string>
+    <string name="date_second_short">ثانية</string>
+    <string name="date_yesterday">أمس</string>
+    <string name="chat_time_today">اليوم</string>
+
+    <string name="setting">جاري الإعداد</string>
+    <string name="setting_fail">فشل الإعداد!</string>
+    <string name="setting_success">تم الإعداد بنجاح!</string>
+    <string name="default_text">الخلفية الافتراضية</string>
+    <string name="core_next_step">الخطوة التالية</string>
+
+    <string name="revoke_tips_you">لقد قمت بسحب رسالة</string>
+    <string name="revoke_tips">تم سحب رسالة</string>
+    <string name="revoke_tips_other">قام الطرف الآخر بسحب رسالة</string>
+    <string name="chat_reply_num">%d ردود</string>
+    <string name="has_read">تمت القراءة</string>
+    <string name="unread">غير مقروء</string>
+    <string name="has_all_read">تمت القراءة بالكامل</string>
+    <string name="someone_has_read">%d شخص قرأ</string>
+
+    <string name="translation_support">توفر دعم الترجمة من Tencent Cloud Chat</string>
+    <string name="timcommon_no_support_msg">رسالة مخصصة غير مدعومة</string>
+</resources>

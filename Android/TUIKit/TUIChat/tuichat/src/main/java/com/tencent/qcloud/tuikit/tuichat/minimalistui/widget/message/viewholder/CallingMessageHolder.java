@@ -74,11 +74,13 @@ public class CallingMessageHolder extends TextMessageHolder {
         ImageSpan imageSpan;
         if (isStart) {
             imageSpan = new ImageSpan(itemView.getContext(), resID);
+            imageSpan.getDrawable().setAutoMirrored(true);
             stringBuilder.insert(0, "iconA");
             stringBuilder.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), "icon".length(), "iconA".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             stringBuilder.setSpan(imageSpan, 0, "icon".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else {
             imageSpan = new ImageSpan(itemView.getContext(), resID);
+            imageSpan.getDrawable().setAutoMirrored(true);
             stringBuilder.append("Aicon");
             stringBuilder.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), stringBuilder.length() - "Aicon".length(),
                 stringBuilder.length() - "icon".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

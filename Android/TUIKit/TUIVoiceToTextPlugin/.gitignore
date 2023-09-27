@@ -1,0 +1,18 @@
+# OS X Files
+.DS_Store
+**/.DS_Store
+
+
+# Gradle files
+*/.gradle/
+*.gradle/
+
+# IDEA Files
+/tuivoicetotextplugin/.idea/
+/tuivoicetotextplugin/build/
+local.properties
+/.codecc/
+/build.yml
+*.iml
+*.idea/
+/captures

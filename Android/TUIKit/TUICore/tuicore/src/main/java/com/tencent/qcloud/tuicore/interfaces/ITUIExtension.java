@@ -13,7 +13,9 @@ public interface ITUIExtension {
         return new HashMap<>();
     }
 
-    default void onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {}
+    default boolean onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {
+        return false;
+    }
     
     default List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
         return new ArrayList<>();

@@ -48,6 +48,18 @@ object DeviceUtils {
         return false
     }
 
+    fun isAppRunningForeground(context: Context): Boolean {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?
+        val runningAppProcessInfos = activityManager?.runningAppProcesses ?: return false
+        val packageName = context.packageName
+        for (appProcessInfo in runningAppProcessInfos) {
+            if (appProcessInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcessInfo.processName == packageName) {
+                return true
+            }
+        }
+        return false
+    }
+
     fun getScreenWidth(context: Context): Int {
         val metric = DisplayMetrics()
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager

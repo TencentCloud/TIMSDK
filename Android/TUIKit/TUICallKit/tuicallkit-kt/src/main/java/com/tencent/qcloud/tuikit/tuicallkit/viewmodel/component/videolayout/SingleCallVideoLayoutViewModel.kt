@@ -10,8 +10,8 @@ class SingleCallVideoLayoutViewModel {
     public var remoteUser: User
     public var isCameraOpen = LiveData<Boolean>()
     public var isFrontCamera = LiveData<TUICommonDefine.Camera>()
-    public var reverseRenderLayout = false
-
+    public var currentReverseRenderView = false
+    public var lastReverseRenderView = false
     init {
         selfUser = TUICallState.instance.selfUser.get()
         var remoteUserList = TUICallState.instance.remoteUserList.get()
@@ -22,5 +22,11 @@ class SingleCallVideoLayoutViewModel {
         }
         isCameraOpen = TUICallState.instance.isCameraOpen
         isFrontCamera = TUICallState.instance.isFrontCamera
+        lastReverseRenderView = TUICallState.instance.reverse1v1CallRenderView
+    }
+
+    public fun reverseRenderLayout(reverse: Boolean) {
+        currentReverseRenderView = reverse
+        TUICallState.instance.reverse1v1CallRenderView = reverse
     }
 }

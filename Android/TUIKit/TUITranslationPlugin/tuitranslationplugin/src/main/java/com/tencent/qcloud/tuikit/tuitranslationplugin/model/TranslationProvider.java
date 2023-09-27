@@ -20,12 +20,43 @@ import com.tencent.qcloud.tuikit.tuitranslationplugin.TUITranslationConfigs;
 import com.tencent.qcloud.tuikit.tuitranslationplugin.util.TUITranslationLog;
 import com.tencent.qcloud.tuikit.tuitranslationplugin.util.TUITranslationUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class TranslationProvider {
     private static final String TAG = "TranslationProvider";
+
+    /**
+     * 消息翻译初始化状态
+     *
+     * message translation unknown
+     */
+    public static final int MSG_TRANSLATE_STATUS_UNKNOWN = 0;
+    /**
+     * 消息翻译隐藏状态
+     *
+     * message translation hidden
+     */
+    public static final int MSG_TRANSLATE_STATUS_HIDDEN = 1;
+    /**
+     * 消息翻译进行中状态
+     *
+     * message translation loading
+     */
+    public static final int MSG_TRANSLATE_STATUS_LOADING = 2;
+    /**
+     * 消息翻译展示状态
+     *
+     * message translation shown
+     */
+    public static final int MSG_TRANSLATE_STATUS_SHOWN = 3;
+
+    private static final String TRANSLATION_KEY = "translation";
+    private static final String TRANSLATION_VIEW_STATUS_KEY = "translation_view_status";
 
     private V2TIMMessage v2TIMMessage;
 
@@ -43,13 +74,13 @@ public class TranslationProvider {
             return;
         }
 
-        if (messageBean.getTranslationStatus() == TUIMessageBean.MSG_TRANSLATE_STATUS_HIDDEN) {
-            messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN);
-            TUITranslationUtils.callbackOnSuccess(callback, messageBean.getTranslation());
+        if (getTranslationStatus(v2TIMMessage) == MSG_TRANSLATE_STATUS_HIDDEN) {
+            setTranslationStatus(v2TIMMessage, MSG_TRANSLATE_STATUS_SHOWN);
+            TUITranslationUtils.callbackOnSuccess(callback, getTranslationText(v2TIMMessage));
             return;
         }
 
-        messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_LOADING);
+        setTranslationStatus(v2TIMMessage, MSG_TRANSLATE_STATUS_LOADING);
         String targetLanguageCode = TUITranslationConfigs.getInstance().getTargetLanguageCode();
 
         List<String> atUserIDList = v2TIMMessage.getGroupAtUserList();
@@ -98,7 +129,7 @@ public class TranslationProvider {
 
                 @Override
                 public void onError(int code, String desc) {
-                    messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_UNKNOWN);
+                    setTranslationStatus(v2TIMMessage, MSG_TRANSLATE_STATUS_UNKNOWN);
                     TUITranslationLog.e(TAG, "translateMessage getUsersInfo error code = " + code + ",des = " + desc);
                     TUITranslationUtils.callbackOnError(callback, TAG, BaseConstants.ERR_INVALID_PARAMETERS, "translateMessage-getUsersInfo failed");
                 }
@@ -120,7 +151,7 @@ public class TranslationProvider {
                     translateResult += result;
                 }
             }
-            messageBean.setTranslation(translateResult);
+            saveTranslationResult(v2TIMMessage, translateResult, MSG_TRANSLATE_STATUS_SHOWN);
             TUITranslationUtils.callbackOnSuccess(callback, translateResult);
             return;
         }
@@ -144,16 +175,101 @@ public class TranslationProvider {
                     translateResult += result;
                 }
 
-                messageBean.setTranslation(translateResult);
+                saveTranslationResult(v2TIMMessage, translateResult, MSG_TRANSLATE_STATUS_SHOWN);
                 TUITranslationUtils.callbackOnSuccess(callback, translateResult);
             }
 
             @Override
             public void onError(int code, String desc) {
-                messageBean.setTranslationStatus(TUIMessageBean.MSG_TRANSLATE_STATUS_UNKNOWN);
+                setTranslationStatus(v2TIMMessage, MSG_TRANSLATE_STATUS_UNKNOWN);
                 TUITranslationLog.e(TAG, "translateText error code = " + code + ",des = " + desc);
                 TUITranslationUtils.callbackOnError(callback, code, desc);
             }
         });
+    }
+
+    public void saveTranslationResult(V2TIMMessage v2TIMMessage, String text, int status) {
+        if (v2TIMMessage != null) {
+            String localCustomData = v2TIMMessage.getLocalCustomData();
+            JSONObject customJson = new JSONObject();
+            try {
+                if (!TextUtils.isEmpty(localCustomData)) {
+                    customJson = new JSONObject(localCustomData);
+                }
+                customJson.put(TRANSLATION_KEY, text);
+                customJson.put(TRANSLATION_VIEW_STATUS_KEY, status);
+                v2TIMMessage.setLocalCustomData(customJson.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setTranslationStatus(V2TIMMessage v2TIMMessage, int status) {
+        if (status != MSG_TRANSLATE_STATUS_UNKNOWN && status != MSG_TRANSLATE_STATUS_HIDDEN && status != MSG_TRANSLATE_STATUS_SHOWN
+                && status != MSG_TRANSLATE_STATUS_LOADING) {
+            return;
+        }
+
+        if (v2TIMMessage != null) {
+            String localCustomData = v2TIMMessage.getLocalCustomData();
+            JSONObject customJson = new JSONObject();
+            try {
+                if (!TextUtils.isEmpty(localCustomData)) {
+                    customJson = new JSONObject(localCustomData);
+                }
+
+                if (customJson.has(TRANSLATION_VIEW_STATUS_KEY)) {
+                    int oldTranslationStatus = customJson.getInt(TRANSLATION_VIEW_STATUS_KEY);
+                    if (oldTranslationStatus == status) {
+                        return;
+                    }
+                }
+                
+                customJson.put(TRANSLATION_VIEW_STATUS_KEY, status);
+                v2TIMMessage.setLocalCustomData(customJson.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String getTranslationText(V2TIMMessage v2TIMMessage) {
+        String result = "";
+        if (v2TIMMessage != null) {
+            String localCustomData = v2TIMMessage.getLocalCustomData();
+            if (TextUtils.isEmpty(localCustomData)) {
+                return result;
+            }
+            try {
+                JSONObject customJson = new JSONObject(localCustomData);
+                if (customJson.has(TRANSLATION_KEY)) {
+                    result = customJson.getString(TRANSLATION_KEY);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+    public int getTranslationStatus(V2TIMMessage v2TIMMessage) {
+        int translationStatus = MSG_TRANSLATE_STATUS_UNKNOWN;
+        if (v2TIMMessage != null) {
+            String localCustomData = v2TIMMessage.getLocalCustomData();
+            if (TextUtils.isEmpty(localCustomData)) {
+                return translationStatus;
+            }
+            try {
+                JSONObject customJson = new JSONObject(localCustomData);
+                if (customJson.has(TRANSLATION_VIEW_STATUS_KEY)) {
+                    translationStatus = customJson.getInt(TRANSLATION_VIEW_STATUS_KEY);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return translationStatus;
     }
 }

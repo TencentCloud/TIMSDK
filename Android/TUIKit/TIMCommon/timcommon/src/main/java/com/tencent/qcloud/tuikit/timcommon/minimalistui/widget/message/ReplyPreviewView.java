@@ -27,6 +27,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class ReplyPreviewView extends FrameLayout {
@@ -77,7 +78,7 @@ public class ReplyPreviewView extends FrameLayout {
             firstImg.setVisibility(GONE);
             secondImg.setVisibility(GONE);
             thirdImg.setVisibility(GONE);
-            replyText.setText(getResources().getString(R.string.chat_reply_num, messageRepliesBean.getRepliesSize()));
+            replyText.setText(String.format(Locale.US, getResources().getString(R.string.chat_reply_num), messageRepliesBean.getRepliesSize()));
             List<MessageRepliesBean.ReplyBean> repliesBeanList = messageRepliesBean.getReplies();
             List<String> iconList = getReplyUserIconLt(repliesBeanList);
             if (iconList == null || iconList.isEmpty()) {

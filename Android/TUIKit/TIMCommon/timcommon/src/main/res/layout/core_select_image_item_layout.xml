@@ -8,6 +8,7 @@
     <com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
         android:background="@drawable/trans_bg"
         app:corner_radius="8dp">
 
@@ -34,10 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true">
 
         <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
@@ -53,7 +52,6 @@
             android:layout_height="21dp"
             android:layout_alignTop="@id/select_border"
             android:layout_alignEnd="@id/select_border"
-            android:layout_alignRight="@id/select_border"
             android:layout_margin="4dp"
             android:background="?attr/core_selected_icon"
             android:visibility="visible" />

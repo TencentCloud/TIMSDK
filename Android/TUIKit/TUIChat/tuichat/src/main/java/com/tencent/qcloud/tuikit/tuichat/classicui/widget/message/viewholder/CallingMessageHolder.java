@@ -44,6 +44,7 @@ public class CallingMessageHolder extends TextMessageHolder {
             } else if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
                 mRightView.setImageResource(R.drawable.ic_self_video_call);
             }
+            mRightView.getDrawable().setAutoMirrored(true);
             unreadAudioText.setVisibility(View.GONE);
         } else {
             mRightView.setVisibility(View.GONE);
@@ -53,6 +54,7 @@ public class CallingMessageHolder extends TextMessageHolder {
             } else if (callingMessageBean.getCallType() == CallingMessageBean.ACTION_ID_VIDEO_CALL) {
                 mLeftView.setImageResource(R.drawable.ic_other_video_call);
             }
+            mLeftView.getDrawable().setAutoMirrored(true);
             unreadAudioText.setVisibility(callingMessageBean.isShowUnreadPoint() ? View.VISIBLE : View.GONE);
         }
 

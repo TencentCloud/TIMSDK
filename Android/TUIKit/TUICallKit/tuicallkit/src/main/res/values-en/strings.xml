@@ -1,16 +1,12 @@
 <resources>
     <string name="tuicalling_contact_default_name">test 123</string>
-    <string name="tuicalling_toast_call_error_msg">Error [%1$d]:%2$s.</string>
     <string name="tuicalling_toast_user_reject_call">%1$s declined the call.</string>
     <string name="tuicalling_toast_user_not_response">%1$s didn’t answer.</string>
     <string name="tuicalling_toast_user_busy">%1$s is busy.</string>
-    <string name="tuicalling_toast_user_cancel_call">%1$s cancelled the call.</string>
-    <string name="tuicalling_toast_user_timeout">%1$s timed out.</string>
     <string name="tuicalling_toast_enable_mute">Muted</string>
     <string name="tuicalling_toast_disable_mute">Unmuted</string>
     <string name="tuicalling_toast_speaker">Speaker</string>
     <string name="tuicalling_toast_use_handset">Earpiece</string>
-    <string name="tuicalling_called_time_format">%02d:%02d</string>
     <string name="tuicalling_toast_user_end">%s end the call.</string>
     <string name="tuicalling_other_party_network_low_quality">The other party\'s network connection is poor</string>
     <string name="tuicalling_self_network_low_quality">Your network connection is poor</string>
@@ -26,14 +22,11 @@
     <string name="tuicalling_text_speaker">Speaker</string>
     <string name="tuicalling_text_dialing">Answer</string>
     <string name="tuicalling_text_camera">Camera</string>
-    <string name="tuicalling_switch_camera_hint">Turn on your camera first</string>
     <string name="tuicalling_switch_audio_call">Switch to Voice Call</string>
     <string name="tuicalling_btn_cancel">Cancel</string>
     <string name="tuicalling_video_call">Video Call</string>
     <string name="tuicalling_audio_call">Voice Call</string>
-    <string name="tuicalling_user_kicked_offline">You have been kicked off the line. Please log in again!</string>
-    <string name="tuicalling_user_sig_expired">Your user signature information has expired</string>
-    <string name="tuicalling_user_exceed_limit">TUICalling currently supports call with up to 9 people.For larger conference calls,try using TUIRoom</string>
+    <string name="tuicalling_user_exceed_limit">TUICallKit currently supports call with up to 9 people.For larger conference calls,try using TUIRoom</string>
     <string name="tuicalling_wait_resonse">Waiting</string>
 
     <string name="tuicalling_permission_camera">Camera</string>
@@ -44,11 +37,10 @@
     <string name="tuicalling_permission_title">%s applies for access to the %s</string>
     <string name="tuicalling_permission_mic_reason">Needs access to your microphone, and it can be used for functions such as Audio/Video Call, Group Audio/Video Call etc.</string>
     <string name="tuicalling_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Video Call, Group Video Call etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
-    <string name="tuicalling_permission_bluetooth_reason">Needs access to your bluetooth，and it can be user for bluetooth headset.</string>
+    <string name="tuicalling_permission_bluetooth_reason">To ensure that you can connect to Bluetooth function for communication during Audio/Video Call, we need to request permission of nearby devices.</string>
 
     <string name="tuicalling_package_not_purchased">You do not have TUICallKit package, please open the free experience in the console or purchase the official package</string>
     <string name="tuicalling_package_not_support">The package you purchased does not support this ability</string>
-    <string name="tuicalling_status_is_not_accept">You can only use this function after you accept the call</string>
     <string name="tuicalling_groupid_is_empty">groupId is empty</string>
     <string name="tuicalling_have_a_new_call">You have a new call</string>
 
@@ -61,10 +53,14 @@
     <string name="tuicallkit_record_done">Done</string>
     <string name="tuicallkit_record_clear">Clear</string>
     <string name="tuicallkit_group_recall_unsupport">Multiple call records do not support recalls</string>
+    <string name="tuicallkit_record_result_unknown">Unknown</string>
+    <string name="tuicallkit_record_result_missed">Missed</string>
+    <string name="tuicallkit_record_result_incoming">Incoming</string>
+    <string name="tuicallkit_record_result_outgoing">Outgoing</string>
 
     <string name="tuicallkit_group_title_add_user">Add User</string>
     <string name="tuicallkit_group_hint_you">(you)</string>
     <string name="tuicallkit_group_btn_ok">Confirm</string>
 
-    <string name="tuicallkit_float_permission_hint">Please enable both \"Display pop-up window while running in the background\" and \"Display pop-up Window\" permissions</string>
+    <string name="tuicallkit_error_in_peer_blacklist">The identifier is in blacklist. Failed to send this message!</string>
 </resources>

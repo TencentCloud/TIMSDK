@@ -8,16 +8,15 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    android:paddingLeft="14.85dp"
+    android:paddingStart="14.85dp"
     android:paddingTop="12dp">
 
     <CheckBox
         android:id="@+id/select_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="6.23dp"
+        android:layout_marginEnd="6.23dp"
         android:button="@drawable/checkbox_selector"
         android:visibility="gone" />
 
@@ -35,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginStart="-10dp"
             android:layout_marginTop="-8dp"
             android:gravity="center"
@@ -48,7 +47,7 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:visibility="gone"
@@ -60,7 +59,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="1.37dp">
 
         <TextView
@@ -68,10 +67,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="180dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:ellipsize="end"
-            android:gravity="top|left"
+            android:gravity="top|start"
             android:singleLine="true"
             android:textColor="@color/black_font_color"
             android:lineHeight="23.04sp"
@@ -82,8 +81,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/conversation_list_time_margin_right"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/conversation_list_time_margin_right"
             android:textColor="@color/conversation_item_time_color"
             android:textSize="11.52sp"
             android:lineHeight="15.84sp"/>
@@ -93,8 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/conversation_list_time_margin_right"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/conversation_list_time_margin_right"
             android:src="@drawable/conversation_mark_banner"
             android:visibility="gone" />
 
@@ -103,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/view_line"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
             android:ellipsize="end"
@@ -153,15 +152,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/view_line"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
             android:layout_marginTop="1.37dp"
             android:visibility="gone"
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
-            android:layout_marginRight="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_toEndOf="@+id/conversation_draft">
 
             <ImageView
@@ -188,9 +187,9 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/view_line"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="48dp"
+            android:layout_marginEnd="48dp"
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
-            android:layout_toRightOf="@+id/message_status_layout"
+            android:layout_toEndOf="@+id/message_status_layout"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/list_bottom_text_bg"
@@ -203,9 +202,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/view_line"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="@dimen/conversation_list_time_margin_right"
+            android:layout_marginEnd="@dimen/conversation_list_time_margin_right"
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
             android:gravity="center"
             android:includeFontPadding="false"

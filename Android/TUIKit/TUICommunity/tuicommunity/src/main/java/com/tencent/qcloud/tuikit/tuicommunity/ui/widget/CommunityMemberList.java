@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -35,6 +38,7 @@ import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityMemberBean;
 import com.tencent.qcloud.tuikit.tuicommunity.presenter.CommunityPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityMemberActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ICommunityMemberList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -278,12 +282,12 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
                             }
                         });
                         int x = view.getWidth() / 2;
-                        int y = -view.getHeight() / 3;
+                        int y = -view.getHeight() / 2;
                         int popHeight = ScreenUtil.dip2px(45) * 3;
                         if (y + popHeight + view.getY() + view.getHeight() > CommunityMemberList.this.getBottom()) {
                             y = y - popHeight;
                         }
-                        popupWindow.showAsDropDown(view, x, y);
+                        popupWindow.showAsDropDown(view, x, y, Gravity.CENTER);
                         return true;
                     }
                 });

@@ -25,16 +25,16 @@
         android:textSize="12sp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/group_manage_add_mute_member"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@color/white"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -45,14 +45,14 @@
             android:scaleType="centerCrop"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginEnd="8dp"/>
 
         <TextView
             android:text="@string/group_add_mute_member_tip"
             android:textSize="12sp"
             android:textColor="#147AFF"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>

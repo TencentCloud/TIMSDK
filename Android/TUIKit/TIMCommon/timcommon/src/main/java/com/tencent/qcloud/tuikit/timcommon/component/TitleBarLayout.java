@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.timcommon.component;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
+
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
@@ -53,7 +56,7 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
             canReturn = array.getBoolean(R.styleable.TitleBarLayout_title_bar_can_return, false);
             array.recycle();
         }
-        inflate(context, R.layout.title_bar_layout, this);
+        inflate(context, R.layout.timcommon_title_bar_layout, this);
         mTitleLayout = findViewById(R.id.page_title_layout);
         mLeftGroup = findViewById(R.id.page_title_left_group);
         mRightGroup = findViewById(R.id.page_title_right_group);
@@ -61,6 +64,10 @@ public class TitleBarLayout extends LinearLayout implements ITitleBarLayout {
         mRightTitle = findViewById(R.id.page_title_right_text);
         mCenterTitle = findViewById(R.id.page_title);
         mLeftIcon = findViewById(R.id.page_title_left_icon);
+        Drawable leftIconDrawable = mLeftIcon.getBackground();
+        if (leftIconDrawable != null) {
+            leftIconDrawable.setAutoMirrored(true);
+        }
         mRightIcon = findViewById(R.id.page_title_right_icon);
         unreadCountTextView = findViewById(R.id.new_message_total_unread);
 

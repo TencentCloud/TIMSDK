@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
@@ -127,8 +128,10 @@ public class GroupInfoFragment extends BaseFragment {
         Intent intent = new Intent();
         intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.chat_background_title));
         intent.putExtra(ImageSelectActivity.SPAN_COUNT, 2);
-        intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(186));
-        intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(124));
+        int itemWidth = (int) (ScreenUtil.getScreenWidth(TUIGroupService.getAppContext()) * 0.42f);
+        int itemHeight = (int) (itemWidth / 1.5f);
+        intent.putExtra(ImageSelectActivity.ITEM_WIDTH, itemWidth);
+        intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, itemHeight);
         intent.putExtra(ImageSelectActivity.DATA, faceList);
         if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
             || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
@@ -136,7 +139,7 @@ public class GroupInfoFragment extends BaseFragment {
         } else {
             intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
         }
-        intent.putExtra(ImageSelectActivity.NEED_DOWLOAD_LOCAL, true);
+        intent.putExtra(ImageSelectActivity.NEED_DOWNLOAD_LOCAL, true);
 
         TUICore.startActivityForResult(this, ImageSelectActivity.class, intent.getExtras(), new ActivityResultCallback<ActivityResult>() {
             @Override
@@ -212,8 +215,9 @@ public class GroupInfoFragment extends BaseFragment {
         Intent intent = new Intent();
         intent.putExtra(ImageSelectActivity.TITLE, getResources().getString(R.string.group_choose_avatar));
         intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-        intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
-        intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+        int itemWidth = (int) (ScreenUtil.getScreenWidth(TUIGroupService.getAppContext()) * 0.2f);
+        intent.putExtra(ImageSelectMinimalistActivity.ITEM_WIDTH, itemWidth);
+        intent.putExtra(ImageSelectMinimalistActivity.ITEM_HEIGHT, itemWidth);
         intent.putExtra(ImageSelectActivity.DATA, faceList);
         intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(originAvatarUrl, originAvatarUrl, false));
         TUICore.startActivityForResult(this, ImageSelectActivity.class, intent.getExtras(), new ActivityResultCallback<ActivityResult>() {

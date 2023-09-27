@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="translation_target_language">ترجمة الرسالة إلى</string>
+    <string name="translate_action">ترجمة</string>
+    <string name="translation_support">تم توفير دعم الترجمة من قبل Tencent Cloud Chat</string>
+    <string name="translation_fail">فشل الترجمة</string>
+    <string name="translation_language_not_support">اللغة المستخدمة للترجمة غير مدعومة حاليًا، يرجى التحويل إلى لغة أخرى</string>
+    <string name="at_all">الجميع</string>
+    <string name="copy_action">نسخ</string>
+    <string name="forward_action">إعادة توجيه</string>
+    <string name="hide_action">إخفاء</string>
+    <string name="copy_success_tip">تم النسخ بنجاح</string>
+</resources>

@@ -222,6 +222,7 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
         public GroupMemberViewHodler(@NonNull View itemView) {
             super(itemView);
             arrowRight = itemView.findViewById(R.id.rightArrow);
+            arrowRight.getBackground().setAutoMirrored(true);
             checkBox = itemView.findViewById(R.id.group_member_check_box);
             memberIcon = itemView.findViewById(R.id.group_member_icon);
             memberIcon.setRadius(ScreenUtil.dip2px(20));

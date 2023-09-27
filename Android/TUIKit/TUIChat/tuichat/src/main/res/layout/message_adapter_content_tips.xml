@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:includeFontPadding="false"
+        android:textDirection="locale"
         android:gravity="center"
         android:textColor="@color/text_tips_color"
         android:clickable="true"
@@ -19,7 +20,7 @@
 
     <TextView
         android:id="@+id/re_edit"
-        android:layout_marginLeft="@dimen/btn_margin_left"
+        android:layout_marginStart="@dimen/btn_margin_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

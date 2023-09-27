@@ -30,6 +30,7 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIForwardChatMinimal
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.ReplyDetailsView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ReplyPresenter;
+import java.util.Locale;
 import java.util.Map;
 
 public class ChatReplyDialogFragment extends DialogFragment implements IReplyMessageHandler {
@@ -91,7 +92,7 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
             RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageContent, null, type);
             if (holder instanceof MessageBaseHolder) {
                 ((MessageContentHolder) holder).isMessageDetailMode = true;
-                ((MessageContentHolder) holder).setTranslationContent(originMessage);
+                ((MessageContentHolder) holder).setBottomContent(originMessage);
                 ((MessageContentHolder) holder).setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
@@ -115,7 +116,8 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
             MessageRepliesBean repliesBean = originMessage.getMessageRepliesBean();
             if (repliesBean != null) {
                 presenter.findReplyMessages(repliesBean);
-                title.setText(getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.chat_reply_num, repliesBean.getRepliesSize()));
+                title.setText(String.format(
+                    Locale.US, getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.chat_reply_num), repliesBean.getRepliesSize()));
             }
 
             cancelBtn.setOnClickListener(new View.OnClickListener() {

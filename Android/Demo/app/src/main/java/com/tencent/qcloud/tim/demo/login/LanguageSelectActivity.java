@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,15 +41,21 @@ public class LanguageSelectActivity extends BaseLightActivity {
     private TitleBarLayout titleBarLayout;
     private RecyclerView recyclerView;
     private final Map<String, String> languageMap = new HashMap<>();
-    private final List<String> languageList = new ArrayList<>();
+    private final List<Pair<String, String>> languageList = new ArrayList<>();
     private SelectAdapter adapter;
     private String currentLanguage;
-
+    private String currentLanguageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initView();
+    }
+
+    private void initView() {
         setContentView(R.layout.activity_theme_language_select);
+        View view = findViewById(android.R.id.content);
+        view.setLayoutDirection(getResources().getConfiguration().getLayoutDirection());
         titleBarLayout = findViewById(R.id.demo_select_title_bar);
         recyclerView = findViewById(R.id.theme_recycler_view);
         titleBarLayout.setTitle(getResources().getString(R.string.demo_language_title), ITitleBarLayout.Position.MIDDLE);
@@ -86,12 +93,12 @@ public class LanguageSelectActivity extends BaseLightActivity {
                 } else {
                     currentLanguage = language;
                 }
-                int index = TextUtils.equals(language, "zh") ? 0 : 1;
-                adapter.setSelectedItem(index);
+                selectCurrentLanguage();
                 adapter.notifyDataSetChanged();
                 TUIThemeManager.getInstance().changeLanguage(LanguageSelectActivity.this, currentLanguage);
                 changeTitleLanguage();
                 notifyLanguageChanged();
+                initView();
             }
         };
     }
@@ -108,14 +115,28 @@ public class LanguageSelectActivity extends BaseLightActivity {
     }
 
     private void initData() {
-        String simplifiedChinese = "简体中文";
-        String english = "English";
+        languageList.clear();
+        languageMap.clear();
+        currentLanguageName = getString(R.string.demo_current_language);
+        Pair<String, String> simplifiedChinese = Pair.create(getString(R.string.demo_language_chinese_key), getString(R.string.demo_language_chinese));
+        Pair<String, String> english = Pair.create(getString(R.string.demo_language_english_key), getString(R.string.demo_language_english));
+        Pair<String, String> arabic = Pair.create(getString(R.string.demo_language_arabic_key), getString(R.string.demo_language_arabic));
         languageList.add(simplifiedChinese);
-        languageMap.put(simplifiedChinese, "zh");
+        languageMap.put(simplifiedChinese.first, TUIThemeManager.LANGUAGE_ZH_CN);
         languageList.add(english);
-        languageMap.put(english, "en");
-        if (TextUtils.equals(currentLanguage, "zh")) {
+        languageMap.put(english.first, TUIThemeManager.LANGUAGE_EN);
+        languageList.add(arabic);
+        languageMap.put(arabic.first, TUIThemeManager.LANGUAGE_AR);
+        selectCurrentLanguage();
+    }
+
+    private void selectCurrentLanguage() {
+        if (TextUtils.equals(currentLanguage, TUIThemeManager.LANGUAGE_ZH_CN)) {
             adapter.setSelectedItem(0);
+        } else if (TextUtils.equals(currentLanguage, TUIThemeManager.LANGUAGE_EN)){
+            adapter.setSelectedItem(1);
+        } else if (TextUtils.equals(currentLanguage, TUIThemeManager.LANGUAGE_AR)) {
+            adapter.setSelectedItem(2);
         } else {
             adapter.setSelectedItem(1);
         }
@@ -143,8 +164,12 @@ public class LanguageSelectActivity extends BaseLightActivity {
 
         @Override
         public void onBindViewHolder(@NonNull SelectAdapter.SelectViewHolder holder, int position) {
-            String language = languageList.get(position);
-            holder.name.setText(language);
+            Pair<String, String> languagePair = languageList.get(position);
+            holder.name.setText(languagePair.first);
+            holder.subName.setText(languagePair.second);
+            if (TextUtils.equals(holder.subName.getText(), currentLanguageName)) {
+                holder.subName.setVisibility(View.GONE);
+            }
             if (selectedItem == position) {
                 holder.selectedIcon.setVisibility(View.VISIBLE);
             } else {
@@ -153,7 +178,7 @@ public class LanguageSelectActivity extends BaseLightActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onClick(languageMap.get(language));
+                    onItemClickListener.onClick(languageMap.get(languagePair.first));
                 }
             });
         }
@@ -165,10 +190,12 @@ public class LanguageSelectActivity extends BaseLightActivity {
 
         class SelectViewHolder extends RecyclerView.ViewHolder {
             TextView name;
+            TextView subName;
             ImageView selectedIcon;
             public SelectViewHolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.name);
+                subName = itemView.findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.sub_name);
                 selectedIcon = itemView.findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.selected_icon);
             }
         }

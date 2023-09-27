@@ -34,6 +34,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinim
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -463,7 +464,11 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.right = leftRightSpace;
+            if (LayoutUtil.isRTL()) {
+                outRect.left = leftRightSpace;
+            } else {
+                outRect.right = leftRightSpace;
+            }
             outRect.bottom = topBottomSpace;
         }
     }

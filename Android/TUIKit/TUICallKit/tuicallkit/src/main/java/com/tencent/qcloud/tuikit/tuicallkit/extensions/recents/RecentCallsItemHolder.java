@@ -67,7 +67,16 @@ public class RecentCallsItemHolder extends RecyclerView.ViewHolder {
                 ? R.drawable.tuicallkit_record_ic_video_call : R.drawable.tuicallkit_ic_audio_call;
         mImageMediaType.setImageDrawable(context.getResources().getDrawable(imageId));
 
-        mTextCallStatus.setText(String.valueOf(records.result));
+        String resultMsg = context.getString(R.string.tuicallkit_record_result_unknown);
+        if (TUICallDefine.CallRecords.Result.Missed.equals(records.result)) {
+            resultMsg = context.getString(R.string.tuicallkit_record_result_missed);
+        } else if (TUICallDefine.CallRecords.Result.Incoming.equals(records.result)) {
+            resultMsg = context.getString(R.string.tuicallkit_record_result_incoming);
+        } else if (TUICallDefine.CallRecords.Result.Outgoing.equals(records.result)) {
+            resultMsg = context.getString(R.string.tuicallkit_record_result_outgoing);
+        }
+        mTextCallStatus.setText(resultMsg);
+
         mTextCallTime.setText(DateTimeUtil.getTimeFormatText(new Date(records.beginTime)));
 
         List<String> list = new ArrayList<>();

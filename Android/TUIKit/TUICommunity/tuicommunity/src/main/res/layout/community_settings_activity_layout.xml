@@ -20,13 +20,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:gravity="center_vertical"
+                android:textAlignment="viewStart"
+                android:gravity="center_vertical|start"
 
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
@@ -105,6 +106,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:textAlignment="viewStart"
                 android:text="@string/community_community_settings"
                 android:textColor="#000000"
                 android:textSize="12sp" />
@@ -134,6 +136,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:textAlignment="viewStart"
                 android:text="@string/community_personal_settings"
                 android:textColor="#000000"
                 android:textSize="12sp" />

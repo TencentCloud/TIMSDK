@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="contact_subtitle">جهات الاتصال</string>
+    <string name="group_subtitle">المجموعات</string>
+    <string name="chat_record">سجل الدردشة</string>
+    <string name="more_contact_label">المزيد من جهات الاتصال</string>
+    <string name="more_group_label">المزيد من المجموعات</string>
+    <string name="more_conversation_label">المزيد من سجل الدردشة</string>
+    <string name="chat_record_reference">سجل الدردشة ذو الصلة</string>
+    <string name="chat_records">سجلات الدردشة ذات الصلة</string>
+    <string name="search_more_label">المزيد</string>
+    <string name="search_ID_label">المعرف: </string>
+
+    <string name="nick_name">الاسم المستعار: </string>
+    <string name="include_group_id">تتضمن معرف المجموعة: </string>
+    <string name="include_group_member">تتضمن أعضاء المجموعة: </string>
+    <string name="ui_at_all">[@الجميع]</string>
+    <string name="ui_at_me">[شخص ما @ لي]</string>
+    <string name="ui_at_all_me">[@الجميع][شخص ما @ لي]</string>
+    <string name="open_file_tips">حدد التطبيق الذي تريد فتح هذا الملف به</string>
+    <string name="custom_msg">[رسالة مخصصة]</string>
+    <string name="custom_emoji">[رمز تعبيري متحرك]</string>
+    <string name="picture_extra">[صورة]</string>
+    <string name="video_extra">[فيديو]</string>
+    <string name="audio_extra">[صوت]</string>
+    <string name="file_extra">[ملف]</string>
+    <string name="forward_extra">[سجل المحادثة]</string>
+    <string name="revoke_tips_you">لقد قمت بسحب رسالة</string>
+    <string name="revoke_tips">تم سحب رسالة</string>
+    <string name="revoke_tips_other">قام الطرف الآخر بسحب رسالة</string>
+    <string name="create_group">إنشاء مجموعة</string>
+    <string name="etc">إلخ</string>
+    <string name="join_group">%s انضم إلى المجموعة</string>
+    <string name="invite_joined_group">%s دعا %s للانضمام إلى المجموعة</string>
+    <string name="quit_group">%s غادر المجموعة</string>
+    <string name="kick_group_tip">%s قام بإزالة %s من المجموعة</string>
+    <string name="be_group_manager">%s تم تعيينه مديرًا للمجموعة</string>
+    <string name="cancle_group_manager">%s تم إزالة صلاحياته كمدير للمجموعة</string>
+    <string name="modify_group_name_is">%s قام بتغيير اسم المجموعة إلى %s</string>
+    <string name="modify_notice">%s قام بتغيير إعلان المجموعة إلى %s</string>
+    <string name="modify_introduction">%s قام بتغيير وصف المجموعة إلى %s</string>
+    <string name="modify_shut_up_all">%s قام بحظر الدردشة لجميع أعضاء المجموعة</string>
+    <string name="modify_cancel_shut_up_all">%s قام بإلغاء حظر الدردشة لجميع أعضاء المجموعة</string>
+    <string name="move_owner">%s قام بنقل ملكية المجموعة إلى %s</string>
+    <string name="modify_group_avatar">%s قام بتغيير صورة المجموعة</string>
+    <string name="banned">%s تم حظره لمدة %s</string>
+    <string name="cancle_banned">%s تم إلغاء حظر الدردشة له في المجموعة</string>
+
+    <!-- البحث -->
+    <string name="search">البحث</string>
+    <string name="cancle">إلغاء</string>
+
+    <string name="search_not_found_info">لا توجد محادثات أو جهات اتصال أو سجلات مطابقة</string>
+
+    <string name="live">مباشر</string>
+    <string name="start_group_call">بدء مكالمة جماعية</string>
+    <string name="start_call">بدء مكالمة</string>
+    <string name="cancle_group_call">إلغاء مكالمة جماعية</string>
+    <string name="cancle_call">إلغاء المكالمة</string>
+    <string name="other_line_busy">الخط مشغول لدى الطرف الآخر</string>
+    <string name="reject_group_calls">رفض مكالمة جماعية</string>
+    <string name="no_response_call">لا يوجد رد</string>
+    <string name="accept_call">تم الرد</string>
+    <string name="stop_group_call">إنهاء مكالمة جماعية</string>
+    <string name="stop_call_tip">إنهاء المكالمة، مدة المكالمة:</string>
+    <string name="line_busy">الخط مشغول</string>
+    <string name="reject_call">رفض المكالمة</string>
+    <string name="invalid_command">أمر المكالمة غير معروف</string>
+    <string name="reject_calls">رفض المكالمات</string>
+
+    <string name="search_i_know">أنا أعلم</string>
+    <string name="search_no_more_reminders">لا تذكرني مرة أخرى</string>
+    <string name="search_im_flagship">نسخة الرائد</string>
+    <string name="search_buying_guidelines">توضيح الأسعار</string>
+    <string name="search_im_flagship_edition_update_tip">الوظيفة %s هي وظيفة نسخة الرائد لـ Tencent Cloud Chat، يمكن استخدامها بعد شراء باقة نسخة الرائد، يرجى الرجوع إلى توضيح الأسعار للحصول على مزيد من المعلومات.</string>
+</resources>

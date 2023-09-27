@@ -130,7 +130,7 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                     TextView delete = new TextView(holder.itemView.getContext());
                     delete.setText(R.string.group_remove_member);
                     int padding = ScreenUtil.getPxByDp(10);
-                    delete.setPadding(padding, padding, padding, padding);
+                    delete.setPaddingRelative(padding, padding, padding, padding);
                     delete.setBackgroundResource(R.drawable.text_border);
                     int[] location = new int[2];
                     v.getLocationInWindow(location);

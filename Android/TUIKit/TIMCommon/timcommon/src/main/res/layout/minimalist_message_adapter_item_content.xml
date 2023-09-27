@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MinimalistMessageLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MinimalistMessageLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/message_content_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="false"
-    android:paddingLeft="16dp"
+    android:paddingStart="16dp"
     android:paddingTop="0dp"
-    android:paddingRight="16dp"
+    android:paddingEnd="16dp"
     android:paddingBottom="25dp">
 
     <TextView
@@ -28,9 +29,9 @@
         android:id="@+id/select_checkbox"
         android:layout_width="21.12dp"
         android:layout_height="21.12dp"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="11.52dp"
+        android:layout_marginEnd="11.52dp"
         android:background="@drawable/chat_checkbox_selector"
         android:button="@null"
         android:visibility="gone"
@@ -53,7 +54,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignBottom="@id/msg_content_ll"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="8dp"
         android:visibility="gone"
         app:default_image="?attr/core_default_user_icon"
@@ -66,8 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/message_top_time_tv"
-        android:layout_toLeftOf="@id/right_user_icon_view"
-        android:layout_toRightOf="@id/left_user_icon_view"
+        android:layout_toEndOf="@id/left_user_icon_view"
+        android:layout_toStartOf="@id/right_user_icon_view"
         android:gravity="start"
         android:orientation="horizontal">
 
@@ -126,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="2dp"
-                    android:layout_toRightOf="@id/left_user_icon_view"
+                    android:layout_toEndOf="@id/left_user_icon_view"
                     android:textColor="#0365F9"
                     android:textSize="12sp"
                     android:visibility="gone"
@@ -163,11 +164,11 @@
         android:gravity="start"
         android:layout_marginTop="4dp"
         android:layout_below="@id/msg_content_ll"
-        android:layout_toLeftOf="@id/right_user_icon_view"
-        android:layout_toRightOf="@id/left_user_icon_view">
+        android:layout_toStartOf="@id/right_user_icon_view"
+        android:layout_toEndOf="@id/left_user_icon_view">
         <!-- translation content area -->
         <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
-            android:id="@+id/translate_content_fl"
+            android:id="@+id/bottom_content_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/minimalist_translation_area_bg"

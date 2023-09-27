@@ -18,6 +18,7 @@
         android:id="@+id/avatar_img"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:scaleType="centerCrop"
         app:round_radius="16dp" />
 
     <TextView

@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
@@ -91,15 +92,12 @@ public class ChatPopMenu {
         indicatorHeight = context.getResources().getDimensionPixelOffset(R.dimen.chat_pop_menu_indicator_height);
 
         // add space to show shadow
-        popupView.setPadding(popupView.getPaddingLeft() + SHADOW_WIDTH, popupView.getPaddingTop() + SHADOW_WIDTH, popupView.getPaddingRight() + SHADOW_WIDTH,
-            popupView.getPaddingBottom() + SHADOW_WIDTH);
+        popupView.setPaddingRelative(popupView.getPaddingLeft() + SHADOW_WIDTH, popupView.getPaddingTop() + SHADOW_WIDTH,
+            popupView.getPaddingRight() + SHADOW_WIDTH, popupView.getPaddingBottom() + SHADOW_WIDTH);
         // actions
         actionRecyclerView = popupView.findViewById(R.id.chat_pop_menu_content_view);
         actionGridLayoutManager = new GridLayoutManager(context, ACTION_COLUMN_NUM);
         actionRecyclerView.setLayoutManager(actionGridLayoutManager);
-        int spaceWidth = context.getResources().getDimensionPixelSize(R.dimen.chat_pop_menu_item_space_width);
-        int spaceHeight = context.getResources().getDimensionPixelSize(R.dimen.chat_pop_menu_item_space_height);
-        actionRecyclerView.addItemDecoration(new GridDecoration(null, ACTION_COLUMN_NUM, spaceWidth, spaceHeight));
         menuAdapter = new MenuAdapter();
         actionRecyclerView.setAdapter(menuAdapter);
 
@@ -108,7 +106,7 @@ public class ChatPopMenu {
         recentFaceView = popupView.findViewById(R.id.recent_faces);
         recentFaceView.setItemAnimator(null);
         LinearLayoutManager recentLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
-        int recentSpacing = ScreenUtil.dip2px(13.44f);
+        int recentSpacing = popupView.getResources().getDimensionPixelOffset(R.dimen.chat_pop_menu_recent_face_space);
         recentFaceView.addItemDecoration(new GridDecoration(null, RECENT_EMOJI_NUM + 1, recentSpacing, 0));
         recentFaceView.setLayoutManager(recentLayoutManager);
         RecentFaceAdapter recentFaceAdapter = new RecentFaceAdapter();
@@ -227,7 +225,7 @@ public class ChatPopMenu {
 
     private void showAtLocation() {
         // reset padding
-        popupView.setPadding(popupView.getPaddingLeft(), popupView.getPaddingTop() - paddingTopOffset, popupView.getPaddingRight(),
+        popupView.setPaddingRelative(popupView.getPaddingLeft(), popupView.getPaddingTop() - paddingTopOffset, popupView.getPaddingRight(),
             popupView.getPaddingBottom() - paddingBottomOffset);
         paddingTopOffset = 0;
         paddingBottomOffset = 0;
@@ -256,12 +254,12 @@ public class ChatPopMenu {
             y = (int) (location[1] + anchorHeight + indicatorHeight);
             // add paddingTop to show indicator
             paddingTopOffset = indicatorHeight;
-            popupView.setPadding(
+            popupView.setPaddingRelative(
                 popupView.getPaddingLeft(), popupView.getPaddingTop() + paddingTopOffset, popupView.getPaddingRight(), popupView.getPaddingBottom());
         } else {
             // add paddingBottom to show indicator
             paddingBottomOffset = indicatorHeight;
-            popupView.setPadding(
+            popupView.setPaddingRelative(
                 popupView.getPaddingLeft(), popupView.getPaddingTop(), popupView.getPaddingRight(), popupView.getPaddingBottom() + paddingBottomOffset);
             y = y - indicatorHeight;
         }
@@ -281,7 +279,7 @@ public class ChatPopMenu {
     public void setChatPopMenuActionList(List<ChatPopMenuAction> actionList) {
         chatPopMenuActionList.clear();
         chatPopMenuActionList.addAll(actionList);
-        if (!chatPopMenuActionList.isEmpty() && chatPopMenuActionList.size() < ACTION_COLUMN_NUM) {
+        if (!isShowFaces && !chatPopMenuActionList.isEmpty() && chatPopMenuActionList.size() < ACTION_COLUMN_NUM) {
             actionGridLayoutManager.setSpanCount(chatPopMenuActionList.size());
         }
         menuAdapter.notifyDataSetChanged();
@@ -558,8 +556,16 @@ public class ChatPopMenu {
             int position = parent.getChildAdapterPosition(view);
             int column = position % columnNum;
 
-            outRect.left = column * leftRightSpace / columnNum;
-            outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int left = column * leftRightSpace / columnNum;
+            int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+
+            if (LayoutUtil.isRTL()) {
+                outRect.left = right;
+                outRect.right = left;
+            } else {
+                outRect.left = left;
+                outRect.right = right;
+            }
 
             // grid has multi rows, add top spacing
             if (position >= columnNum) {
@@ -630,8 +636,16 @@ public class ChatPopMenu {
             int position = parent.getChildAdapterPosition(view);
             int column = position % columnNum;
 
-            outRect.left = column * leftRightSpace / columnNum;
-            outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int left = column * leftRightSpace / columnNum;
+            int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+
+            if (LayoutUtil.isRTL()) {
+                outRect.left = right;
+                outRect.right = left;
+            } else {
+                outRect.left = left;
+                outRect.right = right;
+            }
 
             if (position >= columnNum) {
                 outRect.top = topBottomSpace;

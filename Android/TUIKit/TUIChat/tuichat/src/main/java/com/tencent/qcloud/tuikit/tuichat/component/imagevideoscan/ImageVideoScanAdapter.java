@@ -1,9 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.net.Uri;
@@ -20,23 +17,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.tencent.imsdk.v2.V2TIMDownloadCallback;
-import com.tencent.imsdk.v2.V2TIMElem;
-import com.tencent.imsdk.v2.V2TIMImageElem;
-import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.imsdk.v2.V2TIMVideoElem;
-import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
-import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -50,32 +41,23 @@ import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.video.VideoVie
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.video.proxy.IPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import java.io.File;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAdapter.ViewHolder> {
     private static final String TAG = ImageVideoScanAdapter.class.getSimpleName();
 
-    private static final String DOWNLOAD_ORIGIN_IMAGE_PATH = "downloadOriginImagePath";
-    private static final String BROADCAST_DOWNLOAD_COMPLETED_ACTION = "PhotoViewActivityDownloadOriginImageCompleted";
-
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
-    private BroadcastReceiver downloadReceiver;
-    private Context mContext = null;
+    private Context mContext;
 
     private TUIMessageBean mOldLocateMessage;
     private TUIMessageBean mNewLocateMessage;
 
     private Handler durationHandler;
     private boolean mIsVideoPlay = false;
-    private String mCacheImagePath = null;
-
-    private Set<String> loadingIdList = new HashSet<>();
 
     public ImageVideoScanAdapter() {
         mContext = TUIChatService.getAppContext();
@@ -114,7 +96,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         if (messageBean == null) {
             return;
         }
-
+        holder.setMessageID(messageBean.getId());
         holder.playSeekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -126,6 +108,9 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.progressContainer.setVisibility(View.GONE);
         holder.progressContainer.setOnClickListener(null);
         holder.progressListener = progress -> {
+            if (!TextUtils.equals(holder.getMessageID(), messageBean.getId())) {
+                return;
+            }
             holder.progressContainer.setVisibility(View.VISIBLE);
             holder.progressIcon.setVisibility(View.GONE);
             holder.progressText.setVisibility(View.VISIBLE);
@@ -139,9 +124,9 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         ProgressPresenter.registerProgressListener(messageBean.getId(), holder.progressListener);
 
         if (messageBean instanceof ImageMessageBean) {
-            performPhotoView(holder, messageBean, position);
+            performPhotoView(holder, (ImageMessageBean) messageBean);
         } else if (messageBean instanceof VideoMessageBean) {
-            performVideoView(holder, messageBean, position);
+            performVideoView(holder, (VideoMessageBean) messageBean);
         } else {
             TUIChatLog.d(TAG, "error message type");
         }
@@ -170,82 +155,39 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         notifyDataSetChanged();
     }
 
-    private void loadPhotoView(ViewHolder holder, ImageMessageBean imageMessageBean, int positon) {
-        final List<ImageMessageBean.ImageBean> imgs = imageMessageBean.getImageBeanList();
-        String imagePath = null;
-        String originImagePath = TUIChatUtils.getOriginImagePath(imageMessageBean);
-        if (!TextUtils.isEmpty(originImagePath)) {
-            imagePath = originImagePath;
-        } else {
-            String largePath = TUIChatUtils.generateLargeImagePath(imageMessageBean);
-            File file = new File(largePath);
-            if (file.exists()) {
-                imagePath = largePath;
-            }
+    private void loadPhotoView(ViewHolder holder, ImageMessageBean imageMessageBean) {
+        String imagePath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN);
+        boolean isOriginImage = true;
+        if (!FileUtil.isFileExists(imagePath)) {
+            imagePath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_LARGE);;
+            isOriginImage = false;
         }
-        if (TextUtils.isEmpty(imagePath)) {
-            for (int i = 0; i < imgs.size(); i++) {
-                final ImageMessageBean.ImageBean img = imgs.get(i);
-                if (img.getType() == ImageMessageBean.IMAGE_TYPE_LARGE) {
-                    final String path = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_LARGE);
-                    if (loadingIdList.contains(path)) {
-                        return;
-                    }
-                    loadingIdList.add(path);
-                    img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
-                        @Override
-                        public void onProgress(long currentSize, long totalSize) {
-                            int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
-                            ProgressPresenter.updateProgress(imageMessageBean.getId(), progress);
+        if (!FileUtil.isFileExists(imagePath)) {
+            holder.downloadLargeImageCallback = new TUIValueCallback() {
+                @Override
+                public void onProgress(long currentSize, long totalSize) {
+                    int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
+                    ProgressPresenter.updateProgress(imageMessageBean.getId(), progress);
 
-                            TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
-                        }
-
-                        @Override
-                        public void onError(int code, String desc) {
-                            loadingIdList.remove(path);
-                            TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                            loadingIdList.remove(path);
-                            ProgressPresenter.updateProgress(imageMessageBean.getId(), 100);
-                            ThreadUtils.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    notifyDataSetChanged();
-                                }
-                            });
-                        }
-                    });
-                    break;
+                    TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                 }
-            }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
+                }
+
+                @Override
+                public void onSuccess(Object obj) {
+                    ProgressPresenter.updateProgress(imageMessageBean.getId(), 100);
+                    notifyItemChanged(imageMessageBean);
+                }
+            };
+            ChatFileDownloadPresenter.downloadImage(imageMessageBean, ImageMessageBean.IMAGE_TYPE_LARGE, holder.downloadLargeImageCallback);
             return;
         }
 
-        V2TIMImageElem.V2TIMImage currentOriginalImage = null;
-        String largePath = null;
-        for (int i = 0; i < imgs.size(); i++) {
-            ImageMessageBean.ImageBean img = imgs.get(i);
-            if (img.getType() == ImageMessageBean.IMAGE_TYPE_ORIGIN) {
-                currentOriginalImage = img.getV2TIMImage();
-            }
-            if (img.getType() == ImageMessageBean.IMAGE_TYPE_LARGE) {
-                largePath = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_LARGE);
-            }
-        }
-        String localImgPath = TUIChatUtils.getOriginImagePath(imageMessageBean);
-        boolean isOriginImg = localImgPath != null && currentOriginalImage != null && !TextUtils.isEmpty(localImgPath)
-            && currentOriginalImage.getSize() == FileUtil.getFileSize(localImgPath);
-        String previewImgPath;
-        if (!isOriginImg) {
-            previewImgPath = largePath;
-        } else {
-            previewImgPath = localImgPath;
-        }
-        Uri uri = FileUtil.getUriFromPath(previewImgPath);
+        Uri uri = FileUtil.getUriFromPath(imagePath);
         if (uri != null) {
             holder.progressBar.setVisibility(View.GONE);
         }
@@ -254,74 +196,24 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.photoView.setOnMatrixChangeListener(new MatrixChangeListener());
         holder.photoView.setOnPhotoTapListener(new PhotoTapListener());
         holder.photoView.setOnSingleFlingListener(new SingleFlingListener());
-        // 如果是原图就直接显示原图， 否则显示缩略图，点击查看原图按钮后下载原图显示
-        // If it is the original image, the original image will be displayed directly, otherwise, the thumbnail image will be displayed. Click the View Original
+        // 如果是原图就直接显示大图， 否则显示缩略图，点击查看原图按钮后下载原图显示
+        // If it is the original image, the original image will be displayed directly, otherwise, the large image will be displayed. Click the View Original
         // Image button to download the original image and display it.
 
-        loadImageIntoView(holder.photoView, previewImgPath);
-        if (!isOriginImg) {
-            V2TIMImageElem.V2TIMImage finalMCurrentOriginalImage = currentOriginalImage;
+        loadImageIntoView(holder.photoView, imagePath);
+        if (!isOriginImage) {
             holder.viewOriginalButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (finalMCurrentOriginalImage == null) {
-                        TUIChatLog.e(TAG, "finalMCurrentOriginalImage is null");
-                        return;
-                    }
-                    final String path = ImageUtil.generateImagePath(finalMCurrentOriginalImage.getUUID(), finalMCurrentOriginalImage.getType());
-
-                    finalMCurrentOriginalImage.downloadImage(path, new V2TIMDownloadCallback() {
-                        @Override
-                        public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
-                            int progress = Math.round(progressInfo.getCurrentSize() * 1.0f * 100 / progressInfo.getTotalSize());
-                            if (holder.viewOriginalButton.getVisibility() != View.INVISIBLE && holder.viewOriginalButton.getVisibility() != View.GONE) {
-                                holder.viewOriginalButton.setText(progress + "%");
-                            }
-                        }
-
-                        @Override
-                        public void onError(int code, String desc) {
-                            ToastUtil.toastLongMessage("Download origin image failed , errCode = " + code + ", " + desc);
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                            ThreadUtils.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loadImageIntoView(holder.photoView, path);
-                                    holder.viewOriginalButton.setText(mContext.getString(R.string.completed));
-                                    holder.viewOriginalButton.setOnClickListener(null);
-                                    holder.viewOriginalButton.setVisibility(View.INVISIBLE);
-                                    Intent intent = new Intent();
-                                    intent.setAction(BROADCAST_DOWNLOAD_COMPLETED_ACTION);
-                                    intent.putExtra(DOWNLOAD_ORIGIN_IMAGE_PATH, path);
-                                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-                                }
-                            });
-                        }
-                    });
+                    downloadOriginImageAndShow(imageMessageBean, holder);
                 }
             });
             // 因为图片还没下载下来 ， 加载失败, 接收下载成功的广播来刷新显示
             // Because the picture has not been downloaded yet, the loading fails, receive the broadcast of the successful download to refresh the display
-            if (!TextUtils.isEmpty(localImgPath)) {
+            String originPath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN);
+            if (ChatFileDownloadPresenter.isDownloading(originPath)) {
                 ToastUtil.toastShortMessage(mContext.getString(R.string.downloading));
-                downloadReceiver = new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        String action = intent.getAction();
-                        if (BROADCAST_DOWNLOAD_COMPLETED_ACTION.equals(action)) {
-                            String originImagePath = intent.getStringExtra(DOWNLOAD_ORIGIN_IMAGE_PATH);
-                            if (originImagePath != null) {
-                                loadImageIntoView(holder.photoView, originImagePath);
-                            }
-                        }
-                    }
-                };
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(BROADCAST_DOWNLOAD_COMPLETED_ACTION);
-                LocalBroadcastManager.getInstance(mContext).registerReceiver(downloadReceiver, filter);
+                downloadOriginImageAndShow(imageMessageBean, holder);
             } else {
                 holder.viewOriginalButton.setVisibility(View.VISIBLE);
                 holder.viewOriginalButton.setText(R.string.view_original_image);
@@ -331,22 +223,46 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         }
     }
 
-    private void performPhotoView(ViewHolder holder, TUIMessageBean messageBean, int positon) {
-        holder.photoViewLayout.setVisibility(View.VISIBLE);
+    private void downloadOriginImageAndShow(ImageMessageBean imageMessageBean, ViewHolder holder) {
+        holder.downloadOriginImageCallback = new TUIValueCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                if (TextUtils.equals(imageMessageBean.getId(), holder.getMessageID())) {
+                    String originPath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN);
+                    loadImageIntoView(holder.photoView, originPath);
+                    holder.viewOriginalButton.setText(mContext.getString(R.string.completed));
+                    holder.viewOriginalButton.setOnClickListener(null);
+                    holder.viewOriginalButton.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                ToastUtil.toastLongMessage(ErrorMessageConverter.convertIMError(errorCode, errorMessage));
+            }
+
+            @Override
+            public void onProgress(long current, long total) {
+                if (!TextUtils.equals(imageMessageBean.getId(), holder.getMessageID())) {
+                    return;
+                }
+                int progress = Math.round(current * 1.0f * 100 / total);
+                if (holder.viewOriginalButton.getVisibility() != View.INVISIBLE && holder.viewOriginalButton.getVisibility() != View.GONE) {
+                    holder.viewOriginalButton.setText(progress + "%");
+                }
+            }
+        };
+        ChatFileDownloadPresenter.downloadImage(imageMessageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN, holder.downloadOriginImageCallback);
+    }
+
+    private void performPhotoView(ViewHolder holder, ImageMessageBean imageMessageBean) {
+        holder.videoViewLayout.setVisibility(View.GONE);
+        holder.playControlLayout.setVisibility(View.GONE);
         holder.videoView.setVisibility(View.GONE);
         holder.closeButton.setVisibility(View.GONE);
-        holder.playControlLayout.setVisibility(View.GONE);
         holder.pauseCenterView.setVisibility(View.GONE);
-        holder.videoViewLayout.setVisibility(View.GONE);
-        ImageMessageBean imageMessageBean;
-        if (messageBean instanceof ImageMessageBean) {
-            imageMessageBean = (ImageMessageBean) messageBean;
-        } else {
-            TUIChatLog.e(TAG, "is not ImageMessageBean");
-            return;
-        }
-
-        loadPhotoView(holder, imageMessageBean, positon);
+        holder.photoViewLayout.setVisibility(View.VISIBLE);
+        loadPhotoView(holder, imageMessageBean);
     }
 
     private void loadImageIntoView(ImageView imageView, Object resObj) {
@@ -357,10 +273,10 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             .into(imageView);
     }
 
-    private void loadVideoView(ViewHolder holder, VideoMessageBean videoMessageBean, int position) {
-        if (TextUtils.isEmpty(videoMessageBean.getSnapshotPath())) {
-            final String path = TUIConfig.getImageDownloadDir() + videoMessageBean.getSnapshotUUID();
-            videoMessageBean.downloadSnapshot(path, new VideoMessageBean.VideoDownloadCallback() {
+    private void loadVideoView(ViewHolder holder, VideoMessageBean videoMessageBean) {
+        String snapshotPath = ChatFileDownloadPresenter.getVideoSnapshotPath(videoMessageBean);
+        if (!FileUtil.isFileExists(snapshotPath)) {
+            holder.downloadVideoSnapshotCallback = new TUIValueCallback() {
                 @Override
                 public void onProgress(long currentSize, long totalSize) {
                     int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
@@ -374,20 +290,21 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                 }
 
                 @Override
-                public void onSuccess() {
+                public void onSuccess(Object obj) {
                     ProgressPresenter.updateProgress(videoMessageBean.getId(), 100);
+                    if (!TextUtils.equals(holder.getMessageID(), videoMessageBean.getId())) {
+                        return;
+                    }
                     holder.pauseCenterView.setVisibility(View.VISIBLE);
-                    videoMessageBean.setSnapshotPath(path);
-                    mCacheImagePath = path;
                     holder.snapImageView.setVisibility(View.VISIBLE);
-                    loadImageIntoView(holder.snapImageView, path);
-                    getOrPlayVideo(holder, videoMessageBean, position);
+                    loadImageIntoView(holder.snapImageView, snapshotPath);
+                    getOrPlayVideo(holder, videoMessageBean);
                 }
-            });
+            };
+            ChatFileDownloadPresenter.downloadVideoSnapshot(videoMessageBean, holder.downloadVideoSnapshotCallback);
         } else {
-            String imagePath = videoMessageBean.getSnapshotPath();
             holder.snapImageView.setVisibility(View.VISIBLE);
-            loadImageIntoView(holder.snapImageView, imagePath);
+            loadImageIntoView(holder.snapImageView, snapshotPath);
         }
 
         if (videoMessageBean.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
@@ -400,45 +317,41 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             return;
         }
 
-        getOrPlayVideo(holder, videoMessageBean, position);
+        getOrPlayVideo(holder, videoMessageBean);
     }
 
-    private void getOrPlayVideo(ViewHolder holder, VideoMessageBean videoMessageBean, int position) {
-        final String videoPath = videoMessageBean.getVideoPath();
-        final File videoFile = new File(videoPath);
-        if (videoFile.exists() && videoMessageBean.getVideoSize() == videoFile.length()) {
+    private void getOrPlayVideo(ViewHolder holder, VideoMessageBean videoMessageBean) {
+        String videoPath = ChatFileDownloadPresenter.getVideoPath(videoMessageBean);
+
+        if (FileUtil.isFileExists(videoPath)) {
             playVideo(holder, videoMessageBean);
         } else {
+            holder.videoView.stop();
+            holder.videoView.setVideoURI(null);
+            holder.pauseCenterView.setVisibility(View.GONE);
+            holder.playControlLayout.setVisibility(View.GONE);
+            holder.videoView.setVisibility(View.GONE);
             if (!holder.downloadVideoFailed && !holder.downloadVideoFinished) {
                 holder.progressContainer.setVisibility(View.VISIBLE);
                 holder.progressIcon.setVisibility(View.VISIBLE);
                 holder.progressText.setVisibility(View.GONE);
                 holder.progressBar.setProgress(0);
-                holder.progressContainer.setOnClickListener(v -> getVideo(holder, videoPath, videoMessageBean, true, position));
+                holder.progressContainer.setOnClickListener(v -> getVideo(holder, videoMessageBean, true));
             }
         }
     }
 
-    private void performVideoView(ViewHolder holder, TUIMessageBean messageBean, int position) {
+    private void performVideoView(ViewHolder holder, VideoMessageBean videoMessageBean) {
         holder.photoViewLayout.setVisibility(View.GONE);
-        holder.videoView.setVisibility(View.VISIBLE);
+        holder.videoViewLayout.setVisibility(View.VISIBLE);
         holder.closeButton.setVisibility(View.VISIBLE);
         holder.playControlLayout.setVisibility(View.VISIBLE);
         holder.pauseCenterView.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.VISIBLE);
-        holder.videoViewLayout.setVisibility(View.VISIBLE);
         holder.progressContainer.setVisibility(View.GONE);
-        VideoMessageBean videoMessageBean;
-        if (messageBean instanceof VideoMessageBean) {
-            videoMessageBean = (VideoMessageBean) messageBean;
-        } else {
-            TUIChatLog.e(TAG, "is not VideoMessageBean");
-            return;
-        }
-
         mIsVideoPlay = false;
         playControlInit(holder);
-        loadVideoView(holder, videoMessageBean, position);
+        loadVideoView(holder, videoMessageBean);
     }
 
     private void playControlInit(ViewHolder holder) {
@@ -514,7 +427,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             float times = holder.videoView.getDuration() * 1.0f / 1000;
             if (times <= 0) {
                 TUIChatLog.e(TAG, "onClick, downloading video");
-                // ToastUtil.toastShortMessage("downloading video");
                 holder.pauseCenterView.setVisibility(View.GONE);
                 holder.progressBar.setVisibility(View.VISIBLE);
                 resetVideo(holder);
@@ -546,23 +458,13 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         }
     }
 
-    private Uri processVideoMessage(VideoMessageBean videoMessageBean) {
-        V2TIMMessage timMessage = videoMessageBean.getV2TIMMessage();
-        V2TIMVideoElem videoEle = timMessage.getVideoElem();
-        if (timMessage.isSelf() && !TextUtils.isEmpty(videoEle.getSnapshotPath())) {
-            return FileUtil.getUriFromPath(videoEle.getVideoPath());
-        } else {
-            final String videoPath = TUIConfig.getVideoDownloadDir() + videoEle.getVideoUUID();
-            return Uri.parse(videoPath);
-        }
-    }
-
-    private void playVideo(ViewHolder holder, VideoMessageBean videoMessageBean) {
-        Uri videoUri = processVideoMessage(videoMessageBean);
-
+    private void playVideo(ViewHolder holder, VideoMessageBean messageBean) {
         holder.pauseCenterView.setVisibility(View.VISIBLE);
+        holder.playControlLayout.setVisibility(View.VISIBLE);
         holder.progressBar.setVisibility(View.GONE);
 
+        String videoPath = ChatFileDownloadPresenter.getVideoPath(messageBean);
+        Uri videoUri = FileUtil.getUriFromPath(videoPath);
         if (videoUri == null) {
             TUIChatLog.e(TAG, "playVideo videoUri == null");
             return;
@@ -572,10 +474,15 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.videoView.invalidate();
 
         holder.videoView.setVideoURI(videoUri);
+        holder.videoView.setVisibility(View.VISIBLE);
         holder.videoView.setOnPreparedListener(new IPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IPlayer mediaPlayer) {
-                TUIChatLog.e(TAG, "onPrepared()");
+                if (!TextUtils.equals(messageBean.getId(), holder.getMessageID())) {
+                    return;
+                }
+                TUIChatLog.d(TAG, "video view onPrepared " + holder.getMessageID());
+                TUIChatLog.d(TAG, "video view onPrepared " + videoPath);
                 holder.videoView.start();
                 holder.videoView.pause();
                 holder.playButton.setImageResource(R.drawable.ic_play_icon);
@@ -634,43 +541,52 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         });
     }
 
-    private void getVideo(ViewHolder holder, String videoPath, final VideoMessageBean msg, final boolean autoPlay, final int position) {
-        if (loadingIdList.contains(msg.getId())) {
-            return;
-        }
-        loadingIdList.add(msg.getId());
-        msg.downloadVideo(videoPath, new VideoMessageBean.VideoDownloadCallback() {
+    private void getVideo(ViewHolder holder, final VideoMessageBean msg, final boolean autoPlay) {
+        holder.downloadVideoCallback = new TUIValueCallback() {
             @Override
             public void onProgress(long currentSize, long totalSize) {
                 int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
                 ProgressPresenter.updateProgress(msg.getId(), progress);
-                TUIChatLog.i("downloadVideo progress current:", currentSize + ", total:" + totalSize);
+                TUIChatLog.d("downloadVideo progress current:", currentSize + ", total:" + totalSize);
                 holder.downloadVideoFinished = false;
             }
 
             @Override
             public void onError(int code, String desc) {
-                loadingIdList.remove(msg.getId());
+                notifyItemChanged(msg);
+                if (!TextUtils.equals(holder.getMessageID(), msg.getId())) {
+                    return;
+                }
                 String errorMessage = ErrorMessageConverter.convertIMError(code, desc);
                 ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.download_file_error) + code + " " + errorMessage);
-                msg.setStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
-                notifyItemChanged(position);
                 holder.downloadVideoFailed = true;
             }
 
             @Override
-            public void onSuccess() {
-                loadingIdList.remove(msg.getId());
+            public void onSuccess(Object obj) {
                 ProgressPresenter.updateProgress(msg.getId(), 100);
-                holder.pauseCenterView.setVisibility(View.VISIBLE);
-                notifyItemChanged(position);
+                notifyItemChanged(msg);
+                if (!TextUtils.equals(holder.getMessageID(), msg.getId())) {
+                    return;
+                }
                 holder.downloadVideoFailed = false;
                 holder.downloadVideoFinished = true;
                 if (autoPlay) {
                     playVideo(holder, msg);
                 }
             }
-        });
+        };
+        ChatFileDownloadPresenter.downloadVideo(msg, holder.downloadVideoCallback);
+    }
+
+    private void notifyItemChanged(TUIMessageBean messageBean) {
+        for (int i = 0; i < mDataSource.size(); i++) {
+            TUIMessageBean tempMessageBean = mDataSource.get(i);
+            if (tempMessageBean != null && TextUtils.equals(messageBean.getId(), tempMessageBean.getId())) {
+                notifyItemChanged(i);
+                break;
+            }
+        }
     }
 
     public void destroyView(RecyclerView mRecyclerView, int index) {
@@ -684,11 +600,6 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             if (playSeekBar != null) {
                 playSeekBar.setProgress(0);
             }
-        }
-
-        if (downloadReceiver != null) {
-            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(downloadReceiver);
-            downloadReceiver = null;
         }
     }
 
@@ -704,10 +615,10 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         this.mDataSource = dataSource;
 
         for (TUIMessageBean messageBean : mDataSource) {
-            TUIChatLog.d(TAG, "message seq = " + messageBean.getV2TIMMessage().getSeq());
+            TUIChatLog.d(TAG, "message id = " + messageBean.getV2TIMMessage().getMsgID());
         }
-        Log.d(TAG, "mOldLocateMessage seq:" + mOldLocateMessage.getV2TIMMessage().getSeq());
-        Log.d(TAG, "mNewLocateMessage seq:" + mNewLocateMessage.getV2TIMMessage().getSeq());
+        TUIChatLog.d(TAG, "mOldLocateMessage seq:" + mOldLocateMessage.getV2TIMMessage().getSeq());
+        TUIChatLog.d(TAG, "mNewLocateMessage seq:" + mNewLocateMessage.getV2TIMMessage().getSeq());
     }
 
     public List<TUIMessageBean> getDataSource() {
@@ -803,7 +714,12 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         ChatRingProgressBar progressBar;
         ImageView progressIcon;
         TextView progressText;
+        private String messageID;
         private ProgressPresenter.ProgressListener progressListener;
+        private TUIValueCallback downloadLargeImageCallback;
+        private TUIValueCallback downloadOriginImageCallback;
+        private TUIValueCallback downloadVideoCallback;
+        private TUIValueCallback downloadVideoSnapshotCallback;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -824,6 +740,14 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             progressText = itemView.findViewById(R.id.file_progress_text);
             progressBar = itemView.findViewById(R.id.file_progress_bar);
             progressIcon = itemView.findViewById(R.id.file_progress_icon);
+        }
+
+        public void setMessageID(String messageID) {
+            this.messageID = messageID;
+        }
+
+        public String getMessageID() {
+            return messageID;
         }
     }
 }

@@ -24,10 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/face_url"
         android:layout_alignEnd="@id/face_url"
-        android:layout_alignRight="@id/face_url"
         android:layout_marginTop="-5dp"
         android:layout_marginEnd="-5dp"
-        android:layout_marginRight="-5dp"
         android:visibility="gone"
         tools:text="1"
         tools:visibility="visible" />

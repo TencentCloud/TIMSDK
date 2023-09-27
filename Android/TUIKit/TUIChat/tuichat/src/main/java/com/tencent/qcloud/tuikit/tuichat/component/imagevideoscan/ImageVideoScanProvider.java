@@ -130,7 +130,7 @@ public class ImageVideoScanProvider {
 
                 List<V2TIMMessage> timMessages = new ArrayList<>();
                 for (V2TIMMessage timMessage : v2TIMMessages) {
-                    TUIChatLog.d(TAG, "loadLocalMediaMessageList getType = " + getType + "timMessage seq = " + timMessage.getSeq());
+                    TUIChatLog.d(TAG, "loadLocalMediaMessageList getType = " + getType + " timMessage id = " + timMessage.getMsgID());
                     int status = timMessage.getStatus();
                     if (status == V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED || status == V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED) {
                         continue;

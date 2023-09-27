@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
@@ -86,8 +87,10 @@ public class CreateCommunityActivity extends BaseLightActivity {
                 Intent intent = new Intent(CreateCommunityActivity.this, ImageSelectActivity.class);
                 intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.community_select_cover));
                 intent.putExtra(ImageSelectActivity.SPAN_COUNT, 2);
-                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(165));
-                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(79));
+                int itemWidth = (int) (ScreenUtil.getScreenWidth(CreateCommunityActivity.this) * 0.42f);
+                int itemHeight = (int) (itemWidth / 2.0f);
+                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, itemWidth);
+                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, itemHeight);
                 intent.putExtra(ImageSelectActivity.DATA, coverList);
                 startActivityForResult(intent, COVER_REQUEST_CODE);
             }
@@ -106,8 +109,9 @@ public class CreateCommunityActivity extends BaseLightActivity {
                 Intent intent = new Intent(CreateCommunityActivity.this, ImageSelectActivity.class);
                 intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.community_select_face));
                 intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-                intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
-                intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+                int itemWidth = (int) (ScreenUtil.getScreenWidth(CreateCommunityActivity.this) * 0.2f);
+                intent.putExtra(ImageSelectMinimalistActivity.ITEM_WIDTH, itemWidth);
+                intent.putExtra(ImageSelectMinimalistActivity.ITEM_HEIGHT, itemWidth);
                 intent.putExtra(ImageSelectActivity.DATA, faceList);
                 startActivityForResult(intent, FACE_REQUEST_CODE);
             }

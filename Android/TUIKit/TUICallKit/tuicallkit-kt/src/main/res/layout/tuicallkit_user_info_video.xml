@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="20dp"
-        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
         android:text="@string/tuicalling_contact_default_name"
         android:textColor="@color/tuicalling_color_black"
         android:textSize="24sp"

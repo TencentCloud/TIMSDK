@@ -15,12 +15,11 @@
         android:orientation="vertical"
         android:background="@color/white"
         android:paddingStart="15.36dp"
-        android:paddingRight="15.36dp"
+        android:paddingEnd="15.36dp"
         android:layout_marginBottom="9.6dp"
         android:layout_marginTop="0.96dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="15.36dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -34,8 +33,7 @@
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="11.52dp"
-                android:layout_marginRight="11.52dp" />
+                android:layout_marginEnd="11.52dp" />
 
             <TextView
                 android:id="@+id/time_tv"
@@ -78,10 +76,8 @@
         android:background="#FFFFFF"
         android:focusable="true"
         android:visibility="gone"
-        android:paddingLeft="15.36dp"
         android:paddingStart="15.36dp"
         android:paddingEnd="15.36dp"
-        android:paddingRight="15.36dp"
         android:orientation="vertical">
 
         <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
@@ -90,8 +86,7 @@
             android:layout_alignParentTop="true"
             android:layout_width="38.4dp"
             android:layout_height="38.4dp"
-            android:layout_marginTop="9.6dp"
-            android:layout_alignParentLeft="true" />
+            android:layout_marginTop="9.6dp" />
 
         <TextView
             android:id="@+id/user_name_tv"
@@ -100,16 +95,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="11.52dp"
-            android:layout_marginLeft="11.52dp"
-            android:layout_marginRight="11.52dp"
+            android:layout_marginEnd="11.52dp"
             android:layout_marginTop="7.68dp"
             android:ellipsize="end"
             android:lineHeight="23.04sp"
             android:singleLine="true"
             android:textColor="@color/black_font_color"
             android:textSize="17.28sp"
-            tools:text="Bob"
-            android:layout_toRightOf="@id/user_face" />
+            tools:text="Bob" />
 
         <TextView
             android:id="@+id/user_read_status"
@@ -120,8 +113,7 @@
             android:singleLine="true"
             android:textColor="@color/black_font_color"
             android:textSize="15.36sp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 

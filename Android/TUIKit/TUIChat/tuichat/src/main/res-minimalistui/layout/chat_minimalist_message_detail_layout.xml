@@ -29,7 +29,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/chat_minimalist_arrow_left" />
+                android:background="@drawable/chat_minimalist_arrow_left" />
 
             <TextView
                 android:id="@+id/back_btn"

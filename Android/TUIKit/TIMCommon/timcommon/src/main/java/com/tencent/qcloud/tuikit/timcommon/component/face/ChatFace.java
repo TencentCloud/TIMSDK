@@ -8,6 +8,7 @@ public class ChatFace implements Serializable {
     protected String faceUrl;
     private FaceGroup faceGroup;
     private String faceKey;
+    private boolean autoMirrored = false;
 
     public void setFaceKey(String faceKey) {
         this.faceKey = faceKey;
@@ -47,5 +48,13 @@ public class ChatFace implements Serializable {
 
     public int getWidth() {
         return width;
+    }
+
+    public void setAutoMirrored(boolean autoMirrored) {
+        this.autoMirrored = autoMirrored;
+    }
+
+    public boolean isAutoMirrored() {
+        return autoMirrored;
     }
 }

@@ -12,13 +12,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -26,17 +27,15 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 public class VideoMessageHolder extends MessageContentHolder {
+    private static final String TAG = "VideoMessageHolder";
     private static final int DEFAULT_MAX_SIZE = 540;
     private static final int DEFAULT_RADIUS = 10;
-    private static final Set<String> downloadEles = new HashSet<>();
     private ImageView contentImage;
     private ImageView videoPlayBtn;
     private TextView videoDurationText;
@@ -46,7 +45,10 @@ public class VideoMessageHolder extends MessageContentHolder {
     private TextView progressText;
     private ImageView progressIcon;
 
+    private TUIValueCallback downloadSnapshotCallback;
+    private TUIValueCallback downloadVideoCallback;
     private ProgressPresenter.ProgressListener progressListener;
+    private String msgID;
 
     public VideoMessageHolder(View itemView) {
         super(itemView);
@@ -66,6 +68,7 @@ public class VideoMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
+        msgID = msg.getId();
         performVideo((VideoMessageBean) msg, position);
     }
 
@@ -94,57 +97,48 @@ public class VideoMessageHolder extends MessageContentHolder {
         videoPlayBtn.setVisibility(View.VISIBLE);
         videoDurationText.setVisibility(View.VISIBLE);
 
-        if (!TextUtils.isEmpty(msg.getSnapshotPath()) && new File(msg.getSnapshotPath()).exists()) {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getSnapshotPath(), null, DEFAULT_RADIUS);
+        String snapshotPath = ChatFileDownloadPresenter.getVideoSnapshotPath(msg);
+        if (FileUtil.isFileExists(snapshotPath)) {
+            loadSnapshotImage(msg, snapshotPath);
         } else {
             GlideEngine.clear(contentImage);
-            synchronized (downloadEles) {
-                if (!downloadEles.contains(msg.getSnapshotUUID())) {
-                    downloadEles.add(msg.getSnapshotUUID());
-                }
-            }
-
-            final String path = TUIConfig.getImageDownloadDir() + msg.getSnapshotUUID();
-            msg.downloadSnapshot(path, new VideoMessageBean.VideoDownloadCallback() {
+            downloadSnapshotCallback = new TUIValueCallback() {
                 @Override
                 public void onProgress(long currentSize, long totalSize) {
-                    TUIChatLog.i("downloadSnapshot progress current:", currentSize + ", total:" + totalSize);
+                    TUIChatLog.d("downloadSnapshot progress current:", currentSize + ", total:" + totalSize);
                 }
 
                 @Override
                 public void onError(int code, String desc) {
-                    downloadEles.remove(msg.getSnapshotUUID());
                     TUIChatLog.e("MessageAdapter video getImage", code + ":" + desc);
+                    ToastUtil.toastShortMessage(ErrorMessageConverter.convertIMError(code, desc));
                 }
 
                 @Override
-                public void onSuccess() {
-                    downloadEles.remove(msg.getSnapshotUUID());
-                    msg.setSnapshotPath(path);
-                    GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getSnapshotPath(), null, DEFAULT_RADIUS);
+                public void onSuccess(Object obj) {
+                    loadSnapshotImage(msg, snapshotPath);
                 }
-            });
+            };
+            ChatFileDownloadPresenter.downloadVideoSnapshot(msg, downloadSnapshotCallback);
         }
 
         String durations = DateTimeUtil.formatSecondsTo00(msg.getDuration());
         videoDurationText.setText(durations);
 
-        final String videoPath = msg.getVideoPath();
-        final File videoFile = new File(videoPath);
+        final String videoPath = ChatFileDownloadPresenter.getVideoPath(msg);
+        if (!FileUtil.isFileExists(videoPath)) {
+            showProgressBar();
+        }
+
         if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS) {
             statusImage.setVisibility(View.GONE);
-        } else if (videoFile.exists() && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
+        } else if (FileUtil.isFileExists(videoPath) && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             statusImage.setVisibility(View.GONE);
+            showProgressBar();
         } else if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
             statusImage.setVisibility(View.VISIBLE);
         }
-        if (!videoFile.exists() || msg.getVideoSize() != videoFile.length()) {
-            progressContainer.setVisibility(View.VISIBLE);
-            progressIcon.setVisibility(View.VISIBLE);
-            fileProgressBar.setVisibility(View.VISIBLE);
-            fileProgressBar.setProgress(0);
-            videoPlayBtn.setVisibility(View.GONE);
-        }
+
         progressListener = new ProgressPresenter.ProgressListener() {
             @Override
             public void onProgress(int progress) {
@@ -164,14 +158,37 @@ public class VideoMessageHolder extends MessageContentHolder {
             });
             return;
         }
+        downloadVideoCallback = new TUIValueCallback() {
+            @Override
+            public void onProgress(long currentSize, long totalSize) {
+                int progress = (int) (currentSize * 100 / totalSize);
+                ProgressPresenter.updateProgress(msg.getId(), progress);
+                TUIChatLog.i(TAG, "downloadVideo progress current:" + currentSize + ", total:" + totalSize);
+            }
 
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatLog.e(TAG, "downloadVideo failed. code:" + code + " msg:" + desc);
+                String errorMessage = ErrorMessageConverter.convertIMError(code, desc);
+                ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.download_file_error) + code + " " + errorMessage);
+            }
+
+            @Override
+            public void onSuccess(Object obj) {
+                TUIChatLog.i(TAG, "downloadVideo onSuccess");
+                ProgressPresenter.updateProgress(msg.getId(), 100);
+            }
+        };
+        if (!FileUtil.isFileExists(videoPath) && ChatFileDownloadPresenter.isDownloading(videoPath)) {
+            ChatFileDownloadPresenter.downloadVideo(msg, downloadVideoCallback);
+        }
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (msg.isSelf() && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
                     return;
                 }
-                if (videoFile.exists() && msg.getVideoSize() == videoFile.length()) {
+                if (FileUtil.isFileExists(videoPath)) {
                     progressContainer.setVisibility(View.GONE);
                     Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoScanActivity.class);
                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
@@ -185,39 +202,29 @@ public class VideoMessageHolder extends MessageContentHolder {
                     intent.putExtra(TUIChatConstants.FORWARD_MODE, isForwardMode);
                     TUIChatService.getAppContext().startActivity(intent);
                 } else {
-                    if (downloadEles.contains(msg.getVideoUUID())) {
-                        return;
-                    }
-                    downloadEles.add(msg.getVideoUUID());
-                    msg.downloadVideo(videoPath, new VideoMessageBean.VideoDownloadCallback() {
-                        @Override
-                        public void onProgress(long currentSize, long totalSize) {
-                            int progress = (int) (currentSize * 100 / totalSize);
-                            ProgressPresenter.updateProgress(msg.getId(), progress);
-                            TUIChatLog.i("downloadVideo progress current:", currentSize + ", total:" + totalSize);
-                        }
-
-                        @Override
-                        public void onError(int code, String desc) {
-                            downloadEles.remove(msg.getVideoUUID());
-                            String errorMessage = ErrorMessageConverter.convertIMError(code, desc);
-                            ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.download_file_error) + code + " " + errorMessage);
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                            downloadEles.remove(msg.getVideoUUID());
-                            ProgressPresenter.updateProgress(msg.getId(), 100);
-                        }
-                    });
+                    ChatFileDownloadPresenter.downloadVideo(msg, downloadVideoCallback);
                 }
             }
         });
 
         if (msg.getMessageReactBean() == null || msg.getMessageReactBean().getReactSize() <= 0) {
-            msgArea.setBackground(null);
-            msgArea.setPadding(0, 0, 0, 0);
+            setMessageBubbleBackground(null);
+            setMessageBubbleZeroPadding();
         }
+    }
+
+    private void loadSnapshotImage(TUIMessageBean messageBean, String snapshotPath) {
+        if (TextUtils.equals(msgID, messageBean.getId())) {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, snapshotPath, null, DEFAULT_RADIUS);
+        }
+    }
+
+    private void showProgressBar() {
+        progressContainer.setVisibility(View.VISIBLE);
+        progressIcon.setVisibility(View.VISIBLE);
+        fileProgressBar.setVisibility(View.VISIBLE);
+        fileProgressBar.setProgress(0);
+        videoPlayBtn.setVisibility(View.GONE);
     }
 
     private void updateProgress(int progress, VideoMessageBean messageBean) {
@@ -228,7 +235,6 @@ public class VideoMessageHolder extends MessageContentHolder {
         progressText.setText(progress + "%");
         progressIcon.setVisibility(View.GONE);
         if (progress == 100) {
-            messageBean.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
             videoPlayBtn.setVisibility(View.VISIBLE);
             progressContainer.setVisibility(View.GONE);
         }

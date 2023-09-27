@@ -108,7 +108,6 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
                 popupInputCard.setContent(remarkController.getContent());
                 popupInputCard.setTitle(getResources().getString(R.string.profile_remark_edit));
                 String description = getResources().getString(R.string.contact_modify_remark_rule);
-                popupInputCard.setRule("^[a-zA-Z0-9_一-龥]*$");
                 popupInputCard.setDescription(description);
                 popupInputCard.setOnPositive((result -> {
                     remarkController.setContent(result);

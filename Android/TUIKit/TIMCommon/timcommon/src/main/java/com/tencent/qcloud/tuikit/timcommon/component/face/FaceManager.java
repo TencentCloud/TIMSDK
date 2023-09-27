@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.timcommon.component.face;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -11,13 +12,21 @@ import android.text.style.ImageSpan;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.TIMCommonService;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonLog;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -168,16 +177,32 @@ public class FaceManager {
         }
         String faceUrl = "";
         FaceGroup faceGroup = faceGroupMap.get(faceGroupID);
+        ChatFace face = null;
         if (faceGroup != null) {
-            ChatFace face = faceGroup.getFace(faceKey);
+            face = faceGroup.getFace(faceKey);
             if (face != null) {
                 faceUrl = face.getFaceUrl();
             }
         }
+        final ChatFace finalFace = face;
         Glide.with(imageView.getContext())
             .load(faceUrl)
             .centerInside()
             .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+            .addListener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    if (finalFace != null && finalFace.isAutoMirrored()) {
+                        resource.setAutoMirrored(true);
+                    }
+                    return false;
+                }
+            })
             .into(imageView);
     }
 
@@ -190,29 +215,76 @@ public class FaceManager {
                 .load(((Emoji) chatFace).getIcon())
                 .centerInside()
                 .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (chatFace.isAutoMirrored()) {
+                            resource.setAutoMirrored(true);
+                        }
+                        return false;
+                    }
+                })
                 .into(imageView);
             return;
         }
         String faceUrl = "";
         FaceGroup faceGroup = chatFace.getFaceGroup();
+        ChatFace face = null;
         if (faceGroup != null) {
-            ChatFace face = faceGroup.getFace(chatFace.getFaceKey());
+            face = faceGroup.getFace(chatFace.getFaceKey());
             if (face != null) {
                 faceUrl = face.getFaceUrl();
             }
         }
+        final ChatFace finalFace = face;
         if (isBitMap) {
             Glide.with(imageView.getContext())
                 .asBitmap()
                 .load(faceUrl)
                 .centerInside()
                 .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+                .addListener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        if (finalFace.isAutoMirrored()) {
+                            imageView.setImageBitmap(resource);
+                            imageView.getDrawable().setAutoMirrored(true);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                })
                 .into(imageView);
         } else {
             Glide.with(imageView.getContext())
                 .load(faceUrl)
                 .centerInside()
                 .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (finalFace != null && finalFace.isAutoMirrored()) {
+                            resource.setAutoMirrored(true);
+                        }
+                        return false;
+                    }
+                })
                 .into(imageView);
         }
     }

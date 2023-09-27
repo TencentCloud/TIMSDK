@@ -1,38 +1,29 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.reply;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import androidx.annotation.Nullable;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ImageReplyQuoteView extends TUIReplyQuoteView {
-    protected View imageMsgLayout;
     protected ImageView imageMsgIv;
     protected ImageView videoPlayIv;
 
     protected static final int DEFAULT_RADIUS = 2;
-    protected final List<String> downloadEles = new ArrayList<>();
-    protected String mImagePath = null;
+
+    private TUIValueCallback downloadImageCallback;
 
     public ImageReplyQuoteView(Context context) {
         super(context);
-        imageMsgLayout = findViewById(R.id.image_msg_layout);
         imageMsgIv = findViewById(R.id.image_msg_iv);
         videoPlayIv = findViewById(R.id.video_play_iv);
     }
@@ -45,65 +36,29 @@ public class ImageReplyQuoteView extends TUIReplyQuoteView {
     @Override
     public void onDrawReplyQuote(TUIReplyQuoteBean quoteBean) {
         ImageMessageBean messageBean = (ImageMessageBean) quoteBean.getMessageBean();
-        imageMsgLayout.setVisibility(View.VISIBLE);
         imageMsgIv.setLayoutParams(getImageParams(imageMsgIv.getLayoutParams(), messageBean.getImgWidth(), messageBean.getImgHeight()));
-        final List<ImageMessageBean.ImageBean> imgs = messageBean.getImageBeanList();
-        String imagePath = messageBean.getDataPath();
-        String originImagePath = TUIChatUtils.getOriginImagePath(messageBean);
-        if (!TextUtils.isEmpty(originImagePath)) {
-            imagePath = originImagePath;
-        }
-        if (!TextUtils.isEmpty(imagePath)) {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, imagePath, null, DEFAULT_RADIUS);
+        String thumbPath = ChatFileDownloadPresenter.getImagePath(messageBean);
+        if (FileUtil.isFileExists(thumbPath)) {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, thumbPath, null, DEFAULT_RADIUS);
         } else {
             GlideEngine.clear(imageMsgIv);
-            for (int i = 0; i < imgs.size(); i++) {
-                final ImageMessageBean.ImageBean img = imgs.get(i);
-                if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
-                    synchronized (downloadEles) {
-                        if (downloadEles.contains(img.getUUID())) {
-                            break;
-                        }
-                        downloadEles.add(img.getUUID());
-                    }
-                    final String path = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
-                    if (!path.equals(mImagePath)) {
-                        GlideEngine.clear(imageMsgIv);
-                    }
-                    img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
-                        @Override
-                        public void onProgress(long currentSize, long totalSize) {
-                            TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
-                        }
-
-                        @Override
-                        public void onError(int code, String desc) {
-                            downloadEles.remove(img.getUUID());
-                            TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                            downloadEles.remove(img.getUUID());
-                            messageBean.setDataPath(path);
-                            GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, messageBean.getDataPath(), new RequestListener() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
-                                    mImagePath = null;
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
-                                    mImagePath = path;
-                                    return false;
-                                }
-                            }, DEFAULT_RADIUS);
-                        }
-                    });
-                    break;
+            downloadImageCallback = new TUIValueCallback() {
+                @Override
+                public void onProgress(long currentSize, long totalSize) {
+                    TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                 }
-            }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
+                }
+
+                @Override
+                public void onSuccess(Object obj) {
+                    GlideEngine.loadCornerImageWithoutPlaceHolder(imageMsgIv, thumbPath, null, DEFAULT_RADIUS);
+                }
+            };
+            ChatFileDownloadPresenter.downloadImage(messageBean, downloadImageCallback);
         }
     }
 

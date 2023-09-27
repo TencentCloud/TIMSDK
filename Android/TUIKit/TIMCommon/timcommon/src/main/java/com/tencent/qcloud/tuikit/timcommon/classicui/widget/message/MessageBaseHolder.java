@@ -106,6 +106,22 @@ public abstract class MessageBaseHolder<T extends TUIMessageBean> extends Recycl
         }
     }
 
+    public void setMessageBubbleZeroPadding() {
+        msgArea.setPaddingRelative(0, 0, 0, 0);
+    }
+
+    public void setMessageBubbleBackground(int resID) {
+        msgArea.setBackgroundResource(resID);
+    }
+
+    public void setMessageBubbleBackground(Drawable drawable) {
+        msgArea.setBackground(drawable);
+    }
+
+    public Drawable getMessageBubbleBackground() {
+        return msgArea.getBackground();
+    }
+
     public void stopHighLight() {
         if (highLightAnimator != null) {
             highLightAnimator.cancel();
@@ -154,14 +170,14 @@ public abstract class MessageBaseHolder<T extends TUIMessageBean> extends Recycl
     }
 
     public void setHighLightBackground(int color) {
-        Drawable drawable = msgArea.getBackground();
+        Drawable drawable = getMessageBubbleBackground();
         if (drawable != null) {
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
     }
 
     public void clearHighLightBackground() {
-        Drawable drawable = msgArea.getBackground();
+        Drawable drawable = getMessageBubbleBackground();
         if (drawable != null) {
             drawable.setColorFilter(null);
         }

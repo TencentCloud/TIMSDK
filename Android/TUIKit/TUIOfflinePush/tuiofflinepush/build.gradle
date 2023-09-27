@@ -83,8 +83,8 @@ dependencies {
         if (projects.contains("tuicore")) {
             api project(':tuicore')
         } else {
-            api "com.tencent.imsdk:imsdk-plus:7.4.4643"
-            api 'com.tencent.liteav.tuikit:tuicore:7.4.4643'
+            api "com.tencent.imsdk:imsdk-plus:7.5.4852"
+            api 'com.tencent.liteav.tuikit:tuicore:7.5.4852'
         }
     } else {
         implementation 'com.alibaba:fastjson:1.1.46.android'

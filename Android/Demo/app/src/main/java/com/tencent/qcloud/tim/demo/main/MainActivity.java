@@ -56,6 +56,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListen
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.page.TUICommunityFragment;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -69,6 +70,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends BaseLightActivity {
@@ -298,8 +300,8 @@ public class MainActivity extends BaseLightActivity {
             @Override
             public void onError(int code, String desc) {
                 DemoLog.i(TAG, "cleanConversationUnreadMessageCount error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                ToastUtil.toastShortMessage(
-                    MainActivity.this.getString(R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
+                ToastUtil.toastShortMessage(String.format(Locale.US, MainActivity.this.getString(R.string.mark_all_message_as_read_err_format), code,
+                    ErrorMessageConverter.convertIMError(code, desc)));
             }
         });
 
@@ -957,8 +959,15 @@ public class MainActivity extends BaseLightActivity {
             int columnWidth = parent.getResources().getDimensionPixelSize(R.dimen.demo_tab_bottom_item_width);
             if (columnNum > 1) {
                 int leftRightSpace = (screenWidth - columnNum * columnWidth) / (columnNum - 1);
-                outRect.left = column * leftRightSpace / columnNum;
-                outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+                int left = column * leftRightSpace / columnNum;
+                int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+                if (LayoutUtil.isRTL()) {
+                    outRect.left = right;
+                    outRect.right = left;
+                } else {
+                    outRect.left = left;
+                    outRect.right = right;
+                }
             }
         }
     }

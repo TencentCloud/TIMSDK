@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/navigation_bar_color"
     android:paddingTop="4dp"
-    android:paddingLeft="14.85dp">
+    android:paddingStart="14.85dp">
 
     <TextView
         android:id="@+id/forward_label"

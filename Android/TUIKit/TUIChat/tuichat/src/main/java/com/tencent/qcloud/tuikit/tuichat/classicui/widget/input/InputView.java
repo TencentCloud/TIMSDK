@@ -91,9 +91,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private static final int STATE_FACE_INPUT = 2;
     private static final int STATE_ACTION_INPUT = 3;
 
-    // 音视频通话成员数限制
-    // Membership limit for audio and video calls
-    protected static final int CALL_MEMBER_LIMIT = 8;
+    protected static final int FILE_MAX_SIZE = 100 * 1024 * 1024;
+    protected static final int VIDEO_MAX_SIZE = 100 * 1024 * 1024;
+    protected static final int IMAGE_MAX_SIZE = 28 * 1024 * 1024;
 
     /**
      * 语音/文字切换输入控件
@@ -542,6 +542,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 continue;
             }
             if (mimeType.contains("video")) {
+                if (FileUtil.isFileSizeExceedsLimit(data, VIDEO_MAX_SIZE)) {
+                    ToastUtil.toastShortMessage(getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorFileTooLarge));
+                    continue;
+                }
                 TUIMessageBean msg = buildVideoMessage(filePath);
                 if (msg == null) {
                     ToastUtil.toastShortMessage(getResources().getString(R.string.send_failed_file_not_exists));
@@ -550,6 +554,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     messageBeans.add(msg);
                 }
             } else if (mimeType.contains("image")) {
+                if (FileUtil.isFileSizeExceedsLimit(data, IMAGE_MAX_SIZE)) {
+                    ToastUtil.toastShortMessage(getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorFileTooLarge));
+                    continue;
+                }
                 TUIMessageBean msg = ChatMessageBuilder.buildImageMessage(filePath);
                 if (msg == null) {
                     TUIChatLog.e(TAG, "start send image error data: " + data);
@@ -646,11 +654,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             if (result.getData() != null) {
                 Uri uri = result.getData().getData();
                 if (uri != null) {
-                    TUIMessageBean msg = ChatMessageBuilder.buildImageMessage(FileUtil.getPathFromUri(uri));
-                    if (mMessageHandler != null) {
-                        mMessageHandler.sendMessage(msg);
-                        hideSoftInput();
-                    }
+                    sendPhotoVideoMessage(Collections.singletonList(uri));
                 }
             }
         });
@@ -666,11 +670,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             public void onSuccess(Boolean object) {
                 File imageFile = new File(path);
                 if (imageFile.exists()) {
-                    TUIMessageBean msg = ChatMessageBuilder.buildImageMessage(path);
-                    if (mMessageHandler != null) {
-                        mMessageHandler.sendMessage(msg);
-                        hideSoftInput();
-                    }
+                    sendPhotoVideoMessage(Collections.singletonList(uri));
                 }
             }
 
@@ -739,11 +739,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             public void onSuccess(Boolean object) {
                 File videoFile = new File(path);
                 if (videoFile.exists()) {
-                    TUIMessageBean messageBean = buildVideoMessage(path);
-                    if (mMessageHandler != null) {
-                        mMessageHandler.sendMessage(messageBean);
-                        hideSoftInput();
-                    }
+                    sendPhotoVideoMessage(Collections.singletonList(uri));
                 }
             }
 
@@ -757,17 +753,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         bundle.putInt(TUIChatConstants.CAMERA_TYPE, CameraActivity.BUTTON_STATE_ONLY_RECORDER);
 
         TUICore.startActivityForResult(mInputMoreFragment, CameraActivity.class, bundle, result -> {
-            Intent videoData = result.getData();
-            if (videoData == null) {
+            Intent data = result.getData();
+            if (data == null) {
                 return;
             }
-            Uri videoUri = videoData.getData();
-            if (videoUri != null) {
-                TUIMessageBean messageBean = buildVideoMessage(FileUtil.getPathFromUri(videoUri));
-                if (mMessageHandler != null) {
-                    mMessageHandler.sendMessage(messageBean);
-                    hideSoftInput();
-                }
+            Uri uri = data.getData();
+            if (uri != null) {
+                sendPhotoVideoMessage(Collections.singletonList(uri));
             }
         });
     }
@@ -778,6 +770,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             @Override
             public void onSuccess(Uri data) {
                 if (data == null) {
+                    return;
+                }
+                if (FileUtil.isFileSizeExceedsLimit(data, FILE_MAX_SIZE)) {
+                    ToastUtil.toastShortMessage(getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorFileTooLarge));
                     return;
                 }
                 TUIMessageBean info = ChatMessageBuilder.buildFileMessage(data);
@@ -1327,9 +1323,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         if (mChatInfo.getType() == ChatInfo.TYPE_GROUP && TUIChatUtils.isTopicGroup(mChatInfo.getId())) {
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL, true);
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL, true);
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM, true);
         } else {
-            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall());
-            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL, !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVoiceCall());
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL,
+                !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall() || !getChatInfo().isEnableVideoCall());
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL,
+                !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAudioCall() || !getChatInfo().isEnableAudioCall());
+            param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM,
+                !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableRoomKit() || !getChatInfo().isEnableRoom());
         }
         param.put(TUIConstants.TUIChat.Extension.InputMore.INPUT_MORE_LISTENER, chatInputMoreListener);
         List<TUIExtensionInfo> extensionList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID, param);

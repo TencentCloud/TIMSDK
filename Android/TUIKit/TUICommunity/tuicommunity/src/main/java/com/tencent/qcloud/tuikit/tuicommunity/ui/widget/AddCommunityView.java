@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.component.banner.BannerView;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.page.CreateCommunityActivity;
@@ -53,6 +55,9 @@ public class AddCommunityView extends FrameLayout {
         joinBtn = view.findViewById(R.id.join_community);
         bannerView = view.findViewById(R.id.banner_view);
         initEvent();
+        if (!TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), TUIThemeManager.LANGUAGE_ZH_CN)) {
+            bannerView.setVisibility(GONE);
+        }
     }
 
     private void initEvent() {

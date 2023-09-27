@@ -15,7 +15,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,58 +65,6 @@ public class TUIChatUtils {
 
     public static boolean isGroupChat(int chatType) {
         return chatType == V2TIMConversation.V2TIM_GROUP;
-    }
-
-    public static String getOriginImagePath(final TUIMessageBean msg) {
-        if (msg == null) {
-            return null;
-        }
-        V2TIMMessage v2TIMMessage = msg.getV2TIMMessage();
-        if (v2TIMMessage == null) {
-            return null;
-        }
-        V2TIMImageElem v2TIMImageElem = v2TIMMessage.getImageElem();
-        if (v2TIMImageElem == null) {
-            return null;
-        }
-        String localImgPath = ChatMessageParser.getLocalImagePath(msg);
-        if (localImgPath == null) {
-            String originUUID = null;
-            for (V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
-                if (image.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
-                    originUUID = image.getUUID();
-                    break;
-                }
-            }
-            String originPath = ImageUtil.generateImagePath(originUUID, V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN);
-            File file = new File(originPath);
-            if (file.exists()) {
-                localImgPath = originPath;
-            }
-        }
-        return localImgPath;
-    }
-
-    public static String generateLargeImagePath(final TUIMessageBean msg) {
-        if (msg == null) {
-            return null;
-        }
-        V2TIMMessage v2TIMMessage = msg.getV2TIMMessage();
-        if (v2TIMMessage == null) {
-            return null;
-        }
-        V2TIMImageElem v2TIMImageElem = v2TIMMessage.getImageElem();
-        if (v2TIMImageElem == null) {
-            return null;
-        }
-
-        for (V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
-            if (image.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE) {
-                String uuid = image.getUUID();
-                return ImageUtil.generateImagePath(uuid, V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE);
-            }
-        }
-        return null;
     }
 
     public static String generateOriginImagePath(final TUIMessageBean msg) {

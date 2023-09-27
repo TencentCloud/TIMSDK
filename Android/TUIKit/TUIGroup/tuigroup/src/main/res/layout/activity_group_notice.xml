@@ -14,8 +14,8 @@
     <EditText
         android:id="@+id/group_notice_text"
         android:paddingTop="10dp"
-        android:paddingLeft="15.36dp"
-        android:paddingRight="15.36dp"
+        android:paddingStart="15.36dp"
+        android:paddingEnd="15.36dp"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"

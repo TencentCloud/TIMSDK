@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.component.userinfo.single
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,6 +23,18 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
             textWaitHint?.visibility = VISIBLE
         } else if (it == TUICallDefine.Status.Accept) {
             textWaitHint?.visibility = GONE
+        }
+    }
+
+    private var avatarObserver = Observer<String> {
+        if (!TextUtils.isEmpty(it)) {
+            ImageLoader.loadImage(context.applicationContext, imageAvatar, it, R.drawable.tuicallkit_ic_avatar)
+        }
+    }
+
+    private var nicknameObserver = Observer<String> {
+        if (!TextUtils.isEmpty(it)) {
+            textUserName?.text = it
         }
     }
 
@@ -56,18 +69,22 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
         textUserName?.setTextColor(textColor)
 
         if (viewModel.callStatus.get() == TUICallDefine.Status.Accept) {
-            this.visibility = GONE
+            textWaitHint?.visibility = GONE
         } else {
-            this.visibility = VISIBLE
+            textWaitHint?.visibility = VISIBLE
         }
     }
 
     private fun addObserver() {
         viewModel.callStatus.observe(callStatusObserver)
+        viewModel.avatar.observe(avatarObserver)
+        viewModel.nickname.observe(nicknameObserver)
     }
 
     private fun removeObserver() {
         viewModel.callStatus.removeObserver(callStatusObserver)
+        viewModel.avatar.removeObserver(avatarObserver)
+        viewModel.nickname.removeObserver(nicknameObserver)
     }
 
 }

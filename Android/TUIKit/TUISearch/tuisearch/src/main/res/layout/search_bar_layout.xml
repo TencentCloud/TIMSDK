@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_bar_height"
         android:gravity="center"
-        android:layout_marginLeft="@dimen/search_bar_margin"
-        android:layout_marginRight="@dimen/search_bar_margin"
+        android:layout_marginStart="@dimen/search_bar_margin"
+        android:layout_marginEnd="@dimen/search_bar_margin"
         android:background="@drawable/shape_search"
         android:orientation="horizontal">
 
@@ -34,7 +34,7 @@
             android:textColor="@color/search_tip_text_color"
             android:text="@string/search"
             android:textSize="16.3sp"
-            android:layout_marginLeft="@dimen/btn_margin_left" />
+            android:layout_marginStart="@dimen/btn_margin_left" />
 
     </LinearLayout>
 

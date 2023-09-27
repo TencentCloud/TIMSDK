@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="new_friend">جهات اتصال جديدة</string>
+    <string name="group">مجموعاتي</string>
+    <string name="blacklist">القائمة السوداء</string>
+    <string name="contact_count">%d جهة اتصال</string>
+    <string name="contact_title">دليل الهاتف</string>
+
+    <string name="no_friend_apply">لا يوجد طلبات صداقة</string>
+    <string name="at_all">الجميع</string>
+
+    <string name="success">نجاح</string>
+    <string name="contact_add_failed">فشل الإضافة</string>
+    <string name="contact_add_success">تمت الإضافة بنجاح</string>
+    <string name="have_be_friend">الشخص المطلوب هو بالفعل صديقك</string>
+    <string name="friend_limit">لقد وصلت إلى الحد الأقصى لعدد الأصدقاء في النظام</string>
+    <string name="other_friend_limit">لقد وصل الشخص المطلوب إلى الحد الأقصى لعدد الأصدقاء في النظام</string>
+    <string name="in_blacklist">الشخص المطلوب موجود في القائمة السوداء الخاصة بك</string>
+    <string name="forbid_add_friend">الشخص المطلوب قد منع إضافة الأصدقاء</string>
+    <string name="set_in_blacklist">لقد تم إضافتك إلى القائمة السوداء من قبل الشخص المطلوب</string>
+    <string name="wait_agree_friend">في انتظار موافقة الصديق</string>
+    <string name="send_request">تم إرسال طلب الانضمام إلى المجموعة</string>
+    <string name="contact_add_more_send_request_text">إرسال</string>
+    <string name="contact_search">البحث</string>
+
+    <string name="add_group_permission_deny">منع الانضمام إلى المجموعة</string>
+    <string name="add_group_allready_member">أنت بالفعل عضو في المجموعة</string>
+    <string name="add_group_not_found">المجموعة غير موجودة</string>
+    <string name="add_group_full_member">المجموعة ممتلئة بالأعضاء</string>
+    <string name="request_agree">موافقة</string>
+    <string name="request_accepted">تمت الموافقة</string>
+    <string name="request_waiting">في انتظار التحقق</string>
+    <string name="profile_detail">تفاصيل الملف الشخصي</string>
+    <string name="profile_remark_edit">تعديل الملاحظات</string>
+    <string name="contact_friend_remark">ملاحظات</string>
+    <string name="contact_add_friend_remark">ملاحظات</string>
+    <string name="contact_friend_group">المجموعة</string>
+    <string name="contact_set_add_wording">يرجى إدخال رسالة التحقق</string>
+    <string name="contact_set_remark_and_group">يرجى إدخال الملاحظات والمجموعة</string>
+    <string name="contact_add_wording">رسالة التحقق:</string>
+    <string name="contact_my_friend">أصدقائي</string>
+    <string name="contact_modify_remark_rule">يسمح فقط بالأحرف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>
+    <string name="contact_profile_title_edit">تعديل</string>
+    <string name="contact_add_more_info">تفاصيل</string>
+
+    <!-- معلومات الصديق -->
+    <string name="profile_id">الحساب</string>
+    <string name="profile_add_wording">رسالة التحقق</string>
+    <string name="profile_remark">اسم الملاحظات</string>
+    <string name="profile_black">إضافة إلى القائمة السوداء</string>
+    <string name="profile_chat">إرسال رسالة</string>
+    <string name="profile_voice_chat">مكالمة صوتية</string>
+    <string name="profile_video_chat">مكالمة فيديو</string>
+    <string name="profile_clear_message">مسح سجل الدردشة</string>
+    <string name="profile_delete_friend">حذف الصديق</string>
+    <string name="profile_chat_background">تعيين خلفية الدردشة الحالية</string>
+    <string name="chat_background_title">تغيير الخلفية</string>
+
+    <string name="contact_profile_message">إرسال رسالة</string>
+    <string name="contact_profile_audio_call">مكالمة صوتية</string>
+    <string name="contact_profile_video_call">مكالمة فيديو</string>
+
+    <string name="contact_signature_tag">التوقيع الشخصي:</string>
+    <string name="contact_no_status">لا يوجد توقيع شخصي</string>
+
+    <string name="contact_account_tag">المعرف:</string>
+    <string name="contact_group_type_tag">نوع المجموعة:</string>
+
+    <string name="select_chat">يرجى اختيار شخص للدردشة</string>
+
+    <string name="clear_msg_tip">هل تريد بالتأكيد مسح سجل الدردشة؟</string>
+    <string name="contact_delete_friend_tip">هل تريد بالتأكيد حذف جهة الاتصال؟</string>
+    <string name="tips_empty_group_member">يرجى اختيار أعضاء المجموعة</string>
+    <string name="tips_empty_group_type">يرجى اختيار طريقة الانضمام إلى المجموعة</string>
+
+    <string name="accept">موافقة</string>
+    <string name="refuse">رفض</string>
+    <string name="accepted">تمت الموافقة</string>
+    <string name="refused">تم الرفض</string>
+
+    <string name="chat_to_top">تثبيت المحادثة</string>
+
+    // "+"menu ذات الصلة
+    <string name="add_friend">إضافة صديق</string>
+    <string name="add_group">إضافة مجموعة</string>
+    <string name="start_conversation">بدء محادثة</string>
+    <string name="create_group_chat">إنشاء محادثة جماعية</string>
+    <string name="create_chat_room">إنشاء غرفة دردشة</string>
+    <string name="create_private_group">إنشاء مجموعة خاصة</string>
+    <string name="create_community">إنشاء مجتمع</string>
+    <string name="hint_add_user_id">يرجى إدخال المعرف</string>
+    <string name="hint_search_user_id">البحث عن معرف المستخدم</string>
+    <string name="hint_search_group_id">ابحث عن معرف المجموعة</string>
+    <string name="hint_add_wording">يرجى إدخال رسالة التحقق</string>
+    <string name="contact_add_friend_default_validation">أنا %s</string>
+    <string name="contact_add">إضافة</string>
+    <string name="user_id">معرف الطرف الآخر</string>
+    <string name="add_wording">رسالة التحقق</string>
+    <string name="create_group">إنشاء مجموعة</string>
+    <string name="contact_create">إنشاء</string>
+    <string name="contact_next_step">الخطوة التالية</string>
+
+    <string name="modify_group_name">تعديل اسم المجموعة</string>
+    <string name="add_group_member">إضافة عضو</string>
+    <string name="group_join_type">طريقة الانضمام للمجموعة</string>
+    <string name="forbid_join">منع الانضمام</string>
+    <string name="manager_judge">موافقة المدير</string>
+    <string name="auto_judge">موافقة تلقائية</string>
+    <string name="input_tip">لم تدخل الاسم المستعار، يرجى المحاولة مرة أخرى</string>
+    <string name="profile_msgrev_opt">عدم الإزعاج</string>
+
+    <string name="contact_over_limit_tip">يمكنك فقط تحديد %d على الأكثر.</string>
+
+    <string name="contact_no_such_group">هذه المجموعة غير موجودة</string>
+    <string name="contact_no_such_user">هذا المستخدم غير موجود</string>
+
+    <string name="contact_my_user_id">معرفي الخاص بالمستخدم: %s</string>
+
+    <string name="contact_community">المجتمع</string>
+    <string name="contact_i_know">فهمت</string>
+    <string name="contact_no_more_reminders">لا تذكرني مرة أخرى</string>
+    <string name="contact_im_flagship">الإصدار الرئيسي</string>
+    <string name="contact_buying_guidelines">توضيح الأسعار</string>
+    <string name="contact_im_flagship_edition_update_tip">%s هي وظيفة من وظائف الإصدار الرئيسي لـ IM، يمكن استخدامها بعد شراء باقة الإصدار الرئيسي، يرجى الرجوع إلى توضيح الأسعار للحصول على مزيد من المعلومات.</string>
+
+    <string name="contact_no_new_friend_application">لا توجد طلبات صداقة جديدة</string>
+    <string name="contact_no_group">لا توجد محادثات جماعية</string>
+    <string name="contact_no_block_list">لا يوجد أصدقاء في القائمة السوداء</string>
+    <string name="contact_selected_group_member">الأعضاء المحددين في المجموعة</string>
+
+    <string name="group_choose_avatar">اختر صورة رمزية</string>
+    <string name="group_avatar_text">صورة رمزية للمجموعة</string>
+    <string name="group_name_text">اسم المجموعة</string>
+    <string name="modify_group_id">تعديل معرف المجموعة</string>
+    <string name="group_id_option">معرف المجموعة (اختياري)</string>
+    <string name="group_type_text">نوع المجموعة</string>
+    <string name="group_created">إنشاء</string>
+    <string name="group_type_select_text">اختر نوع المجموعة</string>
+    <string name="group_work_type">مجموعة عمل الأصدقاء (Work)</string>
+    <string name="group_work_content">مجموعة عمل الأصدقاء (Work): تشبه محادثات WeChat العادية، بعد الإنشاء، يمكن للأصدقاء الموجودين في المجموعة دعوة أصدقائهم للانضمام دون الحاجة إلى موافقة المضافين أو الموافقة من قبل مالك المجموعة.</string>
+    <string name="group_public_type">مجموعة تواصل الغرباء (Public)</string>
+    <string name="group_public_des">مجموعة تواصل الغرباء (Public): تشبه مجموعات QQ، بعد الإنشاء، يمكن لمالك المجموعة تعيين مشرفين للمجموعة، عندما يبحث المستخدمون عن معرف المجموعة ويطلبون الانضمام، يجب عليهم الحصول على موافقة من مالك المجموعة أو المشرفين قبل الانضمام إلى المجموعة.</string>
+    <string name="group_meeting_type">مجموعة اجتماعات مؤقتة (Meeting)</string>
+    <string name="group_meeting_des">مجموعة اجتماعات مؤقتة (Meeting): بعد الإنشاء، يمكن للمستخدمين الانضمام والخروج من المجموعة بحرية، ويمكنهم عرض الرسائل قبل الانضمام إلى المجموعة. تستخدم هذه المجموعات في سيناريوهات الاجتماعات الصوتية والمرئية والتعليم عبر الإنترنت وغيرها من السيناريوهات التي تتطلب منتجات الصوت والفيديو الفورية.</string>
+    <string name="group_commnity_type">مجتمع (Community)</string>
+    <string name="group_commnity_des"> المجتمع (Community): بعد الإنشاء يمكن الدخول والخروج بحرية، يدعم حتى 100000 شخص، يدعم تخزين الرسائل السابقة، بعد البحث عن معرف المجموعة وإرسال طلب الانضمام، يمكن الانضمام إلى المجموعة دون حاجة لموافقة المشرف.</string>
+    <string name="group_name_edit_null_tips">اسم المجموعة لا يمكن أن يكون فارغًا!</string>
+    <string name="group_name_edit_exceed_tips">يجب أن يكون اسم المجموعة أقل من 30 بايت!</string>
+    <string name="group_id_edit_format_tips">لا يمكن أن يكون بادئة معرف المجموعة @TGS# !</string>
+    <string name="group_id_edit_exceed_tips">يجب أن يكون معرف المجموعة أقل من 48 بايت!</string>
+    <string name="group_type_content_title">يرجى الرجوع إلى دليل المنتج</string>
+    <string name="group_type_content_url">دليل المنتج</string>
+    <string name="group_type_content_button">عرض دليل المنتج</string>
+</resources>

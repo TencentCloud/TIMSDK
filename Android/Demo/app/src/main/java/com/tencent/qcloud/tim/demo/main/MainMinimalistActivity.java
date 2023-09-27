@@ -50,6 +50,7 @@ import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.TUIContactMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
@@ -60,6 +61,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainMinimalistActivity extends BaseMinimalistLightActivity {
@@ -242,10 +244,10 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
     }
 
     private void triggerClearAllUnreadMessage() {
-        V2TIMManager.getMessageManager().markAllMessageAsRead(new V2TIMCallback() {
+        V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount("", 0, 0, new V2TIMCallback() {
             @Override
             public void onSuccess() {
-                DemoLog.i(TAG, "markAllMessageAsRead success");
+                DemoLog.i(TAG, "cleanConversationUnreadMessageCount success");
                 if (conversationBean != null) {
                     conversationBean.unreadCount = 0;
                     onTabBeanChanged(conversationBean);
@@ -255,9 +257,9 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
 
             @Override
             public void onError(int code, String desc) {
-                DemoLog.i(TAG, "markAllMessageAsRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                ToastUtil.toastShortMessage(MainMinimalistActivity.this.getString(
-                    R.string.mark_all_message_as_read_err_format, code, ErrorMessageConverter.convertIMError(code, desc)));
+                DemoLog.i(TAG, "cleanConversationUnreadMessageCount error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                ToastUtil.toastShortMessage(String.format(Locale.US, MainMinimalistActivity.this.getString(
+                    R.string.mark_all_message_as_read_err_format), code, ErrorMessageConverter.convertIMError(code, desc)));
             }
         });
 
@@ -573,7 +575,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         @NonNull
         @Override
         public TabAdapter.TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(MainMinimalistActivity.this).inflate(R.layout.main_classic_bottom_tab_item_layout, null);
+            View view = LayoutInflater.from(MainMinimalistActivity.this).inflate(R.layout.main_minimalist_bottom_tab_item_layout, null);
             return new TabAdapter.TabViewHolder(view);
         }
 
@@ -726,8 +728,15 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             int columnWidth = parent.getResources().getDimensionPixelSize(R.dimen.demo_tab_bottom_item_width);
             if (columnNum > 1) {
                 int leftRightSpace = (screenWidth - columnNum * columnWidth) / (columnNum - 1);
-                outRect.left = column * leftRightSpace / columnNum;
-                outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+                int left = column * leftRightSpace / columnNum;
+                int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+                if (LayoutUtil.isRTL()) {
+                    outRect.left = right;
+                    outRect.right = left;
+                } else {
+                    outRect.left = left;
+                    outRect.right = right;
+                }
             }
         }
     }

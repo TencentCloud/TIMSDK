@@ -34,9 +34,9 @@
                     android:layout_width="@dimen/group_profile_face_size"
                     android:layout_height="@dimen/group_profile_face_size"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/group_profile_face_margin_left"
+                    android:layout_marginStart="@dimen/group_profile_face_margin_left"
                     android:layout_marginTop="@dimen/group_profile_face_margin_top"
-                    android:layout_marginRight="@dimen/group_profile_face_margin_right"
+                    android:layout_marginEnd="@dimen/group_profile_face_margin_right"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -107,7 +107,7 @@
                     android:background="@color/white"
                     android:fadeScrollbars="true"
                     android:numColumns="5"
-                    android:paddingLeft="@dimen/group_profile_member_grid_padding_left_right"
+                    android:paddingStart="@dimen/group_profile_member_grid_padding_left_right"
                     android:paddingTop="@dimen/group_profile_member_grid_padding_top"
                     android:scrollbars="none" />
 
@@ -139,8 +139,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:paddingLeft="@dimen/group_profile_face_margin_left"
-                android:paddingRight="20dp"
+                android:paddingStart="@dimen/group_profile_face_margin_left"
+                android:paddingEnd="20dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -148,6 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="11.52dp"
                     android:lineHeight="23.04sp"
+                    android:textAlignment="viewStart"
                     android:text="@string/group_notice"
                     android:textColor="#444444"
                     android:textSize="15.36sp" />
@@ -168,6 +169,7 @@
                         android:text="@string/group_notice_empty_tip"
                         android:lineHeight="17.28sp"
                         android:singleLine="true"
+                        android:textAlignment="viewStart"
                         android:textColor="#888888"
                         android:textSize="11.52sp" />
 
@@ -249,14 +251,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/group_profile_item_height"
                     android:layout_below="@id/fold_top_line"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     app:isSwitch="true"
                     app:name="@string/fold_this_group_chat" />
                 <View
                     android:id="@+id/left_line"
                     android:layout_width="10dp"
                     android:layout_height="2px"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     android:layout_centerVertical="true"
                     android:background="@color/dark_line"/>
                 <View

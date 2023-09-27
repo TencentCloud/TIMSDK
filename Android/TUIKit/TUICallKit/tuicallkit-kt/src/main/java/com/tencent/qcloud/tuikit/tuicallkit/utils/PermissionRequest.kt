@@ -1,185 +1,112 @@
 package com.tencent.qcloud.tuikit.tuicallkit.utils
 
+import android.Manifest
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.provider.Settings
 import android.text.TextUtils
-import androidx.annotation.IntDef
-import com.tencent.qcloud.tuicore.interfaces.TUICallback
-import com.tencent.qcloud.tuicore.util.PermissionRequester
-import com.tencent.qcloud.tuicore.util.PermissionRequester.PermissionDialogCallback
+import com.tencent.qcloud.tuicore.TUIConstants
+import com.tencent.qcloud.tuicore.TUICore
+import com.tencent.qcloud.tuicore.permission.PermissionCallback
+import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
-import com.tencent.qcloud.tuikit.tuicallengine.utils.BrandUtils
-import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.R
 
 object PermissionRequest {
-    const val PERMISSION_MICROPHONE = 1
-    const val PERMISSION_CAMERA = 2
-
-    private fun requestPermission(
-        context: Context, @PermissionType type1: Int, @PermissionType type2: Int,
-        callback: PermissionCallback?
-    ) {
-        requestPermission(context, type2, object : PermissionCallback() {
+    fun requestPermissions(context: Context, type: TUICallDefine.MediaType, callback: PermissionCallback?) {
+        val title = StringBuilder().append(context.getString(R.string.tuicalling_permission_microphone))
+        val reason = StringBuilder()
+        var microphonePermissionsDescription = TUICore.createObject(
+            TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME,
+            TUIConstants.Privacy.PermissionsFactory.PermissionsName.MICROPHONE_PERMISSIONS, null
+        ) as String?
+        if (!TextUtils.isEmpty(microphonePermissionsDescription)) {
+            reason.append(microphonePermissionsDescription)
+        } else {
+            reason.append(context.getString(R.string.tuicalling_permission_mic_reason))
+        }
+        val permissionList: MutableList<String> = ArrayList()
+        permissionList.add(Manifest.permission.RECORD_AUDIO)
+        if (TUICallDefine.MediaType.Video == type) {
+            title.append(context.getString(R.string.tuicalling_permission_separator))
+            title.append(context.getString(R.string.tuicalling_permission_camera))
+            val cameraPermissionsDescription = TUICore.createObject(
+                TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME,
+                TUIConstants.Privacy.PermissionsFactory.PermissionsName.CAMERA_PERMISSIONS, null
+            ) as String?
+            if (!TextUtils.isEmpty(cameraPermissionsDescription)) {
+                reason.append(cameraPermissionsDescription)
+            } else {
+                reason.append(context.getString(R.string.tuicalling_permission_camera_reason))
+            }
+            permissionList.add(Manifest.permission.CAMERA)
+        }
+        val permissionCallback: PermissionCallback = object : PermissionCallback() {
             override fun onGranted() {
-                requestPermission(context, type1, object : PermissionCallback() {
+                requestBluetoothPermission(context, object : PermissionCallback() {
                     override fun onGranted() {
                         callback?.onGranted()
                     }
-
-                    override fun onDenied() {
-                        callback?.onDenied()
-                    }
-
-                    override fun onDialogApproved() {
-                        callback?.onDialogApproved()
-                    }
-
-                    override fun onDialogRefused() {
-                        callback?.onDialogRefused()
-                    }
                 })
             }
 
             override fun onDenied() {
+                super.onDenied()
                 callback?.onDenied()
             }
-
-            override fun onDialogApproved() {
-                callback?.onDialogApproved()
-            }
-
-            override fun onDialogRefused() {
-                callback?.onDialogRefused()
-            }
-        })
-    }
-
-    fun requestPermission(context: Context, @PermissionType type: Int, callback: PermissionCallback?) {
-        var permission: String? = null
-        var reason: String? = null
-        var reasonTitle: String? = null
-        var deniedAlert: String? = null
+        }
         val applicationInfo = context.applicationInfo
         val appName = context.packageManager.getApplicationLabel(applicationInfo).toString()
-        when (type) {
-            PERMISSION_MICROPHONE -> {
-                permission = PermissionRequester.PermissionConstants.MICROPHONE
-                reasonTitle = context.getString(R.string.tuicalling_permission_mic_reason_title, appName)
-                reason = context.getString(R.string.tuicalling_permission_mic_reason)
-                deniedAlert = context.getString(R.string.tuicalling_tips_start_audio)
-            }
-            PERMISSION_CAMERA -> {
-                permission = PermissionRequester.PermissionConstants.CAMERA
-                reasonTitle = context.getString(R.string.tuicalling_permission_camera_reason_title, appName)
-                reason = context.getString(R.string.tuicalling_permission_camera_reason)
-                deniedAlert = context.getString(R.string.tuicalling_tips_start_camera)
-            }
-            else -> {}
-        }
-        val simpleCallback: PermissionRequester.SimpleCallback = object : PermissionRequester.SimpleCallback {
-            override fun onGranted() {
-                callback?.onGranted()
-            }
-
-            override fun onDenied() {
-                callback?.onDenied()
-            }
-        }
-        if (!TextUtils.isEmpty(permission)) {
-            PermissionRequester.permission(permission)
-                .reason(reason)
-                .reasonTitle(reasonTitle)
-                .deniedAlert(deniedAlert)
-                .callback(simpleCallback)
-                .permissionDialogCallback(object : PermissionDialogCallback {
-                    override fun onApproved() {
-                        callback?.onDialogApproved()
-                    }
-
-                    override fun onRefused() {
-                        callback?.onDialogRefused()
-                    }
-                })
-                .request()
-        }
+        val permissions = permissionList.toTypedArray()
+        PermissionRequester.newInstance(*permissions)
+            .title(context.getString(R.string.tuicalling_permission_title, appName, title))
+            .description(reason.toString())
+            .settingsTip(
+                """
+    ${context.getString(R.string.tuicalling_permission_tips, title)}
+    $reason
+    """.trimIndent()
+            )
+            .callback(permissionCallback)
+            .request()
     }
 
-    fun checkCallingPermission(mediaType: TUICallDefine.MediaType, callback: TUICallback?) {
-        val permissionCallback: PermissionCallback = object : PermissionCallback() {
-            override fun onGranted() {
-                super.onGranted()
-                callback?.onSuccess()
-            }
-
-            override fun onDialogRefused() {
-                super.onDialogRefused()
-                callback?.onError(TUICallDefine.ERROR_PERMISSION_DENIED, "permission denied")
-            }
-        }
-        if (TUICallDefine.MediaType.Video == mediaType) {
-            requestPermission(CallEngineManager.instance.context, PERMISSION_MICROPHONE, PERMISSION_CAMERA, permissionCallback)
-        } else {
-            requestPermission(CallEngineManager.instance.context, PERMISSION_MICROPHONE, permissionCallback)
-        }
-    }
-
-    fun requestFloatPermission(context: Context) {
-        if (PermissionUtils.hasPermission(context)) {
+    /**
+     * Android S(31) need apply for Nearby devices(Bluetooth) permission to support bluetooth headsets.
+     * Please refer to: https://developer.android.com/guide/topics/connectivity/bluetooth/permissions
+     */
+    private fun requestBluetoothPermission(context: Context, callback: PermissionCallback) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            callback.onGranted()
             return
         }
-        if (BrandUtils.isBrandVivo()) {
-            requestVivoFloatPermission(context)
-        } else {
-            startCommonSettings(context)
-        }
+        val title = context.getString(R.string.tuicalling_permission_bluetooth)
+        val reason = context.getString(R.string.tuicalling_permission_bluetooth_reason)
+        val applicationInfo = context.applicationInfo
+        val appName = context.packageManager.getApplicationLabel(applicationInfo).toString()
+        PermissionRequester.newInstance(Manifest.permission.BLUETOOTH_CONNECT)
+            .title(context.getString(R.string.tuicalling_permission_title, appName, title))
+            .description(reason)
+            .settingsTip(reason)
+            .callback(object : PermissionCallback() {
+                override fun onGranted() {
+                    callback.onGranted()
+                }
+
+                override fun onDenied() {
+                    super.onDenied()
+                    //bluetooth is unnecessary permission, return permission granted
+                    callback.onGranted()
+                }
+            })
+            .request()
     }
 
-    private fun startCommonSettings(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            intent.data = Uri.parse("package:" + context.packageName)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
+    fun requestFloatPermission(context: Context?) {
+        if (PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION).has()) {
+            return
         }
-    }
-
-    private fun requestVivoFloatPermission(context: Context) {
-        val vivoIntent = Intent()
-        val model = BrandUtils.getModel()
-        var isVivoY85 = false
-        if (!TextUtils.isEmpty(model)) {
-            isVivoY85 = model.contains("Y85") && !model.contains("Y85A")
-        }
-        if (!TextUtils.isEmpty(model) && (isVivoY85 || model.contains("vivo Y53L"))) {
-            vivoIntent.setClassName(
-                "com.vivo.permissionmanager",
-                "com.vivo.permissionmanager.activity.PurviewTabActivity"
-            )
-            vivoIntent.putExtra("tabId", "1")
-        } else {
-            vivoIntent.setClassName(
-                "com.vivo.permissionmanager",
-                "com.vivo.permissionmanager.activity.SoftPermissionDetailActivity"
-            )
-            vivoIntent.action = "secure.intent.action.softPermissionDetail"
-        }
-        vivoIntent.putExtra("packagename", context.packageName)
-        vivoIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        context.startActivity(vivoIntent)
-    }
-
-    @IntDef(PERMISSION_MICROPHONE, PERMISSION_CAMERA)
-    annotation class PermissionType
-    abstract class PermissionCallback {
-        open fun onGranted() {}
-        open fun onDenied() {}
-        open fun onDialogApproved() {}
-        open fun onDialogRefused() {}
+        //In TUICallKit,Please open both OverlayWindows and Background pop-ups permission.
+        PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION, PermissionRequester.BG_START_PERMISSION)
+            .request()
     }
 }

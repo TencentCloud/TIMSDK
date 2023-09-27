@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.tabs.TabLayout;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -23,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationGroupBean;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.widget.ConversationTabLayoutMediator;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationGroupNotifyListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -342,6 +345,15 @@ public class TUIConversationFragmentContainer extends BaseFragment {
                     unreadView.setText("99+");
                 } else {
                     unreadView.setText(String.valueOf(unreadCount));
+                }
+            }
+
+            // 修改刷新 tab 时候引起 TabLayout 位置异常
+            int selectPositon = mConversationTabLayout.getSelectedTabPosition();
+            if (selectPositon >= 0) {
+                TabLayout.Tab selectedTab = mConversationTabLayout.getTabAt(selectPositon);
+                if (selectedTab != null) {
+                    selectedTab.select();
                 }
             }
         }

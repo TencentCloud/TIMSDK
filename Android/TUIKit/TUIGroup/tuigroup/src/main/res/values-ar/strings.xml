@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="group_id">معرف المجموعة</string>
+    <string name="group_name">اسم المجموعة</string>
+    <string name="group_icon">تغيير صورة المجموعة</string>
+    <string name="group_notice">إعلان المجموعة</string>
+    <string name="group_notice_empty_tip">لا يوجد إعلانات حاليًا.</string>
+    <string name="group_members">أعضاء المجموعة</string>
+    <string name="group_type">نوع المجموعة</string>
+    <string name="add_group_member">إضافة عضو</string>
+    <string name="group_member_info">تفاصيل</string>
+    <string name="group_delete">حذف</string>
+    <string name="group_set_admin">تعيين كمدير</string>
+    <string name="group_plus_add_group_member">+ إضافة عضو</string>
+    <string name="remove_group_member">إزالة عضو</string>
+    <string name="join_group_type">طريقة الانضمام النشطة</string>
+    <string name="invite_group_type">طريقة الدعوة للانضمام</string>
+    <string name="in_group_nick_name">اسم المستعار في المجموعة</string>
+    <string name="dissolve">حل المجموعة</string>
+    <string name="clear_message">مسح سجل الدردشة</string>
+    <string name="modify_group_notice">تعديل إعلان المجموعة</string>
+    <string name="modify_nick_name_in_goup">تعديل اسمي الداخلي في المجموعة</string>
+    <string name="group_edit">تحرير</string>
+    <string name="group_modify_remark_rule">مسموح فقط بالحروف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>
+    <string name="group_clear_message">مسح سجل الدردشة</string>
+    <string name="group_detail">تفاصيل المحادثة الجماعية</string>
+
+    <string name="group_apply_members">طلبات المجموعة</string>
+
+    <string name="group_remove_member">إزالة عضو من المحادثة الجماعية</string>
+    <string name="modify_group_name_success">تم تعديل اسم المجموعة بنجاح</string>
+    <string name="modify_group_notice_success">تم تعديل إعلان المجموعة بنجاح</string>
+    <string name="exit_group">الخروج من المحادثة الجماعية</string>
+    <string name="modify_nickname_success">تم تعديل الاسم الداخلي بنجاح</string>
+
+    <string name="group_profile_message">إرسال رسالة</string>
+    <string name="group_profile_audio_call">مكالمة صوتية</string>
+    <string name="group_profile_video_call">مكالمة فيديو</string>
+
+    <string name="search_call_hint">أدخل اسم عضو المجموعة</string>
+
+    <string name="modify_icon_fail">فشل تعديل صورة المجموعة</string>
+    <string name="modify_icon_suc">تم تعديل صورة المجموعة بنجاح</string>
+    <string name="chat_room">غرفة الدردشة</string>
+    <string name="chat_room_tip">تتم الموافقة تلقائيًا على الانضمام إلى غرفة الدردشة ولا يمكن تعديلها في الوقت الحالي</string>
+    <string name="community_group">مجموعة المجتمع</string>
+    <string name="dismiss_group_tip">هل تريد بالتأكيد حل هذه المجموعة؟</string>
+    <string name="quit_group_tip">هل تريد بالتأكيد الخروج من هذه المجموعة؟</string>
+    <string name="clear_group_msg_tip">هل تريد بالتأكيد مسح سجل الدردشة؟</string>
+    <string name="private_group">محادثة فردية</string>
+    <string name="public_group">مجموعة عامة</string>
+    <string name="request_wait">تمت الدعوة بنجاح، يرجى الانتظار لقبول الطرف الآخر</string>
+    <string name="remove">إزالة</string>
+    <string name="remove_member">إزالة الأعضاء</string>
+    <string name="remove_tip_suc">تم حذف العضو بنجاح</string>
+    <string name="remove_tip_fail">فشل حذف العضو: </string>
+    <string name="invite_suc">تمت دعوة العضو بنجاح</string>
+    <string name="invite_fail">فشل دعوة العضو:</string>
+    <string name="remove_fail_tip">فشل إزالة العضو</string>
+    <string name="manager">الإدارة</string>
+    <string name="group_manager">مدير المجموعة</string>
+    <string name="invite">دعوة</string>
+
+    <string name="forbid_join">منع الانضمام</string>
+    <string name="forbid_invite">منع الدعوة</string>
+    <string name="manager_judge">مراجعة المدير</string>
+    <string name="auto_judge">مراجعة تلقائية</string>
+
+    <string name="modify_group_name">تعديل اسم المجموعة</string>
+    <string name="group_join_type">طريقة الانضمام النشطة للمجموعة</string>
+    <string name="group_invite_type">طريقة الدعوة إلى المجموعة</string>
+
+    <string name="group_validation_message">رسالة التحقق</string>
+    <string name="group_group_application_detail_title">التفاصيل</string>
+
+    <string name="accept">قبول</string>
+    <string name="refuse">رفض</string>
+    <string name="accepted">تم القبول</string>
+    <string name="refused">تم الرفض</string>
+
+    <string name="input_tip">لم يتم إدخال الاسم المستعار ، يرجى إعادة تعبئته مرة أخرى</string>
+
+    <string name="chat_to_top">تثبيت المحادثة</string>
+    <string name="profile_msgrev_opt">عدم إزعاج</string>
+    <string name="fold_this_group_chat">طي هذه المحادثة الجماعية</string>
+    <string name="profile_chat_background">تعيين خلفية الدردشة الحالية</string>
+    <string name="chat_background_title">تغيير الخلفية</string>
+
+    <string name="join_group_tip">تمت دعوتك للانضمام إلى المجموعة: </string>
+    <string name="joined_tip">لقد انضممت بالفعل إلى المجموعة: </string>
+    <string name="reject_join_tip">تم رفض طلبك للانضمام إلى المجموعة: </string>
+    <string name="kick_group">تم طردك من المجموعة: </string>
+    <string name="dismiss_tip_before">مجموعتك</string>
+    <string name="dismiss_tip_after">تم حلها</string>
+    <string name="get_system_notice">تلقيت إشعار النظام المخصص: </string>
+
+    <string name="group_account_tag">المعرف: </string>
+    <string name="group_view_more_group_members">عرض المزيد من أعضاء المجموعة</string>
+
+    <string name="group_set_manager">تعيين مدير</string>
+    <string name="group_mute_all">كتم الجميع</string>
+    <string name="group_cancel_mute_label">إلغاء الكتم</string>
+    <string name="group_mute_tip">بعد تفعيل كتم الجميع، سيتم السماح فقط للمدير والمشرفين بالتحدث.</string>
+    <string name="group_add_mute_member_tip">إضافة أعضاء المجموعة الذين يجب كتمهم</string>
+    <string name="group_owner_label">مالك المجموعة</string>
+    <string name="group_manager_label">مدير المجموعة</string>
+    <string name="group_member_label">عضو المجموعة</string>
+    <string name="group_add_manager_count_label">مدير المجموعة (%d)</string>
+    <string name="group_add_manager_label">إضافة مدير</string>
+    <string name="group_remove_manager_label">إلغاء تعيين المدير</string>
+    <string name="group_remove_manager_tip">تم إلغاء تعيين المدير بنجاح.</string>
+
+    <string name="group_over_limit_tip">يمكنك اختيار حتى %d فقط.</string>
+    <string name="group_transfer_group_owner">نقل ملكية المجموعة</string>
+
+    <string name="group_not_support_set_manager">نوع المجموعة الحالي لا يدعم تعيين المدير.</string>
+    <string name="group_not_support_mute_member">نوع المجموعة الحالي لا يدعم حظر الدردشة لأعضاء محددين.</string>
+
+    <string name="group_choose_avatar">اختر صورة رمزية</string>
+
+    <string name="group_you">أنت</string>
+
+</resources>

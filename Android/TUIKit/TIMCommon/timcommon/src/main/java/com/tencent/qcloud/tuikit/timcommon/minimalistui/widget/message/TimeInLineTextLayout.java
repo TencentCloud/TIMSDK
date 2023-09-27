@@ -7,13 +7,20 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.tencent.qcloud.tuikit.timcommon.R;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 
 public class TimeInLineTextLayout extends FrameLayout {
     private TextView textView;
     private MessageStatusTimeView statusArea;
+    private int lineCount;
+    private boolean isRTL = false;
+    private int lastLineWidth = 0;
+    private boolean lastLineRunRTL = true;
 
     public TimeInLineTextLayout(@NonNull Context context) {
         super(context);
@@ -31,6 +38,7 @@ public class TimeInLineTextLayout extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        isRTL = LayoutUtil.isRTL();
         textView = new TextView(context, null, R.style.ChatMinimalistMessageTextStyle);
         textView.setTextColor(Color.BLACK);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textView.getResources().getDimension(R.dimen.chat_minimalist_message_text_size));
@@ -85,10 +93,31 @@ public class TimeInLineTextLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int textViewWidth = textView.getMeasuredWidth();
         int textViewHeight = textView.getMeasuredHeight();
-        textView.layout(0, 0, textViewWidth, textViewHeight);
         int statusAreaWidth = statusArea.getMeasuredWidth();
         int statusAreaHeight = statusArea.getMeasuredHeight();
-        statusArea.layout(right - left - statusAreaWidth, bottom - top - statusAreaHeight, right - left, bottom - top);
+        if (isRTL) {
+            if (lineCount <= 1) {
+                textView.layout(statusAreaWidth, 0, statusAreaWidth + textViewWidth, textViewHeight);
+            } else {
+                textView.layout(0, 0, textViewWidth, textViewHeight);
+            }
+        } else {
+            textView.layout(0, 0, textViewWidth, textViewHeight);
+        }
+
+        if (isRTL) {
+            if (lineCount <= 1) {
+                statusArea.layout(0, bottom - top - statusAreaHeight, statusAreaWidth, bottom - top);
+            } else {
+                if (lastLineRunRTL) {
+                    statusArea.layout(0, bottom - top - statusAreaHeight, statusAreaWidth, bottom - top);
+                } else {
+                    statusArea.layout(right - left - statusAreaWidth, bottom - top - statusAreaHeight, right - left, bottom - top);
+                }
+            }
+        } else {
+            statusArea.layout(right - left - statusAreaWidth, bottom - top - statusAreaHeight, right - left, bottom - top);
+        }
     }
 
     @Override
@@ -100,17 +129,18 @@ public class TimeInLineTextLayout extends FrameLayout {
 
         int textWidth = textView.getMeasuredWidth();
         int textHeight = textView.getMeasuredHeight();
-        int lineCount = textView.getLineCount();
+        lineCount = textView.getLineCount();
 
         // get last line's width
-        int lastLineWidth = 0;
         Layout layout = textView.getLayout();
         if (layout != null) {
             int start = layout.getLineStart(lineCount - 1);
             int end = layout.getLineEnd(lineCount - 1);
             float startX = layout.getPrimaryHorizontal(start);
             float endX = layout.getSecondaryHorizontal(end);
-            lastLineWidth = (int) (endX - startX);
+            lastLineWidth = (int) layout.getLineWidth(lineCount - 1);
+            int direction = layout.getParagraphDirection(lineCount - 1);
+            lastLineRunRTL = direction == Layout.DIR_RIGHT_TO_LEFT;
         }
 
         int statusAreaWidth = statusArea.getMeasuredWidth();
@@ -122,6 +152,7 @@ public class TimeInLineTextLayout extends FrameLayout {
         // switch a new line
         if (lastLineWidth + statusAreaWidth > layoutWidth) {
             maxHeight = textHeight + statusAreaHeight;
+            lineCount++;
             maxWidth = Math.max(textWidth, statusAreaWidth);
         } else {
             maxHeight = Math.max(textHeight, statusAreaHeight);

@@ -21,8 +21,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:textColor="?attr/chat_self_msg_text_color"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp"
+        android:paddingStart="7dp"
+        android:paddingEnd="7dp"
         android:maxWidth="276dp"
         android:textSize="@dimen/chat_message_text_size" />
 
