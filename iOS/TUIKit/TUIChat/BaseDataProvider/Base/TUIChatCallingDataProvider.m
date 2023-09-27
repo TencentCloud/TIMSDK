@@ -256,8 +256,7 @@ typedef NSDictionary *TUIChatCallingJsonData;
         NSUInteger duration = [[self.jsonData objectForKey:@"call_end"] unsignedIntegerValue];
         display = isGroup
                       ? TIMCommonLocalizableString(TUIKitSignalingFinishGroupChat)
-                      : [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat), duration / 60, duration % 60];
-
+        : [NSString stringWithFormat:@"%@:%.2d:%.2d",TIMCommonLocalizableString(TUIKitSignalingFinishConversationAndTimeFormat),duration / 60, duration % 60];
     } else if (protocolType == TUICallProtocolTypeTimeout) {
         // Call timeout
         NSMutableString *mutableContent = [NSMutableString string];
@@ -285,7 +284,7 @@ typedef NSDictionary *TUIChatCallingJsonData;
         display = TIMCommonLocalizableString(TUIKitSignalingComfirmSwitchToAudio);
     }
 
-    return display;
+    return rtlString(display);
 }
 
 - (TUICallMessageDirection)directionForDetailsAppearance {
@@ -321,7 +320,7 @@ typedef NSDictionary *TUIChatCallingJsonData;
             display = isCaller ? TUIChatLocalizableString(TUIChatCallCancelInCaller) : TUIChatLocalizableString(TUIChatCallCancelInCallee);
         } else if (protocolType == TUICallProtocolTypeHangup) {
             NSInteger duration = [[self.jsonData objectForKey:@"call_end"] integerValue];
-            display = [NSString stringWithFormat:TUIChatLocalizableString(TUIChatCallDurationFormat), duration / 60, duration % 60];
+            display = [NSString stringWithFormat:@"%@:%.2d:%.2d",TUIChatLocalizableString(TUIChatCallDurationFormat),duration / 60, duration % 60];
         } else if (protocolType == TUICallProtocolTypeTimeout) {
             display = isCaller ? TUIChatLocalizableString(TUIChatCallTimeoutInCaller) : TUIChatLocalizableString(TUIChatCallTimeoutInCallee);
         } else if (protocolType == TUICallProtocolTypeLineBusy) {
@@ -375,7 +374,7 @@ typedef NSDictionary *TUIChatCallingJsonData;
     } else {
         display = TUIChatLocalizableString(TUIChatCallUnrecognized);
     }
-    return display;
+    return rtlString(display);
 }
 
 - (TUICallMessageDirection)directionForSimplifyAppearance {

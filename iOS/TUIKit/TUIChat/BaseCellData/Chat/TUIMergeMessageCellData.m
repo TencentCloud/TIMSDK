@@ -23,6 +23,7 @@
     TUIMergeMessageCellData *relayData = [[TUIMergeMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     relayData.title = elem.title;
     relayData.abstractList = [NSArray arrayWithArray:elem.abstractList];
+    relayData.abstractSendDetailList = [self.class formatAbstractSendDetailList:elem.abstractList];
     relayData.mergerElem = elem;
     relayData.reuseId = TRelayMessageCell_ReuserId;
     return relayData;
@@ -43,6 +44,7 @@
 - (NSAttributedString *)abstractAttributedString {
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.lineSpacing = 4;
+    style.alignment = isRTL()? NSTextAlignmentRight:NSTextAlignmentLeft;
     NSDictionary *attribute = @{
         NSForegroundColorAttributeName : [UIColor colorWithRed:187 / 255.0 green:187 / 255.0 blue:187 / 255.0 alpha:1 / 1.0],
         NSFontAttributeName : [UIFont systemFontOfSize:12.0],
@@ -55,11 +57,62 @@
         if (i >= 4) {
             break;
         }
-        NSString *str = [NSString stringWithFormat:@"%@\n", ab];
+        NSString *resultStr = [NSString stringWithFormat:@"%@\n", ab];
+        NSString *str = resultStr;
         [abstr appendAttributedString:[[NSAttributedString alloc] initWithString:str attributes:attribute]];
         i++;
     }
     return abstr;
 }
 
++ (NSMutableArray *)formatAbstractSendDetailList:(NSArray *)originAbstractList {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:3];
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 4;
+    style.alignment = isRTL()? NSTextAlignmentRight:NSTextAlignmentLeft;
+    NSDictionary *attribute = @{
+        NSForegroundColorAttributeName : [UIColor colorWithRed:187 / 255.0 green:187 / 255.0 blue:187 / 255.0 alpha:1 / 1.0],
+        NSFontAttributeName : [UIFont systemFontOfSize:12.0],
+        NSParagraphStyleAttributeName : style
+    };
+    int i = 0;
+    for (NSString *ab in originAbstractList) {
+        if (i >= 4) {
+            break;
+        }
+        NSString *str = ab;
+        NSString * splitStr = @":";
+        if ([str containsString:@"\u202C:"]) {
+            splitStr = @"\u202C:";
+        }
+        NSArray<NSString *> *result =  [str componentsSeparatedByString:splitStr];
+        NSString *sender = result[0];
+        NSString *detail = result[1];
+        sender =  [NSString stringWithFormat:@"%@",sender];
+        detail =  [NSString stringWithFormat:@"%@",detail];
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:3];
+        if(sender.length>0 ){
+            NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithString:@""];
+            [abstr appendAttributedString:[[NSAttributedString alloc] initWithString:sender attributes:attribute]];
+           [dic setObject:abstr forKey:@"sender"];
+        }
+        if(detail.length>0 ){
+           NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithString:@""];
+           [abstr appendAttributedString:[[NSAttributedString alloc] initWithString:detail attributes:attribute]];
+           [dic setObject:abstr forKey:@"detail"];
+        }
+        [array addObject:dic];
+
+        i++;
+    }
+    return array;
+}
+- (BOOL)isArString:(NSString *)text {
+    NSString *isoLangCode = (__bridge_transfer NSString *)CFStringTokenizerCopyBestStringLanguage((__bridge CFStringRef)text, CFRangeMake(0, text.length));
+
+    if ([isoLangCode isEqualToString:@"ar"]) {
+        return YES;
+    }
+    return NO;
+}
 @end

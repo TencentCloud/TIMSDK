@@ -13,48 +13,48 @@ class GroupCallView: UIView {
     private var isViewReady: Bool = false
     
     let layoutView = {
-        return GroupCallVideoLayout(frame: CGRectZero)
+        return GroupCallVideoLayout(frame: CGRect.zero)
     }()
     
     let floatingWindowBtn = {
-        return FloatingWindowButton(frame: CGRectZero)
+        return FloatingWindowButton(frame: CGRect.zero)
     }()
     
     let inviteUserBUtton = {
-        return InviteUserButton(frame: CGRectZero)
+        return InviteUserButton(frame: CGRect.zero)
     }()
     
     let inviterUserInfoView = {
-        return GroupCallerUserInfoView(frame: CGRectZero)
+        return GroupCallerUserInfoView(frame: CGRect.zero)
     }()
     
     let inviteeAvatarListView = {
-        return InviteeAvatarListView(frame: CGRectZero)
+        return InviteeAvatarListView(frame: CGRect.zero)
     }()
     
     let waitingHintView = {
-        return CallWaitingHintView(frame: CGRectZero)
+        return CallWaitingHintView(frame: CGRect.zero)
     }()
     
     let audioFunctionView = {
-        return AudioCallerWaitingAndAcceptedView(frame: CGRectZero)
+        return AudioCallerWaitingAndAcceptedView(frame: CGRect.zero)
     }()
     
     let videoFunctionView =  {
-        return VideoCallerAndCalleeAcceptedView(frame: CGRectZero)
+        return VideoCallerAndCalleeAcceptedView(frame: CGRect.zero)
     }()
         
     let inviteeWaitFunctionView = {
-        return AudioAndVideoCalleeWaitingView(frame: CGRectZero)
+        return AudioAndVideoCalleeWaitingView(frame: CGRect.zero)
     }()
         
     let timerView: TimerView = {
-        return TimerView(frame: CGRectZero)
+        return TimerView(frame: CGRect.zero)
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.frame = CGRectMake(0, 0, Screen_Width, Screen_Height)
+        self.frame = CGRect(x: 0, y: 0, width: Screen_Width, height: Screen_Height)
         createGroupCallView()
         registerObserveState()
     }
@@ -95,26 +95,28 @@ class GroupCallView: UIView {
     }
     
     func activateConstraints() {
+        let isAuidoCall: Bool = TUICallState.instance.mediaType.value == .audio ? true : false
+        
         layoutView.snp.makeConstraints { make in
             make.size.equalTo(self)
         }
         
         floatingWindowBtn.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 30, height: 30))
-            make.top.equalTo(snp.top).offset(20)
-            make.left.equalTo(snp.left).offset(20)
+            make.size.equalTo(kFloatWindowButtonSize)
+            make.top.equalToSuperview().offset(StatusBar_Height)
+            make.leading.equalTo(snp.leading).offset(20)
         }
 
         inviteUserBUtton.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 30, height: 30))
-            make.top.equalTo(snp.top).offset(20)
-            make.right.equalTo(snp.right).offset(-20)
+            make.size.equalTo(kInviteUserButtonSize)
+            make.top.equalToSuperview().offset(StatusBar_Height)
+            make.trailing.equalTo(snp.trailing).offset(-20)
         }
 
         inviterUserInfoView.snp.makeConstraints { make in
             make.top.equalTo(self).offset(StatusBar_Height + 75.0)
-            make.left.equalTo(self).offset(20)
-            make.right.equalTo(self).offset(-20)
+            make.leading.equalTo(self).offset(20)
+            make.trailing.equalTo(self).offset(-20)
             make.height.equalTo(180)
         }
         
@@ -150,7 +152,7 @@ class GroupCallView: UIView {
             make.centerX.equalTo(self)
             make.height.equalTo(20)
             make.width.equalTo(self)
-            make.bottom.equalTo(self.videoFunctionView.snp.top).offset(10)
+            make.bottom.equalTo(isAuidoCall ? self.audioFunctionView.snp.top : self.videoFunctionView.snp.top).offset(-10)
         }
         
         waitingHintView.snp.makeConstraints { make in

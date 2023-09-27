@@ -8,12 +8,12 @@
 import Foundation
 import ImSDK_Plus
 
-class SelectGroupMeberViewModel {
+class SelectGroupMemberViewModel {
     var selfUser: Observable<User> = Observable(User())
-    var groupMerberList: Observable<[User]> = Observable([])
-    var groupMerberState: [String: Bool] = [:]
-    var groupMerberStateOrigin: [String: Bool] = [:]
-        
+    var groupMemberList: Observable<[User]> = Observable([])
+    var groupMemberState: [String: Bool] = [:]
+    var groupMemberStateOrigin: [String: Bool] = [:]
+    
     init() {
         updateUserState()
     }
@@ -31,18 +31,18 @@ class SelectGroupMeberViewModel {
                     continue
                 }
                 let user = User.convertUserFromImFullInfo(user: imUserInfo)
-                self.groupMerberList.value.append(user)
-                self.groupMerberState[user.id.value] = false
-                self.groupMerberStateOrigin[user.id.value] = false
+                self.groupMemberList.value.append(user)
+                self.groupMemberState[user.id.value] = false
+                self.groupMemberStateOrigin[user.id.value] = false
             }
             
             for user in TUICallState.instance.remoteUserList.value {
-                self.groupMerberState[user.id.value] = true
-                self.groupMerberStateOrigin[user.id.value] = true
+                self.groupMemberState[user.id.value] = true
+                self.groupMemberStateOrigin[user.id.value] = true
             }
             
         } fail: { code, message in
-    
+            
         }
     }
 }

@@ -10,7 +10,6 @@
 #import <ImSDK_Plus/ImSDK_Plus.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TUICore/TUIGlobalization.h>
-#import "TUIAddCellData.h"
 #import "TUIMemberInfoCellData_Minimalist.h"
 #import "TUISelectGroupMemberCell.h"
 

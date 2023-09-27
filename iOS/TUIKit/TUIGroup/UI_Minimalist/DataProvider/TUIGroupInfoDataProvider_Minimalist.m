@@ -11,7 +11,6 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUILogin.h>
 #import "TIMGroupInfo+TUIDataProvider.h"
-#import "TUIAddCellData.h"
 #import "TUIGroupButtonCell_Minimalist.h"
 #import "TUIGroupMemberCellData.h"
 #import "TUIGroupMemberCellData_Minimalist.h"
@@ -257,8 +256,6 @@
         inviteOptionData.value = [TUIGroupInfoDataProvider_Minimalist getApproveOption:self.groupInfo];
         [groupInfoArray addObject:inviteOptionData];
         self.inviteOptionData = inviteOptionData;
-        [dataList addObject:groupInfoArray];
-
         [dataList addObject:groupInfoArray];
 
         // personal info

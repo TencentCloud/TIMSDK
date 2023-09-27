@@ -44,6 +44,7 @@
 #import "TUIVideoMessageCell_Minimalist.h"
 #import "TUIVoiceMessageCell_Minimalist.h"
 #import "TUIMessageCellConfig_Minimalist.h"
+#import "TUIVoiceMessageCell_Minimalist.h"
 
 typedef NSString * CellDataClassName;
 typedef Class<TUIMessageCellProtocol> CellClass;
@@ -137,8 +138,8 @@ typedef NSNumber * HeightNumber;
 }
 
 - (void)registerEvents {
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_WillForwardTranslationSubKey object:self];
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIPluginNotify subKey:TUICore_TUIPluginNotify_WillForwardTextSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIPluginNotify subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationBecomeActive)
                                                  name:UIApplicationDidBecomeActiveNotification
@@ -313,9 +314,16 @@ typedef NSNumber * HeightNumber;
         }
         FailBlock:^(int code, NSString *desc) {
           @strongify(self);
-          [TUITool makeToastError:code msg:desc];
+          NSString * errorMsg = [TUITool convertIMError:code msg:desc];
+          [self makeSendErrorHud:errorMsg];
           [self changeMsg:cellData status:Msg_Status_Fail];
         }];
+}
+
+- (void)makeSendErrorHud:(NSString *)msg {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:msg message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:ac animated:YES completion:nil];
 }
 
 - (void)sendMessage:(V2TIMMessage *)message {
@@ -370,14 +378,14 @@ typedef NSNumber * HeightNumber;
 
 #pragma mark - TUINotificationProtocol
 - (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
-    if ([key isEqualToString:TUICore_TUITranslationNotify] && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
+    if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
         // Translation View is shown, hidden or changed.
-        TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
+        TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
         [self clearAndReloadCellOfData:data];
     }
-    if ([key isEqualToString:TUICore_TUITranslationNotify] && [subKey isEqualToString:TUICore_TUITranslationNotify_WillForwardTranslationSubKey]) {
+    if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_WillForwardTextSubKey]) {
         // Translation will be forwarded.
-        NSString *text = param[TUICore_TUITranslationNotify_WillForwardTranslationSubKey_Text];
+        NSString *text = param[TUICore_TUIPluginNotify_WillForwardTextSubKey_Text];
         if (self.delegate && [self.delegate respondsToSelector:@selector(messageController:onForwardText:)]) {
             [self.delegate messageController:self onForwardText:text];
         }
@@ -790,7 +798,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 #pragma mark - TUIMessageCellDelegate
 
 - (void)onSelectMessage:(TUIMessageCell *)cell {
-    if (self.showCheckBox) {
+    if (self.showCheckBox && [self supportCheckBox:(TUIMessageCellData *)cell.data]) {
         TUIMessageCellData *data = (TUIMessageCellData *)cell.data;
         data.selected = !data.selected;
         [self.tableView reloadData];
@@ -830,6 +838,9 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (void)tryShowGuidance {
+    if (isRTL()){
+        return;
+    }
     BOOL hasShow = [NSUserDefaults.standardUserDefaults boolForKey:@"chat_reply_guide_showKey"];
     if (hasShow) {
         return;
@@ -938,7 +949,12 @@ static NSMutableArray *reloadMsgIndexs = nil;
 
     TUIChatPopContextExtionItem *deleteItem = [self setupDeleteAction:alertController targetCell:cell];
 
+    TUIChatPopContextExtionItem *audioPlaybackStyleItem = [self setupAudioPlaybackStyleAction:alertController targetCell:cell];
+
     if (isChatNoramlMessageOrCustomMessage) {
+        if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC  && imMsg.soundElem) {
+            [items addObject:audioPlaybackStyleItem];
+        }
         if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
             [items addObject:copyItem];
         }
@@ -1156,20 +1172,28 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (void)onJumpToMessageInfoPage:(TUIMessageCellData *)data selectCell:(TUIMessageCell *)cell {
-    TUIMessageReadViewController_Minimalist *readViewController =
-        [[TUIMessageReadViewController_Minimalist alloc] initWithCellData:data
-                                                             dataProvider:self.messageDataProvider
-                                                    showReadStatusDisable:NO
-                                                          c2cReceiverName:self.conversationData.title
-                                                        c2cReceiverAvatar:self.conversationData.faceUrl];
-    CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.frame fromView:cell];
-    readViewController.alertViewCellData = data;
-    readViewController.originFrame = frame;
-    readViewController.alertCellClass = cell.class;
-    readViewController.viewWillShowHandler = ^(TUIMessageCell *_Nonnull alertView) {
-      alertView.delegate = self;
-    };
-    [self.navigationController pushViewController:readViewController animated:YES];
+
+    TUIMessageCellData *alertViewCellData =  [TUIMessageDataProvider getCellData:cell.messageData.innerMessage];;
+    @weakify(self);
+    [self.messageDataProvider preProcessMessage:@[alertViewCellData] callback:^{
+        @strongify(self);
+        TUIMessageReadViewController_Minimalist *readViewController =
+            [[TUIMessageReadViewController_Minimalist alloc] initWithCellData:data
+                                                                 dataProvider:self.messageDataProvider
+                                                        showReadStatusDisable:NO
+                                                              c2cReceiverName:self.conversationData.title
+                                                            c2cReceiverAvatar:self.conversationData.faceUrl];
+        CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.frame fromView:cell];
+        readViewController.originFrame = frame;
+        readViewController.alertCellClass = cell.class;
+        @weakify(self);
+        readViewController.viewWillShowHandler = ^(TUIMessageCell *_Nonnull alertView) {
+          alertView.delegate = self;
+        };
+        readViewController.alertViewCellData = alertViewCellData;
+        [self.navigationController pushViewController:readViewController animated:YES];
+    }];
+
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
@@ -1208,7 +1232,8 @@ static NSMutableArray *reloadMsgIndexs = nil;
         content = txtCell.textView.text;
     }
     if ([sender isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
-        TUIReferenceMessageCellData *replyMsg = (TUIReferenceMessageCellData *)sender;
+        TUIReferenceMessageCell_Minimalist *replyMsgCell = (TUIReferenceMessageCell_Minimalist *)sender;
+        TUIReferenceMessageCellData *replyMsg = (TUIReferenceMessageCellData *)replyMsgCell.data;
         content = replyMsg.content;
     }
     if (content.length > 0) {
@@ -1594,4 +1619,50 @@ static NSMutableArray *reloadMsgIndexs = nil;
     return deleteItem;
 }
 
+- (TUIChatPopContextExtionItem *)setupAudioPlaybackStyleAction:(TUIChatPopContextController *)alertController targetCell:(TUIMessageCell *)cell {
+    
+    
+    @weakify(self);
+    @weakify(cell);
+    @weakify(alertController);
+    
+    TUIVoiceAudioPlaybackStyle originStyle = [TUIVoiceMessageCellData getAudioplaybackStyle];
+
+    TUIChatPopContextExtionItem *styleActionItem = nil;
+    __weak typeof(styleActionItem)  weakStyleActionItem = styleActionItem;
+
+    NSString *title = @"";
+    UIImage * img = nil;
+    if (originStyle == TUIVoiceAudioPlaybackStyleLoudspeaker) {
+        title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleHandset);
+        img   = [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_loudspeaker")];
+    }
+    else {
+        title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleLoudspeaker);
+        img   = [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_handset")];
+    }
+    
+    styleActionItem =
+        [[TUIChatPopContextExtionItem alloc] initWithTitle:title
+                                                  markIcon:img
+                                                    weight:11000
+                                         withActionHandler:^(TUIChatPopContextExtionItem *action) {
+            @strongify(alertController);
+            [alertController blurDismissViewControllerAnimated:NO
+                                                    completion:^(BOOL finished) {
+                                                      if (originStyle == TUIVoiceAudioPlaybackStyleLoudspeaker) {
+                                                          // Change To Handset
+                                                          weakStyleActionItem.title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleLoudspeaker);
+                                                          [TUITool hideToast];
+                                                          [TUITool makeToast:TIMCommonLocalizableString(TUIKitAudioPlaybackStyleChange2Handset) duration:2];
+                                                      } else {
+                                                          weakStyleActionItem.title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleHandset);
+                                                          [TUITool hideToast];
+                                                          [TUITool makeToast:TIMCommonLocalizableString(TUIKitAudioPlaybackStyleChange2Loudspeaker) duration:2];
+                                                      }
+                                                      [TUIVoiceMessageCellData changeAudioPlaybackStyle];
+                                                    }];
+        }];
+    return styleActionItem;
+}
 @end

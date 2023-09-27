@@ -79,6 +79,10 @@ typedef enum : NSUInteger {
     [self.rightButton sizeToFit];
     self.rightButton.frame = CGRectMake(self.frame.size.width - self.rightButton.frame.size.width - kScale390(14), kScale390(23.5),
                                         self.rightButton.frame.size.width, self.rightButton.frame.size.height);
+    if (isRTL()){
+        [self.leftButton resetFrameToFitRTL];
+        [self.rightButton resetFrameToFitRTL];
+    }
 }
 - (void)leftButtonClick {
     if (self.leftButtonClickCallback) {

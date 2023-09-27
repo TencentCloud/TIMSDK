@@ -10,6 +10,8 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
 #import "TUIConversationCellData.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
+
 @implementation TUIFoldConversationListDataProvider
 
 - (Class)getConversationCellClass {
@@ -40,8 +42,11 @@
                                                                     attributes:@{NSForegroundColorAttributeName : RGB(250, 81, 81)}];
         [attributeString appendAttributedString:draft];
 
-        NSAttributedString *draftContent = [[NSAttributedString alloc] initWithString:[self getDraftContent:conv]
-                                                                           attributes:@{NSForegroundColorAttributeName : [UIColor d_systemGrayColor]}];
+        NSString *draftContentStr = [self getDraftContent:conv];
+        
+        NSMutableAttributedString *draftContent = [draftContentStr getAdvancedFormatEmojiStringWithFont:[UIFont systemFontOfSize:16.0]
+                                                                                         textColor:TUIChatDynamicColor(@"chat_input_text_color", @"#000000")
+                                                                                    emojiLocations:nil];
         [attributeString appendAttributedString:draftContent];
     } else {
         /**

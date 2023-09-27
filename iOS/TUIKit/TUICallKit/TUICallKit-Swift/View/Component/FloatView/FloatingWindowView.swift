@@ -13,8 +13,8 @@ private let kMicroWindowCornerRatio = 15.0
 private let kMicroContainerViewOffset = 8.0
 
 private let kCallKitSingleSmallVideoViewWidth = 100.0
-private let kCallKitSingleSmallVideoViewFrame = CGRectMake(5, 5, kCallKitSingleSmallVideoViewWidth - 10,
-                                                           (kCallKitSingleSmallVideoViewWidth / 9.0 * 16.0) - 10 )
+private let kCallKitSingleSmallVideoViewFrame = CGRect(x: 5, y: 5, width: kCallKitSingleSmallVideoViewWidth - 10,
+                                                       height: (kCallKitSingleSmallVideoViewWidth / 9.0 * 16.0) - 10 )
 
 protocol FloatingWindowViewDelegate: NSObject {
     func tapGestureAction(tapGesture: UITapGestureRecognizer)
@@ -31,19 +31,19 @@ class FloatingWindowView: UIView {
     
     var localPreView: VideoView {
         if VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value] == nil {
-            let _ = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRectZero)
+            let _ = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRect.zero)
         }
         VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value]?.videoView.isUserInteractionEnabled = false
-        return VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value]?.videoView ?? VideoView(frame: CGRectZero)
+        return VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value]?.videoView ?? VideoView(frame: CGRect.zero)
     }
     
     var remotePreView: VideoView {
-        guard let remoteUser = self.viewModel.remoteUserList.value.first else { return VideoView(frame: CGRectZero) }
+        guard let remoteUser = self.viewModel.remoteUserList.value.first else { return VideoView(frame: CGRect.zero) }
         if VideoFactory.instance.viewMap[remoteUser.id.value] == nil {
-            let _ = VideoFactory.instance.createVideoView(userId: remoteUser.id.value, frame: CGRectZero)
+            let _ = VideoFactory.instance.createVideoView(userId: remoteUser.id.value, frame: CGRect.zero)
         }
         VideoFactory.instance.viewMap[remoteUser.id.value]?.videoView.isUserInteractionEnabled = false
-        return  VideoFactory.instance.viewMap[remoteUser.id.value]?.videoView ?? VideoView(frame: CGRectZero)
+        return  VideoFactory.instance.viewMap[remoteUser.id.value]?.videoView ?? VideoView(frame: CGRect.zero)
     }
 
     let avatarImageView: UIImageView = {

@@ -13,7 +13,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
     let viewModel = FunctionViewModel()
     lazy var muteMicBtn: BaseControlButton = {
         weak var weakSelf = self
-        let btn = BaseControlButton.create(frame: CGRectZero,
+        let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: "Demo.TRTC.Calling.mic") ?? "",
                                            imageSize: kBtnSmallSize) { sender in
             weakSelf?.muteMicEvent(sender: sender)
@@ -27,7 +27,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
     
     lazy var closeCameraBtn: BaseControlButton = {
         weak var weakSelf = self
-        let btn = BaseControlButton.create(frame: CGRectZero,
+        let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: "Demo.TRTC.Calling.camera") ?? "",
                                            imageSize: kBtnSmallSize) { sender in
             weakSelf?.closeCameraTouchEvent(sender: sender)
@@ -41,7 +41,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
     
     lazy var changeSpeakerBtn: BaseControlButton = {
         weak var weakSelf = self
-        let btn = BaseControlButton.create(frame: CGRectZero,
+        let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: "Demo.TRTC.Calling.speaker") ?? "",
                                            imageSize: kBtnSmallSize) { sender in
             weakSelf?.changeSpeakerEvent(sender: sender)
@@ -55,7 +55,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
     
     lazy var hangupBtn: BaseControlButton = {
         weak var weakSelf = self
-        let btn = BaseControlButton.create(frame: CGRectZero,
+        let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: "Demo.TRTC.Calling.hangup") ?? "",
                                            imageSize: kBtnLargeSize) { sender in
             weakSelf?.hangupTouchEvent(sender: sender)
@@ -104,7 +104,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
 
     func activateConstraints() {
         muteMicBtn.snp.makeConstraints { make in
-            make.right.equalTo(changeSpeakerBtn.snp.left)
+            make.trailing.equalTo(changeSpeakerBtn.snp.leading)
             make.centerY.equalTo(changeSpeakerBtn)
             make.size.equalTo(kControlBtnSize)
         }
@@ -116,7 +116,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
         }
         
         closeCameraBtn.snp.makeConstraints { make in
-            make.left.equalTo(changeSpeakerBtn.snp.right)
+            make.leading.equalTo(changeSpeakerBtn.snp.trailing)
             make.centerY.equalTo(changeSpeakerBtn)
             make.size.equalTo(kControlBtnSize)
         }
@@ -129,7 +129,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
         
         switchCameraBtn.snp.makeConstraints { make in
             make.centerY.equalTo(hangupBtn)
-            make.left.equalTo(hangupBtn.snp.right).offset(20)
+            make.leading.equalTo(hangupBtn.snp.trailing).offset(20)
             make.size.equalTo(CGSize(width: 36, height: 36))
         }
     }

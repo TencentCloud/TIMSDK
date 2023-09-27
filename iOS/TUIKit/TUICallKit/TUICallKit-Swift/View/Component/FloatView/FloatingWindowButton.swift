@@ -49,7 +49,7 @@ class FloatingWindowButton: UIView {
     func activateConstraints() {
         floatButton.snp.makeConstraints { make in
             make.center.equalTo(self)
-            make.size.equalTo(CGSize(width: 40, height: 40))
+            make.size.equalTo(kFloatWindowButtonSize)
         }
     }
 

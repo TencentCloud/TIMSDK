@@ -49,23 +49,51 @@
         UIImageView *starView = [self.starImageArray objectAtIndex:i];
         starView.hidden = (i >= data.score);
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
-    self.titleLabel.mm_top(10).mm_left(10).mm_width(225).mm_height(18);
-
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(10);
+        make.leading.mas_equalTo(10);
+        make.width.mas_equalTo(225);
+        make.height.mas_equalTo(18);
+    }];
+    
     UIImageView *leftView = nil;
     for (UIImageView *starView in self.starImageArray) {
         if (leftView == nil) {
-            starView.mm_left(10).mm_top(self.titleLabel.mm_y + self.titleLabel.mm_h + 6).mm_width(30).mm_height(30);
+            [starView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.leading.mas_equalTo(10);
+                make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(6);
+                make.width.mas_equalTo(30);
+                make.height.mas_equalTo(30);
+            }];
         } else {
-            starView.mm_left(leftView.mm_x + leftView.mm_w).mm_top(self.titleLabel.mm_y + self.titleLabel.mm_h + 6).mm_width(30).mm_height(30);
+            [starView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.leading.mas_equalTo(leftView.mas_trailing);
+                make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(6);
+                make.width.mas_equalTo(30);
+                make.height.mas_equalTo(30);
+            }];
         }
         leftView = starView;
     }
-
+    
     UIImageView *starView = self.starImageArray.firstObject;
 
     self.commentLabel.hidden = self.commentLabel.text.length == 0;
@@ -75,8 +103,25 @@
                                                         attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}
                                                            context:nil];
         CGSize size = CGSizeMake(225, ceilf(rect.size.height));
-        self.commentLabel.mm_width(size.width).mm_height(size.height).mm_left(10).mm_top(starView.mm_y + starView.mm_h + 6);
+        [self.commentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(starView.mas_bottom).mas_offset(6);
+            make.leading.mas_equalTo(10);
+            make.width.mas_equalTo(size.width);
+            make.height.mas_equalTo(size.height);
+        }];
     }
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+    
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 - (NSMutableArray *)starImageArray {

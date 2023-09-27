@@ -1,0 +1,33 @@
+/* 
+  Localizable.strings
+  Chinese Simplized
+
+  Created by harvy on 2020/10/9.
+  
+*/
+"TUIChatCallDurationFormat" = "مدة المكالمة";
+"TUIChatCallCancelInCaller" = "تم الإلغاء";
+"TUIChatCallCancelInCallee" = "تم إلغاءه من الطرف الآخر";
+"TUIChatCallRejectInCaller" = "تم رفضه من الطرف الآخر";
+"TUIChatCallRejectInCallee" = "تم الرفض";
+"TUIChatCallTimeoutInCaller" = "لا يوجد رد من الطرف الآخر";
+"TUIChatCallTimeoutInCallee" = "تم الإلغاء من الطرف الآخر";
+"TUIChatCallLinebusyInCaller" = "الطرف الآخر مشغول";
+"TUIChatCallLinebusyInCallee" = "تم الإلغاء من الطرف الآخر";
+"TUIChatCallSend" = "بدء المكالمة";
+"TUIChatCallAccept" = "قبول المكالمة";
+"TUIChatCallSwitchToAudio" = "تحويل الفيديو إلى صوت";
+"TUIChatCallConfirmSwitchToAudio" = "تأكيد التحويل إلى صوت";
+"TUIChatCallUnrecognized" = "أمر المكالمة غير معروف";
+"TUIChatGroupCallSendFormat" = "\"%@\" بدأ مكالمة جماعية";
+"TUIChatGroupCallEnd" = "انتهت المكالمة";
+"TUIChatGroupCallNoAnswer" = "لم يتم الرد";
+"TUIChatGroupCallRejectFormat" = "\"%@\" رفض المكالمة الجماعية";
+"TUIChatGroupCallAcceptFormat" = "\"%@\" قبل المكالمة";
+"TUIChatGroupCallSwitchToAudioFormat" = "\"%@\" قام بتحويل الفيديو إلى صوت";
+"TUIChatGroupCallConfirmSwitchToAudioFormat" = "\"%@\" قبل تحويل الفيديو إلى صوت";
+"TUIChatVideoCall" = "مكالمة فيديو";
+"TUIChatAudioCall" = "مكالمة صوتية";
+"TUIChatUnknownCall" = "مكالمة غير معروفة";
+
+

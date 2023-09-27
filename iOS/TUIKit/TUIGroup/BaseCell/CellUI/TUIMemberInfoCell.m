@@ -66,7 +66,7 @@
 
 - (void)setData:(TUIMemberInfoCellData *)data {
     _data = data;
-
+    
     UIImage *defaultImage = DefaultAvatarImage;
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:data.avatarUrl] placeholderImage:data.avatar ?: defaultImage];
     self.nameLabel.text = data.name;
@@ -79,25 +79,47 @@
         self.tagView.tagname.text = @"";
         self.tagView.hidden = YES;
     }
-
+    
     if (data.showAccessory) {
-        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;        
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
     }
-    [self updateUI];
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+    
 }
 
-- (void)updateUI {
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
     if (self.data.style == TUIMemberInfoCellStyleAdd) {
-        self.avatarImageView.mm_width(20.0 * kScale).mm_height(20.0 * kScale);
-        self.avatarImageView.mm_left(18.0 * kScale);
+        
+        [self.avatarImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(18.0 * kScale);
+            make.centerY.mas_equalTo(self.contentView);
+            make.width.height.mas_equalTo(20.0 * kScale);
+        }];
         self.nameLabel.font = [UIFont systemFontOfSize:16.0 * kScale];
         self.nameLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
     } else {
-        self.avatarImageView.mm_width(34.0 * kScale).mm_height(34.0 * kScale);
-        self.avatarImageView.mm_left(16.0 * kScale);
+        [self.avatarImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(16.0 * kScale);
+            make.centerY.mas_equalTo(self.contentView);
+            make.width.height.mas_equalTo(34.0 * kScale);
+        }];
         self.nameLabel.font = [UIFont systemFontOfSize:16.0 * kScale];
         self.nameLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
     }
@@ -109,14 +131,27 @@
         self.avatarImageView.layer.masksToBounds = YES;
         self.avatarImageView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
-
-    self.avatarImageView.mm_centerY = self.contentView.mm_centerY;
     [self.nameLabel sizeToFit];
-    self.nameLabel.mm_height(self.contentView.mm_h).mm_left(CGRectGetMaxX(self.avatarImageView.frame) + 14);
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.avatarImageView.mas_trailing).mas_offset(14);
+        make.centerY.mas_equalTo(self.contentView);
+        make.size.mas_equalTo(self.nameLabel.frame.size);
+        if (self.tagView.tagname.text.length > 0) {
+            make.trailing.mas_lessThanOrEqualTo(self.tagView.mas_trailing).mas_offset(- 2.0 * kScale);
+        }
+        else {
+            make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- 2.0 * kScale);
+        }
+    }];
     [self.tagView.tagname sizeToFit];
-    self.tagView.frame = CGRectMake(self.nameLabel.frame.origin.x + self.nameLabel.frame.size.width + kScale390(10), 0,
-                                    self.tagView.tagname.frame.size.width + kScale390(16), kScale390(15));
-    self.tagView.mm_centerY = self.contentView.mm_centerY;
+    [self.tagView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.nameLabel.mas_trailing).mas_offset(kScale390(10));
+        make.width.mas_equalTo(self.tagView.tagname.frame.size.width + kScale390(16));
+        make.height.mas_equalTo(kScale390(15));
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- 2.0 * kScale);
+
+    }];
 }
 
 - (UIImageView *)avatarImageView {

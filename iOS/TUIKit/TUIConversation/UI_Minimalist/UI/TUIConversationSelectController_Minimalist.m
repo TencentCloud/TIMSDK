@@ -62,7 +62,7 @@ typedef void (^TUIConversationSelectCompletHandler)(BOOL);
     self.line = [[UIView alloc] init];
     self.line.backgroundColor = [UIColor tui_colorWithHex:@"#000000" alpha:0.1];
     [self addSubview:self.line];
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    UICollectionViewFlowLayout *layout = [[TUICollectionRTLFitFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;

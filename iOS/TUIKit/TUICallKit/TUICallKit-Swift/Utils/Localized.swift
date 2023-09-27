@@ -21,10 +21,6 @@ func TUICallKitLocalizerFromTableAndCommon(key: String, common: String, table: S
     return TUICallKitLocalizeFromTable(key: key, table: table)
 }
 
-//MARK: Replace String
-
-
-
 // MARK: CallKit
 let TUICallKit_Localize_TableName = "CallingLocalized"
 func TUICallKitLocalize(key: String) -> String? {

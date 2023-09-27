@@ -139,6 +139,7 @@
 #define TUIGroupNoteBundle @"TUIGroupNote"
 #define TIMCommonBundle @"TIMCommon"
 #define TUITranslationBundle @"TUITranslation"
+#define TUIVoiceToTextBundle @"TUIVoiceToText"
 
 #define TUIKitLocalizableBundle @"TUIKitLocalizable"
 #define TUICoreLocalizableBundle TUIKitLocalizableBundle
@@ -164,6 +165,7 @@
 #define TUIGroupNoteBundle_Key_Class @"TUIGroupNoteService"
 #define TIMCommonBundle_Key_Class @"TIMConfig"
 #define TUITranslationBundle_Key_Class @"TUITranslationService"
+#define TUIVoiceToTextBundle_Key_Class @"TUIVoiceToTextService"
 #define TUIKitLocalizableBundle_Key_Class @"TUICore"
 #define TUIChatLocalizableBundle_Key_Class @"TUIChatService"
 #define TIMCommonLocalizableBundle_Key_Class @"TIMConfig"
@@ -205,6 +207,9 @@ static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     }
     if ([bundleKeyClass isEqualToString:TUITranslationBundle_Key_Class]) {
         return @"TUITranslationPlugin";
+    }
+    if ([bundleKeyClass isEqualToString:TUIVoiceToTextBundle_Key_Class]) {
+        return @"TUIVoiceToTextPlugin";
     }
     return @"";
 }
@@ -250,6 +255,7 @@ static inline NSString *getTUIGetBundlePath(NSString *bundleName, NSString *bund
 #define TUIGroupNoteThemePath TUIBundlePath(@"TUIGroupNoteTheme", TUIGroupNoteBundle_Key_Class)
 #define TIMCommonThemePath TUIBundlePath(@"TIMCommonTheme", TIMCommonBundle_Key_Class)
 #define TUITranslationThemePath TUIBundlePath(@"TUITranslationTheme", TUITranslationBundle_Key_Class)
+#define TUIVoiceToTextThemePath TUIBundlePath(@"TUIVoiceToTextTheme", TUIVoiceToTextBundle_Key_Class)
 #define TUICallKitThemePath TUIBundlePath(@"TUICallKitTheme", TUICallKitBundle_Key_Class)
 
 static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
@@ -279,6 +285,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUIGroupNoteImagePath(imageName) [TUIBundlePath(TUIGroupNoteBundle, TUIGroupNoteBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TIMCommonImagePath(imageName) [TUIBundlePath(TIMCommonBundle, TIMCommonBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUITranslationImagePath(imageName) [TUIBundlePath(TUITranslationBundle, TUITranslationBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIVoiceToTextImagePath(imageName) [TUIBundlePath(TUIVoiceToTextBundle, TUIVoiceToTextBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 //-----Minimalist-------
 #define TUIDemoBundle_Minimalist @"TUIDemo_Minimalist"
@@ -292,6 +299,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUIPollBundle_Minimalist @"TUIPoll_Minimalist"
 #define TUIGroupNoteBundle_Minimalist @"TUIGroupNote_Minimalist"
 #define TUITranslationBundle_Minimalist @"TUITranslation_Minimalist"
+#define TUIVoiceToTextBundle_Minimalist @"TUIVoiceToText_Minimalist"
 // #define TUIKitLocalizableBundle  @"TUIKitLocalizable"
 
 // #define TUIKitLocalizable(bundleName) [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)]
@@ -312,6 +320,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     [TUIBundlePath(TUIGroupNoteBundle_Minimalist, TUIGroupNoteBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUITranslationImagePath_Minimalist(imageName) \
     [TUIBundlePath(TUITranslationBundle_Minimalist, TUITranslationBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIVoiceToTextImagePath_Minimalist(imageName) \
+    [TUIBundlePath(TUIVoiceToTextBundle_Minimalist, TUIVoiceToTextBundle_Key_Class) stringByAppendingPathComponent:imageName]
 //-----
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -700,6 +710,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_InputViewMoreItem_GroupID @"TUICore_TUIChatExtension_InputViewMoreItem_GroupID"
 #define TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall @"TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall"
 #define TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall @"TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall"
+#define TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom @"TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom"
 #define TUICore_TUIChatExtension_InputViewMoreItem_ItemSize @"TUICore_TUIChatExtension_InputViewMoreItem_ItemSize"
 #define TUICore_TUIChatExtension_InputViewMoreItem_ItemImage @"TUICore_TUIChatExtension_InputViewMoreItem_ItemImage"
 #define TUICore_TUIChatExtension_InputViewMoreItem_ItemTitle @"TUICore_TUIChatExtension_InputViewMoreItem_ItemTitle"
@@ -736,6 +747,9 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatObjectFactory_ChatViewController_LocateMessage @"TUICore_TUIChatObjectFactory_ChatViewController_LocateMessage"
 #define TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs @"TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Draft @"TUICore_TUIChatObjectFactory_ChatViewController_Draft"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room"
 
 #pragma mark - TUICore_TUIConversation_Service
 #define TUICore_TUIConversationService @"TUICore_TUIConversationService"
@@ -1014,15 +1028,12 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey @"TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey"
 #define TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey_Message @"TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey_Message"
 
-#pragma mark - TUICore_TUITranslation_Notify
-#define TUICore_TUITranslationNotify @"TUICore_TUITranslationNotify"
+#define TUICore_TUIPluginNotify_DidChangePluginViewSubKey @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey"
+#define TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data"
+#define TUICore_TUIPluginNotify_DidChangePluginViewSubKey_VC @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey_VC"
 
-#define TUICore_TUITranslationNotify_DidChangeTranslationSubKey @"TUICore_TUITranslationNotify_DidChangeTranslationSubKey"
-#define TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data @"TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data"
-#define TUICore_TUITranslationNotify_DidChangeTranslationSubKey_VC @"TUICore_TUITranslationNotify_DidChangeTranslationSubKey_VC"
-
-#define TUICore_TUITranslationNotify_WillForwardTranslationSubKey @"TUICore_TUITranslationNotify_WillForwardTranslationSubKey"
-#define TUICore_TUITranslationNotify_WillForwardTranslationSubKey_Text @"TUICore_TUITranslationNotify_WillForwardTranslationSubKey_Text"
+#define TUICore_TUIPluginNotify_WillForwardTextSubKey @"TUICore_TUIPluginNotify_WillForwardTextSubKey"
+#define TUICore_TUIPluginNotify_WillForwardTextSubKey_Text @"TUICore_TUIPluginNotify_WillForwardTextSubKey_Text"
 
 // 初始化录制成功,录制成功
 #define TUICore_RecordAudioMessageNotifyError_None 0
@@ -1120,6 +1131,13 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod @"TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod"
 #define TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod_Message @"TUICore_TUIRoomImAccessFactory_GetRoomMessageViewMethod_Message"
 
+#pragma mark - TUICore_PrivacyService_ScreenShareAntifraudReminderService
+#define TUICore_PrivacyService @"TUICore_PrivacyService"
+#define TUICore_PrivacyService_ScreenShareAntifraudReminderMethod @"TUICore_PrivacyService_ScreenShareAntifraudReminderMethod"
+#define TUICore_PrivacyService_EnableScreenShareAntifraudReminderMethod_Cancel -1
+#define TUICore_PrivacyService_EnableScreenShareAntifraudReminderMethod_Continue 0
+
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 //            TUIOfflinePush
@@ -1157,10 +1175,3 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 #endif /* THeader_h */
 
-
-#pragma mark - TUICore_TUIDebugService
-#define TUICore_TUIDebugService @"TUICore_TUIDebugService"
-#define TUICore_TUIDebugService_ShowDebugView @"TUICore_TUIDebugService_ShowDebugView"
-
-#define TUICore_TUIDebugService_PrepareSetting @"TUICore_TUIDebugService_PrepareSetting"
-#define TUICore_TUIDebugService_PrepareSettingView @"TUICore_TUIDebugService_PrepareSettingView"

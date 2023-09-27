@@ -20,10 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - CellData
 - (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
                                                            userID:(NSString *)userID
+                                                conversationModel:(TUIChatConversationModel *)conversationModel
                                                  actionController:(id<TIMInputViewMoreActionProtocol>)actionController;
 
 - (NSArray<TUICustomActionSheetItem *> *)getInputMoreActionItemList:(nullable NSString *)userID
                                                             groupID:(nullable NSString *)groupID
+                                                  conversationModel:(TUIChatConversationModel *)conversationModel
                                                              pushVC:(nullable UINavigationController *)pushVC
                                                    actionController:(id<TIMInputViewMoreActionProtocol>)actionController;
 

@@ -24,7 +24,7 @@
         _messageLabel.font = [UIFont systemFontOfSize:13];
         _messageLabel.textColor = [UIColor d_systemGrayColor];
         _messageLabel.textAlignment = NSTextAlignmentCenter;
-        _messageLabel.numberOfLines = 0;
+        _messageLabel.numberOfLines = 1;
         _messageLabel.backgroundColor = [UIColor clearColor];
         _messageLabel.layer.cornerRadius = 3;
         [_messageLabel.layer setMasksToBounds:YES];
@@ -33,6 +33,27 @@
         self.contentView.backgroundColor = [UIColor clearColor];
     }
     return self;
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    
+    [self.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.contentView);
+        make.size.mas_equalTo(self.contentView);
+    }];
+    [self.messageLabel sizeToFit];
+    if(self.messageLabel.superview) {
+        [self.messageLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self.container);
+            make.size.mas_equalTo(self.messageLabel.frame.size);
+        }];
+    }
 }
 
 - (void)fillWithData:(TUISystemMessageCellData *)data;
@@ -44,12 +65,17 @@
     self.avatarView.hidden = YES;
     self.retryView.hidden = YES;
     [self.indicator stopAnimating];
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.container.center = self.contentView.center;
-    self.messageLabel.frame = self.container.bounds;
 }
 
 

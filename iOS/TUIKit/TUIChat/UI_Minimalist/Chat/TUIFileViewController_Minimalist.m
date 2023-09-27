@@ -39,8 +39,9 @@
     // left
     UIImage *defaultImage = [UIImage imageNamed:TUIChatImagePath(@"back")];
     UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+    UIImage *formatImage = [TIMCommonDynamicImage(@"nav_back_img", defaultImage) rtl_imageFlippedForRightToLeftLayoutDirection];
     [leftButton addTarget:self action:@selector(onBack:) forControlEvents:UIControlEventTouchUpInside];
-    [leftButton setImage:TIMCommonDynamicImage(@"nav_back_img", defaultImage) forState:UIControlStateNormal];
+    [leftButton setImage:formatImage forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftItem;
 

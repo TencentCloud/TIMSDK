@@ -103,17 +103,17 @@ static NSString *const gRecordCallsViewModelKVOKeyPath = @"dataSource";
     }];
     [self.editButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.segmentedControl);
-        make.right.equalTo(self.containerView).offset(-20);
+        make.trailing.equalTo(self.containerView).offset(-20);
         make.width.height.equalTo(@(32));
     }];
     [self.clearButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.segmentedControl);
-        make.left.equalTo(self.containerView).offset(20);
+        make.leading.equalTo(self.containerView).offset(20);
         make.height.equalTo(@(32));
     }];
     [self.doneButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.segmentedControl);
-        make.right.equalTo(self.containerView).offset(-20);
+        make.trailing.equalTo(self.containerView).offset(-20);
         make.height.equalTo(@(32));
     }];
     [self.recordCallsList mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -322,7 +322,7 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath  API
     if (!_clearButton) {
         UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [clearButton setTitle:TUICallingLocalize(@"TUICallKit.Recents.clear") forState:UIControlStateNormal];
-        clearButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+        clearButton.titleLabel.textAlignment = isRTL() ? NSTextAlignmentRight : NSTextAlignmentLeft;
         clearButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [clearButton setTitleColor:TUICallKitDynamicColor(@"callkit_nav_title_text_color", @"#000000") forState:UIControlStateNormal];
         clearButton.hidden = YES;
@@ -337,7 +337,7 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath  API
     if (!_editButton) {
         UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [editButton setImage:[TUICallingCommon getBundleImageWithName:@"ic_calls_edit"] forState:UIControlStateNormal];
-        editButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+        editButton.titleLabel.textAlignment = isRTL() ? NSTextAlignmentRight : NSTextAlignmentLeft;
         editButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
         _editButton = editButton;
     }
@@ -362,7 +362,7 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath  API
     if (!_segmentedControl) {
         NSArray *array = [NSArray arrayWithObjects:TUICallingLocalize(@"TUICallKit.Recents.all"),
                           TUICallingLocalize(@"TUICallKit.Recents.missed"), nil];
-        UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:array];
+        UISegmentedControl *segment = [[UISegmentedControl alloc] initWithItems:array];
         segment.selectedSegmentIndex = 0;
         _segmentedControl = segment;
     }
@@ -376,11 +376,11 @@ trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath  API
         label.textColor = TUICallKitDynamicColor(@"callkit_recents_tableHeader_title_text_color", @"#000000");
         label.text = TUICallingLocalize(@"TUICallKit.Recents.calls");
         label.font = [UIFont fontWithName:@"PingFangHK-Semibold" size:34];
-        label.textAlignment = NSTextAlignmentLeft;
+        label.textAlignment = isRTL() ? NSTextAlignmentRight : NSTextAlignmentLeft;
         [tableHeaderView addSubview:label];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(tableHeaderView);
-            make.left.equalTo(tableHeaderView).offset(20);
+            make.leading.equalTo(tableHeaderView).offset(20);
         }];
         _tableHeaderView = tableHeaderView;
     }

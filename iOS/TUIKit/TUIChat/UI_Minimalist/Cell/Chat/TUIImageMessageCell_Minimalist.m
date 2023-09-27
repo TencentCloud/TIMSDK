@@ -38,6 +38,8 @@
         [self.container addSubview:_progress];
 
         self.msgTimeLabel.textColor = RGB(255, 255, 255);
+        [self makeConstraints];
+
     }
     return self;
 }
@@ -57,39 +59,95 @@
       @strongify(self);
       if (thumbImage) {
           self.thumb.image = thumbImage;
+          // tell constraints they need updating
+          [self setNeedsUpdateConstraints];
+
+          // update constraints now so we can animate the change
+          [self updateConstraintsIfNeeded];
+
+          [self layoutIfNeeded];
       }
     }];
 
     if (data.direction == MsgDirectionIncoming) {
         [[[RACObserve(data, thumbProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
-          @strongify(self);
-          int progress = [x intValue];
-          self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
-          self.progress.hidden = (progress >= 100 || progress == 0);
+            @strongify(self);
+            int progress = [x intValue];
+            self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
+            self.progress.hidden = (progress >= 100 || progress == 0);
+
+            // tell constraints they need updating
+            [self setNeedsUpdateConstraints];
+
+            // update constraints now so we can animate the change
+            [self updateConstraintsIfNeeded];
+
+            [self layoutIfNeeded];
         }];
     }
 }
+- (void)makeConstraints {
+    [self.thumb mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.container);
+        make.width.mas_equalTo(self.container);
+        make.top.mas_equalTo(self.container);
+        make.leading.mas_equalTo(self.container);
+    }];
+    
+    [self.progress mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.container);
+    }];
+}
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
 
     CGFloat topMargin = 0;
     CGFloat height = self.container.mm_h;
+    
+    [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+        make.width.mas_equalTo(self.container.mas_width);
+        make.top.mas_equalTo(self.container).mas_offset(topMargin);
+        make.leading.mas_equalTo(self.container);
+    }];
+    
+    [self.progress mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.container);
+    }];
+    
+    [self.msgTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(38);
+        make.height.mas_equalTo(self.messageData.msgStatusSize.height);
+        make.bottom.mas_equalTo(self.container).mas_offset(-kScale390(9));
+        make.trailing.mas_equalTo(self.container).mas_offset(-kScale390(8));
+    }];
+    
+    [self.msgStatusView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(16);
+        make.height.mas_equalTo(self.messageData.msgStatusSize.height);
+        make.bottom.mas_equalTo(self.msgTimeLabel);
+        make.trailing.mas_equalTo(self.msgTimeLabel.mas_leading);
+    }];
 
-    if (self.messageData.messageModifyReactsSize.height > 0) {
-        topMargin = 10;
-        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
-    }
-
-    _thumb.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-
-    _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-    _progress.mm_fill();
-    _progress.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-    self.msgStatusView.frame = CGRectOffset(self.msgStatusView.frame, kScale390(8), 0);
-    self.msgTimeLabel.frame = CGRectOffset(self.msgTimeLabel.frame, kScale390(8), 0);
+    [self.selectedView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
+    }];
+    [self.selectedIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(3);
+        make.top.mas_equalTo(self.avatarView.mas_centerY).mas_offset(-10);
+        if (self.messageData.showCheckBox) {
+            make.width.mas_equalTo(20);
+            make.height.mas_equalTo(20);
+        } else {
+            make.size.mas_equalTo(CGSizeZero);
+        }
+    }];
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword {

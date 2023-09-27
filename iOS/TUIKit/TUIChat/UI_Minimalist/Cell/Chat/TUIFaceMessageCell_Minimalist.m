@@ -27,19 +27,43 @@
     return self;
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    CGFloat topMargin = 0;
+    CGFloat height = self.container.mm_h;
+    [self.face mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(kScale390(88));
+        make.centerX.mas_equalTo(self.container.mas_centerX);
+        make.top.mas_equalTo(topMargin);
+        make.width.mas_equalTo(kScale390(90));
+    }];
+    
+    
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-    _face.mm_width(kScale390(90)).mm_height(kScale390(88)).mm_left(kScale390(16)).mm_top(kScale390(8));
-
-    _face.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
+
 - (void)fillWithData:(TUIFaceMessageCellData *)data {
     // set data
     [super fillWithData:data];
     self.faceData = data;
-
     _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
-    ;
+  
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 #pragma mark - TUIMessageCellProtocol

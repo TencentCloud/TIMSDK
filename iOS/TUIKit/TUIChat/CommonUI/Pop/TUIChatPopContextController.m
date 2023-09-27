@@ -13,6 +13,7 @@
 
 @interface TUIChatPopContextController () <TUIChatPopContextRecentEmojiDelegate>
 @property(nonatomic, strong) TUIChatPopContextRecentView *recentView;
+@property(nonatomic, strong) UIView *alertContainerView;
 @property(nonatomic, strong) TUIMessageCell *alertView;
 @property(nonatomic, strong) TUIChatPopContextExtionView *extionView;
 
@@ -113,9 +114,9 @@
         // alertView
         [UIView animateWithDuration:0.3
                          animations:^{
-                           self.alertView.container.frame =
-                               CGRectMake(self.originFrame.origin.x, self.recentView.frame.origin.y + kScale390(8) + self.recentView.frame.size.height,
-                                          self.originFrame.size.width, self.originFrame.size.height);
+                           self.alertContainerView.frame =
+                               CGRectMake(0, self.recentView.frame.origin.y + kScale390(8) + self.recentView.frame.size.height,
+                                          self.view.frame.size.width, self.originFrame.size.height);
                          }
                          completion:^(BOOL finished){
 
@@ -145,8 +146,7 @@
         if (moveY != 0) {
             [UIView animateWithDuration:0.3
                              animations:^{
-                               self.alertView.container.frame = CGRectMake(self.originFrame.origin.x, self.originFrame.origin.y + moveY,
-                                                                           self.originFrame.size.width, self.originFrame.size.height);
+                self.alertContainerView.frame = CGRectMake(0,  self.originFrame.origin.y + moveY, self.view.frame.size.width, self.originFrame.size.height);
                              }
                              completion:^(BOOL finished){
 
@@ -222,18 +222,29 @@
 }
 
 - (void)configureAlertView {
+    self.alertContainerView = [[UIView alloc] init];
+    [self.view addSubview:self.alertContainerView];
     _alertView = [[self.alertCellClass alloc] init];
+    [self.alertContainerView addSubview:_alertView];
     _alertView.userInteractionEnabled = YES;
     if ([self.alertView isKindOfClass:NSClassFromString(@"TUIMergeMessageCell_Minimalist")]) {
-        _alertView.container.userInteractionEnabled = NO;
+        _alertView.userInteractionEnabled = NO;
     }
-    [self.view addSubview:_alertView.container];
-    _alertView.translatesAutoresizingMaskIntoConstraints = NO;
-
     [_alertView fillWithData:self.alertViewCellData];
     [_alertView layoutIfNeeded];
-
-    _alertView.container.frame = _originFrame;
+    
+    self.alertContainerView.frame = CGRectMake(0, _originFrame.origin.y, self.view.frame.size.width, _originFrame.size.height);
+    _alertView.frame = CGRectMake(0, 0, self.alertContainerView.frame.size.width, self.alertContainerView.frame.size.height);
+    for (UIView *view in _alertView.contentView.subviews) {
+        if(view != _alertView.container) {
+            view.hidden = YES;
+        }
+    }
+    [_alertView.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(_originFrame.origin.x);
+        make.top.mas_equalTo(0);
+        make.size.mas_equalTo(_originFrame.size);
+    }];
 }
 
 - (void)configRecentView {
@@ -400,8 +411,7 @@
 
     [UIView animateWithDuration:0.3
         animations:^{
-          self.alertView.container.frame =
-              CGRectMake(self.originFrame.origin.x, self.originFrame.origin.y, self.originFrame.size.width, self.originFrame.size.height);
+        self.alertContainerView.frame = CGRectMake(0,  self.originFrame.origin.y , self.view.frame.size.width, self.originFrame.size.height);
         }
         completion:^(BOOL finished) {
           if (finished) {

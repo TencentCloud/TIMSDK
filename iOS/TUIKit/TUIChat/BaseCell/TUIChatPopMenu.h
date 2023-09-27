@@ -20,10 +20,8 @@ typedef void (^TUIChatPopMenuActionCallback)(void);
 @property(nonatomic, copy) TUIChatPopMenuActionCallback callback;
 
 /**
- * 排序优先级:  复制(1)、转发(2)、多选(3)、引用(4)、回复(5)、撤回(6)、删除(7)、翻译(8)
- * Sort priorities: copy, forward, multiselect, reference, reply, Withdraw, delete
- * 权重越大越靠前weight:  复制 10000  转发 9000 多选 8000 引用 7000 回复 5000 撤回4000 删除 3000  翻译 2000
- * The higher the weight, the more prominent it is: Copy 10000, Forward 9000, Multiple Choice 8000, Quote 7000, Reply 5000, Withdraw 4000, Delete 3000.
+ * 权重越大越靠前weight:  语音播放风格(11000) 复制 10000  转发 9000 多选 8000 引用 7000 回复 5000 撤回4000 删除 3000  翻译 2000
+ * The higher the weight, the more prominent it is: audioPlayback 11000 Copy 10000, Forward 9000, Multiple Choice 8000, Quote 7000, Reply 5000, Withdraw 4000, Delete 3000.
  */
 @property(nonatomic, assign) NSInteger weight;
 

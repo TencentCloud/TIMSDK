@@ -129,9 +129,16 @@
 }
 
 - (void)registerEvents {
-    [TUICore registerEvent:TUICore_TUIPluginNotify subKey:TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey object:self];
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_WillForwardTranslationSubKey object:self];
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIPluginNotify
+                    subKey:TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey
+                    object:self];
+    [TUICore registerEvent:TUICore_TUIPluginNotify
+                    subKey:TUICore_TUIPluginNotify_WillForwardTextSubKey
+                    object:self];
+    [TUICore registerEvent:TUICore_TUIPluginNotify
+                    subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
+                    object:self];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationBecomeActive)
                                                  name:UIApplicationDidBecomeActiveNotification
@@ -312,18 +319,24 @@
     }
                               FailBlock:^(int code, NSString *desc) {
         @strongify(self);
+        NSString *errorMsg = @"";
         if (self.isMsgNeedReadReceipt && code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
-            NSString *msg = [NSString stringWithFormat:@"%@%@", TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead),
-                             TUIKitLocalizableString(TUIKitErrorUnsupporInterfaceSuffix)];
-            [TUITool makeToast:msg];
+            errorMsg = [NSString stringWithFormat:@"%@%@", TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead),
+                                             TUIKitLocalizableString(TUIKitErrorUnsupporInterfaceSuffix)];
         } else {
-            [TUITool makeToastError:code msg:desc];
+            errorMsg = [TUITool convertIMError:code msg:desc];
         }
+        [self makeSendErrorHud:errorMsg];
         [self changeMsg:cellData status:Msg_Status_Fail];
         
         NSDictionary *param = @{TUICore_TUIChatNotify_SendMessageSubKey_Code : @(code), TUICore_TUIChatNotify_SendMessageSubKey_Desc : desc};
         [TUICore notifyEvent:TUICore_TUIChatNotify subKey:TUICore_TUIChatNotify_SendMessageSubKey object:self param:param];
     }];
+}
+- (void)makeSendErrorHud:(NSString *)msg {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:msg message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:ac animated:YES completion:nil];
 }
 
 - (void)sendMessage:(V2TIMMessage *)message {
@@ -402,14 +415,13 @@
                 break;
             }
         }
-    } else if ([key isEqualToString:TUICore_TUITranslationNotify] && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
-        // Translation View is Shown or content changed.
-        TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
+    } else if ([key isEqualToString: TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
+        // Plugin View is Shown or content changed.
+        TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
         [self clearAndReloadCellOfData:data];
-    }
-    if ([key isEqualToString:TUICore_TUITranslationNotify] && [subKey isEqualToString:TUICore_TUITranslationNotify_WillForwardTranslationSubKey]) {
-        // Translation will be forwarded.
-        NSString *text = param[TUICore_TUITranslationNotify_WillForwardTranslationSubKey_Text];
+    } else if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_WillForwardTextSubKey]) {
+        // Text will be forwarded.
+        NSString *text = param[TUICore_TUIPluginNotify_WillForwardTextSubKey_Text];
         if (self.delegate && [self.delegate respondsToSelector:@selector(messageController:onForwardText:)]) {
             [self.delegate messageController:self onForwardText:text];
         }
@@ -786,7 +798,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 #pragma mark - TUIMessageCellDelegate
 
 - (void)onSelectMessage:(TUIMessageCell *)cell {
-    if (self.showCheckBox) {
+    if (self.showCheckBox && [self supportCheckBox:(TUIMessageCellData *)cell.data]) {
         TUIMessageCellData *data = (TUIMessageCellData *)cell.data;
         data.selected = !data.selected;
         [self.tableView reloadData];
@@ -834,6 +846,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (void)tryShowGuidance {
+    if (isRTL()){
+        return;
+    }
     BOOL hasShow = [NSUserDefaults.standardUserDefaults boolForKey:@"chat_reply_guide_showKey"];
     if (hasShow) {
         return;
@@ -878,6 +893,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (void)onLongPressMessage:(TUIMessageCell *)cell {
+    [UIApplication.sharedApplication.keyWindow endEditing:NO];
     TUIMessageCellData *data = cell.messageData;
     if ([data isKindOfClass:[TUISystemMessageCellData class]]) {
         return;
@@ -960,10 +976,14 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIChatPopMenuAction *forwardAction = [self setupForwardAction:cell];
     TUIChatPopMenuAction *quoteAction = [self setupQuoteAction:cell];
     TUIChatPopMenuAction *referenceAction = [self setupReferenceAction:cell];
+    TUIChatPopMenuAction *audioPlaybackStyleAction = [self setupAudioPlaybackStyleAction:cell];
     
     TUIMessageCellData *data = cell.messageData;
     V2TIMMessage *imMsg = data.innerMessage;
     
+    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && imMsg.soundElem) {
+        [menu addAction:audioPlaybackStyleAction];
+    }
     if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReplyMessageCellData.class] ||
         [data isKindOfClass:TUIReferenceMessageCellData.class]) {
         [menu addAction:copyAction];
@@ -1196,6 +1216,42 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     return referenceAction;
 }
 
+- (TUIChatPopMenuAction *)setupAudioPlaybackStyleAction:(TUIMessageCell *)cell {
+    @weakify(self);
+    TUIChatPopMenuAction *audioPlaybackStyleAction = nil;
+    __weak typeof(audioPlaybackStyleAction)  weakAction = audioPlaybackStyleAction;
+    TUIVoiceAudioPlaybackStyle originStyle = [TUIVoiceMessageCellData getAudioplaybackStyle];
+    NSString *title = @"";
+    UIImage *img = nil;
+    if (originStyle == TUIVoiceAudioPlaybackStyleLoudspeaker) {
+        title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleHandset);
+        img   = TUIChatBundleThemeImage(@"chat_icon_audio_handset_img", @"icon_handset");
+    }
+    else {
+        title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleLoudspeaker);
+        img   = TUIChatBundleThemeImage(@"chat_icon_audio_loudspeaker_img", @"icon_loudspeaker");
+    }
+    
+    audioPlaybackStyleAction = [[TUIChatPopMenuAction alloc] initWithTitle:title
+                                                            image:img
+                                                           weight:11000
+                                                         callback:^{
+        if (originStyle == TUIVoiceAudioPlaybackStyleLoudspeaker) {
+            //Change To Handset
+            weakAction.title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleLoudspeaker);
+            [TUITool hideToast];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitAudioPlaybackStyleChange2Handset) duration:2];
+        }
+        else {
+            weakAction.title = TIMCommonLocalizableString(TUIKitAudioPlaybackStyleHandset);
+            [TUITool hideToast];
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitAudioPlaybackStyleChange2Loudspeaker) duration:2];
+        }
+        [TUIVoiceMessageCellData changeAudioPlaybackStyle];
+
+    }];
+    return audioPlaybackStyleAction;
+}
 - (BOOL)canForward:(TUIMessageCellData *)data {
     return ![TUIMessageCellConfig isPluginCustomMessageCellData:data];
 }

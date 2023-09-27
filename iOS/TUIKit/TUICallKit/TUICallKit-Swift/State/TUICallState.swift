@@ -7,9 +7,9 @@
 import Foundation
 import TUICore
 import TUICallEngine
+import AVFoundation
 
 class TUICallState: NSObject {
-    
     static let instance = TUICallState()
     
     let remoteUserList: Observable<[User]> = Observable(Array())
@@ -18,10 +18,9 @@ class TUICallState: NSObject {
     let scene: Observable<TUICallScene> = Observable(TUICallScene.single)
     let mediaType: Observable<TUICallMediaType> = Observable(TUICallMediaType.unknown)
     let timeCount: Observable<Int> = Observable(0)
-    let roomId: Observable<TUIRoomId> = Observable(TUIRoomId())
     let groupId: Observable<String> = Observable("")
     let event: Observable<TUICallEvent> = Observable(TUICallEvent(eventType: .UNKNOWN, event: .UNKNOWN, param: Dictionary()))
-
+    
     let isCameraOpen: Observable<Bool> = Observable(false)
     let isMicMute: Observable<Bool> = Observable(false)
     let isFrontCamera: Observable<TUICamera> = Observable(TUICamera.front)
@@ -45,34 +44,50 @@ extension TUICallState: TUICallObserver {
         param[EVENT_KEY_MESSAGE] = message
         let callEvent = TUICallEvent(eventType: .ERROR, event: .ERROR_COMMON, param: param)
         TUICallState.instance.event.value = callEvent
-
+        
     }
     
     func onCallReceived(callerId: String, calleeIdList: [String], groupId: String?, callMediaType: TUICallMediaType) {
-        
         if (callMediaType == .unknown || calleeIdList.isEmpty) {
             return
         }
-
+        
         if (calleeIdList.count >= MAX_USER) {
             let callEvent = TUICallEvent(eventType: .TIP, event: .USER_EXCEED_LIMIT, param: [:])
             TUICallState.instance.event.value = callEvent
             return
         }
         
-        let remoteUsersId: [String] = [callerId] + calleeIdList
-        User.getUserInfosFromIM(userIDs: remoteUsersId) { inviteeList in
+        if TUICallKitCommon.checkAuthorizationStatusIsDenied(mediaType: callMediaType) {
+            showAuthorizationAlert(mediaType: callMediaType)
+            return
+        }
+        
+        let remoteUserIds: [String] = [callerId] + calleeIdList
+        User.getUserInfosFromIM(userIDs: remoteUserIds) { remoteUserLists in
             var remoteUsers: [User] = Array()
-            for invitee in inviteeList {
-                invitee.callRole.value = TUICallRole.called
-                invitee.callStatus.value = .waiting
-                if invitee.id.value != TUICallState.instance.selfUser.value.id.value {
-                    remoteUsers.append(invitee)
+            for user in remoteUserLists {
+                
+                if user.id.value == callerId {
+                    user.callRole.value = TUICallRole.call
+
+                } else {
+                    user.callRole.value = TUICallRole.called
+                }
+                
+                user.callStatus.value = .waiting
+                
+                if user.id.value != TUICallState.instance.selfUser.value.id.value {
+                    if user.id.value == callerId {
+                        remoteUsers.insert(user, at: 0)
+                    } else {
+                        remoteUsers.append(user)
+                    }
                 }
             }
             TUICallState.instance.remoteUserList.value = remoteUsers
         }
-
+        
         if calleeIdList.count == 1 {
             TUICallState.instance.scene.value = .single
         } else {
@@ -82,9 +97,9 @@ extension TUICallState: TUICallObserver {
         if groupId != nil {
             TUICallState.instance.scene.value = .group
             TUICallState.instance.groupId.value = groupId ?? ""
-        }        
+        }
         TUICallState.instance.mediaType.value = callMediaType
-
+        
         TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
         TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
         
@@ -116,7 +131,7 @@ extension TUICallState: TUICallObserver {
         remoteUser.id.value = userId
         remoteUser.callStatus.value = TUICallStatus.accept
         TUICallState.instance.remoteUserList.value.append(remoteUser)
-
+        
         User.getUserInfosFromIM(userIDs: [userId]) { users in
             guard let user = users.first else { return }
             for remote in TUICallState.instance.remoteUserList.value where user.id.value == remote.id.value {
@@ -133,7 +148,11 @@ extension TUICallState: TUICallObserver {
             TUICallState.instance.remoteUserList.value.remove(at: index)
             break
         }
-                
+        
+        if TUICallState.instance.remoteUserList.value.isEmpty {
+            cleanState()
+        }
+        
         let callEvent = TUICallEvent(eventType: .TIP, event: .USER_LEAVE, param: [EVENT_KEY_USER_ID: userId])
         TUICallState.instance.event.value = callEvent
     }
@@ -144,11 +163,11 @@ extension TUICallState: TUICallObserver {
             TUICallState.instance.remoteUserList.value.remove(at: index)
             break
         }
-
+        
         if TUICallState.instance.remoteUserList.value.isEmpty {
             cleanState()
         }
-
+        
         let callEvent = TUICallEvent(eventType: .TIP, event: .USER_REJECT, param: [EVENT_KEY_USER_ID: userId])
         TUICallState.instance.event.value = callEvent
     }
@@ -159,7 +178,7 @@ extension TUICallState: TUICallObserver {
             TUICallState.instance.remoteUserList.value.remove(at: index)
             break
         }
-
+        
         if TUICallState.instance.remoteUserList.value.isEmpty {
             cleanState()
         }
@@ -174,7 +193,7 @@ extension TUICallState: TUICallObserver {
             TUICallState.instance.remoteUserList.value.remove(at: index)
             break
         }
-
+        
         let callEvent = TUICallEvent(eventType: .TIP, event: .USER_NO_RESPONSE, param: [EVENT_KEY_USER_ID: userId])
         TUICallState.instance.event.value = callEvent
     }
@@ -192,7 +211,7 @@ extension TUICallState: TUICallObserver {
     }
     
     func onUserNetworkQualityChanged(networkQualityList: [TUINetworkQualityInfo]) {
-
+        
     }
     
     func onUserAudioAvailable(userId: String, isAudioAvailable: Bool) {
@@ -208,7 +227,6 @@ extension TUICallState: TUICallObserver {
     }
     
     func onCallBegin(roomId: TUIRoomId, callMediaType: TUICallMediaType, callRole: TUICallRole) {
-        TUICallState.instance.roomId.value = roomId
         TUICallState.instance.mediaType.value = callMediaType
         TUICallState.instance.selfUser.value.callRole.value = callRole
         TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.accept
@@ -237,7 +255,6 @@ extension TUICallState {
         
         TUICallState.instance.mediaType.value = .unknown
         TUICallState.instance.timeCount.value = 0
-        TUICallState.instance.roomId.value = TUIRoomId()
         TUICallState.instance.groupId.value = ""
         
         TUICallState.instance.selfUser.value.callRole.value = TUICallRole.none
@@ -248,7 +265,7 @@ extension TUICallState {
         TUICallState.instance.isMicMute.value = false
         TUICallState.instance.isFrontCamera.value = .front
         TUICallState.instance.audioDevice.value = .earpiece
-
+        
         GCDTimer.cancel(timerName: timerName) { return }
         
         VideoFactory.instance.viewMap.removeAll()
@@ -260,5 +277,20 @@ extension TUICallState {
             userIdList.append(user.id.value)
         }
         return userIdList
+    }
+    
+    func showAuthorizationAlert(mediaType: TUICallMediaType) {
+        let statusVideo: AVAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        var deniedType: AuthorizationDeniedType = AuthorizationDeniedType.audio
+        
+        if mediaType == .video && statusVideo == .denied {
+            deniedType = .video
+        }
+
+        TUICallKitCommon.showAuthorizationAlert(deniedType: deniedType) {
+            CallEngineManager.instance.hangup()
+        } cancelHandler: {
+            CallEngineManager.instance.hangup()
+        }
     }
 }

@@ -62,10 +62,29 @@
     [self setNeedsLayout];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [self.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.contentView);
+        make.size.mas_equalTo(self.contentView);
+    }];
+
+    if(self.textView.superview) {
+        [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self.container);
+            make.size.mas_equalTo(self.contentView);
+        }];
+    }
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.container.tui_mm_center();
-    self.textView.mm_fill();
 }
 
 - (void)onSelectUserName:(NSInteger)index {

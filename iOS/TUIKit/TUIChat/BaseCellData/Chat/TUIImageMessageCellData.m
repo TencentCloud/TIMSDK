@@ -203,7 +203,7 @@
     V2TIMMessage *imMsg = self.innerMessage;
     if (imMsg.elemType == V2TIM_ELEM_TYPE_IMAGE) {
         for (V2TIMImage *imImage in imMsg.imageElem.imageList) {
-            if (type == TImage_Type_Thumb && imImage.type == V2TIM_IMAGE_TYPE_LARGE) {
+            if (type == TImage_Type_Thumb && imImage.type == V2TIM_IMAGE_TYPE_THUMB) {
                 return imImage;
             } else if (type == TImage_Type_Origin && imImage.type == V2TIM_IMAGE_TYPE_ORIGIN) {
                 return imImage;

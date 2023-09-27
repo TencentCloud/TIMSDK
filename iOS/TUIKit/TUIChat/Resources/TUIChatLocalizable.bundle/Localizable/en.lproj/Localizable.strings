@@ -5,7 +5,7 @@
   Created by harvy on 2020/10/9.
   
 */
-"TUIChatCallDurationFormat" = "Duration %.2d:%.2d";
+"TUIChatCallDurationFormat" = "Duration";
 "TUIChatCallCancelInCaller" = "Canceled";
 "TUIChatCallCancelInCallee" = "Call canceled by caller";
 "TUIChatCallRejectInCaller" = "Call declined by user";

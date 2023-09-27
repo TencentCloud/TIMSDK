@@ -122,6 +122,36 @@
                                  self.containerView.frame.size.height - self.topGestureView.frame.size.height);
 }
 
+- (NSArray *)getChatPopMenuQueue {
+    NSArray *emojis = [[NSUserDefaults standardUserDefaults] objectForKey:@"TUIChatPopMenuQueue"];
+    if (emojis && [emojis isKindOfClass:[NSArray class]]) {
+        if (emojis.count > 0) {
+            return emojis;
+        }
+    }
+    return [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emojiRecentDefaultList.plist")];
+}
+- (void)updateRecentMenuQueue:(NSString *)faceName {
+    NSArray *emojis = [self getChatPopMenuQueue];
+    NSMutableArray *muArray = [NSMutableArray arrayWithArray:emojis];
+
+    BOOL hasInQueue = NO;
+    for (NSDictionary *dic in emojis) {
+        NSString *name = [dic objectForKey:@"face_name"];
+        if ([name isEqualToString:faceName]) {
+            hasInQueue = YES;
+        }
+    }
+    if (hasInQueue) {
+        return;
+    }
+
+    [muArray removeObjectAtIndex:0];
+    [muArray addObject:@{@"face_name" : faceName, @"face_id" : @""}];
+    [[NSUserDefaults standardUserDefaults] setObject:muArray forKey:@"TUIChatPopMenuQueue"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void)faceView:(TUIFaceView *)faceView scrollToFaceGroupIndex:(NSInteger)index {
 }
 
@@ -132,6 +162,7 @@
     if (indexPath.section == 0) {
         NSString *faceName = face.name;
         NSLog(@"%@", faceName);
+        [self updateRecentMenuQueue:faceName];
         [self dismissViewControllerAnimated:NO completion:nil];
         if (self.reactClickCallback) {
             self.reactClickCallback(faceName);

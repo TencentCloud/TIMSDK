@@ -91,7 +91,7 @@
 
 - (UICollectionView *)userPanel {
     if (!_userPanel) {
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        UICollectionViewFlowLayout *layout = [[TUICollectionRTLFitFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _userPanel = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         _userPanel.backgroundColor = [UIColor clearColor];

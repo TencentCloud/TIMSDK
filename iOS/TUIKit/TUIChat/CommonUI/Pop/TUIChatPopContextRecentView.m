@@ -164,6 +164,11 @@
     [self addSubview:self.arrowButton];
 
     self.arrowButton.mm_width(kScale390(24)).mm_height(kScale390(24)).mm_right(margin).mm_top(kScale390(8));
+    if (isRTL()) {
+        for (UIView *subview in self.subviews) {
+            [subview resetFrameToFitRTL];
+        }
+    }
 }
 
 - (UIButton *)buttonWithCellImage:(UIImage *)img Tag:(NSInteger)tag {
@@ -230,7 +235,7 @@
     l.frame = CGRectMake(padding, 0, itemWidth * 0.5, itemHeight);
     l.text = self.item.title;
     l.font = item.titleFont ?: [UIFont systemFontOfSize:kScale390(16)];
-    l.textAlignment = NSTextAlignmentLeft;
+    l.textAlignment = isRTL()? NSTextAlignmentRight:NSTextAlignmentLeft;
     l.textColor = item.titleColor ?: [UIColor blackColor];
     l.userInteractionEnabled = false;
     [self addSubview:l];
@@ -249,6 +254,11 @@
         [self addSubview:line];
     }
     self.layer.masksToBounds = YES;
+    if (isRTL()) {
+        for (UIView *subview in self.subviews) {
+            [subview resetFrameToFitRTL];
+        }
+    }
 }
 
 - (void)buttonclick {

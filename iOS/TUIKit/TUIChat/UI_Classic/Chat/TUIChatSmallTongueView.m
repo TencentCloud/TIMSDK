@@ -9,7 +9,8 @@
 #import "TUIChatSmallTongueView.h"
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIThemeManager.h>
-
+#import "TUIChatConfig.h"
+#import <TIMCommon/TIMDefine.h>
 #define TongueHeight 35.f
 #define TongueImageWidth 12.f
 #define TongueImageHeight 12.f
@@ -68,7 +69,6 @@
         [self addSubview:self.imageView];
     }
     self.imageView.image = [TUIChatSmallTongueView getTongueImage:tongue];
-    self.imageView.mm_width(TongueImageWidth).mm_height(TongueImageHeight).mm_left(TongueLeftSpace).mm_top(10);
 
     if (!self.label) {
         self.label = [[UILabel alloc] init];
@@ -76,8 +76,19 @@
         [self addSubview:self.label];
     }
     self.label.text = [TUIChatSmallTongueView getTongueText:tongue];
+    self.label.rtlAlignment = TUITextRTLAlignmentLeading;
     self.label.textColor = TUIChatDynamicColor(@"chat_drop_down_color", @"#147AFF");
-    self.label.mm_flexToRight(TongueRightSpace).mm_height(TongueImageHeight).mm_left(self.imageView.mm_maxX + TongueMiddleSpace).mm_top(10);
+    [self.imageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(TongueImageWidth);
+        make.leading.mas_equalTo(TongueLeftSpace);
+        make.top.mas_equalTo(10);
+    }];
+    [self.label mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_lessThanOrEqualTo(self.mas_trailing).mas_offset(-TongueRightSpace);
+        make.height.mas_equalTo(TongueImageHeight);
+        make.leading.mas_equalTo(self.imageView.mas_trailing).mas_offset(TongueMiddleSpace);
+        make.top.mas_equalTo(10);
+    }];
 }
 
 + (CGFloat)getTongueWidth:(TUIChatSmallTongue *)tongue {
@@ -87,7 +98,7 @@
                                              attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:TongueFontSize]}
                                                 context:nil]
                            .size;
-    CGFloat tongueWidth = TongueLeftSpace + TongueImageWidth + TongueMiddleSpace + titleSize.width + TongueRightSpace;
+    CGFloat tongueWidth = TongueLeftSpace + TongueImageWidth + TongueMiddleSpace + ceil(titleSize.width) + TongueRightSpace;
     return tongueWidth;
 }
 
@@ -164,9 +175,15 @@ static UIWindow *gWindow = nil;
         }
     }
     CGFloat tongueWidth = [TUIChatSmallTongueView getTongueWidth:gTongue];
-    gWindow.frame =
-        CGRectMake(Screen_Width - tongueWidth - 16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight, tongueWidth, TongueHeight);
 
+    if(isRTL()) {
+        gWindow.frame =
+            CGRectMake(16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight, tongueWidth, TongueHeight);
+    }
+    else {
+        gWindow.frame =
+            CGRectMake(Screen_Width - tongueWidth - 16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight, tongueWidth, TongueHeight);
+    }
     if (!gTongueView) {
         gTongueView = [[TUIChatSmallTongueView alloc] initWithFrame:CGRectZero];
         [gWindow addSubview:gTongueView];

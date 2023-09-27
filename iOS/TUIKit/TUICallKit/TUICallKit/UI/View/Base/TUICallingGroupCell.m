@@ -7,6 +7,7 @@
 //
 
 #import "TUICallingGroupCell.h"
+#import <TUICore/TUIGlobalization.h>
 #import "UIImageView+WebCache.h"
 #import "UIColor+TUICallingHex.h"
 #import "TUICallingCommon.h"
@@ -40,7 +41,6 @@
         self.maskView.hidden = YES;
     } else {
         self.maskView.hidden = NO;
-        [self.loadingImageView startAnimating];
     }
     
     if (model.isAudioAvailable) {
@@ -65,6 +65,14 @@
     return [UIImage imageNamed:name inBundle:[self callingBundle] compatibleWithTraitCollection:nil];
 }
 
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    if (!self.maskView.isHidden && self.loadingImageView) {
+        [self.loadingImageView removeFromSuperview];
+        [self addLoadingImageView];
+    }
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         // renderView
@@ -81,19 +89,13 @@
         maskView.backgroundColor = [UIColor t_colorWithHexString:@"#000000" alpha:0.3];
         [self.contentView addSubview:maskView];
         self.maskView = maskView;
-        
         // loadingImageView
-        NSString *filePath = [[TUICallingCommon callingBundle] pathForResource:@"loading" ofType:@"gif"];
-        NSData *imageData = [NSData dataWithContentsOfFile:filePath];
-        UIImageView *loadingImageView = [[UIImageView alloc] init];
-        loadingImageView.image = [UIImage sd_imageWithGIFData:imageData];
-        self.loadingImageView = loadingImageView;
-        [self.maskView addSubview:loadingImageView];
+        [self addLoadingImageView];
         // titleLabel
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.textColor = [UIColor t_colorWithHexString:@"#FFFFFF"];
         label.font = [UIFont systemFontOfSize:12];
-        label.textAlignment = NSTextAlignmentLeft;
+        label.textAlignment = isRTL() ? NSTextAlignmentRight : NSTextAlignmentLeft;
         [self.contentView addSubview:label];
         self.titleLabel = label;
         // volumeImageView
@@ -112,22 +114,32 @@
         [self.maskView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.contentView);
         }];
-        [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.equalTo(self.maskView);
-            make.height.width.equalTo(@(42));
-        }];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.contentView).offset(10);
+            make.leading.equalTo(self.contentView.mas_leading).offset(10);
             make.bottom.equalTo(self.contentView).offset(-5);
-            make.right.equalTo(self.volumeImageView.mas_left).offset(-5);
+            make.trailing.equalTo(self.volumeImageView.mas_leading).offset(-5);
         }];
         [volumeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.bottom.equalTo(self.contentView).offset(-5);
+            make.trailing.equalTo(self.contentView.mas_trailing).offset(-5);
+            make.bottom.equalTo(self.contentView).offset(-5);
             make.centerY.equalTo(label);
             make.width.height.equalTo(@(20));
         }];
     }
     return self;
+}
+
+- (void)addLoadingImageView {
+    NSString *filePath = [[TUICallingCommon callingBundle] pathForResource:@"loading" ofType:@"gif"];
+    NSData *imageData = [NSData dataWithContentsOfFile:filePath];
+    UIImageView *loadingImageView = [[UIImageView alloc] init];
+    loadingImageView.image = [UIImage sd_imageWithGIFData:imageData];
+    self.loadingImageView = loadingImageView;
+    [self.maskView addSubview:loadingImageView];
+    [loadingImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.maskView);
+        make.height.width.equalTo(@(42));
+    }];
 }
 
 @end

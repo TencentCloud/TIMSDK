@@ -1,24 +1,25 @@
 //
-//  TUICallKitSelectGroupMeberViewController.m
+//  TUICallKitSelectGroupMemberViewController.m
 //  TUICallKit
 //
 //  Created by vincepzhang on 2023/4/7.
 //  Copyright © 2021 Tencent. All rights reserved
+
+#import "TUICallKitSelectGroupMemberViewController.h"
 #import "TUICommonModel.h"
-#import "TUICallKitSelectGroupMeberViewController.h"
 #import "TUICore.h"
 #import "Masonry.h"
 #import "TUICallingCommon.h"
 #import "CallingLocalized.h"
-#import "TUICallKitSelectGroupMeberCell.h"
+#import "TUICallKitSelectGroupMemberCell.h"
 #import "TUICallKitGroupMemberInfo.h"
 #import "TUICallingStatusManager.h"
 #import "TUIDefine.h"
 #import "TUICallingAction.h"
 #import "TUICallingUserManager.h"
+#import "UIImage+TUICallKitRTL.h"
 
-
-@interface TUICallKitSelectGroupMeberViewController ()<UITableViewDelegate, UITableViewDataSource>
+@interface TUICallKitSelectGroupMemberViewController ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *selectTableView;
 @property (nonatomic, strong) NSMutableArray<TUICallKitGroupMemberInfo *> *remoteMemberList;
@@ -26,7 +27,7 @@
 
 @end
 
-@implementation TUICallKitSelectGroupMeberViewController {
+@implementation TUICallKitSelectGroupMemberViewController {
     BOOL _isViewReady;
 }
 
@@ -49,7 +50,6 @@
     [self constructViewHierarchy];
     [self activateConstraints];
     _isViewReady = YES;
-    
     self.navigationItem.title = TUICallingLocalize(@"TUICallKit.Recents.addUser");
     
     UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle:TUICallingLocalize(@"LoginNetwork.AppUtils.determine")
@@ -62,7 +62,9 @@
     UIImage *defaultImage = [TUICallingCommon getBundleImageWithName:@"main_mine_about_back"];
     UIButton *leftBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     [leftBtn addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
-    [leftBtn setImage:TIMCommonDynamicImage(@"nav_back_img", defaultImage) forState:UIControlStateNormal];
+    UIImage *leftBtnIcon = TIMCommonDynamicImage(@"nav_back_img", defaultImage);
+    leftBtnIcon = [leftBtnIcon callKitImageFlippedForRightToLeftLayoutDirection];
+    [leftBtn setImage:leftBtnIcon forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftBtn];
     self.navigationItem.leftBarButtonItem = leftItem;
     
@@ -82,16 +84,15 @@
 - (void)updateMemberList {
     NSString *groupId = [[TUICallingStatusManager shareInstance] groupId];
     if (!groupId) {
-        [TUITool makeToast: @"groupId unavailable"];
+        [TUITool makeToast:@"groupId unavailable"];
         return;
     }
+    
     [[V2TIMManager sharedInstance] getGroupMemberList:groupId
                                                filter:V2TIM_GROUP_MEMBER_FILTER_ALL
                                               nextSeq:0
                                                  succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-        
         for (V2TIMGroupMemberFullInfo *userFullInfo in memberList) {
-            
             if ([userFullInfo.userID isEqualToString:self.selfInfo.userId]) {
                 self.selfInfo.name = userFullInfo.nickName;
                 self.selfInfo.avatar = userFullInfo.faceURL;
@@ -111,18 +112,19 @@
                     break;
                 }
             }
-            [self.remoteMemberList addObject: userModel];
+            [self.remoteMemberList addObject:userModel];
         }
         
-        [self.selectTableView registerClass: [TUICallKitSelectGroupMeberCell classForCoder] forCellReuseIdentifier: @"SelectCell"];
+        [self.selectTableView registerClass:[TUICallKitSelectGroupMemberCell classForCoder] forCellReuseIdentifier:@"SelectCell"];
         [self.selectTableView reloadData];
         [self.view layoutIfNeeded];
     } fail:^(int code, NSString *desc) {
-        [TUITool makeToast: @"get group members file"];
+        [TUITool makeToast:@"get group members file"];
     }];
 }
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.remoteMemberList.count == 0) {
         return 0;
@@ -132,7 +134,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TUICallKitSelectGroupMeberCell *cell = (TUICallKitSelectGroupMeberCell *)[tableView dequeueReusableCellWithIdentifier:@"SelectCell" forIndexPath:indexPath];
+    TUICallKitSelectGroupMemberCell *cell = (TUICallKitSelectGroupMemberCell *)[tableView dequeueReusableCellWithIdentifier:@"SelectCell"
+                                                                                                               forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if (indexPath.row == 0) {
         [cell configCell:self.selfInfo isAdded:YES];
@@ -179,6 +182,7 @@
 }
 
 #pragma mark - Lazy
+
 - (UITableView *)selectTableView {
     if (!_selectTableView) {
         _selectTableView = [[UITableView alloc] initWithFrame:CGRectZero];
@@ -189,6 +193,7 @@
 }
 
 #pragma mark - EventAction
+
 - (void)addUsers:(UIButton *)sender {
     NSMutableArray<TUIUserModel *> *inviteUsers = [[NSMutableArray alloc] init];
     
@@ -206,7 +211,7 @@
             addUser.name = user.name;
             addUser.avatar = user.avatar;
             addUser.userId = user.userId;
-            [inviteUsers addObject: addUser];
+            [inviteUsers addObject:addUser];
         }
     }
     
@@ -220,4 +225,5 @@
 - (void)goBack:(UIButton *)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 @end

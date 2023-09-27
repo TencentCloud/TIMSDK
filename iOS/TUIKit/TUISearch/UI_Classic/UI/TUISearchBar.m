@@ -41,6 +41,7 @@
     _searchBar.showsCancelButton = NO;
     _searchBar.delegate = self;
     _searchBar.showsCancelButton = !self.isEntrance;
+    _searchBar.searchTextField.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     if (@available(iOS 13.0, *)) {
         _searchBar.searchTextField.backgroundColor = TIMCommonDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");
     }
@@ -125,7 +126,7 @@
       }
       cancelBtn.enabled = YES;
       cancelBtn.userInteractionEnabled = YES;
-
+      [cancelBtn setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
       [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[ [UISearchBar class] ]].title = TIMCommonLocalizableString(TUIKitSearchItemCancel);
       ;
     });

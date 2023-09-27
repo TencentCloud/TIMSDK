@@ -11,9 +11,15 @@
 
 @implementation NSString (TUIEmoji)
 
++ (NSString *)getRegex_emoji {
+    
+    NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]";  // match emoji
+
+    return regex_emoji;
+}
 - (NSString *)getLocalizableStringWithFaceContent {
     NSString *content = self;
-    NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]";  // match emoji
+    NSString *regex_emoji = [self.class getRegex_emoji];  // match emoji
     NSError *error = nil;
     NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
     if (re) {
@@ -49,7 +55,7 @@
 
 - (NSString *)getInternationalStringWithfaceContent {
     NSString *content = self;
-    NSString *regex_emoji = @"\\[[a-z\\s*A-Z\\s*0-9!-@\\/\\u4e00-\\u9fa5]+\\]";  // match emoji
+    NSString *regex_emoji = [self.class getRegex_emoji];
     NSError *error = nil;
     NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
     if (re) {
@@ -111,7 +117,7 @@
     NSError *error = nil;
     static NSRegularExpression *re = nil;
     if (re == nil) {
-        NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]";  // match emoji
+        NSString *regex_emoji = [self.class getRegex_emoji];
         re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
     }
     if (!re) {
@@ -270,7 +276,7 @@
         return attributeString;
     }
 
-    NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]";  // match emoji
+    NSString *regex_emoji = [self.class getRegex_emoji];
 
     NSError *error = nil;
     NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex_emoji options:NSRegularExpressionCaseInsensitive error:&error];
@@ -295,10 +301,8 @@
                 TUIEmojiTextAttachment *emojiTextAttachment = [[TUIEmojiTextAttachment alloc] init];
                 emojiTextAttachment.faceCellData = face;
 
-                NSString *localizableFaceName = face.localizableName.length ? face.localizableName : face.name;
-
                 // Set tag and image
-                emojiTextAttachment.emojiTag = localizableFaceName;
+                emojiTextAttachment.emojiTag = face.name;
                 emojiTextAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:face.path];
 
                 // Set emoji size
@@ -505,7 +509,7 @@
     NSMutableArray *result = [NSMutableArray new];
 
     /// TUIKit qq emoji.
-    NSString *regexOfCustomEmoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]";
+    NSString *regexOfCustomEmoji = [self.class getRegex_emoji];
     NSError *error = nil;
     NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regexOfCustomEmoji options:NSRegularExpressionCaseInsensitive error:&error];
     if (error) {

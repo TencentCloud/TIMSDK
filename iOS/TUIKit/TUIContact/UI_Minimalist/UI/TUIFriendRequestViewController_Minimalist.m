@@ -14,7 +14,7 @@
 #import "TUICommonContactSwitchCell.h"
 #import "TUIContactAvatarViewController_Minimalist.h"
 #import "TUIContactButtonCell_Minimalist.h"
-#import "UIView+TUIToast.h"
+#import <TUICore/UIView+TUIToast.h>
 
 @interface TUIFriendRequestViewController_Minimalist () <UITableViewDataSource, UITableViewDelegate>
 @property UITableView *tableView;
@@ -51,6 +51,13 @@
     paragraphStyle.lineSpacing = 5;
     paragraphStyle.firstLineHeadIndent = kScale390(12.5);
     paragraphStyle.alignment = NSTextAlignmentLeft;
+    if (isRTL()) {
+        paragraphStyle.alignment = NSTextAlignmentRight;
+    }
+    else {
+        paragraphStyle.alignment = NSTextAlignmentLeft;
+    }
+
     NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:kScale390(16)], NSParagraphStyleAttributeName : paragraphStyle};
     NSString *selfUserID = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[ selfUserID ]
@@ -70,7 +77,12 @@
                                            }];
 
     self.nickTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.nickTextField.textAlignment = NSTextAlignmentRight;
+    if (isRTL()) {
+        self.nickTextField.textAlignment = NSTextAlignmentLeft;
+    }
+    else {
+        self.nickTextField.textAlignment = NSTextAlignmentRight;
+    }
 
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:TIMCommonLocalizableString(FriendRequestFillInfo)];
@@ -299,13 +311,24 @@
     [msgView addSubview:descLabel];
     descLabel.font = [UIFont systemFontOfSize:kScale390(14)];
     descLabel.text = msgText;
+    descLabel.numberOfLines = 0;
     [descLabel sizeToFit];
 
-    icon.frame = CGRectMake(kScale390(12), kScale390(10), kScale390(16), kScale390(16));
-    descLabel.frame = CGRectMake(icon.frame.origin.x + icon.frame.size.width + kScale390(8), kScale390(8), descLabel.frame.size.width, kScale390(20));
-    msgView.frame = CGRectMake(0, 0, descLabel.frame.origin.x + descLabel.frame.size.width + kScale390(12), kScale390(36));
-    msgView.mm__centerX(hudView.mm_centerX);
-    msgView.mm__centerY(hudView.mm_centerY);
+    [icon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(kScale390(12));
+        make.top.mas_equalTo(kScale390(10));
+        make.width.height.mas_equalTo(kScale390(16));
+    }];
+    [descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(icon.mas_trailing).mas_offset(kScale390(8));
+        make.top.mas_equalTo(kScale390(10));
+        make.bottom.mas_equalTo(msgView).mas_offset(-kScale390(10));
+        make.trailing.mas_equalTo(msgView);
+    }];
+    [msgView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(hudView);
+        make.width.mas_lessThanOrEqualTo(hudView);
+    }];
 
     [[UIApplication sharedApplication].keyWindow showToast:hudView
                                                   duration:3.0

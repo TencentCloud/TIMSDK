@@ -87,6 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupNoteDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleGroupNote, defaultHex)
 #define TIMCommonDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleTIMCommon, defaultHex)
 #define TUITranslationDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleTranslation, defaultHex)
+#define TUIVoiceToTextDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleVoiceToText, defaultHex)
 
 /**
  * 动态获取图片
@@ -104,6 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupNoteBundleThemeImage(imageKey, defaultImageName) TUIGroupNoteDynamicImage(imageKey, TUIGroupNoteCommonBundleImage(defaultImageName))
 #define TIMCommonBundleThemeImage(imageKey, defaultImageName) TIMCommonDynamicImage(imageKey, TIMCommonBundleImage(defaultImageName))
 #define TUITranslationBundleThemeImage(imageKey, defaultImageName) TUITranslationDynamicImage(imageKey, TUITranslationCommonBundleImage(defaultImageName))
+#define TUIVoiceToTextBundleThemeImage(imageKey, defaultImageName) TUIVoiceToTextDynamicImage(imageKey, TUIVoiceToTextCommonBundleImage(defaultImageName))
 
 #define TUIDynamicImage(imageKey, themeModule, defaultImg) [TUITheme dynamicImage:imageKey module:themeModule defaultImage:defaultImg]
 #define TUIDemoDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleDemo, defaultImg)
@@ -119,6 +121,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupNoteDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleGroupNote, defaultImg)
 #define TIMCommonDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleTIMCommon, defaultImg)
 #define TUITranslationDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleTranslation, defaultImg)
+#define TUIVoiceToTextDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleVoiceToText, defaultImg)
 
 #define __TUIDefaultBundleImage(imageBundlePath) [UIImage imageWithContentsOfFile:imageBundlePath]
 #define TUIDemoCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIDemoImagePath(imageName))
@@ -133,6 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIGroupNoteCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIGroupNoteImagePath(imageName))
 #define TIMCommonBundleImage(imageName) __TUIDefaultBundleImage(TIMCommonImagePath(imageName))
 #define TUITranslationCommonBundleImage(imageName) __TUIDefaultBundleImage(TUITranslationImagePath(imageName))
+#define TUIVoiceToTextCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIVoiceToTextImagePath(imageName))
 
 /**
  * 主题模块
@@ -164,6 +168,7 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
     TUIThemeModuleTIMCommon = 0x1 << 18,
     TUIThemeModuleTranslation = 0x1 << 19,
     TUIThemeModuleConversationGroup = 0x1 << 20,
+    TUIThemeModuleVoiceToText = 0x1 << 21,
 };
 
 @interface TUITheme : NSObject

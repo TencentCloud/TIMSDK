@@ -14,49 +14,49 @@ class SingleCallView: UIView {
     private var isViewReady: Bool = false
     
     let userInfoAudioView = {
-        return AudioCallUserInfoView(frame: CGRectZero)
+        return AudioCallUserInfoView(frame: CGRect.zero)
     }()
     
     let userInfoVideoView = {
-        return VideoCallUserInfoView(frame: CGRectZero)
+        return VideoCallUserInfoView(frame: CGRect.zero)
     }()
     
     let audioFunctionView = {
-        return AudioCallerWaitingAndAcceptedView(frame: CGRectZero)
+        return AudioCallerWaitingAndAcceptedView(frame: CGRect.zero)
     }()
     
     let videoFunctionView =  {
-        return VideoCallerAndCalleeAcceptedView(frame: CGRectZero)
+        return VideoCallerAndCalleeAcceptedView(frame: CGRect.zero)
     }()
     
     let videoInviteFunctionView = {
-        return VideoCallerWaitingView(frame: CGRectZero)
+        return VideoCallerWaitingView(frame: CGRect.zero)
     }()
     
     let inviteeWaitFunctionView = {
-        return AudioAndVideoCalleeWaitingView(frame: CGRectZero)
+        return AudioAndVideoCalleeWaitingView(frame: CGRect.zero)
     }()
     
     let renderBackgroundView = {
-        return SingleCallVideoLayout(frame: CGRectZero)
+        return SingleCallVideoLayout(frame: CGRect.zero)
     }()
     
     let switchToAudioView = {
-        return SwitchAudioView(frame: CGRectZero)
+        return SwitchAudioView(frame: CGRect.zero)
     }()
     
     let timerView = {
-        return TimerView(frame: CGRectZero)
+        return TimerView(frame: CGRect.zero)
     }()
     
     let floatingWindowBtn = {
-        return FloatingWindowButton(frame: CGRectZero)
+        return FloatingWindowButton(frame: CGRect.zero)
     }()
         
     override init(frame: CGRect) {
         super.init(frame: frame)
         let screenSize = UIScreen.main.bounds.size
-        self.frame = CGRectMake(0, 0, screenSize.width, screenSize.height)
+        self.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
         backgroundColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         
         createView()
@@ -100,6 +100,8 @@ class SingleCallView: UIView {
     }
     
     func activateConstraints() {
+        let isAuidoCall: Bool = TUICallState.instance.mediaType.value == .audio ? true : false
+
         renderBackgroundView.snp.makeConstraints { make in
             make.size.equalTo(self)
         }
@@ -113,8 +115,8 @@ class SingleCallView: UIView {
         
         userInfoVideoView.snp.makeConstraints { make in
             make.top.equalTo(self).offset(StatusBar_Height + 20.0)
-            make.left.equalTo(self).offset(20)
-            make.right.equalTo(self).offset(-20)
+            make.leading.equalTo(self).offset(20)
+            make.trailing.equalTo(self).offset(-20)
         }
 
         audioFunctionView.snp.makeConstraints({ make in
@@ -158,13 +160,13 @@ class SingleCallView: UIView {
             make.centerX.equalTo(self)
             make.height.equalTo(30)
             make.width.equalTo(snp.width)
-            make.bottom.equalTo(self.switchToAudioView.snp.top).offset(-10)
+            make.bottom.equalTo(isAuidoCall ? self.audioFunctionView.snp.top : self.switchToAudioView.snp.top).offset(-10)
         }
 
         floatingWindowBtn.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 40, height: 40))
-            make.top.equalTo(snp.top).offset(30)
-            make.left.equalTo(snp.left).offset(30)
+            make.size.equalTo(kFloatWindowButtonSize)
+            make.top.equalToSuperview().offset(StatusBar_Height + 10)
+            make.leading.equalToSuperview().offset(20)
         }
     }
     

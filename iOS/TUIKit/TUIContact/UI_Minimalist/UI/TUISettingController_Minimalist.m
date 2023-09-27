@@ -173,9 +173,14 @@ static NSString *const kKeyViews = @"views";  // Used to pass custom views from 
     // Extension settings.
     if (dict[kKeyViews] && [dict[kKeyViews] isKindOfClass:NSArray.class]) {
         UIView *view = dict[kKeyViews][indexPath.row];
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"containerCell" forIndexPath:indexPath];
-        [cell addSubview:view];
-        return cell;
+        if ([view isKindOfClass:[UITableViewCell class]] ) {
+            return (id)view;
+        }
+        else {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"containerCell" forIndexPath:indexPath];
+            [cell addSubview:view];
+            return cell;
+        }
     }
     // Built-in settings.
     NSArray *array = dict[kKeyItems];

@@ -31,25 +31,15 @@
 
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
-        self.avatarView.mm_width(34).mm_height(34).mm__centerY(28).mm_left(12);
-        if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-            self.avatarView.layer.masksToBounds = YES;
-            self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
-        } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-            self.avatarView.layer.masksToBounds = YES;
-            self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-        }
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
-        self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_height(20).mm_width(200).mm__centerY(self.avatarView.mm_centerY);
 
         self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
         [self.contentView addSubview:self.detailLabel];
-        self.detailLabel.textAlignment = NSTextAlignmentRight;
+        self.detailLabel.rtlAlignment = TUITextRTLAlignmentTrailing;
         self.detailLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
-        self.detailLabel.mm__centerY(self.avatarView.mm_centerY);
 
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
 
@@ -60,8 +50,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.detailLabel.mm_sizeToFit();
-    self.detailLabel.mm_right(12);
 }
 
 #pragma mark - Public
@@ -73,6 +61,55 @@
     [self.avatarView sd_setImageWithURL:cellData.avatarUrL placeholderImage:DefaultAvatarImage];
     self.detailLabel.hidden = cellData.detail.length == 0;
     self.detailLabel.text = cellData.detail;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    CGFloat imgWidth = kScale390(34);
+
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(imgWidth);
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.leading.mas_equalTo(kScale390(12));
+    }];
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = imgWidth / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+        make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(12);
+        make.height.mas_equalTo(20);
+        make.trailing.lessThanOrEqualTo(self.detailLabel.mas_leading).mas_offset(-5);
+    }];
+
+    [self.detailLabel sizeToFit];
+    [self.detailLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+        make.height.mas_equalTo(20);
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-3);
+        make.width.mas_equalTo(self.detailLabel.frame.size.width);
+    }];
+    
+
+}
 @end

@@ -688,6 +688,11 @@ callMediaType:(TUICallMediaType)callMediaType
         errMsg = TUICallingLocalize(@"TUICallKit.package.not.purchased");
     } else if (errorCode == ERROR_PACKAGE_NOT_SUPPORTED) {
         errMsg = TUICallingLocalize(@"TUICallKit.package.not.support");
+    } else if (errorCode == ERR_SVR_MSG_IN_PEER_BLACKLIST) {
+        errMsg = TUICallingLocalize(@"Demo.TRTC.Calling.ErrorInPeerBlacklist");
+    }
+    else {
+        errMsg = [TUITool convertIMError:errorCode msg:errorMessage];
     }
     [self makeToast:errMsg duration:4 position:nil];
 }
@@ -696,20 +701,6 @@ callMediaType:(TUICallMediaType)callMediaType
     [[TUICallEngine createInstance] init:[TUILogin getSdkAppID] userId:[TUILogin getUserID] userSig:[TUILogin getUserSig] succ:^{
     } fail:^(int code, NSString *errMsg) {
     }];
-    
-    TUIVideoEncoderParams *videoEncoderParams = [[TUIVideoEncoderParams alloc] init];
-    videoEncoderParams.resolution = TUIVideoEncoderParamsResolution_640_360;
-    videoEncoderParams.resolutionMode = TUIVideoEncoderParamsResolutionModePortrait;
-    [[TUICallEngine createInstance] setVideoEncoderParams:videoEncoderParams succ:nil fail:nil];
-    
-    TUIVideoRenderParams *videoRenderParams = [[TUIVideoRenderParams alloc] init];
-    videoRenderParams.fillMode = TUIVideoRenderParamsFillModeFill;
-    videoRenderParams.rotation = TUIVideoRenderParamsRotation_0;
-    [[TUICallEngine createInstance] setVideoRenderParams:[TUILogin getUserID] params:videoRenderParams succ:nil fail:nil];
-    
-    TXBeautyManager *beauty = [[[TUICallEngine createInstance] getTRTCCloudInstance] getBeautyManager];
-    [beauty setBeautyStyle:TXBeautyStyleNature];
-    [beauty setBeautyLevel:6];
 }
 
 - (void)stopCurrentCall {

@@ -129,10 +129,12 @@ static NSString *gConversationCell_ReuseId = @"TConversationCell";
         textLabel.tag = TEXT_TAG;
         textLabel.textColor = [UIColor tui_colorWithHex:@"#000000"];
         textLabel.font = [UIFont systemFontOfSize:kScale390(14)];
+        [textLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         [headerView.contentView addSubview:textLabel];
-        textLabel.mm_fill().mm_left(kScale390(16));
-        textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-
+        [textLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(headerView.mas_leading).mas_offset(kScale390(16));
+            make.top.bottom.trailing.mas_equalTo(headerView);
+        }];
         UIView *clearBackgroundView = [[UIView alloc] init];
         clearBackgroundView.mm_fill();
         headerView.backgroundView = clearBackgroundView;

@@ -29,6 +29,8 @@
 
 #define TIMCommonLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TIMCommonLocalizableBundle]
 
+#define isRTL() [TUIGlobalization getRTLOption]
+
 #define TUICustomLanguageKey @"TUICustomLanguageKey"
 #define TUIChangeLanguageNotification @"TUIChangeLanguageNotification"
 
@@ -57,6 +59,10 @@
  * Ignore traditional chinese and switch to simplified chinese
  */
 + (void)ignoreTraditionChinese:(BOOL)ignore;
+
++ (void)setRTLOption:(BOOL)op;
+
++ (BOOL)getRTLOption;
 
 #pragma mark - Deprecated
 + (NSString *)g_localizedStringForKey:(NSString *)key bundle:(NSString *)bundleName __attribute__((deprecated("use getLocalizedStringForKey:bundle:")));

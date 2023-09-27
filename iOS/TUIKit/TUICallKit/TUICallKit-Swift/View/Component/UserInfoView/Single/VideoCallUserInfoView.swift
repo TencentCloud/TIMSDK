@@ -13,7 +13,7 @@ class VideoCallUserInfoView: UIView {
     let selfCallStatusObserver = Observer()
     let remoteUserListObserver = Observer()
     let userHeadImageView: UIImageView = {
-        let userHeadImageView = UIImageView(frame: CGRectZero)
+        let userHeadImageView = UIImageView(frame: CGRect.zero)
         userHeadImageView.layer.masksToBounds = true
         userHeadImageView.layer.cornerRadius = 5.0
         if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
@@ -23,7 +23,7 @@ class VideoCallUserInfoView: UIView {
     }()
     
     let userNameLabel: UILabel = {
-        let userNameLabel = UILabel(frame: CGRectZero)
+        let userNameLabel = UILabel(frame: CGRect.zero)
         userNameLabel.textColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         userNameLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         userNameLabel.backgroundColor = UIColor.clear
@@ -32,7 +32,7 @@ class VideoCallUserInfoView: UIView {
     }()
     
     let waitingInviteLabel: UILabel = {
-        let waitingInviteLabel = UILabel(frame: CGRectZero)
+        let waitingInviteLabel = UILabel(frame: CGRect.zero)
         waitingInviteLabel.textColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         waitingInviteLabel.font = UIFont.boldSystemFont(ofSize: 14.0)
         waitingInviteLabel.backgroundColor = UIColor.clear
@@ -43,6 +43,7 @@ class VideoCallUserInfoView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         updateWaitingText()
+        setUserImageAndName()
         registerObserveState()
     }
     
@@ -73,18 +74,19 @@ class VideoCallUserInfoView: UIView {
     
     func activateConstraints() {
         self.userHeadImageView.snp.makeConstraints { make in
-            make.top.right.equalTo(self)
+            make.top.equalTo(self)
+            make.trailing.equalTo(self)
             make.size.equalTo(CGSize(width: 100, height: 100))
         }
         
         self.userNameLabel.snp.makeConstraints { make in
             make.top.equalTo(userHeadImageView.snp.top).offset(20)
-            make.right.equalTo(userHeadImageView.snp.left).offset(-20)
+            make.trailing.equalTo(userHeadImageView.snp.leading).offset(-20)
         }
         
         self.waitingInviteLabel.snp.makeConstraints { make in
             make.top.equalTo(userHeadImageView.snp.top).offset(60)
-            make.right.equalTo(userHeadImageView.snp.left).offset(-20)
+            make.trailing.equalTo(userHeadImageView.snp.leading).offset(-20)
         }
 
     }

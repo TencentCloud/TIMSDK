@@ -16,8 +16,12 @@
 #import "TUIMemberCell_Minimalist.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIVideoMessageCellData.h"
+#import "TUITextMessageCellData.h"
+#import "TUIReplyMessageCellData.h"
+#import "TUIVoiceMessageCellData.h"
+#import "TUIMessageCellConfig_Minimalist.h"
 
-@interface TUIMessageReadViewController_Minimalist () <UITableViewDelegate, UITableViewDataSource>
+@interface TUIMessageReadViewController_Minimalist () <UITableViewDelegate, UITableViewDataSource,TUINotificationProtocol>
 
 @property(nonatomic, strong) TUIMessageCellData *cellData;
 @property(nonatomic, assign) BOOL showReadStatusDisable;
@@ -33,7 +37,7 @@
 @property(nonatomic, copy) NSString *c2cReceiverName;
 @property(nonatomic, copy) NSString *c2cReceiverAvatarUrl;
 @property(nonatomic, strong) TUIMessageCell_Minimalist *alertView;
-
+@property(nonatomic, strong) TUIMessageCellConfig_Minimalist *messageCellConfig;
 @end
 
 @implementation TUIMessageReadViewController_Minimalist
@@ -46,6 +50,8 @@
     }
     [self setupViews];
     // Do any additional setup after loading the view.
+
+    [TUICore registerEvent:TUICore_TUIPluginNotify subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey object:self];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -56,6 +62,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    [self updateRootMsg];
     if (_viewWillShowHandler) {
         _viewWillShowHandler(_alertView);
     }
@@ -100,7 +107,7 @@
 
 - (void)layoutViews {
     float backViewTop = self.navigationController.navigationBar.mm_maxY;
-
+    self.messageBackView.frame = CGRectMake(0, 0, self.view.bounds.size.width, kScale390(17)+ kScale390(24)+ kScale390(4));
     self.tableView.mm_top(backViewTop).mm_left(0).mm_width(self.view.mm_w).mm_height(self.view.mm_h - _tableView.mm_y);
 }
 
@@ -128,27 +135,33 @@
     NSString *dateString = [formatter stringFromDate:self.cellData.innerMessage.timestamp];
     dateLabel.text = dateString;
     dateLabel.font = [UIFont systemFontOfSize:kScale390(14)];
+    dateLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     dateLabel.textColor = TUIChatDynamicColor(@"chat_message_read_name_date_text_color", @"#999999");
     [dateLabel sizeToFit];
-    dateLabel.frame = CGRectMake((self.view.frame.size.width - dateLabel.frame.size.width) * 0.5, kScale390(17), dateLabel.frame.size.width, kScale390(24));
+    [dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.view);
+        make.top.mas_equalTo(kScale390(17));
+        make.width.mas_equalTo(dateLabel.frame.size.width);
+        make.height.mas_equalTo(kScale390(24));
+    }];
+}
 
-    _alertView = [[self.alertCellClass alloc] init];
-    _alertView.userInteractionEnabled = NO;
-    [messageBackView addSubview:_alertView];
-
-    _alertView.translatesAutoresizingMaskIntoConstraints = NO;
-    [_alertView fillWithData:self.alertViewCellData];
-    [_alertView notifyBottomContainerReadyOfData:nil];
-    [_alertView layoutIfNeeded];
-    if (self.alertViewCellData.direction == MsgDirectionIncoming) {
-        _alertView.frame = CGRectMake(kScale390(16), dateLabel.frame.origin.y + dateLabel.frame.size.height, _originFrame.size.width, _originFrame.size.height);
-    } else {
-        _alertView.frame = CGRectMake(self.view.bounds.size.width - _originFrame.size.width - kScale390(12),
-                                      dateLabel.frame.origin.y + dateLabel.frame.size.height, _originFrame.size.width, _originFrame.size.height);
+- (void)updateRootMsg {
+    TUIMessageCellData *data = self.alertViewCellData;
+    TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
+    if ([data isKindOfClass:TUITextMessageCellData.class]) {
+        layout = TUIMessageCellLayout.incommingTextMessageLayout;
     }
-
-    messageBackView.mm_width(self.view.bounds.size.width);
-    messageBackView.mm_height(_alertView.frame.origin.y + _alertView.frame.size.height + kScale390(4));
+    if ([data isKindOfClass:TUIReferenceMessageCellData.class]) {
+        layout = TUIMessageCellLayout.incommingTextMessageLayout;
+    }
+    if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
+        layout = [TUIMessageCellLayout incommingVoiceMessageLayout];
+    }
+    self.alertViewCellData.cellLayout = layout;
+    self.alertViewCellData.direction = MsgDirectionIncoming;
+    self.alertViewCellData.showAvatar = NO;
+    self.alertViewCellData.showMessageModifyReplies = NO;
 }
 
 - (void)loadMembers {
@@ -240,14 +253,29 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if(section == 0){
+        return 1;
+    }
     return [self members].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == 0) {
+        TUIMessageCell *cell = nil;
+        TUIMessageCellData *data = self.alertViewCellData;
+        cell = [tableView dequeueReusableCellWithIdentifier:data.reuseId forIndexPath:indexPath];
+        cell.delegate = self;
+        [cell fillWithData:data];
+        [cell notifyBottomContainerReadyOfData:nil];
+        return cell;
+    }
+    
     TUICommonCellData *data = [self members][indexPath.row];
     TUICommonTableViewCell *cell = nil;
 
@@ -261,6 +289,10 @@
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return [self.messageCellConfig getHeightFromMessageCellData:self.cellData];
+    }
+    
     TUICommonCellData *data = [self members][indexPath.row];
     if ([data isKindOfClass:TUIMemberDescribeCellData.class]) {
         return kScale390(57);
@@ -370,8 +402,35 @@
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [_tableView registerClass:[TUIMemberCell_Minimalist class] forCellReuseIdentifier:kMemberCellReuseId];
         [_tableView registerClass:[TUIMemberDescribeCell_Minimalist class] forCellReuseIdentifier:@"TUIMemberDescribeCell_Minimalist"];
+        [self.messageCellConfig bindTableView:self.tableView];
     }
     return _tableView;
 }
 
+- (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider onRemoveHeightCache:(TUIMessageCellData *)cellData {
+    if (cellData) {
+        [self.messageCellConfig removeHeightCacheOfMessageCellData:cellData];
+    }
+}
+- (TUIMessageCellConfig_Minimalist *)messageCellConfig {
+    if (_messageCellConfig == nil) {
+        _messageCellConfig = [[TUIMessageCellConfig_Minimalist alloc] init];
+    }
+    return _messageCellConfig;
+}
+
+#pragma mark - TUINotificationProtocol
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
+
+    if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
+        // Translation View is Shown or content changed.
+        TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
+        [self clearAndReloadCellOfData:data];
+    }
+}
+
+- (void)clearAndReloadCellOfData:(TUIMessageCellData *)data {
+    [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
+    [self.tableView reloadData];
+}
 @end

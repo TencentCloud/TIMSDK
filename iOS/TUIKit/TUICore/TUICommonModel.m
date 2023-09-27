@@ -659,7 +659,7 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
 
 - (UIImage *)navigationItemBackArrowImage {
     if (!_navigationItemBackArrowImage) {
-        _navigationItemBackArrowImage = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+        _navigationItemBackArrowImage = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:TUICoreImagePath(@"nav_back")]);
     }
     return _navigationItemBackArrowImage;
 }

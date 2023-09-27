@@ -8,16 +8,25 @@
 import Foundation
 
 class WindowManager: NSObject, FloatingWindowViewDelegate {
+    
+    enum FloatWindowCornerType {
+        case all
+        case left
+        case right
+    }
         
     static let instance = WindowManager()
     
     var isFloating = false
     
     let mediaTypeObserver = Observer()
-    let remoteUserListObserver = Observer()
     
     let callWindow = UIWindow()
-    let floatWindow = UIWindow()
+    let floatWindow: UIWindow = {
+        let view = UIWindow()
+        view.layer.masksToBounds = true
+        return view
+    }()
     
     var floatWindowBeganPoint: CGPoint?
     var floatWindowBeganOrigin: CGPoint?
@@ -29,7 +38,6 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     
     deinit {
         TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
-        TUICallState.instance.timeCount.removeObserver(mediaTypeObserver)
     }
     
     func showCallWindow() {
@@ -46,15 +54,16 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     
     func showFloatWindow() {
         closeCallWindow()
-        floatWindow.frame = getFloatWindowFrame()
-        floatWindow.backgroundColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         let floatViewController = FloatWindowViewController()
         floatViewController.delegate = self
         floatWindow.rootViewController = floatViewController
+        floatWindow.backgroundColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         floatWindow.isHidden = false
+        floatWindow.frame = getFloatWindowFrame()
+        updateFloatWindowFrame()
+        setFloatWindowCorner(.left)
         floatWindow.t_makeKeyAndVisible()
         isFloating = true
-        updateFloatWindowFrame()
     }
     
     func closeFloatWindow() {
@@ -82,10 +91,10 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
         let originY = floatWindow.frame.origin.y
         if TUICallState.instance.scene.value == .single {
             if TUICallState.instance.mediaType.value == .audio {
-                let dstX = floatWindow.frame.origin.x < Screen_Width / 2.0 ? 0 : Screen_Width - kMicroAudioViewWidth
+                let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroAudioViewWidth)
                 floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroAudioViewWidth, height: kMicroAudioViewHeight)
             } else {
-                let dstX = floatWindow.frame.origin.x < Screen_Width / 2.0 ? 0 : Screen_Width - kMicroVideoViewWidth
+                let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroVideoViewWidth)
                 if TUICallState.instance.remoteUserList.value.first != nil {
                     if TUICallState.instance.remoteUserList.value[0].videoAvailable.value {
                         floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroVideoViewWidth, height: kMicroVideoViewHeight)
@@ -95,7 +104,7 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
                 }
             }
         } else {
-            let dstX = floatWindow.frame.origin.x < Screen_Width / 2.0 ? 0 : Screen_Width - kMicroAudioViewWidth
+            let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroAudioViewWidth)
             floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroAudioViewWidth, height: kMicroAudioViewHeight)
         }
     }
@@ -103,7 +112,9 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     func registerObserveState() {
         TUICallState.instance.mediaType.addObserver(mediaTypeObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
-            self.updateFloatWindowFrame()
+            if self.isFloating {
+                self.updateFloatWindowFrame()
+            }
         })
     }
     
@@ -135,11 +146,13 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
                 dstY = Screen_Height - floatWindow.frame.size.height
                 
             }
-
             floatWindow.frame = CGRect(x: dstX,
-                                  y: dstY,
-                                  width: floatWindow.frame.size.width,
-                                  height: floatWindow.frame.size.height)
+                                       y: dstY,
+                                       width: floatWindow.frame.size.width,
+                                       height: floatWindow.frame.size.height)
+            
+            setFloatWindowCorner(.all)
+
             break
         case.cancelled:
             break
@@ -152,12 +165,40 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
             }
             floatWindow.frame = CGRect(x: dstX,
                                        y: floatWindow.frame.origin.y,
-                                   width: floatWindow.frame.size.width,
-                                  height: floatWindow.frame.size.height)
+                                       width: floatWindow.frame.size.width,
+                                       height: floatWindow.frame.size.height)
+            
+            if dstX == 0 {
+                setFloatWindowCorner(.right)
+            } else {
+                setFloatWindowCorner(.left)
+            }
+            
             break
         default:
             break
         }
     }
+        
+    func setFloatWindowCorner(_ type: FloatWindowCornerType) {
+        var roundingCorners: UIRectCorner
+        switch type {
+        case .all:
+            roundingCorners = [.allCorners]
+            break
+        case .right:
+            roundingCorners = [.topRight, .bottomRight]
+            break
+        case .left:
+            roundingCorners = [.topLeft, .bottomLeft]
+            break
+        }
+        
+        let maskLayer = CAShapeLayer()
+        let path = UIBezierPath(roundedRect: floatWindow.bounds,
+                                byRoundingCorners: roundingCorners,
+                                cornerRadii: CGSize(width: 10, height: 10))
+        maskLayer.path = path.cgPath
+        floatWindow.layer.mask = maskLayer
+    }
 }
-

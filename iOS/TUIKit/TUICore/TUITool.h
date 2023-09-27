@@ -33,6 +33,7 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 
 // msg code convert
 + (NSString *)convertIMError:(NSInteger)code msg:(NSString *)msg;
++ (void)configIMErrorMap;
 
 + (NSString *)genImageName:(NSString *)uuid;
 + (NSString *)genSnapshotName:(NSString *)uuid;

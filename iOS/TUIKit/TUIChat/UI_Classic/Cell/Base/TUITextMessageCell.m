@@ -84,23 +84,41 @@
     self.textView.attributedText = [data getAttributedString:textFont];
     self.textView.textColor = textColor;
     self.textView.font = textFont;
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.textView.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
-    if (self.voiceReadPoint.hidden == NO) {
-        self.voiceReadPoint.frame = CGRectMake(CGRectGetMaxX(self.bubbleView.frame), 0, 5, 5);
-    }
-    if (self.messageData.messageModifyReactsSize.height > 0) {
-        if (self.tagView) {
-            CGFloat tagViewTopPadding = 6;
-            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopPadding,
-                                            self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
-        }
-    }
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.bubbleView.mas_leading).mas_offset(self.textData.textOrigin.x);
+        make.top.mas_equalTo(self.bubbleView.mas_top).mas_offset(self.textData.textOrigin.y);
+        make.size.mas_equalTo(self.textData.textSize);
+    }];
+
+    if (self.voiceReadPoint.hidden == NO) {
+        [self.voiceReadPoint mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.top.mas_equalTo(self.bubbleView);
+          make.leading.mas_equalTo(self.bubbleView.mas_trailing).mas_offset(1);
+          make.size.mas_equalTo(CGSizeMake(5, 5));
+        }];
+    }
+    
     [self layoutBottomContainer];
+    
 }
 
 - (void)layoutBottomContainer {
@@ -109,18 +127,29 @@
     }
 
     CGSize size = self.textData.bottomContainerSize;
-    CGFloat topMargin = self.bubbleView.mm_maxY + self.nameLabel.mm_h + 6;
 
-    if (self.textData.direction == MsgDirectionOutgoing) {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_right(self.mm_w - self.container.mm_maxX);
-    } else {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_left(self.container.mm_minX);
-    }
+    [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.textData.direction == MsgDirectionIncoming) {
+            make.leading.mas_equalTo(self.container.mas_leading);
+        }
+        else {
+            make.trailing.mas_equalTo(self.container.mas_trailing);
+        }
+        make.top.mas_equalTo(self.container.mas_bottom).offset(6);
+        make.size.mas_equalTo(size);
+    }];
 
+    CGFloat repliesBtnTextWidth = self.messageModifyRepliesButton.frame.size.width;
     if (!self.messageModifyRepliesButton.hidden) {
-        CGRect oldRect = self.messageModifyRepliesButton.frame;
-        CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame), oldRect.size.width, oldRect.size.height);
-        self.messageModifyRepliesButton.frame = newRect;
+        [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+          if (self.textData.direction == MsgDirectionIncoming) {
+              make.leading.mas_equalTo(self.container.mas_leading);
+          } else {
+              make.trailing.mas_equalTo(self.container.mas_trailing);
+          }
+          make.top.mas_equalTo(self.bottomContainer.mas_bottom);
+          make.size.mas_equalTo(CGSizeMake(repliesBtnTextWidth + 10, 30));
+        }];
     }
 }
 

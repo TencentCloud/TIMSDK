@@ -245,7 +245,7 @@
 "TUIKitMessageTipsUnmute" = "被解除禁言";
 
 "TUIKitSignalingFinishGroupChat" = "结束群聊";
-"TUIKitSignalingFinishConversationAndTimeFormat" = "通话时长：%.2d:%.2d";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "通话时长";
 "TUIKitSignalingNewCall" = "发起通话";
 "TUIKitSignalingNewGroupCallFormat" = "\"%@\" 发起群通话";
 "TUIkitSignalingCancelCall" = "取消通话";
@@ -473,12 +473,20 @@
 "TUIKitReference" = "引用";
 "TUIKitNotSupportThisMessage" = "[暂时不支持该消息展示]";
 
+"TUIKitAudioPlaybackStyleLoudspeaker" = "扬声器";
+"TUIKitAudioPlaybackStyleHandset" = "听筒";
+"TUIKitAudioPlaybackStyleChange2Loudspeaker" = "切换至扬声器播放";
+"TUIKitAudioPlaybackStyleChange2Handset" = "切换至听筒播放";
+
 "TUIKitTranslate" = "翻译";
 "TUIKitTranslateDefaultTips" = "由腾讯云 IM 提供翻译支持";
 "TUIKitTranslateFailed" = "翻译失败";
 "Hide" = "隐藏";
 "TranslateMessage" = "将消息翻译为";
 "TranslateLanguageNotSupport" = "当前翻译语言不支持，请切换至其他语言";
+
+"TUIKitConvertToText" = "转文字";
+"TUIKitConvertToTextFailed" = "转换失败";
 
 "TUIKitSignalingSwitchToAudio" = "视频转语音";
 "TUIKitSignalingUnsupportedCalling" = "未知邀请";
@@ -490,6 +498,7 @@
 "TUIKitChooseCover" = "选择封面";
 "TUIKitChooseBackground" = "更换背景";
 "TUIKitDefaultBackground" = "默认背景";
+"TUIKitIdentity" = "ID";
 
 "TUIKitChooseBackgroundSuccess" = "设置成功！";
 "TUIKitChooseBackgroundFailed" = "设置失败！";
@@ -706,7 +715,10 @@
 "TIMAppConfirmLogout" = "确定退出吗";
 "TIMAppConfirm" = "确定";
 "TIMAppCancel" = "取消";
+"TIMAppMarkAllMessageAsReadSucc" = "清空未读成功";
+"TIMAppMarkAllMessageAsReadErrFormat" = "清空未读失败, %d, %@";
 "TIMChangeLanguage" = "切换语言";
+
 //----timApp---
 "TUIKitTickledMe" = "我";
 "TUIKitTickledActionVaule" = "拍了拍";
@@ -714,3 +726,7 @@
 "TUIKitImageViewOrigin" = "查看原图";
 "TUIGroupCreateTipsMessage" = "创建群组";
 "TUICommunityCreateTipsMessage" = "创建社群";
+
+"zh-Hans" = "简体中文";
+"en"      = "英语";
+"ar"      = "阿拉伯语";

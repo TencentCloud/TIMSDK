@@ -77,7 +77,81 @@
         NSInteger downloadProgress = [TUIMessageProgressManager.shareManager downloadProgressForMessage:self.fileData.msgID];
         [self onUploadProgress:self.fileData.msgID progress:uploadProgress];
         [self onDownloadProgress:self.fileData.msgID progress:downloadProgress];
+        
     });
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    CGSize containerSize = [self.class getContentSize:self.fileData];
+    [self.fileContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(containerSize.width - kScale390(32));
+        make.height.mas_equalTo(48);
+        make.leading.mas_equalTo(kScale390(16));
+        make.top.mas_equalTo(self.bubbleView).mas_offset(8);
+    }];
+
+
+    CGFloat fileImageSize = 24;
+    
+    [self.fileImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.container.mas_leading).mas_offset(kScale390(17));
+        make.top.mas_equalTo(self.container.mas_top).mas_offset(kScale390(12));
+        make.size.mas_equalTo(fileImageSize);
+    }];
+
+    [self.fileName mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.fileImage.mas_trailing).mas_offset(kScale390(8));
+        make.top.mas_equalTo(15);
+        make.trailing.mas_equalTo(self.container.mas_trailing).mas_offset(- kScale390(12));
+        make.height.mas_equalTo(17);
+    }];
+
+    [self.length mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.container).mas_offset(kScale390(22));
+        make.bottom.mas_equalTo(self.container.mas_bottom).mas_offset(- 11);
+        make.size.mas_equalTo(CGSizeMake(150, 14));
+    }];
+
+    if (!self.fileData.isLocalExist && !self.fileData.isDownloading) {
+        CGFloat downloadSize = 16;
+        [self.downloadImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.fileData.direction == MsgDirectionIncoming) {
+                make.leading.mas_equalTo(self.bubbleView.mas_trailing).mas_offset(kScale390(8));
+            } else {
+                make.trailing.mas_equalTo(self.bubbleView.mas_leading).mas_offset(- kScale390(8));
+            }
+            make.centerY.mas_equalTo(self.length.mas_centerY);
+            make.height.width.mas_equalTo(downloadSize);
+        }];
+    } else {
+        _downloadImage.frame = CGRectZero;
+    }
+    [self.progressView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.width.mas_equalTo(self.progressView.mm_w ?: 1);
+        make.height.mas_equalTo(self.fileContainer.mm_h);
+    }];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 #pragma mark - TUIMessageProgressManagerDelegate
@@ -130,23 +204,21 @@
 
 - (void)showProgressLoadingAnimation:(NSInteger)progress {
     self.progressView.hidden = NO;
-    self.progressView.frame = CGRectMake(0, 0, self.progressView.mm_w ?: 1, self.fileContainer.mm_h);
     NSLog(@"showProgressLodingAnimation:%ld", (long)progress);
     [UIView animateWithDuration:0.25
         animations:^{
-          self.progressView.mm_x = 0;
-          self.progressView.mm_y = 0;
-          self.progressView.mm_h = self.fileContainer.mm_h;
-          self.progressView.mm_w = self.fileContainer.mm_w * progress / 100.0;
-        }
-        completion:^(BOOL finished) {
-          if (progress == 0 || progress >= 100) {
-              self.progressView.hidden = YES;
-              [self.indicator stopAnimating];
-              self.length.text = [self formatLength:self.fileData.length];
-              self.downloadImage.hidden = YES;
-          }
+        [self.progressView mas_updateConstraints:^(MASConstraintMaker *make) {
+          make.width.mas_equalTo(self.fileContainer.mm_w * progress / 100.0);
         }];
+    }
+        completion:^(BOOL finished) {
+        if (progress == 0 || progress >= 100) {
+            self.progressView.hidden = YES;
+            [self.indicator stopAnimating];
+            self.length.text = [self formatLength:self.fileData.length];
+            self.downloadImage.hidden = YES;
+        }
+    }];
 
     self.length.text = [self formatLength:self.fileData.length];
 }
@@ -179,34 +251,6 @@
     return str;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    CGSize containerSize = [self.class getContentSize:self.fileData];
-
-    _fileContainer.mm_width(containerSize.width - kScale390(32)).mm_height(48).mm_left(kScale390(16)).mm_top(8);
-
-    CGFloat fileImageSize = 24;
-    _fileImage.mm_width(fileImageSize).mm_height(fileImageSize).mm_left(kScale390(12)).mm_top(12);
-
-    CGFloat fileNameX = _fileImage.mm_maxX + kScale390(8);
-    _fileName.mm_width(_fileContainer.mm_w - fileNameX - kScale390(12)).mm_height(17).mm_left(fileNameX).mm_top(15);
-
-    _length.mm_width(150).mm_height(14).mm_left(kScale390(22)).mm_top(_fileContainer.mm_maxY + 11);
-
-    if (!self.fileData.isLocalExist && !self.fileData.isDownloading) {
-        CGFloat downloadSize = 16;
-        CGFloat downloadX = 0;
-        if (self.fileData.direction == MsgDirectionIncoming) {
-            downloadX = self.container.mm_maxX + kScale390(8);
-        } else {
-            downloadX = self.container.mm_x - kScale390(8) - downloadSize;
-        }
-        _downloadImage.frame = CGRectMake(downloadX, self.fileContainer.mm_y + _fileName.mm_y, downloadSize, downloadSize);
-    } else {
-        _downloadImage.frame = CGRectZero;
-    }
-}
 
 - (UIView *)progressView {
     if (_progressView == nil) {

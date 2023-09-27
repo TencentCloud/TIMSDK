@@ -28,32 +28,50 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+}
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    
+    CGFloat topMargin = 0;
+    CGFloat height = self.container.mm_h;
     if (self.messageData.messageModifyReactsSize.height > 0) {
         if (self.tagView) {
-            CGFloat topMargin = 10;
+            topMargin = 10;
             CGFloat tagViewTopPadding = 6;
-            CGFloat height = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopPadding;
-            _face.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopPadding,
-                                            self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
+             height = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopPadding;
         }
         self.bubbleView.hidden = NO;
     } else {
-        CGFloat topMargin = 0;
-        CGFloat height = self.container.mm_h;
-        _face.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
         self.bubbleView.hidden = YES;
     }
-    _face.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.face mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+        make.centerX.mas_equalTo(self.container.mas_centerX);
+        make.top.mas_equalTo(topMargin);
+        make.width.mas_equalTo(self.container);
+    }];
+    
+    
 }
 - (void)fillWithData:(TUIFaceMessageCellData *)data {
     // set data
     [super fillWithData:data];
     self.faceData = data;
-
     _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
-    ;
+  
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 #pragma mark - TUIMessageCellProtocol

@@ -11,7 +11,7 @@ class CallWaitingHintView: UIView {
  
     
     let label: UILabel = {
-        let waitingInviteLabel = UILabel(frame: CGRectZero)
+        let waitingInviteLabel = UILabel(frame: CGRect.zero)
         waitingInviteLabel.textColor = UIColor.t_colorWithHexString(color: "#999999")
         waitingInviteLabel.font = UIFont.boldSystemFont(ofSize: 14.0)
         waitingInviteLabel.backgroundColor = UIColor.clear

@@ -68,7 +68,9 @@
     [_inputTextView setFont:kTUIInputNoramlFont];
     _inputTextView.backgroundColor = TUIChatDynamicColor(@"chat_input_bg_color", @"#FFFFFF");
     _inputTextView.textColor = TUIChatDynamicColor(@"chat_input_text_color", @"#000000");
-    _inputTextView.textContainerInset = UIEdgeInsetsMake(kScale390(9), kScale390(16), kScale390(9), kScale390(30));
+    UIEdgeInsets ei = UIEdgeInsetsMake(kScale390(9), kScale390(16), kScale390(9), kScale390(30));
+    _inputTextView.textContainerInset = rtlEdgeInsetsWithInsets(ei);
+    _inputTextView.textAlignment = isRTL()?NSTextAlignmentRight: NSTextAlignmentLeft;
     [_inputTextView setReturnKeyType:UIReturnKeySend];
     [self addSubview:_inputTextView];
 
@@ -158,6 +160,9 @@
         case TUIRecordStatus_Record:
         case TUIRecordStatus_Cancel: {
             _recordDeleteView.frame = CGRectMake(kScale390(16), _recordDeleteView.mm_y, 24, 24);
+            if (isRTL()){
+                [_recordDeleteView resetFrameToFitRTL];
+            }
             _recordDeleteView.image = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"voice_record_delete")];
             _recordBackgroudView.backgroundColor = RGBA(20, 122, 255, 1);
             _recordAnimateCoverView.backgroundColor = _recordBackgroudView.backgroundColor;
@@ -173,6 +178,9 @@
         } break;
         case TUIRecordStatus_Delete: {
             _recordDeleteView.frame = CGRectMake(0, _recordDeleteView.mm_y, 20, 24);
+            if (isRTL()){
+                [_recordDeleteView resetFrameToFitRTL];
+            }
             _recordDeleteView.image = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"voice_record_delete_ready")];
             _recordBackgroudView.backgroundColor = RGBA(255, 88, 76, 1);
             _recordAnimateCoverView.backgroundColor = _recordBackgroudView.backgroundColor;
@@ -229,6 +237,15 @@
     _recordAnimateCoverViewFrame = CGRectMake(animationStartX, animationY, animationCoverWidth, animationSize);
     _recordAnimateCoverView.frame = self.recordAnimateCoverViewFrame;
     [self applyBorderTheme];
+    
+    if(isRTL()) {
+        for (UIView *subviews in self.subviews) {
+            [subviews resetFrameToFitRTL];
+        }
+        for (UIView *subview in _recordView.subviews) {
+            [subview resetFrameToFitRTL];
+        }
+    }
 }
 
 - (void)layoutButton:(CGFloat)height {
@@ -479,6 +496,7 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputBarDidInputAt:)]) {
             [self.delegate inputBarDidInputAt:self];
         }
+        return NO;
     }
     return YES;
 }
@@ -503,10 +521,8 @@
     TUIEmojiTextAttachment *emojiTextAttachment = [[TUIEmojiTextAttachment alloc] init];
     emojiTextAttachment.faceCellData = emoji;
 
-    NSString *localizableFaceName = emoji.localizableName.length ? emoji.localizableName : emoji.name;
-
     // Set tag and image
-    emojiTextAttachment.emojiTag = localizableFaceName;
+    emojiTextAttachment.emojiTag = emoji.name;
     emojiTextAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:emoji.path];
 
     // Set emoji size
@@ -542,6 +558,8 @@
 
     [_inputTextView.textStorage addAttribute:NSFontAttributeName value:kTUIInputNoramlFont range:wholeRange];
     [_inputTextView setFont:kTUIInputNoramlFont];
+    _inputTextView.textAlignment = isRTL()?NSTextAlignmentRight: NSTextAlignmentLeft;
+
 }
 
 - (void)backDelete {
@@ -563,6 +581,24 @@
     [self applyBorderTheme];
 }
 
+- (void)addDraftToInputBar:(NSAttributedString *)draft {
+    [self addWordsToInputBar:draft];
+}
+
+- (void)addWordsToInputBar:(NSAttributedString *)words {
+    NSRange selectedRange = self.inputTextView.selectedRange;
+    if (selectedRange.length > 0) {
+        [self.inputTextView.textStorage deleteCharactersInRange:selectedRange];
+    }
+    // Insert words
+    [self.inputTextView.textStorage insertAttributedString:words atIndex:self.inputTextView.selectedRange.location];
+
+    self.inputTextView.selectedRange = NSMakeRange(self.inputTextView.textStorage.length + 1, 0);
+
+    [self resetTextStyle];
+
+    [self updateTextViewFrame];
+}
 #pragma mark - TUIAudioRecorderDelegate
 - (void)audioRecorder:(TUIAudioRecorder *)recorder didCheckPermission:(BOOL)isGranted isFirstTime:(BOOL)isFirstTime {
     if (isFirstTime) {

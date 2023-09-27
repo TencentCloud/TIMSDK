@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUICallKitGroupMemberInfo: NSObject
+@interface TUICallKitGroupMemberInfo : NSObject
 
 @property (nonatomic, strong) NSString *userId;
 @property (nonatomic, strong) NSString *name;

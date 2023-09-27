@@ -134,4 +134,12 @@
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, tagViewWidth, tagViewHeight);
 }
 
+- (void)updateRTLView {
+    for (UIView *subView in self.subviews) {
+        if (subView) {
+            [subView resetFrameToFitRTL];
+        }
+    }
+}
+
 @end

@@ -27,6 +27,15 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self defaultLayout];
+    
+    if (isRTL()) {
+        for (UIView *subview in self.subviews) {
+            if ([subview respondsToSelector:@selector(resetFrameToFitRTL)]) {
+                [subview resetFrameToFitRTL];
+            }
+        }
+    }
+
 }
 
 - (void)defaultLayout {

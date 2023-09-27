@@ -11,6 +11,7 @@
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIMessageMultiChooseView_Minimalist ()
 
@@ -77,6 +78,14 @@
         labelWidth = labelWidth + 10;
         self.selectedCountLabel.frame = CGRectMake((width - labelWidth) * 0.5, kScale390(14), labelWidth, kScale390(30));
         self.bottomCancelButton.frame = CGRectMake((width - kScale390(50) - kScale390(23)), kScale390(14), kScale390((50)), kScale390(30));
+    }
+    if(isRTL()) {
+        for (UIView *subview in self.toolView.subviews) {
+            [subview resetFrameToFitRTL];
+        }
+        for (UIView *subview in self.menuView.subviews) {
+            [subview resetFrameToFitRTL];
+        }
     }
 }
 

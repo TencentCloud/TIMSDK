@@ -70,13 +70,6 @@
           if (![key isKindOfClass:NSString.class] || ![obj isKindOfClass:NSNumber.class]) {
               return;
           }
-          if ([key isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey]) {
-              TUIChatConfig.defaultConfig.enableVideoCall = obj.boolValue;
-          } else if ([key isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey]) {
-              TUIChatConfig.defaultConfig.enableAudioCall = obj.boolValue;
-          } else if ([key isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod_EnableLinkKey]) {
-              TUIChatConfig.defaultConfig.enableWelcomeCustomMessage = obj.boolValue;
-          }
         }];
     } else if ([method isEqualToString:TUICore_TUIChatService_AppendCustomMessageMethod]) {
         if ([param isKindOfClass:NSDictionary.class]) {

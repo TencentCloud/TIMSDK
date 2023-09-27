@@ -74,16 +74,46 @@
     self.textView.attributedText = [data getAttributedString:textFont];
     self.textView.textColor = textColor;
     self.textView.font = textFont;
+    self.textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+//    self.textView.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
+    [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.bubbleView.mas_leading).mas_offset(ceil(self.textData.textOrigin.x));
+        make.top.mas_equalTo(self.bubbleView.mas_top).mas_offset(ceil(self.textData.textOrigin.y));
+        make.width.mas_equalTo(ceil(self.textData.textSize.width));
+        make.height.mas_equalTo(ceil(self.textData.textSize.height));
+    }];
+    MASAttachKeys(self.textView);
+    if (self.voiceReadPoint.hidden == NO) {
+        [self.voiceReadPoint mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.top.mas_equalTo(self.bubbleView);
+          make.leading.mas_equalTo(self.bubbleView.mas_trailing).mas_offset(1);
+          make.size.mas_equalTo(CGSizeMake(5, 5));
+        }];
+    }
+    MASAttachKeys(self.voiceReadPoint);
+    [self layoutBottomContainer];
+
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.textView.frame = (CGRect){.origin = self.textData.textOrigin, .size = self.textData.textSize};
-    if (self.voiceReadPoint.hidden == NO) {
-        self.voiceReadPoint.frame = CGRectMake(CGRectGetMaxX(self.bubbleView.frame), 0, 5, 5);
-    }
-
-    [self layoutBottomContainer];
 }
 
 - (void)layoutBottomContainer {
@@ -96,19 +126,23 @@
     /// Add an extra tiny offset to the left or right of TransitionView if replyView is visible.
     CGFloat offset = self.replyLineView.hidden ? 0 : 1;
     UIView *view = self.replyEmojiView.hidden ? self.bubbleView : self.replyEmojiView;
-    CGFloat topMargin = view.mm_maxY + self.nameLabel.mm_h + 6;
 
-    if (self.textData.direction == MsgDirectionOutgoing) {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_right(self.mm_w - self.container.mm_maxX + offset);
-    } else {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_left(self.container.mm_minX + offset);
-    }
+    [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.textData.direction == MsgDirectionIncoming) {
+            make.leading.mas_equalTo(self.container.mas_leading).mas_offset(offset);
+        } else {
+            make.trailing.mas_equalTo(self.container.mas_trailing).mas_offset(-offset);
+        }
+        make.top.mas_equalTo(view.mas_bottom).mas_offset(6);
+        make.size.mas_equalTo(size);
+    }];
 
     if (!self.messageModifyRepliesButton.hidden) {
         CGRect oldRect = self.messageModifyRepliesButton.frame;
         CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame) + 5, oldRect.size.width, oldRect.size.height);
         self.messageModifyRepliesButton.frame = newRect;
     }
+    
     for (UIView *view in self.replyAvatarImageViews) {
         CGRect oldRect = view.frame;
         CGRect newRect = CGRectMake(oldRect.origin.x, CGRectGetMaxY(self.bottomContainer.frame) + 5, oldRect.size.width, oldRect.size.height);
@@ -168,7 +202,7 @@
     
     CGFloat height = [super getHeight:textCellData withWidth:width];
     if (textCellData.bottomContainerSize.height > 0) {
-        height += textCellData.bottomContainerSize.height + kScale375(6);
+        height += textCellData.bottomContainerSize.height + 6;
     }
     return height;
 }

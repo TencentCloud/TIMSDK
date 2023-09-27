@@ -12,12 +12,12 @@ import SnapKit
 typealias ButtonActionBlock = (_ sender: UIButton) -> Void
 
 class BaseControlButton: UIView {
-
+    
     var buttonActionBlock: ButtonActionBlock?
     var imageSize: CGSize
     
     let titleLabel: UILabel = {
-        let titleLable = UILabel(frame: CGRectZero)
+        let titleLable = UILabel(frame: CGRect.zero)
         titleLable.font = UIFont.systemFont(ofSize: 12.0)
         titleLable.textAlignment = .center
         return titleLable
@@ -55,7 +55,7 @@ class BaseControlButton: UIView {
         bindInteraction()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(button)
         addSubview(titleLabel)
@@ -64,7 +64,7 @@ class BaseControlButton: UIView {
     func activateConstraints() {
         
         titleLabel.snp.makeConstraints { make in
-            make.left.right.centerX.bottom.equalTo(self)
+            make.leading.trailing.centerX.bottom.equalTo(self)
         }
         
         button.snp.makeConstraints { make in
@@ -77,7 +77,7 @@ class BaseControlButton: UIView {
     func bindInteraction() {
         button.addTarget(self, action: #selector(buttonActionEvent(sender: )), for: .touchUpInside)
     }
-
+    
     // MARK: Update Info
     func updateImage(image: UIImage) {
         button.setBackgroundImage(image, for: .normal)

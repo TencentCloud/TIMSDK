@@ -31,13 +31,36 @@
     if (myData.image == nil) {
         [myData downloadImage];
     }
-    self.imageView.frame = CGRectMake(0, 0, myData.imageSize.width, myData.imageSize.height);
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    TUIImageReplyQuoteViewData *myData = (TUIImageReplyQuoteViewData *)self.data;
+
+    [self.imageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+        make.size.mas_equalTo(myData.imageSize);
+    }];
+    
+}
 - (void)reset {
     [super reset];
     self.imageView.image = nil;
-    self.imageView.frame = CGRectMake(0, 0, 60, 60);
+    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x, self.imageView.frame.origin.y, 60, 60);
 }
 
 @end

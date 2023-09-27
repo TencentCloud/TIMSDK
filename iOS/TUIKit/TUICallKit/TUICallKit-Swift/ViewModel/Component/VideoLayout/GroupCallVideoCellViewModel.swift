@@ -17,8 +17,7 @@ class GroupCallVideoCellViewModel {
     let isCameraOpenAvailableObserver = Observer()
     let remotePlayoutVolumeObserver = Observer()
     let selfPlayoutVolumeObserver = Observer()
-
-
+    
     var isSelf: Bool = false
     
     let selfUser: Observable<User> = Observable(User())

@@ -34,7 +34,7 @@ class InviteUserButtonViewModel {
     }
 
     func inviteUser() {
-        let navigationController = UINavigationController(rootViewController: SelectGroupMeberViewController())
+        let navigationController = UINavigationController(rootViewController: SelectGroupMemberViewController())
         navigationController.modalPresentationStyle = .fullScreen
         navigationController.navigationBar.barTintColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         let keyWindow = TUICallKitCommon.getKeyWindow()

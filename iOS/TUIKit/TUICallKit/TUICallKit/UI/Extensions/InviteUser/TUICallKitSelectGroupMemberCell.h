@@ -1,5 +1,5 @@
 //
-//  TUICallKitSelectGroupMeberCell.h
+//  TUICallKitSelectGroupMemberCell.h
 //  Pods
 //
 //  Created by vincepzhang on 2023/4/7.
@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUICallKitSelectGroupMeberCell: UITableViewCell
+@interface TUICallKitSelectGroupMemberCell : UITableViewCell
 
 - (void)configCell:(TUICallKitGroupMemberInfo *)userInfo isAdded:(BOOL)isAdded;
 

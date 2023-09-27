@@ -72,25 +72,73 @@
     self.titleLabel.text = title;
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    if (self.isFooter) {
+        [self.iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.contentView);
+            make.height.width.mas_equalTo(20);
+            if(isRTL()){
+                make.right.mas_equalTo(self.contentView.mas_right).mas_offset(-10);
+            }
+            else {
+                make.left.mas_equalTo(self.contentView.mas_left).mas_offset(10);
+            }
+        }];
+        [self.titleLabel sizeToFit];
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if(isRTL()) {
+                make.right.mas_equalTo(self.iconView.mas_left).mas_offset(-10);
+            }
+            else{
+                make.left.mas_equalTo(self.iconView.mas_right).mas_offset(10);
+            }
+            make.centerY.mas_equalTo(self.contentView);
+            make.width.mas_equalTo(self.titleLabel.frame.size.width);
+            make.height.mas_equalTo(self.titleLabel.font.lineHeight);
+        }];
+    
+        MASAttachKeys(self.iconView,self.titleLabel);
+    } else {
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if(isRTL()) {
+                make.left.mas_equalTo(self.moreBtn.mas_right).mas_offset(kScale390(16));
+                make.right.mas_equalTo(self.contentView.mas_right).mas_offset(-kScale390(16));
+            }
+            else{
+                make.left.mas_equalTo(self.contentView.mas_left).mas_offset(kScale390(16));
+                make.right.mas_equalTo(self.moreBtn.mas_left).mas_offset(-kScale390(16));
+                
+            }
+//            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(kScale390(16));
+            make.centerY.mas_equalTo(self.contentView);
+//            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+            make.height.mas_equalTo(self.titleLabel.font.lineHeight);
+        }];
+        [self.moreBtn sizeToFit];
+        [self.moreBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if(isRTL()) {
+                make.left.mas_equalTo(self.contentView).mas_offset(kScale390(10));
+            }
+            else{
+                make.right.mas_equalTo(self.contentView).mas_offset(-kScale390(10));
+            }
+            make.centerY.mas_equalTo(self.contentView.mas_centerY);
+            make.width.mas_equalTo(self.moreBtn.frame.size.width);
+            make.height.mas_equalTo(self.moreBtn.frame.size.height);
+        }];
+        
+        MASAttachKeys(self.titleLabel,self.moreBtn);
+    }
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    if (self.isFooter) {
-        self.iconView.mm_height(20).mm_width(20);
-        self.iconView.mm_centerY = self.contentView.mm_centerY;
-        self.iconView.mm_x = 10;
-        [self.titleLabel sizeToFit];
-        self.titleLabel.mm_centerY = self.contentView.mm_centerY;
-        self.titleLabel.mm_x = self.iconView.mm_maxX + 10;
-    } else {
-        [self.titleLabel sizeToFit];
-        self.titleLabel.mm_centerY = self.contentView.mm_centerY;
-        self.titleLabel.mm_x = kScale390(16);
-        [self.moreBtn sizeToFit];
-        self.moreBtn.frame = CGRectMake(self.contentView.frame.size.width - self.moreBtn.frame.size.width - kScale390(20),
-                                        (self.contentView.frame.size.height - self.moreBtn.frame.size.height) * 0.5, self.moreBtn.frame.size.width,
-                                        self.moreBtn.frame.size.height);
-    }
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -131,7 +179,7 @@
     [self.contentView addSubview:_titleLabel];
 
     _rowAccessoryView = [[UIImageView alloc] init];
-    _rowAccessoryView.image = [UIImage imageNamed:TUISearchImagePath(@"right")];
+    _rowAccessoryView.image = [[UIImage imageNamed:TUISearchImagePath(@"right")] rtl_imageFlippedForRightToLeftLayoutDirection];
     [self.contentView addSubview:_rowAccessoryView];
 
     _separtorView = [[UIView alloc] init];
@@ -142,6 +190,13 @@
 - (void)configPlaceHolderImage:(UIImage *)img imgUrl:(NSString *)imgurl Text:(NSString *)text {
     [_iconView sd_setImageWithURL:[NSURL URLWithString:imgurl] placeholderImage:img];
     _titleLabel.text = text;
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 - (void)tap:(UITapGestureRecognizer *)tap {
     if (self.onTap) {
@@ -154,30 +209,65 @@
     self.titleLabel.text = title;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
 
-    self.iconView.mm_height(kScale390(40)).mm_width(kScale390(40));
-    self.iconView.mm_centerY = self.contentView.mm_centerY;
-    self.iconView.mm_x = kScale390(16);
-
+    CGFloat imgWitdh = kScale390(40);
+    [self.iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView);
+        make.height.width.mas_equalTo(kScale390(40));
+        if(isRTL()){
+            make.right.mas_equalTo(self.contentView.mas_right).mas_offset(-kScale390(16));
+        }
+        else {
+            make.left.mas_equalTo(self.contentView.mas_left).mas_offset(kScale390(16));
+        }
+    }];
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.iconView.layer.masksToBounds = YES;
-        self.iconView.layer.cornerRadius = self.iconView.frame.size.height / 2.0;
+        self.iconView.layer.cornerRadius = imgWitdh / 2.0;
     } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
         self.iconView.layer.masksToBounds = YES;
         self.iconView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
 
     [self.titleLabel sizeToFit];
-    self.titleLabel.mm_centerY = self.contentView.mm_centerY;
-    self.titleLabel.mm_x = self.iconView.mm_maxX + kScale390(8);
-
-    self.rowAccessoryView.mm_height(10).mm_width(10);
-    self.rowAccessoryView.mm_centerY = self.contentView.mm_centerY;
-    self.rowAccessoryView.mm_r = 10;
-
-    self.separtorView.frame = CGRectMake(kScale390(16), self.contentView.mm_h - 1, self.contentView.mm_w, 1);
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if(isRTL()){
+            make.right.mas_equalTo(self.iconView.mas_left).mas_offset(-kScale390(8));
+        }
+        else {
+            make.left.mas_equalTo(self.iconView.mas_right).mas_offset(kScale390(8));
+        }
+        make.centerY.mas_equalTo(self.contentView);
+        make.width.mas_equalTo(self.titleLabel.frame.size.width);
+        make.height.mas_equalTo(self.titleLabel.frame.size.height);
+    }];
+    
+    [self.rowAccessoryView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.width.mas_equalTo(10);
+        make.centerY.mas_equalTo(self.contentView);
+        
+        if(isRTL()){
+            make.left.mas_equalTo(self.contentView.mas_left).mas_offset(10);
+        }
+        else {
+            make.right.mas_equalTo(self.contentView.mas_right).mas_offset(-10);
+        }
+//        make.trailing.mas_equalTo(self.contentView).mas_offset(-10);
+    }];
+    
+    [self.separtorView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(10);
+        make.bottom.mas_equalTo(self.contentView).mas_offset(-1);
+        make.width.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(1);
+    }];
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 @end

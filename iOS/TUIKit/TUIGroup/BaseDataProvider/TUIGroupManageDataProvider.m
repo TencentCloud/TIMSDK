@@ -9,7 +9,6 @@
 #import "TUIGroupManageDataProvider.h"
 #import <ImSDK_Plus/ImSDK_Plus.h>
 #import <TUICore/TUIGlobalization.h>
-#import "TUIAddCellData.h"
 #import "TUIMemberInfoCellData.h"
 #import "TUISelectGroupMemberCell.h"
 

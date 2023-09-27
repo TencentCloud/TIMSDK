@@ -93,11 +93,38 @@
     @weakify(self);
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
       @strongify(self);
-      [self updateUI:data];
-      [self layoutIfNeeded];
+        // tell constraints they need updating
+        [self setNeedsUpdateConstraints];
+
+        // update constraints now so we can animate the change
+        [self updateConstraintsIfNeeded];
+
+        [self layoutIfNeeded];
     }];
 
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
     [self layoutIfNeeded];
+    
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [self updateUI:self.referenceData];
+    
+    [self layoutBottomContainer];
+
 }
 
 // Override
@@ -113,7 +140,11 @@
 
     [self.currentOriginView fillWithData:referenceData.quoteData];
 
-    self.textView.frame = (CGRect){.origin = self.referenceData.textOrigin, .size = self.referenceData.textSize};
+    [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.bubbleView.mas_leading).mas_offset(self.referenceData.textOrigin.x);
+        make.top.mas_equalTo(self.bubbleView.mas_top).mas_offset(self.referenceData.textOrigin.y);
+        make.size.mas_equalTo(self.referenceData.textSize);
+    }];
 
     if (referenceData.direction == MsgDirectionIncoming) {
         self.textView.textColor = TUIChatDynamicColor(@"chat_reference_message_content_recv_text_color", @"#000000");
@@ -127,37 +158,44 @@
     if (referenceData.textColor) {
         self.textView.textColor = referenceData.textColor;
     }
-
-    CGFloat marginX = 6;
-    CGFloat marginY = 8;
-
-    self.senderLabel.mm_x = marginX;
-    self.senderLabel.mm_y = marginY;
-    self.senderLabel.mm_w = self.referenceData.senderSize.width + 4;
-    self.senderLabel.mm_h = self.referenceData.senderSize.height;
-
-    self.quoteView.mm_w = self.referenceData.quoteSize.width;
-    self.quoteView.mm_h = self.referenceData.quoteSize.height;
-    self.quoteView.mm_bottom(self.container.mm_b - self.quoteView.mm_h - 6);
-    if (self.referenceData.direction == MsgDirectionIncoming) {
-        self.quoteView.mm_left(self.container.mm_x);
-    } else {
-        self.quoteView.mm_right(self.container.mm_r);
-    }
-
-    if (self.referenceData.showMessageModifyReplies) {
-        self.messageModifyRepliesButton.mm_bottom(self.contentView.mm_b + self.messageModifyRepliesButton.mm_h - 18);
-
+    
+    [self.senderLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.quoteView).mas_offset(6);
+        make.top.mas_equalTo(self.quoteView).mas_offset(8);
+        make.width.mas_equalTo(referenceData.senderSize.width);
+        make.height.mas_equalTo(referenceData.senderSize.height);
+    }];
+    
+    [self.quoteView mas_remakeConstraints:^(MASConstraintMaker *make) {
         if (self.referenceData.direction == MsgDirectionIncoming) {
-            self.messageModifyRepliesButton.mm_left(self.quoteView.mm_x);
-        } else {
-            self.messageModifyRepliesButton.mm_right(self.quoteView.mm_r);
+            make.leading.mas_equalTo(self.bubbleView);
         }
+        else {
+            make.trailing.mas_equalTo(self.bubbleView);
+        }
+        make.top.mas_equalTo(self.container.mas_bottom).mas_offset(6);
+        make.size.mas_equalTo(self.referenceData.quoteSize);
+    }];
+    
+    if (self.referenceData.showMessageModifyReplies) {
+        [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.referenceData.direction == MsgDirectionIncoming) {
+                make.leading.mas_equalTo(self.quoteView.mas_leading);
+            }
+            else {
+                make.trailing.mas_equalTo(self.quoteView.mas_trailing);
+            }
+            make.top.mas_equalTo(self.quoteView.mas_bottom).mas_offset(3);
+            make.size.mas_equalTo(self.messageModifyRepliesButton.frame.size);
+        }];
     }
-    self.currentOriginView.mm_y = marginY + 1;
-    self.currentOriginView.mm_x = self.senderLabel.mm_w + self.senderLabel.mm_x + marginX;
-    self.currentOriginView.mm_w = self.referenceData.quotePlaceholderSize.width;
-    self.currentOriginView.mm_h = self.referenceData.quotePlaceholderSize.height;
+    [self.currentOriginView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.senderLabel.mas_trailing).mas_offset(3);
+        make.top.mas_equalTo(self.senderLabel.mas_top).mas_offset(1);
+        make.trailing.mas_lessThanOrEqualTo(self.quoteView.mas_trailing);
+        make.height.mas_equalTo(self.referenceData.quotePlaceholderSize);
+    }];
+    
 }
 
 - (TUIReplyQuoteView *)getCustomOriginView:(TUIMessageCellData *)originCellData {
@@ -217,10 +255,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    [self updateUI:self.referenceData];
-
-    [self layoutBottomContainer];
 }
 
 - (void)layoutBottomContainer {
@@ -231,11 +265,21 @@
     CGSize size = self.referenceData.bottomContainerSize;
     CGFloat topMargin = self.bubbleView.mm_maxY + self.nameLabel.mm_h + 6;
 
-    if (self.referenceData.direction == MsgDirectionOutgoing) {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_right(self.mm_w - self.container.mm_maxX);
-    } else {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_left(self.container.mm_minX);
-    }
+    [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (!self.messageModifyRepliesButton.isHidden){
+            make.top.mas_equalTo(self.messageModifyRepliesButton.mas_bottom).mas_offset(8);
+        }
+        else {
+            make.top.mas_equalTo(self.quoteView.mas_bottom).mas_offset(8);
+        }
+        make.size.mas_equalTo(size);
+        if (self.referenceData.direction == MsgDirectionOutgoing) {
+            make.trailing.mas_equalTo(self.container);
+        }
+        else {
+            make.leading.mas_equalTo(self.container);
+        }
+    }];
 
     if (!self.quoteView.hidden) {
         CGRect oldRect = self.quoteView.frame;
@@ -339,7 +383,7 @@
     // 动态计算发送者的尺寸
     // Calculate the size of label which displays the sender's displayname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}];
-    CGRect senderRect = [referenceCellData.sender boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
+    CGRect senderRect = [[NSString stringWithFormat:@"%@:",referenceCellData.sender] boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                             attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}
                                                                context:nil];

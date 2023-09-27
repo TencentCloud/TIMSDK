@@ -38,17 +38,45 @@
     [super fillWithData:data];
     self.customData = data;
     self.myTextLabel.text = data.text;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
     CGRect rect = [self.myTextLabel.text boundingRectWithSize:CGSizeMake(245, MAXFLOAT)
                                                       options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                    attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}
                                                       context:nil];
-    self.myTextLabel.mm_top(10).mm_left(10).mm_width(245).mm_height(rect.size.height);
-    self.myLinkLabel.mm_sizeToFit().mm_left(10).mm_top(self.myTextLabel.mm_y + self.myTextLabel.mm_h + 15);
+    [self.myTextLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(10);
+        make.leading.mas_equalTo(10);
+        make.width.mas_equalTo(245);
+        make.height.mas_equalTo(rect.size.height);
+    }];
+    [self.myLinkLabel sizeToFit];
+    [self.myLinkLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.myTextLabel.mas_bottom).mas_offset(15);
+        make.leading.mas_equalTo(10);
+        make.width.mas_equalTo(self.myLinkLabel.frame.size.width);
+        make.height.mas_equalTo(self.myLinkLabel.frame.size.height);
+    }];
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 #pragma mark - TUIMessageCellProtocol

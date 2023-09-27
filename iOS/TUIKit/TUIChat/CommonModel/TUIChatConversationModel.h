@@ -75,6 +75,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL otherSideTyping;
 
+@property(nonatomic, assign) BOOL enabelVideo;
+
+@property(nonatomic, assign) BOOL enabelAudio;
+
+@property(nonatomic, assign) BOOL enabelRoom;
+
 @end
 
 NS_ASSUME_NONNULL_END

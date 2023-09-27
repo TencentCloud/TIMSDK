@@ -16,7 +16,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
         
     lazy var muteMicBtn: BaseControlButton = {
         weak var weakSelf = self
-        let muteAudioBtn = BaseControlButton.create(frame: CGRectZero,
+        let muteAudioBtn = BaseControlButton.create(frame: CGRect.zero,
                                                  title: TUICallKitLocalize(key: "Demo.TRTC.Calling.mic") ?? "" ,
                                                  imageSize: kBtnSmallSize, buttonAction: { sender in
             weakSelf?.muteMicEvent(sender: sender)
@@ -30,7 +30,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
     
     lazy var hangupBtn: BaseControlButton = {
         weak var weakSelf = self
-        let hangupBtn = BaseControlButton.create(frame: CGRectZero,
+        let hangupBtn = BaseControlButton.create(frame: CGRect.zero,
                                                  title: TUICallKitLocalize(key: "Demo.TRTC.Calling.hangup") ?? "" ,
                                                  imageSize: kBtnLargeSize, buttonAction: { sender in
             weakSelf?.hanguphEvent(sender: sender)
@@ -44,7 +44,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
     
     lazy var changeSpeakerBtn: BaseControlButton = {
         weak var weakSelf = self
-        let changeSpeakerBtn = BaseControlButton.create(frame: CGRectZero,
+        let changeSpeakerBtn = BaseControlButton.create(frame: CGRect.zero,
                                                         title: TUICallKitLocalize(key: "Demo.TRTC.Calling.speaker") ?? "" ,
                                                         imageSize: kBtnSmallSize, buttonAction: { sender in
             weakSelf?.changeSpeakerEvent(sender: sender)
@@ -89,7 +89,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
 
     func activateConstraints() {
         muteMicBtn.snp.makeConstraints { make in
-            make.right.equalTo(hangupBtn.snp.left).offset(-5)
+            make.trailing.equalTo(hangupBtn.snp.leading).offset(-5)
             make.centerY.equalTo(hangupBtn)
             make.size.equalTo(kControlBtnSize)
         }
@@ -101,7 +101,7 @@ class AudioCallerWaitingAndAcceptedView : UIView {
         }
         
         changeSpeakerBtn.snp.makeConstraints { make in
-            make.left.equalTo(self.hangupBtn.snp.right).offset(5)
+            make.leading.equalTo(self.hangupBtn.snp.trailing).offset(5)
             make.centerY.equalTo(self.hangupBtn)
             make.size.equalTo(kControlBtnSize)
         }

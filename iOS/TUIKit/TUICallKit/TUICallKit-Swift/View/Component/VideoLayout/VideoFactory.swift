@@ -40,5 +40,5 @@ class VideoFactory {
 class UserVideoEntity {
     var userId: String = ""
     var user: User  = User()
-    var videoView: VideoView = VideoView(frame: CGRectZero)
+    var videoView: VideoView = VideoView(frame: CGRect.zero)
 }

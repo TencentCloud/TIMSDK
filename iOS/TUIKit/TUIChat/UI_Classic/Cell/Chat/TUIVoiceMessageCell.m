@@ -9,6 +9,7 @@
 #import "TUIVoiceMessageCell.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUICore.h>
 
 @implementation TUIVoiceMessageCell
 
@@ -22,6 +23,9 @@
         _duration = [[UILabel alloc] init];
         _duration.font = [UIFont boldSystemFontOfSize:12];
         [self.bubbleView addSubview:_duration];
+        
+        self.bottomContainer = [[UIView alloc] init];
+        [self.contentView addSubview:self.bottomContainer];
 
         _voiceReadPoint = [[UIImageView alloc] init];
         _voiceReadPoint.backgroundColor = [UIColor redColor];
@@ -34,11 +38,25 @@
     return self;
 }
 
-- (void)fillWithData:(TUIVoiceMessageCellData *)data;
-{
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    for (UIView *view in self.bottomContainer.subviews) {
+        [view removeFromSuperview];
+    }
+}
+
+// Override
+- (void)notifyBottomContainerReadyOfData:(TUIMessageCellData *)cellData {
+    NSDictionary *param = @{TUICore_TUIChatExtension_BottomContainer_CellData : self.voiceData};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_BottomContainer_ClassicExtensionID parentView:self.bottomContainer param:param];
+}
+
+- (void)fillWithData:(TUIVoiceMessageCellData *)data {
     // set data
     [super fillWithData:data];
     self.voiceData = data;
+    self.bottomContainer.hidden = CGSizeEqualToSize(data.bottomContainerSize, CGSizeZero);
+    
     if (data.duration > 0) {
         _duration.text = [NSString stringWithFormat:@"%ld\"", (long)data.duration];
     } else {
@@ -61,39 +79,111 @@
     }];
 
     [self applyStyleFromDirection:data.direction];
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
 - (void)applyStyleFromDirection:(TMsgDirection)direction {
     if (direction == MsgDirectionIncoming) {
-        _duration.textAlignment = NSTextAlignmentLeft;
+        _duration.rtlAlignment = TUITextRTLAlignmentLeading;
         _duration.textColor = TUIChatDynamicColor(@"chat_voice_message_recv_duration_time_color", @"#000000");
     } else {
-        _duration.textAlignment = NSTextAlignmentRight;
+        _duration.rtlAlignment = TUITextRTLAlignmentTrailing;
         _duration.textColor = TUIChatDynamicColor(@"chat_voice_message_send_duration_time_color", @"#000000");
     }
 }
-- (void)layoutSubviews {
-    [super layoutSubviews];
 
-    self.duration.mm_sizeToFitThan(10, TVoiceMessageCell_Duration_Size.height);
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
-    self.voice.mm_sizeToFit().mm_top(self.voiceData.voiceTop);
+// This is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
 
+    [self.voice sizeToFit];
+    [self.voice mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.voiceData.voiceTop);
+        make.width.height.mas_equalTo(_voiceData.voiceHeight);
+        if (self.voiceData.direction == MsgDirectionOutgoing) {
+            make.trailing.mas_equalTo(-self.voiceData.cellLayout.bubbleInsets.right);
+        } else {
+            make.leading.mas_equalTo(self.voiceData.cellLayout.bubbleInsets.left);
+        }
+    }];
+    
+    [self.duration mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_greaterThanOrEqualTo(10);
+        make.height.mas_greaterThanOrEqualTo(TVoiceMessageCell_Duration_Size.height);
+        make.centerY.mas_equalTo(self.voice);
+        if (self.voiceData.direction == MsgDirectionOutgoing) {
+            make.trailing.mas_equalTo(self.voice.mas_leading).mas_offset(-5);
+        } else {
+            make.leading.mas_equalTo(self.voice.mas_trailing).mas_offset(5);
+        }
+    }];
+    
     if (self.voiceData.direction == MsgDirectionOutgoing) {
-        self.voice.mm_right(self.voiceData.cellLayout.bubbleInsets.right);
-        self.duration.mm_left(self.voice.mm_x - self.duration.mm_w - 5);
         self.voiceReadPoint.hidden = YES;
     } else {
-        self.voice.mm_left(self.voiceData.cellLayout.bubbleInsets.left);
-        self.duration.mm_left(self.voice.mm_x + self.voice.mm_w + 5);
-        self.voiceReadPoint.mm_top(0).mm_right(-self.voiceReadPoint.mm_w);
+        [self.voiceReadPoint mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.top.mas_equalTo(self.bubbleView);
+          make.leading.mas_equalTo(self.bubbleView.mas_trailing).mas_offset(1);
+          make.size.mas_equalTo(CGSizeMake(5, 5));
+        }];
     }
-    self.duration.mm_centerY = self.voice.mm_centerY;
+    
+    [self layoutBottomContainer];
+}
+
+- (void)layoutBottomContainer {
+    if (CGSizeEqualToSize(self.voiceData.bottomContainerSize, CGSizeZero)) {
+        return;
+    }
+
+    CGSize size = self.voiceData.bottomContainerSize;
+    
+    [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.voiceData.direction == MsgDirectionIncoming) {
+            make.leading.mas_equalTo(self.container.mas_leading);
+        } else {
+            make.trailing.mas_equalTo(self.container.mas_trailing);
+        }
+        make.top.mas_equalTo(self.container.mas_bottom).offset(6);
+        make.size.mas_equalTo(size);
+    }];
+
+    CGFloat repliesBtnTextWidth = self.messageModifyRepliesButton.frame.size.width;
+    if (!self.messageModifyRepliesButton.hidden) {
+        [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.voiceData.direction == MsgDirectionIncoming) {
+              make.leading.mas_equalTo(self.container.mas_leading);
+            } else {
+              make.trailing.mas_equalTo(self.container.mas_trailing);
+            }
+            make.top.mas_equalTo(self.bottomContainer.mas_bottom);
+            make.size.mas_equalTo(CGSizeMake(repliesBtnTextWidth + 10, 30));
+        }];
+    }
 }
 
 #pragma mark - TUIMessageCellProtocol
++ (CGFloat)getHeight:(TUIMessageCellData *)data withWidth:(CGFloat)width {
+    CGFloat height = [super getHeight:data withWidth:width];
+    if (data.bottomContainerSize.height > 0) {
+        height += data.bottomContainerSize.height + kScale375(6);
+    }
+    return height;
+}
+
 + (CGSize)getContentSize:(TUIMessageCellData *)data {
-    NSAssert([data isKindOfClass:TUIVoiceMessageCellData.class], @"data must be kind of TUIVoiceMessageCellData");
     TUIVoiceMessageCellData *voiceCellData = (TUIVoiceMessageCellData *)data;
     
     CGFloat bubbleWidth = TVoiceMessageCell_Back_Width_Min + voiceCellData.duration / TVoiceMessageCell_Max_Duration * Screen_Width;
@@ -112,5 +202,6 @@
 
     return CGSizeMake(bubbleWidth + TVoiceMessageCell_Duration_Size.width, bubbleHeight);
 }
+
 
 @end

@@ -17,11 +17,22 @@
     cellData.innerMessage = message;
     cellData.msgID = message.msgID;
     cellData.content = param[@"content"];
-    cellData.opUser = param[@"opUser"];
+    cellData.opUser = [self.class getOpUserName:message];
     cellData.cmd = param[@"cmd"];
     return cellData;
 }
 
++ (NSString *)getOpUserName:(V2TIMMessage *)info {
+    NSString *opUser;
+    if (info.nameCard.length > 0) {
+        opUser = info.nameCard;
+    } else if (info.nickName.length > 0) {
+        opUser = info.nickName;
+    } else {
+        opUser = info.userID;
+    }
+    return opUser;
+}
 - (NSMutableAttributedString *)attributedString {
     NSString *localizableContent = self.content;
     if (self.cmd && [self.cmd isKindOfClass:NSNumber.class]) {
@@ -33,6 +44,7 @@
         }
     }
     NSString *str = [NSString stringWithFormat:@"\"%@\" %@", self.opUser, localizableContent];
+    str = rtlString(str);
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:str];
     NSDictionary *attributeDict = @{NSForegroundColorAttributeName : [UIColor d_systemGrayColor]};
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
@@ -67,7 +79,8 @@
             localizableContent = TIMCommonLocalizableString(TUIGroupCreateTipsMessage);
         }
     }
-    return [NSString stringWithFormat:@"\"%@\" %@", param[@"opUser"], localizableContent];
+    NSString *str = [NSString stringWithFormat:@"\"%@\" %@", param[@"opUser"], localizableContent];
+    return rtlString(str);
 }
 
 @end

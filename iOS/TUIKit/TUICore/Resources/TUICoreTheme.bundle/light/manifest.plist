@@ -38,5 +38,7 @@
 	<string>service_more_video_call.png</string>
 	<key>service_more_voice_call_img</key>
 	<string>service_more_voice_call.png</string>
+	<key>nav_back_img</key>
+	<string>nav_back.png</string>
 </dict>
 </plist>

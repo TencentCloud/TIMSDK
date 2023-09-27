@@ -1,19 +1,20 @@
 //
-//  SelectGroupMeberViewController.swift
+//  SelectGroupMemberViewController.swift
 //  Alamofire
 //
 //  Created by vincepzhang on 2023/5/12.
 //
 
 import Foundation
+import TUICore
 
-class SelectGroupMeberViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SelectGroupMemberViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let viewModel = SelectGroupMeberViewModel()
+    let viewModel = SelectGroupMemberViewModel()
     let groupMemberObserver = Observer()
-
+    
     let selectTableView: UITableView = {
-        let selectTableView = UITableView(frame: CGRectZero)
+        let selectTableView = UITableView(frame: CGRect.zero)
         selectTableView.backgroundColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         return selectTableView
     }()
@@ -41,50 +42,55 @@ class SelectGroupMeberViewController: UIViewController, UITableViewDelegate, UIT
         title = TUICallKitLocalize(key: "TUICallKit.Recents.addUser")
         navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.foregroundColor: UIColor.t_colorWithHexString(color: "#242424")]
-
+        
         constructViewHierarchy()
         activateConstraints()
         bindInteraction()
-        registerObserve() 
+        registerObserve()
     }
     
     func constructViewHierarchy() {
         view.addSubview(selectTableView)
     }
-
+    
     func activateConstraints() {
         selectTableView.snp.makeConstraints({ make in
             make.edges.equalToSuperview()
         })
     }
-
+    
     func bindInteraction() {
         navigationItem.rightBarButtonItem = rightBtn
         navigationItem.leftBarButtonItem = leftBtn
         selectTableView.dataSource = self
         selectTableView.delegate = self
-        selectTableView.register(SelectGroupMeberCell.self, forCellReuseIdentifier: "SelectCell")
+        selectTableView.register(SelectGroupMemberCell.self, forCellReuseIdentifier: "SelectCell")
     }
     
     func registerObserve() {
-        viewModel.groupMerberList.addObserver(groupMemberObserver) {[weak self] _, _ in
+        viewModel.groupMemberList.addObserver(groupMemberObserver) {[weak self] _, _ in
             guard let self = self else { return }
             self.selectTableView.reloadData()
         }
     }
-
+    
     //MARK: Action
     @objc func addUser() {
         var userIds: [String] = []
-        for state in viewModel.groupMerberStateOrigin {
+        for state in viewModel.groupMemberStateOrigin {
             if state.value {
                 continue
             }
-            if let isSelect = viewModel.groupMerberState[state.key] {
+            if let isSelect = viewModel.groupMemberState[state.key] {
                 if isSelect {
                     userIds.append(state.key)
                 }
             }
+        }
+        
+        if userIds.count + TUICallState.instance.remoteUserList.value.count >=  MAX_USER {
+            TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.User.Exceed.Limit"))
+            return
         }
         
         CallEngineManager.instance.inviteUser(userIds: userIds)
@@ -96,18 +102,18 @@ class SelectGroupMeberViewController: UIViewController, UITableViewDelegate, UIT
     }
 }
 
-extension SelectGroupMeberViewController {
+extension SelectGroupMemberViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.groupMerberList.value.count + 1
+        return viewModel.groupMemberList.value.count + 1
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SelectCell", for: indexPath) as? SelectGroupMeberCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SelectCell", for: indexPath) as? SelectGroupMemberCell
         if indexPath.row == 0 {
             cell?.configCell(user: viewModel.selfUser.value, isSelect: true)
         } else {
-            let user = viewModel.groupMerberList.value[indexPath.row - 1]
-            let isSelect = viewModel.groupMerberState[user.id.value]
+            let user = viewModel.groupMemberList.value[indexPath.row - 1]
+            let isSelect = viewModel.groupMemberState[user.id.value]
             cell?.configCell(user: user, isSelect: isSelect ?? false)
         }
         return cell ?? UITableViewCell()
@@ -123,15 +129,15 @@ extension SelectGroupMeberViewController {
             return
         }
         
-        let user = viewModel.groupMerberList.value[indexPath.row - 1]
-        if viewModel.groupMerberStateOrigin[user.id.value] ?? false {
+        let user = viewModel.groupMemberList.value[indexPath.row - 1]
+        if viewModel.groupMemberStateOrigin[user.id.value] ?? false {
             return
         }
         
-        if viewModel.groupMerberState[user.id.value] ?? false {
-            viewModel.groupMerberState[user.id.value] = false
+        if viewModel.groupMemberState[user.id.value] ?? false {
+            viewModel.groupMemberState[user.id.value] = false
         } else {
-            viewModel.groupMerberState[user.id.value] = true
+            viewModel.groupMemberState[user.id.value] = true
         }
         
         selectTableView.reloadData()

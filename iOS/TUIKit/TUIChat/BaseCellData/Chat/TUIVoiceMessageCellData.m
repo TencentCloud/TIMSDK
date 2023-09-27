@@ -50,25 +50,31 @@
             self.cellLayout = [TUIMessageCellLayout incommingVoiceMessageLayout];
             _voiceImage = TUIChatDynamicImage(@"chat_voice_message_receiver_voice_normal_img",
                                               [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_normal")]);
-            _voiceAnimationImages =
-                [NSArray arrayWithObjects:[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_playing_1")],
-                                          [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_playing_2")],
-                                          [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_receiver_playing_3")], nil];
+            _voiceImage = [_voiceImage rtl_imageFlippedForRightToLeftLayoutDirection];
+            _voiceAnimationImages = [NSArray arrayWithObjects:[self.class formatImageByName:@"message_voice_receiver_playing_1"],
+                                             [self.class formatImageByName:@"message_voice_receiver_playing_2"],
+                                             [self.class formatImageByName:@"message_voice_receiver_playing_3"], nil];
             _voiceTop = [[self class] incommingVoiceTop];
         } else {
             self.cellLayout = [TUIMessageCellLayout outgoingVoiceMessageLayout];
             _voiceImage = TUIChatDynamicImage(@"chat_voice_message_sender_voice_normal_img",
                                               [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_normal")]);
-            _voiceAnimationImages =
-                [NSArray arrayWithObjects:[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_playing_1")],
-                                          [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_playing_2")],
-                                          [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"message_voice_sender_playing_3")], nil];
+            _voiceImage = [_voiceImage rtl_imageFlippedForRightToLeftLayoutDirection];
+            _voiceAnimationImages = [NSArray arrayWithObjects:[self.class formatImageByName:@"message_voice_sender_playing_1"],
+                                             [self.class formatImageByName:@"message_voice_sender_playing_2"],
+                                             [self.class formatImageByName:@"message_voice_sender_playing_3"], nil];
             _voiceTop = [[self class] outgoingVoiceTop];
         }
         _voiceHeight = 21;
     }
 
     return self;
+}
+
++ (UIImage *)formatImageByName:(NSString *)imgName {
+    NSString *path = TUIChatImagePath(imgName);
+    UIImage *img = [[TUIImageCache sharedInstance] getResourceFromCache:path];
+    return [img rtl_imageFlippedForRightToLeftLayoutDirection];
 }
 
 - (NSString *)getVoicePath:(BOOL *)isExist {
@@ -151,7 +157,13 @@
 - (void)playInternal:(NSString *)path {
     if (!self.isPlaying) return;
     // play current
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    TUIVoiceAudioPlaybackStyle playbackStyle = [self.class getAudioplaybackStyle];
+    if(playbackStyle == TUIVoiceAudioPlaybackStyleHandset) {
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    }
+    else {
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    }
     NSURL *url = [NSURL fileURLWithPath:path];
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
     self.audioPlayer.delegate = self;
@@ -178,7 +190,28 @@
         // Fallback on earlier versions
     }
 }
+//The style of audio playback.
++ (TUIVoiceAudioPlaybackStyle)getAudioplaybackStyle {
+    NSString *style = [NSUserDefaults.standardUserDefaults objectForKey:@"tui_audioPlaybackStyle"];
+    if ([style isEqualToString:@"1"]) {
+        return TUIVoiceAudioPlaybackStyleLoudspeaker;
+    } else if ([style isEqualToString:@"2"]) {
+        return TUIVoiceAudioPlaybackStyleHandset;
+    }
+    return TUIVoiceAudioPlaybackStyleLoudspeaker;
+}
 
++ (void)changeAudioPlaybackStyle {
+    TUIVoiceAudioPlaybackStyle style = [self getAudioplaybackStyle];
+    if (style == TUIVoiceAudioPlaybackStyleLoudspeaker) {
+        [NSUserDefaults.standardUserDefaults setObject:@"2" forKey:@"tui_audioPlaybackStyle"];
+    }
+    else {
+        [NSUserDefaults.standardUserDefaults setObject:@"1" forKey:@"tui_audioPlaybackStyle"];
+    }
+    [NSUserDefaults.standardUserDefaults synchronize];
+    
+}
 - (void)updateProgress {
     @weakify(self);
     dispatch_async(dispatch_get_main_queue(), ^{

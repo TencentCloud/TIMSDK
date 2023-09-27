@@ -44,7 +44,7 @@
 
     self.addWordTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addWordTextView.font = [UIFont systemFontOfSize:14];
-
+    self.addWordTextView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     NSString *selfUserID = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[ selfUserID ]
                                            succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
@@ -62,7 +62,13 @@
                                            }];
 
     self.nickTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.nickTextField.textAlignment = NSTextAlignmentRight;
+    if (isRTL()) {
+        self.nickTextField.textAlignment = NSTextAlignmentLeft;
+    }
+    else {
+        self.nickTextField.textAlignment = NSTextAlignmentRight;
+    }
+
 
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     [_titleView setTitle:TIMCommonLocalizableString(FriendRequestFillInfo)];

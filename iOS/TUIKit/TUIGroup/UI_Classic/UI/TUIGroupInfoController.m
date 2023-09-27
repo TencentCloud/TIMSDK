@@ -7,7 +7,6 @@
 #import <TUICore/TUILogin.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TIMGroupInfo+TUIDataProvider.h"
-#import "TUIAddCell.h"
 #import "TUIGroupInfoDataProvider.h"
 #import "TUIGroupManageController.h"
 #import "TUIGroupMemberCell.h"

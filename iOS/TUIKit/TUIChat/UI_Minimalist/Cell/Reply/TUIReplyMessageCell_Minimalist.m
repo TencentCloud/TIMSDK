@@ -51,7 +51,7 @@
 
 - (void)setupViews {
     [self.quoteView addSubview:self.senderLabel];
-    [self.quoteView.layer addSublayer:self.quoteBorderLayer];
+    [self.quoteView addSubview:self.quoteBorderLine];
 
     [self.bubbleView addSubview:self.quoteView];
     [self.bubbleView addSubview:self.contentLabel];
@@ -87,11 +87,37 @@
     @weakify(self);
     [[RACObserve(data, originMessage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(V2TIMMessage *originMessage) {
       @strongify(self);
-      [self updateUI:data];
-      [self layoutIfNeeded];
+        // tell constraints they need updating
+        [self setNeedsUpdateConstraints];
+
+        // update constraints now so we can animate the change
+        [self updateConstraintsIfNeeded];
+
+        [self layoutIfNeeded];
     }];
 
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
     [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [self updateUI:self.replyData];
+    
+    [self layoutBottomContainer];
+
 }
 
 - (void)updateUI:(TUIReplyMessageCellData *)replyData {
@@ -101,27 +127,42 @@
 
     [self.currentOriginView fillWithData:replyData.quoteData];
 
-    self.quoteView.mm_x = 16;
-    self.quoteView.mm_y = 12;
-    self.quoteView.mm_w = self.replyData.quoteSize.width;
-    self.quoteView.mm_h = self.replyData.quoteSize.height;
+    [self.quoteView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.bubbleView).mas_offset(16);
+        make.top.mas_equalTo(12);
+        make.trailing.mas_lessThanOrEqualTo(self.bubbleView).mas_offset(-16);
+        make.width.mas_greaterThanOrEqualTo(self.senderLabel);
+        make.height.mas_equalTo(self.replyData.quoteSize.height);
+    }];
 
-    self.quoteBorderLayer.frame = CGRectMake(0, 0, 3, self.quoteView.mm_h);
+    [self.quoteBorderLine mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.quoteView);
+        make.top.mas_equalTo(self.quoteView);
+        make.width.mas_equalTo(3);
+        make.bottom.mas_equalTo(self.quoteView);
+    }];
 
-    self.contentLabel.mm_y = CGRectGetMaxY(self.quoteView.frame) + 12.0;
-    self.contentLabel.mm_x = 18;
-    self.contentLabel.mm_w = self.replyData.replyContentSize.width;
-    self.contentLabel.mm_h = self.replyData.replyContentSize.height;
+    [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.quoteView).mas_offset(4);
+        make.top.mas_equalTo(self.quoteView.mas_bottom).mas_offset(12);
+        make.trailing.mas_lessThanOrEqualTo(self.quoteView);
+        make.bottom.mas_equalTo(self.bubbleView).mas_offset(-4);
+    }];
 
-    self.senderLabel.mm_x = 6;
-    self.senderLabel.mm_y = 3;
-    self.senderLabel.mm_w = self.replyData.senderSize.width;
-    self.senderLabel.mm_h = self.replyData.senderSize.height;
+    [self.senderLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentLabel);
+        make.top.mas_equalTo(3);
+        make.size.mas_equalTo(self.replyData.senderSize);
+    }];
+    
+    [self.currentOriginView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.senderLabel);
+        make.top.mas_equalTo(self.senderLabel.mas_bottom).mas_offset(4);
+//        make.width.mas_greaterThanOrEqualTo(self.replyData.quotePlaceholderSize);
+        make.trailing.mas_lessThanOrEqualTo(self.quoteView.mas_trailing);
+        make.height.mas_equalTo(self.replyData.quotePlaceholderSize);
+    }];
 
-    self.currentOriginView.mm_y = CGRectGetMaxY(self.senderLabel.frame) + 4;
-    self.currentOriginView.mm_x = self.senderLabel.mm_x;
-    self.currentOriginView.mm_w = self.replyData.quotePlaceholderSize.width;
-    self.currentOriginView.mm_h = self.replyData.quotePlaceholderSize.height;
 }
 
 - (TUIReplyQuoteView_Minimalist *)getCustomOriginView:(TUIMessageCellData *)originCellData {
@@ -134,7 +175,13 @@
     }
 
     if (view == nil) {
+        //FIXME: celldata应该区分不同的Cell
         Class class = [originCellData getReplyQuoteViewClass];
+        NSString *clsStr = NSStringFromClass(class);
+        if (![clsStr containsString:@"_Minimalist"]) {
+            clsStr = [clsStr stringByAppendingString:@"_Minimalist"];
+            class =  NSClassFromString(clsStr);
+        }
         if (class) {
             view = [[class alloc] init];
         }
@@ -194,12 +241,15 @@
     CGSize size = self.replyData.bottomContainerSize;
     UIView *view = self.replyEmojiView.hidden ? self.bubbleView : self.replyEmojiView;
     CGFloat topMargin = view.mm_maxY + self.nameLabel.mm_h + 6;
-
-    if (self.replyData.direction == MsgDirectionOutgoing) {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_right(self.mm_w - self.container.mm_maxX);
-    } else {
-        self.bottomContainer.mm_top(topMargin).mm_width(size.width).mm_height(size.height).mm_left(self.container.mm_minX);
-    }
+    [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.replyData.direction == MsgDirectionIncoming) {
+            make.leading.mas_equalTo(self.container.mas_leading);
+        } else {
+            make.trailing.mas_equalTo(self.container.mas_trailing);
+        }
+        make.top.mas_equalTo(view.mas_bottom).mas_offset(6);
+        make.size.mas_equalTo(size);
+    }];
 
     if (!self.messageModifyRepliesButton.hidden) {
         CGRect oldRect = self.messageModifyRepliesButton.frame;
@@ -220,6 +270,7 @@
         _senderLabel.text = @"harvy:";
         _senderLabel.font = [UIFont boldSystemFontOfSize:12.0];
         _senderLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_sender_text_color", @"#888888");
+        _senderLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     }
     return _senderLabel;
 }
@@ -232,12 +283,12 @@
     return _quoteView;
 }
 
-- (CALayer *)quoteBorderLayer {
-    if (_quoteBorderLayer == nil) {
-        _quoteBorderLayer = [CALayer layer];
-        _quoteBorderLayer.backgroundColor = [UIColor colorWithRed:68 / 255.0 green:68 / 255.0 blue:68 / 255.0 alpha:0.1].CGColor;
+- (UIView *)quoteBorderLine {
+    if (_quoteBorderLine == nil) {
+        _quoteBorderLine = [[UIView alloc] init];
+        _quoteBorderLine.backgroundColor = [UIColor colorWithRed:68 / 255.0 green:68 / 255.0 blue:68 / 255.0 alpha:0.1];
     }
-    return _quoteBorderLayer;
+    return _quoteBorderLine;
 }
 
 - (UILabel *)contentLabel {
@@ -245,6 +296,7 @@
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.font = [UIFont systemFontOfSize:16.0];
         _contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+        _contentLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         _contentLabel.numberOfLines = 0;
     }
     return _contentLabel;

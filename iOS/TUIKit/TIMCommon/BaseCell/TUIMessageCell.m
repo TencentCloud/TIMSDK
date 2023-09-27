@@ -108,41 +108,86 @@
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.backgroundColor = UIColor.clearColor;
     self.contentView.backgroundColor = UIColor.clearColor;
+    
+    [self makeConstraints];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)makeConstraints {
+    
+    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(_container.mas_leading).mas_offset(7);
+        make.top.mas_equalTo(self.avatarView.mas_top);
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.selectedIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(3);
+        make.top.mas_equalTo(self.avatarView.mas_centerY).mas_offset(-10);
+        make.width.mas_equalTo(20);
+        make.height.mas_equalTo(20);
+    }];
 
-    if (self.messageData.showName) {
-        _nameLabel.mm_sizeToFitThan(1, 20);
-        _nameLabel.hidden = NO;
-    } else {
-        _nameLabel.hidden = YES;
-        _nameLabel.mm_height(0);
-    }
+    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+        make.top.mas_equalTo(self.avatarView);
+        make.width.mas_greaterThanOrEqualTo(10);
+        make.height.mas_equalTo(10);
+    }];
+    
+    [self.selectedView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
+    }];
 
-    if (self.messageData.showCheckBox) {
-        _selectedIcon.frame = CGRectMake(10, _avatarView.mm_centerY - 10, 20, 20);
-        _selectedIcon.hidden = NO;
-        _selectedView.hidden = NO;
-    } else {
-        _selectedIcon.frame = CGRectZero;
-        _selectedIcon.hidden = YES;
-        _selectedView.hidden = YES;
-    }
+}
 
-    if (self.messageData.showMessageTime) {
-        _timeLabel.mm_y = self.avatarView.mm_y;
-        _timeLabel.mm_x = self.contentView.bounds.size.width - 10 - _timeLabel.mm_w;
-    } else {
-        _timeLabel.mm_y = 0;
-        _timeLabel.mm_r = 0;
-    }
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
+    BOOL isInComing = (self.messageData.direction == MsgDirectionIncoming);
+
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (isInComing) {
+            make.leading.mas_equalTo(_container.mas_leading).mas_offset(7);
+            make.trailing.mas_equalTo(self.contentView).mas_offset(-7);
+        } else {
+            make.leading.mas_equalTo(self.contentView).mas_offset(7);
+            make.trailing.mas_equalTo(self.container.mas_trailing);
+        }
+        if (self.messageData.showName) {
+            make.width.mas_greaterThanOrEqualTo(20);
+            make.height.mas_greaterThanOrEqualTo(20);
+        } else {
+            make.height.mas_equalTo(0);
+        }
+        make.top.mas_equalTo(self.avatarView.mas_top);
+    }];
+
+    [self.selectedIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.messageData.showCheckBox) {
+            make.width.mas_equalTo(20);
+            make.height.mas_equalTo(20);
+        } else {
+            make.size.mas_equalTo(CGSizeZero);
+        }
+    }];
+
+    [self.timeLabel sizeToFit];
+    [self.timeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.messageData.showMessageTime) {
+            make.width.mas_equalTo(self.timeLabel.frame.size.width);
+            make.height.mas_equalTo(self.timeLabel.frame.size.height);
+        } else {
+            make.width.mas_equalTo(0);
+            make.height.mas_equalTo(0);
+        }
+    }];
 
     CGSize csize = [self.class getContentSize:self.messageData];
-
-    _selectedView.frame = self.contentView.bounds;
-
     CGFloat contentWidth = csize.width;
     CGFloat contentHeight = csize.height;
 
@@ -159,73 +204,97 @@
         contentWidth = MIN(contentWidth, Screen_Width * 0.25 * 3);
         contentHeight = csize.height + self.messageData.messageModifyReactsSize.height;
     }
-
-    TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
     if (self.messageData.direction == MsgDirectionIncoming) {
         self.avatarView.hidden = !self.messageData.showAvatar;
-        self.avatarView.frame = CGRectMake(_selectedIcon.mm_maxX + cellLayout.avatarInsets.left, cellLayout.avatarInsets.top, cellLayout.avatarSize.width,
-                                           cellLayout.avatarSize.height);
+        [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+          if (self.messageData.showCheckBox) {
+              make.leading.mas_equalTo(self.selectedIcon.mas_trailing).mas_offset(cellLayout.avatarInsets.left);
+          } else {
+              make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(cellLayout.avatarInsets.left);
+          }
+          make.top.mas_equalTo(cellLayout.avatarInsets.top);
+          make.size.mas_equalTo(cellLayout.avatarSize);
+        }];
 
-        CGFloat ctop = cellLayout.messageInsets.top + _nameLabel.mm_h;
-        self.container.frame = CGRectMake(cellLayout.messageInsets.left + self.avatarView.mm_maxX, ctop, contentWidth, contentHeight);
-
-        CGRect nameLabelFrame = self.nameLabel.frame;
-        nameLabelFrame.origin = CGPointMake(_container.mm_x + 7, self.avatarView.mm_y);
-        self.nameLabel.frame = nameLabelFrame;
+        [self.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(cellLayout.messageInsets.left);
+          make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(cellLayout.messageInsets.top);
+          make.width.mas_equalTo(contentWidth);
+          make.height.mas_equalTo(contentHeight);
+        }];
 
         CGRect indicatorFrame = self.indicator.frame;
-        indicatorFrame.origin = CGPointMake(_container.mm_maxX + 8, _container.mm_centerY - 0.5 * self.indicator.mm_h);
-        self.indicator.frame = indicatorFrame;
-        if (!self.retryView.isHidden) {
-            self.retryView.frame = indicatorFrame;
-        }
-
+        [self.indicator mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.leading.mas_equalTo(self.container.mas_trailing).mas_offset(8);
+          make.centerY.mas_equalTo(self.container.mas_centerY);
+          make.size.mas_equalTo(indicatorFrame.size);
+        }];
+        self.retryView.frame = self.indicator.frame;
         self.readReceiptLabel.hidden = YES;
-
     } else {
         if (self.messageData.showAvatar) {
             cellLayout.avatarSize = CGSizeMake(40, 40);
         } else {
             cellLayout.avatarSize = CGSizeZero;
         }
-        self.avatarView.mm_w = cellLayout.avatarSize.width;
-        self.avatarView.mm_h = cellLayout.avatarSize.height;
-        self.avatarView.mm_top(cellLayout.avatarInsets.top).mm_right(cellLayout.avatarInsets.right);
+        [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-cellLayout.avatarInsets.right);
+          make.top.mas_equalTo(cellLayout.avatarInsets.top);
+          make.size.mas_equalTo(cellLayout.avatarSize);
+        }];
+        [self.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.trailing.mas_equalTo(self.avatarView.mas_leading).mas_offset(-cellLayout.messageInsets.right);
+          make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(cellLayout.messageInsets.top);
+          make.width.mas_equalTo(contentWidth);
+          make.height.mas_equalTo(contentHeight);
+        }];
 
-        self.nameLabel.mm_top(self.avatarView.mm_y);
+        CGRect indicatorFrame = self.indicator.frame;
+        [self.indicator mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.trailing.mas_equalTo(self.container.mas_leading).mas_offset(-8);
+          make.centerY.mas_equalTo(self.container.mas_centerY);
+          make.size.mas_equalTo(indicatorFrame.size);
+        }];
 
-        CGFloat ctop = cellLayout.messageInsets.top + _nameLabel.mm_h;
-
-        self.container.mm_width(contentWidth)
-            .mm_height(contentHeight)
-            .mm_right(cellLayout.messageInsets.right + self.contentView.mm_w - self.avatarView.mm_x)
-            .mm_top(ctop);
-
-        self.nameLabel.mm_right(_container.mm_r);
-        self.indicator.mm_sizeToFit().mm__centerY(_container.mm_centerY).mm_left(_container.mm_x - 8 - _indicator.mm_w);
         self.retryView.frame = self.indicator.frame;
 
-        self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
+        [self.readReceiptLabel sizeToFit];
+        [self.readReceiptLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.bottom.mas_equalTo(self.container.mas_bottom);
+          make.trailing.mas_equalTo(self.container.mas_leading).mas_offset(-8);
+          make.size.mas_equalTo(self.readReceiptLabel.frame.size);
+        }];
     }
 
     if (!self.messageModifyRepliesButton.isHidden) {
         self.messageModifyRepliesButton.mm_sizeToFit();
-        CGFloat repliesBtnX = 0;
         CGFloat repliesBtnTextWidth = self.messageModifyRepliesButton.frame.size.width;
-        CGFloat repliesBtnPadding = 10;
-        CGFloat repliesBtnWidth = repliesBtnTextWidth + repliesBtnPadding;
-        if (self.messageData.direction == MsgDirectionIncoming) {
-            repliesBtnX = _container.mm_x;
-        } else {
-            repliesBtnX = CGRectGetMaxX(_container.frame) - repliesBtnWidth;
-        }
-        self.messageModifyRepliesButton.frame = CGRectMake(repliesBtnX, CGRectGetMaxY(_container.frame), repliesBtnWidth, 30);
+        [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+          if (isInComing) {
+              make.leading.mas_equalTo(self.container.mas_leading);
+          } else {
+              make.trailing.mas_equalTo(self.container.mas_trailing);
+          }
+          make.top.mas_equalTo(self.container.mas_bottom);
+          make.size.mas_equalTo(CGSizeMake(repliesBtnTextWidth + 10, 30));
+        }];
     }
 
     if (self.tagView) {
+        [self.tagView updateView];
         self.tagView.frame = CGRectMake(0, _container.frame.size.height - self.messageData.messageModifyReactsSize.height, contentWidth,
                                         self.messageData.messageModifyReactsSize.height);
+        if (isRTL() && self.tagView.frame.size.width>0 ) {
+            [self.tagView updateRTLView];
+        }
     }
+
+    // according to apple super should be called at end of method
+    [super updateConstraints];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 - (void)setupRAC {
@@ -261,6 +330,20 @@
     self.messageData = data;
 
     [self loadAvatar:data];
+
+    if (self.messageData.showName) {
+        _nameLabel.hidden = NO;
+    } else {
+        _nameLabel.hidden = YES;
+    }
+
+    if (self.messageData.showCheckBox) {
+        _selectedIcon.hidden = NO;
+        _selectedView.hidden = NO;
+    } else {
+        _selectedIcon.hidden = YES;
+        _selectedView.hidden = YES;
+    }
 
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatarView.layer.masksToBounds = YES;
@@ -339,6 +422,15 @@
     dispatch_async(dispatch_get_main_queue(), ^{
       [weakSelf highlightWhenMatchKeyword:data.highlightKeyword];
     });
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
 - (void)loadAvatar:(TUIMessageCellData *)data {
@@ -357,7 +449,7 @@
             userId = V2TIMManager.sharedInstance.getLoginUser;
         }
 
-        [V2TIMManager.sharedInstance getUsersInfo:@[ userId ]
+        [V2TIMManager.sharedInstance getUsersInfo:@[ userId?:@"" ]
                                              succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
                                                @strongify(self);
                                                V2TIMUserFullInfo *info = infoList.firstObject;
@@ -419,7 +511,13 @@
         NSString *text = isPeerRead ? TIMCommonLocalizableString(TUIKitMessageReadC2CRead) : TIMCommonLocalizableString(TUIKitMessageReadC2CUnRead);
         self.readReceiptLabel.text = text;
     }
-    self.readReceiptLabel.mm_sizeToFit().mm_bottom(self.container.mm_b).mm_left(_container.mm_x - 8 - _readReceiptLabel.mm_w);
+    
+    [self.readReceiptLabel sizeToFit];
+    [self.readReceiptLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+      make.bottom.mas_equalTo(self.container.mas_bottom);
+      make.trailing.mas_equalTo(self.container.mas_leading).mas_offset(-8);
+      make.size.mas_equalTo(self.readReceiptLabel.frame.size);
+    }];
     self.readReceiptLabel.textColor = [self shouldHighlightReadReceiptLabel] ? TIMCommonDynamicColor(@"chat_message_read_status_text_color", @"#147AFF")
                                                                              : TIMCommonDynamicColor(@"chat_message_read_status_text_gray_color", @"#BBBBBB");
 }
@@ -533,7 +631,6 @@
 
 - (void)prepareReactTagUI:(UIView *)containerView {
     TUITagsView *tagView = [[TUITagsView alloc] init];
-    tagView.backgroundColor = [UIColor clearColor];
     [containerView addSubview:tagView];
     self.tagView = tagView;
     __weak typeof(self) weakSelf = self;

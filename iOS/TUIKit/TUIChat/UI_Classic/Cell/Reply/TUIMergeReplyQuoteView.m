@@ -35,15 +35,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    self.titleLabel.mm_x = 0;
-    self.titleLabel.mm_y = 0;
-    self.titleLabel.mm_sizeToFit();
-    self.titleLabel.mm_w = self.mm_w - self.titleLabel.mm_x;
-
-    self.subTitleLabel.mm_x = self.titleLabel.mm_x;
-    self.subTitleLabel.mm_y = CGRectGetMaxY(self.titleLabel.frame) + 3;
-    self.subTitleLabel.mm_flexToRight(8).mm_sizeToFit();
 }
 
 - (void)fillWithData:(TUIReplyQuoteViewData *)data {
@@ -56,6 +47,40 @@
     TUIMergeReplyQuoteViewData *myData = (TUIMergeReplyQuoteViewData *)data;
     self.titleLabel.text = myData.title;
     self.subTitleLabel.text = myData.abstract;
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [self.titleLabel sizeToFit];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+        make.trailing.mas_equalTo(self.mas_trailing);
+        make.height.mas_equalTo(self.titleLabel.font.lineHeight);
+    }];
+    
+    [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.titleLabel);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(3);
+        make.trailing.mas_equalTo(self.mas_trailing).mas_offset(-8);
+        make.height.mas_equalTo(self.subTitleLabel.font.lineHeight);
+    }];
+
 }
 
 - (void)reset {

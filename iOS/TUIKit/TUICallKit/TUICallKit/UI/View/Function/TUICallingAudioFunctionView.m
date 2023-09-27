@@ -34,7 +34,7 @@
 
 - (void)makeConstraints {
     [self.muteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.hangupBtn.mas_left).offset(-5);
+        make.trailing.equalTo(self.hangupBtn.mas_leading).offset(-5);
         make.centerY.equalTo(self.hangupBtn);
         make.size.equalTo(@(kControlBtnSize));
     }];
@@ -44,7 +44,7 @@
         make.size.equalTo(@(kControlBtnSize));
     }];
     [self.handsfreeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.hangupBtn.mas_right).offset(5);
+        make.leading.equalTo(self.hangupBtn.mas_trailing).offset(5);
         make.centerY.equalTo(self.hangupBtn);
         make.size.equalTo(@(kControlBtnSize));
     }];

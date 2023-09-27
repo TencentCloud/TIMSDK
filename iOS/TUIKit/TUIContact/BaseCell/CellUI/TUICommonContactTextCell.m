@@ -45,38 +45,24 @@
         self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
 
-        _keyLabel = self.textLabel;
+        _keyLabel = [[UILabel alloc] init];
         _keyLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _keyLabel.font = [UIFont systemFontOfSize:16.0];
+        [self.contentView addSubview:_keyLabel];
+        [_keyLabel setRtlAlignment:TUITextRTLAlignmentTrailing];
+        
+        _valueLabel = [[UILabel alloc] init];
+        [self.contentView addSubview:_valueLabel];
 
-        _valueLabel = self.detailTextLabel;
         _valueLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
         _valueLabel.font = [UIFont systemFontOfSize:16.0];
+        [_valueLabel setRtlAlignment:TUITextRTLAlignmentTrailing];
 
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    if (self.textData.keyEdgeInsets.left) {
-        self.keyLabel.mm_left(self.textData.keyEdgeInsets.left);
-    }
-
-    if (self.textData.keyEdgeInsets.top) {
-        self.keyLabel.mm_top(self.textData.keyEdgeInsets.top);
-    }
-
-    if (self.textData.keyEdgeInsets.bottom) {
-        self.keyLabel.mm_bottom(self.textData.keyEdgeInsets.bottom);
-    }
-
-    if (self.textData.keyEdgeInsets.right) {
-        self.keyLabel.mm_right(self.textData.keyEdgeInsets.right);
-    }
-}
 
 - (void)fillWithData:(TUICommonContactTextCellData *)textData {
     [super fillWithData:textData];
@@ -104,6 +90,43 @@
     } else {
         self.valueLabel.numberOfLines = 1;
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+
+    [self.keyLabel sizeToFit];
+    [self.keyLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(self.keyLabel.frame.size);
+        make.leading.mas_equalTo(self.contentView).mas_offset(self.textData.keyEdgeInsets.left);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    
+
+    [self.valueLabel sizeToFit];
+    [self.valueLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.keyLabel.mas_trailing).mas_offset(10);
+        if (self.textData.showAccessory) {
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);            
+        }
+        else {
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-20);
+        }
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    
 }
 
 @end

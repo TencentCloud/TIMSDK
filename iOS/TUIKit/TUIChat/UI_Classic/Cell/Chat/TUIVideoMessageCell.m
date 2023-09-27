@@ -29,7 +29,7 @@
         _thumb = [[UIImageView alloc] init];
         _thumb.layer.cornerRadius = 5.0;
         [_thumb.layer setMasksToBounds:YES];
-        _thumb.contentMode = UIViewContentModeScaleAspectFit;
+        _thumb.contentMode = UIViewContentModeScaleAspectFill;
         _thumb.backgroundColor = [UIColor clearColor];
         [self.container addSubview:_thumb];
         _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -103,6 +103,14 @@
         if (data.thumbImage) {
             self.thumb.image = data.thumbImage;
         }
+        // tell constraints they need updating
+        [self setNeedsUpdateConstraints];
+
+        // update constraints now so we can animate the change
+        [self updateConstraintsIfNeeded];
+
+        [self layoutIfNeeded];
+
         return;
     }
 
@@ -212,31 +220,84 @@
             }];
         }
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+
+    [super updateConstraints];
     if (self.messageData.messageModifyReactsSize.height > 0) {
         if (self.tagView) {
             CGFloat topMargin = 10;
             CGFloat tagViewTopMargin = 6;
             CGFloat thumbHeight = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
-            _thumb.mm_height(thumbHeight).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopMargin,
-                                            self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
+            [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(thumbHeight);
+                make.width.mas_equalTo(self.container).multipliedBy(0.7);
+                make.centerX.mas_equalTo(self.container);
+                make.top.mas_equalTo(self.container).mas_offset(topMargin);
+            }];
+            [self.tagView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.messageData.messageModifyReactsSize.height);
+                make.width.mas_equalTo(self.container);
+                make.trailing.mas_equalTo(self.container.mas_trailing);
+                make.bottom.mas_equalTo(self.container.mas_bottom);
+            }];
+            [self.duration mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.trailing.mas_equalTo(self.thumb.mas_trailing).mas_offset(-2);
+
+                //                make.centerX.mas_equalTo(self.thumb).mas_offset(20);
+                make.width.mas_greaterThanOrEqualTo(20);
+                make.height.mas_equalTo(20);
+                make.bottom.mas_equalTo(self.thumb.mas_bottom);
+            }];
         }
         self.bubbleView.hidden = NO;
     } else {
-        CGFloat topMargin = 0;
-        CGFloat height = self.container.mm_h;
-        _thumb.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.container.mas_height);
+            make.width.mas_equalTo(self.container);
+            make.leading.mas_equalTo(self.container.mas_leading);
+            make.top.mas_equalTo(self.container);
+        }];
+        [self.duration mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.trailing.mas_equalTo(self.thumb.mas_trailing).mas_offset(-2);
+            make.width.mas_greaterThanOrEqualTo(20);
+            make.height.mas_equalTo(20);
+            make.bottom.mas_equalTo(self.thumb.mas_bottom);
+        }];
         self.bubbleView.hidden = YES;
     }
-    _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).tui_mm_center();
-    _downloadImage.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).tui_mm_center();
-    [self.duration setFrame:CGRectMake(self.thumb.mm_w - 20 - 17, self.thumb.frame.size.height - 20, 20, 20)];
-    self.duration.mm_sizeToFitThan(20, 20);
-    self.animateCircleView.tui_mm_center();
+    
+    [self.play mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(TVideoMessageCell_Play_Size);
+        make.center.mas_equalTo(self.thumb);
+    }];
+    [self.downloadImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(TVideoMessageCell_Play_Size);
+        make.center.mas_equalTo(self.thumb);
+    }];
+
+    [self.animateCircleView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.thumb);
+        make.size.mas_equalTo(CGSizeMake(kScale390(40), kScale390(40)));
+    }];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword {

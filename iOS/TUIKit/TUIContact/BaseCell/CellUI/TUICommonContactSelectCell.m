@@ -1,4 +1,7 @@
-
+//
+//  TUICommonContactSelectCell.m
+//
+//
 //  Created by Tencent on 2023/06/09.
 //  Copyright © 2023 Tencent. All rights reserved.
 
@@ -32,26 +35,20 @@
         [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_pressed")] forState:UIControlStateHighlighted];
         [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_selected")] forState:UIControlStateSelected];
         [self.selectButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_select_selected_disable")] forState:UIControlStateDisabled];
-        self.selectButton.mm_sizeToFit().mm__centerY(self.mm_centerY).mm_left(12);
         self.selectButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
-        self.avatarView.mm_width(34).mm_height(34).mm__centerY(self.mm_centerY).mm_left(self.selectButton.mm_maxX + 12);
         self.avatarView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
-        self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
         self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
-}
-
-- (void)setupBinds {
 }
 
 - (void)fillWithData:(TUICommonContactSelectCellData *)selectData {
@@ -74,6 +71,50 @@
     }
     [self.selectButton setSelected:selectData.isSelected];
     self.selectButton.enabled = selectData.enabled;
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    CGFloat imgWidth = kScale390(34);
+    
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(imgWidth);
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.leading.mas_equalTo(kScale390(12));
+    }];
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = imgWidth / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+        make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(12);
+        make.height.mas_equalTo(20);
+        make.trailing.mas_greaterThanOrEqualTo(self.contentView.mas_trailing);
+    }];
+    
+    [self.selectButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-kScale390(20));
+        make.width.height.mas_equalTo(20);
+    }];
+}
 @end

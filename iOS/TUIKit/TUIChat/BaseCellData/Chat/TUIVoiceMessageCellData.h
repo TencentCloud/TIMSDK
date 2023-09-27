@@ -9,6 +9,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^VoicePlayTime)(CGFloat);
 
+typedef NS_ENUM(NSUInteger, TUIVoiceAudioPlaybackStyle) {
+    TUIVoiceAudioPlaybackStyleLoudspeaker = 1,
+    TUIVoiceAudioPlaybackStyleHandset = 2,
+};
+
 @interface TUIVoiceMessageCellData : TUIBubbleMessageCellData
 
 @property(nonatomic, strong) NSString *path;
@@ -63,6 +68,11 @@ typedef void (^VoicePlayTime)(CGFloat);
 - (void)playVoiceMessage;
 
 @property(nonatomic, copy) void (^audioPlayerDidFinishPlayingBlock)(void);
+
+
+//The style of audio playback.
++ (TUIVoiceAudioPlaybackStyle)getAudioplaybackStyle;
++ (void)changeAudioPlaybackStyle;
 @end
 
 NS_ASSUME_NONNULL_END

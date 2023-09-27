@@ -994,11 +994,13 @@
 }
 
 + (void)markC2CMessageAsRead:(NSString *)userID succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail {
-    [[V2TIMManager sharedInstance] markC2CMessageAsRead:userID succ:succ fail:fail];
+    NSString * conversationID = [NSString stringWithFormat:@"c2c_%@",userID];
+    [[V2TIMManager sharedInstance] cleanConversationUnreadMessageCount:conversationID cleanTimestamp:0 cleanSequence:0 succ:succ fail:fail];
 }
 
 + (void)markGroupMessageAsRead:(NSString *)groupID succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail {
-    [[V2TIMManager sharedInstance] markGroupMessageAsRead:groupID succ:succ fail:fail];
+    NSString * conversationID = [NSString stringWithFormat:@"group_%@",groupID];
+    [[V2TIMManager sharedInstance] cleanConversationUnreadMessageCount:conversationID cleanTimestamp:0 cleanSequence:0 succ:succ fail:fail];
 }
 
 + (void)markConversationAsUndead:(NSArray<NSString *> *)conversationIDList enableMark:(BOOL)enableMark {
@@ -1096,7 +1098,7 @@
     } else if (message.userID != nil) {
         str = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
     }
-    return str;
+    return rtlString(str);
 }
 
 + (NSString *)getGroupTipsDisplayString:(V2TIMMessage *)message {
@@ -1167,7 +1169,7 @@
         default:
             break;
     }
-    return str;
+    return rtlString(str);
 }
 
 + (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data {
@@ -1176,7 +1178,7 @@
 
 + (NSString *)opGroupInfoChagedFormatStr:(NSString *)opUser ofUserList:(NSMutableArray<NSString *> *)userList ofTips:(V2TIMGroupTipsElem *)tips{
     NSString *str = nil;
-    str = [NSString stringWithFormat:@"\"%@\"", opUser];
+    str = [NSString stringWithFormat:@"%@", opUser];
     for (V2TIMGroupChangeInfo *info in tips.groupChangeInfoList) {
         switch (info.type) {
             case V2TIM_GROUP_INFO_CHANGE_TYPE_NAME: {
@@ -1238,7 +1240,7 @@
                 break;
         }
     }
-    return str;
+    return rtlString(str);
 }
 + (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info {
     NSString *opUser;

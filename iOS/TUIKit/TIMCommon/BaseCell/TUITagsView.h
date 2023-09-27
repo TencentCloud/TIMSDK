@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUITagsView : UIView
 
-/// collectionView
-@property(nonatomic, strong) UIView *containerView;
 /// datasource
 @property(nonatomic, strong) NSMutableArray *listArrM;
 
@@ -30,5 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateView;
 
+- (void)updateRTLView;
 @end
 NS_ASSUME_NONNULL_END

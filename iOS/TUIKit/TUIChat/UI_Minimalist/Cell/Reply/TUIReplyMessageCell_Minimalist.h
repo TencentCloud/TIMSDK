@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIReplyMessageCell_Minimalist : TUIBubbleMessageCell_Minimalist
 
-@property(nonatomic, strong) CALayer *quoteBorderLayer;
+@property(nonatomic, strong) UIView *quoteBorderLine;
 @property(nonatomic, strong) UIView *quoteView;
 @property(nonatomic, strong) UILabel *contentLabel;
 @property(nonatomic, strong) UILabel *senderLabel;

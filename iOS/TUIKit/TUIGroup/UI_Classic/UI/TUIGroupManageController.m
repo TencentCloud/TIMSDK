@@ -9,8 +9,6 @@
 #import "TUIGroupManageController.h"
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
-#import "TUIAddCell.h"
-#import "TUIAddCellData.h"
 #import "TUIGroupManageDataProvider.h"
 #import "TUIMemberInfoCell.h"
 #import "TUIMemberInfoCellData.h"
@@ -143,9 +141,6 @@
     } else if ([data isKindOfClass:TUICommonSwitchCellData.class]) {
         cell = [[TUICommonSwitchCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUICommonSwitchCell.class)];
         [(TUICommonSwitchCell *)cell fillWithData:(TUICommonSwitchCellData *)data];
-    } else if ([data isKindOfClass:TUIAddCellData.class]) {
-        cell = [[TUIAddCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUIAddCell.class)];
-        [(TUIAddCell *)cell setData:(TUIAddCellData *)data];
     } else if ([data isKindOfClass:TUIMemberInfoCellData.class]) {
         cell = [[TUIMemberInfoCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUIMemberInfoCell.class)];
         [(TUIMemberInfoCell *)cell setData:(TUIMemberInfoCellData *)data];

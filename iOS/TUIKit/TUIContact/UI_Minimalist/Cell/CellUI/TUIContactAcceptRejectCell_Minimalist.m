@@ -71,27 +71,65 @@
         self.rejectButton.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
     }
 
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
     CGFloat margin = kScale390(25);
     CGFloat padding = kScale390(20);
     CGFloat btnWidth = (self.contentView.frame.size.width - 2 * margin - padding) * 0.5;
     CGFloat btnHeight = kScale390(42);
-    self.agreeButton.frame = CGRectMake(margin, 0, btnWidth, btnHeight);
-    self.rejectButton.frame = CGRectMake(margin + btnWidth + padding, 0, btnWidth, btnHeight);
-
-    if (data.isRejected && !data.isAccepted) {
+    
+    [self.agreeButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(margin);
+        make.trailing.mas_equalTo(self.rejectButton.mas_leading).mas_offset(- padding);
+        make.top.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(btnHeight);
+    }];
+    [self.rejectButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(self.agreeButton);
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(- margin);
+        make.top.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(btnHeight);
+    }];
+    if (self.acceptRejectData.isRejected && !self.acceptRejectData.isAccepted) {
         self.agreeButton.hidden = YES;
         self.rejectButton.hidden = NO;
-        self.rejectButton.frame = CGRectMake(margin, 0, 2 * btnWidth + padding, btnHeight);
-    } else if (data.isAccepted && !data.isRejected) {
+        [self.rejectButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(margin);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(- margin);
+            make.top.mas_equalTo(self.contentView);
+            make.height.mas_equalTo(btnHeight);
+        }];
+    } else if (self.acceptRejectData.isAccepted && !self.acceptRejectData.isRejected) {
         self.agreeButton.hidden = NO;
         self.rejectButton.hidden = YES;
-        self.agreeButton.frame = CGRectMake(margin, 0, 2 * btnWidth + padding, btnHeight);
+        [self.agreeButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(margin);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(- margin);
+            make.top.mas_equalTo(self.contentView);
+            make.height.mas_equalTo(btnHeight);
+        }];
     } else {
         self.agreeButton.hidden = NO;
         self.rejectButton.hidden = NO;
     }
+    
 }
-
 - (void)agreeClick {
     if (self.acceptRejectData.agreeClickCallback) {
         self.acceptRejectData.agreeClickCallback();

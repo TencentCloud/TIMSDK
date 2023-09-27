@@ -16,31 +16,20 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.avatarView = [[UIImageView alloc] initWithImage:DefaultAvatarImage];
         [self.contentView addSubview:self.avatarView];
-        self.avatarView.mm_width(70).mm_height(70).mm__centerY(43).mm_left(12);
-        if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-            self.avatarView.layer.masksToBounds = YES;
-            self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
-        } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-            self.avatarView.layer.masksToBounds = YES;
-            self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-        }
 
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
-        self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_top(14).mm_height(20).mm_width(120);
 
         self.addSourceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.addSourceLabel];
         self.addSourceLabel.textColor = [UIColor d_systemGrayColor];
         self.addSourceLabel.font = [UIFont systemFontOfSize:15];
-        self.addSourceLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY + 6).mm_height(15).mm_width(120);
 
         self.addWordingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.addWordingLabel];
         self.addWordingLabel.textColor = [UIColor d_systemGrayColor];
         self.addWordingLabel.font = [UIFont systemFontOfSize:15];
-        self.addWordingLabel.mm_left(self.addSourceLabel.mm_x).mm_top(self.addSourceLabel.mm_maxY + 6).mm_height(15).mm_width(120);
 
         self.agreeButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [self.agreeButton setTitleColor:TIMCommonDynamicColor(@"form_title_color", @"#000000") forState:UIControlStateNormal];
@@ -111,11 +100,6 @@
         self.rejectButton.layer.borderWidth = 0.2;
         [self.rejectButton setTitleColor:TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF") forState:UIControlStateNormal];
     }
-
-    self.agreeButton.mm_sizeToFit().mm_width(self.agreeButton.mm_w + 20);
-    self.rejectButton.mm_left(CGRectGetMaxX(self.agreeButton.frame) + 10).mm_sizeToFit().mm_width(self.rejectButton.mm_w + 20);
-    self.stackView.bounds = CGRectMake(0, 0, 2 * self.agreeButton.mm_w + 10, self.agreeButton.mm_h);
-
     if (self.pendencyData.isRejected && !self.pendencyData.isAccepted) {
         self.agreeButton.hidden = YES;
         self.rejectButton.hidden = NO;
@@ -128,8 +112,75 @@
     }
 
     self.addSourceLabel.hidden = self.pendencyData.hideSource;
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
 }
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    CGSize headSize = CGSizeMake(70, 70);
+
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(headSize);
+        make.leading.mas_equalTo(12);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = headSize.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+    
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView.mas_top).mas_offset(14);
+        make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(12);
+        make.height.mas_equalTo(20);
+        make.width.mas_equalTo(120);
+    }];
+    
+    [self.addSourceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(6);
+        make.leading.mas_equalTo(self.titleLabel.mas_leading);
+        make.height.mas_equalTo(15);
+        make.width.mas_equalTo(120);
+    }];
+
+    [self.addWordingLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.addSourceLabel.mas_bottom).mas_offset(6);
+        make.leading.mas_equalTo(self.titleLabel.mas_leading);
+        make.height.mas_equalTo(15);
+        make.width.mas_equalTo(120);
+    }];
+    
+    [self.agreeButton sizeToFit];
+    [self.agreeButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.stackView.mas_leading);
+        make.centerY.mas_equalTo(self.stackView);
+        make.height.mas_equalTo(self.agreeButton.frame.size.height);
+        make.width.mas_equalTo(self.agreeButton.frame.size.width + 20);
+    }];
+    [self.rejectButton sizeToFit];
+    [self.rejectButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.agreeButton.mas_trailing).mas_offset(10);
+        make.height.mas_equalTo(self.rejectButton.frame.size.height);
+        make.width.mas_equalTo(self.rejectButton.frame.size.width + 20);
+    }];
+    self.stackView.bounds = CGRectMake(0, 0, 3 * self.agreeButton.mm_w + 10, self.agreeButton.mm_h);
+
+}
 - (void)agreeClick {
     if (self.pendencyData.cbuttonSelector) {
         UIViewController *vc = self.mm_viewController;

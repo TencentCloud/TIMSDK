@@ -15,7 +15,7 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     let selfCallStatusObserver = Observer()
     lazy var colleeCollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
-        let colleeCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: flowLayout)
+        let colleeCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         colleeCollectionView.delegate = self
         colleeCollectionView.dataSource = self
         colleeCollectionView.showsVerticalScrollIndicator = false
@@ -61,7 +61,7 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     func activateConstraints() {
         colleeCollectionView.snp.makeConstraints { make in
             make.centerX.equalTo(self)
-            make.top.equalTo(snp.top).offset(60)
+            make.top.equalToSuperview().offset(StatusBar_Height + kFloatWindowButtonSize.height)
             make.width.height.equalTo(Screen_Width - 10)
         }
     }

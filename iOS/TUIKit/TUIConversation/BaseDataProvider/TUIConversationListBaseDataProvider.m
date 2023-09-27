@@ -358,6 +358,9 @@
     }
 
     for (TUIConversationCellData *item in conversationList) {
+        if (item.isLocalConversationFoldList){
+            continue;
+        }
         NSNumber *position = [positionMaps objectForKey:item.conversationID];
         NSAssert((position && [position isKindOfClass:NSNumber.class]), @"serius error, the self.conversationList maybe changed on the other thread");
         if (position) {
@@ -738,10 +741,10 @@
 - (void)onRecvNewMessage:(V2TIMMessage *)msg {
     // 如果会话里是被隐藏的会话，则需要先清理被隐藏标记
     // when a new message is received, if the conversation is a hidden conversation, you need to clear the hidden mark first
-
+    
     // 如果会话里被标记未读，则需要清理标记
     // when a new message is received, if the conversation is marked unread, you need to clear the mark
-
+    
     NSString *userID = msg.userID;
     NSString *groupID = msg.groupID;
     NSString *conversationID = @"";
@@ -756,22 +759,81 @@
     if (IS_NOT_EMPTY_NSSTRING(groupID)) {
         conversationID = [NSString stringWithFormat:@"group_%@", groupID];
     }
-
-    [V2TIMManager.sharedInstance markConversation:@[ conversationID ]
-        markType:@(V2TIM_CONVERSATION_MARK_TYPE_HIDE)
-        enableMark:NO
-        succ:^(NSArray<V2TIMConversationOperationResult *> *result) {
-          [V2TIMManager.sharedInstance markConversation:@[ conversationID ]
-                                               markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD)
-                                             enableMark:NO
-                                                   succ:nil
-                                                   fail:^(int code, NSString *desc) {
-                                                     kLog(@"[TUIConversation] %s code:%d, desc:%@", __func__, code, desc);
-                                                   }];
+    
+    TUIConversationCellData * targetCellData = nil;
+    for (TUIConversationCellData * cellData in self.conversationList) {
+        if ([cellData.conversationID isEqualToString:conversationID]) {
+            targetCellData = cellData;
+            break;
         }
-        fail:^(int code, NSString *desc) {
-          kLog(@"[TUIConversation] %s code:%d, desc:%@", __func__, code, desc);
-        }];
+    }
+    if (targetCellData) {
+        BOOL existInHidelist = targetCellData.isMarkAsHide;
+        
+        BOOL existInUnreadlist = targetCellData.isMarkAsUnread;
+
+        if (existInHidelist || existInUnreadlist) {
+            [self cancelHideAndUnreadMarkConversation:conversationID existInHidelist:existInHidelist existInUnreadlist:existInUnreadlist];
+        }
+    }
+    else {
+        [V2TIMManager.sharedInstance getConversation:conversationID
+            succ:^(V2TIMConversation *conv) {
+            TUIConversationCellData *cellData = [self cellDataForConversation:conv];
+            BOOL existInHidelist = cellData.isMarkAsHide;
+            
+            BOOL existInUnreadlist = cellData.isMarkAsUnread;
+
+            if (existInHidelist || existInUnreadlist) {
+                [self cancelHideAndUnreadMarkConversation:conversationID existInHidelist:existInHidelist existInUnreadlist:existInUnreadlist];
+            }
+
+            }
+            fail:^(int code, NSString *desc) {
+              kLog(@"[TUIConversation] %s, code:%d, desc:%@", __func__, code, desc);
+            }];
+    }
+
+}
+- (void)cancelHideAndUnreadMarkConversation:(NSString *)conversationID existInHidelist:(BOOL)existInHidelist existInUnreadlist:(BOOL)existInUnreadlist  {
+    if(existInHidelist && existInUnreadlist) {
+        [V2TIMManager.sharedInstance markConversation:@[ conversationID ]
+            markType:@(V2TIM_CONVERSATION_MARK_TYPE_HIDE)
+            enableMark:NO
+            succ:^(NSArray<V2TIMConversationOperationResult *> *result) {
+              [V2TIMManager.sharedInstance markConversation:@[ conversationID ]
+                                                   markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD)
+                                                 enableMark:NO
+                                                       succ:nil
+                                                       fail:^(int code, NSString *desc) {
+                                                         kLog(@"[TUIConversation] %s code:%d, desc:%@", __func__, code, desc);
+                                                       }];
+            }
+            fail:^(int code, NSString *desc) {
+              kLog(@"[TUIConversation] %s code:%d, desc:%@", __func__, code, desc);
+            }];
+    }
+    else if (existInHidelist)  {
+        [V2TIMManager.sharedInstance markConversation:@[ conversationID ]
+            markType:@(V2TIM_CONVERSATION_MARK_TYPE_HIDE)
+            enableMark:NO
+            succ:nil
+            fail:^(int code, NSString *desc) {
+              kLog(@"[TUIConversation] %s code:%d, desc:%@", __func__, code, desc);
+            }];
+    }
+    else if (existInUnreadlist) {
+        [V2TIMManager.sharedInstance markConversation:@[ conversationID ]
+                                             markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD)
+                                           enableMark:NO
+                                                 succ:nil
+                                                 fail:^(int code, NSString *desc) {
+                                                   kLog(@"[TUIConversation] %s code:%d, desc:%@", __func__, code, desc);
+                                                 }];
+    }
+    else {
+        // noting to do
+    }
 }
 
 #pragma mark - SDK Data Process
@@ -980,12 +1042,7 @@
              * In some case, the time of unread conversation will be nil.
              * If this happens, directly mark the conversation as read.
              */
-            if (conversation.userID.length > 0) {
-                [[V2TIMManager sharedInstance] markC2CMessageAsRead:conversation.userID succ:nil fail:nil];
-            }
-            if (conversation.groupID.length > 0) {
-                [[V2TIMManager sharedInstance] markGroupMessageAsRead:conversation.groupID succ:nil fail:nil];
-            }
+            [[V2TIMManager sharedInstance] cleanConversationUnreadMessageCount:conversation.conversationID cleanTimestamp:0 cleanSequence:0 succ:nil fail:nil];
         }
         return YES;
     }
@@ -999,12 +1056,7 @@
 }
 
 - (void)markConversationAsRead:(TUIConversationCellData *)conv {
-    if (conv.userID.length > 0) {
-        [[V2TIMManager sharedInstance] markC2CMessageAsRead:conv.userID succ:nil fail:nil];
-    }
-    if (conv.groupID.length > 0) {
-        [[V2TIMManager sharedInstance] markGroupMessageAsRead:conv.groupID succ:nil fail:nil];
-    }
+    [[V2TIMManager sharedInstance] cleanConversationUnreadMessageCount:conv.conversationID cleanTimestamp:0 cleanSequence:0 succ:nil fail:nil];
 
     [V2TIMManager.sharedInstance markConversation:@[ conv.conversationID ] markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD) enableMark:NO succ:nil fail:nil];
 }

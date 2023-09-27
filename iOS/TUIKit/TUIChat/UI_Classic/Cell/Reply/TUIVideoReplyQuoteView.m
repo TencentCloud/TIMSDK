@@ -6,9 +6,9 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
-#import "TUIVideoReplyQuoteView.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIDarkModel.h>
+#import "TUIVideoReplyQuoteView.h"
 #import "TUIVideoReplyQuoteViewData.h"
 
 @implementation TUIVideoReplyQuoteView
@@ -25,9 +25,29 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.playView.center = self.imageView.center;
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+
+    TUIVideoReplyQuoteViewData *myData = (TUIVideoReplyQuoteViewData *)self.data;
+
+    [self.imageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+      make.leading.top.mas_equalTo(self);
+      make.size.mas_equalTo(myData.imageSize);
+    }];
+
+    [self.playView mas_remakeConstraints:^(MASConstraintMaker *make) {
+      make.size.mas_equalTo(CGSizeMake(30, 30));
+      make.center.mas_equalTo(self.imageView);
+    }];
+}
 - (void)fillWithData:(TUIReplyQuoteViewData *)data {
     [super fillWithData:data];
 
@@ -39,7 +59,14 @@
     if (myData.image == nil) {
         [myData downloadImage];
     }
-    self.imageView.frame = CGRectMake(0, 0, myData.imageSize.width, myData.imageSize.height);
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 @end

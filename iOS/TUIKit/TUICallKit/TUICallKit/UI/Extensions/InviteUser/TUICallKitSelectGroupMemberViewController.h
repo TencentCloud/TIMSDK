@@ -12,15 +12,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SelectGroupMeberViewControllerDelegate <NSObject>
+@protocol SelectGroupMemberViewControllerDelegate <NSObject>
 
 - (void)addNewGroupUser:(NSArray<TUIUserModel *> *)inviteUsers;
 
 @end
 
-@interface TUICallKitSelectGroupMeberViewController : UIViewController
+@interface TUICallKitSelectGroupMemberViewController : UIViewController
 
-@property (nonatomic, weak) id<SelectGroupMeberViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<SelectGroupMemberViewControllerDelegate> delegate;
 
 @end
 

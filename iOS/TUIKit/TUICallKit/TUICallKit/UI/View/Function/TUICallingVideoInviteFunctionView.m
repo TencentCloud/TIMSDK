@@ -36,7 +36,7 @@
     }];
     [self.switchCameraBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.hangupBtn);
-        make.left.equalTo(self.hangupBtn.mas_right).offset(20);
+        make.leading.equalTo(self.hangupBtn.mas_trailing).offset(20);
         make.size.equalTo(@(CGSizeMake(36, 36)));
     }];
 }

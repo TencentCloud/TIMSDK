@@ -29,6 +29,7 @@
     self.textLabel = [[UILabel alloc] init];
     self.textLabel.font = [UIFont systemFontOfSize:kScale390(16)];
     self.textLabel.textColor = [UIColor tui_colorWithHex:@"#000000"];
+    self.textLabel.rtlAlignment = TUITextRTLAlignmentCenter;
     [self addSubview:self.textLabel];
     self.textLabel.text = @"Message";
 
@@ -39,12 +40,31 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
     [self addGestureRecognizer:tap];
 }
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    [self.iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(kScale390(30));
+        make.top.mas_equalTo(kScale390(19));
+        make.centerX.mas_equalTo(self);
+    }];
+    [self.textLabel sizeToFit];
+    [self.textLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.trailing.mas_equalTo(self);
+        make.height.mas_equalTo(kScale390(19));
+        make.top.mas_equalTo(self.iconView.mas_bottom).mas_offset(kScale390(11));
+        make.centerX.mas_equalTo(self);
+    }];
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.iconView.frame = CGRectMake((self.bounds.size.width - kScale390(30)) * 0.5, kScale390(19), kScale390(30), kScale390(30));
-    [self.textLabel sizeToFit];
-    self.textLabel.frame = CGRectMake((self.bounds.size.width - self.textLabel.frame.size.width) * 0.5,
-                                      self.iconView.frame.origin.y + self.iconView.frame.size.height + kScale390(11), self.bounds.size.width, kScale390(19));
+
 }
 - (void)click {
     if (self.messageBtnClickBlock) {
@@ -99,28 +119,61 @@
             x = CGRectGetMaxX(itemView.frame) + space;
         }
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
-    self.headImg.frame = CGRectMake((self.bounds.size.width - kScale390(94)) * 0.5, kScale390(42), kScale390(94), kScale390(94));
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    CGFloat imgWidth = kScale390(94);
+    [self.headImg mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(imgWidth);
+        make.centerX.mas_equalTo(self.mas_centerX);
+        make.top.mas_equalTo(kScale390(42));
+    }];
+    
+    MASAttachKeys(self.headImg);
+
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.headImg.layer.masksToBounds = YES;
-        self.headImg.layer.cornerRadius = self.headImg.frame.size.height / 2.0;
+        self.headImg.layer.cornerRadius = imgWidth / 2;
     } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
         self.headImg.layer.masksToBounds = YES;
         self.headImg.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
-
+    
     [self.descriptionLabel sizeToFit];
-    self.descriptionLabel.frame = CGRectMake((self.bounds.size.width - self.descriptionLabel.frame.size.width) * 0.5,
-                                             self.headImg.frame.origin.y + self.headImg.frame.size.height + kScale390(10),
-                                             self.descriptionLabel.frame.size.width, self.descriptionLabel.frame.size.height);
+    [self.descriptionLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.mas_centerX);
+        make.top.mas_equalTo(self.headImg.mas_bottom).mas_offset(kScale390(10));
+        make.height.mas_equalTo(30);
+        make.width.mas_equalTo(self.descriptionLabel.frame.size.width);
+        make.width.mas_lessThanOrEqualTo(self).multipliedBy(0.5);
+    }];
+    MASAttachKeys(self.descriptionLabel);
 
     if (self.functionListView.subviews.count > 0) {
-        self.functionListView.frame = CGRectMake(0, CGRectGetMaxY(self.descriptionLabel.frame) + kScale390(42), self.bounds.size.width, kScale390(95));
+        [self.functionListView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(0);
+            make.width.mas_equalTo(self.bounds.size.width);
+            make.height.mas_equalTo(kScale390(95));
+            make.top.mas_equalTo(self.descriptionLabel.mas_bottom).mas_offset(kScale390(18));
+        }];
     }
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 @end

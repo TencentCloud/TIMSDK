@@ -38,12 +38,17 @@
 
         _replyEmojiCount = [[UILabel alloc] init];
         [_replyEmojiCount setTextColor:RGBA(153, 153, 153, 1)];
-        [_replyEmojiCount setTextAlignment:NSTextAlignmentLeft];
+        _replyEmojiCount.rtlAlignment = TUITextRTLAlignmentLeading;
         [_replyEmojiCount setFont:[UIFont systemFontOfSize:12]];
         [_replyEmojiView addSubview:_replyEmojiCount];
 
         [self.messageModifyRepliesButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-        [self.messageModifyRepliesButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        if(isRTL()) {
+            self.messageModifyRepliesButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        }
+        else {
+            self.messageModifyRepliesButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        }
         [self.messageModifyRepliesButton setTitleColor:RGBA(0, 95, 255, 1) forState:UIControlStateNormal];
 
         _msgStatusView = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -57,7 +62,7 @@
         _msgTimeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _msgTimeLabel.textColor = RGB(102, 102, 102);
         _msgTimeLabel.font = [UIFont systemFontOfSize:12];
-        _msgTimeLabel.textAlignment = NSTextAlignmentRight;
+        _msgTimeLabel.rtlAlignment = TUITextRTLAlignmentTrailing;
         _msgTimeLabel.layer.zPosition = CGFLOAT_MAX;
         [self.container addSubview:_msgTimeLabel];
 
@@ -85,6 +90,289 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(onJumpToMessageInfoPage:selectCell:)]) {
         [self.delegate onJumpToMessageInfoPage:self.messageData selectCell:self];
     }
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    TUIMessageCellLayout *cellLayout = self.messageData.cellLayout;
+    BOOL isInComing = (self.messageData.direction == MsgDirectionIncoming);
+
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (isInComing) {
+            make.leading.mas_equalTo(self.container.mas_leading).mas_offset(7);
+        } else {
+            make.trailing.mas_equalTo(self.container.mas_trailing);
+        }
+        if (self.messageData.showName) {
+            make.width.mas_greaterThanOrEqualTo(20);
+            make.height.mas_greaterThanOrEqualTo(20);
+        } else {
+            make.height.mas_equalTo(0);
+        }
+        make.top.mas_equalTo(self.avatarView.mas_top);
+    }];
+
+    [self.selectedIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(3);
+        make.centerY.mas_equalTo(self.container.mas_centerY);
+        if (self.messageData.showCheckBox) {
+            make.width.mas_equalTo(20);
+            make.height.mas_equalTo(20);
+        } else {
+            make.size.mas_equalTo(CGSizeZero);
+        }
+    }];
+
+    [self.timeLabel sizeToFit];
+    [self.timeLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (self.messageData.showMessageTime) {
+            make.width.mas_equalTo(self.timeLabel.frame.size.width);
+            make.height.mas_equalTo(self.timeLabel.frame.size.height);
+        } else {
+            make.width.mas_equalTo(0);
+            make.height.mas_equalTo(0);
+        }
+    }];
+
+    CGSize csize = [self.class getContentSize:self.messageData];
+    CGFloat contentWidth = csize.width;
+    CGFloat contentHeight = csize.height;
+
+    if (self.messageData.direction == MsgDirectionIncoming) {
+        self.avatarView.hidden = !self.messageData.showAvatar;
+        [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+          if (self.messageData.showCheckBox) {
+              make.leading.mas_equalTo(self.selectedIcon.mas_trailing).mas_offset(cellLayout.avatarInsets.left);
+          } else {
+              make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(cellLayout.avatarInsets.left);
+          }
+          make.top.mas_equalTo(cellLayout.avatarInsets.top);
+          make.size.mas_equalTo(cellLayout.avatarSize);
+        }];
+
+        [self.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(cellLayout.messageInsets.left);
+          make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(cellLayout.messageInsets.top);
+          make.width.mas_equalTo(contentWidth);
+          make.height.mas_equalTo(contentHeight);
+        }];
+
+        CGRect indicatorFrame = self.indicator.frame;
+        [self.indicator mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.leading.mas_equalTo(self.container.mas_trailing).mas_offset(8);
+          make.centerY.mas_equalTo(self.container.mas_centerY);
+          make.size.mas_equalTo(indicatorFrame.size);
+        }];
+        self.retryView.frame = self.indicator.frame;
+        self.readReceiptLabel.hidden = YES;
+    } else {
+        if (self.messageData.showAvatar) {
+            cellLayout.avatarSize = CGSizeMake(40, 40);
+        } else {
+            cellLayout.avatarSize = CGSizeZero;
+        }
+        [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-cellLayout.avatarInsets.right);
+          make.top.mas_equalTo(cellLayout.avatarInsets.top);
+          make.size.mas_equalTo(cellLayout.avatarSize);
+        }];
+        [self.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.trailing.mas_equalTo(self.avatarView.mas_leading).mas_offset(-cellLayout.messageInsets.right);
+          make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(cellLayout.messageInsets.top);
+          make.width.mas_equalTo(contentWidth);
+          make.height.mas_equalTo(contentHeight);
+        }];
+
+        CGRect indicatorFrame = self.indicator.frame;
+        [self.indicator mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.trailing.mas_equalTo(self.container.mas_leading).mas_offset(-8);
+          make.centerY.mas_equalTo(self.container.mas_centerY);
+          make.size.mas_equalTo(indicatorFrame.size);
+        }];
+
+        self.retryView.frame = self.indicator.frame;
+
+        [self.readReceiptLabel sizeToFit];
+        [self.readReceiptLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.bottom.mas_equalTo(self.container.mas_bottom);
+          make.trailing.mas_equalTo(self.container.mas_leading).mas_offset(-8);
+          make.size.mas_equalTo(self.readReceiptLabel.frame.size);
+        }];
+    }
+
+    if (!self.messageModifyRepliesButton.isHidden) {
+        self.messageModifyRepliesButton.mm_sizeToFit();
+        CGFloat repliesBtnTextWidth = self.messageModifyRepliesButton.frame.size.width;
+        [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+          if (isInComing) {
+              make.leading.mas_equalTo(self.container.mas_leading);
+          } else {
+              make.trailing.mas_equalTo(self.container.mas_trailing);
+          }
+          make.top.mas_equalTo(self.container.mas_bottom);
+          make.size.mas_equalTo(CGSizeMake(repliesBtnTextWidth + 10, 30));
+        }];
+    }
+
+    if (self.tagView) {
+        [self.tagView mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.trailing.mas_equalTo(self.container.mas_trailing);
+          make.bottom.mas_equalTo(self.container.mas_bottom);
+          make.size.mas_equalTo(CGSizeZero);
+        }];
+    }
+    
+    CGSize contentSize = [self.class getContentSize:self.messageData];
+    
+    if ((self.messageData.messageModifyReacts.count > 0) &&_replyEmojiImageViews.count > 0) {
+        CGFloat emojiSize = 12;
+        CGFloat emojiSpace = kScale390(4);
+        __block UIImageView * preEmojiView = nil;
+        for (int i = 0; i < _replyEmojiImageViews.count; ++i) {
+            UIImageView *emojiView = _replyEmojiImageViews[i];
+            if (i == 0) {
+                preEmojiView = nil;
+            }
+            else {
+                preEmojiView = _replyEmojiImageViews[i-1];
+            }
+            [emojiView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                if (i == 0){
+                    make.leading.mas_equalTo(_replyEmojiView.mas_leading).mas_offset(kScale390(8));
+                }
+                else {
+                    make.leading.mas_equalTo(preEmojiView.mas_trailing).mas_offset(emojiSpace);
+                }
+                make.width.height.mas_equalTo(emojiSize);
+                make.centerY.mas_equalTo(_replyEmojiView.mas_centerY);
+            }];
+            emojiView.layer.masksToBounds = YES;
+            emojiView.layer.cornerRadius = emojiSize / 2.0;
+        }
+        UIImageView * lastEmojiView = _replyEmojiImageViews.lastObject;
+        [_replyEmojiCount mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(lastEmojiView.mas_trailing).mas_offset(kScale390(8));
+            make.trailing.mas_equalTo(_replyEmojiView.mas_trailing);
+            make.width.mas_equalTo(emojiSize + 10);
+            make.height.mas_equalTo(emojiSize);
+            make.centerY.mas_equalTo(_replyEmojiView.mas_centerY);
+        }];
+        
+        [_replyEmojiView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.messageData.direction == MsgDirectionIncoming) {
+                make.leading.mas_greaterThanOrEqualTo(self.container).mas_offset(kScale390(16));
+            } else {
+                make.trailing.mas_lessThanOrEqualTo(self.container).mas_offset(-kScale390(16));
+            }
+            make.top.mas_equalTo(self.container.mas_bottom).mas_offset(-4);
+            make.height.mas_equalTo(20);
+        }];
+    } else {
+        _replyEmojiCount.frame = CGRectZero;
+        _replyEmojiView.frame = CGRectZero;
+    }
+
+    if (self.messageData.showMessageModifyReplies && _replyAvatarImageViews.count > 0)  {
+        CGFloat lineViewW = 17;
+        CGFloat avatarSize = 16;
+        CGFloat repliesBtnW = kScale390(50);
+        CGFloat avatarY = self.contentView.mm_h - (self.messageData.sameToNextMsgSender ? avatarSize : avatarSize * 2);
+        if (self.messageData.direction == MsgDirectionIncoming)  {
+            UIImageView *preAvatarImageView = nil;
+            for (int i = 0; i < _replyAvatarImageViews.count; ++i) {
+                UIImageView *avatarView = _replyAvatarImageViews[i];
+                if (i == 0) {
+                    preAvatarImageView = nil;
+                }
+                else {
+                    preAvatarImageView = _replyAvatarImageViews[i-1];
+                }
+                [avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    if (i == 0) {
+                        make.leading.mas_equalTo(_replyLineView.mas_trailing);
+                    }
+                    else {
+                        make.leading.mas_equalTo(preAvatarImageView.mas_centerX);
+                    }
+                    make.top.mas_equalTo(avatarY);
+                    make.width.height.mas_equalTo(avatarSize);
+                   
+                }];
+                avatarView.layer.masksToBounds = YES;
+                avatarView.layer.cornerRadius = avatarSize / 2.0;
+            }
+        }
+        else {
+            __block UIImageView *preAvatarImageView = nil;
+            NSInteger count = _replyAvatarImageViews.count;
+            for (NSInteger i = (count - 1); i >=0; i--) {
+                UIImageView *avatarView = _replyAvatarImageViews[i];
+                [avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    if (!preAvatarImageView) {
+                        make.trailing.mas_equalTo(self.messageModifyRepliesButton.mas_leading);
+                    }
+                    else {
+                        make.trailing.mas_equalTo(preAvatarImageView.mas_centerX);
+                    }
+                    make.top.mas_equalTo(avatarY);
+                    make.width.height.mas_equalTo(avatarSize);
+                }];
+                avatarView.layer.masksToBounds = YES;
+                avatarView.layer.cornerRadius = avatarSize / 2.0;
+                preAvatarImageView = avatarView;
+            }
+        }
+
+        UIImageView *lastAvatarImageView = _replyAvatarImageViews.lastObject;
+
+        [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.messageData.direction == MsgDirectionIncoming)  {
+                make.leading.mas_equalTo(lastAvatarImageView.mas_trailing);
+            }
+            else {
+                make.trailing.mas_equalTo(_replyLineView.mas_leading);
+            }
+            
+            make.top.mas_equalTo(avatarY);
+            make.width.mas_equalTo(repliesBtnW);
+            make.height.mas_equalTo(avatarSize);
+        }];
+
+        [_replyLineView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.messageData.direction == MsgDirectionIncoming) {
+                make.leading.mas_equalTo(self.container.mas_leading).mas_offset(- 1);
+            }
+            else {
+                make.trailing.mas_equalTo(self.container.mas_trailing);
+            }
+            make.top.mas_equalTo(CGRectGetMaxY(self.container.frame) - 14);
+            make.width.mas_equalTo(lineViewW);
+            make.bottom.mas_equalTo(self.messageModifyRepliesButton.mas_centerY);
+        }];
+    } else {
+        _replyLineView.frame = CGRectZero;
+        self.messageModifyRepliesButton.frame = CGRectZero;
+    }
+
+    [_msgTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(38);
+        make.height.mas_equalTo(self.messageData.msgStatusSize.height);
+        make.bottom.mas_equalTo(self.container).mas_offset(-kScale390(9));
+        make.trailing.mas_equalTo(self.container).mas_offset(-kScale390(16));
+    }];
+    [_msgStatusView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(16);
+        make.height.mas_equalTo(self.messageData.msgStatusSize.height);
+        make.bottom.mas_equalTo(self.msgTimeLabel);
+        make.trailing.mas_equalTo(_msgTimeLabel.mas_leading);
+    }];
+    
 }
 
 - (void)fillWithData:(TUIMessageCellData *)data {
@@ -154,7 +442,10 @@
         } else {
             lineImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_reply_line_outcome")];
         }
-        _replyLineView.image = [lineImage resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{10,0,20,0}") resizingMode:UIImageResizingModeStretch];
+        lineImage = [lineImage rtl_imageFlippedForRightToLeftLayoutDirection];
+        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{10,0,20,0}");
+        ei = rtlEdgeInsetsWithInsets(ei);
+        _replyLineView.image = [lineImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
 
         // avtar
         NSInteger avatarCount = 0;
@@ -191,6 +482,7 @@
 
     self.indicator.hidden = YES;
     _msgStatusView.hidden = YES;
+    self.readReceiptLabel.hidden = YES;
     if (self.messageData.direction == MsgDirectionOutgoing) {
         self.status = TUIMessageStatus_Unkown;
         if (self.messageData.status == Msg_Status_Sending || self.messageData.status == Msg_Status_Sending_2) {
@@ -200,6 +492,14 @@
         }
         [self updateReadLabelText];
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
 - (void)updateReadLabelText {
@@ -260,75 +560,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    CGSize contentSize = [self.class getContentSize:self.messageData];
-    
-    self.tagView.frame = CGRectZero;
-    if (!self.retryView.hidden) {
-        self.retryView.mm__centerY(contentSize.height / 2);
-    }
-    self.avatarView.mm_y = contentSize.height - self.avatarView.mm_h + 4;
-
-    if (self.messageData.messageModifyReacts.count > 0) {
-        CGFloat emojiSize = 12;
-        CGFloat emojiY = kScale390(4);
-        CGFloat emojiSpace = kScale390(4);
-        CGFloat replyEmojiCountX = 0;
-        for (int i = 0; i < _replyEmojiImageViews.count; ++i) {
-            UIImageView *emojiView = _replyEmojiImageViews[i];
-            emojiView.frame = CGRectMake(kScale390(8) + (emojiSpace + emojiSize) * i, emojiY, emojiSize, emojiSize);
-            emojiView.layer.masksToBounds = true;
-            emojiView.layer.cornerRadius = emojiSize / 2.0;
-            replyEmojiCountX = emojiView.mm_maxX + kScale390(8);
-        }
-        _replyEmojiCount.frame = CGRectMake(replyEmojiCountX, emojiY, emojiSize + 10, emojiSize);
-
-        CGFloat emojiViewW = _replyEmojiCount.mm_x + _replyEmojiCount.mm_w;
-        CGFloat emojiViewX = (self.messageData.direction == MsgDirectionIncoming ? self.container.mm_x + kScale390(16)
-                                                                                     : self.container.mm_x + self.container.mm_w - kScale390(16) - emojiViewW);
-        _replyEmojiView.frame = CGRectMake(emojiViewX, self.container.mm_maxY - 4, emojiViewW, 20);
-    } else {
-        _replyEmojiCount.frame = CGRectZero;
-        _replyEmojiView.frame = CGRectZero;
-    }
-
-    if (self.messageData.showMessageModifyReplies) {
-        CGFloat lineViewW = 17;
-        CGFloat lineViewH = 0;
-        CGFloat lineViewX = (self.messageData.direction == MsgDirectionIncoming ? self.container.mm_x - 1 : self.container.mm_maxX - lineViewW);
-        _replyLineView.mm_left(lineViewX).mm_width(lineViewW).mm_height(lineViewH).mm_top(self.container.mm_maxY - 14);
-
-        CGFloat avatarSize = 16;
-        CGFloat repliesBtnW = kScale390(50);
-        CGFloat avatarStartX = 0;
-        if (self.messageData.direction == MsgDirectionIncoming) {
-            avatarStartX = _replyLineView.mm_maxX;
-        } else {
-            CGFloat avatarTotalW = (_replyAvatarImageViews.count + 1) * avatarSize / 2;
-            avatarStartX = self.container.mm_maxX - repliesBtnW - avatarTotalW - 12;
-        }
-        CGFloat avatarY = self.contentView.mm_h - (self.messageData.sameToNextMsgSender ? avatarSize : avatarSize * 2);
-        CGFloat repliesBtnX = 0;
-        for (int i = 0; i < _replyAvatarImageViews.count; ++i) {
-            UIImageView *avatarView = _replyAvatarImageViews[i];
-            avatarView.frame = CGRectMake(avatarStartX + i * avatarSize / 2.0, avatarY, avatarSize, avatarSize);
-            avatarView.layer.masksToBounds = true;
-            avatarView.layer.cornerRadius = avatarSize / 2.0;
-            repliesBtnX = avatarView.mm_maxX;
-        }
-        self.messageModifyRepliesButton.frame = CGRectMake(repliesBtnX, avatarY, repliesBtnW, avatarSize);
-        _replyLineView.mm_h = self.messageModifyRepliesButton.mm_centerY - _replyLineView.mm_y;
-    } else {
-        _replyLineView.frame = CGRectZero;
-        self.messageModifyRepliesButton.frame = CGRectZero;
-    }
-
-    _msgTimeLabel.mm_width(38).mm_height(self.messageData.msgStatusSize.height).mm_bottom(9).mm_right(kScale390(16));
-    _msgStatusView.mm_width(16).mm_height(self.messageData.msgStatusSize.height).mm_bottom(9).mm_left(_msgTimeLabel.mm_x - 16);
-
-    if (self.messageData.showCheckBox) {
-        self.selectedIcon.mm_centerY = self.container.mm_centerY;
-    }
 }
 
 #pragma mark - TUIMessageCellProtocol

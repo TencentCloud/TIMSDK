@@ -10,7 +10,6 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIThemeManager.h>
-#import "ReactiveObjC.h"
 #import "TUIBlackListController.h"
 #import "TUIContactActionCell.h"
 #import "TUIFindContactViewController.h"
@@ -134,7 +133,11 @@
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
-    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(Screen_Width - 140, orginY, 130, height)];
+    CGFloat orginX = Screen_Width - 140;
+    if(isRTL()){
+        orginX = 10;
+    }
+    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(orginX, orginY, 130, height)];
     CGRect frameInNaviView = [self.navigationController.view convertRect:rightBarButton.frame fromView:rightBarButton.superview];
     popView.arrowPoint = CGPointMake(frameInNaviView.origin.x + frameInNaviView.size.width * 0.5, orginY);
     popView.delegate = self;
@@ -210,9 +213,12 @@
         textLabel.tag = TEXT_TAG;
         textLabel.font = [UIFont systemFontOfSize:16];
         textLabel.textColor = RGB(0x80, 0x80, 0x80);
+        [textLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         [headerView addSubview:textLabel];
-        textLabel.mm_fill().mm_left(12);
-        textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [textLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(headerView.mas_leading).mas_offset(12);
+            make.top.bottom.trailing.mas_equalTo(headerView);
+        }];
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];
     label.text = self.viewModel.groupList[section - 1];

@@ -65,23 +65,6 @@
     // Configure the view for the selected state
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.avatarView.mm_width(kScale390(40)).mm_height(kScale390(40)).mm__centerY(self.contentView.mm_h / 2).mm_left(kScale390(16));
-    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-        self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
-    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-        self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-    }
-
-    self.titleLabel.mm_left(self.avatarView.mm_maxX + kScale390(12)).mm_top(kScale390(8)).mm_height(20).mm_width(120);
-
-    //    self.addSourceLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY+6).mm_height(15).mm_width(120);
-
-    self.addWordingLabel.mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY + 4).mm_height(15).mm_width(120);
-}
 - (void)fillWithData:(TUICommonPendencyCellData_Minimalist *)pendencyData {
     [super fillWithData:pendencyData];
 
@@ -125,11 +108,6 @@
         self.rejectButton.layer.cornerRadius = kScale390(10);
         [self.rejectButton setTitleColor:TIMCommonDynamicColor(@"", @"#FF584C") forState:UIControlStateNormal];
     }
-
-    self.agreeButton.mm_sizeToFit().mm_width(kScale390(69));
-    self.rejectButton.mm_left(CGRectGetMaxX(self.agreeButton.frame) + 10).mm_sizeToFit().mm_width(kScale390(76));
-    self.stackView.bounds = CGRectMake(0, 0, 2 * self.agreeButton.mm_w + 10, self.agreeButton.mm_h);
-
     if (self.pendencyData.isRejected && !self.pendencyData.isAccepted) {
         self.agreeButton.hidden = YES;
         self.rejectButton.hidden = NO;
@@ -142,8 +120,69 @@
     }
 
     self.addSourceLabel.hidden = self.pendencyData.hideSource;
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    CGSize headSize = CGSizeMake(kScale390(40), kScale390(40));
+    
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(headSize);
+        make.leading.mas_equalTo(kScale390(16));
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = headSize.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+    
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView.mas_top).mas_offset(kScale390(8));
+        make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(kScale390(12));
+        make.height.mas_equalTo(20);
+        make.width.mas_equalTo(120);
+    }];
+
+    [self.addWordingLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(4);
+        make.leading.mas_equalTo(self.titleLabel.mas_leading);
+        make.height.mas_equalTo(15);
+        make.width.mas_equalTo(120);
+    }];
+    
+    [self.agreeButton sizeToFit];
+    [self.agreeButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.stackView.mas_leading);
+        make.centerY.mas_equalTo(self.stackView);
+        make.height.mas_equalTo(self.agreeButton.frame.size.height);
+        make.width.mas_equalTo(kScale390(69));
+    }];
+    [self.rejectButton sizeToFit];
+    [self.rejectButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.agreeButton.mas_trailing).mas_offset(10);
+        make.height.mas_equalTo(self.rejectButton.frame.size.height);
+        make.width.mas_equalTo(kScale390(76));
+    }];
+    self.stackView.bounds = CGRectMake(0, 0,  kScale390(69) + kScale390(76) +10, self.agreeButton.mm_h);
+}
 - (void)agreeClick {
     if (self.pendencyData.cbuttonSelector) {
         UIViewController *vc = self.mm_viewController;

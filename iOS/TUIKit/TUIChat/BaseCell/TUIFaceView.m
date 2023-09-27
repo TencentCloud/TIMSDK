@@ -34,7 +34,7 @@
 - (void)setupViews {
     self.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
 
-    _faceFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+    _faceFlowLayout = [[TUICollectionRTLFitFlowLayout alloc] init];
     _faceFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _faceFlowLayout.minimumLineSpacing = TFaceView_Margin;
     _faceFlowLayout.minimumInteritemSpacing = TFaceView_Margin;
@@ -133,6 +133,7 @@
         TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
         data.path = TUIChatFaceImagePath(@"del_normal");
         [cell setData:data];
+        cell.face.image  = [cell.face.image rtl_imageFlippedForRightToLeftLayoutDirection];
     } else {
         NSNumber *index = [_itemIndexs objectForKey:indexPath];
         if (index.integerValue < group.faces.count) {

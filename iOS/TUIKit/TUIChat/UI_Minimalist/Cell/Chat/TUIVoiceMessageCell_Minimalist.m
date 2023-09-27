@@ -11,7 +11,7 @@
 #import <TUICore/TUIThemeManager.h>
 
 @interface TUIVoiceMessageCell_Minimalist ()
-@property(nonatomic, assign) CGRect animationCoverFrame;
+
 @end
 
 @implementation TUIVoiceMessageCell_Minimalist
@@ -33,7 +33,7 @@
 
         _duration = [[UILabel alloc] init];
         _duration.font = [UIFont boldSystemFontOfSize:14];
-        _duration.textAlignment = NSTextAlignmentRight;
+        _duration.rtlAlignment = TUITextRTLAlignmentTrailing;
         [self.bubbleView addSubview:_duration];
 
         _voiceReadPoint = [[UIImageView alloc] init];
@@ -76,6 +76,59 @@
       @strongify(self);
       self.duration.text = [NSString stringWithFormat:@"%d:%.2d", (int)time / 60, (int)time % 60];
     };
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+
+    [self.voicePlay mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(12);
+        make.leading.mas_equalTo(kScale390(16));
+        make.width.mas_equalTo(11);
+        make.height.mas_equalTo(13);
+    }];
+    
+    CGFloat animationStartX = kScale390(35);
+    for (int i = 0; i < self.voiceAnimations.count; ++i) {
+        UIImageView *animation = self.voiceAnimations[i];
+        [animation mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.bubbleView).mas_offset(animationStartX + kScale390(25) * i);
+            make.top.mas_equalTo(self.bubbleView).mas_offset(self.voiceData.voiceTop);
+            make.width.height.mas_equalTo(_voiceData.voiceHeight);
+        }];
+    }
+
+    [self.duration mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_greaterThanOrEqualTo(kScale390(34));
+        make.height.mas_greaterThanOrEqualTo(17);
+        make.top.mas_equalTo(self.voiceData.voiceTop + 2);
+        make.trailing.mas_equalTo(self.container).mas_offset(- kScale390(14));
+    }];
+    
+    if (self.voiceData.direction == MsgDirectionOutgoing) {
+        self.voiceReadPoint.hidden = YES;
+    }
+    else {
+        [self.voiceReadPoint mas_remakeConstraints:^(MASConstraintMaker *make) {
+          make.top.mas_equalTo(self.bubbleView);
+          make.leading.mas_equalTo(self.bubbleView.mas_trailing).mas_offset(1);
+          make.size.mas_equalTo(CGSizeMake(5, 5));
+        }];
+    }
 }
 
 - (void)startAnimating {
@@ -88,25 +141,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    _voicePlay.frame = CGRectMake(kScale390(16), 12, 11, 13);
-
-    CGFloat animationWidth = 0;
-    CGFloat animationStartX = kScale390(35);
-    for (int i = 0; i < self.voiceAnimations.count; ++i) {
-        UIImageView *animation = self.voiceAnimations[i];
-        animation.frame = CGRectMake(animationStartX + kScale390(25) * i, self.voiceData.voiceTop, self.voiceData.voiceHeight, self.voiceData.voiceHeight);
-        animationWidth = animation.mm_maxX - animationStartX;
-    }
-    _animationCoverFrame = CGRectMake(animationStartX, self.voiceData.voiceTop, animationWidth, self.voiceData.voiceHeight);
-
-    _duration.mm_width(kScale390(34)).mm_height(17).mm_top(self.voiceData.voiceTop + 2).mm_flexToRight(kScale390(14));
-
-    if (self.voiceData.direction == MsgDirectionOutgoing) {
-        self.voiceReadPoint.hidden = YES;
-    } else {
-        self.voiceReadPoint.mm_top(0).mm_right(-self.voiceReadPoint.mm_w);
-    }
 }
 
 #pragma mark - TUIMessageCellProtocol

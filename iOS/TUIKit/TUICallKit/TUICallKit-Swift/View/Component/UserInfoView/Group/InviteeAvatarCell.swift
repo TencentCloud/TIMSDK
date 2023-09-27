@@ -11,7 +11,7 @@ class InviteeAvatarCell: UICollectionViewCell {
     
     private var user: User = User()
     private let userIcon = {
-        let imageView = UIImageView(frame: CGRectZero)
+        let imageView = UIImageView(frame: CGRect.zero)
         imageView.contentMode = .scaleAspectFill
         if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
             imageView.image = image

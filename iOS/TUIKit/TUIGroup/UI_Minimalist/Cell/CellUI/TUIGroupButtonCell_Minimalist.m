@@ -47,7 +47,12 @@
     [super fillWithData:data];
     self.buttonData = data;
     [_button setTitle:data.title forState:UIControlStateNormal];
-    _button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    if(isRTL()) {
+        _button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    }
+    else {
+        _button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    }
     _button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     switch (data.style) {
         case ButtonGreen: {
@@ -88,13 +93,43 @@
     }
 
     _line.hidden = data.hideSeparatorLine;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+    
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    [self.button mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(kScale390(20));
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(- kScale390(20));
+        make.top.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView);
+    }];
+    
+    [_line mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(20);
+        make.trailing.mas_equalTo(self.contentView.mas_trailing);
+        make.height.mas_equalTo(0.2);
+        make.bottom.mas_equalTo(self.contentView);
+    }];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    _button.mm_width(Screen_Width - 2 * kScale390(20)).mm_height(self.mm_h - TButtonCell_Margin).mm_left(kScale390(20));
 
-    _line.mm_width(Screen_Width).mm_height(0.2).mm_left(0).mm_bottom(0);
 }
 
 - (void)onClick:(UIButton *)sender {

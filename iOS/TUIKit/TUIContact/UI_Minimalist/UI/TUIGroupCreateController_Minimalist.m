@@ -156,7 +156,7 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 }
 
 - (void)initControl {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    UICollectionViewFlowLayout *flowLayout = [[TUICollectionRTLFitFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     flowLayout.minimumLineSpacing = 20;
     flowLayout.minimumInteritemSpacing = 20;
@@ -361,18 +361,18 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     NSMutableParagraphStyle *paragraphPlaceholderStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphPlaceholderStyle.firstLineHeadIndent = 0;
     paragraphPlaceholderStyle.headIndent = 0;
-    paragraphPlaceholderStyle.alignment = NSTextAlignmentLeft;
+    paragraphPlaceholderStyle.alignment = isRTL()?NSTextAlignmentLeft:NSTextAlignmentRight;
     NSDictionary *attributesPlaceholder =
         @{NSFontAttributeName : [UIFont systemFontOfSize:kScale390(16)], NSParagraphStyleAttributeName : paragraphPlaceholderStyle};
 
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.firstLineHeadIndent = 0;
-    paragraphStyle.alignment = NSTextAlignmentLeft;
+    paragraphStyle.alignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
 
     NSDictionary *attributes = @{NSFontAttributeName : [UIFont boldSystemFontOfSize:kScale390(16)], NSParagraphStyleAttributeName : paragraphStyle};
 
     self.groupNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.groupNameTextField.textAlignment = NSTextAlignmentLeft;
+    self.groupNameTextField.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     self.groupNameTextField.attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.groupNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:TIMCommonLocalizableString(TUIKitCreatGroupNamed_Placeholder)
                                                                                     attributes:attributesPlaceholder];
@@ -382,7 +382,7 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         self.groupNameTextField.attributedText = [[NSAttributedString alloc] initWithString:self.createGroupInfo.groupName attributes:attributes];
     }
     self.groupIDTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.groupIDTextField.textAlignment = NSTextAlignmentLeft;
+    self.groupIDTextField.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     self.groupIDTextField.keyboardType = UIKeyboardTypeDefault;
     self.groupIDTextField.attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.groupIDTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:TIMCommonLocalizableString(TUIKitCreatGroupID_Placeholder)
@@ -403,6 +403,7 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     if (!_describeTextView) {
         _describeTextView = [[UITextView alloc] init];
         _describeTextView.backgroundColor = [UIColor clearColor];
+        _describeTextView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         _describeTextView.editable = NO;
         _describeTextView.scrollEnabled = NO;
         _describeTextView.textContainerInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
@@ -459,7 +460,7 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.minimumLineHeight = 18;
     [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-    [paragraphStyle setAlignment:NSTextAlignmentLeft];
+    [paragraphStyle setAlignment:isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft];
     NSDictionary *dictionary = @{
         NSFontAttributeName : [UIFont systemFontOfSize:12],
         NSForegroundColorAttributeName : [UIColor tui_colorWithHex:@"#888888"],
@@ -516,6 +517,7 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     if (section == 2 || section == 3) {
         [view addSubview:sectionTitleLabel];
         sectionTitleLabel.font = [UIFont boldSystemFontOfSize:kScale390(16)];
+        sectionTitleLabel.rtlAlignment = TUITextRTLAlignmentLeading;
         if (section == 2) {
             sectionTitleLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupAvatar);
         } else if (section == 3) {
@@ -523,7 +525,11 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         }
 
         [sectionTitleLabel sizeToFit];
-        sectionTitleLabel.frame = CGRectMake(kScale390(16), kScale390(12), sectionTitleLabel.frame.size.width, sectionTitleLabel.frame.size.height);
+        [sectionTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(kScale390(16));
+            make.top.mas_equalTo(kScale390(12));
+            make.size.mas_equalTo(sectionTitleLabel.frame.size);
+        }];
     }
     return view;
 }
@@ -552,13 +558,24 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"groupName"];
             [cell.contentView addSubview:self.groupNameTextField];
             cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
-            self.groupNameTextField.mm_width(cell.contentView.mm_w).mm_height(cell.contentView.mm_h).mm_left(kScale390(16));
+            [self.groupNameTextField mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.trailing.mas_equalTo(cell.contentView.mas_trailing);
+                make.leading.mas_equalTo(cell.contentView.mas_leading).mas_offset(10);
+                make.height.mas_equalTo(cell.contentView);
+                make.centerY.mas_equalTo(cell.contentView);
+            }];
             return cell;
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"groupID"];
             cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
             [cell.contentView addSubview:self.groupIDTextField];
-            self.groupIDTextField.mm_width(cell.contentView.mm_w).mm_height(cell.contentView.mm_h).mm_left(kScale390(16));
+            [self.groupIDTextField mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.trailing.mas_equalTo(cell.contentView.mas_trailing);
+                make.leading.mas_equalTo(cell.contentView.mas_leading).mas_offset(10);
+                make.height.mas_equalTo(cell.contentView);
+                make.width.mas_equalTo(cell.contentView);
+                make.centerY.mas_equalTo(cell.contentView);
+            }];
             return cell;
         }
     } else if (indexPath.section == 1) {
@@ -580,8 +597,13 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         return cell;
     } else if (indexPath.section == 2) {
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"GroupChoose"];
-        self.createPortraitView.mm_width(self.view.frame.size.width).mm_height(kScale390(144)).mm_left(kScale390(0));
         [cell.contentView addSubview:self.createPortraitView];
+        [self.createPortraitView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(cell.contentView);
+            make.height.mas_equalTo(kScale390(144));
+            make.width.mas_equalTo(cell.contentView);
+            make.centerY.mas_equalTo(cell.contentView);
+        }];
         @weakify(self);
         self.createPortraitView.onClick = ^(TUISelectAvatarCardItem *data) {
           @strongify(self);
@@ -597,7 +619,12 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UserPanel"];
         self.userPanelHeaderView = [[TUIContactUserPanelHeaderView_Minimalist alloc] init];
         [cell.contentView addSubview:self.userPanelHeaderView];
-        self.userPanelHeaderView.mm_width(self.view.frame.size.width).mm_height(kScale390(57)).mm_left(kScale390(0));
+        [self.userPanelHeaderView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.trailing.mas_equalTo(cell.contentView);
+            make.height.mas_equalTo(kScale390(57));
+            make.width.mas_equalTo(cell.contentView);
+            make.centerY.mas_equalTo(cell.contentView);
+        }];
         self.userPanelHeaderView.selectedUsers = [NSMutableArray arrayWithArray:self.createContactArray];
         @weakify(self);
         self.userPanelHeaderView.clickCallback = ^{

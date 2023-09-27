@@ -203,19 +203,13 @@
                                continue;
                            }
                            [weakSelf.atUserList addObject:model];
-                           if (i == 0) {
-                               [atText appendString:[NSString stringWithFormat:@"%@ ", model.name]];
-                           } else {
-                               [atText appendString:[NSString stringWithFormat:@"@%@ ", model.name]];
-                           }
+                           [atText appendString:[NSString stringWithFormat:@"@%@ ", model.name]];
                        }
 
                        NSAttributedString *spaceString = [[NSAttributedString alloc]
                            initWithString:atText
                                attributes:@{NSFontAttributeName : kTUIInputNoramlFont, NSForegroundColorAttributeName : kTUIInputNormalTextColor}];
-                       NSRange range = weakSelf.inputController.inputBar.inputTextView.selectedRange;
-                       [weakSelf.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString atIndex:range.location + range.length];
-                       [weakSelf.inputController.inputBar updateTextViewFrame];
+                      [weakSelf.inputController.inputBar addWordsToInputBar:spaceString ];
                      }];
     }
 }
@@ -259,11 +253,7 @@
         NSString *nameString = [NSString stringWithFormat:@"@%@ ", user.name];
         UIFont *textFont = kTUIInputNoramlFont;
         NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:nameString attributes:@{NSFontAttributeName : textFont}];
-        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString
-                                                                                atIndex:self.inputController.inputBar.inputTextView.textStorage.length];
-        [self.inputController.inputBar.inputTextView becomeFirstResponder];
-        self.inputController.inputBar.inputTextView.selectedRange =
-            NSMakeRange(spaceString.length + self.inputController.inputBar.inputTextView.textStorage.length, 0);
+       [self.inputController.inputBar addWordsToInputBar:spaceString ];
     }
 }
 

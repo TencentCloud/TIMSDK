@@ -14,6 +14,7 @@
 #import "TUILogin.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallingUserModel.h"
+#import "TUICallingStatusManager.h"
 
 @interface TUICallingGroupView ()
 
@@ -170,6 +171,9 @@
 #pragma mark - Action Event
 
 - (void)startRemoteView:(NSString *)userId view:(UIView *)view {
+    if (self.callType != TUICallMediaTypeVideo) {
+        return;
+    }
     [TUICallingAction startRemoteView:userId videoView:view onPlaying:nil onLoading:nil onError:nil];
 }
 
@@ -180,7 +184,7 @@
 #pragma mark - Private
 
 - (void)handleLocalRenderView {
-    if (self.callType != TUICallMediaTypeVideo) {
+    if ((self.callType != TUICallMediaTypeVideo) || (TUICallStatusNone == [TUICallingStatusManager shareInstance].callStatus)) {
         return;
     }
     

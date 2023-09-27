@@ -15,8 +15,9 @@
 #import "TUICallingUserModel.h"
 
 static CGFloat const kCallingSingleSmallVideoViewWidth = 100.0f;
-#define kTUICallingSingleViewMicroRenderFrame CGRectMake(self.frame.size.width - kCallingSingleSmallVideoViewWidth - 18,\
-StatusBar_Height + 20, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVideoViewWidth / 9.0 * 16.0)
+
+#define kTUICallingSingleViewMicroRenderFrame CGRectMake(isRTL() ? 18 : (self.frame.size.width - kCallingSingleSmallVideoViewWidth - 18),\
+StatusBar_Height + 40, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVideoViewWidth / 9.0 * 16.0)
 
 @interface TUICallingSingleView () <TUICallingVideoRenderViewDelegate>
 
@@ -46,7 +47,6 @@ StatusBar_Height + 20, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVid
 
 - (void)setupCallingSingleView {
     self.localPreView.frame = self.bounds;
-    self.remotePreView.frame = CGRectMake(self.bounds.size.width - 120, 74 + 20, 100, 216);
     [self.localPreView setUserInteractionEnabled:NO];
     self.remotePreView.hidden = YES;
     self.localPreView.hidden = NO;

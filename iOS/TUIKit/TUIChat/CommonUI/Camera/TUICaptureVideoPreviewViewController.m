@@ -54,7 +54,7 @@
 
     self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *cancelButtonBGImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"camera_cancel")];
-    [self.cancelButton setBackgroundImage:cancelButtonBGImage forState:UIControlStateNormal];
+    [self.cancelButton setBackgroundImage:[cancelButtonBGImage rtl_imageFlippedForRightToLeftLayoutDirection] forState:UIControlStateNormal];
     [self.cancelButton addTarget:self action:@selector(cancelButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.cancelButton];
 
@@ -100,9 +100,13 @@
         CGFloat commitButtonY = self.view.bounds.size.height - commitButtonWidth - 50.0;
         CGFloat commitButtonX = 2 * buttonDistance + commitButtonWidth;
         self.commitButton.frame = CGRectMake(commitButtonX, commitButtonY, commitButtonWidth, commitButtonWidth);
-
+        
         CGFloat cancelButtonX = commitButtonWidth;
         self.cancelButton.frame = CGRectMake(cancelButtonX, commitButtonY, commitButtonWidth, commitButtonWidth);
+        if (isRTL()) {
+            [self.commitButton resetFrameToFitRTL];
+            [self.cancelButton resetFrameToFitRTL];
+        }
     }
 }
 

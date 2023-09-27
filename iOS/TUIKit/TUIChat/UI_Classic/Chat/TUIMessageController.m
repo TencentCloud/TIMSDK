@@ -7,7 +7,6 @@
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/UIView+TUILayout.h>
-#import "ReactiveObjC.h"
 #import "TUIBaseMessageController+ProtectedAPI.h"
 #import "TUIChatConfig.h"
 #import "TUIChatModifyMessageHelper.h"
@@ -187,7 +186,7 @@
 }
 
 - (void)loadLocateMessages:(BOOL)firstLoad {
-    if (!self.locateMessage) {
+    if (!self.locateMessage && self.locateGroupMessageSeq == 0) {
         return;
     }
     @weakify(self);
@@ -379,7 +378,6 @@
 }
 
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell {
-    [UIApplication.sharedApplication.keyWindow endEditing:YES];
     NSString *originMsgID = @"";
     NSString *msgAbstract = @"";
     if ([cell isKindOfClass:TUIReplyMessageCell.class]) {

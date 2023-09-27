@@ -13,7 +13,7 @@
 #import "TUIMessageDataProvider.h"
 #import "TUITextMessageCellData.h"
 #import "TUITextMessageCell_Minimalist.h"
-
+#import "TUIChatConfig.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TUISystemMessageCell.h>
 #import <TUICore/TUICore.h>
@@ -112,7 +112,7 @@
 
     [self updateSubContainerView];
 
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIPluginNotify subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey object:self];
 }
 
 - (void)updateSubContainerView {
@@ -125,6 +125,9 @@
 
     self.tableView.frame = CGRectMake(0, self.topGestureView.frame.size.height, self.containerView.frame.size.width,
                                       self.containerView.frame.size.height - self.topGestureView.frame.size.height);
+    if (isRTL()) {
+        [self.cancelButton resetFrameToFitRTL];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -210,7 +213,8 @@
 }
 
 - (void)updateTableViewConstraint {
-    CGFloat height = CGRectGetMaxY(self.inputController.inputBar.frame) + Bottom_SafeHeight;
+    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? CGRectGetMaxY(self.inputController.inputBar.frame):0;
+    CGFloat height = textViewHeight + Bottom_SafeHeight;
     CGRect msgFrame = self.tableView.frame;
     msgFrame.size.height = self.view.frame.size.height - height;
     self.tableView.frame = msgFrame;
@@ -704,8 +708,8 @@
 
 #pragma mark - TUINotificationProtocol
 - (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
-    if ([key isEqualToString:TUICore_TUITranslationNotify] && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
-        TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
+    if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
+        TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
         [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
         [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID section:1];
     }

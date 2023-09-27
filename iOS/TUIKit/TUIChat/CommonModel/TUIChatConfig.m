@@ -21,6 +21,7 @@
         self.enablePopMenuEmojiReactAction = YES;
         self.enablePopMenuReplyAction = YES;
         self.enablePopMenuReferenceAction = YES;
+        self.enableMainPageInputBar = YES;
         self.enableTypingStatus = YES;
         self.enableFloatWindowForCall = YES;
         self.enableMultiDeviceForCall = NO;

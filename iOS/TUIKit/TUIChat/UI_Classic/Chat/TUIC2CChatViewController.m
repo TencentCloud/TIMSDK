@@ -38,7 +38,8 @@
 
 #pragma mark - Override Methods
 - (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
-    return [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
+    NSString *title = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
+    return rtlString(title);
 }
 
 - (void)inputController:(TUIInputController *)inputController didSelectMoreCell:(TUIInputMoreCell *)cell {

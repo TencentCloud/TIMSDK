@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 /// 通话结果
 typedef NS_ENUM(NSUInteger, TUICallRecordCallsType) {

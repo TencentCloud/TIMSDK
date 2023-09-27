@@ -181,11 +181,16 @@ static UIView *gCustomTopView;
     TUINavigationController *naviController = (TUINavigationController *)self.navigationController;
     if ([naviController isKindOfClass:TUINavigationController.class]) {
         naviController.uiNaviDelegate = self;
+        UIImage *backimg = TIMCommonDynamicImage(@"nav_back_img", TIMCommonImagePath(@"nav_back"));
+        backimg = [backimg rtl_imageFlippedForRightToLeftLayoutDirection];
+        naviController.navigationItemBackArrowImage =  backimg;
     }
 
     UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
     [backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [backButton setImage:[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"vc_back")] forState:UIControlStateNormal];
+    UIImage *imgicon = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"vc_back")];
+    imgicon  = [imgicon rtl_imageFlippedForRightToLeftLayoutDirection];
+    [backButton setImage:imgicon forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 
     UIView *infoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScale390(200), 40)];
@@ -202,13 +207,22 @@ static UIView *gCustomTopView;
     UILabel *mainTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(avatarView.mm_x + avatarView.mm_w + kScale390(8), 0, kScale390(200), 20)];
     mainTitleLabel.font = [UIFont boldSystemFontOfSize:14];
     mainTitleLabel.text = [self getMainTitleLabelText];
+    mainTitleLabel.rtlAlignment = TUITextRTLAlignmentLeading;
     [infoView addSubview:mainTitleLabel];
     self.mainTitleLabel = mainTitleLabel;
 
     self.subTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(mainTitleLabel.mm_x, 20, mainTitleLabel.mm_w, 20)];
     self.subTitleLabel.font = [UIFont systemFontOfSize:12];
+    self.subTitleLabel.rtlAlignment = TUITextRTLAlignmentLeading;
     [self updateSubTitleLabelText];
     [infoView addSubview:self.subTitleLabel];
+
+    if (isRTL()) {
+        [avatarView resetFrameToFitRTL];
+        [mainTitleLabel resetFrameToFitRTL];
+        [self.subTitleLabel resetFrameToFitRTL];
+    }
+    
     UIBarButtonItem *infoViewItem = [[UIBarButtonItem alloc] initWithCustomView:infoView];
 
     self.navigationItem.leftBarButtonItems = @[ backButtonItem, infoViewItem ];
@@ -345,8 +359,9 @@ static UIView *gCustomTopView;
     _messageController = vc;
     _messageController.delegate = self;
     [_messageController setConversation:self.conversationData];
+    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
     _messageController.view.frame = CGRectMake(0, [self topMarginByCustomView], self.view.frame.size.width,
-                                               self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight - [self topMarginByCustomView]);
+                                               self.view.frame.size.height - textViewHeight - Bottom_SafeHeight - [self topMarginByCustomView]);
     [self addChildViewController:_messageController];
     [self.view addSubview:_messageController.view];
     [_messageController didMoveToParentViewController:self];
@@ -365,6 +380,8 @@ static UIView *gCustomTopView;
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
+    _inputController.view.hidden = !TUIChatConfig.defaultConfig.enableMainPageInputBar;
+
 }
 - (void)configHeadImageView:(TUIChatConversationModel *)convData {
     /**
@@ -415,8 +432,10 @@ static UIView *gCustomTopView;
     } else if (IS_NOT_EMPTY_NSSTRING(imgUrl)) {
         [self.backgroudView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:nil];
     }
+    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
+
     self.backgroudView.frame =
-        CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
+        CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - textViewHeight - Bottom_SafeHeight);
 
     [self.view insertSubview:self.backgroudView atIndex:0];
 }
@@ -489,7 +508,7 @@ static UIView *gCustomTopView;
                                                                                          textColor:kTUIInputNormalTextColor
                                                                                     emojiLocations:nil];
 
-        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:formatEmojiString atIndex:0];
+        [self.inputController.inputBar addDraftToInputBar:formatEmojiString];
         return;
     }
 
@@ -503,7 +522,7 @@ static UIView *gCustomTopView;
                                                                                             textColor:kTUIInputNormalTextColor
                                                                                        emojiLocations:nil];
 
-    [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:formatEmojiString atIndex:0];
+    [self.inputController.inputBar addDraftToInputBar:formatEmojiString];
 
     NSString *messageRootID = [jsonDict.allKeys containsObject:@"messageRootID"] ? jsonDict[@"messageRootID"] : @"";
 
@@ -576,7 +595,7 @@ static UIView *gCustomTopView;
                                                                 self.conversationData.faceUrl = friendInfoResult.friendInfo.userFullInfo.faceURL;
                                                             } else {
                                                                 [TUIChatDataProvider
-                                                                    getUserInfoWithUserId:friendInfoResult.friendInfo.userID
+                                                                    getUserInfoWithUserId:self.conversationData.userID
                                                                                 SuccBlock:^(V2TIMUserFullInfo *_Nonnull userInfo) {
                                                                                   if (userInfo.nickName.length > 0) {
                                                                                       self.conversationData.title = userInfo.nickName;
@@ -715,6 +734,7 @@ static UIView *gCustomTopView;
 - (void)inputControllerDidSelectMoreButton:(TUIInputController_Minimalist *)inputController {
     NSArray *items = [self.dataProvider getInputMoreActionItemList:self.conversationData.userID
                                                            groupID:self.conversationData.groupID
+                                                 conversationModel:self.conversationData
                                                             pushVC:self.navigationController
                                                   actionController:self];
     if (items.count) {

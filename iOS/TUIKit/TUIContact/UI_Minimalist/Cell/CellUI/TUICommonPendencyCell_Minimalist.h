@@ -14,15 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUICommonPendencyCell_Minimalist : TUICommonTableViewCell
 
-@property UIImageView *avatarView;
-@property UILabel *titleLabel;
-@property UILabel *addSourceLabel;
-@property UILabel *addWordingLabel;
-@property UIButton *agreeButton;
-@property UIButton *rejectButton;
-@property UIStackView *stackView;
-
-@property(nonatomic) TUICommonPendencyCellData_Minimalist *pendencyData;
+@property(nonatomic,strong) UIImageView *avatarView;
+@property(nonatomic,strong) UILabel *titleLabel;
+@property(nonatomic,strong) UILabel *addSourceLabel;
+@property(nonatomic,strong) UILabel *addWordingLabel;
+@property(nonatomic,strong) UIButton *agreeButton;
+@property(nonatomic,strong) UIButton *rejectButton;
+@property(nonatomic,strong) UIStackView *stackView;
+@property(nonatomic,strong) TUICommonPendencyCellData_Minimalist *pendencyData;
 
 - (void)fillWithData:(TUICommonPendencyCellData_Minimalist *)pendencyData;
 

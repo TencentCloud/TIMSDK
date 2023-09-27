@@ -7,9 +7,10 @@
 //
 
 #import <SDWebImage/SDImageCoderHelper.h>
-#import "TUIDefine.h"
-#import "TUIGlobalization.h"
 #import "TUILogin.h"
+#import "TUIGlobalization.h"
+#import "TUIWeakProxy.h"
+#import "TUIDefine.h"
 #import "UIView+TUIToast.h"
 
 @import ImSDK_Plus;
@@ -20,6 +21,9 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
 
 + (void)initialize {
     [self setupIMErrorMap];
+}
++ (void)configIMErrorMap {
+    [self.class setupIMErrorMap];
 }
 + (void)setupIMErrorMap {
     NSMutableDictionary *map = [NSMutableDictionary dictionary];
@@ -549,8 +553,7 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
     if (dateFmt == nil) {
         dateFmt = [[NSDateFormatter alloc] init];
     }
-    NSString *identifer = [TUIGlobalization tk_localizableLanguageKey];
-    dateFmt.locale = [NSLocale localeWithLocaleIdentifier:identifer];
+    dateFmt.locale = nil;
 
     NSCalendar *calendar = [NSCalendar currentCalendar];
     calendar.firstWeekday = 7;
@@ -571,6 +574,8 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
                 } else {
                     // Not same day
                     dateFmt.dateFormat = @"EEEE";
+                    NSString *identifer = [TUIGlobalization getPreferredLanguage];
+                    dateFmt.locale = [NSLocale localeWithLocaleIdentifier:identifer];
                 }
             } else {
                 // Not same weeek
@@ -726,7 +731,7 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
     if (!enable) {
         return;
     }
-
+    TUIWeakProxy *weakVC = [TUIWeakProxy proxyWithTarget:vc];
     [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedUnsupportInterfaceError
                                                       object:nil
                                                        queue:nil
@@ -734,7 +739,9 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
                                                     NSDictionary *userInfo = note.userInfo;
                                                     NSString *service = [userInfo objectForKey:@"service"];
                                                     NSString *serviceDesc = [userInfo objectForKey:@"serviceDesc"];
-                                                    [TUITool showUnsupportAlertOfService:service serviceDesc:serviceDesc onVC:vc];
+                                                    if (weakVC.target) {
+                                                        [TUITool showUnsupportAlertOfService:service serviceDesc:serviceDesc onVC:weakVC.target];
+                                                    }
                                                   }];
 }
 

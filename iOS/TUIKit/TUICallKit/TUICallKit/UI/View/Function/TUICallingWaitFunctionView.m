@@ -8,6 +8,7 @@
 
 #import "TUICallingWaitFunctionView.h"
 #import "Masonry.h"
+#import <TUICore/TUIGlobalization.h>
 
 @interface TUICallingWaitFunctionView ()
 
@@ -31,13 +32,13 @@
 
 - (void)makeConstraints {
     [self.rejectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self).offset(-80);
+        make.centerX.equalTo(self).offset(isRTL() ? 80 : -80);
         make.bottom.equalTo(self);
         make.width.equalTo(@(100));
         make.height.equalTo(@(94));
     }];
     [self.acceptBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self).offset(80);
+        make.centerX.equalTo(self).offset(isRTL() ? -80 : 80);
         make.bottom.equalTo(self);
         make.width.equalTo(@(100));
         make.height.equalTo(@(94));

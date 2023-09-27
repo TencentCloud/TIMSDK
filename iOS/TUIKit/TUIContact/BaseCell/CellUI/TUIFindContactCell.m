@@ -38,34 +38,62 @@
     [self.avatarView sd_setImageWithURL:data.avatarUrl placeholderImage:data.avatar ?: placeHolder];
 
     self.descLabel.hidden = (data.type == TUIFindContactTypeC2C);
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
-    self.avatarView.mm_left(16 * kScale).mm_top(12 * kScale).mm_width(48 * kScale).mm_height(48 * kScale);
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    CGFloat imgWidth = kScale390(48);
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(imgWidth);
+        make.top.mas_equalTo(kScale390(10));
+        make.leading.mas_equalTo(kScale390(16));
+    }];
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
+        self.avatarView.layer.cornerRadius = imgWidth / 2;
     } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
         self.avatarView.layer.masksToBounds = YES;
         self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
-
-    self.mainTitleLabel.mm_sizeToFit();
-    self.mainTitleLabel.mm_x = CGRectGetMaxX(self.avatarView.frame) + 12 * kScale;
-    self.mainTitleLabel.mm_y = self.avatarView.mm_y;
-    self.mainTitleLabel.mm_flexToRight(12 * kScale);
-
-    self.subTitleLabel.mm_sizeToFit();
-    self.subTitleLabel.mm_x = self.mainTitleLabel.mm_x;
-    self.subTitleLabel.mm_y = CGRectGetMaxY(self.mainTitleLabel.frame) + 2 * kScale;
-    self.subTitleLabel.mm_flexToRight(12 * kScale);
-
-    self.descLabel.mm_sizeToFit();
-    self.descLabel.mm_x = self.mainTitleLabel.mm_x;
-    self.descLabel.mm_y = CGRectGetMaxY(self.subTitleLabel.frame) + 2 * kScale;
-    self.descLabel.mm_flexToRight(12 * kScale);
+    [self.mainTitleLabel sizeToFit];
+    [self.mainTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.avatarView.mas_top);
+        make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(12);
+        make.height.mas_equalTo(20);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- kScale390(12));
+    }];
+    [self.subTitleLabel sizeToFit];
+    [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).mas_offset(2);
+        make.leading.mas_equalTo(self.mainTitleLabel.mas_leading);
+        make.height.mas_equalTo(self.subTitleLabel.frame.size.height);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- kScale390(12));
+    }];
+    [self.descLabel sizeToFit];
+    [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.subTitleLabel.mas_bottom).mas_offset(2);
+        make.leading.mas_equalTo(self.mainTitleLabel.mas_leading);
+        make.height.mas_equalTo(self.subTitleLabel.frame.size.height);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- kScale390(12));
+    }];
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 - (UIImageView *)avatarView {

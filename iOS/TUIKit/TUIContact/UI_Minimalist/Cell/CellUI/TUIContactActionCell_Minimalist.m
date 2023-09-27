@@ -44,23 +44,58 @@
 - (void)fillWithData:(TUIContactActionCellData_Minimalist *)actionData {
     [super fillWithData:actionData];
     self.actionData = actionData;
-
     self.titleLabel.text = actionData.title;
-
-    [self.titleLabel sizeToFit];
-    self.titleLabel.frame = CGRectMake(kScale390(16), (self.contentView.frame.size.height - self.titleLabel.frame.size.height) * 0.5,
-                                       self.titleLabel.frame.size.width, self.titleLabel.frame.size.height);
-
-    self.line.hidden = actionData.needBottomLine ? NO : YES;
-    self.line.frame = CGRectMake(0, self.contentView.frame.size.height - 1, self.contentView.frame.size.width, 1);
-
     @weakify(self);
     [[RACObserve(self.actionData, readNum) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSNumber *x) {
       @strongify(self);
       [self.unRead setNum:[x integerValue]];
     }];
+    self.line.hidden = self.actionData.needBottomLine ? NO : YES;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
 
-    self.unRead.mm__centerY(self.titleLabel.mm_centerY).mm_right(self.accessoryView.mm_w);
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
+}
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
 }
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    [self.titleLabel sizeToFit];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(kScale390(16));
+        make.width.mas_equalTo(self.titleLabel.frame.size.width);
+        make.height.mas_equalTo(self.titleLabel.frame.size.height);
+    }];
+    
+    [self.unRead.unReadLabel sizeToFit];
+    [self.unRead mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-5);
+        make.width.mas_equalTo(kScale375(20));
+        make.height.mas_equalTo(kScale375(20));
+    }];
+    [self.unRead.unReadLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.unRead);
+        make.size.mas_equalTo(self.unRead.unReadLabel);
+    }];
+    self.unRead.layer.cornerRadius = kScale375(10);
+    [self.unRead.layer masksToBounds];
+    
+    [self.line mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.contentView.mas_bottom).mas_offset(-1);
+        make.width.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(1);
+        make.leading.mas_equalTo(self.contentView.mas_leading);
+    }];    
+}
 @end

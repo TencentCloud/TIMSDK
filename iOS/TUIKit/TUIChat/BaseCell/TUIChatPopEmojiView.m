@@ -70,6 +70,7 @@
         TUIFaceCellData *data = [[TUIFaceCellData alloc] init];
         data.path = TUIChatFaceImagePath(@"del_normal");
         [cell setData:data];
+        cell.face.image  = [cell.face.image rtl_imageFlippedForRightToLeftLayoutDirection];
     } else {
         NSNumber *index = [self.itemIndexs objectForKey:indexPath];
         if (index.integerValue < group.faces.count) {

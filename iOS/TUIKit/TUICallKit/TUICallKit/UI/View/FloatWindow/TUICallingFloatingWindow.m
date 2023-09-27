@@ -60,11 +60,11 @@ static CGFloat const kMicroContainerViewOffset = 8;
     }];
     [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self);
-        make.top.left.mas_equalTo(self).offset(kMicroContainerViewOffset);
+        make.top.leading.mas_equalTo(self).offset(kMicroContainerViewOffset);
     }];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self);
-        make.top.left.mas_equalTo(self).offset(kMicroContainerViewOffset);
+        make.top.leading.mas_equalTo(self).offset(kMicroContainerViewOffset);
     }];
     [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView).offset(5);

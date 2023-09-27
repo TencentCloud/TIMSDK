@@ -53,13 +53,13 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
     __block NSString *failDesc = nil;
 
     /**
-     * 以定位消息为起点，加载最旧的10条消息
-     * Load the oldest 10 messages starting from locating message
+     * 以定位消息为起点，加载最旧的pageCount条消息
+     * Load the oldest pageCount messages starting from locating message
      */
     {
         dispatch_group_enter(group);
         V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
-        option.getType = V2TIM_GET_LOCAL_OLDER_MSG;
+        option.getType = V2TIM_GET_CLOUD_OLDER_MSG;
         option.count = self.pageCount;
         option.groupID = conversation.groupID;
         option.userID = conversation.userID;
@@ -85,13 +85,13 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
             }];
     }
     /**
-     * 以定位消息为起点，加载最新的10条消息
-     * Load the latest 10 messages starting from the locating message
+     * 以定位消息为起点，加载最新的pageCount条消息
+     * Load the latest pageCount messages starting from the locating message
      */
     {
         dispatch_group_enter(group);
         V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
-        option.getType = V2TIM_GET_LOCAL_NEWER_MSG;
+        option.getType = V2TIM_GET_CLOUD_NEWER_MSG;
         option.count = self.pageCount;
         option.groupID = conversation.groupID;
         option.userID = conversation.userID;

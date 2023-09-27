@@ -191,8 +191,21 @@
     [self setupContainerPosition];
 
     [self updateLayout];
+    
+    if (isRTL()) {
+        [self fitRTLViews];
+    }
+    
 }
-
+- (void)fitRTLViews {    
+    if (self.actionsView) {
+        for (UIView *subview in self.actionsView.subviews) {
+            if ([subview respondsToSelector:@selector(resetFrameToFitRTL)]) {
+                [subview resetFrameToFitRTL];
+            }
+        }
+    }
+}
 - (void)updateActionByRank {
     NSArray *ageSortResultArray = [self.actions sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
       TUIChatPopMenuAction *per1 = obj1;
@@ -426,8 +439,11 @@
 
 - (UIButton *)buttonWithAction:(TUIChatPopMenuAction *)action tag:(NSInteger)tag {
     UIButton *actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [actionButton setTitleColor:TUIChatDynamicColor(@"chat_pop_menu_text_color", @"#444444") forState:UIControlStateNormal];
+    [actionButton setTitleColor:TUIChatDynamicColor(@"chat_pop_menu_text_color", @"#444444")
+                       forState:UIControlStateNormal];
     actionButton.titleLabel.font = [UIFont systemFontOfSize:10.0];
+    actionButton.titleLabel.numberOfLines = 2;
+    actionButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [actionButton setTitle:action.title forState:UIControlStateNormal];
     [actionButton setImage:action.image forState:UIControlStateNormal];
     actionButton.contentMode = UIViewContentModeScaleAspectFit;
@@ -446,6 +462,7 @@
     if (titleSize.width + 0.5 < frameSize.width) {
         titleSize.width = frameSize.width;
     }
+    titleSize.width = MIN(titleSize.width, 48);
     CGFloat totalHeight = (imageSize.height + titleSize.height + 8);
     actionButton.imageEdgeInsets = UIEdgeInsetsMake(-(totalHeight - imageSize.height), 0.0, 0.0, -titleSize.width);
     actionButton.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, -(totalHeight - titleSize.height), 0);

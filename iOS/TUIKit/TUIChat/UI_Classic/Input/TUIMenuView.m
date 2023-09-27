@@ -45,7 +45,7 @@
     [_sendButton addTarget:self action:@selector(sendUpInside:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_sendButton];
 
-    _menuFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+    _menuFlowLayout = [[TUICollectionRTLFitFlowLayout alloc] init];
     _menuFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _menuFlowLayout.minimumLineSpacing = 0;
     _menuFlowLayout.minimumInteritemSpacing = 0;
@@ -67,8 +67,18 @@
 
 - (void)defaultLayout {
     CGFloat buttonWidth = self.frame.size.height * 1.3;
-    _sendButton.frame = CGRectMake(self.frame.size.width - buttonWidth, 0, buttonWidth, self.frame.size.height);
-    _menuCollectionView.frame = CGRectMake(0, 0, self.frame.size.width - 2 * buttonWidth, self.frame.size.height);
+    [_sendButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.mas_trailing);
+        make.width.mas_equalTo(buttonWidth);
+        make.height.mas_equalTo(self);
+        make.centerY.mas_equalTo(self);
+    }];
+    [_menuCollectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(0);
+        make.trailing.mas_equalTo(_sendButton.mas_leading).mas_offset(- 30);
+        make.height.mas_equalTo(self);
+        make.centerY.mas_equalTo(self);
+    }];
 }
 
 - (void)sendUpInside:(UIButton *)sender {

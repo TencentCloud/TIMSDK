@@ -36,6 +36,7 @@
         _progress.backgroundColor = TImageMessageCell_Progress_Color;
         [_progress.layer setMasksToBounds:YES];
         [self.container addSubview:_progress];
+        [self makeConstraints];
     }
     return self;
 }
@@ -64,31 +65,92 @@
       self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
       self.progress.hidden = (progress >= 100 || progress == 0);
     }];
+     
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+- (void)makeConstraints {
+    [self.thumb mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.container);
+        make.width.mas_equalTo(self.container);
+        make.top.mas_equalTo(self.container);
+        make.leading.mas_equalTo(self.container);
+    }];
+    
+    [self.progress mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.container);
+    }];
+}
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+
+    [super updateConstraints];
+
+    CGFloat topMargin = 0;
+    CGFloat height = self.container.mm_h;
+    if (self.messageData.messageModifyReactsSize.height > 0) {
+        if (self.tagView) {
+            topMargin = 10;
+            CGFloat tagViewTopMargin = 6;
+            height = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
+        }
+        self.bubbleView.hidden = NO;
+    } else {
+        self.bubbleView.hidden = YES;
+    }
+    
+    [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+        make.width.mas_equalTo(self.container.mas_width);
+        make.top.mas_equalTo(self.container).mas_offset(topMargin);
+        make.leading.mas_equalTo(self.container);
+    }];
+    
+    [self.progress mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.container);
+    }];
+    [self.selectedView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.contentView);
+    }];
+    [self.selectedIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(3);
+        make.top.mas_equalTo(self.avatarView.mas_centerY).mas_offset(-10);
+        if (self.messageData.showCheckBox) {
+            make.width.mas_equalTo(20);
+            make.height.mas_equalTo(20);
+        } else {
+            make.size.mas_equalTo(CGSizeZero);
+        }
+    }];
+
+    [self.timeLabel sizeToFit];
+    [self.timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+        make.top.mas_equalTo(self.avatarView);
+        if (self.messageData.showMessageTime) {
+            make.width.mas_equalTo(self.timeLabel.frame.size.width);
+            make.height.mas_equalTo(self.timeLabel.frame.size.height);
+        } else {
+            make.width.mas_equalTo(0);
+            make.height.mas_equalTo(0);
+        }
+    }];
+
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (self.messageData.messageModifyReactsSize.height > 0) {
-        if (self.tagView) {
-            CGFloat topMargin = 10;
-            CGFloat tagViewTopMargin = 6;
-            CGFloat thumbHeight = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
-            _thumb.mm_height(thumbHeight).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-            self.tagView.frame = CGRectMake(0, self.container.mm_h - self.messageData.messageModifyReactsSize.height - tagViewTopMargin,
-                                            self.container.frame.size.width, self.messageData.messageModifyReactsSize.height);
-        }
-        self.bubbleView.hidden = NO;
-    } else {
-        CGFloat topMargin = 0;
-        CGFloat height = self.container.mm_h;
-        _thumb.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-        self.bubbleView.hidden = YES;
-    }
-
-    _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-    _progress.mm_fill();
-    _progress.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 - (void)highlightWhenMatchKeyword:(NSString *)keyword {
     if (keyword) {

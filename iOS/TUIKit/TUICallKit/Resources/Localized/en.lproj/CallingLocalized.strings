@@ -3,7 +3,6 @@
  TRTCCalling
  
  Created by adams on 2021/5/13.
- 
  */
 
 "LoginNetwork.ProfileManager.sendfailed" = "Send failed. Please try again later.";
@@ -58,6 +57,7 @@
 
 "Demo.TRTC.Calling.User.Exceed.Limit" = "TUICalling currently supports call with up to 9 people.For larger conference calls,try using TUIRoom";
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "Unable to restart the call";
+"Demo.TRTC.Calling.ErrorInPeerBlacklist" = "The identifier is in blacklist. Failed to send this message!";
 
 "TUICallKit.failedtogetcamerapermission.Title" = "No access to camera";
 "TUICallKit.failedtogetcamerapermission.Tips"  = "Unable to use the video call function, click \"Authorize Now\" to open the camera permission.";
@@ -82,3 +82,5 @@
 "TUICallKit.Recents.addUser"= "Add User";
 "TUICallKit.Recents.clear.all" = "Clear All Call History";
 "TUICallKit.Recents.clear.cancel" = "Cancel";
+"TUICallKit.Recents.incoming" = "Incoming";
+"TUICallKit.Recents.outgoing" = "Outgoing";

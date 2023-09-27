@@ -39,6 +39,7 @@
     _searchBar.backgroundImage = [UIImage new];
     _searchBar.barTintColor = UIColor.redColor;
     _searchBar.showsCancelButton = NO;
+    _searchBar.searchTextField.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     _searchBar.delegate = self;
     _searchBar.showsCancelButton = !self.isEntrance;
     if (@available(iOS 13.0, *)) {
@@ -124,6 +125,7 @@
       }
       cancelBtn.enabled = YES;
       cancelBtn.userInteractionEnabled = YES;
+      [cancelBtn setTitleColor:[UIColor systemBlueColor] forState:UIControlStateNormal];
 
       [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[ [UISearchBar class] ]].title = TIMCommonLocalizableString(TUIKitSearchItemCancel);
       ;

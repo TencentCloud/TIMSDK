@@ -13,6 +13,7 @@
 #import "TUIChatDataProvider.h"
 #import "TUIMessageDataProvider.h"
 #import "TUIVideoMessageCellData.h"
+#import "TUIChatConversationModel.h"
 
 #define Input_SendBtn_Key @"Input_SendBtn_Key"
 #define Input_SendBtn_Title @"Input_SendBtn_Title"
@@ -219,8 +220,11 @@
     if (display.length == 0) {
         display = [TUIMessageDataProvider getDisplayString:msg];
     }
+    NSString * splitStr = @":";
+    splitStr = @"\u202C:";
     if (desc.length > 0 && display.length > 0) {
-        desc = [desc stringByAppendingFormat:@":%@", display];
+        desc = [desc stringByAppendingFormat:@"%@", splitStr];
+        desc = [desc stringByAppendingFormat:@"%@", display];
     }
     return desc;
 }
@@ -229,9 +233,12 @@
 
 - (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
                                                            userID:(NSString *)userID
+                                         conversationModel:(TUIChatConversationModel *)conversationModel
                                                  actionController:(id<TIMInputViewMoreActionProtocol>)actionController {
-    BOOL isNeedVideoCall = [TUIChatConfig defaultConfig].enableVideoCall;
-    BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall;
+    
+    BOOL isNeedVideoCall = [TUIChatConfig defaultConfig].enableVideoCall && conversationModel.enabelVideo;
+    BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall && conversationModel.enabelAudio;
+    BOOL isNeedRoom = conversationModel.enabelRoom;
     BOOL isNeedGroupLive = NO;
     BOOL isNeedLink = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage;
     
@@ -248,6 +255,7 @@
     }
     extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall] = @(!isNeedVideoCall);
     extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall] = @(!isNeedAudioCall);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom]  = @(!isNeedRoom);
     extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_ActionVC] = actionController;
     NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID param:extensionParam];
     for (TUIExtensionInfo *info in extensionList) {
@@ -271,6 +279,7 @@
 
 - (NSArray<TUICustomActionSheetItem *> *)getInputMoreActionItemList:(NSString *)userID
                                                             groupID:(NSString *)groupID
+                                                  conversationModel:(TUIChatConversationModel *)conversationModel
                                                              pushVC:(UINavigationController *)pushVC
                                                    actionController:(id<TIMInputViewMoreActionProtocol>)actionController {
     NSMutableArray *result = [NSMutableArray array];

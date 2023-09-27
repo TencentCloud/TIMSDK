@@ -10,8 +10,6 @@
 #import <TIMCommon/TIMCommonModel.h>
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
-#import "TUIAddCell.h"
-#import "TUIAddCellData.h"
 #import "TUIGroupManageDataProvider_Minimalist.h"
 #import "TUIMemberInfoCellData_Minimalist.h"
 #import "TUIMemberInfoCell_Minimalist.h"
@@ -144,9 +142,6 @@
     } else if ([data isKindOfClass:TUICommonSwitchCellData.class]) {
         cell = [[TUICommonSwitchCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUICommonSwitchCell.class)];
         [(TUICommonSwitchCell *)cell fillWithData:(TUICommonSwitchCellData *)data];
-    } else if ([data isKindOfClass:TUIAddCellData.class]) {
-        cell = [[TUIAddCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(TUIAddCell.class)];
-        [(TUIAddCell *)cell setData:(TUIAddCellData *)data];
     } else if ([data isKindOfClass:TUIMemberInfoCellData_Minimalist.class]) {
         cell = [[TUIMemberInfoCell_Minimalist alloc] initWithStyle:UITableViewCellStyleValue1
                                                    reuseIdentifier:NSStringFromClass(TUIMemberInfoCell_Minimalist.class)];

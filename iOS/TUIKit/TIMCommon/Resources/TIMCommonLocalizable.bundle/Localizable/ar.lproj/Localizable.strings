@@ -1,0 +1,728 @@
+/* 
+  Localizable.strings
+  Chinese Simplized
+
+  Created by harvy on 2020/10/9.
+  
+*/
+
+/***************************** 日期格式化 Start *************************/
+"YesterdayDateFormat" = "aHH:mm";
+/***************************** 日期格式化 End *************************/
+
+"TUIKitTipsMostSelectTextFormat" = "يمكن اختيار حد أقصى %ld";
+
+"Confirm" = "تأكيد";
+"Cancel" = "إلغاء";
+"Send" = "إرسال";
+"Save" = "حفظ";
+"You" = "أنت";
+"you" = "أنت";
+"Male" = "ذكر";
+"Female" = "أنثى";
+"File" = "ملف";
+"Download" = "تحميل";
+"Unsetted" = "غير محدد";
+"Show" = "عرض";
+
+"Monday" = "الاثنين";
+"Tuesday" = "الثلاثاء";
+"Wednesday" = "الأربعاء";
+"Thursday" = "الخميس";
+"Friday" = "الجمعة";
+"Saturday" = "السبت";
+"Sunday" = "الأحد";
+"Yesterday" = "أمس";
+"am" = "صباحًا";
+"pm" = "مساءً";
+
+"Read" = "تمت القراءة";
+"Unread" = "غير مقروء";
+
+"Copy" = "نسخ";
+"Delete" = "حذف";
+"Revoke" = "إلغاء";
+"Retry" = "إعادة المحاولة";
+"Re_send" = "إعادة الإرسال";
+"Make_a_call" = "إجراء مكالمة";
+"Done" = "تم";
+"All" = "الكل";
+"Agreed" = "تم الموافقة";
+"Disclined" = "تم الرفض";
+"Agree" = "موافقة";
+"Have_been_sent" = "تم الإرسال";
+
+"OK" = "موافق";
+"None" = "لا شيء";
+"Send" = "إرسال";
+"Cancel" = "إلغاء";
+"Alia" = "ملاحظة";
+"Group" = "مجموعة";
+"Accept" = "قبول";
+"Decline" = "رفض";
+"send_success" = "تم الإرسال بنجاح";
+"add_success" = "تمت الإضافة بنجاح";
+"delete_success" = "تم الحذف بنجاح";
+"my_friend" = "أصدقائي";
+"no_personal_signature" = "لا توجد توقيع شخصي";
+"SignatureFormat" = "التوقيع الشخصي: %@";
+"choose_avatar_for_you" = "تم تعيين صورة رمزية لك تلقائيًا من التطبيق";
+"SearchGroupPlaceholder" = "معرف المستخدم";
+"please_fill_in_verification_information" = "يرجى ملء معلومات التحقق";
+"please_fill_in_remarks_group_info" = "يرجى ملء معلومات الملاحظات والمجموعة";
+
+"no_set" = "غير محدد";
+"no_personal_signature" = "لا توجد توقيع شخصي";
+"logout" = "تسجيل الخروج";
+"login" = "تسجيل الدخول";
+"ReadAll" = "قراءة الكل";
+"Hide"    = "إخفاء";
+"Delete"    = "حذف";
+
+"ContactsJoinGroup"  = "إضافة محادثة جماعية";
+"ContactsAddFriends" = "إضافة صديق";
+
+"ChatsNewChatText"    = "بدء محادثة";
+"ChatsNewGroupText"  = "إنشاء محادثة جماعية";
+"ChatsSelectContact" = "اختيار جهة الاتصال";
+
+"GroupJoin" = "إضافة مجموعة";
+"GroupRequestJoinGroupFormat" = "%@ يطلب الانضمام إلى المحادثة الجماعية";
+"GroupDeleteFriend" = "حذف جهة الاتصال";
+"GroupAddFirend" = "إضافة جهة الاتصال";
+"GroupMember" = "أعضاء المجموعة";
+
+"ProfileAlia" = "اسم الملاحظة";
+"ProfileMessageDoNotDisturb" = "عدم الإزعاج";
+"ProfileStickyonTop" = "تثبيت المحادثة في الأعلى";
+"ProfileBlocked" = "إضافة إلى القائمة السوداء";
+"ProfileSendMessages" = "إرسال رسالة";
+"ProfileDeleteFirend" = "حذف الصديق";
+"ProfileEditAlia" = "تعديل الملاحظة";
+"ProfileDetails" = "تفاصيل الملف الشخصي";
+"ProfileSetBackgroundImage" = "تعيين صورة خلفية للمحادثة الحالية";
+"ProfilePhoto" = "الصورة الرمزية";
+"ProfileName"  = "الاسم";
+"ProfileAccount" = "الحساب";
+"ProfileSignature" = "التوقيع الشخصي";
+"ProfileGender" = "الجنس";
+"ProfileEditName" = "تعديل الاسم";
+"ProfileEditNameDesc" = "يسمح فقط بالأحرف الصينية والحروف والأرقام والشرطة السفلية";
+"ProfileEditSignture" = "تعديل التوقيع الشخصي";
+"ProfileEditGender" = "تعديل الجنس";
+"ProfileEditAlia" = "تعديل الملاحظة";
+"ProfileEdit" = "تعديل";
+"ProfileAlia" = "اسم الملاحظة";
+"ProfileBlocked" = "إضافة إلى القائمة السوداء";
+"ProfileMessageDoNotDisturb" = "عدم الإزعاج";
+"ProfileStickyonTop" = "تثبيت المحادثة في الأعلى";
+"ProfileSendMessages" = "إرسال رسالة";
+"ProfileDeleteFirend" = "حذف الصديق";
+"ProfileBirthday" = "تاريخ الميلاد";
+"SignatureFormat" = "التوقيع الشخصي: %@";
+
+"FriendRequestFormat" = "أنا %@";
+"FriendRequestFillInfo" = "إضافة صديق";
+"FriendOneWay" = "صديق في اتجاه واحد";
+"FriendAddTitle" = "إضافة صديق";
+"FriendAddVerificationMessage" = "رسالة التحقق";
+"FriendAddResultSuccessWait" = "تم الإرسال بنجاح، في انتظار الموافقة";
+"FriendAddResultForbid" = "الطرف الآخر ممنوع إضافته";
+"FriendAddResultSuccess" = "تمت الإضافة إلى قائمة الأصدقاء";
+"FriendAddResultExists" = "الطرف الآخر هو بالفعل صديق لك";
+"MeFriendRequest" = "عندما يرغب شخص ما في إضافتي كصديق";
+"MeFriendRequestMethodAgreeAll" = "الموافقة على أي شخص يرغب في إضافتي كصديق";
+"MeFriendRequestMethodNeedConfirm" = "يحتاج التحقق";
+"MeFriendRequestMethodDenyAll" = "رفض أي شخص يرغب في إضافتي كصديق";
+"MeMessageReadStatus" = "حالة قراءة الرسائل";
+"MeMessageReadStatusOpenDesc" = "عند الإغلاق، لن تظهر حالة قراءة الرسائل في الرسائل التي تستلمها أو ترسلها، ولن تتمكن من معرفة ما إذا قرأ الطرف الآخر الرسالة أم لا، وبالمثل، الطرف الآخر لن يتمكن من معرفة ما إذا قرأت الرسالة أم لا.";
+"MeMessageReadStatusCloseDesc" = "عند الفتح، ستظهر حالة قراءة الرسائل في الرسائل التي تستلمها أو ترسلها في المحادثات الجماعية، ويمكنك رؤية ما إذا قرأ الطرف الآخر الرسالة أم لا. إذا قام أصدقاؤك في المحادثات الفردية بتفعيل حالة قراءة الرسائل، ستظهر حالة قراءة الرسائل في المحادثات الفردية التي تتبادلها معهم.";
+
+"ShowOnlineStatus" = "عرض حالة الاتصال";
+"ShowOnlineStatusOpenDesc" = "عند الإغلاق، لن ترى حالة الاتصال (متصل/غير متصل) لأصدقائك في قائمة المحادثات وقائمة الأصدقاء.";
+"ShowOnlineStatusCloseDesc" = "عند الفتح، سترى حالة الاتصال (متصل/غير متصل) لأصدقائك في قائمة المحادثات وقائمة الأصدقاء.";
+"ShowPackageToast" = "هذه الميزة متاحة في الإصدار الفاخر";
+
+"ShowCallsRecord" = "عرض سجل المكالمات";
+
+"TUIKitClassic" = "التصميم الكلاسيكي";
+"TUIKitMinimalist" = "التصميم البسيط";
+"TUIKitThemeNameSystemFollowTitle" = "متابعة نظام الجهاز";
+"TUIKitThemeNameSystemFollowSubTitle" = "عند الفتح، سيتم عرض التصميم الافتراضي (الخفيف/الداكن) فقط، ولا يمكن تغيير تصميم التطبيق إلى أي تصميم آخر.";
+"TUIKitThemeNameSerious" = "جدي";
+"TUIKitThemeNameLight" = "خفيف";
+"TUIKitThemeNameLivey" = "حيوي";
+"TUIKitThemeNameDark" = "داكن";
+"TUIKitThemeNameSystem" = "متابعة نظام الجهاز";
+
+"TUIKitDone" = "تم";
+"TUIKitWelcome" = "مرحبًا بك في عائلة Tencent Cloud IM!";
+"TUIKitMicCamerAuthTips" = "يرجى تمكين إذن الوصول إلى الميكروفون والكاميرا";
+"TUIKitMicAuth" = "يرجى تمكين إذن الوصول إلى الميكروفون";
+"TUIKitTipsConfirmResendMessage" = "هل ترغب في إعادة إرسال هذه الرسالة؟";
+"TUIKitTipsSystemError" = "خطأ في النظام";
+"TUIKitTipsEnterRoomErrorFormat" = "فشل الانضمام إلى الغرفة: %d";
+"TUIKitWhoRequestForJoinGroupFormat" = "%@ يطلب الانضمام إلى المجموعة";
+"TUIKitInviteJoinGroupFormat" = "دعوة %@ للانضمام إلى المجموعة";
+"TUIKitAgreedByAdministor" = "تمت الموافقة من قبل المسؤول";
+"TUIkitDiscliedByAdministor" = "تم الرفض من قبل المسؤول";
+"TUIKitDownloadProgressFormat" = "جارٍ تنزيل %d٪";
+"TUIKitOpenWithOtherApp" = "فتح باستخدام تطبيق آخر";
+"TUIKitTipsContactListNil" = "قائمة جهات الاتصال فارغة، يرجى إضافة أصدقاء أولاً";
+
+"TUIKitUserStatusUnknown" = "غير معروف";
+"TUIKitUserStatusOnline" = "متصل";
+"TUIKitUserStatusOffline" = "غير متصل";
+"TUIKitUserStatusUnlogined" = "غير مسجل الدخول";
+
+"TUIKitInputHoldToTalk" = "استمر في الضغط للتحدث";
+"TUIKitInputReleaseToSend" = "رفع الإصبع لإرسال";
+"TUIKitInputReleaseToCancel" = "رفع الإصبع للإلغاء";
+"TUIKitInputBlankMessageTitle" = "لا يمكن إرسال رسالة فارغة";
+"TUIKitInputWillFinishRecordInSeconds" = "سيتم إنهاء التسجيل في %ld ثانية";
+"TUIKitInputRecordSlideToCancel" = "اسحب الإصبع للأعلى للإلغاء";
+"TUIKitInputRecordReleaseToCancel" = "رفع الإصبع للإلغاء";
+"TUIKitInputRecordTimeshort" = "مدة التسجيل قصيرة جدًا";
+"TUIKitInputRecordTimeLong" = "مدة التسجيل طويلة جدًا";
+
+"TUIKitGroupProfileDetails" = "تفاصيل الملف الشخصي";
+"TUIKitGroupProfileMember" = "أعضاء المجموعة";
+"TUIKitGroupProfileMemberCount" = "%d أشخاص";
+"TUIKitGroupProfileMemberCountlu" = "%lu شخص";
+"TUIKitGroupProfileType" = "نوع المجموعة";
+"TUIKitGroupProfileJoinType" = "طريقة الانضمام النشطة";
+"TUIKitGroupProfileInviteType" = "طريقة الدعوة للانضمام";
+"TUIKitGroupProfileInviteJoin" = "دعوة للانضمام";
+"TUIKitGroupProfileAutoApproval" = "الموافقة التلقائية";
+"TUIKitGroupProfileAlias" = "اسم المجموعة الخاص بي";
+"TUIKitGroupProfileMessageDoNotDisturb" = "عدم الإزعاج للرسائل";
+"TUIKitGroupProfileStickyOnTop" = "تثبيت في الأعلى";
+"TUIKitGroupProfileDeleteAndExit" = "حذف والخروج";
+"TUIKitGroupProfileDissolve" = "حل المجموعة";
+"TUIKitGroupProfileJoinDisable" = "تعطيل الانضمام";
+"TUIKitGroupProfileInviteDisable" = "تعطيل الدعوة";
+"TUIKitGroupProfileAdminApprove" = "موافقة المشرف";
+"TUIKitGroupProfileEditAlias" = "تعديل اسم المجموعة الخاص بي";
+"TUIKitGroupProfileEditAliasDesc" = "مسموح فقط بالأحرف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية";
+"TUIKitGroupProfileEditGroupName" = "تعديل اسم المجموعة";
+"TUIKitGroupProfileEditAnnouncement" = "تعديل إعلان المجموعة";
+"TUIKitGroupProfileEditAvatar" = "تعديل صورة المجموعة";
+"TUIKitGroupProfileDeleteGroupTips" = "بمجرد الخروج، لن تتلقى رسائل المجموعة";
+"TUIKitGroupProfileGroupCountFormat" = "أعضاء المجموعة (%ld أشخاص)";
+"TUIKitGroupProfileManage" = "الإدارة";
+"TUIKitGroupProfileManageAdd" = "إضافة عضو";
+"TUIKitGroupProfileManageDelete" = "حذف عضو";
+"TUIKitGroupProfileAdmainAdd" = "تعيين كمشرف";
+"TUIKitGroupProfileAdmainDelete" = "إلغاء تعيين كمشرف";
+"TUIKitGroupTransferOwner" = "نقل ملكية المجموعة";
+"TUIKitGroupTransferOwnerSuccess" = "تم نقل ملكية المجموعة بنجاح";
+
+"TUIKitGroupApplicant" = "طلبات الانضمام للمجموعة";
+"TUIKitGroupDismssTipsFormat" = "تم حل مجموعة %@";
+"TUIKitGroupRecycledTipsFormat" = "تم إعادة تدوير مجموعة %@";
+"TUIKitGroupKickOffTipsFormat" = "تم طردك من مجموعة %@";
+"TUIKitGroupDropoutTipsFormat" = "لقد قمت بالخروج من مجموعة %@";
+
+"TUIKitMessageTipsYouRecallMessage" = "لقد قمت بسحب رسالة";
+"TUIKitMessageTipsReEditMessage" = "إعادة التحرير";
+"TUIKitMessageTipsRecallMessageFormat" = "\"%@\" قام بسحب رسالة";
+"TUIKitMessageTipsOthersRecallMessage" = "قام الطرف الآخر بسحب رسالة";
+"TUIKitMessageTipsJoinGroupFormat" = "\"%@\" انضم إلى المجموعة";
+"TUIKitMessageTipsInviteJoinGroupFormat" = "\"%@\" يدعو \"%@\" للانضمام إلى المجموعة";
+"TUIKitMessageTipsLeaveGroupFormat" = "\"%@\" غادر المجموعة";
+"TUIKitMessageTipsKickoffGroupFormat" = "\"%@\" يطرد \"%@\" من المجموعة";
+"TUIKitMessageTipsSettAdminFormat" = "\"%@\" تم تعيينه مديرًا للمجموعة";
+"TUIKitMessageTipsCancelAdminFormat" = "\"%@\" تم إزالة صلاحياته كمدير للمجموعة";
+"TUIkitMessageTipsEditGroupNameFormat" = "%@قام بتغيير اسم المجموعة إلى %@、";
+"TUIKitMessageTipsEditGroupIntroFormat" = "\"%@\" قام بتغيير وصف المجموعة إلى \"%@\"、";
+"TUIKitMessageTipsEditGroupAnnounceFormat" = "\"%@\" قام بتغيير إعلان المجموعة إلى \"%@\"、";
+"TUIKitMessageTipsDeleteGroupAnnounceFormat" = "\"%@\" قام بحذف إعلان المجموعة、";
+"TUIKitMessageTipsEditGroupAvatarFormat" = "\"%@\" قام بتغيير صورة المجموعة、";
+"TUIKitMessageTipsEditGroupOwnerFormat" = "\"%@\" قام بنقل ملكية المجموعة إلى \"%@\"、";
+"TUIKitMessageTipsCreateGroupFormat" = "\"%@\" قام بإنشاء مجموعة";
+"TUIKitMessageTipsUnsupportCustomMessage" = "[رسالة مخصصة غير مدعومة]";
+
+"TUIKitMessageTipsMute" = "تم حظر الصوت";
+"TUIKitMessageTipsUnmute" = "تم إلغاء حظر الصوت";
+
+"TUIKitSignalingFinishGroupChat" = "إنهاء المحادثة الجماعية";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "مدة المكالمة";
+"TUIKitSignalingNewCall" = "بدء مكالمة";
+"TUIKitSignalingNewGroupCallFormat" =  "%@ يبدأ مكالمة جماعية";
+"TUIkitSignalingCancelCall" = "إلغاء المكالمة";
+"TUIkitSignalingCancelGroupCallFormat" = "%@ يلغي المكالمة الجماعية";
+"TUIkitSignalingHangonCall" = "تم الرد";
+"TUIKitSignalingHangonCallFormat" =  "%@ تم الرد عليه";
+"TUIKitSignalingBusyFormat" = "%@ مشغول";
+"TUIKitSignalingDeclineFormat" = "%@ يرفض المكالمة";
+"TUIKitSignalingCallBusy" = "الطرف الآخر مشغول";
+"TUIkitSignalingDecline" = "رفض المكالمة";
+"TUIKitSignalingNoResponse" = "لا يوجد رد";
+"TUIkitSignalingUnrecognlize" = "أمر المكالمة غير معروف";
+"TUIkitMessageTypeImage" = "[صورة]";
+"TUIKitMessageTypeVoice" = "[تسجيل صوتي]";
+"TUIkitMessageTypeVideo" = "[فيديو]";
+"TUIkitMessageTypeFile" = "[ملف]";
+"TUIKitMessageTypeAnimateEmoji" = "[رمز تعبيري متحرك]";
+"TUIKitMessageTypeDraftFormat" = "[مسودة] ";
+"TUIKitMessageTypeLastMsgCountFormat" = "رسالة";
+
+"TUIKitMessageReadPartRead" = "شخص قرأ";
+"TUIKitMessageReadPartUnread" = "غير مقروء";
+"TUIKitMessageReadPartDisable" = "بدون حالة";
+"TUIKitMessageReadAllRead" = "تمت القراءة بالكامل";
+"TUIKitMessageReadC2CRead" = "تمت القراءة";
+"TUIKitMessageReadC2CUnRead" = "لم يتم القراءة";
+"TUIKitMessageReadC2CUnReadDetail" = "لم يتم القراءة بعد";
+"TUIKitMessageReadDetail" = "تفاصيل الرسالة";
+"TUIKitMessageReadNoMoreData" = "لا توجد مزيد من البيانات";
+"TUIKitMessageReadGetReadMembersFail" = "فشل في الحصول على قائمة المستخدمين الذين قرأوا الرسالة";
+"TUIKitMessageReadGetUnreadMembersFail" = "فشل في الحصول على قائمة المستخدمين الذين لم يقروا الرسالة";
+
+"TUIKitMoreCamera" = "التقاط صورة";
+"TUIKitMorePhoto" = "صورة";
+"TUIKitMoreVideo" = "تسجيل فيديو";
+"TUIKitMoreVideoCaptureDurationTip" = "مدة التسجيل قصيرة جدًا";
+"TUIKitMoreFile" = "ملف";
+"TUIKitMoreVideoCall" = "مكالمة فيديو";
+"TUIKitMoreVoiceCall" = "مكالمة صوتية";
+"TUIKitMoreLink" = "مخصص";
+"TUIKitMoreLinkDetails" = "عرض التفاصيل >>";
+"TUIKitMorePoll" = "استطلاع";
+"TUIKitMoreGroupNote" = "ملاحظة المجموعة";
+
+"TUIKitCallInviteYouVideoCall" = "يدعوك لمكالمة فيديو";
+"TUIKitCallTurningOnMute" = "تشغيل الصوت";
+"TUIKitCallTurningOffMute" = "إيقاف الصوت";
+"TUIKitCallUsingSpeaker" = "استخدام مكبر الصوت";
+"TUIKitCallUsingHeadphone" = "استخدام سماعة الأذن";
+"TUIKitCallCancelCallingFormat" = "%@ قام بإلغاء المكالمة";
+
+"TUIKitAtSelectMemberTitle" = "اختيار أعضاء المجموعة";
+
+"TUIKitConversationTipsAtMe" = "[شخص ما @ لي]";
+"TUIKitConversationTipsAtAll" = "[@ الجميع]";
+"TUIKitConversationTipsAtMeAndAll" = "[شخص ما @ لي][@ الجميع]";
+"TUIKitConversationTipsDelete" = "سيتم حذف هذه المحادثة وجميع سجلات الدردشة المرتبطة بها";
+
+"TUIKitPublicGroup" = "مجموعة عامة";
+"TUIKitWorkGroup" = "مجموعة عمل";
+"TUIKitChatRoom" = "غرفة دردشة";
+"TUIKitCommunity" = "مجتمع";
+
+"TUIKitContactsNewFriends" = "جهات اتصال جديدة";
+"TUIKitContactsGroupChats" = "الدردشات الجماعية";
+"TUIKitContactsBlackList" = "القائمة السوداء";
+"TUIKitAddFriendSourceFormat" = "المصدر: %@";
+"TUIKitFriendApplicationApproved" = "تمت الموافقة على طلب الصداقة";
+"TUIKitFirendRequestRejected" = "تم رفض طلب الصداقة";
+
+"TUIKitOfflinePushCallTips" = "لديك طلب مكالمة";
+
+"TUIKitChatTap2Remove" = "انقر للحذف";
+"TUIKitChatPendencyTitle" = "انقر للمعالجة";
+"TUIKitChatPendencyRequestToJoinGroupFormat" = "%@ طلبات الانضمام إلى المجموعة";
+"TUIKitChatTipsAtMe" = "شخص ما @ لي";
+"TUIKitChatBackToLatestLocation" = "العودة إلى الموقع الأحدث";
+"TUIKitChatNewMessages" = "%@ رسالة جديدة";
+
+"TUIKitAllowTypeAcceptOne" = "السماح لأي مستخدم بإضافة صديق";
+"TUIKitAllowTypeNeedConfirm" = "يتطلب التحقق";
+"TUIKitAllowTypeDeclineAll" = "رفض جميع طلبات الصداقة";
+
+/***************************** 消息转发 & 消息搜索 *************************/
+// 补充
+"Multiple" = "متعدد";
+"Forward" = "إعادة توجيه";
+"Delete" = "حذف";
+"Copy" = "نسخ";
+"Revoke" = "إلغاء";
+"Resend" = "إعادة إرسال";
+"Search" = "بحث";
+"Recall" = "إلغاء";
+"MultiSelect" = "تحديد متعدد";
+"Quote" = "اقتباس";
+
+"TUIKitCallMicCamAuthTips" = "يرجى تمكين إذن الوصول إلى الميكروفون والكاميرا";
+"TUIKitCallMicAuthTips" = "يرجى تمكين إذن الوصول إلى الميكروفون";
+"TUIKitMessageTipsSureToResend" = "هل أنت متأكد من إعادة إرسال الرسالة؟";
+
+// 消息转发
+"TUIKitRelayNoMessageTips" = "يرجى تحديد الرسالة";
+"TUIKitRelayRecentMessages" = "الرسائل الأخيرة";
+"TUIKitRelayChatHistory" = "سجل الدردشة";
+"TUIKitRelaySepcialForbid" = "لا يمكن إعادة توجيه رسائل الصوت وغيرها من الرسائل الخاصة المحددة.";
+"TUIKitRelayConfirmForward" = "هل أنت متأكد من إعادة التوجيه؟";
+"TUIKitRelayOneByOneForward" = "إعادة التوجيه بشكل فردي";
+"TUIKitRelayCombineForwad" = "دمج إعادة التوجيه";
+"TUIKitRelayGroupChatHistory" = "سجل الدردشة الجماعية";
+"TUIKitRelayChatHistoryForSomebodyFormat" = "سجل الدردشة لـ %@ و %@";
+"TUIKitRelayErrorForwardFormat" = "@فشل إعادة التوجيه، code:%d, desc:%@";
+"TUIKitRelayTargetCreateNewChat" = "إنشاء دردشة جديدة";
+"TUIKitRelayTargetCreateNewGroup" = "إنشاء مجموعة جديدة";
+"TUIKitRelayTargetSelectFromContacts" = "اختيار من جهات الاتصال";
+"TUIKitRelayTargetCrateGroupError" = "فشل إنشاء المجموعة";
+"TUIKitRelayTargetNoneTips" = "يرجى تحديد جهة اتصال أو محادثة";
+"TUIKitRelayLayerLimitTips" = "عذرًا، تجاوزت الحد المسموح به للتداخل الطبقي الحالي";
+"TUIKitRelayCompatibleText" = "لا يدعم إعادة توجيه الرسائل المدمجة، يرجى الترقية إلى أحدث إصدار.";
+"TUIKitRelayUnsupportForward" = "لا يدعم إعادة توجيه الرسائل التي فشلت في الإرسال";
+"TUIKitRelayOneByOnyOverLimit" = "تم تجاوز الحد الأقصى لعدد رسائل إعادة التوجيه، لا يدعم حاليًا إعادة التوجيه بشكل فردي";
+"TUIKitRelayPluginNotAllowed" = "لا يدعم إعادة توجيه رسائل التصويت/التسلسل الزمني";
+// 消息搜索
+"TUIKitSearchItemHeaderTitleContact" = "جهات الاتصال";
+"TUIKitSearchItemFooterTitleContact" = "عرض المزيد من جهات الاتصال";
+"TUIKitSearchItemHeaderTitleGroup" = "الدردشات الجماعية";
+"TUIKitSearchItemFooterTitleGroup" = "عرض المزيد من الدردشات الجماعية";
+"TUIkitSearchItemHeaderTitleChatHistory" = "سجل الدردشة";
+"TUIKitSearchItemFooterTitleChatHistory" = "عرض المزيد من سجل الدردشة";
+"TUIKitSearchResultMatchFormat" = "يحتوي على: %@";
+"TUIKitSearchResultMatchGroupIDFormat" = "يحتوي على معرف المجموعة: %@";
+"TUIKitSearchResultMatchGroupMember" = "يحتوي على أعضاء المجموعة:";
+"TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd سجل دردشة";
+/***************************** 消息转发 & 消息搜索 *************************/
+
+
+/***************************** 消息回复 & 换肤 *************************/
+"Reply" = "الرد";
+"TUIKitReplyMessageNotFoundOriginMessage" = "تعذر تحديد الرسالة الأصلية";
+"TUIKitClearAllChatHistory" = "مسح سجل الدردشة بالكامل";
+"TUIKitClearAllChatHistoryTips" = "هل أنت متأكد من مسح سجل الدردشة بالكامل؟";
+"Discline" = "رفض";
+"Copied" = "تم النسخ";
+"ConfirmDeleteMessage" = "هل أنت متأكد من حذف الرسائل المحددة؟";
+"TUIKitAddFriend" = "إضافة صديق";
+"TUIKitAddGroup" = "إضافة مجموعة";
+"TUIKitSearchUserID" = "البحث عن معرف المستخدم";
+"TUIKitSearchGroupID" = "البحث عن معرف المجموعة";
+"TUIKitNoSelfSignature" = "لا يوجد توقيع شخصي حاليًا";
+"TUIKitSelfSignatureFormat" = "توقيع شخصي: %@";//fix me
+"TUIKitGroupProfileManage" = "إدارة المجموعة";
+"TUIKitGroupManageShutupAllTips" = "عند تمكين الحظر الكلي للمستخدمين، سيتم السماح فقط للمالك والمشرفين بالتحدث.";
+"TUIKitGroupManageAdminSetting" = "تعيين المشرفين";
+"TUIKitGroupManageShutAll" = "حظر الكل";
+"TUIKitGroupAddShutupMember" = "إضافة أعضاء المجموعة الذين يجب حظرهم";
+"TUIKitGroupOwner" = "مالك المجموعة";
+"TUIKitGroupManagerFormat" = "المشرفون (%zd/%zd)";
+"TUIKitSetShutupAllFormat" = "%@ تم تمكين الحظر الكلي للمستخدمين،";
+"TUIKitCancelShutupAllFormat" = "%@ تم إلغاء الحظر الكلي للمستخدمين،";
+"TUIKitGroupNotice" = "إعلان المجموعة";
+"TUIKitGroupNoticeNull" = "لا يوجد إعلان حاليًا";
+"Edit" = "تحرير";
+"Done" = "تم";
+"TUIKitAddContactMyUserIDFormat" = "معرف المستخدم الخاص بي: %@";
+"TUIKitAddUserNoDataTips" = "هذا المستخدم غير موجود";
+"TUIKitAddGroupNoDataTips" = "هذه الدردشة الجماعية غير موجودة";
+/***************************** 消息回复 & 换肤 *************************/
+
+
+/***************************** 视频、图片加载 & 保存 *************************/
+"TUIKitVideoTranscoding" = "جاري تحويل الفيديو...";
+"TUIKitVideoDownloading" = "جاري تحميل الفيديو...";
+"TUIKitVideoSavedSuccess" = "تم حفظ الفيديو بنجاح";
+"TUIKitVideoSavedFailed" = "فشل حفظ الفيديو";
+"TUIKitPictureSavedSuccess" = "تم حفظ الصورة بنجاح";
+"TUIKitPictureSavedFailed" = "فشل حفظ الصورة";
+/***************************** 视频、图片加载 & 保存 *************************/
+
+"TUIKitGroupSetAdminsForbidden" = "لا يدعم الدردشة الجماعية الحالية إعداد المشرفين";
+"TUIKitGroupAddAdmins" = "إضافة مشرفين";
+"TUIKitGroupAddMemberOfBlockedForbidden" = "لا يدعم الدردشة الجماعية الحالية حظر أعضاء محددين";
+
+"TUIKitNotDownload"= "لم يتم التنزيل بعد";
+
+"TUIKitInputNoCameraTitle" = "لم يتم تمكين إذن الكاميرا";
+"TUIKitInputNoCameraTips" = "لا يمكن استخدام ميزات التقاط الصور والفيديو والمكالمات الفيديو، انقر على (الذهاب للتمكين) لفتح إذن الكاميرا";
+"TUIKitInputNoCameraOperateLater" = "لاحقًا";
+"TUIKitInputNoCameraOperateEnable" = "الذهاب للتمكين";
+
+"TUIKitInputNoMicTitle" = "لم يتم تمكين إذن الميكروفون";
+"TUIKitInputNoMicTips" = "لا يمكن استخدام ميزات إرسال رسائل الصوت والتقاط الفيديو والمكالمات الصوتية والفيديو، انقر على (الذهاب للتمكين) لفتح إذن الميكروفون";
+"TUIKitInputNoMicOperateLater" = "لاحقًا";
+"TUIKitInputNoMicOperateEnable" = "الذهاب للتمكين";
+
+"TUIKitInputNoPhotoTitle" = "لم يتم تمكين إذن الصور";
+"TUIKitInputNoPhotoTips" = "لا يمكن استخدام ميزات عرض الصور واختيارها في ميزات الدردشة، انقر على (الذهاب للتمكين) لفتح إذن الصور";
+"TUIKitInputNoPhotoOperateLater" = "لاحقًا";
+"TUIKitInputNoPhotoerateEnable" = "الذهاب للتمكين";
+
+"TUIKitInputRecordTipsTitle" = "قم بتحرير الإصدار لإرساله، اسحب لليسار للإلغاء";
+"TUIKitInputRecordCancelTipsTitle" = "تم إلغاء الإصدار";
+"TUIKitInputRecordRejectedInCall" = "جاري المكالمة الصوتية أو الفيديو، يرجى المحاولة لاحقًا";
+"TUIKitInputRecordRejectedIsRecording" = "جاري التسجيل الصوتي، يرجى الانتظار حتى ينتهي";
+
+"StickyonTop" = "تثبيت في الأعلى";
+"CancelStickonTop" = "إلغاء التثبيت في الأعلى";
+"ClearHistoryChatMessage" = "مسح الرسائل";
+"MarkAsRead" = "وضع علامة كمقروءة";
+"MarkAsUnRead" = "وضع علامة كغير مقروءة";
+"MarkHide" = "إخفاء";
+"MinimizeGroup" = "طي الدردشة";
+"More" = "المزيد";
+"Info" = "معلومات";
+
+"TUIKitConversationMarkHide" = "إخفاء الدردشة";
+"TUIKitConversationMarkHideDescriptionOn" = "عند التمكين، لن تظهر هذه الدردشة في قائمة الدردشات، وسيتم الاحتفاظ بسجل الدردشة.";
+"TUIKitConversationMarkHideDescriptionOff" = "عند التعطيل، ستظهر هذه الدردشة في قائمة الدردشات، وسيتم الاحتفاظ بسجل الدردشة.";
+
+"TUIKitConversationMarkFoldGroups" = "مجموعات الدردشة المطوية";
+"TUIKitConversationMarkFold" = "طي هذه المجموعة";
+
+"TUIKitRepliesDetailTitle" = "تفاصيل الرد";
+"TUIKitRepliesNum" = "ردود";
+"TUIKitReference" = "المرجع";
+"TUIKitNotSupportThisMessage" = "[لا يتم دعم عرض هذه الرسالة مؤقتًا]";
+
+"TUIKitAudioPlaybackStyleLoudspeaker" = "مكبر الصوت";
+"TUIKitAudioPlaybackStyleHandset" = "سماعة الهاتف";
+"TUIKitAudioPlaybackStyleChange2Loudspeaker" = "التبديل إلى تشغيل الصوت عبر مكبر الصوت";
+"TUIKitAudioPlaybackStyleChange2Handset" = "التبديل إلى تشغيل الصوت عبر سماعة الهاتف";
+
+"TUIKitTranslate" = "ترجمة";
+"TUIKitTranslateDefaultTips" = "تقدم خدمة الترجمة بواسطة Tencent Cloud IM";
+"TUIKitTranslateFailed" = "فشل الترجمة";
+"Hide" = "إخفاء";
+"TranslateMessage" = "ترجمة الرسالة إلى";
+"TranslateLanguageNotSupport" = "اللغة المستهدفة غير مدعومة، يرجى تغيير اللغة";
+
+"TUIKitConvertToText" = "تحويل النص";
+"TUIKitConvertToTextFailed" = "فشل تحويل";
+
+"TUIKitSignalingSwitchToAudio" = "تحويل الفيديو إلى صوت";
+"TUIKitSignalingUnsupportedCalling" = "دعوة غير معروفة";
+"TUIKitSignalingComfirmSwitchToAudio" = "تأكيد التحويل إلى صوت";
+
+"TUIKitErrorEnableUserStatusOnConsole" = "لم تقم بتمكين ميزة حالة المستخدم، يرجى تسجيل الدخول إلى لوحة التحكم وتمكينها";
+
+"TUIKitChooseAvatar" = "اختيار الصورة الرمزية";
+"TUIKitChooseCover" = "اختيار الغلاف";
+"TUIKitChooseBackground" = "تغيير الخلفية";
+"TUIKitDefaultBackground" = "الخلفية الافتراضية";
+"TUIKitIdentity" = "المعرف";
+
+"TUIKitChooseBackgroundSuccess" = "تم التعيين بنجاح!";
+"TUIKitChooseBackgroundFailed" = "فشل التعيين!";
+
+"TUIKitContactNoNewApplicationRequest" = "لا توجد طلبات صداقة جديدة حاليًا";
+"TUIKitContactNoGroupChats" = "لا توجد محادثات جماعية حاليًا";
+"TUIKitContactNoBlockList" = "لا توجد أشخاص في قائمة الحظر حاليًا";
+"TUIKitSearchNoResultLists" = "لا توجد نتائج متعلقة بالمحادثات أو جهات الاتصال أو سجل الرسائل";
+"TUIKitTyping" = "الشخص الآخر يكتب حاليًا";
+
+"TUIKitMessageTipsEditGroupAddOptFormat" = "\"%@\" قام بتعديل طريقة الانضمام إلى المجموعة إلى \"%@\"、";
+"TUIKitMessageTipsEditGroupInviteOptFormat" = "\"%@\" قام بتعديل طريقة الدعوة إلى المجموعة إلى \"%@\"、";
+
+"TUIKitCreatGroupNamed" = "اسم المجموعة";
+"TUIKitCreatGroupID" = "معرف المجموعة (اختياري)";
+"TUIKitCreatGroupNamed_Placeholder" = "أدخل اسم المجموعة";
+"TUIKitCreatGroupID_Placeholder" = "أدخل معرف المجموعة";
+"TUIKitCreatGroupAvatar" = "صورة المجموعة";
+"TUIKitCreatGroupType" = "نوع المجموعة";
+"TUIKitCreatGroupType_Work" = "مجموعة عمل للأصدقاء (Work)";
+"TUIKitCreatGroupType_Public" = "مجموعة تواصل مع غرباء (Public)";
+"TUIKitCreatGroupType_Meeting" = "مجموعة اجتماع مؤقتة (Meeting)";
+"TUIKitCreatGroupType_Community" = "مجموعة مجتمع (Community)";
+"TUIKitCreatGroupType_Work_Desc" = "مجموعة عمل للأصدقاء (Work): تشبه مجموعات الدردشة العادية في تطبيق WeChat، بعد الإنشاء، يمكن للأصدقاء الموجودين في المجموعة دعوة أصدقاء آخرين للانضمام دون الحاجة لموافقة المدعو أو موافقة صاحب المجموعة.";
+"TUIKitCreatGroupType_Public_Desc" = "مجموعة تواصل مع غرباء (Public): تشبه مجموعات QQ، بعد الإنشاء، يمكن لصاحب المجموعة تعيين مشرفين للمجموعة، عندما يقوم المستخدم بالبحث عن معرف المجموعة ويقدم طلب الانضمام، يحتاج إلى موافقة صاحب المجموعة أو المشرفين قبل الانضمام إلى المجموعة.";
+"TUIKitCreatGroupType_Meeting_Desc" = "مجموعة اجتماع مؤقتة (Meeting): بعد الإنشاء، يمكن للمستخدمين الانضمام والخروج بحرية، ويدعم عرض الرسائل قبل الانضمام؛ مناسبة لسيناريوهات المؤتمرات الصوتية والمرئية وسيناريوهات التعليم عبر الإنترنت وغيرها من السيناريوهات التي تجمع بين منتجات الصوت والفيديو الفورية.";
+"TUIKitCreatGroupType_Community_Desc" = "مجموعة مجتمع (Community): بعد الإنشاء، يمكن للمستخدمين الانضمام والخروج بحرية، وتدعم ما يصل إلى 100000 شخص، وتدعم تخزين الرسائل التاريخية، عندما يقوم المستخدم بالبحث عن معرف المجموعة ويقدم طلب الانضمام، لا يحتاج إلى موافقة المشرفين للانضمام إلى المجموعة.";
+"TUIKitCreatGroupType_See_Doc" = "انظر الوثائق المنتج";
+"TUIKitCreatGroupType_Desc_Highlight" = "وثائق المنتج";
+"TUIKitCreatGroupType_See_Doc_Simple" = "عرض وثائق المنتج";
+"TUIKitSearchItemCancel" = "إلغاء";
+
+//----mini---
+"Pin" = "تثبيت";
+"UnPin" = "إلغاء التثبيت";
+"TUIKitSelected" = "تم تحديدها";
+"TUIKitThreadQuote" = "ردود";
+"MessageInfo" = "تفاصيل الرسالة";
+"C2CReadBy" = "تمت القراءة";
+"C2CDeliveredTo" = "لم يتم القراءة";
+"GroupReadBy" = "قائمة المقروءة";
+"GroupDeliveredTo" = "قائمة الغير مقروءة";
+"TUIKitMessage" = "إرسال رسالة";
+"TUIKitAudio" = "مكالمة صوتية";
+"TUIKitVideo" = "مكالمة فيديو";
+"TUIKitAddMembers" = "+ إضافة أعضاء";
+"TUIKitMembersRoleMember" = "عضو";
+"TUIKitMembersRoleAdmin" = "مشرف";
+"TUIKitMembersRoleSuper" = "مالك المجموعة";
+"TUIKitCreateCancel" = "إلغاء";
+"TUIKitCreateNext" = "التالي";
+"TUIKitCreateFinish" = "إنشاء";
+"TUIKitCreateMemebers" = "الأعضاء المحددين";
+"TUIKitDateToday" = "اليوم";
+//----mini---
+
+"TUIPollCreateNew" = "إنشاء استطلاع";
+"TUIPollCreateSucceed" = "تم الإنشاء بنجاح";
+"TUIPollCreateFail" = "فشل الإنشاء";
+"TUIPollEnterTitle" = "أدخل عنوان الاستطلاع";
+"TUIPollEnterOption" = "أدخل الخيار";
+"TUIPollAddOption" = "إضافة خيار";
+"TUIPollEnableMultiSelect" = "السماح بالتحديد المتعدد";
+"TUIPollSingleSelect" = "اختيار واحد";
+"TUIPollMultiSelect" = "اختيار متعدد";
+"TUIPollAnonymousVote" = "التصويت المجهول";
+"TUIPollPublic" = "نتائج عامة";
+"TUIPollNonPublic" = "نتائج غير عامة";
+"TUIPollNonAnonymous" = "غير مجهول";
+"TUIPollAnonymous" = "مجهول";
+"TUIPollEnableNotification" = "إرسال إشعار عند تقديم جديد في المجموعة";
+"TUIPolllPublish" = "نشر";
+"TUIPollOneCount" = "صوت";
+"TUIPollMoreCount" = "أصوات";
+"TUIPollInvitedParticipants" = "عدد المشاركين المطلوبين: %d";
+"TUIPollRespondedParticipants" = "عدد المشاركين الفعليين: %d";
+"TUIPollResend" = "إعادة الإرسال";
+"TUIPollResendFail" = "فشل إعادة الإرسال، رمز الخطأ: %d";
+"TUIPollEnd" = "إنهاء الاستطلاع";
+"TUIPollEndFail" = "فشل إنهاء الاستطلاع، رمز الخطأ: %d";
+"TUIPollVoteNow" = "التصويت الآن";
+"TUIPollConfirmVote" = "تأكيد";
+"TUIPollCancelVote" = "إلغاء";
+"TUIPollPercent" = "تم التصويت بـ %d صوت، يشكل %.0f";//fix me
+"TUIPollEnded" = "انتهت الاستطلاع";
+"TUIPollVoteSucceed" = "تم التصويت بنجاح";
+"TUIPollVoteFail" = "فشل التصويت";
+"TUIPollPublicResult" = "نتائج عامة";
+"TUIPollViewAllOptions" = "عرض جميع الخيارات";
+"TUIPollDisplayString" = "[استطلاع]";
+"TUIPollTextFieldExceedLimit" = "تجاوز الحد الأقصى لعدد الأحرف (50)";
+"TUIPollVoted" = "تم التصويت";
+"TUIPoll" = "استطلاع";
+"TUIGroupNote" = "التوالي";
+"TUIGroupNoteTitle" = "التوالي الجماعي";
+"TUIGroupNoteSettings" = "الإعدادات";
+"TUIGroupNoteDeadline" = "الموعد النهائي %@";
+"TUIGroupNoteTitleHint" = "إضافة عنوان التوالي";
+"TUIGroupNoteDescriptionHint" = "إضافة وصف التوالي";
+"TUIGroupNoteFormatExample" = "مثال";
+"TUIGroupNoteFormatHint" = "يمكنك ملء تنسيق التوالي";
+"TUIGroupNoteFillIn" = "يرجى ملء";
+"TUIGroupNoteMultipleSettings" = "السماح بتقديم عدة نسخ لكل شخص";
+"TUIGroupNoteDeadlineSettings" = "تعيين الموعد النهائي";
+"TUIGroupNoteDeadlineNotSet" = "غير محدد";
+"TUIGroupNoteNotifySettings" = "إرسال إشعار في المجموعة عند تقديم جديد";
+"TUIGroupNoteSend" = "إرسال";
+"TUIGroupNoteNow" = "التوالي الفوري";
+"TUIGroupNoteMessageTitle" = "التوالي الجماعي";
+"TUIGroupNoteMessageTitleInfo" = "تم إطلاقها بواسطة %@، وقد انضم %d شخصًا";
+"TUIGroupNoteTipsMessagePrefix" = "انضم %@ إلى التوالي الجماعي";
+"TUIGroupNoteHasStopped" = "تم إيقاف التوالي";
+"TUIGroupNoteDeadlineMustBeLater" = "يجب أن يكون الموعد النهائي لاحقًا من الوقت الحالي";
+"TUIGroupNoteDisplayString" = "[التوالي الجماعي]";
+"TUIGroupNoteSendSucceed" = "تم الإرسال بنجاح";
+"TUIGroupNoteSendFail" = "فشل الإرسال";
+"TUIGroupNoteSubmitExceedLimit" = "تجاوز الحد الأقصى لعدد التواليات";
+"TUIGroupNoteTextFieldExceedLimit" = "تجاوز الحد الأقصى لعدد الأحرف 50";
+"TUIGroupNoteSubmitOnce" = "يُسمح بتقديم مرة واحدة فقط";
+"TUIGroupNoteSubmitNotAllowed" = "غير مسموح بالتقديم";
+"TUIGroupNoteExceedDeadline" = "تجاوز الموعد النهائي، تم إيقاف التوالي";
+"TUIGroupNoteNotChanged" = "لم يتغير معلومات التوالي";
+"TUIGroupNoteExpand" = "...عرض المزيد...";
+"TUIGroupNoteNotDatePickerConfirm" = "تأكيد";
+"TUIGroupNoteNotDatePickerCancel" = "إلغاء";
+"TUIGroupNoteNotDatePickerDone" = "تم";
+"TUIGroupNoteNotDatePickerYear" = " سنة";
+"TUIGroupNoteNotDatePickerMonth" = " شهر";
+"TUIGroupNoteNotDatePickerDay" = " يوم";
+"TUIGroupNoteNotDatePickerHour" = " ساعة";
+"TUIGroupNoteNotDatePickerMinute" = " دقيقة";
+"TUIGroupNoteNotDatePickerSecond" = " ثانية";
+"TUIGroupNoteNotDatePickerAM" = "صباحًا";
+"TUIGroupNoteNotDatePickerPM" = "مساءً";
+"TUIGroupNoteNotDatePickerNow" = " حتى الآن";
+"TUIGroupNoteNotDatePickerToday" = " اليوم";
+"TUIGroupNoteNotDatePickerMon" = " الاثنين";
+"TUIGroupNoteNotDatePickerTue" = " الثلاثاء";
+"TUIGroupNoteNotDatePickerWed" = " الأربعاء";
+"TUIGroupNoteNotDatePickerTHR" = " الخميس";
+"TUIGroupNoteNotDatePickerFRI" = " الجمعة";
+"TUIGroupNoteNotDatePickerSAT" = " السبت";
+"TUIGroupNoteNotDatePickerSUN" = " الأحد";
+"TUIConversationGroupAll" = "الكل";
+"TUIConversationGroupUnread" = "غير مقروءة";
+"TUIConversationGroupAtMe" = "@ لي";
+"TUIConversationGroupGroup" = "مجموعة";
+"TUIConversationGroupC2C" = "دردشة فردية";
+"TUIConversationGroupInputGroupName" = "يرجى إدخال اسم المجموعة";
+"TUIConversationGroupCreateGroup" = "إنشاء مجموعة المحادثة";
+"TUIConversationGroupNewGroup" = "مجموعة جديدة";
+"TUIConversationGroupAddGroup" = "إضافة مجموعة";
+"TUIConversationGroupMoveGroup" = "نقل المجموعة";
+"TUIConversationGroupRemoveGroup" = "إزالة المجموعة";
+"TUIConversationGroupShowGroup" = "عرض مجموعة المحادثة";
+"TUIConversationGroupHideGroup" = "إخفاء مجموعة المحادثة";
+"TUIConversationGroupEditGroup" = "إعدادات مجموعة المحادثة";
+"TUIConversationGroupEdit" = "تعديل";
+"TUIConversationGroupSave" = "حفظ";
+"TUIConversationGroupSaveSucc" = "تم حفظ المجموعة بنجاح";
+"TUIConversationGroupCreate" = "إنشاء";
+"TUIConversationGroupNameIsNull" = "اسم المجموعة لا يمكن أن يكون فارغًا!";
+"TUIConversationGroupNameIsInvalid" = "اسم المجموعة لا يمكن أن يكون اسمًا محددًا مسبقًا";
+"TUIConversationGroupConversationIsNull" = "المحادثة لا يمكن أن تكون فارغة!";
+"TUIConversationGroupCreateSucc" = "تم إنشاء المجموعة بنجاح";
+"TUIConversationGroupModifySucc" = "تم تعديل المجموعة بنجاح";
+"TUIConversationGroupName" = "اسم المجموعة";
+"TUIConversationGroupIncludeConversation" = "تضمين المحادثة";
+"TUIConversationGroupAddConversation" = "إضافة محادثة";
+"TUIConversationGroup" = "مجموعة المحادثة";
+"TUIConversationGroupManager" = "المدير";
+"TUIConversationGroupSelectGroup" = "اختر مجموعة المحادثة";
+"TUIConversationGroupUnlogined" = "غير مسجل الدخول، فشل الحفظ!";
+"TUIConversationMark" = "وضع علامة";
+"TUIConversationMarkCancel" = "إلغاء العلامة";
+
+"TUIConversationNone" = "لا يوجد أي محادثات لـ %@";
+
+//----timApp---
+"TIMAppMainTitle" = "تينسنت كلاود · IM";
+"TIMAppMainConnectingTitle" = "جاري الاتصال...";
+"TIMAppMainDisconnectTitle" = "تينسنت كلاود · IM (غير متصل)";
+"TIMAppTabBarItemMessageText" = "الرسائل";
+"TIMAppTabBarItemContactText" = "جهات الاتصال";
+"TIMAppTabBarItemMeText"      = "أنا";
+"TIMAppTabBarItemMessageText_mini" = "الدردشة";
+"TIMAppTabBarItemContactText_mini" = "جهات الاتصال";
+"TIMAppTabBarItemSettingText_mini" = "الإعدادات";
+"TIMAppTabBarItemCallsRecordText_mini" = "سجل المكالمات";
+"TIMAppChat" = "الدردشة";
+"TIMAppChatDisconnectTitle" = "الدردشة (غير متصل)";
+"TIMAppChatSecurityWarning" = "【تحذير أمان】تستخدم هذه التطبيقات فقط لتجربة وظائف منتج تينسنت كلاود للاتصال الفوري. يجب عدم استخدامها للتفاوض التجاري والتوسع. يرجى عدم الوثوق بمعلومات تتعلق بالمدفوعات والفوز بجوائز وغيرها من المعلومات المتعلقة بالمال. يرجى عدم الاتصال بأرقام الهواتف الغريبة بسهولة وتوخي الحذر لتجنب الوقوع في الاحتيال.";
+"TIMAppChatSecurityWarningReport" = "النقر هنا للإبلاغ";
+"TIMAppTencentCloudIM" = "الاتصال الفوري";
+"TIMAppWelcomeToChat" = "مرحبًا بك في استخدام هذا التطبيق لتجربة خدمة الاتصال الفوري من تينسنت كلاود IM";
+
+"TIMAppWelcomeToChatDetails" = "مرحبًا بك في استخدام هذا التطبيق لتجربة خدمة الاتصال الفوري من تينسنت كلاود IM. يمكنك استخدامه لإرسال الرسائل النصية والرموز التعبيرية والرسائل الغنية بالوسائط والرد على الرسائل والردود بالرموز التعبيرية وحالة قراءة الرسائل وعلاقات الأصدقاء وغيرها من الوظائف. في الوقت نفسه، قمنا بتوفير 3 أصدقاء آليين لك لا يمكنهم الرد، يمكنك بدء محادثة فردية أو محادثة جماعية معهم وتجربة إدارة المجموعات وغيرها من الوظائف.";
+"TIMAppSelectStyle" = "اختيار النمط";
+"TIMAppChatStyles" = "تبديل نمط IM الحصري";
+"TIMAppChangeTheme" = "اختيار السمة";
+"TIMAppChatThemes" = "تبديل سمة IM الحصرية";
+"TIMAppEnterChat" = "دخول IM";
+
+"TIMAppRunDemo" = "تشغيل العرض التوضيحي في دقيقة واحدة بتغيير سطرين من الشفرة";
+"TIMAppCustomers" = "أكثر من 10000 عميل يخدمون شهريًا";
+"TIMAppMessagingSuccess" = "معدل نجاح إرسال واستلام الرسائل وموثوقية الخدمة أعلى من 99.99٪";
+"TIMAppActiveUsers" = "أكثر من مليار مستخدم نشط شهريًا";
+"TIMAppOK" = "موافق";
+"TIMApp1Billion+" = "أكثر من مليار";
+"TIMApp10000+" = "أكثر من 10000";
+"TIMApp1Minute" = "دقيقة واحدة";
+"TIMAppMeAbout" = "حول تينسنت كلاود · IM";
+"TIMAppConfirmLogout" = "هل أنت متأكد من تسجيل الخروج؟";
+"TIMAppConfirm" = "تأكيد";
+"TIMAppCancel" = "إلغاء";
+"TIMChangeLanguage" = "تغيير اللغة";
+//----timApp---
+"TUIKitTickledMe" = "أنا";
+"TUIKitTickledActionVaule" = "طبقة";
+"TUIKitTickledMyself" = "نفسي";
+"TUIKitImageViewOrigin" = "عرض الصورة الأصلية";
+"TUIGroupCreateTipsMessage" = "إنشاء مجموعة";
+"TUICommunityCreateTipsMessage" = "إنشاء مجتمع";
+
+"zh-Hans" = "الصينية المبسطة";
+"en"      = "إنجليزي";
+"ar"      = "عربي";
+

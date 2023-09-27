@@ -173,6 +173,11 @@
     self.title.frame =
         CGRectMake(_image.frame.origin.x + _image.frame.size.width + TUIPopCell_Margin, TUIPopCell_Padding, titleWidth, self.contentView.bounds.size.height);
     self.title.center = CGPointMake(self.title.center.x, self.contentView.center.y);
+    
+    if (isRTL()) {
+        [self.image resetFrameToFitRTL];
+        [self.title resetFrameToFitRTL];
+    }
 }
 
 - (void)setData:(TUIPopCellData *)data {
@@ -253,6 +258,7 @@
     CGFloat contentY = CGRectGetMaxY(_hLine.frame) + 17;
     CGFloat contentheight = 40;
     _content = [[UITextField alloc] initWithFrame:CGRectMake(contentMargin, contentY, contentWidth, contentheight)];
+    _content.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     _content.delegate = self;
     _content.backgroundColor = TUIGroupDynamicColor(@"group_modify_input_bg_color", @"#F5F5F5");
     _content.textColor = TUIGroupDynamicColor(@"group_modify_input_text_color", @"#000000");
@@ -579,37 +585,20 @@
         self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         self.contentView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
 
-        _keyLabel = self.textLabel;
+        _keyLabel = [[UILabel alloc] init];
         _keyLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _keyLabel.font = [UIFont systemFontOfSize:16.0];
-
-        _valueLabel = self.detailTextLabel;
+        [self.contentView addSubview:_keyLabel];
+        [_keyLabel setRtlAlignment:TUITextRTLAlignmentTrailing];
+        
+        _valueLabel = [[UILabel alloc] init];
+        [self.contentView addSubview:_valueLabel];
         _valueLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
         _valueLabel.font = [UIFont systemFontOfSize:16.0];
-
+        [_valueLabel setRtlAlignment:TUITextRTLAlignmentTrailing];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    if (self.textData.keyEdgeInsets.left) {
-        self.keyLabel.mm_left(self.textData.keyEdgeInsets.left);
-    }
-
-    if (self.textData.keyEdgeInsets.top) {
-        self.keyLabel.mm_top(self.textData.keyEdgeInsets.top);
-    }
-
-    if (self.textData.keyEdgeInsets.bottom) {
-        self.keyLabel.mm_bottom(self.textData.keyEdgeInsets.bottom);
-    }
-
-    if (self.textData.keyEdgeInsets.right) {
-        self.keyLabel.mm_right(self.textData.keyEdgeInsets.right);
-    }
 }
 
 - (void)fillWithData:(TUICommonTextCellData *)textData {
@@ -638,6 +627,41 @@
     } else {
         self.valueLabel.numberOfLines = 1;
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+
+    [self.keyLabel sizeToFit];
+    [self.keyLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(self.keyLabel.frame.size);
+        make.leading.mas_equalTo(self.contentView).mas_offset(self.textData.keyEdgeInsets.left);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    
+    [self.valueLabel sizeToFit];
+    [self.valueLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.keyLabel.mas_trailing).mas_offset(10);
+        if (self.textData.showAccessory) {
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+        }
+        else {
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-20);
+        }
+        make.centerY.mas_equalTo(self.contentView);
+    }];
 }
 
 @end
@@ -685,14 +709,14 @@
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.textColor = TIMCommonDynamicColor(@"form_key_text_color", @"#444444");
         _titleLabel.font = [UIFont systemFontOfSize:16];
-        _titleLabel.textAlignment = NSTextAlignmentLeft;
+        [_titleLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         [self.contentView addSubview:_titleLabel];
 
         _descLabel = [[UILabel alloc] init];
         _descLabel.textColor = TIMCommonDynamicColor(@"group_modify_desc_color", @"#888888");
         _descLabel.font = [UIFont systemFontOfSize:12];
         _descLabel.numberOfLines = 0;
-        _descLabel.textAlignment = NSTextAlignmentLeft;
+        [_descLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         _descLabel.hidden = YES;
         [self.contentView addSubview:_descLabel];
 
@@ -713,7 +737,35 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+}
 
+- (void)fillWithData:(TUICommonSwitchCellData *)switchData {
+    [super fillWithData:switchData];
+
+    self.switchData = switchData;
+    _titleLabel.text = switchData.title;
+    [_switcher setOn:switchData.isOn];
+    _descLabel.text = switchData.desc;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
     if (self.switchData.disableChecked) {
         _titleLabel.textColor = [UIColor grayColor];
         _titleLabel.alpha = 0.4;
@@ -747,23 +799,29 @@
                                      attributes:attribute
                                         context:nil]
                           .size;
-        _titleLabel.mm_width(size.width).mm_height(24).mm_left(leftMargin).mm_top(12);
-        _descLabel.mm_width(size.width).mm_height(size.height).mm_left(_titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY + 2);
+        
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(size.width);
+            make.height.mas_equalTo(24);
+            make.leading.mas_equalTo(leftMargin);
+            make.top.mas_equalTo(12);
+        }];
+        [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(size.width);
+            make.height.mas_equalTo(size.height);
+            make.leading.mas_equalTo(self.titleLabel.mas_leading);
+            make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(2);
+        }];
     } else {
         _descLabel.text = @"";
-        _titleLabel.mm_sizeToFit().mm_left(leftMargin).mm__centerY(self.contentView.mm_h / 2);
+        [self.titleLabel sizeToFit];
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(self.titleLabel.frame.size);
+            make.leading.mas_equalTo(self.switchData.margin);
+            make.centerY.mas_equalTo(self.contentView);
+        }];
     }
 }
-
-- (void)fillWithData:(TUICommonSwitchCellData *)switchData {
-    [super fillWithData:switchData];
-
-    self.switchData = switchData;
-    _titleLabel.text = switchData.title;
-    [_switcher setOn:switchData.isOn];
-    _descLabel.text = switchData.desc;
-}
-
 - (void)switchClick {
     if (self.switchData.cswitchSelector) {
         UIViewController *vc = self.mm_viewController;
@@ -1449,6 +1507,10 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
 
     self.accessoryBtn.mm_sizeToFit().mm_height(30).mm_right(15).mm_top(13);
     self.collectionView.mm_left(15).mm_height(40).mm_width(self.accessoryBtn.mm_x - 30).mm__centerY(self.accessoryBtn.mm_centerY);
+    if (isRTL()) {
+        [self.accessoryBtn resetFrameToFitRTL];
+        [self.collectionView resetFrameToFitRTL];
+    }
 }
 
 @end
@@ -1544,7 +1606,7 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     RAC(_signature, text) = [RACObserve(data, signature) takeUntil:self.rac_prepareForReuseSignal];
     [[[RACObserve(data, identifier) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSString *x) {
       @strongify(self);
-      self.identifier.text = [@"ID: " stringByAppendingString:data.identifier];
+        self.identifier.text = [NSString stringWithFormat:@"%@:%@",TIMCommonLocalizableString(TUIKitIdentity),data.identifier];
     }];
 
     [[[RACObserve(data, name) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSString *x) {
@@ -1573,33 +1635,91 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat maxLabelWidth = self.contentView.mm_w - CGRectGetMaxX(_avatar.frame) - 30;
-    _name.mm_sizeToFitThan(0, _avatar.mm_h / 3).mm_top(_avatar.mm_y).mm_left(_avatar.mm_maxX + TPersonalCommonCell_Margin);
-    if (CGRectGetMaxX(_name.frame) >= self.contentView.mm_w) {
-        _name.mm_w = maxLabelWidth;
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    CGSize headSize = CGSizeMake(kScale390(66), kScale390(66));
+
+    [self.avatar mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(headSize);
+        make.top.mas_equalTo(kScale390(10));
+        make.leading.mas_equalTo(kScale390(16));
+    }];
+    
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatar.layer.masksToBounds = YES;
+        self.avatar.layer.cornerRadius = headSize.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatar.layer.masksToBounds = YES;
+        self.avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
 
-    _identifier.mm_sizeToFitThan(80, _avatar.mm_h / 3).mm_left(_name.mm_x);
+    [self.name sizeToFit];
+    [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(TPersonalCommonCell_Margin);
+        make.leading.mas_equalTo(self.avatar.mas_trailing).mas_offset(15);
+        make.width.mas_lessThanOrEqualTo(self.name.frame.size.width);
+        make.height.mas_greaterThanOrEqualTo(self.name.frame.size.height);
+        make.trailing.mas_lessThanOrEqualTo(self.genderIcon.mas_leading).mas_offset(- 1);
+    }];
+
+    [self.genderIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(self.name.font.pointSize *0.9);
+        make.centerY.mas_equalTo(self.name);
+        make.leading.mas_equalTo(self.name.mas_trailing).mas_offset(1);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- 10);
+    }];
+
+    [self.identifier sizeToFit];
+    [self.identifier mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.name);
+        make.top.mas_equalTo(self.name.mas_bottom).mas_offset(5);
+        if(self.identifier.frame.size.width > 80) {
+            make.width.mas_greaterThanOrEqualTo(self.identifier.frame.size.width);
+        }
+        else {
+            make.width.mas_greaterThanOrEqualTo(@80);
+        }
+        make.height.mas_greaterThanOrEqualTo(self.identifier.frame.size.height);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(-1);
+    }];
 
     if (self.cardData.showSignature) {
-        _identifier.mm_y = _name.mm_y + _name.mm_h + 5;
+        [self.signature sizeToFit];
+        [self.signature mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.name);
+            make.top.mas_equalTo(self.identifier.mas_bottom).mas_offset(5);
+            if(self.signature.frame.size.width > 80) {
+                make.width.mas_greaterThanOrEqualTo(self.signature.frame.size.width);
+            }
+            else {
+                make.width.mas_greaterThanOrEqualTo(@80);
+            }
+            make.height.mas_greaterThanOrEqualTo(self.signature.frame.size.height);
+            make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(-1);
+        }];
+        
     } else {
-        _identifier.mm_bottom(_avatar.mm_b);
+        self.signature.frame = CGRectZero;
     }
 
-    _signature.mm_sizeToFitThan(80, _avatar.mm_h / 3).mm_left(_name.mm_x);
-    _signature.mm_y = CGRectGetMaxY(_identifier.frame) + 5;
-    if (CGRectGetMaxX(_signature.frame) >= self.contentView.mm_w) {
-        _signature.mm_w = maxLabelWidth;
-    }
-
-    _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9)
-        .mm__centerY(_name.mm_centerY)
-        .mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);
 }
 
 - (void)onTapAvatar {
@@ -2164,20 +2284,20 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
     }
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+    
 }
 
 - (void)setupViews {
-    CGSize headSize = TPersonalCommonCell_Image_Size;
-    _avatar = [[UIImageView alloc] initWithFrame:CGRectMake(TPersonalCommonCell_Margin, TPersonalCommonCell_Margin, headSize.width, headSize.height)];
+    _avatar = [[UIImageView alloc] initWithFrame:CGRectZero];
     _avatar.contentMode = UIViewContentModeScaleAspectFit;
-
-    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-        self.avatar.layer.masksToBounds = YES;
-        self.avatar.layer.cornerRadius = headSize.height / 2;
-    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-        self.avatar.layer.masksToBounds = YES;
-        self.avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-    }
 
     [self addSubview:_avatar];
 
@@ -2193,12 +2313,37 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    CGSize headSize = TPersonalCommonCell_Image_Size;    
+    [self.avatar mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(headSize);
+        if (self.avatarData.showAccessory) {
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+        }
+        else {
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-20);
+        }
+        make.centerY.mas_equalTo(self);
+    }];
+    
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatar.layer.masksToBounds = YES;
+        self.avatar.layer.cornerRadius = headSize.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatar.layer.masksToBounds = YES;
+        self.avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    //_avatar.mm_top(self.mm_maxY - TPersonalCommonCell_Margin).mm_left(self.mm_maxX - 100);
-    CGFloat margin = self.avatarData.showAccessory ? 20 : 0;
-    _avatar.mm_left(self.mm_maxX - 16 - TPersonalCommonCell_Image_Size.width - margin);
+    
 }
 @end
 

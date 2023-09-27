@@ -101,7 +101,7 @@
 #pragma mark-- Timer
 - (void)triggerRecordTimer {
     self.currentRecordTime = 0;
-    self.recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(onRecordTimerTriggered:) userInfo:nil repeats:YES];
+    self.recordTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(onRecordTimerTriggered:) userInfo:nil repeats:YES];
 }
 
 - (void)onRecordTimerTriggered:(NSTimer *)timer {
@@ -109,7 +109,7 @@
 
     if (self.isUsingCallKitRecorder) {
         /// To ensure the callkit recorder's recording time is enough for 60 seconds.
-        self.currentRecordTime += 0.495;
+        self.currentRecordTime += 0.1958;
         if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didRecordTimeChanged:)]) {
             [self.delegate audioRecorder:self didRecordTimeChanged:self.currentRecordTime];
         }

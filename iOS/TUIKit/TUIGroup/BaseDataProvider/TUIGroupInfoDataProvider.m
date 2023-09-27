@@ -5,7 +5,6 @@
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
 #import "TIMGroupInfo+TUIDataProvider.h"
-#import "TUIAddCellData.h"
 #import "TUIGroupInfoDataProvider.h"
 #import "TUIGroupMemberCellData.h"
 #import "TUIGroupMembersCellData.h"

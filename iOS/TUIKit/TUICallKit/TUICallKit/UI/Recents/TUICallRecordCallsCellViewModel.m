@@ -10,6 +10,7 @@
 #import "TUICallEngineHeader.h"
 #import "TUITool.h"
 #import "TUIConfig.h"
+#import "CallingLocalized.h"
 
 @interface TUICallRecordCallsCellViewModel ()
 
@@ -112,13 +113,13 @@
     self.resultLabelStr = @"";
     switch (callResultType) {
         case TUICallResultTypeMissed:
-            self.resultLabelStr = @"Missed";
+            self.resultLabelStr = TUICallingLocalize(@"TUICallKit.Recents.missed");
             break;
         case TUICallResultTypeIncoming:
-            self.resultLabelStr = @"Incoming";
+            self.resultLabelStr = TUICallingLocalize(@"TUICallKit.Recents.incoming");
             break;
         case TUICallResultTypeOutgoing:
-            self.resultLabelStr = @"Outgoing";
+            self.resultLabelStr = TUICallingLocalize(@"TUICallKit.Recents.outgoing");
             break;
         case TUICallResultTypeUnknown:
         default:

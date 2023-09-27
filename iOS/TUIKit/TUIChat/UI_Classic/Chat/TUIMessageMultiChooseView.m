@@ -11,6 +11,7 @@
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/UIView+TUILayout.h>
+#import <TIMCommon/TIMDefine.h>
 
 @interface TUIMessageMultiChooseView ()
 
@@ -75,6 +76,14 @@
             UIView *sub = self.menuView.subviews[i];
             CGFloat centerY = (self.menuView.bounds.size.height - height) * 0.5;
             sub.frame = CGRectMake(i * width, centerY -= 0.5 * centerBottomOffset, width, height);
+        }
+    }
+    if(isRTL()) {
+        for (UIView *subview in self.toolView.subviews) {
+            [subview resetFrameToFitRTL];
+        }
+        for (UIView *subview in self.menuView.subviews) {
+            [subview resetFrameToFitRTL];
         }
     }
 }

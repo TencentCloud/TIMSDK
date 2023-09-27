@@ -12,7 +12,7 @@ class VideoCallerWaitingView: UIView {
     let viewModel = FunctionViewModel()
     lazy var hangupBtn: BaseControlButton = {
         weak var weakSelf = self
-        let btn = BaseControlButton.create(frame: CGRectZero,
+        let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: "Demo.TRTC.Calling.hangup") ?? "",
                                            imageSize: kBtnLargeSize) { sender in
             weakSelf?.hangupTouchEvent(sender: sender)
@@ -23,7 +23,7 @@ class VideoCallerWaitingView: UIView {
         btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))
         return btn
     }()
-
+    
     let switchCameraBtn: UIButton = {
         let btn = UIButton(type: .system)
         if let image = TUICallKitCommon.getBundleImage(name: "switch_camera") {
@@ -50,12 +50,12 @@ class VideoCallerWaitingView: UIView {
         bindInteraction()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(hangupBtn)
         addSubview(switchCameraBtn)
     }
-
+    
     func activateConstraints() {
         hangupBtn.snp.makeConstraints { make in
             make.center.equalTo(self)
@@ -64,11 +64,11 @@ class VideoCallerWaitingView: UIView {
         
         switchCameraBtn.snp.makeConstraints { make in
             make.centerY.equalTo(hangupBtn)
-            make.left.equalTo(hangupBtn.snp.right).offset(20)
+            make.leading.equalTo(hangupBtn.snp.trailing).offset(20)
             make.size.equalTo(CGSize(width: 36, height: 36))
         }
     }
-
+    
     func bindInteraction() {
         switchCameraBtn.addTarget(self, action: #selector(switchCameraTouchEvent(sender: )), for: .touchUpInside)
     }
@@ -77,9 +77,9 @@ class VideoCallerWaitingView: UIView {
     func hangupTouchEvent(sender: UIButton) {
         viewModel.hangup()
     }
-
+    
     @objc func switchCameraTouchEvent(sender: UIButton ) {
         viewModel.switchCamera()
     }
-
+    
 }

@@ -18,22 +18,22 @@ class GroupCallVideoCell: UICollectionViewCell {
     let isCameraOpenObserver = Observer()
     let remotePlayoutVolumeObserver = Observer()
     let selfPlayoutVolumeObserver = Observer()
-
+    
     private var viewModel = GroupCallVideoCellViewModel(remote: User())
     private var user: User = User()
     
     private var renderView = VideoView()
-
+    
     private let titleLabel = {
-        let titleLabel = UILabel(frame: CGRectZero)
+        let titleLabel = UILabel(frame: CGRect.zero)
         titleLabel.textColor = UIColor.t_colorWithHexString(color: "FFFFFF")
         titleLabel.font = UIFont.systemFont(ofSize: 12)
-        titleLabel.textAlignment = .left
+        titleLabel.textAlignment = TUICoreDefineConvert.getIsRTL() ? .right : .left
         return titleLabel
     }()
-        
+    
     private let loadingImageView = {
-        let imageView = UIImageView(frame: CGRectZero)
+        let imageView = UIImageView(frame: CGRect.zero)
         imageView.contentMode = .scaleAspectFill
         guard let filePath = TUICallKitCommon.getTUICallKitBundle()?.path(forResource: "loading", ofType: "gif") else { return imageView }
         guard let data = NSData(contentsOfFile: filePath) as? Data else { return imageView }
@@ -42,13 +42,13 @@ class GroupCallVideoCell: UICollectionViewCell {
     }()
     
     private let avatarImageView = {
-        let imageView = UIImageView(frame: CGRectZero)
+        let imageView = UIImageView(frame: CGRect.zero)
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
     private let micImageView = {
-        let imageView = UIImageView(frame: CGRectZero)
+        let imageView = UIImageView(frame: CGRect.zero)
         imageView.contentMode = .scaleAspectFill
         if let image = TUICallKitCommon.getBundleImage(name: "ic_mute") {
             imageView.image = image
@@ -96,7 +96,7 @@ class GroupCallVideoCell: UICollectionViewCell {
         activateConstraints()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         contentView.addSubview(renderView)
         contentView.addSubview(avatarImageView)
@@ -104,7 +104,7 @@ class GroupCallVideoCell: UICollectionViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(micImageView)
     }
-
+    
     func activateConstraints() {
         renderView.snp.makeConstraints { make in
             make.edges.equalTo(self.contentView)
@@ -119,7 +119,7 @@ class GroupCallVideoCell: UICollectionViewCell {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.left.equalTo(self.contentView).offset(20)
+            make.leading.equalTo(self.contentView).offset(20)
             make.bottom.equalTo(self.contentView).offset(-5)
             make.width.equalTo(self.contentView)
             make.height.equalTo(20)
@@ -127,11 +127,11 @@ class GroupCallVideoCell: UICollectionViewCell {
         
         micImageView.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 20, height: 20))
-            make.right.equalTo(self.contentView).offset(-20)
+            make.trailing.equalTo(self.contentView).offset(-20)
             make.bottom.equalTo(self.contentView).offset(-5)
         }
     }
-
+    
     func initCell(user: User) {
         self.user = user
         viewModel = GroupCallVideoCellViewModel(remote: user)
@@ -146,7 +146,7 @@ class GroupCallVideoCell: UICollectionViewCell {
         isCameraOpenChanged()
         volumChanged()
     }
-
+    
     func callStatusChanged() {
         if viewModel.isSelf {
             viewModel.selfUserStatus.addObserver(selfUserStatusObserver, closure: { [weak self] newValue, _ in
@@ -203,9 +203,9 @@ class GroupCallVideoCell: UICollectionViewCell {
     
     //MARK: Update UI
     func initWaitingUI() {
-        titleLabel.text = viewModel.remoteUser.id.value
+        titleLabel.text = viewModel.remoteUser.nickname.value
         setUserAvatar()
-
+        
         if viewModel.isSelf {
             initSelfUserUI()
         } else {
@@ -219,13 +219,13 @@ class GroupCallVideoCell: UICollectionViewCell {
         if viewModel.mediaType.value == .video {
             if viewModel.selfUserStatus.value == .waiting {
                 if !VideoFactory.instance.isExistVideoView(videoView: renderView) {
-                    renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRectZero)
+                    renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRect.zero)
                     renderView.isHidden = false
                     viewModel.openCamera(videoView: renderView)
                 }
             } else if viewModel.selfUserStatus.value == .accept {
                 if !VideoFactory.instance.isExistVideoView(videoView: renderView) {
-                    renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRectZero)
+                    renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRect.zero)
                     viewModel.openCamera(videoView: renderView)
                 }
                 if viewModel.isCameraOpen.value == true {
@@ -240,7 +240,7 @@ class GroupCallVideoCell: UICollectionViewCell {
             avatarImageView.isHidden = false
         }
     }
-
+    
     func updateSelfUsertUI() {
         hiddenAllSubView()
         
@@ -256,8 +256,8 @@ class GroupCallVideoCell: UICollectionViewCell {
             avatarImageView.isHidden = false
         }
     }
-
-                
+    
+    
     func updateRemoteUserCellUI() {
         hiddenAllSubView()
         
@@ -284,7 +284,7 @@ class GroupCallVideoCell: UICollectionViewCell {
             }
         }
     }
-        
+    
     func hiddenAllSubView() {
         renderView.isHidden = true
         titleLabel.isHidden = true

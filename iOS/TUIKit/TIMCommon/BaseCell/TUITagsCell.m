@@ -100,6 +100,15 @@
     allWidth += rightMargin;
     allWidth += 8;
     self.ItemWidth = allWidth;
+    
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    for (UIView *subView in self.subviews) {
+        [subView resetFrameToFitRTL];
+    }
+
 }
 
 - (void)emojiBtnClick {

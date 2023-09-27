@@ -12,6 +12,7 @@
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/TUITool.h>
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIThemeSelectCollectionViewCellModel
 
@@ -98,50 +99,100 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self setupViews];
+        [self setupBaseViews];
     }
     return self;
 }
 
 - (void)setCellModel:(TUIThemeSelectCollectionViewCellModel *)cellModel {
-    [super setCellModel:cellModel];
+    _cellModel = cellModel;
     self.titleLabel.text = TIMCommonLocalizableString(TUIKitThemeNameSystemFollowTitle);
     self.subTitleLabel.text = TIMCommonLocalizableString(TUIKitThemeNameSystemFollowSubTitle);
     self.switcher.on = cellModel.selected;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
-- (void)setupViews {
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(kScale375(24));
+        make.top.mas_equalTo(12);
+        make.trailing.mas_equalTo(self.switcher.mas_leading).mas_offset(- 3);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.subTitleLabel sizeToFit];
+    [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.titleLabel);
+        make.trailing.mas_equalTo(self.switcher.mas_leading);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(3);
+        make.bottom.mas_equalTo(self.contentView.mas_bottom);
+    }];
+    
+    [self.switcher mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-kScale375(24));
+        make.top.mas_equalTo(self.titleLabel);
+        make.width.mas_equalTo(35);
+        make.height.mas_equalTo(20);
+    }];
+
+
+}
+- (void)setupBaseViews {
     self.contentView.layer.cornerRadius = 5.0;
     self.contentView.layer.masksToBounds = YES;
-    [self.contentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)]];
     self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
-    [self.contentView addSubview:self.switcher];
 
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(kScale375(24), 12, self.contentView.mm_w * 0.8, 20)];
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     self.titleLabel.font = [UIFont systemFontOfSize:16.0];
-    self.titleLabel.textAlignment = NSTextAlignmentLeft;
+    self.titleLabel.rtlAlignment = TUITextRTLAlignmentLeading;
     self.titleLabel.numberOfLines = 0;
     [self.contentView addSubview:self.titleLabel];
 
-    self.subTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.titleLabel.mm_x, self.titleLabel.mm_maxY + 10, self.contentView.mm_w * 0.9, 18)];
+    self.subTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.subTitleLabel.textColor = TIMCommonDynamicColor(@"form_desc_color", @"#888888");
-    self.subTitleLabel.textAlignment = NSTextAlignmentLeft;
+    self.subTitleLabel.rtlAlignment = TUITextRTLAlignmentLeading;
     self.subTitleLabel.font = [UIFont systemFontOfSize:12.0];
     self.subTitleLabel.backgroundColor = [UIColor clearColor];
     self.subTitleLabel.numberOfLines = 0;
     [self.contentView addSubview:self.subTitleLabel];
+   
+    self.switcher = [[UISwitch alloc] initWithFrame:CGRectZero];
+    _switcher.onTintColor = TIMCommonDynamicColor(@"common_switch_on_color", @"#147AFF");
+    [_switcher addTarget:self action:@selector(switchClick:) forControlEvents:UIControlEventValueChanged];
 
-    self.switcher = [[UISwitch alloc] initWithFrame:CGRectMake(self.contentView.mm_w - 35 - kScale375(24), self.titleLabel.mm_y - 4, 35, 20)];
-    self.switcher.onTintColor = TIMCommonDynamicColor(@"common_switch_on_color", @"#147AFF");
-    [self.switcher addTarget:self action:@selector(switchClick:) forControlEvents:UIControlEventValueChanged];
     [self.contentView addSubview:self.switcher];
 }
+
 
 - (void)switchClick:(id)sw {
     if (self.onSelect) {
         self.onSelect(self.cellModel);
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+    self.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
+    
 }
 
 @end
@@ -186,6 +237,7 @@
         self.navigationController.navigationBar.barTintColor = self.tintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
     }
+    self.navigationController.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -209,8 +261,9 @@
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
-    UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    UIImage *image = TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:TIMCommonImagePath(@"nav_back")]);
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    image = [image rtl_imageFlippedForRightToLeftLayoutDirection];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:image forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
@@ -500,7 +553,7 @@ static BOOL gDisableFollowSystemStyle = NO;
         layout.sectionInset = UIEdgeInsetsMake(12, 16, 12, 16);
 
         if (!gDisableFollowSystemStyle) {
-            layout.headerReferenceSize = CGSizeMake((UIScreen.mainScreen.bounds.size.width), 68);
+            layout.headerReferenceSize = CGSizeMake((UIScreen.mainScreen.bounds.size.width), 120);
         }
 
         _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
@@ -512,7 +565,7 @@ static BOOL gDisableFollowSystemStyle = NO;
         [_collectionView registerClass:[TUIThemeHeaderCollectionViewCell class]
             forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
                    withReuseIdentifier:@"HeaderView"];
-        _collectionView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#111111");
+        _collectionView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
     }
     return _collectionView;
 }
@@ -584,6 +637,7 @@ static BOOL gDisableFollowSystemStyle = NO;
 
 - (void)onThemeChanged {
     dispatch_async(dispatch_get_main_queue(), ^{
+      [self prepareData];
       [self.collectionView reloadData];
     });
 }

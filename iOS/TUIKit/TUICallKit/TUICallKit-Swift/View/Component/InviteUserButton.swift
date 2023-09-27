@@ -50,7 +50,7 @@ class InviteUserButton: UIView {
     func activateConstraints() {
         inviteUserButton.snp.makeConstraints { make in
             make.center.equalTo(self)
-            make.size.equalTo(CGSize(width: 40, height: 40))
+            make.size.equalTo(kInviteUserButtonSize)
         }
     }
 

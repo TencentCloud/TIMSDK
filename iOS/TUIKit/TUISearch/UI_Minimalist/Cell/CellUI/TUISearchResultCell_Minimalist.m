@@ -38,12 +38,15 @@
     _title_label.text = @"";
     _title_label.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     _title_label.font = [UIFont boldSystemFontOfSize:14.0];
+    _title_label.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     [self.contentView addSubview:_title_label];
 
     _detail_title = [[UILabel alloc] init];
     _detail_title.text = @"";
     _detail_title.textColor = TIMCommonDynamicColor(@"form_subtitle_color", @"#888888");
     _detail_title.font = [UIFont systemFontOfSize:12.0];
+    _detail_title.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
+
     [self.contentView addSubview:_detail_title];
 
     _rowAccessoryView = [[UIImageView alloc] init];
@@ -61,42 +64,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.avatarView.mm_x = kScale390(16);
-    self.avatarView.mm_w = kScale390(40);
-    self.avatarView.mm_h = kScale390(40);
-    self.avatarView.mm_centerY = self.contentView.mm_centerY;
-    if (self.cellModel.avatarType == TAvatarTypeRadiusCorner) {
-        self.avatarView.layer.cornerRadius = self.avatarView.mm_h / 2;
-        self.avatarView.layer.masksToBounds = YES;
-    }
-
-    self.title_label.mm_x = self.avatarView.mm_maxX + 10;
-    self.detail_title.mm_x = self.avatarView.mm_maxX + 10;
-
-    [self.title_label sizeToFit];
-    [self.detail_title sizeToFit];
-
-    self.rowAccessoryView.mm_height(10).mm_width(10);
-    self.rowAccessoryView.mm_centerY = self.contentView.mm_centerY;
-    self.rowAccessoryView.mm_r = 10;
-
-    self.separtorView.frame = CGRectMake(self.detail_title.mm_x, self.contentView.mm_h - 1, self.contentView.mm_w - self.detail_title.mm_x - kScale390(10), 1);
-
-    NSString *title = self.title_label.text;
-    if (title.length == 0) {
-        title = self.title_label.attributedText.string;
-    }
-    NSString *detail = self.detail_title.text;
-    if (detail.length == 0) {
-        detail = self.detail_title.attributedText.string;
-    }
-    if (title.length && self.detail_title.text.length) {
-        self.title_label.mm_y = self.avatarView.mm_y;
-        self.detail_title.mm_b = self.avatarView.mm_b;
-    } else {
-        self.title_label.mm_centerY = self.avatarView.mm_centerY;
-        self.detail_title.mm_centerY = self.avatarView.mm_centerY;
-    }
 }
 
 - (void)fillWithData:(TUISearchResultCellModel *)cellModel {
@@ -243,6 +210,95 @@
           [self.avatarView sd_setImageWithURL:[NSURL URLWithString:faceUrl] placeholderImage:self.cellModel.avatarImage];
       }
     }];
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+        
+    CGSize headSize = CGSizeMake(kScale390(40), kScale390(40));
+
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(headSize);
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.leading.mas_equalTo(kScale390(16));
+    }];
+    
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = headSize.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatarView.layer.masksToBounds = YES;
+        self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+
+    NSString *title = self.title_label.text;
+    if (title.length == 0) {
+        title = self.title_label.attributedText.string;
+    }
+    NSString *detail = self.detail_title.text;
+    if (detail.length == 0) {
+        detail = self.detail_title.attributedText.string;
+    }
+    
+    [self.title_label sizeToFit];
+    
+    [self.detail_title sizeToFit];
+    
+    if (title.length && self.detail_title.text.length) {
+        [self.title_label mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.avatarView.mas_top);
+            make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(10);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+            make.height.mas_greaterThanOrEqualTo(self.title_label.frame.size.height);
+        }];
+
+        [self.detail_title mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.avatarView.mas_bottom);
+            make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(10);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+            make.height.mas_greaterThanOrEqualTo(self.detail_title.frame.size.height);
+        }];
+    } else {
+
+        [self.title_label mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+            make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(10);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+            make.height.mas_greaterThanOrEqualTo(self.title_label.frame.size.height);
+        }];
+        [self.detail_title mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+            make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(10);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-10);
+            make.height.mas_greaterThanOrEqualTo(self.title_label.frame.size.height);
+        }];
+    }
+
+    [self.rowAccessoryView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.width.mas_equalTo(10);
+        make.centerY.mas_equalTo(self.contentView);
+        make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(- 10);
+    }];
+    [self.separtorView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.detail_title.mas_trailing);
+        make.bottom.mas_equalTo(self.contentView.mas_bottom).mas_offset(-1);
+        make.width.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(1);
+    }];
+
+}
 @end

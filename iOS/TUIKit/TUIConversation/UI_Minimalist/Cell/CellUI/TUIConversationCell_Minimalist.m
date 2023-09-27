@@ -49,6 +49,14 @@
     [self configOnlineStatusIcon:convData];
 
     [self configDisplayLastMessageStatusImage:convData];
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 - (void)configHeadImageView:(TUIConversationCellData *)convData {
@@ -235,8 +243,7 @@
       @strongify(self);
       if (convData.onlineStatus == TUIConversationOnlineStatusOnline && TUIConfig.defaultConfig.displayOnlineStatusIcon) {
           self.onlineStatusIcon.hidden = NO;
-          self.onlineStatusIcon.image =
-              TUIDynamicImage(@"", TUIThemeModuleConversation_Minimalist, [UIImage imageNamed:TUIConversationImagePath_Minimalist(@"icon_online_status")]);
+          self.onlineStatusIcon.image = TIMCommonDynamicImage(@"icon_online_status", [UIImage imageNamed:TIMCommonImagePath(@"icon_online_status")]);
       } else if (convData.onlineStatus == TUIConversationOnlineStatusOffline && TUIConfig.defaultConfig.displayOnlineStatusIcon) {
           self.onlineStatusIcon.hidden = YES;
           self.onlineStatusIcon.image = nil;
@@ -264,27 +271,51 @@
     return image;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
     CGFloat height = [self.convData heightOfWidth:self.mm_w];
     self.mm_h = height;
     CGFloat imgHeight = height - 2 * (kScale390(12));
 
+    if (self.convData.isOnTop) {
+        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_top_bg_color", @"#F4F4F4");
+    } else {
+        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_bg_color", @"#FFFFFF");
+    }
+    
+    CGFloat selectedIconSize = 20;
     if (self.convData.showCheckBox) {
-        self.selectedIcon.mm_width(20).mm_height(20);
-        self.selectedIcon.mm_x = 10;
-        self.selectedIcon.mm_centerY = self.headImageView.mm_centerY;
         self.selectedIcon.hidden = NO;
     } else {
-        self.selectedIcon.mm_width(0).mm_height(0);
-        self.selectedIcon.mm_x = 0;
-        self.selectedIcon.mm_y = 0;
         self.selectedIcon.hidden = YES;
     }
-
-    CGFloat margin = self.convData.showCheckBox ? self.selectedIcon.mm_maxX : 0;
-    self.headImageView.mm_width(imgHeight).mm_height(imgHeight).mm_left(kScale390(16) + margin).mm_top(kScale390(12));
+    
+    [self.selectedIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.convData.showCheckBox) {
+            make.width.height.mas_equalTo(selectedIconSize);
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(10);
+            make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        }
+    }];
+    
+    [self.headImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(imgHeight);
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        if (self.convData.showCheckBox) {
+            make.leading.mas_equalTo(self.selectedIcon.mas_trailing).mas_offset(kScale390(16));
+        }
+        else {
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(kScale390(16));
+        }
+    }];
+    
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.headImageView.layer.masksToBounds = YES;
         self.headImageView.layer.cornerRadius = imgHeight / 2;
@@ -292,35 +323,79 @@
         self.headImageView.layer.masksToBounds = YES;
         self.headImageView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
+    [self.timeLabel sizeToFit];
+    [self.timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(self.timeLabel.frame.size.width);
+        make.height.mas_greaterThanOrEqualTo(self.timeLabel.font.lineHeight);
+        make.top.mas_equalTo(self.subTitleLabel.mas_top);
+        make.trailing.mas_equalTo(self.contentView).mas_offset(- kScale390(8));
+    }];
+    MASAttachKeys(self.timeLabel);
 
-    self.unReadView.mm_right(self.mm_r + kScale390(8)).mm_top(kScale390(16.5));
-    self.timeLabel.mm_sizeToFit().mm_top(self.unReadView.mm_maxY + kScale390(3)).mm_right(kScale390(8));
-    self.lastMessageStatusImageView.mm_width(kScale390(14))
-        .mm_height(14)
-        .mm_top(self.unReadView.mm_maxY + kScale390(3))
-        .mm_right(kScale390(1) + self.timeLabel.mm_w + kScale390(8));
-    self.titleLabel.mm_sizeToFit()
-        .mm_top(self.unReadView.mm_y)
-        .mm_left(self.headImageView.mm_maxX + kScale390(8))
-        .mm_flexToRight(self.timeLabel.mm_w + 2 * kScale390(14));
-    self.subTitleLabel.mm_sizeToFit().mm_left(self.titleLabel.mm_x).mm_top(self.titleLabel.mm_maxY + kScale390(3)).mm_flexToRight(2 * kScale390(28));
-    self.notDisturbRedDot.mm_width(TConversationCell_Margin_Disturb_Dot)
-        .mm_height(TConversationCell_Margin_Disturb_Dot)
-        .mm_right(self.headImageView.mm_r - 3)
-        .mm_top(self.headImageView.mm_y - 3);
-    self.notDisturbView.mm_width(TConversationCell_Margin_Disturb).mm_height(TConversationCell_Margin_Disturb).mm_top(kScale390(16)).mm_right(kScale390(8));
+    [self.lastMessageStatusImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(kScale390(14));
+        make.height.mas_equalTo(14);
+        make.trailing.mas_equalTo(self.timeLabel.mas_leading).mas_offset(- (kScale390(1) + kScale390(8)));
+        make.bottom.mas_equalTo(self.timeLabel.mas_bottom);
+    }];
+    MASAttachKeys(self.lastMessageStatusImageView);
+    
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_greaterThanOrEqualTo(120);
+        make.height.mas_greaterThanOrEqualTo(self.titleLabel.font.lineHeight);
+        make.top.mas_equalTo(self.contentView.mas_top).mas_offset(kScale390(14));
+        make.leading.mas_equalTo(self.headImageView.mas_trailing).mas_offset(kScale390(8));
+        make.trailing.mas_equalTo(self.timeLabel.mas_leading).mas_offset(- 2*kScale390(14));
+    }];
+    MASAttachKeys(self.titleLabel);
 
-    self.onlineStatusIcon.mm_width(kScale390(10)).mm_height(kScale390(10));
-    self.onlineStatusIcon.mm_x = CGRectGetMaxX(self.headImageView.frame) - 0.5 * self.onlineStatusIcon.mm_w - kScale390(3);
-    self.onlineStatusIcon.mm_y = CGRectGetMaxY(self.headImageView.frame) - self.onlineStatusIcon.mm_w;
-    self.onlineStatusIcon.layer.cornerRadius = 0.5 * self.onlineStatusIcon.mm_w;
+    
 
-    if (self.convData.isOnTop) {
-        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_top_bg_color", @"#F4F4F4");
-    } else {
-        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_bg_color", @"#FFFFFF");
-        ;
-    }
+    [self.subTitleLabel sizeToFit];
+    [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_greaterThanOrEqualTo(self.subTitleLabel);
+        make.bottom.mas_equalTo(self.contentView).mas_offset(- kScale390(14));
+        make.leading.mas_equalTo(self.titleLabel.mas_leading);
+        make.trailing.mas_equalTo(self.timeLabel.mas_leading).mas_offset(-kScale390(8));
+    }];
+    MASAttachKeys(self.subTitleLabel);
+
+    [self.unReadView.unReadLabel sizeToFit];
+    [self.unReadView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.timeLabel.mas_trailing);
+        make.top.mas_equalTo(self.titleLabel.mas_top);
+        make.width.mas_equalTo(kScale375(18));
+        make.height.mas_equalTo(kScale375(18));
+    }];
+    [self.unReadView.unReadLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.unReadView);
+        make.size.mas_equalTo(self.unReadView.unReadLabel);
+    }];
+    self.unReadView.layer.cornerRadius = kScale375(18) * 0.5;
+    [self.unReadView.layer masksToBounds];
+    
+    [self.notDisturbRedDot mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.headImageView.mas_trailing).mas_offset(3);
+        make.top.mas_equalTo(self.headImageView.mas_top).mas_offset(1);
+        make.width.height.mas_equalTo(TConversationCell_Margin_Disturb_Dot);
+    }];
+
+    [self.notDisturbView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(TConversationCell_Margin_Disturb);
+        make.trailing.mas_equalTo(self.timeLabel.mas_trailing);
+        make.top.mas_equalTo(self.titleLabel.mas_top);
+    }];
+    
+    [self.onlineStatusIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(kScale375(15));
+        make.leading.mas_equalTo(self.headImageView.mas_trailing).mas_offset(-kScale375(10));
+        make.bottom.mas_equalTo(self.headImageView.mas_bottom).mas_offset(-kScale375(1));
+    }];
+    
+    self.onlineStatusIcon.layer.cornerRadius = 0.5 *kScale375(15);
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 @end

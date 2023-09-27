@@ -72,6 +72,15 @@
       NSInteger downloadProgress = [TUIMessageProgressManager.shareManager downloadProgressForMessage:self.fileData.msgID];
       [self onUploadProgress:self.fileData.msgID progress:uploadProgress];
       [self onDownloadProgress:self.fileData.msgID progress:downloadProgress];
+        
+      // tell constraints they need updating
+      [self setNeedsUpdateConstraints];
+
+      // update constraints now so we can animate the change
+      [self updateConstraintsIfNeeded];
+
+      [self layoutIfNeeded];
+
     });
 }
 
@@ -119,22 +128,20 @@
 }
 - (void)showProgressLodingAnimation:(NSInteger)progress {
     self.progressView.hidden = NO;
-    self.progressView.frame = CGRectMake(0, 0, self.progressView.mm_w ?: 1, self.fileContainer.mm_h);
     NSLog(@"showProgressLodingAnimation:%ld", (long)progress);
     [UIView animateWithDuration:0.25
         animations:^{
-          self.progressView.mm_x = 0;
-          self.progressView.mm_y = 0;
-          self.progressView.mm_h = self.fileContainer.mm_h;
-          self.progressView.mm_w = self.fileContainer.mm_w * progress / 100.0;
-        }
-        completion:^(BOOL finished) {
-          if (progress == 0 || progress >= 100) {
-              self.progressView.hidden = YES;
-              [self.indicator stopAnimating];
-              self.length.text = [self formatLength:self.fileData.length];
-          }
+        [self.progressView mas_updateConstraints:^(MASConstraintMaker *make) {
+          make.width.mas_equalTo(self.fileContainer.mm_w * progress / 100.0);
         }];
+    }
+        completion:^(BOOL finished) {
+        if (progress == 0 || progress >= 100) {
+            self.progressView.hidden = YES;
+            [self.indicator stopAnimating];
+            self.length.text = [self formatLength:self.fileData.length];
+        }
+    }];
 
     self.length.text = [self formatLength:self.fileData.length];
 }
@@ -181,28 +188,60 @@
     return TUIChatImagePath(@"msg_file");
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    
     CGSize containerSize = [self.class getContentSize:self.fileData];
-    self.fileContainer.frame = CGRectMake(0, 0, containerSize.width, containerSize.height);
+    [self.fileContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.container);
+        make.size.mas_equalTo(containerSize);
+    }];
+    
     CGFloat imageHeight = containerSize.height - 2 * TFileMessageCell_Margin;
     CGFloat imageWidth = imageHeight;
-    _image.frame = CGRectMake(TFileMessageCell_Margin, TFileMessageCell_Margin, imageWidth, imageHeight);
+    [self.image mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.container.mas_leading).mas_offset(TFileMessageCell_Margin);
+        make.top.mas_equalTo(self.container.mas_top).mas_offset(TFileMessageCell_Margin);
+        make.size.mas_equalTo(CGSizeMake(imageWidth, imageHeight));
+    }];
+
     CGFloat textWidth = containerSize.width - 2 * TFileMessageCell_Margin - imageWidth;
     CGSize nameSize = [_fileName sizeThatFits:containerSize];
-    _fileName.frame =
-        CGRectMake(_image.frame.origin.x + _image.frame.size.width + TFileMessageCell_Margin, TFileMessageCell_Margin, textWidth, nameSize.height);
-    CGSize lengthSize = [_length sizeThatFits:containerSize];
-    _length.frame =
-        CGRectMake(_fileName.frame.origin.x, _fileName.frame.origin.y + nameSize.height + TFileMessageCell_Margin * 0.5, textWidth, lengthSize.height);
 
+    [self.fileName mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.image.mas_trailing).mas_offset(TFileMessageCell_Margin);
+        make.top.mas_equalTo(self.image);
+        make.size.mas_equalTo(CGSizeMake(textWidth, nameSize.height));
+    }];
+
+    CGSize lengthSize = [_length sizeThatFits:containerSize];
+    [self.length mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.fileName);
+        make.top.mas_equalTo(self.fileName.mas_bottom).mas_offset(TFileMessageCell_Margin * 0.5);
+        make.size.mas_equalTo(CGSizeMake(textWidth, nameSize.height));
+    }];
+    
+    
     if (self.messageData.messageModifyReactsSize.height > 0) {
-        self.fileContainer.frame = CGRectMake(0, 0, self.container.frame.size.width, self.container.frame.size.height);
+        [self.fileContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self.container);
+            make.size.mas_equalTo(self.container);
+        }];
+        
         if (self.tagView) {
-            self.tagView.frame =
-                CGRectMake(0, TFileMessageCell_Margin + imageHeight, self.fileContainer.frame.size.width, self.messageData.messageModifyReactsSize.height);
+            [self.tagView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.leading.mas_equalTo(self.container);
+                make.bottom.mas_equalTo(self.container);
+                make.width.mas_equalTo(self.container);
+                make.height.mas_equalTo(self.messageData.messageModifyReactsSize.height);
+            }];
         }
+        
         self.bubble.hidden = NO;
     } else {
         self.bubble.hidden = YES;
@@ -218,6 +257,17 @@
     UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:self.fileContainer.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(10, 10)];
     self.maskLayer.path = bezierPath.CGPath;
     self.borderLayer.path = bezierPath.CGPath;
+    
+    [self.progressView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.width.mas_equalTo(self.progressView.mm_w ?: 1);
+        make.height.mas_equalTo(self.fileContainer.mm_h);
+    }];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 - (CAShapeLayer *)maskLayer {

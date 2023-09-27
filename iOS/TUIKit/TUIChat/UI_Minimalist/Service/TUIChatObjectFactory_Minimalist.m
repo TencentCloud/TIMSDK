@@ -52,7 +52,10 @@
     V2TIMMessage *locateMessage = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_LocateMessage asClass:V2TIMMessage.class];
     NSArray * atMsgSeqs = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs asClass:NSArray.class];
     NSString *draft = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Draft asClass:NSString.class];
-    
+    NSString *isEnableVideoInfoStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call asClass:NSString.class];
+    NSString *isEnableAudioInfoStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call asClass:NSString.class];
+    NSString *isEnableRoomInfoStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room asClass:NSString.class];
+
     TUIChatConversationModel *conversationModel = [[TUIChatConversationModel alloc] init];
     conversationModel.title = title;
     conversationModel.userID = userID;
@@ -63,6 +66,17 @@
     conversationModel.atMsgSeqs = [NSMutableArray arrayWithArray:atMsgSeqs];
     conversationModel.draftText = draft;
 
+    if ([isEnableVideoInfoStr isEqualToString:@"0"]) {
+        conversationModel.enabelVideo = NO;
+    }
+
+    if ([isEnableAudioInfoStr isEqualToString:@"0"]) {
+        conversationModel.enabelAudio = NO;
+    }
+    if ([isEnableRoomInfoStr isEqualToString:@"0"]) {
+        conversationModel.enabelRoom = NO;
+    }
+    
     TUIBaseChatViewController_Minimalist *chatVC = nil;
     if (conversationModel.groupID.length > 0) {
         chatVC = [[TUIGroupChatViewController_Minimalist alloc] init];

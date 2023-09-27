@@ -100,6 +100,7 @@
     [_inputTextView setFont:kTUIInputNoramlFont];
     _inputTextView.backgroundColor = TUIChatDynamicColor(@"chat_input_bg_color", @"#FFFFFF");
     _inputTextView.textColor = TUIChatDynamicColor(@"chat_input_text_color", @"#000000");
+    _inputTextView.textAlignment = isRTL()?NSTextAlignmentRight: NSTextAlignmentLeft;
     [_inputTextView setReturnKeyType:UIReturnKeySend];
     [self addSubview:_inputTextView];
 
@@ -139,6 +140,12 @@
     CGFloat endX = _faceButton.frame.origin.x - TTextView_Margin;
     _recordButton.frame = CGRectMake(beginX, (TTextView_Height - TTextView_TextView_Height_Min) * 0.5, endX - beginX, TTextView_TextView_Height_Min);
     _inputTextView.frame = _recordButton.frame;
+    
+    if(isRTL()) {
+        for (UIView *subviews in self.subviews) {
+            [subviews resetFrameToFitRTL];
+        }
+    }
 }
 
 - (void)layoutButton:(CGFloat)height {
@@ -438,6 +445,7 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputBarDidInputAt:)]) {
             [self.delegate inputBarDidInputAt:self];
         }
+        return NO;
     }
     return YES;
 }
@@ -462,7 +470,7 @@
     TUIEmojiTextAttachment *emojiTextAttachment = [[TUIEmojiTextAttachment alloc] init];
     emojiTextAttachment.faceCellData = emoji;
 
-    NSString *localizableFaceName = emoji.localizableName.length ? emoji.localizableName : emoji.name;
+    NSString *localizableFaceName =  emoji.name;
 
     // Set tag and image
     emojiTextAttachment.emojiTag = localizableFaceName;
@@ -502,6 +510,8 @@
     [_inputTextView.textStorage addAttribute:NSFontAttributeName value:kTUIInputNoramlFont range:wholeRange];
     [_inputTextView setFont:kTUIInputNoramlFont];
 
+    _inputTextView.textAlignment = isRTL()?NSTextAlignmentRight: NSTextAlignmentLeft;
+
     // In iOS 15.0 and later, you need set styles again as belows
     _inputTextView.textColor = kTUIInputNormalTextColor;
     _inputTextView.font = kTUIInputNoramlFont;
@@ -520,6 +530,25 @@
 
 - (void)changeToKeyboard {
     [self onKeyboardButtonClicked:self.keyboardButton];
+}
+
+- (void)addDraftToInputBar:(NSAttributedString *)draft {
+    [self addWordsToInputBar:draft];
+}
+
+- (void)addWordsToInputBar:(NSAttributedString *)words {
+    NSRange selectedRange = self.inputTextView.selectedRange;
+    if (selectedRange.length > 0) {
+        [self.inputTextView.textStorage deleteCharactersInRange:selectedRange];
+    }
+    // Insert draft
+    [self.inputTextView.textStorage insertAttributedString:words atIndex:self.inputTextView.selectedRange.location];
+
+    self.inputTextView.selectedRange = NSMakeRange(self.inputTextView.textStorage.length + 1, 0);
+    [self resetTextStyle];
+
+    [self updateTextViewFrame];
+
 }
 
 #pragma mark - TUIAudioRecorderDelegate
@@ -569,8 +598,9 @@
 }
 
 - (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
-    if (time >= 55 && time < 60) {
-        NSInteger seconds = 60 - time;
+    float maxDuration = 59;
+    if (time >= 55 && time <= maxDuration) {
+        NSInteger seconds = maxDuration - time;
         /**
          * 此处强转了 long 型，是为了消除编译器警告。
          * 此处 +1 是为了向上取整，优化时间逻辑。
@@ -579,7 +609,7 @@
          * Here +1 is to round up and optimize the time logic.
          */
         self.recordView.title.text = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitInputWillFinishRecordInSeconds), (long)seconds + 1];
-    } else if (time >= 60) {
+    } else if (time > maxDuration) {
         [self.recorder stop];
         NSString *path = self.recorder.recordedFilePath;
         [self.recordView setStatus:Record_Status_TooLong];

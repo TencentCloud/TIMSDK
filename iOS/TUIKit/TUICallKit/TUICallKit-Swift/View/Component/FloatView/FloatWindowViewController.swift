@@ -11,7 +11,7 @@ import TUICore
 class FloatWindowViewController: UIViewController, FloatingWindowViewDelegate {
     
     let callEventObserver = Observer()
-    let floatView = FloatingWindowView(frame: CGRectZero)
+    let floatView = FloatingWindowView(frame: CGRect.zero)
     weak var delegate: FloatingWindowViewDelegate?
 
     override func viewDidLoad() {

@@ -28,12 +28,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    self.iconView.frame = CGRectMake(0, 0, 15, 15);
-    [self.textLabel sizeToFit];
-    self.textLabel.mm_centerY = self.iconView.mm_centerY;
-    self.textLabel.mm_x = CGRectGetMaxX(self.iconView.frame) + 3;
-    self.textLabel.mm_w = self.mm_w - self.textLabel.mm_x;
 }
 
 - (void)fillWithData:(TUIReplyQuoteViewData *)data {
@@ -44,6 +38,42 @@
     TUIVoiceReplyQuoteViewData *myData = (TUIVoiceReplyQuoteViewData *)data;
     self.iconView.image = myData.icon;
     self.textLabel.numberOfLines = 1;
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    [self.iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self);
+        make.top.mas_equalTo(self);
+        make.width.mas_equalTo(15);
+        make.height.mas_equalTo(15);
+    }];
+    
+    [self.textLabel sizeToFit];
+    [self.textLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.iconView.mas_trailing).mas_offset(3);
+        make.centerY.mas_equalTo(self.mas_centerY);
+        make.trailing.mas_equalTo(self.mas_trailing);
+        make.height.mas_equalTo(self.textLabel.font.lineHeight);
+    }];
+    
+
+}
+
 
 @end

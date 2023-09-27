@@ -63,8 +63,9 @@ static NSString *const HistoryHFId = @"HistoryHFId";
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.view.backgroundColor = [UIColor whiteColor];
 
-    UIImage *image = [UIImage imageNamed:@"ic_back_white"];
+    UIImage *image = [UIImage imageNamed:TIMCommonImagePath(@"nav_back")];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    image = [image rtl_imageFlippedForRightToLeftLayoutDirection];
     UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     self.navigationItem.leftBarButtonItems = @[ back ];
     self.navigationItem.leftItemsSupplementBackButton = NO;

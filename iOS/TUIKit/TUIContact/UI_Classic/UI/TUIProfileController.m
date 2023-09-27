@@ -54,7 +54,7 @@
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
 
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
-    [[V2TIMManager sharedInstance] getUsersInfo:@[ loginUser ]
+    [[V2TIMManager sharedInstance] getUsersInfo:@[ loginUser?:@"" ]
                                            succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
                                              self.profile = infoList.firstObject;
                                              [self setupData];

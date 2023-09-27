@@ -95,24 +95,53 @@
     [self.maskView addSubview:self.selectedView];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+        
+    [self.maskView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(kScale390(16));
+        make.top.mas_equalTo(0);
+        make.trailing.mas_equalTo(self.mas_trailing).mas_offset(-kScale390(16));
+        make.height.mas_equalTo(self);
+    }];
+    
+    CGFloat x = 0;
+    if (!self.selectedView.isHidden) {
+        [self.selectedView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(kScale390(16));
+            make.top.mas_equalTo(kScale390(15));
+            make.width.height.mas_equalTo(kScale390(16));
+        }];
+    }
+    [self.title mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.selectedView.isHidden) {
+            make.leading.mas_equalTo(self.maskView).mas_offset(kScale390(16));
+        }
+        else {
+            make.leading.mas_equalTo(self.selectedView.mas_trailing).mas_offset(10);
+        }
+        make.trailing.mas_equalTo(self.maskView.mas_trailing).mas_offset(- 10);
+        make.height.mas_equalTo(24);
+        make.top.mas_equalTo(kScale390(12));
+    }];
+
+    [self.describeTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.contentView).mas_offset(16);
+            make.trailing.mas_equalTo(self.contentView).mas_offset(-16);
+            make.top.mas_equalTo(self.title.mas_bottom).mas_offset(kScale390(8));
+            make.height.mas_equalTo(_describeTextViewRect.size.height);
+    }];
+
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    [self updateCellView];
-
-    CGFloat x = 0;
-
-    if (self.selectedView.isHidden) {
-        x = kScale390(16);
-    } else {
-        self.selectedView.frame = CGRectMake(kScale390(16), kScale390(15), kScale390(16), kScale390(16));
-        x = self.selectedView.frame.origin.x + self.selectedView.frame.size.width + 10;
-    }
-    self.title.frame = CGRectMake(x, kScale390(12), self.maskView.frame.size.width - x - 10, 24);
-    self.describeTextView.mm_width(self.maskView.mm_w - 32)
-        .mm_height(_describeTextViewRect.size.height)
-        .mm_top(self.title.frame.origin.y + self.title.frame.size.height + kScale390(8))
-        .mm_left(kScale390(16));
 }
 
 - (void)setData:(TUIGroupTypeData_Minimalist *)data {
@@ -120,14 +149,6 @@
     _image.image = data.image;
     _title.text = data.title;
     [self updateRectAndTextForDescribeTextView:self.describeTextView groupType:data.groupType];
-}
-
-- (void)updateCellView {
-    [self updateSelectedUI];
-    self.maskView.frame = CGRectMake(kScale390(16), 0, self.frame.size.width - kScale390(32), self.frame.size.height);
-}
-
-- (void)updateSelectedUI {
     if (self.cellData.isSelect) {
         self.maskView.layer.borderColor = TIMCommonDynamicColor(@"", @"#006EFF").CGColor;
         self.selectedView.hidden = NO;
@@ -135,11 +156,21 @@
         self.maskView.layer.borderColor = [UIColor tui_colorWithHex:@"#DDDDDD"].CGColor;
         self.selectedView.hidden = YES;
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
+
 - (UITextView *)describeTextView {
     if (!_describeTextView) {
         _describeTextView = [[UITextView alloc] init];
         _describeTextView.backgroundColor = [UIColor clearColor];
+        _describeTextView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         _describeTextView.editable = NO;
         _describeTextView.scrollEnabled = NO;
         _describeTextView.textContainerInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
@@ -162,7 +193,7 @@
     if (@available(iOS 9.0, *)) {
         paragraphStyle.allowsDefaultTighteningForTruncation = YES;
     }
-    paragraphStyle.alignment = NSTextAlignmentJustified;
+    paragraphStyle.alignment = isRTL()?NSTextAlignmentRight: NSTextAlignmentLeft;
     NSDictionary *dictionary = @{
         NSFontAttributeName : [UIFont systemFontOfSize:12],
         NSForegroundColorAttributeName : [UIColor tui_colorWithHex:@"#888888"],

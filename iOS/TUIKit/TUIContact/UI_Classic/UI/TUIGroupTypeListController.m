@@ -81,19 +81,40 @@
     _title = [[UILabel alloc] init];
     _title.font = [UIFont systemFontOfSize:16];
     _title.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
+    _title.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     _title.numberOfLines = 0;
     [self addSubview:_title];
 
     [self addSubview:self.describeTextView];
 }
 
-- (void)layoutSubviews {
-    self.image.frame = CGRectMake(16, 12, 40, 40);
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
-    CGFloat x = _image.frame.origin.x + _image.frame.size.width + 10;
-    self.title.frame = CGRectMake(x, 0, self.frame.size.width - x - 10, 24);
-    self.title.center = CGPointMake(self.title.center.x, self.image.center.y);
-    self.describeTextView.mm_width(self.mm_w - 32).mm_height(_describeTextViewRect.size.height).mm_top(12 + 40 + 8).mm_left(16);
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    [self.image mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.contentView).mas_offset(16);
+        make.top.mas_equalTo(self.contentView).mas_offset(16);
+        make.width.height.mas_equalTo(40);
+    }];
+    [self.title sizeToFit];
+    [self.title mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.image.mas_trailing).mas_offset(10);
+        make.centerY.mas_equalTo(self.image);
+        make.trailing.mas_equalTo(self.contentView).mas_offset(- 4);
+    }];
+    
+    [self.describeTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(16);
+        make.trailing.mas_equalTo(self.contentView).mas_offset(-16);
+        make.top.mas_equalTo(self.image.mas_bottom).mas_offset(8);
+        make.height.mas_equalTo(_describeTextViewRect.size.height);
+    }];
+    
 }
 
 - (void)setData:(TUIGroupTypeData *)data {
@@ -110,6 +131,7 @@
         _describeTextView.editable = NO;
         _describeTextView.scrollEnabled = NO;
         _describeTextView.textContainerInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
+        _describeTextView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     }
     return _describeTextView;
 }
@@ -121,7 +143,7 @@
     if (@available(iOS 9.0, *)) {
         paragraphStyle.allowsDefaultTighteningForTruncation = YES;
     }
-    paragraphStyle.alignment = NSTextAlignmentJustified;
+    paragraphStyle.alignment = isRTL()?NSTextAlignmentRight: NSTextAlignmentLeft;
     NSDictionary *dictionary = @{
         NSFontAttributeName : [UIFont systemFontOfSize:12],
         NSForegroundColorAttributeName : [UIColor tui_colorWithHex:@"#888888"],

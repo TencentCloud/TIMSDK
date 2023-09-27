@@ -43,8 +43,9 @@ typedef void (^ThemeSelectCallback)(TUIThemeSelectCollectionViewCellModel *cellM
 
 @end
 
-@interface TUIThemeHeaderCollectionViewCell : TUIThemeSelectCollectionViewCell
-
+@interface TUIThemeHeaderCollectionViewCell : UICollectionViewCell
+@property(nonatomic, strong) TUIThemeSelectCollectionViewCellModel *cellModel;
+@property(nonatomic, copy) ThemeSelectCallback onSelect;
 @end
 
 @interface TUIThemeSelectController : UIViewController

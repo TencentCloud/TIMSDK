@@ -86,6 +86,14 @@
         if (data.thumbImage) {
             self.thumb.image = data.thumbImage;
         }
+        // tell constraints they need updating
+        [self setNeedsUpdateConstraints];
+
+        // update constraints now so we can animate the change
+        [self updateConstraintsIfNeeded];
+
+        [self layoutIfNeeded];
+
         return;
     }
     else {
@@ -114,26 +122,58 @@
           self.play.hidden = !self.progress.hidden;
         }];
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
+}
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+
+    [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.container.mas_height);
+        make.width.mas_equalTo(self.container);
+        make.leading.mas_equalTo(self.container.mas_leading);
+        make.top.mas_equalTo(self.container);
+    }];
+    
+    [self.play mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(TVideoMessageCell_Play_Size);
+        make.center.mas_equalTo(self.thumb);
+    }];
+
+    [self.msgTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(38);
+        make.height.mas_equalTo(self.messageData.msgStatusSize.height);
+        make.bottom.mas_equalTo(self.container).mas_offset(-kScale390(9));
+        make.trailing.mas_equalTo(self.container).mas_offset(-kScale390(8));
+    }];
+    
+    [self.msgStatusView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(16);
+        make.height.mas_equalTo(self.messageData.msgStatusSize.height);
+        make.bottom.mas_equalTo(self.msgTimeLabel);
+        make.trailing.mas_equalTo(self.msgTimeLabel.mas_leading);
+    }];
+    
+    [self.animateCircleView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.thumb);
+        make.size.mas_equalTo(CGSizeMake(kScale390(40), kScale390(40)));
+    }];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    CGFloat topMargin = 0;
-    CGFloat height = self.container.mm_h;
-
-    if (self.messageData.messageModifyReactsSize.height > 0) {
-        topMargin = 10;
-        height = (self.container.mm_h - self.messageData.messageModifyReactsSize.height - topMargin);
-    }
-
-    _thumb.mm_height(height).mm_left(0).mm_top(topMargin).mm_width(self.container.mm_w);
-
-    _play.mm_width(TVideoMessageCell_Play_Size.width).mm_height(TVideoMessageCell_Play_Size.height).tui_mm_center();
-
-    self.msgStatusView.frame = CGRectOffset(self.msgStatusView.frame, kScale390(8), 0);
-    self.msgTimeLabel.frame = CGRectOffset(self.msgTimeLabel.frame, kScale390(8), 0);
-    self.animateCircleView.tui_mm_center();
 }
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword {

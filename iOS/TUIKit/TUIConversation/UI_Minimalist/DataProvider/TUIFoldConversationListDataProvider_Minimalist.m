@@ -10,6 +10,7 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
 #import "TUIConversationCellData_Minimalist.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 @implementation TUIFoldConversationListDataProvider_Minimalist
 
@@ -40,7 +41,9 @@
                                                                     attributes:@{NSForegroundColorAttributeName : RGB(250, 81, 81)}];
         [attributeString appendAttributedString:draft];
 
-        NSAttributedString *draftContent = [[NSAttributedString alloc] initWithString:[self getDraftContent:conv]
+        NSString *draftContentStr = [self getDraftContent:conv];
+        draftContentStr = [draftContentStr getLocalizableStringWithFaceContent];
+        NSAttributedString *draftContent = [[NSAttributedString alloc] initWithString:draftContentStr
                                                                            attributes:@{NSForegroundColorAttributeName : [UIColor d_systemGrayColor]}];
         [attributeString appendAttributedString:draftContent];
     } else {

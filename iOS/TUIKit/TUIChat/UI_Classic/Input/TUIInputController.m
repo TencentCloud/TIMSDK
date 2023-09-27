@@ -396,7 +396,7 @@
 - (void)inputBar:(TUIInputBar *)textView didSendVoice:(NSString *)path {
     NSURL *url = [NSURL fileURLWithPath:path];
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url options:nil];
-    int duration = (int)CMTimeGetSeconds(audioAsset.duration);
+    int duration = CMTimeGetSeconds(audioAsset.duration) > 59 ? 60 : (int)CMTimeGetSeconds(audioAsset.duration);
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createSoundMessage:path duration:duration];
     if (message && _delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]) {
         [_delegate inputController:self didSendMessage:message];

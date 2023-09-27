@@ -27,6 +27,7 @@
         _userImg = [[UIImageView alloc] initWithFrame:CGRectZero];
         [self addSubview:_userImg];
         _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _nameLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         [self addSubview:_nameLabel];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -38,12 +39,45 @@
     _selectedMark.image = isSelect ? [UIImage imageNamed:TUIGroupImagePath(@"ic_selected")] : [UIImage imageNamed:TUIGroupImagePath(@"ic_unselect")];
     [_userImg sd_setImageWithURL:[NSURL URLWithString:model.avatar] placeholderImage:DefaultAvatarImage];
     _nameLabel.text = model.name;
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [_selectedMark mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(20);
+        make.leading.mas_equalTo(self.contentView).mas_offset(12);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+
+    [_userImg mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(32);
+        make.leading.mas_equalTo(_selectedMark.mas_trailing).mas_offset(12);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    [_nameLabel sizeToFit];
+    [_nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(_userImg.mas_trailing).mas_offset(12);
+        make.trailing.mas_equalTo(self.contentView.mas_trailing);
+        make.height.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-    _selectedMark.mm_width(12).mm_height(12).mm_left(12).mm__centerY(self.mm_h / 2);
-    _userImg.mm_width(32).mm_height(32).mm_left(_selectedMark.mm_maxX + 12).mm__centerY(self.mm_h / 2);
-    _nameLabel.mm_height(self.mm_h).mm_left(_userImg.mm_maxX + 12).mm_flexToRight(0);
 }
 @end

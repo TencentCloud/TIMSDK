@@ -146,6 +146,7 @@
             self.type == TUIFindContactTypeC2C ? TIMCommonLocalizableString(TUIKitSearchUserID) : TIMCommonLocalizableString(TUIKitSearchGroupID);
         _searchBar.backgroundImage = [[UIImage alloc] init];
         _searchBar.delegate = self;
+        _searchBar.searchTextField.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         UITextField *searchField = [_searchBar valueForKey:@"searchField"];
         if (searchField) {
             searchField.backgroundColor = TIMCommonDynamicColor(@"search_textfield_bg_color", @"#FEFEFE");

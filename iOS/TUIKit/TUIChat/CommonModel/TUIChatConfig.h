@@ -71,6 +71,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL enableTypingStatus;
 
 /**
+ *  聊天对话框是否展示 输入框 默认 YES
+ *  Whether the  chat dialog box displays "InputBar", the default is YES
+ */
+@property(nonatomic, assign) BOOL enableMainPageInputBar;
+
+/**
  * 设置聊天界面背景颜色
  * Setup the backgroud color of chat page
  */

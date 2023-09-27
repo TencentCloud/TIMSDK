@@ -27,25 +27,47 @@
     self.nameLabel.text = cellModel.styleName;
     self.nameLabel.textColor = cellModel.selected ? RGBA(0, 110, 255, 1) : TIMCommonDynamicColor(@"form_title_color", @"#000000");
     self.chooseIconView.hidden = !cellModel.selected;
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 - (void)setupViews {
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.chooseIconView];
 }
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    self.chooseIconView.frame = CGRectMake(self.contentView.mm_w - 16 - 20, 0.5 * (self.contentView.mm_h - 20), 20, 20);
-    self.nameLabel.frame = CGRectMake(kScale375(24), 0, self.contentView.mm_w - 3 * 16 - 20, self.contentView.mm_h);
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
 }
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    
+    [self.chooseIconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView);
+        make.width.mas_equalTo(20);
+        make.height.mas_equalTo(20);
+        make.trailing.mas_equalTo(-16);
+    }];
+
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(16);
+        make.trailing.mas_equalTo(self.chooseIconView.mas_leading).mas_offset(-2);
+        make.height.mas_equalTo(self.nameLabel.font.lineHeight);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+}
 - (UILabel *)nameLabel {
     if (_nameLabel == nil) {
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.font = [UIFont systemFontOfSize:16.0];
         _nameLabel.text = @"1233";
+        _nameLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         _nameLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     }
     return _nameLabel;
@@ -107,6 +129,7 @@
         self.navigationController.navigationBar.barTintColor = self.tintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
     }
+    self.navigationController.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -135,8 +158,9 @@
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
-    UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    UIImage *image = TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    image = [image rtl_imageFlippedForRightToLeftLayoutDirection];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:image forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
@@ -231,7 +255,7 @@
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#111111");
+        _tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#FFFFFF");
         [_tableView registerClass:TUIStyleSelectCell.class forCellReuseIdentifier:@"cell"];
     }
     return _tableView;

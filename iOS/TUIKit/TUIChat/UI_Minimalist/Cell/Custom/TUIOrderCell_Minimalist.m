@@ -54,15 +54,54 @@
     } else {
         [self.iconView setImage:[UIImage sd_imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:data.imageUrl]]]];
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+ 
+    [self.iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(10);
+        make.leading.mas_equalTo(12);
+        make.width.mas_equalTo(60);
+        make.height.mas_equalTo(60);
+    }];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(10);
+        make.leading.mas_equalTo(80);
+        make.width.mas_equalTo(150);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(30);
+        make.leading.mas_equalTo(80);
+        make.width.mas_equalTo(150);
+        make.height.mas_equalTo(17);
+    }];
+    
+    [self.priceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(49);
+        make.leading.mas_equalTo(80);
+        make.width.mas_equalTo(150);
+        make.height.mas_equalTo(25);
+    }];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    self.iconView.mm_top(10).mm_left(12).mm_width(60).mm_height(60);
-    self.titleLabel.mm_top(10).mm_left(80).mm_width(150).mm_height(17);
-    self.descLabel.mm_top(30).mm_left(80).mm_width(150).mm_height(17);
-    self.priceLabel.mm_top(49).mm_left(80).mm_width(150).mm_height(25);
 }
 
 #pragma mark - TUIMessageCellProtocol

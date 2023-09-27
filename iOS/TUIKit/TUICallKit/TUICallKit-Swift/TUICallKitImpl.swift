@@ -17,7 +17,6 @@ import TXLiteAVSDK_Professional
 #endif
 
 class TUICallKitImpl: TUICallKit {
-    
     static let instance = TUICallKitImpl()
     let selfUserCallStatusObserver = Observer()
     
@@ -33,7 +32,7 @@ class TUICallKitImpl: TUICallKit {
         NotificationCenter.default.removeObserver(self)
         TUICallState.instance.selfUser.value.callStatus.removeObserver(selfUserCallStatusObserver)
     }
-        
+    
     // MARK: TUICallKit对外接口实现
     override func setSelfInfo(nickname: String, avatar: String, succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
         CallEngineManager.instance.setSelfInfo(nickname: nickname, avatar: avatar) {
@@ -44,47 +43,54 @@ class TUICallKitImpl: TUICallKit {
     }
     
     override func call(userId: String, callMediaType: TUICallMediaType) {
-        call(userId: userId, callMediaType: callMediaType, params:TUICallParams()) {
+        call(userId: userId, callMediaType: callMediaType, params: getCallParams()) {
             
         } fail: { errCode, errMessage in
             
         }
     }
-
+    
     override func call(userId: String, callMediaType: TUICallMediaType, params: TUICallParams,
                        succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
-       
         if  userId.count <= 0 {
-             fail(ERROR_PARAM_INVALID, "call failed, invalid params 'userId'")
-             return
-         }
+            fail(ERROR_PARAM_INVALID, "call failed, invalid params 'userId'")
+            return
+        }
         
         if TUILogin.getUserID() == nil {
             fail(ERROR_INIT_FAIL, "call failed, please login")
             return
-         }
+        }
         
-         if WindowManager.instance.isFloating {
-             fail(ERROR_PARAM_INVALID, "call failed, Unable to restart the call")
-             TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.UnableToRestartTheCall"))
-             return
-         }
+        if WindowManager.instance.isFloating {
+            fail(ERROR_PARAM_INVALID, "call failed, Unable to restart the call")
+            TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.UnableToRestartTheCall"))
+            return
+        }
         
         if callMediaType == .unknown {
-             fail(ERROR_PARAM_INVALID, "call failed, callMediaType is Unknown")
-             return
-         }
-
+            fail(ERROR_PARAM_INVALID, "call failed, callMediaType is Unknown")
+            return
+        }
+        
+        if TUICallKitCommon.checkAuthorizationStatusIsDenied(mediaType: callMediaType) {
+            showAuthorizationAlert(mediaType: callMediaType)
+            fail(ERROR_PARAM_INVALID, "call failed, authorization status is denied")
+            return
+        }
+        
         CallEngineManager.instance.call(userId: userId, callMediaType: callMediaType, params: params) {
             succ()
-        } fail: { code, message in
+        } fail: { [weak self] code, message in
+            guard let self = self else { return }
+            self.handleAbilityFailErrorMessage(code: code, message: message)
             fail(code, message)
         }
     }
-
-    override func groupCall(groupId: String, userIdList: [String], callMediaType: TUICallMediaType) {
-        groupCall(groupId: groupId, userIdList: userIdList, callMediaType: callMediaType, params: TUICallParams()) {
     
+    override func groupCall(groupId: String, userIdList: [String], callMediaType: TUICallMediaType) {
+        groupCall(groupId: groupId, userIdList: userIdList, callMediaType: callMediaType, params: getCallParams()) {
+            
         } fail: { code, message in
             
         }
@@ -92,14 +98,55 @@ class TUICallKitImpl: TUICallKit {
     
     override func groupCall(groupId: String, userIdList: [String], callMediaType: TUICallMediaType, params: TUICallParams,
                             succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
+        if  userIdList.isEmpty {
+            fail(ERROR_PARAM_INVALID, "call failed, invalid params 'userIdList'")
+            return
+        }
+        
+        if userIdList.count >= MAX_USER {
+            fail(ERROR_PARAM_INVALID, "groupCall failed, currently supports call with up to 9 people")
+            TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.User.Exceed.Limit"))
+            return
+        }
+        
+        if TUILogin.getUserID() == nil {
+            fail(ERROR_INIT_FAIL, "call failed, please login")
+            return
+        }
+        
+        if WindowManager.instance.isFloating {
+            fail(ERROR_PARAM_INVALID, "call failed, Unable to restart the call")
+            TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.UnableToRestartTheCall"))
+            return
+        }
+        
+        if callMediaType == .unknown {
+            fail(ERROR_PARAM_INVALID, "call failed, callMediaType is Unknown")
+            return
+        }
+        
+        
+        if TUICallKitCommon.checkAuthorizationStatusIsDenied(mediaType: callMediaType) {
+            showAuthorizationAlert(mediaType: callMediaType)
+            fail(ERROR_PARAM_INVALID, "call failed, authorization status is denied")
+            return
+        }
+        
         CallEngineManager.instance.groupCall(groupId: groupId, userIdList: userIdList, callMediaType: callMediaType, params: params) {
             succ()
-        } fail: { code, message in
+        } fail: { [weak self] code, message in
+            guard let self = self else { return }
+            self.handleAbilityFailErrorMessage(code: code, message: message)
             fail(code,message)
         }
     }
     
     override func joinInGroupCall(roomId: TUIRoomId, groupId: String, callMediaType: TUICallMediaType) {
+        if TUICallKitCommon.checkAuthorizationStatusIsDenied(mediaType: callMediaType) {
+            showAuthorizationAlert(mediaType: callMediaType)
+            return
+        }
+        
         CallEngineManager.instance.joinInGroupCall(roomId: roomId, groupId: groupId, callMediaType: callMediaType)
     }
     
@@ -153,7 +200,6 @@ class TUICallKitImpl: TUICallKit {
     }
     
     override func getCallViewController() -> UIViewController {
-        
         if let callWindowVC = WindowManager.instance.callWindow.rootViewController {
             return callWindowVC
         }
@@ -164,13 +210,10 @@ class TUICallKitImpl: TUICallKit {
         
         return UIViewController()
     }
-    
 }
-
 
 // MARK: TUICallKit内部接口
 private extension TUICallKitImpl {
-        
     func registerNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(loginSuccessNotification),
@@ -191,6 +234,7 @@ private extension TUICallKitImpl {
         initState()
         CallEngineManager.instance.addObserver(TUICallState.instance)
         CallEngineManager.instance.setFramework()
+        CallEngineManager.instance.setExcludeFromHistoryMessage()
     }
     
     @objc func logoutSuccessNotification(noti: Notification) {
@@ -205,8 +249,8 @@ private extension TUICallKitImpl {
     
     func initEngine() {
         CallEngineManager.instance.initEigine(sdkAppId:TUILogin.getSdkAppID(),
-                                                userId: TUILogin.getUserID() ?? "",
-                                               userSig: TUILogin.getUserSig() ?? "") {} fail: { Int32errCode, errMessage in }
+                                              userId: TUILogin.getUserID() ?? "",
+                                              userSig: TUILogin.getUserSig() ?? "") {} fail: { Int32errCode, errMessage in }
         
         let videoEncoderParams = TUIVideoEncoderParams()
         videoEncoderParams.resolution = ._640_360
@@ -217,15 +261,14 @@ private extension TUICallKitImpl {
         videoRenderParams.fillMode = .fill
         videoRenderParams.rotation = ._0
         CallEngineManager.instance.setVideoRenderParams(userId: TUILogin.getUserID() ?? "",
-                                                            params: videoRenderParams) {} fail: { Int32errCode, errMessage in }
-
+                                                        params: videoRenderParams) {} fail: { Int32errCode, errMessage in }
+        
         let beauty = CallEngineManager.instance.getTRTCCloudInstance().getBeautyManager()
         beauty.setBeautyStyle(.nature)
         beauty.setBeautyLevel(6.0)
     }
     
     func initState() {
-        
         CallEngineManager.instance.addObserver(TUICallState.instance)
         User.getSelfUserInfo(response: { selfUser in
             TUICallState.instance.selfUser.value.id.value = selfUser.id.value
@@ -242,7 +285,7 @@ private extension TUICallKitImpl {
                 CallEngineManager.instance.setAudioPlaybackDevice(device: TUIAudioPlaybackDevice.earpiece)
                 WindowManager.instance.showCallWindow()
             }
-
+            
             if TUICallState.instance.selfUser.value.callRole.value == TUICallRole.none &&
                 TUICallState.instance.selfUser.value.callStatus.value == TUICallStatus.none {
                 WindowManager.instance.closeCallWindow()
@@ -250,4 +293,40 @@ private extension TUICallKitImpl {
             }
         })
     }
+    
+    func showAuthorizationAlert(mediaType: TUICallMediaType) {
+        let statusVideo: AVAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        var deniedType: AuthorizationDeniedType = AuthorizationDeniedType.audio
+        
+        if mediaType == .video && statusVideo == .denied {
+            deniedType = .video
+        }
+        
+        TUICallKitCommon.showAuthorizationAlert(deniedType: deniedType) {
+            CallEngineManager.instance.hangup()
+        } cancelHandler: {
+            CallEngineManager.instance.hangup()
+        }
+    }
+    
+    func getCallParams() -> TUICallParams {
+        let offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo()
+        let callParams = TUICallParams()
+        callParams.offlinePushInfo = offlinePushInfo
+        callParams.timeout = TUI_CALLKIT_SIGNALING_MAX_TIME
+        return callParams
+    }
+    
+    func handleAbilityFailErrorMessage(code: Int32, message: String?) {
+        var errorMessage: String? = message
+        if code == ERROR_PACKAGE_NOT_PURCHASED {
+            errorMessage = TUICallKitLocalize(key: "Demo.TRTC.Calling.purchased")
+        } else if code == ERROR_PACKAGE_NOT_SUPPORTED {
+            errorMessage = TUICallKitLocalize(key: "Demo.TRTC.Calling.support")
+        } else if code == ERR_SVR_MSG_IN_PEER_BLACKLIST.rawValue {
+            errorMessage = TUICallKitLocalize(key: "Demo.TRTC.Calling.ErrorInPeerBlacklist")
+        }
+        TUITool.makeToast(errorMessage ?? "", duration: 4)
+    }
+    
 }

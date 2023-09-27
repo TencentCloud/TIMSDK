@@ -16,12 +16,10 @@ import TXLiteAVSDK_Professional
 #endif
 
 class CallEngineManager {
-    
     static let instance = CallEngineManager()
     let engine = TUICallEngine.createInstance()
     
     func setSelfInfo(nickname: String, avatar: String, succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
-        
         engine.setSelfInfo(nickname: nickname, avatar: avatar) {
             TUICallState.instance.selfUser.value.avatar.value = avatar
             TUICallState.instance.selfUser.value.nickname.value = nickname
@@ -30,15 +28,9 @@ class CallEngineManager {
             fail(code, message)
         }
     }
-
+    
     func call(userId: String, callMediaType: TUICallMediaType, params: TUICallParams, succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
-        
-        let roomId = TUIRoomId()
-        roomId.intRoomId = TUICallKitCommon.createRoomId()
-        engine.call(roomId: roomId, userId: userId, callMediaType: callMediaType, params: params) {
-            
-            TUICallState.instance.roomId.value = roomId
-            
+        engine.call(userId: userId, callMediaType: callMediaType, params: params) {
             User.getUserInfosFromIM(userIDs: [userId]) { mInviteeList in
                 TUICallState.instance.remoteUserList.value = mInviteeList
                 
@@ -47,14 +39,13 @@ class CallEngineManager {
                     TUICallState.instance.remoteUserList.value[index].callRole.value = TUICallRole.called
                 }
             }
+            
             TUICallState.instance.mediaType.value = callMediaType
             TUICallState.instance.scene.value = TUICallScene.single
-
             TUICallState.instance.selfUser.value.callRole.value = TUICallRole.call
             TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
             
             let _ = CallingBellFeature.instance.playCallingBell(type: .CallingBellTypeDial)
-            
             succ()
         } fail: { code, message in
             fail(code,message)
@@ -67,16 +58,10 @@ class CallEngineManager {
                    params: TUICallParams,
                    succ: @escaping TUICallSucc,
                    fail: @escaping TUICallFail) {
-        let roomId = TUIRoomId()
-        roomId.intRoomId = TUICallKitCommon.createRoomId()
-        
-        engine.groupCall(roomId: roomId,
-                         groupId: groupId,
-                      userIdList: userIdList,
-                   callMediaType: callMediaType,
-                          params: params) {
-            
-            TUICallState.instance.roomId.value = roomId
+        engine.groupCall(groupId: groupId,
+                         userIdList: userIdList,
+                         callMediaType: callMediaType,
+                         params: params) {
             TUICallState.instance.groupId.value = groupId
             
             User.getUserInfosFromIM(userIDs: userIdList) { mInviteeList in
@@ -89,12 +74,11 @@ class CallEngineManager {
             
             TUICallState.instance.mediaType.value = callMediaType
             TUICallState.instance.scene.value = TUICallScene.group
-
+            
             TUICallState.instance.selfUser.value.callRole.value = TUICallRole.call
             TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
             
             let _ = CallingBellFeature.instance.playCallingBell(type: .CallingBellTypeDial)
-            
             succ()
         } fail: { code, message in
             fail(code, message)
@@ -103,43 +87,33 @@ class CallEngineManager {
     
     func joinInGroupCall(roomId: TUIRoomId, groupId: String, callMediaType: TUICallMediaType) {
         engine.joinInGroupCall(roomId: roomId, groupId: groupId, callMediaType: callMediaType) {
-            
-            TUICallState.instance.roomId.value = roomId
-        
             TUICallState.instance.mediaType.value = callMediaType
             TUICallState.instance.scene.value = TUICallScene.group
             TUICallState.instance.groupId.value = groupId
-
+            
             TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
             TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.accept
-                
+            
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER), object: nil)
         } fail: { code, message in
-            
         }
     }
     
     func hangup() {
         engine.hangup {
-            
         } fail: { code, message in
-            
         }
     }
     
     func accept() {
         engine.accept {
-
         } fail: { code, message in
-            
         }
     }
     
     func reject() {
         engine.reject {
-
         } fail: { code, message in
-            
         }
     }
     
@@ -148,7 +122,6 @@ class CallEngineManager {
             engine.openMicrophone {
                 TUICallState.instance.isMicMute.value = false
             } fail: { code , message  in
-
             }
         } else {
             engine.closeMicrophone()
@@ -167,7 +140,7 @@ class CallEngineManager {
     }
     
     func switchCamera() {
-        if  TUICallState.instance.isFrontCamera.value == .front {
+        if TUICallState.instance.isFrontCamera.value == .front {
             engine.switchCamera(.back)
             TUICallState.instance.isFrontCamera.value = .back
         } else {
@@ -185,24 +158,20 @@ class CallEngineManager {
         engine.openCamera(TUICallState.instance.isFrontCamera.value == .front ? .front : .back, videoView: videoView) {
             TUICallState.instance.isCameraOpen.value = true
         } fail: { code, message in
-            
         }
     }
     
     func startRemoteView(user: User, videoView: TUIVideoView){
         engine.startRemoteView(userId: user.id.value, videoView: videoView) { userId in
-            
         } onLoading: { userId in
-            
         } onError: { userId, code, message in
-            
         }
     }
     
     func stopRemoteView(user: User) {
         engine.stopRemoteView(userId: user.id.value)
     }
-
+    
     func setAudioPlaybackDevice(device: TUIAudioPlaybackDevice) {
         engine.selectAudioPlaybackDevice(device)
     }
@@ -212,11 +181,12 @@ class CallEngineManager {
     }
     
     func inviteUser(userIds: [String]) {
-        let params = TUICallParams()
-        params.offlinePushInfo = TUIOfflinePushInfo()
-        engine.inviteUser(userIdList: userIds, params: params) { userIds in
+        let callParams = TUICallParams()
+        callParams.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo()
+        callParams.timeout = TUI_CALLKIT_SIGNALING_MAX_TIME
+        
+        engine.inviteUser(userIdList: userIds, params: callParams) { userIds in
             User.getUserInfosFromIM(userIDs: userIds) { newRemoteUsers in
-                
                 for newUser in newRemoteUsers {
                     newUser.callStatus.value = TUICallStatus.waiting
                     newUser.callRole.value = TUICallRole.called
@@ -267,17 +237,40 @@ class CallEngineManager {
         var jsonParams: [String: Any]
         if TUICore.getService(TUICore_TUIChatService) == nil {
             jsonParams = ["api": "setFramework",
-                       "params": ["component": 14,
-                                  "language": 3,],]
+                          "params": ["component": 14,
+                                     "language": 3,],]
         } else {
             jsonParams = ["api": "setFramework",
-                       "params": ["component": 15,
-                                  "language": 3,],]
+                          "params": ["component": 15,
+                                     "language": 3,],]
         }
+        
         guard let data = try? JSONSerialization.data(withJSONObject: jsonParams,
-                                                     options: JSONSerialization.WritingOptions(rawValue: 0)) else { return }
-        guard let paramsString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String else { return }
+                                                     options: JSONSerialization.WritingOptions(rawValue: 0)) else {
+            return
+        }
+        guard let paramsString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String else {
+            return
+        }
+        
+        engine.callExperimentalAPI(jsonObject: paramsString)
+    }
+    
+    func setExcludeFromHistoryMessage() {
+        if TUICore.getService(TUICore_TUIChatService) == nil {
+            return
+        }
+        
+        let jsonParams: [String: Any] = ["api": "setExcludeFromHistoryMessage",
+                                         "params": ["excludeFromHistoryMessage": false,],]
+        guard let data = try? JSONSerialization.data(withJSONObject: jsonParams,
+                                                     options: JSONSerialization.WritingOptions(rawValue: 0)) else {
+            return
+        }
+        guard let paramsString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String else {
+            return
+        }
+        
         engine.callExperimentalAPI(jsonObject: paramsString)
     }
 }
-

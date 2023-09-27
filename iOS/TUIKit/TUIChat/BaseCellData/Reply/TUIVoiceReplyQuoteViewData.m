@@ -22,7 +22,7 @@
     }
 
     TUIVoiceReplyQuoteViewData *myData = [[TUIVoiceReplyQuoteViewData alloc] init];
-    myData.text = [NSString stringWithFormat:@"%ds\"", [(TUIVoiceMessageCellData *)originCellData duration]];
+    myData.text = [NSString stringWithFormat:@"%d\"", [(TUIVoiceMessageCellData *)originCellData duration]];
     myData.icon = TUIChatCommonBundleImage(@"voice_reply");
     myData.originCellData = originCellData;
     return myData;

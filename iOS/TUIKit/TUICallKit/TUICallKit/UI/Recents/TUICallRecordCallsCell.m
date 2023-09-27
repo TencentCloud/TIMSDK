@@ -70,33 +70,33 @@ static NSString *const gRecordCallsCellViewModelKVOTitle = @"titleLabelStr";
 - (void)activateConstraints {
     [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.contentView);
-        make.left.equalTo(self.contentView).offset(8);
+        make.leading.equalTo(self.contentView).offset(8);
         make.width.height.mas_equalTo(40);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.contentView).offset(14);
-        make.left.equalTo(self.avatarImageView.mas_right).offset(8);
-        make.right.lessThanOrEqualTo(self.timeLabel.mas_left).offset(-20);
+        make.leading.equalTo(self.avatarImageView.mas_trailing).offset(8);
+        make.trailing.lessThanOrEqualTo(self.timeLabel.mas_leading).offset(-20);
     }];
     [self.mediaTypeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.contentView).offset(-14);
-        make.left.equalTo(self.avatarImageView.mas_right).offset(8);
+        make.leading.equalTo(self.avatarImageView.mas_trailing).offset(8);
         make.width.mas_equalTo(19);
         make.height.mas_equalTo(12);
     }];
     [self.resultLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mediaTypeImageView);
-        make.left.equalTo(self.mediaTypeImageView.mas_right).offset(4);
+        make.leading.equalTo(self.mediaTypeImageView.mas_trailing).offset(4);
         make.width.mas_equalTo(100);
     }];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.contentView);
-        make.right.equalTo(self.moreButton.mas_left).offset(-4);
+        make.trailing.equalTo(self.moreButton.mas_leading).offset(-4);
         make.width.mas_equalTo(100);
     }];
     [self.moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.contentView);
-        make.right.mas_equalTo(-8);
+        make.trailing.mas_equalTo(-8);
         make.width.height.mas_equalTo(24);
     }];
 }
@@ -180,7 +180,7 @@ static NSString *const gRecordCallsCellViewModelKVOTitle = @"titleLabelStr";
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _titleLabel.numberOfLines = 1;
         _titleLabel.font = [UIFont fontWithName:@"PingFangHK-Semibold" size:14];
-        _titleLabel.textAlignment = NSTextAlignmentLeft;
+        _titleLabel.textAlignment =  isRTL() ? NSTextAlignmentRight : NSTextAlignmentLeft;
     }
     return _titleLabel;
 }
@@ -198,7 +198,7 @@ static NSString *const gRecordCallsCellViewModelKVOTitle = @"titleLabelStr";
         _resultLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _resultLabel.textColor = TUICallKitDynamicColor(@"callkit_recents_cell_subtitle_color", @"#888888");
         _resultLabel.font = [UIFont systemFontOfSize:12];
-        _resultLabel.textAlignment = NSTextAlignmentLeft;
+        _resultLabel.textAlignment =  isRTL() ? NSTextAlignmentRight : NSTextAlignmentLeft;
     }
     return _resultLabel;
 }
@@ -208,7 +208,7 @@ static NSString *const gRecordCallsCellViewModelKVOTitle = @"titleLabelStr";
         _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _timeLabel.textColor = TUICallKitDynamicColor(@"callkit_recents_cell_time_color", @"#BBBBBB");
         _timeLabel.font = [UIFont systemFontOfSize:12];
-        _timeLabel.textAlignment = NSTextAlignmentRight;
+        _timeLabel.textAlignment =  isRTL() ? NSTextAlignmentLeft : NSTextAlignmentRight;
     }
     return _timeLabel;
 }

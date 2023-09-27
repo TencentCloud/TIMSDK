@@ -12,9 +12,9 @@ class SwitchAudioView: UIView {
     let viewModel = SwitchAudioViewModel()
     lazy var switchToAudioBtn: BaseControlButton = {
         weak var weakSelf = self
-        let switchToAudioBtn = BaseControlButton.create(frame: CGRectZero,
+        let switchToAudioBtn = BaseControlButton.create(frame: CGRect.zero,
                                                         title: TUICallKitLocalize(key: "Demo.TRTC.Calling.switchtoaudio") ?? "",
-                                                        imageSize: CGSizeMake(28,18)) { sender in
+                                                        imageSize: CGSize(width: 28,height: 18)) { sender in
             weakSelf?.switchToAudioTouchAudio(sender: sender)
         }
         if let image = TUICallKitCommon.getBundleImage(name: "switch2audio") {

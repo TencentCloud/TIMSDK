@@ -68,6 +68,11 @@
 
         CGFloat cancelButtonX = commitButtonWidth;
         self.cancelButton.frame = CGRectMake(cancelButtonX, commitButtonY, commitButtonWidth, commitButtonWidth);
+        
+        if (isRTL()) {
+            [self.commitButton resetFrameToFitRTL];
+            [self.cancelButton resetFrameToFitRTL];
+        }
     }
 }
 

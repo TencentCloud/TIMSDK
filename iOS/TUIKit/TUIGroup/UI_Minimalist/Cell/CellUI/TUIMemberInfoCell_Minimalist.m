@@ -36,32 +36,61 @@
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:data.avatarUrl] placeholderImage:data.avatar ?: defaultImage];
     self.nameLabel.text = data.name;
 
-    [self updateUI];
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
-- (void)updateUI {
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    CGFloat imgWidth = kScale390(20);
     if (self.data.style == TUIMemberInfoCellStyleAdd) {
-        self.avatarImageView.mm_width(20.0 * kScale).mm_height(20.0 * kScale);
-        self.avatarImageView.mm_left(18.0 * kScale);
+        imgWidth = 20.0 * kScale;
+        [self.avatarImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(20.0 * kScale);
+            make.leading.mas_equalTo(kScale390(18));
+            make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        }];
         self.nameLabel.font = [UIFont systemFontOfSize:16.0 * kScale];
         self.nameLabel.textColor = [UIColor tui_colorWithHex:@"#147AFF"];
     } else {
-        self.avatarImageView.mm_width(34.0 * kScale).mm_height(34.0 * kScale);
-        self.avatarImageView.mm_left(16.0 * kScale);
+        imgWidth = 34.0 * kScale;
+        [self.avatarImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(34.0 * kScale);
+            make.leading.mas_equalTo(kScale390(16));
+            make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        }];
         self.nameLabel.font = [UIFont systemFontOfSize:16.0 * kScale];
         self.nameLabel.textColor = TIMCommonDynamicColor(@"form_value_text_color", @"#000000");
     }
 
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatarImageView.layer.masksToBounds = YES;
-        self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.size.height / 2;
+        self.avatarImageView.layer.cornerRadius = imgWidth / 2;
     } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
         self.avatarImageView.layer.masksToBounds = YES;
         self.avatarImageView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
 
-    self.avatarImageView.mm_centerY = self.contentView.mm_centerY;
-    self.nameLabel.mm_height(self.contentView.mm_h).mm_left(CGRectGetMaxX(self.avatarImageView.frame) + 14).mm_flexToRight(16 * kScale);
+    [self.nameLabel sizeToFit];
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.avatarImageView.mas_trailing).mas_offset(14);
+        make.centerY.mas_equalTo(self.contentView);
+        make.size.mas_equalTo(self.nameLabel.frame.size);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- 2.0 * kScale);
+    }];
+
+    
 }
 
 - (UIImageView *)avatarImageView {

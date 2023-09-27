@@ -13,7 +13,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setupViews];
-        [self defaultLayout];
     }
     return self;
 }
@@ -31,22 +30,9 @@
     [self.contentView addSubview:_name];
 }
 
-- (void)defaultLayout {
-    CGSize headSize = [[self class] getSize];
-    _head.frame = CGRectMake(0, 0, headSize.width, headSize.width);
-    _name.frame = CGRectMake(0, _head.frame.origin.y + _head.frame.size.height + TGroupMemberCell_Margin, _head.frame.size.width, TGroupMemberCell_Name_Height);
-    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-        _head.layer.masksToBounds = YES;
-        _head.layer.cornerRadius = _head.frame.size.height / 2;
-    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-        _head.layer.masksToBounds = YES;
-        _head.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-    }
-}
-
 - (void)setData:(TUIGroupMemberCellData *)data {
     _data = data;
-
+    
     if (data.avatarUrl) {
         [self.head sd_setImageWithURL:[NSURL URLWithString:data.avatarUrl] placeholderImage:data.avatarImage ?: DefaultAvatarImage];
     } else {
@@ -61,9 +47,45 @@
     } else {
         self.name.text = data.identifier;
     }
-    [self defaultLayout];
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
+}
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
 }
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    CGSize headSize = [[self class] getSize];
+    [_head mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.top.mas_equalTo(self.contentView);
+        make.width.mas_equalTo(headSize.width);
+        make.height.mas_equalTo(headSize.width);
+    }];
+    [_name mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.head);
+        make.top.mas_equalTo(self.head.mas_bottom).mas_offset(TGroupMemberCell_Margin);
+        make.width.mas_equalTo(headSize.width);
+        make.height.mas_equalTo(TGroupMemberCell_Name_Height);
+    }];
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        _head.layer.masksToBounds = YES;
+        _head.layer.cornerRadius = _head.frame.size.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        _head.layer.masksToBounds = YES;
+        _head.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+
+}
 + (CGSize)getSize {
     CGSize headSize = TGroupMemberCell_Head_Size;
     if (headSize.width * TGroupMembersCell_Column_Count + TGroupMembersCell_Margin * (TGroupMembersCell_Column_Count + 1) > Screen_Width) {

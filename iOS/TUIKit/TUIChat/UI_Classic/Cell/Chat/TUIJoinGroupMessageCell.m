@@ -40,7 +40,7 @@
     self.avatarView.hidden = YES;
     self.retryView.hidden = YES;
     [self.indicator stopAnimating];
-
+    
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", data.content]];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.alignment = NSTextAlignmentCenter;
@@ -50,7 +50,7 @@
         NSParagraphStyleAttributeName : paragraphStyle
     };
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
-
+    
     if (data.userNameList.count > 0) {
         NSArray *nameRangeList = [self findRightRangeOfAllString:data.userNameList inText:attributeString.string];
         int i = 0;
@@ -61,9 +61,37 @@
         }
     }
     self.textView.attributedText = attributeString;
-    [self setNeedsLayout];
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    
+    [self.container mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.contentView);
+        make.size.mas_equalTo(self.contentView);
+    }];
+
+    if(self.textView.superview) {
+        [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self.container);
+            make.size.mas_equalTo(self.contentView);
+        }];
+    }
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.container.tui_mm_center();

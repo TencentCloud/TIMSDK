@@ -31,6 +31,7 @@
 
     self.addMsgTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
+    self.addMsgTextView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     self.addMsgTextView.backgroundColor = [UIColor tui_colorWithHex:@"f9f9f9"];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 5;

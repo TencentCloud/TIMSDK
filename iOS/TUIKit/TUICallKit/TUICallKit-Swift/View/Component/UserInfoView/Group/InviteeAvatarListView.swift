@@ -18,7 +18,7 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
-        let calleeCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: flowLayout)
+        let calleeCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         calleeCollectionView.delegate = self
         calleeCollectionView.dataSource = self
         calleeCollectionView.showsVerticalScrollIndicator = false

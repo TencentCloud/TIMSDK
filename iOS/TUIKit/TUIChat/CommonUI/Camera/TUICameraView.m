@@ -112,6 +112,10 @@ static CGFloat gProgressLayerLineWidth = 5.0;
         self.switchCameraButton.frame =
             CGRectMake(self.contentView.bounds.size.width - switchCameraButtonWidth - 16.0, 30.0, switchCameraButtonWidth, switchCameraButtonWidth);
 
+        if (isRTL()) {
+            [self.switchCameraButton resetFrameToFitRTL];
+        }
+        
         CGFloat photoBtnWidth = 100.0;
         self.photoBtn.frame = CGRectMake((self.contentView.bounds.size.width - photoBtnWidth) / 2.0, self.contentView.bounds.size.height - photoBtnWidth - 30,
                                          photoBtnWidth, photoBtnWidth);
@@ -139,11 +143,15 @@ static CGFloat gProgressLayerLineWidth = 5.0;
         CGFloat closeButtonX = (self.photoBtn.frame.origin.x - closeButtonWidth) / 2.0;
         CGFloat closeButtonY = self.photoBtn.center.y - closeButtonWidth / 2.0;
         self.closeButton.frame = CGRectMake(closeButtonX, closeButtonY, closeButtonWidth, closeButtonWidth);
-
+        if (isRTL()) {
+            [self.closeButton resetFrameToFitRTL];
+        }
         CGFloat pictureButtonWidth = 30.0;
 
         self.pictureLibButton.frame = CGRectMake(self.contentView.frame.size.width - closeButtonX, closeButtonY, pictureButtonWidth, pictureButtonWidth);
-
+        if (isRTL()) {
+            [self.pictureLibButton resetFrameToFitRTL];
+        }
         self.slider.transform = CGAffineTransformMakeRotation(M_PI_2);
         self.slider.frame = CGRectMake(self.bounds.size.width - 50, 50, 15, 200);
     }
@@ -348,7 +356,7 @@ static CGFloat gProgressLayerLineWidth = 5.0;
     if (!_closeButton) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         UIImage *closeButtonImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"camera_back")];
-        [_closeButton setBackgroundImage:closeButtonImage forState:UIControlStateNormal];
+        [_closeButton setBackgroundImage:[closeButtonImage rtl_imageFlippedForRightToLeftLayoutDirection] forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(closeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _closeButton;

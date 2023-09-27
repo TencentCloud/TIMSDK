@@ -142,8 +142,14 @@
 	<string>icon_reference</string>
 	<key>chat_icon_translate_img</key>
 	<string>icon_translate</string>
+	<key>chat_icon_convert_voice_to_text_img</key>
+	<string>icon_convert_voice_to_text</string>
 	<key>chat_icon_hide_img</key>
 	<string>icon_hide</string>
+	<key>chat_icon_audio_loudspeaker_img</key>
+	<string>icon_loudspeaker</string>
+	<key>chat_icon_audio_handset_img</key>
+	<string>icon_handset</string>
 	<key>chat_icon_emojiArrowDown_img</key>
 	<string>emojiArrowDown.png</string>
 	<key>chat_icon_emojiArrowUp_img</key>

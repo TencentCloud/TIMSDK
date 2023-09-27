@@ -204,19 +204,12 @@
                                continue;
                            }
                            [self.atUserList addObject:model];
-                           if (i == 0) {
-                               [atText appendString:[NSString stringWithFormat:@"%@ ", model.name]];
-                           } else {
-                               [atText appendString:[NSString stringWithFormat:@"@%@ ", model.name]];
-                           }
+                           [atText appendString:[NSString stringWithFormat:@"@%@ ", model.name]];
                        }
 
                        UIFont *textFont = kTUIInputNoramlFont;
                        NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:atText attributes:@{NSFontAttributeName : textFont}];
-                       [weakSelf.inputController.inputBar.inputTextView.textStorage
-                           insertAttributedString:spaceString
-                                          atIndex:weakSelf.inputController.inputBar.inputTextView.textStorage.length];
-                       [weakSelf.inputController.inputBar updateTextViewFrame];
+                       [weakSelf.inputController.inputBar addWordsToInputBar:spaceString ];
                      }];
     }
 }
@@ -256,11 +249,7 @@
         NSString *nameString = [NSString stringWithFormat:@"@%@ ", user.name];
         UIFont *textFont = kTUIInputNoramlFont;
         NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:nameString attributes:@{NSFontAttributeName : textFont}];
-        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:spaceString
-                                                                                atIndex:self.inputController.inputBar.inputTextView.textStorage.length];
-        [self.inputController.inputBar.inputTextView becomeFirstResponder];
-        self.inputController.inputBar.inputTextView.selectedRange =
-            NSMakeRange(spaceString.length + self.inputController.inputBar.inputTextView.textStorage.length, 0);
+        [self.inputController.inputBar addWordsToInputBar:spaceString ];
     }
 }
 

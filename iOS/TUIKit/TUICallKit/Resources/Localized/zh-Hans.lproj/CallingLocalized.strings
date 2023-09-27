@@ -3,7 +3,6 @@
  TRTCCalling
  
  Created by adams on 2021/5/13.
- 
  */
 
 "LoginNetwork.ProfileManager.sendfailed" = "发送失败，请稍后重试";
@@ -58,6 +57,7 @@
 
 "Demo.TRTC.Calling.User.Exceed.Limit" = "暂支持最多9人通话。如需多人会议，请使用TUIRoom";
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "正在通话中，无法再次发起";
+"Demo.TRTC.Calling.ErrorInPeerBlacklist" = "发起通话失败，用户在黑名单中，禁止发起！";
 
 "TUICallKit.failedtogetcamerapermission.Title" = "相机权限未开启";
 "TUICallKit.failedtogetcamerapermission.Tips"  = "无法使用视频通话功能，点击\"去开启\"打开相机权限";
@@ -82,3 +82,5 @@
 "TUICallKit.Recents.addUser" = "添加成员";
 "TUICallKit.Recents.clear.all" = "清除所有记录";
 "TUICallKit.Recents.clear.cancel" = "取消";
+"TUICallKit.Recents.incoming" = "来电";
+"TUICallKit.Recents.outgoing" = "去电";

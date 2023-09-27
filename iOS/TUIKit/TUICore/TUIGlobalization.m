@@ -12,8 +12,19 @@
 
 @implementation TUIGlobalization
 
++ (void)load {
+    NSString *language = [TUIGlobalization getPreferredLanguage];
+    if([language hasPrefix:@"ar"]) {
+        [TUIGlobalization setRTLOption:YES];
+    }
+    else {
+        [TUIGlobalization setRTLOption:NO];
+    }
+}
+
 static NSString *gCustomLanguage = nil;
 static BOOL gIgnoreTraditionChinese = YES;
+static BOOL gRTLOption = NO;
 
 + (NSString *)getLocalizedStringForKey:(NSString *)key bundle:(NSString *)bundleName {
     return [self getLocalizedStringForKey:key value:nil bundle:bundleName];
@@ -66,7 +77,10 @@ static BOOL gIgnoreTraditionChinese = YES;
         language = @"ru";
     } else if ([language hasPrefix:@"uk"]) {
         language = @"uk";
-    } else {
+    } else if ([language hasPrefix:@"ar"]) {
+        language = @"ar";
+    }
+    else {
         language = @"en";
     }
 
@@ -90,6 +104,18 @@ static BOOL gIgnoreTraditionChinese = YES;
 
 + (void)ignoreTraditionChinese:(BOOL)ignore {
     gIgnoreTraditionChinese = ignore;
+}
+
++ (void)setRTLOption:(BOOL)op {
+    gRTLOption = op;
+    [UIView appearance].semanticContentAttribute =  op?UISemanticContentAttributeForceRightToLeft:UISemanticContentAttributeForceLeftToRight;
+    [UISearchBar appearance].semanticContentAttribute = op?UISemanticContentAttributeForceRightToLeft:UISemanticContentAttributeForceLeftToRight;
+    [UICollectionView appearance].semanticContentAttribute = op?UISemanticContentAttributeForceRightToLeft:UISemanticContentAttributeForceLeftToRight;
+    [UISwitch appearance].semanticContentAttribute = op?UISemanticContentAttributeForceRightToLeft:UISemanticContentAttributeForceLeftToRight;
+}
+
++ (BOOL)getRTLOption {
+    return gRTLOption;
 }
 
 #pragma mark - Deprecated

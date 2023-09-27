@@ -24,11 +24,18 @@
     return self;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.textLabel.frame = self.bounds;
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
 }
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    [self.textLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self);
+    }];
+}
 - (void)fillWithData:(TUIReplyQuoteViewData *)data {
     [super fillWithData:data];
     if (![data isKindOfClass:TUITextReplyQuoteViewData.class]) {
@@ -36,6 +43,22 @@
     }
     TUITextReplyQuoteViewData *myData = (TUITextReplyQuoteViewData *)data;
     self.textLabel.attributedText = [myData.text getFormatEmojiStringWithFont:self.textLabel.font emojiLocations:nil];
+    
+    if (isRTL()) {
+        self.textLabel.textAlignment = NSTextAlignmentRight;
+    }
+    else {
+        self.textLabel.textAlignment = NSTextAlignmentLeft;
+    }
+    
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
 - (void)reset {

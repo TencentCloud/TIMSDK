@@ -51,14 +51,14 @@
     }
 
     self.groupNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.groupNameTextField.textAlignment = NSTextAlignmentRight;
+    self.groupNameTextField.textAlignment = isRTL()?NSTextAlignmentLeft: NSTextAlignmentRight;
     self.groupNameTextField.placeholder = TIMCommonLocalizableString(TUIKitCreatGroupNamed_Placeholder);
     self.groupNameTextField.delegate = self;
     if (IS_NOT_EMPTY_NSSTRING(self.createGroupInfo.groupName)) {
         self.groupNameTextField.text = self.createGroupInfo.groupName;
     }
     self.groupIDTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.groupIDTextField.textAlignment = NSTextAlignmentRight;
+    self.groupIDTextField.textAlignment = isRTL()?NSTextAlignmentLeft: NSTextAlignmentRight;
     self.groupIDTextField.keyboardType = UIKeyboardTypeDefault;
     self.groupIDTextField.placeholder = TIMCommonLocalizableString(TUIKitCreatGroupID_Placeholder);
     self.groupIDTextField.delegate = self;
@@ -83,6 +83,7 @@
     if (!_describeTextView) {
         _describeTextView = [[UITextView alloc] init];
         _describeTextView.backgroundColor = [UIColor clearColor];
+        _describeTextView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         _describeTextView.editable = NO;
         _describeTextView.scrollEnabled = NO;
         _describeTextView.textContainerInset = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
@@ -125,7 +126,8 @@
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.minimumLineHeight = 18;
     [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-    [paragraphStyle setAlignment:NSTextAlignmentLeft];
+    [paragraphStyle setAlignment:isRTL()?NSTextAlignmentRight: NSTextAlignmentLeft];
+    
     NSDictionary *dictionary = @{
         NSFontAttributeName : [UIFont systemFontOfSize:12],
         NSForegroundColorAttributeName : [UIColor tui_colorWithHex:@"#888888"],
@@ -154,8 +156,9 @@
     return 44;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-{ return 3; }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 3;
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] init];
@@ -190,16 +193,24 @@
             cell.textLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupNamed);
             [cell.contentView addSubview:self.groupNameTextField];
             cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
-            self.groupNameTextField.mm_width(cell.contentView.mm_w / 2).mm_height(cell.contentView.mm_h).mm_right(16);
-            self.groupNameTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+            [self.groupNameTextField mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.trailing.mas_equalTo(cell.contentView.mas_trailing).mas_offset(- 16);
+                make.height.mas_equalTo(cell.contentView);
+                make.width.mas_equalTo(cell.contentView).multipliedBy(0.5);
+                make.centerY.mas_equalTo(cell.contentView);
+            }];
             return cell;
         } else {
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"groupID"];
             cell.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
             cell.textLabel.text = TIMCommonLocalizableString(TUIKitCreatGroupID);
             [cell.contentView addSubview:self.groupIDTextField];
-            self.groupIDTextField.mm_width(cell.contentView.mm_w / 2).mm_height(cell.contentView.mm_h).mm_right(16);
-            self.groupIDTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+            [self.groupIDTextField mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.trailing.mas_equalTo(cell.contentView.mas_trailing).mas_offset(- 16);
+                make.height.mas_equalTo(cell.contentView);
+                make.width.mas_equalTo(cell.contentView).multipliedBy(0.5);
+                make.centerY.mas_equalTo(cell.contentView);
+            }];
             return cell;
         }
     } else if (indexPath.section == 1) {
@@ -224,8 +235,11 @@
             [headImage sd_setImageWithURL:[NSURL URLWithString:self.createGroupInfo.faceURL] placeholderImage:self.cacheGroupGridAvatarImage];
         }
         CGFloat margin = 5;
-        headImage.frame = CGRectMake((cell.mm_w - 48 - margin), (88 - 48) / 2, 48, 48);
-        headImage.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [headImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.trailing.mas_equalTo(cell.contentView.mas_trailing).mas_offset(- margin);
+            make.height.width.mas_equalTo(48);
+            make.centerY.mas_equalTo(cell.contentView);
+        }];
         return cell;
     }
 

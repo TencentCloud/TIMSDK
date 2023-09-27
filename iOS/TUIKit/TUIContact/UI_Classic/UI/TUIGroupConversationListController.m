@@ -128,8 +128,12 @@ static NSString *gConversationCell_ReuseId = @"TConversationCell";
         UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         textLabel.tag = TEXT_TAG;
         textLabel.textColor = RGB(0x80, 0x80, 0x80);
+        [textLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         [headerView addSubview:textLabel];
-        textLabel.mm_fill().mm_left(12);
+        [textLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(headerView.mas_leading).mas_offset(12);
+            make.top.bottom.trailing.mas_equalTo(headerView);
+        }];
         textLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     UILabel *label = [headerView viewWithTag:TEXT_TAG];

@@ -244,5 +244,7 @@ typedef NS_ENUM(NSInteger, TUIRecordStatus) {
 - (void)updateTextViewFrame;
 
 - (void)changeToKeyboard;
+- (void)addDraftToInputBar:(NSAttributedString *)draft;
+- (void)addWordsToInputBar:(NSAttributedString *)words;
 
 @end

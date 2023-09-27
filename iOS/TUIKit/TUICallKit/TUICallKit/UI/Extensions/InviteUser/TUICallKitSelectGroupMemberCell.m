@@ -1,11 +1,11 @@
 //
-//  InviteUserSelectCell.m
+//  TUICallKitSelectGroupMemberCell.m
 //  TUICallKit
 //
 //  Created by vincepzhang on 2023/4/7.
 //  Copyright © 2021 Tencent. All rights reserved
 
-#import "TUICallKitSelectGroupMeberCell.h"
+#import "TUICallKitSelectGroupMemberCell.h"
 #import "TUICore.h"
 #import "UIColor+TUICallingHex.h"
 #import "Masonry.h"
@@ -15,7 +15,7 @@
 #import "UIImageView+WebCache.h"
 #import "TUIThemeManager.h"
 
-@interface TUICallKitSelectGroupMeberCell ()
+@interface TUICallKitSelectGroupMemberCell ()
 
 @property (nonatomic, strong) UIImageView *selectImageView;
 @property (nonatomic, strong) UIImageView *userImageView;
@@ -24,12 +24,12 @@
 
 @end
 
-@implementation TUICallKitSelectGroupMeberCell {
+@implementation TUICallKitSelectGroupMemberCell {
     BOOL _isViewReady;
 }
 
-- (instancetype)init {
-    self = [super init];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _isViewReady = NO;
         self.contentView.backgroundColor = TUICallKitDynamicColor(@"callkit_recents_cell_bg_color", @"#FFFFFF");
@@ -55,17 +55,15 @@
 
 - (void)activateConstraints {
     [self.selectImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.superview).offset(20);
+        make.leading.equalTo(self.contentView.mas_leading).offset(20);
         make.width.height.equalTo(@(15));
         make.centerY.equalTo(self);
     }];
-    
     [self.userImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(self.selectImageView.mas_trailing).offset(20);
         make.width.height.equalTo(@(40));
         make.centerY.equalTo(self);
     }];
-    
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.equalTo(self.userImageView.mas_trailing).offset(12);
         make.centerY.equalTo(self);
@@ -84,7 +82,7 @@
         self.selectImageView.image = [TUICallingCommon getBundleImageWithName:@"tuicallkit_check_box_group_unselected"];
     }
     
-    if (userInfo.name == NULL || [userInfo.name isEqual: @""]) {
+    if (userInfo.name == NULL || [userInfo.name isEqual:@""]) {
         self.nameLabel.text = userInfo.userId;
     } else {
         self.nameLabel.text = userInfo.name;
@@ -92,6 +90,7 @@
 }
 
 #pragma mark - Lazy
+
 - (UIImageView *)userImageView {
     if (!_userImageView) {
         _userImageView = [[UIImageView alloc] initWithFrame:CGRectZero];

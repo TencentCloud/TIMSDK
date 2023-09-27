@@ -195,7 +195,11 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
-    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(Screen_Width - 155, orginY, 145, height)];
+    CGFloat orginX = Screen_Width - 155;
+    if(isRTL()){
+        orginX = 10;
+    }
+    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(orginX, orginY, 145, height)];
     CGRect frameInNaviView = [self.navigationController.view convertRect:rightBarButton.frame fromView:rightBarButton.superview];
     popView.arrowPoint = CGPointMake(frameInNaviView.origin.x + frameInNaviView.size.width * 0.5, orginY);
     popView.delegate = self;
@@ -625,6 +629,9 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     if ([language containsString:@"zh-"]) {
         markAsReadImageName = [markAsReadImageName stringByAppendingString:@"_zh"];
     }
+    else if ([language containsString:@"ar"]) {
+        markAsReadImageName = [markAsReadImageName stringByAppendingString:@"_ar"];
+    }
     markAsReadAction.image =
         TUIDynamicImage(@"", TUIThemeModuleConversation_Minimalist, [UIImage imageNamed:TUIConversationImagePath_Minimalist(markAsReadImageName)]);
 
@@ -651,7 +658,13 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
                             [weakSelf showMoreAction:cellData];
                           }];
     moreAction.backgroundColor = RGB(0, 0, 0);
-    NSString *moreImageName = [language containsString:@"zh-"] ? @"icon_conversation_swipe_more_zh" : @"icon_conversation_swipe_more";
+    NSString *moreImageName =  @"icon_conversation_swipe_more";
+    if ([language containsString:@"zh-"]) {
+        moreImageName = [moreImageName stringByAppendingString:@"_zh"];
+    }
+    else if ([language containsString:@"ar"]) {
+        moreImageName = [moreImageName stringByAppendingString:@"_ar"];
+    }
     moreAction.image = TUIDynamicImage(@"", TUIThemeModuleConversation_Minimalist, [UIImage imageNamed:TUIConversationImagePath_Minimalist(moreImageName)]);
 
     // config Actions

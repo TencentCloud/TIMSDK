@@ -10,6 +10,7 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIThemeManager.h>
+#import "TUIChatConfig.h"
 
 #define TongueMiddleSpace 5.f
 #define TongueRightSpace 10.f
@@ -42,7 +43,10 @@
         backgroudView.mm_fill();
         backgroudView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         UIImage *bkImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"small_tongue_bk")];
-        backgroudView.image = [bkImage resizableImageWithCapInsets:UIEdgeInsetsFromString(@"{5,12,5,5}") resizingMode:UIImageResizingModeStretch];
+        bkImage = [bkImage rtl_imageFlippedForRightToLeftLayoutDirection];
+        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{5,12,5,5}");
+        ei = rtlEdgeInsetsWithInsets(ei);
+        backgroudView.image = [bkImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
 
         // 点击事件
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
@@ -186,9 +190,14 @@ static UIWindow *gWindow = nil;
 
     CGFloat tongueWidth = [TUIChatSmallTongueView_Minimalist getTongueWidth:gTongue];
     CGFloat tongueHeight = [TUIChatSmallTongueView_Minimalist getTongueHeight:gTongue];
-    gWindow.frame =
-        CGRectMake(Screen_Width - kScale390(54), Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - tongueHeight, tongueWidth, tongueHeight);
-
+    if(isRTL()) {
+        gWindow.frame =
+            CGRectMake(kScale390(16), Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - tongueHeight, tongueWidth, tongueHeight);
+    }
+    else {
+        gWindow.frame =
+            CGRectMake(Screen_Width - kScale390(54), Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - tongueHeight, tongueWidth, tongueHeight);
+    }
     if (!gTongueView) {
         gTongueView = [[TUIChatSmallTongueView_Minimalist alloc] initWithFrame:CGRectZero];
         [gWindow addSubview:gTongueView];

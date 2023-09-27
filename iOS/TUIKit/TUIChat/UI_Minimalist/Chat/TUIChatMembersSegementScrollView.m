@@ -60,6 +60,13 @@
 
         [self.segementScrollView addSubview:self.selectedLine];
         self.segementScrollView.contentSize = CGSizeMake(titleCount * SEGEMENT_BTN_WIDTH + (padding * titleCount - 1), 0);
+        if (isRTL()) {
+            self.segementScrollView.transform = CGAffineTransformMakeRotation(M_PI);
+            NSArray *subViews = self.segementScrollView.subviews;
+            for (UIView *subView in subViews) {
+                    subView.transform = CGAffineTransformMakeRotation(M_PI);
+            }
+        }
     }
     return self;
 }
@@ -172,6 +179,13 @@
             [self.pageScrollView addSubview:viewController.view];
         }
         self.pageScrollView.contentSize = CGSizeMake(viewArray.count * SCROLLVIEW_WIDTH, self.pageScrollView.frame.size.height);
+        if (isRTL()) {
+            _pageScrollView.transform = CGAffineTransformMakeRotation(M_PI);
+            NSArray *subViews = _pageScrollView.subviews;
+            for (UIView *subView in subViews) {
+                    subView.transform = CGAffineTransformMakeRotation(M_PI);
+            }
+        }
     }
 
     return self;

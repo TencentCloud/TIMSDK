@@ -10,7 +10,6 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
 #import "TIMGroupInfo+TUIDataProvider.h"
-#import "TUIAddCell.h"
 #import "TUIGroupMemberCell.h"
 #import "TUIGroupMemberDataProvider.h"
 
@@ -63,6 +62,7 @@
 
     // left
     UIImage *image = TUIGroupDynamicImage(@"group_nav_back_img", [UIImage imageNamed:TUIGroupImagePath(@"back")]);
+    image = [image rtl_imageFlippedForRightToLeftLayoutDirection];
     UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     [leftButton addTarget:self action:@selector(leftBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [leftButton setImage:image forState:UIControlStateNormal];

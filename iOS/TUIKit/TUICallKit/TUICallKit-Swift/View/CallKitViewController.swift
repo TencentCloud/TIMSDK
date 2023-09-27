@@ -20,7 +20,7 @@ class CallKitViewController: UIViewController {
     override func viewDidLoad(){
         super.viewDidLoad()
         if TUICallState.instance.scene.value == .single {
-            let callView: SingleCallView? = SingleCallView(frame: CGRectZero)
+            let callView: SingleCallView? = SingleCallView(frame: CGRect.zero)
             view.addSubview(callView ?? UIView())
         } else if TUICallState.instance.scene.value == .group {
             let groupCallView = GroupCallView()

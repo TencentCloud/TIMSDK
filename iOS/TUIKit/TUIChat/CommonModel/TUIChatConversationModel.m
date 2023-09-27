@@ -10,4 +10,13 @@
 
 @implementation TUIChatConversationModel
 
+- (instancetype)init {
+    self = [super init];
+    if (self){
+        self.enabelVideo = YES;
+        self.enabelAudio = YES;
+        self.enabelRoom  = YES;
+    }
+    return self;
+}
 @end

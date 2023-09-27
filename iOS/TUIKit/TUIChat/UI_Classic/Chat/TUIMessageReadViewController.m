@@ -175,12 +175,25 @@
 }
 
 - (void)layoutViews {
-    float backViewTop = self.navigationController.navigationBar.mm_maxY;
-    self.messageBackView.mm_left(0).mm_width(self.view.mm_w).mm_top(backViewTop);
-
+    id content = [self content];
+    CGFloat messageBackViewHeight = 69 ;
+    if ([content isKindOfClass:UIImage.class]) {
+        messageBackViewHeight = 87;
+    }
+    [self.messageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.view.mas_safeAreaLayoutGuideTop);
+        make.leading.mas_equalTo(0);
+        make.height.mas_equalTo(messageBackViewHeight);
+        make.width.mas_equalTo(self.view);
+    }];
     // content label may not exist when content is not text
     if (self.contentLabel) {
-        self.contentLabel.mm_left(16).mm_top(33).mm_height(24).mm_width(self.messageBackView.mm_w - 32);
+        [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(16);
+            make.top.mas_equalTo(33);
+            make.height.mas_equalTo(24);
+            make.trailing.mas_equalTo(-16);
+        }];
     }
 
     UIView *readView = [self layoutSelectView:self.selectViewsDict[@(TUIMessageReadViewTagRead)] leftView:nil];
@@ -200,10 +213,17 @@
     if (count == 0) {
         return nil;
     }
-    view.mm_width(self.view.mm_w / count)
-        .mm_height(48)
-        .mm_left(leftView == nil ? 0 : leftView.mm_maxX)
-        .mm_top(self.messageBackView.mm_y + self.messageBackView.mm_h + 10);
+    [view mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(self.view).multipliedBy(1.0/count);
+        make.height.mas_equalTo(48);
+        if (leftView) {
+            make.leading.mas_equalTo(leftView.mas_trailing);
+        }
+        else {
+            make.leading.mas_equalTo(0);
+        }
+        make.top.mas_equalTo(self.messageBackView.mas_bottom).mas_offset(10);
+    }];
     return view;
 }
 
@@ -226,19 +246,31 @@
     nameLabel.text = self.cellData.name;
     nameLabel.font = [UIFont systemFontOfSize:12.0];
     nameLabel.textColor = TUIChatDynamicColor(@"chat_message_read_name_date_text_color", @"#999999");
+    nameLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     [messageBackView addSubview:nameLabel];
-    nameLabel.mm_sizeToFit().mm_top(12).mm_left(16);
-
+    [nameLabel sizeToFit];
+    [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(12);
+        make.leading.mas_equalTo(16);
+        make.width.mas_equalTo(nameLabel.frame.size.width);
+        make.height.mas_equalTo(nameLabel.frame.size.height);
+    }];
     UILabel *dateLabel = [[UILabel alloc] init];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MM-dd HH:mm"];
     NSString *dateString = [formatter stringFromDate:self.cellData.innerMessage.timestamp];
     dateLabel.text = dateString;
     dateLabel.font = [UIFont systemFontOfSize:12];
+    dateLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     dateLabel.textColor = TUIChatDynamicColor(@"chat_message_read_name_date_text_color", @"#999999");
     [messageBackView addSubview:dateLabel];
-    dateLabel.mm_sizeToFit().mm_left(nameLabel.mm_x + nameLabel.mm_w + 12).mm__centerY(nameLabel.mm_centerY);
-
+    [dateLabel sizeToFit];
+    [dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(nameLabel);
+        make.leading.mas_equalTo(nameLabel.mas_trailing).mas_offset(12);
+        make.width.mas_equalTo(dateLabel.frame.size.width);
+        make.height.mas_equalTo(dateLabel.frame.size.height);
+    }];
     id content = [self content];
     if ([content isKindOfClass:NSString.class]) {
         UILabel *contentLabel = [[UILabel alloc] init];
@@ -246,22 +278,26 @@
         contentLabel.font = [UIFont systemFontOfSize:16];
         contentLabel.textColor = TUIChatDynamicColor(@"chat_input_text_color", @"#111111");
         contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        contentLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         self.contentLabel = contentLabel;
         [messageBackView addSubview:contentLabel];
-        messageBackView.mm_height(69);
     } else if ([content isKindOfClass:UIImage.class]) {
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.image = content;
         [messageBackView addSubview:imageView];
-        messageBackView.mm_height(87);
-
-        imageView.mm_left(16).mm_top(33).mm_height([self scaledSizeOfImage:content].height).mm_width([self scaledSizeOfImage:content].width);
+        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(33);
+            make.leading.mas_equalTo(16);
+            make.width.mas_equalTo([self scaledSizeOfImage:content].width);
+            make.height.mas_equalTo([self scaledSizeOfImage:content].height);
+        }];
     }
 }
 
 - (void)setupSelectView {
     NSMutableDictionary *dataDict = [self selectViewsData];
     NSInteger count = dataDict.count;
+    NSMutableArray * selectViewsArray = [NSMutableArray arrayWithCapacity:2];
     UIView *tmp = nil;
     for (NSNumber *tag in dataDict) {
         NSDictionary *data = dataDict[tag];
@@ -271,6 +307,7 @@
         selectView.backgroundColor = TIMCommonDynamicColor(@"form_bg_color", @"#FFFFFF");
         selectView.delegate = self;
         [self.view addSubview:selectView];
+        [selectViewsArray addObject:selectView];
         [self.selectViewsDict setObject:selectView forKey:data[@"tag"]];
 
         selectView.mm_width(self.view.mm_w / count)

@@ -20,7 +20,6 @@
 #import "TUICallingVideoInviteFunctionView.h"
 #import "TUICallingSwitchToAudioView.h"
 #import "TUICallingTimerView.h"
-#import "TUICallingVideoRenderView.h"
 #import "UIWindow+TUICalling.h"
 #import "Masonry.h"
 #import "UIColor+TUICallingHex.h"
@@ -31,11 +30,10 @@
 #import "TUIDefine.h"
 #import "TUICallingUserModel.h"
 #import "TUICallEngineHeader.h"
-#import "TUICore.h"
 #import "TUICallingNavigationController.h"
-#import "TUICallKitSelectGroupMeberViewController.h"
+#import "TUICallKitSelectGroupMemberViewController.h"
 
-@interface TUICallingViewManager () <TUICallingFloatingWindowManagerDelegate, SelectGroupMeberViewControllerDelegate>
+@interface TUICallingViewManager () <TUICallingFloatingWindowManagerDelegate, SelectGroupMemberViewControllerDelegate>
 
 @property (nonatomic, strong) UIWindow *callingWindow;
 @property (nonatomic, strong) UIView *containerView;
@@ -307,7 +305,7 @@
     [self.containerView addSubview:self.addOtherUserBtn];
     [self.addOtherUserBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.containerView).offset(StatusBar_Height + 3);
-        make.right.equalTo(self.containerView).offset(-10);
+        make.trailing.equalTo(self.containerView).offset(-10);
         make.width.height.equalTo(@(32));
     }];
 }
@@ -376,8 +374,8 @@
 - (void)makeUserViewConstraints:(CGFloat)topOffset {
     [self.callingUserView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.containerView).offset(StatusBar_Height + topOffset);
-        make.left.equalTo(self.containerView).offset(20);
-        make.right.equalTo(self.containerView).offset(-20);
+        make.leading.equalTo(self.containerView).offset(20);
+        make.trailing.equalTo(self.containerView).offset(-20);
     }];
 }
 
@@ -419,7 +417,7 @@
 - (void)makeFloatingWindowBtnConstraints {
     [self.floatingWindowBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.containerView).offset(StatusBar_Height + 3);
-        make.left.equalTo(self.containerView).offset(10);
+        make.leading.equalTo(self.containerView).offset(10);
         make.width.height.equalTo(@(32));
     }];
 }
@@ -563,7 +561,7 @@
 }
 
 - (void)addOtherUserTouchEvent:(UIButton *)sender {
-    TUICallKitSelectGroupMeberViewController *vc = [[TUICallKitSelectGroupMeberViewController alloc] init];
+    TUICallKitSelectGroupMemberViewController *vc = [[TUICallKitSelectGroupMemberViewController alloc] init];
     vc.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
     navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -571,9 +569,10 @@
 }
 
 #pragma mark -SelectGroupMeberViewControllerDelegate
-- (void)addNewGroupUser:(NSArray<TUIUserModel *> *)inviteUsersn {
+
+- (void)addNewGroupUser:(NSArray<TUIUserModel *> *)inviteUsers {
     __weak typeof(self) weakSelf = self;
-    [TUICallingAction inviteUser:inviteUsersn succ:^(NSArray * _Nonnull userIDs) {
+    [TUICallingAction inviteUser:inviteUsers succ:^(NSArray * _Nonnull userIDs) {
         [[V2TIMManager sharedInstance] getUsersInfo:userIDs succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
             __strong typeof(self) strongSelf = weakSelf;
             for (V2TIMUserFullInfo *userInfo in infoList) {

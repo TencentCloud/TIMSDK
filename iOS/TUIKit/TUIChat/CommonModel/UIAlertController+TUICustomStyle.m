@@ -54,10 +54,15 @@ CGFloat itemCount = 2;
             l.frame = CGRectMake(icon.frame.origin.x + icon.frame.size.width + padding + kScale390(15), 0, alertVCWidth * 0.5, itemHeight);
             l.text = items[i].title;
             l.font = [UIFont systemFontOfSize:17];
-            l.textAlignment = NSTextAlignmentLeft;
+            l.textAlignment = isRTL()? NSTextAlignmentRight:NSTextAlignmentLeft;
             l.textColor = [UIColor systemBlueColor];
             l.userInteractionEnabled = false;
             [itemView addSubview:l];
+            
+            if (isRTL()) {
+                [icon resetFrameToFitRTL];
+                [l resetFrameToFitRTL];
+            }
         }
     }
 

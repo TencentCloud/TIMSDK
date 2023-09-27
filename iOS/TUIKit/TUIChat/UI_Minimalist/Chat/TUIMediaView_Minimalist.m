@@ -49,7 +49,7 @@
     self.mediaView.backgroundColor = [UIColor clearColor];
     [self addSubview:self.mediaView];
 
-    UICollectionViewFlowLayout *menuFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+    UICollectionViewFlowLayout *menuFlowLayout = [[TUICollectionRTLFitFlowLayout alloc] init];
     menuFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     menuFlowLayout.minimumLineSpacing = 0;
     menuFlowLayout.minimumInteritemSpacing = 0;

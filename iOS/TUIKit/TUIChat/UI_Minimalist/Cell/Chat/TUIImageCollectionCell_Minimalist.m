@@ -62,11 +62,22 @@
 {
     [super fillWithData:data];
     self.imageView.image = nil;
-    if (data.largeImage == nil) {
+    if (data.thumbImage == nil) {
+        [data downloadImage:TImage_Type_Thumb];
+    }
+    if (data.thumbImage && data.largeImage == nil) {
         [data downloadImage:TImage_Type_Large];
     }
 
     @weakify(self);
+    [[RACObserve(data, thumbImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *thumbImage) {
+      @strongify(self);
+      if (thumbImage) {
+          self.imageView.image = thumbImage;
+      }
+    }];
+
+    // largeImage
     [[RACObserve(data, largeImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *largeImage) {
       @strongify(self);
       if (largeImage) {

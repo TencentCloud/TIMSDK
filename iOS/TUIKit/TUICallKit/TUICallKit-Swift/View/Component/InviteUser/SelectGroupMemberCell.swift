@@ -1,5 +1,5 @@
 //
-//  SelectGroupMeberCell.swift
+//  SelectGroupMemberCell.swift
 //  Alamofire
 //
 //  Created by vincepzhang on 2023/5/12.
@@ -7,22 +7,22 @@
 
 import Foundation
 
-class SelectGroupMeberCell: UITableViewCell {
+class SelectGroupMemberCell: UITableViewCell {
     let userImageView = {
-        let view = UIImageView(frame: CGRectZero)
+        let view = UIImageView(frame: CGRect.zero)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         return view
     }()
     
     let nameLabel = {
-        let view = UILabel(frame: CGRectZero)
+        let view = UILabel(frame: CGRect.zero)
         view.textColor = UIColor.t_colorWithHexString(color: "#242424")
         return view
     }()
     
     let selectImageView = {
-        let view = UIImageView(frame: CGRectZero)
+        let view = UIImageView(frame: CGRect.zero)
         return view
     }()
     

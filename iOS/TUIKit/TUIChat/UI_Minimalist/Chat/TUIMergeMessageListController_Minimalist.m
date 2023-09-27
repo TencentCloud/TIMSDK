@@ -165,8 +165,9 @@
     self.tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
     [self.messageCellConfig bindTableView:self.tableView];
 
-    UIImage *image = TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:@"ic_back_white"]);
+    UIImage *image = TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:TIMCommonImagePath(@"nav_back")]);
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    image = [image rtl_imageFlippedForRightToLeftLayoutDirection];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:image forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];

@@ -12,6 +12,7 @@
 #import "TUIMessageDataProvider.h"
 #import "TUITextMessageCell.h"
 #import "TUITextMessageCellData.h"
+#import "TUIChatConfig.h"
 
 #import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TUISystemMessageCell.h>
@@ -77,7 +78,9 @@
 
     [self setupInputViewController];
 
-    [TUICore registerEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIPluginNotify
+                    subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
+                    object:self];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [self updateRootMsg];
@@ -162,7 +165,8 @@
 }
 
 - (void)updateTableViewConstraint {
-    CGFloat height = CGRectGetMaxY(self.inputController.inputBar.frame) + Bottom_SafeHeight;
+    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? CGRectGetMaxY(self.inputController.inputBar.frame):0;
+    CGFloat height = textViewHeight + Bottom_SafeHeight;
     CGRect msgFrame = self.tableView.frame;
     msgFrame.size.height = self.view.frame.size.height - height;
     self.tableView.frame = msgFrame;
@@ -193,7 +197,7 @@
     data.path = group.menuPath;
     data.isSelected = YES;
     [_inputController.menuView setData:(id) @[ data ]];
-
+    _inputController.view.hidden = !TUIChatConfig.defaultConfig.enableMainPageInputBar;
     CGFloat margin = 20;
     CGFloat padding = 10;
     _inputController.inputBar.inputTextView.frame =
@@ -650,8 +654,9 @@
 
 #pragma mark - TUINotificationProtocol
 - (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
-    if ([key isEqualToString:TUICore_TUITranslationNotify] && [subKey isEqualToString:TUICore_TUITranslationNotify_DidChangeTranslationSubKey]) {
-        TUIMessageCellData *data = param[TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data];
+    if ([key isEqualToString:TUICore_TUIPluginNotify] &&
+        [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
+        TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
         [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
         [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID section:1];
     }

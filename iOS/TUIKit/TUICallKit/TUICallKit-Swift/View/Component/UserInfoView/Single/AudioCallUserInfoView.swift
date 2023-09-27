@@ -13,7 +13,7 @@ class AudioCallUserInfoView: UIView {
     let selfCallStatusObserver = Observer()
     let remoteUserListObserver = Observer()
     let userHeadImageView: UIImageView = {
-        let userHeadImageView = UIImageView(frame: CGRectZero)
+        let userHeadImageView = UIImageView(frame: CGRect.zero)
         userHeadImageView.layer.masksToBounds = true
         userHeadImageView.layer.cornerRadius = 5.0
         if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
@@ -23,7 +23,7 @@ class AudioCallUserInfoView: UIView {
     }()
     
     let userNameLabel: UILabel = {
-        let userNameLabel = UILabel(frame: CGRectZero)
+        let userNameLabel = UILabel(frame: CGRect.zero)
         userNameLabel.textColor = UIColor.t_colorWithHexString(color: "#242424")
         userNameLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         userNameLabel.backgroundColor = UIColor.clear
@@ -32,7 +32,7 @@ class AudioCallUserInfoView: UIView {
     }()
     
     let waitingInviteLabel: UILabel = {
-        let waitingInviteLabel = UILabel(frame: CGRectZero)
+        let waitingInviteLabel = UILabel(frame: CGRect.zero)
         waitingInviteLabel.textColor = UIColor.t_colorWithHexString(color: "#242424")
         waitingInviteLabel.font = UIFont.boldSystemFont(ofSize: 14.0)
         waitingInviteLabel.backgroundColor = UIColor.clear

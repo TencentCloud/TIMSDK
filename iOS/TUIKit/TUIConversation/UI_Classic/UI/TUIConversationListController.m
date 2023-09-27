@@ -111,7 +111,11 @@
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
-    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(Screen_Width - 155, orginY, 145, height)];
+    CGFloat orginX = Screen_Width - 155;
+    if(isRTL()){
+        orginX = 10;
+    }
+    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(orginX, orginY, 145, height)];
     CGRect frameInNaviView = [self.navigationController.view convertRect:rightBarButton.frame fromView:rightBarButton.superview];
     popView.arrowPoint = CGPointMake(frameInNaviView.origin.x + frameInNaviView.size.width * 0.5, orginY);
     popView.delegate = self;
@@ -231,9 +235,12 @@
         [TUICore raiseExtension:TUICore_TUIConversationExtension_ConversationGroupManagerContainer_ClassicExtensionID
                      parentView:self.groupBtnContainer
                           param:@{TUICore_TUIConversationExtension_ConversationGroupManagerContainer_ParentVCKey : self}];
-
+        
         CGFloat groupScrollViewWidth = self.groupBtnContainer.mm_x - kScale375(16) - kScale375(10);
-        self.groupScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(kScale375(16), 18, groupScrollViewWidth, GroupScrollViewHeight)];
+        UIView *groupScrollBackgrounView = [[UIView alloc] init];
+        [_groupView addSubview:groupScrollBackgrounView];
+        groupScrollBackgrounView.frame = CGRectMake(kScale375(16), 18, groupScrollViewWidth, GroupScrollViewHeight);
+        self.groupScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, groupScrollViewWidth, GroupScrollViewHeight)];
         self.groupScrollView.backgroundColor = TUIConversationDynamicColor(@"conversation_group_bg_color", @"#EBECF0");
         self.groupScrollView.showsHorizontalScrollIndicator = NO;
         self.groupScrollView.showsVerticalScrollIndicator = NO;
@@ -241,11 +248,16 @@
         self.groupScrollView.scrollEnabled = YES;
         self.groupScrollView.layer.cornerRadius = GroupScrollViewHeight / 2.0;
         self.groupScrollView.layer.masksToBounds = YES;
-        [_groupView addSubview:self.groupScrollView];
+        [groupScrollBackgrounView addSubview:self.groupScrollView];
         @weakify(self);
         [[[RACObserve(self.groupScrollView, contentSize) distinctUntilChanged] skip:1] subscribeNext:^(NSValue *contentSizeValue) {
           @strongify(self);
-          self.groupScrollView.mm_w = MIN(groupScrollViewWidth, [contentSizeValue CGSizeValue].width);
+            [self.groupScrollView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.leading.mas_equalTo(groupScrollBackgrounView.mas_leading);
+                make.height.mas_equalTo(GroupScrollViewHeight);
+                make.width.mas_equalTo(MIN(groupScrollViewWidth, [contentSizeValue CGSizeValue].width));
+                make.centerY.mas_equalTo(groupScrollBackgrounView);
+            }];
         }];
 
         self.groupAnimationView = [[UIView alloc] init];
@@ -255,6 +267,15 @@
         self.groupAnimationView.layer.borderWidth = 1;
         self.groupAnimationView.layer.borderColor = [TUIConversationDynamicColor(@"conversation_group_bg_color", @"#EBECF0") CGColor];
         [self.groupScrollView addSubview:self.groupAnimationView];
+        if (isRTL()) {
+            [groupScrollBackgrounView resetFrameToFitRTL];
+            [self.groupBtnContainer resetFrameToFitRTL];
+            self.groupScrollView.transform = CGAffineTransformMakeRotation(M_PI);
+            NSArray *subViews = self.groupScrollView.subviews;
+            for (UIView *subView in subViews) {
+                    subView.transform = CGAffineTransformMakeRotation(M_PI);
+            }
+        }
     }
     return _groupView;
 }
@@ -272,13 +293,23 @@
     groupBtn.mm_w = groupBtn.mm_w + GroupBtnSpace;
     groupBtn.mm_h = GroupScrollViewHeight;
     groupItem.groupBtn = groupBtn;
+    if (isRTL()) {
+        groupBtn.transform = CGAffineTransformMakeRotation(M_PI);
+    }
+
 }
 
 - (void)updateGroupBtn:(TUIConversationGroupItem *)groupItem {
     [groupItem.groupBtn setAttributedTitle:[self getGroupBtnAttributedString:groupItem] forState:UIControlStateNormal];
-    [groupItem.groupBtn sizeToFit];
-    groupItem.groupBtn.mm_w = groupItem.groupBtn.mm_w + GroupBtnSpace;
-    groupItem.groupBtn.mm_h = GroupScrollViewHeight;
+    if(isRTL()) {
+        groupItem.groupBtn.mm_w = groupItem.groupBtn.mm_w ;
+        groupItem.groupBtn.mm_h = GroupScrollViewHeight;
+    }
+    else {
+        [groupItem.groupBtn sizeToFit];
+        groupItem.groupBtn.mm_w = groupItem.groupBtn.mm_w + GroupBtnSpace;
+        groupItem.groupBtn.mm_h = GroupScrollViewHeight;
+    }
 }
 
 - (void)onGroupBtnClick:(UIButton *)btn {
@@ -307,6 +338,12 @@
         if ([groupItem.groupName isEqualToString:currentSelectGroup]) {
             groupItem.groupBtn.selected = YES;
             self.groupAnimationView.frame = groupItem.groupBtn.frame;
+        }
+    }
+    if (isRTL()) {
+        NSArray *subViews = self.groupScrollView.subviews;
+        for (UIView *subView in subViews) {
+                subView.transform = CGAffineTransformMakeRotation(M_PI);
         }
     }
 }
@@ -438,32 +475,48 @@
 }
 
 - (NSMutableAttributedString *)getGroupBtnAttributedString:(TUIConversationGroupItem *)groupItem {
-    NSMutableString *content = [NSMutableString stringWithString:groupItem.groupName];
+    NSMutableString *content = [NSMutableString stringWithString:@""];
+    NSMutableString *contentName = [NSMutableString stringWithString: groupItem.groupName];
+    NSMutableString *contentNum = [NSMutableString stringWithString:@""];
+    NSMutableAttributedString *attributeString = nil;
     NSInteger unreadCount = groupItem.unreadCount;
     if (unreadCount > 0) {
+        [contentNum appendString:(unreadCount > 99 ? @"99+" : [@(unreadCount) stringValue])];
+    }
+    if (isRTL()){
+        [content appendString:@"\u200E"];
+        [content appendString:contentNum];
         [content appendString:@" "];
-        [content appendString:(unreadCount > 99 ? @"99+" : [@(unreadCount) stringValue])];
+        [content appendString:@"\u202B"];
+        [content appendString:contentName];
+        attributeString = [[NSMutableAttributedString alloc] initWithString:content];
     }
-    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:content];
-    if (groupItem.groupBtn.isSelected) {
-        [attributeString setAttributes:@{
-            NSFontAttributeName : [UIFont systemFontOfSize:16],
-            NSForegroundColorAttributeName : TUIConversationDynamicColor(@"conversation_group_btn_select_color", @"#147AFF")
-        }
-                                 range:NSMakeRange(0, groupItem.groupName.length)];
-    } else {
-        [attributeString setAttributes:@{
-            NSFontAttributeName : [UIFont systemFontOfSize:16],
-            NSForegroundColorAttributeName : TUIConversationDynamicColor(@"conversation_group_btn_unselect_color", @"#666666")
-        }
-                                 range:NSMakeRange(0, groupItem.groupName.length)];
+    else {
+        [content appendString:contentName];
+        [content appendString:@" "];
+        [content appendString:contentNum];
+        attributeString = [[NSMutableAttributedString alloc] initWithString:content];
     }
+    
     [attributeString setAttributes:@{
         NSForegroundColorAttributeName : TUIConversationDynamicColor(@"conversation_group_btn_select_color", @"#147AFF"),
         NSFontAttributeName : [UIFont systemFontOfSize:12],
         NSBaselineOffsetAttributeName : @(1)
     }
-                             range:NSMakeRange(groupItem.groupName.length, content.length - groupItem.groupName.length)];
+                             range:[content rangeOfString:contentNum]];
+    if (groupItem.groupBtn.isSelected) {
+        [attributeString setAttributes:@{
+            NSFontAttributeName : [UIFont systemFontOfSize:16],
+            NSForegroundColorAttributeName : TUIConversationDynamicColor(@"conversation_group_btn_select_color", @"#147AFF")
+        }
+                                 range:[content rangeOfString:contentName]];
+    } else {
+        [attributeString setAttributes:@{
+            NSFontAttributeName : [UIFont systemFontOfSize:16],
+            NSForegroundColorAttributeName : TUIConversationDynamicColor(@"conversation_group_btn_unselect_color", @"#666666")
+        }
+                                 range:[content rangeOfString:contentName]];
+    }
     return attributeString;
 }
 
@@ -477,7 +530,7 @@
     if ([key isEqualToString:TUICore_TUIConversationGroupNotify]) {
         if ([param objectForKey:TUICore_TUIConversationGroupNotify_GroupListReloadKey]) {
             NSArray *groupItemList = [param objectForKey:TUICore_TUIConversationGroupNotify_GroupListReloadKey];
-            if (groupItemList && groupItemList.count > 0) {
+            if (groupItemList) {
                 [self reloadGroupList:groupItemList];
             }
         } else if ([param objectForKey:TUICore_TUIConversationGroupNotify_GroupAddKey]) {

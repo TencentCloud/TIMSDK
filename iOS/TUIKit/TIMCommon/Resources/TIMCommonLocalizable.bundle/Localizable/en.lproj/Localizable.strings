@@ -240,7 +240,7 @@
 "TUIKitMessageTipsUnmute" = "unblocked";
 
 "TUIKitSignalingFinishGroupChat" = "End Group Chat";
-"TUIKitSignalingFinishConversationAndTimeFormat" = "Duration: %.2d:%.2d.";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "Duration";
 "TUIKitSignalingNewCall" = "Start Call";
 "TUIKitSignalingNewGroupCallFormat" = "\"%@\" initiated a group call.";
 "TUIkitSignalingCancelCall" = "Cancel Call";
@@ -476,12 +476,20 @@
 "TUIKitReference" = "reference";
 "TUIKitNotSupportThisMessage" = "[This message display is not currently supported]";
 
+"TUIKitAudioPlaybackStyleLoudspeaker" = "Loudspeaker";
+"TUIKitAudioPlaybackStyleHandset" = "Handset";
+"TUIKitAudioPlaybackStyleChange2Loudspeaker" = "Switch To Loudspeaker";
+"TUIKitAudioPlaybackStyleChange2Handset" = "Switch To Handset";
+
 "TUIKitTranslate" = "Translate";
 "TUIKitTranslateDefaultTips" = "Translated by IM";
 "TUIKitTranslateFailed" = "Unable to translate";
 "Hide" = "Hide";
 "TranslateMessage" = "Translate message to language";
 "TranslateLanguageNotSupport" = "Translation is not supported between current languages, please switch to another language.";
+
+"TUIKitConvertToText" = "Convert\nto Text";
+"TUIKitConvertToTextFailed" = "Unable to convert";
 
 "TUIKitSignalingSwitchToAudio" = "Switch to voice call";
 "TUIKitSignalingUnsupportedCalling" = "Unknown invitation";
@@ -493,6 +501,7 @@
 "TUIKitChooseCover" = "Choose a cover";
 "TUIKitChooseBackground" = "Choose a Wallpaper";
 "TUIKitDefaultBackground" = "Default background";
+"TUIKitIdentity" = "ID";
 
 "TUIKitChooseBackgroundSuccess" = "Setup Success！";
 "TUIKitChooseBackgroundFailed" = "Setup failed！";
@@ -710,7 +719,10 @@
 "TIMAppConfirmLogout" = "Leave now?";
 "TIMAppConfirm" = "OK";
 "TIMAppCancel" = "Cancel";
+"TIMAppMarkAllMessageAsReadSucc" = "Success to mark all as read";
+"TIMAppMarkAllMessageAsReadErrFormat" = "Error, %d, %@";
 "TIMChangeLanguage" = "Language";
+
 //----timApp---
 "TUIKitTickledMe" = "I";
 "TUIKitTickledActionVaule" = " tickled ";
@@ -718,3 +730,6 @@
 "TUIKitImageViewOrigin" = "Original image";
 "TUIGroupCreateTipsMessage" = "Create Group";
 "TUICommunityCreateTipsMessage" = "Create Community";
+"zh-Hans" = "Simple Chinese";
+"en"      = "English";
+"ar"      = "Arabic";

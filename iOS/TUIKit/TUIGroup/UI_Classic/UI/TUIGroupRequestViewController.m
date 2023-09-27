@@ -27,6 +27,7 @@
 
     self.addMsgTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.addMsgTextView.font = [UIFont systemFontOfSize:14];
+    self.addMsgTextView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
     [[V2TIMManager sharedInstance] getUsersInfo:@[ loginUser ]
                                            succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {

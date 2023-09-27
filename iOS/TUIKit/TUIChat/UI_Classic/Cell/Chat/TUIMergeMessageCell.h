@@ -34,12 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UILabel *relayTitleLabel;
 
 /**
- * 转发消息的摘要信息 abstract
- * Abstract of merged-forward message
- */
-@property(nonatomic, strong) UILabel *abstractLabel;
-
-/**
  * 水平分割线
  * Horizontal dividing line
  */

@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIReplyMessageCell : TUIBubbleMessageCell
 
-@property(nonatomic, strong) CALayer *quoteBorderLayer;
+@property(nonatomic, strong) UIView *quoteBorderLine;
 @property(nonatomic, strong) UIView *quoteView;
 
 @property(nonatomic, strong) TUITextView *textView;

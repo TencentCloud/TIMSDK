@@ -28,12 +28,14 @@
         _timeLabel.font = [UIFont systemFontOfSize:12];
         _timeLabel.textColor = TIMCommonDynamicColor(@"form_desc_color", @"#BBBBBB");
         _timeLabel.layer.masksToBounds = YES;
+        [_timeLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         [self.contentView addSubview:_timeLabel];
 
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:16];
         _titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         _titleLabel.layer.masksToBounds = YES;
+        [_titleLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         [self.contentView addSubview:_titleLabel];
 
         _unReadView = [[TUIUnReadView alloc] init];
@@ -43,6 +45,7 @@
         _subTitleLabel.layer.masksToBounds = YES;
         _subTitleLabel.font = [UIFont systemFontOfSize:14];
         _subTitleLabel.textColor = TIMCommonDynamicColor(@"form_subtitle_color", @"#888888");
+        [_subTitleLabel setRtlAlignment:TUITextRTLAlignmentLeading];
         [self.contentView addSubview:_subTitleLabel];
 
         _notDisturbRedDot = [[UIView alloc] init];
@@ -77,7 +80,11 @@
 
     self.timeLabel.text = [TUITool convertDateToStr:convData.time];
     self.subTitleLabel.attributedText = convData.subTitle;
-
+    if (self.convData.showCheckBox) {
+        _selectedIcon.hidden = NO;
+    } else {
+        _selectedIcon.hidden = YES;
+    }
     [self configRedPoint:convData];
 
     if (convData.isOnTop) {
@@ -97,8 +104,15 @@
 
     @weakify(self);
     [[[RACObserve(convData, title) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSString *x) {
-      @strongify(self);
-      self.titleLabel.text = x;
+        @strongify(self);
+        self.titleLabel.text = x;
+        // tell constraints they need updating
+        [self setNeedsUpdateConstraints];
+
+        // update constraints now so we can animate the change
+        [self updateConstraintsIfNeeded];
+
+        [self layoutIfNeeded];
     }];
 
     /**
@@ -117,7 +131,6 @@
             avatar = [TUIGroupAvatar getCacheAvatarForGroup:convData.groupID number:(UInt32)member];
         }
         convData.avatarImage = avatar ? avatar : DefaultGroupAvatarImageByGroupType(convData.groupType);
-        ;
     }
 
     [[RACObserve(convData, faceUrl) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *faceUrl) {
@@ -244,6 +257,15 @@
     [self configOnlineStatusIcon:convData];
 
     [self configDisplayLastMessageStatusImage:convData];
+
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
 - (void)configDisplayLastMessageStatusImage:(TUIConversationCellData *)convData {
@@ -319,27 +341,40 @@
         self.notDisturbView.hidden = YES;
     }
 }
-- (void)layoutSubviews {
-    [super layoutSubviews];
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
     CGFloat height = [self.convData heightOfWidth:self.mm_w];
     self.mm_h = height;
-
     CGFloat selectedIconSize = 20;
-    if (self.convData.showCheckBox) {
-        _selectedIcon.mm_width(selectedIconSize).mm_height(selectedIconSize);
-        _selectedIcon.mm_x = 10;
-        _selectedIcon.mm_centerY = self.headImageView.mm_centerY;
-        _selectedIcon.hidden = NO;
-    } else {
-        _selectedIcon.mm_width(0).mm_height(0);
-        _selectedIcon.mm_x = 0;
-        _selectedIcon.mm_y = 0;
-        _selectedIcon.hidden = YES;
-    }
+    [self.selectedIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.convData.showCheckBox) {
+            make.width.height.mas_equalTo(selectedIconSize);
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(10);
+            make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        }
+    }];
+    MASAttachKeys(self.selectedIcon);
 
     CGFloat imgHeight = height - 2 * (TConversationCell_Margin);
-    CGFloat margin = self.convData.showCheckBox ? _selectedIcon.mm_maxX : 0;
-    self.headImageView.mm_width(imgHeight).mm_height(imgHeight).mm_left(TConversationCell_Margin + 3 + margin).mm_top(TConversationCell_Margin);
+    [self.headImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(imgHeight);
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        if (self.convData.showCheckBox) {
+            make.leading.mas_equalTo(self.selectedIcon.mas_trailing).mas_offset(TConversationCell_Margin + 3);
+        }
+        else {
+            make.leading.mas_equalTo(self.contentView.mas_leading).mas_offset(TConversationCell_Margin + 3);
+        }
+    }];
+    MASAttachKeys(self.headImageView);
+
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.headImageView.layer.masksToBounds = YES;
         self.headImageView.layer.cornerRadius = imgHeight / 2;
@@ -350,10 +385,14 @@
 
     CGFloat titleLabelHeight = 30;
     if (self.convData.isLiteMode) {
-        self.titleLabel.mm_sizeToFitThan(120, titleLabelHeight)
-            .mm_top((height - titleLabelHeight) / 2)
-            .mm_left(self.headImageView.mm_maxX + TConversationCell_Margin)
-            .mm_flexToRight(2 * TConversationCell_Margin_Text);
+        [self.titleLabel sizeToFit];
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_greaterThanOrEqualTo(120);
+            make.height.mas_greaterThanOrEqualTo(titleLabelHeight);
+            make.top.mas_equalTo((height - titleLabelHeight) / 2);
+            make.leading.mas_equalTo(self.headImageView.mas_trailing).mas_offset(TConversationCell_Margin);
+            make.trailing.mas_equalTo(self.contentView).mas_offset(- 2*TConversationCell_Margin_Text);
+        }];
         self.timeLabel.hidden = YES;
         self.lastMessageStatusImageView.hidden = YES;
         self.subTitleLabel.hidden = YES;
@@ -362,31 +401,80 @@
         self.notDisturbView.hidden = YES;
         self.onlineStatusIcon.hidden = YES;
     } else {
-        self.timeLabel.mm_sizeToFit().mm_top(TConversationCell_Margin_Text).mm_right(TConversationCell_Margin + 4);
-        self.lastMessageStatusImageView.mm_width(kScale390(14))
-            .mm_height(14)
-            .mm_bottom(kScale390(16))
-            .mm_right(kScale390(1) + TConversationCell_Margin_Disturb + kScale390(8));
-        self.titleLabel.mm_sizeToFitThan(120, titleLabelHeight)
-            .mm_top(TConversationCell_Margin_Text - 5)
-            .mm_left(self.headImageView.mm_maxX + TConversationCell_Margin)
-            .mm_flexToRight(self.timeLabel.mm_w + 2 * TConversationCell_Margin_Text);
-        self.subTitleLabel.mm_sizeToFit()
-            .mm_left(self.titleLabel.mm_x)
-            .mm_bottom(TConversationCell_Margin_Text)
-            .mm_flexToRight(2 * TConversationCell_Margin_Text);
-        self.unReadView.mm_right(self.headImageView.mm_r - 5).mm_top(self.headImageView.mm_y - 5);
-        self.notDisturbRedDot.mm_width(TConversationCell_Margin_Disturb_Dot)
-            .mm_height(TConversationCell_Margin_Disturb_Dot)
-            .mm_right(self.headImageView.mm_r - 3)
-            .mm_top(self.headImageView.mm_y - 3);
-        self.notDisturbView.mm_width(TConversationCell_Margin_Disturb).mm_height(TConversationCell_Margin_Disturb).mm_right(16).mm_bottom(15);
+        [self.timeLabel sizeToFit];
+        [self.timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(self.timeLabel);
+            make.height.mas_greaterThanOrEqualTo(self.timeLabel.font.lineHeight);
+            make.top.mas_equalTo(self.contentView.mas_top).mas_offset(TConversationCell_Margin_Text);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(- TConversationCell_Margin_Text);
+        }];
+        MASAttachKeys(self.timeLabel);
 
-        self.onlineStatusIcon.mm_width(kScale * 15).mm_height(kScale * 15);
-        self.onlineStatusIcon.mm_x = CGRectGetMaxX(self.headImageView.frame) - 0.5 * self.onlineStatusIcon.mm_w - 3 * kScale;
-        self.onlineStatusIcon.mm_y = CGRectGetMaxY(self.headImageView.frame) - self.onlineStatusIcon.mm_w;
-        self.onlineStatusIcon.layer.cornerRadius = 0.5 * self.onlineStatusIcon.mm_w;
+        [self.lastMessageStatusImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(kScale390(14));
+            make.height.mas_equalTo(14);
+            make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(- (kScale390(1) + TConversationCell_Margin_Disturb + kScale390(8)));
+            make.bottom.mas_equalTo(self.contentView.mas_bottom).mas_offset(kScale390(16));
+        }];
+        MASAttachKeys(self.lastMessageStatusImageView);
+
+        [self.titleLabel sizeToFit];
+        [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_greaterThanOrEqualTo(titleLabelHeight);
+            make.top.mas_equalTo(self.contentView.mas_top).mas_offset(TConversationCell_Margin_Text - 5);
+            make.leading.mas_equalTo(self.headImageView.mas_trailing).mas_offset(TConversationCell_Margin);
+            make.trailing.mas_lessThanOrEqualTo(self.timeLabel.mas_trailing).mas_offset(- 2*TConversationCell_Margin_Text);
+        }];
+        MASAttachKeys(self.titleLabel);
+        [self.subTitleLabel sizeToFit];
+        [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_greaterThanOrEqualTo(self.subTitleLabel);
+            make.bottom.mas_equalTo(self.contentView).mas_offset(- TConversationCell_Margin_Text);
+            make.leading.mas_equalTo(self.titleLabel);
+            make.trailing.mas_equalTo(self.contentView).mas_offset(- 2*TConversationCell_Margin_Text);
+        }];
+        MASAttachKeys(self.subTitleLabel);
+
+        [self.unReadView.unReadLabel sizeToFit];
+        [self.unReadView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.trailing.mas_equalTo(self.headImageView.mas_trailing).mas_offset(kScale375(5));
+            make.top.mas_equalTo(self.headImageView.mas_top).mas_offset(-kScale375(5));
+            make.width.mas_equalTo(kScale375(20));
+            make.height.mas_equalTo(kScale375(20));
+        }];
+        MASAttachKeys(self.unReadView);
+
+        [self.unReadView.unReadLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.center.mas_equalTo(self.unReadView);
+            make.size.mas_equalTo(self.unReadView.unReadLabel);
+        }];
+        self.unReadView.layer.cornerRadius = kScale375(10);
+        [self.unReadView.layer masksToBounds];
+        
+        [self.notDisturbRedDot mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.trailing.mas_equalTo(self.headImageView.mas_trailing).mas_offset(3);
+            make.top.mas_equalTo(self.headImageView.mas_top).mas_offset(1);
+            make.width.height.mas_equalTo(TConversationCell_Margin_Disturb_Dot);
+        }];
+        MASAttachKeys(self.notDisturbRedDot);
+
+        [self.notDisturbView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(TConversationCell_Margin_Disturb);
+            make.trailing.mas_equalTo(self.timeLabel.mas_trailing);
+            make.bottom.mas_equalTo(self.contentView.mas_bottom).mas_offset(-15);
+        }];
+        
+        [self.onlineStatusIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(kScale375(15));
+            make.leading.mas_equalTo(self.headImageView.mas_trailing).mas_offset(-kScale375(15));
+            make.bottom.mas_equalTo(self.headImageView.mas_bottom).mas_offset(-kScale375(1));
+        }];
+        self.onlineStatusIcon.layer.cornerRadius = 0.5 * kScale375(15);
     }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 @end

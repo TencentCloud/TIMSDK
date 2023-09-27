@@ -9,7 +9,6 @@
 #import "TUIBlackListController.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
-#import "ReactiveObjC.h"
 
 @interface TUIBlackListController () <V2TIMFriendshipListener>
 

@@ -15,9 +15,9 @@ class AudioAndVideoCalleeWaitingView: UIView {
     
     lazy var acceptBtn: BaseControlButton = {
         weak var weakSelf = self
-        let acceptBtn = BaseControlButton.create(frame: CGRectZero,
+        let acceptBtn = BaseControlButton.create(frame: CGRect.zero,
                                                  title: TUICallKitLocalize(key: "Demo.TRTC.Calling.answer") ?? "",
-                                                 imageSize: CGSizeMake(64, 64)) { sender in
+                                                 imageSize: CGSize(width: 64, height: 64)) { sender in
             weakSelf?.acceptTouchEvent(sender: sender)
         }
         if let image = TUICallKitCommon.getBundleImage(name: "trtccalling_ic_dialing") {
@@ -30,12 +30,12 @@ class AudioAndVideoCalleeWaitingView: UIView {
         }
         return acceptBtn
     }()
-
+    
     lazy var rejectBtn: BaseControlButton = {
         weak var weakSelf = self
-        let rejectBtn = BaseControlButton.create(frame: CGRectZero,
+        let rejectBtn = BaseControlButton.create(frame: CGRect.zero,
                                                  title: TUICallKitLocalize(key: "Demo.TRTC.Calling.decline") ?? "",
-                                                 imageSize: CGSizeMake(64, 64)) { sender in
+                                                 imageSize: CGSize(width: 64, height: 64)) { sender in
             weakSelf?.rejectTouchEvent(sender: sender)
         }
         if let image = TUICallKitCommon.getBundleImage(name: "ic_hangup") {
@@ -48,7 +48,7 @@ class AudioAndVideoCalleeWaitingView: UIView {
         }
         return rejectBtn
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         registerObserveState()
@@ -71,42 +71,42 @@ class AudioAndVideoCalleeWaitingView: UIView {
         activateConstraints()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(rejectBtn)
         addSubview(acceptBtn)
     }
-
+    
     func activateConstraints() {
         rejectBtn.snp.makeConstraints { make in
-            make.centerX.equalTo(self).offset(-80)
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? 80 : -80)
             make.bottom.equalTo(self)
             make.width.equalTo(100)
             make.height.equalTo(94)
         }
         
         acceptBtn.snp.makeConstraints { make in
-            make.centerX.equalTo(self).offset(80)
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? -80 : 80)
             make.bottom.equalTo(self)
             make.width.equalTo(100)
             make.height.equalTo(94)
         }
     }
-
+    
     //MARK:   Event Action
     func rejectTouchEvent(sender: UIButton) {
         viewModel.reject()
     }
-
+    
     func acceptTouchEvent(sender: UIButton) {
         viewModel.accept()
     }
-
+    
     // MARK: Register TUICallState Observer && Update UI
     func registerObserveState() {
         mediaTypeChange()
     }
-        
+    
     func mediaTypeChange() {
         viewModel.mediaType.addObserver(mediaTypeObserver) {  [weak self] newValue, _  in
             guard let self = self else { return }

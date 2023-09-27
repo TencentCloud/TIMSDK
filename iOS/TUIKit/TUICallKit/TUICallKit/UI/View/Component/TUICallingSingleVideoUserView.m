@@ -11,6 +11,7 @@
 #import "Masonry.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallingUserModel.h"
+#import <TUICore/TUIGlobalization.h>
 
 @interface TUICallingSingleVideoUserView ()
 
@@ -36,18 +37,18 @@
 
 - (void)makeConstraints {
     [self.userHeadImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.mas_equalTo(self);
+        make.top.trailing.mas_equalTo(self);
         make.size.mas_equalTo(CGSizeMake(100, 100));
     }];
     [self.userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.userHeadImageView.mas_top);
-        make.left.equalTo(self);
-        make.right.equalTo(self.userHeadImageView.mas_left).offset(-20);
+        make.leading.equalTo(self);
+        make.trailing.equalTo(self.userHeadImageView.mas_leading).offset(-20);
     }];
     [self.waitingInviteLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.userNameLabel.mas_bottom).offset(8.0f);
-        make.left.equalTo(self);
-        make.right.equalTo(self.userHeadImageView.mas_left).offset(-20);
+        make.leading.equalTo(self);
+        make.trailing.equalTo(self.userHeadImageView.mas_leading).offset(-20);
     }];
 }
 
@@ -77,7 +78,7 @@
         [_userNameLabel setTextColor:[UIColor t_colorWithHexString:@"#FFFFFF"]];
         [_userNameLabel setFont:[UIFont boldSystemFontOfSize:24.0f]];
         [_userNameLabel setBackgroundColor:[UIColor clearColor]];
-        [_userNameLabel setTextAlignment:NSTextAlignmentRight];
+        [_userNameLabel setTextAlignment:(isRTL() ? NSTextAlignmentLeft : NSTextAlignmentRight)];
     }
     return _userNameLabel;
 }
@@ -88,7 +89,7 @@
         [_waitingInviteLabel setBackgroundColor:[UIColor clearColor]];
         [_waitingInviteLabel setTextColor:[UIColor t_colorWithHexString:@"#FFFFFF"]];
         [_waitingInviteLabel setFont:[UIFont systemFontOfSize:12.0f]];
-        [_waitingInviteLabel setTextAlignment:NSTextAlignmentRight];
+        [_waitingInviteLabel setTextAlignment:(isRTL() ? NSTextAlignmentLeft : NSTextAlignmentRight)];
     }
     return _waitingInviteLabel;
 }

@@ -54,26 +54,55 @@
         self.accessoryType = UITableViewCellAccessoryNone;
         self.userInteractionEnabled = NO;
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.avatarView.frame = CGRectMake(kScale390(16), (self.bounds.size.height - kScale390(40)) * 0.5, kScale390(40), kScale390(40));
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    CGFloat imgWidth = kScale390(40);
+    
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(imgWidth);
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.leading.mas_equalTo(kScale390(16));
+    }];
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
+        self.avatarView.layer.cornerRadius = imgWidth / 2;
     } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
         self.avatarView.layer.masksToBounds = YES;
         self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
+    
+    [self.titleLabel sizeToFit];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+        make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(12);
+        make.height.mas_equalTo(20);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(1);
+    }];
 
-    self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
+    [self.detailLabel sizeToFit];
+    [self.detailLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+        make.height.mas_equalTo(self.detailLabel.frame.size.height);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- kScale390(16));
+    }];
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 
-    self.detailLabel.mm_sizeToFit();
-    self.detailLabel.mm_right(kScale390(16));
-    self.detailLabel.mm_height(20);
-    self.detailLabel.mm__centerY(self.avatarView.mm_centerY);
-    self.detailLabel.mm_flexToRight(kScale390(16));
-    //    self.separtorView.frame = CGRectMake(self.avatarView.mm_maxX, self.contentView.mm_h - 1, self.contentView.mm_w, 1);
 }
 @end

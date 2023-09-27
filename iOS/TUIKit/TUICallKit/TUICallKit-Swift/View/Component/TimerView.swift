@@ -15,7 +15,7 @@ class TimerView: UIView {
     let mediaTypeObserver = Observer()
 
     lazy var timerLabel: UILabel = {
-        let timerLabel = UILabel(frame: CGRectZero)
+        let timerLabel = UILabel(frame: CGRect.zero)
         timerLabel.font = UIFont.boldSystemFont(ofSize: 14.0)
         timerLabel.backgroundColor = UIColor.clear
         timerLabel.textAlignment = .center

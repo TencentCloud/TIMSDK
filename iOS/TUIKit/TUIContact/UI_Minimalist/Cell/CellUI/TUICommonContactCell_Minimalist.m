@@ -68,27 +68,62 @@
           self.onlineStatusIcon.image = nil;
       }
     }];
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.avatarView.frame = CGRectMake(kScale390(16), (self.bounds.size.height - kScale390(40)) * 0.5, kScale390(40), kScale390(40));
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    CGFloat imgWidth = kScale390(40);
+
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(imgWidth);
+        make.centerY.mas_equalTo(self.contentView.mas_centerY);
+        make.leading.mas_equalTo(kScale390(16));
+    }];
     if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
         self.avatarView.layer.masksToBounds = YES;
-        self.avatarView.layer.cornerRadius = self.avatarView.frame.size.height / 2;
+        self.avatarView.layer.cornerRadius = imgWidth / 2;
     } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
         self.avatarView.layer.masksToBounds = YES;
         self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
 
-    self.titleLabel.mm_left(self.avatarView.mm_maxX + 12).mm_height(20).mm__centerY(self.avatarView.mm_centerY).mm_flexToRight(0);
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.avatarView.mas_centerY);
+        make.leading.mas_equalTo(self.avatarView.mas_trailing).mas_offset(12);
+        make.height.mas_equalTo(20);
+        make.trailing.mas_greaterThanOrEqualTo(self.contentView.mas_trailing);
+        
+    }];
+    
+    [self.onlineStatusIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(kScale375(15));
+        make.trailing.mas_equalTo(self.avatarView.mas_trailing).mas_offset(kScale375(5));
+        make.bottom.mas_equalTo(self.avatarView.mas_bottom);
+    }];
+    self.onlineStatusIcon.layer.cornerRadius = 0.5 * kScale375(15);
 
-    self.onlineStatusIcon.mm_width(kScale * 15).mm_height(kScale * 15);
-    self.onlineStatusIcon.mm_x = CGRectGetMaxX(self.avatarView.frame) - 0.5 * self.onlineStatusIcon.mm_w - 3 * kScale;
-    self.onlineStatusIcon.mm_y = CGRectGetMaxY(self.avatarView.frame) - self.onlineStatusIcon.mm_w;
-    self.onlineStatusIcon.layer.cornerRadius = 0.5 * self.onlineStatusIcon.mm_w;
-
-    self.separtorView.frame = CGRectMake(self.avatarView.mm_maxX, self.contentView.mm_h - 1, self.contentView.mm_w, 1);
+    [self.separtorView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(self.contentView.mas_width);
+        make.height.mas_equalTo(1);
+        make.leading.mas_equalTo(self.avatarView.mas_trailing);
+        make.bottom.mas_equalTo(self.mas_bottom).mas_offset(-1);
+    }];
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 - (void)configHeadImageView:(TUICommonContactCellData_Minimalist *)convData {
     /**

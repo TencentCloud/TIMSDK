@@ -96,6 +96,7 @@
 - (UITextView *)textView {
     if (_textView == nil) {
         _textView = [[UITextView alloc] init];
+        _textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         _textView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
         _textView.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
         _textView.font = [UIFont systemFontOfSize:17];

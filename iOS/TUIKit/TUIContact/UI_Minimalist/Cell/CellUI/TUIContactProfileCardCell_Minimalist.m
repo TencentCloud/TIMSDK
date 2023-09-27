@@ -28,14 +28,6 @@
     UITapGestureRecognizer *tapAvatar = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAvatar)];
     [_avatar addGestureRecognizer:tapAvatar];
     _avatar.userInteractionEnabled = YES;
-
-    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
-        self.avatar.layer.masksToBounds = YES;
-        self.avatar.layer.cornerRadius = headSize.height / 2;
-    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
-        self.avatar.layer.masksToBounds = YES;
-        self.avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
-    }
     [self.contentView addSubview:_avatar];
 
     // CGSize genderIconSize = CGSizeMake(20, 20);
@@ -102,33 +94,92 @@
     } else {
         self.accessoryType = UITableViewCellAccessoryNone;
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+}
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    self.backgroundColor = [UIColor redColor];
+    CGSize headSize = CGSizeMake(kScale390(66), kScale390(66));
+
+    [self.avatar mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(headSize);
+        make.top.mas_equalTo(kScale390(10));
+        make.leading.mas_equalTo(kScale390(16));
+    }];
+    
+    if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRounded) {
+        self.avatar.layer.masksToBounds = YES;
+        self.avatar.layer.cornerRadius = headSize.height / 2;
+    } else if ([TUIConfig defaultConfig].avatarType == TAvatarTypeRadiusCorner) {
+        self.avatar.layer.masksToBounds = YES;
+        self.avatar.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
+    }
+
+    [self.name sizeToFit];
+    [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(TPersonalCommonCell_Margin);
+        make.leading.mas_equalTo(self.avatar.mas_trailing).mas_offset(15);
+        make.width.mas_lessThanOrEqualTo(self.name.frame.size.width);
+        make.height.mas_greaterThanOrEqualTo(self.name.frame.size.height);
+        make.trailing.mas_lessThanOrEqualTo(self.genderIcon.mas_leading).mas_offset(- 1);
+    }];
+
+    [self.genderIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(self.name.font.pointSize *0.9);
+        make.centerY.mas_equalTo(self.name);
+        make.leading.mas_equalTo(self.name.mas_trailing).mas_offset(1);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(- 10);
+    }];
+
+    [self.identifier sizeToFit];
+    [self.identifier mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.name);
+        make.top.mas_equalTo(self.name.mas_bottom).mas_offset(5);
+        if(self.identifier.frame.size.width > 80) {
+            make.width.mas_greaterThanOrEqualTo(self.identifier.frame.size.width);
+        }
+        else {
+            make.width.mas_greaterThanOrEqualTo(@80);
+        }
+        make.height.mas_greaterThanOrEqualTo(self.identifier.frame.size.height);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(-1);
+    }];
+
+    if (self.cardData.showSignature) {
+        [self.signature sizeToFit];
+        [self.signature mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.name);
+            make.top.mas_equalTo(self.identifier.mas_bottom).mas_offset(5);
+            if(self.signature.frame.size.width > 80) {
+                make.width.mas_greaterThanOrEqualTo(self.signature.frame.size.width);
+            }
+            else {
+                make.width.mas_greaterThanOrEqualTo(@80);
+            }
+            make.height.mas_greaterThanOrEqualTo(self.signature.frame.size.height);
+            make.trailing.mas_lessThanOrEqualTo(self.contentView.mas_trailing).mas_offset(-1);
+        }];
+        
+    } else {
+        self.signature.frame = CGRectZero;
+    }
+
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat maxLabelWidth = self.contentView.mm_w - CGRectGetMaxX(_avatar.frame) - 30;
-    _name.mm_sizeToFitThan(0, _avatar.mm_h / 5).mm_top(_avatar.mm_y).mm_left(_avatar.mm_maxX + kScale390(8));
-    if (CGRectGetMaxX(_name.frame) >= self.contentView.mm_w) {
-        _name.mm_w = maxLabelWidth;
-    }
-
-    _identifier.mm_sizeToFitThan(80, _avatar.mm_h / 5).mm_left(_name.mm_x);
-
-    if (self.cardData.showSignature) {
-        _identifier.mm_y = _name.mm_y + _name.mm_h + 5;
-    } else {
-        _identifier.mm_bottom(_avatar.mm_b);
-    }
-
-    _signature.mm_sizeToFitThan(80, _avatar.mm_h / 3).mm_left(_name.mm_x);
-    _signature.mm_y = CGRectGetMaxY(_identifier.frame) + 5;
-    if (CGRectGetMaxX(_signature.frame) >= self.contentView.mm_w) {
-        _signature.mm_w = maxLabelWidth;
-    }
-
-    _genderIcon.mm_sizeToFitThan(_name.font.pointSize * 0.9, _name.font.pointSize * 0.9)
-        .mm__centerY(_name.mm_centerY)
-        .mm_left(_name.mm_x + _name.mm_w + TPersonalCommonCell_Margin);
 }
 
 - (void)onTapAvatar {

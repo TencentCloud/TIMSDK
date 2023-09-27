@@ -223,4 +223,6 @@
 
 - (void)changeToKeyboard;
 
+- (void)addDraftToInputBar:(NSAttributedString *)draft;
+- (void)addWordsToInputBar:(NSAttributedString *)words;
 @end

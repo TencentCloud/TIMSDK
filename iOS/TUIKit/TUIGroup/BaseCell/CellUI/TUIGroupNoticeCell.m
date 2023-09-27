@@ -8,6 +8,7 @@
 
 #import "TUIGroupNoticeCell.h"
 #import <TUICore/TUIThemeManager.h>
+#import <TIMCommon/TIMDefine.h>
 
 @implementation TUIGroupNoticeCell
 
@@ -48,20 +49,41 @@
 
     self.nameLabel.text = cellData.name;
     self.descLabel.text = cellData.desc;
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+     
+    [super updateConstraints];
+    
+    [self.nameLabel sizeToFit];
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(20);
+        make.top.mas_equalTo(12);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView).mas_offset(-20);
+        make.size.mas_equalTo(self.nameLabel.frame.size);
+    }];
+    [self.descLabel sizeToFit];
+    [self.descLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.nameLabel);
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(4);
+        make.trailing.mas_lessThanOrEqualTo(self.contentView).mas_offset(-30);
+        make.size.mas_equalTo(self.descLabel.frame.size);
+    }];
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    [self.nameLabel sizeToFit];
-    self.nameLabel.mm_x = 20.0;
-    self.nameLabel.mm_y = 12.0;
-    self.nameLabel.mm_flexToRight(20);
-
-    [self.descLabel sizeToFit];
-    self.descLabel.mm_y = CGRectGetMaxY(self.nameLabel.frame) + 4;
-    self.descLabel.mm_x = self.nameLabel.mm_x;
-    self.descLabel.mm_flexToRight(30);
 }
 
 - (UILabel *)nameLabel {

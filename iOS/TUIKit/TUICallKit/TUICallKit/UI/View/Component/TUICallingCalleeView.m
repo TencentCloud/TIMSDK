@@ -46,14 +46,14 @@ static CGFloat const kSpacing = 5.0f;
     // 视图约束
     [self.calleeTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.top.equalTo(self);
-        make.left.equalTo(self).offset(20);
-        make.right.equalTo(self).offset(-20);
+        make.leading.equalTo(self).offset(20);
+        make.trailing.equalTo(self).offset(-20);
         make.height.equalTo(@(20));
     }];
     [self.calleeCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.calleeTipLabel.mas_bottom).offset(15);
-        make.left.equalTo(self).offset(20);
-        make.right.equalTo(self).offset(-20);
+        make.leading.equalTo(self).offset(20);
+        make.trailing.equalTo(self).offset(-20);
         make.height.equalTo(@(32));
     }];
 }

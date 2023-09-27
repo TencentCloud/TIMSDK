@@ -8,8 +8,10 @@
 import Foundation
 
 private let kCallKitSingleSmallVideoViewWidth = 100.0
-private let kCallKitSingleSmallVideoViewFrame = CGRectMake(ScreenSize.width - kCallKitSingleSmallVideoViewWidth - 18,
-StatusBar_Height + 20, kCallKitSingleSmallVideoViewWidth, kCallKitSingleSmallVideoViewWidth / 9.0 * 16.0)
+private let kCallKitSingleSmallVideoViewFrame = CGRect(x: ScreenSize.width - kCallKitSingleSmallVideoViewWidth - 18,
+                                                       y: StatusBar_Height + 20,
+                                                       width: kCallKitSingleSmallVideoViewWidth,
+                                                       height: kCallKitSingleSmallVideoViewWidth / 9.0 * 16.0)
 private let kCallKitSingleLargeVideoViewFrame = CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.height)
 
 class SingleCallVideoLayout: UIView {
@@ -17,21 +19,21 @@ class SingleCallVideoLayout: UIView {
     let viewModel = SingleCallVideoLayoutModel()
     let selfCallStatusObserver = Observer()
     let isCameraOpenObserver = Observer()
-    var isLocalPreViewLargr: Bool = true
-
+    var isLocalPreViewLarge: Bool = true
+    
     var localPreView: VideoView {
         if VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value] == nil {
-            let _ = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRectZero)
+            let _ = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRect.zero)
         }
-        return VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value]?.videoView ?? VideoView(frame: CGRectZero)
+        return VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value]?.videoView ?? VideoView(frame: CGRect.zero)
     }
     
     var remotePreView: VideoView {
-        guard let remoteUser = self.viewModel.remoteUserList.value.first else { return VideoView(frame: CGRectZero) }
+        guard let remoteUser = self.viewModel.remoteUserList.value.first else { return VideoView(frame: CGRect.zero) }
         if VideoFactory.instance.viewMap[remoteUser.id.value] == nil {
-            let _ = VideoFactory.instance.createVideoView(userId: remoteUser.id.value, frame: CGRectZero)
+            let _ = VideoFactory.instance.createVideoView(userId: remoteUser.id.value, frame: CGRect.zero)
         }
-        return  VideoFactory.instance.viewMap[remoteUser.id.value]?.videoView ?? VideoView(frame: CGRectZero)
+        return  VideoFactory.instance.viewMap[remoteUser.id.value]?.videoView ?? VideoView(frame: CGRect.zero)
     }
     var remoteUser: User?
     
@@ -57,7 +59,7 @@ class SingleCallVideoLayout: UIView {
         callStatusChanged()
         cameraStateChanged()
     }
-        
+    
     func callStatusChanged() {
         viewModel.selfCallStatus.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
@@ -78,7 +80,7 @@ class SingleCallVideoLayout: UIView {
     func cameraStateChanged() {
         viewModel.isCameraOpen.addObserver(isCameraOpenObserver) { [weak self] newValue, _ in
             guard let self = self else { return }
-            if newValue == false && self.isLocalPreViewLargr == false {
+            if newValue == false && self.isLocalPreViewLarge == false {
                 self.localPreView.isHidden = true
             } else {
                 self.localPreView.isHidden = false
@@ -88,7 +90,7 @@ class SingleCallVideoLayout: UIView {
     
     //MARK: update UI
     func switchPreview() {
-        if isLocalPreViewLargr {
+        if isLocalPreViewLarge {
             UIView.animate(withDuration: 0.3) {
                 self.localPreView.frame = kCallKitSingleSmallVideoViewFrame
                 self.remotePreView.frame = kCallKitSingleLargeVideoViewFrame
@@ -98,24 +100,24 @@ class SingleCallVideoLayout: UIView {
                 self.localPreView.isUserInteractionEnabled = true
                 self.remotePreView.isUserInteractionEnabled = false
             }
-            isLocalPreViewLargr = false
+            isLocalPreViewLarge = false
         } else {
             UIView.animate(withDuration: 0.3) {
                 self.localPreView.frame = kCallKitSingleLargeVideoViewFrame
                 self.remotePreView.frame = kCallKitSingleSmallVideoViewFrame
             } completion: { finished in
                 self.sendSubviewToBack(self.localPreView)
-
+                
                 self.localPreView.isUserInteractionEnabled = false
                 self.remotePreView.isUserInteractionEnabled = true
             }
-            isLocalPreViewLargr = true
+            isLocalPreViewLarge = true
         }
     }
-
+    
     func setBeginAcceptPreview() {
         remotePreView.isHidden = false
-
+        
         UIView.animate(withDuration: 0.3) {
             self.localPreView.frame = kCallKitSingleSmallVideoViewFrame
             self.remotePreView.frame = kCallKitSingleLargeVideoViewFrame
@@ -125,7 +127,7 @@ class SingleCallVideoLayout: UIView {
             self.localPreView.isUserInteractionEnabled = true
             self.remotePreView.isUserInteractionEnabled = false
         }
-        isLocalPreViewLargr = false
+        isLocalPreViewLarge = false
     }
     
     func setEndPreview() {
@@ -133,7 +135,7 @@ class SingleCallVideoLayout: UIView {
         self.viewModel.stopRemoteView(user: self.remoteUser ?? User())
         
         self.remoteUser = nil
-        isLocalPreViewLargr = true
+        isLocalPreViewLarge = true
     }
     
     func initPreView() {
@@ -189,7 +191,7 @@ extension  SingleCallVideoLayout: VideoViewDelegate {
         if  tapGesture.view?.frame.size.width == CGFloat(kCallKitSingleSmallVideoViewWidth) {
             switchPreview()
         }
-        if viewModel.isCameraOpen.value == false && self.isLocalPreViewLargr == false {
+        if viewModel.isCameraOpen.value == false && self.isLocalPreViewLarge == false {
             self.localPreView.isHidden = true
         } else {
             self.localPreView.isHidden = false
@@ -214,7 +216,7 @@ extension  SingleCallVideoLayout: VideoViewDelegate {
                 newCenterY > self.bounds.size.height - (smallView?.bounds.size.height ?? 0.0) / 2.0 {
                 return
             }
-
+            
             UIView.animate(withDuration: 0.1) {
                 smallView?.center = CGPoint(x: newCenterX, y: newCenterY)
             }

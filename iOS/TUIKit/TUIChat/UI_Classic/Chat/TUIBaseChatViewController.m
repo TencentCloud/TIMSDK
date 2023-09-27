@@ -169,6 +169,9 @@ static UIView *gCustomTopView;
     TUINavigationController *naviController = (TUINavigationController *)self.navigationController;
     if ([naviController isKindOfClass:TUINavigationController.class]) {
         naviController.uiNaviDelegate = self;
+        UIImage *backimg = TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:TIMCommonImagePath(@"nav_back")]);
+        backimg = [backimg rtl_imageFlippedForRightToLeftLayoutDirection];
+        naviController.navigationItemBackArrowImage =  backimg;
     }
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     self.navigationItem.titleView = _titleView;
@@ -232,8 +235,10 @@ static UIView *gCustomTopView;
     _messageController = vc;
     _messageController.delegate = self;
     [_messageController setConversation:self.conversationData];
+    
+    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
     _messageController.view.frame = CGRectMake(0, [self topMarginByCustomView], self.view.frame.size.width,
-                                               self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight - [self topMarginByCustomView]);
+                                               self.view.frame.size.height - textViewHeight - Bottom_SafeHeight - [self topMarginByCustomView]);
     [self addChildViewController:_messageController];
     [self.view addSubview:_messageController.view];
     [_messageController didMoveToParentViewController:self];
@@ -260,8 +265,11 @@ static UIView *gCustomTopView;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
 
+    _inputController.view.hidden = !TUIChatConfig.defaultConfig.enableMainPageInputBar;
+
     self.moreMenus = [self.dataProvider moreMenuCellDataArray:self.conversationData.groupID
                                                        userID:self.conversationData.userID
+                                            conversationModel:self.conversationData
                                              actionController:self];
 }
 
@@ -278,8 +286,10 @@ static UIView *gCustomTopView;
     } else if (IS_NOT_EMPTY_NSSTRING(imgUrl)) {
         [self.backgroudView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:nil];
     }
+    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
+
     self.backgroudView.frame =
-        CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight);
+        CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - textViewHeight - Bottom_SafeHeight);
 
     [self.view insertSubview:self.backgroudView atIndex:0];
 }
@@ -340,6 +350,7 @@ static UIView *gCustomTopView;
 }
 
 - (void)loadDraft {
+    
     NSString *draft = self.conversationData.draftText;
     if (draft.length == 0) {
         return;
@@ -352,7 +363,7 @@ static UIView *gCustomTopView;
                                                                                          textColor:kTUIInputNormalTextColor
                                                                                     emojiLocations:nil];
 
-        [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:formatEmojiString atIndex:0];
+        [self.inputController.inputBar addDraftToInputBar:formatEmojiString];
         return;
     }
 
@@ -366,7 +377,7 @@ static UIView *gCustomTopView;
                                                                                             textColor:kTUIInputNormalTextColor
                                                                                        emojiLocations:nil];
 
-    [self.inputController.inputBar.inputTextView.textStorage insertAttributedString:formatEmojiString atIndex:0];
+    [self.inputController.inputBar addDraftToInputBar:formatEmojiString];
 
     NSString *messageRootID = [jsonDict.allKeys containsObject:@"messageRootID"] ? jsonDict[@"messageRootID"] : @"";
 
@@ -445,7 +456,7 @@ static UIView *gCustomTopView;
                                                      friendInfoResult.friendInfo.friendRemark.length > 0) {
                                                      self.conversationData.title = friendInfoResult.friendInfo.friendRemark;
                                                  } else {
-                                                     [TUIChatDataProvider getUserInfoWithUserId:friendInfoResult.friendInfo.userID
+                                                     [TUIChatDataProvider getUserInfoWithUserId:self.conversationData.userID
                                                                                       SuccBlock:^(V2TIMUserFullInfo *_Nonnull userInfo) {
                                                                                         if (userInfo.nickName.length > 0) {
                                                                                             self.conversationData.title = userInfo.nickName;
