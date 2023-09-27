@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/core_pop_menu_padding_top"
     android:paddingBottom="@dimen/core_pop_menu_padding_bottom"
-    android:paddingLeft="20dp"
-    android:paddingRight="10dp">
+    android:paddingStart="20dp"
+    android:paddingEnd="10dp">
 
     <ListView
         android:id="@+id/menu_pop_list"

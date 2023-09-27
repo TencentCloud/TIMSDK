@@ -7,8 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.TypedValue;
 import android.view.View;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
+
 import java.util.List;
 
 public class SuspensionDecoration extends RecyclerView.ItemDecoration {
@@ -130,8 +134,13 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
 
         mPaint.setColor(COLOR_TITLE_FONT);
         mPaint.getTextBounds(mDatas.get(position).getSuspensionTag(), 0, mDatas.get(position).getSuspensionTag().length(), mBounds);
-        c.drawText(mDatas.get(position).getSuspensionTag(), child.getPaddingLeft() + 61,
-            child.getTop() - params.topMargin - (mTitleHeight / 2 - mBounds.height() / 2), mPaint);
+
+        int x = child.getPaddingLeft() + 61;
+        int y = child.getTop() - params.topMargin - (mTitleHeight / 2 - mBounds.height() / 2);
+        if (LayoutUtil.isRTL()) {
+            x = child.getWidth() - child.getPaddingRight() - mBounds.width() - 61;
+        }
+        c.drawText(mDatas.get(position).getSuspensionTag(), x, y, mPaint);
     }
 
     @Override public void onDrawOver(Canvas c, final RecyclerView parent, RecyclerView.State state) { // 最后调用 绘制在最上层 // Last call to draw on top
@@ -179,7 +188,14 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
             parent.getPaddingLeft(), parent.getPaddingTop(), parent.getRight() - parent.getPaddingRight(), parent.getPaddingTop() + mTitleHeight, mPaint);
         mPaint.setColor(COLOR_TITLE_FONT);
         mPaint.getTextBounds(tag, 0, tag.length(), mBounds);
-        c.drawText(tag, child.getPaddingLeft() + 40, parent.getPaddingTop() + mTitleHeight - (mTitleHeight / 2 - mBounds.height() / 2), mPaint);
+
+        int x = child.getPaddingLeft() + 61;
+        int y = parent.getPaddingTop() + mTitleHeight - (mTitleHeight / 2 - mBounds.height() / 2);
+        if (LayoutUtil.isRTL()) {
+            x = child.getWidth() - child.getPaddingRight() - mBounds.width() - 61;
+        }
+        c.drawText(tag, x, y, mPaint);
+
         if (flag) {
             c.restore();
         }

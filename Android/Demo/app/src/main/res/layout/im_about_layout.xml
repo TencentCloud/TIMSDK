@@ -10,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
         android:paddingTop="28dp"
-        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="21dp">
 
         <ImageView
@@ -83,8 +83,8 @@
             android:layout_width="match_parent"
             android:layout_height="44.16dp"
             android:layout_gravity="bottom|center"
-            android:layout_marginLeft="86dp"
-            android:layout_marginRight="86dp"
+            android:layout_marginStart="86dp"
+            android:layout_marginEnd="86dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/button_border"
             android:gravity="center"

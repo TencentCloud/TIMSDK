@@ -1,10 +1,10 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.recyclerview.widget.RecyclerView;
-import com.tencent.qcloud.tuicore.TUIConfig;
+
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -15,10 +15,10 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import java.io.File;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -228,20 +228,11 @@ public class ImageVideoScanPresenter {
         if (mAdapter != null && mCurrentPosition >= 0 && mCurrentPosition < mAdapter.getItemCount()) {
             TUIMessageBean messageBean = mAdapter.getDataSource().get(mCurrentPosition);
             if (messageBean instanceof ImageMessageBean) {
-                ImageMessageBean imageMessageBean = (ImageMessageBean) messageBean;
-                String imagePath = imageMessageBean.getDataPath();
-                TUIChatLog.d(TAG, "imagePath = " + imagePath);
-                String originImagePath = TUIChatUtils.getOriginImagePath(imageMessageBean);
-                TUIChatLog.d(TAG, "originImagePath = " + originImagePath);
-                if (!TextUtils.isEmpty(originImagePath)) {
-                    imagePath = originImagePath;
-                }
+                String imagePath = ChatFileDownloadPresenter.getImagePath((ImageMessageBean) messageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN);
                 saveImage(context, imagePath);
             } else if (messageBean instanceof VideoMessageBean) {
-                VideoMessageBean videoMessageBean = (VideoMessageBean) messageBean;
-                final String videoPath = TUIConfig.getVideoDownloadDir() + videoMessageBean.getVideoUUID();
-                File file = new File(videoPath);
-                if (file.exists() && file.length() == videoMessageBean.getVideoSize()) {
+                String videoPath = ChatFileDownloadPresenter.getVideoPath((VideoMessageBean) messageBean);
+                if (com.tencent.qcloud.tuikit.timcommon.util.FileUtil.isFileExists(videoPath)) {
                     saveVideo(context, videoPath);
                 } else {
                     ToastUtil.toastShortMessage(context.getString(R.string.downloading));

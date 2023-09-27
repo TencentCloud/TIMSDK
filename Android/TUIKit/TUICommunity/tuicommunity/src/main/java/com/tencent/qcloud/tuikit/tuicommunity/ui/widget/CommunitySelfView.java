@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuicommunity.ui.widget;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
 import com.tencent.qcloud.tuikit.tuicommunity.component.banner.BannerView;
@@ -83,7 +85,9 @@ public class CommunitySelfView extends FrameLayout implements ICommunitySelfView
         });
         bannerItems.add(imNew);
         bannerView.setBannerData(bannerItems);
-
+        if (!TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), TUIThemeManager.LANGUAGE_ZH_CN)) {
+            bannerView.setVisibility(GONE);
+        }
         createCommunityExperience = view.findViewById(R.id.create_community_experience);
         addCommunityExperience = view.findViewById(R.id.add_community_experience);
         sendMessageInTopic = view.findViewById(R.id.send_message_experience);

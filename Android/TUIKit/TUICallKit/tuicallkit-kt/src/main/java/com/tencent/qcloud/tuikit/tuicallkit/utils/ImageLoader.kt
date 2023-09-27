@@ -13,23 +13,28 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestOptions
+import com.tencent.qcloud.tuikit.tuicallkit.R
 import java.security.MessageDigest
 
 object ImageLoader {
     private val radius: Int = 1
 
     @JvmStatic
-    fun loadImage(context: Context?, imageView: ImageView?, url: String?, @DrawableRes errorResId: Int) {
-        loadImage(context, imageView, url, errorResId, radius)
+    fun loadImage(context: Context?, imageView: ImageView?, url: Any?) {
+        loadImage(context, imageView, url, R.drawable.tuicallkit_ic_avatar)
     }
 
-    @JvmName("loadImage1")
-    @JvmOverloads
+    @JvmStatic
+    fun loadImage(context: Context?, imageView: ImageView?, url: Any?, @DrawableRes errorResId: Int = 0,) {
+        loadImage(context, imageView, url, R.drawable.tuicallkit_ic_avatar, this.radius)
+    }
+
+    @JvmStatic
     fun loadImage(
-        context: Context?, imageView: ImageView?, url: String?, @DrawableRes errorResId: Int = 0,
+        context: Context?, imageView: ImageView?, url: Any?, @DrawableRes errorResId: Int = 0,
         radius: Int = this.radius
     ) {
-        if (TextUtils.isEmpty(url)) {
+        if (url == null) {
             if (imageView != null && errorResId != 0) {
                 imageView.setImageResource(errorResId)
             }
@@ -44,6 +49,7 @@ object ImageLoader {
         Glide.with(context!!).asGif().load(resourceId).into(imageView!!)
     }
 
+    @JvmStatic
     fun clear(context: Context?, imageView: ImageView?) {
         Glide.with(context!!).clear(imageView!!)
     }
@@ -56,6 +62,16 @@ object ImageLoader {
     ): RequestBuilder<Drawable> {
         return Glide.with(context!!).load(placeholderId)
             .apply(RequestOptions().centerCrop().transform(GlideRoundTransform(context, radius)))
+    }
+
+    @JvmStatic
+    fun loadBitmap(context: Context, imgUrl: Any?, targetImageSize: Int): Bitmap? {
+        return if (imgUrl == null) {
+            null
+        } else Glide.with(context).asBitmap().load(imgUrl)
+            .apply(loadTransform(context, R.drawable.tuicallkit_ic_avatar, radius))
+            .into(targetImageSize, targetImageSize)
+            .get()
     }
 
     class GlideRoundTransform(context: Context?, dp: Int) : BitmapTransformation() {
@@ -75,7 +91,7 @@ object ImageLoader {
                 if (result == null) {
                     result = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
                 }
-                val canvas = Canvas(result)
+                val canvas = Canvas(result!!)
                 val paint = Paint()
                 paint.shader = BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
                 paint.isAntiAlias = true

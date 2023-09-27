@@ -11,7 +11,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
 
         <ImageView
             android:id="@+id/item_icon"
@@ -24,8 +24,9 @@
             android:id="@+id/item_text"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginLeft="12.5dp"
-            android:layout_toRightOf="@id/item_icon"
+            android:layout_marginStart="12.5dp"
+            android:layout_toEndOf="@id/item_icon"
+            android:textAlignment="viewStart"
             android:gravity="start|center"
             android:textColor="#147AFF"
             android:textSize="17sp" />

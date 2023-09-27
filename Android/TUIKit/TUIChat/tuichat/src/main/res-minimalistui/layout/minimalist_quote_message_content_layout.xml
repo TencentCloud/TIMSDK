@@ -10,7 +10,7 @@
         android:id="@+id/sender_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#99000000"
+        android:textColor="#FF666666"
         android:ellipsize="middle"
         android:singleLine="true" />
 
@@ -22,7 +22,7 @@
         <TextView
             android:id="@+id/msg_abstract_tv"
             android:textSize="14sp"
-            android:textColor="#66000000"
+            android:textColor="#FF999999"
             android:maxLines="3"
             android:ellipsize="end"
             android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
         <TextView
             android:id="@+id/file_name_tv"
             android:textSize="14sp"
-            android:textColor="#66000000"
+            android:textColor="#FF999999"
             android:maxLines="2"
             android:ellipsize="middle"
             android:layout_width="wrap_content"
@@ -70,15 +70,23 @@
     <FrameLayout
         android:id="@+id/sound_msg_area"
         android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/sound_msg_icon_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:src="@drawable/chat_voice_reply_icon"
+            android:scaleType="centerInside"
+            android:layout_gravity="center_vertical|start"
+            android:layout_width="18dp"
+            android:layout_height="18dp"/>
 
         <TextView
             android:id="@+id/sound_msg_time_tv"
+            android:textColor="#FF999999"
+            android:layout_marginStart="22dp"
+            android:layout_gravity="center_vertical|start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </FrameLayout>

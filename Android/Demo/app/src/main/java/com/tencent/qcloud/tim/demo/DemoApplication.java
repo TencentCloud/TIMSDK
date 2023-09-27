@@ -3,16 +3,20 @@ package com.tencent.qcloud.tim.demo;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.multidex.MultiDex;
 
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.imsdk.BuildConfig;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
@@ -28,6 +32,7 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -57,7 +62,8 @@ public class DemoApplication extends Application {
             registerActivityLifecycleCallbacks(new StatisticActivityLifecycleCallback());
             initLoginStatusListener();
             initBugly();
-            initIMDemoAppInfo();
+            setPermissionRequestContent();
+            registerLanguageChangedReceiver();
         }
     }
 
@@ -73,6 +79,50 @@ public class DemoApplication extends Application {
         });
     }
 
+    private void registerLanguageChangedReceiver() {
+        BroadcastReceiver languageChangedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                setPermissionRequestContent();
+            }
+        };
+
+        IntentFilter languageFilter = new IntentFilter();
+        languageFilter.addAction(Constants.DEMO_LANGUAGE_CHANGED_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(languageChangedReceiver, languageFilter);
+    }
+
+    public void setPermissionRequestContent() {
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        Resources resources = getResources();
+        int stringId = applicationInfo.labelRes;
+        String appName = stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : resources.getString(stringId);
+
+        String micReason = getResources().getString(R.string.demo_permission_mic_reason);
+        String micDeniedAlert = getResources().getString(R.string.demo_permission_mic_dialog_alert, appName);
+
+        String cameraReason = getResources().getString(R.string.demo_permission_camera_reason);
+        String cameraDeniedAlert = getResources().getString(R.string.demo_permission_camera_dialog_alert, appName);
+
+        TUICore.unregisterObjectFactory(TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME);
+        TUICore.registerObjectFactory(TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME, new ITUIObjectFactory() {
+            @Override
+            public Object onCreateObject(String objectName, Map<String, Object> param) {
+                if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.CAMERA_PERMISSIONS)) {
+                    return cameraReason;
+                } else if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.MICROPHONE_PERMISSIONS)) {
+                    return micReason;
+                } else if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.CAMERA_PERMISSIONS_TIP)) {
+                    return cameraDeniedAlert;
+                } else if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.MICROPHONE_PERMISSIONS_TIP)) {
+                    return micDeniedAlert;
+                }
+                return null;
+            }
+        });
+
+    }
+
     private void initBugly() {
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, new ITUINotification() {
             @Override
@@ -83,14 +133,6 @@ public class DemoApplication extends Application {
                 CrashReport.initCrashReport(getApplicationContext(), PrivateConstants.BUGLY_APPID, true, strategy);
             }
         });
-    }
-
-    private void initIMDemoAppInfo() {
-        TUIConfig.setTUIHostType(TUIConfig.TUI_HOST_TYPE_IMAPP);
-        if (TextUtils.equals(BuildConfig.FLAVOR, Constants.FLAVOR_INTERNATIONAL)){
-            AppConfig.DEMO_FLAVOR_VERSION = Constants.FLAVOR_INTERNATIONAL;
-        }
-        AppConfig.DEMO_VERSION_NAME = BuildConfig.VERSION_NAME;
     }
 
     public void initLoginStatusListener() {

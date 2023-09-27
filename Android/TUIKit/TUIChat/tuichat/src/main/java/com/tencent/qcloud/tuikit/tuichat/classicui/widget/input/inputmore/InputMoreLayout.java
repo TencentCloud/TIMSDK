@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
@@ -34,11 +34,8 @@ public class InputMoreLayout extends LinearLayout {
     }
 
     public void init(List<InputMoreActionUnit> actions) {
-
-        final ViewPager viewPager = findViewById(R.id.viewPager);
-
-        ActionsPagerAdapter adapter = new ActionsPagerAdapter(viewPager, actions);
+        final ViewPager2 viewPager = findViewById(R.id.viewPager);
+        ActionsPagerAdapter adapter = new ActionsPagerAdapter(actions);
         viewPager.setAdapter(adapter);
     }
-
 }

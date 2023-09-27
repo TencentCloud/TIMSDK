@@ -2,11 +2,11 @@ package com.tencent.qcloud.tuikit.tuichat;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
 import androidx.datastore.rxjava3.RxDataStore;
+
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
@@ -37,6 +37,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,6 +113,8 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             TUIConstants.TUITranslationPlugin.EVENT_KEY_TRANSLATION_EVENT, TUIConstants.TUITranslationPlugin.EVENT_SUB_KEY_TRANSLATION_CHANGED, this);
         TUICore.registerEvent(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION,
             TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, this);
+        TUICore.registerEvent(
+            TUIConstants.TUIVoiceToTextPlugin.EVENT_KEY_VOICE_TO_TEXT_EVENT, TUIConstants.TUIVoiceToTextPlugin.EVENT_SUB_KEY_VOICE_TO_TEXT_CHANGED, this);
     }
 
     @Override
@@ -169,18 +172,6 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             if (!TextUtils.isEmpty(uri)) {
                 DataStoreUtil.getInstance().putValue(chatId, uri);
             }
-        } else if (TextUtils.equals(TUIConstants.TUIChat.METHOD_SET_CHAT_EXTENSION, method)) {
-            for (Map.Entry<String, Object> entry : param.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                if (TextUtils.equals(key, TUIConstants.TUIChat.ENABLE_VIDEO_CALL)) {
-                    TUIChatConfigs.getConfigs().getGeneralConfig().setEnableVideoCall((Boolean) value);
-                } else if (TextUtils.equals(key, TUIConstants.TUIChat.ENABLE_AUDIO_CALL)) {
-                    TUIChatConfigs.getConfigs().getGeneralConfig().setEnableVoiceCall((Boolean) value);
-                } else if (TextUtils.equals(key, TUIConstants.TUIChat.ENABLE_LINK)) {
-                    TUIChatConfigs.getConfigs().getGeneralConfig().setEnableWelcomeCustomMessage((Boolean) value);
-                }
-            }
         }
         return null;
     }
@@ -201,8 +192,9 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             handleMessageStatusChangedEvent(subKey, param);
         } else if (TextUtils.equals(key, TUIChatConstants.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING)) {
             handleOfflineRingEvent(subKey, param);
-        } else if (TextUtils.equals(key, TUIConstants.TUITranslationPlugin.EVENT_KEY_TRANSLATION_EVENT)) {
-            handleTranslationEvent(subKey, param);
+        } else if (TextUtils.equals(key, TUIConstants.TUITranslationPlugin.EVENT_KEY_TRANSLATION_EVENT)
+                   || TextUtils.equals(key, TUIConstants.TUIVoiceToTextPlugin.EVENT_KEY_VOICE_TO_TEXT_EVENT)) {
+            handleMessageChangedEvent(subKey, param);
         } else if (TextUtils.equals(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION, key)) {
             handleGroupApplicationEvent(subKey, param);
         }
@@ -211,7 +203,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
     private void handleOfflineRingEvent(String subKey, Map<String, Object> param) {
         if (TextUtils.equals(subKey, TUIChatConstants.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING)) {
             Boolean isPrivateRing = (Boolean) param.get(TUIChatConstants.OFFLINE_MESSAGE_PRIVATE_RING);
-            TUIChatConfigs.getConfigs().getGeneralConfig().setAndroidPrivateRing(isPrivateRing);
+            TUIChatConfigs.getConfigs().getGeneralConfig().setEnableAndroidPrivateRing(isPrivateRing);
         }
     }
 
@@ -268,8 +260,9 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         }
     }
 
-    private void handleTranslationEvent(String subKey, Map<String, Object> param) {
-        if (TextUtils.equals(subKey, TUIConstants.TUITranslationPlugin.EVENT_SUB_KEY_TRANSLATION_CHANGED)) {
+    private void handleMessageChangedEvent(String subKey, Map<String, Object> param) {
+        if (TextUtils.equals(subKey, TUIConstants.TUITranslationPlugin.EVENT_SUB_KEY_TRANSLATION_CHANGED)
+            || TextUtils.equals(subKey, TUIConstants.TUIVoiceToTextPlugin.EVENT_SUB_KEY_VOICE_TO_TEXT_CHANGED)) {
             TUIMessageBean messageBean = (TUIMessageBean) param.get(TUIConstants.TUIChat.MESSAGE_BEAN);
             int dataChangeType = (int) param.get(TUIChatConstants.DATA_CHANGE_TYPE);
             List<C2CChatEventListener> c2CChatEventListenerList = getInstance().getC2CChatEventListenerList();

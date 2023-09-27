@@ -5,8 +5,8 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:background="@color/white"
-    android:paddingLeft="@dimen/page_margin"
-    android:paddingRight="@dimen/page_margin">
+    android:paddingStart="@dimen/page_margin"
+    android:paddingEnd="@dimen/page_margin">
 
     <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
         android:id="@+id/group_apply_member_icon"
@@ -18,8 +18,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -43,7 +43,7 @@
         android:id="@+id/group_apply_accept"
         android:layout_width="60dp"
         android:layout_height="40dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:gravity="center"
         android:background="@drawable/group_bg_positive_btn"
         android:onClick="startConversation"
@@ -54,7 +54,7 @@
         android:id="@+id/group_apply_refuse"
         android:layout_width="60dp"
         android:layout_height="40dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:gravity="center"
         android:background="@drawable/group_bg_negative_btn"
         android:onClick="startConversation"

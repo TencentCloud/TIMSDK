@@ -29,7 +29,7 @@
             android:layout_height="40dp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
             android:layout_weight="1"
@@ -57,6 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ID: "
+                    android:textDirection="locale"
                     android:layout_marginTop="3dp"
                     android:textColor="#CC000000"
                     android:textSize="12sp" />

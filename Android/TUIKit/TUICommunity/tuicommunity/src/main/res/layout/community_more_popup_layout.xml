@@ -19,7 +19,6 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
             app:corner_radius="4.5dp" />
@@ -29,9 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/community_group_face"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/community_group_face"
-            android:layout_toRightOf="@id/community_group_face"
             android:textColor="#000000"
             android:textSize="16sp" />
 
@@ -41,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/community_name_tv"
             android:layout_alignStart="@id/community_name_tv"
-            android:layout_alignLeft="@id/community_name_tv"
             android:layout_marginTop="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -51,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/community_group_id_label"
+                android:textDirection="locale"
                 android:textColor="#999999"
                 android:textSize="12sp" />
 
@@ -60,7 +58,7 @@
 
                 <TextView
                     android:id="@+id/community_group_id_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
@@ -74,7 +72,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="9dp"
-                    android:layout_marginLeft="9dp"
                     android:maxLines="1"
                     app:bind_copy_text="@id/community_group_id_tv"
                     android:text="@string/community_copy"
@@ -89,7 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/community_id_ll"
             android:layout_alignStart="@id/community_id_ll"
-            android:layout_alignLeft="@id/community_name_tv"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="3"

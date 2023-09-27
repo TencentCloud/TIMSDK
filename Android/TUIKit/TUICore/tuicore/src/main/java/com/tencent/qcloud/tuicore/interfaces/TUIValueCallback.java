@@ -16,4 +16,12 @@ public abstract class TUIValueCallback<T> {
             callback.onError(errorCode, errorMessage);
         }
     }
+
+    public void onProgress(long current, long total) {}
+
+    public static <T> void onProgress(TUIValueCallback<T> callback, long current, long total) {
+        if (callback != null) {
+            callback.onProgress(current, total);
+        }
+    }
 }

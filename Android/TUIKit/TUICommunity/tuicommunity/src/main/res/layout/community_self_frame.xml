@@ -29,7 +29,7 @@
                     android:layout_gravity="center"
                     android:background="#FFFFFF" />
 
-            `</com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout>`
+            </com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,6 +65,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="7.5dp"
                             android:text="@string/community_recommended_experience"
+                            android:textAlignment="viewStart"
                             android:textColor="#000000"
                             android:textSize="16sp" />
 
@@ -134,6 +135,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="13.5dp"
+                            android:textAlignment="viewStart"
                             android:text="@string/community_quick_integration"
                             android:textColor="#000000"
                             android:textSize="16sp" />

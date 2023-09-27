@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
@@ -14,14 +17,20 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+
+import java.util.Locale;
 
 public class FileMessageHolder extends MessageContentHolder {
+    private static final String TAG = "FileMessageHolder";
     private TextView fileNameText;
     private TextView fileSizeText;
     private View fileContent;
 
     private ProgressPresenter.ProgressListener progressListener;
     private NetworkConnectionListener networkConnectionListener;
+    private TUIValueCallback downloadCallback;
 
     private Drawable normalBackground;
     private Drawable fileContentBackground;
@@ -42,12 +51,12 @@ public class FileMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
-        msgArea.setPadding(0, 0, 0, 0);
+        setMessageBubbleZeroPadding();
         msgId = msg.getId();
         if (isForwardMode || isMessageDetailMode) {
             fileStatusImage.setVisibility(View.GONE);
         }
-        normalBackground = msgArea.getBackground();
+        normalBackground = getMessageBubbleBackground();
         fileContentBackground = fileContent.getBackground();
 
         progressListener = new ProgressPresenter.ProgressListener() {
@@ -58,7 +67,7 @@ public class FileMessageHolder extends MessageContentHolder {
         };
 
         FileMessageBean message = (FileMessageBean) msg;
-        final String path = message.getDataPath();
+        final String path = ChatFileDownloadPresenter.getFilePath(message);
         fileNameText.setText(message.getFileName());
         String size = FileUtil.formatFileSize(message.getFileSize());
         final String fileName = message.getFileName();
@@ -67,7 +76,7 @@ public class FileMessageHolder extends MessageContentHolder {
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
+                    if (FileUtil.isFileExists(path)) {
                         FileUtil.openFile(path, fileName);
                     }
                 }
@@ -83,41 +92,41 @@ public class FileMessageHolder extends MessageContentHolder {
             });
         }
 
-        if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS && message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADED) {
+        boolean isFileExists = FileUtil.isFileExists(path);
+        if (isFileExists) {
             fileStatusImage.setVisibility(View.GONE);
-        } else if (message.getStatus() != TUIMessageBean.MSG_STATUS_SENDING && message.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-            if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADING) {
-                fileStatusImage.setVisibility(View.GONE);
-            } else if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
-                fileStatusImage.setVisibility(View.GONE);
-            } else if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_UN_DOWNLOAD) {
-                fileStatusImage.setImageResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.chat_minimalist_file_download_icon);
-                fileStatusImage.setVisibility(View.VISIBLE);
-            }
+        } else {
+            fileStatusImage.setImageResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.chat_minimalist_file_download_icon);
+            fileStatusImage.setVisibility(View.VISIBLE);
         }
 
-        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_UN_DOWNLOAD) {
+        if (!isFileExists) {
             if (isMultiSelectMode) {
                 return;
             }
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadFile(message, path, fileName, true);
+                    downloadFile(message);
                 }
             });
             fileStatusImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadFile(message, path, fileName, true);
+                    downloadFile(message);
                 }
             });
+            if (ChatFileDownloadPresenter.isDownloading(path)) {
+                downloadFile(message);
+            }
         }
+
         networkConnectionListener = new NetworkConnectionListener() {
             @Override
             public void onConnected() {
-                if (message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADING) {
-                    downloadFile(message, path, fileName, false);
+                String filePath = ChatFileDownloadPresenter.getFilePath(message);
+                if (!FileUtil.isFileExists(filePath) && message.isDownloading()) {
+                    downloadFile(message);
                 }
             }
         };
@@ -125,19 +134,14 @@ public class FileMessageHolder extends MessageContentHolder {
         ProgressPresenter.getInstance().registerProgressListener(msg.getId(), progressListener);
     }
 
-    private void downloadFile(FileMessageBean message, String path, String fileName, boolean isUserClick) {
-        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
+    private void downloadFile(FileMessageBean message) {
+        String path = ChatFileDownloadPresenter.getFilePath(message);
+        if (FileUtil.isFileExists(path)) {
             return;
         }
-
-        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADING && isUserClick) {
-            return;
-        }
-
+        message.setDownloading(true);
         fileStatusImage.setVisibility(View.GONE);
-
-        message.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADING);
-        message.downloadFile(path, new FileMessageBean.FileDownloadCallback() {
+        downloadCallback = new TUIValueCallback() {
             @Override
             public void onProgress(long currentSize, long totalSize) {
                 int progress = (int) (currentSize * 100 / totalSize);
@@ -146,25 +150,28 @@ public class FileMessageHolder extends MessageContentHolder {
 
             @Override
             public void onError(int code, String desc) {
-                ToastUtil.toastLongMessage("download file failed:" + code + "=" + desc);
-                fileStatusImage.setImageResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.chat_minimalist_file_download_icon);
-                fileStatusImage.setVisibility(View.VISIBLE);
+                TUIChatLog.e(TAG, String.format(Locale.US, "download file %s failed code %d,message %s", path, code, desc));
+                ToastUtil.toastLongMessage(ErrorMessageConverter.convertIMError(code, desc));
+                setFileStatus(message, true);
             }
 
             @Override
-            public void onSuccess() {
-                message.setDataPath(path);
-                message.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
-                msgContentFrame.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
-                            FileUtil.openFile(path, fileName);
-                        }
-                    }
-                });
+            public void onSuccess(Object obj) {
+                message.setDownloading(false);
+                updateProgress(100, message);
+                setFileStatus(message, false);
+                if (mAdapter != null) {
+                    mAdapter.onItemRefresh(message);
+                }
             }
-        });
+        };
+        ChatFileDownloadPresenter.downloadFile(message, downloadCallback);
+    }
+
+    private void setFileStatus(TUIMessageBean messageBean, boolean isVisible) {
+        if (TextUtils.equals(messageBean.getId(), msgId)) {
+            fileStatusImage.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void updateProgress(int progress, FileMessageBean msg) {
@@ -172,12 +179,10 @@ public class FileMessageHolder extends MessageContentHolder {
             return;
         }
 
-        msg.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADING);
         if (progress == 0 || progress == 100) {
             if (progress == 100) {
                 String size = FileUtil.formatFileSize(msg.getFileSize());
                 fileSizeText.setText(size);
-                msg.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
             }
         } else {
             fileSizeText.setText(progress + "%");
@@ -206,7 +211,7 @@ public class FileMessageHolder extends MessageContentHolder {
 
     @Override
     public void onRecycled() {
-        ProgressPresenter.getInstance().unregisterProgressListener(msgId, progressListener);
+        ProgressPresenter.unregisterProgressListener(msgId, progressListener);
         progressListener = null;
     }
 }

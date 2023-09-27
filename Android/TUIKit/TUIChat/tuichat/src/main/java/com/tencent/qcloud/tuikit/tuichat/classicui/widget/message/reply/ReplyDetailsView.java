@@ -29,7 +29,7 @@ import java.util.Map;
 public class ReplyDetailsView extends RecyclerView {
     private ReplyDetailsAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private FrameLayout translationContentFrameLayout;
+    private FrameLayout bottomContentFrameLayout;
     private Activity activity;
 
     public ReplyDetailsView(@NonNull Context context) {
@@ -74,7 +74,7 @@ public class ReplyDetailsView extends RecyclerView {
         @Override
         public ReplyDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_reply_details_item_layout, parent, false);
-            translationContentFrameLayout = view.findViewById(R.id.translate_content_fl);
+            bottomContentFrameLayout = view.findViewById(R.id.bottom_content_fl);
             return new ReplyDetailsViewHolder(view);
         }
 
@@ -99,7 +99,7 @@ public class ReplyDetailsView extends RecyclerView {
             holder.userNameTv.setText(userName);
             FaceManager.handlerEmojiText(holder.messageText, messageText, false);
 
-            setTranslationContent(messageBean);
+            setBottomContent(messageBean);
         }
 
         @Override
@@ -111,12 +111,12 @@ public class ReplyDetailsView extends RecyclerView {
         }
     }
 
-    private void setTranslationContent(TUIMessageBean msg) {
+    private void setBottomContent(TUIMessageBean msg) {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, ReplyDetailsView.this);
 
-        TUICore.raiseExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID, translationContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID, bottomContentFrameLayout, param);
     }
 
     static class ReplyDetailsViewHolder extends ViewHolder {

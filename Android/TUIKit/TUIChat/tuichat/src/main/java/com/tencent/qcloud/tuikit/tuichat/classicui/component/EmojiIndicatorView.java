@@ -7,12 +7,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+
 import java.util.ArrayList;
 
 public class EmojiIndicatorView extends LinearLayout {
@@ -61,49 +62,16 @@ public class EmojiIndicatorView extends LinearLayout {
         }
     }
 
-    public void setIndicatorCount(int count) {
-        if (mImageViews == null || count > mImageViews.size()) {
-            return;
-        }
-        for (int i = 0; i < mImageViews.size(); i++) {
-            if (i >= count) {
-                mImageViews.get(i).setVisibility(GONE);
-                ((View) mImageViews.get(i).getParent()).setVisibility(GONE);
-            } else {
-                mImageViews.get(i).setVisibility(VISIBLE);
-                ((View) mImageViews.get(i).getParent()).setVisibility(VISIBLE);
-            }
-        }
-    }
-
-    public void playTo(int position) {
-        for (ImageView iv : mImageViews) {
-            iv.setImageBitmap(bmpNomal);
-        }
-        mImageViews.get(position).setImageBitmap(bmpSelect);
-        final ImageView imageViewStrat = mImageViews.get(position);
-        ObjectAnimator animIn1 = ObjectAnimator.ofFloat(imageViewStrat, "scaleX", 0.25f, 1.0f);
-        ObjectAnimator animIn2 = ObjectAnimator.ofFloat(imageViewStrat, "scaleY", 0.25f, 1.0f);
-
-        if (mPlayToAnimatorSet != null && mPlayToAnimatorSet.isRunning()) {
-            mPlayToAnimatorSet.cancel();
-            mPlayToAnimatorSet = null;
-        }
-        mPlayToAnimatorSet = new AnimatorSet();
-        mPlayToAnimatorSet.play(animIn1).with(animIn2);
-        mPlayToAnimatorSet.setDuration(100);
-        mPlayToAnimatorSet.start();
-    }
-
     public void playBy(int startPosition, int nextPosition) {
-        boolean isShowInAnimOnly = false;
+        final boolean isShowInAnimOnly = false;
         if (startPosition < 0 || nextPosition < 0 || nextPosition == startPosition) {
             startPosition = nextPosition = 0;
         }
-
-        if (startPosition < 0) {
-            isShowInAnimOnly = true;
-            startPosition = nextPosition = 0;
+        if (mImageViews == null || mImageViews.isEmpty()) {
+            return;
+        }
+        if (startPosition >= mImageViews.size() || nextPosition >= mImageViews.size()) {
+            return;
         }
 
         final ImageView imageViewStrat = mImageViews.get(startPosition);

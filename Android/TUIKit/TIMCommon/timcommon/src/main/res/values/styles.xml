@@ -22,6 +22,8 @@
         <item name="android:textColor">#FF000000</item>
         <item name="android:textFontWeight">500</item>
         <item name="android:lineHeight">16.7sp</item>
+        <item name="android:textAlignment">viewStart</item>
+
     </style>
 
     <style name="BeginnerGuidePopupAnimation">

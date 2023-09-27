@@ -3,7 +3,10 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
@@ -34,12 +37,14 @@ public class TUIForwardChatMinimalistActivity extends BaseMinimalistLightActivit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_minimalist_forward_layout);
         mFowardChatMessageRecyclerView = (MessageRecyclerView) findViewById(R.id.chat_message_layout);
+        ImageView backIcon = findViewById(R.id.back_icon);
+        backIcon.getDrawable().setAutoMirrored(true);
         mFowardChatMessageRecyclerView.setLayoutManager(new CustomLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mForwardChatAdapter = new MessageAdapter();
         mForwardChatAdapter.setForwardMode(true);
         presenter = new ForwardPresenter();
         presenter.setMessageListAdapter(mForwardChatAdapter);
-        presenter.setNeedShowTranslation(false);
+        presenter.setNeedShowBottom(false);
         mForwardChatAdapter.setPresenter(presenter);
 
         mFowardChatMessageRecyclerView.setAdapter(mForwardChatAdapter);

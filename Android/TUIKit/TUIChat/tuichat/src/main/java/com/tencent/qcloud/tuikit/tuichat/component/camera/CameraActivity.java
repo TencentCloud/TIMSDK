@@ -41,7 +41,7 @@ public class CameraActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.chat_camera_activity_layout);
         cameraView = findViewById(R.id.camera_view);
 
         int feature = getIntent().getIntExtra(TUIChatConstants.CAMERA_TYPE, BUTTON_STATE_BOTH);
@@ -136,21 +136,21 @@ public class CameraActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         TUIChatLog.i(TAG, "onResume");
-        super.onResume();
         cameraView.onResume();
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
         TUIChatLog.i(TAG, "onPause");
-        super.onPause();
         cameraView.onPause();
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         TUIChatLog.i(TAG, "onDestroy");
-        super.onDestroy();
         cameraView.onDestroy();
+        super.onDestroy();
     }
 }

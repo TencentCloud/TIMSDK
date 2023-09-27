@@ -8,6 +8,15 @@
     <string name="account">Username</string>
     <string name="password">Password</string>
 
+    <string name="demo_language_chinese_key">简体中文</string>
+    <string name="demo_language_english_key">English</string>
+    <string name="demo_language_arabic_key">العربية</string>
+
+    <string name="demo_current_language">English</string>
+    <string name="demo_language_chinese">Simplified Chinese</string>
+    <string name="demo_language_english">English</string>
+    <string name="demo_language_arabic">Arabic</string>
+
     <string name="demo_login_country_or_region_label">Country/Region</string>
     <string name="demo_area_code_title">Select a country or region</string>
     <string name="demo_language_title">Language</string>

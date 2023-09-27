@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -20,6 +21,7 @@ import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,20 +61,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ContactAdapter.ViewHolder holder, final int position) {
         final ContactItemBean contactBean = mData.get(position);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.line.getLayoutParams();
-        if (position < mData.size() - 1) {
-            String tag1 = contactBean.getSuspensionTag();
-            String tag2 = mData.get(position + 1).getSuspensionTag();
-
-            if (TextUtils.equals(tag1, tag2)) {
-                params.leftMargin = holder.tvName.getLeft();
-            } else {
-                params.leftMargin = 0;
-            }
-        } else {
-            params.leftMargin = 0;
-        }
-        holder.line.setLayoutParams(params);
         if (!TextUtils.isEmpty(contactBean.getRemark())) {
             holder.tvName.setText(contactBean.getRemark());
         } else if (!TextUtils.isEmpty(contactBean.getNickName())) {

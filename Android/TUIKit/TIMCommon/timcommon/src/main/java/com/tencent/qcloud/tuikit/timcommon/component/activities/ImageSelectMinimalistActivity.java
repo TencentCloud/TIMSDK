@@ -30,6 +30,7 @@ import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import java.io.File;
 import java.io.Serializable;
@@ -328,6 +329,11 @@ public class ImageSelectMinimalistActivity extends BaseMinimalistLightActivity {
 
         private void setItemLayoutParams(ImageViewHolder holder) {
             if (itemHeight > 0 && itemWidth > 0) {
+                ViewGroup.LayoutParams itemViewLayoutParams = holder.itemView.getLayoutParams();
+                itemViewLayoutParams.width = itemWidth;
+                itemViewLayoutParams.height = itemHeight;
+                holder.itemView.setLayoutParams(itemViewLayoutParams);
+
                 ViewGroup.LayoutParams params = holder.imageView.getLayoutParams();
                 params.width = itemWidth;
                 params.height = itemHeight;
@@ -388,8 +394,15 @@ public class ImageSelectMinimalistActivity extends BaseMinimalistLightActivity {
             int position = parent.getChildAdapterPosition(view);
             int column = position % columnNum;
 
-            outRect.left = column * leftRightSpace / columnNum;
-            outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int left = column * leftRightSpace / columnNum;
+            int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            if (LayoutUtil.isRTL()) {
+                outRect.left = right;
+                outRect.right = left;
+            } else {
+                outRect.left = left;
+                outRect.right = right;
+            }
 
             // add top spacing
             if (position >= columnNum) {

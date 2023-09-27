@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import java.util.List;
@@ -151,8 +152,15 @@ public class ChatPopMenuEmojiDialogFragment extends DialogFragment {
             int position = parent.getChildAdapterPosition(view);
             int column = position % columnNum;
             int leftRightSpace = getLeftRightSpace();
-            outRect.left = column * leftRightSpace / columnNum;
-            outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int left = column * leftRightSpace / columnNum;
+            if (LayoutUtil.isRTL()) {
+                outRect.right = left;
+                outRect.left = right;
+            } else {
+                outRect.left = left;
+                outRect.right = right;
+            }
 
             outRect.top = topBottomSpace;
             outRect.bottom = topBottomSpace;

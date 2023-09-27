@@ -37,7 +37,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
     private OnCheckListChangedListener onCheckListChangedListener;
-    private HashMap<String, Boolean> mSelectedPositions = new HashMap<String, Boolean>();
+    private HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
     protected boolean isShowMultiSelectCheckBox = false;
 
     private int mHighShowPosition;
@@ -70,7 +70,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
         ArrayList<TUIMessageBean> selectList = new ArrayList<>();
         for (int i = 0; i < getItemCount() - 1; i++) {
-            if (isItemChecked(mDataSource.get(i).getId())) {
+            if (isItemChecked(mDataSource.get(i))) {
                 selectList.add(mDataSource.get(i));
             }
         }
@@ -94,25 +94,25 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         return isShowMultiSelectCheckBox;
     }
 
-    public void setItemChecked(String msgID, boolean isChecked) {
+    public void setItemChecked(TUIMessageBean messageBean, boolean isChecked) {
         if (mSelectedPositions == null) {
             return;
         }
 
-        mSelectedPositions.put(msgID, isChecked);
+        mSelectedPositions.put(messageBean.getId(), isChecked);
 
         if (onCheckListChangedListener != null) {
             onCheckListChangedListener.onCheckListChanged(getSelectedItem());
         }
     }
 
-    private boolean isItemChecked(String id) {
+    private boolean isItemChecked(TUIMessageBean messageBean) {
         if (mSelectedPositions.size() <= 0) {
             return false;
         }
 
-        if (mSelectedPositions.containsKey(id)) {
-            return mSelectedPositions.get(id);
+        if (mSelectedPositions.containsKey(messageBean.getId())) {
+            return mSelectedPositions.get(messageBean.getId());
         } else {
             return false;
         }
@@ -138,8 +138,8 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             MessageContentHolder messageContentHolder = (MessageContentHolder) holder;
             messageContentHolder.isForwardMode = isForwardMode;
             messageContentHolder.isMessageDetailMode = isReplyDetailMode;
-            messageContentHolder.setShowRead(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
-            messageContentHolder.setNeedShowTranslation(presenter.isNeedShowTranslation());
+            messageContentHolder.setShowRead(TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt());
+            messageContentHolder.setNeedShowBottom(presenter.isNeedShowBottom());
             messageContentHolder.setRecyclerView(mRecycleView);
             messageContentHolder.setFragment(fragment);
             if (isForwardMode) {
@@ -158,12 +158,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             }
             final MessageBaseHolder baseHolder = (MessageBaseHolder) holder;
             baseHolder.setOnItemClickListener(mOnItemClickListener);
-            String msgId = "";
-            if (msg != null) {
-                msgId = msg.getId();
-            }
-
-            setCheckBoxStatus(position, msgId, baseHolder);
+            setCheckBoxStatus(msg, baseHolder);
             baseHolder.layoutViews(msg, position);
 
             if (getItemViewType(position) == MSG_TYPE_HEADER_VIEW) {
@@ -182,7 +177,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
     }
 
-    private void setCheckBoxStatus(final int position, final String msgId, MessageBaseHolder baseHolder) {
+    private void setCheckBoxStatus(TUIMessageBean messageBean, MessageBaseHolder baseHolder) {
+        if (messageBean == null) {
+            return;
+        }
         if (baseHolder.mMutiSelectCheckBox == null) {
             return;
         }
@@ -194,17 +192,17 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             }
         } else {
             baseHolder.mMutiSelectCheckBox.setVisibility(View.VISIBLE);
-            baseHolder.mMutiSelectCheckBox.setChecked(isItemChecked(msgId));
+            baseHolder.mMutiSelectCheckBox.setChecked(isItemChecked(messageBean));
             baseHolder.mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
             });
             baseHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
             });
 
@@ -214,12 +212,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
                 @Override
                 public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
 
                 @Override
                 public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
 
                 @Override
@@ -230,12 +228,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
                 @Override
                 public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
 
                 @Override
                 public void onMessageClick(View view, int position, TUIMessageBean messageInfo) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
             });
 
@@ -243,20 +241,20 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 baseHolder.msgContentFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        changeCheckedStatus(msgId, position);
+                        changeCheckedStatus(messageBean);
                     }
                 });
             }
         }
     }
 
-    public void changeCheckedStatus(String msgId, int position) {
-        if (isItemChecked(msgId)) {
-            setItemChecked(msgId, false);
+    public void changeCheckedStatus(TUIMessageBean messageBean) {
+        if (isItemChecked(messageBean)) {
+            setItemChecked(messageBean, false);
         } else {
-            setItemChecked(msgId, true);
+            setItemChecked(messageBean, true);
         }
-        notifyItemChanged(position);
+        onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
     }
 
     @Override
@@ -280,7 +278,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         if (holder instanceof MessageContentHolder) {
-            ((MessageContentHolder) holder).msgArea.setBackground(null);
+            ((MessageContentHolder) holder).setMessageBubbleBackground(null);
             ((MessageContentHolder) holder).stopHighLight();
             ((MessageContentHolder) holder).onRecycled();
         }
@@ -291,7 +289,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         ThreadUtils.postOnUiThread(() -> {
             mLoading = false;
             refreshLoadView();
-            if (type == MessageRecyclerView.DATA_CHANGE_LOCATE_TO_POSITION) {
+            if (type == IMessageRecyclerView.DATA_CHANGE_LOCATE_TO_POSITION) {
                 notifyDataSetChanged();
                 int position = getMessagePosition(messageBean);
                 if (position == ITEM_POSITION_UNKNOWN) {
@@ -299,7 +297,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 }
                 mRecycleView.scrollToPosition(position);
                 mRecycleView.setHighShowPosition(position);
-            } else if (type == MessageRecyclerView.SCROLL_TO_POSITION) {
+            } else if (type == IMessageRecyclerView.SCROLL_TO_POSITION) {
                 int position = getMessagePosition(messageBean);
                 if (position == ITEM_POSITION_UNKNOWN) {
                     return;
@@ -308,7 +306,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 mRecycleView.setHighShowPosition(position);
                 onItemChanged(position);
                 mRecycleView.scrollMessageFinish();
-            } else if (type == MessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION) {
                 notifyDataSetChanged();
                 int position = getMessagePosition(messageBean);
                 if (position == ITEM_POSITION_UNKNOWN) {
@@ -319,7 +317,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 mRecycleView.setHighShowPosition(position);
                 onItemChanged(position);
                 mRecycleView.scrollMessageFinish();
-            } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
                 int position = getMessagePosition(messageBean);
                 if (position == ITEM_POSITION_UNKNOWN) {
                     return;
@@ -340,17 +338,17 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     public void onViewNeedRefresh(final int type, final int value) {
         ThreadUtils.postOnUiThread(() -> {
             mLoading = false;
-            if (type == MessageRecyclerView.DATA_CHANGE_TYPE_REFRESH) {
+            if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH) {
                 notifyDataSetChanged();
                 mRecycleView.scrollToEnd();
-            } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_ADD_BACK) {
                 onItemInsert(mDataSource.size() + 1, value);
-            } else if (type == MessageRecyclerView.DATA_CHANGE_NEW_MESSAGE) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_NEW_MESSAGE) {
                 onItemInsert(mDataSource.size() + 1, value);
                 mRecycleView.onMsgAddBack();
-            } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
                 notifyDataSetChanged();
-            } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT) {
                 // 加载条目为数0，只更新动画
                 // The number of loaded entries is 0, only the animation is updated
                 if (value != 0) {
@@ -360,11 +358,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     // so the refresh here needs one more entry
                     onItemInsert(0, value);
                 }
-            } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_LOAD) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_LOAD) {
                 notifyDataSetChanged();
                 mRecycleView.scrollToEnd();
                 mRecycleView.loadMessageFinish();
-            } else if (type == MessageRecyclerView.DATA_CHANGE_TYPE_DELETE) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_DELETE) {
                 if (value == ITEM_POSITION_UNKNOWN) {
                     return;
                 }
@@ -408,6 +406,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             notifyItemChanged(end);
         }
         notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onItemRefresh(TUIMessageBean messageBean) {
+        onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
     }
 
     @Override

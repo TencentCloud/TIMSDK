@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?attr/chat_self_reply_quote_text_color"
-        android:layout_marginRight="6.5dp"
         android:layout_marginEnd="6.5dp"
         android:maxLines="2"
         android:ellipsize="end"

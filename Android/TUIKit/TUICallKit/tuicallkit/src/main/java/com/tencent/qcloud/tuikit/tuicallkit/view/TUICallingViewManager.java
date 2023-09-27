@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
 import com.tencent.qcloud.tuikit.TUIVideoView;
@@ -25,7 +27,6 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.Role;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.Scene;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.Status;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
 import com.tencent.qcloud.tuikit.tuicallkit.base.BaseCallActivity;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
@@ -57,6 +58,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.root.TUICallingImageView;
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.TUICallingSingleView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,19 +126,23 @@ public class TUICallingViewManager implements ITUINotification {
         mInviter = inviter;
         mInviteeList = inviteeList;
 
-        CallingUserModel userModel;
-        if (TUICallDefine.Role.Caller.equals(TUICallingStatusManager.sharedInstance(mContext).getCallRole())) {
-            userModel = inviteeList.get(0);
-            for (CallingUserModel model : inviteeList) {
-                reloadUserModel(model);
-            }
-        } else {
-            userModel = inviter;
-            reloadUserModel(inviter);
+        List<CallingUserModel> userList = new ArrayList<>();
+        userList.add(mInviter);
+        userList.addAll(mInviteeList);
+        for (CallingUserModel model : userList) {
+            reloadUserModel(model);
         }
 
-        if (null != mUserView) {
-            mUserView.updateUserInfo(userModel);
+        Role role = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
+        CallingUserModel model = null;
+        if (Role.Caller.equals(role) && inviteeList != null && !inviteeList.isEmpty()) {
+            model = inviteeList.get(0);
+        } else if (Role.Called.equals(role)) {
+            model = mInviter;
+        }
+
+        if (null != mUserView && model != null && !TextUtils.isEmpty(model.userId)) {
+            mUserView.updateUserInfo(model);
         }
         initOtherInviteeView();
     }
@@ -156,13 +162,6 @@ public class TUICallingViewManager implements ITUINotification {
         mBaseCallView = null;
         BaseCallActivity.finishActivity();
         SelectGroupMemberActivity.finishActivity();
-
-        mSelfUserModel = null;
-        mInviteeList.clear();
-        mInviter = new CallingUserModel();
-
-        TUICallingStatusManager.sharedInstance(mContext).clear();
-
         mFunctionView = null;
         mFloatCallView = null;
         mUserView = null;
@@ -174,6 +173,11 @@ public class TUICallingViewManager implements ITUINotification {
             mHomeWatcher = null;
         }
         FloatWindowService.stopService(mContext);
+        TUICallingStatusManager.sharedInstance(mContext).clear();
+
+        mSelfUserModel = null;
+        mInviteeList.clear();
+        mInviter = new CallingUserModel();
     }
 
     private void updateCallStatus(TUICallDefine.Status status) {
@@ -194,6 +198,17 @@ public class TUICallingViewManager implements ITUINotification {
         }
         if (null != mFloatCallView) {
             updateFloatView(TUICallingStatusManager.sharedInstance(mContext).getCallStatus());
+        }
+        showAntiFraudReminder();
+    }
+
+    private void showAntiFraudReminder() {
+        if (TUICore.getService(TUIConstants.Service.TUI_PRIVACY) != null) {
+            Map map = new HashMap();
+            map.put(TUIConstants.Privacy.PARAM_DIALOG_CONTEXT, mContext);
+
+            TUICore.callService(TUIConstants.Service.TUI_PRIVACY, TUIConstants.Privacy.METHOD_ANTO_FRAUD_REMINDER,
+                    map, null);
         }
     }
 
@@ -620,7 +635,7 @@ public class TUICallingViewManager implements ITUINotification {
         if (null != mFloatCallView) {
             return;
         }
-        if (PermissionUtils.hasPermission(mContext)) {
+        if (PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION).has()) {
             mFloatCallView = createFloatView();
             updateFloatView(TUICallingStatusManager.sharedInstance(mContext).getCallStatus());
             FloatWindowService.startFloatService(mContext, mFloatCallView);
@@ -641,11 +656,14 @@ public class TUICallingViewManager implements ITUINotification {
 
                 MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
                 Scene callScene = TUICallingStatusManager.sharedInstance(mContext).getCallScene();
+                Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
+
                 if (MediaType.Video.equals(mediaType) && Scene.SINGLE_CALL.equals(callScene)) {
 
                     Role callRole = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
-                    CallingUserModel model = (Role.Called.equals(callRole)) ? mInviter : mInviteeList.get(0);
-                    Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
+                    CallingUserModel model =
+                            (Role.Caller.equals(callRole) && mInviteeList != null && !mInviteeList.isEmpty())
+                                    ? mInviteeList.get(0) : mInviter;
 
                     if (Status.Accept.equals(status)) {
                         resetVideoCloudView(mSelfUserModel);
@@ -654,18 +672,21 @@ public class TUICallingViewManager implements ITUINotification {
                         resetVideoCloudView(mSelfUserModel);
                     }
                 }
-                showCallingView();
+                if (!Status.None.equals(status)) {
+                    showCallingView();
+                } else {
+                    TUILog.w(TAG, "The current call has ended");
+                }
             }
         });
         return floatView;
     }
 
     private void resetVideoCloudView(CallingUserModel model) {
-        UserLayout userLayout = mUserLayoutFactory.findUserLayout(model.userId);
-        if (null == userLayout) {
-            userLayout = mUserLayoutFactory.allocUserLayout(model);
+        UserLayout userLayout = mUserLayoutFactory.allocUserLayout(model);
+        if (userLayout == null) {
+            return;
         }
-
         TUIVideoView videoView = userLayout.getVideoView();
         if (videoView != null) {
             if (null != videoView.getParent()) {
@@ -705,14 +726,14 @@ public class TUICallingViewManager implements ITUINotification {
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
-                if (PermissionUtils.hasPermission(mContext)) {
+                if (PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION).has()) {
                     startFloatService();
                 }
             }
 
             @Override
             public void onRecentAppsPressed() {
-                if (PermissionUtils.hasPermission(mContext)) {
+                if (PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION).has()) {
                     startFloatService();
                 }
             }
@@ -753,7 +774,7 @@ public class TUICallingViewManager implements ITUINotification {
                 TUICallDefine.Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
                 TUICallDefine.Role role = TUICallingStatusManager.sharedInstance(mContext).getCallRole();
                 if (TUICallDefine.Role.Called.equals(role) && !TUICallDefine.Status.Accept.equals(status)) {
-                    ToastUtil.toastShortMessage(mContext.getString(R.string.tuicalling_status_is_not_accept));
+                    TUILog.e(TAG, "This feature can only be used after the callee accepted the call.");
                     return;
                 }
 

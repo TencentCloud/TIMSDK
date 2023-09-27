@@ -29,7 +29,7 @@
         android:layout_marginTop="54dp"
         android:layout_marginBottom="40.8dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|right"
+        android:layout_gravity="center_vertical|end"
         app:indexBarPressBackground="@color/partTranslucent"
         app:indexBarTextSize="12sp" />
 

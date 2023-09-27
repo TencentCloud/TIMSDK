@@ -4,22 +4,26 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.tencent.qcloud.tuicore.TUIConfig;
+
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import java.io.File;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class SoundMessageHolder extends MessageContentHolder {
+    private static final String TAG = "SoundMessageHolder";
     private static final int UNREAD = 0;
     private static final int READ = 1;
 
@@ -27,6 +31,8 @@ public class SoundMessageHolder extends MessageContentHolder {
     private ImageView audioPlayImage;
     private Timer mTimer;
     private int times = 0;
+
+    private TUIValueCallback downloadSoundCallback;
 
     public SoundMessageHolder(View itemView) {
         super(itemView);
@@ -55,14 +61,15 @@ public class SoundMessageHolder extends MessageContentHolder {
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String soundPath = ChatFileDownloadPresenter.getSoundPath(message);
                 if (AudioPlayer.getInstance().isPlaying()) {
                     AudioPlayer.getInstance().stopPlay();
                     resetTimerStatus(timeString);
-                    if (TextUtils.equals(AudioPlayer.getInstance().getPath(), message.getDataPath())) {
+                    if (TextUtils.equals(AudioPlayer.getInstance().getPath(), soundPath)) {
                         return;
                     }
                 }
-                if (TextUtils.isEmpty(message.getDataPath())) {
+                if (!FileUtil.isFileExists(soundPath)) {
                     ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.voice_play_tip));
                     getSound(message);
                     return;
@@ -93,7 +100,7 @@ public class SoundMessageHolder extends MessageContentHolder {
 
                 audioPlayImage.setImageResource(R.drawable.chat_audio_stop_btn_ic);
                 message.setPlayed();
-                AudioPlayer.getInstance().startPlay(message.getDataPath(), new AudioPlayer.Callback() {
+                AudioPlayer.getInstance().startPlay(soundPath, new AudioPlayer.Callback() {
                     @Override
                     public void onCompletion(Boolean success) {
                         audioPlayImage.post(new Runnable() {
@@ -119,28 +126,23 @@ public class SoundMessageHolder extends MessageContentHolder {
     }
 
     private void getSound(final SoundMessageBean messageBean) {
-        final String path = TUIConfig.getRecordDownloadDir() + messageBean.getUUID();
-        File file = new File(path);
-        if (!file.exists()) {
-            messageBean.downloadSound(path, new SoundMessageBean.SoundDownloadCallback() {
-                @Override
-                public void onProgress(long currentSize, long totalSize) {
-                    TUIChatLog.i("downloadSound progress current:", currentSize + ", total:" + totalSize);
-                }
+        downloadSoundCallback = new TUIValueCallback() {
+            @Override
+            public void onProgress(long currentSize, long totalSize) {
+                TUIChatLog.i(TAG, "downloadSound progress current: " + currentSize + ", total:" + totalSize);
+            }
 
-                @Override
-                public void onError(int code, String desc) {
-                    TUIChatLog.e("getSoundToFile failed code = ", code + ", info = " + desc);
-                    ToastUtil.toastLongMessage("getSoundToFile failed code = " + code + ", info = " + desc);
-                }
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatLog.e(TAG, "getSoundToFile failed code = " + code + ", info = " + desc);
+                ToastUtil.toastLongMessage("getSoundToFile failed code = " + code + ", info = " + desc);
+            }
 
-                @Override
-                public void onSuccess() {
-                    messageBean.setDataPath(path);
-                }
-            });
-        } else {
-            messageBean.setDataPath(path);
-        }
+            @Override
+            public void onSuccess(Object obj) {
+                TUIChatLog.i(TAG, "get sound success");
+            }
+        };
+        ChatFileDownloadPresenter.downloadSound(messageBean, downloadSoundCallback);
     }
 }

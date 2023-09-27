@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/status_bar_color"
-    android:orientation="vertical"
-    tools:context="com.tencent.qcloud.tim.tuisearch.com.tencent.qcloud.tuikit.tuisearch.ui.page.SearchMainActivity">
+    android:orientation="vertical">
 
     <!-- search-->
     <RelativeLayout
@@ -18,26 +16,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/font_blue"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/cancle"
             android:textSize="16sp" />
 
         <LinearLayout
             android:focusable="true"
-            android:layout_toLeftOf="@+id/cancel_button"
+            android:layout_toStartOf="@+id/cancel_button"
             android:focusableInTouchMode="true"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/shape_search"
             android:orientation="horizontal">
             <ImageView
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
@@ -49,15 +47,16 @@
                 android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="@null"
+                android:textAlignment="viewStart"
                 android:imeOptions="actionSearch"
                 android:hint="@string/search"
                 android:lines="1"
                 android:textSize="16sp"
                 android:singleLine="true" />
             <ImageView
-                android:layout_marginRight="3dp"
+                android:layout_marginEnd="3dp"
                 android:id="@+id/imgv_delete"
                 android:layout_width="25dp"
                 android:layout_height="25dp"

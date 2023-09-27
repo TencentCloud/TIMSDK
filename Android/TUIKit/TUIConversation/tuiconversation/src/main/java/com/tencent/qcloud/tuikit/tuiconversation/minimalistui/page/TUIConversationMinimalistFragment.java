@@ -445,7 +445,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         mBottomDialog.show();
         Window win = mBottomDialog.getWindow();
         win.setGravity(Gravity.BOTTOM); // 这里控制弹出的位置
-        win.getDecorView().setPadding(0, 0, 0, 0);
+        win.getDecorView().setPaddingRelative(0, 0, 0, 0);
         WindowManager.LayoutParams lp = win.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;

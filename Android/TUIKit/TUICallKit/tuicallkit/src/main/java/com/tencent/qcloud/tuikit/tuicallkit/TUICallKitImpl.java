@@ -6,12 +6,15 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.liteav.beauty.TXBeautyManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
+import com.tencent.qcloud.tuicore.permission.PermissionRequester;
+import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
@@ -21,7 +24,6 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.Status;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallObserver;
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog;
-import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
 import com.tencent.qcloud.tuikit.tuicallkit.base.Constants;
 import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
@@ -151,6 +153,9 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                             public void onError(int errCode, String errMsg) {
                                 if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
                                     errMsg = mContext.getString(R.string.tuicalling_package_not_purchased);
+                                }
+                                if (errCode == BaseConstants.ERR_SVR_MSG_IN_PEER_BLACKLIST) {
+                                    errMsg = mContext.getString(R.string.tuicallkit_error_in_peer_blacklist);
                                 }
                                 ToastUtil.toastLongMessage(errMsg);
                                 callbackError(callback, errCode, errMsg);
@@ -338,6 +343,13 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             if (TUICallDefine.Role.None.equals(role) || TUICallDefine.MediaType.Unknown.equals(mediaType)) {
                 return;
             }
+
+            //The received call has been processed in #onCallReceived
+            if (TUICallDefine.Role.Called.equals(role)
+                    && PermissionRequester.newInstance(PermissionRequester.BG_START_PERMISSION).has()) {
+                return;
+            }
+
             PermissionRequest.requestPermissions(mContext, mediaType, new PermissionCallback() {
                 @Override
                 public void onGranted() {
@@ -349,7 +361,9 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
                 @Override
                 public void onDenied() {
-                    TUICallEngine.createInstance(mContext).reject(null);
+                    if (TUICallDefine.Role.Called.equals(role)) {
+                        TUICallEngine.createInstance(mContext).reject(null);
+                    }
                     resetCall();
                 }
             });
@@ -360,7 +374,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         @Override
         public void onError(int code, String msg) {
             super.onError(code, msg);
-            ToastUtil.toastLongMessage(mContext.getString(R.string.tuicalling_toast_call_error_msg, code, msg));
         }
 
         @Override
@@ -402,7 +415,10 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             TUICallingStatusManager.sharedInstance(mContext).setGroupId(groupId);
 
             //when app comes back to foreground, start the call
-            if (!DeviceUtils.isAppRunningForeground(mContext) && !PermissionUtils.hasPermission(mContext)) {
+            boolean hasBgPermission = PermissionRequester.newInstance(PermissionRequester.BG_START_PERMISSION).has();
+            boolean isAppInBackground = !DeviceUtils.isAppRunningForeground(mContext);
+
+            if (isAppInBackground && !hasBgPermission) {
                 TUILog.w(TAG, "App is in background");
                 mCallingBellFeature.startRing();
                 return;
@@ -677,15 +693,11 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             @Override
             public void run() {
                 mTimeCount++;
-                mCallingViewManager.userCallingTimeStr(getShowTime(mTimeCount));
+                mCallingViewManager.userCallingTimeStr(DateTimeUtil.formatSecondsTo00(mTimeCount));
                 mTimeHandler.postDelayed(mTimeRunnable, 1000);
             }
         };
         mTimeHandler.post(mTimeRunnable);
-    }
-
-    private String getShowTime(int count) {
-        return mContext.getString(R.string.tuicalling_called_time_format, count / 60, count % 60);
     }
 
     private void stopTimeCount() {
@@ -802,7 +814,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         TRTCCloud trtcCloud = TUICallEngine.createInstance(mContext).getTRTCCloudInstance();
         TXBeautyManager txBeautyManager = trtcCloud.getBeautyManager();
         txBeautyManager.setBeautyStyle(TXBeautyManager.TXBeautyStyleNature);
-        txBeautyManager.setBeautyLevel(6);
+        txBeautyManager.setBeautyLevel(4);
     }
 
     @Override

@@ -27,6 +27,7 @@ allprojects {
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charset', 'UTF-8')
     }
+
 }
 
 subprojects {
@@ -38,7 +39,7 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 30
     versionCode = 1
-    versionName = "7.4.4643"
+    versionName = "7.5.4852"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"

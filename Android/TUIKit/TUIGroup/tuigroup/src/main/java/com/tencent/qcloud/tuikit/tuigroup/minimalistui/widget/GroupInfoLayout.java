@@ -137,7 +137,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         // 成员列表
         memberList = findViewById(R.id.group_members);
         mMemberAdapter = new GroupInfoAdapter();
-        //        memberList.setAdapter(mMemberAdapter);
         // 群类型，只读
         mGroupTypeView = findViewById(R.id.group_type_bar);
         // 群ID，只读
@@ -350,7 +349,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             popupInputCard.setContent(mNickView.getContent());
             popupInputCard.setTitle(getResources().getString(R.string.modify_nick_name_in_goup));
-            popupInputCard.setRule("^[a-zA-Z0-9_一-龥]*$");
             popupInputCard.setOnPositive((result -> {
                 mPresenter.modifyMyGroupNickname(result);
                 mNickView.setContent(result);
@@ -528,7 +526,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         } else {
             mGroupNoticeText.setText(info.getNotice());
         }
-        mMemberView.setName(getResources().getString(R.string.group_members) + String.format("（%d）", info.getMemberCount()));
+        mMemberView.setName(getResources().getString(R.string.group_members) + String.format("（%s）", info.getMemberCount() + ""));
         mMemberAdapter.setDataSource(info);
         mMemberAdapter.setOnGroupMemberClickListener(new GroupMemberLayout.OnGroupMemberClickListener() {
             @Override

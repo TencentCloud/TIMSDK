@@ -9,8 +9,8 @@
         android:id="@+id/group_member_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:button="@drawable/community_checkbox_selector"
         android:layout_gravity="center"
         android:gravity="center"
@@ -23,8 +23,8 @@
         android:layout_width="38.4dp"
         android:layout_height="38.4dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="15.36dp"
-        android:layout_marginRight="11.52dp"
+        android:layout_marginStart="15.36dp"
+        android:layout_marginEnd="11.52dp"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -35,8 +35,9 @@
         <TextView
             android:id="@+id/group_member_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:ellipsize="end"
+            android:textAlignment="viewStart"
             android:gravity="center_vertical"
             android:layout_weight="1"
             android:lines="1"

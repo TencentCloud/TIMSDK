@@ -21,8 +21,8 @@
         android:background="@color/conversation_bottom_bg"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:paddingLeft="38.4dp"
-        android:paddingRight="38.4dp"
+        android:paddingStart="38.4dp"
+        android:paddingEnd="38.4dp"
         android:layout_marginTop="1.36dp"
         android:layout_marginBottom="46.08dp"
         android:orientation="horizontal" >

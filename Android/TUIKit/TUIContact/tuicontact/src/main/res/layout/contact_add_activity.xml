@@ -22,26 +22,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#444444"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/contact_search"
             android:textSize="15.36sp" />
 
         <LinearLayout
             android:focusable="true"
-            android:layout_toLeftOf="@+id/search_button"
+            android:layout_toStartOf="@+id/search_button"
             android:focusableInTouchMode="true"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/contact_shape_search"
             android:orientation="horizontal">
             <ImageView
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
@@ -53,15 +53,16 @@
                 android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="@null"
+                android:textAlignment="viewStart"
                 android:imeOptions="actionSearch"
                 android:hint="@string/hint_search_user_id"
                 android:lines="1"
                 android:textSize="16sp"
                 android:singleLine="true" />
             <ImageView
-                android:layout_marginRight="3dp"
+                android:layout_marginEnd="3dp"
                 android:id="@+id/imgv_delete"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
@@ -89,8 +90,8 @@
             android:layout_height="@dimen/contact_profile_face_size"
             android:layout_gravity="start"
             android:scaleType="centerCrop"
-            android:layout_marginLeft="@dimen/contact_profile_face_margin_left"
-            android:layout_marginRight="@dimen/contact_profile_face_margin_right"
+            android:layout_marginStart="@dimen/contact_profile_face_margin_left"
+            android:layout_marginEnd="@dimen/contact_profile_face_margin_right"
             android:layout_marginTop="@dimen/contact_profile_face_margin_top" />
 
         <TextView
@@ -111,6 +112,7 @@
             android:layout_below="@id/friend_nick_name"
             android:layout_marginTop="@dimen/contact_profile_text_margin"
             android:gravity="center_vertical"
+            android:textDirection="locale"
             android:textSize="@dimen/contact_profile_account_text_size"
             android:text="@string/contact_account_tag" />
 
@@ -134,6 +136,7 @@
             android:layout_below="@id/friend_account_tag"
             android:layout_marginTop="@dimen/contact_profile_text_margin"
             android:gravity="center_vertical"
+            android:textDirection="locale"
             android:textSize="@dimen/contact_profile_account_text_size"
             android:text="@string/contact_group_type_tag" />
 

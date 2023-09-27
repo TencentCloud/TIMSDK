@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.common;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -125,9 +126,8 @@ public class SlideRecyclerView extends RecyclerView {
                 case MotionEvent.ACTION_MOVE:
                     // 随手指滑动
                     if (mMenuViewWidth != INVALID_CHILD_WIDTH) {
-                        float dx = mLastX - x;
-                        if (mFlingView.getScrollX() + dx <= mMenuViewWidth
-                                && mFlingView.getScrollX() + dx > 0) {
+                        float dx = Math.abs(mFlingView.getScrollX() + (mLastX - x));
+                        if (dx <= mMenuViewWidth && dx > 0) {
                             if (mMenuViewWidth != INVALID_CHILD_WIDTH) {
                                 int scrollX = mFlingView.getScrollX();
                                 mVelocityTracker.computeCurrentVelocity(1000);
@@ -135,16 +135,11 @@ public class SlideRecyclerView extends RecyclerView {
                                 // 1.菜单被拉出宽度大于菜单宽度一半；
                                 // 2.横向滑动速度大于最小滑动速度；
                                 // 注意:向左滑则速度为负值
-                                if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {    // 向左侧滑达到侧滑最低速度，则打开
-                                    mScroller.startScroll(scrollX, 0, mMenuViewWidth - scrollX, 0,
-                                            Math.abs(mMenuViewWidth - scrollX));
-                                } else if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {  // 向右侧滑达到侧滑最低速度，则关闭
-                                    mScroller.startScroll(scrollX, 0, -scrollX, 0, Math.abs(scrollX));
-                                } else if (scrollX >= mMenuViewWidth / 2) { // 如果超过删除按钮一半，则打开
-                                    mScroller.startScroll(scrollX, 0, mMenuViewWidth - scrollX, 0,
-                                            Math.abs(mMenuViewWidth - scrollX));
-                                } else {    // 其他情况则关闭
-                                    mScroller.startScroll(scrollX, 0, -scrollX, 0, Math.abs(scrollX));
+
+                                if (isRTL()) {
+                                    openRightExtendView(scrollX);
+                                } else {
+                                    openLeftExtendView(scrollX);
                                 }
                                 invalidate();
                             }
@@ -168,6 +163,34 @@ public class SlideRecyclerView extends RecyclerView {
             releaseVelocity();
         }
         return super.onTouchEvent(e);
+    }
+
+    private void openRightExtendView(int scrollX) {
+        if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) { //向右滑的速度大于600,则打开
+            startScroll(scrollX, scrollX - mMenuViewWidth);
+        } else if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) { //向左滑的速度达到最低速度,则关闭
+            startScroll(scrollX, -scrollX);
+        } else if (scrollX >= mMenuViewWidth / 2) {
+            startScroll(scrollX, scrollX - mMenuViewWidth);
+        } else {
+            startScroll(scrollX, -scrollX);
+        }
+    }
+
+    private void openLeftExtendView(int scrollX) {
+        if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {    //向左侧滑达到侧滑最低速度，则打开
+            startScroll(scrollX, mMenuViewWidth - scrollX);
+        } else if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {  //向右侧滑达到侧滑最低速度，则关闭
+            startScroll(scrollX, -scrollX);
+        } else if (scrollX >= mMenuViewWidth / 2) { // 如果超过删除按钮一半，则打开
+            startScroll(scrollX, mMenuViewWidth - scrollX);
+        } else {    // 其他情况则关闭
+            startScroll(scrollX, -scrollX);
+        }
+    }
+
+    private void startScroll(int startX, int dx) {
+        mScroller.startScroll(startX, 0, dx, 0);
     }
 
     private void releaseVelocity() {
@@ -222,5 +245,11 @@ public class SlideRecyclerView extends RecyclerView {
         if (mFlingView != null && mFlingView.getScrollX() != 0) {
             mFlingView.scrollTo(0, 0);
         }
+    }
+
+    private boolean isRTL() {
+        Configuration configuration = getContext().getResources().getConfiguration();
+        int layoutDirection = configuration.getLayoutDirection();
+        return layoutDirection == View.LAYOUT_DIRECTION_RTL;
     }
 }

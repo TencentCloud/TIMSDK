@@ -23,10 +23,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -70,6 +72,7 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +94,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     public ChatPresenter.TypingListener mTypingListener = new ChatPresenter.TypingListener() {
         @Override
         public void onTyping(int status) {
-            if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMessageTyping()) {
+            if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTypingStatus()) {
                 return;
             }
 
@@ -164,12 +167,14 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     private void initViews() {
-        inflate(getContext(), R.layout.chat_layout, this);
+        inflate(getContext(), R.layout.tuichat_chat_layout, this);
 
         mTitleBar = findViewById(R.id.chat_title_bar);
         mMessageRecyclerView = findViewById(R.id.chat_message_layout);
         mInputView = findViewById(R.id.chat_input_layout);
         mInputView.setChatLayout(this);
+        boolean enableMainPageInputBar = TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMainPageInputBar();
+        mInputView.setVisibility(enableMainPageInputBar ? VISIBLE : GONE);
         mRecordingGroup = findViewById(R.id.voice_recording_view);
         mRecordingIcon = findViewById(R.id.recording_icon);
         mRecordingTips = findViewById(R.id.recording_tips);
@@ -355,8 +360,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getMessageLayout().getLayoutManager();
-                int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-                int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                int firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition();
+                int lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition();
                 sendMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
                 notifyMessageDisplayed(firstVisiblePosition, lastVisiblePosition);
             }
@@ -685,6 +690,18 @@ public class ChatView extends LinearLayout implements IChatLayout {
             public void onQuoteMessageClick(TUIMessageBean msg) {
                 quoteMessage(msg);
             }
+
+            @Override
+            public void onSpeakerModeSwitchClick(TUIMessageBean msg) {
+                boolean enableSpeakerMode = TUIChatConfigs.getConfigs().getGeneralConfig().isEnableSoundMessageSpeakerMode();
+                TUIChatConfigs.getConfigs().getGeneralConfig().setEnableSoundMessageSpeakerMode(!enableSpeakerMode);
+                AudioPlayer.getInstance().setSpeakerMode();
+                if (enableSpeakerMode) {
+                    ToastUtil.toastShortMessage(getResources().getString(R.string.chat_speaker_mode_off_tip));
+                } else {
+                    ToastUtil.toastShortMessage(getResources().getString(R.string.chat_speaker_mode_on_tip));
+                }
+            }
         });
         getMessageLayout().setLoadMoreMessageHandler(new MessageRecyclerView.OnLoadMoreHandler() {
             @Override
@@ -799,7 +816,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
             @Override
             public void onUserTyping(boolean status, long curTime) {
-                if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMessageTyping()) {
+                if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTypingStatus()) {
                     return;
                 }
 
@@ -972,7 +989,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         if (mAdapter != null) {
             mInputView.hideSoftInput();
             mAdapter.setShowMultiSelectCheckBox(true);
-            mAdapter.setItemChecked(msg.getId(), true);
+            mAdapter.setItemChecked(msg, true);
             mAdapter.notifyDataSetChanged();
 
             setTitleBarWhenMultiSelectMessage();
@@ -982,10 +999,14 @@ public class ChatView extends LinearLayout implements IChatLayout {
     public void forwardMessage(TUIMessageBean msg) {
         if (mAdapter != null) {
             mInputView.hideSoftInput();
-            mAdapter.setItemChecked(msg.getId(), true);
+            mAdapter.setItemChecked(msg, true);
             mAdapter.notifyDataSetChanged();
             showForwardDialog(false, true);
         }
+    }
+
+    public void forwardText(String text) {
+        showForwardTextDialog(text);
     }
 
     // Reply Message need MessageRootId
@@ -1025,7 +1046,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
         });
 
         getForwardLayout().setVisibility(GONE);
-        getInputLayout().setVisibility(VISIBLE);
+        boolean enableMainPageInputBar = TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMainPageInputBar();
+        getInputLayout().setVisibility(enableMainPageInputBar ? VISIBLE : GONE);
     }
 
     private void resetForwardState(String leftTitle) {
@@ -1122,6 +1144,13 @@ public class ChatView extends LinearLayout implements IChatLayout {
         }
     }
 
+    private void showForwardTextDialog(String text) {
+        final List<TUIMessageBean> messageInfoList = new ArrayList<>();
+        TUIMessageBean textMessageBean = ChatMessageBuilder.buildTextMessage(text);
+        messageInfoList.add(textMessageBean);
+        startSelectForwardActivity(TUIChatConstants.FORWARD_MODE_NEW_MESSAGE, messageInfoList);
+    }
+
     private void showForwardLimitDialog(final List<TUIMessageBean> messageInfoList) {
         TUIKitDialog tipsDialog = new TUIKitDialog(getContext())
                                       .builder()
@@ -1170,7 +1199,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUIChatUtils.callbackOnError(callback, errCode, errMsg);
-                String toastMsg = errCode + ", " + errMsg;
+                String toastMsg = errMsg;
                 if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
                     showNotSupportDialog();
                     if (messageBean.isNeedReadReceipt()) {

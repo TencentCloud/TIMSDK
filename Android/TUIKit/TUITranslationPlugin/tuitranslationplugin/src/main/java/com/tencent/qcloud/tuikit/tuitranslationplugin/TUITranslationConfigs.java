@@ -41,6 +41,9 @@ public class TUITranslationConfigs {
                 }
             }
         }
+        if (TextUtils.isEmpty(languageName)) {
+            languageName = "English";
+        }
 
         return languageName;
     }

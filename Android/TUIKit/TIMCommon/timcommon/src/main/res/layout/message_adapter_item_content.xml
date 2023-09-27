@@ -8,8 +8,8 @@
     android:clickable="false"
     android:paddingTop="8.6dp"
     android:paddingBottom="8.6dp"
-    android:paddingLeft="15.36dp"
-    android:paddingRight="15.36dp">
+    android:paddingStart="15.36dp"
+    android:paddingEnd="15.36dp">
 
     <TextView
         android:id="@+id/message_top_time_tv"
@@ -29,9 +29,9 @@
         android:layout_width="21.12dp"
         android:layout_height="21.12dp"
         android:layout_below="@id/message_top_time_tv"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="11.52dp"
+        android:layout_marginEnd="11.52dp"
         android:button="@null"
         android:background="@drawable/chat_checkbox_selector"
         android:visibility="gone"
@@ -42,15 +42,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/message_top_time_tv"
-        android:layout_toRightOf="@id/select_checkbox">
+        android:layout_toEndOf="@id/select_checkbox">
 
         <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView
             android:id="@+id/left_user_icon_view"
             android:layout_width="41dp"
             android:layout_height="41dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="11.52dp"
+            android:layout_marginEnd="11.52dp"
             android:visibility="gone"
             app:default_image="?attr/core_default_user_icon"
             app:image_radius="20dp"
@@ -60,9 +60,9 @@
             android:id="@+id/right_user_icon_view"
             android:layout_width="41dp"
             android:layout_height="41dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="11.52dp"
+            android:layout_marginStart="11.52dp"
             android:visibility="gone"
             app:default_image="?attr/core_default_user_icon"
             app:image_radius="20dp" />
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="3.84dp"
-            android:layout_toRightOf="@id/left_user_icon_view"
+            android:layout_toEndOf="@id/left_user_icon_view"
             android:textColor="@color/text_tips_color"
             android:textSize="12.6sp"
             android:visibility="gone"
@@ -85,9 +85,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@id/user_name_tv"
-            android:layout_marginRight="3.36dp"
+            android:layout_marginEnd="3.36dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#B0B0B0"
@@ -101,8 +100,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/user_name_tv"
-            android:layout_toLeftOf="@id/right_user_icon_view"
-            android:layout_toRightOf="@id/left_user_icon_view"
+            android:layout_toStartOf="@id/right_user_icon_view"
+            android:layout_toEndOf="@id/left_user_icon_view"
 
             android:orientation="horizontal">
 
@@ -126,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginRight="6dp"
+                android:layout_marginEnd="6dp"
                 android:layout_marginBottom="2.88dp"
                 android:textColor="@color/text_gray1"
                 android:textSize="11sp"
@@ -182,14 +181,14 @@
 
         <!-- translation content area -->
         <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
-            android:id="@+id/translate_content_fl"
+            android:id="@+id/bottom_content_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/msg_content_ll"
             android:layout_marginTop="4dp"
-            android:layout_toLeftOf="@id/right_user_icon_view"
-            android:layout_toRightOf="@id/left_user_icon_view"
-            android:background="@drawable/translation_area_bg"
+            android:layout_toStartOf="@id/right_user_icon_view"
+            android:layout_toEndOf="@id/left_user_icon_view"
+            android:background="@drawable/bottom_area_bg"
             app:maxWidth="@dimen/chat_message_content_max_width"
             android:visibility="gone"
             tools:visibility="visible"/>
@@ -200,9 +199,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5.76dp"
-            android:layout_below="@id/translate_content_fl"
-            android:layout_toRightOf="@id/left_user_icon_view"
-            android:layout_toLeftOf="@id/right_user_icon_view"
+            android:layout_below="@id/bottom_content_fl"
+            android:layout_toEndOf="@id/left_user_icon_view"
+            android:layout_toStartOf="@id/right_user_icon_view"
             android:background="@drawable/quote_message_area_bg"
             android:visibility="gone"
             app:maxWidth="@dimen/chat_message_content_max_width"
@@ -215,8 +214,8 @@
             android:layout_height="14.4dp"
             android:layout_marginTop="3.84dp"
             android:layout_below="@id/quote_content_fl"
-            android:layout_toRightOf="@id/left_user_icon_view"
-            android:layout_toLeftOf="@id/right_user_icon_view"
+            android:layout_toEndOf="@id/left_user_icon_view"
+            android:layout_toStartOf="@id/right_user_icon_view"
             android:gravity="center"
             android:orientation="horizontal">
 

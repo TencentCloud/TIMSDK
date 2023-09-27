@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat_top">تثبيت المحادثة</string>
+    <string name="chat_delete">حذف الدردشة</string>
+    <string name="quit_chat_top">إلغاء تثبيت المحادثة</string>
+    <string name="mark_unread">وضع علامة كغير مقروء</string>
+    <string name="mark_read">وضع علامة كمقروء</string>
+    <string name="not_display">عدم العرض</string>
+
+    <string name="forward_select_new_chat">إنشاء دردشة جديدة</string>
+    <string name="forward_select_from_contact">اختيار من جهات الاتصال</string>
+    <string name="titlebar_cancle">إلغاء</string>
+    <string name="titlebar_close">إغلاق</string>
+    <string name="forward_alert_title">هل تريد التحويل؟</string>
+    <string name="forward_list_label">الدردشات الأخيرة</string>
+    <string name="ui_at_all">[@الجميع]</string>
+    <string name="ui_at_me">[شخص ما @ لي]</string>
+    <string name="ui_at_all_me">[@الجميع][شخص ما @ لي]</string>
+    <string name="drafts">[مسودة]</string>
+    <string name="titlebar_mutiselect">تحديد متعدد</string>
+    <string name="message_num">رسالة</string>
+
+    <string name="conversation_forward">تحويل</string>
+
+    <string name="folded_group_chat">دردشة جماعية مطوية</string>
+
+    <string name="conversation_title_edit">تحرير</string>
+    <string name="conversation_add_new_conversation">إضافة دردشة</string>
+    <string name="conversation_page_all">الكل</string>
+    <string name="conversation_null_text">لا توجد دردشات لـ %1$s</string>
+    <string name="conversation_delete_tips">سيتم حذف هذه الدردشة وجميع سجلات الدردشة المرتبطة بها</string>
+</resources>

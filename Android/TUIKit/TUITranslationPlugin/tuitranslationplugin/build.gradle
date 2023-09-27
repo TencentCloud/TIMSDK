@@ -26,15 +26,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // 主题资源文件夹
-    sourceSets {
-        main {
-            res.srcDirs += "src/main/res-minimalistui"
-            res.srcDirs += "src/main/res-light"
-            res.srcDirs += "src/main/res-lively"
-            res.srcDirs += "src/main/res-serious"
-        }
-    }
 }
 
 afterEvaluate {

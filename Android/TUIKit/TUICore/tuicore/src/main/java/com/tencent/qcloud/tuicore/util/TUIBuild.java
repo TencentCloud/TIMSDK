@@ -1,7 +1,10 @@
 package com.tencent.qcloud.tuicore.util;
 
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
+
+import java.lang.reflect.Method;
 
 public final class TUIBuild {
     private static final String TAG = "TUIBuild";
@@ -183,5 +186,59 @@ public final class TUIBuild {
         }
 
         return BOARD;
+    }
+
+    public static boolean isBrandXiaoMi() {
+        return "xiaomi".equalsIgnoreCase(getBrand()) || "xiaomi".equalsIgnoreCase(getManufacturer());
+    }
+
+    public static boolean isBrandHuawei() {
+        return "huawei".equalsIgnoreCase(getBrand()) || "huawei".equalsIgnoreCase(getManufacturer())
+                || "honor".equalsIgnoreCase(getBrand());
+    }
+
+    public static boolean isBrandMeizu() {
+        return "meizu".equalsIgnoreCase(getBrand()) || "meizu".equalsIgnoreCase(getManufacturer())
+                || "22c4185e".equalsIgnoreCase(getBrand());
+    }
+
+    public static boolean isBrandOppo() {
+        return "oppo".equalsIgnoreCase(getBrand()) || "realme".equalsIgnoreCase(getBrand())
+                || "oneplus".equalsIgnoreCase(getBrand())
+                || "oppo".equalsIgnoreCase(getManufacturer()) || "realme".equalsIgnoreCase(getManufacturer())
+                || "oneplus".equalsIgnoreCase(getManufacturer());
+    }
+
+    public static boolean isBrandVivo() {
+        return "vivo".equalsIgnoreCase(getBrand()) || "vivo".equalsIgnoreCase(getManufacturer());
+    }
+
+    public static boolean isBrandHonor() {
+        return "honor".equalsIgnoreCase(getBrand()) && "honor".equalsIgnoreCase(getManufacturer());
+    }
+
+    public static boolean isHarmonyOS() {
+        try {
+            Class clz = Class.forName("com.huawei.system.BuildEx");
+            Method method = clz.getMethod("getOsBrand");
+            return "harmony".equals(method.invoke(clz));
+        } catch (Exception e) {
+            Log.e(TAG, "the phone not support the harmonyOS");
+        }
+        return false;
+    }
+
+    public static boolean isMiuiOptimization() {
+        String miuiOptimization = "";
+        try {
+            Class systemProperties = Class.forName("android.os.systemProperties");
+            Method get = systemProperties.getDeclaredMethod("get", String.class, String.class);
+            miuiOptimization = (String) get.invoke(systemProperties, "persist.sys.miuiOptimization", "");
+            //The user has not adjusted the MIUI-optimization switch (default) | user open MIUI-optimization
+            return TextUtils.isEmpty(miuiOptimization) | "true".equals(miuiOptimization);
+        } catch (Exception e) {
+            Log.e(TAG, "the phone not support the miui optimization");
+        }
+        return false;
     }
 }

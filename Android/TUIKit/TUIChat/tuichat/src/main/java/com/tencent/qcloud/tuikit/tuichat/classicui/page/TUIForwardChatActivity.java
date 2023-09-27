@@ -43,7 +43,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
         mForwardChatAdapter.setForwardMode(true);
         presenter = new ForwardPresenter();
         presenter.setMessageListAdapter(mForwardChatAdapter);
-        presenter.setNeedShowTranslation(false);
+        presenter.setNeedShowBottom(false);
         mForwardChatAdapter.setPresenter(presenter);
 
         mFowardChatMessageRecyclerView.setAdapter(mForwardChatAdapter);
@@ -87,6 +87,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
     private void init() {
         Intent intent = getIntent();
         if (intent != null) {
+            mTitle = getString(R.string.forward_chat_record);
             mTitleBar.setTitle(mTitle, ITitleBarLayout.Position.MIDDLE);
             mTitleBar.getRightGroup().setVisibility(View.GONE);
 

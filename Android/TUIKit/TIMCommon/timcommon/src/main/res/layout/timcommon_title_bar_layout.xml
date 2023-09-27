@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/page_title_layout">
+
+    <LinearLayout
+        android:id="@+id/page_title_left_group"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"
+        android:minWidth="80dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/page_title_left_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:clickable="false"
+            android:background="?attr/core_title_bar_back_icon" />
+
+        <com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView
+            android:id="@+id/new_message_total_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:layout_marginEnd="5dp"
+            android:minWidth="18.4dp"
+            android:minHeight="18.4dp"
+            android:textColor="#ffffff"
+            android:textSize="13.4sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/page_title_left_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/core_title_bar_text_bg"
+            android:gravity="center"
+            android:textSize="16.3sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:maxWidth="200dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textAlignment="gravity"
+        android:textColor="?attr/core_title_bar_text_bg"
+        android:textSize="16.3sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        tools:text="Title"/>
+
+    <LinearLayout
+        android:id="@+id/page_title_right_group"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical|end"
+        android:minWidth="80dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/page_title_right_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="?attr/core_title_bar_text_bg"
+            android:textSize="16.3sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/page_title_right_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:clickable="false" />
+    </LinearLayout>
+
+</RelativeLayout>

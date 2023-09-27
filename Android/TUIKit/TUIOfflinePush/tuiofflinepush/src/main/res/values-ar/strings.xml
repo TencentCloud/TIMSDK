@@ -1,0 +1,4 @@
+<resources>
+    <string name="you_app">تطبيقك</string>
+    <string name="low_version">الإصدار منخفض جدًا ولا يدعم فتح هذه الرسالة الغير متصلة بالإنترنت</string>
+</resources>

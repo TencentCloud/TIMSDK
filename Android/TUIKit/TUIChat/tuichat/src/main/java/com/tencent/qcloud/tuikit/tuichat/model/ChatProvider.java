@@ -313,7 +313,7 @@ public class ChatProvider {
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
         // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
-        if (TUIChatConfigs.getConfigs().getGeneralConfig().isAndroidPrivateRing()) {
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {
             v2TIMOfflinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
             v2TIMOfflinePushInfo.setAndroidFCMChannelID(OfflinePushInfoUtils.FCM_PUSH_CHANNEL_ID);
         }

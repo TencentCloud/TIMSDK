@@ -39,7 +39,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private List<TUIMessageBean> dataSource = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
 
-    private HashMap<String, Boolean> mSelectedPositions = new HashMap<String, Boolean>();
+    private HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
     protected boolean isShowMultiSelectCheckBox = false;
 
     private int mHighShowPosition;
@@ -72,7 +72,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
         ArrayList<TUIMessageBean> selectList = new ArrayList<>();
         for (int i = 0; i < getItemCount() - 1; i++) {
-            if (isItemChecked(dataSource.get(i).getId())) {
+            if (isItemChecked(dataSource.get(i))) {
                 selectList.add(dataSource.get(i));
             }
         }
@@ -92,21 +92,20 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         return dataSource;
     }
 
-    public void setItemChecked(String msgID, boolean isChecked) {
+    public void setItemChecked(TUIMessageBean messageBean, boolean isChecked) {
         if (mSelectedPositions == null) {
             return;
         }
-
-        mSelectedPositions.put(msgID, isChecked);
+        mSelectedPositions.put(messageBean.getId(), isChecked);
     }
 
-    private boolean isItemChecked(String id) {
+    private boolean isItemChecked(TUIMessageBean messageBean) {
         if (mSelectedPositions.size() <= 0) {
             return false;
         }
 
-        if (mSelectedPositions.containsKey(id)) {
-            return mSelectedPositions.get(id);
+        if (mSelectedPositions.containsKey(messageBean.getId())) {
+            return mSelectedPositions.get(messageBean.getId());
         } else {
             return false;
         }
@@ -132,8 +131,8 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             MessageContentHolder messageContentHolder = (MessageContentHolder) holder;
             messageContentHolder.isForwardMode = isForwardMode;
             messageContentHolder.isReplyDetailMode = isReplyDetailMode;
-            messageContentHolder.setShowRead(TUIChatConfigs.getConfigs().getGeneralConfig().isShowRead());
-            messageContentHolder.setNeedShowTranslation(presenter.isNeedShowTranslation());
+            messageContentHolder.setShowRead(TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt());
+            messageContentHolder.setNeedShowBottomLayout(presenter.isNeedShowBottom());
             messageContentHolder.setRecyclerView(mRecycleView);
             messageContentHolder.setFragment(fragment);
 
@@ -153,12 +152,8 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             }
             final MessageBaseHolder baseHolder = (MessageBaseHolder) holder;
             baseHolder.setOnItemClickListener(mOnItemClickListener);
-            String msgId = "";
-            if (msg != null) {
-                msgId = msg.getId();
-            }
 
-            setCheckBoxStatus(position, msgId, baseHolder);
+            setCheckBoxStatus(msg, baseHolder);
             baseHolder.layoutViews(msg, position);
 
             if (getItemViewType(position) == MSG_TYPE_HEADER_VIEW) {
@@ -177,7 +172,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
     }
 
-    private void setCheckBoxStatus(final int position, final String msgId, MessageBaseHolder baseHolder) {
+    private void setCheckBoxStatus(final TUIMessageBean messageBean, MessageBaseHolder baseHolder) {
+        if (messageBean == null) {
+            return;
+        }
         if (baseHolder.mMutiSelectCheckBox == null) {
             return;
         }
@@ -189,17 +187,17 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             }
         } else {
             baseHolder.mMutiSelectCheckBox.setVisibility(View.VISIBLE);
-            baseHolder.mMutiSelectCheckBox.setChecked(isItemChecked(msgId));
+            baseHolder.mMutiSelectCheckBox.setChecked(isItemChecked(messageBean));
             baseHolder.mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
             });
             baseHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
             });
 
@@ -209,12 +207,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
                 @Override
                 public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
 
                 @Override
                 public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
 
                 @Override
@@ -225,12 +223,12 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
                 @Override
                 public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
 
                 @Override
                 public void onMessageClick(View view, int position, TUIMessageBean messageInfo) {
-                    changeCheckedStatus(msgId, position);
+                    changeCheckedStatus(messageBean);
                 }
             });
 
@@ -238,20 +236,20 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 baseHolder.msgContentFrame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        changeCheckedStatus(msgId, position);
+                        changeCheckedStatus(messageBean);
                     }
                 });
             }
         }
     }
 
-    private void changeCheckedStatus(String msgId, int position) {
-        if (isItemChecked(msgId)) {
-            setItemChecked(msgId, false);
+    private void changeCheckedStatus(TUIMessageBean messageBean) {
+        if (isItemChecked(messageBean)) {
+            setItemChecked(messageBean, false);
         } else {
-            setItemChecked(msgId, true);
+            setItemChecked(messageBean, true);
         }
-        notifyItemChanged(position);
+        onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
     }
 
     public void resetSelectableText() {
@@ -290,7 +288,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         if (holder instanceof MessageContentHolder) {
-            ((MessageContentHolder) holder).msgArea.setBackground(null);
+            ((MessageContentHolder) holder).setMessageBubbleBackground(null);
             ((MessageContentHolder) holder).stopHighLight();
             ((MessageContentHolder) holder).onRecycled();
         }
@@ -393,6 +391,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     private void refreshLoadView() {
         notifyItemChanged(0);
+    }
+
+    @Override
+    public void onItemRefresh(TUIMessageBean messageBean) {
+        onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
     }
 
     @Override

@@ -3,9 +3,9 @@ package com.tencent.qcloud.tuikit.tuicallkit.state
 public class TUICallEvent {
     public var eventType: EventType? = null
     public var event: Event? = null
-    public var param: HashMap<String, Any>? = null
+    public var param: HashMap<String, Any?>? = null
 
-    constructor(eventType: EventType, event: Event, param: HashMap<String, Any>?) {
+    constructor(eventType: EventType, event: Event, param: HashMap<String, Any?>?) {
         this.eventType = eventType
         this.event = event
         this.param = param

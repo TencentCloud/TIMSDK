@@ -90,7 +90,9 @@ public class LoginForDevActivity extends BaseLightActivity {
 
     private void initActivity() {
         setContentView(R.layout.login_for_dev_activity);
-
+        View view = findViewById(android.R.id.content);
+        view.setLayoutDirection(getResources().getConfiguration().getLayoutDirection());
+        
         styleArea = findViewById(R.id.modify_style);
         styleTv = findViewById(R.id.demo_login_style_tv);
 
@@ -124,8 +126,8 @@ public class LoginForDevActivity extends BaseLightActivity {
                     public void onError(final int code, final String desc) {
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                mLoginView.setEnabled(true);
                                 ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc);
+                                mLoginView.setEnabled(true);
                             }
                         });
                         DemoLog.i(TAG, "imLogin errorCode = " + code + ", errorInfo = " + desc);

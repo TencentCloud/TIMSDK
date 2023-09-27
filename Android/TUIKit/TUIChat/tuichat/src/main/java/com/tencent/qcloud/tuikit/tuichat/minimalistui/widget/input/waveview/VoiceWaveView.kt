@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.Gravity
@@ -53,7 +54,7 @@ class VoiceWaveView @JvmOverloads constructor(
 
     private var valueAnimatorOffset: Float = 1f
 
-    private var valHandler = Handler()
+    private var valHandler = Handler(Looper.getMainLooper())
     val linePath = Path()
 
     @Volatile

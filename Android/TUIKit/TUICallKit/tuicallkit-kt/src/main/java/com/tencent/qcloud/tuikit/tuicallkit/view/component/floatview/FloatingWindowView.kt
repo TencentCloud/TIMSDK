@@ -1,13 +1,13 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.floatwindow
 
 import android.content.Context
-import android.media.Image
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.tencent.qcloud.tuicore.ServiceInitializer
+import com.tencent.qcloud.tuicore.util.DateTimeUtil
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
@@ -16,13 +16,10 @@ import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
-import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
+import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.floatview.FloatingWindowViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class FloatingWindowView(context: Context) : BaseCallView(context) {
 
@@ -43,27 +40,31 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
                     var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
                     showUserToast(userId, R.string.tuicalling_toast_user_reject_call)
                 }
+
                 (TUICallEvent.Event.USER_LEAVE) -> {
                     var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
                     showUserToast(userId, R.string.tuicalling_toast_user_end)
                 }
+
                 (TUICallEvent.Event.USER_LINE_BUSY) -> {
                     var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
                     showUserToast(userId, R.string.tuicalling_toast_user_busy)
                 }
+
                 (TUICallEvent.Event.USER_NO_RESPONSE) -> {
                     var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
                     showUserToast(userId, R.string.tuicalling_toast_user_not_response)
                 }
+
                 (TUICallEvent.Event.USER_EXCEED_LIMIT) -> {
                     ToastUtil.toastLongMessage(context.getString(R.string.tuicalling_user_exceed_limit))
                 }
+
                 else -> {}
             }
         } else if (TUICallEvent.EventType.ERROR == it.eventType && TUICallEvent.Event.ERROR_COMMON == it.event) {
             var code = it.param?.get(TUICallEvent.EVENT_KEY_CODE) as Int
             var msg = it.param?.get(TUICallEvent.EVENT_KEY_MESSAGE) as String
-            ToastUtil.toastLongMessage(context.getString(R.string.tuicalling_toast_call_error_msg, code, msg))
         }
     }
 
@@ -106,16 +107,14 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
 
     private fun updateView(it: Any?) {
         if (it != null && it is Int) {
-            GlobalScope.launch(Dispatchers.Main) {
-                textCallStatus?.text = context.getString(
-                    R.string.tuicalling_called_time_format, it / 60,
-                    it % 60
-                )
+            textCallStatus?.post {
+                textCallStatus?.text = DateTimeUtil.formatSecondsTo00(it)
             }
             return
         }
         if (viewModel.mediaType.get() == TUICallDefine.MediaType.Audio
-            || viewModel.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+            || viewModel.scene.get() == TUICallDefine.Scene.GROUP_CALL
+        ) {
             imageAudioIcon?.visibility = VISIBLE
             textCallStatus?.visibility = VISIBLE
             layoutVideoView?.visibility = GONE
@@ -123,11 +122,10 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
             if (viewModel.selfUser?.callStatus?.get() == TUICallDefine.Status.Waiting) {
                 textCallStatus?.text = context.getString(R.string.tuicalling_wait_resonse)
             } else if (viewModel.selfUser?.callStatus?.get() == TUICallDefine.Status.Accept) {
-                textCallStatus?.text = context.getString(
-                    R.string.tuicalling_called_time_format, TUICallState.instance.timeCount.get() / 60,
-                    TUICallState.instance.timeCount.get() % 60
-                )
+                textCallStatus?.text = DateTimeUtil.formatSecondsTo00(viewModel.timeCount.get())
             } else {
+                VideoViewFactory.instance.clear()
+                clear()
                 viewModel.stopFloatService()
             }
         } else if (viewModel.mediaType.get() == TUICallDefine.MediaType.Video) {
@@ -171,6 +169,8 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
                     )
                 }
             } else {
+                VideoViewFactory.instance.clear()
+                clear()
                 viewModel.stopFloatService()
             }
         }

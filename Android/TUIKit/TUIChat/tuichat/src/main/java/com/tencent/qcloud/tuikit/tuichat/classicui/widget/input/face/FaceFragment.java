@@ -13,8 +13,11 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.tencent.qcloud.tuikit.timcommon.component.face.ChatFace;
 import com.tencent.qcloud.tuikit.timcommon.component.face.CustomFace;
 import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
@@ -24,12 +27,13 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.BaseInputFragment;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FaceFragment extends BaseInputFragment {
-    ViewPager faceViewPager;
+    ViewPager2 faceViewPager;
     EmojiIndicatorView faceIndicator;
     FaceGroupIcon mCurrentSelected;
     LinearLayout faceGroup;
@@ -128,20 +132,14 @@ public class FaceFragment extends BaseInputFragment {
         }
         FaceVPAdapter mVpAdapter = new FaceVPAdapter(viewPagerItems);
         faceViewPager.setAdapter(mVpAdapter);
-        faceViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        faceViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             int oldPosition = 0;
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
                 faceIndicator.playBy(oldPosition, position);
                 oldPosition = position;
             }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {}
         });
     }
 
@@ -196,6 +194,7 @@ public class FaceFragment extends BaseInputFragment {
         if (mCurrentGroupIndex == 0) {
             Emoji deleteEmoji = new Emoji();
             deleteEmoji.setIcon(BitmapFactory.decodeResource(getResources(), R.drawable.face_delete));
+            deleteEmoji.setAutoMirrored(true);
             subList.add(deleteEmoji);
         }
 
@@ -301,32 +300,43 @@ public class FaceFragment extends BaseInputFragment {
         }
     }
 
-    class FaceVPAdapter extends PagerAdapter {
+    class FaceVPAdapter extends RecyclerView.Adapter<FaceVPAdapter.FaceVPViewHolder> {
         private List<View> views;
 
         public FaceVPAdapter(List<View> views) {
             this.views = views;
         }
 
+        @NonNull
         @Override
-        public void destroyItem(View arg0, int arg1, Object arg2) {
-            ((ViewPager) arg0).removeView((View) (arg2));
+        public FaceVPViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            FrameLayout frameLayout = new FrameLayout(parent.getContext());
+            frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            return new FaceVPViewHolder(frameLayout);
         }
 
         @Override
-        public int getCount() {
+        public void onBindViewHolder(@NonNull FaceVPViewHolder holder, int position) {
+            holder.setContentView(views.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            if (views == null) {
+                return 0;
+            }
             return views.size();
         }
 
-        @Override
-        public Object instantiateItem(View arg0, int arg1) {
-            ((ViewPager) arg0).addView(views.get(arg1));
-            return views.get(arg1);
-        }
+        class FaceVPViewHolder extends RecyclerView.ViewHolder {
+            public FaceVPViewHolder(@NonNull View itemView) {
+                super(itemView);
+            }
 
-        @Override
-        public boolean isViewFromObject(View arg0, Object arg1) {
-            return (arg0 == arg1);
+            public void setContentView(View view) {
+                ((ViewGroup) itemView).removeAllViews();
+                ((ViewGroup) itemView).addView(view);
+            }
         }
     }
 }

@@ -100,9 +100,13 @@ class ExtensionManager {
         if (list == null) {
             return;
         }
+
+        boolean isResponded = false;
         for (ITUIExtension extension : list) {
-            extension.onRaiseExtension(extensionID, parentView, param);
-            return;
+            isResponded = extension.onRaiseExtension(extensionID, parentView, param);
+            if (isResponded) {
+                break;
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.Accept) {
             initSmallRenderView()
+            videoViewSmall?.setImageAvatarVisibility(false)
             switchRenderLayout()
         }
     }
@@ -39,11 +40,11 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
     }
 
     private fun addObserver() {
-        viewModel.remoteUser?.callStatus?.observe(callStatusObserver)
+        viewModel.selfUser?.callStatus?.observe(callStatusObserver)
     }
 
     private fun removeObserver() {
-        viewModel.remoteUser?.callStatus?.removeObserver(callStatusObserver)
+        viewModel.selfUser?.callStatus?.removeObserver(callStatusObserver)
     }
 
     private fun initView() {
@@ -56,6 +57,9 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
         initGestureListener(layoutRenderSmall)
         initBigRenderView()
         initSmallRenderView()
+        if (viewModel.lastReverseRenderView) {
+            switchRenderLayout()
+        }
     }
 
     private fun switchRenderLayout() {
@@ -70,12 +74,12 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
                 parent.removeAllViews()
                 layoutRenderBig?.removeAllViews()
             }
-            if (viewModel.reverseRenderLayout) {
-                viewModel.reverseRenderLayout = false
+            if (viewModel.currentReverseRenderView) {
+                viewModel.reverseRenderLayout(false)
                 layoutRenderSmall?.addView(videoViewSmall)
                 layoutRenderBig?.addView(videoViewBig)
             } else {
-                viewModel.reverseRenderLayout = true
+                viewModel.reverseRenderLayout(true)
                 layoutRenderSmall?.addView(videoViewBig)
                 layoutRenderBig?.addView(videoViewSmall)
             }
@@ -107,7 +111,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
             layoutRenderBig?.removeAllViews()
         }
         layoutRenderBig?.addView(videoViewBig)
-        if (!viewModel.isCameraOpen.get()) {
+        if (!viewModel.isCameraOpen.get() && TUICallDefine.Status.Accept != viewModel.selfUser.callStatus.get()) {
             viewModel.selfUser.videoAvailable.set(true)
             CallEngineManager.instance.openCamera(
                 viewModel.isFrontCamera.get(),

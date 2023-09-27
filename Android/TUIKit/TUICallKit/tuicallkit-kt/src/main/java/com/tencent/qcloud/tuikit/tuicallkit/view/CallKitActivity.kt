@@ -15,6 +15,7 @@ import com.tencent.qcloud.tuicore.ServiceInitializer
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
+import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_KEY_CODE
@@ -22,15 +23,18 @@ import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_K
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_KEY_USER_ID
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils.setScreenLockParams
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatWindowService
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.GroupCallView
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.SingleCallView
 
 class CallKitActivity : AppCompatActivity() {
     private var baseCallView: RelativeLayout? = null
+    private var layoutContainer: RelativeLayout? = null
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.None) {
+            TUILog.i(TAG, "callStatusObserver None -> finishActivity")
             finishActivity()
         }
     }
@@ -62,39 +66,41 @@ class CallKitActivity : AppCompatActivity() {
         } else if (TUICallEvent.EventType.ERROR == it.eventType && TUICallEvent.Event.ERROR_COMMON == it.event) {
             var code = it.param?.get(EVENT_KEY_CODE) as Int
             var msg = it.param?.get(EVENT_KEY_MESSAGE) as String
-            ToastUtil.toastLongMessage(getString(R.string.tuicalling_toast_call_error_msg, code, msg))
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        TUILog.i(TAG, "onCreate")
         setScreenLockParams(window)
         mActivity = this
         setContentView(R.layout.tuicallkit_activity_call_kit)
         initStatusBar()
-        initView()
         addObserver()
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancelAll()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        removeObserver()
-        if (null != baseCallView && null != baseCallView!!.parent) {
-            (baseCallView!!.parent as ViewGroup).removeView(baseCallView)
+    override fun onResume() {
+        super.onResume()
+        TUILog.i(TAG, "onResume")
+        if (TUICallDefine.Status.None == TUICallState.instance.selfUser.get().callStatus.get()) {
+            if (null != mActivity) {
+                mActivity?.finish()
+            }
+            mActivity = null
+            removeObserver()
+            return
         }
-        if (null != baseCallView && baseCallView is GroupCallView) {
-            (baseCallView as GroupCallView).clear()
-        }
-        if (null != baseCallView && baseCallView is SingleCallView) {
-            (baseCallView as SingleCallView).clear()
-        }
-        baseCallView = null
-        mActivity = null
+        initView()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+        notificationManager?.cancelAll()
     }
 
     override fun onBackPressed() {}
+
+    override fun onDestroy() {
+        super.onDestroy()
+        TUILog.i(TAG, "onDestroy")
+    }
 
     private fun initStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -110,7 +116,7 @@ class CallKitActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        var layoutContainer = findViewById<RelativeLayout>(R.id.rl_container)
+        layoutContainer = findViewById(R.id.rl_container)
         layoutContainer?.removeAllViews()
         if (baseCallView != null && baseCallView?.parent != null) {
             (baseCallView?.parent as ViewGroup).removeView(baseCallView)
@@ -155,6 +161,11 @@ class CallKitActivity : AppCompatActivity() {
     }
 
     private fun finishActivity() {
+        if (null != mActivity) {
+            mActivity?.finish()
+        }
+        mActivity = null
+        removeObserver()
         if (null != baseCallView && null != baseCallView!!.parent) {
             (baseCallView!!.parent as ViewGroup).removeView(baseCallView)
         }
@@ -165,14 +176,16 @@ class CallKitActivity : AppCompatActivity() {
             (baseCallView as SingleCallView).clear()
         }
         baseCallView = null
-
+        layoutContainer = null
         VideoViewFactory.instance.clear()
-        removeObserver()
-        finish()
+        if (TUICallDefine.Status.None == TUICallState.instance.selfUser.get().callStatus.get()) {
+            FloatWindowService.stopService()
+        }
     }
 
     companion object {
         private var mActivity: AppCompatActivity? = null
+        const val TAG = "CallKitActivity"
 
         fun finishActivity() {
             if (null != mActivity) {

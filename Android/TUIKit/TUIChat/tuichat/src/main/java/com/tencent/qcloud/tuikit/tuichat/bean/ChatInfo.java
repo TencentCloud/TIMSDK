@@ -24,7 +24,9 @@ public class ChatInfo implements Serializable {
     private String groupType;
     private boolean isTopChat;
     private TUIMessageBean locateMessage;
-
+    boolean enableAudioCall = true;
+    boolean enableVideoCall = true;
+    boolean enableRoom = true;
     private DraftInfo draft;
 
     public ChatInfo() {}
@@ -173,5 +175,29 @@ public class ChatInfo implements Serializable {
 
     public void setIconUrlList(List<Object> iconUrlList) {
         this.iconUrlList = iconUrlList;
+    }
+
+    public void setEnableAudioCall(boolean enableAudioCall) {
+        this.enableAudioCall = enableAudioCall;
+    }
+
+    public void setEnableRoom(boolean enableRoom) {
+        this.enableRoom = enableRoom;
+    }
+
+    public void setEnableVideoCall(boolean enableVideoCall) {
+        this.enableVideoCall = enableVideoCall;
+    }
+
+    public boolean isEnableAudioCall() {
+        return enableAudioCall;
+    }
+
+    public boolean isEnableRoom() {
+        return enableRoom;
+    }
+
+    public boolean isEnableVideoCall() {
+        return enableVideoCall;
     }
 }

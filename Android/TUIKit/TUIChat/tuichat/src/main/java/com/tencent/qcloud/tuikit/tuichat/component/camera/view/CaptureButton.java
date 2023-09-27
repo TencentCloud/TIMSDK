@@ -9,8 +9,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.CountDownTimer;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.tencent.qcloud.tuikit.tuichat.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.CameraUtil;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.CaptureListener;
@@ -63,8 +65,15 @@ public class CaptureButton extends View {
         super(context);
     }
 
-    public CaptureButton(Context context, int size) {
-        super(context);
+    public CaptureButton(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+    }
+
+    public CaptureButton(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public void setView(int size) {
         this.buttonSize = size;
         buttonRadius = size / 2.0f;
 
@@ -92,7 +101,7 @@ public class CaptureButton extends View {
         centerY = (buttonSize + outsideAddSize * 2) / 2;
 
         rectF = new RectF(centerX - (buttonRadius + outsideAddSize - strokeWidth / 2), centerY - (buttonRadius + outsideAddSize - strokeWidth / 2),
-            centerX + (buttonRadius + outsideAddSize - strokeWidth / 2), centerY + (buttonRadius + outsideAddSize - strokeWidth / 2));
+                centerX + (buttonRadius + outsideAddSize - strokeWidth / 2), centerY + (buttonRadius + outsideAddSize - strokeWidth / 2));
 
         timer = new RecordCountDownTimer(duration, duration / 360);
     }

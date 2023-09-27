@@ -15,6 +15,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationUserStatusBean;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
@@ -283,10 +284,25 @@ public class ConversationPresenter {
     }
 
     private void loadAndSubscribeConversationUserStatus(List<ConversationInfo> conversationInfoList) {
-        provider.loadConversationUserStatus(conversationInfoList, new IUIKitCallback<Void>() {
+        TUIConversationLog.i(TAG, "loadAndSubscribeConversationUserStatus");
+        provider.loadConversationUserStatus(conversationInfoList, new IUIKitCallback<Map<String, ConversationUserStatusBean>>() {
             @Override
-            public void onSuccess(Void data) {
-                onConversationChanged(conversationInfoList);
+            public void onSuccess(Map<String, ConversationUserStatusBean> data) {
+                List<ConversationInfo> changedConversations = new ArrayList<>();
+                for (ConversationInfo conversationInfo : loadedConversationInfoList) {
+                    if (!conversationInfo.isGroup()) {
+                         String userID = conversationInfo.getId();
+                         if (data.containsKey(userID)) {
+                             ConversationUserStatusBean statusBean = data.get(userID);
+                             if (statusBean != null) {
+                                 conversationInfo.setStatusType(statusBean.getStatusType());
+                                 changedConversations.add(conversationInfo);
+                             }
+                         }
+                    }
+                }
+                TUIConversationLog.i(TAG, "on load user status success");
+                onConversationChanged(changedConversations);
             }
 
             @Override

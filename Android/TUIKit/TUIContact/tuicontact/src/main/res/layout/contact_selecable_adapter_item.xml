@@ -13,18 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:paddingLeft="15.36dp">
-
-        <CheckBox
-            android:id="@+id/contact_check_box"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="10dp"
-            android:button="@null"
-            android:background="@drawable/contact_checkbox_selector"
-            android:clickable="false"
-            android:focusable="false"
-            android:visibility="gone" />
+        android:paddingStart="15.36dp"
+        android:paddingEnd="15.36dp">
 
         <RelativeLayout
             android:layout_width="45dp"
@@ -42,7 +32,7 @@
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="0dp"
                 android:layout_marginBottom="1dp"
                 android:background="?attr/user_status_offline"
@@ -52,15 +42,16 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:paddingLeft="11.5dp">
+            android:layout_weight="1"
+            android:paddingStart="11.5dp">
 
             <TextView
                 android:id="@+id/tvCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
                 android:singleLine="true"
                 android:ellipsize="end"
@@ -69,29 +60,42 @@
                 android:clickable="false"
                 android:focusable="false"
                 android:textColor="@color/black_font_color"
-                tools:text="@string/default_friend" />
+                tools:text="Friend" />
 
             <com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView
                 android:id="@+id/conversation_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
-                android:layout_marginRight="24dp"
+                android:layout_marginEnd="24dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="#fff"
                 android:textSize="10sp" />
 
         </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/contact_check_box"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:button="@null"
+            android:background="@drawable/contact_checkbox_selector"
+            android:clickable="false"
+            android:focusable="false"
+            android:visibility="gone" />
     </LinearLayout>
 
     <View
         android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:paddingStart="15.36dp"
+        android:paddingEnd="15.36dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="73.78dp"
         android:background="@color/split_lint_color" />
 
 </RelativeLayout>

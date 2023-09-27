@@ -32,7 +32,7 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
     private RecyclerView.Adapter mAdapter;
     private List<String> mDatas = new ArrayList<>();
     private TitleBarLayout titleBarLayout;
-    private TextView groupTypeTextView;
+    private TextView viewProductBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +53,8 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setTitle(getString(R.string.group_type_select_text), ITitleBarLayout.Position.MIDDLE);
         titleBarLayout.setOnLeftClickListener(this);
-        groupTypeTextView = findViewById(R.id.group_type_text);
-        groupTypeTextView.setOnClickListener(new View.OnClickListener() {
+        viewProductBtn = findViewById(R.id.view_product_doc_btn);
+        viewProductBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String url = "";

@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
@@ -33,6 +34,7 @@ public class UnreadCountTextView extends AppCompatTextView {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        setTextDirection(View.TEXT_DIRECTION_LTR);
         mNormalSize = dp2px(18.4f);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.UnreadCountTextView);
         int paintColor = typedArray.getColor(R.styleable.UnreadCountTextView_paint_color, getResources().getColor(R.color.read_dot_bg));

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/chat_background_color">
+
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
+        android:id="@+id/chat_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_below="@+id/chat_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/chat_title_line_color" />
+
+    <FrameLayout
+        android:id="@+id/custom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_line"
+        android:layout_marginTop="0dp"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout
+        android:id="@+id/chat_group_apply_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/custom_layout"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout
+        android:id="@+id/chat_notice_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_group_apply_layout"
+        android:layout_marginTop="1dp"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView
+        android:id="@+id/chat_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_input_layout"
+        android:layout_below="@+id/chat_notice_layout"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:descendantFocusability="blocksDescendants" />
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="4dp"
+        app:cardElevation="6dp"
+        app:cardUseCompatPadding="true"
+        android:layout_above="@+id/chat_input_layout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/btn_margin_right"
+        android:layout_marginBottom="@dimen/btn_margin_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/jump_message_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="33.6dp"
+            android:paddingTop="9.12dp"
+            android:paddingBottom="8.64dp"
+            android:paddingStart="10.08dp"
+            android:paddingEnd="9.6dp"
+            android:background="#FFFFFF"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/arrow_icon"
+                android:layout_width="11.52dp"
+                android:layout_height="11.52dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:scaleType="fitCenter"
+                android:background="?attr/chat_jump_recent_down_icon" />
+
+            <TextView
+                android:id="@+id/jump_message_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5.76dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="?attr/core_primary_color"
+                android:textSize="11.52sp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView
+        android:id="@+id/chat_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/forward_layout"
+        android:layout_alignParentBottom="true" />
+
+    <RelativeLayout
+        android:id="@+id/voice_recording_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ic_volume_dialog_bg"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:id="@+id/recording_icon"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"/>
+
+
+            <TextView
+                android:id="@+id/recording_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/forward_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#E6E9EB"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingStart="38.4dp"
+        android:paddingTop="15.36dp"
+        android:paddingEnd="38.4dp"
+        android:paddingBottom="46.08dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/forward_one_by_one_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="38.4dp"
+                android:layout_height="38.4dp"
+                android:background="@drawable/multi_select_forward_one" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.76dp"
+                android:text="@string/forward_mode_onebyone"
+                android:textColor="#444444"
+                android:textSize="11.52sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/forward_merge_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="38.4dp"
+                android:layout_height="38.4dp"
+                android:background="@drawable/multi_select_forward_merge" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.76dp"
+                android:text="@string/forward_mode_merge"
+                android:textColor="#444444"
+                android:textSize="11.52sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/delete_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="38.4dp"
+                android:layout_height="38.4dp"
+                android:background="@drawable/multi_select_delete" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.76dp"
+                android:text="@string/delete_button"
+                android:textColor="#444444"
+                android:textSize="11.52sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

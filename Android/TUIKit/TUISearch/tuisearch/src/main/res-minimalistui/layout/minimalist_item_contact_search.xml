@@ -26,7 +26,7 @@
             app:corner_radius="20dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
             android:orientation="vertical"
@@ -36,7 +36,6 @@
                 android:id="@+id/conversation_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/black_font_color"
@@ -52,11 +51,10 @@
                     android:id="@+id/conversation_sub_title_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/conversation_title"
-                    android:layout_centerVertical="true"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/list_bottom_text_bg"
+                    android:textDirection="locale"
                     android:textSize="14sp"
                     tools:text="label" />
 
@@ -64,11 +62,8 @@
                     android:id="@+id/conversation_sub_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/conversation_sub_title_label"
-                    android:layout_centerVertical="true"
                     android:layout_marginStart="2dp"
-                    android:layout_marginRight="48dp"
-                    android:layout_toEndOf="@id/conversation_sub_title_label"
+                    android:layout_marginEnd="48dp"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/list_bottom_text_bg"

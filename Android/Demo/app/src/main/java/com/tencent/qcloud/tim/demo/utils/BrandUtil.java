@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tim.demo.utils;
 
+import android.text.TextUtils;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class BrandUtil {
@@ -33,6 +34,16 @@ public class BrandUtil {
         return "oppo".equalsIgnoreCase(getBuildBrand()) || "realme".equalsIgnoreCase(getBuildBrand()) || "oneplus".equalsIgnoreCase(getBuildBrand())
             || "oppo".equalsIgnoreCase(getBuildManufacturer()) || "realme".equalsIgnoreCase(getBuildManufacturer())
             || "oneplus".equalsIgnoreCase(getBuildManufacturer());
+    }
+
+    /**
+     * oppo device
+     *
+     * @return
+     */
+    public static boolean isSamsungS9Series() {
+        return "samsung".equalsIgnoreCase(getBuildBrand())
+            && (!TextUtils.isEmpty(getBuildModel()) && (getBuildModel().startsWith("SM-G965") || getBuildModel().startsWith("SM-G960")));
     }
 
     /**

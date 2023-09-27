@@ -100,9 +100,9 @@ public class Menu {
         int popWidth = itemWidth + paddingLeftRight * 2 - SHADOW_WIDTH;
         int popHeight = itemHeight * rowCount + paddingTopBottom * 2 - SHADOW_WIDTH;
         float anchorWidth = mAttachView.getWidth();
-        float indicatorX = anchorWidth / 2;
+        float indicatorX = anchorWidth / 2 + indicatorHeight;
         int screenWidth = ScreenUtil.getScreenWidth(mActivity);
-        int x = location[0];
+        int x = location[0] - indicatorHeight;
         int y;
         float xOffset = anchorWidth / 2;
         // If it is on the right, the x-coordinate of the small arrow and the x-position of the pop-up window will change

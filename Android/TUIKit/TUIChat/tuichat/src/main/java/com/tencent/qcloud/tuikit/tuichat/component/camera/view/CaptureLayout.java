@@ -8,14 +8,14 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.CaptureListener;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ClickListener;
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ReturnListener;
@@ -28,17 +28,15 @@ public class CaptureLayout extends FrameLayout {
     private ClickListener leftClickListener; // 左边按钮监听 left button Lisenter
     private ClickListener rightClickListener; // 右边按钮监听 Right button Lisenter
     private CaptureButton btnCapture; // 拍照按钮 photo button
-    private TypeButton btnConfirm; // 确认按钮 Confirm button
-    private TypeButton btnCancel; // 取消按钮 cancel button
+    private View btnConfirm; // 确认按钮 Confirm button
+    private View btnCancel; // 取消按钮 cancel button
     private ReturnButton btnReturn; // 返回按钮 back button
-    private ImageView customLeftIv; // 左边自定义按钮 left custom button
-    private ImageView customRightIv; // 右边自定义按钮 right custom button
+    private ImageView backBtn; // 左边自定义按钮 left custom button
+    private ImageView selectPhotoBtn; // 右边自定义按钮 right custom button
     private TextView txtTip; // 提示文本 prompt text
     private int layoutWidth;
     private int layoutHeight;
     private int buttonSize;
-    private int iconLeft = 0;
-    private int iconRight = 0;
     private boolean isFirst = true;
 
     public CaptureLayout(Context context) {
@@ -62,10 +60,16 @@ public class CaptureLayout extends FrameLayout {
             layoutWidth = outMetrics.widthPixels / 2;
         }
         buttonSize = (int) (layoutWidth / 4.5f);
-        layoutHeight = buttonSize + (buttonSize / 5) * 2 + 100;
+        layoutHeight = buttonSize * 2;
 
         initView();
         initEvent();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(layoutWidth, layoutHeight);
     }
 
     public void setTypeListener(TypeListener typeListener) {
@@ -80,27 +84,15 @@ public class CaptureLayout extends FrameLayout {
         this.returnListener = returnListener;
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(layoutWidth, layoutHeight);
-    }
-
     public void initEvent() {
-        customRightIv.setVisibility(GONE);
+        selectPhotoBtn.setVisibility(GONE);
         btnCancel.setVisibility(GONE);
         btnConfirm.setVisibility(GONE);
     }
 
     public void startTypeBtnAnimator() {
-        if (this.iconLeft != 0) {
-            customLeftIv.setVisibility(GONE);
-        } else {
-            btnReturn.setVisibility(GONE);
-        }
-        if (this.iconRight != 0) {
-            customRightIv.setVisibility(GONE);
-        }
+        backBtn.setVisibility(GONE);
+        selectPhotoBtn.setVisibility(GONE);
         btnCapture.setVisibility(GONE);
         btnCancel.setVisibility(VISIBLE);
         btnConfirm.setVisibility(VISIBLE);
@@ -126,10 +118,15 @@ public class CaptureLayout extends FrameLayout {
     private void initView() {
         setWillNotDraw(false);
         // 拍照按钮
-        btnCapture = new CaptureButton(getContext(), buttonSize);
-        LayoutParams btnCaptureParam = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        btnCaptureParam.gravity = Gravity.CENTER;
-        btnCapture.setLayoutParams(btnCaptureParam);
+        LayoutInflater.from(getContext()).inflate(R.layout.chat_camera_capture_layout, this);
+        btnCapture = findViewById(R.id.capture_btn);
+        btnCancel = findViewById(R.id.cancel_btn);
+        btnConfirm = findViewById(R.id.confirm_btn);
+        backBtn = findViewById(R.id.back_btn);
+        selectPhotoBtn = findViewById(R.id.select_image_btn);
+        txtTip = findViewById(R.id.text_tips);
+
+        btnCapture.setView(buttonSize);
         btnCapture.setCaptureListener(new CaptureListener() {
             @Override
             public void takePictures() {
@@ -178,12 +175,7 @@ public class CaptureLayout extends FrameLayout {
             }
         });
 
-        // 取消按钮
-        btnCancel = new TypeButton(getContext(), TypeButton.TYPE_CANCEL, buttonSize);
-        final LayoutParams btn_cancel_param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        btn_cancel_param.gravity = Gravity.CENTER_VERTICAL;
-        btn_cancel_param.setMargins((layoutWidth / 4) - buttonSize / 2, 0, 0, 0);
-        btnCancel.setLayoutParams(btn_cancel_param);
+        btnCancel.getBackground().setAutoMirrored(true);
         btnCancel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,15 +183,9 @@ public class CaptureLayout extends FrameLayout {
                     typeListener.cancel();
                 }
                 startAlphaAnimation();
-                //                resetCaptureLayout();
             }
         });
 
-        btnConfirm = new TypeButton(getContext(), TypeButton.TYPE_CONFIRM, buttonSize);
-        LayoutParams btnConfirmParam = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        btnConfirmParam.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-        btnConfirmParam.setMargins(0, 0, (layoutWidth / 4) - buttonSize / 2, 0);
-        btnConfirm.setLayoutParams(btnConfirmParam);
         btnConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,16 +193,11 @@ public class CaptureLayout extends FrameLayout {
                     typeListener.confirm();
                 }
                 startAlphaAnimation();
-                //                resetCaptureLayout();
             }
         });
 
-        btnReturn = new ReturnButton(getContext(), (int) (buttonSize / 2.5f));
-        LayoutParams btnReturnParam = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        btnReturnParam.gravity = Gravity.CENTER_VERTICAL;
-        btnReturnParam.setMargins(layoutWidth / 6, 0, 0, 0);
-        btnReturn.setLayoutParams(btnReturnParam);
-        btnReturn.setOnClickListener(new OnClickListener() {
+        backBtn.getDrawable().setAutoMirrored(true);
+        backBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (leftClickListener != null) {
@@ -225,26 +206,7 @@ public class CaptureLayout extends FrameLayout {
             }
         });
 
-        customLeftIv = new ImageView(getContext());
-        LayoutParams ivCustomParamLeft = new LayoutParams((int) (buttonSize / 2.5f), (int) (buttonSize / 2.5f));
-        ivCustomParamLeft.gravity = Gravity.CENTER_VERTICAL;
-        ivCustomParamLeft.setMargins(layoutWidth / 6, 0, 0, 0);
-        customLeftIv.setLayoutParams(ivCustomParamLeft);
-        customLeftIv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (leftClickListener != null) {
-                    leftClickListener.onClick();
-                }
-            }
-        });
-
-        customRightIv = new ImageView(getContext());
-        LayoutParams ivCustomParamRight = new LayoutParams((int) (buttonSize / 2.5f), (int) (buttonSize / 2.5f));
-        ivCustomParamRight.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-        ivCustomParamRight.setMargins(0, 0, layoutWidth / 6, 0);
-        customRightIv.setLayoutParams(ivCustomParamRight);
-        customRightIv.setOnClickListener(new OnClickListener() {
+        selectPhotoBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (rightClickListener != null) {
@@ -252,23 +214,6 @@ public class CaptureLayout extends FrameLayout {
                 }
             }
         });
-
-        txtTip = new TextView(getContext());
-        LayoutParams txtParam = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        txtParam.gravity = Gravity.CENTER_HORIZONTAL;
-        txtParam.setMargins(0, 0, 0, 0);
-        txtTip.setText(TUIChatService.getAppContext().getString(R.string.tap_tips));
-        txtTip.setTextColor(0xFFFFFFFF);
-        txtTip.setGravity(Gravity.CENTER);
-        txtTip.setLayoutParams(txtParam);
-
-        this.addView(btnCapture);
-        this.addView(btnCancel);
-        this.addView(btnConfirm);
-        this.addView(btnReturn);
-        this.addView(customLeftIv);
-        this.addView(customRightIv);
-        this.addView(txtTip);
     }
 
     /**************************************************
@@ -279,14 +224,8 @@ public class CaptureLayout extends FrameLayout {
         btnCancel.setVisibility(GONE);
         btnConfirm.setVisibility(GONE);
         btnCapture.setVisibility(VISIBLE);
-        if (this.iconLeft != 0) {
-            customLeftIv.setVisibility(VISIBLE);
-        } else {
-            btnReturn.setVisibility(VISIBLE);
-        }
-        if (this.iconRight != 0) {
-            customRightIv.setVisibility(VISIBLE);
-        }
+        backBtn.setVisibility(VISIBLE);
+        selectPhotoBtn.setVisibility(VISIBLE);
     }
 
     public void startAlphaAnimation() {
@@ -319,25 +258,6 @@ public class CaptureLayout extends FrameLayout {
 
     public void showTip() {
         txtTip.setVisibility(VISIBLE);
-    }
-
-    public void setIconSrc(int iconLeft, int iconRight) {
-        this.iconLeft = iconLeft;
-        this.iconRight = iconRight;
-        if (this.iconLeft != 0) {
-            customLeftIv.setImageResource(iconLeft);
-            customLeftIv.setVisibility(VISIBLE);
-            btnReturn.setVisibility(GONE);
-        } else {
-            customLeftIv.setVisibility(GONE);
-            btnReturn.setVisibility(VISIBLE);
-        }
-        if (this.iconRight != 0) {
-            customRightIv.setImageResource(iconRight);
-            customRightIv.setVisibility(VISIBLE);
-        } else {
-            customRightIv.setVisibility(GONE);
-        }
     }
 
     public void setLeftClickListener(ClickListener leftClickListener) {

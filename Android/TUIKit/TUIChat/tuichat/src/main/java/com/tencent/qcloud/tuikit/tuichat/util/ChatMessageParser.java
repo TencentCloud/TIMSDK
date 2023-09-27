@@ -1,11 +1,11 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
 import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.message.Message;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
-import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
@@ -33,7 +33,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import java.io.File;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -391,35 +391,6 @@ public class ChatMessageParser {
             displayName = timMessage.getSender();
         }
         return displayName;
-    }
-
-    /**
-     * 获取图片在本地的原始路径 (可能是沙盒中的路径)
-     * @param messageBean 图片消息元组
-     * @return 图片原始路径，如果不存在返回 null
-     *
-     * Get the original path of the image locally (maybe the path in the sandbox)
-     * @param messageBean message bean
-     * @return The original path of the image, or null if it does not exist
-     */
-    public static String getLocalImagePath(TUIMessageBean messageBean) {
-        if (messageBean == null || !messageBean.isSelf()) {
-            return null;
-        }
-        V2TIMMessage message = messageBean.getV2TIMMessage();
-        if (message == null || message.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE) {
-            return null;
-        }
-        V2TIMImageElem imageElem = message.getImageElem();
-        if (imageElem == null) {
-            return null;
-        }
-        String path = imageElem.getPath();
-        File file = new File(path);
-        if (file.exists()) {
-            return path;
-        }
-        return null;
     }
 
     public static String getDisplayString(V2TIMMessage v2TIMMessage) {

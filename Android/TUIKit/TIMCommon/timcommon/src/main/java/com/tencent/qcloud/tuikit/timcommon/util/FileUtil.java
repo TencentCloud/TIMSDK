@@ -15,17 +15,23 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.R;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Random;
 
 public class FileUtil {
@@ -38,12 +44,12 @@ public class FileUtil {
     public static final int SIZETYPE_MB = 3;
     public static final int SIZETYPE_GB = 4;
 
-    public static boolean deleteFile(String url) {
-        if (TextUtils.isEmpty(url)) {
+    public static boolean deleteFile(String path) {
+        if (TextUtils.isEmpty(path)) {
             return false;
         }
         boolean result = false;
-        File file = new File(url);
+        File file = new File(path);
         if (file.exists()) {
             result = file.delete();
         }
@@ -383,7 +389,8 @@ public class FileUtil {
      * @return
      */
     public static String formatFileSize(long fileS) {
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        DecimalFormat df = new DecimalFormat("#.00", symbols);
         String fileSizeString = "";
         String wrongSize = "0B";
         if (fileS == 0) {
@@ -505,6 +512,43 @@ public class FileUtil {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isFileExists(String path) {
+        try {
+            File file = new File(path);
+            return file.exists() && file.isFile();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isDirExists(String path) {
+        try {
+            File file = new File(path);
+            return file.exists() && file.isDirectory();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isFileSizeExceedsLimit(Uri data, int maxSize) {
+        try {
+            Cursor returnCursor = ServiceInitializer.getAppContext().getContentResolver().query(data, null, null, null, null);
+            if (returnCursor != null) {
+                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                returnCursor.moveToFirst();
+                int size = returnCursor.getInt(sizeIndex);
+                if (size > maxSize) {
+                    return true;
+                }
+                returnCursor.close();
+                return false;
+            }
+            return false;
+        } catch (Exception e) {
             return false;
         }
     }

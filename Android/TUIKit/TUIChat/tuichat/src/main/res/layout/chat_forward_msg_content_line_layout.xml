@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/sender_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11.52sp"
+        android:lineHeight="20sp"
+        android:ellipsize="end"
+        android:textColor="#BBBBBB"
+        android:maxLines="1"
+        android:maxWidth="60dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=":"
+        android:textSize="11.52sp"
+        android:lineHeight="20sp"
+        android:ellipsize="end"
+        android:textColor="#BBBBBB" />
+
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11.52sp"
+        android:textAlignment="viewStart"
+        android:lineHeight="20sp"
+        android:ellipsize="end"
+        android:textColor="#BBBBBB"
+        android:maxLines="2" />
+</LinearLayout>

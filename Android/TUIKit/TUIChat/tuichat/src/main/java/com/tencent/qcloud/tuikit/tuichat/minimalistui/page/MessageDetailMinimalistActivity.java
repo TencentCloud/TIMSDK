@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
@@ -34,6 +36,7 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.
 import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ReplyPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +86,8 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
         unreadList = findViewById(R.id.unread_list);
         unreadtitle = findViewById(R.id.unread_title);
         readTitle = findViewById(R.id.read_title);
-
+        ImageView backIcon = findViewById(R.id.back_icon);
+        backIcon.getBackground().setAutoMirrored(true);
         View backBtn = findViewById(R.id.back_btn_area);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +204,7 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
         RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageArea, null, type);
         if (holder instanceof MessageContentHolder) {
             ((MessageContentHolder) holder).layoutViews(messageBean, 0);
-            ((MessageContentHolder) holder).setTranslationContent(messageBean);
+            ((MessageContentHolder) holder).setBottomContent(messageBean);
             ((MessageContentHolder) holder).setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onMessageClick(View view, int position, TUIMessageBean messageBean) {

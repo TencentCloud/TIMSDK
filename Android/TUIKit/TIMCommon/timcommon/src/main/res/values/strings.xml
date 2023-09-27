@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_file_tips">Select an app to open the file</string>
-    <string name="chat_time_today">Today</string>
+    <string name="date_year_short">y</string>
+    <string name="date_month_short">m</string>
+    <string name="date_day_short">d</string>
+    <string name="date_hour_short">h</string>
+    <string name="date_minute_short">min</string>
+    <string name="date_second_short">s</string>
     <string name="date_yesterday">Yesterday</string>
-    <string name="date_year_short">YYYY</string>
-    <string name="date_month_short">MM</string>
-    <string name="date_day_short">DD</string>
-    <string name="date_hour_short">HH</string>
-    <string name="date_minute_short">MM</string>
-    <string name="date_second_short">SS</string>
+    <string name="chat_time_today">Today</string>
+
 
     <string name="setting">setting</string>
     <string name="setting_fail">Setup failed！</string>
@@ -26,6 +27,6 @@
     <string name="someone_has_read">%d read</string>
 
     <string name="timcommon_no_support_msg">Unsupported custom messages</string>
-    <string name="translation_support">Translated by IM</string>
+    <string name="translation_support">Translated by Tencent Cloud Chat</string>
 
 </resources>

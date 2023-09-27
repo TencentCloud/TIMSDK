@@ -342,7 +342,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
     }
 
     private void setMessageReadStatus(boolean isShowReadStatus, boolean needUpdate) {
-        TUIChatConfigs.getConfigs().getGeneralConfig().setShowRead(isShowReadStatus);
+        TUIChatConfigs.getConfigs().getGeneralConfig().setMsgNeedReadReceipt(isShowReadStatus);
         if (needUpdate) {
             SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -37,6 +37,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -182,7 +183,7 @@ public class ChatPopActivity extends AppCompatActivity {
                 }
             }
             ((MessageContentHolder) holder).layoutViews(messageBean, 0);
-            ((MessageContentHolder) holder).msgArea.setBackground(ChatPopDataHolder.getMsgAreaBackground());
+            ((MessageContentHolder) holder).setMessageBubbleBackground(ChatPopDataHolder.getMsgAreaBackground());
         }
         if (messageBean.isSelf()) {
             RelativeLayout.LayoutParams faceViewLayoutParams = (RelativeLayout.LayoutParams) recentFaceView.getLayoutParams();
@@ -457,8 +458,15 @@ public class ChatPopActivity extends AppCompatActivity {
             int position = parent.getChildAdapterPosition(view);
             int column = position % columnNum;
 
-            outRect.left = column * leftRightSpace / columnNum;
-            outRect.right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            int left = column * leftRightSpace / columnNum;
+            int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
+            if (LayoutUtil.isRTL()) {
+                outRect.left = right;
+                outRect.right = left;
+            } else {
+                outRect.left = left;
+                outRect.right = right;
+            }
 
             if (position >= columnNum) {
                 outRect.top = topBottomSpace;

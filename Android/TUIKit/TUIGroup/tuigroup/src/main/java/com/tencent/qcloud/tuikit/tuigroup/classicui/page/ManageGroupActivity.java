@@ -180,12 +180,12 @@ public class ManageGroupActivity extends BaseLightActivity {
                     }
                 });
                 int x = view.getWidth() / 2;
-                int y = -view.getHeight() / 3;
+                int y = -view.getHeight() / 2;
                 int popHeight = ScreenUtil.dip2px(45) * 3;
                 if (y + popHeight + view.getY() + view.getHeight() > mutedList.getBottom()) {
                     y = y - popHeight;
                 }
-                popupWindow.showAsDropDown(view, x, y, Gravity.TOP | Gravity.START);
+                popupWindow.showAsDropDown(view, x, y, Gravity.CENTER);
             }
         });
     }

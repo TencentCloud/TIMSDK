@@ -22,14 +22,14 @@ public class MinimalistUIExtensionObserver extends ServiceInitializer implements
     }
 
     @Override
-    public void onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {
+    public boolean onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {
         if (TextUtils.equals(extensionID, TUIConstants.TUIConversation.Extension.ConversationListHeader.MINIMALIST_EXTENSION_ID)) {
             ViewGroup viewGroup = null;
             if (parentView instanceof ViewGroup) {
                 viewGroup = (ViewGroup) parentView;
             }
             if (viewGroup == null) {
-                return;
+                return false;
             }
             View searchView = LayoutInflater.from(getAppContext()).inflate(R.layout.minimalist_search_view_layout, null);
             viewGroup.removeAllViews();
@@ -40,7 +40,10 @@ public class MinimalistUIExtensionObserver extends ServiceInitializer implements
                 }
             });
             viewGroup.addView(searchView);
+            return true;
         }
+
+        return false;
     }
 
     @Override

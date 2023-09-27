@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="demo_app_name">Tencent Chat</string>
+
+    <string name="test_custom_message">عرض التفاصيل>></string>
+
+    <string name="account">اسم المستخدم</string>
+    <string name="password">كلمة المرور</string>
+
+    <string name="demo_current_language">العربية</string>
+    <string name="demo_language_chinese">الصينية المبسطة</string>
+    <string name="demo_language_english">إنجليزي</string>
+    <string name="demo_language_arabic">العربية</string>
+
+    <string name="demo_login_country_or_region_label">الدولة / المنطقة</string>
+    <string name="demo_area_code_title">اختر الدولة أو المنطقة</string>
+    <string name="demo_language_title">اختر اللغة</string>
+    <string name="demo_style_title">اختر النمط</string>
+    <string name="demo_login_chinese_mainland">البر الرئيسي الصيني</string>
+    <string name="demo_login_mobile_phone_number">رقم الهاتف المحمول</string>
+    <string name="demo_login_verification_code_label">رمز التحقق</string>
+    <string name="demo_search">بحث</string>
+
+    <string name="login_title">Tencent Cloud Chat</string>
+    <string name="login_sub_title">مرحبًا بك في استخدام هذا التطبيق لتجربة منتجات Tencent Cloud Chat</string>
+    <string name="input_number">الرجاء إدخال رقم الهاتف المحمول</string>
+    <string name="input_verification">الرجاء إدخال رمز التحقق القصير</string>
+    <string name="verification_code">الحصول على رمز التحقق</string>
+    <string name="button_login">تسجيل الدخول</string>
+    <string name="password_login">تسجيل الدخول بكلمة المرور</string>
+    <string name="official_website">زيارة الموقع الرسمي</string>
+    <string name="debug_mode_summary">تسجيل الدخول إلى حساب Chat مباشرة ، يتم عرض هذا فقط في وضع التصحيح</string>
+    <string name="account_hint">يمكن أن يكون أي حرف غير فارغ ، يرجى الرجوع إلى تعليقات الفئة</string>
+
+    <string name="repeat_login_tip">تم تسجيل الدخول إلى حسابك من جهاز آخر</string>
+    <string name="expired_login_tip">انتهت صلاحية الحساب ، يرجى تسجيل الدخول مرة أخرى</string>
+    <string name="failed_login_tip">فشل تسجيل الدخول</string>
+
+    <string name="profile">أنا</string>
+    <string name="modify_user_icon">الصورة الشخصية</string>
+    <string name="modify_nick_name">الاسم المستعار</string>
+    <string name="add_rule">عندما يضيفني شخص ما كصديق</string>
+    <string name="translation_target_language">ترجمة الرسالة إلى</string>
+    <string name="allow_type_allow_any">السماح لأي شخص</string>
+    <string name="allow_type_deny_any">رفض أي شخص</string>
+    <string name="allow_type_need_confirm">يحتاج التحقق</string>
+    <string name="exit">تسجيل الخروج</string>
+    <string name="about_im">حول تنسنت يون Chat</string>
+    <string name="appkit_show_recent_calls">عرض سجل المكالمات</string>
+    <string name="appkit_recent_calls_tab_name">سجل المكالمات</string>
+    <string name="modify_birthday">تاريخ الميلاد</string>
+    <string name="modify_gender">الجنس</string>
+    <string name="modify_signature">التوقيع الشخصي</string>
+    <string name="demo_no_status">لا يوجد توقيع شخصي حاليًا</string>
+    <string name="modify_account">الحساب</string>
+    <string name="demo_profile_user_id">الحساب</string>
+    <string name="cancel_account">إلغاء الحساب</string>
+    <string name="cancel_account_alert_tip">هل أنت متأكد من أنك تريد إلغاء الحساب؟</string>
+    <string name="cancel_account_tip">بعد الإلغاء ، لن تتمكن من استخدام الحساب الحالي ، وسيتم حذف البيانات ذات الصلة ولا يمكن استردادها. الحساب الحالي %s </string>
+    <string name="cancel_account_error_msg">فشل إلغاء التسجيل، لم يتم العثور على رمز Token أو رقم الهاتف المرتبط بالحساب الحالي، يرجى تسجيل الدخول باستخدام رقم الهاتف المحمول.</string>
+    <string name="cancel_account_successful">تم الإلغاء بنجاح</string>
+
+    <string name="self_infomation_collection_list">قائمة جمع المعلومات الشخصية</string>
+    <string name="third_part_shared_list">قائمة مشاركة المعلومات من الأطراف الثالثة</string>
+
+    <string name="modify_theme">تغيير السمة</string>
+    <string name="light_theme">خفيف وسريع</string>
+    <string name="lively_theme">مشرق وحيوي</string>
+    <string name="serious_theme">عميق وجاد</string>
+    <string name="modify_language">تغيير اللغة</string>
+    <string name="modify_style">تغيير النمط</string>
+    <string name="style_classic">الإصدار الكلاسيكي</string>
+    <string name="style_minimalist">الإصدار البسيط</string>
+
+    <string name="demo_language">الصينية المبسطة</string>
+    <string name="demo_theme_light">خفيف وسريع</string>
+    <string name="demo_signature_tag">التوقيع الشخصي:</string>
+    <string name="demo_account_tag">المعرف:</string>
+
+    <string name="demo_about_sdk_version">إصدار SDK</string>
+    <string name="demo_about_im">حول</string>
+    <string name="demo_contact_us">اتصل بنا</string>
+
+    <string name="demo_self_detail_gender_male">ذكر</string>
+    <string name="demo_self_detail_gender_female">أنثى</string>
+    <string name="demo_self_detail_gender_unknown">غير معروف</string>
+
+    <string name="demo_self_detail_modify_nickname">تعديل الاسم المستعار</string>
+    <string name="demo_self_detail_modify_signature">تعديل التوقيع الشخصي</string>
+    <string name="demo_self_detail_modify_gender">تعديل الجنس</string>
+    <string name="demo_profile_edit">تحرير</string>
+
+    <string name="demo_self_detail_modify_nickname_rule">يسمح فقط بالأحرف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>
+
+    <string name="conversation_title">تنسنت يون كلاود Chat</string>
+    <string name="contact_title">دليل الهاتف</string>
+    <string name="add_friend">إضافة صديق</string>
+    <string name="add_group">إضافة مجموعة</string>
+    <string name="start_conversation">بدء محادثة</string>
+    <string name="create_group_chat">إنشاء محادثة جماعية</string>
+    <string name="create_chat_room">إنشاء غرفة دردشة</string>
+    <string name="create_community">إنشاء مجتمع</string>
+    <string name="create_private_group">إنشاء مجموعة نقاش</string>
+
+    <string name="tab_contact_tab_text">دليل الهاتف</string>
+    <string name="tab_conversation_tab_text">الرسائل</string>
+    <string name="demo_tab_overseas_conversation_tab_text">الدردشة</string>
+    <string name="tab_profile_tab_text">أنا</string>
+    <string name="minimalist_tab_settings_tab_text">الإعدادات</string>
+    <string name="minimalist_tab_contacts_tab_text">جهات الاتصال</string>
+    <string name="tab_community_tab_text">المجتمع</string>
+
+    <string name="test_excluded_from_unread_count_action">الرسائل التي لا تحتسب في عدد الرسائل غير المقروءة</string>
+
+    <string name="privacy_text">لقد وافقت على <a href="http://privacy.qq.com/">سياسة الخصوصية</a></string>
+
+    <string name="no_support_msg">رسالة مخصصة غير مدعومة</string>
+    <string name="live">مباشر</string>
+    <string name="living">يبث حالياً</string>
+    <string name="stop_live">إنهاء البث المباشر</string>
+    <string name="http_error_invalid">يجب أن يبدأ اسم المستخدم بحرف ويتكون من 3-23 حرفًا من الأحرف والأرقام</string>
+    <string name="http_error_user">المستخدم موجود بالفعل</string>
+    <string name="http_error_server">خطأ في الخادم</string>
+    <string name="http_error_no_user">المستخدم غير موجود</string>
+    <string name="http_error_password">كلمة المرور غير صحيحة</string>
+    <string name="not_retry_more">لا تحاول الحصول على رمز التحقق بشكل متكرر</string>
+    <string name="input_phone">يرجى إدخال رقم هاتف صحيح</string>
+    <string name="verify_code_fail">فشل في الحصول على رمز التحقق:</string>
+    <string name="send_verify_code">تم إرسال رمز التحقق</string>
+    <string name="input_phone_code">يرجى إدخال رقم الهاتف ورمز التحقق</string>
+    <string name="login_fail_tip">فشل تسجيل الدخول:</string>
+    <string name="login_suc_tip">تم تسجيل الدخول بنجاح</string>
+    <string name="second">ثانية</string>
+    <string name="get_verify_code">الحصول على رمز التحقق</string>
+    <string name="permission_tip">لم يتم منح جميع الأذونات، قد لا يتمكن بعض الوظائف من العمل!</string>
+
+    <string name="logout_tip">هل أنت متأكد من أنك تريد تسجيل الخروج؟</string>
+
+    <string name="online_fail">فشل الاتصال بالشبكة</string>
+    <string name="online">متصل</string>
+    <string name="unknow_error">خطأ غير معروف</string>
+    <string name="you_app">تطبيقك</string>
+    <string name="low_version">الإصدار منخفض جدًا ولا يدعم فتح هذه الرسائل الغير متصلة</string>
+    <string name="call_timeout">انتهت مدة المكالمة</string>
+    <string name="call_notification">إشعار برسالة دعوة الصوت والفيديو</string>
+    <string name="background_tip">عندما يكون التطبيق في الخلفية، سيتم تنبيه المستخدم برسالة دعوة جديدة عبر شريط الإشعارات</string>
+    <string name="new_msg_notification">إشعار برسالة جديدة</string>
+    <string name="new_msg">تم استلام رسالة جديدة</string>
+    <string name="call_nos">لا يوجد استجابة للمكالمة</string>
+    <string name="login_password_tips">1-16 حرفًا (أحرف وأرقام)</string>
+    <string name="login_user_tips">يجب أن يبدأ الاسم بحرف ويتكون من 4-24 حرفًا من الأحرف والأرقام</string>
+
+    <string name="login_agree_privacy_regulations">\"سياسة الخصوصية\"</string>
+    <string name="login_agree_privacy_regulations_summary">\"ملخص سياسة الخصوصية\"</string>
+    <string name="login_agree_user_agreement">\"اتفاقية المستخدم\"</string>
+    <string name="login_agree_self_infomation_collection_list">\"قائمة جمع المعلومات الشخصية\"</string>
+    <string name="login_agree_third_part_shared_list">\"قائمة مشاركة المعلومات مع الأطراف الثالثة\"</string>
+
+    <string name="im_privacy">سياسة الخصوصية</string>
+    <string name="im_statement">إخلاء المسؤولية</string>
+    <string name="im_user_agreement">اتفام المستخدم</string>
+    <string name="im_statement_content">تعتبر تطبيقات تينسنت للتواصل الفوري (Chat) منتجات تجريبية تقدمها تينسنت كلاود، وتحتفظ تينسنت بحقوق النشر والملكية الكاملة لهذه المنتجات. يتم استخدام هذه المنتجات فقط لتجربة الوظائف ولا يجوز استخدامها لأي غرض تجاري. وتماشياً مع متطلبات الرقابة الحكومية ذات الصلة، يمنع بشدة نشر أي محتوى غير قانوني مثل الإباحية والإساءة والإرهاب والشؤون السياسية أثناء الاستخدام.</string>
+    <string name="im_privacy_tips">يرجى قراءة الاتفاقيات والموافقة عليها</string>
+    <string name="demo_im_privacy_dialog_tips">مرحبًا بك في تطبيق تينسنت للتواصل الفوري Chat، ولحماية سلامة معلوماتك الشخصية، قمنا بتحديث \"سياسة الخصوصية\"، وذلك لتحسين محتوى جمع المعلومات الخاصة بالمستخدمين وأغراضها، وزيادة استخدام SDK الخاص بالأطراف الثالثة وغيرها من المحتويات.\n\nيرجى النقر على \"اتفاقية المستخدم\" و\"ملخص سياسة الخصوصية\" و\"سياسة الخصوصية\" و\"قائمة جمع المعلومات الشخصية\" و\"قائمة مشاركة المعلومات مع الأطراف الثالثة\" وقراءتها بعناية. إذا كنت توافق على هذه المحتويات، فيرجى النقر على \"موافق ومتابعة\" لبدء استخدام منتجاتنا وخدماتنا!</string>
+    <string name="demo_im_privacy_agree">موافق ومتابعة</string>
+    <string name="demo_im_privacy_refuse_and_exit">لا أوافق، الخروج</string>
+
+    <string name="get_verify_code_error">حدث خطأ في الحصول على رمز التحقق، يرجى إعادة المحاولة! (%d)</string>
+
+    <string name="modify_group_name">تعديل اسم المجموعة</string>
+    <string name="input_tip">لم يتم إدخال اسم المستخدم، يرجى إعادة الملء</string>
+    <string name="call_time_out">انتهت مدة المكالمة</string>
+
+    <string name="mark_all_message_as_read_succ">تم مسح جميع الرسائل غير المقروءة بنجاح</string>
+    <string name="mark_all_message_as_read_err_format">فشل مسح جميع الرسائل غير المقروءة، %d، %s</string>
+
+    <string name="demo_profile_detail">تفاصيل الملف الشخصي</string>
+    <string name="demo_profile_back">رجوع</string>
+
+    <string name="demo_message_read_switch_title">حالة قراءة الرسالة</string>
+    <string name="demo_message_read_switch_open_tip">هذه الميزة متاحة فقط في النسخة الفاخرة</string>
+    <string name="demo_message_read_switch_open_text">عند إيقاف هذه الميزة، لن تظهر حالة قراءة الرسالة عند إرسال واستلام الرسائل، ولن تتمكن من معرفة ما إذا قرأ الطرف الآخر الرسالة أم لا، وبالتالي الطرف الآخر لن يتمكن من معرفة ما إذا قرأت الرسالة أم لا.</string>
+    <string name="demo_message_read_switch_close_text">عند تشغيل هذه الميزة، ستظهر حالة قراءة الرسالة عند إرسال واستلام الرسائل في المحادثات الجماعية، وستتمكن من معرفة ما إذا قرأ الطرف الآخر الرسالة أم لا. إذا كان صديقك في المحادثة الفردية يستخدم هذه الميزة، فستظهر حالة قراءة الرسالة في المحادثة الفردية أيضًا.</string>
+
+    <string name="demo_choose_avatar">اختيار الصورة الرمزية</string>
+
+    <!--  صلاحيات ذات الصلة start -->
+    <string name="demo_permission_mic_reason_title"> %s تقدم بطلب للحصول على إذن الميكروفون</string>
+    <string name="demo_permission_mic_reason">لتسهيل إرسال الرسائل الصوتية وإجراء المكالمات الصوتية والفيديو واستخدام ميزة الاجتماعات السريعة، يرجى السماح لنا بالوصول إلى الميكروفون.</string>
+    <string name="demo_permission_camera_reason_title">%s تقدم بطلب للحصول على إذن الكاميرا</string>
+    <string name="demo_permission_camera_reason">لتسهيل التقاط الصور والفيديو لإرسالها إلى الأصدقاء وإجراء المكالمات الفيديو واستخدام ميزة الاجتماعات السريعة، يرجى السماح لنا بالوصول إلى الكاميرا.</string>
+    <string name="demo_permission_storage_reason_title">%s تقدم بطلب للحصول على إذن التخزين</string>
+    <string name="demo_permission_storage_reason">لتسهيل حفظ الصور والفيديو على الجهاز، يرجى السماح لنا بالكتابة على التخزين.</string>
+    <string name="demo_permission_mic_dialog_alert">يرجى تمكين صلاحية الميكروفون في الإعدادات - التطبيقات - %s - الأذونات لاستخدام الرسائل الصوتية والمكالمات الصوتية والفيديو وميزة الاجتماعات السريعة بشكل طبيعي</string>
+    <string name="demo_permission_camera_dialog_alert">يرجى تمكين صلاحية الكاميرا في الإعدادات - التطبيقات - %s - الأذونات لاستخدام التقاط الصور والفيديو والمكالمات الفيديو وميزة الاجتماعات السريعة بشكل طبيعي</string>
+    <string name="demo_permission_storage_dialog_alert">يرجى تمكين صلاحية التخزين في الإعدادات - التطبيقات - %s - الأذونات لاستخدام حفظ الصور والفيديو بشكل طبيعي</string>
+
+    <string name="upgrade_sure">ترقية الآن</string>
+    <string name="demo_user_status_switch_title">عرض حالة الاتصال</string>
+    <string name="demo_user_status_switch_on_text">عند إيقاف هذه الميزة، لن تتمكن من رؤية حالة اتصال الأصدقاء في قائمة المحادثات والدليل الهاتفي.</string>
+    <string name="demo_user_status_switch_off_text">عند تشغيل هذه الميزة، ستتمكن من رؤية حالة اتصال الأصدقاء في قائمة المحادثات والدليل الهاتفي.</string>
+    <string name="demo_user_status">حالة الاتصال</string>
+    <string name="demo_i_know">أنا أعلم</string>
+    <string name="demo_no_more_reminders">لا تذكرني مرة أخرى</string>
+    <string name="demo_im_flagship">نسخة فاخرة</string>
+    <string name="demo_buying_guidelines">توضيح الأسعار</string>
+    <string name="demo_im_flagship_edition_update_tip">هذه الميزة هي ميزة نسخة فاخرة من Chat، يمكن استخدامها بعد شراء حزمة النسخة الفاخرة، يرجى الرجوع إلى توضيح الأسعار للحصول على مزيد من المعلومات.</string>
+    <string name="demo_buying_tips">هذه الميزة هي ميزة نسخة فاخرة</string>
+
+    <string name="chat_security_warning">【تحذير أمني】يتم استخدام هذا التطبيق فقط لتجربة منتجات Tencent Cloud Chat ولا يمكن استخدامه للتفاوض التجاري والتوسع. يرجى عدم الوثوق بالرسائل التي تتعلق بالمدفوعات أو الفوز بجوائز وعدم الاتصال بأرقام الهواتف الغريبة بسهولة، وتجنب الوقوع في الخداع.</string>
+    <string name="chat_security_warning_report">الإبلاغ عن ذلك هنا</string>
+
+
+    <string name="change_theme">تغيير الجلد</string>
+    <string name="change_style">اختر النمط</string>
+    <string name="app_title">الاتصال الفوري</string>
+    <string name="app_title_content">مرحبًا بك في استخدام هذا التطبيق لتجربة منتجات Tencent Cloud Chat</string>
+    <string name="button_enter">الدخول إلى Chat</string>
+    <string name="demo_style_sub_title">تبديل نمط Chat الحصري</string>
+    <string name="demo_ui_title">اختر الجلد</string>
+    <string name="demo_ui_sub_title">تبديل سمة Chat الحصرية</string>
+    <string name="im_about_detail">مرحبًا بك في استخدام هذا التطبيق لتجربة منتجات وخدمات المراسلة الفورية ، مثل إرسال رسائل نصية / رموز / رسائل وسائط غنية ، والرد على الرسائل ، واستجابة الرموز ، وحالة قراءة الرسائل ، وسلسلة علاقات الأصدقاء والوظائف الأخرى. في الوقت نفسه ، نوفر لك 3 أصدقاء روبوت لن يردوا بشكل افتراضي.يمكنك مباشرة بدء الدردشات الفردية وجلسات الدردشة الجماعية وتجربة إدارة المجموعة والوظائف الأخرى.</string>
+    <string name="im_about_title_time">1 دقيقة</string>
+    <string name="im_about_subtitle_time">قم بتغيير سطري الكود، وجرب التطبيق الديمو في دقيقة واحدة</string>
+    <string name="im_about_title_custom">10000+</string>
+    <string name="im_about_subtitle_custom">أكثر من 10،000 عميل يتم خدمتهم شهريًا</string>
+    <string name="im_about_title_success">99.99٪</string>
+    <string name="im_about_subtitle_success">معدل نجاح إرسال واستلام الرسائل وموثوقية الخدمة أعلى من ٪99.99</string>
+    <string name="im_about_title_mau">10 مليارات +</string>
+    <string name="im_about_subtitle_mau">أكثر من 10 مليارات مستخدم نشط شهريًا</string>
+    <string name="im_about_known">معروف</string>
+</resources>

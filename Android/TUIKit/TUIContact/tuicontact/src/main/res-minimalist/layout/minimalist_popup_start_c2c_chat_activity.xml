@@ -30,6 +30,7 @@
                 android:layout_weight="0.33"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
                 android:textSize="16sp"
                 android:textColor="#0365F9"
                 android:text="@string/cancel"

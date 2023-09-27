@@ -19,24 +19,34 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
+import com.tencent.qcloud.tuikit.tuichat.model.ChatFileDownloadProvider;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+
+import java.util.Locale;
 
 public class FileMessageHolder extends MessageContentHolder {
+    private static final String TAG = "FileMessageHolder";
     private TextView fileNameText;
     private TextView fileSizeText;
     private TextView fileStatusText;
 
     private ProgressPresenter.ProgressListener progressListener;
     private NetworkConnectionListener networkConnectionListener;
+    private TUIValueCallback downloadCallback;
 
     private ProgressDrawable progressDrawable;
     private Drawable normalBackground;
@@ -56,28 +66,27 @@ public class FileMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
-        msgArea.setPadding(0, 0, 0, 0);
         msgId = msg.getId();
         reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.chat_react_other_text_color));
         if (isForwardMode || isReplyDetailMode) {
-            msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+            setMessageBubbleBackground(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);
         } else {
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    msgArea.setBackground(properties.getRightBubble().getConstantState().newDrawable());
+                    setMessageBubbleBackground(properties.getRightBubble().getConstantState().newDrawable());
                 } else {
-                    msgArea.setBackgroundResource(R.drawable.chat_bubble_self_cavity_bg);
+                    setMessageBubbleBackground(R.drawable.chat_bubble_self_cavity_bg);
                 }
             } else {
                 if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    msgArea.setBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                    setMessageBubbleBackground(properties.getLeftBubble().getConstantState().newDrawable());
                 } else {
-                    msgArea.setBackgroundResource(R.drawable.chat_bubble_other_cavity_bg);
+                    setMessageBubbleBackground(R.drawable.chat_bubble_other_cavity_bg);
                 }
             }
         }
-        normalBackground = msgArea.getBackground();
+        normalBackground = getMessageBubbleBackground();
 
         progressListener = new ProgressPresenter.ProgressListener() {
             @Override
@@ -88,7 +97,8 @@ public class FileMessageHolder extends MessageContentHolder {
 
         sendingProgress.setVisibility(View.GONE);
         FileMessageBean message = (FileMessageBean) msg;
-        final String path = message.getDataPath();
+        final String path = ChatFileDownloadPresenter.getFilePath(message);
+        boolean isFileExists = FileUtil.isFileExists(path);
         fileNameText.setText(message.getFileName());
         String size = FileUtil.formatFileSize(message.getFileSize());
         final String fileName = message.getFileName();
@@ -97,7 +107,7 @@ public class FileMessageHolder extends MessageContentHolder {
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
+                    if (isFileExists) {
                         FileUtil.openFile(path, fileName);
                     }
                 }
@@ -113,42 +123,50 @@ public class FileMessageHolder extends MessageContentHolder {
             });
         }
 
-        if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS && message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADED) {
-            fileStatusText.setText(R.string.sended);
-        } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
-            fileStatusText.setText(R.string.sending);
-        } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-            fileStatusText.setText(R.string.send_failed);
-        } else {
-            if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADING) {
-                fileStatusText.setText(R.string.downloading);
-            } else if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
-                if (!message.isSelf()) {
-                    fileStatusText.setText(R.string.downloaded);
+        if (isFileExists) {
+            String selfPath = ChatFileDownloadProvider.getFileSelfPath(message);
+            // send from current device
+            if (FileUtil.isFileExists(selfPath)) {
+                if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS) {
+                    fileStatusText.setText(R.string.sended);
+                } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
+                    fileStatusText.setText(R.string.sending);
+                } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+                    fileStatusText.setText(R.string.send_failed);
                 } else {
                     fileStatusText.setText(R.string.sended);
                 }
-            } else if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_UN_DOWNLOAD) {
+            } else {
+                fileStatusText.setText(R.string.downloaded);
+            }
+        } else {
+            if (ChatFileDownloadPresenter.isDownloading(path)) {
+                fileStatusText.setText(R.string.downloading);
+            } else {
                 fileStatusText.setText(R.string.un_download);
             }
         }
 
-        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_UN_DOWNLOAD) {
+        if (!isFileExists) {
             if (isMultiSelectMode) {
                 return;
             }
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadFile(message, path, fileName, true);
+                    downloadFile(message);
                 }
             });
+            if (ChatFileDownloadPresenter.isDownloading(path)) {
+                downloadFile(message);
+            }
         }
         networkConnectionListener = new NetworkConnectionListener() {
             @Override
             public void onConnected() {
-                if (message.getDownloadStatus() == FileMessageBean.MSG_STATUS_DOWNLOADING) {
-                    downloadFile(message, path, fileName, false);
+                String filePath = ChatFileDownloadPresenter.getFilePath(message);
+                if (!FileUtil.isFileExists(filePath) && message.isDownloading()) {
+                    downloadFile(message);
                 }
             }
         };
@@ -156,18 +174,14 @@ public class FileMessageHolder extends MessageContentHolder {
         ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
     }
 
-    private void downloadFile(FileMessageBean message, String path, String fileName, boolean isUserClick) {
-        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
+    private void downloadFile(FileMessageBean message) {
+        String path = ChatFileDownloadPresenter.getFilePath(message);
+        if (FileUtil.isFileExists(path)) {
             return;
         }
-
-        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADING && isUserClick) {
-            return;
-        }
-
-        message.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADING);
+        message.setDownloading(true);
         fileStatusText.setText(R.string.downloading);
-        message.downloadFile(path, new FileMessageBean.FileDownloadCallback() {
+        downloadCallback = new TUIValueCallback() {
             @Override
             public void onProgress(long currentSize, long totalSize) {
                 int progress = (int) (currentSize * 100 / totalSize);
@@ -176,29 +190,23 @@ public class FileMessageHolder extends MessageContentHolder {
 
             @Override
             public void onError(int code, String desc) {
-                ToastUtil.toastLongMessage("getToFile fail:" + code + "=" + desc);
-                fileStatusText.setText(R.string.un_download);
+                TUIChatLog.e(TAG, String.format(Locale.US, "download file %s failed code %d,message %s", path, code, desc));
+                ToastUtil.toastLongMessage(ErrorMessageConverter.convertIMError(code, desc));
+                if (mAdapter != null) {
+                    mAdapter.onItemRefresh(message);
+                }
             }
 
             @Override
-            public void onSuccess() {
-                message.setDataPath(path);
-                if (!message.isSelf()) {
-                    fileStatusText.setText(R.string.downloaded);
-                } else {
-                    fileStatusText.setText(R.string.sended);
+            public void onSuccess(Object obj) {
+                message.setDownloading(false);
+                updateProgress(100, message);
+                if (mAdapter != null) {
+                    mAdapter.onItemRefresh(message);
                 }
-                message.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
-                msgContentFrame.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (message.getDownloadStatus() == TUIMessageBean.MSG_STATUS_DOWNLOADED) {
-                            FileUtil.openFile(path, fileName);
-                        }
-                    }
-                });
             }
-        });
+        };
+        ChatFileDownloadPresenter.downloadFile(message, downloadCallback);
     }
 
     private void updateProgress(int progress, TUIMessageBean msg) {
@@ -206,31 +214,21 @@ public class FileMessageHolder extends MessageContentHolder {
             return;
         }
 
-        if (!msg.isSelf()) {
-            fileStatusText.setText(R.string.downloading);
-        } else {
+        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             fileStatusText.setText(R.string.sending);
+        } else {
+            fileStatusText.setText(R.string.downloading);
         }
 
-        msg.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADING);
         if (progress == 0 || progress == 100) {
-            msgArea.setBackground(normalBackground);
+            setMessageBubbleBackground(normalBackground);
             if (progressDrawable != null) {
                 progressDrawable.setProgress(0);
-            }
-
-            if (progress == 100) {
-                if (!msg.isSelf()) {
-                    fileStatusText.setText(R.string.downloaded);
-                } else {
-                    fileStatusText.setText(R.string.sended);
-                }
-                msg.setDownloadStatus(TUIMessageBean.MSG_STATUS_DOWNLOADED);
             }
             return;
         }
 
-        Drawable drawable = msgArea.getBackground();
+        Drawable drawable = getMessageBubbleBackground();
         if (drawable != null) {
             if (progressDrawable == null) {
                 progressDrawable = new ProgressDrawable();
@@ -241,11 +239,11 @@ public class FileMessageHolder extends MessageContentHolder {
                 progressDrawable.setBorderColor(context.getResources().getColor(R.color.chat_message_bubble_bg_stoke_color));
                 progressDrawable.setSelf(msg.isSelf());
                 progressDrawable.setBackgroundDrawable(drawable);
-                msgArea.setBackground(progressDrawable);
+                setMessageBubbleBackground(progressDrawable);
             } else {
                 progressDrawable.setProgress(progress);
-                msgArea.setBackground(progressDrawable);
-                msgArea.getBackground().invalidateSelf();
+                setMessageBubbleBackground(progressDrawable);
+                getMessageBubbleBackground().invalidateSelf();
             }
         }
     }
@@ -290,6 +288,7 @@ public class FileMessageHolder extends MessageContentHolder {
         private final Path solidPath = new Path();
         private final Path highLightPath = new Path();
         private final float borderWidth = ScreenUtil.dip2px(0.96f);
+        private final boolean isRTL;
 
         ProgressDrawable() {
             paint = new Paint();
@@ -303,6 +302,7 @@ public class FileMessageHolder extends MessageContentHolder {
             highLightPaint.setAntiAlias(true);
             highLightPaint.setStyle(Paint.Style.FILL);
             highLightPaint.setColor(Color.TRANSPARENT);
+            isRTL = LayoutUtil.isRTL();
         }
 
         public void setPaintColor(int color) {
@@ -342,10 +342,19 @@ public class FileMessageHolder extends MessageContentHolder {
             float[] radius;
             float normalRadius = ScreenUtil.dip2px(10.96f);
             float specialRadius = ScreenUtil.dip2px(2.19f);
+            float[] selfRadius = new float[] {normalRadius, normalRadius, specialRadius, specialRadius, normalRadius, normalRadius, normalRadius, normalRadius};
+            float[] otherRadius =
+                new float[] {specialRadius, specialRadius, normalRadius, normalRadius, normalRadius, normalRadius, normalRadius, normalRadius};
             if (isSelf) {
-                radius = new float[] {normalRadius, normalRadius, specialRadius, specialRadius, normalRadius, normalRadius, normalRadius, normalRadius};
+                radius = selfRadius;
+                if (isRTL) {
+                    radius = otherRadius;
+                }
             } else {
-                radius = new float[] {specialRadius, specialRadius, normalRadius, normalRadius, normalRadius, normalRadius, normalRadius, normalRadius};
+                radius = otherRadius;
+                if (isRTL) {
+                    radius = selfRadius;
+                }
             }
             rectPath.reset();
             solidPath.reset();
@@ -357,7 +366,11 @@ public class FileMessageHolder extends MessageContentHolder {
             highLightPath.set(rectPath);
             canvas.drawPath(rectPath, borderPaint);
             int solidWidth = width * progress / 100;
-            solidPath.addRect(new RectF(borderWidth / 2, borderWidth / 2, solidWidth - borderWidth / 2, height - borderWidth / 2), Path.Direction.CW);
+            if (isRTL) {
+                solidPath.addRect(new RectF(width - solidWidth, borderWidth / 2, width - borderWidth / 2, height - borderWidth / 2), Path.Direction.CW);
+            } else {
+                solidPath.addRect(new RectF(borderWidth / 2, borderWidth / 2, solidWidth - borderWidth / 2, height - borderWidth / 2), Path.Direction.CW);
+            }
             rectPath.op(solidPath, Path.Op.INTERSECT);
             canvas.drawPath(rectPath, paint);
             canvas.drawPath(highLightPath, highLightPaint);

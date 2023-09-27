@@ -28,6 +28,7 @@
         android:layout_toStartOf="@id/more_conversation_arrow"
         android:ellipsize="end"
         android:singleLine="true"
+        android:textAlignment="viewStart"
         android:background="#FFFFFF"
         android:layout_centerVertical="true"
         android:text="@string/more_conversation_label"
@@ -43,7 +44,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
         android:background="#FFFFFF"
-        android:src="@drawable/search_minimalist_forward_icon" />
+        android:src="@drawable/search_minimalist_forward_icon_drawable" />
 
     <View
         android:layout_width="match_parent"

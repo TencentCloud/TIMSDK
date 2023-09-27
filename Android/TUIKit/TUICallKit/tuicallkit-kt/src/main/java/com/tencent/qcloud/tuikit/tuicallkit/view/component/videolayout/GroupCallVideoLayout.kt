@@ -58,21 +58,21 @@ class GroupCallVideoLayout(context: Context) : BaseCallView(context) {
             }
             videoView?.layoutParams = paramList[index]
             addView(videoView)
-            if (index == 0) {
-                if (!viewModel.isCameraOpen.get() && TUICallDefine.MediaType.Video == viewModel.mediaType.get()) {
+            if (TUICallDefine.MediaType.Video == viewModel.mediaType.get()) {
+                if (index == 0 && !viewModel.isCameraOpen.get()) {
                     user.videoAvailable.set(true)
                     CallEngineManager.instance.openCamera(
                         viewModel.isFrontCamera.get(),
                         videoView?.getVideoView(),
                         null
                     )
+                } else {
+                    CallEngineManager.instance.startRemoteView(
+                        user.id,
+                        videoView?.getVideoView(),
+                        null
+                    )
                 }
-            } else {
-                CallEngineManager.instance.startRemoteView(
-                    user.id,
-                    videoView?.getVideoView(),
-                    null
-                )
             }
         }
     }

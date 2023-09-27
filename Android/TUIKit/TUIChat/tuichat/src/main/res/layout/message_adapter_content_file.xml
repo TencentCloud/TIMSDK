@@ -3,10 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:maxWidth="200dp"
-    android:paddingTop="9.6dp"
-    android:paddingBottom="9.6dp"
-    android:paddingLeft="11.52dp"
-    android:paddingRight="11.52dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:layout_width="wrap_content"
@@ -27,16 +25,17 @@
             android:textColor="@color/black"
             android:textSize="15.36sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="8dp">
 
             <TextView
                 android:id="@+id/file_size_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_weight="1"
                 android:textColor="#888888"
                 android:textSize="13sp" />
 
@@ -46,17 +45,13 @@
                 android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_toEndOf="@id/file_size_tv"
                 android:includeFontPadding="false"
                 android:text="@string/un_download"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="#888888"
-                android:textSize="13sp"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/file_size_tv" />
-        </RelativeLayout>
+                android:textSize="13sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -64,7 +59,7 @@
         android:id="@+id/file_icon_iv"
         android:layout_width="30dp"
         android:layout_height="38dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:scaleType="fitXY"
         android:src="@drawable/file_icon"/>
 

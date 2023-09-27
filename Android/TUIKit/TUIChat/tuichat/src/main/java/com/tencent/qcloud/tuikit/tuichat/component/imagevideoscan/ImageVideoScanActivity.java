@@ -38,7 +38,7 @@ public class ImageVideoScanActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.image_video_scan_layout);
+        setContentView(R.layout.tuichat_image_video_scan_layout);
 
         mIsForwardMode = getIntent().getBooleanExtra(TUIChatConstants.FORWARD_MODE, false);
         if (mIsForwardMode) {
@@ -61,7 +61,7 @@ public class ImageVideoScanActivity extends Activity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        setContentView(R.layout.image_video_scan_layout);
+        setContentView(R.layout.tuichat_image_video_scan_layout);
         initView();
         initData();
     }

@@ -7,19 +7,26 @@ import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCaller
 import com.tencent.qcloud.tuicore.TUIConstants
+import com.tencent.qcloud.tuicore.TUIConstants.TUICalling.ObjectFactory.RecentCalls
 import com.tencent.qcloud.tuicore.TUICore
-import com.tencent.qcloud.tuicore.interfaces.*
+import com.tencent.qcloud.tuicore.interfaces.ITUIExtension
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification
+import com.tencent.qcloud.tuicore.interfaces.ITUIService
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo
+import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit.Companion.createInstance
+import com.tencent.qcloud.tuikit.tuicallkit.extensions.recents.RecentCallsFragment
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
-class TUICallKitService private constructor(context: Context) : ITUINotification, ITUIService, ITUIExtension {
+class TUICallKitService private constructor(context: Context) : ITUINotification, ITUIService, ITUIExtension,
+    ITUIObjectFactory {
     private var appContext: Context
 
     init {
@@ -39,14 +46,21 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         TUICore.registerExtension(TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID, this)
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, this)
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.MINIMALIST_EXTENSION_ID, this)
+
+
+        TUICore.registerObjectFactory(TUIConstants.TUICalling.ObjectFactory.FACTORY_NAME, this)
     }
 
-    override fun onNotifyEvent(key: String, subKey: String, param: Map<String, Any>?) {
+    override fun onNotifyEvent(key: String?, subKey: String?, param: Map<String, Any>?) {
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(subKey)) {
+            return
+        }
         if (TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED == key
             && TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT == subKey
         ) {
             TUICallKit.createInstance(appContext)
             adaptiveComponentReport()
+            setExcludeFromHistoryMessage()
         }
     }
 
@@ -71,6 +85,22 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         }
     }
 
+    private fun setExcludeFromHistoryMessage() {
+        if (TUICore.getService(TUIConstants.TUIChat.SERVICE_NAME) == null) {
+            return
+        }
+        try {
+            val params = JSONObject()
+            params.put("excludeFromHistoryMessage", false)
+            val jsonObject = JSONObject()
+            jsonObject.put("api", "setExcludeFromHistoryMessage")
+            jsonObject.put("params", params)
+            TUICallEngine.createInstance(appContext).callExperimentalAPI(jsonObject.toString())
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     companion object {
         private const val TAG = "TUICallKitService"
         private const val CALL_MEMBER_LIMIT = 9
@@ -80,8 +110,7 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         }
     }
 
-    override fun onGetExtension(extensionID: String, param: Map<String?, Any?>?): List<TUIExtensionInfo?>? {
-        Log.i(TAG, "onGetExtension, extensionID: $extensionID ,param: $param")
+    override fun onGetExtension(extensionID: String?, param: Map<String?, Any?>?): List<TUIExtensionInfo?>? {
         if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID)) {
             return getClassicChatInputMoreExtension(param)
         } else if (TextUtils.equals(
@@ -165,7 +194,7 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         override fun onClicked(param: Map<String, Any>?) {
             if (!TextUtils.isEmpty(groupID)) {
                 var groupMemberSelectActivityName =
-                        TUIConstants.TUIContact.StartActivity.GroupMemberSelect.CLASSIC_ACTIVITY_NAME
+                    TUIConstants.TUIContact.StartActivity.GroupMemberSelect.CLASSIC_ACTIVITY_NAME
                 if (!isClassicUI) {
                     groupMemberSelectActivityName =
                         TUIConstants.TUIContact.StartActivity.GroupMemberSelect.MINIMALIST_ACTIVITY_NAME
@@ -179,7 +208,7 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
                 ) { result: ActivityResult ->
                     val data = result.data
                     if (data != null) {
-                        val stringList: List<String?> = data.getStringArrayListExtra(
+                        val stringList: ArrayList<String>? = data.getStringArrayListExtra(
                             TUIConstants.TUIContact.StartActivity.GroupMemberSelect.DATA_LIST
                         )
                         TUICallKit.createInstance(appContext).groupCall(groupID!!, stringList, mediaType!!)
@@ -325,8 +354,11 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         return defaultValue
     }
 
-    override fun onCall(method: String, param: Map<String?, Any?>?): Any? {
+    override fun onCall(method: String?, param: Map<String?, Any?>?): Any? {
         Log.i(TAG, "onCall, method: $method ,param: $param")
+        if (TextUtils.isEmpty(method)) {
+            return null
+        }
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, method)) {
             val enableFloatWindow = param[TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW] as Boolean
             Log.i(TAG, "onCall, enableFloatWindow: $enableFloatWindow")
@@ -361,6 +393,17 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
             } else {
                 Log.e(TAG, "onCall ignored, groupId is empty and userList is not 1, cannot start call or groupCall")
             }
+        }
+        return null
+    }
+
+    override fun onCreateObject(objectName: String?, param: MutableMap<String?, Any?>?): Any? {
+        if (TextUtils.equals(objectName, RecentCalls.OBJECT_NAME)) {
+            var style = RecentCalls.UI_STYLE_MINIMALIST
+            if (param != null && param[RecentCalls.UI_STYLE] != null && RecentCalls.UI_STYLE_CLASSIC == param[RecentCalls.UI_STYLE]!!) {
+                style = RecentCalls.UI_STYLE_CLASSIC
+            }
+            return RecentCallsFragment(style)
         }
         return null
     }

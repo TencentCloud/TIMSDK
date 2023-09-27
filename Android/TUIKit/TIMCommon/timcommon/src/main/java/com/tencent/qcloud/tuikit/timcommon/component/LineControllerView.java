@@ -12,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import com.tencent.qcloud.tuikit.timcommon.R;
-import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 
 /**
  * Custom LineControllerView
@@ -36,7 +38,7 @@ public class LineControllerView extends RelativeLayout {
 
     public LineControllerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.line_controller_view, this);
+        LayoutInflater.from(context).inflate(R.layout.timcommon_line_controller_view, this);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.LineControllerView, 0, 0);
         try {
             mName = ta.getString(R.styleable.LineControllerView_name);
@@ -61,8 +63,12 @@ public class LineControllerView extends RelativeLayout {
         bottomLine.setVisibility(mIsBottom ? VISIBLE : GONE);
         topLine.setVisibility(mIsTop ? VISIBLE : GONE);
         mNavArrowView = findViewById(R.id.rightArrow);
+        Drawable arrowDrawable = mNavArrowView.getDrawable();
+        if (arrowDrawable != null) {
+            DrawableCompat.setAutoMirrored(arrowDrawable, true);
+        }
         mNavArrowView.setVisibility(mIsJump ? VISIBLE : GONE);
-        RelativeLayout contentLayout = findViewById(R.id.contentText);
+        ViewGroup contentLayout = findViewById(R.id.contentText);
         contentLayout.setVisibility(mIsSwitch ? GONE : VISIBLE);
         mSwitchView = findViewById(R.id.btnSwitch);
         mSwitchView.setVisibility(mIsSwitch ? VISIBLE : GONE);
@@ -97,16 +103,8 @@ public class LineControllerView extends RelativeLayout {
         this.mIsJump = canNav;
         mNavArrowView.setVisibility(canNav ? VISIBLE : GONE);
         if (canNav) {
-            ViewGroup.LayoutParams params = mContentText.getLayoutParams();
-            params.width = ScreenUtil.getPxByDp(120);
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mContentText.setLayoutParams(params);
             mContentText.setTextIsSelectable(false);
         } else {
-            ViewGroup.LayoutParams params = mContentText.getLayoutParams();
-            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mContentText.setLayoutParams(params);
             mContentText.setTextIsSelectable(true);
         }
     }
@@ -125,10 +123,16 @@ public class LineControllerView extends RelativeLayout {
 
     public void setMask(boolean enableMask) {
         if (enableMask) {
-            mMask.setVisibility(View.VISIBLE);
+            mNameText.setEnabled(false);
+            mContentText.setEnabled(false);
+            mNameText.setTextColor(getResources().getColor(R.color.text_color_gray));
+            mContentText.setTextColor(getResources().getColor(R.color.text_color_gray));
             mSwitchView.setEnabled(false);
         } else {
-            mMask.setVisibility(View.GONE);
+            mNameText.setEnabled(true);
+            mContentText.setEnabled(true);
+            mNameText.setTextColor(getResources().getColor(R.color.core_line_controller_title_color));
+            mContentText.setTextColor(getResources().getColor(R.color.core_line_controller_content_color));
             mSwitchView.setEnabled(true);
         }
     }

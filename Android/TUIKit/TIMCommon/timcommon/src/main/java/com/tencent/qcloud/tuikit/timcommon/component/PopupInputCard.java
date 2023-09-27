@@ -40,7 +40,7 @@ public class PopupInputCard {
     private ByteLengthFilter lengthFilter = new ByteLengthFilter();
 
     public PopupInputCard(Activity activity) {
-        View popupView = LayoutInflater.from(activity).inflate(R.layout.layout_popup_card, null);
+        View popupView = LayoutInflater.from(activity).inflate(R.layout.timcommon_layout_popup_card, null);
         titleTv = popupView.findViewById(R.id.popup_card_title);
         editText = popupView.findViewById(R.id.popup_card_edit);
         descriptionTv = popupView.findViewById(R.id.popup_card_description);

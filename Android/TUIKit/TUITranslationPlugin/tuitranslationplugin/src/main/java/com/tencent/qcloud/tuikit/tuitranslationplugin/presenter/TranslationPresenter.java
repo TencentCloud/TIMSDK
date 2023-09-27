@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuitranslationplugin.presenter;
 
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -57,5 +58,17 @@ public class TranslationPresenter {
         param.put(TUIChatConstants.MESSAGE_BEAN, messageBean);
         param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
         TUICore.notifyEvent(TUIConstants.TUITranslationPlugin.EVENT_KEY_TRANSLATION_EVENT, TUIConstants.TUITranslationPlugin.EVENT_SUB_KEY_TRANSLATION_CHANGED, param);
+    }
+
+    public int getTranslationStatus(V2TIMMessage v2TIMMessage) {
+        return provider.getTranslationStatus(v2TIMMessage);
+    }
+
+    public void setTranslationStatus(V2TIMMessage v2TIMMessage, int status) {
+        provider.setTranslationStatus(v2TIMMessage, status);
+    }
+
+    public String getTranslationText(V2TIMMessage v2TIMMessage) {
+        return provider.getTranslationText(v2TIMMessage);
     }
 }

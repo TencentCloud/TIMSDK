@@ -19,7 +19,7 @@
 
     <FrameLayout
         android:id="@+id/msg_content"
-        android:layout_toRightOf="@id/user_icon"
+        android:layout_toEndOf="@id/user_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/chat_message_popup_stroke_border_left"
@@ -37,14 +37,14 @@
 
     <!-- translation content area -->
     <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
-        android:id="@+id/translate_content_fl"
+        android:id="@+id/bottom_content_fl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/user_icon"
+        android:layout_toEndOf="@id/user_icon"
         android:layout_below="@id/msg_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/translation_area_bg"
+        android:background="@drawable/bottom_area_bg"
         app:maxWidth="@dimen/chat_message_content_max_width"
         android:visibility="gone"
         tools:visibility="visible"/>

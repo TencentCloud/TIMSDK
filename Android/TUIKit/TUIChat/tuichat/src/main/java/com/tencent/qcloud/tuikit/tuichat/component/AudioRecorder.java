@@ -71,7 +71,7 @@ public class AudioRecorder {
                         onRecordCompleted(true);
                         ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_limit_tips));
                     }
-                }, TUIChatConfigs.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000);
+                }, (TUIChatConfigs.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000) - 200);
                 return;
 
             case TUIConstants.TUICalling.ERROR_STATUS_IN_CALL:
@@ -198,7 +198,7 @@ public class AudioRecorder {
                     onRecordCompleted(true);
                     ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.record_limit_tips));
                 }
-            }, TUIChatConfigs.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000);
+            }, (TUIChatConfigs.getConfigs().getGeneralConfig().getAudioRecordMaxTime() * 1000) - 200);
             updateMicStatus();
         } catch (Exception e) {
             TUIChatLog.w(TAG, "startRecord failed", e);

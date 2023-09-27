@@ -15,7 +15,11 @@
     <string name="revoke_action">Recall</string>
     <string name="resend_action">Resend</string>
     <string name="hide_action">Hide</string>
+    <string name="chat_speaker_mode_on_action">Turn on Speaker</string>
+    <string name="chat_speaker_mode_off_action">Play on Ear</string>
 
+    <string name="chat_speaker_mode_on_tip">Speaker Mode On</string>
+    <string name="chat_speaker_mode_off_tip">Speaker Mode off</string>
     <string name="copy_success_tip">Copy Success</string>
 
     <string name="chat_message_detail">Message details</string>
@@ -87,23 +91,23 @@
     <string name="create_group">Create Group</string>
     <string name="create_community">Create Community</string>
     <string name="etc">, etc.</string>
-    <string name="join_group">Join Group</string>
-    <string name="invite_joined_group">is invited to the group.</string>
-    <string name="quit_group">Leave Group</string>
-    <string name="kick_group_tip">is removed from the group.</string>
-    <string name="be_group_manager">is set as admin.</string>
-    <string name="cancle_group_manager">\'s admin status is terminated.</string>
-    <string name="modify_group_name_is">Change the group name to</string>
-    <string name="modify_notice">Change the group notice to</string>
-    <string name="modify_introduction">Change the group introduction to</string>
-    <string name="modify_shut_up_all">Mute All</string>
-    <string name="modify_cancel_shut_up_all">Unmute All</string>
-    <string name="move_owner">Transfer group ownership to</string>
-    <string name="modify_group_avatar">changed the group profile photo.</string>
-    <string name="banned">is blocked from posting</string>
-    <string name="cancle_banned">is unblocked and can post now</string>
-    <string name="modify_group_add_opt">changed group add option to </string>
-    <string name="modify_group_invite_opt">changed group inviting option to </string>
+    <string name="join_group">%s joined the group</string>
+    <string name="invite_joined_group">%s invited %s to join the group</string>
+    <string name="quit_group">%s left the group</string>
+    <string name="kick_group_tip">%s has removed %s from the group</string>
+    <string name="be_group_manager">%s was promoted to group manager</string>
+    <string name="cancle_group_manager">%s was demoted from group manager</string>
+    <string name="modify_group_name_is">%s changed the group name to %s</string>
+    <string name="modify_notice">%s changed the group notice to %s</string>
+    <string name="modify_introduction">%s changed the group introduction to %s</string>
+    <string name="modify_shut_up_all">%s muted all members</string>
+    <string name="modify_cancel_shut_up_all">%s unmuted all members</string>
+    <string name="move_owner">%s transferred group ownership to %s</string>
+    <string name="modify_group_avatar">%s changed the group avatar</string>
+    <string name="banned">%s was muted for %s</string>
+    <string name="cancle_banned">%s was unmuted</string>
+    <string name="modify_group_add_opt">%s changed the group join setting to %s</string>
+    <string name="modify_group_invite_opt">%s changed the group invitation setting to %s</string>
     <string name="group_add_opt_auto_approval">Auto Approval</string>
     <string name="group_add_opt_admin_approve">Admin Approval</string>
     <string name="group_add_opt_join_disable">Prohibited from Joining</string>
@@ -191,7 +195,7 @@
     <string name="test_custom_message">View Details>></string>
 
     <string name="test_custom_action">Custom</string>
-    <string name="welcome_tip">Welcome to Tencent Cloud Instant Messaging!</string>
+    <string name="welcome_tip">Welcome to Tencent Cloud Chat!</string>
 
     <string name="resend_tips">Are you sure you want to resend?</string>
     <string name="delete_tips">Are you sure you want to delete this message?</string>

@@ -38,9 +38,10 @@ public class TUIChatConstants {
     public static final String OPEN_MESSAGE_SCAN = "open_message_scan";
     public static final String OPEN_MESSAGES_SCAN_FORWARD = "open_messages_scan_forward";
 
-    public static final String FORWARD_MODE = "forward_mode"; // 0,onebyone;  1,merge;
+    public static final String FORWARD_MODE = "forward_mode"; // 0,onebyone;  1,merge;  2,new message;
     public static final int FORWARD_MODE_ONE_BY_ONE = 0;
     public static final int FORWARD_MODE_MERGE = 1;
+    public static final int FORWARD_MODE_NEW_MESSAGE = 2;
 
     public static final String SELECT_FRIENDS = "select_friends";
     public static final String GROUP_ID = "group_id";
@@ -77,6 +78,9 @@ public class TUIChatConstants {
     public static final int JSON_VERSION_1 = 1;
     public static final int JSON_VERSION_4 = 4;
     public static int version = JSON_VERSION_4;
+
+    public static final String CHAT_SETTINGS_SP_NAME = "chat_settings_sp";
+    public static final String CHAT_SP_KEY_SPEAKER_MODE_ON = "chat_sp_key_speaker_mode_on";
 
     public static String covert2HTMLString(String original) {
         return "\"<font color=\"#5B6B92\">" + original + "</font>\"";

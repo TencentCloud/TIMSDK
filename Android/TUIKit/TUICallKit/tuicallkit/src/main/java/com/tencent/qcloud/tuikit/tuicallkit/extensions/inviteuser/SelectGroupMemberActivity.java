@@ -49,6 +49,9 @@ public class SelectGroupMemberActivity extends AppCompatActivity {
 
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar_group);
+        if (toolbar.getNavigationIcon() != null) {
+            toolbar.getNavigationIcon().setAutoMirrored(true);
+        }
         toolbar.setNavigationOnClickListener(v -> finish());
         Button btnOK = findViewById(R.id.btn_group_ok);
         btnOK.setOnClickListener(v -> {

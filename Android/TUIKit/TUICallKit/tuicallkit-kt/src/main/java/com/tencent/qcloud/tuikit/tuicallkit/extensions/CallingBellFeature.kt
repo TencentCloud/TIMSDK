@@ -2,8 +2,10 @@ package com.tencent.qcloud.tuikit.tuicallkit.extensions
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.TextUtils
@@ -35,6 +37,7 @@ class CallingBellFeature(context: Context) {
                 TUICallDefine.Status.None -> {
                     stopRing()
                 }
+
                 TUICallDefine.Status.Waiting -> {
                     startRing()
                 }
@@ -90,12 +93,23 @@ class CallingBellFeature(context: Context) {
         }
 
         val afd = assetFileDescriptor
-        handler!!.post(Runnable {
+        handler?.post(Runnable {
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.stop()
             }
             mediaPlayer.reset()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val attrs = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+                mediaPlayer.setAudioAttributes(attrs)
+            }
+            var mAudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
+            mAudioManager?.mode = AudioManager.MODE_NORMAL
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+
             try {
                 if (null != afd) {
                     mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)

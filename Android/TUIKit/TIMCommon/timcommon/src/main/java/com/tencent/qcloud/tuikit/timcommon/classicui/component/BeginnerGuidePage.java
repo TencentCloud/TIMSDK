@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.timcommon.classicui.component;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,12 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
@@ -154,6 +158,7 @@ public class BeginnerGuidePage {
 
     public static void showBeginnerGuideThen(View view, Runnable runnable) {
         boolean isShowGuide = SPUtils.getInstance(TIMCommonConstants.CHAT_SETTINGS_SP_NAME).getBoolean(TIMCommonConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, true);
+        isShowGuide = isShowGuide && TextUtils.equals(TUIThemeManager.getInstance().getCurrentLanguage(), TUIThemeManager.LANGUAGE_ZH_CN);
         if (isShowGuide) {
             SoftKeyBoardUtil.hideKeyBoard(view.getWindowToken());
             SPUtils.getInstance(TIMCommonConstants.CHAT_SETTINGS_SP_NAME).put(TIMCommonConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, false);

@@ -1,18 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
-import android.net.Uri;
-import android.text.TextUtils;
-import com.tencent.imsdk.v2.V2TIMDownloadCallback;
-import com.tencent.imsdk.v2.V2TIMElem;
 import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
-import java.io.File;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +32,6 @@ public class ImageMessageBean extends TUIMessageBean {
      */
     public static final int IMAGE_TYPE_LARGE = V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE;
 
-    private String dataUri;
-    private String dataPath;
     private int imgWidth;
     private int imgHeight;
 
@@ -61,87 +54,14 @@ public class ImageMessageBean extends TUIMessageBean {
                 ImageBean imageBean = new ImageBean();
                 imageBean.setV2TIMImage(v2TIMImage);
                 imageBeans.add(imageBean);
+                if (imageBean.getType() == IMAGE_TYPE_THUMB) {
+                    imgWidth = imageBean.getWidth();
+                    imgHeight = imageBean.getHeight();
+                }
             }
             this.imageBeanList = imageBeans;
         }
-
-        String localPath = imageElem.getPath();
-        if (isSelf() && !TextUtils.isEmpty(localPath) && new File(localPath).exists()) {
-            dataPath = localPath;
-            int[] size = ImageUtil.getImageSize(localPath);
-            imgWidth = size[0];
-            imgHeight = size[1];
-        }
-        // 本地路径为空，可能为更换手机或者是接收的消息
-        // The local path is empty, it may be a phone change or a received message
-        else {
-            List<V2TIMImageElem.V2TIMImage> imgs = imageElem.getImageList();
-            for (int i = 0; i < imgs.size(); i++) {
-                V2TIMImageElem.V2TIMImage img = imgs.get(i);
-                if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
-                    imgWidth = img.getWidth();
-                    imgHeight = img.getHeight();
-                }
-                if (img.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
-                    final String path = ImageUtil.generateImagePath(img.getUUID(), V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB);
-                    File file = new File(path);
-                    if (file.exists()) {
-                        dataPath = path;
-                    }
-                }
-            }
-        }
         setExtra(TUIChatService.getAppContext().getString(R.string.picture_extra));
-    }
-
-    /**
-     * 获取多媒体消息的数据源
-     *
-     * Get the data source of the multimedia message
-     *
-     * @return
-     */
-    public Uri getDataUriObj() {
-        if (!TextUtils.isEmpty(dataUri)) {
-            return Uri.parse(dataUri);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 设置多媒体消息的数据源
-     *
-     * Set the data source of the multimedia message
-     *
-     * @param dataUri
-     */
-    public void setDataUri(Uri dataUri) {
-        if (dataUri != null) {
-            this.dataUri = dataUri.toString();
-        }
-    }
-
-    /**
-     * 获取多媒体消息的保存路径
-     *
-     * Get the save path of multimedia messages
-     *
-     * @return
-     */
-    public String getDataPath() {
-        return dataPath;
-    }
-
-    /**
-     * 设置多媒体消息的保存路径
-     *
-     * Set the save path of multimedia messages
-     *
-     * @param dataPath
-     */
-    public void setDataPath(String dataPath) {
-        this.dataPath = dataPath;
     }
 
     public void setImgHeight(int imgHeight) {
@@ -160,16 +80,17 @@ public class ImageMessageBean extends TUIMessageBean {
         return imgWidth;
     }
 
-    public void setImageElem(V2TIMImageElem imageElem) {
-        this.imageElem = imageElem;
-    }
-
-    public void setImageBeanList(List<ImageBean> imageBeanList) {
-        this.imageBeanList = imageBeanList;
-    }
-
     public List<ImageBean> getImageBeanList() {
         return imageBeanList;
+    }
+
+    public ImageBean getImageBean(int type) {
+        for (ImageBean imageBean : imageBeanList) {
+            if (imageBean.getType() == type) {
+                return imageBean;
+            }
+        }
+        return null;
     }
 
     public String getPath() {
@@ -230,41 +151,6 @@ public class ImageMessageBean extends TUIMessageBean {
                 return v2TIMImage.getWidth();
             }
             return 0;
-        }
-
-        public void downloadImage(String path, ImageDownloadCallback callback) {
-            if (v2TIMImage != null) {
-                v2TIMImage.downloadImage(path, new V2TIMDownloadCallback() {
-                    @Override
-                    public void onProgress(V2TIMElem.V2ProgressInfo progressInfo) {
-                        if (callback != null) {
-                            callback.onProgress(progressInfo.getCurrentSize(), progressInfo.getTotalSize());
-                        }
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        if (callback != null) {
-                            callback.onSuccess();
-                        }
-                    }
-
-                    @Override
-                    public void onError(int code, String desc) {
-                        if (callback != null) {
-                            callback.onError(code, desc);
-                        }
-                    }
-                });
-            }
-        }
-
-        public interface ImageDownloadCallback {
-            void onProgress(long currentSize, long totalSize);
-
-            void onSuccess();
-
-            void onError(int code, String desc);
         }
     }
 

@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:paddingTop="8.6dp"
     android:paddingBottom="8.6dp"
-    android:paddingLeft="15.36dp"
-    android:paddingRight="15.36dp">
+    android:paddingStart="15.36dp"
+    android:paddingEnd="15.36dp">
 
     <TextView
         android:id="@+id/message_top_time_tv"

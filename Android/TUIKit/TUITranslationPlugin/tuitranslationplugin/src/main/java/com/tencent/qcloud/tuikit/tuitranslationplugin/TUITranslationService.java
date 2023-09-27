@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -19,7 +22,10 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionActivit
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
+import com.tencent.qcloud.tuikit.tuitranslationplugin.model.TranslationProvider;
+import com.tencent.qcloud.tuikit.tuitranslationplugin.presenter.TranslationPresenter;
 import com.tencent.qcloud.tuikit.tuitranslationplugin.widget.TranslationMessageLayoutProxy;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +53,8 @@ public class TUITranslationService extends ServiceInitializer implements ITUIExt
     private void initExtension() {
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.MessagePopMenu.CLASSIC_EXTENSION_ID, this);
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.MessagePopMenu.MINIMALIST_EXTENSION_ID, this);
-        TUICore.registerExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID, this);
-        TUICore.registerExtension(TUIConstants.TUITranslationPlugin.Extension.TranslationView.MINIMALIST_EXTENSION_ID, this);
+        TUICore.registerExtension(TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID, this);
+        TUICore.registerExtension(TUIConstants.TUIChat.Extension.MessageBottom.MINIMALIST_EXTENSION_ID, this);
         TUICore.registerExtension(TUIConstants.TIMAppKit.Extension.ProfileSettings.CLASSIC_EXTENSION_ID, this);
         TUICore.registerExtension(TUIConstants.TIMAppKit.Extension.ProfileSettings.MINIMALIST_EXTENSION_ID, this);
     }
@@ -62,9 +68,9 @@ public class TUITranslationService extends ServiceInitializer implements ITUIExt
             }
 
             TUIMessageBean messageBean = (TUIMessageBean) param.get(TUIConstants.TUIChat.Extension.MessagePopMenu.MESSAGE_BEAN);
-
+            TranslationPresenter presenter = new TranslationPresenter();
             if ((messageBean instanceof TextMessageBean || messageBean instanceof QuoteMessageBean)
-                && messageBean.getTranslationStatus() != TUIMessageBean.MSG_TRANSLATE_STATUS_SHOWN) {
+                && presenter.getTranslationStatus(messageBean.getV2TIMMessage()) != TranslationProvider.MSG_TRANSLATE_STATUS_SHOWN) {
                 // only select-all-text can be translated
                 String selectText = messageBean.getSelectText();
                 if (!TextUtils.isEmpty(selectText)) {
@@ -130,11 +136,11 @@ public class TUITranslationService extends ServiceInitializer implements ITUIExt
     }
 
     @Override
-    public void onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {
-        if (TextUtils.equals(extensionID, TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID)
-            || TextUtils.equals(extensionID, TUIConstants.TUITranslationPlugin.Extension.TranslationView.MINIMALIST_EXTENSION_ID)) {
+    public boolean onRaiseExtension(String extensionID, View parentView, Map<String, Object> param) {
+        if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID)
+            || TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessageBottom.MINIMALIST_EXTENSION_ID)) {
             if (param == null) {
-                return;
+                return false;
             }
 
             ViewGroup viewGroup = null;
@@ -142,10 +148,22 @@ public class TUITranslationService extends ServiceInitializer implements ITUIExt
                 viewGroup = (ViewGroup) parentView;
             }
             if (viewGroup == null) {
-                return;
+                return false;
             }
 
             TUIMessageBean messageBean = (TUIMessageBean) param.get(TUIConstants.TUIChat.MESSAGE_BEAN);
+            if (messageBean == null) {
+                return false;
+            }
+            V2TIMMessage v2TIMMessage = messageBean.getV2TIMMessage();
+            if (v2TIMMessage == null) {
+                return false;
+            }
+
+            if (v2TIMMessage.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
+                return false;
+            }
+
             RecyclerView recyclerView = (RecyclerView) param.get(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW);
             BaseFragment fragment = null;
             Object fragmentObject = param.get(TUIConstants.TUIChat.FRAGMENT);
@@ -153,12 +171,16 @@ public class TUITranslationService extends ServiceInitializer implements ITUIExt
                 fragment = (BaseFragment) fragmentObject;
             }
 
-            if (TextUtils.equals(extensionID, TUIConstants.TUITranslationPlugin.Extension.TranslationView.CLASSIC_EXTENSION_ID)) {
+            if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID)) {
                 translationMessageLayoutProxy.showTranslationView(fragment, TUIConstants.TUIChat.THEME_STYLE_CLASSIC, recyclerView, viewGroup, messageBean);
             } else {
                 translationMessageLayoutProxy.showTranslationView(fragment, TUIConstants.TUIChat.THEME_STYLE_MINIMALIST, recyclerView, viewGroup, messageBean);
             }
+
+            return true;
         }
+
+        return false;
     }
 
     private void selectLanguage(String theme, View modifyTranslationTargetLanguageView) {

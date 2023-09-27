@@ -1,0 +1,108 @@
+<resources>
+    <string name="community_create_community">إنشاء مجتمع</string>
+    <string name="community_create_community_success">تم إنشاء المجتمع بنجاح</string>
+    <string name="community_create_community_failed">فشل إنشاء المجتمع</string>
+    <string name="community_join_community">الانضمام إلى مجتمع</string>
+    <string name="community_join">الانضمام</string>
+    <string name="community_joined">تم الانضمام</string>
+    <string name="community_not_found_community">هذا المجتمع غير موجود</string>
+    <string name="community_community_name">اسم المجتمع</string>
+    <string name="community_community_introduction">نبذة عن المجتمع</string>
+    <string name="community_select_cover">اختر الغلاف</string>
+    <string name="community_select_face">اختر الصورة الرمزية</string>
+    <string name="community_edit_tips_input">الرجاء إدخال</string>
+    <string name="community_button_tips_select">الرجاء الاختيار</string>
+    <string name="community_exit_community">الخروج من المجتمع</string>
+    <string name="community_group_id_label">معرف المجتمع: </string>
+    <string name="community_copy">نسخ</string>
+    <string name="community_user_list">قائمة المستخدمين</string>
+    <string name="community_share_community">مشاركة المجتمع</string>
+    <string name="community_settings">الإعدادات</string>
+    <string name="community_community_settings">إعدادات المجتمع</string>
+    <string name="community_topic_settings">تفاصيل الموضوع</string>
+    <string name="community_create_topic">إنشاء موضوع</string>
+    <string name="community_create_topic_success">تم إنشاء الموضوع بنجاح</string>
+    <string name="community_create_topic_failed">فشل إنشاء الموضوع</string>
+    <string name="community_create_topic_category">إنشاء فئة</string>
+    <string name="community_create_topic_category_success">تم إنشاء الفئة بنجاح</string>
+    <string name="community_create_topic_category_failed">فشل إنشاء الفئة</string>
+    <string name="community_delete_topic_category">حذف الفئة</string>
+    <string name="community_topic_name">اسم الموضوع</string>
+    <string name="community_topic_category">فئة الموضوع</string>
+    <string name="community_topic_type">نوع الموضوع</string>
+    <string name="community_self_nick_name">اسم العضو في المجتمع</string>
+    <string name="community_personal_settings">الإعدادات الشخصية</string>
+    <string name="community_community_information">معلومات المجتمع</string>
+    <string name="community_settings_community_name">الاسم</string>
+    <string name="community_settings_community_avatar">الصورة الرمزية</string>
+    <string name="community_settings_community_cover">الغلاف</string>
+    <string name="community_settings_community_introduction">نبذة عن المجتمع</string>
+    <string name="community_settings_community_id">معرف المجتمع</string>
+    <string name="community_settings_not_set">غير محدد</string>
+    <string name="community_transfer_owner">نقل ملكية المجتمع</string>
+    <string name="community_disband_group">حل المجتمع</string>
+
+    <string name="community_no_category">لا يوجد فئة</string>
+
+    <string name="community_cancel">إلغاء</string>
+    <string name="community_search_community_id">البحث عن معرف المجتمع</string>
+    <string name="community_search_community">البحث عن المجتمع</string>
+    <string name="community_owner">المالك</string>
+
+    <string name="community_select_category">اختر الفئة</string>
+    <string name="community_invite">دعوة الأعضاء</string>
+    <string name="community_remove_fail_tip">فشل إزالة العضو</string>
+    <string name="community_remove_member">إزالة العضو</string>
+    <string name="community_add_group_member">إضافة الأعضاء</string>
+    <string name="community_remove_group_member">إزالة الأعضاء</string>
+
+    <string name="community_topic_type_text_title">موضوع نصي</string>
+    <string name="community_topic_type_text_desc">يدعم التفاعل بين الرسائل النصية والرموز التعبيرية والصور ومقاطع الفيديو وغيرها، وهو مناسب للدردشة ونشر الأنشطة / الإعلانات وما إلى ذلك</string>
+    <string name="community_topic_type_video_title">موضوع صوتي / فيديو</string>
+    <string name="community_topic_type_video_title_coming">موضوع صوتي / فيديو (قريبًا)</string>
+    <string name="community_topic_type_video_desc">يدعم الاتصال الصوتي والفيديو في الوقت الحقيقي، وهو مناسب للغناء والدردشة ولعب الألعاب وما إلى ذلك</string>
+    <string name="community_topic_type_live_title">موضوع مباشر</string>
+    <string name="community_topic_type_live_title_coming">موضوع مباشر (قريبًا)</string>
+    <string name="community_topic_type_live_desc">يدعم الإعجاب بالبث المباشر والتفاعل مع الرسائل النصية المتحركة، وهو مناسب للبث المباشر للأحداث الرياضية والتجارة الإلكترونية وما إلى ذلك</string>
+    <string name="community_delete_topic">حذف الموضوع</string>
+    <string name="community_delete_topic_tip">هل تريد بالتأكيد حذف الموضوع؟</string>
+    <string name="community_choose_avatar">اختر الصورة الرمزية</string>
+    <string name="community_over_limit_tip">يمكنك اختيار حتى %d فقط.</string>
+    <string name="community_default_category_announcement">إعلان</string>
+    <string name="community_default_category_communication">منطقة التواصل</string>
+    <string name="community_topic_important_notice">إشعار مهم</string>
+    <string name="community_topic_newbie_report">تقرير المبتدئين</string>
+    <string name="community_topic_chat_hall">قاعة الدردشة</string>
+    <string name="community_to_be_experienced">قيد التجربة</string>
+    <string name="community_completed">تم الانتهاء</string>
+    <string name="community_recommended_experience">تجربة الوظائف الموصى بها</string>
+    <string name="community_quick_integration">تكامل سريع في دقيقة واحدة باستخدام مكونات واجهة المستخدم</string>
+    <string name="community_experience_send_message">إرسال رسالة في الموضوع</string>
+    <string name="community_experience_reply_message">الرد على رسالة في الموضوع</string>
+    <string name="community_experience_create_community">إنشاء مجتمع جديد</string>
+    <string name="community_experience_add_community">إضافة مجتمع جديد</string>
+    <string name="community_experience_disband_community">حل مجتمع</string>
+    <string name="community_experience_create_topic">إنشاء موضوع جديد</string>
+    <string name="community_experience_delete_topic">حذف موضوع</string>
+    <string name="community_experience_more_demos">تجربة المزيد من الأمثلة التوضيحية</string>
+
+    <string name="community_integration_download_code">تنزيل مصدر TUIKit</string>
+    <string name="community_integration_login">تسجيل الدخول إلى المكونات</string>
+    <string name="community_integration_create_viewPager">إنشاء ViewPager</string>
+    <string name="community_integration_build_fragment">بناء جوهر Fragment</string>
+    <string name="community_integration_build_audio_video_call">بناء وظيفة المكالمات الصوتية والفيديو</string>
+
+    <string name="community_network_connect_failed">خطأ في الشبكة، يرجى التحقق من إعدادات الشبكة</string>
+    <string name="community_network_connecting">جاري الاتصال بالشبكة...</string>
+
+    <string name="community_integration_download_code_link">https://cloud.tencent.com/document/product/269/37059#module-.E6.BA.90.E7.A0.81.E9.9B.86.E6.88.90</string>
+    <string name="community_integration_login_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E4.B8.80.EF.BC.9A.E7.BB.84.E4.BB.B6.E7.99.BB.E5.BD.95</string>
+    <string name="community_integration_create_viewPager_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E4.BA.8C.EF.BC.9A.E5.88.9B.E5.BB.BA-viewpager</string>
+    <string name="community_integration_build_fragment_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E4.B8.89.EF.BC.9A.E6.9E.84.E5.BB.BA.E6.A0.B8.E5.BF.83-fragment</string>
+    <string name="community_integration_build_audio_video_call_link">https://cloud.tencent.com/document/product/269/37059#.E6.AD.A5.E9.AA.A4.E5.9B.9B.EF.BC.9A.E6.9E.84.E5.BB.BA.E9.9F.B3.E8.A7.86.E9.A2.91.E9.80.9A.E8.AF.9D.E5.8A.9F.E8.83.BD</string>
+
+    <string name="community_copy_success_tip">تم النسخ بنجاح</string>
+    <string name="community_coming_soon">قريبًا</string>
+    <string name="community_accept">موافق</string>
+    <string name="community_refuse">رفض</string>
+</resources>

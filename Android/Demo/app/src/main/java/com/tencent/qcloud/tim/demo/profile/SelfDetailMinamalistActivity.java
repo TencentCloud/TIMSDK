@@ -8,7 +8,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
+
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
@@ -30,10 +32,10 @@ import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity implements View.OnClickListener {
     private static final String TAG = SelfDetailMinamalistActivity.class.getSimpleName();
@@ -174,11 +176,6 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
             String description = getString(R.string.demo_self_detail_modify_nickname_rule);
             popupInputCard.setDescription(description);
             popupInputCard.setOnPositive((result -> {
-                if (!Pattern.matches("^[a-zA-Z0-9_\u4e00-\u9fa5]*$", result)) {
-                    ToastUtil.toastShortMessage(description);
-                    return;
-                }
-
                 nickName = result;
                 updateProfile();
             }));
@@ -197,11 +194,6 @@ public class SelfDetailMinamalistActivity extends BaseMinimalistLightActivity im
             String description = getString(R.string.demo_self_detail_modify_nickname_rule);
             popupInputCard.setDescription(description);
             popupInputCard.setOnPositive((result -> {
-                if (!Pattern.matches("^[a-zA-Z0-9_\u4e00-\u9fa5]*$", result)) {
-                    ToastUtil.toastShortMessage(description);
-                    return;
-                }
-
                 signature = result;
                 updateProfile();
             }));

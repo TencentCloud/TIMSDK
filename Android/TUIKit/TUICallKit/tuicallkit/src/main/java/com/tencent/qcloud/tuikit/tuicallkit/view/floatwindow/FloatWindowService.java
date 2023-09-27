@@ -68,9 +68,8 @@ public class FloatWindowService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (null != mCallView) {
+        if (null != mCallView && mCallView.isAttachedToWindow()) {
             mWindowManager.removeView(mCallView);
-            mCallView = null;
         }
     }
 

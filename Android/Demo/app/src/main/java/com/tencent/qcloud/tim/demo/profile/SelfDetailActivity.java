@@ -7,7 +7,9 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
+
 import androidx.annotation.Nullable;
+
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
@@ -24,15 +26,16 @@ import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
+import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class SelfDetailActivity extends BaseLightActivity implements View.OnClickListener {
     private static final String TAG = SelfDetailActivity.class.getSimpleName();
@@ -162,8 +165,9 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
             Intent intent = new Intent(SelfDetailActivity.this, ImageSelectActivity.class);
             intent.putExtra(ImageSelectActivity.TITLE, getString(R.string.demo_choose_avatar));
             intent.putExtra(ImageSelectActivity.SPAN_COUNT, 4);
-            intent.putExtra(ImageSelectActivity.ITEM_WIDTH, ScreenUtil.dip2px(77));
-            intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, ScreenUtil.dip2px(77));
+            int itemWidth = (int) (ScreenUtil.getScreenWidth(this) * 0.2f);
+            intent.putExtra(ImageSelectMinimalistActivity.ITEM_WIDTH, itemWidth);
+            intent.putExtra(ImageSelectMinimalistActivity.ITEM_HEIGHT, itemWidth);
             intent.putExtra(ImageSelectActivity.DATA, faceList);
             intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(faceUrl, faceUrl, false));
             startActivityForResult(intent, CHOOSE_AVATAR_REQUEST_CODE);
@@ -174,11 +178,6 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
             String description = getString(R.string.demo_self_detail_modify_nickname_rule);
             popupInputCard.setDescription(description);
             popupInputCard.setOnPositive((result -> {
-                if (!Pattern.matches("^[a-zA-Z0-9_\u4e00-\u9fa5]*$", result)) {
-                    ToastUtil.toastShortMessage(description);
-                    return;
-                }
-
                 nickName = result;
                 updateProfile();
             }));
@@ -197,11 +196,6 @@ public class SelfDetailActivity extends BaseLightActivity implements View.OnClic
             String description = getString(R.string.demo_self_detail_modify_nickname_rule);
             popupInputCard.setDescription(description);
             popupInputCard.setOnPositive((result -> {
-                if (!Pattern.matches("^[a-zA-Z0-9_\u4e00-\u9fa5]*$", result)) {
-                    ToastUtil.toastShortMessage(description);
-                    return;
-                }
-
                 signature = result;
                 updateProfile();
             }));

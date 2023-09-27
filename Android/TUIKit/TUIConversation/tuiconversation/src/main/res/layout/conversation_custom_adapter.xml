@@ -11,8 +11,8 @@
         android:layout_height="match_parent"
         android:background="#FFFFFF"
         android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:paddingTop="10dp">
 
         <ImageView
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/conversation_icon"
-            android:layout_alignRight="@+id/conversation_title"
+            android:layout_alignEnd="@+id/conversation_title"
             android:ellipsize="end"
             android:singleLine="true"
             android:textSize="12sp"
@@ -48,7 +48,7 @@
             android:id="@+id/conversation_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/conversation_title"
             android:textSize="10sp"
             android:textColor="@color/list_bottom_text_bg" />
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:gravity="center"
             android:includeFontPadding="false"
             android:textColor="#fff"

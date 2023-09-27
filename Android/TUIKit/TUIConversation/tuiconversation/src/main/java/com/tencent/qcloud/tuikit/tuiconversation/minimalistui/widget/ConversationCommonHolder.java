@@ -15,6 +15,7 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.swipe.SwipeLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -156,7 +157,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             }
         }
         if (draftInfo != null) {
-            messageText.setText(draftText);
+            messageText.setText(FaceManager.emojiJudge(draftText));
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
         } else {
             HashMap<String, Object> param = new HashMap<>();

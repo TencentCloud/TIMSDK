@@ -10,11 +10,11 @@
         android:layout_width="38.4dp"
         android:layout_height="38.4dp"
         android:layout_gravity="center"
-        android:layout_marginLeft="15.36dp"
-        android:layout_marginRight="11.52dp" />
+        android:layout_marginStart="15.36dp"
+        android:layout_marginEnd="11.52dp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -22,11 +22,12 @@
         <TextView
             android:id="@+id/group_manage_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
-            android:gravity="center_vertical"
+            android:gravity="start|center_vertical"
             android:singleLine="true"
             android:ellipsize="end"
+            android:textAlignment="viewStart"
             android:layout_weight="1"
             android:lineHeight="23.04sp"
             android:textSize="17.28sp" />

@@ -1,11 +1,15 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
+
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
@@ -34,19 +38,23 @@ public class SoundMessageHolder extends MessageContentHolder {
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
         SoundMessageBean message = (SoundMessageBean) msg;
         if (message.isSelf()) {
-            audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
+            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
+            playingDrawable.setAutoMirrored(true);
+            audioPlayImage.setImageDrawable(playingDrawable);
             audioPlayImage.setRotation(180f);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage);
             unreadAudioText.setVisibility(View.GONE);
         } else {
-            audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
+            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
+            playingDrawable.setAutoMirrored(true);
+            audioPlayImage.setImageDrawable(playingDrawable);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage, 0);
             if (!message.hasPlayed()) {
                 LinearLayout.LayoutParams unreadParams = (LinearLayout.LayoutParams) isReadText.getLayoutParams();
                 unreadParams.gravity = Gravity.CENTER_VERTICAL;
-                unreadParams.leftMargin = 10;
+                unreadParams.setMarginStart(10);
                 unreadAudioText.setVisibility(View.VISIBLE);
                 unreadAudioText.setLayoutParams(unreadParams);
             } else {
@@ -85,13 +93,16 @@ public class SoundMessageHolder extends MessageContentHolder {
                 audioPlayImage.setRotation(180f);
             }
             animationDrawable = (AnimationDrawable) audioPlayImage.getDrawable();
+            animationDrawable.setAutoMirrored(true);
             animationDrawable.start();
             unreadAudioText.setVisibility(View.GONE);
         } else {
             if (animationDrawable != null) {
                 animationDrawable.stop();
             }
-            audioPlayImage.setImageResource(R.drawable.voice_msg_playing_3);
+            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
+            playingDrawable.setAutoMirrored(true);
+            audioPlayImage.setImageDrawable(playingDrawable);
             if (message.isSelf()) {
                 audioPlayImage.setRotation(180f);
             }

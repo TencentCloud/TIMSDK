@@ -117,8 +117,8 @@
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="16dp"
         android:layout_height="wrap_content">
 
@@ -127,11 +127,11 @@
             android:background="@drawable/contact_confirm_button_bg"
             android:textSize="14sp"
             android:text="@string/group_created"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="12dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
             android:layout_gravity="center_vertical"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:textColor="@color/white"

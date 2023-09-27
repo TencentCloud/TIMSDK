@@ -1,0 +1,66 @@
+<resources>
+    <string name="tuicalling_contact_default_name">اختبار 123</string>
+    <string name="tuicalling_toast_user_reject_call">%1$s رفض المكالمة.</string>
+    <string name="tuicalling_toast_user_not_response">%1$s لم يرد.</string>
+    <string name="tuicalling_toast_user_busy">%1$s مشغول.</string>
+    <string name="tuicalling_toast_enable_mute">كتم الصوت</string>
+    <string name="tuicalling_toast_disable_mute">إلغاء الكتم</string>
+    <string name="tuicalling_toast_speaker">مكبر الصوت</string>
+    <string name="tuicalling_toast_use_handset">سماعة الأذن</string>
+    <string name="tuicalling_toast_user_end">%s انهى المكالمة.</string>
+    <string name="tuicalling_other_party_network_low_quality">اتصال الطرف الآخر بالشبكة ضعيف</string>
+    <string name="tuicalling_self_network_low_quality">اتصالك بالشبكة ضعيف</string>
+    <string name="tuicalling_toast_switch_camera">تبديل الكاميرا</string>
+    <string name="tuicalling_toast_enable_camera">تشغيل الكاميرا</string>
+    <string name="tuicalling_toast_disable_camera">إيقاف الكاميرا</string>
+    <string name="tuicalling_waiting_accept">في انتظار قبول المستخدم...</string>
+    <string name="tuicalling_invite_audio_call">دعوتك لمكالمة صوتية...</string>
+    <string name="tuicalling_invite_video_call">دعوتك لمكالمة فيديو...</string>
+    <string name="tuicalling_text_microphone">ميكروفون</string>
+    <string name="tuicalling_text_hangup">إنهاء المكالمة</string>
+    <string name="tuicalling_text_reject">رفض</string>
+    <string name="tuicalling_text_speaker">مكبر الصوت</string>
+    <string name="tuicalling_text_dialing">الرد</string>
+    <string name="tuicalling_text_camera">الكاميرا</string>
+    <string name="tuicalling_switch_audio_call">التحول إلى المكالمة الصوتية</string>
+    <string name="tuicalling_btn_cancel">إلغاء</string>
+    <string name="tuicalling_video_call">مكالمة فيديو</string>
+    <string name="tuicalling_audio_call">مكالمة صوتية</string>
+    <string name="tuicalling_user_exceed_limit">يدعم TUICallKit حاليًا المكالمة مع ما يصل إلى 9 أشخاص. لمؤتمرات الاتصال الأكبر ، جرب استخدام TUIRoom</string>
+    <string name="tuicalling_wait_resonse">انتظار</string>
+
+    <string name="tuicalling_permission_camera">الكاميرا</string>
+    <string name="tuicalling_permission_microphone">الميكروفون</string>
+    <string name="tuicalling_permission_bluetooth">البلوتوث</string>
+    <string name="tuicalling_permission_separator">،</string>
+    <string name="tuicalling_permission_tips">يرجى تشغيل إذن %s أولاً</string>
+    <string name="tuicalling_permission_title">%s يتقدم بطلب الوصول إلى %s</string>
+    <string name="tuicalling_permission_mic_reason">يحتاج إلى الوصول إلى ميكروفونك ، ويمكن استخدامه لوظائف مثل المكالمة الصوتية / الفيديو ، المكالمة الصوتية / الفيديو الجماعية وما إلى ذلك.</string>
+    <string name="tuicalling_permission_camera_reason">يحتاج إلى الوصول إلى كاميراك ، ويمكن استخدامه لوظائف مثل المكالمة الفيديو ، المكالمة الفيديو الجماعية وما إلى ذلك. لتعمل مرشحات الجمال ، سنجمع معلومات الوجه التي يتم التقاطها بكاميراك في الوقت الحقيقي لكشف ملامح وجهك.</string>
+    <string name="tuicalling_permission_bluetooth_reason">يحتاج إلى الوصول إلى بلوتوثك ، ويمكن استخدامه لسماعة البلوتوث.</string>
+
+    <string name="tuicalling_package_not_purchased">ليس لديك حزمة TUICallKit ، يرجى فتح التجربة المجانية في لوحة التحكم أو شراء الحزمة الرسمية</string>
+    <string name="tuicalling_package_not_support">الحزمة التي اشتريتها لا تدعم هذه القدرة</string>
+    <string name="tuicalling_groupid_is_empty">معرف المجموعة فارغ</string>
+    <string name="tuicalling_have_a_new_call">لديك مكالمة جديدة</string>
+
+    <string name="tuicallkit_record_call_title">المكالمات الأخيرة</string>
+    <string name="tuicallkit_record_call_delete">حذف</string>
+    <string name="tuicallkit_record_dialog_message">مسح كل سجل المكالمات</string>
+    <string name="tuicallkit_record_dialog_cancel">إلغاء</string>
+    <string name="tuicallkit_record_tab_title_all">الكل</string>
+    <string name="tuicallkit_record_tab_title_miss">المفقودة</string>
+    <string name="tuicallkit_record_done">تم</string>
+    <string name="tuicallkit_record_clear">مسح</string>
+    <string name="tuicallkit_group_recall_unsupport">لا يدعم سجل المكالمات المتعددة إعادة الاتصال</string>
+    <string name="tuicallkit_record_result_unknown">غير معروف</string>
+    <string name="tuicallkit_record_result_missed">فائت</string>
+    <string name="tuicallkit_record_result_incoming">وارد</string>
+    <string name="tuicallkit_record_result_outgoing">صادر</string>
+
+    <string name="tuicallkit_group_title_add_user">إضافة مستخدم</string>
+    <string name="tuicallkit_group_hint_you">(أنت)</string>
+    <string name="tuicallkit_group_btn_ok">تأكيد</string>
+
+    <string name="tuicallkit_error_in_peer_blacklist">فشلت المكالمة ، المستخدم في القائمة السوداء ، ممنوع الإطلاق.</string>
+</resources>

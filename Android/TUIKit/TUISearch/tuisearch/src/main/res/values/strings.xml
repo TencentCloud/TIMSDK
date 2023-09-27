@@ -38,19 +38,21 @@
     <string name="revoke_tips_other">A message is recalled.</string>
     <string name="create_group">Create Group</string>
     <string name="etc">, etc.</string>
-    <string name="join_group">Join Group</string>
-    <string name="invite_joined_group">is invited to the group.</string>
-    <string name="quit_group">Leave Group</string>
-    <string name="kick_group_tip">is removed from the group.</string>
-    <string name="be_group_manager">is set as admin.</string>
-    <string name="cancle_group_manager">\'s admin status is terminated.</string>
-    <string name="modify_group_name_is">Change the group name to</string>
-    <string name="modify_notice">Change the group notice to</string>
-    <string name="modify_introduction">Change the group introduction to</string>
-    <string name="move_owner">Transfer group ownership to</string>
-    <string name="modify_group_avatar">changed the group profile photo.</string>
-    <string name="banned">is blocked from posting</string>
-    <string name="cancle_banned">is unblocked and can post now</string>
+    <string name="join_group">%s joined the group</string>
+    <string name="invite_joined_group">%s invited %s to join the group</string>
+    <string name="quit_group">%s left the group</string>
+    <string name="kick_group_tip">%s has removed %s from the group</string>
+    <string name="be_group_manager">%s was promoted to group manager</string>
+    <string name="cancle_group_manager">%s was demoted from group manager</string>
+    <string name="modify_group_name_is">%s changed the group name to %s</string>
+    <string name="modify_notice">%s changed the group notice to %s</string>
+    <string name="modify_introduction">%s changed the group introduction to %s</string>
+    <string name="modify_shut_up_all">%s muted all members</string>
+    <string name="modify_cancel_shut_up_all">%s unmuted all members</string>
+    <string name="move_owner">%s transferred group ownership to %s</string>
+    <string name="modify_group_avatar">%s changed the group avatar</string>
+    <string name="banned">%s was muted for %s</string>
+    <string name="cancle_banned">%s was unmuted</string>
 
     <string name="search">Search</string>
     <string name="cancle">Cancle</string>
@@ -71,13 +73,11 @@
     <string name="stop_group_call">End Group Call</string>
     <string name="stop_call_tip">Call ended. Duration:</string>
     <string name="reject_calls">Decline Call</string>
-    <string name="modify_shut_up_all">Mute All</string>
-    <string name="modify_cancel_shut_up_all">Unmute All</string>
 
     <string name="search_i_know">I got it</string>
     <string name="search_no_more_reminders">No more reminders</string>
     <string name="search_im_flagship">Ultimate Edition</string>
     <string name="search_buying_guidelines">price description</string>
-    <string name="search_im_flagship_edition_update_tip">%s function is the IM Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
+    <string name="search_im_flagship_edition_update_tip">%s function is the Tencent Cloud Chat Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
 
 </resources>

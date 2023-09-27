@@ -72,9 +72,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/image_round_container"
-        android:layout_alignRight="@+id/image_round_container"
+        android:layout_alignEnd="@+id/image_round_container"
         android:layout_marginBottom="4dp"
-        android:layout_marginRight="6.5dp"
+        android:layout_marginEnd="6.5dp"
         android:textColor="@color/white"
         android:visibility="gone"
         android:textSize="11sp" />

@@ -20,7 +20,7 @@ class TUICallService : Service() {
     companion object {
         private const val NOTIFICATION_ID = 1001
         fun start(context: Context) {
-            if (DeviceUtils.isServiceRunning(context, TUICallService::class.java.getName())) {
+            if (DeviceUtils.isServiceRunning(context, TUICallService::class.java.name)) {
                 return
             }
             val starter = Intent(context, TUICallService::class.java)

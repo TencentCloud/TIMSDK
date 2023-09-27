@@ -31,6 +31,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33"
+                android:textAlignment="viewStart"
                 android:text="@string/cancel"
                 android:textColor="#0365F9"
                 android:textSize="16sp" />
@@ -50,6 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33"
+                android:textAlignment="viewEnd"
                 android:gravity="end"
                 android:text="@string/contact_next_step"
                 android:textColor="#0365F9"

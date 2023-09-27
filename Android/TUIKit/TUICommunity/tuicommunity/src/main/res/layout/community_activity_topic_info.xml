@@ -21,8 +21,8 @@
         app:setting_is_show_bottom_line="true"
         app:setting_is_show_arrow="false"
         android:background="#FFFFFF"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
@@ -30,8 +30,8 @@
         android:id="@+id/topic_category_setting"
         app:setting_name="@string/community_topic_category"
         app:setting_is_show_arrow="false"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="#FFFFFF"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>

@@ -10,11 +10,12 @@
     <TextView
         android:layout_weight="1"
         android:id="@+id/experience_name"
-        android:gravity="left"
+        android:gravity="start"
+        android:textAlignment="viewStart"
         android:textSize="14sp"
         android:textColor="#FF333333"
         android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="12312\n111" />
 
@@ -30,7 +31,6 @@
         android:text="@string/community_to_be_experienced"
         android:textColor="#FFFFFFFF"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginLeft="20dp" />
+        android:layout_height="20dp" />
 
 </LinearLayout>

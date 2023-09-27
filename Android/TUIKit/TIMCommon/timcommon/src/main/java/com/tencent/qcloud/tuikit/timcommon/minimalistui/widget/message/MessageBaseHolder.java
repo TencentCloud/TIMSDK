@@ -143,9 +143,9 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         long yearStartTimeInMillis = yearCalendar.getTimeInMillis();
         long outTimeMillis = date.getTime();
         if (outTimeMillis < yearStartTimeInMillis) {
-            timeText = String.format(locale, "%1$tY/%1$tm/%1$td", date);
+            timeText = String.format(Locale.US, "%1$tY/%1$tm/%1$td", date);
         } else if (outTimeMillis < weekStartTimeInMillis) {
-            timeText = String.format(locale, "%1$tm/%1$td", date);
+            timeText = String.format(Locale.US, "%1$tm/%1$td", date);
         } else if (outTimeMillis < dayStartTimeInMillis) {
             timeText = String.format(locale, "%tA", date);
         } else {
@@ -167,6 +167,22 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
 
     protected boolean isShowAvatar(TUIMessageBean messageBean) {
         return false;
+    }
+
+    public void setMessageBubbleZeroPadding() {
+        msgArea.setPaddingRelative(0, 0, 0, 0);
+    }
+
+    public void setMessageBubbleBackground(int resID) {
+        msgArea.setBackgroundResource(resID);
+    }
+
+    public void setMessageBubbleBackground(Drawable drawable) {
+        msgArea.setBackground(drawable);
+    }
+
+    public Drawable getMessageBubbleBackground() {
+        return msgArea.getBackground();
     }
     
     public void startHighLight() {
@@ -210,14 +226,14 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void setHighLightBackground(int color) {
-        Drawable drawable = msgArea.getBackground();
+        Drawable drawable = getMessageBubbleBackground();
         if (drawable != null) {
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
     }
 
     public void clearHighLightBackground() {
-        Drawable drawable = msgArea.getBackground();
+        Drawable drawable = getMessageBubbleBackground();
         if (drawable != null) {
             drawable.setColorFilter(null);
         }

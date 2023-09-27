@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:paddingLeft="16dp">
+        android:paddingStart="16dp">
 
         <RelativeLayout
             android:layout_width="45dp"
@@ -29,7 +29,7 @@
                 android:id="@+id/user_status"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginEnd="0dp"
                 android:layout_marginBottom="1dp"
@@ -41,7 +41,7 @@
 
         <RelativeLayout
             android:layout_weight="1"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:paddingEnd="24dp"
             android:paddingStart="13dp">
@@ -50,7 +50,7 @@
                 android:id="@+id/tvCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
                 android:layout_toStartOf="@id/conversation_unread"
                 android:clickable="false"
@@ -66,7 +66,7 @@
                 android:id="@+id/conversation_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:includeFontPadding="false"

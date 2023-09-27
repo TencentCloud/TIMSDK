@@ -62,7 +62,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="start"
-            android:layout_marginRight="18dp"
+            android:layout_marginEnd="18dp"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -149,6 +149,7 @@
             android:layout_height="123dp"
             android:layout_marginTop="4dp"
             android:gravity="start|top"
+            android:textAlignment="viewStart"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="12dp"

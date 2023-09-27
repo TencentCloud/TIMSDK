@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+
+    <include layout="@layout/chat_minimalist_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_below="@id/chat_header"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#1F000000" />
+
+    <FrameLayout
+        android:id="@+id/custom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_line"
+        android:layout_marginTop="0dp"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.component.noticelayout.NoticeLayout
+        android:id="@+id/chat_group_apply_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/custom_layout"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.component.noticelayout.NoticeLayout
+        android:id="@+id/chat_notice_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_group_apply_layout"
+        android:layout_marginTop="1dp"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageRecyclerView
+        android:id="@+id/chat_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_input_layout"
+        android:layout_below="@+id/chat_notice_layout"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:descendantFocusability="blocksDescendants" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/jump_view_layout"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        android:layout_marginEnd="-16dp"
+        android:layout_above="@+id/chat_input_layout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/jump_message_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:background="#FFFFFF"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/arrow_icon"
+                android:layout_width="18.76dp"
+                android:layout_height="18.76dp"
+                android:clickable="false"
+                android:scaleType="fitCenter"
+                android:background="@drawable/chat_minimalist_jump_down_icon" />
+
+            <TextView
+                android:id="@+id/jump_message_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="#147AFF"
+                android:textSize="14sp"
+                tools:text="8"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.InputView
+        android:id="@+id/chat_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_above="@id/forward_area"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true" />
+
+    <RelativeLayout
+        android:id="@+id/voice_recording_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_input_layout"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/recording_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp" />
+
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/forward_area"
+        android:layout_alignParentBottom="true"
+        app:cardBackgroundColor="#FFFFFFFF"
+        app:contentPaddingBottom="26dp"
+        app:cardElevation="4dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/forward_image"
+                android:background="@drawable/chat_minimalist_forward_icon"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="start"
+                android:scaleType="centerCrop"
+                android:layout_width="16dp"
+                android:layout_height="16dp"/>
+
+            <ImageView
+                android:id="@+id/delete_image"
+                android:background="@drawable/chat_minimalist_delete_icon"
+                android:layout_toEndOf="@id/forward_image"
+                android:layout_gravity="start"
+                android:scaleType="centerCrop"
+                android:layout_marginStart="16dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"/>
+
+            <TextView
+                android:id="@+id/forward_select_text"
+                android:textSize="14sp"
+                android:textColor="#FF000000"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2 Selected"/>
+
+            <TextView
+                android:id="@+id/forward_cancel_btn"
+                android:textSize="14sp"
+                android:textColor="#FF147AFF"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"/>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

@@ -33,6 +33,7 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SetGroupManagerActivity extends BaseLightActivity {
     private TitleBarLayout titleBarLayout;
@@ -76,7 +77,7 @@ public class SetGroupManagerActivity extends BaseLightActivity {
             @Override
             public void onSuccess(List<GroupMemberInfo> data) {
                 if (data != null) {
-                    managerCountLabel.setText(getString(R.string.group_add_manager_count_label, data.size()));
+                    managerCountLabel.setText(String.format(Locale.US, getString(R.string.group_add_manager_count_label), data.size()));
                     managerAdapter.setGroupMemberInfoList(data);
                 }
             }
@@ -167,12 +168,12 @@ public class SetGroupManagerActivity extends BaseLightActivity {
                     }
                 });
                 int x = view.getWidth() / 2;
-                int y = -view.getHeight() / 3;
+                int y = -view.getHeight() / 2;
                 int popHeight = ScreenUtil.dip2px(45) * 3;
                 if (y + popHeight + view.getY() + view.getHeight() > managerList.getBottom()) {
                     y = y - popHeight;
                 }
-                popupWindow.showAsDropDown(view, x, y, Gravity.TOP | Gravity.START);
+                popupWindow.showAsDropDown(view, x, y, Gravity.CENTER);
             }
         });
     }

@@ -127,16 +127,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/group_profile_item_height"
                     android:layout_below="@id/fold_top_line"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     app:isSwitch="true"
                     app:name="@string/fold_this_group_chat" />
 
                 <View
                     android:id="@+id/left_line"
                     android:layout_width="10dp"
-                    android:layout_height="2px"
+                    android:layout_height="1dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     android:background="@color/dark_line" />
 
                 <View
@@ -163,8 +163,8 @@
                 android:layout_height="70dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/group_profile_face_margin_left"
-                android:paddingRight="16dp">
+                android:paddingStart="@dimen/group_profile_face_margin_left"
+                android:paddingEnd="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -184,7 +184,7 @@
 
                     <TextView
                         android:id="@+id/group_notice_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ellipsize="end"

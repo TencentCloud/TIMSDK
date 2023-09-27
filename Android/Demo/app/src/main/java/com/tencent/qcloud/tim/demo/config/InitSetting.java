@@ -10,6 +10,7 @@ import android.util.Log;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.custom.CustomConfigHelper;
 import com.tencent.qcloud.tim.demo.push.OfflinePushAPIDemo;
 import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
 import com.tencent.qcloud.tim.demo.push.OfflinePushLocalReceiver;
@@ -26,6 +27,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +51,7 @@ public class InitSetting {
         TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
         setPermissionRequestContent();
         TUIChatConfigs.getConfigs().getGeneralConfig().setEnableMultiDeviceForCall(true);
+        CustomConfigHelper.initCustom(mContext);
         initOfflinePushConfigs();
         initDemoStyle();
     }
@@ -68,7 +71,8 @@ public class InitSetting {
         String micReason = mContext.getResources().getString(R.string.demo_permission_mic_reason);
         microphoneContent.setReason(micReason);
         microphoneContent.setIconResId(R.drawable.demo_permission_icon_mic);
-        microphoneContent.setDeniedAlert(mContext.getResources().getString(R.string.demo_permission_mic_dialog_alert, appName));
+        String micDeniedAlert = mContext.getResources().getString(R.string.demo_permission_mic_dialog_alert, appName);
+        microphoneContent.setDeniedAlert(micDeniedAlert);
         PermissionRequester.setPermissionRequestContent(PermissionRequester.PermissionConstants.MICROPHONE, microphoneContent);
 
         PermissionRequester.PermissionRequestContent cameraContent = new PermissionRequester.PermissionRequestContent();
@@ -76,22 +80,9 @@ public class InitSetting {
         String cameraReason = mContext.getResources().getString(R.string.demo_permission_camera_reason);
         cameraContent.setReason(cameraReason);
         cameraContent.setIconResId(R.drawable.demo_permission_icon_camera);
-        cameraContent.setDeniedAlert(mContext.getResources().getString(R.string.demo_permission_camera_dialog_alert, appName));
+        String cameraDeniedAlert = mContext.getResources().getString(R.string.demo_permission_camera_dialog_alert, appName);
+        cameraContent.setDeniedAlert(cameraDeniedAlert);
         PermissionRequester.setPermissionRequestContent(PermissionRequester.PermissionConstants.CAMERA, cameraContent);
-
-        TUICore.unregisterObjectFactory(TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME);
-        TUICore.registerObjectFactory(TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME, new ITUIObjectFactory() {
-            @Override
-            public Object onCreateObject(String objectName, Map<String, Object> param) {
-                if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.CAMERA_PERMISSIONS)) {
-                    return cameraReason;
-                } else if (TextUtils.equals(objectName, TUIConstants.Privacy.PermissionsFactory.PermissionsName.MICROPHONE_PERMISSIONS)) {
-                    return micReason;
-                }
-                return null;
-            }
-        });
-
     }
 
     private void initOfflinePushConfigs() {

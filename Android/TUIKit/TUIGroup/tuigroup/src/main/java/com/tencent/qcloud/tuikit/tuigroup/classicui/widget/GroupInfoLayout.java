@@ -306,7 +306,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             PopupInputCard popupInputCard = new PopupInputCard((Activity) getContext());
             popupInputCard.setContent(mNickView.getContent());
             popupInputCard.setTitle(getResources().getString(R.string.modify_nick_name_in_goup));
-            popupInputCard.setRule("^[a-zA-Z0-9_一-龥]*$");
             popupInputCard.setOnPositive((result -> {
                 mPresenter.modifyMyGroupNickname(result);
                 mNickView.setContent(result);
@@ -494,7 +493,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         } else {
             mGroupNoticeText.setText(info.getNotice());
         }
-        mMemberView.setContent(info.getMemberCount() + "人");
+        mMemberView.setContent(info.getMemberCount() + "");
         mMemberAdapter.setDataSource(info);
 
         int columnNum = memberList.getNumColumns();

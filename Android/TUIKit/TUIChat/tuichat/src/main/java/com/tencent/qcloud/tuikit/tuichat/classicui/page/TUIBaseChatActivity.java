@@ -91,7 +91,9 @@ public abstract class TUIBaseChatActivity extends BaseLightActivity {
         chatInfo.setLocateMessage(messageInfo);
         chatInfo.setAtInfoList((List<V2TIMGroupAtInfo>) intent.getSerializableExtra(TUIConstants.TUIChat.AT_INFO_LIST));
         chatInfo.setFaceUrl(intent.getStringExtra(TUIConstants.TUIChat.FACE_URL));
-
+        chatInfo.setEnableAudioCall(intent.getBooleanExtra(TUIConstants.TUIChat.ENABLE_AUDIO_CALL, true));
+        chatInfo.setEnableVideoCall(intent.getBooleanExtra(TUIConstants.TUIChat.ENABLE_VIDEO_CALL, true));
+        chatInfo.setEnableRoom(intent.getBooleanExtra(TUIConstants.TUIChat.ENABLE_ROOM, true));
         if (chatType == ChatInfo.TYPE_GROUP) {
             GroupInfo groupInfo = (GroupInfo) chatInfo;
             groupInfo.setGroupName(intent.getStringExtra(TUIConstants.TUIChat.GROUP_NAME));

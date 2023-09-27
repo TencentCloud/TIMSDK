@@ -12,16 +12,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -29,18 +24,14 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
+import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ImageMessageHolder extends MessageContentHolder {
     private static final int DEFAULT_MAX_SIZE = 540;
     private static final int DEFAULT_RADIUS = 10;
-    private static final Set<String> downloadEles = new HashSet<>();
     private ImageView contentImage;
     private ImageView videoPlayBtn;
     private TextView videoDurationText;
@@ -48,9 +39,10 @@ public class ImageMessageHolder extends MessageContentHolder {
     private ChatRingProgressBar fileProgressBar;
     private TextView progressText;
     private ImageView progressIcon;
-    private String mImagePath = null;
 
+    private TUIValueCallback downloadCallback;
     private ProgressPresenter.ProgressListener progressListener;
+    private String msgID;
 
     public ImageMessageHolder(View itemView) {
         super(itemView);
@@ -70,6 +62,7 @@ public class ImageMessageHolder extends MessageContentHolder {
 
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
+        msgID = msg.getId();
         performImage((ImageMessageBean) msg, position);
     }
 
@@ -103,69 +96,38 @@ public class ImageMessageHolder extends MessageContentHolder {
         progressListener = this::updateProgress;
         ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
 
-        final List<ImageMessageBean.ImageBean> imgs = msg.getImageBeanList();
-        String imagePath = msg.getDataPath();
-        String originImagePath = TUIChatUtils.getOriginImagePath(msg);
-        if (!TextUtils.isEmpty(originImagePath)) {
-            imagePath = originImagePath;
-        }
-        if (!TextUtils.isEmpty(imagePath)) {
-            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, imagePath, null, DEFAULT_RADIUS);
+        String imagePath = ChatFileDownloadPresenter.getImagePath(msg);
+        if (FileUtil.isFileExists(imagePath)) {
+            loadImage(msg, imagePath);
             progressContainer.setVisibility(View.GONE);
         } else {
             GlideEngine.clear(contentImage);
             progressContainer.setVisibility(View.VISIBLE);
-            for (int i = 0; i < imgs.size(); i++) {
-                final ImageMessageBean.ImageBean img = imgs.get(i);
-                if (img.getType() == ImageMessageBean.IMAGE_TYPE_THUMB) {
-                    synchronized (downloadEles) {
-                        if (downloadEles.contains(img.getUUID())) {
-                            break;
-                        }
-                        downloadEles.add(img.getUUID());
-                    }
-                    final String path = ImageUtil.generateImagePath(img.getUUID(), ImageMessageBean.IMAGE_TYPE_THUMB);
-                    if (!path.equals(mImagePath)) {
-                        GlideEngine.clear(contentImage);
-                    }
-                    img.downloadImage(path, new ImageMessageBean.ImageBean.ImageDownloadCallback() {
-                        @Override
-                        public void onProgress(long currentSize, long totalSize) {
-                            int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
-                            ProgressPresenter.updateProgress(msg.getId(), progress);
+            String finalImagePath = imagePath;
+            downloadCallback = new TUIValueCallback() {
+                @Override
+                public void onProgress(long currentSize, long totalSize) {
+                    int progress = Math.round(currentSize * 1.0f * 100 / totalSize);
+                    ProgressPresenter.updateProgress(msg.getId(), progress);
 
-                            TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
-                        }
-
-                        @Override
-                        public void onError(int code, String desc) {
-                            downloadEles.remove(img.getUUID());
-                            TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                            ProgressPresenter.updateProgress(msg.getId(), 100);
-                            downloadEles.remove(img.getUUID());
-                            msg.setDataPath(path);
-                            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getDataPath(), new RequestListener() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
-                                    mImagePath = null;
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
-                                    mImagePath = path;
-                                    return false;
-                                }
-                            }, DEFAULT_RADIUS);
-                        }
-                    });
-                    break;
+                    TUIChatLog.i("downloadImage progress current:", currentSize + ", total:" + totalSize);
                 }
-            }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIChatLog.e("MessageAdapter img getImage", code + ":" + desc);
+                    if (mAdapter != null) {
+                        mAdapter.onItemRefresh(msg);
+                    }
+                }
+
+                @Override
+                public void onSuccess(Object obj) {
+                    ProgressPresenter.updateProgress(msg.getId(), 100);
+                    loadImage(msg, finalImagePath);
+                }
+            };
+            ChatFileDownloadPresenter.downloadImage(msg, downloadCallback);
         }
         if (isMultiSelectMode) {
             contentImage.setOnClickListener(new View.OnClickListener() {
@@ -205,8 +167,14 @@ public class ImageMessageHolder extends MessageContentHolder {
         });
 
         if (msg.getMessageReactBean() == null || msg.getMessageReactBean().getReactSize() <= 0) {
-            msgArea.setBackground(null);
-            msgArea.setPadding(0, 0, 0, 0);
+            setMessageBubbleBackground(null);
+            setMessageBubbleZeroPadding();
+        }
+    }
+
+    private void loadImage(TUIMessageBean messageBean, String finalImagePath) {
+        if (TextUtils.equals(msgID, messageBean.getId())) {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, finalImagePath, null, DEFAULT_RADIUS);
         }
     }
 

@@ -1,22 +1,35 @@
 package com.tencent.qcloud.tuicore.permission;
 
 import android.annotation.SuppressLint;
+import android.app.AppOpsManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.Size;
 import androidx.core.content.ContextCompat;
+
+import com.tencent.qcloud.tuicore.R;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,8 +55,22 @@ public class PermissionRequester {
 
     public enum Result { Granted, Denied, Requesting }
 
+    public static final String FLOAT_PERMISSION    = "PermissionOverlayWindows";
+    public static final String BG_START_PERMISSION = "PermissionStartActivityFromBackground";
+
+    private List<String> mDirectPermissionList   = new ArrayList<>();
+    private List<String> mIndirectPermissionList = new ArrayList<>();
+
     private PermissionRequester(String... permissions) {
         mPermissions = permissions;
+        for (String permission : mPermissions) {
+            if (FLOAT_PERMISSION.equals(permission) || BG_START_PERMISSION.equals(permission)) {
+                mIndirectPermissionList.add(permission);
+            } else {
+                mDirectPermissionList.add(permission);
+            }
+        }
+
         mPermissionNotification = (key, subKey, param) -> {
             if (param == null) {
                 return;
@@ -146,10 +173,24 @@ public class PermissionRequester {
      */
     @SuppressLint("NewApi")
     public void request() {
+        Log.i(TAG, "request, directPermissionList: " + mDirectPermissionList
+                + " ,indirectPermissionList:  " + mIndirectPermissionList);
+        if (mDirectPermissionList != null && mDirectPermissionList.size() > 0) {
+            requestDirectPermission(mDirectPermissionList.toArray(new String[0]));
+        }
+        if (mIndirectPermissionList != null && mIndirectPermissionList.size() > 0) {
+            startAppDetailsSettingsByBrand();
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private void requestDirectPermission(String[] permissions) {
         synchronized (sLock) {
             if (sIsRequesting.get()) {
                 Log.e(TAG, "can not request during requesting");
-                mPermissionCallback.onDenied();
+                if (mPermissionCallback != null) {
+                    mPermissionCallback.onDenied();
+                }
                 return;
             }
             sIsRequesting.set(true);
@@ -161,7 +202,7 @@ public class PermissionRequester {
             notifyPermissionRequestResult(Result.Granted);
             return;
         }
-        String[] unauthorizedPermissions = findUnauthorizedPermissions(mPermissions);
+        String[] unauthorizedPermissions = findUnauthorizedPermissions(permissions);
         if (unauthorizedPermissions.length <= 0) {
             notifyPermissionRequestResult(Result.Granted);
             return;
@@ -170,8 +211,19 @@ public class PermissionRequester {
         startPermissionActivity(realRequest);
     }
 
+    /**
+     * 不支持悬浮窗和后台拉起应用权限 与 麦克风\相机\蓝牙等其他权限一起进行检查
+     * <p>
+     * Do not support check float permission(or background permission) with microphone(or camera\bluetooth) together
+     */
     public boolean has() {
-        for (String permission : mPermissions) {
+        if (mIndirectPermissionList.contains(BG_START_PERMISSION)) {
+            return hasFloatPermission() && hasBgStartPermission();
+        } else if (mIndirectPermissionList.contains(FLOAT_PERMISSION)) {
+            return hasFloatPermission();
+        }
+
+        for (String permission : mDirectPermissionList) {
             if (!has(permission)) {
                 return false;
             }
@@ -318,5 +370,199 @@ public class PermissionRequester {
             dest.writeString(mSettingsTip);
             dest.writeInt(mPermissionIconId);
         }
+    }
+
+    private void startAppDetailsSettingsByBrand() {
+        if (TUIBuild.isBrandVivo()) {
+            startVivoPermissionSettings(TUIConfig.getAppContext());
+        } else if (TUIBuild.isBrandHuawei()) {
+            startHuaweiPermissionSettings(TUIConfig.getAppContext());
+        } else if (TUIBuild.isBrandXiaoMi()) {
+            startXiaomiPermissionSettings(TUIConfig.getAppContext());
+        } else {
+            startCommonSettings(TUIConfig.getAppContext());
+        }
+    }
+
+    private void startCommonSettings(Context context) {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                intent.setData(Uri.parse("package:" + context.getPackageName()));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startVivoPermissionSettings(Context context) {
+        try {
+            Intent intent = new Intent();
+            intent.setClassName("com.vivo.permissionmanager",
+                    "com.vivo.permissionmanager.activity.SoftPermissionDetailActivity");
+            intent.setAction("secure.intent.action.softPermissionDetail");
+            intent.putExtra("packagename", context.getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            ToastUtil.toastShortMessage(context.getResources().getString(R.string.core_float_permission_hint));
+        } catch (Exception e) {
+            Log.w(TAG, "startVivoPermissionSettings: open common settings");
+            startCommonSettings(context);
+        }
+    }
+
+    private void startHuaweiPermissionSettings(Context context) {
+        if (!TUIBuild.isHarmonyOS()) {
+            Log.i(TAG, "The device is not Harmony or cannot get system operator");
+            startCommonSettings(context);
+            return;
+        }
+
+        try {
+            Intent intent = new Intent();
+            intent.putExtra("packageName", context.getPackageName());
+            ComponentName comp = new ComponentName("com.huawei.systemmanager",
+                    "com.huawei.permissionmanager.ui.MainActivity");
+            intent.setComponent(comp);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
+            ToastUtil.toastShortMessage(context.getResources().getString(R.string.core_float_permission_hint));
+        } catch (Exception e) {
+            Log.w(TAG, "startHuaweiPermissionSettings: open common settings");
+            startCommonSettings(context);
+        }
+    }
+
+    private void startXiaomiPermissionSettings(Context context) {
+        if (!TUIBuild.isMiuiOptimization()) {
+            Log.i(TAG, "The device do not open miuiOptimization or cannot get miui property");
+            startCommonSettings(context);
+            return;
+        }
+
+        try {
+            Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            intent.setClassName("com.miui.securitycenter",
+                    "com.miui.permcenter.permissions.PermissionsEditorActivity");
+            intent.putExtra("extra_pkgname", context.getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
+            ToastUtil.toastShortMessage(context.getResources().getString(R.string.core_float_permission_hint));
+        } catch (Exception e) {
+            Log.w(TAG, "startXiaomiPermissionSettings: open common settings");
+            startCommonSettings(context);
+        }
+    }
+
+    /**
+     * 1. 大部分机型,悬浮窗和后台拉起应用是同一个权限;
+     * 2. 若小米手机关闭了miui优化,申请权限时会跳转原生界面(该界面无法开启后台拉起应用权限),需用户手动到系统应用管理中开启;
+     * <p>
+     * 1. For most phone, floating permissions and background permission are the same.
+     * 2. If the xiaomi phone has turned off MIUI optimization. When requesting float or background
+     * pop-ups permission, it will start Settings.canDrawOverlays which cannot support open background pop-ups
+     * permission. You need manually enable the background pop-ups permission in the system application Settings.
+     */
+    private boolean hasBgStartPermission() {
+        if (TUIBuild.isBrandHuawei() && TUIBuild.isHarmonyOS()) {
+            return isHarmonyBgStartPermissionAllowed(TUIConfig.getAppContext());
+        } else if (TUIBuild.isBrandVivo()) {
+            return isVivoBgStartPermissionAllowed(TUIConfig.getAppContext());
+        } else if (TUIBuild.isBrandXiaoMi() && TUIBuild.isMiuiOptimization()) {
+            return isXiaomiBgStartPermissionAllowed(TUIConfig.getAppContext());
+        }
+
+        return hasFloatPermission();
+    }
+
+    private boolean hasFloatPermission() {
+        try {
+            Context context = TUIConfig.getAppContext();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return Settings.canDrawOverlays(context);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                if (manager == null) {
+                    return false;
+                }
+                Method method = AppOpsManager.class.getMethod("checkOp", int.class, int.class, String.class);
+                int result = (Integer) method.invoke(manager, 24, Binder.getCallingUid(), context.getPackageName());
+                Log.i(TAG, "hasFloatPermission, result: " + (AppOpsManager.MODE_ALLOWED == result));
+                return AppOpsManager.MODE_ALLOWED == result;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isHarmonyBgStartPermissionAllowed(Context context) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                if (manager == null) {
+                    return false;
+                }
+                Class<?> clz = Class.forName("com.huawei.android.app.AppOpsManagerEx");
+                Method method = clz.getDeclaredMethod("checkHwOpNoThrow", AppOpsManager.class, int.class, int.class,
+                        String.class);
+                int result = (int) method.invoke(clz.newInstance(), new Object[]{manager, 100000,
+                        android.os.Process.myUid(), context.getPackageName()});
+                Log.i(TAG, "isHarmonyBgStartPermissionAllowed, result: " + (result == 0));
+                return result == 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isVivoBgStartPermissionAllowed(Context context) {
+        try {
+            Uri uri = Uri.parse("content://com.vivo.permissionmanager.provider.permission/start_bg_activity");
+            Cursor cursor = context.getContentResolver().query(uri, null, "pkgname = ?",
+                    new String[]{context.getPackageName()}, null);
+            if (cursor == null) {
+                return false;
+            }
+            if (cursor.moveToFirst()) {
+                int result = cursor.getInt(cursor.getColumnIndex("currentstate"));
+                cursor.close();
+                Log.i(TAG, "isVivoBgStartPermissionAllowed, result: " + (0 == result));
+                return 0 == result;
+            } else {
+                cursor.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isXiaomiBgStartPermissionAllowed(Context context) {
+        try {
+            AppOpsManager appOpsManager = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+            }
+            if (appOpsManager == null) {
+                return false;
+            }
+            int op = 10021;
+            Method method = appOpsManager.getClass().getMethod("checkOpNoThrow",
+                    new Class[]{int.class, int.class, String.class});
+            method.setAccessible(true);
+            int result = (int) method.invoke(appOpsManager, op, android.os.Process.myUid(), context.getPackageName());
+            Log.i(TAG, "isXiaomiBgStartPermissionAllowed, result: " + (AppOpsManager.MODE_ALLOWED == result));
+            return AppOpsManager.MODE_ALLOWED == result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

@@ -1,9 +1,11 @@
 package com.tencent.qcloud.tuikit.timcommon.util;
 
 import android.content.Context;
+
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,13 +64,13 @@ public class DateTimeUtil {
         long yearStartTimeInMillis = yearStartCalendar.getTimeInMillis();
         long outTimeMillis = date.getTime();
         if (outTimeMillis < yearStartTimeInMillis) {
-            timeText = String.format(locale, "%tD", date);
+            timeText = String.format(Locale.US, "%tD", date);
         } else if (outTimeMillis < weekStartTimeInMillis) {
-            timeText = String.format(locale, "%1$tm/%1$td", date);
+            timeText = String.format(Locale.US, "%1$tm/%1$td", date);
         } else if (outTimeMillis < dayStartTimeInMillis) {
             timeText = String.format(locale, "%tA", date);
         } else {
-            timeText = String.format(locale, "%tR", date);
+            timeText = String.format(Locale.US, "%tR", date);
         }
         return timeText;
     }
@@ -82,14 +84,7 @@ public class DateTimeUtil {
         if (date == null) {
             return "";
         }
-        Context context = TUIConfig.getAppContext();
-        Locale locale;
-        if (context == null) {
-            locale = Locale.getDefault();
-        } else {
-            locale = TUIThemeManager.getInstance().getLocale(context);
-        }
-        return String.format(locale, "%tR", date);
+        return String.format(Locale.US, "%tR", date);
     }
 
     public static String formatSeconds(long seconds) {
@@ -136,7 +131,7 @@ public class DateTimeUtil {
     }
 
     public static long getStringToDate(String dateString, String pattern) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.US);
         Date date = new Date();
         try {
             date = dateFormat.parse(dateString);
@@ -148,7 +143,7 @@ public class DateTimeUtil {
     }
 
     public static String getTimeStringFromDate(Date date, String pattern) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.US);
         return simpleDateFormat.format(date);
     }
 }

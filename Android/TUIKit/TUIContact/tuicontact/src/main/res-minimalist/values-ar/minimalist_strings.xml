@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="contact_minimalist_contacts">جهات الاتصال</string>
+    <string name="contact_new_application_title">%d طلب صداقة جديد</string>
+    <string name="contact_validation_message">رسالة التحقق</string>
+    <string name="contact_friend_application_detail_title">التفاصيل</string>
+    <string name="contact_not_found_info">لا يوجد محتوى</string>
+
+</resources>

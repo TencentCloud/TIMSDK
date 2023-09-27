@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="camera">كاميرا</string>
+    <string name="left_cancle_send">إرسال عند تحرير الإصبع،اسحب لليمين للإلغاء</string>
+    <string name="chat_tap_to_remove">انقر للحذف</string>
+    <string name="chat_forward_checked_num">تم اختيار %d</string>
+    <string name="chat_minimalist_pop_more">المزيد</string>
+    <string name="chat_contact_profile_message">إرسال رسالة</string>
+
+</resources>

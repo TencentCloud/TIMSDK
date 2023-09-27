@@ -14,8 +14,9 @@
     <TextView
         android:id="@+id/controller_name"
         android:layout_weight="1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:textSize="16sp"
         android:textColor="@color/black"/>
 
@@ -33,6 +34,7 @@
         tools:visibility="visible"/>
 
     <ImageView
+        android:id="@+id/arrow_icon"
         android:layout_marginStart="4dp"
         android:layout_width="16dp"
         android:layout_height="16dp"

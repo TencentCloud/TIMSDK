@@ -36,6 +36,7 @@ class SelectGroupMemberActivity : AppCompatActivity() {
 
     private fun initView() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar_group)
+        toolbar.navigationIcon?.isAutoMirrored = true
         toolbar.setNavigationOnClickListener { v: View? -> finish() }
         val btnOK = findViewById<Button>(R.id.btn_group_ok)
         btnOK.setOnClickListener { v: View? ->

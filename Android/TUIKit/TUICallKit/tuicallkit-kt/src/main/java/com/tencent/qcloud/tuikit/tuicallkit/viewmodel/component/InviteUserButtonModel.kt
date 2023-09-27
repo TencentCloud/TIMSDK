@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component
 import android.os.Bundle
 import android.text.TextUtils
 import com.tencent.qcloud.tuicore.ServiceInitializer
-import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification
@@ -19,10 +18,12 @@ import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 class InviteUserButtonModel : ITUINotification {
     public var role: LiveData<TUICallDefine.Role>? = null
     public var mediaType = LiveData<TUICallDefine.MediaType>()
+    public var callStatus = LiveData<TUICallDefine.Status>()
 
     init {
         role = TUICallState.instance.selfUser.get().callRole
         mediaType = TUICallState.instance.mediaType
+        callStatus = TUICallState.instance.selfUser.get().callStatus
     }
 
     fun registerEvent() {
@@ -30,7 +31,7 @@ class InviteUserButtonModel : ITUINotification {
     }
 
     fun unRegisterEvent() {
-        TUICore.unRegisterEvent(Constants.EVENT_TUICALLING_CHANGED,  Constants.EVENT_SUB_GROUP_MEMBER_SELECTED, this)
+        TUICore.unRegisterEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_GROUP_MEMBER_SELECTED, this)
     }
 
     fun inviteUser() {
@@ -43,9 +44,7 @@ class InviteUserButtonModel : ITUINotification {
         }
         val status: TUICallDefine.Status = TUICallState.instance.selfUser.get().callStatus.get()
         if (TUICallDefine.Role.Called == role?.get() && TUICallDefine.Status.Accept != status) {
-            ToastUtil.toastShortMessage(
-                ServiceInitializer.getAppContext().getString(R.string.tuicalling_status_is_not_accept)
-            )
+            TUILog.i(TAG, "This feature can only be used after the callee accepted the call.")
             return
         }
         val list = ArrayList<String?>()
