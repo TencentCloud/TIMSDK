@@ -1,9 +1,10 @@
 package com.tencent.cloud.tuikit.roomkit.model.manager;
 
-import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
+import static com.tencent.cloud.tuikit.roomkit.videoseat.Constants.VOLUME_CAN_HEARD_MIN_LIMIT;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
@@ -11,13 +12,14 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RoomEventDispatcher extends TUIRoomObserver {
+    private static final String TAG = "RoomEventDispatcher";
+
     private RoomStore mRoomStore;
 
     public RoomEventDispatcher(RoomStore roomStore) {
@@ -106,36 +108,21 @@ public class RoomEventDispatcher extends TUIRoomObserver {
 
     @Override
     public void onRemoteUserEnterRoom(String roomId, TUIRoomDefine.UserInfo userInfo) {
-        mRoomStore.allUserList.add(userInfo);
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-        map.put(RoomEventConstant.KEY_USER_INFO, userInfo);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM, map);
+        mRoomStore.remoteUserEnterRoom(userInfo);
     }
 
     @Override
     public void onRemoteUserLeaveRoom(String roomId, TUIRoomDefine.UserInfo userInfo) {
-        TUIRoomDefine.UserInfo user = findUserInfo(userInfo.userId);
-        if (user != null) {
-            mRoomStore.allUserList.remove(user);
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-        map.put(RoomEventConstant.KEY_USER_INFO, userInfo);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, map);
+        mRoomStore.remoteUserLeaveRoom(userInfo.userId);
     }
 
     @Override
     public void onUserRoleChanged(String userId, TUIRoomDefine.Role role) {
-        TUIRoomDefine.UserInfo userInfo = findUserInfo(userId);
-        if (userInfo != null) {
-            userInfo.userRole = role;
-        }
         if (TextUtils.equals(userId, mRoomStore.userModel.userId)) {
             mRoomStore.userModel.role = role;
         }
         if (role == TUIRoomDefine.Role.ROOM_OWNER) {
-            mRoomStore.roomInfo.owner = userId;
+            mRoomStore.roomInfo.ownerId = userId;
         }
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_USER_ID, userId);
@@ -146,45 +133,30 @@ public class RoomEventDispatcher extends TUIRoomObserver {
     @Override
     public void onUserVideoStateChanged(String userId, TUIRoomDefine.VideoStreamType streamType, boolean hasVideo,
                                         TUIRoomDefine.ChangeReason reason) {
-        TUIRoomDefine.UserInfo userInfo = findUserInfo(userId);
-        if (userInfo != null) {
-            if (SCREEN_STREAM == streamType) {
-                userInfo.hasScreenStream = hasVideo;
-            } else {
-                userInfo.hasVideoStream = hasVideo;
-            }
+        if (streamType == SCREEN_STREAM) {
+            mRoomStore.handleUserScreenStateChanged(userId, hasVideo);
+        } else {
+            mRoomStore.updateUserCameraState(userId, streamType, hasVideo, reason);
         }
-        if (TextUtils.equals(mRoomStore.userModel.userId, userId) && streamType == CAMERA_STREAM) {
-            mRoomStore.roomInfo.isOpenCamera = hasVideo;
-        }
-
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_USER_ID, userId);
-        map.put(RoomEventConstant.KEY_STREAM_TYPE, streamType);
-        map.put(RoomEventConstant.KEY_HAS_VIDEO, hasVideo);
-        map.put(RoomEventConstant.KEY_REASON, reason);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_VIDEO_STATE_CHANGED, map);
     }
 
     @Override
     public void onUserAudioStateChanged(String userId, boolean hasAudio, TUIRoomDefine.ChangeReason reason) {
-        TUIRoomDefine.UserInfo userInfo = findUserInfo(userId);
-        if (userInfo != null) {
-            userInfo.hasAudioStream = hasAudio;
-        }
-        if (TextUtils.equals(mRoomStore.userModel.userId, userId)) {
-            mRoomStore.roomInfo.isOpenMicrophone = hasAudio;
-        }
-
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_USER_ID, userId);
-        map.put(RoomEventConstant.KEY_HAS_AUDIO, hasAudio);
-        map.put(RoomEventConstant.KEY_REASON, reason);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_AUDIO_STATE_CHANGED, map);
+        mRoomStore.updateUserAudioState(userId, hasAudio, reason);
     }
 
     @Override
     public void onUserVoiceVolumeChanged(Map<String, Integer> volumeMap) {
+        for (Map.Entry<String, Integer> entry : volumeMap.entrySet()) {
+            String userId = entry.getKey();
+            if (TextUtils.isEmpty(userId)) {
+                continue;
+            }
+            if (entry.getValue() < VOLUME_CAN_HEARD_MIN_LIMIT) {
+                continue;
+            }
+            mRoomStore.updateUserAudioVolume(userId, entry.getValue());
+        }
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_VOLUME_MAP, volumeMap);
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_VOICE_VOLUME_CHANGED, map);
@@ -192,12 +164,7 @@ public class RoomEventDispatcher extends TUIRoomObserver {
 
     @Override
     public void onSendMessageForUserDisableChanged(String roomId, String userId, boolean isDisable) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-        map.put(RoomEventConstant.KEY_USER_ID, userId);
-        map.put(RoomEventConstant.KEY_IS_DISABLE, isDisable);
-        RoomEventCenter.getInstance().
-                notifyEngineEvent(RoomEventCenter.RoomEngineEvent.SEND_MESSAGE_FOR_USER_DISABLE_CHANGED, map);
+        mRoomStore.disableUserSendingMsg(userId, isDisable);
     }
 
     @Override
@@ -228,26 +195,26 @@ public class RoomEventDispatcher extends TUIRoomObserver {
     @Override
     public void onSeatListChanged(List<TUIRoomDefine.SeatInfo> seatList, List<TUIRoomDefine.SeatInfo> seatedList,
                                   List<TUIRoomDefine.SeatInfo> leftList) {
+        RoomEngineManager manager = RoomEngineManager.sharedInstance();
+        for (TUIRoomDefine.SeatInfo item : seatedList) {
+            mRoomStore.setUserOnSeat(item.userId, true);
+            manager.getUserInfo(item.userId, new TUIRoomDefine.GetUserInfoCallback() {
+                @Override
+                public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
+                    mRoomStore.remoteUserTakeSeat(userInfo);
+                }
 
-        for (TUIRoomDefine.SeatInfo info : seatedList) {
-            if (info.userId.equals(mRoomStore.userModel.userId)) {
-                mRoomStore.userModel.isOnSeat = true;
-                break;
-            }
+                @Override
+                public void onError(TUICommonDefine.Error error, String s) {
+                    Log.e(TAG, "onSeatListChanged getUserInfo onError, error=" + error + " s=" + s);
+                }
+            });
         }
 
-        for (TUIRoomDefine.SeatInfo info : leftList) {
-            if (info.userId.equals(mRoomStore.userModel.userId)) {
-                mRoomStore.userModel.isOnSeat = false;
-                break;
-            }
+        for (TUIRoomDefine.SeatInfo item : leftList) {
+            mRoomStore.setUserOnSeat(item.userId, false);
+            mRoomStore.remoteUserLeaveSeat(item.userId);
         }
-
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_SEAT_LIST, seatList);
-        map.put(RoomEventConstant.KEY_SEATED_LIST, seatedList);
-        map.put(RoomEventConstant.KEY_LEFT_LIST, leftList);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.SEAT_LIST_CHANGED, map);
     }
 
     @Override
@@ -286,16 +253,5 @@ public class RoomEventDispatcher extends TUIRoomObserver {
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_USER_ID, userId);
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.KICKED_OFF_SEAT, map);
-    }
-
-    private TUIRoomDefine.UserInfo findUserInfo(String userId) {
-        List<TUIRoomDefine.UserInfo> list =
-                RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomStore().allUserList;
-        for (TUIRoomDefine.UserInfo item : list) {
-            if (TextUtils.equals(item.userId, userId)) {
-                return item;
-            }
-        }
-        return null;
     }
 }

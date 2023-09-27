@@ -36,7 +36,7 @@ public abstract class BaseBottomDialog extends BottomSheetDialog {
         if (bottomSheetView != null) {
             mBehavior = BottomSheetBehavior.from(bottomSheetView);
         }
-        intiView();
+        initView();
     }
 
     protected void updateHeightToMatchParent() {
@@ -58,7 +58,7 @@ public abstract class BaseBottomDialog extends BottomSheetDialog {
 
     protected abstract int getLayoutId();
 
-    protected abstract void intiView();
+    protected abstract void initView();
 
     public void changeConfiguration(Configuration configuration) {
         Window window = getWindow();

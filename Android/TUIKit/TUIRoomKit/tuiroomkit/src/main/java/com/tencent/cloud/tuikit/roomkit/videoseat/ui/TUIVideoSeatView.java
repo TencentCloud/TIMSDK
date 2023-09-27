@@ -13,16 +13,15 @@ import android.widget.RelativeLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
-import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.LandscapePageLayoutManager;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.PageLayoutManager;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.PagerSnapHelper;
+import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.PortraitPageLayoutManager;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.UserListAdapter;
+import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.VisibleRange;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.CircleIndicator;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserDisplayView;
-import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.PortraitPageLayoutManager;
-import com.tencent.cloud.tuikit.roomkit.videoseat.ui.layout.VisibleRange;
 import com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel.IVideoSeatViewModel;
 import com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel.VideoSeatViewModel;
@@ -46,7 +45,6 @@ public class TUIVideoSeatView extends RelativeLayout {
     private List<UserEntity> mMemberEntityList;
 
     private IVideoSeatViewModel mViewModel;
-    private TUIRoomEngine       mRoomEngine;
 
     private boolean mIsSpeakerModeOn;
     private boolean mIsTwoPersonVideoOn;
@@ -57,10 +55,9 @@ public class TUIVideoSeatView extends RelativeLayout {
 
     private VisibleRange mVisibleRange = new VisibleRange();
 
-    public TUIVideoSeatView(Context context, String roomId, TUIRoomEngine roomEngine) {
+    public TUIVideoSeatView(Context context) {
         super(context);
         mContext = context;
-        mRoomEngine = roomEngine;
     }
 
     public void setMemberEntityList(List<UserEntity> memberEntityList) {
@@ -77,7 +74,7 @@ public class TUIVideoSeatView extends RelativeLayout {
         int selectColor = getResources().getColor(R.color.tuivideoseat_color_white);
         mCircleIndicator.setSelectDotColor(selectColor);
         mCircleIndicator.setUnSelectDotColor(unSelectColor);
-        mViewModel = new VideoSeatViewModel(mContext, mRoomEngine, this);
+        mViewModel = new VideoSeatViewModel(mContext, this);
         initListView();
     }
 
@@ -112,7 +109,7 @@ public class TUIVideoSeatView extends RelativeLayout {
         mPageLayoutManager.setPageListener(new PageLayoutManager.PageListener() {
             @Override
             public void onPageSizeChanged(int pageSize) {
-
+                updateScrollIndicator();
             }
 
             @Override
@@ -128,12 +125,12 @@ public class TUIVideoSeatView extends RelativeLayout {
                 }
                 mCurrentPageIndex = pageIndex;
                 updateUserTalkingViewVisible(pageIndex);
+                updateCircleIndicator();
                 processVideoPlay(mVisibleRange.getMinVisibleRange(), mVisibleRange.getMaxVisibleRange());
             }
 
             @Override
             public void onItemVisible(int fromItem, int toItem) {
-                Log.d(TAG, "onItemVisible: " + fromItem + " to " + toItem);
                 mVisibleRange.updateRange(fromItem, toItem);
             }
         });
@@ -448,9 +445,7 @@ public class TUIVideoSeatView extends RelativeLayout {
         mPageLayoutManager.enableTwoPersonMeeting(mIsTwoPersonVideoOn, mIsTwoPersonSwitched);
 
         if (mMemberListAdapter.getItemCount() == 1) {
-            if (mIsTwoPersonSwitched) {
-                mMemberListAdapter.notifyItemChanged(0);
-            }
+            mMemberListAdapter.notifyItemChanged(0);
             return;
         }
         if (mMemberListAdapter.getItemCount() == 2 && enable) {

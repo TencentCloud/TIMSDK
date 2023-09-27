@@ -6,24 +6,22 @@
 
 package com.tencent.cloud.tuikit.roomkit;
 
-import android.content.Context;
-
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
+import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.model.TUIRoomKitImpl;
 
 public abstract class TUIRoomKit {
-    public enum RoomScene {
-        MEETING,
-        LIVE
+    /**
+     * 1.1 创建 TUIRoomKit 实例（单例模式）
+     */
+    public static TUIRoomKit createInstance() {
+        return TUIRoomKitImpl.sharedInstance();
     }
 
     /**
-     * 1.1 创建 TUIRoomKit 实例（单例模式）
-     *
-     * @param context Android 上下文。
+     * 1.2 销毁 TUIRoomKit 实例（单例模式）
      */
-    public static TUIRoomKit sharedInstance(Context context) {
-        return TUIRoomKitImpl.sharedInstance(context);
+    public static void destroyInstance() {
+        TUIRoomKitImpl.destroyInstance();
     }
 
     /**
@@ -32,41 +30,23 @@ public abstract class TUIRoomKit {
      * @param userName 个人的用户名。
      * @param avatarURL 个人的头像链接。
      */
-    public abstract void setSelfInfo(String userName, String avatarURL);
-
-    /**
-     * 4.1 是否进入预览界面
-     *
-     * @param enablePreview true 就进入预览界面，false 则跳过预览界面。
-     */
-    public abstract void enterPrepareView(boolean enablePreview);
+    public abstract void setSelfInfo(String userName, String avatarURL, TUIRoomDefine.ActionCallback callback);
 
     /**
      * 5.1 创建房间
      *
-     * @param roomInfo 创建房间的参数，包含房间名，房间号等。
-     * @param scene 房间类型。
+     * @param roomInfo 创建房间的参数，包含房间号、房间名称等，其中 roomId 是必填项，其余可为默认值。
      */
-    public abstract void createRoom(RoomInfo roomInfo, RoomScene scene);
+    public abstract void createRoom(TUIRoomDefine.RoomInfo roomInfo, TUIRoomDefine.ActionCallback callback);
 
     /**
      * 5.2 进入房间
      *
-     * @param roomInfo 进入房间的参数，包含房间名，房间号等。
+     * @param roomId           进入房间的房间号。
+     * @param enableMic        是否开启麦克风，true 则开启，false 则关闭。
+     * @param enableCamera     是否打开摄像头，true 则开启，false 则关闭。
+     * @param isSoundOnSpeaker 是否使用扬声器播放声音，true 则使用扬声器，false 则使用听筒。
      */
-    public abstract void enterRoom(RoomInfo roomInfo);
-
-    /**
-     * 6.1 添加 TUIRoomKit 事件回
-     *
-     * @param listener TUIRoomKit 回调事件的监听器。
-     */
-    public abstract void addListener(TUIRoomKitListener listener);
-
-    /**
-     * 6.2 移除 TUIRoomKit 事件回调
-     *
-     * @param listener TUIRoomKit 回调事件的监听器。
-     */
-    public abstract void removeListener(TUIRoomKitListener listener);
+    public abstract void enterRoom(String roomId, boolean enableMic, boolean enableCamera, boolean isSoundOnSpeaker,
+                                   TUIRoomDefine.GetRoomInfoCallback callback);
 }

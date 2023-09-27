@@ -18,6 +18,7 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomMsgManager;
 import com.tencent.cloud.tuikit.roomkit.imaccess.utils.BusinessSceneUtil;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.InvitedToJoinRoomActivity;
@@ -132,6 +133,11 @@ public class RoomServiceInitializer extends ServiceInitializer implements ITUIEx
                 Log.e(TAG, "onGetExtension TUIConstants.TUIChat.Extension.InputMore.GROUP_ID params is illegal");
                 return null;
             }
+            Object obj = param.get(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM);
+            if (obj != null && obj instanceof Boolean && ((boolean)obj)) {
+                return null;
+            }
+            TUIRoomKit.createInstance();
             ChatInputMoreListener chatInputMoreListener =
                     (ChatInputMoreListener) param.get(TUIConstants.TUIChat.Extension.InputMore.INPUT_MORE_LISTENER);
             RoomMsgManager.setChatInputMoreListenerRef(new WeakReference<>(chatInputMoreListener));

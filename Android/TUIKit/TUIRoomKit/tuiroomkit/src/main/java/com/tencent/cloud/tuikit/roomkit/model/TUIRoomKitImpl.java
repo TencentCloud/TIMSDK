@@ -1,5 +1,10 @@
 package com.tencent.cloud.tuikit.roomkit.model;
 
+import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ROOM_ID_INVALID;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.Role.GENERAL_USER;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.Role.ROOM_OWNER;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.SpeechMode.SPEAK_AFTER_TAKING_SEAT;
+
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -7,230 +12,138 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
-import com.tencent.cloud.tuikit.roomkit.TUIRoomKitListener;
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.service.KeepAliveService;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomPermissionUtil;
-import com.tencent.cloud.tuikit.roomkit.utils.UserModel;
-import com.tencent.cloud.tuikit.roomkit.utils.UserModelManager;
-import com.tencent.cloud.tuikit.roomkit.view.activity.PrepareActivity;
 import com.tencent.cloud.tuikit.roomkit.view.activity.RoomMainActivity;
-import com.tencent.cloud.tuikit.roomkit.view.service.RoomFloatWindowManager;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.permission.PermissionCallback;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TUIRoomKitImpl extends TUIRoomKit implements RoomEngineManager.Listener {
+public class TUIRoomKitImpl extends TUIRoomKit {
     private static final String TAG = "TUIRoomKitImpl";
 
     private static TUIRoomKit sInstance;
 
-    private Context                  mContext;
-    private List<TUIRoomKitListener> mListenerList;
+    private Context mContext;
 
-    private RoomFloatWindowManager mRoomFloatWindowManager;
-
-    public static TUIRoomKit sharedInstance(Context context) {
+    public static TUIRoomKit sharedInstance() {
         if (sInstance == null) {
             synchronized (TUIRoomKitImpl.class) {
                 if (sInstance == null) {
-                    sInstance = new TUIRoomKitImpl(context);
+                    sInstance = new TUIRoomKitImpl();
                 }
             }
         }
         return sInstance;
     }
 
-    private TUIRoomKitImpl(Context context) {
-        mContext = context.getApplicationContext();
-        mListenerList = new ArrayList<>();
-        RoomEngineManager.sharedInstance(mContext).setListener(this);
+    public static void destroyInstance() {
+        sInstance = null;
+    }
+
+    private TUIRoomKitImpl() {
+        mContext = TUILogin.getAppContext();
     }
 
     @Override
-    public void setSelfInfo(String userName, String avatarURL) {
+    public void setSelfInfo(String userName, String avatarURL, TUIRoomDefine.ActionCallback callback) {
         Log.i(TAG, "set self info userName=" + userName + " avatarURL=" + avatarURL);
-        RoomEngineManager.sharedInstance(mContext).setSelfInfo(userName, avatarURL);
+        RoomEngineManager.sharedInstance().setSelfInfo(userName, avatarURL, callback);
     }
 
-    @Override
-    public void enterPrepareView(boolean enablePreview) {
-        Log.i(TAG, "enter prepare view enablePreview=" + enablePreview);
-        if (RoomEngineManager.sharedInstance(mContext).getRoomStore().isInFloatWindow()) {
-            ToastUtil.toastLongMessage(mContext.getString(R.string.tuiroomkit_room_msg_joined));
-            return;
-        }
-        Intent intent = new Intent(mContext, PrepareActivity.class);
-        intent.putExtra(PrepareActivity.INTENT_ENABLE_PREVIEW, enablePreview);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);
-    }
 
     @Override
-    public void createRoom(final RoomInfo roomInfo, RoomScene scene) {
-        Log.i(TAG, "create room roomInfo=" + roomInfo + " scene=" + scene);
+    public void createRoom(TUIRoomDefine.RoomInfo roomInfo, TUIRoomDefine.ActionCallback callback) {
+        Log.i(TAG, "createRoom roomInfo=" + roomInfo);
         if (roomInfo == null || TextUtils.isEmpty(roomInfo.roomId)) {
-            final List<TUIRoomKitListener> list = copyListener();
-            for (TUIRoomKitListener listener : list) {
-                listener.onRoomEnter(-1, "roomInfo is empty");
+            if (callback != null) {
+                callback.onError(ROOM_ID_INVALID, "room id is empty");
             }
             return;
         }
-        RoomEngineManager.sharedInstance(mContext).createRoom(roomInfo, scene);
+        RoomEngineManager.sharedInstance().createRoom(roomInfo, callback);
     }
 
     @Override
-    public void enterRoom(RoomInfo roomInfo) {
-        Log.i(TAG, "enter room roomInfo=" + roomInfo);
-        if (roomInfo == null || TextUtils.isEmpty(roomInfo.roomId)) {
-            final List<TUIRoomKitListener> list = copyListener();
-            for (TUIRoomKitListener listener : list) {
-                listener.onRoomEnter(-1, "roomInfo or room id is empty");
+    public void enterRoom(String roomId, boolean enableMic, boolean enableCamera, boolean isSoundOnSpeaker,
+                          TUIRoomDefine.GetRoomInfoCallback callback) {
+        Log.i(TAG, "enterRoom roomId=" + roomId + " enableMic=" + enableMic + " enableCamera=" + enableCamera
+                + " isSoundOnSpeaker=" + isSoundOnSpeaker);
+        if (TextUtils.isEmpty(roomId)) {
+            if (callback != null) {
+                callback.onError(ROOM_ID_INVALID, "room id is empty");
             }
             return;
         }
-        RoomEngineManager.sharedInstance(mContext).enterRoom(roomInfo);
+        RoomEngineManager.sharedInstance().enterRoom(roomId, new TUIRoomDefine.GetRoomInfoCallback() {
+            @Override
+            public void onSuccess(TUIRoomDefine.RoomInfo roomInfo) {
+                if (RoomEngineManager.sharedInstance().getRoomStore().isAutoShowRoomMainUi()) {
+                    goRoomMainActivity();
+                }
+                decideMediaStatus(enableMic, enableCamera, isSoundOnSpeaker);
+                if (callback != null) {
+                    callback.onSuccess(roomInfo);
+                }
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String message) {
+                if (callback != null) {
+                    callback.onError(error, message);
+                }
+            }
+        });
     }
 
-    @Override
-    public void addListener(TUIRoomKitListener listener) {
-        Log.i(TAG, "add listener : " + listener);
-        if (listener != null) {
-            mListenerList.add(listener);
-        }
-    }
-
-    @Override
-    public void removeListener(TUIRoomKitListener listener) {
-        Log.i(TAG, "remove listener : " + listener);
-        if (listener != null) {
-            mListenerList.remove(listener);
-        }
-    }
-
-    @Override
-    public void onCreateEngineRoom(int code, String message, RoomInfo roomInfo) {
-        Log.i(TAG, "onCreateEngineRoom code=" + code + " message=" + message);
-        if (roomInfo == null) {
-            Log.e(TAG, "onCreateEngineRoom roomInfo is null");
-            notifyCreateRoomResult(code, message);
-            return;
-        }
-        if (TextUtils.isEmpty(roomInfo.roomId)) {
-            Log.e(TAG, "onCreateEngineRoom roomId is empty");
-            notifyCreateRoomResult(code, message);
-            return;
-        }
-        notifyCreateRoomResult(code, message);
-        KeepAliveService.startKeepAliveService(mContext.getString(mContext.getApplicationInfo().labelRes),
-                mContext.getString(R.string.tuiroomkit_app_running));
-    }
-
-    private void notifyCreateRoomResult(int code, String message) {
-        final List<TUIRoomKitListener> list = copyListener();
-        for (TUIRoomKitListener listener : list) {
-            listener.onRoomCreate(code, message);
-        }
-    }
-
-    @Override
-    public void onEnterEngineRoom(int code, String message, RoomInfo roomInfo) {
-        Log.i(TAG, "onEnterEngineRoom code=" + code + " message=" + message);
-        if (roomInfo == null) {
-            Log.e(TAG, "onEnterEngineRoom roomInfo is null");
-            notifyEnterRoomResult(code, message);
-            return;
-        }
-        if (TextUtils.isEmpty(roomInfo.roomId)) {
-            Log.e(TAG, "onEnterEngineRoom roomId is empty ");
-            notifyEnterRoomResult(code, message);
-            return;
-        }
-        if (code == 0 && RoomEngineManager.sharedInstance(mContext).getRoomStore().isAutoShowRoomMainUi()) {
-            goRoomMainActivity();
-        }
-        UserModelManager.getInstance().getUserModel().userType = UserModel.UserType.ROOM;
-        KeepAliveService.startKeepAliveService(mContext.getString(mContext.getApplicationInfo().labelRes),
-                mContext.getString(R.string.tuiroomkit_app_running));
-        mRoomFloatWindowManager = new RoomFloatWindowManager(mContext);
-        decideMediaStatus();
-        notifyEnterRoomResult(code, message);
-    }
-
-    private void decideMediaStatus() {
-        RoomStore roomStore = RoomEngineManager.sharedInstance().getRoomStore();
-        if (roomStore.roomInfo.isOpenMicrophone && (roomStore.userModel.role == TUIRoomDefine.Role.ROOM_OWNER
-                || !roomStore.roomInfo.isMicrophoneDisableForAllUser)) {
+    private void decideMediaStatus(boolean enableMic, boolean enableCamera, boolean isSoundOnSpeaker) {
+        decideAudioRoute(isSoundOnSpeaker);
+        if (isMicCanOpen(enableMic)) {
             RoomEngineManager.sharedInstance().openLocalMicrophone(new TUIRoomDefine.ActionCallback() {
                 @Override
                 public void onSuccess() {
-                    decideCameraStatus();
+                    decideCameraStatus(enableCamera);
                 }
 
                 @Override
                 public void onError(TUICommonDefine.Error error, String s) {
-                    decideCameraStatus();
+                    decideCameraStatus(enableCamera);
                 }
             });
         } else {
-            decideCameraStatus();
+            decideCameraStatus(enableCamera);
         }
     }
 
-    private void decideCameraStatus() {
+    private void decideAudioRoute(boolean isSoundOnSpeaker) {
+        RoomEngineManager.sharedInstance().setAudioRoute(isSoundOnSpeaker);
+    }
+
+    private void decideCameraStatus(boolean enableCamera) {
         RoomStore roomStore = RoomEngineManager.sharedInstance().getRoomStore();
-        if (roomStore.roomInfo.isOpenCamera && (roomStore.userModel.role == TUIRoomDefine.Role.ROOM_OWNER
-                || !roomStore.roomInfo.isCameraDisableForAllUser)) {
+        if (!enableCamera) {
+            return;
+        }
+        if (roomStore.roomInfo.isCameraDisableForAllUser && roomStore.userModel.role == GENERAL_USER) {
+            return;
+        }
+        if (roomStore.roomInfo.speechMode != SPEAK_AFTER_TAKING_SEAT || roomStore.userModel.role == ROOM_OWNER) {
             RoomEngineManager.sharedInstance().openLocalCamera(null);
         }
     }
 
-    private void notifyEnterRoomResult(int code, String message) {
-        final List<TUIRoomKitListener> list = copyListener();
-        for (TUIRoomKitListener listener : list) {
-            listener.onRoomEnter(code, message);
+    private boolean isMicCanOpen(boolean enableMic) {
+        RoomStore roomStore = RoomEngineManager.sharedInstance().getRoomStore();
+        if (!enableMic) {
+            return false;
         }
+        if (roomStore.roomInfo.isMicrophoneDisableForAllUser && roomStore.userModel.role == GENERAL_USER) {
+            return false;
+        }
+        return roomStore.roomInfo.speechMode != SPEAK_AFTER_TAKING_SEAT || roomStore.userModel.role == ROOM_OWNER;
     }
 
     private void goRoomMainActivity() {
         Intent intent = new Intent(mContext, RoomMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
-    }
-
-    @Override
-    public void onDestroyEngineRoom() {
-        Log.i(TAG, "onDestroyEngineRoom");
-        final List<TUIRoomKitListener> list = copyListener();
-        for (TUIRoomKitListener listener : list) {
-            listener.onDestroyRoom();
-        }
-        KeepAliveService.stopKeepAliveService();
-    }
-
-    @Override
-    public void onExitEngineRoom() {
-        Log.i(TAG, "onExitEngineRoom");
-        final List<TUIRoomKitListener> list = copyListener();
-        for (TUIRoomKitListener listener : list) {
-            listener.onExitRoom();
-        }
-        KeepAliveService.stopKeepAliveService();
-        mRoomFloatWindowManager.destroy();
-        mRoomFloatWindowManager = null;
-    }
-
-    private List<TUIRoomKitListener> copyListener() {
-        List<TUIRoomKitListener> list = new ArrayList<>();
-        for (TUIRoomKitListener item: mListenerList) {
-            list.add(item);
-        }
-        return list;
     }
 }

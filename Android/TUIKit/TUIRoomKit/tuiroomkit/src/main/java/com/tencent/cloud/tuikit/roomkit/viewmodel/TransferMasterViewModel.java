@@ -1,22 +1,27 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import android.content.Context;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+
 import android.content.res.Configuration;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.TransferMasterView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,204 +29,101 @@ public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventR
         RoomEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "TransferMasterViewModel";
 
-    private static final long USER_LIST_NEXT_SEQUENCE = 100L;
-
     private RoomStore          mRoomStore;
-    private TUIRoomEngine      mRoomEngine;
     private TransferMasterView mTransferMasterView;
 
-    private List<UserModel>        mUserModelList;
-    private Map<String, UserModel> mUserModelMap;
-
-    public TransferMasterViewModel(Context context, TransferMasterView transferMasterView) {
+    public TransferMasterViewModel(TransferMasterView transferMasterView) {
         mTransferMasterView = transferMasterView;
-        RoomEngineManager engineManager = RoomEngineManager.sharedInstance(context);
-        mRoomStore = engineManager.getRoomStore();
-        mRoomEngine = engineManager.getRoomEngine();
-        mUserModelList = new ArrayList<>();
-        mUserModelMap = new HashMap<>();
-        initUserList();
+        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
         subscribeEvent();
-    }
-
-    private void subscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     public void destroy() {
         unSubscribeEvent();
     }
 
+    private void subscribeEvent() {
+        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        eventCenter.subscribeEngine(REMOTE_USER_ENTER_ROOM, this);
+        eventCenter.subscribeEngine(REMOTE_USER_LEAVE_ROOM, this);
+        eventCenter.subscribeUIEvent(CONFIGURATION_CHANGE, this);
+    }
+
     private void unSubscribeEvent() {
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        eventCenter.unsubscribeEngine(REMOTE_USER_ENTER_ROOM, this);
+        eventCenter.unsubscribeEngine(REMOTE_USER_LEAVE_ROOM, this);
+        eventCenter.unsubscribeUIEvent(CONFIGURATION_CHANGE, this);
     }
 
     public void transferMaster(String userId) {
         if (TextUtils.isEmpty(userId)) {
             return;
         }
-        mRoomEngine.changeUserRole(userId, TUIRoomDefine.Role.ROOM_OWNER, new TUIRoomDefine.ActionCallback() {
-            @Override
-            public void onSuccess() {
-                mRoomStore.userModel.role = TUIRoomDefine.Role.GENERAL_USER;
-                RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.EXIT_MEETING, null);
-            }
+        RoomEngineManager.sharedInstance()
+                .changeUserRole(userId, TUIRoomDefine.Role.ROOM_OWNER, new TUIRoomDefine.ActionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        mRoomStore.userModel.role = TUIRoomDefine.Role.GENERAL_USER;
+                        RoomEngineManager.sharedInstance().exitRoom(null);
+                    }
 
-            @Override
-            public void onError(TUICommonDefine.Error error, String s) {
-                Log.e(TAG, "changeUserRole error,code:" + error + ",msg:" + s);
-            }
-        });
+                    @Override
+                    public void onError(TUICommonDefine.Error error, String s) {
+                        Log.e(TAG, "changeUserRole error,code:" + error + ",msg:" + s);
+                    }
+                });
     }
 
-    private void addMemberEntity(UserModel userModel) {
-        if (userModel == null) {
-            return;
-        }
-        if (TUIRoomDefine.Role.ROOM_OWNER.equals(userModel.role)) {
-            return;
-        }
-        if (findUserModel(userModel.userId) != null) {
-            return;
-        }
-        mUserModelList.add(userModel);
-        mUserModelMap.put(userModel.userId, userModel);
-        mTransferMasterView.addItem(userModel);
-    }
-
-    private UserModel findUserModel(String userId) {
-        if (TextUtils.isEmpty(userId)) {
-            return null;
-        }
-        for (UserModel entity : mUserModelList) {
-            if (entity == null) {
-                continue;
-            }
-            if (userId.equals(entity.userId)) {
-                return entity;
-            }
-        }
-        return null;
-    }
-
-    private void removeMemberEntity(String userId) {
-        UserModel userModel = mUserModelMap.remove(userId);
-        if (userModel != null) {
-            mUserModelList.remove(userModel);
-            mTransferMasterView.removeItem(userModel);
-        }
-    }
-
-    private void initUserList() {
-        mRoomEngine.getUserList(USER_LIST_NEXT_SEQUENCE, new TUIRoomDefine.GetUserListCallback() {
-            @Override
-            public void onSuccess(TUIRoomDefine.UserListResult userListResult) {
-                for (TUIRoomDefine.UserInfo userInfo : userListResult.userInfoList) {
-                    UserModel userModel = new UserModel();
-                    userModel.userId = userInfo.userId;
-                    userModel.userName = userInfo.userName;
-                    userModel.userAvatar = userInfo.avatarUrl;
-                    userModel.role = userInfo.userRole;
-                    addMemberEntity(userModel);
-                }
-                if (userListResult.nextSequence != 0) {
-                    initUserList();
-                }
-            }
-
-            @Override
-            public void onError(TUICommonDefine.Error error, String s) {
-                Log.e(TAG, "getUserList error,code:" + error + ",msg:" + s);
-            }
-        });
-    }
-
-    public List<UserModel> getUserList() {
-        return mUserModelList;
-    }
-
-    public List<UserModel> searchUserByKeyWords(String keyWords) {
+    public List<UserEntity> searchUserByKeyWords(String keyWords) {
         if (TextUtils.isEmpty(keyWords)) {
             return new ArrayList<>();
         }
 
-        List<UserModel> searchList = new ArrayList<>();
-        for (UserModel model : mUserModelList) {
-            if (model == null) {
-                continue;
-            }
-            if (model.userName.contains(keyWords) || model.userId.contains(keyWords)) {
-                searchList.add(model);
+        List<UserEntity> searchList = new ArrayList<>();
+        for (UserEntity item : mRoomStore.allUserList) {
+            if (item.getUserName().contains(keyWords) || item.getUserId().contains(keyWords)) {
+                searchList.add(item);
             }
         }
         return searchList;
-    }
-
-    private UserModel findUserModelByName(String userName) {
-        if (TextUtils.isEmpty(userName)) {
-            return null;
-        }
-        for (UserModel model : mUserModelList) {
-            if (model == null) {
-                continue;
-            }
-            if (userName.equals(model.userName)) {
-                return model;
-            }
-        }
-        return null;
     }
 
     @Override
     public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case REMOTE_USER_ENTER_ROOM:
-                onRemoteUserEnterRoom(params);
+                handleRemoteUserEnterRoom(params);
                 break;
+
             case REMOTE_USER_LEAVE_ROOM:
-                onRemoteUserLeaveRoom(params);
+                handleRemoteUserLeaveRoom(params);
                 break;
+
             default:
                 break;
         }
     }
 
-    private void onRemoteUserEnterRoom(Map<String, Object> params) {
-        if (params == null) {
+    private void handleRemoteUserEnterRoom(Map<String, Object> params) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        TUIRoomDefine.UserInfo userInfo = (TUIRoomDefine.UserInfo) params.get(RoomEventConstant.KEY_USER_INFO);
-        if (userInfo == null) {
-            return;
-        }
-        UserModel userModel = new UserModel();
-        userModel.userId = userInfo.userId;
-        userModel.userName = userInfo.userName;
-        userModel.userAvatar = userInfo.avatarUrl;
-        userModel.role = userInfo.userRole;
-        addMemberEntity(userModel);
+        mTransferMasterView.onNotifyUserEnter(position);
     }
 
-    private void onRemoteUserLeaveRoom(Map<String, Object> params) {
-        if (params == null) {
+    private void handleRemoteUserLeaveRoom(Map<String, Object> params) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        TUIRoomDefine.UserInfo userInfo = (TUIRoomDefine.UserInfo) params.get(RoomEventConstant.KEY_USER_INFO);
-        if (userInfo == null) {
-            return;
-        }
-        removeMemberEntity(userInfo.userId);
+        mTransferMasterView.onNotifyUserExit(position);
     }
 
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
-        if (RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key)
+        if (CONFIGURATION_CHANGE.equals(key)
                 && params != null && mTransferMasterView.isShowing()) {
             Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
             mTransferMasterView.changeConfiguration(configuration);

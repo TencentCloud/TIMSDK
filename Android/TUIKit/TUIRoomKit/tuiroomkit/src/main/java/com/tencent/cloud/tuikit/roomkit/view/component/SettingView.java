@@ -10,10 +10,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.view.settingview.AudioSettingView;
-import com.tencent.cloud.tuikit.roomkit.view.settingview.ShareSettingView;
 import com.tencent.cloud.tuikit.roomkit.view.settingview.VideoSettingView;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.SettingViewModel;
 
@@ -27,7 +25,6 @@ public class SettingView extends BaseBottomDialog {
     private SettingViewPageAdapter mPagerAdapter;
     private VideoSettingView       mVideoSettingView;
     private AudioSettingView       mAudioSettingView;
-    private ShareSettingView       mShareSettingView;
     private List<View>             mFragmentList;
     private List<String>           mTitleList;
     private SettingViewModel       mViewModel;
@@ -42,8 +39,8 @@ public class SettingView extends BaseBottomDialog {
     }
 
     @Override
-    protected void intiView() {
-        mViewModel = new SettingViewModel(getContext(), this);
+    protected void initView() {
+        mViewModel = new SettingViewModel(this);
         mLayoutTop = findViewById(R.id.tl_top);
         mViewPagerContent = findViewById(R.id.vp_content);
 
@@ -115,22 +112,8 @@ public class SettingView extends BaseBottomDialog {
                     mViewModel.stopFileDumping();
                 }
             });
-            mShareSettingView = new ShareSettingView(getContext());
             mFragmentList.add(mVideoSettingView);
             mFragmentList.add(mAudioSettingView);
-            mFragmentList.add(mShareSettingView);
-            mShareSettingView.setShareButtonClickListener(new ShareSettingView.OnShareButtonClickListener() {
-                @Override
-                public void onClick() {
-                    if (RoomEngineManager.sharedInstance().getRoomStore().videoModel.isScreenSharing()) {
-                        mViewModel.stopScreenShare();
-                    } else {
-                        mViewModel.startScreenShare();
-                    }
-                    dismiss();
-                }
-            });
-            mShareSettingView.enableShareButton(mEnableShare);
         }
     }
 
@@ -138,13 +121,6 @@ public class SettingView extends BaseBottomDialog {
     public void onDetachedFromWindow() {
         mViewModel.destroy();
         super.onDetachedFromWindow();
-    }
-
-    public void enableShareButton(boolean enable) {
-        mEnableShare = enable;
-        if (mShareSettingView != null) {
-            mShareSettingView.enableShareButton(enable);
-        }
     }
 
     static class SettingViewPageAdapter extends PagerAdapter {

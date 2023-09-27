@@ -1,18 +1,14 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.model;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.TUIRoomKit.RoomScene;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 
 public interface IRoomManager {
     void enableAutoShowRoomMainUi(boolean enable);
 
-    void showRoomMainUi();
+    void createRoom(String roomId, boolean isOpenMic, boolean isOpenCamera, boolean isUseSpeaker);
 
-    void createRoom(RoomInfo roomInfo, RoomScene scene);
-
-    void enterRoom(RoomInfo roomInfo);
+    void enterRoom(String roomId, boolean isOpenMic, boolean isOpenCamera, boolean isUseSpeaker);
 
     void exitRoom();
 

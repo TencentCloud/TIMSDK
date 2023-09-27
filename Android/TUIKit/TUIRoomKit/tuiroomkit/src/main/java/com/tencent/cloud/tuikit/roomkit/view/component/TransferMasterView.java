@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.TransferMasterViewModel;
 
@@ -40,7 +40,7 @@ public class TransferMasterView extends BaseBottomDialog implements View.OnClick
     }
 
     @Override
-    protected void intiView() {
+    protected void initView() {
         mToolBar = findViewById(R.id.toolbar);
         mEditSearch = findViewById(R.id.et_search);
         mButtonConfirmLeave = findViewById(R.id.btn_specify_and_leave);
@@ -48,6 +48,7 @@ public class TransferMasterView extends BaseBottomDialog implements View.OnClick
 
         mRecyclerUserList.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mAdapter = new TransferMasterAdapter(mContext);
+        mAdapter.setDataList(RoomEngineManager.sharedInstance().getRoomStore().allUserList);
         mRecyclerUserList.setAdapter(mAdapter);
         mRecyclerUserList.setHasFixedSize(true);
 
@@ -63,7 +64,7 @@ public class TransferMasterView extends BaseBottomDialog implements View.OnClick
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String userName = mEditSearch.getText().toString();
                 if (TextUtils.isEmpty(userName)) {
-                    mAdapter.setDataList(mViewModel.getUserList());
+                    mAdapter.setDataList(RoomEngineManager.sharedInstance().getRoomStore().allUserList);
                 }
             }
 
@@ -82,7 +83,7 @@ public class TransferMasterView extends BaseBottomDialog implements View.OnClick
                 return false;
             }
         });
-        mViewModel = new TransferMasterViewModel(mContext, this);
+        mViewModel = new TransferMasterViewModel(this);
     }
 
     @Override
@@ -97,16 +98,16 @@ public class TransferMasterView extends BaseBottomDialog implements View.OnClick
         }
     }
 
-    public void addItem(UserModel userModel) {
-        if (mAdapter != null) {
-            mAdapter.addItem(userModel);
-        }
+    public void onNotifyUserEnter(int position) {
+        mAdapter.notifyItemInserted(position);
     }
 
-    public void removeItem(UserModel userModel) {
-        if (mAdapter != null) {
-            mAdapter.removeItem(userModel);
-        }
+    public void onNotifyUserExit(int position) {
+        mAdapter.notifyItemRemoved(position);
+    }
+
+    public void onNotifyUserStateChanged(int position) {
+        mAdapter.notifyItemChanged(position);
     }
 
     @Override

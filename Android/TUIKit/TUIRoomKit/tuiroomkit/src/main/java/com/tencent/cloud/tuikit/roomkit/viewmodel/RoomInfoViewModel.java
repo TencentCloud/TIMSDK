@@ -5,7 +5,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
@@ -14,9 +13,9 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.RoomInfoView;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,15 +46,12 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
         ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData mClipData = ClipData.newPlainText(LABEL, content);
         cm.setPrimaryClip(mClipData);
-        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    public RoomInfo getRoomInfo() {
-        return mRoomStore.roomInfo;
+        ToastUtil.toastShortMessageCenter(msg);
     }
 
     public void setMasterName() {
-        mRoomEngine.getUserInfo(mRoomStore.roomInfo.owner, new TUIRoomDefine.GetUserInfoCallback() {
+        String ownerId = RoomEngineManager.sharedInstance().getRoomStore().roomInfo.ownerId;
+        mRoomEngine.getUserInfo(ownerId, new TUIRoomDefine.GetUserInfoCallback() {
             @Override
             public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
                 String name = TextUtils.isEmpty(userInfo.userName) ? userInfo.userId : userInfo.userName;
@@ -64,7 +60,7 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
             @Override
             public void onError(TUICommonDefine.Error error, String s) {
-                mRoomInfoView.setMasterName(mRoomStore.roomInfo.owner);
+                mRoomInfoView.setMasterName(ownerId);
             }
         });
     }
@@ -80,9 +76,21 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     public String getRoomURL() {
-        return mContext.getString(R.string.tuiroomkit_room_link_params,
-                URL_ROOM_KIT_WEB,
-                mRoomStore.roomInfo.roomId);
+        String packageName = mContext.getPackageName();
+        if (TextUtils.equals(packageName, "com.tencent.liteav.tuiroom")) {
+            return "https://web.sdk.qcloud.com/trtc/webrtc/test/tuiroom-inner/index.html#/room?roomId="
+                    + mRoomStore.roomInfo.roomId;
+        } else if (TextUtils.equals(packageName, "com.tencent.trtc")) {
+            return "https://web.sdk.qcloud.com/component/tuiroom/index.html#/room?roomId=" + mRoomStore.roomInfo.roomId;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean needShowRoomLink() {
+        String packageName = mContext.getPackageName();
+        return TextUtils.equals(packageName, "com.tencent.liteav.tuiroom") || TextUtils.equals(packageName,
+                "com.tencent.trtc");
     }
 
     public void showQRCodeView() {

@@ -16,4 +16,8 @@ public class RoomConstant {
 
     // 默认 Camera 值
     public static final boolean DEFAULT_CAMERA_FRONT = true;
+
+    public static final String KEY_ERROR = "KEY_ERROR";
+
+    public static final int USER_NOT_FOUND = -1;
 }

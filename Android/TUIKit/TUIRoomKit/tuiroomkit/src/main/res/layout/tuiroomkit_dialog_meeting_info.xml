@@ -22,9 +22,8 @@
 
         <TextView
             android:id="@+id/tv_info_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/tuiroomkit_meeting_title"
             android:textColor="@color/tuiroomkit_color_white"
             android:textSize="18sp"
@@ -115,21 +114,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_toEndOf="@id/tv_room_id_title"
             android:textColor="@color/tuiroomkit_color_white"
             android:textSize="14sp" />
 
-        <ImageButton
+        <LinearLayout
             android:id="@+id/btn_copy_room_id"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="60dp"
+            android:layout_height="26dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:background="@color/transparent"
-            android:src="@drawable/tuiroomkit_ic_copy_white" />
+            android:background="@drawable/tuiroomkit_bg_copy_grey"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="6dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/transparent"
+                android:src="@drawable/tuiroomkit_ic_copy_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="12sp"
+                android:textColor="#B2BBD1"
+                android:text="@string/tuiroomkit_meeting_info_copy" />
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/tuiroomkit_root_room_link_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -150,29 +170,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toStartOf="@+id/btn_copy_room_link"
             android:layout_toEndOf="@id/tv_room_link_title"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxEms="15"
+            android:maxLines="1"
             android:textColor="@color/tuiroomkit_color_white"
             android:textSize="14sp" />
 
-        <ImageButton
+        <LinearLayout
             android:id="@+id/btn_copy_room_link"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="60dp"
+            android:layout_height="26dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:background="@color/transparent"
-            android:src="@drawable/tuiroomkit_ic_copy_white" />
+            android:background="@drawable/tuiroomkit_bg_copy_grey"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="6dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/transparent"
+                android:src="@drawable/tuiroomkit_ic_copy_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="12sp"
+                android:textColor="#B2BBD1"
+                android:text="@string/tuiroomkit_meeting_info_copy" />
+        </LinearLayout>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_meeting_info_tips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp"
-        android:text="@string/tuiroomkit_room_tips"
-        android:textColor="@color/tuiroomkit_color_info_title"
-        android:textSize="12sp" />
 </LinearLayout>

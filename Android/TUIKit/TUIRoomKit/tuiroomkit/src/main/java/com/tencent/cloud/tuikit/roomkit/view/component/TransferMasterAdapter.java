@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.view.base.UserBaseAdapter;
 
@@ -53,16 +53,16 @@ public class TransferMasterAdapter extends UserBaseAdapter {
         }
 
         @Override
-        public void bind(Context context, final UserModel model) {
-            int visibility = model.userId.equals(mSelectedUserId) ? View.VISIBLE : View.GONE;
+        public void bind(Context context, final UserEntity user) {
+            int visibility = TextUtils.equals(user.getUserId(), mSelectedUserId) ? View.VISIBLE : View.GONE;
             mImageSelected.setVisibility(visibility);
-            ImageLoader.loadImage(context, mImageHead, model.userAvatar, R.drawable.tuiroomkit_head);
-            String userName = TextUtils.isEmpty(model.userName) ? model.userId : model.userName;
+            ImageLoader.loadImage(context, mImageHead, user.getAvatarUrl(), R.drawable.tuiroomkit_head);
+            String userName = TextUtils.isEmpty(user.getUserName()) ? user.getUserId() : user.getUserName();
             mTextUserName.setText(userName);
             mRootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mSelectedUserId = model.userId;
+                    mSelectedUserId = user.getUserId();
                     notifyDataSetChanged();
                 }
             });

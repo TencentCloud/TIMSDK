@@ -1,5 +1,8 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
+import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
@@ -9,36 +12,30 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-
 import com.tencent.cloud.tuikit.roomkit.view.component.UserListView;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserListViewModel implements RoomEventCenter.RoomEngineEventResponder,
-        RoomEventCenter.RoomKitUIEventResponder {
-    private static final String TAG                     = "UserListViewModel";
-    private static final int    SEAT_INDEX              = -1;
-    private static final int    INVITE_TIME_OUT         = 0;
-    private static final long   USER_LIST_NEXT_SEQUENCE = 0;
+public class UserListViewModel
+        implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
+    private static final String TAG             = "UserListViewModel";
+    private static final int    SEAT_INDEX      = -1;
+    private static final int    INVITE_TIME_OUT = 0;
 
     private final Context       mContext;
     private final RoomStore     mRoomStore;
     private final UserListView  mUserListView;
     private final TUIRoomEngine mRoomEngine;
 
-    private List<UserModel>        mUserModelList;
-    private Map<String, UserModel> mUserModelMap;
+    private List<UserEntity> mUserModelList;
 
     public UserListViewModel(Context context, UserListView userListView) {
         mContext = context;
@@ -46,11 +43,9 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
         mRoomEngine = RoomEngineManager.sharedInstance(context).getRoomEngine();
         mRoomStore = RoomEngineManager.sharedInstance(mContext).getRoomStore();
 
-        mUserModelList = new ArrayList<>();
-        mUserModelMap = new HashMap<>();
-
         mUserListView.updateMuteVideoView(mRoomStore.roomInfo.isCameraDisableForAllUser);
         mUserListView.updateMuteAudioView(mRoomStore.roomInfo.isMicrophoneDisableForAllUser);
+        mUserListView.updateMemberCount(mRoomStore.getTotalUserCount());
         initUserModelList();
         subscribeEvent();
     }
@@ -60,11 +55,12 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_VIDEO_STATE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_AUDIO_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.SEAT_LIST_CHANGED, this);
+        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
+        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
@@ -79,173 +75,20 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_VIDEO_STATE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_AUDIO_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.SEAT_LIST_CHANGED, this);
+        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
+        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
-    public TUIRoomDefine.SpeechMode getSpeechMode() {
-        return mRoomStore.roomInfo.speechMode;
-    }
-
-    private void addMemberEntity(UserModel userModel) {
-        if (userModel == null) {
-            return;
-        }
-        if (findUserModel(userModel.userId) != null) {
-            return;
-        }
-        mUserModelList.add(userModel);
-        mUserModelMap.put(userModel.userId, userModel);
-        mUserListView.addItem(userModel);
-    }
-
-    private UserModel findUserModel(String userId) {
-        if (TextUtils.isEmpty(userId)) {
-            return null;
-        }
-        for (UserModel entity : mUserModelList) {
-            if (entity == null) {
-                continue;
-            }
-            if (userId.equals(entity.userId)) {
-                return entity;
-            }
-        }
-        return null;
-    }
-
-    private void removeMemberEntity(String userId) {
-        UserModel userModel = mUserModelMap.remove(userId);
-        if (userModel != null) {
-            mUserModelList.remove(userModel);
-        }
-        mUserListView.removeItem(userModel);
-    }
-
     private void initUserModelList() {
         mUserListView.setOwner(isOwner());
-        if (isTakeSeatSpeechMode()) {
-            mRoomEngine.getSeatList(new TUIRoomDefine.GetSeatListCallback() {
-                @Override
-                public void onSuccess(List<TUIRoomDefine.SeatInfo> list) {
-                    for (TUIRoomDefine.SeatInfo seatInfo : list) {
-                        UserModel userModel = new UserModel();
-                        userModel.userId = seatInfo.userId;
-                        userModel.isOnSeat = true;
-                        addMemberEntity(userModel);
-                        mRoomEngine.getUserInfo(seatInfo.userId, new TUIRoomDefine.GetUserInfoCallback() {
-                            @Override
-                            public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
-                                userModel.userName = userInfo.userName;
-                                userModel.userAvatar = userInfo.avatarUrl;
-                                userModel.isAudioAvailable = userInfo.hasAudioStream;
-                                userModel.isVideoAvailable = userInfo.hasVideoStream;
-                                userModel.role = userInfo.userRole;
-                                mUserListView.updateItem(userModel);
-                            }
-
-                            @Override
-                            public void onError(TUICommonDefine.Error error, String s) {
-
-                            }
-                        });
-                    }
-                    initListByUserList(USER_LIST_NEXT_SEQUENCE);
-                }
-
-                @Override
-                public void onError(TUICommonDefine.Error error, String s) {
-
-                }
-            });
-        } else {
-            initListByUserList(USER_LIST_NEXT_SEQUENCE);
-        }
-    }
-
-    private void initListByUserList(long sequence) {
-        mRoomEngine.getUserList(sequence, new TUIRoomDefine.GetUserListCallback() {
-            @Override
-            public void onSuccess(TUIRoomDefine.UserListResult userListResult) {
-                for (TUIRoomDefine.UserInfo userInfo : userListResult.userInfoList) {
-                    UserModel userModel = new UserModel();
-                    userModel.userId = userInfo.userId;
-                    userModel.userName = userInfo.userName;
-                    userModel.userAvatar = userInfo.avatarUrl;
-                    userModel.isAudioAvailable = userInfo.hasAudioStream;
-                    userModel.isVideoAvailable = userInfo.hasVideoStream;
-                    userModel.isOnSeat = false;
-                    userModel.role = userInfo.userRole;
-                    addMemberEntity(userModel);
-                    updateRemoteUserInfo(userInfo.userId, userInfo.userName,
-                            userInfo.avatarUrl);
-                }
-                if (userListResult.nextSequence != 0) {
-                    initListByUserList(userListResult.nextSequence);
-                }
-            }
-
-            @Override
-            public void onError(TUICommonDefine.Error error, String s) {
-                Log.e(TAG, "getUserList error,code:" + error + ",msg:" + s);
-            }
-        });
-    }
-
-    private void updateRemoteUserInfo(String userId, String userName, String userAvatar) {
-        UserModel userModel = findUserModel(userId);
-        if (userModel == null) {
-            return;
-        }
-        userModel.userId = userId;
-        userModel.userName = userName;
-        userModel.userAvatar = userAvatar;
-        mUserListView.updateItem(userModel);
-    }
-
-    private void updateUserEntityList(TUIRoomDefine.SeatInfo info) {
-        String userId = info.userId;
-        final UserModel userModel = new UserModel();
-        userModel.userId = userId;
-        userModel.isOnSeat = true;
-        addMemberEntity(userModel);
-        mRoomEngine.getUserInfo(userId, new TUIRoomDefine.GetUserInfoCallback() {
-            @Override
-            public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
-                userModel.userName = userInfo.userName;
-                userModel.userAvatar = userInfo.avatarUrl;
-                userModel.role = userInfo.userRole;
-                boolean isChangeSort = userModel.role == TUIRoomDefine.Role.ROOM_OWNER;
-                if (isChangeSort) {
-                    Collections.sort(mUserModelList, new Comparator<UserModel>() {
-                        @Override
-                        public int compare(UserModel o1, UserModel o2) {
-                            if (o1.role == TUIRoomDefine.Role.ROOM_OWNER) {
-                                return -1;
-                            }
-                            return 1;
-                        }
-                    });
-                }
-                updateRemoteUserInfo(userInfo.userId, userInfo.userName,
-                        userInfo.avatarUrl);
-            }
-
-            @Override
-            public void onError(TUICommonDefine.Error error, String s) {
-
-            }
-        });
-    }
-
-    public String getSelfUserId() {
-        return mRoomStore.userModel.userId;
+        mUserModelList = mRoomStore.allUserList;
     }
 
     public void muteAllUserAudio() {
@@ -309,22 +152,19 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
         mUserListView.updateMuteVideoView(isMute);
     }
 
-    public List<UserModel> getUserList() {
+    public List<UserEntity> getUserList() {
         return mUserModelList;
     }
 
-    public List<UserModel> searchUserByKeyWords(String keyWords) {
+    public List<UserEntity> searchUserByKeyWords(String keyWords) {
         if (TextUtils.isEmpty(keyWords)) {
             return new ArrayList<>();
         }
 
-        List<UserModel> searchList = new ArrayList<>();
-        for (UserModel model : mUserModelList) {
-            if (model == null) {
-                continue;
-            }
-            if (model.userName.contains(keyWords) || model.userId.contains(keyWords)) {
-                searchList.add(model);
+        List<UserEntity> searchList = new ArrayList<>();
+        for (UserEntity item : mRoomStore.allUserList) {
+            if (item.getUserName().contains(keyWords) || item.getUserId().contains(keyWords)) {
+                searchList.add(item);
             }
         }
         return searchList;
@@ -372,20 +212,23 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
             case USER_ROLE_CHANGED:
                 onUserRoleChange(params);
                 break;
-            case USER_VIDEO_STATE_CHANGED:
-                onUserVideoStateChanged(params);
+            case USER_CAMERA_STATE_CHANGED:
+                onUserCameraStateChanged(params);
                 break;
-            case USER_AUDIO_STATE_CHANGED:
-                onUserAudioStateChanged(params);
+            case USER_MIC_STATE_CHANGED:
+                onUserMicStateChanged(params);
                 break;
             case REMOTE_USER_ENTER_ROOM:
                 onRemoteUserEnterRoom(params);
+                mUserListView.updateMemberCount(mRoomStore.getTotalUserCount());
                 break;
             case REMOTE_USER_LEAVE_ROOM:
                 onRemoteUserLeaveRoom(params);
+                mUserListView.updateMemberCount(mRoomStore.getTotalUserCount());
                 break;
-            case SEAT_LIST_CHANGED:
-                onSeatListChanged(params);
+            case REMOTE_USER_TAKE_SEAT:
+            case REMOTE_USER_LEAVE_SEAT:
+                onRemoteUserSeatStateChanged(params);
                 break;
             default:
                 break;
@@ -437,39 +280,28 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
         }
 
         mUserListView.setOwner(TUIRoomDefine.Role.ROOM_OWNER.equals(role));
-        mUserListView.updateMuteVideoView(mRoomStore.roomInfo.isCameraDisableForAllUser);
-        mUserListView.updateMuteAudioView(mRoomStore.roomInfo.isMicrophoneDisableForAllUser);
     }
 
-    private void onUserVideoStateChanged(Map<String, Object> params) {
+    private void onUserCameraStateChanged(Map<String, Object> params) {
         if (params == null) {
             return;
         }
-        TUIRoomDefine.VideoStreamType streamType = (TUIRoomDefine.VideoStreamType)
-                params.get(RoomEventConstant.KEY_STREAM_TYPE);
-        if (TUIRoomDefine.VideoStreamType.SCREEN_STREAM.equals(streamType)) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        UserModel userModel = findUserModel(userId);
-        if (userModel == null) {
-            return;
-        }
-        userModel.isVideoAvailable = (boolean) params.get(RoomEventConstant.KEY_HAS_VIDEO);
-        mUserListView.updateItem(userModel);
+        mUserListView.notifyUserStateChanged(position);
     }
 
-    private void onUserAudioStateChanged(Map<String, Object> params) {
+    private void onUserMicStateChanged(Map<String, Object> params) {
         if (params == null) {
             return;
         }
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        UserModel userModel = findUserModel(userId);
-        if (userModel == null) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        userModel.isAudioAvailable = (boolean) params.get(RoomEventConstant.KEY_HAS_AUDIO);
-        mUserListView.updateItem(userModel);
+        mUserListView.notifyUserStateChanged(position);
     }
 
     private void onRemoteUserEnterRoom(Map<String, Object> params) {
@@ -477,20 +309,11 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
             return;
         }
 
-        TUIRoomDefine.UserInfo userInfo = (TUIRoomDefine.UserInfo) params.get(RoomEventConstant.KEY_USER_INFO);
-        if (userInfo == null) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        UserModel userModel = new UserModel();
-        userModel.userId = userInfo.userId;
-        userModel.userName = userInfo.userName;
-        userModel.userAvatar = userInfo.avatarUrl;
-        userModel.isAudioAvailable = userInfo.hasAudioStream;
-        userModel.isVideoAvailable = userInfo.hasVideoStream;
-        userModel.role = userInfo.userRole;
-        addMemberEntity(userModel);
-        updateRemoteUserInfo(userInfo.userId, userInfo.userName,
-                userInfo.avatarUrl);
+        mUserListView.notifyUserEnter(position);
     }
 
     private void onRemoteUserLeaveRoom(Map<String, Object> params) {
@@ -498,56 +321,11 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
             return;
         }
 
-        TUIRoomDefine.UserInfo userInfo = (TUIRoomDefine.UserInfo) params.get(RoomEventConstant.KEY_USER_INFO);
-        if (userInfo == null) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        removeMemberEntity(userInfo.userId);
-    }
-
-    private void onSeatListChanged(Map<String, Object> params) {
-        if (params == null) {
-            return;
-        }
-        List<TUIRoomDefine.SeatInfo> userSeatedList = (List<TUIRoomDefine.SeatInfo>)
-                params.get(RoomEventConstant.KEY_SEATED_LIST);
-
-        if (userSeatedList != null && !userSeatedList.isEmpty()) {
-            for (TUIRoomDefine.SeatInfo info :
-                    userSeatedList) {
-                if (isTakeSeatSpeechMode()) {
-                    updateUserSeatedState(info.userId, true);
-                } else {
-                    updateUserEntityList(info);
-                }
-            }
-        }
-
-        List<TUIRoomDefine.SeatInfo> userLeftList = (List<TUIRoomDefine.SeatInfo>)
-                params.get(RoomEventConstant.KEY_LEFT_LIST);
-        if (userLeftList != null && !userLeftList.isEmpty()) {
-            for (TUIRoomDefine.SeatInfo info :
-                    userLeftList) {
-                if (isTakeSeatSpeechMode()) {
-                    updateUserSeatedState(info.userId, false);
-                } else {
-                    removeMemberEntity(info.userId);
-                }
-            }
-        }
-    }
-
-    private boolean isTakeSeatSpeechMode() {
-        return TUIRoomDefine.SpeechMode.SPEAK_AFTER_TAKING_SEAT.equals(mRoomStore.roomInfo.speechMode);
-    }
-
-    private void updateUserSeatedState(String userId, boolean isOnSeat) {
-        UserModel userModel = findUserModel(userId);
-        if (userModel == null) {
-            return;
-        }
-        userModel.isOnSeat = isOnSeat;
-        mUserListView.updateItem(userModel);
+        mUserListView.notifyUserExit(position);
     }
 
     @Override
@@ -557,11 +335,11 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
                 if (params == null) {
                     break;
                 }
-                UserModel userModel = (UserModel) params.get(RoomEventConstant.KEY_USER_MODEL);
-                if (userModel == null) {
+                UserEntity user = (UserEntity) params.get(RoomEventConstant.KEY_USER_MODEL);
+                if (user == null) {
                     break;
                 }
-                mUserListView.showUserManagementView(userModel);
+                mUserListView.showUserManagementView(user);
                 break;
             case RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT:
                 if (params == null) {
@@ -586,20 +364,22 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
     }
 
     private void inviteUserOnSeat(final String userId) {
-        final UserModel userModel = findUserModel(userId);
-        if (userModel == null) {
+        UserEntity userEntity = mRoomStore.findUserWithCameraStream(mUserModelList, userId);
+        if (userEntity == null) {
             return;
         }
-        ToastUtil.toastShortMessage(mContext.getString(R.string.tuiroomkit_toast_invite_audience_to_stage));
+        ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_toast_invite_audience_to_stage));
         mRoomEngine.takeUserOnSeatByAdmin(SEAT_INDEX, userId, INVITE_TIME_OUT, new TUIRoomDefine.RequestCallback() {
             @Override
             public void onAccepted(String requestId, String userId) {
-                ToastUtil.toastShortMessage(mContext.getString(R.string.tuiroomkit_accept_invite, userModel.userName));
+                ToastUtil.toastShortMessageCenter(
+                        mContext.getString(R.string.tuiroomkit_accept_invite, userEntity.getUserName()));
             }
 
             @Override
             public void onRejected(String requestId, String userId, String message) {
-                ToastUtil.toastShortMessage(mContext.getString(R.string.tuiroomkit_reject_invite, userModel.userName));
+                ToastUtil.toastShortMessageCenter(
+                        mContext.getString(R.string.tuiroomkit_reject_invite, userEntity.getUserName()));
             }
 
             @Override
@@ -617,5 +397,16 @@ public class UserListViewModel implements RoomEventCenter.RoomEngineEventRespond
                 Log.e(TAG, "takeSeat onError userId:" + userId + ",code : " + code + ",message:" + message);
             }
         });
+    }
+
+    private void onRemoteUserSeatStateChanged(Map<String, Object> params) {
+        if (params == null) {
+            return;
+        }
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
+            return;
+        }
+        mUserListView.notifyUserStateChanged(position);
     }
 }

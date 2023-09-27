@@ -134,6 +134,12 @@ public class BottomItemData {
         BEAUTY,
         BARRAGE,
         MEMBER_LIST,
-        EXTENSION
+        EXTENSION,
+        CHAT,
+        SHARE,
+        INVITE,
+        MINIMIZE,
+        RECORD,
+        SETTING
     }
 }

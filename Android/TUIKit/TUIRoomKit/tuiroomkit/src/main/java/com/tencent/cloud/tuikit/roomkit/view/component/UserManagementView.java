@@ -9,16 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.UserManagementViewModel;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.utils.ImageLoader;
+import com.tencent.qcloud.tuicore.TUILogin;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserManagementView extends BaseBottomDialog implements View.OnClickListener {
     private Context                 mContext;
-    private UserModel               mUserModel;
+    private UserEntity              mUser;
     private TextView                mTextMute;
     private TextView                mTextCloseMic;
     private TextView                mTextUserName;
@@ -36,11 +38,11 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
     private LinearLayout            mLayoutForwardMaster;
     private UserManagementViewModel mViewModel;
 
-    public UserManagementView(@NonNull Context context, UserModel model) {
+    public UserManagementView(@NonNull Context context, UserEntity user) {
         super(context);
         mContext = context;
-        mUserModel = model;
-        mViewModel = new UserManagementViewModel(context, mUserModel, this);
+        mUser = user;
+        mViewModel = new UserManagementViewModel(mContext, user, this);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
     }
 
     @Override
-    protected void intiView() {
+    protected void initView() {
         mImageHead = findViewById(R.id.image_head);
         mImageMic = findViewById(R.id.image_mic);
         mImageCamera = findViewById(R.id.image_camera);
@@ -75,16 +77,16 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
         mLayoutInviteToStage.setOnClickListener(this);
 
         if (mViewModel.isEnableSeatControl()) {
-            updateLayout(mUserModel.isOnSeat);
+            updateLayout(mUser.isOnSeat());
         }
-        updateCameraState(mUserModel.isVideoAvailable);
-        updateMicState(mUserModel.isAudioAvailable);
-        updateMuteState(!mUserModel.isMute);
+        updateCameraState(mUser.isHasVideoStream());
+        updateMicState(mUser.isHasAudioStream());
+        updateMuteState(!mUser.isDisableSendingMessage());
 
-        ImageLoader.loadImage(getContext(), mImageHead, mUserModel.userAvatar, R.drawable.tuiroomkit_head);
+        ImageLoader.loadImage(getContext(), mImageHead, mUser.getAvatarUrl(), R.drawable.tuiroomkit_head);
 
         if (mViewModel.isSelf()) {
-            String userName = mUserModel.userName + getContext().getString(R.string.tuiroomkit_me);
+            String userName = mUser.getUserName() + getContext().getString(R.string.tuiroomkit_me);
             mTextUserName.setText(userName);
             mLayoutForwardMaster.setVisibility(View.GONE);
             mLayoutMuteUser.setVisibility(View.GONE);
@@ -92,7 +94,7 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
             mLayoutKickoffStage.setVisibility(View.GONE);
             mLayoutInviteToStage.setVisibility(View.GONE);
         } else {
-            mTextUserName.setText(mUserModel.userName);
+            mTextUserName.setText(mUser.getUserName());
         }
     }
 
@@ -141,7 +143,7 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
             dismiss();
         } else if (v.getId() == R.id.ll_kick_out) {
             dismiss();
-            showKickDialog(mUserModel.userId, mUserModel.userName);
+            showKickDialog(mUser.getUserId(), mUser.getUserName());
         } else if (v.getId() == R.id.ll_kick_off_stage) {
             mViewModel.kickOffStage();
         } else if (v.getId() == R.id.ll_invite_to_stage) {

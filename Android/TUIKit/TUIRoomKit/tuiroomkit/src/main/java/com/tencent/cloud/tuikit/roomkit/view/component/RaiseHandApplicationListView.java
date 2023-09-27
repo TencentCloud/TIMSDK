@@ -14,12 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RaiseHandApplicationListViewModel;
 
-public class RaiseHandApplicationListView extends BaseBottomDialog implements
-        View.OnClickListener {
+public class RaiseHandApplicationListView extends BaseBottomDialog implements View.OnClickListener {
     private Context                           mContext;
     private TextView                          mTextAgreeAll;
     private TextView                          mTextInviteMember;
@@ -32,7 +30,7 @@ public class RaiseHandApplicationListView extends BaseBottomDialog implements
         super(context);
         mContext = context;
         mAdapter = new RaiseHandApplicationListAdapter(mContext);
-        mViewModel = new RaiseHandApplicationListViewModel(mContext, this);
+        mViewModel = new RaiseHandApplicationListViewModel(this);
     }
 
     @Override
@@ -41,7 +39,7 @@ public class RaiseHandApplicationListView extends BaseBottomDialog implements
     }
 
     @Override
-    protected void intiView() {
+    protected void initView() {
         mTextAgreeAll = findViewById(R.id.tv_agree_all);
         mTextInviteMember = findViewById(R.id.tv_invite_member_to_stage);
         mRecyclerApplyList = findViewById(R.id.rv_apply_list);
@@ -85,9 +83,9 @@ public class RaiseHandApplicationListView extends BaseBottomDialog implements
 
         mRecyclerApplyList.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
 
+        mAdapter.setDataList(mViewModel.getApplyList());
         mRecyclerApplyList.setAdapter(mAdapter);
         mRecyclerApplyList.setHasFixedSize(true);
-
     }
 
     @Override
@@ -96,16 +94,16 @@ public class RaiseHandApplicationListView extends BaseBottomDialog implements
         updateHeightToMatchParent();
     }
 
-    public void addItem(UserModel userModel) {
-        if (mAdapter != null) {
-            mAdapter.addItem(userModel);
-        }
+    public void notifyItemInserted(int position) {
+        mAdapter.notifyItemInserted(position);
     }
 
-    public void removeItem(UserModel userModel) {
-        if (mAdapter != null) {
-            mAdapter.removeItem(userModel);
-        }
+    public void notifyItemRemoved(int position) {
+        mAdapter.notifyItemRemoved(position);
+    }
+
+    public void notifyDataSetChanged() {
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

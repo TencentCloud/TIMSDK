@@ -4,34 +4,38 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.UserListViewModel;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 
-public class UserListView extends BaseBottomDialog implements
-        View.OnClickListener {
+public class UserListView extends BaseBottomDialog implements View.OnClickListener {
 
     private Context           mContext;
     private TextView          mBtnConfirm;
     private TextView          mMuteAudioAllBtn;
     private TextView          mMuteVideoAllBtn;
+    private TextView          mMoreOptions;
+    private TextView          mMemberCount;
     private EditText          mEditSearch;
+    private LinearLayout      mBtnInvite;
     private RecyclerView      mRecyclerUserList;
     private UserListAdapter   mUserListAdapter;
     private UserListViewModel mViewModel;
@@ -46,22 +50,22 @@ public class UserListView extends BaseBottomDialog implements
         return R.layout.tuiroomkit_view_room_remote_user_list;
     }
 
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        updateHeightToMatchParent();
-    }
 
     @Override
-    protected void intiView() {
+    protected void initView() {
+        mMemberCount = findViewById(R.id.main_title);
         mMuteAudioAllBtn = findViewById(R.id.btn_mute_audio_all);
         mMuteVideoAllBtn = findViewById(R.id.btn_mute_video_all);
+        mMoreOptions = findViewById(R.id.btn_mute_more_options);
         mRecyclerUserList = findViewById(R.id.rv_user_list);
         mBtnConfirm = findViewById(R.id.btn_confirm);
         mEditSearch = findViewById(R.id.et_search);
+        mBtnInvite = findViewById(R.id.btn_invite);
         mMuteAudioAllBtn.setOnClickListener(this);
         mMuteVideoAllBtn.setOnClickListener(this);
+        mMoreOptions.setOnClickListener(this);
         mBtnConfirm.setOnClickListener(this);
+        mBtnInvite.setOnClickListener(this);
         findViewById(R.id.toolbar).setOnClickListener(this);
 
         mEditSearch.addTextChangedListener(new TextWatcher() {
@@ -99,34 +103,34 @@ public class UserListView extends BaseBottomDialog implements
         mRecyclerUserList.setAdapter(mUserListAdapter);
         mRecyclerUserList.setHasFixedSize(true);
         mViewModel = new UserListViewModel(mContext, this);
-        mUserListAdapter.setUserId(mViewModel.getSelfUserId());
-        mUserListAdapter.setSpeechMode(mViewModel.getSpeechMode());
+        mUserListAdapter.setUserId(TUILogin.getUserId());
+        mUserListAdapter.setSpeechMode(RoomEngineManager.sharedInstance().getRoomStore().roomInfo.speechMode);
+        mUserListAdapter.setDataList(mViewModel.getUserList());
+    }
+
+    public void updateMemberCount(int memberCount) {
+        mMemberCount.setText(mContext.getString(R.string.tuiroomkit_tv_member_list, memberCount));
     }
 
     public void setOwner(boolean isOwner) {
         mMuteAudioAllBtn.setVisibility(isOwner ? VISIBLE : GONE);
         mMuteVideoAllBtn.setVisibility(isOwner ? VISIBLE : GONE);
+        mMoreOptions.setVisibility(isOwner ? VISIBLE : GONE);
         mBtnConfirm.setVisibility(isOwner ? GONE : VISIBLE);
         mUserListAdapter.setOwner(isOwner);
         mUserListAdapter.notifyDataSetChanged();
     }
 
-    public void addItem(UserModel userModel) {
-        if (mUserListAdapter != null) {
-            mUserListAdapter.addItem(userModel);
-        }
+    public void notifyUserEnter(int position) {
+        mUserListAdapter.notifyItemInserted(position);
     }
 
-    public void removeItem(UserModel userModel) {
-        if (mUserListAdapter != null) {
-            mUserListAdapter.removeItem(userModel);
-        }
+    public void notifyUserExit(int position) {
+        mUserListAdapter.notifyItemRemoved(position);
     }
 
-    public void updateItem(UserModel userModel) {
-        if (mUserListAdapter != null) {
-            mUserListAdapter.updateItem(userModel);
-        }
+    public void notifyUserStateChanged(int position) {
+        mUserListAdapter.notifyItemChanged(position);
     }
 
     public void updateMuteAudioView(boolean isMute) {
@@ -151,17 +155,17 @@ public class UserListView extends BaseBottomDialog implements
 
     public void disableMuteAllVideo(boolean disable) {
         if (disable) {
-            ToastUtil.toastShortMessage(getContext().getString(R.string.tuiroomkit_mute_all_camera_toast));
+            ToastUtil.toastShortMessageCenter(getContext().getString(R.string.tuiroomkit_mute_all_camera_toast));
         } else {
-            ToastUtil.toastShortMessage(getContext().getString(R.string.tuiroomkit_toast_not_mute_all_video));
+            ToastUtil.toastShortMessageCenter(getContext().getString(R.string.tuiroomkit_toast_not_mute_all_video));
         }
     }
 
     public void disableMuteAllAudio(boolean disable) {
         if (disable) {
-            ToastUtil.toastShortMessage(getContext().getString(R.string.tuiroomkit_mute_all_mic_toast));
+            ToastUtil.toastShortMessageCenter(getContext().getString(R.string.tuiroomkit_mute_all_mic_toast));
         } else {
-            ToastUtil.toastShortMessage(getContext().getString(R.string.tuiroomkit_toast_not_mute_all_audio));
+            ToastUtil.toastShortMessageCenter(getContext().getString(R.string.tuiroomkit_toast_not_mute_all_audio));
         }
     }
 
@@ -179,6 +183,8 @@ public class UserListView extends BaseBottomDialog implements
             mViewModel.muteAllUserAudio();
         } else if (v.getId() == R.id.btn_mute_video_all) {
             mViewModel.muteAllUserVideo();
+        } else if (v.getId() == R.id.btn_mute_more_options || v.getId() == R.id.btn_invite) {
+            RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW, null);
         }
     }
 
@@ -188,8 +194,8 @@ public class UserListView extends BaseBottomDialog implements
         }
     }
 
-    public void showUserManagementView(UserModel userModel) {
-        UserManagementView userManagementView = new UserManagementView(mContext, userModel);
+    public void showUserManagementView(UserEntity user) {
+        UserManagementView userManagementView = new UserManagementView(mContext, user);
         userManagementView.show();
     }
 }

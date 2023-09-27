@@ -139,11 +139,10 @@ public class AudioSettingView extends CoordinatorLayout {
     }
 
     private void createFile(String path) {
-        File file = new File(path);
         try {
+            File file = new File(path);
             file.delete();
-            file.createNewFile();
-        } catch (IOException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }

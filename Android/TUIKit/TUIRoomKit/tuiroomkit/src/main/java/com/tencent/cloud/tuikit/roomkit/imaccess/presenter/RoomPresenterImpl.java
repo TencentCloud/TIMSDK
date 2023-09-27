@@ -1,7 +1,5 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.presenter;
 
-import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.SpeechMode.FREE_TO_SPEAK;
-import static com.tencent.cloud.tuikit.roomkit.TUIRoomKit.RoomScene.MEETING;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.JOINED_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.JOINING_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.LEAVING_ROOM;
@@ -13,7 +11,6 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.IRoomCallback;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.IRoomManager;
@@ -24,7 +21,6 @@ import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomObserver;
 import com.tencent.cloud.tuikit.roomkit.imaccess.utils.BusinessSceneUtil;
 import com.tencent.cloud.tuikit.roomkit.imaccess.utils.RoomSpUtil;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.qcloud.tuicore.TUILogin;
 
@@ -46,7 +42,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     private       AccessRoomConstants.SelfRoomStatus mSelfRoomStatus = NO_IN_ROOM;
     private final TUIRoomDefine.LoginUserInfo        mSelfInfo;
 
-    private CountDownLatch mLoginLatch;
     private CountDownLatch mLeaveRoomLatch;
     private CountDownLatch mJoinRoomLatch;
     private CountDownLatch mSendMsgLatch;
@@ -54,19 +49,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     private AtomicBoolean  mIsProcess  = new AtomicBoolean(false);
 
     private RoomPresenterImpl() {
-        mLoginLatch = new CountDownLatch(1);
-        RoomEngineManager.loginRoomEngine(new TUIRoomDefine.ActionCallback() {
-            @Override
-            public void onSuccess() {
-                mLoginLatch.countDown();
-            }
-
-            @Override
-            public void onError(TUICommonDefine.Error error, String message) {
-                Log.e(TAG, "loginRoomEngine onError error=" + error + " message=" + message);
-                mLoginLatch.countDown();
-            }
-        });
         addObserver();
         mRoomManager = new RoomManagerImpl();
         mRoomTaskStoreHouse = new RoomTaskStoreHouse();
@@ -97,7 +79,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
-                waitUntilLogin();
                 processCreateRoom();
             }
         });
@@ -116,14 +97,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         waitUntilExitPreRoom();
         waitUntilCreateRoom();
         mIsProcess.set(false);
-    }
-
-    private void waitUntilLogin() {
-        try {
-            mLoginLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void waitUntilExitPreRoom() {
@@ -200,21 +173,9 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
 
     private void waitUntilCreateRoom() {
         addObserver();
-        RoomInfo roomInfo = new RoomInfo();
-        roomInfo.roomId = RoomSpUtil.getUniqueRoomId();
-        roomInfo.owner = TUILogin.getUserId();
-        roomInfo.name = TUILogin.getNickName() + TUILogin.getAppContext().getResources()
-                .getString(R.string.tuiroomkit_room_msg_display_suffix);
-        roomInfo.isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
-        roomInfo.isOpenMicrophone = RoomSpUtil.getMicrophoneSwitchFromSp();
-        roomInfo.isUseSpeaker = false;
-        roomInfo.isMicrophoneDisableForAllUser = false;
-        roomInfo.isCameraDisableForAllUser = false;
-        roomInfo.isMessageDisableForAllUser = false;
-        roomInfo.speechMode = FREE_TO_SPEAK;
-        Log.d(TAG, roomInfo.toString());
+        String roomId = RoomSpUtil.getUniqueRoomId();
         mSendMsgLatch = new CountDownLatch(1);
-        mRoomObserver.initMsgData(roomInfo.roomId);
+        mRoomObserver.initMsgData(roomId);
         try {
             mSendMsgLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -222,9 +183,12 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         }
         mSelfRoomStatus = JOINING_ROOM;
         mJoinRoomLatch = new CountDownLatch(1);
-        Log.d(TAG, "waitUntilCreateRoom start roomId=" + roomInfo.roomId);
+        Log.d(TAG, "waitUntilCreateRoom start roomId=" + roomId);
         mRoomManager.enableAutoShowRoomMainUi(false);
-        mRoomManager.createRoom(roomInfo, MEETING);
+        boolean isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
+        boolean isOpenMic = RoomSpUtil.getMicrophoneSwitchFromSp();
+        boolean isUseSpeaker = true;
+        mRoomManager.createRoom(roomId, isOpenMic, isOpenCamera, isUseSpeaker);
         try {
             mJoinRoomLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -258,7 +222,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
-                waitUntilLogin();
                 processEnterRoom(roomMsgData);
             }
         });
@@ -288,21 +251,15 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     private void waitUntilEnterRoom(RoomMsgData roomMsgData) {
         Log.d(TAG, "waitUntilEnterRoom");
         addObserver();
-        RoomInfo roomInfo = new RoomInfo();
-        roomInfo.roomId = roomMsgData.getRoomId();
-        roomInfo.isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
-        roomInfo.isOpenMicrophone = RoomSpUtil.getMicrophoneSwitchFromSp();
-        roomInfo.isUseSpeaker = false;
-        roomInfo.isMicrophoneDisableForAllUser = false;
-        roomInfo.isCameraDisableForAllUser = false;
-        roomInfo.isMessageDisableForAllUser = false;
-        roomInfo.speechMode = FREE_TO_SPEAK;
-        Log.d(TAG, roomInfo.toString());
         mRoomObserver.setMsgData(roomMsgData);
         mJoinRoomLatch = new CountDownLatch(1);
         mSelfRoomStatus = JOINING_ROOM;
         Log.d(TAG, "waitUntilEnterRoom start");
-        mRoomManager.enterRoom(roomInfo);
+        String roomId = roomMsgData.getRoomId();
+        boolean isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
+        boolean isOpenMic = RoomSpUtil.getMicrophoneSwitchFromSp();
+        boolean isUseSpeaker = true;
+        mRoomManager.enterRoom(roomId, isOpenMic, isOpenCamera, isUseSpeaker);
         try {
             mJoinRoomLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -329,7 +286,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
-                waitUntilLogin();
                 mRoomManager.inviteOtherMembersToJoin(roomMsgData, mSelfInfo);
             }
         });

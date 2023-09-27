@@ -82,8 +82,8 @@ public class PageLayoutManager extends RecyclerView.LayoutManager implements
 
     public void enableSpeakerMode(boolean enable) {
         mIsSpeakerModeOn = enable;
-        mLastPageIndex = -1;
         mOffsetX = 0;
+        mLastPageIndex = 1;
     }
 
     public void enableTwoPersonMeeting(boolean isTwoPersonVideoOn, boolean isPersonSwitch) {

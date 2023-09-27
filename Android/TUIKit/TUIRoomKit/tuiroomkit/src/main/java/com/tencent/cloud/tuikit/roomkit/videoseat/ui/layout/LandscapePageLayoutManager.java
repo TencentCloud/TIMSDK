@@ -25,8 +25,6 @@ public class LandscapePageLayoutManager extends PageLayoutManager {
         if (mOffsetX > mMaxScrollX) {
             mOffsetX = mMaxScrollX;
         }
-        setPageCount(getTotalPageCount());
-        setPageIndex(getPageIndexByOffset());
 
         if (mIsSpeakerModeOn) {
             layoutForSpeakerMode(recycler, state);
@@ -35,6 +33,8 @@ public class LandscapePageLayoutManager extends PageLayoutManager {
         } else {
             layoutForGridMod(recycler, state);
         }
+        setPageCount(getTotalPageCount());
+        setPageIndex(getPageIndexByOffset());
     }
 
 

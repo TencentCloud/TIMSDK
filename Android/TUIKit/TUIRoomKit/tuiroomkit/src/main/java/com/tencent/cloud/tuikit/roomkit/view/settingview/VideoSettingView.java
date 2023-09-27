@@ -120,7 +120,7 @@ public class VideoSettingView extends CoordinatorLayout {
                 mListener.onVideoLocalMirrorChange(isChecked);
             }
         }).setCheck(mRoomStore.videoModel.isLocalMirror);
-        mSettingItemList.add(mMirrorTypeItem);
+     //   mSettingItemList.add(mMirrorTypeItem);
 
         for (BaseSettingItem item : mSettingItemList) {
             View view = item.getView();

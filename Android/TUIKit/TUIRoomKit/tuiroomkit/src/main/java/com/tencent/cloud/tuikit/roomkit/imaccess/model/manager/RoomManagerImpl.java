@@ -1,19 +1,17 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.model.manager;
 
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.KEY_INVITE_DATA;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.EXIT_FLOAT_WINDOW;
 
 import android.content.Context;
 import android.content.Intent;
 
 import com.google.gson.Gson;
+import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.IRoomManager;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.InviteToJoinRoomActivity;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -22,7 +20,7 @@ public class RoomManagerImpl implements IRoomManager {
     private TUIRoomKit mRoomKit;
 
     public RoomManagerImpl() {
-        mRoomKit = TUIRoomKit.sharedInstance(TUILogin.getAppContext());
+        mRoomKit = TUIRoomKit.createInstance();
     }
 
     @Override
@@ -31,34 +29,39 @@ public class RoomManagerImpl implements IRoomManager {
     }
 
     @Override
-    public void showRoomMainUi() {
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).exitFloatWindow();
+    public void createRoom(String roomId, boolean isOpenMic, boolean isOpenCamera, boolean isUseSpeaker) {
+        TUIRoomDefine.RoomInfo engineRoomInfo = new TUIRoomDefine.RoomInfo();
+        engineRoomInfo.roomId = roomId;
+        mRoomKit.createRoom(engineRoomInfo, new TUIRoomDefine.ActionCallback() {
+            @Override
+            public void onSuccess() {
+                mRoomKit.enterRoom(roomId, isOpenMic, isOpenCamera, isUseSpeaker, null);
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String message) {
+            }
+        });
     }
 
     @Override
-    public void createRoom(RoomInfo roomInfo, TUIRoomKit.RoomScene scene) {
-        mRoomKit.createRoom(roomInfo, scene);
-    }
-
-    @Override
-    public void enterRoom(RoomInfo roomInfo) {
-        mRoomKit.enterRoom(roomInfo);
+    public void enterRoom(String roomId, boolean isOpenMic, boolean isOpenCamera, boolean isUseSpeaker) {
+        mRoomKit.enterRoom(roomId, isOpenMic, isOpenCamera, isUseSpeaker, null);
     }
 
     @Override
     public void exitRoom() {
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).exitRoom();
+        RoomEngineManager.sharedInstance().exitRoom(null);
     }
 
     @Override
     public void destroyRoom() {
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).exitRoom();
+        RoomEngineManager.sharedInstance().destroyRoom(null);
     }
 
     @Override
     public void changeUserRole(String userId, TUIRoomDefine.Role role, TUIRoomDefine.ActionCallback callback) {
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomEngine()
-                .changeUserRole(userId, role, callback);
+        RoomEngineManager.sharedInstance().changeUserRole(userId, role, callback);
     }
 
     @Override

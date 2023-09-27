@@ -1,6 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.view.component;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.drawable.StateListDrawable;
 import android.text.TextUtils;
@@ -12,47 +13,79 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomItemData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomSelectItemData;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.BottomViewModel;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BottomView extends LinearLayout {
+    public static int MAINVIEW = 0;
+    public static int EXTENSIONVIEW = 4;
+    public static int TALK_FREEDOM = 5;
+    public static int TALK_SEAT_MODE = 6;
     private Context                                        mContext;
     private BottomViewModel                                mViewModel;
     private List<BottomItemData>                           mDataList;
     private Map<BottomItemData.Type, AppCompatImageButton> mButtonMap;
     private Map<BottomItemData.Type, TextView>             mTextViewMap;
+    private int                                            mType;
 
-    public BottomView(Context context) {
+    public BottomView(Context context, int type) {
         super(context);
+        mType = type;
         mContext = context;
         mButtonMap = new HashMap<>();
         mTextViewMap = new HashMap<>();
-
         mViewModel = new BottomViewModel(mContext, this);
+
+        if (type == MAINVIEW) {
+            createBottomMainViewModel();
+        } else if (type == EXTENSIONVIEW) {
+            createBottomExtensionViewModel();
+        }
+    }
+
+    private void createBottomMainViewModel() {
         mDataList = mViewModel.getItemDataList();
-        mViewModel.initData();
+        mViewModel.initMainData();
+    }
+
+    private void createBottomExtensionViewModel() {
+        mDataList = mViewModel.getItemDataList();
+        mViewModel.initExtensionItemData();
+    }
+
+    private int getExtensionParentWidth() {
+        int screenWidth = ScreenUtil.getScreenWidth(mContext);
+        int density = ScreenUtil.getPxByDp(16);
+        int screenWidthMinus16dp = screenWidth - density;
+        return screenWidthMinus16dp;
     }
 
     private void updateItemsPosition() {
+        int seatCount = mType == EXTENSIONVIEW ? TALK_SEAT_MODE : TALK_FREEDOM;
         int childCount = getChildCount();
-        int parentWidth = ((ViewGroup) getParent()).getWidth();
+        int parentWidth = mType == EXTENSIONVIEW ? getExtensionParentWidth() : ((ViewGroup) getParent()).getWidth();
         int totalChildWidth = 0;
         for (int i = 0; i < childCount; i++) {
             int childWidth = mDataList.get(i).getWidth() == 0 ? getResources()
                     .getDimensionPixelSize(R.dimen.tuiroomkit_bottom_item_view_width) : mDataList.get(i).getWidth();
             totalChildWidth += childWidth;
         }
+        totalChildWidth = (totalChildWidth / childCount) * seatCount;
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
-            int padding = (parentWidth - totalChildWidth) / (childCount + 1);
+            int padding = (parentWidth - totalChildWidth) / seatCount;
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) childView.getLayoutParams();
             params.leftMargin = padding;
             params.width = mDataList.get(i).getWidth() == 0 ? getResources()
@@ -136,16 +169,9 @@ public class BottomView extends LinearLayout {
             layout.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    boolean changed = true;
-                    if (button.isEnabled()) {
-                        changed = !selectItemData.isSelected();
-                        selectItemData.setSelected(changed);
-                        button.setSelected(changed);
-                    }
+                    boolean changed = !selectItemData.isSelected();
                     BottomSelectItemData.OnItemSelectListener listener = selectItemData.getOnItemSelectListener();
-                    if (listener != null) {
-                        listener.onItemSelected(changed);
-                    }
+                    listener.onItemSelected(changed);
                 }
             });
         } else {
@@ -153,9 +179,7 @@ public class BottomView extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     BottomItemData.OnItemClickListener listener = itemData.getOnItemClickListener();
-                    if (listener != null) {
-                        listener.onItemClick();
-                    }
+                    listener.onItemClick();
                 }
             });
         }
@@ -168,6 +192,71 @@ public class BottomView extends LinearLayout {
                 updateItemsPosition();
             }
         });
+    }
+
+    public void replaceItem(BottomItemData.Type type, BottomItemData itemData) {
+        TextView textItemName = mTextViewMap.get(type);
+        AppCompatImageButton button = mButtonMap.get(type);
+        if (textItemName == null || button == null) {
+            return;
+        }
+        textItemName.setText(itemData.getName());
+        mTextViewMap.remove(type);
+        mTextViewMap.put(itemData.getType(), textItemName);
+
+        StateListDrawable stateListDrawable = createStateListDrawable(itemData);
+        button.setBackground(stateListDrawable);
+        button.setEnabled(itemData.isEnable());
+        mButtonMap.remove(type);
+        mButtonMap.put(itemData.getType(), button);
+
+        mDataList.set(mViewModel.indexOf(type), itemData);
+
+        View layout = (View) button.getParent();
+        final BottomSelectItemData selectItemData = itemData.getSelectItemData();
+        layout.setOnClickListener(null);
+        if (selectItemData != null) {
+            button.setSelected(selectItemData.isSelected());
+            layout.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean changed = !selectItemData.isSelected();
+                    BottomSelectItemData.OnItemSelectListener listener = selectItemData.getOnItemSelectListener();
+                    listener.onItemSelected(changed);
+                }
+            });
+        } else {
+            layout.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BottomItemData.OnItemClickListener listener = itemData.getOnItemClickListener();
+                    listener.onItemClick();
+                }
+            });
+        }
+    }
+
+    public void stopScreenShareDialog() {
+        ConfirmDialog confirmDialog = new ConfirmDialog(mContext);
+        confirmDialog.setCancelable(true);
+        confirmDialog.setMessage(mContext.getString(R.string.tuiroomkit_hint_stop_live_screen));
+        confirmDialog.setPositiveText(mContext.getString(R.string.tuiroomkit_hint_stop_live_screen_stop));
+        confirmDialog.setNegativeText(mContext.getString(R.string.tuiroomkit_hint_stop_live_screen_cancel));
+        confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
+            @Override
+            public void onClick() {
+                RoomEngineManager.sharedInstance().stopScreenCapture();
+                confirmDialog.dismiss();
+            }
+        });
+        confirmDialog.setNegativeClickListener(new ConfirmDialog.NegativeClickListener() {
+            @Override
+            public void onClick() {
+                confirmDialog.dismiss();
+                return;
+            }
+        });
+        confirmDialog.show();
     }
 
     private StateListDrawable createStateListDrawable(BottomItemData itemData) {
@@ -197,26 +286,6 @@ public class BottomView extends LinearLayout {
         return stateListDrawable;
     }
 
-    public void removeItem(int index) {
-        if (index < 0 || index > mDataList.size() - 1) {
-            return;
-        }
-        BottomItemData itemData = mDataList.get(index);
-        if (itemData == null) {
-            return;
-        }
-
-        mButtonMap.remove(itemData.getType());
-        mTextViewMap.remove(itemData.getType());
-        removeViewAt(index);
-        post(new Runnable() {
-            @Override
-            public void run() {
-                updateItemsPosition();
-            }
-        });
-    }
-
     public void updateItemSelectStatus(BottomItemData.Type type, boolean isSelected) {
         BottomItemData itemData = mViewModel.findItemData(type);
         if (itemData != null && itemData.getSelectItemData() != null) {
@@ -233,6 +302,15 @@ public class BottomView extends LinearLayout {
             if (!TextUtils.isEmpty(name)) {
                 textView.setText(name);
             }
+        }
+    }
+
+    public void updateUserListText(int memberCount) {
+        BottomItemData itemData = mViewModel.findItemData(BottomItemData.Type.MEMBER_LIST);
+        TextView textView = mTextViewMap.get(BottomItemData.Type.MEMBER_LIST);
+        if (textView != null && itemData != null) {
+            String name = mContext.getString(R.string.tuiroomkit_item_member, memberCount);
+            textView.setText(name);
         }
     }
 

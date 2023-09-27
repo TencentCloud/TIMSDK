@@ -52,13 +52,14 @@
 
     <TextView
         android:id="@+id/tuiroomkit_room_msg_manager_tv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="21dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:text="@string/tuiroomkit_room_msg_display_suffix"
         android:textColor="@color/black"
         android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.33" />
@@ -179,13 +180,14 @@
 
         <TextView
             android:id="@+id/tuiroomkit_room_msg_joined_members_tv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingStart="10dp"
             android:visibility="gone"
             android:textSize="12sp"
-            android:text="@string/tuiroomkit_room_msg_members_has_joined" />
+            android:text="@string/tuiroomkit_room_msg_members_has_joined"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tuiroomkit_room_msg_join_btn"

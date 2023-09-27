@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.utils.widget.ImageFilterView;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
@@ -34,7 +35,7 @@ public class UserDisplayView extends FrameLayout {
     private TextView             mUserNameTv;
     private ImageView            mIvMaster;
     private UserVolumePromptView mUserMic;
-    private CircleImageView      mUserHeadImg;
+    private ImageFilterView      mUserHeadImg;
     private UserEntity           mMemberEntity;
     private FrameLayout          mVideoContainer;
     private RoundRelativeLayout  mTopLayout;

@@ -17,13 +17,14 @@
         android:layout_height="match_parent"
         android:background="@drawable/tuivideoseat_bg_item_no_content" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/img_user_head"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
         android:src="@drawable/tuivideoseat_head"
+        app:roundPercent="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,15 +38,16 @@
         android:layout_marginBottom="12dp"
         android:layout_marginStart="4dp"
         android:background="@drawable/tuivideoseat_bg_anchor_info"
-        android:paddingRight="8dp">
+        android:paddingEnd="8dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/img_master"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerInParent="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/tuivideoseat_ic_master" />
+            android:src="@drawable/tuivideoseat_ic_master"
+            app:roundPercent="1"/>
 
         <com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserVolumePromptView
             android:id="@+id/tuivideoseat_user_mic"

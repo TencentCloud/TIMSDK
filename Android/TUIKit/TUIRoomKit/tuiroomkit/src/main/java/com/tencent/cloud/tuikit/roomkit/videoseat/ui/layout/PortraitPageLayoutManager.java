@@ -25,14 +25,14 @@ public class PortraitPageLayoutManager extends PageLayoutManager {
         if (mOffsetX > mMaxScrollX) {
             mOffsetX = mMaxScrollX;
         }
-        setPageCount(getTotalPageCount());
-        setPageIndex(getPageIndexByOffset());
 
         if (mIsSpeakerModeOn) {
             layoutForSpeakerMode(recycler, state);
         } else {
             layoutForGridMod(recycler, state);
         }
+        setPageCount(getTotalPageCount());
+        setPageIndex(getPageIndexByOffset());
     }
 
     private void layoutForSpeakerMode(RecyclerView.Recycler recycler, RecyclerView.State state) {

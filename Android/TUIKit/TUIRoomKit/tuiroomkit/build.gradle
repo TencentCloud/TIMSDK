@@ -19,7 +19,7 @@ android {
 }
 
 dependencies {
- //   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
     implementation "de.hdodenhof:circleimageview:3.1.0"
     implementation "com.github.bumptech.glide:glide:4.12.0"
@@ -31,7 +31,7 @@ dependencies {
 
     implementation project(':timcommon')
     implementation project(':tuichat')
-    implementation rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_TRTC:11.3.0.13176"
-    implementation rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "com.tencent.liteav.tuikit:tuiroomengine:1.4.5.60"
-    implementation projects.contains("tuicore") ? project(':tuicore') : "com.tencent.liteav.tuikit:tuicore:7.4.4643"
+    implementation rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_TRTC:11.4.0.13189"
+    implementation rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "com.tencent.liteav.tuikit:tuiroomengine:1.5.1.14"
+    implementation projects.contains("tuicore") ? project(':tuicore') : "com.tencent.liteav.tuikit:tuicore:7.5.4852"
 }

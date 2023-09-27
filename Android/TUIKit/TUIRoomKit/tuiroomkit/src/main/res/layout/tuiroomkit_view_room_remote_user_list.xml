@@ -1,113 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="720dp"
+    android:paddingBottom="8dp">
 
-    <androidx.appcompat.widget.Toolbar
+    <View
+        android:id="@+id/icon_drop_down"
+        android:layout_width="24dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/tuiroomkit_bottom_dialog_tip"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginTop="28dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/tuiroomkit_ic_back">
+        app:layout_constraintTop_toTopOf="@+id/icon_drop_down" >
 
         <TextView
             android:id="@+id/main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
+            android:layout_marginStart="16dp"
             android:singleLine="true"
             android:text="@string/tuiroomkit_tv_member_list"
             android:textColor="@color/tuiroomkit_color_text_light_grey"
             android:textSize="18sp"
             android:textStyle="bold" />
-    </androidx.appcompat.widget.Toolbar>
+    </RelativeLayout>
 
-    <EditText
-        android:id="@+id/et_search"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/ll_search"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/tuiroomkit_bg_bottom_item_black"
-        android:drawablePadding="8dp"
-        android:gravity="center_vertical"
-        android:hint="@string/tuiroomkit_hint_search_member"
-        android:imeOptions="actionSearch"
-        android:paddingStart="12dp"
-        android:paddingTop="10dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="18dp"
         android:paddingEnd="4dp"
         android:paddingBottom="10dp"
-        android:singleLine="true"
-        android:textColor="@color/tuiroomkit_color_text_light_grey"
-        android:textColorHint="@color/tuiroomkit_color_text_hint_search"
-        android:textSize="14sp"
-        app:drawableLeftCompat="@drawable/tuiroomkit_ic_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:background="@drawable/tuiroomkit_bg_bottom_item_black"
+            android:drawablePadding="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:hint="@string/tuiroomkit_hint_search_member"
+            android:imeOptions="actionSearch"
+            android:paddingStart="12dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="10dp"
+            android:singleLine="true"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
+            android:textColorHint="@color/tuiroomkit_color_text_hint_search"
+            android:textSize="14sp"
+            app:drawableLeftCompat="@drawable/tuiroomkit_ic_search" />
+
+        <LinearLayout
+            android:id="@+id/btn_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/tuiroomkit_bg_stroke_blue"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:srcCompat="@drawable/tuiroomkit_ic_user_list_invite" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/tuiroomkit_item_invite"
+                android:textColor="@color/tuiroomkit_color_stroke_blue"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_user_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_mute_audio_all"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_search" />
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/ll_search"
+        app:layout_constraintBottom_toTopOf="@+id/btn_mute_audio_all"/>
 
     <TextView
         android:id="@+id/btn_mute_audio_all"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="22dp"
+        android:layout_width="108dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/tuiroomkit_bg_bottom_item_black"
         android:gravity="center"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
         android:text="@string/tuiroomkit_mute_all_audio"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
-        android:textSize="16sp"
+        android:textSize="14sp"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_mute_video_all"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_mute_video_all" />
 
     <TextView
         android:id="@+id/btn_mute_video_all"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="11dp"
-        android:layout_marginEnd="20dp"
+        android:layout_width="108dp"
+        android:layout_height="40dp"
         android:background="@drawable/tuiroomkit_bg_bottom_item_black"
         android:gravity="center"
         android:text="@string/tuiroomkit_mute_all_video"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:textSize="14sp"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/btn_mute_audio_all"
+        app:layout_constraintEnd_toStartOf="@+id/btn_mute_more_options"
         app:layout_constraintTop_toTopOf="@+id/btn_mute_audio_all" />
+
+    <TextView
+        android:id="@+id/btn_mute_more_options"
+        android:layout_width="108dp"
+        android:layout_height="40dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_black"
+        android:gravity="center"
+        android:text="@string/tuiroomkit_user_list_more_options"
+        android:textColor="@color/tuiroomkit_color_text_light_grey"
+        android:textSize="14sp"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/btn_mute_video_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_mute_video_all" />
 
     <TextView
         android:id="@+id/btn_confirm"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="22dp"
+        android:layout_marginTop="646dp"
         android:background="@drawable/tuiroomkit_bg_bottom_item_black"
         android:gravity="center"
         android:text="@string/tuiroomkit_confirm"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
         android:textSize="16sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

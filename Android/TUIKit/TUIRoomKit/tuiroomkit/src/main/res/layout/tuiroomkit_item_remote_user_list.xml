@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_user_item_root"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
     android:paddingTop="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -92,4 +93,35 @@
 
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="@id/tv_user_name" />
+
+    <LinearLayout
+        android:id="@+id/room_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toEndOf="@+id/img_head"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name">
+
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/tuiroomkit_ic_owner" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColor="@color/tuiroomkit_color_owner_name"
+            android:text="@string/tuiroomkit_master" />
+
+
+    </LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

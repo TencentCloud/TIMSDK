@@ -11,7 +11,6 @@
         android:id="@+id/rl_video_seat_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_view"
         android:layout_below="@id/top_view"
         android:layout_marginBottom="@dimen/tuiroomkit_video_seat_bottom_margin" />
 
@@ -32,50 +31,26 @@
         android:layout_marginEnd="12dp"
         android:background="@color/tuiroomkit_bg_main_light_black" />
 
-    <RelativeLayout
-        android:id="@+id/bottom_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp" />
-
-    <LinearLayout
-        android:id="@+id/ll_raise_hand_tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_view"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/tuiroomkit_bg_raise_hand_tip"
-        android:gravity="center_horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:gravity="center"
-            android:text="@string/tuiroomkit_raise_hand_tip"
-            android:textColor="@color/tuiroomkit_color_white"
-            android:textSize="14sp"
-            tools:ignore="RtlSymmetry" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/tuiroomkit_ic_cancel_raise_hand_tip" />
-    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/group_screen_capture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_view"
         android:layout_below="@id/top_view"
         android:layout_marginBottom="@dimen/tuiroomkit_video_seat_bottom_margin"
         android:background="@color/tuiroomkit_color_black"
         android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/tv_screen_capture_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/tuiroomkit_tv_screen_icon"
+            app:layout_constraintBottom_toTopOf="@+id/tv_screen_capture_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"/>
 
         <TextView
             android:id="@+id/tv_screen_capture_tag"
@@ -87,7 +62,7 @@
             app:layout_constraintBottom_toTopOf="@+id/tv_stop_screen_capture"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_screen_capture_icon"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -104,4 +79,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_screen_capture_tag" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginBottom="21dp" />
 </RelativeLayout>

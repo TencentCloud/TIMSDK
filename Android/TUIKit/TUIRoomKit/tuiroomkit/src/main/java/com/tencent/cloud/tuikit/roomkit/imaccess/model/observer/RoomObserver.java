@@ -1,23 +1,28 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.model.observer;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.Role.ROOM_OWNER;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.KEY_ERROR;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_CREATE_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_DESTROY_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_EXIT_ROOM;
 
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
-import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
-import com.tencent.cloud.tuikit.roomkit.TUIRoomKitListener;
 import com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.IRoomCallback;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomMsgManager;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.List;
+import java.util.Map;
 
-public class RoomObserver extends TUIRoomObserver implements TUIRoomKitListener {
+public class RoomObserver extends TUIRoomObserver implements RoomEventCenter.RoomEngineEventResponder {
     private static final String TAG = "RoomObserver";
     private RoomMsgManager mRoomMsgManager;
     private IRoomCallback  mRoomCallback;
@@ -52,12 +57,18 @@ public class RoomObserver extends TUIRoomObserver implements TUIRoomKitListener 
 
     public void registerObserver() {
         RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomEngine().addObserver(this);
-        TUIRoomKit.sharedInstance(TUILogin.getAppContext()).addListener(this);
+        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_CREATE_ROOM, this);
+        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_EXIT_ROOM, this);
+        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
     }
 
     public void unregisterObserver() {
         RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomEngine().removeObserver(this);
-        TUIRoomKit.sharedInstance(TUILogin.getAppContext()).removeListener(this);
+        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_CREATE_ROOM, this);
+        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_EXIT_ROOM, this);
+        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
     }
 
     public boolean isRoomOwner() {
@@ -80,33 +91,6 @@ public class RoomObserver extends TUIRoomObserver implements TUIRoomKitListener 
             return item;
         }
         return null;
-    }
-
-    @Override
-    public void onRoomCreate(int code, String message) {
-        Log.d(TAG, "onRoomCreate code=" + code + " message=" + message);
-        AccessRoomConstants.RoomResult result =
-                code == 0 ? AccessRoomConstants.RoomResult.SUCCESS : AccessRoomConstants.RoomResult.FAILED;
-        if (result == AccessRoomConstants.RoomResult.SUCCESS) {
-            mRoomMsgData.setRoomState(AccessRoomConstants.RoomState.created);
-            mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
-        } else {
-            updateMsgForRoomStateChanged(AccessRoomConstants.RoomState.destroyed);
-        }
-        mRoomCallback.onCreateRoom(mRoomMsgData.getRoomId(), result);
-    }
-
-    @Override
-    public void onRoomEnter(int code, String message) {
-        Log.d(TAG, "onRoomEnter code=" + code + " message=" + message);
-        AccessRoomConstants.RoomResult result =
-                code == 0 ? AccessRoomConstants.RoomResult.SUCCESS : AccessRoomConstants.RoomResult.FAILED;
-        if (result == AccessRoomConstants.RoomResult.SUCCESS) {
-            getUserList();
-        } else {
-            updateMsgForRoomStateChanged(AccessRoomConstants.RoomState.destroyed);
-        }
-        mRoomCallback.onEnterRoom(mRoomMsgData.getRoomId(), result);
     }
 
     private long mNextSequence = 0L;
@@ -146,22 +130,9 @@ public class RoomObserver extends TUIRoomObserver implements TUIRoomKitListener 
         }
     }
 
-    @Override
-    public void onDestroyRoom() {
-        Log.d(TAG, "onDestroyRoom");
-        updateMsgForRoomStateChanged(AccessRoomConstants.RoomState.destroyed);
-        mRoomCallback.onDestroyRoom(mRoomMsgData.getRoomId());
-    }
-
     public void updateMsgForRoomStateChanged(AccessRoomConstants.RoomState state) {
         mRoomMsgData.setRoomState(state);
         mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData, true);
-    }
-
-    @Override
-    public void onExitRoom() {
-        Log.d(TAG, "onExitRoom");
-        mRoomCallback.onExitRoom(mRoomMsgData.getRoomId());
     }
 
     @Override
@@ -218,5 +189,75 @@ public class RoomObserver extends TUIRoomObserver implements TUIRoomKitListener 
             }
         }
         mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
+    }
+
+    @Override
+    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+        Log.d(TAG, "onEngineEvent event=" + event);
+        switch (event) {
+            case LOCAL_USER_CREATE_ROOM:
+                handleLocalUserCreateRoom(params);
+                break;
+
+            case LOCAL_USER_ENTER_ROOM:
+                handleLocalUserEnterRoom(params);
+                break;
+
+            case LOCAL_USER_EXIT_ROOM:
+                handleLocalUserExitRoom(params);
+                break;
+
+            case LOCAL_USER_DESTROY_ROOM:
+                handleLocalUserDestroyRoom(params);
+                break;
+
+            default:
+                Log.w(TAG, "onEngineEvent un handle event : " + event);
+                break;
+        }
+    }
+
+    private void handleLocalUserCreateRoom(Map<String, Object> params) {
+        AccessRoomConstants.RoomResult result =
+                params.get(KEY_ERROR) == TUICommonDefine.Error.SUCCESS ? AccessRoomConstants.RoomResult.SUCCESS :
+                        AccessRoomConstants.RoomResult.FAILED;
+        Log.d(TAG, "handleLocalUserCreateRoom result=" + result);
+        if (result == AccessRoomConstants.RoomResult.SUCCESS) {
+            mRoomMsgData.setRoomState(AccessRoomConstants.RoomState.created);
+            mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
+        } else {
+            updateMsgForRoomStateChanged(AccessRoomConstants.RoomState.destroyed);
+        }
+        mRoomCallback.onCreateRoom(mRoomMsgData.getRoomId(), result);
+    }
+
+    private void handleLocalUserEnterRoom(Map<String, Object> params) {
+        AccessRoomConstants.RoomResult result =
+                params.get(KEY_ERROR) == TUICommonDefine.Error.SUCCESS ? AccessRoomConstants.RoomResult.SUCCESS :
+                        AccessRoomConstants.RoomResult.FAILED;
+        Log.d(TAG, "handleLocalUserEnterRoom result=" + result);
+        if (result == AccessRoomConstants.RoomResult.SUCCESS) {
+            getUserList();
+        } else {
+            updateMsgForRoomStateChanged(AccessRoomConstants.RoomState.destroyed);
+        }
+        mRoomCallback.onEnterRoom(mRoomMsgData.getRoomId(), result);
+    }
+
+    private void handleLocalUserExitRoom(Map<String, Object> params) {
+        AccessRoomConstants.RoomResult result =
+                params.get(KEY_ERROR) == TUICommonDefine.Error.SUCCESS ? AccessRoomConstants.RoomResult.SUCCESS :
+                        AccessRoomConstants.RoomResult.FAILED;
+        Log.d(TAG, "handleLocalUserExitRoom result=" + result);
+        mRoomCallback.onExitRoom(mRoomMsgData.getRoomId());
+    }
+
+    private void handleLocalUserDestroyRoom(Map<String, Object> params) {
+        AccessRoomConstants.RoomResult result =
+                params.get(KEY_ERROR) == TUICommonDefine.Error.SUCCESS ? AccessRoomConstants.RoomResult.SUCCESS :
+                        AccessRoomConstants.RoomResult.FAILED;
+        Log.d(TAG, "handleLocalUserDestroyRoom result=" + result);
+        updateMsgForRoomStateChanged(AccessRoomConstants.RoomState.destroyed);
+        mRoomCallback.onDestroyRoom(mRoomMsgData.getRoomId());
     }
 }

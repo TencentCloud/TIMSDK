@@ -2,79 +2,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tuiroomkit_transparent"
-    android:orientation="vertical">
+    android:background="@drawable/tuiroomkit_bg_bottom_dialog_black_portrait"
+    android:orientation="vertical"
+    android:paddingBottom="16dp">
 
-    <LinearLayout
+    <View
+        android:layout_width="24dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/tuiroomkit_bottom_dialog_tip" />
+
+    <TextView
+        android:id="@+id/tv_leave_tips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/tuiroomkit_bg_logout"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_leave_tips"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/tuiroomkit_transparent"
-            android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:text="@string/tuiroomkit_leave_room_tips"
-            android:textColor="@color/tuiroomkit_bg_main_light_black"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/tuiroomkit_bg_guide_line_grey" />
-
-        <Button
-            android:id="@+id/btn_leave_room"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/tuiroomkit_transparent"
-            android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:text="@string/tuiroomkit_leave_room"
-            android:textColor="@color/tuiroomkit_color_blue"
-            android:textSize="20sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/tuiroomkit_bg_guide_line_grey" />
-
-        <Button
-            android:id="@+id/btn_finish_room"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/tuiroomkit_transparent"
-            android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:text="@string/tuiroomkit_finish_room"
-            android:textColor="@color/tuiroomkit_color_text_red"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="34dp"
-        android:background="@drawable/tuiroomkit_bg_logout"
+        android:background="@color/tuiroomkit_transparent"
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="@string/cancel"
+        android:text="@string/tuiroomkit_leave_room_tips"
+        android:textColor="@color/tuiroomkit_color_info_title"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
+
+    <Button
+        android:id="@+id/btn_leave_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tuiroomkit_transparent"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/tuiroomkit_leave_room"
         android:textColor="@color/tuiroomkit_color_blue"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
+
+    <Button
+        android:id="@+id/btn_finish_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tuiroomkit_transparent"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/tuiroomkit_finish_room"
+        android:textColor="@color/tuiroomkit_color_text_red"
+        android:textSize="20sp" />
+
 </LinearLayout>

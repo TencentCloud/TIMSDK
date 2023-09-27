@@ -1,40 +1,35 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.RaiseHandApplicationListView;
+import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RaiseHandApplicationListViewModel implements RoomEventCenter.RoomEngineEventResponder,
-        RoomEventCenter.RoomKitUIEventResponder {
+public class RaiseHandApplicationListViewModel
+        implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "ApplyListViewModel";
 
     private final RoomStore                    mRoomStore;
-    private final TUIRoomEngine                mRoomEngine;
     private final RaiseHandApplicationListView mApplyView;
 
-    private List<UserModel>                    mApplyUserList;
+    private List<UserEntity>                   mApplyUserList;
     private Map<String, TUIRoomDefine.Request> mApplyMap;
 
-    public RaiseHandApplicationListViewModel(Context context, RaiseHandApplicationListView view) {
+    public RaiseHandApplicationListViewModel(RaiseHandApplicationListView view) {
         mApplyView = view;
-        mRoomEngine = RoomEngineManager.sharedInstance(context).getRoomEngine();
-        mRoomStore = RoomEngineManager.sharedInstance(context).getRoomStore();
+        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
 
         mApplyUserList = new ArrayList<>();
         mApplyMap = new HashMap<>();
@@ -46,7 +41,7 @@ public class RaiseHandApplicationListViewModel implements RoomEventCenter.RoomEn
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_CANCELLED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.SEAT_LIST_CHANGED, this);
+        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
@@ -60,7 +55,7 @@ public class RaiseHandApplicationListViewModel implements RoomEventCenter.RoomEn
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_CANCELLED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.SEAT_LIST_CHANGED, this);
+        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
@@ -70,124 +65,46 @@ public class RaiseHandApplicationListViewModel implements RoomEventCenter.RoomEn
         if (mApplyMap.containsKey(request.userId)) {
             return;
         }
-
         mApplyMap.put(request.userId, request);
-        getUserModel(request.userId);
+        UserEntity user = mRoomStore.findUserWithCameraStream(mRoomStore.allUserList, request.userId);
+        mApplyUserList.add(user);
+        mApplyView.notifyItemInserted(mApplyUserList.size() - 1);
     }
 
-    private UserModel findUserModelById(String userId) {
-        if (TextUtils.isEmpty(userId)) {
-            return null;
-        }
-        for (UserModel entity : mApplyUserList) {
-            if (entity == null) {
-                continue;
-            }
-            if (userId.equals(entity.userId)) {
-                return entity;
-            }
-        }
-        return null;
-    }
-
-    public List<UserModel> getApplyList() {
+    public List<UserEntity> getApplyList() {
         return mApplyUserList;
     }
 
-    public List<UserModel> searchUserByKeyWords(String keyWords) {
+    public List<UserEntity> searchUserByKeyWords(String keyWords) {
         if (TextUtils.isEmpty(keyWords)) {
             return new ArrayList<>();
         }
 
-        List<UserModel> searchList = new ArrayList<>();
-        for (UserModel model : mApplyUserList) {
-            if (model == null) {
-                continue;
-            }
-            if (model.userName.contains(keyWords) || model.userId.contains(keyWords)) {
-                searchList.add(model);
+        List<UserEntity> searchList = new ArrayList<>();
+        for (UserEntity item : mApplyUserList) {
+            if (item.getUserName().contains(keyWords) || item.getUserId().contains(keyWords)) {
+                searchList.add(item);
             }
         }
         return searchList;
     }
 
-    private UserModel findUserModelByName(String userName) {
-        if (TextUtils.isEmpty(userName)) {
-            return null;
-        }
-        for (UserModel model : mApplyUserList) {
-            if (model == null) {
-                continue;
-            }
-            if (userName.equals(model.userName)) {
-                return model;
-            }
-        }
-        return null;
-    }
-
-    private void removeApplyUser(String userId) {
-        if (mApplyMap.remove(userId) == null) {
-            return;
-        }
-        UserModel userModel = findUserModelById(userId);
-        if (userModel == null) {
-            return;
-        }
-        mApplyUserList.remove(userModel);
-        mApplyView.removeItem(userModel);
-    }
-
     public void agreeAllUserOnStage() {
-        for (UserModel model : mApplyUserList) {
-            if (TextUtils.isEmpty(model.userId)) {
+        for (UserEntity item : mApplyUserList) {
+            TUIRoomDefine.Request request = mApplyMap.get(item.getUserId());
+            if (request == null) {
                 continue;
             }
-            if (mApplyMap.get(model.userId) == null) {
-                continue;
-            }
-            mRoomEngine.responseRemoteRequest(mApplyMap.get(model.userId).requestId, true, null);
-            mApplyView.removeItem(model);
+            RoomEngineManager.sharedInstance()
+                    .responseRemoteRequest(request.requestAction, request.requestId, true, null);
         }
         mApplyMap.clear();
         mApplyUserList.clear();
-    }
-
-    private void responseUserOnStage(String userId, boolean agree) {
-        if (!mApplyMap.containsKey(userId)) {
-            return;
-        }
-        if (mApplyMap.get(userId) == null) {
-            return;
-        }
-        mRoomEngine.responseRemoteRequest(mApplyMap.get(userId).requestId, agree, null);
-        removeApplyUser(userId);
+        mApplyView.notifyDataSetChanged();
     }
 
     public void inviteMemberOnstage() {
         RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST, null);
-    }
-
-    private void getUserModel(String userId) {
-        if (TextUtils.isEmpty(userId)) {
-            return;
-        }
-        mRoomEngine.getUserInfo(userId, new TUIRoomDefine.GetUserInfoCallback() {
-            @Override
-            public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
-                UserModel userModel = new UserModel();
-                userModel.userName = TextUtils.isEmpty(userInfo.userName) ? userInfo.userId : userInfo.userName;
-                userModel.userAvatar = userInfo.avatarUrl;
-                userModel.userId = userInfo.userId;
-                mApplyUserList.add(userModel);
-                mApplyView.addItem(userModel);
-            }
-
-            @Override
-            public void onError(TUICommonDefine.Error error, String s) {
-                Log.i(TAG, "getUserInfo error,code:" + error + ",msg:" + s);
-            }
-        });
     }
 
     private boolean isOwner() {
@@ -203,8 +120,8 @@ public class RaiseHandApplicationListViewModel implements RoomEventCenter.RoomEn
             case REQUEST_CANCELLED:
                 onRequestCancelled(params);
                 break;
-            case SEAT_LIST_CHANGED:
-                onSeatListChanged(params);
+            case REMOTE_USER_TAKE_SEAT:
+                onRemoteUserTakeSeat(params);
                 break;
             default:
                 break;
@@ -212,65 +129,64 @@ public class RaiseHandApplicationListViewModel implements RoomEventCenter.RoomEn
     }
 
     private void onRequestReceived(Map<String, Object> params) {
-        if (params == null) {
-            return;
-        }
         TUIRoomDefine.Request request = (TUIRoomDefine.Request) params.get(RoomEventConstant.KEY_REQUEST);
         if (request == null) {
             return;
         }
-        if (isOwner() && request.userId.equals(mRoomStore.userModel.userId)) {
-            mRoomEngine.responseRemoteRequest(request.requestId, true, null);
+        if (isOwner() && TextUtils.equals(request.userId, TUILogin.getUserId())) {
+            RoomEngineManager.sharedInstance()
+                    .responseRemoteRequest(request.requestAction, request.requestId, true, null);
         }
-        if (TUIRoomDefine.RequestAction.REQUEST_TO_TAKE_SEAT.equals(request.requestAction)) {
+        if (TUIRoomDefine.RequestAction.REQUEST_TO_TAKE_SEAT == request.requestAction) {
             addApplyUser(request);
         }
     }
 
-    private void onSeatListChanged(Map<String, Object> params) {
-        if (params == null) {
-            return;
-        }
-        List<TUIRoomDefine.SeatInfo> userSeatedList = (List<TUIRoomDefine.SeatInfo>)
-                params.get(RoomEventConstant.KEY_SEATED_LIST);
-
-        if (userSeatedList != null && !userSeatedList.isEmpty()) {
-            for (TUIRoomDefine.SeatInfo info :
-                    userSeatedList) {
-                removeApplyUser(info.userId);
-            }
-        }
-    }
-
     private void onRequestCancelled(Map<String, Object> params) {
-        if (params == null) {
-            return;
-        }
         String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
         if (TextUtils.isEmpty(userId)) {
-            return;
-        }
-        if (!mApplyMap.containsKey(userId)) {
             return;
         }
         removeApplyUser(userId);
     }
 
+    private void onRemoteUserTakeSeat(Map<String, Object> params) {
+        int position = (int) params.get(RoomEventConstant.KEY_USER_POSITION);
+        removeApplyUser(mRoomStore.seatUserList.get(position).getUserId());
+    }
+
+    private void removeApplyUser(String userId) {
+        if (!mApplyMap.containsKey(userId)) {
+            return;
+        }
+        mApplyMap.remove(userId);
+        UserEntity user = findUser(userId);
+        if (user == null) {
+            return;
+        }
+        int index = mApplyUserList.indexOf(user);
+        mApplyUserList.remove(index);
+        mApplyView.notifyItemRemoved(index);
+    }
+
+    private UserEntity findUser(String userId) {
+        for (UserEntity item : mApplyUserList) {
+            if (TextUtils.equals(item.getUserId(), userId)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
-        if (params == null) {
-            return;
-        }
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        if (TextUtils.isEmpty(userId)) {
-            return;
-        }
         switch (key) {
             case RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT:
-                responseUserOnStage(userId, true);
+                responseUserOnStage(params, true);
                 break;
             case RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT:
-                responseUserOnStage(userId, false);
+                responseUserOnStage(params, false);
                 break;
             case RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE:
                 if (!mApplyView.isShowing()) {
@@ -282,5 +198,25 @@ public class RaiseHandApplicationListViewModel implements RoomEventCenter.RoomEn
             default:
                 break;
         }
+    }
+
+    private void responseUserOnStage(Map<String, Object> params, boolean agree) {
+        if (params == null) {
+            return;
+        }
+        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
+        if (TextUtils.isEmpty(userId)) {
+            return;
+        }
+        if (!mApplyMap.containsKey(userId)) {
+            return;
+        }
+        if (mApplyMap.get(userId) == null) {
+            return;
+        }
+        RoomEngineManager.sharedInstance()
+                .responseRemoteRequest(mApplyMap.get(userId).requestAction, mApplyMap.get(userId).requestId, agree,
+                        null);
+        removeApplyUser(userId);
     }
 }

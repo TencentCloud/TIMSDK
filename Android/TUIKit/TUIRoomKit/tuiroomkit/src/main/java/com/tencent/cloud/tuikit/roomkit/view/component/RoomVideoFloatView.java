@@ -1,7 +1,5 @@
 package com.tencent.cloud.tuikit.roomkit.view.component;
 
-import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.Role.ROOM_OWNER;
-
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,11 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
-import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomVideoFloatViewModel;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserVolumePromptView;
+import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomVideoFloatViewModel;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,7 +48,7 @@ public class RoomVideoFloatView extends FrameLayout {
         mUserVolumePromptView = findViewById(R.id.tuiroomkit_user_mic);
         mUserNameTv = findViewById(R.id.tuiroomkit_user_name_tv);
 
-        mFloatViewModel = new RoomVideoFloatViewModel(mContext, this, mVideoView);
+        mFloatViewModel = new RoomVideoFloatViewModel(this, mVideoView);
     }
 
     @Override
@@ -76,10 +75,11 @@ public class RoomVideoFloatView extends FrameLayout {
         mUserVolumePromptView.updateVolumeEffect(volume);
     }
 
-    public void onNotifyUserInfoChanged(TUIRoomDefine.UserInfo userInfo) {
-        mRoomOwnerView.setVisibility(userInfo.userRole == ROOM_OWNER ? VISIBLE : GONE);
-        mUserNameTv.setText(TextUtils.isEmpty(userInfo.userName) ? userInfo.userId : userInfo.userName);
-        ImageLoader.loadImage(mContext, mUserAvatarIv, userInfo.avatarUrl, R.drawable.tuivideoseat_head);
+    public void onNotifyUserInfoChanged(UserEntity userInfo) {
+        mRoomOwnerView.setVisibility(TextUtils.equals(userInfo.getUserId(),
+                RoomEngineManager.sharedInstance().getRoomStore().roomInfo.ownerId) ? VISIBLE : GONE);
+        mUserNameTv.setText(TextUtils.isEmpty(userInfo.getUserName()) ? userInfo.getUserId() : userInfo.getUserName());
+        ImageLoader.loadImage(mContext, mUserAvatarIv, userInfo.getAvatarUrl(), R.drawable.tuivideoseat_head);
     }
 
     @Override

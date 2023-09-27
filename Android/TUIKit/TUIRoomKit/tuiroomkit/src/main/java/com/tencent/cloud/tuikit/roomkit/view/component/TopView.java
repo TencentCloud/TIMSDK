@@ -3,27 +3,28 @@ package com.tencent.cloud.tuikit.roomkit.view.component;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.DrawOverlaysPermissionUtil;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.TopViewModel;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 
 public class TopView extends FrameLayout implements View.OnClickListener {
-    private Context        mContext;
-    private ImageView      mImgHeadset;
-    private ImageView      mImageSwitchCamera;
-    private ImageView      mImgReport;
-    private ImageView      mImgMinimizeRoom;
-    private TextView       mTextTitle;
-    private TextView       mTexTime;
-    private RelativeLayout mLayoutMeetingInfo;
-    private TopViewModel   mViewModel;
+    private Context         mContext;
+    private ImageView       mImgHeadset;
+    private ImageView       mImageSwitchCamera;
+    private ImageView       mImgReport;
+    private LinearLayout    mButtonExit;
+    private TextView        mTextTitle;
+    private TextView        mTexTime;
+    private RelativeLayout  mLayoutMeetingInfo;
+    private TopViewModel    mViewModel;
 
     public TopView(Context context) {
         super(context);
@@ -40,14 +41,14 @@ public class TopView extends FrameLayout implements View.OnClickListener {
         mTextTitle = itemView.findViewById(R.id.tv_title);
         mLayoutMeetingInfo = findViewById(R.id.rl_meeting_info);
         mImgReport = itemView.findViewById(R.id.btn_report);
-        mImgMinimizeRoom = itemView.findViewById(R.id.tuiroomkit_minimize_room_iv);
+        mButtonExit = itemView.findViewById(R.id.btn_exit_room);
 
         mTexTime = itemView.findViewById(R.id.tv_broadcast_time);
         mImgHeadset.setOnClickListener(this);
         mImageSwitchCamera.setOnClickListener(this);
         mLayoutMeetingInfo.setOnClickListener(this);
         mImgReport.setOnClickListener(this);
-        mImgMinimizeRoom.setOnClickListener(this);
+        mButtonExit.setOnClickListener(this);
     }
 
     public void showReportView(boolean isShow) {
@@ -64,6 +65,7 @@ public class TopView extends FrameLayout implements View.OnClickListener {
     protected void onDetachedFromWindow() {
         mViewModel.stopTimeCount();
         super.onDetachedFromWindow();
+        mViewModel.destroy();
     }
 
     @Override
@@ -96,12 +98,8 @@ public class TopView extends FrameLayout implements View.OnClickListener {
             mViewModel.showMeetingInfo();
         } else if (v.getId() == R.id.btn_report) {
             mViewModel.report();
-        } else if (v.getId() == R.id.tuiroomkit_minimize_room_iv) {
-            if (!DrawOverlaysPermissionUtil.isGrantedDrawOverlays()) {
-                DrawOverlaysPermissionUtil.requestDrawOverlays();
-                return;
-            }
-            RoomEngineManager.sharedInstance(mContext).enterFloatWindow();
+        } else if (v.getId() == R.id.btn_exit_room) {
+            RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, null);
         }
     }
 }

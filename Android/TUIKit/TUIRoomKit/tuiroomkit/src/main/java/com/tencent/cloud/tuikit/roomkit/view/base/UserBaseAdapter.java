@@ -8,60 +8,27 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class UserBaseAdapter extends RecyclerView.Adapter<UserBaseAdapter.UserBaseViewHolder> {
-    private Context         mContext;
-    private List<UserModel> mModelList;
+    private Context          mContext;
+    private List<UserEntity> mModelList;
 
     public UserBaseAdapter(Context context) {
         mContext = context;
         mModelList = new ArrayList<>();
     }
 
-    public void setDataList(List<UserModel> list) {
+    public void setDataList(List<UserEntity> list) {
         if (list == null) {
             return;
         }
         this.mModelList = list;
         notifyDataSetChanged();
-    }
-
-    public void addItem(UserModel userModel) {
-        if (userModel == null) {
-            return;
-        }
-        mModelList.add(userModel);
-        notifyItemInserted(mModelList.size());
-    }
-
-    public void removeItem(UserModel userModel) {
-        if (userModel == null) {
-            return;
-        }
-        int index = mModelList.indexOf(userModel);
-        if (index == -1) {
-            return;
-        }
-        mModelList.remove(userModel);
-        notifyItemRemoved(index);
-    }
-
-    public void updateItem(UserModel userModel) {
-        if (userModel == null) {
-            return;
-        }
-        for (int i = 0; i < mModelList.size(); i++) {
-            if (mModelList.get(i) != null
-                    && mModelList.get(i).userId.equals(userModel.userId)) {
-                mModelList.set(i, userModel);
-                notifyItemChanged(i);
-                return;
-            }
-        }
     }
 
     @NonNull
@@ -73,10 +40,8 @@ public abstract class UserBaseAdapter extends RecyclerView.Adapter<UserBaseAdapt
 
     @Override
     public void onBindViewHolder(@NonNull UserBaseViewHolder holder, int position) {
-        UserModel userModel = mModelList.get(position);
-        if (userModel != null) {
-            holder.bind(mContext, userModel);
-        }
+        UserEntity userEntity = mModelList.get(position);
+        holder.bind(mContext, userEntity);
     }
 
     @Override
@@ -94,6 +59,6 @@ public abstract class UserBaseAdapter extends RecyclerView.Adapter<UserBaseAdapt
             super(itemView);
         }
 
-        public abstract void bind(Context context, UserModel userModel);
+        public abstract void bind(Context context, UserEntity userEntity);
     }
 }

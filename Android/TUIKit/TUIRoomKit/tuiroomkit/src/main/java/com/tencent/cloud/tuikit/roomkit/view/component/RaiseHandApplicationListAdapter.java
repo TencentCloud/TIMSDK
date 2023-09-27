@@ -5,11 +5,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.view.base.UserBaseAdapter;
 
@@ -43,14 +42,14 @@ public class RaiseHandApplicationListAdapter extends UserBaseAdapter {
         }
 
         @Override
-        public void bind(Context context, final UserModel userModel) {
-            ImageLoader.loadImage(context, mImageHead, userModel.userAvatar, R.drawable.tuiroomkit_head);
-            mTextUserName.setText(userModel.userName);
+        public void bind(Context context, final UserEntity user) {
+            ImageLoader.loadImage(context, mImageHead, user.getAvatarUrl(), R.drawable.tuiroomkit_head);
+            mTextUserName.setText(user.getUserName());
             mButtonAgree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Map<String, Object> params = new HashMap<>();
-                    params.put(RoomEventConstant.KEY_USER_ID, userModel.userId);
+                    params.put(RoomEventConstant.KEY_USER_ID, user.getUserId());
                     RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT, params);
                 }
             });
@@ -58,9 +57,9 @@ public class RaiseHandApplicationListAdapter extends UserBaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Map<String, Object> params = new HashMap<>();
-                    params.put(RoomEventConstant.KEY_USER_ID, userModel.userId);
-                    RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT,
-                            params);
+                    params.put(RoomEventConstant.KEY_USER_ID, user.getUserId());
+                    RoomEventCenter.getInstance()
+                            .notifyUIEvent(RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT, params);
                 }
             });
         }

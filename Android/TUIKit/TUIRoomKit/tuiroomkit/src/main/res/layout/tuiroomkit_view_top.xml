@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="5dp"
@@ -9,12 +10,16 @@
         android:id="@+id/rl_meeting_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginStart="10dp">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxEms="9"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/tuiroomkit_color_white"
             android:textSize="16sp" />
 
@@ -24,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/tv_broadcast_time"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/tv_title"
             android:src="@drawable/tuiroomkit_ic_arrow_down" />
 
@@ -41,10 +46,9 @@
         android:id="@+id/img_headset"
         android:layout_width="@dimen/tuiroomkit_top_item_view_width"
         android:layout_height="@dimen/tuiroomkit_top_item_view_height"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp"
-        android:layout_toStartOf="@id/img_camera_switch"
-        android:layout_toLeftOf="@id/img_camera_switch"
+        android:layout_marginStart="16dp"
         android:src="@drawable/tuiroomkit_ic_speaker" />
 
     <ImageView
@@ -52,19 +56,33 @@
         android:layout_width="@dimen/tuiroomkit_top_item_view_width"
         android:layout_height="@dimen/tuiroomkit_top_item_view_height"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp"
-        android:layout_toStartOf="@id/tuiroomkit_minimize_room_iv"
-        android:layout_toLeftOf="@id/tuiroomkit_minimize_room_iv"
+        android:layout_marginStart="24dp"
+        android:layout_toEndOf="@+id/img_headset"
         android:src="@drawable/tuiroomkit_ic_camera_switch" />
 
-    <ImageView
-        android:id="@+id/tuiroomkit_minimize_room_iv"
-        android:layout_width="@dimen/tuiroomkit_top_item_view_width"
-        android:layout_height="@dimen/tuiroomkit_top_item_view_height"
-        android:layout_alignParentRight="true"
+
+    <LinearLayout
+        android:id="@+id/btn_exit_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/tuiroomkit_ic_minimize" />
+        android:layout_marginEnd="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/tuiroomkit_ic_exit" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#ED414D"
+            android:text="@string/tuiroomkit_item_leave" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/btn_report"
@@ -72,9 +90,8 @@
         android:layout_height="@dimen/tuiroomkit_top_item_view_width"
         android:layout_centerVertical="true"
         android:layout_marginStart="-135dp"
-        android:layout_marginLeft="-135dp"
         android:layout_marginEnd="20dp"
-        android:layout_toLeftOf="@id/img_headset"
+        android:layout_toStartOf="@id/img_headset"
         android:src="@drawable/tuiroomkit_ic_report_room"
         android:visibility="gone" />
 </RelativeLayout>

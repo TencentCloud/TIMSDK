@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/tuiroomkit_bg_bottom_dialog_black_portrait"
     android:orientation="vertical"
-    android:paddingBottom="61dp">
+    android:paddingBottom="24dp">
 
     <View
         android:layout_width="24dp"
@@ -48,6 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -57,7 +58,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:clickable="false"
-            android:src="@drawable/tuiroomkit_ic_member_list_audio" />
+            android:src="@drawable/tuiroomkit_ic_user_manage_audio" />
 
         <TextView
             android:id="@+id/tv_close_mic"
@@ -66,18 +67,24 @@
             android:layout_marginStart="15dp"
             android:clickable="false"
             android:text="@string/tuiroomkit_item_close_microphone"
-            android:textColor="@color/tuiroomkit_color_hint"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
             android:textSize="14sp" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
 
     <LinearLayout
         android:id="@+id/ll_close_camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -86,7 +93,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:clickable="false"
-            android:src="@drawable/tuiroomkit_ic_member_list_video" />
+            android:src="@drawable/tuiroomkit_ic_user_manage_video" />
 
         <TextView
             android:id="@+id/tv_open_camera"
@@ -95,48 +102,24 @@
             android:layout_marginStart="15dp"
             android:clickable="false"
             android:text="@string/tuiroomkit_item_open_camera"
-            android:textColor="@color/tuiroomkit_color_hint"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
             android:textSize="14sp" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_invite_to_stage"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/image_forward_master"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:clickable="false"
-            android:src="@drawable/tuiroomkit_ic_invite_to_stage" />
-
-        <TextView
-            android:id="@+id/tv_invite_to_stage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:clickable="false"
-            android:text="@string/tuiroomkit_invite_to_stage"
-            android:textColor="@color/tuiroomkit_color_hint"
-            android:textSize="14sp" />
-
-    </LinearLayout>
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
 
     <LinearLayout
         android:id="@+id/ll_forward_master"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -154,18 +137,24 @@
             android:layout_marginStart="15dp"
             android:clickable="false"
             android:text="@string/tuiroomkit_forward_master_to"
-            android:textColor="@color/tuiroomkit_color_hint"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
             android:textSize="14sp" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
 
     <LinearLayout
         android:id="@+id/ll_mute_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -174,7 +163,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:clickable="false"
-            android:src="@drawable/tuiroomkit_ic_silence_user" />
+            android:src="@drawable/tuiroomkit_ic_slience" />
 
         <TextView
             android:id="@+id/tv_mute_user"
@@ -183,18 +172,61 @@
             android:layout_marginStart="15dp"
             android:clickable="false"
             android:text="@string/tuiroomkit_mute_user"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_invite_to_stage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/image_invite_forward_master"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="false"
+            android:src="@drawable/tuiroomkit_ic_invite_to_stage" />
+
+        <TextView
+            android:id="@+id/tv_invite_to_stage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:clickable="false"
+            android:text="@string/tuiroomkit_invite_to_stage"
             android:textColor="@color/tuiroomkit_color_hint"
             android:textSize="14sp" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
 
     <LinearLayout
         android:id="@+id/ll_kick_off_stage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -213,17 +245,22 @@
             android:layout_marginStart="15dp"
             android:clickable="false"
             android:text="@string/tuiroomkit_kick_off_stage"
-            android:textColor="@color/tuiroomkit_color_hint"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
             android:textSize="14sp" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
 
     <LinearLayout
         android:id="@+id/ll_kick_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -242,7 +279,7 @@
             android:layout_marginStart="15dp"
             android:clickable="false"
             android:text="@string/tuiroomkit_kick_out_of_room"
-            android:textColor="@color/tuiroomkit_color_hint"
+            android:textColor="@color/tuiroomkit_color_kick_red"
             android:textSize="14sp" />
 
     </LinearLayout>

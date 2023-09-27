@@ -13,6 +13,7 @@ import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.TUIVideoSeatView;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.utils.UserListSorter;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.ScaleVideoView;
@@ -52,10 +53,10 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
 
     private TUIRoomDefine.VideoStreamType mRemoteCameraStreamType = TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
 
-    public VideoSeatViewModel(Context context, TUIRoomEngine roomEngine, TUIVideoSeatView videoSeatView) {
+    public VideoSeatViewModel(Context context, TUIVideoSeatView videoSeatView) {
         mContext = context;
         mVideoSeatView = videoSeatView;
-        mRoomEngine = roomEngine;
+        mRoomEngine = RoomEngineManager.sharedInstance().getRoomEngine();
         mSelfUserId = TUIRoomEngine.getSelfInfo().userId;
 
         mRoomEngine.addObserver(this);
@@ -66,7 +67,8 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
 
     @Override
     public void setLocalVideoView(UserEntity selfEntity) {
-        if (selfEntity == null || selfEntity.getRoomVideoView() == mLocalPreview) {
+        if (selfEntity == null || selfEntity.getRoomVideoView() == mLocalPreview
+                || selfEntity.isScreenShareAvailable()) {
             return;
         }
         mLocalPreview = selfEntity.getRoomVideoView();
@@ -231,7 +233,7 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
                 continue;
             }
             UserEntity memberEntity = mUserEntityMap.get(userId);
-            if (memberEntity == null) {
+            if (memberEntity == null || !memberEntity.isAudioAvailable()) {
                 continue;
             }
             memberEntity.setAudioVolume(entry.getValue());
@@ -269,6 +271,7 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
         }
         Log.d(TAG, "onRemoteUserLeaveRoom userId=" + userInfo.userId + " userName=" + userInfo.userName + " videoOn="
                 + userInfo.hasVideoStream);
+        removeMemberEntity(userInfo.userId + "-sub");
         removeMemberEntity(userInfo.userId);
         notifyUiForUserListChanged();
     }
@@ -403,6 +406,7 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
     private void removeLeftUsers(List<TUIRoomDefine.SeatInfo> leftList) {
         for (TUIRoomDefine.SeatInfo info : leftList) {
             Log.d(TAG, "removeLeftUsers info.userId=" + info.userId);
+            removeMemberEntity(info.userId + "-sub");
             removeMemberEntity(info.userId);
         }
         if (!leftList.isEmpty()) {
@@ -513,7 +517,6 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
 
     private void removeMemberEntity(String userId) {
         if (!mUserEntityMap.containsKey(userId)) {
-            Log.w(TAG, "removeMemberEntity userId is not existed : " + userId);
             return;
         }
         UserEntity entity = mUserEntityMap.get(userId);

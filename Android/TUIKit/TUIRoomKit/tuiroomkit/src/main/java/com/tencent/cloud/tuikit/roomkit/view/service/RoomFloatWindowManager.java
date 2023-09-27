@@ -18,6 +18,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.utils.DrawOverlaysPermissionUtil;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 
 import java.util.Map;
@@ -113,7 +114,7 @@ public class RoomFloatWindowManager
             case ROOM_DISMISSED:
                 if (RoomEngineManager.sharedInstance(mAppContext).getRoomStore().isInFloatWindow()) {
                     dismissFloatWindow();
-                    RoomEngineManager.sharedInstance(mAppContext).exitRoom();
+                    RoomEngineManager.sharedInstance(mAppContext).exitRoom(null);
                 }
                 break;
 
@@ -137,7 +138,12 @@ public class RoomFloatWindowManager
                 EVENT_SUB_KEY_START_UNINIT) && RoomEngineManager.sharedInstance(mAppContext).getRoomStore()
                 .isInFloatWindow()) {
             dismissFloatWindow();
-            RoomEngineManager.sharedInstance().exitRoom();
+            if (TextUtils.equals(TUILogin.getUserId(),
+                    RoomEngineManager.sharedInstance().getRoomStore().roomInfo.ownerId)) {
+                RoomEngineManager.sharedInstance().destroyRoom(null);
+            } else {
+                RoomEngineManager.sharedInstance().exitRoom(null);
+            }
         }
     }
 }

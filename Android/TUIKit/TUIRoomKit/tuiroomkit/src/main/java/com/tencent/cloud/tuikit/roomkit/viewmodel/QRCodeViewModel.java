@@ -9,7 +9,6 @@ import android.os.Build;
 import android.widget.Toast;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.model.utils.SaveBitMap;
@@ -23,10 +22,6 @@ public class QRCodeViewModel {
 
     public QRCodeViewModel(Context context) {
         mContext = context;
-    }
-
-    public RoomInfo getRoomInfo() {
-        return RoomEngineManager.sharedInstance(mContext).getRoomStore().roomInfo;
     }
 
     public void saveQRCodeToAlbum(final Bitmap bitmap) {

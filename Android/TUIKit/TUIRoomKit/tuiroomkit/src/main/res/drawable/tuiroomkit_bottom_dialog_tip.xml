@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/tuiroomkit_color_bg_bottom_tip" />
-    <corners android:radius="2dp" />
-</shape>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="28dp"
+    android:height="7dp"
+    android:viewportWidth="28"
+    android:viewportHeight="7">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#8F9AB2"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M2,2 L11.0896,4.27239 C13.0005,4.75011 14.9995,4.75011 16.9104,4.27239 L26,2" />
+</vector>

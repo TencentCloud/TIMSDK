@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.entity.RoomInfo;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.QRCodeViewModel;
@@ -28,7 +28,6 @@ public class QRCodeView extends BaseBottomDialog implements View.OnClickListener
     private TextView        mTextRoomId;
     private ImageView       mImageQRCode;
     private ImageButton     mButtonCopyRoomId;
-    private RoomInfo        mRoomInfo;
     private QRCodeViewModel mViewModel;
 
     public QRCodeView(Context context, String url) {
@@ -42,9 +41,8 @@ public class QRCodeView extends BaseBottomDialog implements View.OnClickListener
     }
 
     @Override
-    protected void intiView() {
+    protected void initView() {
         mViewModel = new QRCodeViewModel(getContext());
-        mRoomInfo = mViewModel.getRoomInfo();
         mToolbar = findViewById(R.id.toolbar_qr_code_view);
         mButtonSave = findViewById(R.id.btn_save);
         mTextRoomName = findViewById(R.id.tv_room_name);
@@ -56,8 +54,9 @@ public class QRCodeView extends BaseBottomDialog implements View.OnClickListener
         mButtonSave.setOnClickListener(this);
         mButtonCopyRoomId.setOnClickListener(this);
 
-        mTextRoomName.setText(mRoomInfo.name);
-        mTextRoomId.setText(mRoomInfo.roomId);
+        mTextRoomName.setText(RoomEngineManager.sharedInstance().getRoomStore().roomInfo.name
+                + getContext().getString(R.string.tuiroomkit_meeting_title));
+        mTextRoomId.setText(RoomEngineManager.sharedInstance().getRoomStore().roomInfo.roomId);
 
         mBitmap = CommonUtils.createQRCodeBitmap(mRoomURL, QRCODE_WIDTH, QRCODE_HEIGHT);
         mImageQRCode.setImageBitmap(mBitmap);
