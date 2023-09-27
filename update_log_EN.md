@@ -2,6 +2,31 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.5.4852 @2023.09.27 - Enhanced Version
+### SDK
+- Added notification for offline kicked users
+- Optimized retrieval of roaming messages
+- Community supports marking group members
+- Optimized C API header files
+- Added interface to ban the entire group chat
+- Added flag field for message response to indicate whether it is a self-response
+- Fixed occasional exception in local storage of message reaction
+- Fixed issue where the revoke-information of lastMessage in the conversation is empty when a message is revoked
+- Fixed issue where the message sender's remarks are empty when receiving friend messages
+- Fixed issue where clearing only group chat unread messages also clears unread messages in one-on-one chats
+- Fixed issue where onRecvNewMessage callback is not triggered for group messages received during network disconnection
+- Fixed occasional crash issue in server search
+- Fixed issue where unread count of topic information is not updated after reconnection and retrieval
+- Fixed issue where conversation's LastMessage is not updated after custom data is set for the last message of the conversation
+- Fixed crash issue when clearing unread notifications on Windows platform using Swift interface with Int.max as input
+
+### TUIKit & Demo
+- TUIKit supports RTL language
+- TUIChat's voice playback supports manual switching between earpiece and speaker
+- Added voice recognition plugin TUIVoiceToText
+- Optimized file download
+- Replaced the latest cleanConversationUnreadMessageCount interface with read report.
+
 ## 7.4.4661 @2023.09.08 - Enhanced Version
 ### SDK
 - Fix the exception caused by clearing unread messages with one click.
