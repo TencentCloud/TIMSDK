@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TIMCommon'
-  spec.version      = '7.4.4643'
+  spec.version      = '7.5.4852'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -11,20 +11,20 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://cloud.tencent.com/document/product/269/3794'
   spec.documentation_url = 'https://cloud.tencent.com/document/product/269/9147'
   spec.authors      = 'tencent video cloud'
-  spec.summary      = 'TUICore'
+  spec.summary      = 'TIMCommon'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.4.4643/ios/TIMCommon.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4852/ios/TIMCommon.zip'}
 
   spec.subspec 'CommonModel' do |commonModel|
         commonModel.source_files = '**/TIMCommon/CommonModel/*.{h,m,mm}'
-        commonModel.dependency 'TXIMSDK_Plus_iOS','7.4.4643'
-        commonModel.dependency 'TUICore','7.4.4643'
-        #commonModel.dependency 'TUICore', :path => 'TUICore'
+        commonModel.dependency 'TXIMSDK_Plus_iOS','7.5.4852'
+        commonModel.dependency 'TUICore','7.5.4852'
         commonModel.dependency 'ReactiveObjC'
         commonModel.dependency 'SDWebImage'
+        commonModel.dependency 'Masonry'
   end
   
   spec.subspec 'BaseCellData' do |baseCellData|
@@ -55,12 +55,10 @@ Pod::Spec.new do |spec|
   
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES',
     'DEFINES_MODULE' => 'YES'
   }
   spec.user_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES',
     'DEFINES_MODULE' => 'YES'
   }
 end

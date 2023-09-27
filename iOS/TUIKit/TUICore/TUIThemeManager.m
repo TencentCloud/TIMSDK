@@ -129,7 +129,9 @@
             return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
               switch (traitCollection.userInterfaceStyle) {
                   case UIUserInterfaceStyleDark:
-                      return [darkTheme dynamicColor:colorKey defaultColor:hex];
+                      if (darkTheme) {
+                          return [darkTheme dynamicColor:colorKey defaultColor:hex];
+                      }
                   case UIUserInterfaceStyleLight:
                   case UIUserInterfaceStyleUnspecified:
                   default:
