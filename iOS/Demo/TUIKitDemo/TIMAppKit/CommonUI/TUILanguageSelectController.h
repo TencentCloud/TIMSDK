@@ -22,6 +22,7 @@ typedef void (^TUILanguageSelectCallback)(TUILanguageSelectCellModel *);
 @interface TUILanguageSelectCell : UITableViewCell
 
 @property(nonatomic, strong) UILabel *nameLabel;
+@property(nonatomic, strong) UILabel *detailNameLabel;
 @property(nonatomic, strong) UIImageView *chooseIconView;
 
 @property(nonatomic, strong) TUILanguageSelectCellModel *cellModel;
@@ -31,7 +32,9 @@ typedef void (^TUILanguageSelectCallback)(TUILanguageSelectCellModel *);
 @interface TUILanguageSelectCellModel : NSObject
 
 @property(nonatomic, copy) NSString *languageID;
+@property(nonatomic, strong) NSString *displayName;
 @property(nonatomic, strong) NSString *languageName;
+@property(nonatomic, strong) NSString *nameInCurrentLanguage;
 @property(nonatomic, assign) BOOL selected;
 
 @end

@@ -121,7 +121,13 @@ NSString *kHaveViewedIMIntroduction = @"TUIKitDemo_HaveViewedIMIntroduction";
         [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     }
 }
+
+static BOOL g_hasAddedCustomFace = NO;
 - (void)setupCustomSticker {
+    if (g_hasAddedCustomFace) {
+        return;
+    }
+    g_hasAddedCustomFace = YES;
     NSMutableArray *faceGroups = [NSMutableArray arrayWithArray:TIMConfig.defaultConfig.faceGroups];
     NSString *bundlePath = TUIBundlePath(@"CustomFaceResource", TUIDemoBundle_Key_Class);
     // 4350 group
@@ -614,6 +620,7 @@ static UIWindow *gImWindow = nil;
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
     msgItem.title = TIMCommonLocalizableString(TIMAppTabBarItemMessageText);
+    msgItem.identity = @"msgItem";
     msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"session_selected")]);
     msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"session_normal")]);
     ConversationController *convVC = [[ConversationController alloc] init];
@@ -643,6 +650,7 @@ static UIWindow *gImWindow = nil;
 
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = TIMCommonLocalizableString(TIMAppTabBarItemContactText);
+    contactItem.identity = @"contactItem";
     contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"contact_selected")]);
     contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"contact_normal")]);
     ContactsController *contactVC = [[ContactsController alloc] init];
@@ -661,6 +669,7 @@ static UIWindow *gImWindow = nil;
 
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = TIMCommonLocalizableString(TIMAppTabBarItemMeText);
+    setItem.identity = @"setItem";
     setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"myself_selected")]);
     setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"myself_normal")]);
     SettingController *setVC = [[SettingController alloc] init];
@@ -692,13 +701,13 @@ static UIWindow *gImWindow = nil;
 
     switch (self.defaultVC) {
         case DefaultVC_Conversation:
-            self.tbc.selectedIndex = 0;
+            self.tbc.selectedIndex = [items indexOfObject:msgItem];
             break;
         case DefaultVC_Contact:
-            self.tbc.selectedIndex = 1;
+            self.tbc.selectedIndex = [items indexOfObject:contactItem];
             break;
         case DefaultVC_Setting:
-            self.tbc.selectedIndex = 2;
+            self.tbc.selectedIndex = [items indexOfObject:setItem];
             break;
         default:
             break;
@@ -712,6 +721,7 @@ static UIWindow *gImWindow = nil;
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
     msgItem.title = TIMCommonLocalizableString(TIMAppTabBarItemMessageText_mini);
+    msgItem.identity = @"msgItem";
     msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"session_selected")]);
     msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"session_normal")]);
     self.convVC_Mini = [[ConversationController_Minimalist alloc] init];
@@ -741,6 +751,7 @@ static UIWindow *gImWindow = nil;
 
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = TIMCommonLocalizableString(TIMAppTabBarItemContactText_mini);
+    contactItem.identity = @"contactItem";
     contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"contact_selected")]);
     contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"contact_normal")]);
     self.contactsVC_Mini = [[ContactsController_Minimalist alloc] init];
@@ -759,6 +770,7 @@ static UIWindow *gImWindow = nil;
 
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = TIMCommonLocalizableString(TIMAppTabBarItemSettingText_mini);
+    setItem.identity = @"setItem";
     setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:TUIDemoImagePath(@"myself_selected")]);
     setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"myself_normal")]);
     self.settingVC_Mini = [[SettingController_Minimalist alloc] init];
@@ -790,13 +802,13 @@ static UIWindow *gImWindow = nil;
 
     switch (self.defaultVC) {
         case DefaultVC_Conversation:
-            self.tbc.selectedIndex = 0;
+            self.tbc.selectedIndex = [items indexOfObject:msgItem];
             break;
         case DefaultVC_Contact:
-            self.tbc.selectedIndex = 1;
+            self.tbc.selectedIndex = [items indexOfObject:contactItem];
             break;
         case DefaultVC_Setting:
-            self.tbc.selectedIndex = 2;
+            self.tbc.selectedIndex = [items indexOfObject:setItem];
             break;
         default:
             break;
@@ -818,18 +830,15 @@ static UIWindow *gImWindow = nil;
 - (void)redpoint_clearUnreadMessage {
     NSLog(@"[Redpoint] %s", __func__);
     @weakify(self);
-    [V2TIMManager.sharedInstance
-        markAllMessageAsRead:^{
-          @strongify(self);
-          [TUITool makeToast:TIMCommonLocalizableString(TIMAppMarkAllMessageAsReadSucc)];
-          [self onTotalUnreadCountChanged:0];
-        }
-        fail:^(int code, NSString *desc) {
-          @strongify(self);
-          [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TIMAppMarkAllMessageAsReadErrFormat), code, desc]];
-          [self onTotalUnreadCountChanged:self.unReadCount];
-        }];
-
+    [V2TIMManager.sharedInstance cleanConversationUnreadMessageCount:@"" cleanTimestamp:0 cleanSequence:0 succ:^{
+        @strongify(self);
+        [TUITool makeToast:TIMCommonLocalizableString(TIMAppMarkAllMessageAsReadSucc)];
+        [self onTotalUnreadCountChanged:0];
+    } fail:^(int code, NSString *desc) {
+        @strongify(self);
+        [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TIMAppMarkAllMessageAsReadErrFormat), code, desc]];
+        [self onTotalUnreadCountChanged:self.unReadCount];
+    }];
     NSArray *conversations = [self.markUnreadMap allKeys];
     if (conversations.count) {
         [V2TIMManager.sharedInstance markConversation:conversations markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD) enableMark:NO succ:nil fail:nil];
@@ -878,8 +887,14 @@ static UIWindow *gImWindow = nil;
     if (tab.tabBarItems.count < 2) {
         return;
     }
-    TUITabBarItem *item = tab.tabBarItems[1];
-    item.badgeView.title = applicationCount == 0 ? @"" : [NSString stringWithFormat:@"%zd", applicationCount];
+    TUITabBarItem *contactItem = nil;
+    for (TUITabBarItem *item in tab.tabBarItems) {
+        if ([item.identity isEqualToString:@"contactItem"]) {
+            contactItem = item;
+            break;
+        }
+    }
+    contactItem.badgeView.title = applicationCount == 0 ? @"" : [NSString stringWithFormat:@"%zd", applicationCount];
 }
 
 - (NSInteger)caculateRealResultAboutSDKTotalCount:(UInt64)totalCount

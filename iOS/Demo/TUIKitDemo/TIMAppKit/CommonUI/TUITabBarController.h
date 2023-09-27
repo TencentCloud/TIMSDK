@@ -17,6 +17,7 @@
 @property(nonatomic, strong) NSString *title;
 @property(nonatomic, strong) UIViewController *controller;
 @property(nonatomic, strong) TUIBadgeView *badgeView;
+@property(nonatomic, copy)   NSString *identity;
 @end
 
 @interface TUITabBarController : UITabBarController

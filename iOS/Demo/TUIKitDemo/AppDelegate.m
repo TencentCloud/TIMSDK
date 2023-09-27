@@ -32,6 +32,7 @@
 #import "TUIWarningView.h"
 #import "TUICallingHistoryViewController.h"
 #import "TIMDefine.h"
+#import "UIView+TUILayout.h"
 
 //Minimalist
 #import "ConversationController_Minimalist.h"
@@ -563,13 +564,19 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
 }
 
 - (UITabBarController *)getMainController_Classic {
+    UIImage *backimg = TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:TIMCommonImagePath(@"nav_back")]);
+    backimg = [backimg rtl_imageFlippedForRightToLeftLayoutDirection];
+    
     TUITabBarController *tbc = [[TUITabBarController alloc] init];
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
     msgItem.title = NSLocalizedString(@"TabBarItemMessageText", nil);
+    msgItem.identity = @"msgItem";
     msgItem.selectedImage = TUIDemoDynamicImage(@"tab_msg_selected_img", [UIImage imageNamed:@"session_selected"]);
     msgItem.normalImage = TUIDemoDynamicImage(@"tab_msg_normal_img", [UIImage imageNamed:@"session_normal"]);
-    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
+    TUINavigationController *msgNav = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController alloc] init]];
+    msgNav.navigationItemBackArrowImage = backimg;
+    msgItem.controller = msgNav;
     msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     msgItem.badgeView = [[TUIBadgeView alloc] init];
     @weakify(self)
@@ -587,15 +594,19 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = NSLocalizedString(@"TabBarItemContactText", nil);
+    contactItem.identity = @"contactItem";
     contactItem.selectedImage = TUIDemoDynamicImage(@"tab_contact_selected_img", [UIImage imageNamed:@"contact_selected"]);
     contactItem.normalImage = TUIDemoDynamicImage(@"tab_contact_normal_img", [UIImage imageNamed:@"contact_normal"]);
-    contactItem.controller = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    TUINavigationController *contactNav = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController alloc] init]];
+    contactNav.navigationItemBackArrowImage = backimg;
+    contactItem.controller = contactNav;
     contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     contactItem.badgeView = [[TUIBadgeView alloc] init];
     [items addObject:contactItem];
     
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = NSLocalizedString(@"TabBarItemMeText", nil);
+    setItem.identity = @"setItem";
     setItem.selectedImage = TUIDemoDynamicImage(@"tab_me_selected_img", [UIImage imageNamed:@"myself_selected"]);
     setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:@"myself_normal"]);
     SettingController *setVC = [[SettingController alloc] init];
@@ -609,7 +620,9 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
             NSLog(@"logout fail");
         }];
     };
-    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:setVC];
+    TUINavigationController *setNav = [[TUINavigationController alloc] initWithRootViewController:setVC];
+    setNav.navigationItemBackArrowImage = backimg;
+    setItem.controller = setNav;
     setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:TController_Background_Color dark:TController_Background_Color_Dark];
     [items addObject:setItem];
     tbc.tabBarItems = items;
@@ -700,16 +713,16 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
 
 - (UITabBarController *)getMainController_Minimalist {
     
+    UIImage *backimg = [[UIImage imageNamed:@"icon_back_blue"] rtl_imageFlippedForRightToLeftLayoutDirection];
+    
     TUITabBarController *tbc = [[TUITabBarController alloc] init];
     NSMutableArray *items = [NSMutableArray array];
     TUITabBarItem *msgItem = [[TUITabBarItem alloc] init];
 
     msgItem.title = NSLocalizedString(@"TabBarItemMessageText_mini", nil);
+    msgItem.identity = @"msgItem";
     msgItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"session_selected")]);
     msgItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"session_normal")]);
-    TUINavigationController *msgNav = [[TUINavigationController alloc] initWithRootViewController:[[ConversationController_Minimalist alloc] init]];
-    msgItem.controller = msgNav;
-    msgNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
     ConversationController_Minimalist *convVC = [[ConversationController_Minimalist alloc] init];
     @weakify(self)
     convVC.getUnReadCount = ^NSUInteger{
@@ -720,7 +733,10 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
         @strongify(self)
         [self redpoint_clearUnreadMessage];
     };
-    msgItem.controller = [[TUINavigationController alloc] initWithRootViewController:convVC];
+    
+    TUINavigationController *msgNav = [[TUINavigationController alloc] initWithRootViewController:convVC];
+    msgItem.controller = msgNav;
+    msgNav.navigationItemBackArrowImage = backimg;
     msgItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     msgItem.badgeView = [[TUIBadgeView alloc] init];
     msgItem.badgeView.clearCallback = ^{
@@ -737,23 +753,22 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
     contactItem.title = NSLocalizedString(@"TabBarItemContactText_mini", nil);
+    contactItem.identity = @"contactItem";
     contactItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"contact_selected")]);
     contactItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"contact_normal")]);
     TUINavigationController *contactNav = [[TUINavigationController alloc] initWithRootViewController:[[ContactsController_Minimalist alloc] init]];
-    contactNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
+    contactNav.navigationItemBackArrowImage = backimg;
     contactItem.controller = contactNav;
     contactItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     contactItem.badgeView = [[TUIBadgeView alloc] init];
     [items addObject:contactItem];
     
+    
     TUITabBarItem *setItem = [[TUITabBarItem alloc] init];
     setItem.title = NSLocalizedString(@"TabBarItemSettingText_mini", nil);
-    
+    setItem.identity = @"setItem";
     setItem.selectedImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"setting_selected")]);
     setItem.normalImage = TUIDynamicImage(@"", TUIThemeModuleDemo_Minimalist, [UIImage imageNamed:TUIDemoImagePath_Minimalist(@"setting_normal")]);
-    TUINavigationController *setNav = [[TUINavigationController alloc] initWithRootViewController:[[SettingController_Minimalist alloc] init]];
-    setNav.navigationItemBackArrowImage = [UIImage imageNamed:@"icon_back_blue"];
-    setItem.controller = setNav;
     SettingController_Minimalist *setVC = [[SettingController_Minimalist alloc] init];
     setVC.confirmLogout = ^{
         [TUILogin logout:^{
@@ -765,7 +780,10 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
             NSLog(@"logout fail");
         }];
     };
-    setItem.controller = [[TUINavigationController alloc] initWithRootViewController:setVC];
+    
+    TUINavigationController *setNav = [[TUINavigationController alloc] initWithRootViewController:setVC];
+    setNav.navigationItemBackArrowImage = backimg;
+    setItem.controller = setNav;
     setItem.controller.view.backgroundColor = [UIColor d_colorWithColorLight:[UIColor whiteColor] dark:TController_Background_Color_Dark];
     [items addObject:setItem];
     tbc.tabBarItems = items;
@@ -786,6 +804,7 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
                                        : TUIDemoDynamicImage(@"tab_calls_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"tab_calls_normal")]);
         TUITabBarItem *callsItem = [[TUITabBarItem alloc] init];
         callsItem.title = title;
+        callsItem.identity = @"callsItem";
         callsItem.selectedImage = selected;
         callsItem.normalImage = normal;
         callsItem.controller = [[TUINavigationController alloc] initWithRootViewController:callsVc];

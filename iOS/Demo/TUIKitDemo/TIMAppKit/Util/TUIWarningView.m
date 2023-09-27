@@ -34,7 +34,7 @@
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             paragraphStyle.minimumLineHeight = 18;
             [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-            [paragraphStyle setAlignment:NSTextAlignmentLeft];
+            [paragraphStyle setAlignment:isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft];
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:tips];
             [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [tips length])];
             self.tipsLabel.attributedText = attributedString;
@@ -45,6 +45,9 @@
                                                   context:nil];
             self.mm_height(rect.size.height + 32);
             self.tipsLabel.mm_width(rect.size.width).mm_height(rect.size.height).mm_top(16).mm_left(16);
+            if (isRTL()) {
+                [self.tipsLabel resetFrameToFitRTL];
+            }
         }
 
         if (buttonTitle.length > 0) {
@@ -55,6 +58,9 @@
             [self.tipsButton setTitleColor:[UIColor tui_colorWithHex:@"006EFF"] forState:UIControlStateNormal];
             [self.tipsButton addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             self.tipsButton.mm_sizeToFit().mm_right(16).mm_bottom(10);
+            if (isRTL()) {
+                [self.tipsButton resetFrameToFitRTL];
+            }
         }
     }
     return self;

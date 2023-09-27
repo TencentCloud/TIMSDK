@@ -71,7 +71,13 @@
     for (TUITabBarItem *item in _tabBarItems) {
         UIView *tabItemView = [self getTabBarContentView:item.controller.tabBarItem];
         CGRect frame = [self.tabBar convertRect:tabItemView.frame fromView:tabItemView.superview];
-        item.badgeView.center = CGPointMake(CGRectGetMaxX(frame), frame.origin.y);
+        if(isRTL()) {
+            item.badgeView.center = CGPointMake(CGRectGetMinX(frame), frame.origin.y);
+        }
+        else {
+            item.badgeView.center = CGPointMake(CGRectGetMaxX(frame), frame.origin.y);
+        }
+        
         [self.tabBar addSubview:item.badgeView];
     }
 }
@@ -83,7 +89,12 @@
       for (TUITabBarItem *item in weakSelf.tabBarItems) {
           UIView *tabItemView = [weakSelf getTabBarContentView:item.controller.tabBarItem];
           CGRect frame = [weakSelf.tabBar convertRect:tabItemView.frame fromView:tabItemView.superview];
-          item.badgeView.center = CGPointMake(CGRectGetMaxX(frame), frame.origin.y);
+          if(isRTL()) {
+              item.badgeView.center = CGPointMake(CGRectGetMinX(frame), frame.origin.y);
+          }
+          else {
+              item.badgeView.center = CGPointMake(CGRectGetMaxX(frame), frame.origin.y);
+          }
           [item.badgeView removeFromSuperview];
           [weakSelf.tabBar addSubview:item.badgeView];
       }

@@ -106,7 +106,7 @@ NSInteger _markHideUnreadCount = 0;
 {
     NSLog(@"[Redpoint] %s", __func__);
     @weakify(self)
-    [V2TIMManager.sharedInstance markAllMessageAsRead:^{
+    [V2TIMManager.sharedInstance cleanConversationUnreadMessageCount:@"" cleanTimestamp:0 cleanSequence:0 succ:^{
         @strongify(self)
         [TUITool makeToast:NSLocalizedString(@"MarkAllMessageAsReadSucc", nil)];
         [self onTotalUnreadCountChanged:0];
@@ -114,8 +114,9 @@ NSInteger _markHideUnreadCount = 0;
         @strongify(self)
         [TUITool makeToast:[NSString stringWithFormat:NSLocalizedString(@"MarkAllMessageAsReadErrFormat", nil), code, desc]];
         [self onTotalUnreadCountChanged:self.unReadCount];
+
     }];
-    
+        
     NSArray *conversations = [self.markUnreadMap allKeys];
     if (conversations.count) {
         [V2TIMManager.sharedInstance markConversation:conversations markType:@(V2TIM_CONVERSATION_MARK_TYPE_UNREAD) enableMark:NO succ:nil fail:nil];
@@ -133,8 +134,14 @@ NSInteger _markHideUnreadCount = 0;
     if (tab.tabBarItems.count < 2) {
         return;
     }
-    TUITabBarItem *item = tab.tabBarItems[1];
-    item.badgeView.title = applicationCount == 0 ? @"" : [NSString stringWithFormat:@"%zd", applicationCount];
+    TUITabBarItem *contactItem = nil;
+    for (TUITabBarItem *item in tab.tabBarItems) {
+        if ([item.identity isEqualToString:@"contactItem"]) {
+            contactItem = item;
+            break;
+        }
+    }
+    contactItem.badgeView.title = applicationCount == 0 ? @"" : [NSString stringWithFormat:@"%zd", applicationCount];
 }
 
 

@@ -74,7 +74,11 @@
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;
     CGFloat orginY = StatusBar_Height + NavBar_Height;
-    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(Screen_Width - 155, orginY, 145, height)];
+    CGFloat orginX = Screen_Width - 155;
+    if(isRTL()){
+        orginX = 10;
+    }
+    TUIPopView *popView = [[TUIPopView alloc] initWithFrame:CGRectMake(orginX, orginY, 145, height)];
     CGRect frameInNaviView = [self.navigationController.view convertRect:rightBarButton.frame fromView:rightBarButton.superview];
     popView.arrowPoint = CGPointMake(frameInNaviView.origin.x + frameInNaviView.size.width * 0.5, orginY);
     popView.delegate = self;

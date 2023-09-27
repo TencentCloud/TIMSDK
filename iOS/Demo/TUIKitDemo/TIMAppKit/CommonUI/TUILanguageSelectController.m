@@ -25,19 +25,66 @@
     _cellModel = cellModel;
 
     self.nameLabel.text = cellModel.languageName;
+    self.detailNameLabel.text = cellModel.nameInCurrentLanguage;
     self.chooseIconView.hidden = !cellModel.selected;
+    self.detailNameLabel.hidden = cellModel.selected;
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
 }
 
 - (void)setupViews {
     [self.contentView addSubview:self.nameLabel];
+    [self.contentView addSubview:self.detailNameLabel];
     [self.contentView addSubview:self.chooseIconView];
 }
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
 
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+    
+    
+    [self.chooseIconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.contentView);
+        make.width.mas_equalTo(20);
+        make.height.mas_equalTo(20);
+        make.trailing.mas_equalTo(-16);
+    }];
+    
+    if (self.detailNameLabel.isHidden) {
+        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(16);
+            make.trailing.mas_equalTo(self.chooseIconView.mas_leading).mas_offset(-2);
+            make.height.mas_equalTo(self.nameLabel.font.lineHeight);
+            make.centerY.mas_equalTo(self.contentView);
+        }];
+    }
+    else {
+        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(16);
+            make.trailing.mas_equalTo(self.chooseIconView.mas_leading).mas_offset(-2);
+            make.top.mas_equalTo(3);
+            make.height.mas_equalTo(self.nameLabel.font.lineHeight);
+        }];
+        
+        [self.detailNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(16);
+            make.trailing.mas_equalTo(self.chooseIconView.mas_leading).mas_offset(-2);
+            make.bottom.mas_equalTo(-3);
+            make.height.mas_equalTo(self.nameLabel.font.lineHeight);
+        }];
+    }
+
+}
 - (void)layoutSubviews {
     [super layoutSubviews];
-
-    self.chooseIconView.frame = CGRectMake(self.contentView.mm_w - 16 - 20, 0.5 * (self.contentView.mm_h - 20), 20, 20);
-    self.nameLabel.frame = CGRectMake(16, 0, self.contentView.mm_w - 3 * 16 - 20, self.contentView.mm_h);
 }
 
 - (UILabel *)nameLabel {
@@ -45,11 +92,21 @@
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.font = [UIFont systemFontOfSize:16.0];
         _nameLabel.text = @"1233";
+        _nameLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
         _nameLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
     }
     return _nameLabel;
 }
-
+- (UILabel *)detailNameLabel {
+    if (_detailNameLabel == nil) {
+        _detailNameLabel = [[UILabel alloc] init];
+        _detailNameLabel.font = [UIFont systemFontOfSize:13.0];
+        _detailNameLabel.text = @"1233";
+        _detailNameLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
+        _detailNameLabel.textColor = [UIColor grayColor];
+    }
+    return _detailNameLabel;
+}
 - (UIImageView *)chooseIconView {
     if (_chooseIconView == nil) {
         _chooseIconView = [[UIImageView alloc] init];
@@ -106,6 +163,7 @@
         self.navigationController.navigationBar.barTintColor = self.tintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
     }
+    self.navigationController.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -134,8 +192,7 @@
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 
-    UIImage *image = TUICoreDynamicImage(@"nav_back_img", [UIImage imageNamed:TUIDemoImagePath(@"ic_back_white")]);
-    image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *image = [TIMCommonDynamicImage(@"nav_back_img", [UIImage imageNamed:TUIDemoImagePath(@"ic_back_white")]) rtl_imageFlippedForRightToLeftLayoutDirection];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setImage:image forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
@@ -150,19 +207,29 @@
 }
 
 - (void)prepareData {
+    NSString *languageID = [TUIGlobalization tk_localizableLanguageKey];
+
     TUILanguageSelectCellModel *chinese = [[TUILanguageSelectCellModel alloc] init];
     chinese.languageID = @"zh-Hans";
     chinese.languageName = @"简体中文";
+    chinese.nameInCurrentLanguage = TIMCommonLocalizableString(zh-Hans);
     chinese.selected = NO;
 
     TUILanguageSelectCellModel *english = [[TUILanguageSelectCellModel alloc] init];
     english.languageID = @"en";
     english.languageName = @"English";
+    english.nameInCurrentLanguage = TIMCommonLocalizableString(en);
     english.selected = NO;
+    
+    TUILanguageSelectCellModel *ar = [[TUILanguageSelectCellModel alloc] init];
+    ar.languageID = @"ar";
+    ar.languageName = @"عربي";
+    ar.nameInCurrentLanguage = TIMCommonLocalizableString(ar);
+    ar.selected = NO;
 
-    self.datas = [NSMutableArray arrayWithArray:@[ chinese, english ]];
 
-    NSString *languageID = [TUIGlobalization tk_localizableLanguageKey];
+    self.datas = [NSMutableArray arrayWithArray:@[ chinese, english,ar ]];
+
     for (TUILanguageSelectCellModel *cellModel in self.datas) {
         if ([cellModel.languageID isEqual:languageID]) {
             cellModel.selected = YES;
@@ -171,6 +238,7 @@
         }
     }
 }
+
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
 
@@ -201,12 +269,18 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     TUILanguageSelectCellModel *cellModel = self.datas[indexPath.row];
 
+    if([cellModel.languageID hasPrefix:@"ar"]) {
+        [TUIGlobalization setRTLOption:YES];
+    }
+    else {
+        [TUIGlobalization setRTLOption:NO];
+    }
     /**
      * 切换语言
      * Changing language
      */
     [TUIGlobalization setPreferredLanguage:cellModel.languageID];
-
+    [TUITool configIMErrorMap];
     /**
      * 处理 UI 选中
      * Handling UI selection

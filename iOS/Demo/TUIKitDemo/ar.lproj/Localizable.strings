@@ -1,0 +1,190 @@
+/*
+  Localizable.strings
+  TUIKitDemo
+
+  Created by harvy on 2020/10/16.
+  Copyright © 2020 Tencent. All rights reserved.
+*/
+"cancel" = "إلغاء";
+"Cancel" = "إلغاء";
+"Send" = "إرسال";
+"Alia" = "ملاحظة";
+"Group" = "قائمة";
+"OK" = "موافق";
+"Accept" = "موافقة";
+"Decline" = "رفض";
+"Password" = "كلمة المرور";
+
+"done" = "موافق";
+"Done" = "موافق";
+
+"logout" = "تسجيل الخروج";
+"login" = "تسجيل الدخول";
+
+"confirm" = "موافق";
+
+"save" = "حفظ";
+"Save" = "حفظ";
+
+"None" = "لا شيء";
+
+"choose_avatar_for_you" = "تقوم التطبيق بتعيين صورة رمزية نظامية عشوائية لك.";
+
+"AppLoginSucc" = "تم تسجيل الدخول بنجاح";
+"AppGetAccessAddressFail" = "الخدمة غير طبيعية. يرجى التحقق من الشبكة والمحاولة مرة أخرى";
+"AppOfflineTitle" = "تسجيل الخروج من الحساب";
+"AppOfflineDesc" = "تم تسجيل الدخول إلى حسابك على هاتف محمول آخر";
+"AppCancelRelogin" = "تسجيل الخروج";
+"AppConfirmRelogin" = "تسجيل الدخول مرة أخرى";
+
+"AppMainTitle" = "TencentCloud·IM";
+"AppMainConnectingTitle" = "جارٍ الاتصال...";
+"AppMainDisconnectTitle" = "TencentCloud·IM (غير متصل)";
+
+"TabBarItemMessageText" = "الرسائل";
+"TabBarItemContactText" = "جهات الاتصال";
+"TabBarItemMeText"      = "أنا";
+
+"ChatsCreateFailed" = "فشل إنشاء المجموعة";
+
+"ChatSecurityWarning" = "[تذكير أمان] يتم استخدام هذا التطبيق فقط لتجربة ميزات منتجات Tencent Cloud Chat ولا يمكن استخدامه للتفاوض التجاري والتوسع. يرجى عدم الوثوق في التحويل المالي والفوز في اليانصيب وغيرها من المعلومات المتعلقة بالمال، وعدم إجراء مكالمات هاتفية غريبة بسهولة، والحذر من الاحتيال.";
+"ChatSecurityWarningReport" = "الإبلاغ عنها";
+
+"MeAbout" = "حول TencentCloud·IM";
+"MeDevelop" = "تطوير وتصحيح الأخطاء";
+"MeReportMemoryLeak" = "الإبلاغ عن تسرب الذاكرة";
+
+"MeSwitchSkin" = "تغيير الواجهة";
+"MeSwitchLaunguage" = "تغيير اللغة";
+
+"GroupRequestJoinGroupFormat" = "%@ يطلب الانضمام إلى محادثة المجموعة.";
+"GroupJoin" = "إضافة مجموعة";
+
+"FriendRequestFormat" = "أنا %@";
+"FriendRequestFillInfo" = "إضافة صديق";
+"FriendOneWay" = "صديق في اتجاه واحد";
+"FriendAddResultSuccessWait" = "تم الإرسال بنجاح. انتظر الموافقة.";
+"FriendAddResultForbid" = "المستخدم الآخر قام بتعطيل طلب الصداقة.";
+"FriendAddResultSuccess" = "تمت إضافته إلى قائمة الأصدقاء";
+"FriendAddResultExists" = "أنتما بالفعل أصدقاء.";
+"FriendAddVerificationMessage" = "رسالة التحقق";
+"FriendAddTitle" = "إضافة صديق";
+
+"SearchGroupPlaceholder" = "معرف المستخدم";
+
+"GroupMember" = "أعضاء المجموعة";
+"GroupAddFirend" = "إضافة جهة اتصال";
+"GroupDeleteFriend" = "حذف جهة اتصال";
+
+"ErrrorTipsCreate" = "فشل الإنشاء";
+"ErrorTipsDestory" = "فشل الإنهاء";
+"ErrirTipsHeart" = "فشل نبض القلب";
+"ErrorTipsParamtersValid" = "فشل تحويل المعلمات";
+"ErrorTipsServerRequest" = "فشل طلب الخدمة";
+"ErrorTipsOpFailed" = "فشل العملية. تحقق من الشبكة.";
+"ErrorTipsInvalidUser" = "تنسيق اسم المستخدم غير صالح";
+"ErrorTIpsInvalidUserPwd" = "اسم المستخدم أو كلمة المرور غير صالحة";
+"ErrorTipsUsernameExists" = "اسم المستخدم موجود بالفعل.";
+"ErrorTipsServer" = "خطأ في الخادم";
+"ErrorTipsUsernameNull" = "المستخدم غير موجود.";
+"ErrorTipsPwdError" = "كلمة المرور غير صحيحة";
+
+"TipsCheckCodeHasSent" = "تم إرسال رمز التحقق";
+"TipsGetCheckcode" = "إرسال الرمز";
+"TipsCheckCodeFailedFormat" = "فشل الحصول على رمز التحقق. رمز الخطأ: %d. رسالة الخطأ: %@";
+"TipsPhoneCodeNotNull" = "الرقم الهاتفي ورمز التحقق مطلوبان.";
+"TipsPhoneNotMatch" = "هذا الرقم الهاتفي ليس الرقم الذي يتلقى رمز التحقق. يرجى التأكد.";
+"TipsLoginErrorWithUserIdfailed" = "فشل تسجيل الدخول. فشل الحصول على معرف المستخدم أو userSig.";
+"TipsLoginErrorFormat" = "فشل تسجيل الدخول. رمز الخطأ: %d. رسالة الخطأ: %@";
+"TipsLoginWithAccountPassword" = "تسجيل الدخول عبر كلمة المرور";
+"TipsLoginWithAccountDirectly" = "تسجيل الدخول بدون كلمة مرور";
+"TipsOldVersionRegisterAccount" =  "يمكن للمستخدمين الذين يستخدمون الإصدارات الأقدم ولديهم حساب مسجل تسجيل الدخول عن طريق إدخال اسم الحساب وكلمة المرور مباشرة.";
+
+"exclued_from_unread_count" = "تجاهل عدد الرسائل غير المقروءة";
+// ---- 2021-04-22 新增
+"TipsPhoneNotNull" = "رقم الهاتف المحمول مطلوب.";
+
+"GetSmsErrorFormat" = "فشل الحصول على رمز التحقق! (%@)";
+
+"MarkAllMessageAsReadSucc" = "تم الإشارة إلى جميع الرسائل كمقروءة بنجاح";
+"MarkAllMessageAsReadErrFormat" = "خطأ، %d، %@";
+
+"ChooseNationOrRegion" = "اختر الدولة أو المنطقة";
+
+"ChangeStyle" = "النمط";
+"ChangeSkin" = "السمة";
+"ChangeLanguage" = "اللغة";
+"SimpleChinese" = "الصينية المبسطة";
+"English" = "الإنجليزية";
+"CurrentLanguage" = "الإنجليزية";
+"Classic" = "الكلاسيكية";
+"Minimalist" = "الحد الأدنى";
+
+"ThemeNameSerious" = "جدي";
+"ThemeNameLight" = "فاتح";
+"ThemeNameLivey" = "حيوي";
+"ThemeNameDark" = "داكن";
+"ThemeNameSystem" = "النظام";
+
+"TUIKitAboutUsSDKVersion" = "إصدار SDK";
+"TUIKitAboutUsPrivacyRegulations" = "سياسة الخصوصية";
+"TUIKitAboutUsUserAgreement" = "اتفاقية المستخدم";
+"TUIKitAboutUsDisclaimer" = "إخلاء المسؤولية";
+"TUIKitAboutUsPersonalInformationCollectionList" = "المعلومات الشخصية المجمعة";
+"TUIKitAboutUs3PartySharingList" = "المعلومات المشتركة مع الأطراف الثالثة";
+"TUIKitAboutUsCloseAccount" = "إلغاء الحساب";
+"TUIKitAboutUsContactUs" = "اتصل بنا";
+"TUIKitAboutUsDisclaimerText" = "تطبيق Tencent Cloud Instant Messaging  هو منتج اختباري يتم توفيره من قبل Tencent Cloud، وتتمتع Tencent Cloud بحقوق النشر والملكية لهذا المنتج. يتم استخدام هذا المنتج فقط لتجربة الوظائف ولا يجوز استخدامه لأي أغراض تجارية. من أجل الامتثال لمتطلبات التنظيم الخاصة بالإدارات ذات الصلة، يتم منع بشدة أي محتوى إباحي أو مسيء أو عنيف أو ذي صلة سياسيًا أثناء الاستخدام.";
+"TUIKitAboutUsCloseAccountDescribe" = "بعد إلغاء هذا الحساب، لن تتمكن من استخدامه، وسيتم حذف البيانات ذات الصلة بشكل دائم. الحساب الحالي: %@";
+
+"TUIKitAboutUsCloseAccountAlterMsg" = "هل أنت متأكد أنك تريد إلغاء هذا الحساب؟";
+"TUIKitAboutUsCloseAccountAlterAction1" = "تأكيد";
+"TUIKitAboutUsCloseAccountError1" = "فشل إلغاء الحساب. لم يتم اكتشاف رمز أو رقم هاتف محمول مرتبط بالحساب الحالي. يرجى تسجيل الدخول باستخدام رقم هاتفك.";
+"TUIKitAboutUsCloseAccountSuccessful" = "تم إلغاء الحساب بنجاح";
+"TUIKitAboutUsCloseAccountFailed" = "فشل إلغاء الحساب";
+
+"TUIPrivateProtocolAlertMsg" = " مرحبًا بك في تطبيق تينسنت للتواصل الفوري Chat، ولحماية سلامة معلوماتك الشخصية، قمنا بتحديث \"سياسة الخصوصية\"، وذلك لتحسين محتوى جمع المعلومات الخاصة بالمستخدمين وأغراضها، وزيادة استخدام SDK الخاص بالأطراف الثالثة وغيرها من المحتويات.\nيرجى النقر على \"اتفاقية المستخدم\" و\"ملخص سياسة الخصوصية\" و\"سياسة الخصوصية\" و\"قائمة جمع المعلومات الشخصية\" و\"قائمة مشاركة المعلومات مع الأطراف الثالثة\" وقراءتها بعناية. إذا كنت توافق على هذه المحتويات، فيرجى النقر على \"موافق ومتابعة\" لبدء استخدام منتجاتنا وخدماتنا!";
+"TUIPrivateProtocolHighlight1" = "\"اتفاقية المستخدم\"";
+"TUIPrivateProtocolHighlight2" = "\"سياسة الخصوصية\"";
+"TUIPrivateProtocolHighlight3" = "\"قائمة جمع المعلومات الشخصية\"";
+"TUIPrivateProtocolHighlight4" = "\"قائمة مشاركة المعلومات مع الأطراف الثالثة\"";
+"TUIPrivateProtocolHighlight5" = "\"ملخص سياسة الخصوصية\"";
+"TUIPrivateProtocolAlertActionAgree" = "موافق ومتابعة";
+"TUIPrivateProtocolAlertActionDisagree" = "غير موافق والخروج";
+
+"TipsSystemVerifyError" = "فشل التحقق من إجراءات المستخدم أو المعلمة";
+"TipsSystemError" = "حدث خطأ غير معروف في النظام";
+"TipsServiceUnavailable" = "الخدمة غير متاحة";
+"TipsServiceResponseInvalid" = "الاستجابة غير صالحة";
+"TipsServiceSmsFailed" = "فشل في إرسال رسالة SMS";
+"TipsServiceDBFailed" = "حدث خطأ في قاعدة بيانات الخدمة";
+"TipsServiceUnknownError" = "حدث خطأ غير معروف في الخدمة";
+"TipsUserCodeInvalid" = "رمز التحقق من رسالة SMS غير صالح";
+"TipsUserCodeExpired" = "انتهت صلاحية رمز التحقق من رسالة SMS";
+"TipsUserCodeConsumed" = "تم استخدام رمز التحقق بالفعل";
+"TipsUserTokenExpired" = "انتهت صلاحية رمز المستخدم، يرجى تسجيل الدخول مرة أخرى";
+"TipsUserTokenInvalid" = "رمز المستخدم غير صالح، يرجى تسجيل الدخول مرة أخرى";
+"TipsUseInfoEmpty" = "معلومات المستخدم فارغة";
+"TipsUserNotExists" = "المستخدم غير موجود";
+"TipsUserEmailInvalid" = "البريد الإلكتروني للمستخدم غير صالح";
+"TipsUserQueryParams" = "معلمة الاستعلام غير صحيحة";
+"TipsUserQueryLimit" = "الكثير من بيانات الاستعلام، تم تفعيل قيود التدفق";
+"TipsUserOAuthParams" = "معلمة مصادقة المستخدم غير صحيحة";
+
+//未翻译---start
+"TUIThemeNameSystemFollowTitle" = "تلقائي";
+"TUIThemeNameSystemFollowSubTitle" = "بعد تمكين هذه الوظيفة، سيتم عرض السمة الافتراضية فقط (فاتحة/داكنة). لا يمكن تبديل أنماط السمات الأخرى";
+
+"UpgradeNow" = "الترقية الآن";
+
+"OnlineStatus" = "حالة الاتصال عبر الإنترنت";
+
+//----------------Mini begin------------
+"Chat" = "الدردشة";
+"TabBarItemMessageText_mini" = "المحادثات";
+"TabBarItemContactText_mini" = "جهات الاتصال";
+"TabBarItemSettingText_mini" = "الإعدادات";
+"TabBarItemCallsRecordText_mini" = "المكالمات";
+//----------------Mini end------------
+"TUIStartPageTitle" = "Tencent Cloud Chat";
+
