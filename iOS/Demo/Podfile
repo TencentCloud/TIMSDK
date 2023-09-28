@@ -22,7 +22,7 @@ target 'TUIKitDemo' do
 #  pod 'TUIConversationGroupPlugin', '7.5.4852'
 #  pod 'TUIConversationMarkPlugin', '7.5.4852'
   pod 'TUICallKit'
-#  pod 'TUIRoomKit','1.4.5'
+  pod 'TUIRoomKit','1.5.1'
   pod 'MJRefresh'
   pod 'Masonry'
 
