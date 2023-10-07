@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name         = 'TUITranslationPlugin'
+  spec.name         = 'TUIVoiceToTextPlugin'
   spec.version      = '7.5.4852'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
@@ -11,15 +11,15 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://cloud.tencent.com/document/product/269/3794'
   spec.documentation_url = 'https://cloud.tencent.com/document/product/269/9147'
   spec.authors      = 'tencent video cloud'
-  spec.summary      = 'TUITranslationPlugin'
+  spec.summary      = 'TUIVoiceToTextPlugin'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4852/ios/TUITranslationPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4852/ios/TUIVoiceToTextPlugin.zip'}
 
   spec.subspec 'CommonModel' do |commonModel|
-    commonModel.source_files = '**/TUITranslationPlugin/CommonModel/*.{h,m,mm}'
+    commonModel.source_files = '**/TUIVoiceToTextPlugin/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TUICore','7.5.4852'
     commonModel.dependency 'TIMCommon','7.5.4852'
     commonModel.dependency 'TUIChat','7.5.4852'
@@ -27,19 +27,19 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'UI' do |commonUI|
     commonUI.subspec 'DataProvider' do |dataProvider|
-      dataProvider.source_files = '**/TUITranslationPlugin/UI/DataProvider/*.{h,m,mm}'
-      dataProvider.dependency "TUITranslationPlugin/CommonModel"
+      dataProvider.source_files = '**/TUIVoiceToTextPlugin/UI/DataProvider/*.{h,m,mm}'
+      dataProvider.dependency "TUIVoiceToTextPlugin/CommonModel"
     end
     commonUI.subspec 'UI' do |subUI|
-      subUI.source_files = '**/TUITranslationPlugin/UI/UI/*.{h,m,mm}'
-      subUI.dependency "TUITranslationPlugin/UI/DataProvider"
+      subUI.source_files = '**/TUIVoiceToTextPlugin/UI/UI/*.{h,m,mm}'
+      subUI.dependency "TUIVoiceToTextPlugin/UI/DataProvider"
     end
     commonUI.subspec 'Service' do |service|
-      service.source_files = '**/TUITranslationPlugin/UI/Service/*.{h,m,mm}'
-      service.dependency "TUITranslationPlugin/UI/UI"
+      service.source_files = '**/TUIVoiceToTextPlugin/UI/Service/*.{h,m,mm}'
+      service.dependency "TUIVoiceToTextPlugin/UI/UI"
     end
     commonUI.resource = [
-      '**/TUITranslationPlugin/Resources/*.bundle'
+      '**/TUIVoiceToTextPlugin/Resources/*.bundle'
     ]
   end
 
@@ -53,4 +53,4 @@ Pod::Spec.new do |spec|
   }
 end
 
-# pod trunk push TUITranslationPlugin.podspec --use-libraries --allow-warnings
+# pod trunk push TUIVoiceToTextPlugin.podspec --use-libraries --allow-warnings
