@@ -94,6 +94,12 @@
 		48DF2C45253FE1B800BC522F /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		48DF2C47253FE1B800BC522F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D757F7318DC3B846A870603 /* Pods-TUIKitDemo.dailybuild.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TUIKitDemo.dailybuild.xcconfig"; path = "Target Support Files/Pods-TUIKitDemo/Pods-TUIKitDemo.dailybuild.xcconfig"; sourceTree = "<group>"; };
+		933346772AD3A09000E3FC83 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
+		933346782AD3A09100E3FC83 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		933346792AD3A0E500E3FC83 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9333467A2AD3A0EF00E3FC83 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9333467B2AD3A0F400E3FC83 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
+		9333467C2AD3A0FD00E3FC83 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		935F7BF2293615760033D099 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		935F7BF4293615760033D099 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		935F7BF6293615760033D099 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -560,6 +566,7 @@
 				Base,
 				"zh-Hans",
 				"en-GB",
+				ar,
 			);
 			mainGroup = CF014479216E1A4900C12E35;
 			productRefGroup = CF014483216E1A4900C12E35 /* Products */;
@@ -742,6 +749,7 @@
 			children = (
 				935F7BF2293615760033D099 /* zh-Hans */,
 				935F7C00293615760033D099 /* en-GB */,
+				9333467C2AD3A0FD00E3FC83 /* ar */,
 			);
 			name = LaunchScreen.strings;
 			sourceTree = "<group>";
@@ -751,6 +759,7 @@
 			children = (
 				935F7BF4293615760033D099 /* zh-Hans */,
 				935F7C33293615770033D099 /* Base */,
+				933346782AD3A09100E3FC83 /* ar */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -761,6 +770,7 @@
 				935F7BF6293615760033D099 /* zh-Hans */,
 				935F7BFB293615760033D099 /* en */,
 				935F7C01293615760033D099 /* en-GB */,
+				9333467B2AD3A0F400E3FC83 /* ar */,
 			);
 			name = Main.strings;
 			sourceTree = "<group>";
@@ -770,6 +780,7 @@
 			children = (
 				935F7BF8293615760033D099 /* zh-Hans */,
 				935F7BFC293615760033D099 /* en */,
+				9333467A2AD3A0EF00E3FC83 /* ar */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -779,6 +790,7 @@
 			children = (
 				935F7BFA293615760033D099 /* zh-Hans */,
 				935F7BFD293615760033D099 /* en */,
+				933346792AD3A0E500E3FC83 /* ar */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -787,6 +799,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				935F7C35293615770033D099 /* Base */,
+				933346772AD3A09000E3FC83 /* ar */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
