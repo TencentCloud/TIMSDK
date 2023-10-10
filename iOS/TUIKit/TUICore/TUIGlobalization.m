@@ -112,6 +112,9 @@ static BOOL gRTLOption = NO;
     [UISearchBar appearance].semanticContentAttribute = op?UISemanticContentAttributeForceRightToLeft:UISemanticContentAttributeForceLeftToRight;
     [UICollectionView appearance].semanticContentAttribute = op?UISemanticContentAttributeForceRightToLeft:UISemanticContentAttributeForceLeftToRight;
     [UISwitch appearance].semanticContentAttribute = op?UISemanticContentAttributeForceRightToLeft:UISemanticContentAttributeForceLeftToRight;
+    
+    [NSUserDefaults.standardUserDefaults setBool:op forKey:TUIKitGlobalizationRTLOptionKey];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 + (BOOL)getRTLOption {
