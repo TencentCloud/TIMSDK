@@ -210,7 +210,6 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ## Latest Enhanced Version 7.5.4852 @2023.09.27
 ### SDK
-- Added notification for offline kicked users
 - Optimized retrieval of roaming messages
 - Community supports marking group members
 - Optimized C API header files
