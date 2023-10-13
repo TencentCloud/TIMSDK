@@ -14,6 +14,10 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUIOfflinePush download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUIOfflinePush.zip)
 
+[Latest TUITranslationPlugin download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUITranslationPlugin.zip)
+
+[Latest TUIVoiceToTextPlugin download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUIVoiceToTextPlugin.zip)
+
 [Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUICore.zip)
 
 [Latest TIMCommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TIMCommon.zip)

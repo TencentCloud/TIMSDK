@@ -16,6 +16,10 @@
 
 [最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUIOfflinePush.zip)
 
+[最新 TUITranslationPlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUITranslationPlugin.zip)
+
+[最新 TUIVoiceToTextPlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUIVoiceToTextPlugin.zip)
+
 [最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUICore.zip)
 
 [最新 TIMCommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TIMCommon.zip)
