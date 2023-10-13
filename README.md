@@ -208,29 +208,12 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.5.4852 @2023.09.27
+## Latest Enhanced Version 7.5.4864 @2023.10.13
 ### SDK
-- Optimized retrieval of roaming messages
-- Community supports marking group members
-- Optimized C API header files
-- Added interface to ban the entire group chat
-- Added flag field for message response to indicate whether it is a self-response
-- Fixed occasional exception in local storage of message reaction
-- Fixed issue where the revoke-information of lastMessage in the conversation is empty when a message is revoked
-- Fixed issue where the message sender's remarks are empty when receiving friend messages
-- Fixed issue where clearing only group chat unread messages also clears unread messages in one-on-one chats
-- Fixed issue where onRecvNewMessage callback is not triggered for group messages received during network disconnection
-- Fixed occasional crash issue in server search
-- Fixed issue where unread count of topic information is not updated after reconnection and retrieval
-- Fixed issue where conversation's LastMessage is not updated after custom data is set for the last message of the conversation
-- Fixed crash issue when clearing unread notifications on Windows platform using Swift interface with Int.max as input
-
-### TUIKit & Demo
-- TUIKit supports RTL language
-- TUIChat's voice playback supports manual switching between earpiece and speaker
-- Added voice recognition plugin TUIVoiceToText
-- Optimized file download
-- Replaced the latest cleanConversationUnreadMessageCount interface with read report.
+- Fixed occasional issue of no callback when retrieving historical messages.
+- Fixed occasional issue of local message loss.
+- Fixed occasional incorrect message response status.
+- Optimized automatic login logic after SDK is kicked out.
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
