@@ -2,6 +2,13 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.5.4864 @2023.10.13 - Enhanced Version
+### SDK
+- Fixed occasional issue of no callback when retrieving historical messages.
+- Fixed occasional issue of local message loss.
+- Fixed occasional incorrect message response status.
+- Optimized automatic login logic after SDK is kicked out.
+
 ## 7.5.4852 @2023.09.27 - Enhanced Version
 ### SDK
 - Optimized retrieval of roaming messages
