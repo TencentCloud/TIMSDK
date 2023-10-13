@@ -33,6 +33,7 @@
 
 #define TUICustomLanguageKey @"TUICustomLanguageKey"
 #define TUIChangeLanguageNotification @"TUIChangeLanguageNotification"
+
 #define TUIKitGlobalizationRTLOptionKey @"TUIKitGlobalizationRTLOptionKey"
 
 @interface TUIGlobalization : NSObject
