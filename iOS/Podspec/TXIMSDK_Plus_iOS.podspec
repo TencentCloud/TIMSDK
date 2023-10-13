@@ -1,9 +1,9 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_iOS'
-  spec.version      = '7.5.4852'
+  spec.version      = '7.5.4864'
   spec.platform     = :ios 
-  spec.ios.deployment_target = '8.0'
+  spec.ios.deployment_target = '13.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE
         copyright 2017 tencent Ltd. All rights reserved.
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.5.4852/ImSDK_Plus_7.5.4852.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.5.4864/ImSDK_Plus_7.5.4864.framework.zip'}
   spec.preserve_paths = '**/ImSDK_Plus.framework'
   spec.source_files = '**/ImSDK_Plus.framework/Headers/*.h', '**/ImSDK_Plus.framework/cpluscplus/include/*.h'
   spec.public_header_files = '**/ImSDK_Plus.framework/Headers/*.h', '**/ImSDK_Plus.framework/cpluscplus/include/*.h'
