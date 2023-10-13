@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIOfflinePush'
-  spec.version      = '7.5.4852'
+  spec.version      = '7.5.4864'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4852/ios/TUIOfflinePush.zip?time=2'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.5.4864/ios/TUIOfflinePush.zip?time=2'}
   
   spec.default_subspec = 'APNS'
   
@@ -37,8 +37,8 @@ Pod::Spec.new do |spec|
   end
   
   spec.subspec 'Base' do |ss|
-    ss.dependency 'TXIMSDK_Plus_iOS','7.5.4852'
-    ss.dependency 'TUICore','7.5.4852'
+    ss.dependency 'TXIMSDK_Plus_iOS','7.5.4864'
+    ss.dependency 'TUICore','7.5.4864'
     ss.source_files = '**/TUIOfflinePush/Base/**/*.{h,m,mm}'
   end
   
