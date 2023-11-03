@@ -5,9 +5,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 
 public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener {
+    private static final int CLICK_ACTION_MAX_MOVE_DISTANCE = 10;
+
     private static final float SCALE_MAX = 5.0f; //最大的缩放比例
     private static final float SCALE_MIN = 1.0f;
 
@@ -19,6 +23,11 @@ public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener
     private double      mDistAfterMove  = 0;     // 俩手指移动后距离
     private boolean     mEnableScale    = false;
 
+    private OnClickListener mClickListener;
+    private boolean         mIsClickAction;
+    private float           mTouchDownPointX;
+    private float           mTouchDownPointY;
+
     public ScaleVideoView(Context context) {
         this(context, null);
     }
@@ -26,6 +35,11 @@ public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener
     public ScaleVideoView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOnTouchListener(this);
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener clickListener) {
+        mClickListener = clickListener;
     }
 
     private final Runnable measureAndLayout = new Runnable() {
@@ -55,7 +69,17 @@ public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener
         }
         int pointerCount = event.getPointerCount();
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                if (pointerCount == 1) {
+                    mTouchDownPointX = event.getX();
+                    mTouchDownPointY = event.getY();
+                    mIsClickAction = true;
+                }
+                break;
             case MotionEvent.ACTION_UP:
+                if (mIsClickAction && mClickListener != null) {
+                    mClickListener.onClick(this);
+                }
                 if (pointerCount == 2) {
                     mPressedPoint1X = 0;
                     mPressedPoint1Y = 0;
@@ -64,6 +88,13 @@ public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (pointerCount == 1) {
+                    float xDistance = Math.abs(event.getX() - mTouchDownPointX);
+                    float yDistance = Math.abs(event.getY() - mTouchDownPointY);
+                    if (xDistance >= CLICK_ACTION_MAX_MOVE_DISTANCE || yDistance >= CLICK_ACTION_MAX_MOVE_DISTANCE) {
+                        mIsClickAction = false;
+                    }
+                }
                 if (pointerCount == 2) {
                     float firstPointX = event.getX(0);
                     float secondPointX = event.getX(1);

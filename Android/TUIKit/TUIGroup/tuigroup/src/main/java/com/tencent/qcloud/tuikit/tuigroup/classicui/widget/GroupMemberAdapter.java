@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuigroup.classicui.widget;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -25,6 +26,7 @@ import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberChangedCallback;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,19 +86,7 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
     public void onBindViewHolder(@NonNull GroupMemberViewHodler holder, int position) {
         final GroupMemberInfo info = mGroupMembers.get(position);
         GlideEngine.loadImage(holder.memberIcon, info.getIconUrl());
-        if (!TextUtils.isEmpty(info.getNameCard())) {
-            holder.memberName.setText(info.getNameCard());
-        } else {
-            if (!TextUtils.isEmpty(info.getNickName())) {
-                holder.memberName.setText(info.getNickName());
-            } else {
-                if (!TextUtils.isEmpty(info.getAccount())) {
-                    holder.memberName.setText(info.getAccount());
-                } else {
-                    holder.memberName.setText("");
-                }
-            }
-        }
+        holder.memberName.setText(info.getDisplayName());
 
         if (isSelectMode) {
             holder.checkBox.setVisibility(View.VISIBLE);

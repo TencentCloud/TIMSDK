@@ -6,9 +6,10 @@ import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.bean.BaseIndexPinyinBean;
 
-public class ContactItemBean extends BaseIndexPinyinBean {
+public class ContactItemBean extends BaseIndexPinyinBean implements Comparable<ContactItemBean> {
     public static final int TYPE_C2C = V2TIMConversation.V2TIM_C2C;
     public static final int TYPE_GROUP = V2TIMConversation.V2TIM_GROUP;
     public static final int TYPE_INVALID = V2TIMConversation.CONVERSATION_TYPE_INVALID;
@@ -23,6 +24,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private boolean isBlackList;
     private String remark;
     private String nickName;
+    private String nameCard;
     private String avatarUrl;
     private String signature;
     private boolean isGroup;
@@ -31,6 +33,9 @@ public class ContactItemBean extends BaseIndexPinyinBean {
     private boolean isEnable = true;
     private int statusType = V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN;
     private int itemBeanType = ITEM_BEAN_TYPE_CONTACT;
+    private int avatarResID;
+    private int weight;
+    private TUIExtensionEventListener extensionListener;
 
     public ContactItemBean() {}
 
@@ -67,13 +72,7 @@ public class ContactItemBean extends BaseIndexPinyinBean {
 
     @Override
     public String getTarget() {
-        if (!TextUtils.isEmpty(remark)) {
-            return remark;
-        }
-        if (!TextUtils.isEmpty(nickName)) {
-            return nickName;
-        }
-        return id;
+        return getDisplayName();
     }
 
     @Override
@@ -146,6 +145,14 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         this.remark = remark;
     }
 
+    public void setNameCard(String nameCard) {
+        this.nameCard = nameCard;
+    }
+
+    public String getNameCard() {
+        return nameCard;
+    }
+
     public boolean isGroup() {
         return isGroup;
     }
@@ -186,6 +193,30 @@ public class ContactItemBean extends BaseIndexPinyinBean {
         this.statusType = statusType;
     }
 
+    public int getAvatarResID() {
+        return avatarResID;
+    }
+
+    public void setAvatarResID(int avatarResID) {
+        this.avatarResID = avatarResID;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public TUIExtensionEventListener getExtensionListener() {
+        return extensionListener;
+    }
+
+    public void setExtensionListener(TUIExtensionEventListener extensionListener) {
+        this.extensionListener = extensionListener;
+    }
+
     public ContactItemBean covertTIMGroupBaseInfo(V2TIMGroupInfo group) {
         if (group == null) {
             return this;
@@ -203,15 +234,29 @@ public class ContactItemBean extends BaseIndexPinyinBean {
             return this;
         }
         setId(member.getUserID());
-        if (TextUtils.isEmpty(member.getNickName())) {
-            setRemark(member.getNameCard());
-            setNickName(member.getNameCard());
-        } else {
-            setRemark(member.getNickName());
-            setNickName(member.getNickName());
-        }
+        setNameCard(member.getNameCard());
+        setRemark(member.getFriendRemark());
+        setNickName(member.getNickName());
+
         setAvatarUrl(member.getFaceUrl());
         setGroup(false);
         return this;
+    }
+
+    public String getDisplayName() {
+        if (!TextUtils.isEmpty(nameCard)) {
+            return nameCard;
+        } else if (!TextUtils.isEmpty(remark)) {
+            return remark;
+        } else if (!TextUtils.isEmpty(nickName)) {
+            return nickName;
+        } else {
+            return id;
+        }
+    }
+
+    @Override
+    public int compareTo(ContactItemBean contactItemBean) {
+        return contactItemBean.getWeight() - this.weight;
     }
 }

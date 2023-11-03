@@ -9,11 +9,18 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.TextUtils
+import androidx.core.content.ContextCompat
+import com.tencent.liteav.audio.TXAudioEffectManager
+import com.tencent.liteav.audio.TXAudioEffectManager.AudioMusicParam
 import com.tencent.qcloud.tuicore.util.SPUtils
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+
 
 class CallingBellFeature(context: Context) {
     private val context: Context
@@ -21,6 +28,7 @@ class CallingBellFeature(context: Context) {
     private var handler: Handler? = null
     private var bellResourceId: Int
     private var bellResourcePath: String
+    private var dialPath: String? = null
 
     init {
         this.context = context.applicationContext
@@ -51,7 +59,7 @@ class CallingBellFeature(context: Context) {
 
     private fun startRing() {
         if (TUICallState.instance?.selfUser?.get()?.callRole?.get() == TUICallDefine.Role.Caller) {
-            start("", R.raw.phone_dialing, 0)
+            startDialingMusic()
         } else {
             if (TUICallState.instance.enableMuteMode) {
                 return
@@ -67,6 +75,18 @@ class CallingBellFeature(context: Context) {
 
     private fun stopRing() {
         stop()
+    }
+
+    private fun startDialingMusic() {
+        if (TextUtils.isEmpty(dialPath)) {
+            dialPath = getBellPath(context, R.raw.phone_dialing, "phone_dialing.mp3")
+        }
+        TUICallEngine.createInstance(context).trtcCloudInstance
+            .audioEffectManager.setMusicPlayoutVolume(AUDIO_DIAL_ID, 100)
+        val param = AudioMusicParam(AUDIO_DIAL_ID, dialPath)
+        param.isShortFile = true
+        TUICallEngine.createInstance(context).trtcCloudInstance
+            .audioEffectManager.startPlayMusic(param)
     }
 
     private fun start(resPath: String, resId: Int, duration: Long) {
@@ -101,14 +121,14 @@ class CallingBellFeature(context: Context) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val attrs = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build()
                 mediaPlayer.setAudioAttributes(attrs)
             }
             var mAudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
-            mAudioManager?.mode = AudioManager.MODE_NORMAL
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            mAudioManager?.mode = AudioManager.MODE_RINGTONE
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL)
 
             try {
                 if (null != afd) {
@@ -141,24 +161,58 @@ class CallingBellFeature(context: Context) {
     }
 
     private fun stop() {
-        if (null == handler) {
-            return
-        }
-        if (-1 == bellResourceId && TextUtils.isEmpty(bellResourcePath)) {
-            return
-        }
-        handler!!.post {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.stop()
+        if (TUICallState.instance?.selfUser?.get()?.callRole?.get() == TUICallDefine.Role.Caller) {
+            TUICallEngine.createInstance(context).trtcCloudInstance
+                .audioEffectManager.stopPlayMusic(AUDIO_DIAL_ID)
+        } else {
+            if (null == handler) {
+                return
             }
-            bellResourceId = -1
-            bellResourcePath = ""
+            if (-1 == bellResourceId && TextUtils.isEmpty(bellResourcePath)) {
+                return
+            }
+            handler!!.post {
+                if (mediaPlayer.isPlaying) {
+                    mediaPlayer.stop()
+                }
+                bellResourceId = -1
+                bellResourcePath = ""
+            }
         }
+    }
+
+    private fun getBellPath(context: Context, resId: Int, name: String): String? {
+        val savePath = ContextCompat.getExternalFilesDirs(context, null)[0].absolutePath
+        val dir = File(savePath)
+        if (!dir.exists()) {
+            dir.mkdir()
+        }
+        try {
+            val file = File("$savePath/$name")
+            if (file.exists()) {
+                return file.absolutePath
+            }
+            val inputStream = context.resources.openRawResource(resId)
+            val outputStream = FileOutputStream(file)
+            val buffer = ByteArray(2048)
+            var length: Int
+            while (inputStream.read(buffer).also { length = it } > 0) {
+                outputStream.write(buffer, 0, length)
+            }
+            outputStream.flush()
+            outputStream.close()
+            inputStream.close()
+            return file.absolutePath
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
     }
 
     companion object {
         const val PROFILE_TUICALLKIT = "per_profile_tuicallkit"
         const val PROFILE_CALL_BELL = "per_call_bell"
         const val PROFILE_MUTE_MODE = "per_mute_mode"
+        const val AUDIO_DIAL_ID = 48
     }
 }

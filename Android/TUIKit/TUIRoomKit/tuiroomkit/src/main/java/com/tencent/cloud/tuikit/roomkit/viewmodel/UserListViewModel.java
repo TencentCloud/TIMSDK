@@ -17,7 +17,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.component.UserListView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel.UserListPanel;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -32,22 +32,26 @@ public class UserListViewModel
 
     private final Context       mContext;
     private final RoomStore     mRoomStore;
-    private final UserListView  mUserListView;
+    private final UserListPanel mUserListView;
     private final TUIRoomEngine mRoomEngine;
 
     private List<UserEntity> mUserModelList;
 
-    public UserListViewModel(Context context, UserListView userListView) {
+    public UserListViewModel(Context context, UserListPanel userListView) {
         mContext = context;
         mUserListView = userListView;
         mRoomEngine = RoomEngineManager.sharedInstance(context).getRoomEngine();
         mRoomStore = RoomEngineManager.sharedInstance(mContext).getRoomStore();
 
+        initUserModelList();
+        subscribeEvent();
+    }
+
+    public void updateViewInitState() {
         mUserListView.updateMuteVideoView(mRoomStore.roomInfo.isCameraDisableForAllUser);
         mUserListView.updateMuteAudioView(mRoomStore.roomInfo.isMicrophoneDisableForAllUser);
         mUserListView.updateMemberCount(mRoomStore.getTotalUserCount());
-        initUserModelList();
-        subscribeEvent();
+        mUserListView.setOwner(isOwner());
     }
 
     private void subscribeEvent() {
@@ -87,7 +91,6 @@ public class UserListViewModel
     }
 
     private void initUserModelList() {
-        mUserListView.setOwner(isOwner());
         mUserModelList = mRoomStore.allUserList;
     }
 

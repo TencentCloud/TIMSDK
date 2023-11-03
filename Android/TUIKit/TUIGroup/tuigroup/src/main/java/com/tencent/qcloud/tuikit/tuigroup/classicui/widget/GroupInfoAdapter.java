@@ -76,20 +76,8 @@ public class GroupInfoAdapter extends BaseAdapter {
         }
         final GroupMemberInfo info = getItem(i);
         GlideEngine.loadImage(holder.memberIcon, info.getIconUrl());
-        // 显示优先级 群名片->昵称->账号
-        if (!TextUtils.isEmpty(info.getNameCard())) {
-            holder.memberName.setText(info.getNameCard());
-        } else {
-            if (!TextUtils.isEmpty(info.getNickName())) {
-                holder.memberName.setText(info.getNickName());
-            } else {
-                if (!TextUtils.isEmpty(info.getAccount())) {
-                    holder.memberName.setText(info.getAccount());
-                } else {
-                    holder.memberName.setText("");
-                }
-            }
-        }
+        holder.memberName.setText(info.getDisplayName());
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:id="@+id/v_branch_dash_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layerType="software"
+        android:background="@drawable/dash_line"/>
+
+    <TextView
+        android:id="@+id/branch_item_content"
+        android:layout_toLeftOf="@id/branch_item_arrow"
+        android:layout_toStartOf="@id/branch_item_arrow"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:textColor="?attr/customer_service_item_text_color"
+        android:textSize="16sp"
+        tools:text="内容" />
+    
+    <ImageView
+        android:id="@+id/branch_item_arrow"
+        android:layout_width="5dp"
+        android:layout_height="9dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="?attr/customer_service_item_arrow" />
+    
+</RelativeLayout>

@@ -254,8 +254,7 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
                     return false;
                 }
             });
-            String displayName = getDisplayName(groupMemberInfo);
-            holder.managerName.setText(displayName);
+            holder.managerName.setText(groupMemberInfo.getDisplayName());
             GlideEngine.loadUserIcon(holder.faceIcon, groupMemberInfo.getIconUrl());
         }
 
@@ -278,17 +277,6 @@ public class ManageGroupMinimalistActivity extends BaseMinimalistLightActivity {
                 managerName = itemView.findViewById(R.id.group_manage_name);
             }
         }
-    }
-
-    private String getDisplayName(GroupMemberInfo groupMemberInfo) {
-        String displayName = groupMemberInfo.getNameCard();
-        if (TextUtils.isEmpty(displayName)) {
-            displayName = groupMemberInfo.getNickName();
-        }
-        if (TextUtils.isEmpty(displayName)) {
-            displayName = groupMemberInfo.getAccount();
-        }
-        return displayName;
     }
 
     interface OnItemLongClickListener {

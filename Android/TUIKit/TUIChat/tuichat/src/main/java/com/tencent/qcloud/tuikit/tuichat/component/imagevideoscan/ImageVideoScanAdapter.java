@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +27,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -49,6 +51,7 @@ import java.util.List;
 
 public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAdapter.ViewHolder> {
     private static final String TAG = ImageVideoScanAdapter.class.getSimpleName();
+    private static final String PAYLOAD_RISK_CONTENT = "PayloadRiskContent";
 
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
     private Context mContext;
@@ -91,11 +94,35 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.size() == 1) {
+            Object object = payloads.get(0);
+            if (object == PAYLOAD_RISK_CONTENT) {
+                holder.videoView.stop();
+                return;
+            }
+        }
+        onBindViewHolder(holder, position);
+    }
+
+    @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         TUIMessageBean messageBean = getItem(position);
         if (messageBean == null) {
             return;
         }
+
+        if (messageBean.hasRiskContent()) {
+            holder.progressContainer.setVisibility(View.GONE);
+            holder.playControlLayout.setVisibility(View.GONE);
+            holder.photoViewLayout.setVisibility(View.VISIBLE);
+            holder.photoView.setVisibility(View.VISIBLE);
+            holder.videoViewLayout.setVisibility(View.GONE);
+            holder.viewOriginalButton.setVisibility(View.GONE);
+            GlideEngine.loadImage(holder.photoView, R.drawable.chat_risk_image_replace_icon);
+            return;
+        }
+
         holder.setMessageID(messageBean.getId());
         holder.playSeekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -153,6 +180,16 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
             }
         }
         notifyDataSetChanged();
+    }
+
+    public void onMessageHasRiskContent(TUIMessageBean messageBean) {
+        for (int i = 0; i < getItemCount(); i++) {
+            TUIMessageBean dataBean = mDataSource.get(i);
+            if (TextUtils.equals(messageBean.getId(), dataBean.getId())) {
+                notifyItemChanged(i, PAYLOAD_RISK_CONTENT);
+                break;
+            }
+        }
     }
 
     private void loadPhotoView(ViewHolder holder, ImageMessageBean imageMessageBean) {

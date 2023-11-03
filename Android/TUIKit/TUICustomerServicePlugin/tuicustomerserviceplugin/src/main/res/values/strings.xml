@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="suggest">suggest</string>
+    <string name="session_end">Session End</string>
+    <string name="session_timeout">Session Timeout</string>
+    <string name="invite_to_evaluation">Thank you for using our service, please rate this service.</string>
+    <string name="submit_the_evaluation">Submit the evaluation.</string>
+    <string name="satisfaction_evaluation">Satisfaction Evaluation</string>
+    <string name="extension_satisfaction_evaluation">Satisfaction Evaluation</string>
+    <string name="customer_service">Customer Service</string>
+    <string name="send_product_info">Send Product Information</string>
+    <string name="product_card_input_info">Please fill in the product information</string>
+    <string name="product_card_close">Close</string>
+    <string name="product_card_name">Name</string>
+    <string name="product_card_description">Description</string>
+    <string name="product_card_picture_url">Picture Url</string>
+    <string name="product_card_jump_url">Jump Url</string>
+    <string name="product_card_confirm">Confirm</string>
+    <string name="product_info_input_empty">Input cannot be empty</string>
+    <string name="common_phrases">Common Phrases</string>
+    <string name="customer_service_unsupport_tips">Customer Service is a value-added payment feature, which is currently in the internal testing stage. Click to enter [Tencent Cloud Instant messaging IM Group] to apply for activation and trial.</string>
+    <string name="customer_service_buying_guidelines">Tencent Cloud Instant messaging IM Group</string>
+    <string name="customer_service_i_know">I got it</string>
+
+    <string-array name="common_phrases_list">
+        <item>Is it in stock?</item>
+        <item>Can it be cheaper?</item>
+        <item>Is there a giveaway?</item>
+        <item>What is the shipping date?</item>
+        <item>Which express company is it?</item>
+        <item>When will it arrive?</item>
+    </string-array>
+</resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/tuiroomkit_bg_bottom_dialog_black_portrait"
@@ -7,11 +8,15 @@
     android:paddingBottom="16dp">
 
     <View
+        android:id="@+id/tuiroomkit_exit_room_hide"
         android:layout_width="24dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
-        android:background="@drawable/tuiroomkit_bottom_dialog_tip" />
+        android:background="@drawable/tuiroomkit_bottom_dialog_hide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tv_leave_tips"
@@ -23,12 +28,15 @@
         android:paddingBottom="16dp"
         android:text="@string/tuiroomkit_leave_room_tips"
         android:textColor="@color/tuiroomkit_color_info_title"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_exit_room_hide"/>
 
     <View
+        android:id="@+id/tuiroomkit_divide_leave_tips"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
+        android:background="@color/tuiroomkit_bg_dividing_line_grey"
+        app:layout_constraintTop_toBottomOf="@+id/tv_leave_tips"/>
 
     <Button
         android:id="@+id/btn_leave_room"
@@ -40,12 +48,15 @@
         android:paddingBottom="16dp"
         android:text="@string/tuiroomkit_leave_room"
         android:textColor="@color/tuiroomkit_color_blue"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_divide_leave_tips"/>
 
     <View
+        android:id="@+id/tuiroomkit_divide_leave_room"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/tuiroomkit_bg_dividing_line_grey" />
+        android:background="@color/tuiroomkit_bg_dividing_line_grey"
+        app:layout_constraintTop_toBottomOf="@+id/btn_leave_room"/>
 
     <Button
         android:id="@+id/btn_finish_room"
@@ -57,6 +68,7 @@
         android:paddingBottom="16dp"
         android:text="@string/tuiroomkit_finish_room"
         android:textColor="@color/tuiroomkit_color_text_red"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_divide_leave_room"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,15 +1,14 @@
 package com.tencent.qcloud.tuikit.timcommon.bean;
 
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.TIMCommonService;
 import com.tencent.qcloud.tuikit.timcommon.util.MessageBuilder;
 import com.tencent.qcloud.tuikit.timcommon.util.MessageParser;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
-
 import java.io.Serializable;
 
 public abstract class TUIMessageBean implements Serializable {
@@ -24,26 +23,26 @@ public abstract class TUIMessageBean implements Serializable {
      *
      * message sending
      */
-    public static final int MSG_STATUS_SENDING = 1;
+    public static final int MSG_STATUS_SENDING = V2TIMMessage.V2TIM_MSG_STATUS_SENDING;
     /**
      * 消息发送成功状态
      *
      * message send success
      */
-    public static final int MSG_STATUS_SEND_SUCCESS = 2;
+    public static final int MSG_STATUS_SEND_SUCCESS = V2TIMMessage.V2TIM_MSG_STATUS_SEND_SUCC;
     /**
      * 消息发送失败状态
      *
      * message send failed
      */
-    public static final int MSG_STATUS_SEND_FAIL = 3;
+    public static final int MSG_STATUS_SEND_FAIL = V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
     /**
      * 消息撤回状态
      *
      * messaage revoked
      */
-    public static final int MSG_STATUS_REVOKE = 0x113;
+    public static final int MSG_STATUS_REVOKE = V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED;
 
     private V2TIMMessage v2TIMMessage;
     private long msgTime;
@@ -55,6 +54,8 @@ public abstract class TUIMessageBean implements Serializable {
     private boolean excludeFromHistory;
     private boolean isUseMsgReceiverAvatar = false;
     private boolean isEnableForward = true;
+    private UserBean revoker;
+    private boolean hasRiskContent = false;
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -130,7 +131,7 @@ public abstract class TUIMessageBean implements Serializable {
 
         id = v2TIMMessage.getMsgID();
         isGroup = !TextUtils.isEmpty(v2TIMMessage.getGroupID());
-
+        hasRiskContent = v2TIMMessage.hasRiskContent();
         if (v2TIMMessage.getStatus() == V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED) {
             status = MSG_STATUS_REVOKE;
             if (isSelf()) {
@@ -162,6 +163,10 @@ public abstract class TUIMessageBean implements Serializable {
             return messageReceiptInfo.isPeerRead();
         }
         return false;
+    }
+
+    public boolean hasRiskContent() {
+        return hasRiskContent;
     }
 
     public boolean isAllRead() {
@@ -354,6 +359,38 @@ public abstract class TUIMessageBean implements Serializable {
 
     public void setMessageTypingFeature(MessageFeature messageFeature) {
         MessageBuilder.mergeCloudCustomData(this, TIMCommonConstants.MESSAGE_FEATURE_KEY, messageFeature);
+    }
+
+    public UserBean getRevoker() {
+        if (revoker != null) {
+            return revoker;
+        }
+        if (v2TIMMessage != null) {
+            V2TIMUserFullInfo fullInfo = v2TIMMessage.getRevokerInfo();
+            if (fullInfo != null) {
+                revoker = new UserBean();
+                revoker.setUserId(fullInfo.getUserID());
+                revoker.setNikeName(fullInfo.getNickName());
+                revoker.setFaceUrl(fullInfo.getFaceUrl());
+                return revoker;
+            }
+        }
+        return null;
+    }
+
+    public void setRevoker(UserBean revoker) {
+        this.revoker = revoker;
+    }
+
+    public String getRevokeReason() {
+        if (v2TIMMessage != null) {
+            return v2TIMMessage.getRevokeReason();
+        }
+        return null;
+    }
+
+    public void setHasRiskContent(boolean hasRiskContent) {
+        this.hasRiskContent = hasRiskContent;
     }
 
     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {

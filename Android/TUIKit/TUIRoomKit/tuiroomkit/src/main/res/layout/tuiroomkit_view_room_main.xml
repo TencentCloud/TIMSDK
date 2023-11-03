@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tuiroomkit_root_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tuiroomkit_bg_main_color_black">
+
+    <FrameLayout
+        android:id="@+id/tuiroomkit_video_seat_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/tuiroomkit_video_seat_margin_start"
+        android:layout_marginEnd="@dimen/tuiroomkit_video_seat_margin_end"
+        android:layout_marginTop="@dimen/tuiroomkit_video_seat_margin_top"
+        android:layout_marginBottom="@dimen/tuiroomkit_video_seat_margin_bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tuiroomkit_group_screen_capture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/tuiroomkit_color_black"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_video_seat_container"
+        app:layout_constraintEnd_toEndOf="@+id/tuiroomkit_video_seat_container"
+        app:layout_constraintTop_toTopOf="@+id/tuiroomkit_video_seat_container"
+        app:layout_constraintBottom_toBottomOf="@+id/tuiroomkit_video_seat_container">
+
+        <ImageView
+            android:id="@+id/tv_screen_capture_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/tuiroomkit_tv_screen_icon"
+            app:layout_constraintBottom_toTopOf="@+id/tv_screen_capture_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/tv_screen_capture_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:text="@string/tuiroomkit_tv_screen_capture"
+            android:textColor="@color/tuiroomkit_color_white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/tuiroomkit_btn_stop_screen_capture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_screen_capture_icon"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Button
+            android:id="@+id/tuiroomkit_btn_stop_screen_capture"
+            android:layout_width="102dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/tuiroomkit_btn_exit"
+            android:text="@string/tuiroomkit_tv_stop_screen_capture"
+            android:textColor="@color/tuiroomkit_color_white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_screen_capture_tag" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/tuiroomit_local_audio_container"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <FrameLayout
+        android:id="@+id/tuiroomit_top_view_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/tuiroomkit_top_view_margin_start"
+        android:layout_marginEnd="@dimen/tuiroomkit_top_view_margin_end"
+        android:layout_marginTop="@dimen/tuiroomkit_top_view_margin_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <FrameLayout
+        android:id="@+id/tuiroomkit_bottom_view_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/tuiroomkit_bottom_view_margin_start"
+        android:layout_marginEnd="@dimen/tuiroomkit_bottom_view_margin_end"
+        android:layout_marginBottom="@dimen/tuiroomkit_bottom_view_margin_bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

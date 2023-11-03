@@ -6,6 +6,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ILayout;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIBaseChatFragment;
+import com.tencent.qcloud.tuikit.tuichat.classicui.setting.ChatLayoutSetting;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
@@ -83,4 +84,11 @@ public interface IChatLayout extends ILayout {
      * @param retry 是否重试
      */
     void sendMessage(TUIMessageBean msg, boolean retry);
+
+    /**
+     * 自定义输入更多界面
+     *
+     * @return
+     */
+    void customizeInputMoreLayout();
 }

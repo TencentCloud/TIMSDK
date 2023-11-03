@@ -8,7 +8,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class MessageTypingBean extends TUIMessageBean {
-    private MessageTyping messageTyping;
+    public MessageTyping messageTyping;
 
     @Override
     public String onGetDisplayString() {

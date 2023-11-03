@@ -20,6 +20,7 @@
     <string name="revoke_tips_you">You recalled a message.</string>
     <string name="revoke_tips">recalled a message.</string>
     <string name="revoke_tips_other">A message is recalled.</string>
+    <string name="common_risk_msg_revoked_tips">The violation message has been retracted.</string>
     <string name="chat_reply_num">%d replied</string>
     <string name="has_read">Read</string>
     <string name="unread">Unread</string>

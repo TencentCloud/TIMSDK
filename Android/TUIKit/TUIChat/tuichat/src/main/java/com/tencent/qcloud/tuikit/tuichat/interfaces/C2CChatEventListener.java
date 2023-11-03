@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.interfaces;
 
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public abstract class C2CChatEventListener {
 
     public void onReadReport(List<MessageReceiptInfo> receiptList) {}
 
-    public void handleRevoke(String msgId) {}
+    public void onRecvMessageRevoked(String msgID, UserBean userBean, String reason) {}
 
     public void onRecvNewMessage(TUIMessageBean message) {}
 

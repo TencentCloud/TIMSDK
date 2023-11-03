@@ -185,10 +185,10 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mJoinRoomLatch = new CountDownLatch(1);
         Log.d(TAG, "waitUntilCreateRoom start roomId=" + roomId);
         mRoomManager.enableAutoShowRoomMainUi(false);
-        boolean isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
-        boolean isOpenMic = RoomSpUtil.getMicrophoneSwitchFromSp();
+        boolean isOpenVideo = RoomSpUtil.getVideoSwitchFromSp();
+        boolean isOpenAudio = RoomSpUtil.getAudioSwitchFromSp();
         boolean isUseSpeaker = true;
-        mRoomManager.createRoom(roomId, isOpenMic, isOpenCamera, isUseSpeaker);
+        mRoomManager.createRoom(roomId, isOpenAudio, isOpenVideo, isUseSpeaker);
         try {
             mJoinRoomLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -256,10 +256,10 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mSelfRoomStatus = JOINING_ROOM;
         Log.d(TAG, "waitUntilEnterRoom start");
         String roomId = roomMsgData.getRoomId();
-        boolean isOpenCamera = RoomSpUtil.getCameraSwitchFromSp();
-        boolean isOpenMic = RoomSpUtil.getMicrophoneSwitchFromSp();
+        boolean isOpenVideo = RoomSpUtil.getVideoSwitchFromSp();
+        boolean isOpenAudio = RoomSpUtil.getAudioSwitchFromSp();
         boolean isUseSpeaker = true;
-        mRoomManager.enterRoom(roomId, isOpenMic, isOpenCamera, isUseSpeaker);
+        mRoomManager.enterRoom(roomId, isOpenAudio, isOpenVideo, isUseSpeaker);
         try {
             mJoinRoomLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
         } catch (InterruptedException e) {

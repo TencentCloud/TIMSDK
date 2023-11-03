@@ -20,6 +20,7 @@
     <string name="revoke_tips_you">您撤回了一条消息</string>
     <string name="revoke_tips">撤回了一条消息</string>
     <string name="revoke_tips_other">对方撤回了一条消息</string>
+    <string name="common_risk_msg_revoked_tips">违规消息已被撤回</string>
     <string name="chat_reply_num">%d条回复</string>
     <string name="has_read">已读</string>
     <string name="unread">未读</string>

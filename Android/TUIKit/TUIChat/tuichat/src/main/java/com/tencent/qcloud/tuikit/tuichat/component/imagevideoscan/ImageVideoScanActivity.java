@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,18 +8,22 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.util.PermissionHelper;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageVideoScanActivity extends Activity {
+public class ImageVideoScanActivity extends AppCompatActivity {
     private static final String TAG = ImageVideoScanActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
@@ -97,6 +100,7 @@ public class ImageVideoScanActivity extends Activity {
         mRecyclerView.setAdapter(mAdapter);
 
         mImageVideoScanPresenter = new ImageVideoScanPresenter();
+        mImageVideoScanPresenter.initChatEventListener();
         mImageVideoScanPresenter.setAdapter(mAdapter);
         mImageVideoScanPresenter.setRecyclerView(mRecyclerView);
         mImageVideoScanPresenter.setViewPagerLayoutManager(mLayoutManager);
@@ -120,7 +124,40 @@ public class ImageVideoScanActivity extends Activity {
     public void onItemSelected(TUIMessageBean messageBean) {
         if (messageBean != null) {
             mCurrentMessageBean = messageBean;
+            if (mCurrentMessageBean.hasRiskContent()) {
+                mDownloadView.setVisibility(View.GONE);
+            } else {
+                mDownloadView.setVisibility(View.VISIBLE);
+            }
         }
+    }
+
+    public void onCurrentMessageHasRiskContent(TUIMessageBean messageBean) {
+        mDownloadView.setVisibility(View.GONE);
+        TUIKitDialog dialog = new TUIKitDialog(this).builder();
+        String title = getString(R.string.chat_risk_image_message_alert);
+        if (messageBean instanceof ImageMessageBean) {
+            title = getString(R.string.chat_scan_risk_image_message_alert);
+        } else if (messageBean instanceof VideoMessageBean) {
+            title = getString(R.string.chat_scan_risk_video_message_alert);
+        }
+        dialog.setTitle(title)
+            .setCancelOutside(false)
+            .setPositiveButton(getString(R.string.chat_i_know),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mAdapter != null) {
+                            mAdapter.onDataChanged(messageBean);
+                        }
+                        dialog.dismiss();
+                    }
+                })
+            .show();
+    }
+
+    public TUIMessageBean getCurrentMessageBean() {
+        return mCurrentMessageBean;
     }
 
     @Override
@@ -134,9 +171,5 @@ public class ImageVideoScanActivity extends Activity {
 
     public interface OnItemClickListener {
         void onClickItem();
-    }
-
-    public interface OnItemSelectedListener {
-        void onClickSelected(TUIMessageBean messageBean);
     }
 }

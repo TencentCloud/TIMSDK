@@ -20,6 +20,7 @@
     <string name="revoke_tips_you">لقد قمت بسحب رسالة</string>
     <string name="revoke_tips">تم سحب رسالة</string>
     <string name="revoke_tips_other">قام الطرف الآخر بسحب رسالة</string>
+    <string name="common_risk_msg_revoked_tips">تم سحب الرسالة المخالفة.</string>
     <string name="chat_reply_num">%d ردود</string>
     <string name="has_read">تمت القراءة</string>
     <string name="unread">غير مقروء</string>

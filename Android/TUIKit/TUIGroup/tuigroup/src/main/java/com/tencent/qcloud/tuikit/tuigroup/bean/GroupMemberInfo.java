@@ -13,10 +13,10 @@ public class GroupMemberInfo implements Serializable {
     private String birthday;
     private String nameCard;
     private String nickName;
+    private String friendRemark;
     private boolean isTopChat;
     private boolean isFriend;
     private long joinTime;
-    private long tinyId;
     private int memberType;
     private boolean isSelected = false;
 
@@ -76,6 +76,14 @@ public class GroupMemberInfo implements Serializable {
         return this.nickName;
     }
 
+    public void setFriendRemark(String friendRemark) {
+        this.friendRemark = friendRemark;
+    }
+
+    public String getFriendRemark() {
+        return friendRemark;
+    }
+
     public boolean isTopChat() {
         return isTopChat;
     }
@@ -119,6 +127,8 @@ public class GroupMemberInfo implements Serializable {
     public String getDisplayName() {
         if (!TextUtils.isEmpty(nameCard)) {
             return nameCard;
+        } else if (!TextUtils.isEmpty(friendRemark)) {
+            return friendRemark;
         } else if (!TextUtils.isEmpty(nickName)) {
             return nickName;
         } else if (!TextUtils.isEmpty(account)) {
@@ -136,6 +146,7 @@ public class GroupMemberInfo implements Serializable {
         }
         setAccount(info.getUserID());
         setNameCard(info.getNameCard());
+        setFriendRemark(info.getFriendRemark());
         setIconUrl(info.getFaceUrl());
         setNickName(info.getNickName());
         return this;

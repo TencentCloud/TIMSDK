@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.BaseConstants;
-import com.tencent.liteav.beauty.TXBeautyManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -35,7 +34,6 @@ import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest;
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.view.TUICallingViewManager;
-import com.tencent.trtc.TRTCCloud;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -145,7 +143,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                                 TUICallingStatusManager.sharedInstance(mContext).setCallScene(Scene.SINGLE_CALL);
 
                                 showCallingView();
-                                mCallingBellFeature.startDialingMusic();
+                                mCallingBellFeature.playMusic();
                                 callbackSuccess(callback);
                             }
 
@@ -230,7 +228,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                                 TUICallingStatusManager.sharedInstance(mContext).setGroupId(groupId);
 
                                 showCallingView();
-                                mCallingBellFeature.startDialingMusic();
+                                mCallingBellFeature.playMusic();
                                 callbackSuccess(callback);
                             }
 
@@ -420,7 +418,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
             if (isAppInBackground && !hasBgPermission) {
                 TUILog.w(TAG, "App is in background");
-                mCallingBellFeature.startRing();
+                mCallingBellFeature.playMusic();
                 return;
             }
 
@@ -433,7 +431,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                         return;
                     }
                     showCallingView();
-                    mCallingBellFeature.startRing();
+                    mCallingBellFeature.playMusic();
                 }
 
                 @Override
@@ -775,46 +773,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                     public void onError(int errCode, String errMsg) {
                     }
                 });
-        initCallVideoParams();
-        initCallBeautyParams();
-    }
-
-    private void initCallVideoParams() {
-        //set video render params of loginUser
-        TUICommonDefine.VideoRenderParams renderParams = new TUICommonDefine.VideoRenderParams();
-        renderParams.fillMode = TUICommonDefine.VideoRenderParams.FillMode.Fill;
-        renderParams.rotation = TUICommonDefine.VideoRenderParams.Rotation.Rotation_0;
-        String user = TUILogin.getLoginUser();
-        TUICallEngine.createInstance(mContext).setVideoRenderParams(user, renderParams, new TUICommonDefine.Callback() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onError(int errCode, String errMsg) {
-            }
-        });
-
-        //set video encoder params
-        TUICommonDefine.VideoEncoderParams encoderParams = new TUICommonDefine.VideoEncoderParams();
-        encoderParams.resolution = TUICommonDefine.VideoEncoderParams.Resolution.Resolution_640_360;
-        encoderParams.resolutionMode = TUICommonDefine.VideoEncoderParams.ResolutionMode.Portrait;
-        TUICallEngine.createInstance(mContext).setVideoEncoderParams(encoderParams, new TUICommonDefine.Callback() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onError(int errCode, String errMsg) {
-            }
-        });
-    }
-
-    private void initCallBeautyParams() {
-        TRTCCloud trtcCloud = TUICallEngine.createInstance(mContext).getTRTCCloudInstance();
-        TXBeautyManager txBeautyManager = trtcCloud.getBeautyManager();
-        txBeautyManager.setBeautyStyle(TXBeautyManager.TXBeautyStyleNature);
-        txBeautyManager.setBeautyLevel(4);
     }
 
     @Override

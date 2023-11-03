@@ -35,7 +35,7 @@
             android:name=".classicui.page.TUIC2CChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing|stateHidden" />
+            android:windowSoftInputMode="adjustPan" />
 
 
         <activity

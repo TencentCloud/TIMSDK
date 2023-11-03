@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 参与换肤的属性 -->
+    <attr name="customer_service_item_text_color" format="reference|color"/>
+    <attr name="customer_service_reply_quote_text_color" format="reference|color"/>
+    <attr name="product_close_color" format="reference|color"/>
+    <attr name="evaluation_number_default_color" format="reference|color"/>
+    <attr name="submit_bg_color" format="reference|color"/>
+    <attr name="customer_service_item_arrow" format="reference"/>
+    <attr name="evaluation_number_active_bg" format="reference"/>
+    <attr name="send_suggest_icon" format="reference"/>
+    <attr name="customer_service_icon" format="reference"/>
+    <attr name="evaluation_number_default_bg" format="reference"/>
+</resources>

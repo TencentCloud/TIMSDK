@@ -294,7 +294,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             multiSelectAction.setActionClickListener(() -> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
         }
 
-        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL && !msg.hasRiskContent()) {
             forwardAction = new ChatPopMenu.ChatPopMenuAction();
             forwardAction.setActionName(getContext().getString(R.string.forward_button));
             forwardAction.setActionIcon(R.drawable.pop_menu_forward);
@@ -433,6 +433,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
     }
 
+    @Override
     public void scrollToEnd() {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
             ThreadUtils.runOnUiThread(new Runnable() {
@@ -973,8 +974,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
     public interface OnLoadMoreHandler {
         void loadMore(int type);
-
-        boolean isListEnd(int position);
 
         void displayBackToLastMessage(boolean display);
 

@@ -2,17 +2,21 @@ package com.tencent.qcloud.tim.demo.push;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.gson.Gson;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.TUIServiceCallback;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
-import java.lang.reflect.Method;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class OfflinePushAPIDemo {
@@ -58,6 +62,31 @@ public class OfflinePushAPIDemo {
      */
     public void registerPush(Context context) {
         OfflinePushParamBean offlinePushParamBean = new OfflinePushParamBean();
+
+        String huaweiBussinessId, xiaomiBussinessId, meizuBussinessId, vivoBussinessId, oppoBussinessId;
+        String fcmBussinessId, honorBussinessId;
+
+        int callbackMode = OfflinePushConfigs.getOfflinePushConfigs().getClickNotificationCallbackMode();
+        Log.d(TAG, "OfflinePush callback mode:" + callbackMode);
+        if (callbackMode == OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_NOTIFY ||
+                callbackMode == OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_BROADCAST) {
+            huaweiBussinessId = "0";
+            xiaomiBussinessId = "0";
+            meizuBussinessId = "0";
+            vivoBussinessId = "0";
+            oppoBussinessId = "0";
+            fcmBussinessId = "0";
+            honorBussinessId = "0";
+        } else {
+            huaweiBussinessId = "0";
+            xiaomiBussinessId = "0";
+            meizuBussinessId = "0";
+            vivoBussinessId = "0";
+            oppoBussinessId = "0";
+            fcmBussinessId = "0";
+            honorBussinessId = "0";
+        }
+
         offlinePushParamBean.setHuaweiPushBussinessId("");
         offlinePushParamBean.setHuaweiBadgeClassName("");
 
@@ -87,48 +116,22 @@ public class OfflinePushAPIDemo {
         }
 
         DemoLog.d(TAG, "registerPush json = " + jsonStr);
-        try {
-            Class clz = Class.forName("com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager");
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TIMPush.REGISTER_PUSH_WITH_JSON_KEY, jsonStr);
+        TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_REGISTER_PUSH_WITH_JSON, param, new TUIServiceCallback() {
+            @Override
+            public void onServiceCallback(int errorCode, String errorMessage, Bundle bundle) {
+                DemoLog.d(TAG, "registerPush errorCode = " + errorCode + ", errorMessage = " + errorMessage);
+            }
+        });
+
+        /*try {
+            Class clz = Class.forName("com.tencent.qcloud.tim.push.TIMPushService");
             Method methodIntance = clz.getDeclaredMethod("getInstance", new Class[0]);
             Object intance = methodIntance.invoke(null, new Object[] {});
             Method methodRegister = clz.getDeclaredMethod("registerPush", String.class, Context.class);
             methodRegister.setAccessible(true);
             methodRegister.invoke(intance, jsonStr, context);
-        } catch (Exception e) {
-            DemoLog.e(TAG, "registerPush exception = " + e);
-        }
-    }
-
-    // 直接调用组件类设置，影响解耦性
-    // Call the component class settings directly，affect decoupling
-    public void registerPush2(Context context) {
-        /*PrivateConstants.huaweiPushBussinessId = 0;
-        PrivateConstants.huaweiBadgeClassName = "";
-
-        PrivateConstants.xiaomiPushBussinessId = 0;
-        PrivateConstants.xiaomiPushAppId = "";
-        PrivateConstants.xiaomiPushAppKey = "";
-
-        PrivateConstants.meizuPushBussinessId = 0;
-        PrivateConstants.meizuPushAppId = "";
-        PrivateConstants.meizuPushAppKey = "";
-
-        PrivateConstants.vivoPushBussinessId = 0;
-
-        PrivateConstants.fcmPushBussinessId = 0;
-
-        PrivateConstants.oppoPushBussinessId = 0;
-        PrivateConstants.oppoPushAppKey = "";
-        PrivateConstants.oppoPushAppSecret = "";
-
-        DemoLog.d(TAG, "registerPush2");
-        try {
-            Class clz = Class.forName("com.tencent.qcloud.tim.tuiofflinepush.TUIOfflinePushManager");
-            Method methodIntance = clz.getDeclaredMethod("getInstance", null);
-            Object intance = methodIntance.invoke(null, null);
-            Method methodRegister = clz.getDeclaredMethod("registerPush", Context.class);
-            methodRegister.setAccessible(true);
-            methodRegister.invoke(intance, context);
         } catch (Exception e) {
             DemoLog.e(TAG, "registerPush exception = " + e);
         }*/
@@ -141,14 +144,14 @@ public class OfflinePushAPIDemo {
      * TUICore, and click the notification bar event will be returned through the TUICore.onNotifyEvent callback.
      */
     public void registerNotifyEvent() {
-        TUICore.registerEvent(TUIConstants.TUIOfflinePush.EVENT_NOTIFY, TUIConstants.TUIOfflinePush.EVENT_NOTIFY_NOTIFICATION, new ITUINotification() {
+        TUICore.registerEvent(TUIConstants.TIMPush.EVENT_NOTIFY, TUIConstants.TIMPush.EVENT_NOTIFY_NOTIFICATION, new ITUINotification() {
             @Override
             public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
                 Log.d(TAG, "onNotifyEvent key = " + key + "subKey = " + subKey);
-                if (TUIConstants.TUIOfflinePush.EVENT_NOTIFY.equals(key)) {
-                    if (TUIConstants.TUIOfflinePush.EVENT_NOTIFY_NOTIFICATION.equals(subKey)) {
+                if (TUIConstants.TIMPush.EVENT_NOTIFY.equals(key)) {
+                    if (TUIConstants.TIMPush.EVENT_NOTIFY_NOTIFICATION.equals(subKey)) {
                         if (param != null) {
-                            String extString = (String) param.get(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
+                            String extString = (String) param.get(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY);
                             TUIUtils.handleOfflinePush(extString, null);
                         }
                     }
@@ -159,16 +162,16 @@ public class OfflinePushAPIDemo {
 
     /*
      * 当 IM 控制台设置点击后续动作为 "使用推送组件回调跳转"，推送成功后，注册广播接收者，点击通知栏事件通过发送广播回调返回，IntentFilter 为
-     * TUIConstants.TUIOfflinePush.NOTIFICATION_BROADCAST_ACTION。
+     * TUIConstants.TIMPush.NOTIFICATION_BROADCAST_ACTION。
      *
      * When the IM console sets the click follow-up action to "use push component callback to jump"，After the push is successful, register the broadcast
      * receiver, click the notification bar event to return by sending the broadcast callback. IntentFilter 为
-     * TUIConstants.TUIOfflinePush.NOTIFICATION_BROADCAST_ACTION.
+     * TUIConstants.TIMPush.NOTIFICATION_BROADCAST_ACTION.
      */
     public void registerNotificationReceiver(Context context, OfflinePushLocalReceiver localReceiver) {
         DemoLog.d(TAG, "registerNotificationReceiver ");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(TUIConstants.TUIOfflinePush.NOTIFICATION_BROADCAST_ACTION);
+        intentFilter.addAction(TUIConstants.TIMPush.NOTIFICATION_BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(context).registerReceiver(localReceiver, intentFilter);
     }
 }

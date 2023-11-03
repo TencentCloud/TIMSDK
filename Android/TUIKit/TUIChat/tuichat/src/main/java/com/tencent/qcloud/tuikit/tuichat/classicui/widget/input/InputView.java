@@ -57,6 +57,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.face.FaceFragment;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore.InputMoreFragment;
 import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
@@ -324,7 +325,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                                 } else {
                                     if (mAudioCancel) {
                                         if (mChatInputHandler != null) {
-                                            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
+                                            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CONTINUE);
                                         }
                                     }
                                     mAudioCancel = false;
@@ -1294,10 +1295,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        mInputMoreActionList.addAll(mInputMoreCustomActionList);
-
         List<InputMoreActionUnit> extensionList = getExtensionInputMoreList();
         mInputMoreActionList.addAll(extensionList);
+        clearCustomActionList();
+        if (mChatLayout != null) {
+            mChatLayout.customizeInputMoreLayout();
+        }
+        mInputMoreActionList.addAll(mInputMoreCustomActionList);
         Collections.sort(mInputMoreActionList, new Comparator<InputMoreActionUnit>() {
             @Override
             public int compare(InputMoreActionUnit o1, InputMoreActionUnit o2) {
@@ -1510,6 +1514,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         int RECORD_CANCEL = 3;
         int RECORD_TOO_SHORT = 4;
         int RECORD_FAILED = 5;
+        int RECORD_CONTINUE = 6;
 
         void onInputAreaClick();
 

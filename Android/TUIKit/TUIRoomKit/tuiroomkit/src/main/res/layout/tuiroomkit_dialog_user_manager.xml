@@ -11,7 +11,7 @@
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
-        android:background="@drawable/tuiroomkit_bottom_dialog_tip" />
+        android:background="@drawable/tuiroomkit_bottom_dialog_hide" />
 
     <RelativeLayout
         android:layout_width="match_parent"

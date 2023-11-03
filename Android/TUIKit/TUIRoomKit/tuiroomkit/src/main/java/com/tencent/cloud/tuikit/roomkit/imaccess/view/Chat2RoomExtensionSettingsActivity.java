@@ -48,19 +48,19 @@ public class Chat2RoomExtensionSettingsActivity extends BaseLightActivity {
         mMicrophoneSwitch = findViewById(R.id.tuiroomkit_chat_settings_microphone);
         mCameraSwitch = findViewById(R.id.tuiroomkit_chat_settings_camera);
 
-        mMicrophoneSwitch.setChecked(RoomSpUtil.getMicrophoneSwitchFromSp());
-        mCameraSwitch.setChecked(RoomSpUtil.getCameraSwitchFromSp());
+        mMicrophoneSwitch.setChecked(RoomSpUtil.getAudioSwitchFromSp());
+        mCameraSwitch.setChecked(RoomSpUtil.getVideoSwitchFromSp());
 
         mMicrophoneSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RoomSpUtil.saveMicrophoneSwitchToSp(isChecked);
+                RoomSpUtil.saveAudioSwitchToSp(isChecked);
             }
         });
         mCameraSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RoomSpUtil.saveCameraSwitchToSp(isChecked);
+                RoomSpUtil.saveVideoSwitchToSp(isChecked);
             }
         });
     }

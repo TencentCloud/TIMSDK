@@ -15,7 +15,10 @@ import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.TUIReplyQuot
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.SoundReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.VideoReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.ClassicUIService;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.reply.TextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
@@ -49,7 +52,9 @@ public class ReplyMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msg.setSelectText(msg.getExtra());
-
+        if (hasRiskContent) {
+            setRiskContent(itemView.getResources().getString(R.string.chat_risk_reply_message_alert));
+        }
         ReplyMessageBean replyMessageBean = (ReplyMessageBean) msg;
         TUIMessageBean replyContentBean = replyMessageBean.getContentMessageBean();
         String replyContent = replyContentBean.getExtra();
@@ -120,19 +125,46 @@ public class ReplyMessageHolder extends MessageContentHolder {
 
         TUIReplyQuoteBean replyQuoteBean = replyMessageBean.getReplyQuoteBean();
         if (originMessage != null) {
-            performQuote(replyQuoteBean, replyMessageBean);
+            if (replyQuoteBean != null && replyQuoteBean.hasRiskContent()) {
+                String originAbstract = itemView.getResources().getString(R.string.chat_risk_content);
+                if (replyQuoteBean instanceof SoundReplyQuoteBean) {
+                    originAbstract = itemView.getResources().getString(R.string.chat_risk_sound);
+                } else if (replyQuoteBean instanceof ImageReplyQuoteBean) {
+                    originAbstract = itemView.getResources().getString(R.string.chat_risk_image);
+                } else if (replyQuoteBean instanceof VideoReplyQuoteBean) {
+                    originAbstract = itemView.getResources().getString(R.string.chat_risk_video);
+                }
+                TextReplyQuoteBean textReplyQuoteBean = new TextReplyQuoteBean();
+                textReplyQuoteBean.setText(originAbstract);
+                TextReplyQuoteView textReplyQuoteView = new TextReplyQuoteView(itemView.getContext());
+                textReplyQuoteView.onDrawReplyQuote(textReplyQuoteBean);
+                if (isForwardMode || isReplyDetailMode) {
+                    textReplyQuoteView.setSelf(false);
+                } else {
+                    textReplyQuoteView.setSelf(replyMessageBean.isSelf());
+                }
+                quoteFrameLayout.removeAllViews();
+                quoteFrameLayout.addView(textReplyQuoteView);
+            } else {
+                performQuote(replyQuoteBean, replyMessageBean);
+            }
         } else {
             performNotFound(replyQuoteBean, replyMessageBean);
         }
-
-        originMsgLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onReplyMessageClick(v, position, replyMessageBean);
+        if (replyQuoteBean != null && replyQuoteBean.hasRiskContent()) {
+            originMsgLayout.setOnClickListener(null);
+        } else if (replyMessageBean.getOriginMessageBean() != null && replyMessageBean.getOriginMessageBean().hasRiskContent()) {
+            originMsgLayout.setOnClickListener(null);
+        } else {
+            originMsgLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onReplyMessageClick(v, position, replyMessageBean);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void performNotFound(TUIReplyQuoteBean replyQuoteBean, ReplyMessageBean replyMessageBean) {

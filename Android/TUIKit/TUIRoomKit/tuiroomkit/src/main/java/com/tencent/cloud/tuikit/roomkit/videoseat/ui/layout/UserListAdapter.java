@@ -42,10 +42,17 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final int mRoundRadius;
 
+    private View.OnClickListener mClickListener;
+
     public UserListAdapter(Context context, List<UserEntity> list) {
         this.mContext = context;
         this.mList = list;
         mRoundRadius = (int) context.getResources().getDimension(R.dimen.tuivideoseat_video_view_conor);
+    }
+
+    public void setItemClickListener(View.OnClickListener clickListener) {
+        mClickListener = clickListener;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -212,6 +219,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             mVideoContainer.removeAllViews();
             mVideoContainer.addView(videoView);
+            videoView.setOnClickListener(mClickListener);
         }
 
         private void initView(final View itemView) {

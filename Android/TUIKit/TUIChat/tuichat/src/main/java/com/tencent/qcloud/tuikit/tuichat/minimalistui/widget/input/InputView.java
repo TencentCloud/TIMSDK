@@ -1292,6 +1292,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             @Override
             public void onCompletion(Boolean success) {
                 recordComplete(success);
+                hideVoiceLayout();
             }
 
             @Override

@@ -3,6 +3,10 @@ package com.tencent.qcloud.tuikit.tuichat;
 import com.tencent.imsdk.BaseConstants;
 
 public class TUIChatConstants {
+    public static final int ERR_SVR_COMM_SENSITIVE_IMAGE = BaseConstants.ERR_SVR_COMM_SENSITIVE_IMAGE;
+    public static final int ERR_SVR_COMM_SENSITIVE_TEXT = BaseConstants.ERR_SVR_COMM_SENSITIVE_TEXT;
+    public static final int ERR_LOCAL_COMM_SENSITIVE_TEXT = BaseConstants.ERR_SDK_BLOCKED_BY_SENSITIVE_WORD;
+
     public static final String CAMERA_IMAGE_PATH = "camera_image_path";
     public static final String IMAGE_WIDTH = "image_width";
     public static final String IMAGE_HEIGHT = "image_height";
@@ -31,6 +35,7 @@ public class TUIChatConstants {
     public static final int GET_MESSAGE_LOCATE = 3;
 
     public static final String CHAT_INFO = "chatInfo";
+    public static final String INPUT_VIEW = "inputView";
 
     public static final String MESSAGE_BEAN = "messageBean";
     public static final String DATA_CHANGE_TYPE = "dataChangeType";

@@ -3,9 +3,6 @@ package com.tencent.qcloud.tuikit.tuicallkit.state
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.TextUtils
-import com.tencent.imsdk.v2.V2TIMManager
-import com.tencent.imsdk.v2.V2TIMUserFullInfo
-import com.tencent.imsdk.v2.V2TIMValueCallback
 import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
@@ -20,9 +17,10 @@ import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_KEY_USER_ID
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
+import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
 
 class TUICallState {
     public var selfUser = LiveData<User>()
@@ -105,7 +103,7 @@ class TUICallState {
                 user.id = callerId
                 user.callRole.set(TUICallDefine.Role.Caller)
                 user.callStatus.set(TUICallDefine.Status.Waiting)
-                updateUserAvatarAndNickname(user)
+                UserInfoUtils.updateUserInfo(user)
                 remoteUserList.add(user)
             }
 
@@ -115,7 +113,7 @@ class TUICallState {
                     user.id = userId
                     user.callRole.set(TUICallDefine.Role.Called)
                     user.callStatus.set(TUICallDefine.Status.Waiting)
-                    updateUserAvatarAndNickname(user)
+                    UserInfoUtils.updateUserInfo(user)
                     remoteUserList.add(user)
                 }
             }
@@ -147,14 +145,21 @@ class TUICallState {
             callRole: TUICallDefine.Role?
         ) {
             TUILog.i(TAG, "onCallBegin -> {room: $room, callMediaType: $callMediaType, callRole: $callRole}")
-            CallEngineManager.instance.selectAudioPlaybackDevice(instance.audioPlayoutDevice.get())
+            if (TUICallDefine.Role.Called == instance.selfUser.get().callRole.get()
+                && TUICallDefine.MediaType.Audio == instance.mediaType.get()
+                && TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()
+            ) {
+                EngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Earpiece)
+            } else {
+                EngineManager.instance.selectAudioPlaybackDevice(instance.audioPlayoutDevice.get())
+            }
             roomId.set(room)
             selfUser.get().callStatus.set(TUICallDefine.Status.Accept)
             instance.reverse1v1CallRenderView = true
             if (isMicrophoneMute.get()) {
-                CallEngineManager.instance.closeMicrophone()
+                EngineManager.instance.closeMicrophone()
             } else {
-                CallEngineManager.instance.openMicrophone(null)
+                EngineManager.instance.openMicrophone(null)
             }
             startTimeCount()
         }
@@ -182,12 +187,16 @@ class TUICallState {
                 mediaType.set(newCallMediaType)
                 if (newCallMediaType == TUICallDefine.MediaType.Audio) {
                     if (TUICallDefine.Status.Accept == instance.selfUser.get().callStatus.get()) {
-                        CallEngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Earpiece)
+                        EngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Earpiece)
                     } else {
-                        instance.audioPlayoutDevice.set(AudioPlaybackDevice.Earpiece)
+                        if (TUICallDefine.Role.Caller == instance.selfUser.get().callRole.get()) {
+                            EngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Earpiece)
+                        } else {
+                            EngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Speakerphone)
+                        }
                     }
                 } else {
-                    CallEngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Speakerphone)
+                    EngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Speakerphone)
                 }
             }
         }
@@ -309,12 +318,12 @@ class TUICallState {
         }
 
         override fun onKickedOffline() {
-            CallEngineManager.instance.hangup(null)
+            EngineManager.instance.hangup(null)
             resetCall()
         }
 
         override fun onUserSigExpired() {
-            CallEngineManager.instance.hangup(null)
+            EngineManager.instance.hangup(null)
             resetCall()
         }
     }
@@ -427,39 +436,8 @@ class TUICallState {
             remoteUserList.add(user)
         }
         if (TextUtils.isEmpty(user.nickname.get()) || TextUtils.isEmpty(user.avatar.get())) {
-            updateUserAvatarAndNickname(user)
+            UserInfoUtils.updateUserInfo(user)
         }
-    }
-
-    private fun updateUserAvatarAndNickname(user: User) {
-        if (TextUtils.isEmpty(user.id)) {
-            TUILog.e(TAG, "getUsersInfo -> user.userId isEmpty")
-            return
-        }
-        if (!TextUtils.isEmpty(user.nickname.get()) && !TextUtils.isEmpty(user.avatar.get())) {
-            TUILog.i(TAG, "getUsersInfo -> user.userName = ${user.nickname}, avatar = ${user.avatar}")
-            return
-        }
-        val userList: MutableList<String> = ArrayList()
-        userList.add(user.id!!)
-        V2TIMManager.getInstance().getUsersInfo(userList, object : V2TIMValueCallback<List<V2TIMUserFullInfo?>?> {
-            override fun onError(errorCode: Int, errorMsg: String?) {
-                TUILog.e(TAG, "getUsersInfo -> userId:${user.id} onError errorCode = $errorCode , errorMsg = $errorMsg")
-            }
-
-            override fun onSuccess(list: List<V2TIMUserFullInfo?>?) {
-                if (list.isNullOrEmpty() || null == list[0] || TextUtils.isEmpty(list[0]?.userID)) {
-                    TUILog.i(TAG, "getUsersInfo -> userId:${user.id} onSuccess list = null")
-                    return
-                }
-                TUILog.i(
-                    TAG,
-                    "getUsersInfo -> userId:${user.id} onSuccess nickname:${list[0]?.nickName}, avatar:${list[0]?.faceUrl}"
-                )
-                user.nickname.set(list[0]?.nickName)
-                user.avatar.set(list[0]?.faceUrl)
-            }
-        })
     }
 
     companion object {

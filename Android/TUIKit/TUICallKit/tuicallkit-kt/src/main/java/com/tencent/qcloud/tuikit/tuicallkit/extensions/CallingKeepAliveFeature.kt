@@ -7,9 +7,6 @@ import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
 
 class CallingKeepAliveFeature(private val mContext: Context) {
-    init {
-        addObserver()
-    }
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.None) {
@@ -17,6 +14,10 @@ class CallingKeepAliveFeature(private val mContext: Context) {
         } else if (it == TUICallDefine.Status.Waiting) {
             startKeepAlive()
         }
+    }
+
+    init {
+        addObserver()
     }
 
     fun addObserver() {

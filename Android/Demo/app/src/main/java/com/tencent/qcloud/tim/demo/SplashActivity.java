@@ -94,8 +94,8 @@ public class SplashActivity extends BaseLightActivity {
         Intent dataIntent = getIntent();
         intent.putExtras(dataIntent);
         if (dataIntent != null) {
-            String ext = dataIntent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
-            intent.putExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY, ext);
+            String ext = dataIntent.getStringExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY);
+            intent.putExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY, ext);
         }
         startActivity(intent);
         finish();

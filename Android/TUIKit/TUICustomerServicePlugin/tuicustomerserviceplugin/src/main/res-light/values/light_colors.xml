@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="customer_service_item_text_color_light">#368DFF</color>
+    <color name="customer_service_reply_quote_text_color_light">#888888</color>
+    <color name="product_close_color_light">#3370ff</color>
+    <color name="evaluation_number_default_color_light">#006eff</color>
+    <color name="submit_bg_color_light">#3370ff</color>
+</resources>

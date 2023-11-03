@@ -3,7 +3,11 @@ package com.tencent.qcloud.tuikit.tuicontact.presenter;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicontact.R;
@@ -20,6 +24,7 @@ import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +42,7 @@ public class ContactPresenter {
     private ContactEventListener friendListListener;
     private ContactEventListener blackListListener;
     private IUIKitCallback<Void> getUserStatusCallback;
+    private boolean isClassicStyle;
 
     private boolean isSelectForCall = false;
 
@@ -47,6 +53,10 @@ public class ContactPresenter {
 
     public void setContactListView(IContactListView contactListView) {
         this.contactListView = contactListView;
+    }
+
+    public void setIsClassicStyle(boolean isClassicStyle) {
+        this.isClassicStyle = isClassicStyle;
     }
 
     public void setFriendListListener() {
@@ -158,11 +168,44 @@ public class ContactPresenter {
                                    .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER)
                                    .setTop(true)
                                    .setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                dataSource.addAll(getExtensionControllerMoreList());
                 provider.loadFriendListDataAsync(callback);
                 break;
             default:
                 break;
         }
+    }
+
+    private List<ContactItemBean> getExtensionControllerMoreList() {
+        List<ContactItemBean> contactItemBeanList = new ArrayList<>();
+        if (!isClassicStyle) {
+            return contactItemBeanList;
+        }
+
+        List<TUIExtensionInfo> extensionInfoList =
+            TUICore.getExtensionList(TUIConstants.TUIContact.Extension.ContactItem.CLASSIC_EXTENSION_ID, null);
+        for (TUIExtensionInfo extensionInfo : extensionInfoList) {
+            if (extensionInfo != null) {
+                String name = extensionInfo.getText();
+                int iconResID = (int) extensionInfo.getIcon();
+                int weight = extensionInfo.getWeight();
+                TUIExtensionEventListener listener = extensionInfo.getExtensionListener();
+                ContactItemBean contactItemBean = new ContactItemBean(name);
+                contactItemBean.setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER);
+                contactItemBean.setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP);
+                contactItemBean.setTop(true);
+                contactItemBean.setAvatarResID(iconResID);
+                contactItemBean.setWeight(weight);
+                contactItemBean.setExtensionListener(listener);
+                contactItemBeanList.add(contactItemBean);
+            }
+        }
+
+        if (contactItemBeanList.size() > 0) {
+            Collections.sort(contactItemBeanList);
+        }
+
+        return contactItemBeanList;
     }
 
     public long getNextSeq() {

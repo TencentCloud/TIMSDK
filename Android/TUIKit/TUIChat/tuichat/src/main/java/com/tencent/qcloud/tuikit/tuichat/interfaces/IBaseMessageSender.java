@@ -12,5 +12,5 @@ public interface IBaseMessageSender {
      * @param receiver 接收者 Id
      * @param isGroup 是否为群组
      */
-    String sendMessage(final TUIMessageBean message, String receiver, boolean isGroup);
+    String sendMessage(final TUIMessageBean message, String receiver, boolean isGroup, boolean onlineUserOnly);
 }

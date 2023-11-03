@@ -270,7 +270,7 @@ public class ManageGroupActivity extends BaseLightActivity {
                     return false;
                 }
             });
-            String displayName = getDisplayName(groupMemberInfo);
+            String displayName = groupMemberInfo.getDisplayName();
             holder.managerName.setText(displayName);
             GlideEngine.loadUserIcon(holder.faceIcon, groupMemberInfo.getIconUrl());
         }
@@ -293,20 +293,5 @@ public class ManageGroupActivity extends BaseLightActivity {
                 managerName = itemView.findViewById(R.id.group_manage_name);
             }
         }
-    }
-
-    private String getDisplayName(GroupMemberInfo groupMemberInfo) {
-        String displayName = groupMemberInfo.getNameCard();
-        if (TextUtils.isEmpty(displayName)) {
-            displayName = groupMemberInfo.getNickName();
-        }
-        if (TextUtils.isEmpty(displayName)) {
-            displayName = groupMemberInfo.getAccount();
-        }
-        return displayName;
-    }
-
-    interface OnItemLongClickListener {
-        void onClick(View view, GroupMemberInfo groupMemberInfo);
     }
 }

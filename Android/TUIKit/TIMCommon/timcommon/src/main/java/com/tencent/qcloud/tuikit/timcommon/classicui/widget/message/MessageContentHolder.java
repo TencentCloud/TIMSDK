@@ -38,12 +38,16 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     public UserIconView rightUserIcon;
     public TextView usernameText;
     public LinearLayout msgContentLinear;
+    public View riskContentLine;
+    public TextView riskContentText;
     public ProgressBar sendingProgress;
     public ImageView statusImage;
     public TextView isReadText;
     public TextView unreadAudioText;
     public TextView messageDetailsTimeTv;
+    private LinearLayout bottomContentArea;
     private FrameLayout bottomContentFrameLayout;
+    private View bottomFailedIv;
 
     public boolean isForwardMode = false;
     public boolean isReplyDetailMode = false;
@@ -57,6 +61,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     protected boolean isShowRead = false;
     private BaseFragment fragment;
     private RecyclerView recyclerView;
+    protected boolean hasRiskContent = false;
 
     public MessageContentHolder(View itemView) {
         super(itemView);
@@ -64,12 +69,16 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         rightUserIcon = itemView.findViewById(R.id.right_user_icon_view);
         usernameText = itemView.findViewById(R.id.user_name_tv);
         msgContentLinear = itemView.findViewById(R.id.msg_content_ll);
+        riskContentLine = itemView.findViewById(R.id.risk_content_line);
+        riskContentText = itemView.findViewById(R.id.risk_content_text);
         statusImage = itemView.findViewById(R.id.message_status_iv);
         sendingProgress = itemView.findViewById(R.id.message_sending_pb);
         isReadText = itemView.findViewById(R.id.is_read_tv);
         unreadAudioText = itemView.findViewById(R.id.audio_unread);
         messageDetailsTimeTv = itemView.findViewById(R.id.msg_detail_time_tv);
+        bottomContentArea = itemView.findViewById(R.id.bottom_content_area);
         bottomContentFrameLayout = itemView.findViewById(R.id.bottom_content_fl);
+        bottomFailedIv = itemView.findViewById(R.id.bottom_failed_iv);
     }
 
     public void setFragment(BaseFragment fragment) {
@@ -107,32 +116,13 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
 
     @Override
     public void layoutViews(final T msg, final int position) {
+        hasRiskContent = msg.hasRiskContent();
         super.layoutViews(msg, position);
-
         setUserIcon(msg);
         setUserName(msg);
         loadAvatar(msg);
         setSendingProgress(msg);
-
-        if (isForwardMode || isReplyDetailMode) {
-            setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
-            statusImage.setVisibility(View.GONE);
-        } else {
-            if (msg.isSelf()) {
-                if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    setMessageBubbleBackground(properties.getRightBubble().getConstantState().newDrawable());
-                } else {
-                    setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_self_bg));
-                }
-            } else {
-                if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    setMessageBubbleBackground(properties.getLeftBubble().getConstantState().newDrawable());
-                } else {
-                    setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
-                }
-            }
-            setOnClickListener(msg, position);
-        }
+        setMessageBubbleBackground(msg, position);
 
         if (isForwardMode || isReplyDetailMode) {
             setGravity(true);
@@ -186,10 +176,62 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         if (isNeedShowBottomLayout) {
             setBottomContent(msg);
         }
+        bottomFailedIv.setVisibility(View.GONE);
+        if (hasRiskContent) {
+            bottomContentFrameLayout.setBackgroundResource(R.drawable.chat_message_bottom_area_risk_bg);
+            if (bottomContentFrameLayout.getVisibility() == View.VISIBLE) {
+                bottomFailedIv.setVisibility(View.VISIBLE);
+            }
+        } else {
+            bottomContentFrameLayout.setBackgroundResource(R.drawable.chat_message_bottom_area_bg);
+        }
 
         setMessageBubbleDefaultPadding();
-
         layoutVariableViews(msg, position);
+    }
+
+    private void setMessageBubbleBackground(T msg, int position) {
+        if (hasRiskContent) {
+            if (msg.isSelf()) {
+                setMessageBubbleBackground(R.drawable.chat_message_popup_risk_content_border_right);
+            } else {
+                setMessageBubbleBackground(R.drawable.chat_message_popup_risk_content_border_left);
+            }
+            statusImage.setVisibility(View.VISIBLE);
+        } else {
+            statusImage.setVisibility(View.GONE);
+            setRiskContent(null);
+            if (isForwardMode || isReplyDetailMode) {
+                setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
+                statusImage.setVisibility(View.GONE);
+            } else {
+                if (msg.isSelf()) {
+                    if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
+                        setMessageBubbleBackground(properties.getRightBubble().getConstantState().newDrawable());
+                    } else {
+                        setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_self_bg));
+                    }
+                } else {
+                    if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
+                        setMessageBubbleBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                    } else {
+                        setMessageBubbleBackground(TUIThemeManager.getAttrResId(itemView.getContext(), R.attr.chat_bubble_other_bg));
+                    }
+                }
+            }
+        }
+        setOnClickListener(msg, position);
+    }
+
+    protected void setRiskContent(String riskContent) {
+        if (TextUtils.isEmpty(riskContent)) {
+            riskContentLine.setVisibility(View.GONE);
+            riskContentText.setVisibility(View.GONE);
+        } else {
+            riskContentLine.setVisibility(View.VISIBLE);
+            riskContentText.setVisibility(View.VISIBLE);
+            riskContentText.setText(riskContent);
+        }
     }
 
     private void setOnClickListener(T msg, int position) {
@@ -434,6 +476,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         } else if (layoutParams instanceof LinearLayout.LayoutParams) {
             ((LinearLayout.LayoutParams) layoutParams).gravity = gravity;
         }
+        msgArea.setGravity(gravity);
         msgContentFrame.setLayoutParams(layoutParams);
     }
 
@@ -502,6 +545,10 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     }
 
     private void showReadText(TUIMessageBean msg) {
+        if (hasRiskContent) {
+            isReadText.setVisibility(View.GONE);
+            return;
+        }
         if (msg.isGroup()) {
             isReadText.setVisibility(View.VISIBLE);
             if (msg.isAllRead()) {

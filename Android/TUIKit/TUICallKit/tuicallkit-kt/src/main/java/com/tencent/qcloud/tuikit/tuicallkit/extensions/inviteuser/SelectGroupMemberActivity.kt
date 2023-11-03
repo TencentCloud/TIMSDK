@@ -15,20 +15,20 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult
 import com.tencent.imsdk.v2.V2TIMManager
 import com.tencent.imsdk.v2.V2TIMValueCallback
-import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 
 class SelectGroupMemberActivity : AppCompatActivity() {
-    private var mRecyclerUserList: RecyclerView? = null
-    private var mGroupId: String? = null
-    private val mGroupMemberList: MutableList<GroupMemberInfo> = ArrayList()
-    private var mAlreadySelectList: List<String?> = ArrayList()
-    private var mAdapter: SelectGroupMemberAdapter? = null
+    private var recyclerUserList: RecyclerView? = null
+    private var groupId: String? = null
+    private val groupMemberList: MutableList<GroupMemberInfo> = ArrayList()
+    private var alreadySelectList: List<String?> = ArrayList()
+    private var adapter: SelectGroupMemberAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tuicallkit_activity_group_user)
-        mActivity = this
+        activity = this
         initStatusBar()
         initView()
         initData()
@@ -40,40 +40,42 @@ class SelectGroupMemberActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener { v: View? -> finish() }
         val btnOK = findViewById<Button>(R.id.btn_group_ok)
         btnOK.setOnClickListener { v: View? ->
-            if (mAdapter != null) {
+            if (adapter != null) {
                 val selectUsers: MutableList<String?> = ArrayList()
-                for (info in mGroupMemberList) {
-                    if (info != null && !TextUtils.isEmpty(info.userId) && info.isSelected) {
+                for (info in groupMemberList) {
+                    if (info != null && !TextUtils.isEmpty(info.userId) && info.isSelected
+                        && !alreadySelectList.contains(info.userId)
+                    ) {
                         selectUsers.add(info.userId)
                     }
                 }
-                val map: MutableMap<String, Any> = HashMap()
-                map[Constants.SELECT_MEMBER_LIST] = selectUsers
-                TUICore.notifyEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_GROUP_MEMBER_SELECTED, map)
+                if (selectUsers.isNotEmpty()) {
+                    EngineManager.instance.inviteUser(selectUsers)
+                }
             }
             finish()
         }
-        mRecyclerUserList = findViewById(R.id.rv_user_list)
+        recyclerUserList = findViewById(R.id.rv_user_list)
     }
 
     private fun initData() {
         val intent = intent
-        mGroupId = intent.getStringExtra(Constants.GROUP_ID)
-        mAlreadySelectList = ArrayList(intent.getStringArrayListExtra(Constants.SELECT_MEMBER_LIST))
-        mAdapter = SelectGroupMemberAdapter()
-        mRecyclerUserList!!.layoutManager = LinearLayoutManager(applicationContext)
-        mRecyclerUserList!!.adapter = mAdapter
+        groupId = intent.getStringExtra(Constants.GROUP_ID)
+        alreadySelectList = ArrayList(intent.getStringArrayListExtra(Constants.SELECT_MEMBER_LIST))
+        adapter = SelectGroupMemberAdapter()
+        recyclerUserList!!.layoutManager = LinearLayoutManager(applicationContext)
+        recyclerUserList!!.adapter = adapter
         updateGroupUserList()
     }
 
     private fun updateGroupUserList() {
         val filter = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL
-        V2TIMManager.getGroupManager().getGroupMemberList(mGroupId, filter, 0,
+        V2TIMManager.getGroupManager().getGroupMemberList(groupId, filter, 0,
             object : V2TIMValueCallback<V2TIMGroupMemberInfoResult?> {
                 override fun onError(errorCode: Int, errorMsg: String) {}
                 override fun onSuccess(v2TIMGroupMemberInfoResult: V2TIMGroupMemberInfoResult?) {
                     val results = v2TIMGroupMemberInfoResult?.memberInfoList
-                    mGroupMemberList.clear()
+                    groupMemberList.clear()
                     if (results == null) {
                         return
                     }
@@ -82,12 +84,12 @@ class SelectGroupMemberActivity : AppCompatActivity() {
                         userInfo.userId = info.userID
                         userInfo.avatar = info.faceUrl
                         userInfo.userName = info.nickName
-                        userInfo.isSelected = mAlreadySelectList?.contains(userInfo.userId) == true
-                        mGroupMemberList.add(userInfo)
+                        userInfo.isSelected = alreadySelectList?.contains(userInfo.userId) == true
+                        groupMemberList.add(userInfo)
                     }
-                    if (mAdapter != null) {
-                        mAdapter!!.setDataSource(mGroupMemberList)
-                        mAdapter!!.notifyDataSetChanged()
+                    if (adapter != null) {
+                        adapter!!.setDataSource(groupMemberList)
+                        adapter!!.notifyDataSetChanged()
                     }
                 }
             })
@@ -107,13 +109,13 @@ class SelectGroupMemberActivity : AppCompatActivity() {
     }
 
     companion object {
-        private var mActivity: AppCompatActivity? = null
+        private var activity: AppCompatActivity? = null
         fun finishActivity() {
-            if (mActivity == null || mActivity!!.isFinishing) {
+            if (activity == null || activity!!.isFinishing) {
                 return
             }
-            mActivity!!.finish()
-            mActivity = null
+            activity!!.finish()
+            activity = null
         }
     }
 }

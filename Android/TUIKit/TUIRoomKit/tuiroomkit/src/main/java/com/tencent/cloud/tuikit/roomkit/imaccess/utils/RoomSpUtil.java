@@ -6,29 +6,29 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 
 public class RoomSpUtil {
-    private static final String ROOM_SP_FILE_NAME         = "ROOM_SP_FILE_NAME";
-    private static final String SP_ROOM_ID                = "ROOM_ID";
-    private static final String SP_ROOM_MICROPHONE_SWITCH = "ROOM_MICROPHONE_SWITCH";
-    private static final String SP_ROOM_CAMERA_SWITCH     = "ROOM_CAMERA_SWITCH";
+    private static final String ROOM_SP_FILE_NAME     = "ROOM_SP_FILE_NAME";
+    private static final String SP_ROOM_ID            = "ROOM_ID";
+    private static final String SP_ROOM_AUDIO_SWITCH  = "ROOM_AUDIO_SWITCH";
+    private static final String SP_ROOM_VIDEO_SWITCH  = "ROOM_VIDEO_SWITCH";
 
-    public static void saveMicrophoneSwitchToSp(boolean isOpen) {
+    public static void saveAudioSwitchToSp(boolean isOpen) {
         SPUtils sp = SPUtils.getInstance(ROOM_SP_FILE_NAME);
-        sp.put(SP_ROOM_MICROPHONE_SWITCH, isOpen);
+        sp.put(SP_ROOM_AUDIO_SWITCH, isOpen);
     }
 
-    public static boolean getMicrophoneSwitchFromSp() {
+    public static boolean getAudioSwitchFromSp() {
         SPUtils sp = SPUtils.getInstance(ROOM_SP_FILE_NAME);
-        return sp.getBoolean(SP_ROOM_MICROPHONE_SWITCH, true);
+        return sp.getBoolean(SP_ROOM_AUDIO_SWITCH, true);
     }
 
-    public static void saveCameraSwitchToSp(boolean isOpen) {
+    public static void saveVideoSwitchToSp(boolean isOpen) {
         SPUtils sp = SPUtils.getInstance(ROOM_SP_FILE_NAME);
-        sp.put(SP_ROOM_CAMERA_SWITCH, isOpen);
+        sp.put(SP_ROOM_VIDEO_SWITCH, isOpen);
     }
 
-    public static boolean getCameraSwitchFromSp() {
+    public static boolean getVideoSwitchFromSp() {
         SPUtils sp = SPUtils.getInstance(ROOM_SP_FILE_NAME);
-        return sp.getBoolean(SP_ROOM_CAMERA_SWITCH, true);
+        return sp.getBoolean(SP_ROOM_VIDEO_SWITCH, true);
     }
 
     public static String getUniqueRoomId() {

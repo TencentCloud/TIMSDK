@@ -6,23 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="false"
-    android:paddingTop="8.6dp"
-    android:paddingBottom="8.6dp"
     android:paddingStart="15.36dp"
-    android:paddingEnd="15.36dp">
+    android:paddingTop="8.6dp"
+    android:paddingEnd="15.36dp"
+    android:paddingBottom="8.6dp">
 
     <TextView
         android:id="@+id/message_top_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:includeFontPadding="false"
         android:textColor="@color/text_tips_color"
         android:textSize="12.6sp"
-        tools:text="12:00"/>
+        tools:text="12:00" />
 
     <CheckBox
         android:id="@+id/select_checkbox"
@@ -32,10 +32,10 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="11.52dp"
-        android:button="@null"
         android:background="@drawable/chat_checkbox_selector"
+        android:button="@null"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/right_group_layout"
@@ -60,8 +60,8 @@
             android:id="@+id/right_user_icon_view"
             android:layout_width="41dp"
             android:layout_height="41dp"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginStart="11.52dp"
             android:visibility="gone"
             app:default_image="?attr/core_default_user_icon"
@@ -84,16 +84,16 @@
             android:id="@+id/msg_detail_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignTop="@id/user_name_tv"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="3.36dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#B0B0B0"
             android:textSize="11.52sp"
             android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="18:00" />
+            tools:text="18:00"
+            tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/msg_content_ll"
@@ -135,7 +135,7 @@
                 android:id="@+id/message_status_iv"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_vertical|bottom"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
@@ -153,10 +153,10 @@
 
                 <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthLinearLayout
                     android:id="@+id/msg_area"
-                    android:transitionName="testImg"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:transitionName="testImg"
                     app:maxWidth="@dimen/chat_message_content_max_width">
 
                     <!-- message content area -->
@@ -171,7 +171,28 @@
                         android:id="@+id/reacts_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="5dp"/>
+                        android:paddingTop="5dp" />
+
+                    <FrameLayout
+                        android:id="@+id/risk_content_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="#E5C7C7" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/risk_content_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FF584C"
+                        android:textSize="12sp"
+                        tools:text="Has Risk Content!" />
 
                 </com.tencent.qcloud.tuikit.timcommon.component.MaxWidthLinearLayout>
 
@@ -180,28 +201,50 @@
         </LinearLayout>
 
         <!-- translation content area -->
-        <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
-            android:id="@+id/bottom_content_fl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/msg_content_ll"
-            android:layout_marginTop="4dp"
+        <LinearLayout
+            android:id="@+id/bottom_content_area"
+            android:orientation="horizontal"
             android:layout_toStartOf="@id/right_user_icon_view"
             android:layout_toEndOf="@id/left_user_icon_view"
-            android:background="@drawable/bottom_area_bg"
-            app:maxWidth="@dimen/chat_message_content_max_width"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            android:layout_below="@id/msg_content_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/bottom_failed_iv"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical|bottom"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/message_send_fail"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
+                android:id="@+id/bottom_content_fl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/chat_message_bottom_area_bg"
+                android:visibility="gone"
+                app:maxWidth="@dimen/chat_message_content_max_width"
+                tools:visibility="visible" />
+        </LinearLayout>
+
 
         <!-- quote content area -->
         <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout
             android:id="@+id/quote_content_fl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/bottom_content_area"
             android:layout_marginTop="5.76dp"
-            android:layout_below="@id/bottom_content_fl"
-            android:layout_toEndOf="@id/left_user_icon_view"
             android:layout_toStartOf="@id/right_user_icon_view"
+            android:layout_toEndOf="@id/left_user_icon_view"
             android:background="@drawable/quote_message_area_bg"
             android:visibility="gone"
             app:maxWidth="@dimen/chat_message_content_max_width"
@@ -212,10 +255,10 @@
             android:id="@+id/msg_reply_detail_fl"
             android:layout_width="wrap_content"
             android:layout_height="14.4dp"
-            android:layout_marginTop="3.84dp"
             android:layout_below="@id/quote_content_fl"
-            android:layout_toEndOf="@id/left_user_icon_view"
+            android:layout_marginTop="3.84dp"
             android:layout_toStartOf="@id/right_user_icon_view"
+            android:layout_toEndOf="@id/left_user_icon_view"
             android:gravity="center"
             android:orientation="horizontal">
 

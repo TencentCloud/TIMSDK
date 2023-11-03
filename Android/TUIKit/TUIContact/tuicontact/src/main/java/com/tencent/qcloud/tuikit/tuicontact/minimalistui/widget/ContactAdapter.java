@@ -68,13 +68,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final ContactItemBean contactBean = mData.get(position);
         if (viewHolder instanceof ContactItemViewHolder) {
             ContactItemViewHolder itemViewHolder = (ContactItemViewHolder) viewHolder;
-            if (!TextUtils.isEmpty(contactBean.getRemark())) {
-                itemViewHolder.tvName.setText(contactBean.getRemark());
-            } else if (!TextUtils.isEmpty(contactBean.getNickName())) {
-                itemViewHolder.tvName.setText(contactBean.getNickName());
-            } else {
-                itemViewHolder.tvName.setText(contactBean.getId());
-            }
+            itemViewHolder.tvName.setText(contactBean.getDisplayName());
             if (!isSingleSelectMode && mOnSelectChangedListener != null) {
                 itemViewHolder.ccSelect.setVisibility(View.VISIBLE);
                 itemViewHolder.ccSelect.setChecked(contactBean.isSelected());

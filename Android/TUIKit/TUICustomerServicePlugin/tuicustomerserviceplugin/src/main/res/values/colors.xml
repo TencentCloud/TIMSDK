@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="customer_service_title_color">#171538</color>
+    <color name="customer_service_tips_color">#9a9a9a</color>
+    <color name="make_an_evaluation_color">#1c1c1c</color>
+    <color name="submit_an_evaluation_disable_color">#80ffffff</color>
+    <color name="evaluation_background_color">#fbfbfb</color>
+    <color name="evaluation_number_active_color">#ffffff</color>
+    <color name="evaluation_number_background_disable_color">#80ffffff</color>
+    <color name="card_desc_color">#ff6c2e</color>
+    <color name="float_layer_text_color">#999999</color>
+</resources>

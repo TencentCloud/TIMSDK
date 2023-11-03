@@ -29,6 +29,13 @@ public abstract class TUIReplyQuoteBean<T extends TUIMessageBean> implements Ser
         return messageBean;
     }
 
+    public boolean hasRiskContent() {
+        if (messageBean != null) {
+            return messageBean.hasRiskContent();
+        }
+        return false;
+    }
+
     public String getDefaultAbstract() {
         return defaultAbstract;
     }

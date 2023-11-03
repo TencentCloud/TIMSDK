@@ -446,7 +446,7 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                 }
             });
         } else {
-            String ext = intent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
+            String ext = intent.getStringExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY);
             TUIUtils.handleOfflinePush(ext, new HandleOfflinePushCallBack() {
                 @Override
                 public void onHandleOfflinePush(boolean hasLogged) {

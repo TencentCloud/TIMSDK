@@ -6,11 +6,6 @@
     android:background="?attr/chat_input_area_bg"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/input_title_line_color" />
-
     <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.ReplyPreviewBar
         android:id="@+id/reply_preview_bar"
         android:layout_width="match_parent"

@@ -3,7 +3,7 @@ package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
 
@@ -41,7 +41,7 @@ class VideoCallerAndCalleeAcceptedViewModel {
     }
 
     fun closeCamera() {
-        CallEngineManager.instance.closeCamera()
+        EngineManager.instance.closeCamera()
     }
 
     fun openCamera(frontCamera: Boolean?) {
@@ -51,7 +51,7 @@ class VideoCallerAndCalleeAcceptedViewModel {
             TUICommonDefine.Camera.Back
         }
         var videoView = VideoViewFactory.instance.videoEntityList.get(TUICallState.instance.selfUser.get().id)?.videoView
-        CallEngineManager.instance.openCamera(camera, videoView?.getVideoView(), object :
+        EngineManager.instance.openCamera(camera, videoView?.getVideoView(), object :
             TUICommonDefine.Callback {
             override fun onSuccess() {}
 
@@ -60,11 +60,11 @@ class VideoCallerAndCalleeAcceptedViewModel {
     }
 
     fun switchCamera(camera: TUICommonDefine.Camera) {
-        CallEngineManager.instance.switchCamera(camera)
+        EngineManager.instance.switchCamera(camera)
     }
 
     fun openMicrophone() {
-        CallEngineManager.instance.openMicrophone(object : TUICommonDefine.Callback {
+        EngineManager.instance.openMicrophone(object : TUICommonDefine.Callback {
             override fun onSuccess() {
                 TUICallState.instance.isMicrophoneMute.set(false)
             }
@@ -75,15 +75,15 @@ class VideoCallerAndCalleeAcceptedViewModel {
 
     fun closeMicrophone() {
         TUICallState.instance.isMicrophoneMute.set(true)
-        CallEngineManager.instance.closeMicrophone()
+        EngineManager.instance.closeMicrophone()
     }
 
     fun selectAudioPlaybackDevice(type: TUICommonDefine.AudioPlaybackDevice) {
-        CallEngineManager.instance.selectAudioPlaybackDevice(type)
+        EngineManager.instance.selectAudioPlaybackDevice(type)
     }
 
     fun hangup() {
-        CallEngineManager.instance.hangup(object : TUICommonDefine.Callback {
+        EngineManager.instance.hangup(object : TUICommonDefine.Callback {
             override fun onSuccess() {}
 
             override fun onError(errCode: Int, errMsg: String?) {}

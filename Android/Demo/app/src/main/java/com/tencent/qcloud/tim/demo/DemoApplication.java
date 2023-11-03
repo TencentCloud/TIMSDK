@@ -94,10 +94,11 @@ public class DemoApplication extends Application {
 
     public void setPermissionRequestContent() {
         ApplicationInfo applicationInfo = getApplicationInfo();
-        Resources resources = getResources();
-        int stringId = applicationInfo.labelRes;
-        String appName = stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : resources.getString(stringId);
-
+        CharSequence labelCharSequence = applicationInfo.loadLabel(getPackageManager());
+        String appName = "App";
+        if (!TextUtils.isEmpty(labelCharSequence)) {
+            appName = labelCharSequence.toString();
+        }
         String micReason = getResources().getString(R.string.demo_permission_mic_reason);
         String micDeniedAlert = getResources().getString(R.string.demo_permission_mic_dialog_alert, appName);
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -23,6 +24,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
@@ -69,7 +71,28 @@ public class VideoMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgID = msg.getId();
-        performVideo((VideoMessageBean) msg, position);
+        if (hasRiskContent) {
+            progressContainer.setVisibility(View.GONE);
+            videoPlayBtn.setVisibility(View.GONE);
+            videoDurationText.setVisibility(View.GONE);
+            sendingProgress.setVisibility(View.GONE);
+            downloadSnapshotCallback = null;
+            downloadVideoCallback = null;
+            progressListener = null;
+            ViewGroup.LayoutParams params = contentImage.getLayoutParams();
+            params.width = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            params.height = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            contentImage.setLayoutParams(params);
+            GlideEngine.loadImage(contentImage, R.drawable.chat_risk_image_replace_icon);
+            if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+                setRiskContent(itemView.getResources().getString(R.string.chat_risk_send_message_failed_alert));
+            } else {
+                setRiskContent(itemView.getResources().getString(R.string.chat_risk_image_message_alert));
+            }
+            msgContentFrame.setOnClickListener(null);
+        } else {
+            performVideo((VideoMessageBean) msg, position);
+        }
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final VideoMessageBean msg) {
@@ -130,13 +153,8 @@ public class VideoMessageHolder extends MessageContentHolder {
             showProgressBar();
         }
 
-        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS) {
-            statusImage.setVisibility(View.GONE);
-        } else if (FileUtil.isFileExists(videoPath) && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
-            statusImage.setVisibility(View.GONE);
+        if (FileUtil.isFileExists(videoPath) && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             showProgressBar();
-        } else if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-            statusImage.setVisibility(View.VISIBLE);
         }
 
         progressListener = new ProgressPresenter.ProgressListener() {

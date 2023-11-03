@@ -12,7 +12,7 @@ import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
@@ -152,7 +152,7 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
                         layoutVideoView?.removeAllViews()
                     }
                     layoutVideoView?.addView(videoView)
-                    CallEngineManager.instance.startRemoteView(
+                    EngineManager.instance.startRemoteView(
                         viewModel.remoteUser?.id,
                         videoView?.getVideoView(),
                         null

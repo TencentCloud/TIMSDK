@@ -44,7 +44,7 @@
         android:layout_below="@id/msg_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/bottom_area_bg"
+        android:background="@drawable/chat_message_bottom_area_bg"
         app:maxWidth="@dimen/chat_message_content_max_width"
         android:visibility="gone"
         tools:visibility="visible"/>

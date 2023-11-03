@@ -28,7 +28,7 @@ public class RoomEventCenter {
         ROOM_NAME_CHANGED,
         LOCAL_CAMERA_STATE_CHANGED,
         LOCAL_SCREEN_STATE_CHANGED,
-        LOCAL_MICROPHONE_STATE_CHANGED,
+        LOCAL_AUDIO_STATE_CHANGED,
         LOCAL_AUDIO_ROUTE_CHANGED,
         ALL_USER_MICROPHONE_DISABLE_CHANGED,
         ALL_USER_CAMERA_DISABLE_CHANGED,
@@ -58,7 +58,15 @@ public class RoomEventCenter {
         REQUEST_CANCELLED,
         RECEIVE_TEXT_MESSAGE,
         RECEIVE_CUSTOM_MESSAGE,
-        KICKED_OFF_SEAT
+        KICKED_OFF_SEAT,
+        USER_TAKE_SEAT_REQUEST_ADD,
+        USER_TAKE_SEAT_REQUEST_REMOVE,
+        LOCAL_VIDEO_FPS_CHANGED,
+        LOCAL_VIDEO_BITRATE_CHANGED,
+        LOCAL_VIDEO_RESOLUTION_CHANGED,
+        LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED,
+        LOCAL_AUDIO_PLAY_VOLUME_CHANGED,
+        LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED,
     }
 
     public static class RoomKitUIEvent {
@@ -82,6 +90,8 @@ public class RoomEventCenter {
         public static final String EXIT_FLOAT_WINDOW  = "EXIT_FLOAT_WINDOW";
 
         public static final String SEND_IM_MSG_COMPLETE = "SEND_IM_MSG_COMPLETE";
+
+        public static final String BAR_SHOW_TIME_RECOUNT = "BAR_SHOW_TIME_RECOUNT";
     }
 
     /**

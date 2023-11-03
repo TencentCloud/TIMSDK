@@ -13,7 +13,7 @@
     <string name="tuiroomkit_you_have_transferred_master">You have transferred the master</string>
     <string name="tuiroomkit_mute_all_audio">Mute All</string>
     <string name="tuiroomkit_not_mute_all_audio">UnMute All</string>
-    <string name="tuiroomkit_toast_not_mute_all_audio">The master turns off muted microphone for all members, and the audience can turn on the microphone by themselves</string>
+    <string name="tuiroomkit_toast_not_mute_all_audio">The host mutes all members, and viewers can unmute themselves</string>
     <string name="tuiroomkit_mute_all_video">Stop Videos</string>
     <string name="tuiroomkit_not_mute_all_video">Start Videos</string>
     <string name="tuiroomkit_toast_not_mute_all_video">The master turns off muted camera for all members, and the audience can turn on the camera by themselves</string>
@@ -22,8 +22,8 @@
     <string name="tuiroomkit_dialog_cancel">Cancel</string>
     <string name="tuiroomkit_tv_member_list">Members(%d)</string>
     <string name="tuiroomkit_confirm">Confirm</string>
-    <string name="tuiroomkit_mute_audio_by_master">You were muted by the room owner.</string>
-    <string name="tuiroomkit_un_mute_audio_by_master">You were unMuted by the room owner.</string>
+    <string name="tuiroomkit_mute_audio_by_master">You have been muted</string>
+    <string name="tuiroomkit_un_mute_audio_by_master">The moderator has unmuted you</string>
     <string name="tuiroomkit_mute_video_by_master">The room owner disabled your video.</string>
     <string name="tuiroomkit_un_mute_video_by_master">The room owner enabled your video.</string>
     <string name="tuiroomkit_title_collection_volume">Collection Volume</string>
@@ -57,8 +57,6 @@
     <string name="tuiroomkit_item_float">Floating</string>
     <string name="tuiroomkit_item_expand">Expand</string>
     <string name="tuiroomkit_item_close">Close</string>
-    <string name="tuiroomkit_turn_on_camera">Camera</string>
-    <string name="tuiroomkit_turn_on_microphone">Mic</string>
     <string name="tuiroomkit_enter_room">Join</string>
     <string name="tuiroomkit_please_input_room_number">Enter a conference ID</string>
     <string name="tuiroomkit_create_room">Create Room</string>
@@ -67,7 +65,6 @@
     <string name="tuiroomkit_room_type">Room Type</string>
     <string name="tuiroomkit_room_free_speech">Free Speech Room</string>
     <string name="tuiroomkit_room_raise_hand">Raise Hand Room</string>
-    <string name="tuiroomkit_turn_on_speaker">Speaker</string>
     <string name="tuiroomkit_logout">Logout</string>
     <string name="tuiroomkit_kiecked_off_line">You are already logged in elsewhere</string>
     <string name="tuiroomkit_cancel">Cancel</string>
@@ -112,10 +109,10 @@
     <string name="tuiroomkit_accept_invite">%s  accepted your invitation</string>
     <string name="tuiroomkit_reject_invite">%s  rejected your invitation</string>
     <string name="tuiroomkit_raise_hand_tip">If you want to speak, please raise your hand on the microphone</string>
-    <string name="tuiroomkit_receive_invitation">The host invites you to speak on stage, accepting the invitation can turn on the camera and microphone</string>
-    <string name="tuiroomkit_can_not_open_mic">The Master has muted microphone for all members,and cannot open the  microphone</string>
+    <string name="tuiroomkit_receive_invitation">The host invites you to speak on stage. Once on stage, you can turn on the camera and unmute yourself</string>
+    <string name="tuiroomkit_can_not_open_mic">The host has muted all members and cannot unmute himself</string>
     <string name="tuiroomkit_can_not_open_camera">The Master has muted camera for all members, and cannot open the camera</string>
-    <string name="tuiroomkit_mute_all_mic_toast">Muted microphone for all members, the audience will not be able to turn it</string>
+    <string name="tuiroomkit_mute_all_mic_toast">All mutes have been turned on, and viewers will not be able to unmute them</string>
     <string name="tuiroomkit_mute_all_camera_toast">Muted microphone for all camera, the audience will not be able to turn on it</string>
     <string name="tuiroomkit_item_close_camera">Close camera</string>
     <string name="tuiroomkit_item_open_microphone">Open mic</string>
@@ -154,8 +151,8 @@
     <string name="tuiroomkit_chat_access_room_invite_accept">Accept</string>
     <string name="tuiroomkit_chat_access_room_invite_reject">Reject</string>
     <string name="tuiroomkit_chat_access_room_extension_settings">Fast meeting settings</string>
-    <string name="tuiroomkit_chat_access_room_extension_settings_microphone">Join the conference and turn on the microphone</string>
-    <string name="tuiroomkit_chat_access_room_extension_settings_camera">Join the meeting and turn on the camera</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_audio">Enable audio when joining a meeting</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_video">入Enable video when joining a meeting</string>
     <string name="tuiroomkit_can_not_join_room_tip">Audio and video are occupied by other functions, so cannot join the meeting</string>
     <string name="tuiroomkit_hint_stop_live_screen">Stop Screen Sharing Screen Streaming</string>
     <string name="tuiroomkit_hint_stop_live_screen_cancel">Cancel</string>
@@ -164,8 +161,13 @@
     <string name="tuiroomkit_take_seat_request_accepted">The moderator has approved your request to take seat</string>
     <string name="tuiroomkit_take_seat_request_rejected">The moderator has rejected your request to take seat</string>
     <string name="tuiroomkit_other_user_in_screen_sharing">Other users have turned on screen sharing</string>
-    <string name="tuiroomkit_open_mic_agree">%s agreed to the request to turn on the microphone</string>
-    <string name="tuiroomkit_open_mic_reject">%s rejected the request to turn on the microphone</string>
+    <string name="tuiroomkit_open_mic_agree">%s agreed to unmute request</string>
+    <string name="tuiroomkit_open_mic_reject">%s unmute request denied</string>
     <string name="tuiroomkit_open_camera_agree">%s agreed to the request to turn on the camera</string>
     <string name="tuiroomkit_open_camera_reject">%s rejected the request to turn on the camera</string>
+
+    <string name="tuiroomkit_video_resolution_smooth">Smooth</string>
+    <string name="tuiroomkit_video_resolution_sd">Standard Definition</string>
+    <string name="tuiroomkit_video_resolution_hd">High Definition</string>
+    <string name="tuiroomkit_video_resolution_uhd">Ultra High Definition</string>
 </resources>

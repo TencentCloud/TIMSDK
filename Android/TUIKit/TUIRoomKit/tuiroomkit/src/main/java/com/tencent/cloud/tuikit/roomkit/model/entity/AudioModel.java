@@ -1,26 +1,65 @@
 package com.tencent.cloud.tuikit.roomkit.model.entity;
 
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_PLAY_VOLUME_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_MICROPHONE_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED;
 
 import com.tencent.cloud.tuikit.roomkit.model.RoomConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 
 public class AudioModel {
-    public int     captureVolume          = RoomConstant.DEFAULT_AUDIO_CAPTURE_VOLUME;
-    public int     playVolume             = RoomConstant.DEFAULT_AUDIO_PLAY_VOLUME;
-    public boolean enableVolumeEvaluation = RoomConstant.DEFAULT_AUDIO_VOLUME_EVALUATION;
+    private int     captureVolume          = RoomConstant.DEFAULT_AUDIO_CAPTURE_VOLUME;
+    private int     playVolume             = RoomConstant.DEFAULT_AUDIO_PLAY_VOLUME;
+    private boolean enableVolumeEvaluation = RoomConstant.DEFAULT_AUDIO_VOLUME_EVALUATION;
 
-    private boolean isMicOpened            = false;
-    private boolean isSoundOnSpeaker       = false;
+    private boolean hasAudioStream   = false;
+    private boolean isMicOpen        = false;
+    private boolean isSoundOnSpeaker = false;
 
-    public boolean isMicOpened() {
-        return isMicOpened;
+    public int getCaptureVolume() {
+        return captureVolume;
     }
 
-    public void setMicOpened(boolean micOpened) {
-        isMicOpened = micOpened;
-        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_MICROPHONE_STATE_CHANGED, null);
+    public void setCaptureVolume(int captureVolume) {
+        this.captureVolume = captureVolume;
+        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED, null);
+    }
+
+    public int getPlayVolume() {
+        return playVolume;
+    }
+
+    public void setPlayVolume(int playVolume) {
+        this.playVolume = playVolume;
+        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_PLAY_VOLUME_CHANGED, null);
+    }
+
+    public boolean isEnableVolumeEvaluation() {
+        return enableVolumeEvaluation;
+    }
+
+    public void setEnableVolumeEvaluation(boolean enableVolumeEvaluation) {
+        this.enableVolumeEvaluation = enableVolumeEvaluation;
+        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED, null);
+    }
+
+    public boolean isHasAudioStream() {
+        return hasAudioStream;
+    }
+
+    public void setHasAudioStream(boolean hasAudioStream) {
+        this.hasAudioStream = hasAudioStream;
+        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_STATE_CHANGED, null);
+    }
+
+    public boolean isMicOpen() {
+        return isMicOpen;
+    }
+
+    public void setMicOpen(boolean micOpened) {
+        isMicOpen = micOpened;
     }
 
     public boolean isSoundOnSpeaker() {

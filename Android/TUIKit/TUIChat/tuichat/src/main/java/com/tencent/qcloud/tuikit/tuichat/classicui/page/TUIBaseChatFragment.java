@@ -27,6 +27,8 @@ import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
@@ -47,6 +49,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,9 +213,24 @@ public class TUIBaseChatFragment extends BaseFragment {
                     return;
                 }
 
-                Bundle bundle = new Bundle();
-                bundle.putString(TUIConstants.TUIChat.CHAT_ID, userID);
-                TUICore.startActivity("FriendProfileActivity", bundle);
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIChat.Extension.ChatUserIconClickedProcessor.USER_ID, userID);
+                List<TUIExtensionInfo> extensionInfoList =
+                    TUICore.getExtensionList(TUIConstants.TUIChat.Extension.ChatUserIconClickedProcessor.CLASSIC_EXTENSION_ID, param);
+                if (!extensionInfoList.isEmpty()) {
+                    Collections.singletonList(extensionInfoList);
+                    TUIExtensionInfo extensionInfo = extensionInfoList.get(0);
+                    TUIExtensionEventListener eventListener = extensionInfo.getExtensionListener();
+                    if (eventListener != null) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put(TUIConstants.TUIChat.CHAT_ID, userID);
+                        eventListener.onClicked(map);
+                    }
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(TUIConstants.TUIChat.CHAT_ID, userID);
+                    TUICore.startActivity("FriendProfileActivity", bundle);
+                }
             }
 
             @Override

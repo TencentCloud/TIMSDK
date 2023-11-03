@@ -6,6 +6,7 @@ import android.util.Pair;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -46,8 +47,8 @@ public class C2CChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void handleRevoke(String msgId) {
-                C2CChatPresenter.this.handleRevoke(msgId);
+            public void onRecvMessageRevoked(String msgID, UserBean userBean, String reason) {
+                C2CChatPresenter.this.handleRevoke(msgID, userBean);
             }
 
             @Override

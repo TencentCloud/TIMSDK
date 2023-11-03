@@ -93,7 +93,6 @@ public class ChatFileDownloadProxy {
                     @Override
                     public void onError(int errorCode, String errorMessage) {
                         TUIChatLog.e(TAG, String.format(Locale.US, "download file %s error %d, %s.", path, errorCode, errorMessage));
-                        getProxy().callbackMap.remove(taskID);
                         callbackOnError(taskID, errorCode, errorMessage);
                     }
 

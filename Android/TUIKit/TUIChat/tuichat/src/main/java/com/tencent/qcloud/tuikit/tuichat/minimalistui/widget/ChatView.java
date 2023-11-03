@@ -1291,7 +1291,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     private String sendMessage(TUIMessageBean msg, boolean retry, IUIKitCallback<TUIMessageBean> callback) {
-        return presenter.sendMessage(msg, retry, new IUIKitCallback<TUIMessageBean>() {
+        return presenter.sendMessage(msg, retry, false, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
                 TUIChatUtils.callbackOnSuccess(callback, data);
@@ -1331,7 +1331,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     public void sendReplyMessage(TUIMessageBean msg, boolean retry) {
-        presenter.sendMessage(msg, retry, new IUIKitCallback<TUIMessageBean>() {
+        presenter.sendMessage(msg, retry, false, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
                 ThreadUtils.runOnUiThread(new Runnable() {

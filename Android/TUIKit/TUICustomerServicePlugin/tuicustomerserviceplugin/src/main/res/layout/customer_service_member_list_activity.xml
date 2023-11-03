@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
+        android:id="@+id/customer_service_member_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <ListView
+        android:id="@+id/customer_service_member_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/customer_service_member_not_found_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center_horizontal"
+        android:textSize="13.44sp"
+        android:textColor="#444444"
+        android:visibility="gone"
+        android:text="@string/contact_no_new_friend_application"
+        tools:visibility="visible"
+        tools:text="暂无客服"/>
+</LinearLayout>

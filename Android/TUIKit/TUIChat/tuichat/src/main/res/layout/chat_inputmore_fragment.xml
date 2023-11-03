@@ -7,6 +7,6 @@
     <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore.InputMoreLayout
         android:id="@+id/input_extra_area"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

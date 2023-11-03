@@ -156,7 +156,7 @@ public class ChatLayoutSetting {
 
         //====== InputLayout使用范例 ======//
         //====== InputLayout example ======//
-        final InputView inputView = layout.getInputLayout();
+        // final InputView inputView = layout.getInputLayout();
 
         //        // TODO 隐藏音频输入的入口，可以打开下面代码测试
         //        // To hide the entrance of audio input, you can open the following code to test
@@ -187,7 +187,10 @@ public class ChatLayoutSetting {
         //        inputView.disableSendFileAction(true);
         //        inputView.disableSendPhotoAction(true);
         //        inputView.disableVideoRecordAction(true);
+    }
 
+    public void customizeInputMoreExtension(ChatView layout) {
+        InputView inputView = layout.getInputLayout();
         // TODO 可以自己增加一些功能，可以打开下面代码测试
         // You can add some functions yourself, you can open the following code to test
 

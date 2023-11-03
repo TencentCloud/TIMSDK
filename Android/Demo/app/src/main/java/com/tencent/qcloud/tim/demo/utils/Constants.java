@@ -26,6 +26,7 @@ public class Constants {
     public static final String IM_ABOUT = "https://cloud.tencent.com/product/im";
     public static final String IM_THIRD_SHARED = "https://privacy.qq.com/document/preview/dea84ac4bb88454794928b77126e9246";
     public static final String IM_SELF_INFORMATION_COLLECTION = "https://privacy.qq.com/document/preview/45ba982a1ce6493597a00f8c86b52a1e";
+    public static final String IM_SECURITY_REPORT = "https://cloud.tencent.com/act/event/report-platform";
 
     public static final String FLAVOR_INTERNATIONAL = "international";
     public static final String FLAVOR_LOCAL = "local";

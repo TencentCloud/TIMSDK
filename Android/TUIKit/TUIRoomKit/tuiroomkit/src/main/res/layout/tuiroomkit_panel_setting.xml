@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="718dp"
+    android:background="@drawable/tuiroomkit_bg_bottom_dialog_black_portrait"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="718dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/tuiroomkit_settings_hide"
+            android:layout_width="24dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/tuiroomkit_bottom_dialog_hide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:textSize="14sp"
+            android:textColor="#D5E0F2"
+            android:text="@string/tuiroomkit_title_video"/>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/tuiroomkit_inside_bg_dialog"
+            android:orientation="vertical">
+            
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tuiroomkit_settings_video_resolution"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="@string/tuiroomkit_title_resolution"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/tuiroomkit_iv_settings_video_resolution_expand"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/tuiroomkit_settings_arrow_expand"
+                    android:scaleType="centerInside"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+                
+                <TextView
+                    android:id="@+id/tuiroomkit_tv_settings_video_resolution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="540*960"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_iv_settings_video_resolution_expand"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="1px"
+                android:layout_marginBottom="1px"
+                android:background="#B2BBD1"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tuiroomkit_settings_video_fps"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="@string/tuiroomkit_title_frame_rate"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/tuiroomkit_iv_settings_video_fps"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/tuiroomkit_settings_arrow_expand"
+                    android:scaleType="centerInside"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tuiroomkit_tv_settings_video_fps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="15"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_iv_settings_video_fps"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:textSize="14sp"
+            android:textColor="#D5E0F2"
+            android:text="@string/tuiroomkit_title_audio"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="166dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/tuiroomkit_inside_bg_dialog"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="@string/tuiroomkit_title_collection_volume"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <SeekBar
+                    android:id="@+id/tuiroomkit_settings_audio_capture_volume"
+                    android:layout_width="109dp"
+                    android:layout_height="20dp"
+                    android:paddingStart="7dp"
+                    android:paddingEnd="7dp"
+                    android:maxHeight="4dp"
+                    android:minHeight="4dp"
+                    android:progress="50"
+                    android:progressDrawable="@drawable/tuiroomkit_seekbar_progress"
+                    android:thumb="@drawable/tuiroomkit_seekbar_thumb"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tuiroomkit_tv_audio_capture_volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="100"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_settings_audio_capture_volume"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="1px"
+                android:layout_marginBottom="1px"
+                android:background="#B2BBD1"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="@string/tuiroomkit_title_play_volume"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <SeekBar
+                    android:id="@+id/tuiroomkit_settings_audio_play_volume"
+                    android:layout_width="109dp"
+                    android:layout_height="20dp"
+                    android:paddingStart="7dp"
+                    android:paddingEnd="7dp"
+                    android:maxHeight="4dp"
+                    android:minHeight="4dp"
+                    android:progress="50"
+                    android:progressDrawable="@drawable/tuiroomkit_seekbar_progress"
+                    android:thumb="@drawable/tuiroomkit_seekbar_thumb"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tuiroomkit_tv_audio_play_volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="100"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_settings_audio_play_volume"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="1px"
+                android:layout_marginBottom="1px"
+                android:background="#B2BBD1"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:textSize="16sp"
+                    android:textColor="#D1D9EC"
+                    android:text="@string/tuiroomkit_title_volume_reminder"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <Switch
+                    android:id="@+id/tuiroomkit_switch_audio_volume_evaluation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:thumb="@drawable/tuiroomkit_switch_thumb"
+                    android:track="@drawable/tuiroomkit_switch_track"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

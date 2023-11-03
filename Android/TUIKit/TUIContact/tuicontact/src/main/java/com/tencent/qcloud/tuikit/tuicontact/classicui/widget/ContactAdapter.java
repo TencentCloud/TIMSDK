@@ -61,13 +61,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ContactAdapter.ViewHolder holder, final int position) {
         final ContactItemBean contactBean = mData.get(position);
-        if (!TextUtils.isEmpty(contactBean.getRemark())) {
-            holder.tvName.setText(contactBean.getRemark());
-        } else if (!TextUtils.isEmpty(contactBean.getNickName())) {
-            holder.tvName.setText(contactBean.getNickName());
-        } else {
-            holder.tvName.setText(contactBean.getId());
-        }
+        holder.tvName.setText(contactBean.getDisplayName());
+
         if (mOnSelectChangedListener != null) {
             holder.ccSelect.setVisibility(View.VISIBLE);
             holder.ccSelect.setChecked(contactBean.isSelected());
@@ -121,24 +116,28 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.blacklist), contactBean.getId())) {
             holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_black_list_icon));
         } else {
-            int radius = holder.itemView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
-            if (isGroupList) {
-                int defaultIconResId = TUIUtil.getDefaultGroupIconResIDByGroupType(holder.itemView.getContext(), contactBean.getGroupType());
-                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), defaultIconResId, radius);
+            if (contactBean.isTop() && contactBean.getExtensionListener() != null) {
+                holder.avatar.setImageResource(contactBean.getAvatarResID());
             } else {
-                GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
-            }
-            if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfig.getInstance().isShowUserStatus()) {
-                holder.userStatusView.setVisibility(View.VISIBLE);
-                if (contactBean.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
-                    holder.userStatusView.setBackgroundResource(
-                        TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_online));
+                int radius = holder.itemView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
+                if (isGroupList) {
+                    int defaultIconResId = TUIUtil.getDefaultGroupIconResIDByGroupType(holder.itemView.getContext(), contactBean.getGroupType());
+                    GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), defaultIconResId, radius);
                 } else {
-                    holder.userStatusView.setBackgroundResource(
-                        TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_offline));
+                    GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
                 }
-            } else {
-                holder.userStatusView.setVisibility(View.GONE);
+                if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfig.getInstance().isShowUserStatus()) {
+                    holder.userStatusView.setVisibility(View.VISIBLE);
+                    if (contactBean.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
+                        holder.userStatusView.setBackgroundResource(
+                            TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_online));
+                    } else {
+                        holder.userStatusView.setBackgroundResource(
+                            TUIThemeManager.getAttrResId(TUIContactService.getAppContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.user_status_offline));
+                    }
+                } else {
+                    holder.userStatusView.setVisibility(View.GONE);
+                }
             }
         }
         setAlreadySelected(holder, contactBean);

@@ -4,7 +4,7 @@ import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class AudioCallerWaitingAndAcceptedViewModel {
@@ -33,7 +33,7 @@ class AudioCallerWaitingAndAcceptedViewModel {
     }
 
     fun hangup() {
-        CallEngineManager.instance.hangup(object : TUICommonDefine.Callback {
+        EngineManager.instance.hangup(object : TUICommonDefine.Callback {
             override fun onSuccess() {}
 
             override fun onError(errCode: Int, errMsg: String?) {}
@@ -42,7 +42,7 @@ class AudioCallerWaitingAndAcceptedViewModel {
     }
 
     fun openMicrophone() {
-        CallEngineManager.instance.openMicrophone(object : TUICommonDefine.Callback {
+        EngineManager.instance.openMicrophone(object : TUICommonDefine.Callback {
             override fun onSuccess() {
             }
 
@@ -51,14 +51,10 @@ class AudioCallerWaitingAndAcceptedViewModel {
     }
 
     fun closeMicrophone() {
-        CallEngineManager.instance.closeMicrophone()
+        EngineManager.instance.closeMicrophone()
     }
 
     fun selectAudioPlaybackDevice(type: TUICommonDefine.AudioPlaybackDevice) {
-        if (TUICallDefine.Status.Accept == TUICallState.instance.selfUser.get().callStatus.get()) {
-            CallEngineManager.instance.selectAudioPlaybackDevice(type)
-        } else {
-            TUICallState.instance.audioPlayoutDevice.set(type)
-        }
+        EngineManager.instance.selectAudioPlaybackDevice(type)
     }
 }

@@ -58,5 +58,7 @@
     <dimen name="chat_pop_menu_item_space_width">5.28dp</dimen>
     <dimen name="chat_pop_menu_item_space_height">3.84dp</dimen>
 
+    <dimen name="chat_image_message_error_size">140dp</dimen>
+
 
 </resources>

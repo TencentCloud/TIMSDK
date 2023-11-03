@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tuiroomkit_chat_access_room_extension_settings_microphone"
+            android:text="@string/tuiroomkit_chat_access_room_extension_settings_audio"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/tuiroomkit_chat_access_room_extension_settings_camera"
+            android:text="@string/tuiroomkit_chat_access_room_extension_settings_audio"
             android:textColor="@color/black"
             android:textSize="14sp" />
 

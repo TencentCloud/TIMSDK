@@ -264,4 +264,15 @@
     <string name="chat_quick_tap_message_action_to_me">"%s" %s me</string>
     <string name="chat_quick_tap_message_action">"%s" %s "%s"</string>
 
+    <string name="chat_risk_image_message_alert">Contains sensitive content, unable to view</string>
+    <string name="chat_risk_sound_message_alert">Contains sensitive content, unable to listen</string>
+    <string name="chat_risk_send_message_failed_alert">Contains sensitive content, failed to send</string>
+    <string name="chat_risk_quote_message_alert">Contains sensitive content, quoting failed</string>
+    <string name="chat_risk_reply_message_alert">Contains sensitive content, reply failed</string>
+    <string name="chat_scan_risk_image_message_alert">Image detected to contain sensitive content, temporarily unable to view</string>
+    <string name="chat_scan_risk_video_message_alert">Video detected to contain sensitive content, temporarily unable to view</string>
+    <string name="chat_risk_content">[Violation content]</string>
+    <string name="chat_risk_sound">[Violation audio]</string>
+    <string name="chat_risk_image">[Violation image]</string>
+    <string name="chat_risk_video">[Violation video]</string>
 </resources>

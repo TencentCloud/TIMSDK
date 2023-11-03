@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tuiroomkit_top_view_margin_start">0dp</dimen>
+    <dimen name="tuiroomkit_top_view_margin_end">0dp</dimen>
+    <dimen name="tuiroomkit_top_view_margin_top">0dp</dimen>
+    <dimen name="tuiroomkit_top_view_item_width">20dp</dimen>
+    <dimen name="tuiroomkit_top_view_item_height">20dp</dimen>
+
+    <dimen name="tuiroomkit_video_seat_margin_start">73dp</dimen>
+    <dimen name="tuiroomkit_video_seat_margin_end">73dp</dimen>
+    <dimen name="tuiroomkit_video_seat_margin_top">0dp</dimen>
+    <dimen name="tuiroomkit_video_seat_margin_bottom">0dp</dimen>
+
+    <dimen name="tuiroomkit_bottom_view_width">360dp</dimen>
+    <dimen name="tuiroomkit_bottom_view_margin_start">0dp</dimen>
+    <dimen name="tuiroomkit_bottom_view_margin_end">0dp</dimen>
+    <dimen name="tuiroomkit_bottom_view_margin_bottom">0dp</dimen>
+
+    <dimen name="tuiroomkit_bottom_item_icon_width">24dp</dimen>
+    <dimen name="tuiroomkit_bottom_item_icon_height">24dp</dimen>
+    <dimen name="tuiroomkit_bottom_item_view_width">52dp</dimen>
+    <dimen name="tuiroomkit_bottom_item_view_height">52dp</dimen>
+    <dimen name="tuiroomkit_bottom_extension_width">33dp</dimen>
+
+    <dimen name="tuiroomkit_item_title_size">16sp</dimen>
+    <dimen name="tuiroomkit_radio_button_text_size">16sp</dimen>
+    <dimen name="tuiroomkit_radio_button_padding_horizon">20dp</dimen>
+    <dimen name="tuiroomkit_radio_button_padding_vertical">12dp</dimen>
+    <dimen name="tuiroomkit_radio_button_bounds_horizon">24dp</dimen>
+    <dimen name="tuiroomkit_radio_button_bounds_vertical">24dp</dimen>
+    <dimen name="tuiroomkit_create_room_margin_bottom">100dp</dimen>
+    <dimen name="tuiroomkit_enter_room_margin_bottom">20dp</dimen>
+    <dimen name="tuiroomkit_room_float_view_size">50dp</dimen>
+    <dimen name="tuiroomkit_room_video_float_view_width">100dp</dimen>
+    <dimen name="tuiroomkit_room_video_float_view_height">180dp</dimen>
+
+    <dimen name="tuivideoseat_page_dot_radius">3dp</dimen>
+    <dimen name="tuivideoseat_video_view_margin">92dp</dimen>
+    <dimen name="tuivideoseat_video_view_conor">16dp</dimen>
+    <dimen name="tuivideoseat_video_view_size_small">100dp</dimen>
+    <dimen name="tuivideoseat_video_view_size_middle">180dp</dimen>
+</resources>

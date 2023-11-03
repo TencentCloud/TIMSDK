@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="suggest">اقتراح شكوى</string>
+    <string name="session_end">انتهت الجلسة</string>
+    <string name="session_timeout">مهلة جلسة</string>
+    <string name="invite_to_evaluation">شكرًا لك على استخدام خدمتنا، يرجى تقييم هذه الخدمة.</string>
+    <string name="submit_the_evaluation">إرسال المراجعة</string>
+    <string name="satisfaction_evaluation">[تقييم الرضا]</string>
+    <string name="extension_satisfaction_evaluation">تصنيف الخدمة</string>
+    <string name="customer_service">رقم خدمة العملاء</string>
+    <string name="send_product_info">إرسال البضائع</string>
+    <string name="product_card_input_info">يرجى ملء معلومات المنتج</string>
+    <string name="product_card_close">إنهاء</string>
+    <string name="product_card_name">اسم</string>
+    <string name="product_card_description">يصف</string>
+    <string name="product_card_picture_url">صورة</string>
+    <string name="product_card_jump_url">القفز</string>
+    <string name="product_card_confirm">إرسال معلومات المنتج</string>
+    <string name="product_info_input_empty">لا يمكن أن يكون الإدخال فارغًا</string>
+    <string name="common_phrases">إرسال البضائع</string>
+    <string name="customer_service_unsupport_tips">يعد المكون الإضافي لخدمة العملاء وظيفة مدفوعة الأجر ذات قيمة مضافة وهو حاليًا في مرحلة الاختبار الداخلي. يرجى النقر للدخول إلى [Tencent Cloud Instant Messaging IM Group] للتقدم بطلب التنشيط التجريبي</string>
+    <string name="customer_service_buying_guidelines">مجموعة Tencent Cloud للمراسلة الفورية</string>
+    <string name="customer_service_i_know">أرى</string>
+
+    <string-array name="common_phrases_list">
+        <item>هل هو في المخزون؟</item>
+        <item>هل يمكن أن يكون أرخص؟</item>
+        <item>أي هدايا مجانية؟</item>
+        <item>ما هو تاريخ الشحن؟</item>
+        <item>أي نوع من التسليم السريع؟</item>
+        <item>متى ستصل؟</item>
+    </string-array>
+</resources>

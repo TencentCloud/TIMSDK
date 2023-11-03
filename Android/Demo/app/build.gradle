@@ -103,7 +103,6 @@ dependencies {
     api project(':tuisearch')
     api project(':tuigroup')
     api project(':tuicallkit')
-    api project(':tuiofflinepush')
     api project(':tuitranslationplugin')
 
     if (projects.contains("tuigroupnoteplugin")) {
@@ -129,7 +128,58 @@ dependencies {
     } else {
         api "com.tencent.imsdk:tuiconversationgroup-plugin:7.5.4852"
     }
-
     api project(':tuivoicetotextplugin')
     api project(':tuiroomkit')
+    if (projects.contains("tuicustomerserviceplugin")) {
+        api project(':tuicustomerserviceplugin')
+    }
+
+    if (projects.contains("timpush")) {
+        api project(':timpush')
+    } else {
+        api 'com.tencent.testaar:timpush:1.0.1'
+    }
+
+    if (projects.contains("fcmpush")) {
+        api project(':fcmpush')
+    } else {
+        api 'com.tencent.testaar:fcm:1.1.0'
+    }
+
+    if (projects.contains("xiaomipush")) {
+        api project(':xiaomipush')
+    } else {
+        api 'com.tencent.testaar:xiaomi:1.1.0'
+    }
+
+    if (projects.contains("meizupush")) {
+        api project(':meizupush')
+    } else {
+        api 'com.tencent.testaar:meizu:1.1.0'
+    }
+
+    if (projects.contains("oppopush")) {
+        api project(':oppopush')
+    } else {
+        api 'com.tencent.testaar:oppo:1.1.0'
+    }
+
+    if (projects.contains("vivopush")) {
+        api project(':vivopush')
+    } else {
+        api 'com.tencent.testaar:vivo:1.1.0'
+    }
+
+    if (projects.contains("huaweipush")) {
+        api project(':huaweipush')
+    } else {
+        api 'com.tencent.testaar:huawei:1.1.0'
+    }
+
+    if (projects.contains("honorpush")) {
+        api project(':honorpush')
+    } else {
+        api 'com.tencent.testaar:honor:1.1.0'
+    }
+
 }

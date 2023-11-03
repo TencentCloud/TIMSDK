@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuitranslationplugin.widget;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -78,6 +79,13 @@ public class TranslationMessageLayoutProxy {
             if (TextUtils.equals(themeStyle, TUIConstants.TUIChat.THEME_STYLE_MINIMALIST)) {
                 translationText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     translationText.getResources().getDimension(com.tencent.qcloud.tuikit.timcommon.R.dimen.chat_minimalist_message_text_size));
+            } else {
+                if (msg.hasRiskContent()) {
+                    translationText.setText(R.string.translation_risk_content_failed_tip);
+                    translationText.setTextColor(viewGroup.getResources().getColor(R.color.translation_risk_tip_color));
+                    return;
+                }
+                translationText.setTextColor(Color.BLACK);
             }
             if (MessageProperties.getInstance().getChatContextFontSize() != 0) {
                 translationText.setTextSize(MessageProperties.getInstance().getChatContextFontSize());

@@ -6,9 +6,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.qcloud.tuicore.TUIConfig;
@@ -56,7 +54,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -135,8 +132,8 @@ public abstract class ChatPresenter {
     protected void initMessageSender() {
         baseMessageSender = new IBaseMessageSender() {
             @Override
-            public String sendMessage(TUIMessageBean message, String receiver, boolean isGroup) {
-                return ChatPresenter.this.sendMessage(message, receiver, isGroup);
+            public String sendMessage(TUIMessageBean message, String receiver, boolean isGroup, boolean onlineUserOnly) {
+                return ChatPresenter.this.sendMessage(message, receiver, isGroup, onlineUserOnly);
             }
         };
         TUIChatService.getInstance().setMessageSender(baseMessageSender);
@@ -841,16 +838,16 @@ public abstract class ChatPresenter {
         }
     }
 
-    public String sendMessage(final TUIMessageBean messageInfo, String receiver, boolean isGroup) {
+    public String sendMessage(final TUIMessageBean messageInfo, String receiver, boolean isGroup, boolean onlineUserOnly) {
         if (!TextUtils.isEmpty(receiver)) {
             if (!TextUtils.equals(getChatInfo().getId(), receiver) || isGroup != TUIChatUtils.isGroupChat(getChatInfo().getType())) {
                 return null;
             }
         }
-        return sendMessage(messageInfo, false, null);
+        return sendMessage(messageInfo, false, onlineUserOnly, null);
     }
 
-    public String sendMessage(final TUIMessageBean message, boolean retry, final IUIKitCallback<TUIMessageBean> callBack) {
+    public String sendMessage(final TUIMessageBean message, boolean retry, boolean onlineUserOnly, final IUIKitCallback<TUIMessageBean> callBack) {
         if (!safetyCall()) {
             TUIChatLog.w(TAG, "sendMessage unSafetyCall");
             return null;
@@ -863,7 +860,11 @@ public abstract class ChatPresenter {
         assembleGroupMessage(message);
         notifyConversationInfo(getChatInfo());
 
-        String msgId = provider.sendMessage(message, getChatInfo(), new IUIKitCallback<TUIMessageBean>() {
+        if (messageRecyclerView != null) {
+            messageRecyclerView.scrollToEnd();
+        }
+
+        String msgId = provider.sendMessage(message, getChatInfo(), onlineUserOnly, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
                 ProgressPresenter.updateProgress(data.getId(), 100);
@@ -889,7 +890,10 @@ public abstract class ChatPresenter {
                 }
 
                 TUIChatUtils.callbackOnError(callBack, TAG, errCode, errMsg);
-
+                if (errCode == TUIChatConstants.ERR_SVR_COMM_SENSITIVE_IMAGE || errCode == TUIChatConstants.ERR_SVR_COMM_SENSITIVE_TEXT
+                    || errCode == TUIChatConstants.ERR_LOCAL_COMM_SENSITIVE_TEXT) {
+                    message.setHasRiskContent(true);
+                }
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
                 updateMessageInfo(message, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
             }
@@ -974,7 +978,7 @@ public abstract class ChatPresenter {
         });
     }
 
-    public void handleRevoke(String msgId) {
+    public void handleRevoke(String msgId, UserBean revoker) {
         if (!safetyCall()) {
             TUIChatLog.w(TAG, "handleInvoke unSafetyCall");
             return;
@@ -986,13 +990,16 @@ public abstract class ChatPresenter {
             // A message containing multiple elements, when withdrawn, will withdraw all elements,
             // so the following judgment cannot return even if the conditions are met
             if (messageInfo.getId().equals(msgId)) {
+                messageInfo.setRevoker(revoker);
                 messageInfo.setStatus(TUIMessageBean.MSG_STATUS_REVOKE);
                 updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
 
                 if (isChatFragmentShow()) {
                     if (messageRecyclerView != null && messageRecyclerView.isDisplayJumpMessageLayout()) {
                         if (messageInfo.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-                            currentChatUnreadCount--;
+                            if (revoker != null) {
+                                currentChatUnreadCount--;
+                            }
                             if (currentChatUnreadCount <= 0) {
                                 messageRecyclerView.displayBackToNewMessage(false, "", 0);
                                 mCacheNewMessage = null;
@@ -1233,7 +1240,6 @@ public abstract class ChatPresenter {
                         }
                     });
                 }
-                updateMessageRevoked(message.getId());
             }
 
             @Override
@@ -1328,7 +1334,7 @@ public abstract class ChatPresenter {
                     TUIMessageBean message = ChatMessageBuilder.buildForwardMessage(info.getV2TIMMessage());
 
                     if (selfConversation) {
-                        sendMessage(message, false, callBack);
+                        sendMessage(message, false, false, callBack);
                         try {
                             Thread.sleep(timeInterval);
                         } catch (InterruptedException e) {
@@ -1392,7 +1398,7 @@ public abstract class ChatPresenter {
 
             for (int j = 0; j < messageBeans.size(); j++) {
                 TUIMessageBean messageBean = messageBeans.get(j);
-                sendMessage(messageBean, false, null);
+                sendMessage(messageBean, false, false, null);
                 try {
                     Thread.sleep(timeInterval);
                 } catch (InterruptedException e) {
@@ -1451,7 +1457,7 @@ public abstract class ChatPresenter {
             msgInfos, offlineTitle, abstractList, TUIChatService.getAppContext().getString(R.string.forward_compatible_text));
 
         if (selfConversation) {
-            sendMessage(msgInfo, false, callBack);
+            sendMessage(msgInfo, false, false, callBack);
             return;
         }
         if (isGroup) {
@@ -1493,7 +1499,12 @@ public abstract class ChatPresenter {
 
         boolean isNeedReadReceipt = TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt();
         message.setNeedReadReceipt(isNeedReadReceipt);
-        assembleGroupMessage(message);
+        if (isGroup) {
+            message.setGroup(true);
+            if (TUIChatUtils.isCommunityGroup(id)) {
+                message.setNeedReadReceipt(false);
+            }
+        }
 
         Map<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.CHAT_ID, id);
@@ -1529,6 +1540,10 @@ public abstract class ChatPresenter {
                     return;
                 }
                 TUIChatUtils.callbackOnError(callBack, errCode, errMsg);
+                if (errCode == TUIChatConstants.ERR_SVR_COMM_SENSITIVE_IMAGE || errCode == TUIChatConstants.ERR_SVR_COMM_SENSITIVE_TEXT
+                        || errCode == TUIChatConstants.ERR_LOCAL_COMM_SENSITIVE_TEXT) {
+                    message.setHasRiskContent(true);
+                }
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
                 updateMessageInfo(message, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
                 Map<String, Object> param = new HashMap<>();

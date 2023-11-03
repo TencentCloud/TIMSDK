@@ -19,7 +19,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.component.UserManagementView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel.UserManagementView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
@@ -94,7 +94,7 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
 
     private void onMuteUserAudio(String userId) {
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance().closeLocalMicrophone();
+            RoomEngineManager.sharedInstance().disableLocalAudio();
             return;
         }
         if (!isOwner()) {
@@ -105,7 +105,7 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
 
     private void onUnMuteUserAudio(String userId) {
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance().openLocalMicrophone(null);
+            RoomEngineManager.sharedInstance().enableLocalAudio();
             return;
         }
         if (!isOwner()) {

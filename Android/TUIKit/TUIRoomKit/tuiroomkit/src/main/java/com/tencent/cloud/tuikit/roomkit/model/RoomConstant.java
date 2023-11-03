@@ -1,6 +1,8 @@
 package com.tencent.cloud.tuikit.roomkit.model;
 
-import com.tencent.trtc.TRTCCloudDef;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoQuality.Q_720P;
+
+import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 
 public class RoomConstant {
     // 默认音频值
@@ -9,10 +11,10 @@ public class RoomConstant {
     public static final boolean DEFAULT_AUDIO_VOLUME_EVALUATION = true;
 
     // 默认视频值
-    public static final int     DEFAULT_VIDEO_FPS          = 15;
-    public static final int     DEFAULT_VIDEO_BITRATE      = 900;
-    public static final int     DEFAULT_VIDEO_RESOLUTION   = TRTCCloudDef.TRTC_VIDEO_RESOLUTION_960_540;
-    public static final boolean DEFAULT_VIDEO_LOCAL_MIRROR = true;
+    public static final int                        DEFAULT_VIDEO_FPS          = 15;
+    public static final int                        DEFAULT_VIDEO_BITRATE      = 1200;
+    public static final TUIRoomDefine.VideoQuality DEFAULT_VIDEO_RESOLUTION   = Q_720P;
+    public static final boolean                    DEFAULT_VIDEO_LOCAL_MIRROR = true;
 
     // 默认 Camera 值
     public static final boolean DEFAULT_CAMERA_FRONT = true;
@@ -20,4 +22,6 @@ public class RoomConstant {
     public static final String KEY_ERROR = "KEY_ERROR";
 
     public static final int USER_NOT_FOUND = -1;
+
+    public static final String KEY_ROOM_RAISE_HAND_TIP_SHOWED = "KEY_ROOM_RAISE_HAND_TIP_SHOWED";
 }

@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -10,7 +11,9 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -172,7 +175,12 @@ public class ChatMessageParser {
             if (bean != null) {
                 return bean;
             } else {
-                return unsupportBean;
+                if (isCustomerService(v2TIMMessage)) {
+                    // Return null means not display in the chat page
+                    return null;
+                } else {
+                    return unsupportBean;
+                }
             }
         } else {
             return unsupportBean;
@@ -230,6 +238,7 @@ public class ChatMessageParser {
             return null;
         }
         String data = new String(customElem.getData());
+        TUIChatLog.e(TAG, " customElem data: " + data);
 
         Gson gson = new Gson();
         HashMap customJsonMap = null;
@@ -243,10 +252,46 @@ public class ChatMessageParser {
         if (customJsonMap != null) {
             businessIdObj = customJsonMap.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY);
         }
+        if (businessIdObj == null && customJsonMap != null) {
+            Object customerServiceMessageKey = customJsonMap.get(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY);
+            if (customerServiceMessageKey != null) {
+                businessIdObj = customJsonMap.get(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY);
+            }
+        }
         if (businessIdObj instanceof String) {
             businessId = (String) businessIdObj;
         }
+
         return businessId;
+    }
+
+    private static boolean isCustomerService(V2TIMMessage v2TIMMessage) {
+        V2TIMCustomElem customElem = v2TIMMessage.getCustomElem();
+        if (customElem == null || customElem.getData() == null || customElem.getData().length == 0) {
+            return false;
+        }
+        String data = new String(customElem.getData());
+
+        Gson gson = new Gson();
+        HashMap customJsonMap = null;
+        try {
+            customJsonMap = gson.fromJson(data, HashMap.class);
+        } catch (JsonSyntaxException e) {
+            TUIChatLog.e(TAG, " getCustomJsonMap error ");
+        }
+        Object businessIdObj = null;
+        if (customJsonMap != null) {
+            businessIdObj = customJsonMap.get(TUIConstants.Message.CUSTOM_BUSINESS_ID_KEY);
+        }
+        if (businessIdObj == null) {
+            if (customJsonMap.keySet().contains(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     private static String getSignalingBusinessId(V2TIMSignalingInfo v2SignalingInfo) {
@@ -403,19 +448,42 @@ public class ChatMessageParser {
         }
         String displayString;
         if (messageBean.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-            if (messageBean.isSelf()) {
-                displayString = TUIChatService.getAppContext().getString(R.string.revoke_tips_you);
-            } else if (messageBean.isGroup()) {
-                String sender = TUIChatConstants.covert2HTMLString(messageBean.getUserDisplayName());
-                displayString = sender + TUIChatService.getAppContext().getString(R.string.revoke_tips);
-            } else {
-                displayString = TUIChatService.getAppContext().getString(R.string.revoke_tips_other);
-            }
+            displayString = getRevokeMessageDisplayString(messageBean);
         } else {
             displayString = messageBean.onGetDisplayString();
         }
         displayString = FaceManager.emojiJudge(displayString);
         return displayString;
+    }
+
+    public static String getRevokeMessageDisplayString(TUIMessageBean msg) {
+        Context context = TUIChatService.getAppContext();
+        if (context == null || msg == null || msg.getStatus() != TUIMessageBean.MSG_STATUS_REVOKE) {
+            return "";
+        }
+        String showString;
+        String revoker = msg.getSender();
+        String messageSender = msg.getSender();
+        UserBean revokerBean = msg.getRevoker();
+        if (revokerBean != null && !TextUtils.isEmpty(revokerBean.getUserId())) {
+            revoker = revokerBean.getUserId();
+        }
+        if (TextUtils.equals(revoker, messageSender)) {
+            if (msg.isSelf()) {
+                showString = context.getResources().getString(R.string.revoke_tips_you);
+            } else {
+                if (!msg.isGroup()) {
+                    showString = context.getResources().getString(R.string.revoke_tips_other);
+                } else {
+                    String operatorName = msg.getUserDisplayName();
+                    showString = operatorName + context.getResources().getString(R.string.revoke_tips);
+                }
+            }
+        } else {
+            String operatorName = revokerBean.getDisplayString();
+            showString = operatorName + context.getResources().getString(R.string.revoke_tips);
+        }
+        return showString;
     }
 
     public static String getReplyMessageAbstract(TUIMessageBean messageBean) {

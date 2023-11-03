@@ -1,9 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.model;
 
-import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
-import static com.tencent.imsdk.BaseConstants.ERR_SUCC;
-import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
-
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -66,6 +62,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
+import static com.tencent.imsdk.BaseConstants.ERR_SUCC;
+import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 public class ChatProvider {
     private static final String TAG = ChatProvider.class.getSimpleName();
@@ -280,23 +280,18 @@ public class ChatProvider {
         return msgID;
     }
 
-    public String sendMessage(TUIMessageBean message, ChatInfo chatInfo, IUIKitCallback<TUIMessageBean> callBack) {
-        final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
-        if (v2TIMMessage == null) {
-            return null;
-        }
-        // support message typing flag
-        setMessageTypingFeature(message);
-
+    private V2TIMOfflinePushInfo createOfflinePushInfo(TUIMessageBean message, ChatInfo chatInfo) {
+        String description = message.getExtra();
+        String sender = message.getSender();
+        String chatName = chatInfo.getChatName();
         OfflineMessageBean entity = new OfflineMessageBean();
-        entity.content = message.getExtra();
-        entity.sender = message.getSender();
-        entity.nickname = chatInfo.getChatName();
+        entity.content = description;
+        entity.sender = sender;
+        entity.nickname = chatName;
         entity.faceUrl = TUIConfig.getSelfFaceUrl();
         OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
         containerBean.entity = entity;
 
-        String userID = "";
         String groupID = "";
         boolean isGroup = false;
         if (chatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
@@ -304,11 +299,21 @@ public class ChatProvider {
             isGroup = true;
             entity.chatType = V2TIMConversation.V2TIM_GROUP;
             entity.sender = groupID;
-        } else {
-            userID = chatInfo.getId();
         }
 
         V2TIMOfflinePushInfo v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
+        if (!TextUtils.isEmpty(chatName)) {
+            v2TIMOfflinePushInfo.setTitle(chatName);
+        } else {
+            String title = isGroup ? groupID : sender;
+            if (!TextUtils.isEmpty(title)) {
+                v2TIMOfflinePushInfo.setTitle(title);
+            }
+        }
+
+        if (!TextUtils.isEmpty(description)) {
+            v2TIMOfflinePushInfo.setDesc(description);
+        }
         v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
         // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
         // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
@@ -320,11 +325,34 @@ public class ChatProvider {
         v2TIMOfflinePushInfo.setAndroidHuaWeiCategory("IM");
         v2TIMOfflinePushInfo.setAndroidVIVOCategory("IM");
 
+        return v2TIMOfflinePushInfo;
+    }
+
+    public String sendMessage(TUIMessageBean message, ChatInfo chatInfo, boolean onlineUserOnly, IUIKitCallback<TUIMessageBean> callBack) {
+        final V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
+        if (v2TIMMessage == null) {
+            return null;
+        }
+        // support message typing flag
+        setMessageTypingFeature(message);
+
+        String userID = "";
+        String groupID = "";
+        boolean isGroup = false;
+        if (chatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
+            groupID = chatInfo.getId();
+            isGroup = true;
+        } else {
+            userID = chatInfo.getId();
+        }
+
+        V2TIMOfflinePushInfo v2TIMOfflinePushInfo = createOfflinePushInfo(message, chatInfo);
+
         v2TIMMessage.setExcludedFromUnreadCount(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromUnreadCount());
         v2TIMMessage.setExcludedFromLastMessage(TUIChatConfigs.getConfigs().getGeneralConfig().isExcludedFromLastMessage());
 
         String msgID = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, isGroup ? null : userID, isGroup ? groupID : null,
-            V2TIMMessage.V2TIM_PRIORITY_DEFAULT, false, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
+            V2TIMMessage.V2TIM_PRIORITY_DEFAULT, onlineUserOnly, v2TIMOfflinePushInfo, new V2TIMSendCallback<V2TIMMessage>() {
                 @Override
                 public void onProgress(int progress) {
                     TUIChatUtils.callbackOnProgress(callBack, progress);

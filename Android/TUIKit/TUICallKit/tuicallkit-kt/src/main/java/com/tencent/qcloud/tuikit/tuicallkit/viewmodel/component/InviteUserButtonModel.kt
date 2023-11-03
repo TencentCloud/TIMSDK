@@ -5,17 +5,15 @@ import android.text.TextUtils
 import com.tencent.qcloud.tuicore.ServiceInitializer
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
-import com.tencent.qcloud.tuicore.interfaces.ITUINotification
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
-class InviteUserButtonModel : ITUINotification {
+class InviteUserButtonModel {
     public var role: LiveData<TUICallDefine.Role>? = null
     public var mediaType = LiveData<TUICallDefine.MediaType>()
     public var callStatus = LiveData<TUICallDefine.Status>()
@@ -24,14 +22,6 @@ class InviteUserButtonModel : ITUINotification {
         role = TUICallState.instance.selfUser.get().callRole
         mediaType = TUICallState.instance.mediaType
         callStatus = TUICallState.instance.selfUser.get().callStatus
-    }
-
-    fun registerEvent() {
-        TUICore.registerEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_GROUP_MEMBER_SELECTED, this)
-    }
-
-    fun unRegisterEvent() {
-        TUICore.unRegisterEvent(Constants.EVENT_TUICALLING_CHANGED, Constants.EVENT_SUB_GROUP_MEMBER_SELECTED, this)
     }
 
     fun inviteUser() {
@@ -66,23 +56,4 @@ class InviteUserButtonModel : ITUINotification {
     companion object {
         private const val TAG = "InviteUserButtonModel"
     }
-
-    private fun inviteUsersToGroupCall(userIdList: List<String>?) {
-        if (userIdList == null || userIdList.isEmpty()) {
-            TUILog.e(TAG, "inviteUsersToGroupCall, userIdList is empty: $userIdList")
-            return
-        }
-        CallEngineManager.instance.inviteUser(userIdList)
-    }
-
-    override fun onNotifyEvent(key: String?, subKey: String?, param: MutableMap<String, Any>?) {
-        if (param == null) {
-            return
-        }
-        if (Constants.EVENT_TUICALLING_CHANGED.equals(key) && Constants.EVENT_SUB_GROUP_MEMBER_SELECTED.equals(subKey)) {
-            val list = param[Constants.SELECT_MEMBER_LIST] as List<String>?
-            inviteUsersToGroupCall(list)
-        }
-    }
-
 }

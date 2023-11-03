@@ -18,6 +18,7 @@
     <string name="ui_at_me">[Someone @ me]</string>
     <string name="ui_at_all_me">[@All][Someone @ me]</string>
     <string name="drafts">[Drafts]</string>
+    <string name="conversation_risk_message_extra">[Violation message]</string>
     <string name="titlebar_mutiselect">Select</string>
     <string name="message_num">messages</string>
     <string name="conversation_forward">Forward</string>

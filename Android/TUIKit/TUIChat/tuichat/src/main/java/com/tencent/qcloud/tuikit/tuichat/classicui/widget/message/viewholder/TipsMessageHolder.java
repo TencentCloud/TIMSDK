@@ -1,15 +1,19 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 
 public class TipsMessageHolder extends MessageBaseHolder {
     protected TextView mChatTipsTv;
@@ -40,10 +44,24 @@ public class TipsMessageHolder extends MessageBaseHolder {
             mChatTipsTv.setTextSize(properties.getTipsMessageFontSize());
         }
 
+        mReEditText.setVisibility(View.GONE);
+        mReEditText.setOnClickListener(null);
+
         if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-            String showString = itemView.getResources().getString(R.string.revoke_tips_other);
-            if (msg.isSelf()) {
-                int msgType = msg.getMsgType();
+            handleRevoke(msg, position);
+        }
+
+        if (msg instanceof TipsMessageBean) {
+            mChatTipsTv.setText(Html.fromHtml(((TipsMessageBean) msg).getText()));
+        }
+    }
+
+    private void handleRevoke(TUIMessageBean msg, int position) {
+        String showString = ChatMessageParser.getRevokeMessageDisplayString(msg);
+        UserBean revoker = msg.getRevoker();
+        if (msg.isSelf()) {
+            int msgType = msg.getMsgType();
+            if (revoker != null && TextUtils.equals(revoker.getUserId(), TUILogin.getLoginUser())) {
                 if (msgType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
                     long nowtime = V2TIMManager.getInstance().getServerTime();
                     long msgtime = msg.getMessageTime();
@@ -55,22 +73,11 @@ public class TipsMessageHolder extends MessageBaseHolder {
                                 onItemClickListener.onReEditRevokeMessage(view, position, msg);
                             }
                         });
-                    } else {
-                        mReEditText.setVisibility(View.GONE);
                     }
                 }
-                showString = itemView.getResources().getString(R.string.revoke_tips_you);
-            } else if (msg.isGroup()) {
-                String sender = TUIChatConstants.covert2HTMLString(msg.getUserDisplayName());
-                showString = sender + itemView.getResources().getString(R.string.revoke_tips);
-                mReEditText.setVisibility(View.GONE);
-                mReEditText.setOnClickListener(null);
             }
-            mChatTipsTv.setText(Html.fromHtml(showString));
         }
 
-        if (msg instanceof TipsMessageBean) {
-            mChatTipsTv.setText(Html.fromHtml(((TipsMessageBean) msg).getText()));
-        }
+        mChatTipsTv.setText(Html.fromHtml(showString));
     }
 }

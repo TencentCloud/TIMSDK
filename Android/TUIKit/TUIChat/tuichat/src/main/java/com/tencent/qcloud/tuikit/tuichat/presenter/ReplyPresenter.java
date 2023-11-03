@@ -172,7 +172,7 @@ public class ReplyPresenter {
     }
 
     public void sendReplyMessage(TUIMessageBean replyMessageBean, IUIKitCallback<TUIMessageBean> callback) {
-        chatPresenter.sendMessage(replyMessageBean, false, new IUIKitCallback<TUIMessageBean>() {
+        chatPresenter.sendMessage(replyMessageBean, false, false, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
                 Map<String, Object> param = new HashMap<>();

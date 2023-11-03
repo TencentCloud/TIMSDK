@@ -37,6 +37,8 @@ public class TUICallingVideoFunctionView extends BaseFunctionView {
         mImageOpenCamera = (ImageView) findViewById(R.id.img_camera);
         mLayoutHangup = (LinearLayout) findViewById(R.id.ll_hangup);
         mImageSwitchCamera = (ImageView) findViewById(R.id.switch_camera);
+
+        mLayoutHandsFree.setActivated(true);
     }
 
     private void initClickListener() {

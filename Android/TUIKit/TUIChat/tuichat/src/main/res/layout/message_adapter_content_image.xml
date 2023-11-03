@@ -8,7 +8,8 @@
         android:id="@+id/image_round_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         app:corner_radius="8dp">
 
         <ImageView

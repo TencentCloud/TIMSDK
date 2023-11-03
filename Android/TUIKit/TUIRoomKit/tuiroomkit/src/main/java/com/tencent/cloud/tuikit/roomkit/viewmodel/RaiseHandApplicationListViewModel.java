@@ -1,19 +1,24 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
+import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_ADD;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_REMOVE;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+
 import android.content.res.Configuration;
 import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
+import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.component.RaiseHandApplicationListView;
-import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.raisehandcontrolpanel.RaiseHandApplicationListPanel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,30 +26,26 @@ public class RaiseHandApplicationListViewModel
         implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "ApplyListViewModel";
 
-    private final RoomStore                    mRoomStore;
-    private final RaiseHandApplicationListView mApplyView;
+    private final RaiseHandApplicationListPanel mApplyView;
 
-    private List<UserEntity>                   mApplyUserList;
-    private Map<String, TUIRoomDefine.Request> mApplyMap;
+    private List<TakeSeatRequestEntity> mTakeSeatRequestList;
 
-    public RaiseHandApplicationListViewModel(RaiseHandApplicationListView view) {
+    public RaiseHandApplicationListViewModel(RaiseHandApplicationListPanel view) {
         mApplyView = view;
-        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
 
-        mApplyUserList = new ArrayList<>();
-        mApplyMap = new HashMap<>();
+        mTakeSeatRequestList = RoomEngineManager.sharedInstance().getRoomStore().takeSeatRequestList;
 
         subscribeEvent();
     }
 
     private void subscribeEvent() {
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_CANCELLED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
+        eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
+
+        eventCenter.subscribeUIEvent(AGREE_TAKE_SEAT, this);
+        eventCenter.subscribeUIEvent(DISAGREE_TAKE_SEAT, this);
+        eventCenter.subscribeUIEvent(CONFIGURATION_CHANGE, this);
     }
 
     public void destroy() {
@@ -53,35 +54,25 @@ public class RaiseHandApplicationListViewModel
 
     private void unSubscribeEvent() {
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_CANCELLED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
+        eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
+
+        eventCenter.unsubscribeUIEvent(AGREE_TAKE_SEAT, this);
+        eventCenter.unsubscribeUIEvent(DISAGREE_TAKE_SEAT, this);
+        eventCenter.unsubscribeUIEvent(CONFIGURATION_CHANGE, this);
     }
 
-    private void addApplyUser(TUIRoomDefine.Request request) {
-        if (mApplyMap.containsKey(request.userId)) {
-            return;
-        }
-        mApplyMap.put(request.userId, request);
-        UserEntity user = mRoomStore.findUserWithCameraStream(mRoomStore.allUserList, request.userId);
-        mApplyUserList.add(user);
-        mApplyView.notifyItemInserted(mApplyUserList.size() - 1);
+    public List<TakeSeatRequestEntity> getApplyList() {
+        return mTakeSeatRequestList;
     }
 
-    public List<UserEntity> getApplyList() {
-        return mApplyUserList;
-    }
-
-    public List<UserEntity> searchUserByKeyWords(String keyWords) {
+    public List<TakeSeatRequestEntity> searchUserByKeyWords(String keyWords) {
         if (TextUtils.isEmpty(keyWords)) {
             return new ArrayList<>();
         }
 
-        List<UserEntity> searchList = new ArrayList<>();
-        for (UserEntity item : mApplyUserList) {
+        List<TakeSeatRequestEntity> searchList = new ArrayList<>();
+        for (TakeSeatRequestEntity item : mTakeSeatRequestList) {
             if (item.getUserName().contains(keyWords) || item.getUserId().contains(keyWords)) {
                 searchList.add(item);
             }
@@ -90,105 +81,68 @@ public class RaiseHandApplicationListViewModel
     }
 
     public void agreeAllUserOnStage() {
-        for (UserEntity item : mApplyUserList) {
-            TUIRoomDefine.Request request = mApplyMap.get(item.getUserId());
+        for (TakeSeatRequestEntity item : mTakeSeatRequestList) {
+            TUIRoomDefine.Request request = item.getRequest();
             if (request == null) {
                 continue;
             }
             RoomEngineManager.sharedInstance()
                     .responseRemoteRequest(request.requestAction, request.requestId, true, null);
         }
-        mApplyMap.clear();
-        mApplyUserList.clear();
-        mApplyView.notifyDataSetChanged();
     }
 
     public void inviteMemberOnstage() {
         RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST, null);
     }
 
-    private boolean isOwner() {
-        return TUIRoomDefine.Role.ROOM_OWNER.equals(mRoomStore.userModel.role);
-    }
-
     @Override
     public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
-            case REQUEST_RECEIVED:
-                onRequestReceived(params);
+            case USER_TAKE_SEAT_REQUEST_ADD:
+                onAddTakeSeatRequest(params);
                 break;
-            case REQUEST_CANCELLED:
-                onRequestCancelled(params);
+
+            case USER_TAKE_SEAT_REQUEST_REMOVE:
+                onRemoveTakeSeatRequest(params);
                 break;
-            case REMOTE_USER_TAKE_SEAT:
-                onRemoteUserTakeSeat(params);
-                break;
+
             default:
                 break;
         }
     }
 
-    private void onRequestReceived(Map<String, Object> params) {
-        TUIRoomDefine.Request request = (TUIRoomDefine.Request) params.get(RoomEventConstant.KEY_REQUEST);
-        if (request == null) {
+    private void onAddTakeSeatRequest(Map<String, Object> params) {
+        if (params == null) {
             return;
         }
-        if (isOwner() && TextUtils.equals(request.userId, TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance()
-                    .responseRemoteRequest(request.requestAction, request.requestId, true, null);
-        }
-        if (TUIRoomDefine.RequestAction.REQUEST_TO_TAKE_SEAT == request.requestAction) {
-            addApplyUser(request);
-        }
-    }
-
-    private void onRequestCancelled(Map<String, Object> params) {
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        if (TextUtils.isEmpty(userId)) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        removeApplyUser(userId);
+        mApplyView.notifyItemInserted(position);
     }
 
-    private void onRemoteUserTakeSeat(Map<String, Object> params) {
-        int position = (int) params.get(RoomEventConstant.KEY_USER_POSITION);
-        removeApplyUser(mRoomStore.seatUserList.get(position).getUserId());
-    }
-
-    private void removeApplyUser(String userId) {
-        if (!mApplyMap.containsKey(userId)) {
+    private void onRemoveTakeSeatRequest(Map<String, Object> params) {
+        if (params == null) {
             return;
         }
-        mApplyMap.remove(userId);
-        UserEntity user = findUser(userId);
-        if (user == null) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        int index = mApplyUserList.indexOf(user);
-        mApplyUserList.remove(index);
-        mApplyView.notifyItemRemoved(index);
+        mApplyView.notifyItemRemoved(position);
     }
-
-    private UserEntity findUser(String userId) {
-        for (UserEntity item : mApplyUserList) {
-            if (TextUtils.equals(item.getUserId(), userId)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
 
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
         switch (key) {
-            case RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT:
+            case AGREE_TAKE_SEAT:
                 responseUserOnStage(params, true);
                 break;
-            case RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT:
+            case DISAGREE_TAKE_SEAT:
                 responseUserOnStage(params, false);
                 break;
-            case RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE:
+            case CONFIGURATION_CHANGE:
                 if (!mApplyView.isShowing()) {
                     break;
                 }
@@ -208,15 +162,13 @@ public class RaiseHandApplicationListViewModel
         if (TextUtils.isEmpty(userId)) {
             return;
         }
-        if (!mApplyMap.containsKey(userId)) {
+        TakeSeatRequestEntity request =
+                RoomEngineManager.sharedInstance().getRoomStore().getTakeSeatRequestEntity(userId);
+        if (request == null) {
             return;
         }
-        if (mApplyMap.get(userId) == null) {
-            return;
-        }
+
         RoomEngineManager.sharedInstance()
-                .responseRemoteRequest(mApplyMap.get(userId).requestAction, mApplyMap.get(userId).requestId, agree,
-                        null);
-        removeApplyUser(userId);
+                .responseRemoteRequest(request.getRequest().requestAction, request.getRequest().requestId, agree, null);
     }
 }

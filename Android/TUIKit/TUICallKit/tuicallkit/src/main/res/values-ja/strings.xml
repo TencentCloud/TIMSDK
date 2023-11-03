@@ -1,0 +1,66 @@
+<resources>
+    <string name="tuicalling_contact_default_name">test123</string>
+    <string name="tuicalling_toast_user_reject_call">%1$s通話拒否</string>
+    <string name="tuicalling_toast_user_not_response">%1$s応答なし</string>
+    <string name="tuicalling_toast_user_busy">%1$sが通話中です</string>
+    <string name="tuicalling_toast_enable_mute">マイクがオフになっています</string>
+    <string name="tuicalling_toast_disable_mute">マイクがオンになっています</string>
+    <string name="tuicalling_toast_speaker">スピーカーを使用します</string>
+    <string name="tuicalling_toast_use_handset">ヘッドホンを使用します</string>
+    <string name="tuicalling_toast_user_end">%s 通話終了</string>
+    <string name="tuicalling_other_party_network_low_quality">相手のネットワーク接続が不安定です</string>
+    <string name="tuicalling_self_network_low_quality">ネットワーク接続が不安定です</string>
+    <string name="tuicalling_toast_switch_camera">カメラの切り替え</string>
+    <string name="tuicalling_toast_enable_camera">カメラがオンになっています</string>
+    <string name="tuicalling_toast_disable_camera">カメラがオフになっています</string>
+    <string name="tuicalling_waiting_accept">相手が招待を承諾するのを待っています</string>
+    <string name="tuicalling_invite_audio_call">音声通話に招待されました</string>
+    <string name="tuicalling_invite_video_call">ビデオ通話に招待されました</string>
+    <string name="tuicalling_text_microphone">マイク</string>
+    <string name="tuicalling_text_hangup">マイク</string>
+    <string name="tuicalling_text_reject">拒否</string>
+    <string name="tuicalling_text_speaker">スピーカー</string>
+    <string name="tuicalling_text_dialing">応答</string>
+    <string name="tuicalling_text_camera">カメラ</string>
+    <string name="tuicalling_switch_audio_call">音声通話に切り替えます</string>
+    <string name="tuicalling_btn_cancel">キャンセル</string>
+    <string name="tuicalling_video_call">ビデオ通話</string>
+    <string name="tuicalling_audio_call">音声通話</string>
+    <string name="tuicalling_user_exceed_limit">暫して、最大9人までの通话をサポートしています。複数人の会議を希望する場合、TUIRoomを使用してください。</string>
+    <string name="tuicalling_wait_resonse">応答を待っています...</string>
+
+    <string name="tuicalling_permission_camera">カメラ</string>
+    <string name="tuicalling_permission_microphone">マイク</string>
+    <string name="tuicalling_permission_bluetooth">Bluetooth</string>
+    <string name="tuicalling_permission_separator">、</string>
+    <string name="tuicalling_permission_tips">最初に%sの権限を有効にする必要があります</string>
+    <string name="tuicalling_permission_title">%sは%s権限を取得するよう申請します</string>
+    <string name="tuicalling_permission_camera_reason">カメラへのアクセス許可が必要で、ビデオ通話、グループビデオ通話などの機能に使用できます。美顔機能を使用する場合は、カメラで撮影された映像から顔の特徴点情報をリアルタイムで収集し、より自然な美しさを提供します。</string>
+    <string name="tuicalling_permission_mic_reason">マイクへのアクセス許可が必要で、音声/ビデオ通話、グループ音声/ビデオ通話などの機能に使用できます。マイクをオンにした場合のみ、録画した動画に音声が保存されます。</string>
+    <string name="tuicalling_permission_bluetooth_reason">音声/ビデオ通話中にBluetooth接続が正常に行われるには、付近のBluetoothデバイスの検出や接続を許可する必要があります。</string>
+
+    <string name="tuicalling_package_not_purchased">TUICallKit パッケージを購入していません。コンソールで無料トライアル版をアクティブ化するか、正式版を購入してください。</string>
+    <string name="tuicalling_package_not_support">購入したTUICallKitパッケージはこの機能をサポートしていません。パッケージタイプをアップグレードすることをお勧めします。</string>
+    <string name="tuicalling_groupid_is_empty">グループIDが空です</string>
+    <string name="tuicalling_have_a_new_call">新しい通話があります</string>
+
+    <string name="tuicallkit_record_call_title">通話履歴</string>
+    <string name="tuicallkit_record_call_delete">削除</string>
+    <string name="tuicallkit_record_dialog_message">すべての履歴を消去</string>
+    <string name="tuicallkit_record_dialog_cancel">キャンセル</string>
+    <string name="tuicallkit_record_tab_title_all">すべて</string>
+    <string name="tuicallkit_record_tab_title_miss">不在着信</string>
+    <string name="tuicallkit_record_done">完了</string>
+    <string name="tuicallkit_record_clear">削除</string>
+    <string name="tuicallkit_group_recall_unsupport">グループ通話記録はリコールをサポートしません</string>
+    <string name="tuicallkit_record_result_unknown">不明</string>
+    <string name="tuicallkit_record_result_missed">不在着信</string>
+    <string name="tuicallkit_record_result_incoming">着信</string>
+    <string name="tuicallkit_record_result_outgoing">発信</string>
+
+    <string name="tuicallkit_group_title_add_user">メンバーを招待</string>
+    <string name="tuicallkit_group_hint_you">(自分)</string>
+    <string name="tuicallkit_group_btn_ok">OK</string>
+
+    <string name="tuicallkit_error_in_peer_blacklist">ユーザーはブラックリストに登録され、通話が開始できませんでした。</string>
+</resources>

@@ -7,7 +7,7 @@ import android.view.MotionEvent
 import android.widget.RelativeLayout
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.videolayout.SingleCallVideoLayoutViewModel
@@ -95,7 +95,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
                 layoutRenderSmall?.removeAllViews()
             }
             layoutRenderSmall?.addView(videoViewSmall)
-            CallEngineManager.instance.startRemoteView(
+            EngineManager.instance.startRemoteView(
                 viewModel.remoteUser.id,
                 videoViewSmall?.getVideoView(),
                 null
@@ -113,7 +113,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
         layoutRenderBig?.addView(videoViewBig)
         if (!viewModel.isCameraOpen.get() && TUICallDefine.Status.Accept != viewModel.selfUser.callStatus.get()) {
             viewModel.selfUser.videoAvailable.set(true)
-            CallEngineManager.instance.openCamera(
+            EngineManager.instance.openCamera(
                 viewModel.isFrontCamera.get(),
                 videoViewBig?.getVideoView(),
                 null
