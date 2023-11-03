@@ -31,15 +31,15 @@ target 'TUIKitDemo' do
   pod 'TUIContact', :path => "../TUIKit/TUIContact"
   pod 'TUIGroup', :path => "../TUIKit/TUIGroup"
   pod 'TUISearch', :path => "../TUIKit/TUISearch"
-  pod 'TUIOfflinePush', :path => "../TUIKit/TUIOfflinePush"
   
   # 注意:插件需要跟随版本，需要和TUICore.spec中一致，正常情况下我们会帮您修改一致。
   # Note:TUIKit plugins need to follow the version.
-  pod 'TUIPollPlugin', '7.5.4864'
-  pod 'TUIGroupNotePlugin', '7.5.4864'
-  pod 'TUITranslationPlugin', '7.5.4864'
-  pod 'TUIConversationGroupPlugin','7.5.4864'
-  pod 'TUIConversationMarkPlugin', '7.5.4864'
+  pod 'TIMPush', '7.6.5011'
+  pod 'TUIPollPlugin', '7.6.5011'
+  pod 'TUIGroupNotePlugin', '7.6.5011'
+  pod 'TUITranslationPlugin', '7.6.5011'
+  pod 'TUIConversationGroupPlugin','7.6.5011'
+  pod 'TUIConversationMarkPlugin', '7.6.5011'
   
   # 其他 Pod
   # Other Pod
@@ -49,6 +49,11 @@ target 'TUIKitDemo' do
   pod 'Masonry'
 end
 
+target 'pushservice' do
+  use_frameworks!
+  use_modular_headers!
+  pod 'TIMPush', '7.6.5011'
+end
 
 
 #Pods config
