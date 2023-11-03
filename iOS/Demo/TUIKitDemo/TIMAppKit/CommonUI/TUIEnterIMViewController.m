@@ -240,7 +240,7 @@ static BOOL g_hasAddedCustomFace = NO;
                                                                 tips:tips
                                                          buttonTitle:buttonTitle
                                                         buttonAction:^{
-                                                          NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/apply/p/xc3oaubi98g"];
+                                                          NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
                                                           [TUITool openLinkWithURL:url];
                                                         }];
     if ([TUIStyleSelectViewController isClassicEntrance]) {

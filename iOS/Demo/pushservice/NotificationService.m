@@ -7,7 +7,8 @@
 //
 
 #import "NotificationService.h"
-
+#import <TIMPush/TIMPush.h>
+#import "TCConstants.h"
 @interface NotificationService ()
 
 @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
@@ -19,12 +20,19 @@
 
 - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
     self.contentHandler = contentHandler;
-    self.bestAttemptContent = [request.content mutableCopy];
+
+    //appGroup 标识当前主 APP 和 Extension 之间共享的 APP Group，需要在主 APP 的 Capability 中配置 App Groups 能力。
+    //格式为group + [主bundleID]+ key
+    //如group.com.tencent.im.pushkey
+    NSString * appGroupID = kTIMPushAppGorupKey;
     
-    // Modify the notification content here...
-    self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
-    
-    self.contentHandler(self.bestAttemptContent);
+    __weak typeof(self) weakSelf = self;
+    [TIMPush onReceiveNotificationRequest:request inAppGroupID:appGroupID callback:^(UNNotificationContent *content) {
+        weakSelf.bestAttemptContent = [content mutableCopy];
+        // Modify the notification content here...
+        // self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
+        weakSelf.contentHandler(weakSelf.bestAttemptContent);
+    }];
 }
 
 - (void)serviceExtensionTimeWillExpire {

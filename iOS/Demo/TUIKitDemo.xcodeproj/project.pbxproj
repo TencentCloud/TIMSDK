@@ -112,7 +112,6 @@
 		935F7BFF293615760033D099 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		935F7C00293615760033D099 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		935F7C01293615760033D099 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Main.strings"; sourceTree = "<group>"; };
-		935F7C02293615760033D099 /* TUIKitDemo.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = TUIKitDemo.entitlements; sourceTree = "<group>"; };
 		935F7C2F293615770033D099 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		935F7C31293615770033D099 /* 00.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 00.caf; sourceTree = "<group>"; };
 		935F7C32293615770033D099 /* 01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 01.caf; sourceTree = "<group>"; };
@@ -235,7 +234,6 @@
 			children = (
 				9383459D2A8A0EBA0072977E /* TIMAppKit */,
 				935F7C37293615770033D099 /* Private */,
-				935F7C02293615760033D099 /* TUIKitDemo.entitlements */,
 				935F7C30293615770033D099 /* PushSound */,
 				935F7C4D293615770033D099 /* Login */,
 				935F7C34293615770033D099 /* Main.storyboard */,

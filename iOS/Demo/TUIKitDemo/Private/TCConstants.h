@@ -49,6 +49,7 @@
 
 //APNS
 #define kAPNSBusiId 0
+#define kTIMPushAppGorupKey @"" 
 
 //tpns
 #define kTPNSAccessID  0

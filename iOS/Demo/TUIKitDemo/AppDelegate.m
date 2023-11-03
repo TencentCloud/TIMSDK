@@ -40,7 +40,10 @@
 #import "SettingController_Minimalist.h"
 //Minimalist
 
-@interface AppDelegate () <V2TIMConversationListener, TUILoginListener, TUIThemeSelectControllerDelegate, TUILanguageSelectControllerDelegate,V2TIMAPNSListener>
+#import <TIMPush/TIMPush.h>
+#import <UserNotifications/UserNotifications.h>
+
+@interface AppDelegate () <V2TIMConversationListener, TUILoginListener, TUIThemeSelectControllerDelegate, TUILanguageSelectControllerDelegate,V2TIMAPNSListener, TIMPushDelegate>
 
 @property (nonatomic, strong) TUIContactViewDataProvider *contactDataProvider;
 @property (nonatomic, strong) TUILoginConfig *loginConfig;
@@ -49,7 +52,6 @@
 @end
 
 @implementation AppDelegate
-
 
 #pragma mark - Life cycle
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -247,7 +249,7 @@ void uncaughtExceptionHandler(NSException*exception) {
                                                                 tips:tips
                                                          buttonTitle:buttonTitle
                                                         buttonAction:^{
-        NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/apply/p/xc3oaubi98g"];
+        NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
         [TUITool openLinkWithURL:url];
     }];
     [TUIBaseChatViewController setCustomTopView:tipsView];
@@ -811,6 +813,41 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
         return callsItem;
     }
     return nil;
+}
+
+#pragma mark - TIMPush
+// TIMPush 相关配置
+- (int)offlinePushCertificateID {
+    return kAPNSBusiId;
+}
+
+- (NSString *)applicationGroupID {
+    return kTIMPushAppGorupKey;
+}
+
+- (void)navigateToBuiltInChatViewController:(NSString *)userID groupID:(NSString *)groupID {
+    UITabBarController *tab = [self getMainController];
+    if (![tab isKindOfClass: UITabBarController.class]) {
+        // 正在登录中
+        return;
+    }
+    if (tab.selectedIndex != 0) {
+        [tab setSelectedIndex:0];
+    }
+    self.window.rootViewController = tab;
+    UINavigationController *nav = (UINavigationController *)tab.selectedViewController;
+    if (![nav isKindOfClass:UINavigationController.class]) {
+        return;
+    }
+
+    UIViewController *vc = nav.viewControllers.firstObject;
+    if (![vc isKindOfClass:NSClassFromString(@"ConversationController")]
+        && ![vc isKindOfClass:NSClassFromString(@"ConversationController_Minimalist")]) {
+        return;
+    }
+    if ([vc respondsToSelector:NSSelectorFromString(@"pushToChatViewController:userID:")]) {
+        [vc performSelector:NSSelectorFromString(@"pushToChatViewController:userID:") withObject:groupID withObject:userID];
+    }
 }
 
 @end
