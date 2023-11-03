@@ -182,4 +182,6 @@ dependencies {
         api 'com.tencent.timpush:honor:7.6.5011'
     }
 
+    api project(':tuiofflinepush')
+
 }
