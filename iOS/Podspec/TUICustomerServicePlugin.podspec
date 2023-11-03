@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name         = 'TUITranslationPlugin'
+  spec.name         = 'TUICustomerServicePlugin'
   spec.version      = '7.6.5011'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
@@ -11,36 +11,41 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://cloud.tencent.com/document/product/269/3794'
   spec.documentation_url = 'https://cloud.tencent.com/document/product/269/9147'
   spec.authors      = 'tencent video cloud'
-  spec.summary      = 'TUITranslationPlugin'
+  spec.summary      = 'TUICustomerServicePlugin'
   spec.xcconfig     = { 'VALID_ARCHS' => 'armv7 arm64 x86_64', }
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUITranslationPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUICustomerServicePlugin.zip'}
 
   spec.subspec 'CommonModel' do |commonModel|
-    commonModel.source_files = '**/TUITranslationPlugin/CommonModel/*.{h,m,mm}'
+    commonModel.source_files = '**/TUICustomerServicePlugin/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TUICore','7.6.5011'
     commonModel.dependency 'TIMCommon','7.6.5011'
     commonModel.dependency 'TUIChat','7.6.5011'
+    commonModel.dependency 'TUIContact','7.6.5011'
   end
 
-  spec.subspec 'UI' do |commonUI|
+  spec.subspec 'UI_Classic' do |commonUI|
     commonUI.subspec 'DataProvider' do |dataProvider|
-      dataProvider.source_files = '**/TUITranslationPlugin/UI/DataProvider/*.{h,m,mm}'
-      dataProvider.dependency "TUITranslationPlugin/CommonModel"
+      dataProvider.source_files = '**/TUICustomerServicePlugin/UI_Classic/DataProvider/*.{h,m,mm}'
+      dataProvider.dependency "TUICustomerServicePlugin/CommonModel"
     end
     commonUI.subspec 'UI' do |subUI|
-      subUI.source_files = '**/TUITranslationPlugin/UI/UI/*.{h,m,mm}'
-      subUI.dependency "TUITranslationPlugin/UI/DataProvider"
+      subUI.source_files = '**/TUICustomerServicePlugin/UI_Classic/UI/*.{h,m,mm}'
+      subUI.dependency "TUICustomerServicePlugin/UI_Classic/DataProvider"
     end
     commonUI.subspec 'Service' do |service|
-      service.source_files = '**/TUITranslationPlugin/UI/Service/*.{h,m,mm}'
-      service.dependency "TUITranslationPlugin/UI/UI"
+      service.source_files = '**/TUICustomerServicePlugin/UI_Classic/Service/*.{h,m,mm}'
+      service.dependency "TUICustomerServicePlugin/UI_Classic/UI"
     end
     commonUI.resource = [
-      '**/TUITranslationPlugin/Resources/*.bundle'
+      '**/TUICustomerServicePlugin/Resources/*.bundle'
     ]
+  end
+
+  spec.subspec 'ALL' do |all|
+    all.dependency "TUICustomerServicePlugin/UI_Classic"
   end
 
   spec.pod_target_xcconfig = {
@@ -53,4 +58,4 @@ Pod::Spec.new do |spec|
   }
 end
 
-# pod trunk push TUITranslationPlugin.podspec --use-libraries --allow-warnings
+# pod trunk push TUICustomerServicePlugin.podspec --use-libraries --allow-warnings

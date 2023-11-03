@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIPollPlugin'
-  spec.version      = '7.5.4864'
+  spec.version      = '7.6.5011'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.5.4864/ios/TUIPollPlugin_7.5.4864.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.6.5011/ios/TUIPollPlugin_7.6.5011.framework.zip'}
   spec.preserve_paths = 'TUIPollPlugin.framework'
   spec.vendored_frameworks = 'TUIPollPlugin.framework'
   spec.pod_target_xcconfig = {
@@ -25,3 +25,5 @@ Pod::Spec.new do |spec|
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
   } 
 end
+
+# pod trunk push TUIPollPlugin.podspec --use-libraries --allow-warnings
