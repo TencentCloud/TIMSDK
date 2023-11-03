@@ -208,12 +208,22 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.5.4864 @2023.10.13
+## Latest Enhanced Version 7.6.5011 @2023.11.03
 ### SDK
-- Fixed occasional issue of no callback when retrieving historical messages.
-- Fixed occasional issue of local message loss.
-- Fixed occasional incorrect message response status.
-- Optimized automatic login logic after SDK is kicked out.
+- Online status supports returning terminal type
+- Save security strike status locally after sending text and image messages are hit by security
+- C interface layer's session information supplements session avatar and group specific type
+- Optimize message sending failure status and resend logic
+- Optimize the message response fetching logic when there is no network connection.
+- Fix the occasional network connection failure when switching sdkappid across sites
+- Fix the issue of being able to search in the cloud after being kicked offline
+
+### TUIKit & Demo
+- Added push plugin, console supports viewing statistical indicator data, supports troubleshooting tools
+- Added open-source customer service plugin TUICustomerServicePlugin
+- TUIChat adds 60-second countdown for sending voice messages
+- TUIChat uses the new recall interface, supports displaying the recall operator
+- Optimize the display of images/videos/audios hit by security
 
 
 ## Latest Basic Version 5.1.66 @2021.09.22
