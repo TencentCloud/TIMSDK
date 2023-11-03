@@ -3,7 +3,7 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 
 #import <AVFoundation/AVFoundation.h>
-
+#import <TUICore/TUILogin.h>
 #import <TIMCommon/TUISystemMessageCellData.h>
 #import "TUIChatCallingDataProvider.h"
 #import "TUICloudCustomDataTypeCenter.h"
@@ -247,6 +247,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     
     NSString *businessID = nil;
     BOOL excludeFromHistory = NO;
+    BOOL isCustomerService = NO;
     
     V2TIMSignalingInfo *signalingInfo = [V2TIMManager.sharedInstance getSignallingInfo:message];
     if (signalingInfo) {
@@ -262,14 +263,14 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     } else {
         // This message is normal custom message
         excludeFromHistory = NO;
-        businessID = [self getCustomBusinessID:message];
+        businessID = [self getCustomBusinessID:message isCustomerService:&isCustomerService];
     }
     
     if (excludeFromHistory) {
         // Return nil means not display in the chat page
         return nil;
     }
-    
+
     if (businessID.length > 0) {
         Class cellDataClass = nil;
         if (gDataSourceClass && [gDataSourceClass respondsToSelector:@selector(onGetCustomMessageCellDataClass:)]) {
@@ -277,8 +278,16 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         }
         if (cellDataClass && [cellDataClass respondsToSelector:@selector(getCellData:)]) {
             TUIMessageCellData *data = [cellDataClass getCellData:message];
-            data.reuseId = businessID;
-            return data;
+            if (data.shouldHide) {
+                return nil;
+            } else {
+                data.reuseId = businessID;
+                return data;
+            }
+        }
+        // CustomerService 场景，不支持的消息直接不展示
+        if (isCustomerService) {
+            return nil;
         }
         return [self getUnsupportedCellData:message];
     } else {
@@ -322,17 +331,19 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 + (nullable TUISystemMessageCellData *)getRevokeCellData:(V2TIMMessage *)message {
     TUISystemMessageCellData *revoke = [[TUISystemMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
     revoke.reuseId = TSystemMessageCell_ReuseId;
+    revoke.content = [self getRevokeDispayString:message];
+    revoke.innerMessage = message;
+    V2TIMUserFullInfo *revokerInfo = message.revokerInfo;
     if (message.isSelf) {
         if (message.elemType == V2TIM_ELEM_TYPE_TEXT && fabs([[NSDate date] timeIntervalSinceDate:message.timestamp]) < MaxReEditMessageDelay) {
-            revoke.supportReEdit = YES;
+            if(revokerInfo &&![revokerInfo.userID isEqualToString:message.sender]) {
+                //Super User revoke
+                revoke.supportReEdit = NO;
+            }
+            else {
+                revoke.supportReEdit = YES;
+            }
         }
-        revoke.content = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
-        revoke.innerMessage = message;
-        return revoke;
-    } else if (message.userID.length > 0) {
-        revoke.content = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
-        revoke.innerMessage = message;
-        return revoke;
     } else if (message.groupID.length > 0) {
         /**
          * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
@@ -341,13 +352,13 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
          */
         NSString *userName = [TUIMessageDataProvider getShowName:message];
         TUIJoinGroupMessageCellData *joinGroupData = [[TUIJoinGroupMessageCellData alloc] initWithDirection:MsgDirectionIncoming];
-        joinGroupData.content = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+        joinGroupData.content = [self getRevokeDispayString:message];
         joinGroupData.opUserID = message.sender;
         joinGroupData.opUserName = userName;
         joinGroupData.reuseId = TJoinGroupMessageCell_ReuseId;
         return joinGroupData;
     }
-    return nil;
+    return revoke;
 }
 
 + (nullable TUISystemMessageCellData *)getSystemMsgFromDate:(NSDate *)date {
@@ -360,6 +371,11 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 
 #pragma mark - Last message parser
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message {
+    BOOL hasRiskContent = message.hasRiskContent;
+    BOOL isRevoked = (message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED);
+    if (hasRiskContent && !isRevoked ) {
+        return  TIMCommonLocalizableString(TUIKitMessageDisplayRiskContent);
+    }
     NSString *str = [self parseDisplayStringFromMessageStatus:message];
     if (str == nil) {
         str = [self parseDisplayStringFromMessageElement:message];
@@ -449,6 +465,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     
     NSString *businessID = nil;
     BOOL excludeFromHistory = NO;
+    BOOL isCustomerService = NO;
 
     V2TIMSignalingInfo *signalingInfo = [V2TIMManager.sharedInstance getSignallingInfo:message];
     if (signalingInfo) {
@@ -458,7 +475,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     } else {
         // This message is normal custom message
         excludeFromHistory = NO;
-        businessID = [self getCustomBusinessID:message];
+        businessID = [self getCustomBusinessID:message isCustomerService:&isCustomerService];
     }
 
     if (excludeFromHistory) {
@@ -473,6 +490,10 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         }
         if (cellDataClass && [cellDataClass respondsToSelector:@selector(getDisplayString:)]) {
             return [cellDataClass getDisplayString:message];
+        }
+        // CustomerService 场景，不支持的消息，直接不展示
+        if (isCustomerService) {
+            return nil;
         }
         return TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
     } else {
@@ -576,7 +597,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 }
 
 #pragma mark - Utils
-+ (nullable NSString *)getCustomBusinessID:(V2TIMMessage *)message {
++ (nullable NSString *)getCustomBusinessID:(V2TIMMessage *)message isCustomerService:(BOOL *)isCustomerService {
     if (message == nil || message.customElem.data == nil) {
         return nil;
     }
@@ -589,11 +610,21 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     if (!param || ![param isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
+    
     NSString *businessID = param[BussinessID];
-    if (!businessID || ![businessID isKindOfClass:[NSString class]]) {
+    if (businessID.length > 0 && [businessID isKindOfClass:[NSString class]]) {
+        return businessID;
+    } else {
+        if (![param.allKeys containsObject:BussinessID_CustomerService]) {
+            return nil;
+        }
+        *isCustomerService = YES;
+        NSString *src = param[BussinessID_Src];
+        if (src.length > 0 && [src isKindOfClass:[NSString class]]) {
+            return src;
+        }
         return nil;
     }
-    return businessID;
 }
 
 + (nullable NSString *)getSignalingBusinessID:(V2TIMSignalingInfo *)signalInfo {

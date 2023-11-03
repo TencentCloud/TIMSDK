@@ -54,11 +54,10 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (void)addUnsupportNotificationInVC:(UIViewController *)vc;
 + (void)addUnsupportNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly;
 
-+ (void)showValueAddedUnsupportAlertOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc onVC:(UIViewController *)vc;
-+ (void)postValueAddedUnsupportNotificationOfService:(NSString *)service;
-+ (void)postValueAddedUnsupportNotificationOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc debugOnly:(BOOL)debugOnly;
-+ (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc;
-+ (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly;
++ (void)addValueAddedUnsupportNeedContactNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly;
++ (void)addValueAddedUnsupportNeedPurchaseNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly;
++ (void)postValueAddedUnsupportNeedContactNotification:(NSString *)service;
++ (void)postValueAddedUnsupportNeedPurchaseNotification:(NSString *)service;
 
 + (void)checkCommercialAbility:(long long)param succ:(void (^)(BOOL enabled))succ fail:(void (^)(int code, NSString *desc))fail;
 

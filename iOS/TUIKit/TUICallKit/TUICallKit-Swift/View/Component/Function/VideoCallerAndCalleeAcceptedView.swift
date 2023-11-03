@@ -10,7 +10,7 @@ import SnapKit
 
 class VideoCallerAndCalleeAcceptedView: UIView {
     
-    let viewModel = FunctionViewModel()
+    let viewModel = VideoCallerAndCalleeAcceptedViewModel()
     lazy var muteMicBtn: BaseControlButton = {
         weak var weakSelf = self
         let btn = BaseControlButton.create(frame: CGRect.zero,
@@ -46,7 +46,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
                                            imageSize: kBtnSmallSize) { sender in
             weakSelf?.changeSpeakerEvent(sender: sender)
         }
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_handsfree") {
+        if let image = TUICallKitCommon.getBundleImage(name: "ic_handsfree_on") {
             btn.updateImage(image: image)
         }
         btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))

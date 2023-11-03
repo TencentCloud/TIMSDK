@@ -41,6 +41,10 @@ class SingleCallVideoLayout: UIView {
         super.init(frame: frame)
         backgroundColor = UIColor.t_colorWithHexString(color: "#242424")
         
+        if viewModel.mediaType.value != .video {
+            return
+        }
+
         initPreView()
         registerObserveState()
     }
@@ -154,7 +158,7 @@ class SingleCallVideoLayout: UIView {
         localPreView.isUserInteractionEnabled = false
         localPreView.isHidden = false
         addSubview(localPreView)
-        
+                
         if viewModel.selfCallStatus.value == .waiting {
             viewModel.openCamera(videoView: localPreView)
         } else if viewModel.selfCallStatus.value == .accept && viewModel.isCameraOpen.value == true {

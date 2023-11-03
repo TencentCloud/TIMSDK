@@ -83,7 +83,7 @@ class GCDTimer {
         }
 
         if time.sec <= 0 {
-            seconds = ""
+            seconds = "00"
         } else if time.sec >= 0 && time.sec < 10 {
             seconds = "0\(time.sec)"
         } else {

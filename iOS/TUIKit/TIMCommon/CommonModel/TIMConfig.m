@@ -26,8 +26,8 @@ typedef NS_OPTIONS(NSInteger, emojiFaceType) {
 - (id)init {
     self = [super init];
     if (self) {
+        self.enableMessageBubble = YES;
         [self updateEmojiGroups];
-
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeLanguage) name:TUIChangeLanguageNotification object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onChangeTheme) name:TUIDidApplyingThemeChangedNotfication object:nil];
     }

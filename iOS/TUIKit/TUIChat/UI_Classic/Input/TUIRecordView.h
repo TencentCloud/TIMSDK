@@ -39,6 +39,8 @@
 
 @property(nonatomic, strong) UIView *background;
 
+@property(nonatomic, strong) UILabel *timeLabel;
+
 /**
  *  设置当前录音的音量。
  *  便于录音图标视图中的图像根据音量进行改变。

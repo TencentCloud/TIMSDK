@@ -14,7 +14,7 @@
 #import "TUIMessageController.h"
 #import "TUIMessageDataProvider.h"
 
-#define kC2CTypingTime 30.0
+#define kC2CTypingTime 3000.0
 
 @interface TUIC2CChatViewController ()
 
@@ -29,11 +29,25 @@
 
 - (void)dealloc {
     self.sendTypingBaseCondationInVC = NO;
+    
+    // notify
+    NSDictionary *param = @{TUICore_TUIChatNotify_ViewWillDeallocSubKey_UserID: self.conversationData.userID ? : @""};
+    [TUICore notifyEvent:TUICore_TUIChatNotify
+                  subKey:TUICore_TUIChatNotify_ViewWillDeallocSubKey
+                  object:nil
+                   param:param];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.sendTypingBaseCondationInVC = NO;
+    
+    // notify
+    NSDictionary *param = @{TUICore_TUIChatNotify_ViewDidLoadSubKey_UserID: self.conversationData.userID ? : @""};
+    [TUICore notifyEvent:TUICore_TUIChatNotify
+                  subKey:TUICore_TUIChatNotify_ViewDidLoadSubKey
+                  object:nil
+                   param:param];
 }
 
 #pragma mark - Override Methods

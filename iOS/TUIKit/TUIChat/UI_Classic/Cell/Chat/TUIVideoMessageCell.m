@@ -31,7 +31,7 @@
         [_thumb.layer setMasksToBounds:YES];
         _thumb.contentMode = UIViewContentModeScaleAspectFill;
         _thumb.backgroundColor = [UIColor clearColor];
-        [self.container addSubview:_thumb];
+        [self.bubbleView addSubview:_thumb];
         _thumb.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
         CGSize playSize = TVideoMessageCell_Play_Size;
@@ -78,6 +78,18 @@
     [super fillWithData:data];
     self.videoData = data;
     _thumb.image = nil;
+    
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        self.thumb.image = TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        self.securityStrikeView.textLabel.text = TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrikeImage);
+        self.duration.text = @"";
+        self.play.hidden = YES;
+        self.downloadImage.hidden = YES;
+        self.indicator.hidden = YES;
+        self.animateCircleView.hidden = YES;
+        return;
+    }
     if (data.thumbImage == nil) {
         [data downloadThumb];
     }
@@ -242,35 +254,32 @@
         if (self.tagView) {
             CGFloat topMargin = 10;
             CGFloat tagViewTopMargin = 6;
-            CGFloat thumbHeight = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
+            CGFloat thumbHeight = self.bubbleView.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
             [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(thumbHeight);
-                make.width.mas_equalTo(self.container).multipliedBy(0.7);
-                make.centerX.mas_equalTo(self.container);
+                make.width.mas_equalTo(self.bubbleView).multipliedBy(0.7);
+                make.centerX.mas_equalTo(self.bubbleView);
                 make.top.mas_equalTo(self.container).mas_offset(topMargin);
             }];
             [self.tagView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(self.messageData.messageModifyReactsSize.height);
-                make.width.mas_equalTo(self.container);
-                make.trailing.mas_equalTo(self.container.mas_trailing);
-                make.bottom.mas_equalTo(self.container.mas_bottom);
+                make.width.mas_equalTo(self.bubbleView);
+                make.trailing.mas_equalTo(self.bubbleView.mas_trailing);
+                make.bottom.mas_equalTo(self.bubbleView.mas_bottom);
             }];
             [self.duration mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.trailing.mas_equalTo(self.thumb.mas_trailing).mas_offset(-2);
-
-                //                make.centerX.mas_equalTo(self.thumb).mas_offset(20);
                 make.width.mas_greaterThanOrEqualTo(20);
                 make.height.mas_equalTo(20);
                 make.bottom.mas_equalTo(self.thumb.mas_bottom);
             }];
         }
-        self.bubbleView.hidden = NO;
     } else {
         [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(self.container.mas_height);
-            make.width.mas_equalTo(self.container);
-            make.leading.mas_equalTo(self.container.mas_leading);
-            make.top.mas_equalTo(self.container);
+            make.top.mas_equalTo(self.bubbleView).mas_offset(self.messageData.cellLayout.bubbleInsets.top);
+            make.bottom.mas_equalTo(self.bubbleView).mas_offset(- self.messageData.cellLayout.bubbleInsets.bottom);
+            make.leading.mas_equalTo(self.bubbleView).mas_offset(self.messageData.cellLayout.bubbleInsets.left);
+            make.trailing.mas_equalTo(self.bubbleView).mas_offset(- self.messageData.cellLayout.bubbleInsets.right);
         }];
         [self.duration mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.trailing.mas_equalTo(self.thumb.mas_trailing).mas_offset(-2);
@@ -278,9 +287,30 @@
             make.height.mas_equalTo(20);
             make.bottom.mas_equalTo(self.thumb.mas_bottom);
         }];
-        self.bubbleView.hidden = YES;
     }
     
+    
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent ) {
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.bubbleView).mas_offset(12);
+            make.size.mas_equalTo(CGSizeMake(150, 150));
+            make.centerX.mas_equalTo(self.bubbleView);
+        }];
+        
+        [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.thumb.mas_bottom);
+            make.width.mas_equalTo(self.bubbleView);
+            if(self.tagView) {
+                make.bottom.mas_equalTo(self.container).mas_offset(-self.messageData.messageModifyReactsSize.height);
+            }
+            else {
+                make.bottom.mas_equalTo(self.container).mas_offset(-12);
+            }
+            
+        }];
+    }
+
     [self.play mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(TVideoMessageCell_Play_Size);
         make.center.mas_equalTo(self.thumb);
@@ -379,6 +409,17 @@
     } else {
         size.height = size.height / size.width * TVideoMessageCell_Image_Width_Max;
         size.width = TVideoMessageCell_Image_Width_Max;
+    }
+    BOOL hasRiskContent = videoCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        CGFloat bubbleTopMargin = 12;
+        CGFloat bubbleBottomMargin = 12;
+        size.height = MAX(size.height, 150);// width must more than  TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        size.width = MAX(size.width, 200);// width must more than  TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrike)
+        size.height += bubbleTopMargin;
+        size.height += kTUISecurityStrikeViewTopLineMargin;
+        size.height += kTUISecurityStrikeViewTopLineToBottom;
+        size.height += bubbleBottomMargin;
     }
     return size;
 }

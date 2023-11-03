@@ -17,7 +17,7 @@
     cellData.innerMessage = message;
     cellData.msgID = message.msgID;
     cellData.content = param[@"content"];
-    cellData.opUser = [self.class getOpUserName:message];
+    cellData.opUser = [self.class getOpUserName:message]?:param[@"opUser"];
     cellData.cmd = param[@"cmd"];
     return cellData;
 }
@@ -79,7 +79,8 @@
             localizableContent = TIMCommonLocalizableString(TUIGroupCreateTipsMessage);
         }
     }
-    NSString *str = [NSString stringWithFormat:@"\"%@\" %@", param[@"opUser"], localizableContent];
+    NSString * opUser = [self.class getOpUserName:msg]?:param[@"opUser"];
+    NSString *str = [NSString stringWithFormat:@"\"%@\" %@", opUser, localizableContent];
     return rtlString(str);
 }
 

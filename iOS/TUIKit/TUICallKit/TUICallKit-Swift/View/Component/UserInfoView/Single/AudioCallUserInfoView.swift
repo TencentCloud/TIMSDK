@@ -116,9 +116,10 @@ class AudioCallUserInfoView: UIView {
     // MARK: Update UI
     func setUserImageAndName() {
         let remoteUser = viewModel.remoteUserList.value.first ?? User()
-        userNameLabel.text = remoteUser.nickname.value
-        if let image = TUICallKitCommon.getUrlImage(url: remoteUser.avatar.value) {
-            self.userHeadImageView.image = image
+        userNameLabel.text = User.getUserDisplayName(user: remoteUser)
+        
+        if let url = URL(string: remoteUser.avatar.value) {
+            userHeadImageView.sd_setImage(with: url)
         }
     }
 

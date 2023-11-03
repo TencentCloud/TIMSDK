@@ -48,8 +48,6 @@ StatusBar_Height + 40, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVid
 - (void)setupCallingSingleView {
     self.localPreView.frame = self.bounds;
     [self.localPreView setUserInteractionEnabled:NO];
-    self.remotePreView.hidden = YES;
-    self.localPreView.hidden = NO;
     self.backgroundColor = [UIColor t_colorWithHexString:@"#242424"];
     [self addSubview:self.remotePreView];
     [self addSubview:self.localPreView];
@@ -81,15 +79,13 @@ StatusBar_Height + 40, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVid
     }
 }
 
-- (void)updateCameraOpenStatus:(BOOL)isOpen {
-    self.localPreView.hidden = !isOpen;
-}
-
 - (void)updateRemoteView {
     if (![self.remoteUser.userId isEqualToString:[TUILogin getUserID]]) {
         [self.remotePreView configViewWithUserModel:self.remoteUser];
-        [TUICallingAction startRemoteView:self.remoteUser.userId videoView:self.remotePreView onPlaying:nil onLoading:nil onError:nil];
-        self.remotePreView.hidden = NO;
+        [TUICallingAction startRemoteView:self.remoteUser.userId videoView:self.remotePreView onPlaying:^(NSString * _Nonnull userId) {
+        } onLoading:^(NSString * _Nonnull userId) {
+        } onError:^(NSString * _Nonnull userId, int code, NSString * _Nonnull errMsg) {
+        }];
         [self switchTo2UserPreView];
     }
 }
@@ -97,8 +93,10 @@ StatusBar_Height + 40, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVid
 - (void)setRemotePreViewWith:(CallingUserModel *)userModel{
     if (![userModel.userId isEqualToString:[TUILogin getUserID]]) {
         [self.remotePreView configViewWithUserModel:userModel];
-        [TUICallingAction startRemoteView:self.remoteUser.userId videoView:self.remotePreView onPlaying:nil onLoading:nil onError:nil];
-        self.remotePreView.hidden = NO;
+        [TUICallingAction startRemoteView:self.remoteUser.userId videoView:self.remotePreView onPlaying:^(NSString * _Nonnull userId) {
+        } onLoading:^(NSString * _Nonnull userId) {
+        } onError:^(NSString * _Nonnull userId, int code, NSString * _Nonnull errMsg) {
+        }];
     }
 }
 
@@ -208,8 +206,6 @@ StatusBar_Height + 40, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVid
             }
         }];
     } else {
-        self.localPreView.hidden = NO;
-        
         [UIView animateWithDuration:0.3 animations:^{
             self.localPreView.frame = self.frame;
             remoteView.frame = kTUICallingSingleViewMicroRenderFrame;

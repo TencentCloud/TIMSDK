@@ -1,5 +1,5 @@
 //
-//  FunctionViewModel.swift
+//  AudioAndVideoCalleeWaitingViewModel.swift
 //  Alamofire
 //
 //  Created by vincepzhang on 2022/12/30.
@@ -8,7 +8,7 @@
 import Foundation
 import TUICallEngine
 
-class FunctionViewModel {
+class AudioAndVideoCalleeWaitingViewModel {
     
     let mediaTypeObserver = Observer()
     let isCameraOpenObserver = Observer()
@@ -66,31 +66,7 @@ class FunctionViewModel {
         CallEngineManager.instance.accept()
     }
     
-    func hangup() {
-        CallEngineManager.instance.hangup()
-    }
-    
     func reject() {
         CallEngineManager.instance.reject()
-    }
-    
-    func muteMic() {
-        CallEngineManager.instance.muteMic()
-    }
-    
-    func changeSpeaker() {
-        CallEngineManager.instance.changeSpeaker()
-    }
-    
-    func switchCamera() {
-        CallEngineManager.instance.switchCamera()
-    }
-    
-    func closeCamera() {
-        CallEngineManager.instance.closeCamera()
-    }
-    
-    func openCamera(videoView: TUIVideoView) {
-        CallEngineManager.instance.openCamera(videoView: videoView)
     }
 }

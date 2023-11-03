@@ -39,11 +39,7 @@ class TUICoreDefineConvert {
     static func getTUICoreDynamicColor(colorKey: String, defaultHex: String) -> UIColor? {
         return TUITheme.dynamicColor(colorKey, module: TUIThemeModule.core, defaultColor: defaultHex)
     }
-    
-    static func setTUIRegisterThemeResourcePath(path: String, modlue: TUIThemeModule) {
-        TUIThemeManager.share().registerThemeResourcePath(path, for: modlue)
-    }
-    
+        
     static func getDefaultAvatarImage() -> UIImage {
         return TUIConfig.default().defaultAvatarImage
     }
@@ -56,4 +52,7 @@ class TUICoreDefineConvert {
         return TUIGlobalization.getRTLOption()
     }
     
+    static func getTUICallKitThemePath() -> String {
+        return getTUIGetBundlePath("TUICallKitTheme", "TUICallingService")
+    }
 }

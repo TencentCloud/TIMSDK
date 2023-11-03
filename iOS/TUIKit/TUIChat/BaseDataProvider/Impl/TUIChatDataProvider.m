@@ -42,39 +42,36 @@
 }
 
 - (NSArray<TUIInputMoreCellData *> *)customInputMoreMenus {
-    if (_customInputMoreMenus == nil) {
-        NSMutableArray *arrayM = [NSMutableArray array];
-        if (TUIChatConfig.defaultConfig.enableWelcomeCustomMessage) {
-            // Link
-            __weak typeof(self) weakSelf = self;
-            TUIInputMoreCellData *linkData = [[TUIInputMoreCellData alloc] init];
-            linkData.priority = 0;
-            linkData.title = TIMCommonLocalizableString(TUIKitMoreLink);
-            linkData.image = TUIChatBundleThemeImage(@"chat_more_link_img", @"chat_more_link_img");
-            linkData.onClicked = ^(NSDictionary *actionParam) {
-              NSString *text = TIMCommonLocalizableString(TUIKitWelcome);
-              NSString *link = TUITencentCloudHomePageEN;
-              NSString *language = [TUIGlobalization tk_localizableLanguageKey];
-              if ([language containsString:@"zh-"]) {
-                  link = TUITencentCloudHomePageCN;
-              }
-              NSError *error = nil;
-              NSDictionary *param = @{BussinessID : BussinessID_TextLink, @"text" : text, @"link" : link};
-              NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
-              if (error) {
-                  NSLog(@"[%@] Post Json Error", [weakSelf class]);
-                  return;
-              }
-              V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
-              if ([weakSelf.delegate respondsToSelector:@selector(dataProvider:sendMessage:)]) {
-                  [weakSelf.delegate dataProvider:weakSelf sendMessage:message];
-              }
-            };
-            [arrayM addObject:linkData];
-        }
-        _customInputMoreMenus = arrayM;
+    NSMutableArray *arrayM = [NSMutableArray array];
+    if (TUIChatConfig.defaultConfig.enableWelcomeCustomMessage) {
+        // Link
+        __weak typeof(self) weakSelf = self;
+        TUIInputMoreCellData *linkData = [[TUIInputMoreCellData alloc] init];
+        linkData.priority = 0;
+        linkData.title = TIMCommonLocalizableString(TUIKitMoreLink);
+        linkData.image = TUIChatBundleThemeImage(@"chat_more_link_img", @"chat_more_link_img");
+        linkData.onClicked = ^(NSDictionary *actionParam) {
+          NSString *text = TIMCommonLocalizableString(TUIKitWelcome);
+          NSString *link = TUITencentCloudHomePageEN;
+          NSString *language = [TUIGlobalization tk_localizableLanguageKey];
+          if ([language containsString:@"zh-"]) {
+              link = TUITencentCloudHomePageCN;
+          }
+          NSError *error = nil;
+          NSDictionary *param = @{BussinessID : BussinessID_TextLink, @"text" : text, @"link" : link};
+          NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
+          if (error) {
+              NSLog(@"[%@] Post Json Error", [weakSelf class]);
+              return;
+          }
+          V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data desc:text extension:text];
+          if ([weakSelf.delegate respondsToSelector:@selector(dataProvider:sendMessage:)]) {
+              [weakSelf.delegate dataProvider:weakSelf sendMessage:message];
+          }
+        };
+        [arrayM addObject:linkData];
     }
-    return _customInputMoreMenus;
+    return [arrayM copy];
 }
 
 - (NSArray<TUIInputMoreCellData *> *)builtInInputMoreMenus {
@@ -148,7 +145,7 @@
                                                     NSLog(@"[%@] Post Json Error", [self class]);
                                                     return;
                                                 }
-                                                V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
+                                                   V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data desc:text extension:text];
                                                 if ([weakSelf.delegate respondsToSelector:@selector(dataProvider:sendMessage:)]) {
                                                     [weakSelf.delegate dataProvider:weakSelf sendMessage:message];
                                                 }
@@ -239,8 +236,6 @@
     BOOL isNeedVideoCall = [TUIChatConfig defaultConfig].enableVideoCall && conversationModel.enabelVideo;
     BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall && conversationModel.enabelAudio;
     BOOL isNeedRoom = conversationModel.enabelRoom;
-    BOOL isNeedGroupLive = NO;
-    BOOL isNeedLink = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage;
     
     NSMutableArray *moreMenus = [NSMutableArray array];
     [moreMenus addObjectsFromArray:self.builtInInputMoreMenus];

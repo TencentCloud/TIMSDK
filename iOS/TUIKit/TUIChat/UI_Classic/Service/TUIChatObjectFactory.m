@@ -55,7 +55,9 @@
     NSString *isEnableVideoInfoStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call asClass:NSString.class];
     NSString *isEnableAudioInfoStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call asClass:NSString.class];
     NSString *isEnableRoomInfoStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room asClass:NSString.class];
-    
+    NSString *isLimitedPortraitOrientationStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation
+                                                                asClass: NSString.class];
+
     TUIChatConversationModel *conversationModel = [[TUIChatConversationModel alloc] init];
     conversationModel.title = title;
     conversationModel.userID = userID;
@@ -76,6 +78,9 @@
     
     if ([isEnableRoomInfoStr isEqualToString:@"0"]) {
         conversationModel.enabelRoom = NO;
+    }
+    if ([isLimitedPortraitOrientationStr isEqualToString:@"1"]) {
+        conversationModel.isLimitedPortraitOrientation = YES;
     }
     
     TUIBaseChatViewController *chatVC = nil;

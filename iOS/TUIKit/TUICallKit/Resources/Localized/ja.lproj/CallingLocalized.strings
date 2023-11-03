@@ -1,0 +1,60 @@
+/*
+ CallingLocalized.strings
+ TRTCCalling
+ 
+ Created by adams on 2021/5/13.
+ */
+
+"Demo.TRTC.calling.callingrefuse" = "通話拒否";
+"Demo.TRTC.calling.callingleave" = "通話終了";
+"Demo.TRTC.calling.callingnoresponse" = "タイムアウト";
+"Demo.TRTC.calling.callingbusy" = "相手が通話中です";
+"Demo.TRTC.calling.invitetovideocall" = "ビデオ通話に招待されました";
+"Demo.TRTC.calling.invitetoaudiocall" = "音声通話に招待されました";
+"LoginNetwork.AppUtils.determine" = "もちろん";
+"TUICallKit.Audio.call" = "音声通話";
+"TUICallKit.Video.call" = "ビデオ通話";
+
+"Demo.TRTC.Calling.waitaccept" = "相手が招待を承諾するのを待っています";
+"Demo.TRTC.Calling.hangup" = "通話終了";
+"Demo.TRTC.Calling.decline" = "拒否";
+"Demo.TRTC.Calling.mic" = "マイク";
+"Demo.TRTC.Calling.speaker" = "スピーカー";
+"Demo.TRTC.Calling.camera" = "カメラ";
+"Demo.TRTC.Calling.switchtoaudio" = "音声通話に切り替えます";
+"Demo.TRTC.Calling.answer" = "応答";
+"Demo.TRTC.Salon.invitelimited" = "リクエストは処理中です。後でもう一度お試しください。";
+"Demo.TRTC.Calling.calleeTip" = "参加者：";
+"Demo.TRTC.Calling.FloatingWindow.waitaccept" = "応答を待っています...";
+
+"Demo.TRTC.Calling.FloatingWindow.dailing" = "電話中...";
+
+"Demo.TRTC.Calling.User.Exceed.Limit" = "一時的に最大9人の通話をサポートします。多人数の会議が必要な場合は、TUIRoomを使用してください"; 
+"Demo.TRTC.Calling.UnableToRestartTheCall" = "通話中のため、再度発信できません";
+"Demo.TRTC.Calling.ErrorInPeerBlacklist" = "通話の開始に失敗しました。ユーザーがブラックリストに登録されているため、発信が禁止されています！";
+
+"TUICallKit.failedtogetcamerapermission.Title" = "カメラの権限が開かれていません"; 
+"TUICallKit.failedtogetcamerapermission.Tips" = "ビデオ通話機能が使用できません。\"開く\"をクリックしてカメラの権限を開きます";
+"TUICallKit.failedtogetcamerapermission.Later" = "後で言う";
+"TUICallKit.failedtogetcamerapermission.Enable" = "開く";
+
+"TUICallKit.failedtogetmicrophonepermission.Title" = "マイクの権限が開かれていません";
+"TUICallKit.failedtogetmicrophonepermission.Tips" = "音声・ビデオ通話機能が使用できません。\"開く\"をクリックしてマイクの権限を開きます";
+"TUICallKit.failedtogetmicrophonepermission.Later" = "後で言う";
+"TUICallKit.failedtogetmicrophonepermission.Enable" = "開く";
+
+"TUICallKit.package.not.purchased" = "TUICallKit パッケージを購入していません。コンソールで無料トライアル版をアクティブ化するか、正式版を購入してください。";
+"TUICallKit.package.not.support" = "購入したTUICallKitパッケージはこの機能をサポートしていません。パッケージタイプをアップグレードすることをお勧めします。";
+"TUICallKit.have.new.invitation" = "新しい通話があります";
+
+"TUICallKit.Recents.all" = "すべて";
+"TUICallKit.Recents.missed" = "不在着信";
+"TUICallKit.Recents.calls" = "通話履歴";
+"TUICallKit.Recents.clear" = "削除";
+"TUICallKit.Recents.done" = "完了";
+"TUICallKit.Recents.delete" = "削除";
+"TUICallKit.Recents.addUser" = "メンバーを招待";
+"TUICallKit.Recents.clear.all" = "すべての履歴を消去";
+"TUICallKit.Recents.clear.cancel" = "キャンセル";
+"TUICallKit.Recents.incoming" = "着信";
+"TUICallKit.Recents.outgoing" = "発信";

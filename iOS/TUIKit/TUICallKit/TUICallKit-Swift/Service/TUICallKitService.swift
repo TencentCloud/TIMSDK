@@ -12,7 +12,7 @@ import UIKit
 
 class TUICallKitService: NSObject, TUIServiceProtocol {
     static let instance = TUICallKitService()
-        
+    
     func startCall(groupID: String, userIDs: [String], callingType: TUICallMediaType) {
         let selector = NSSelectorFromString("setOnlineUserOnly")
         if TUICallEngine.createInstance().responds(to: selector) {
@@ -67,7 +67,16 @@ extension TUICallKitService {
             } fail: { code, message in
                 
             }
+        } else if method == TUICore_TUICallingService_SetAudioPlaybackDeviceMethod {
+            guard let audioPlaybackDevice = param[TUICore_TUICallingService_SetAudioPlaybackDevice_AudioPlaybackDevice]
+                    as? TUIAudioPlaybackDevice else { return nil }
+            TUICallState.instance.audioDevice.value = audioPlaybackDevice
+        } else if method == TUICore_TUICallingService_SetIsMicMuteMethod {
+            guard let isMicMute = param[TUICore_TUICallingService_SetIsMicMuteMethod_IsMicMute]
+                    as? Bool else { return nil }
+            TUICallState.instance.isMicMute.value = !isMicMute
         }
+        
         return nil
     }
 }

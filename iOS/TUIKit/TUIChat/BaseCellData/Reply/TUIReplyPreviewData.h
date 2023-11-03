@@ -53,7 +53,7 @@
 //  Message reply root RootID (not necessarily the msgID of the originMessage above, but the ID of the message at the top)
 @property(nonatomic, copy) NSString *messageRootID;
 
-+ (NSString *)displayAbstract:(NSInteger)type abstract:(NSString *)abstract withFileName:(BOOL)withFilename;
++ (NSString *)displayAbstract:(NSInteger)type abstract:(NSString *)abstract withFileName:(BOOL)withFilename isRisk:(BOOL)isRisk;
 
 @end
 

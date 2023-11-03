@@ -151,6 +151,7 @@ static NSMutableDictionary *gImageCache;
 static TUIChatSmallTongueView *gTongueView = nil;
 static TUIChatSmallTongue *gTongue = nil;
 static UIWindow *gWindow = nil;
+static CGFloat gBottomMargin = 0;
 
 @implementation TUIChatSmallTongueManager
 
@@ -175,14 +176,16 @@ static UIWindow *gWindow = nil;
         }
     }
     CGFloat tongueWidth = [TUIChatSmallTongueView getTongueWidth:gTongue];
-
     if(isRTL()) {
         gWindow.frame =
-            CGRectMake(16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight, tongueWidth, TongueHeight);
+            CGRectMake(16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight - gBottomMargin, 
+                       tongueWidth, TongueHeight);
     }
     else {
         gWindow.frame =
-            CGRectMake(Screen_Width - tongueWidth - 16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight, tongueWidth, TongueHeight);
+            CGRectMake(Screen_Width - tongueWidth - 16, 
+                       Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight - gBottomMargin,
+                       tongueWidth, TongueHeight);
     }
     if (!gTongueView) {
         gTongueView = [[TUIChatSmallTongueView alloc] initWithFrame:CGRectZero];
@@ -211,6 +214,10 @@ static UIWindow *gWindow = nil;
     if (gTongueView) {
         gTongueView.hidden = isHidden;
     }
+}
+
++ (void)adaptTongueBottomMargin:(CGFloat)margin {
+    gBottomMargin = margin;
 }
 
 @end

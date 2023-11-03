@@ -41,21 +41,50 @@
     _title.layer.cornerRadius = 5;
     [_title.layer setMasksToBounds:YES];
     [_background addSubview:_title];
+    
+    _timeLabel = [[UILabel alloc] init];
+    _timeLabel.font = [UIFont systemFontOfSize:14];
+    _timeLabel.textColor = [UIColor whiteColor];
+    _timeLabel.textAlignment = NSTextAlignmentCenter;
+    _timeLabel.layer.cornerRadius = 5;
+    _timeLabel.text = @"60\"";
+    [_background addSubview:_timeLabel];
 }
 
 - (void)defaultLayout {
     CGSize backSize = Record_Background_Size;
     _title.text = TIMCommonLocalizableString(TUIKitInputRecordSlideToCancel);
     CGSize titleSize = [_title sizeThatFits:CGSizeMake(Screen_Width, Screen_Height)];
+    CGSize timeSize = CGSizeMake(100, 15);
     if (titleSize.width > backSize.width) {
         backSize.width = titleSize.width + 2 * Record_Margin;
     }
-
-    _background.frame = CGRectMake((Screen_Width - backSize.width) * 0.5, (Screen_Height - backSize.height) * 0.5, backSize.width, backSize.height);
     CGFloat imageHeight = backSize.height - titleSize.height - 2 * Record_Margin;
-    _recordImage.frame = CGRectMake(0, 0, backSize.width, imageHeight);
-    CGFloat titley = _recordImage.frame.origin.y + imageHeight;
-    _title.frame = CGRectMake(0, titley, backSize.width, backSize.height - titley);
+
+    [self.timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+      make.top.mas_equalTo(self.background).mas_offset(10);
+      make.width.mas_equalTo(100);
+      make.height.mas_equalTo(10);
+      make.centerX.mas_equalTo(self.background);
+    }];
+    [self.recordImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+      make.top.mas_equalTo(self.timeLabel.mas_bottom).mas_offset(-13);
+      make.centerX.mas_equalTo(self.background);
+      make.width.mas_equalTo(backSize.width);
+      make.height.mas_equalTo(imageHeight);
+    }];
+    [self.title mas_remakeConstraints:^(MASConstraintMaker *make) {
+      make.centerX.mas_equalTo(self.background);
+      make.top.mas_equalTo(self.recordImage.mas_bottom);
+      make.width.mas_equalTo(backSize.width);
+      make.height.mas_equalTo(15);
+    }];
+    [self.background mas_remakeConstraints:^(MASConstraintMaker *make) {
+      make.top.mas_equalTo(self.timeLabel.mas_top).mas_offset(-3);
+      make.bottom.mas_equalTo(self.title.mas_bottom).mas_offset(3);
+      make.center.mas_equalTo(self);
+      make.width.mas_equalTo(backSize.width);
+    }];
 }
 
 - (void)setStatus:(RecordStatus)status {
@@ -67,7 +96,7 @@
         }
         case Record_Status_Cancel: {
             _title.text = TIMCommonLocalizableString(TUIKitInputRecordReleaseToCancel);
-            _title.backgroundColor = Record_Title_Background_Color;
+            _title.backgroundColor = [UIColor clearColor];
             break;
         }
         case Record_Status_TooShort: {

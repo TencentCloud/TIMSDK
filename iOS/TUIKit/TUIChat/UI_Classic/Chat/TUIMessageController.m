@@ -41,7 +41,9 @@
     self.tableView.backgroundColor = UIColor.clearColor;
 
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
-
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onBottomMarginChanged:) 
+                                               name:TUIKitNotification_onMessageVCBottomMarginChanged object:nil];
+    
     if (self.conversationData.atMsgSeqs.count > 0) {
         TUIChatSmallTongue *tongue = [[TUIChatSmallTongue alloc] init];
         tongue.type = TUIChatSmallTongueType_SomeoneAtMe;
@@ -74,6 +76,15 @@
         [[self messageSearchDataProvider] removeAllSearchData];
         [self.tableView reloadData];
         [self loadMessages:YES];
+    }
+}
+
+- (void)onBottomMarginChanged:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if ([userInfo.allKeys containsObject:TUIKitNotification_onMessageVCBottomMarginChanged_Margin] &&
+        [userInfo[TUIKitNotification_onMessageVCBottomMarginChanged_Margin] isKindOfClass:NSNumber.class]) {
+        float margin = [userInfo[TUIKitNotification_onMessageVCBottomMarginChanged_Margin] floatValue];
+        [TUIChatSmallTongueManager adaptTongueBottomMargin:margin];
     }
 }
 
@@ -409,6 +420,12 @@
 
               if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
                   [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+                  return;
+              }
+
+              BOOL hasRiskContent = message.hasRiskContent;
+              if (hasRiskContent) {
+                  NSLog(@"hasRiskContent");
                   return;
               }
 

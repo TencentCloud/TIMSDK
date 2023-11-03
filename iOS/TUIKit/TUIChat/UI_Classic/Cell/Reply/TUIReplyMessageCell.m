@@ -148,6 +148,23 @@
         make.bottom.mas_equalTo(self.bubbleView).mas_offset(-4);
     }];
 
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent ) {
+        
+        [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.quoteView).mas_offset(4);
+            make.top.mas_equalTo(self.quoteView.mas_bottom).mas_offset(12);
+            make.trailing.mas_lessThanOrEqualTo(self.quoteView).mas_offset(-4);
+            make.size.mas_equalTo(self.replyData.replyContentSize);
+        }];
+        
+        [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.textView.mas_bottom);
+            make.width.mas_equalTo(self.bubbleView);
+            make.bottom.mas_equalTo(self.container);
+        }];
+    }
+    
     [self.senderLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.textView);
         make.top.mas_equalTo(3);
@@ -167,11 +184,20 @@
     NSString *reuseId = originCellData ? NSStringFromClass(originCellData.class) : NSStringFromClass(TUITextMessageCellData.class);
     TUIReplyQuoteView *view = nil;
     BOOL reuse = NO;
+    BOOL hasRiskContent = originCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        reuseId = @"hasRiskContent";
+    }
     if ([self.customOriginViewsCache.allKeys containsObject:reuseId]) {
         view = [self.customOriginViewsCache objectForKey:reuseId];
         reuse = YES;
     }
-
+    
+    if (hasRiskContent && view == nil){
+        TUITextReplyQuoteView *quoteView = [[TUITextReplyQuoteView alloc] init];
+        view = quoteView;
+    }
+    
     if (view == nil) {
         Class class = [originCellData getReplyQuoteViewClass];
         if (class) {
@@ -400,7 +426,16 @@
     // 计算 cell 的高度
     // Calculate the height of cell
     height = 12 + quoteHeight + 12 + replyCellData.replyContentSize.height + 12;
-    return CGSizeMake(quoteWidth + kReplyQuoteViewMarginWidth, height);
+    
+    CGSize size = CGSizeMake(quoteWidth + kReplyQuoteViewMarginWidth, height);
+    
+    BOOL hasRiskContent = replyCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        size.width = MAX(size.width, 200);// width must more than  TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrike)
+        size.height += kTUISecurityStrikeViewTopLineMargin;
+        size.height += kTUISecurityStrikeViewTopLineToBottom;
+    }
+    return size;
 }
 
 @end

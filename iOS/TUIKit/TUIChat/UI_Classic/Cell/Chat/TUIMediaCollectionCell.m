@@ -8,11 +8,15 @@
 
 #import "TUIMediaCollectionCell.h"
 
+@interface TUIMediaCollectionCell()<V2TIMAdvancedMsgListener>
+
+@end
 @implementation TUIMediaCollectionCell
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
+        [self registerTUIKitNotification];
     }
     return self;
 }
@@ -21,4 +25,7 @@
     return;
 }
 
+- (void)registerTUIKitNotification {
+    [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
+}
 @end

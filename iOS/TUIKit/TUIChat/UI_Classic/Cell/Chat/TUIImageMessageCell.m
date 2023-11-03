@@ -24,9 +24,8 @@
         _thumb.layer.cornerRadius = 5.0;
         [_thumb.layer setMasksToBounds:YES];
         _thumb.contentMode = UIViewContentModeScaleAspectFit;
-        _thumb.backgroundColor = [UIColor clearColor];
-        [self.container addSubview:_thumb];
-
+        _thumb.backgroundColor = [UIColor clearColor];        
+        [self.bubbleView addSubview:_thumb];
         _progress = [[UILabel alloc] init];
         _progress.textColor = [UIColor whiteColor];
         _progress.font = [UIFont systemFontOfSize:15];
@@ -47,16 +46,23 @@
     [super fillWithData:data];
     self.imageData = data;
     _thumb.image = nil;
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        self.thumb.image = TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        self.securityStrikeView.textLabel.text = TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrikeImage);
+        self.progress.hidden = YES;
+        return;
+    }
     if (data.thumbImage == nil) {
         [data downloadImage:TImage_Type_Thumb];
     }
 
     @weakify(self);
     [[RACObserve(data, thumbImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *thumbImage) {
-      @strongify(self);
-      if (thumbImage) {
-          self.thumb.image = thumbImage;
-      }
+        @strongify(self);
+        if (thumbImage) {
+            self.thumb.image = thumbImage;
+        }
     }];
 
     [[[RACObserve(data, thumbProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
@@ -82,14 +88,14 @@
 
 - (void)makeConstraints {
     [self.thumb mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(self.container);
-        make.width.mas_equalTo(self.container);
-        make.top.mas_equalTo(self.container);
-        make.leading.mas_equalTo(self.container);
+        make.height.mas_equalTo(self.bubbleView);
+        make.width.mas_equalTo(self.bubbleView);
+        make.top.mas_equalTo(self.bubbleView);
+        make.leading.mas_equalTo(self.bubbleView);
     }];
     
     [self.progress mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.container);
+        make.edges.mas_equalTo(self.bubbleView);
     }];
 }
 // this is Apple's recommended place for adding/updating constraints
@@ -98,27 +104,49 @@
     [super updateConstraints];
 
     CGFloat topMargin = 0;
-    CGFloat height = self.container.mm_h;
+    CGFloat height = self.bubbleView.mm_h;
     if (self.messageData.messageModifyReactsSize.height > 0) {
         if (self.tagView) {
             topMargin = 10;
             CGFloat tagViewTopMargin = 6;
-            height = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
+            height = self.bubbleView.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
+            [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(height);
+                make.width.mas_equalTo(self.bubbleView.mas_width);
+                make.top.mas_equalTo(self.bubbleView).mas_offset(topMargin);
+                make.leading.mas_equalTo(self.bubbleView);
+            }];
         }
-        self.bubbleView.hidden = NO;
     } else {
-        self.bubbleView.hidden = YES;
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.bubbleView).mas_offset(self.messageData.cellLayout.bubbleInsets.top);
+            make.bottom.mas_equalTo(self.bubbleView).mas_offset(-self.messageData.cellLayout.bubbleInsets.bottom);
+            make.leading.mas_equalTo(self.bubbleView).mas_offset(self.messageData.cellLayout.bubbleInsets.left);
+            make.trailing.mas_equalTo(self.bubbleView).mas_offset(-self.messageData.cellLayout.bubbleInsets.right);
+        }];
     }
-    
-    [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height);
-        make.width.mas_equalTo(self.container.mas_width);
-        make.top.mas_equalTo(self.container).mas_offset(topMargin);
-        make.leading.mas_equalTo(self.container);
-    }];
-    
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent ) {
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.bubbleView).mas_offset(12);
+            make.size.mas_equalTo(CGSizeMake(150, 150));
+            make.centerX.mas_equalTo(self.bubbleView);
+        }];
+        
+        [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.thumb.mas_bottom);
+            make.width.mas_equalTo(self.bubbleView);
+            if(self.tagView) {
+                make.bottom.mas_equalTo(self.container).mas_offset(- self.messageData.messageModifyReactsSize.height);
+            }
+            else {
+                make.bottom.mas_equalTo(self.container);
+            }
+        }];
+    }
+
     [self.progress mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.container);
+        make.edges.mas_equalTo(self.bubbleView);
     }];
     [self.selectedView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.contentView);
@@ -246,6 +274,18 @@
     } else {
         size.height = size.height / size.width * TImageMessageCell_Image_Width_Max;
         size.width = TImageMessageCell_Image_Width_Max;
+    }
+    
+    BOOL hasRiskContent = imageCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        CGFloat bubbleTopMargin = 12;
+        CGFloat bubbleBottomMargin = 12;
+        size.height = MAX(size.height, 150);// width must more than  TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        size.width = MAX(size.width, 200);// width must more than  TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrike)
+        size.height += bubbleTopMargin;
+        size.height += kTUISecurityStrikeViewTopLineMargin;
+        size.height += kTUISecurityStrikeViewTopLineToBottom;
+        size.height += bubbleBottomMargin;
     }
     return size;
 }

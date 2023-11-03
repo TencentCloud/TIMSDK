@@ -30,5 +30,6 @@ extension NSObject {
         
         TUICore.registerObjectFactory(TUICore_TUICallingObjectFactory, objectFactory: TUICallKitObjectFactory.instance)
         
+        TUIThemeManager.share().registerThemeResourcePath(TUICoreDefineConvert.getTUICallKitThemePath(), for: .calling)
     }
 }

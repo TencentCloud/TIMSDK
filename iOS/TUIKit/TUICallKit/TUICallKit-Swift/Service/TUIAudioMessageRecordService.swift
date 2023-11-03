@@ -34,9 +34,6 @@ class TUIAudioMessageRecordService: NSObject, TUIServiceProtocol, TUINotificatio
     
     override init() {
         super.init()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterruptionNotification),
-                                               name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loginSuccessNotification),
                                                name: NSNotification.Name.TUILoginSuccess, object: nil)
     }
@@ -48,16 +45,6 @@ class TUIAudioMessageRecordService: NSObject, TUIServiceProtocol, TUINotificatio
     @objc
     func loginSuccessNotification() {
         TUICallEngine.createInstance().addObserver(self)
-    }
-    
-    // MARK: AVAudioSessionInterruptionNotification
-    @objc
-    func audioSessionInterruptionNotification(_ notification: Notification) {
-        guard let typeValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber else { return }
-        let type = AVAudioSession.InterruptionType(rawValue: typeValue.uintValue)
-        if type == .began {
-            stopRecordAudioMessage()
-        }
     }
 }
 

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString *title;
 @property UIImage *icon;
 @property NSInteger readNum;
+@property (nonatomic, copy, nullable) void (^onClicked)(NSDictionary * _Nullable param);
 
 @end
 

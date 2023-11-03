@@ -16,6 +16,7 @@
         self.enabelVideo = YES;
         self.enabelAudio = YES;
         self.enabelRoom  = YES;
+        self.isLimitedPortraitOrientation = NO;
     }
     return self;
 }

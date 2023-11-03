@@ -64,7 +64,12 @@
     }
     _voice.image = data.voiceImage;
     _voice.animationImages = data.voiceAnimationImages;
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
 
+    if (hasRiskContent) {
+        self.securityStrikeView.textLabel.text = TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrikeVoice);
+    }
+    
     if (self.voiceData.innerMessage.localCustomInt == 0 && self.voiceData.direction == MsgDirectionIncoming) self.voiceReadPoint.hidden = NO;
 
     // animate
@@ -139,6 +144,19 @@
           make.size.mas_equalTo(CGSizeMake(5, 5));
         }];
     }
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.voice.mas_bottom);
+            make.width.mas_equalTo(self.bubbleView);
+            if(self.tagView) {
+                make.bottom.mas_equalTo(self.container).mas_offset(- self.messageData.messageModifyReactsSize.height);
+            }
+            else {
+                make.bottom.mas_equalTo(self.container);
+            }
+        }];
+    }
     
     [self layoutBottomContainer];
 }
@@ -199,8 +217,18 @@
         bubbleWidth = MAX(bubbleWidth, [TUIBubbleMessageCell outgoingBubble].size.width);
         bubbleHeight = voiceCellData.voiceImage.size.height + 2 * voiceCellData.voiceTop;  // [TUIBubbleMessageCellData outgoingBubble].size.height;
     }
+    
+    CGFloat width = bubbleWidth + TVoiceMessageCell_Duration_Size.width;
+    CGFloat height = bubbleHeight;
+    
+    BOOL hasRiskContent = voiceCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        width = MAX(width, 200);// width must more than  TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrikeVoice)
+        height += kTUISecurityStrikeViewTopLineMargin;
+        height += kTUISecurityStrikeViewTopLineToBottom;
+    }
 
-    return CGSizeMake(bubbleWidth + TVoiceMessageCell_Duration_Size.width, bubbleHeight);
+    return CGSizeMake(width, height);
 }
 
 

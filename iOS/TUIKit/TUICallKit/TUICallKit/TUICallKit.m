@@ -24,6 +24,7 @@
 #import "TUICallKitGCDTimer.h"
 #import "TUICallKitOfflinePushInfoConfig.h"
 #import "TUICallKitConstants.h"
+#import "TUICallKitUserInfoUtils.h"
 
 typedef NS_ENUM(NSUInteger, TUICallingUserRemoveReason) {
     TUICallingUserRemoveReasonLeave,
@@ -208,7 +209,7 @@ callMediaType:(TUICallMediaType)callMediaType
         TUICallScene callScene = [strongSelf getCallScene:userIdList];
         [strongSelf.callingViewManager createCallingView:callMediaType callRole:TUICallRoleCall callScene:callScene];
         [strongSelf callStart:userIdList type:callMediaType role:TUICallRoleCall];
-        [strongSelf updateCallingView:userIdList callScene:callMediaType sponsor:[TUILogin getUserID]];
+        [strongSelf updateCallingView:userIdList callScene:callScene sponsor:[TUILogin getUserID]];
     } fail:^(int code, NSString *errMsg) {
         __strong typeof(self) strongSelf = weakSelf;
         if (fail) {
@@ -270,34 +271,30 @@ callMediaType:(TUICallMediaType)callMediaType
     }
     
     __weak typeof(self) weakSelf = self;
-    [[V2TIMManager sharedInstance] getUsersInfo:[userIDSet allObjects] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+    [TUICallKitUserInfoUtils getUserInfo:[userIDSet allObjects] succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
         __strong typeof(self) strongSelf = weakSelf;
-        if (infoList.count < 1) {
+        if (modelList.count < 1) {
             return;
         }
         
-        NSMutableArray <CallingUserModel *> *modelList = [NSMutableArray array];
+        NSMutableArray <CallingUserModel *> *modelMutableArray = [NSMutableArray array];
         CallingUserModel *sponsorModel = nil;
         
-        for (V2TIMUserFullInfo *userFullInfo in infoList) {
-            CallingUserModel *userModel = [TUICallingCommon covertUser:userFullInfo];
-            
+        for (CallingUserModel *userModel in modelList) {
             if (sponsor && [userModel.userId isEqualToString:sponsor]) {
                 sponsorModel = userModel;
-                
                 if ([allUserIDs containsObject:sponsor]) {
-                    [modelList addObject:userModel];
+                    [modelMutableArray addObject:userModel];
                 }
             } else {
-                [modelList addObject:userModel];
+                [modelMutableArray addObject:userModel];
             }
             
             [TUICallingUserManager cacheUser:userModel];
         }
         
-        [strongSelf.callingViewManager updateCallingView:[modelList copy] sponsor:sponsorModel];
-    } fail:^(int code, NSString *desc) {
-        
+        [strongSelf.callingViewManager updateCallingView:[modelMutableArray copy] sponsor:sponsorModel];
+    } fail:^(int code, NSString * _Nullable errMsg) {
     }];
 }
 
@@ -385,24 +382,21 @@ callMediaType:(TUICallMediaType)callMediaType
 
 - (void)onUserJoin:(nonnull NSString *)userId {
     CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
-    
     if (userModel) {
         [self.callingViewManager userEnter:userModel];
         return;
     }
     
     __weak typeof(self) weakSelf = self;
-    [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+    [TUICallKitUserInfoUtils getUserInfo:@[userId] succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
         __strong typeof(self) strongSelf = weakSelf;
-        V2TIMUserFullInfo *userInfo = [infoList firstObject];
-        if (!userInfo) {
-            return;
+        CallingUserModel *userModel = [TUICallingUserManager getUser:userId] ?: [modelList firstObject];
+        if (userModel) {
+            [strongSelf.callingViewManager userEnter:userModel];
+            [TUICallingUserManager cacheUser:userModel];
         }
-        CallingUserModel *userModel = [TUICallingCommon covertUser:userInfo];
-        [strongSelf.callingViewManager userEnter:userModel];
-        [TUICallingUserManager cacheUser:userModel];
-    } fail:nil];
-    
+    } fail:^(int code, NSString * _Nullable errMsg) {
+    }];
 }
 
 - (void)onUserLeave:(nonnull NSString *)userId {
@@ -423,7 +417,6 @@ callMediaType:(TUICallMediaType)callMediaType
 
 - (void)onUserAudioAvailable:(nonnull NSString *)userId isAudioAvailable:(BOOL)isAudioAvailable {
     CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
-    
     if (userModel) {
         userModel.isEnter = YES;
         userModel.isAudioAvailable = isAudioAvailable;
@@ -432,25 +425,23 @@ callMediaType:(TUICallMediaType)callMediaType
     }
     
     __weak typeof(self) weakSelf = self;
-    [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+    [TUICallKitUserInfoUtils getUserInfo:@[userId] succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
         __strong typeof(self) strongSelf = weakSelf;
-        CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
-        if (!userModel) {
-            V2TIMUserFullInfo *userInfo = [infoList firstObject];
-            userModel = [TUICallingCommon covertUser:userInfo];
+        CallingUserModel *userModel = [TUICallingUserManager getUser:userId] ?: [modelList firstObject];
+        if (userModel) {
+            userModel.isEnter = YES;
+            userModel.isAudioAvailable = isAudioAvailable;
+            if (isAudioAvailable) {
+                [TUICallingUserManager cacheUser:userModel];
+            }
+            [strongSelf.callingViewManager updateUser:userModel];
         }
-        userModel.isEnter = YES;
-        userModel.isAudioAvailable = isAudioAvailable;
-        if (isAudioAvailable) {
-            [TUICallingUserManager cacheUser:userModel];
-        }
-        [strongSelf.callingViewManager updateUser:userModel];
-    } fail:nil];
+    } fail:^(int code, NSString * _Nullable errMsg) {
+    }];
 }
 
 - (void)onUserVideoAvailable:(nonnull NSString *)userId isVideoAvailable:(BOOL)isVideoAvailable {
     CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
-    
     if (userModel) {
         userModel.isEnter = YES;
         userModel.isVideoAvailable = isVideoAvailable;
@@ -459,32 +450,29 @@ callMediaType:(TUICallMediaType)callMediaType
     }
     
     __weak typeof(self) weakSelf = self;
-    [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+    [TUICallKitUserInfoUtils getUserInfo:@[userId] succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
-        if (!userModel) {
-            V2TIMUserFullInfo *userInfo = [infoList firstObject];
-            userModel = [TUICallingCommon covertUser:userInfo];
+        CallingUserModel *userModel = [TUICallingUserManager getUser:userId] ?: [modelList firstObject];
+        if (userModel) {
+            userModel.isEnter = YES;
+            userModel.isVideoAvailable = isVideoAvailable;
+            if (isVideoAvailable) {
+                [TUICallingUserManager cacheUser:userModel];
+            }
+            [strongSelf.callingViewManager updateUser:userModel];
         }
-        userModel.isEnter = YES;
-        userModel.isVideoAvailable = isVideoAvailable;
-        if (isVideoAvailable) {
-            [TUICallingUserManager cacheUser:userModel];
-        }
-        [strongSelf.callingViewManager updateUser:userModel];
-    } fail:nil];
+    } fail:^(int code, NSString * _Nullable errMsg) {
+    }];
 }
 
 - (void)onUserVoiceVolumeChanged:(nonnull NSDictionary<NSString *, NSNumber *> *)volumeMap {
-    NSArray *keyArray = volumeMap.allKeys;
-    
-    for (NSString *userId in keyArray) {
+    for (NSString *userId in volumeMap.allKeys) {
         CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
         if (userModel) {
             CallingUserModel *newUser = userModel;
             newUser.isEnter = YES;
             newUser.volume = [volumeMap[userId] floatValue] / 100;
+            [TUICallingUserManager cacheUser:newUser];
             [self.callingViewManager updateUser:newUser];
         }
     }
@@ -560,14 +548,8 @@ callMediaType:(TUICallMediaType)callMediaType
 }
 
 - (void)handleUserLeave:(NSString *)userId removeReason:(TUICallingUserRemoveReason)removeReason {
-    if (!(userId && [userId isKindOfClass:NSString.class] && userId.length > 0)) {
-        return;
-    }
-    
     CallingUserModel *userModel = [TUICallingUserManager getUser:userId];
-    
     if (userModel) {
-        userModel.isEnter = YES;
         [TUICallingUserManager removeUser:userId];
         [self.callingViewManager userLeave:userModel];
         [self handleUserLeaveToast:userModel reason:removeReason];
@@ -575,16 +557,15 @@ callMediaType:(TUICallMediaType)callMediaType
     }
     
     __weak typeof(self) weakSelf = self;
-    [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+    [TUICallKitUserInfoUtils getUserInfo:@[userId] succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
         __strong typeof(self) strongSelf = weakSelf;
-        V2TIMUserFullInfo *userInfo = [infoList firstObject];
-        if (!userInfo) {
-            return;
+        CallingUserModel *userModel = [TUICallingUserManager getUser:userId] ?: [modelList firstObject];
+        if (userModel) {
+            [strongSelf.callingViewManager userLeave:userModel];
+            [strongSelf handleUserLeaveToast:userModel reason:removeReason];
         }
-        CallingUserModel *userModel = [TUICallingCommon covertUser:userInfo];
-        [strongSelf.callingViewManager userLeave:userModel];
-        [strongSelf handleUserLeaveToast:userModel reason:removeReason];
-    } fail:nil];
+    } fail:^(int code, NSString * _Nullable errMsg) {
+    }];
 }
 
 - (void)handleUserLeaveToast:(CallingUserModel *)userModel reason:(TUICallingUserRemoveReason)reason {
@@ -775,12 +756,15 @@ callMediaType:(TUICallMediaType)callMediaType
 - (void)makeToast:(NSString *)toast userId:(NSString *)userId {
     if (userId && [userId isKindOfClass:NSString.class] && userId.length > 0) {
         __weak typeof(self) weakSelf = self;
-        [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        [TUICallKitUserInfoUtils getUserInfo:@[userId] succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
             __strong typeof(self) strongSelf = weakSelf;
-            V2TIMUserFullInfo *userFullInfo = [infoList firstObject];
-            NSString *toastStr = [NSString stringWithFormat:@"%@ %@", userFullInfo.nickName ?: userFullInfo.userID, toast];
-            [strongSelf makeToast:toastStr duration:3 position:nil];
-        } fail:nil];
+            CallingUserModel *userModel = [modelList firstObject];
+            if (userModel) {
+                NSString *toastStr = [NSString stringWithFormat:@"%@ %@", userModel.name, toast];
+                [strongSelf makeToast:toastStr duration:3 position:nil];
+            }
+        } fail:^(int code, NSString * _Nullable errMsg) {
+        }];
         return;
     }
     [self makeToast:toast duration:3 position:nil];

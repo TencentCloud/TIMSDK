@@ -22,6 +22,7 @@
 @property(nonatomic, strong) UILabel *abstractName;
 @property(nonatomic, strong) UILabel *abstractBreak;
 @property(nonatomic, strong) UILabel *abstractDetail;
+@property(nonatomic, assign) CGFloat abstractNameLimitedWidth;
 - (void)fillWithData:(NSAttributedString *)name detailContent:(NSAttributedString *)detailContent;
 @end
 @implementation TUIMergeMessageDetailRow_Minimalist
@@ -77,12 +78,13 @@
 - (void)updateConstraints {
     
     [super updateConstraints];
+
     [self.abstractName sizeToFit];
     [self.abstractName mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(0);
         make.top.mas_equalTo(0);
         make.trailing.mas_lessThanOrEqualTo(self.abstractBreak.mas_leading);
-        make.width.mas_lessThanOrEqualTo(self.mas_width).multipliedBy(0.33);
+        make.width.mas_equalTo(self.abstractNameLimitedWidth);
     }];
     
     [self.abstractBreak sizeToFit];
@@ -98,13 +100,17 @@
         make.leading.mas_equalTo(self.abstractBreak.mas_trailing);
         make.top.mas_equalTo(0);
         make.trailing.mas_lessThanOrEqualTo(self.mas_trailing).mas_offset(-15);
-        make.bottom.mas_equalTo(self);
     }];
 }
 - (void)fillWithData:(NSAttributedString *)name detailContent:(NSAttributedString *)detailContent {
 
-    self.abstractName.text = name.string;
+    self.abstractName.attributedText = name;
     self.abstractDetail.attributedText = detailContent;
+    
+    NSAttributedString * senderStr = [[NSAttributedString alloc] initWithString:self.abstractName.text];
+    CGRect senderRect = [senderStr boundingRectWithSize:CGSizeMake(70, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                context:nil];
+    self.abstractNameLimitedWidth = MIN(ceil(senderRect.size.width), 70);
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
 
@@ -290,7 +296,7 @@
     CGFloat height = mergeCellData.abstractRow1Size.height + mergeCellData.abstractRow2Size.height + mergeCellData.abstractRow3Size.height;
     UIFont *titleFont = [UIFont systemFontOfSize:16];
     height = (10 + titleFont.lineHeight + 3) + height + 1 + 5 + 20 + 5 + 3;
-    return CGSizeMake(kScale390(250), height + mergeCellData.msgStatusSize.height);
+    return CGSizeMake(200, height + mergeCellData.msgStatusSize.height);
 }
 
 + (CGSize)caculate:(TUIMergeMessageCellData *)data index:(NSInteger)index {
@@ -299,12 +305,16 @@
     if (abstractSendDetailList.count <= index){
         return CGSizeZero;
     }
-    NSAttributedString * str = abstractSendDetailList[index][@"sender"];
-    NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithAttributedString:str];
+    NSAttributedString * senderStr = abstractSendDetailList[index][@"sender"];
+    CGRect senderRect = [senderStr boundingRectWithSize:CGSizeMake(70, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                context:nil];
+    
+    NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithString:@""];
     [abstr appendAttributedString:[[NSAttributedString alloc] initWithString:@":"]];
     [abstr appendAttributedString:abstractSendDetailList[index][@"detail"]];
 
-    CGRect rect = [abstr boundingRectWithSize:CGSizeMake(200 - 20, MAXFLOAT)
+    CGFloat senderWidth = senderRect.size.width;
+    CGRect rect = [abstr boundingRectWithSize:CGSizeMake(200 - 20 - senderWidth, MAXFLOAT)
                                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                                 context:nil];
     CGSize size = CGSizeMake(200, MIN(TRelayMessageCell_Text_Height_Max/3.0, CGFLOAT_CEIL(rect.size.height)));

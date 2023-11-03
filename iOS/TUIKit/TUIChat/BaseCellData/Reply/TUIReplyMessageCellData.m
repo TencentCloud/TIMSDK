@@ -95,17 +95,26 @@
 
 - (TUIReplyQuoteViewData *)getQuoteData:(TUIMessageCellData *)originCellData {
     TUIReplyQuoteViewData *quoteData = nil;
-
     Class class = [originCellData getReplyQuoteViewDataClass];
-    if (class && [class respondsToSelector:@selector(getReplyQuoteViewData:)]) {
+
+    BOOL hasRiskContent = originCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent){
+        // Return text reply data in default
+        TUITextReplyQuoteViewData *myData = [[TUITextReplyQuoteViewData alloc] init];
+        myData.text = [TUIReplyPreviewData displayAbstract:self.originMsgType abstract:self.msgAbstract withFileName:NO isRisk:hasRiskContent];
+        quoteData = myData;
+    }
+    else  if (class && [class respondsToSelector:@selector(getReplyQuoteViewData:)]) {
         quoteData = [class getReplyQuoteViewData:originCellData];
     }
+    else {
 
+    }
     if (quoteData == nil) {
         // 默认创建文本类型
         // Return text reply data in default
         TUITextReplyQuoteViewData *myData = [[TUITextReplyQuoteViewData alloc] init];
-        myData.text = [TUIReplyPreviewData displayAbstract:self.originMsgType abstract:self.msgAbstract withFileName:NO];
+        myData.text = [TUIReplyPreviewData displayAbstract:self.originMsgType abstract:self.msgAbstract withFileName:NO isRisk:hasRiskContent];
         quoteData = myData;
     }
 

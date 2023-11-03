@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)removeTongue:(TUIChatSmallTongueType)type;
 + (void)removeTongue;
 + (void)hideTongue:(BOOL)isHidden;
++ (void)adaptTongueBottomMargin:(CGFloat)margin;
 
 @end
 

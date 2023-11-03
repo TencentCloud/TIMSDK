@@ -225,6 +225,17 @@
     self.videoData = data;
     self.isSaveVideo = NO;
 
+    BOOL hasRiskContent = data.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        self.imageView.image = TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        for (UIView *subview in self.subviews) {
+            if (subview != self.scrollView && subview != self.closeBtn){
+                subview.hidden = YES;
+            }
+        }
+        return;
+    }
+    
     CGFloat duration = data.videoItem.duration;
     self.duration.text = [NSString stringWithFormat:@"%.2d:%.2d", (int)duration / 60, (int)duration % 60];
 
@@ -405,10 +416,13 @@
 }
 
 - (void)stopPlay {
+    BOOL hasRiskContent = self.videoData.innerMessage.hasRiskContent;
     self.isPlay = NO;
     [self.player pause];
     self.imageView.hidden = NO;
-    self.mainPlayBtn.hidden = NO;
+    if (!hasRiskContent) {
+        self.mainPlayBtn.hidden = NO;
+    }
     [self.playBtn setImage:TUIChatCommonBundleImage(@"video_play") forState:UIControlStateNormal];
 }
 
@@ -482,5 +496,37 @@
     if (self.videoData.direction == MsgDirectionOutgoing) {
         self.videoData.uploadProgress = progress;
     }
+}
+#pragma mark - V2TIMAdvancedMsgListener
+- (void)onRecvMessageModified:(V2TIMMessage *)msg {
+    V2TIMMessage *imMsg = msg;
+    if (imMsg == nil || ![imMsg isKindOfClass:V2TIMMessage.class]) {
+        return;
+    }
+    if ([self.videoData.innerMessage.msgID isEqualToString:imMsg.msgID]) {
+        BOOL hasRiskContent = msg.hasRiskContent;
+        if (hasRiskContent) {
+            self.videoData.innerMessage = imMsg;
+            [self showRiskAlert];
+        }
+    }
+}
+
+- (void)showRiskAlert {
+    if (self.player) {
+        [self stopPlay];
+    }
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil
+                                                                message:TIMCommonLocalizableString(TUIKitVideoCheckRisk)
+                                                         preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitVideoCheckRiskCancel)
+                                                    style:UIAlertActionStyleCancel
+                                                  handler:^(UIAlertAction *_Nonnull action) {
+                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                    [strongSelf reloadAllView];
+                                                  }]];
+
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
 }
 @end

@@ -31,6 +31,8 @@
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:atStr];
     NSDictionary *attributeDict = @{NSForegroundColorAttributeName : [UIColor d_systemRedColor]};
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
+    BOOL hasRiskContent = conv.lastMessage.hasRiskContent;
+    BOOL isRevoked = (conv.lastMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED);
 
     /**
      * 如果有草稿箱，优先展示草稿箱信息
@@ -78,7 +80,15 @@
         if (lastMsgStr.length == 0) {
             return nil;
         }
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
+
+        if(hasRiskContent && !isRevoked) {
+            [attributeString appendAttributedString:
+             [[NSAttributedString alloc]initWithString:lastMsgStr
+                                            attributes:@{NSForegroundColorAttributeName : RGB(233, 68, 68)}]];
+        }
+        else {
+            [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
+        }
     }
 
     /**
@@ -99,7 +109,9 @@
      * If the status of the lastMsg of the conversation is sending or failed, display the sending status of the message (the draft box does not need to display
      * the sending status)
      */
-    if (!conv.draftText && (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status || V2TIM_MSG_STATUS_SEND_FAIL == conv.lastMessage.status)) {
+    if (!conv.draftText && (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status
+                            || V2TIM_MSG_STATUS_SEND_FAIL == conv.lastMessage.status
+                            || hasRiskContent) && !isRevoked) {
         UIFont *textFont = [UIFont systemFontOfSize:14];
         NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@" " attributes:@{NSFontAttributeName : textFont}];
         NSTextAttachment *attchment = [[NSTextAttachment alloc] init];

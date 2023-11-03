@@ -5,37 +5,13 @@
  Created by noah on 2023/8/3.
  */
 
-"LoginNetwork.ProfileManager.sendfailed" = "فشل الإرسال، يرجى المحاولة مرة أخرى لاحقا";
-"V2.Live.LoginMock.sendtheverificatcode" = "يرجى إرسال رمز التحقق";
-"LoginNetwork.ProfileManager.loginfailed" = "فشل تسجيل الدخول، يرجى المحاولة مرة أخرى لاحقا";
-"LoginNetwork.ProfileManager.queryfailed" = "فشل الاستعلام، يرجى المحاولة مرة أخرى لاحقا";
-"LoginNetwork.ProfileManager.registerfailed" = "فشل التسجيل، يرجى المحاولة مرة أخرى لاحقا";
-"Demo.TRTC.calling.callingrequest" = "لديك طلب مكالمة";
-"Demo.TRTC.calling.syserror"= "خطأ في النظام";
-"Demo.TRTC.calling.yourphonenumber" = "رقم هاتفك ";
-"Demo.TRTC.calling.searchphonenumber" = "البحث عن رقم الهاتف";
-"Demo.TRTC.calling.searching" = "جار البحث";
-"Demo.TRTC.calling.searchandcall" = "البحث وإضافة مستخدم مسجل\nلبدء المكالمة";
-"Demo.TRTC.calling.callingbegan" = "بدء المكالمة";
-"Demo.TRTC.calling.callingcancel" = "إلغاء المكالمة";
-"Demo.TRTC.calling.callingtimeout" = "انتهاء مهلة المكالمة";
 "Demo.TRTC.calling.callingrefuse" = "رفض المكالمة";
 "Demo.TRTC.calling.callingleave" = "مغادرة المكالمة";
 "Demo.TRTC.calling.callingnoresponse" = "لا يوجد استجابة";
 "Demo.TRTC.calling.callingbusy" = "خط مشغول";
-"Demo.TRTC.calling.searchingfailed" = "فشل الاستعلام";
-"Demo.TRTC.calling.cantinviteself" = "لا يمكن دعوة نفسك";
-"Demo.TRTC.calling.muteon" = "تشغيل الكتم";
-"Demo.TRTC.calling.muteoff" = "إيقاف الكتم";
-"Demo.TRTC.calling.handsfreeon" = "تشغيل الاستخدام بدون اليدين";
-"Demo.TRTC.calling.handsfreeoff" = "إيقاف الاستخدام بدون اليدين";
-"LoginNetwork.AppUtils.warmprompt" = "تلميح دافئ";
-"LoginNetwork.AppUtils.tomeettheregulatory" = "للتوافق مع متطلبات الإشراف الحكومي، يتم تسجيل جميع المكالمات الصوتية والمرئية في هذا التطبيق، ويحظر الإباحية والإهانات والعنف والمحتوى السياسي المخالف.";
-"LoginNetwork.AppUtils.determine" = "تأكيد";
 "Demo.TRTC.calling.invitetovideocall" = "يدعوك لمكالمة فيديو";
 "Demo.TRTC.calling.invitetoaudiocall" = "يدعوك لمكالمة صوتية";
-"Demo.TRTC.Streaming.call" = "مكالمة";
-
+"LoginNetwork.AppUtils.determine" = "تأكيد";
 "TUICallKit.Audio.call" = "مكالمة صوتية";
 "TUICallKit.Video.call" = "مكالمة فيديو";
 
@@ -47,10 +23,7 @@
 "Demo.TRTC.Calling.camera" = "كاميرا";
 "Demo.TRTC.Calling.switchtoaudio" = "التبديل إلى المكالمة الصوتية";
 "Demo.TRTC.Calling.answer" = "الرد";
-"Demo.TRTC.Calling.othernetworkpoor" = "شبكة الطرف الآخر ضعيفة";
-"Demo.TRTC.Calling.yournetworkpoor" = "شبكتك ضعيفة";
 "Demo.TRTC.Salon.invitelimited" = "الطلب قيد المعالجة ، يرجى المحاولة مرة أخرى لاحقًا";
-"Demo.TRTC.Login.countrycode" = "رمز الهاتف الدولي";
 "Demo.TRTC.Calling.calleeTip" = "هم أيضا هنا";
 "Demo.TRTC.Calling.FloatingWindow.waitaccept" = "في انتظار الرد";
 "Demo.TRTC.Calling.FloatingWindow.dailing" = "الاتصال ...";

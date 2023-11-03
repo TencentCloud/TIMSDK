@@ -7,6 +7,8 @@
 //
 
 #import "TUICallingAction.h"
+#import <TUICore/TUICore.h>
+#import <TUICore/TUIDefine.h>
 #import "TUICallEngineHeader.h"
 #import "TUICallingStatusManager.h"
 #import "TUICommonModel.h"
@@ -74,7 +76,9 @@
     }
     [[TUICallEngine createInstance] openMicrophone:^{
         [TUICallingStatusManager shareInstance].isMicMute = YES;
-        [[NSNotificationCenter defaultCenter] postNotificationName:TUICallKitEventOpenMicrophone object:nil];
+        [TUICore notifyEvent:TUICore_TUICallKitVoIPExtensionNotify
+                      subKey:TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey
+                      object:nil param:nil];
     } fail:^(int code, NSString *errMsg) {
     }];
 }
@@ -85,7 +89,9 @@
         return;
     }
     [[TUICallEngine createInstance] closeMicrophone];
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUICallKitEventCloseMicrophone object:nil];
+    [TUICore notifyEvent:TUICore_TUICallKitVoIPExtensionNotify
+                  subKey:TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey
+                  object:nil param:nil];
     [TUICallingStatusManager shareInstance].isMicMute = NO;
 }
 

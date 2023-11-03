@@ -115,7 +115,7 @@
     if (_recordButton) {
         [_recordButton.layer setMasksToBounds:YES];
         [_recordButton.layer setCornerRadius:4.0f];
-        [_recordButton.layer setBorderWidth:0.5f];
+        [_recordButton.layer setBorderWidth:1.0f];
         [_recordButton.layer setBorderColor:TIMCommonDynamicColor(@"separator_color", @"#DBDBDB").CGColor];
     }
 
@@ -238,6 +238,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
           @strongify(self);
           [self.recordView removeFromSuperview];
+          self.recordView = nil;
         });
     } else if (interval > 60) {
         [self.recordView setStatus:Record_Status_TooLong];
@@ -245,6 +246,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
           @strongify(self);
           [self.recordView removeFromSuperview];
+          self.recordView = nil;
         });
     } else {
         dispatch_queue_t main_queue = dispatch_get_main_queue();
@@ -268,6 +270,7 @@
 
 - (void)onRecordButtonTouchCancel:(UIButton *)sender {
     [self.recordView removeFromSuperview];
+    self.recordView = nil;
     self.recordButton.backgroundColor = [UIColor clearColor];
     [self.recordButton setTitle:TIMCommonLocalizableString(TUIKitInputHoldToTalk) forState:UIControlStateNormal];
     [self.recorder cancel];
@@ -599,6 +602,8 @@
 
 - (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
     float maxDuration = 59;
+    NSInteger seconds = maxDuration - time;
+    self.recordView.timeLabel.text = [[NSString alloc] initWithFormat:@"%ld\"", (long)seconds + 1];
     if (time >= 55 && time <= maxDuration) {
         NSInteger seconds = maxDuration - time;
         /**
@@ -618,6 +623,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
           @strongify(self);
           [self.recordView removeFromSuperview];
+          self.recordView = nil;
         });
         if (path) {
             if (_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendVoice:)]) {

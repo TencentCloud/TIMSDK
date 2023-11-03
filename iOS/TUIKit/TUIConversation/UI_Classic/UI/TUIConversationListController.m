@@ -757,7 +757,17 @@
         if ([businessID isEqualToString:BussinessID_TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
             NSString *desc = param[@"text"];
             if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-                if (msg.isSelf) {
+                V2TIMUserFullInfo *info = msg.revokerInfo;
+                NSString *  revokeReason = msg.revokeReason;
+                BOOL hasRiskContent = msg.hasRiskContent;
+                if (hasRiskContent) {
+                    desc =  TIMCommonLocalizableString(TUIKitMessageTipsRecallRiskContent);
+                }
+                else if (info) {
+                    NSString *userName = info.nickName;
+                    desc  = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+                }
+                else if (msg.isSelf) {
                     desc = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
                 } else if (msg.userID.length > 0) {
                     desc = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);

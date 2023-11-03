@@ -311,7 +311,10 @@
 "TUIKitErrorUnsupportIntefaceMessageRead" = "Message Read Receipt";
 "TUIKitErrorUnsupportIntefaceCommunity" = "Community";
 "TUIKitErrorUnsupportIntefaceDesc" = " feature is only available to the Ultimate edition, which can be used after purchasing the Ultimate Edition. See the price guidelines for details.";
-"TUIKitErrorValueAddedUnsupportIntefaceDesc" = " is a value-added payment feature, which is currently in the internal testing stage. Please contact Tencent Cloud Commerce to activate it for you and continue to use it.";
+"TUIKitErrorValueAddedUnsupportIntefaceContactDesc" = " is a value-added payment feature, which is currently in the internal testing stage. Click to enter [Tencent Cloud Instant messaging IM Group] to apply for activation and trial.";
+"TUIKitErrorValueAddedUnsupportIntefacePurchaseDesc" = " is a value-added payment feature, Please go to Tencent Cloud console [Plug-in Market] for trial or purchase and activate";
+"TUIKitErrorValueAddedUnsupportIntefaceContactDescHighlight" = "[Tencent Cloud Instant messaging IM Group]";
+"TUIKitErrorValueAddedUnsupportIntefacePurchaseDescHighlight" = "[Plug-in Market]";
 "TUIKitErrorUnsupportIntefaceCommunityDesc" = "\nNote: The community can accommodate millions of members, and can be divided into groups and topics. It is suitable for interest making friends, game social networking, fan operation, organization management and other scenarios.";
 "TUIKitErrorUnsupportIntefaceGuidelines" = "price guidelines";
 "TUIKitErrorUnsupportIntefaceTitle" = "Tips";

@@ -92,6 +92,8 @@
 	<string>service_more_poll_img.png</string>
 	<key>service_more_group_note_img</key>
 	<string>service_more_group_note_img.png</string>
+	<key>service_more_customer_service_evaluation_img</key>
+	<string>service_more_customer_service_evaluation_img.png</string>
 	<key>icon_online_status_img</key>
 	<string>icon_online_status.png</string>
 	<key>icon_offline_status_img</key>

@@ -7,8 +7,12 @@
 
 import Foundation
 import AVFAudio
+import TXLiteAVSDK_TRTC
+import TUICallEngine
 
-class CallingBellFeature {
+let CALLKIT_AUDIO_DIAL_ID: Int32 = 48
+
+class CallingBellFeature: NSObject, AVAudioPlayerDelegate {
     
     enum CallingBellType {
         case CallingBellTypeHangup
@@ -17,19 +21,16 @@ class CallingBellFeature {
     }
     
     static let instance = CallingBellFeature()
+    var player: AVAudioPlayer?
+    var loop: Bool = true
     
-    func playCallingBellWithFilePath(filePath: String) -> Bool {
-        let url = URL(fileURLWithPath: filePath)
-        return CallingBellPlayer.instance.playAudio(url: url)
-    }
-    
-    func playCallingBell(type: CallingBellType) -> Bool {
+    func startPlayMusic(type: CallingBellType) -> Bool {
         guard let bundle = TUICallKitCommon.getTUICallKitBundle() else { return false }
         switch type {
         case .CallingBellTypeHangup:
             let path = bundle.bundlePath + "/AudioFile" + "/phone_hangup.mp3"
             let url = URL(fileURLWithPath: path)
-            return CallingBellPlayer.instance.playAudio(url: url, loop: false)
+            return startPlayMusicBySystemPlayer(url: url, loop: false)
         case .CallingBellTypeCalled:
             if TUICallState.instance.enableMuteMode {
                 return false
@@ -42,31 +43,45 @@ class CallingBellFeature {
             }
             
             let url = URL(fileURLWithPath: path)
-            return CallingBellPlayer.instance.playAudio(url: url)
+            return startPlayMusicBySystemPlayer(url: url)
         case .CallingBellTypeDial:
             let path = bundle.bundlePath + "/AudioFile" + "/phone_dialing.m4a"
-            let url = URL(fileURLWithPath: path)
-            return CallingBellPlayer.instance.playAudio(url: url)
+            startPlayMusicByTRTCPlayer(path: path, id: CALLKIT_AUDIO_DIAL_ID)
+            return true
         }
     }
     
-    func stopAudio() {
-        CallingBellPlayer.instance.stopPlay()
+    func stopPlayMusic() {
+        if TUICallState.instance.selfUser.value.callRole.value == .call {
+            stopPlayMusicByTRTCPlayer(id: CALLKIT_AUDIO_DIAL_ID)
+            return
+        }
+        stopPlayMusicBySystemPlayer()
     }
-}
 
-class CallingBellPlayer: NSObject, AVAudioPlayerDelegate {
+    // MARK: TRTC Audio Player
+    private func startPlayMusicByTRTCPlayer(path: String, id: Int32) {
+        CallEngineManager.instance.setAudioPlaybackDevice(device: TUICallState.instance.mediaType.value == .audio ? .earpiece : .speakerphone)
+        let param = TXAudioMusicParam()
+        param.id = id
+        param.isShortFile = true
+        param.path = path
+        TUICallEngine.createInstance().getTRTCCloudInstance().getAudioEffectManager().startPlayMusic(param,
+                                                                                                     onStart: nil,
+                                                                                                     onProgress: nil)
+        TUICallEngine.createInstance().getTRTCCloudInstance().getAudioEffectManager().setMusicPlayoutVolume(id, volume: 100)
+    }
     
-    static let instance = CallingBellPlayer()
-    
-    var player: AVAudioPlayer?
-    var loop: Bool = true
-        
-    func playAudio(url: URL, loop: Bool = true) -> Bool {
+    private func stopPlayMusicByTRTCPlayer(id: Int32) {
+        TUICallEngine.createInstance().getTRTCCloudInstance().getAudioEffectManager().stopPlayMusic(id)
+    }
+
+    // MARK: System AVAudio Player
+    private func startPlayMusicBySystemPlayer(url: URL, loop: Bool = true) -> Bool {
         self.loop = loop
         
         if player != nil {
-            stopPlay()
+            stopPlayMusicBySystemPlayer()
         }
         
         do {
@@ -89,7 +104,7 @@ class CallingBellPlayer: NSObject, AVAudioPlayerDelegate {
         return res
     }
         
-    func stopPlay() {
+    private func stopPlayMusicBySystemPlayer() {
         if player == nil {
             return
         }
@@ -98,21 +113,21 @@ class CallingBellPlayer: NSObject, AVAudioPlayerDelegate {
     }
     
     //MARK: AVAudioPlayerDelegate
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    internal func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if loop {
             player.play()
         } else {
-            stopPlay()
+            stopPlayMusicBySystemPlayer()
         }
     }
     
-    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+    internal func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         if error != nil {
-            stopPlay()
+            stopPlayMusicBySystemPlayer()
         }
     }
     
-    func setAudioSessionPlayback() {
+    private func setAudioSessionPlayback() {
         let audioSession = AVAudioSession()
         try? audioSession.setCategory(.soloAmbient)
         try? audioSession.setActive(true)

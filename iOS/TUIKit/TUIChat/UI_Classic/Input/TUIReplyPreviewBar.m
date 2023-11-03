@@ -48,7 +48,7 @@
 - (void)setPreviewData:(TUIReplyPreviewData *)previewData {
     _previewData = previewData;
 
-    NSString *abstract = [TUIReplyPreviewData displayAbstract:previewData.type abstract:previewData.msgAbstract withFileName:YES];
+    NSString *abstract = [TUIReplyPreviewData displayAbstract:previewData.type abstract:previewData.msgAbstract withFileName:YES isRisk:NO];
     _titleLabel.text = [[NSString stringWithFormat:@"%@: %@", previewData.sender, abstract] getLocalizableStringWithFaceContent];
     _titleLabel.lineBreakMode = previewData.type == (NSInteger)V2TIM_ELEM_TYPE_FILE ? NSLineBreakByTruncatingMiddle : NSLineBreakByTruncatingTail;
 }
@@ -56,7 +56,10 @@
 - (void)setPreviewReferenceData:(TUIReferencePreviewData *)previewReferenceData {
     _previewReferenceData = previewReferenceData;
 
-    NSString *abstract = [TUIReferencePreviewData displayAbstract:previewReferenceData.type abstract:previewReferenceData.msgAbstract withFileName:YES];
+    NSString *abstract = [TUIReferencePreviewData displayAbstract:previewReferenceData.type
+                                                         abstract:previewReferenceData.msgAbstract
+                                                     withFileName:YES
+                                                           isRisk:NO];
     _titleLabel.text = [[NSString stringWithFormat:@"%@: %@", previewReferenceData.sender, abstract] getLocalizableStringWithFaceContent];
     _titleLabel.lineBreakMode = previewReferenceData.type == (NSInteger)V2TIM_ELEM_TYPE_FILE ? NSLineBreakByTruncatingMiddle : NSLineBreakByTruncatingTail;
 }

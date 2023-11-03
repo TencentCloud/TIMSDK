@@ -106,7 +106,7 @@ class FloatingWindowView: UIView {
         viewModel.selfCallStatus.removeObserver(selfCallStatusObserver)
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     func setSubView() {
         clearSubview()
         constructViewHierarchy()
@@ -167,7 +167,7 @@ class FloatingWindowView: UIView {
         }
     }
     
-    //MARK: Action Event
+    // MARK: Action Event
     @objc func tapGestureAction(tapGesture: UITapGestureRecognizer) {
         if self.delegate != nil && ((self.delegate?.responds(to: Selector(("tapGestureAction")))) != nil) {
             self.delegate?.tapGestureAction(tapGesture: tapGesture)
@@ -202,9 +202,9 @@ class FloatingWindowView: UIView {
         }
     }
     
-    //MARK: Update UI
+    // MARK: Update UI
     func updateUI() {
-        if viewModel.scence.value == .single {
+        if viewModel.scene.value == .single {
             if viewModel.mediaType.value == .audio {
                 if viewModel.selfCallStatus.value == .waiting {
                     setAudioWaitingUI()
@@ -219,7 +219,7 @@ class FloatingWindowView: UIView {
                     if remoteUser.videoAvailable.value == true {
                         setVideoAcceptUI()
                     } else {
-                        setVideoAcceptWithDisavailableUI()
+                        setVideoAcceptWithUnavailableUI()
                     }
                 }
             }
@@ -276,13 +276,20 @@ class FloatingWindowView: UIView {
         viewModel.startRemoteView(user: remoteUser, videoView: remotePreView)
     }
     
-    func setVideoAcceptWithDisavailableUI() {
+    func setVideoAcceptWithUnavailableUI() {
         setSubView()
         avatarImageView.isHidden = false
         containerView.isHidden = true
         frame = kMicroAudioViewRect
 
         guard let remoteUser = viewModel.remoteUserList.value.first else { return }
-        avatarImageView.image = viewModel.getRemoteAvatar(user: remoteUser)
+        let userIcon: UIImage? = TUICallKitCommon.getBundleImage(name: "userIcon")
+        
+        if remoteUser.avatar.value == "" {
+            guard let image = userIcon else { return }
+            avatarImageView.image = image
+        } else {
+            avatarImageView.sd_setImage(with: URL(string: remoteUser.avatar.value), placeholderImage: userIcon)
+        }
     }
 }

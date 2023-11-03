@@ -10,7 +10,7 @@ import TUICallEngine
 
 class AudioAndVideoCalleeWaitingView: UIView {
     
-    let viewModel = FunctionViewModel()
+    let viewModel = AudioAndVideoCalleeWaitingViewModel()
     let mediaTypeObserver = Observer()
     
     lazy var acceptBtn: BaseControlButton = {

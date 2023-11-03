@@ -255,7 +255,7 @@ extern const NSString *TUICSToastPositionBottomRight;
 
 /**
  The spacing from the horizontal edge of the toast view to the content. When an image
- is present, this is also used as the padding between the image and the text.
+ is present, and is not set horizontalIntervalPadding, this is also used as the padding between the image and the text.
  Default is 10.0.
  */
 @property(assign, nonatomic) CGFloat horizontalPadding;
@@ -266,6 +266,12 @@ extern const NSString *TUICSToastPositionBottomRight;
  Default is 10.0.
  */
 @property(assign, nonatomic) CGFloat verticalPadding;
+
+/**
+ When an image is present, this is used as the padding between the image and the text.
+ Default is horizontalPadding.
+ */
+@property(assign, nonatomic) CGFloat horizontalIntervalPadding;
 
 /**
  The corner radius. Default is 10.0.

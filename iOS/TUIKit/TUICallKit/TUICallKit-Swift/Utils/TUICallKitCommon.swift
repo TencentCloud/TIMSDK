@@ -29,15 +29,6 @@ class TUICallKitCommon {
         return UIImage(named: name, in: self.getTUICallKitBundle(), compatibleWith: nil)
     }
     
-    static func getUrlImage(url: String) -> UIImage? {
-        guard let url = URL(string: url) else { return nil }
-        var data = Data()
-        do {
-            data = try Data(contentsOf: url)
-        } catch _ as NSError {}
-        return  UIImage(data: data)
-    }
-    
     static func getKeyWindow() -> UIWindow? {
         if #available(iOS 13.0, *) {
             return UIApplication.shared.windows.filter({ $0.isKeyWindow }).last

@@ -9,7 +9,7 @@ import Foundation
 
 class VideoCallerWaitingView: UIView {
     
-    let viewModel = FunctionViewModel()
+    let viewModel = VideoCallerWaitingViewModel()
     lazy var hangupBtn: BaseControlButton = {
         weak var weakSelf = self
         let btn = BaseControlButton.create(frame: CGRect.zero,

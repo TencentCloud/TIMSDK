@@ -12,8 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^CallingUserModelCallback)(NSInteger code, NSString * _Nonnull message, CallingUserModel * _Nullable userInfo);
-
 @interface TUICallingUserManager : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -30,8 +28,6 @@ typedef void (^CallingUserModelCallback)(NSInteger code, NSString * _Nonnull mes
 + (NSArray<CallingUserModel *> *)allUserList;
 
 + (NSArray<NSString *> *)allUserIdList;
-
-+ (void)getUserInfo:(NSString *)userId callback:(CallingUserModelCallback)callback;
 
 + (void)removeUser:(NSString *)userId;
 

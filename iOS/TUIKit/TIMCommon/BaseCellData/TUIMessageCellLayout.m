@@ -116,4 +116,45 @@ static TUIMessageCellLayout *gSystemMessageLayout;
     return gSystemMessageLayout;
 }
 
+#pragma Image CellLayout
+
+static TUIMessageCellLayout *gIncommingImageMessageLayout;
++ (TUIMessageCellLayout *)incommingImageMessageLayout {
+    if (!gIncommingImageMessageLayout) {
+        gIncommingImageMessageLayout = [[TUIMessageCellLayout alloc] init:YES];
+        gIncommingImageMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 0, .bottom = 0, .left = 0 ,.right = 0};
+    }
+    return gIncommingImageMessageLayout;
+}
+
+static TUIMessageCellLayout *gOutgoingImageMessageLayout;
++ (TUIMessageCellLayout *)outgoingImageMessageLayout {
+    if (!gOutgoingImageMessageLayout) {
+        gOutgoingImageMessageLayout = [[TUIMessageCellLayout alloc] init:NO];
+        gOutgoingImageMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 0, .bottom = 0, .left = 0 ,.right = 0};
+    }
+    return gOutgoingImageMessageLayout;
+}
+
+#pragma Video CellLayout
+static TUIMessageCellLayout *gIncommingVideoMessageLayout;
+
++ (TUIMessageCellLayout *)incommingVideoMessageLayout {
+    if (!gIncommingVideoMessageLayout) {
+        gIncommingVideoMessageLayout = [[TUIMessageCellLayout alloc] init:YES];
+        gIncommingVideoMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 0, .bottom = 0, .left = 0 ,.right = 0};
+    }
+    return gIncommingVideoMessageLayout;
+}
+
+static TUIMessageCellLayout *gOutgoingVideoMessageLayout;
+
++ (TUIMessageCellLayout *)outgoingVideoMessageLayout {
+    if (!gOutgoingVideoMessageLayout) {
+        gOutgoingVideoMessageLayout = [[TUIMessageCellLayout alloc] init:NO];
+        gOutgoingVideoMessageLayout.bubbleInsets = (UIEdgeInsets){.top = 0, .bottom = 0, .left = 0 ,.right = 0};
+    }
+    return gOutgoingVideoMessageLayout;
+}
+
 @end

@@ -11,6 +11,8 @@
 #import "TUITool.h"
 #import "TUIConfig.h"
 #import "CallingLocalized.h"
+#import "TUICallKitUserInfoUtils.h"
+#import "TUICallingUserModel.h"
 
 @interface TUICallRecordCallsCellViewModel ()
 
@@ -164,15 +166,18 @@
             break;
     }
     
+    self.titleLabelStr = [[allUsers copy] componentsJoinedByString:@", "];
+    
     __weak __typeof(self) weakSelf = self;
-    [[V2TIMManager sharedInstance] getUsersInfo:[allUsers copy] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+    [TUICallKitUserInfoUtils getUserInfo:[allUsers copy] succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
         __strong __typeof(weakSelf) strongSelf = weakSelf;
         NSMutableArray *titleArray = [NSMutableArray array];
-        [infoList enumerateObjectsUsingBlock:^(V2TIMUserFullInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [titleArray addObject:obj.nickName ?: obj.userID];
-        }];
+        for (CallingUserModel *userModel in modelList) {
+            [titleArray addObject:userModel.name];
+        }
         strongSelf.titleLabelStr = [titleArray componentsJoinedByString:@", "];
-    } fail:nil];
+    } fail:^(int code, NSString * _Nullable errMsg) {
+    }];
 }
 
 - (void)configTimeWith:(TUICallRecords *)callRecord {

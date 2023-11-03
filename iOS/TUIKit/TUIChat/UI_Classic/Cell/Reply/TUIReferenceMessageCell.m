@@ -159,6 +159,15 @@
         self.textView.textColor = referenceData.textColor;
     }
     
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent ) {
+        [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.textView.mas_bottom);
+            make.width.mas_equalTo(self.bubbleView);
+            make.bottom.mas_equalTo(self.container);
+        }];
+    }
+    
     [self.senderLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.quoteView).mas_offset(6);
         make.top.mas_equalTo(self.quoteView).mas_offset(8);
@@ -202,11 +211,20 @@
     NSString *reuseId = originCellData ? NSStringFromClass(originCellData.class) : NSStringFromClass(TUITextMessageCellData.class);
     TUIReplyQuoteView *view = nil;
     BOOL reuse = NO;
+    BOOL hasRiskContent = originCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        reuseId = @"hasRiskContent";
+    }
     if ([self.customOriginViewsCache.allKeys containsObject:reuseId]) {
         view = [self.customOriginViewsCache objectForKey:reuseId];
         reuse = YES;
     }
-
+    
+    if (hasRiskContent && view == nil){
+        TUITextReplyQuoteView *quoteView = [[TUITextReplyQuoteView alloc] init];
+        view = quoteView;
+    }
+    
     if (view == nil) {
         Class class = [originCellData getReplyQuoteViewClass];
         if (class) {
@@ -410,6 +428,12 @@
         size.height = MAX(size.height, TUIBubbleMessageCell.incommingBubble.size.height);
     } else {
         size.height = MAX(size.height, TUIBubbleMessageCell.outgoingBubble.size.height);
+    }
+    BOOL hasRiskContent = referenceCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        size.width = MAX(size.width, 200);// width must more than  TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrike)
+        size.height += kTUISecurityStrikeViewTopLineMargin;
+        size.height += kTUISecurityStrikeViewTopLineToBottom;
     }
 
     quoteWidth = senderRect.size.width;

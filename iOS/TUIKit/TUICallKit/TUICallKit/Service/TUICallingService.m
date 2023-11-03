@@ -15,6 +15,7 @@
 #import "TUIGlobalization.h"
 #import "NSDictionary+TUISafe.h"
 #import "TUICallEngineHeader.h"
+#import "TUICallingStatusManager.h"
 
 @interface TUICallingService () <TUIServiceProtocol>
 
@@ -110,6 +111,14 @@
         [[TUICallEngine createInstance] enableMultiDeviceAbility:[enableMultiDeviceAbility boolValue] succ:^{
         } fail:^(int code, NSString * _Nullable errMsg) {
         }];
+    } else if ([method isEqualToString:TUICore_TUICallingService_SetAudioPlaybackDeviceMethod]) {
+        NSString *keyStr = TUICore_TUICallingService_SetAudioPlaybackDevice_AudioPlaybackDevice;
+        NSNumber *audioPlaybackDevice = [param tui_objectForKey:keyStr asClass:NSNumber.class];
+        [TUICallingStatusManager shareInstance].audioPlaybackDevice = [audioPlaybackDevice unsignedIntegerValue];
+    } else if ([method isEqualToString:TUICore_TUICallingService_SetIsMicMuteMethod]) {
+        NSString *keyStr = TUICore_TUICallingService_SetIsMicMuteMethod_IsMicMute;
+        NSNumber *isMicMute = [param tui_objectForKey:keyStr asClass:NSNumber.class];
+        [TUICallingStatusManager shareInstance].isMicMute = [isMicMute boolValue];
     }
     
     return nil;

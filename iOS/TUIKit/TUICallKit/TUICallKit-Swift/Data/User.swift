@@ -15,6 +15,7 @@ class User {
     let id: Observable<String> = Observable("")
     let nickname: Observable<String> = Observable("")
     let avatar: Observable<String> = Observable("")
+    let remark: Observable<String> = Observable("")
     
     let callRole: Observable<TUICallRole> = Observable(.none)
     let callStatus: Observable<TUICallStatus> = Observable(.none)
@@ -46,12 +47,12 @@ class User {
     
     static func getUserInfosFromIM(userIDs: [String], response: @escaping ([User]) -> Void ) {
         
-        var userModels: [User] = Array()
-        V2TIMManager.sharedInstance().getUsersInfo(userIDs) { imUserInfos in
-            var userModel = User()
-            guard let userInfos = imUserInfos else { return }
-            for info in userInfos {
-                userModel = convertUser(user: info)
+        V2TIMManager.sharedInstance().getFriendsInfo(userIDs) { imFrientInfosOptional in
+            guard let imFrientInfos = imFrientInfosOptional else { return }
+            var userModels: [User] = Array()
+            for imFriendInfo in imFrientInfos {
+                let userModel = convertUser(user: imFriendInfo.friendInfo.userFullInfo)
+                userModel.remark.value = imFriendInfo.friendInfo.friendRemark ?? ""
                 userModels.append(userModel)
             }
             response(userModels)
@@ -70,4 +71,17 @@ class User {
             }
         }
     }
+    
+    static func getUserDisplayName(user: User) -> String {
+        if !user.remark.value.isEmpty {
+            return user.remark.value
+        }
+        
+        if !user.nickname.value.isEmpty {
+            return user.nickname.value
+        }
+
+        return user.id.value
+    }
+
 }

@@ -79,6 +79,8 @@ static BOOL gRTLOption = NO;
         language = @"uk";
     } else if ([language hasPrefix:@"ar"]) {
         language = @"ar";
+    }else if ([language hasPrefix:@"ja"]) {
+        language = @"ja";
     }
     else {
         language = @"en";

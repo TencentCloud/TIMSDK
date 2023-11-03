@@ -808,11 +808,18 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
     [vc presentViewController:alertController animated:NO completion:nil];
 }
 
-+ (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc {
-    [self addValueAddedUnsupportNotificationInVC:vc debugOnly:YES];
++ (void)onTapLabel:(UIGestureRecognizer *)ges {
+    NSString *chinesePurchase = @"https://cloud.tencent.com/document/product/269/11673#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
+    NSString *englishPurchase = @"https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
+    NSString *language = [TUIGlobalization tk_localizableLanguageKey];
+    NSURL *url = [NSURL URLWithString:chinesePurchase];
+    if (![language containsString:@"zh-"]) {
+        url = [NSURL URLWithString:englishPurchase];
+    }
+    [TUITool openLinkWithURL:url];
 }
 
-+ (void)addValueAddedUnsupportNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly {
++ (void)addValueAddedUnsupportNeedContactNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly {
     BOOL enable = YES;
     if (debugOnly) {
 #if DEBUG
@@ -821,27 +828,58 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
         enable = NO;
 #endif
     }
-
     if (!enable) {
         return;
     }
 
-    [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError
+    [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedValueAddedUnsupportContactNeededError
                                                       object:nil
                                                        queue:nil
                                                   usingBlock:^(NSNotification *_Nonnull note) {
-                                                    NSDictionary *userInfo = note.userInfo;
-                                                    NSString *service = [userInfo objectForKey:@"service"];
-                                                    NSString *serviceDesc = [userInfo objectForKey:@"serviceDesc"];
-                                                    [TUITool showValueAddedUnsupportAlertOfService:service serviceDesc:serviceDesc onVC:vc];
-                                                  }];
+        NSDictionary *userInfo = note.userInfo;
+        NSString *service = [userInfo objectForKey:@"service"];
+        [TUITool showValueAddedUnsupportNeedContactAlertOfService:service onVC:vc];
+    }];
 }
 
-+ (void)postValueAddedUnsupportNotificationOfService:(NSString *)service {
-    [self postValueAddedUnsupportNotificationOfService:service serviceDesc:nil debugOnly:YES];
++ (void)addValueAddedUnsupportNeedPurchaseNotificationInVC:(UIViewController *)vc debugOnly:(BOOL)debugOnly {
+    BOOL enable = YES;
+    if (debugOnly) {
+#if DEBUG
+        enable = YES;
+#else
+        enable = NO;
+#endif
+    }
+    if (!enable) {
+        return;
+    }
+
+    [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedValueAddedUnsupportPurchaseNeededError
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification *_Nonnull note) {
+        NSDictionary *userInfo = note.userInfo;
+        NSString *service = [userInfo objectForKey:@"service"];
+        [TUITool showValueAddedUnsupportNeedPurchaseAlertOfService:service onVC:vc];
+    }];
 }
 
-+ (void)postValueAddedUnsupportNotificationOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc debugOnly:(BOOL)debugOnly {
++ (void)postValueAddedUnsupportNeedContactNotification:(NSString *)service {
+    [self postValueAddedUnsupportNotification:TUIKitNotification_onReceivedValueAddedUnsupportContactNeededError
+                                      service:service
+                                  serviceDesc:nil
+                                    debugOnly:YES];
+}
+
++ (void)postValueAddedUnsupportNeedPurchaseNotification:(NSString *)service {
+    [self postValueAddedUnsupportNotification:TUIKitNotification_onReceivedValueAddedUnsupportPurchaseNeededError
+                                      service:service
+                                  serviceDesc:nil
+                                    debugOnly:YES];
+}
+
++ (void)postValueAddedUnsupportNotification:(NSString *)notification service:(NSString *)service serviceDesc:(NSString *)serviceDesc debugOnly:(BOOL)debugOnly {
     BOOL enable = YES;
     if (debugOnly) {
 #if DEBUG
@@ -859,23 +897,63 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
         NSLog(@"postNotificationOfService, service is nil");
         return;
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError
+    [[NSNotificationCenter defaultCenter] postNotificationName:notification
                                                         object:nil
-                                                      userInfo:@{@"service" : service ?: @"", @"serviceDesc" : serviceDesc ?: @""}];
+                                                      userInfo:@{@"service" : service ?: @"",
+                                                                 @"serviceDesc" : serviceDesc ?: @""}];
 }
 
-+ (void)showValueAddedUnsupportAlertOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc onVC:(UIViewController *)vc {
-    NSString *desc = [NSString stringWithFormat:@"%@%@%@", service, TUIKitLocalizableString(TUIKitErrorValueAddedUnsupportIntefaceDesc), serviceDesc ?: @""];
++ (void)showValueAddedUnsupportNeedContactAlertOfService:(NSString *)service onVC:(UIViewController *)vc {
+    [self showValueAddedUnsupportAlertOfService:service
+                                    serviceDesc:TUIKitLocalizableString(TUIKitErrorValueAddedUnsupportIntefaceContactDesc)
+                                           onVC:vc
+                                  highlightText:TUIKitLocalizableString(TUIKitErrorValueAddedUnsupportIntefaceContactDescHighlight)
+                                            sel:@selector(onTapValueAddedContactLabel)];
+}
+
++ (void)showValueAddedUnsupportNeedPurchaseAlertOfService:(NSString *)service onVC:(UIViewController *)vc {
+    [self showValueAddedUnsupportAlertOfService:service
+                                    serviceDesc:TUIKitLocalizableString(TUIKitErrorValueAddedUnsupportIntefacePurchaseDesc)
+                                           onVC:vc
+                                  highlightText:TUIKitLocalizableString(TUIKitErrorValueAddedUnsupportIntefacePurchaseDescHighlight)
+                                            sel:@selector(onTapValueAddedPurchaseLabel)];
+}
+
++ (void)showValueAddedUnsupportAlertOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc onVC:(UIViewController *)vc 
+                                highlightText:(NSString *)text sel:(SEL)selector {
+    NSString *desc = [NSString stringWithFormat:@"%@%@", service, serviceDesc ?: @""];
     NSString *button = TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceIGotIt);
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceTitle)
                                                                              message:desc
                                                                       preferredStyle:UIAlertControllerStyleAlert];
+    
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:desc];
+    [attrStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(0, desc.length)];
+    [attrStr addAttribute:NSLinkAttributeName value:@"https://" range:[desc rangeOfString:text]];
+    [alertController setValue:attrStr forKey:@"attributedMessage"];
+    
+    UILabel *msgLabel = [TUITool messageLabelInAlertController:alertController];
+    msgLabel.userInteractionEnabled = YES;
+    msgLabel.textAlignment = NSTextAlignmentLeft;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:TUITool.class action:selector];
+    [msgLabel addGestureRecognizer:tap];
+    
     UIAlertAction *ok = [UIAlertAction actionWithTitle:button
                                                  style:UIAlertActionStyleDefault
                                                handler:^(UIAlertAction *_Nonnull action){
                                                }];
     [alertController tuitheme_addAction:ok];
     [vc presentViewController:alertController animated:NO completion:nil];
+}
+
++ (void)onTapValueAddedContactLabel {
+    NSURL *url = [NSURL URLWithString:@"https://zhiliao.qq.com"];
+    [TUITool openLinkWithURL:url];
+}
+
++ (void)onTapValueAddedPurchaseLabel {
+    NSURL *url = [NSURL URLWithString:@"https://buy.cloud.tencent.com/avc?activeId=plugin&regionId=1"];
+    [TUITool openLinkWithURL:url];
 }
 
 + (void)checkCommercialAbility:(long long)param succ:(void (^)(BOOL enabled))succ fail:(void (^)(int code, NSString *desc))fail {
@@ -902,17 +980,6 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
             });
           }];
     });
-}
-
-+ (void)onTapLabel:(UIGestureRecognizer *)ges {
-    NSString *chinesePurchase = @"https://cloud.tencent.com/document/product/269/11673#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
-    NSString *englishPurchase = @"https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
-    NSString *language = [TUIGlobalization tk_localizableLanguageKey];
-    NSURL *url = [NSURL URLWithString:chinesePurchase];
-    if (![language containsString:@"zh-"]) {
-        url = [NSURL URLWithString:englishPurchase];
-    }
-    [TUITool openLinkWithURL:url];
 }
 
 + (UILabel *)messageLabelInAlertController:(UIAlertController *)alert {

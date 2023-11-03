@@ -75,6 +75,11 @@
         _uploadProgress = 100;
         _isDownloadingVideo = NO;
         _isDownloadingSnapshot = NO;
+        if (direction == MsgDirectionIncoming) {
+            self.cellLayout = [TUIMessageCellLayout incommingVideoMessageLayout];
+        } else {
+            self.cellLayout = [TUIMessageCellLayout outgoingVideoMessageLayout];
+        }
     }
     return self;
 }

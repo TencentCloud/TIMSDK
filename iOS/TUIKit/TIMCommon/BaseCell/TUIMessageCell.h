@@ -31,6 +31,8 @@
 #import "TUIMessageCellData.h"
 #import "TUITagsModel.h"
 #import "TUITagsView.h"
+#import "TUISecurityStrikeView.h"
+
 
 @class TUIMessageCell;
 
@@ -190,6 +192,14 @@
  *  Retry view, displayed after sending failed, click on this view to trigger onRetryMessage: callback.
  */
 @property(nonatomic, strong) UIImageView *retryView;
+
+
+/**
+ *  安全打击提示视图
+ *
+ *  security Strike View
+ */
+@property (nonatomic, strong) TUISecurityStrikeView * securityStrikeView;
 
 /**
  *  表情回复标签列表

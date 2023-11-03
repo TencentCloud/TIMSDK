@@ -12,6 +12,7 @@
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIGlobalization.h>
 #import "TUIFaceView.h"
+#import <TUICore/UIColor+TUIHexColor.h>
 
 #ifndef CGFLOAT_CEIL
 #ifdef CGFLOAT_IS_DOUBLE
@@ -117,6 +118,19 @@
         }];
     }
     
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent ) {
+        [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.textView.mas_bottom);
+            make.width.mas_equalTo(self.bubbleView);
+            if(self.tagView) {
+                make.bottom.mas_equalTo(self.container).mas_offset(- self.messageData.messageModifyReactsSize.height);
+            }
+            else {
+                make.bottom.mas_equalTo(self.container);
+            }
+        }];
+    }
     [self layoutBottomContainer];
     
 }
@@ -222,11 +236,8 @@
 
     textCellData.textSize = CGSizeMake(width, height);
 
-    static CGPoint textOrigin;
-    if (CGPointEqualToPoint(CGPointZero, textOrigin)) {
-        textOrigin = CGPointMake(textCellData.cellLayout.bubbleInsets.left,
-                                 textCellData.cellLayout.bubbleInsets.top + [TUIBubbleMessageCell getBubbleTop:textCellData]);
-    }
+    CGPoint textOrigin = CGPointMake(textCellData.cellLayout.bubbleInsets.left,
+                                 textCellData.cellLayout.bubbleInsets.top);
     textCellData.textOrigin = textOrigin;
 
     height += textCellData.cellLayout.bubbleInsets.top;
@@ -239,6 +250,13 @@
         height = MAX(height, TUIBubbleMessageCell.incommingBubble.size.height);
     } else {
         height = MAX(height, TUIBubbleMessageCell.outgoingBubble.size.height);
+    }
+    
+    BOOL hasRiskContent = textCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        width = MAX(width, 200);// width must more than  TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrike)
+        height += kTUISecurityStrikeViewTopLineMargin;
+        height += kTUISecurityStrikeViewTopLineToBottom;
     }
 
     CGSize size = CGSizeMake(width, height);

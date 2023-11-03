@@ -207,6 +207,19 @@
     [super fillWithData:data];
     self.imgCellData = data;
     self.imageView.image = nil;
+    
+    BOOL hasRiskContent = data.innerMessage.hasRiskContent;
+    if (hasRiskContent  ) {
+        self.imageView.image = TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        for (UIView *subview in self.subviews) {
+            if (subview != self.scrollView ){
+                subview.hidden = YES;
+            }
+        }
+        return;
+    }
+
+    
     if (data.thumbImage == nil) {
         [data downloadImage:TImage_Type_Thumb];
     }
@@ -298,6 +311,9 @@
 }
 
 - (void)onDeviceOrientationChange:(NSNotification *)noti {
+    [self reloadAllView];
+}
+- (void)reloadAllView {
     for (UIView *subview in self.subviews) {
         if (subview) {
             [subview removeFromSuperview];
@@ -305,6 +321,36 @@
     }
     [self setupViews];
     [self fillWithData:self.imgCellData];
+
 }
 
+#pragma mark - V2TIMAdvancedMsgListener
+- (void)onRecvMessageModified:(V2TIMMessage *)msg {
+    V2TIMMessage *imMsg = msg;
+    if (imMsg == nil || ![imMsg isKindOfClass:V2TIMMessage.class]) {
+        return;
+    }
+    if ([self.imgCellData.innerMessage.msgID isEqualToString:imMsg.msgID]) {
+        BOOL hasRiskContent = imMsg.hasRiskContent;
+        if (hasRiskContent) {
+            self.imgCellData.innerMessage = imMsg;
+            [self showRiskAlert];
+        }
+    }
+}
+
+- (void)showRiskAlert {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil
+                                                                message:TIMCommonLocalizableString(TUIKitPictureCheckRisk)
+                                                         preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TUIKitVideoCheckRiskCancel)
+                                                    style:UIAlertActionStyleCancel
+                                                  handler:^(UIAlertAction *_Nonnull action) {
+                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                    [strongSelf reloadAllView];
+                                                  }]];
+
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
+}
 @end

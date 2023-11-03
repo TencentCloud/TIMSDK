@@ -36,6 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong) NSArray<TUIFaceGroup *> *chatPopDetailGroups;
 
+
+@property(nonatomic, assign) BOOL enableMessageBubble;
+
 @end
 
 NS_ASSUME_NONNULL_END

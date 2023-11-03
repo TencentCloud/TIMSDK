@@ -65,6 +65,13 @@
         }
         NSDictionary *userInfo = @{TUICore_TUIChatService_SendMessageMethod_MsgKey : message};
         [[NSNotificationCenter defaultCenter] postNotificationName:TUIChatSendMessageNotification object:nil userInfo:userInfo];
+    } else if ([method isEqualToString:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI]) {
+        V2TIMMessage *message = [param tui_objectForKey:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey asClass:V2TIMMessage.class];
+        if (message == nil) {
+            return nil;
+        }
+        NSDictionary *userInfo = @{TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey : message};
+        [[NSNotificationCenter defaultCenter] postNotificationName:TUIChatSendMessageWithoutUpdateUINotification object:nil userInfo:userInfo];
     } else if ([method isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod]) {
         [param enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *obj, BOOL *_Nonnull stop) {
           if (![key isKindOfClass:NSString.class] || ![obj isKindOfClass:NSNumber.class]) {

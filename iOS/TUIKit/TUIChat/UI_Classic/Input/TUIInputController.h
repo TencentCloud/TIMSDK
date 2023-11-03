@@ -97,6 +97,8 @@
 
 - (void)inputControllerEndTyping:(TUIInputController *)inputController;
 
+- (void)inputControllerDidClickMore:(TUIInputController *)inputController;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////

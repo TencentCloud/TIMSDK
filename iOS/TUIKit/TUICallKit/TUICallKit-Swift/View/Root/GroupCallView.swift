@@ -209,7 +209,7 @@ class GroupCallView: UIView {
         layoutView.isHidden = false
         inviteUserBUtton.isHidden = false
         videoFunctionView.isHidden = false
-        waitingHintView.isHidden = false
+        waitingHintView.isHidden = viewModel.selfCallRole.value == .call ? true : false
     }
     
     func createVideoCallingView() {
@@ -227,7 +227,7 @@ class GroupCallView: UIView {
         layoutView.isHidden = false
         inviteUserBUtton.isHidden = false
         audioFunctionView.isHidden = false
-        waitingHintView.isHidden = false
+        waitingHintView.isHidden = viewModel.selfCallRole.value == .call ? true : false
     }
     
     func createAudioCallingView() {

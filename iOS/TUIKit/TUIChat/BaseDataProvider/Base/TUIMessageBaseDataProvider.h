@@ -235,10 +235,12 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 /// message -> displayString
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message;
 + (nullable NSString *)getRevokeDispayString:(V2TIMMessage *)message;
++ (nullable NSString *)getRevokeDispayString:(V2TIMMessage *)message operateUser:(V2TIMUserFullInfo *)operateUser reason:(NSString *)reason;
 + (nullable NSString *)getGroupTipsDisplayString:(V2TIMMessage *)message;
 
 /// message <-> info
 + (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data;
++ (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data desc:(NSString *)desc extension:(NSString *)extension;
 + (NSMutableArray *)getUserIDList:(NSArray<V2TIMGroupMemberInfo *> *)infoList;
 + (NSString *)getShowName:(V2TIMMessage *)message;
 + (NSString *)getOpUserName:(V2TIMGroupMemberInfo *)info;

@@ -45,7 +45,13 @@ class CallEngineManager {
             TUICallState.instance.selfUser.value.callRole.value = TUICallRole.call
             TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
             
-            let _ = CallingBellFeature.instance.playCallingBell(type: .CallingBellTypeDial)
+            if callMediaType == .audio {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+            } else if callMediaType == .video {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+            }
+            
+            let _ = CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeDial)
             succ()
         } fail: { code, message in
             fail(code,message)
@@ -78,7 +84,13 @@ class CallEngineManager {
             TUICallState.instance.selfUser.value.callRole.value = TUICallRole.call
             TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
             
-            let _ = CallingBellFeature.instance.playCallingBell(type: .CallingBellTypeDial)
+            if callMediaType == .audio {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+            } else if callMediaType == .video {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+            }
+            
+            let _ = CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeDial)
             succ()
         } fail: { code, message in
             fail(code, message)
@@ -93,6 +105,12 @@ class CallEngineManager {
             
             TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
             TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.accept
+            
+            if callMediaType == .audio {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+            } else if callMediaType == .video {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+            }
             
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER), object: nil)
         } fail: { code, message in
@@ -121,12 +139,40 @@ class CallEngineManager {
         if TUICallState.instance.isMicMute.value == true {
             engine.openMicrophone {
                 TUICallState.instance.isMicMute.value = false
+                TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
+                                    subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey,
+                                    object: nil,
+                                    param: nil)
             } fail: { code , message  in
             }
         } else {
             engine.closeMicrophone()
             TUICallState.instance.isMicMute.value = true
+            TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
+                                subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey,
+                                object: nil,
+                                param: nil)
         }
+    }
+    
+    func openMicrophone() {
+        engine.openMicrophone {
+            TUICallState.instance.isMicMute.value = false
+            TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
+                                subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey,
+                                object: nil,
+                                param: nil)
+        } fail: { code , message  in
+        }
+    }
+    
+    func closeMicrophone() {
+        engine.closeMicrophone()
+        TUICallState.instance.isMicMute.value = true
+        TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
+                            subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey,
+                            object: nil,
+                            param: nil)
     }
     
     func changeSpeaker() {

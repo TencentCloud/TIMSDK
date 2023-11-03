@@ -16,6 +16,6 @@ typedef enum : NSUInteger {
 
 extern BOOL playAudioWithFilePath(NSString *filePath);
 
-extern BOOL playAudio(CallingAudioType type);
+extern void playAudio(CallingAudioType type);
 
 extern void stopAudio(void);

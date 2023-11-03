@@ -51,7 +51,7 @@
      
     [super updateConstraints];
     [self.bubbleView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.mas_equalTo(self.getBubbleTop);
+        make.leading.mas_equalTo(0);
         make.size.mas_equalTo(self.container);
         make.top.mas_equalTo(self.container);
     }];
@@ -114,6 +114,9 @@
 }
 
 - (UIImage *)getBubble {
+    if (!TIMConfig.defaultConfig.enableMessageBubble) {
+        return nil;
+    }
     if (self.bubbleData.direction == MsgDirectionIncoming) {
         return self.class.incommingBubble;
     } else {
@@ -122,6 +125,9 @@
 }
 
 - (UIImage *)getHighlightBubble {
+    if (!TIMConfig.defaultConfig.enableMessageBubble) {
+        return nil;
+    }
     if (self.bubbleData.direction == MsgDirectionIncoming) {
         return self.class.incommingHighlightedBubble;
     } else {
@@ -130,6 +136,9 @@
 }
 
 - (UIImage *)getAnimateHighlightBubble_alpha50 {
+    if (!TIMConfig.defaultConfig.enableMessageBubble) {
+        return nil;
+    }
     if (self.bubbleData.direction == MsgDirectionIncoming) {
         return self.class.incommingAnimatedHighlightedAlpha50;
     } else {
@@ -138,6 +147,9 @@
 }
 
 - (UIImage *)getAnimateHighlightBubble_alpha20 {
+    if (!TIMConfig.defaultConfig.enableMessageBubble) {
+        return nil;
+    }
     if (self.bubbleData.direction == MsgDirectionIncoming) {
         return self.class.incommingAnimatedHighlightedAlpha20;
     } else {
@@ -146,6 +158,9 @@
 }
 
 - (UIImage *)getSameMessageBubble {
+    if (!TIMConfig.defaultConfig.enableMessageBubble) {
+        return nil;
+    }
     UIImage *bubble_SameMsg = nil;
     UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
     ei = rtlEdgeInsetsWithInsets(ei);
@@ -162,6 +177,9 @@
 }
 
 - (UIImage *)getHighlightSameMessageBubble {
+    if (!TIMConfig.defaultConfig.enableMessageBubble) {
+        return nil;
+    }
     return self.getSameMessageBubble;
 }
 

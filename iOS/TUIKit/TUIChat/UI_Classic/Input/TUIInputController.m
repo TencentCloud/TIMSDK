@@ -11,6 +11,7 @@
 #import <TIMCommon/NSString+TUIEmoji.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatDataProvider.h"
@@ -214,6 +215,10 @@
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]) {
         [_delegate inputController:self didChangeHeight:CGRectGetMaxY(_inputBar.frame) + self.moreView.frame.size.height + Bottom_SafeHeight];
     }
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(inputControllerDidClickMore:)]) {
+        [_delegate inputControllerDidClickMore:self];
+    }
 }
 
 - (void)inputBarDidTouchFace:(TUIInputBar *)textView {
@@ -396,8 +401,9 @@
 - (void)inputBar:(TUIInputBar *)textView didSendVoice:(NSString *)path {
     NSURL *url = [NSURL fileURLWithPath:path];
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url options:nil];
-    int duration = CMTimeGetSeconds(audioAsset.duration) > 59 ? 60 : (int)CMTimeGetSeconds(audioAsset.duration);
-    V2TIMMessage *message = [[V2TIMManager sharedInstance] createSoundMessage:path duration:duration];
+    int duration = CMTimeGetSeconds(audioAsset.duration);
+    int formatDuration = duration > 59 ? 60 : duration + 1 ;
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createSoundMessage:path duration:formatDuration];
     if (message && _delegate && [_delegate respondsToSelector:@selector(inputController:didSendMessage:)]) {
         [_delegate inputController:self didSendMessage:message];
     }
@@ -443,6 +449,12 @@
     }
     _status = Input_Status_Input;
     [_inputBar.inputTextView resignFirstResponder];
+    
+    [TUICore notifyEvent:TUICore_TUIChatNotify
+                  subKey:TUICore_TUIChatNotify_KeyboardWillHideSubKey
+                  object:nil
+                   param:nil];
+    
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]) {
         CGFloat inputContainerBottom = [self getInputContainerBottom];
         [_delegate inputController:self didChangeHeight:inputContainerBottom + Bottom_SafeHeight];

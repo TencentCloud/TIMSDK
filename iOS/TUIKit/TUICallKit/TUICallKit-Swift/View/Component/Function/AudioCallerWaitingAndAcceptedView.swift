@@ -10,7 +10,7 @@ import UIKit
 
 class AudioCallerWaitingAndAcceptedView : UIView {
     
-    let viewModel = FunctionViewModel()
+    let viewModel = AudioCallerWaitingAndAcceptedViewModel()
     let isMicMuteObserver = Observer()
     let audioDeviceObserver = Observer()
         
@@ -58,8 +58,6 @@ class AudioCallerWaitingAndAcceptedView : UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        registerObserveState()
     }
     
     required init?(coder: NSCoder) {
@@ -132,27 +130,6 @@ class AudioCallerWaitingAndAcceptedView : UIView {
     func updateChangeSpeakerBtn(isSpeaker: Bool) {
         if let image = TUICallKitCommon.getBundleImage(name: isSpeaker ? "ic_handsfree_on" : "ic_handsfree") {
             changeSpeakerBtn.updateImage(image: image)
-        }
-    }
-    
-    // MARK: Register TUICallState Observer && Update UI
-    func registerObserveState() {
-        audioDeviceChanged()
-        muteMicChanged()
-    }
-    
-    func audioDeviceChanged() {
-        
-        viewModel.audioDevice.addObserver(audioDeviceObserver) { [weak self] newValue, _ in
-            guard let self = self else { return }
-            self.updateChangeSpeakerBtn(isSpeaker: newValue == .speakerphone)
-        }
-    }
-    
-    func muteMicChanged() {
-        viewModel.isMicMute.addObserver(isMicMuteObserver) { [weak self] newValue, _ in
-            guard let self = self else { return }
-            self.updateMuteAudioBtn(mute: newValue)
         }
     }
 }

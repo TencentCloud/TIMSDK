@@ -31,6 +31,9 @@ class TUICallRecordCallsViewModel {
     var recordCallsUIStyle: TUICallKitRecordCallsUIStyle = .minimalist
     var recordCallsType: TUICallRecordCallsType = .all
     
+    typealias SuccClosureType = @convention(block) (UIViewController) -> Void
+    typealias FailClosureType = @convention(block) (Int, String) -> Void
+    
     func queryRecentCalls() {
         let filter = TUICallRecentCallsFilter()
         TUICallEngine.createInstance().queryRecentCalls(filter: filter, succ: { [weak self] callRecords in
@@ -186,19 +189,19 @@ class TUICallRecordCallsViewModel {
         }
     }
     
-    func getUserOrFriendProfileVCWithUserID(userId: String, succ: ((UIViewController) -> Void)?, fail: ((Int, String) -> Void)?) {
-        let param: [String: Any] = [
-            TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey: userId ?? "",
-            TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey: succ ?? { _ in },
-            TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey: fail ?? { _, _ in },
+    func getUserOrFriendProfileVCWithUserID(userId: String, succ: @escaping SuccClosureType, fail: @escaping FailClosureType) {
+        let param: NSDictionary = [
+            TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_UserIDKey: userId,
+            TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey: succ,
+            TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey: fail,
         ]
         
         if TUICallKitRecordCallsUIStyle.classic == self.recordCallsUIStyle {
             TUICore.createObject(TUICore_TUIContactObjectFactory,
-                                 key: TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod, param: param)
+                                 key: TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod, param: param as? [AnyHashable : Any])
         } else {
             TUICore.createObject(TUICore_TUIContactObjectFactory_Minimalist,
-                                 key: TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod, param: param)
+                                 key: TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod, param: param as? [AnyHashable : Any])
         }
     }
 }

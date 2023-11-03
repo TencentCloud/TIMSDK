@@ -56,6 +56,11 @@
     self = [super initWithDirection:direction];
     if (self) {
         _uploadProgress = 100;
+        if (direction == MsgDirectionIncoming) {
+            self.cellLayout = [TUIMessageCellLayout incommingImageMessageLayout];
+        } else {
+            self.cellLayout = [TUIMessageCellLayout outgoingImageMessageLayout];
+        }
     }
     return self;
 }

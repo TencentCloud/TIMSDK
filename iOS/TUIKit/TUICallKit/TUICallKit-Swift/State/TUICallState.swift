@@ -102,13 +102,19 @@ extension TUICallState: TUICallObserver {
         
         TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
         TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
-        
-        CallingBellFeature.instance.playCallingBell(type: .CallingBellTypeCalled)
+                
+        if callMediaType == .audio {
+            TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+        } else if callMediaType == .video {
+            TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+        }
+
+        CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeCalled)
     }
     
     func onCallCancelled(callerId: String) {
+        CallingBellFeature.instance.stopPlayMusic()
         cleanState()
-        CallingBellFeature.instance.stopAudio()
     }
     
     func onKickedOffline() {
@@ -235,12 +241,18 @@ extension TUICallState: TUICallObserver {
             TUICallState.instance.timeCount.value += 1
         }
         
-        CallingBellFeature.instance.stopAudio()
+        CallingBellFeature.instance.stopPlayMusic()
+        CallEngineManager.instance.setAudioPlaybackDevice(device: TUICallState.instance.audioDevice.value)
+        if TUICallState.instance.isMicMute.value == false {
+            CallEngineManager.instance.openMicrophone()
+        } else {
+            CallEngineManager.instance.closeMicrophone()
+        }
     }
     
     func onCallEnd(roomId: TUIRoomId, callMediaType: TUICallMediaType, callRole: TUICallRole, totalTime: Float) {
+        CallingBellFeature.instance.stopPlayMusic()
         cleanState()
-        CallingBellFeature.instance.stopAudio()
     }
     
     func onCallMediaTypeChanged(oldCallMediaType: TUICallMediaType, newCallMediaType: TUICallMediaType) {

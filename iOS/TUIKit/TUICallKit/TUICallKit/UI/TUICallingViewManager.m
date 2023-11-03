@@ -7,6 +7,7 @@
 //
 
 #import "TUICallingViewManager.h"
+#import <TUICore/TUICore.h>
 #import "BaseCallViewProtocol.h"
 #import "TUICallingGroupView.h"
 #import "TUICallingSingleView.h"
@@ -32,6 +33,7 @@
 #import "TUICallEngineHeader.h"
 #import "TUICallingNavigationController.h"
 #import "TUICallKitSelectGroupMemberViewController.h"
+#import "TUICallKitUserInfoUtils.h"
 
 @interface TUICallingViewManager () <TUICallingFloatingWindowManagerDelegate, SelectGroupMemberViewControllerDelegate>
 
@@ -537,6 +539,12 @@
     self.enableFloatWindow = enable;
 }
 
+- (void)showAntiFraudReminder {
+    if ([TUICore getService:TUICore_PrivacyService]) {
+        [TUICore callService:TUICore_PrivacyService method:TUICore_PrivacyService_CallKitAntifraudReminderMethod param:nil];
+    }
+}
+
 #pragma mark - Action Event
 
 - (void)floatingWindowTouchEvent:(UIButton *)sender {
@@ -573,16 +581,16 @@
 - (void)addNewGroupUser:(NSArray<TUIUserModel *> *)inviteUsers {
     __weak typeof(self) weakSelf = self;
     [TUICallingAction inviteUser:inviteUsers succ:^(NSArray * _Nonnull userIDs) {
-        [[V2TIMManager sharedInstance] getUsersInfo:userIDs succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+        [TUICallKitUserInfoUtils getUserInfo:userIDs succ:^(NSArray<CallingUserModel *> * _Nonnull modelList) {
             __strong typeof(self) strongSelf = weakSelf;
-            for (V2TIMUserFullInfo *userInfo in infoList) {
-                CallingUserModel *userModel = [TUICallingCommon covertUser:userInfo];
+            for (CallingUserModel *userModel in modelList) {
                 [TUICallingUserManager cacheUser:userModel];
                 if (strongSelf.backgroundView && [strongSelf.backgroundView respondsToSelector:@selector(userAdd:)]) {
                     [strongSelf.backgroundView userAdd:userModel];
                 }
             }
-        } fail:nil];
+        } fail:^(int code, NSString * _Nullable errMsg) {
+        }];
     } fail:^(int code, NSString * _Nonnull desc) {
         [[TUICallingCommon getKeyWindow] makeToast:desc];
     }];
@@ -640,6 +648,8 @@
         if (self.backgroundView && [self.backgroundView respondsToSelector:@selector(updateRemoteView)]) {
             [self.backgroundView updateRemoteView];
         }
+        
+        [self showAntiFraudReminder];
     }
 }
 

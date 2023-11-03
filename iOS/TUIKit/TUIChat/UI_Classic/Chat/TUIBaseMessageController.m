@@ -153,6 +153,7 @@
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedSendMessageRequest:) name:TUIChatSendMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedSendMessageWithoutUpdateUIRequest:) name:TUIChatSendMessageWithoutUpdateUINotification object:nil];
 }
 
 - (TUIMessageCellConfig *)messageCellConfig {
@@ -326,14 +327,18 @@
         } else {
             errorMsg = [TUITool convertIMError:code msg:desc];
         }
-        [self makeSendErrorHud:errorMsg];
+        [self reloadUIMessage:cellData];
+        [self makeSendErrorHud:code msg:errorMsg];
         [self changeMsg:cellData status:Msg_Status_Fail];
         
         NSDictionary *param = @{TUICore_TUIChatNotify_SendMessageSubKey_Code : @(code), TUICore_TUIChatNotify_SendMessageSubKey_Desc : desc};
         [TUICore notifyEvent:TUICore_TUIChatNotify subKey:TUICore_TUIChatNotify_SendMessageSubKey object:self param:param];
     }];
 }
-- (void)makeSendErrorHud:(NSString *)msg {
+- (void)makeSendErrorHud:(int)code msg:(NSString *)msg  {
+    if (code == 80001 || code == 80004) {
+        return;
+    }
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:msg message:nil preferredStyle:UIAlertControllerStyleAlert];
     [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
@@ -399,6 +404,29 @@
         return;
     }
     [self sendMessage:message];
+}
+
+- (void)onReceivedSendMessageWithoutUpdateUIRequest:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if (userInfo == nil) {
+        return;
+    }
+    V2TIMMessage *message = [userInfo objectForKey:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey];
+    if (message == nil) {
+        return;
+    }
+    TUISendMessageAppendParams *param = [TUISendMessageAppendParams new];
+    param.isOnlineUserOnly = YES;
+    [TUIMessageDataProvider sendMessage:message
+                         toConversation:self.conversationData
+                           appendParams:param
+                               Progress:nil
+                              SuccBlock:^{
+        NSLog(@"send message without updating UI succeed");
+    }
+                              FailBlock:^(int code, NSString *desc) {
+        NSLog(@"send message without updating UI failed, code: %d, desc: %@", code, desc);
+    }];
 }
 
 #pragma mark - TUINotificationProtocol
@@ -798,6 +826,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 #pragma mark - TUIMessageCellDelegate
 
 - (void)onSelectMessage:(TUIMessageCell *)cell {
+    if (cell.messageData.innerMessage.hasRiskContent) {
+        return;
+    }
     if (self.showCheckBox && [self supportCheckBox:(TUIMessageCellData *)cell.data]) {
         TUIMessageCellData *data = (TUIMessageCellData *)cell.data;
         data.selected = !data.selected;
@@ -895,6 +926,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (void)onLongPressMessage:(TUIMessageCell *)cell {
     [UIApplication.sharedApplication.keyWindow endEditing:NO];
     TUIMessageCellData *data = cell.messageData;
+    if (![data canLongPress]) {
+        return;
+    }
     if ([data isKindOfClass:[TUISystemMessageCellData class]]) {
         return;
     }
@@ -996,7 +1030,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
             [menu addAction:recallAction];
         }
     }
-    if ([self canForward:data] && imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) {
+    if ([self canForward:data] && imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && !imMsg.hasRiskContent) {
         [menu addAction:forwardAction];
     }
     if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && [TUIChatConfig defaultConfig].enablePopMenuReplyAction) {
@@ -1425,7 +1459,12 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)onMulitSelect:(id)sender {
     [self enableMultiSelectedMode:YES];
-
+    if (self.menuUIMsg.innerMessage.hasRiskContent) {
+        if (_delegate && [_delegate respondsToSelector:@selector(messageController:onSelectMessageMenu:withData:)]) {
+            [_delegate messageController:self onSelectMessageMenu:0 withData:nil];
+        }
+        return;
+    }
     self.menuUIMsg.selected = YES;
     [self.tableView beginUpdates];
     NSInteger index = [self.messageDataProvider.uiMsgs indexOfObject:self.menuUIMsg];

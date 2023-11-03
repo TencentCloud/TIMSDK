@@ -313,7 +313,10 @@
 "TUIKitErrorUnsupportIntefaceMessageRead" = "消息已读回执";
 "TUIKitErrorUnsupportIntefaceCommunity" = "社群";
 "TUIKitErrorUnsupportIntefaceDesc" = "功能为 IM 旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。";
-"TUIKitErrorValueAddedUnsupportIntefaceDesc" = "是增值付费功能，当前处于内测阶段，请联系腾讯云商务为您开通后继续使用";
+"TUIKitErrorValueAddedUnsupportIntefaceContactDesc" = "是增值付费功能，当前处于内测阶段，请点击进入[腾讯云即时通信 IM 群]申请开通试用";
+"TUIKitErrorValueAddedUnsupportIntefacePurchaseDesc" = "是增值付费功能，请在腾讯云控制台[插件市场]领取试用或者购买开通使用";
+"TUIKitErrorValueAddedUnsupportIntefaceContactDescHighlight" = "[腾讯云即时通信 IM 群]";
+"TUIKitErrorValueAddedUnsupportIntefacePurchaseDescHighlight" = "[插件市场]";
 "TUIKitErrorUnsupportIntefaceCommunityDesc" = "\n备注: 社群可容纳百万成员，可划分分组、话题，适用于兴趣交友、游戏社交、粉丝运营、组织管理等场景。";
 "TUIKitErrorUnsupportIntefaceGuidelines" = "价格说明";
 "TUIKitErrorUnsupportIntefaceTitle" = "提示";

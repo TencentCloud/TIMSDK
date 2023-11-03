@@ -102,6 +102,11 @@ static UIView *gCustomTopView;
     [self setupNavigator];
     [self setupMessageController];
     [self setupInputController];
+    
+    // reset then setup bottom container and its margin
+    NSDictionary *userInfo = @{TUIKitNotification_onMessageVCBottomMarginChanged_Margin: @(0)};
+    [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onMessageVCBottomMarginChanged object:nil userInfo:userInfo];
+    [self setupBottomContainerView];
 
     // Notify
     [self configNotify];
@@ -165,6 +170,14 @@ static UIView *gCustomTopView;
     }
 }
 
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    if (_conversationData.isLimitedPortraitOrientation) {
+        return UIInterfaceOrientationMaskPortrait;
+    } else {
+        return UIInterfaceOrientationMaskAllButUpsideDown;
+    }
+}
+
 - (void)setupNavigator {
     TUINavigationController *naviController = (TUINavigationController *)self.navigationController;
     if ([naviController isKindOfClass:TUINavigationController.class]) {
@@ -210,17 +223,25 @@ static UIView *gCustomTopView;
     param[TUICore_TUIChatExtension_NavigationMoreItem_FilterVideoCall] = @(!TUIChatConfig.defaultConfig.enableVideoCall);
     param[TUICore_TUIChatExtension_NavigationMoreItem_FilterAudioCall] = @(!TUIChatConfig.defaultConfig.enableAudioCall);
     NSArray<TUIExtensionInfo *> *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_NavigationMoreItem_ClassicExtensionID param:param];
+    TUIExtensionInfo *maxWeightInfo = [TUIExtensionInfo new];
+    maxWeightInfo.weight = INT_MIN;
     for (TUIExtensionInfo *info in extensionList) {
-        if (info.icon && info.onClicked) {
-            UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, itemSize.width, itemSize.height)];
-            [button.widthAnchor constraintEqualToConstant:itemSize.width].active = YES;
-            [button.heightAnchor constraintEqualToConstant:itemSize.height].active = YES;
-            button.tui_extValueObj = info;
-            [button addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-            [button setImage:info.icon forState:UIControlStateNormal];
-            UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-            [rightBarButtonList addObject:rightItem];
+        if (maxWeightInfo.weight < info.weight) {
+            maxWeightInfo = info;
         }
+    }
+    if (maxWeightInfo == nil) {
+        return;
+    }
+    if (maxWeightInfo.icon && maxWeightInfo.onClicked) {
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, itemSize.width, itemSize.height)];
+        [button.widthAnchor constraintEqualToConstant:itemSize.width].active = YES;
+        [button.heightAnchor constraintEqualToConstant:itemSize.height].active = YES;
+        button.tui_extValueObj = maxWeightInfo;
+        [button addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [button setImage:maxWeightInfo.icon forState:UIControlStateNormal];
+        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        [rightBarButtonList addObject:rightItem];
     }
     if (rightBarButtonList.count > 0) {
         self.navigationItem.rightBarButtonItems = rightBarButtonList.reverseObjectEnumerator.allObjects;
@@ -249,6 +270,11 @@ static UIView *gCustomTopView;
         [self.view addSubview:gCustomTopView];
     }
     gCustomTopView.mm_top(0).mm_left(0);
+}
+
+- (void)setupBottomContainerView {
+    [self.view addSubview:self.bottomContainerView];
+    [self notifyBttomContainerReady];
 }
 
 - (void)setupInputController {
@@ -301,6 +327,24 @@ static UIView *gCustomTopView;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey object:self];
     [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey object:self];
+}
+
+#pragma mark - Extension
+- (void)notifyBttomContainerReady {
+    [TUICore registerEvent:TUICore_TUIPluginNotify
+                    subKey:TUICore_TUIPluginNotify_PluginViewDidAddToSuperview
+                    object:self];
+    [TUICore raiseExtension:TUICore_TUIChatExtension_ChatVCBottomContainer_ClassicExtensionID
+                 parentView:self.bottomContainerView
+                      param:@{TUICore_TUIChatExtension_ChatVCBottomContainer_UserID: self.conversationData.userID ? : @"",
+                              TUICore_TUIChatExtension_ChatVCBottomContainer_VC: self}];
+}
+
+- (UIView *)bottomContainerView {
+    if (!_bottomContainerView) {
+        _bottomContainerView = [[UIView alloc] init];
+    }
+    return _bottomContainerView;
 }
 
 #pragma mark - Public Methods
@@ -524,6 +568,21 @@ static UIView *gCustomTopView;
         if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
             [self updateBackgroundImageUrlByConversationID:conversationID];
         }
+    } else if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_PluginViewDidAddToSuperview]) {
+        float height = [param[TUICore_TUIPluginNotify_PluginViewDidAddToSuperviewSubKey_PluginViewHeight] floatValue];
+        
+        self.messageController.view.frame = CGRectMake(0, [self topMarginByCustomView],
+                                                       self.view.frame.size.width, self.messageController.view.mm_h - height);
+        [self.messageController.view setNeedsLayout];
+        [self.messageController.view layoutIfNeeded];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.bottomContainerView.frame = CGRectMake(0, self.messageController.view.mm_maxY,
+                                                        self.messageController.view.mm_w, height);
+        });
+        
+        NSDictionary *userInfo = @{TUIKitNotification_onMessageVCBottomMarginChanged_Margin: @(height)};
+        [[NSNotificationCenter defaultCenter] postNotificationName:TUIKitNotification_onMessageVCBottomMarginChanged object:nil userInfo:userInfo];
     }
 }
 
@@ -575,16 +634,28 @@ static UIView *gCustomTopView;
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                       CGRect msgFrame = self.messageController.view.frame;
-                       msgFrame.size.height = self.view.frame.size.height - height - [self topMarginByCustomView];
-                       self.messageController.view.frame = msgFrame;
+        CGRect msgFrame = self.messageController.view.frame;
+        msgFrame.size.height = self.view.frame.size.height - height - [self topMarginByCustomView] - self.bottomContainerView.mm_h;
+        self.messageController.view.frame = msgFrame;
+        
+        if (self.bottomContainerView.mm_h > 0) {
+            CGRect containerFrame = self.bottomContainerView.frame;
+            containerFrame.origin.y = msgFrame.origin.y + msgFrame.size.height;
+            self.bottomContainerView.frame = containerFrame;
+            
+            CGRect inputFrame = self.inputController.view.frame;
+            inputFrame.origin.y = self.bottomContainerView.mm_maxY;
+            inputFrame.size.height = height;
+            self.inputController.view.frame = inputFrame;
+        } else {
+            CGRect inputFrame = self.inputController.view.frame;
+            inputFrame.origin.y = msgFrame.origin.y + msgFrame.size.height;
+            inputFrame.size.height = height;
+            self.inputController.view.frame = inputFrame;
+        }
 
-                       CGRect inputFrame = self.inputController.view.frame;
-                       inputFrame.origin.y = msgFrame.origin.y + msgFrame.size.height;
-                       inputFrame.size.height = height;
-                       self.inputController.view.frame = inputFrame;
-                       [self.messageController scrollToBottom:NO];
-                     }
+        [self.messageController scrollToBottom:NO];
+    }
                      completion:nil];
 }
 
@@ -637,6 +708,13 @@ static UIView *gCustomTopView;
     data.onClicked(param);
 }
 
+- (void)inputControllerDidClickMore:(TUIInputController *)inputController {
+    self.moreMenus = [self.dataProvider moreMenuCellDataArray:self.conversationData.groupID
+                                                       userID:self.conversationData.userID
+                                            conversationModel:self.conversationData
+                                             actionController:self];
+}
+
 #pragma mark - TUIBaseMessageControllerDelegate
 - (void)didTapInMessageController:(TUIBaseMessageController *)controller {
     [self.inputController reset];
@@ -684,11 +762,40 @@ static UIView *gCustomTopView;
     if (userID == nil) {
         return;
     }
-    [self getUserOrFriendProfileVCWithUserID:userID
-                                   succBlock:^(UIViewController *vc) {
-                                     [self.navigationController pushViewController:vc animated:YES];
-                                   }
-                                   failBlock:nil];
+    
+    // Get extensions first
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    if (self.conversationData.userID.length > 0) {
+        param[TUICore_TUIChatExtension_ClickAvatar_UserID] = self.conversationData.userID;
+    } else if (self.conversationData.groupID.length > 0) {
+        param[TUICore_TUIChatExtension_ClickAvatar_GroupID] = self.conversationData.groupID;
+    }
+    if (self.navigationController) {
+        param[TUICore_TUIChatExtension_ClickAvatar_PushVC] = self.navigationController;
+    }
+    
+    NSArray<TUIExtensionInfo *> *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_ClickAvatar_ClassicExtensionID param:param];
+    if (extensionList.count > 0) {
+        TUIExtensionInfo *maxWeightInfo = [TUIExtensionInfo new];
+        maxWeightInfo.weight = INT_MIN;
+        for (TUIExtensionInfo *info in extensionList) {
+            if (maxWeightInfo.weight < info.weight) {
+                maxWeightInfo = info;
+            }
+        }
+        if (maxWeightInfo == nil) {
+            return;
+        }
+        if (maxWeightInfo.onClicked) {
+            maxWeightInfo.onClicked(param);
+        }
+    } else {
+        [self getUserOrFriendProfileVCWithUserID:userID
+                                       succBlock:^(UIViewController *vc) {
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+                                       failBlock:nil];
+    }
 }
 
 - (void)messageController:(TUIBaseMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell {

@@ -327,7 +327,7 @@ static const NSString *TUICSToastQueueKey = @"TUICSToastQueueKey";
     CGRect titleRect = CGRectZero;
 
     if (titleLabel != nil) {
-        titleRect.origin.x = imageRect.origin.x + imageRect.size.width + style.horizontalPadding;
+        titleRect.origin.x = imageRect.origin.x + imageRect.size.width + style.horizontalIntervalPadding;
         titleRect.origin.y = style.verticalPadding;
         titleRect.size.width = titleLabel.bounds.size.width;
         titleRect.size.height = titleLabel.bounds.size.height;
@@ -336,7 +336,7 @@ static const NSString *TUICSToastQueueKey = @"TUICSToastQueueKey";
     CGRect messageRect = CGRectZero;
 
     if (messageLabel != nil) {
-        messageRect.origin.x = imageRect.origin.x + imageRect.size.width + style.horizontalPadding;
+        messageRect.origin.x = imageRect.origin.x + imageRect.size.width + style.horizontalIntervalPadding;
         messageRect.origin.y = titleRect.origin.y + titleRect.size.height + style.verticalPadding;
         messageRect.size.width = messageLabel.bounds.size.width;
         messageRect.size.height = messageLabel.bounds.size.height;
@@ -521,6 +521,7 @@ static const NSString *TUICSToastQueueKey = @"TUICSToastQueueKey";
         self.maxHeightPercentage = 0.8;
         self.horizontalPadding = 10.0;
         self.verticalPadding = 10.0;
+        self.horizontalIntervalPadding = 0.0f;
         self.cornerRadius = 10.0;
         self.titleFont = [UIFont boldSystemFontOfSize:16.0];
         self.messageFont = [UIFont systemFontOfSize:16.0];
@@ -545,6 +546,13 @@ static const NSString *TUICSToastQueueKey = @"TUICSToastQueueKey";
 
 - (void)setMaxHeightPercentage:(CGFloat)maxHeightPercentage {
     _maxHeightPercentage = MAX(MIN(maxHeightPercentage, 1.0), 0.0);
+}
+
+- (CGFloat)horizontalIntervalPadding {
+    if (_horizontalIntervalPadding == 0) {
+        return _horizontalPadding;
+    }
+    return _horizontalIntervalPadding;
 }
 
 - (instancetype)init NS_UNAVAILABLE {

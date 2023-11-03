@@ -390,7 +390,11 @@ NSString *const TUILogoutFailNotification = @"TUILogoutFailNotification";
     }];
 }
 
-- (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)Info {
+- (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)info {
+    if (self.userID && self.userID.length > 0 && [self.userID isEqualToString:info.userID]) {
+        self.nickName = info.nickName;
+        self.faceUrl = info.faceURL;
+    }
 }
 
 @end

@@ -8,7 +8,6 @@
 
 #import "TUICallingUserManager.h"
 #import "TUICallKitHeader.h"
-#import "TUICallEngineHeader.h"
 #import "TUICallingUserModel.h"
 #import <TUICore/TUILogin.h>
 
@@ -69,39 +68,6 @@ static dispatch_once_t gOnceToken;
 
 + (NSArray<NSString *> *)allUserIdList {
     return [[TUICallingUserManager shareInstance] getUserIdList];
-}
-
-+ (void)getUserInfo:(NSString *)userId callback:(CallingUserModelCallback)callback {
-    if (!userId) {
-        if (callback) {
-            callback(-1, @"Invalid parameter", nil);
-        }
-        return;
-    }
-    
-    [[V2TIMManager sharedInstance] getUsersInfo:@[userId] succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-        V2TIMUserFullInfo *imInfo = infoList.firstObject;
-        CallingUserModel *userInfo = nil;
-        
-        if (imInfo) {
-            userInfo = [[CallingUserModel alloc] init];
-            userInfo.userId = imInfo.userID;
-            userInfo.name = imInfo.nickName;
-            userInfo.avatar = imInfo.faceURL;
-        }
-        
-        if (callback) {
-            if (userInfo) {
-                callback(0, @"success", userInfo);
-            } else {
-                callback(-1, @"get user info fail", userInfo);
-            }
-        }
-    } fail:^(int code, NSString *desc) {
-        if (callback) {
-            callback(code, desc, nil);
-        }
-    }];
 }
 
 + (void)removeUser:(NSString *)userId {

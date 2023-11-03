@@ -32,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat)getBubbleTop:(TUIBubbleMessageCellData *)data;
 
+- (UIImage *)getBubble;
+
+- (UIImage *)getErrorBubble;
 
 @end
 
@@ -58,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, class) UIImage *outgoingHighlightedBubble;
 
+@property(nonatomic, class) UIImage *outgoingErrorBubble;
+
 /**
  * 发送气泡图标动画过渡
  * Send bubble icon (highlighted state)
@@ -82,6 +87,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  - The receive icon of the bubble, assigned to @highlightedBubble when the bubble message was received.
  */
 @property(nonatomic, class) UIImage *incommingHighlightedBubble;
+
+@property(nonatomic, class) UIImage *incommingErrorBubble;
 
 /**
  * 接收气泡图标动画过渡

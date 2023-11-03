@@ -223,6 +223,7 @@
 "TUIKitGroupKickOffTipsFormat" = "تم طردك من مجموعة %@";
 "TUIKitGroupDropoutTipsFormat" = "لقد قمت بالخروج من مجموعة %@";
 
+"TUIKitMessageTipsNormalRecallMessage" = "تم سحب رسالة";
 "TUIKitMessageTipsYouRecallMessage" = "لقد قمت بسحب رسالة";
 "TUIKitMessageTipsReEditMessage" = "إعادة التحرير";
 "TUIKitMessageTipsRecallMessageFormat" = "\"%@\" قام بسحب رسالة";
@@ -241,6 +242,8 @@
 "TUIKitMessageTipsEditGroupOwnerFormat" = "\"%@\" قام بنقل ملكية المجموعة إلى \"%@\"、";
 "TUIKitMessageTipsCreateGroupFormat" = "\"%@\" قام بإنشاء مجموعة";
 "TUIKitMessageTipsUnsupportCustomMessage" = "[رسالة مخصصة غير مدعومة]";
+"TUIKitMessageTipsRecallRiskContent" = "تم سحب رسالة المخالفة";
+"TUIKitMessageDisplayRiskContent" = "[رسالة المخالفة]";
 
 "TUIKitMessageTipsMute" = "تم حظر الصوت";
 "TUIKitMessageTipsUnmute" = "تم إلغاء حظر الصوت";
@@ -265,7 +268,17 @@
 "TUIkitMessageTypeFile" = "[ملف]";
 "TUIKitMessageTypeAnimateEmoji" = "[رمز تعبيري متحرك]";
 "TUIKitMessageTypeDraftFormat" = "[مسودة] ";
+
+"TUIkitMessageTypeRiskImage" = "[صور غير قانونية]";
+"TUIkitMessageTypeRiskVoice" = "[صوت غير قانوني]";
+"TUIkitMessageTypeRiskVideo" = "[فيديو مخالف]";
+
+
 "TUIKitMessageTypeLastMsgCountFormat" = "رسالة";
+"TUIKitMessageTypeSecurityStrike" = "تم تضمين محتوى حساس، فشل الإرسال";
+"TUIKitMessageTypeSecurityStrikeVoice" = "المحتوى الحساس المتضمن، لا يمكن الاستماع إليه";
+"TUIKitMessageTypeSecurityStrikeImage" = "محتوى حساس متضمن ولا يمكن مشاهدته";
+"TUIKitMessageTypeSecurityStrikeTranslate" = "يتضمن محتوى حساسًا، فشلت الترجمة";
 
 "TUIKitMessageReadPartRead" = "شخص قرأ";
 "TUIKitMessageReadPartUnread" = "غير مقروء";
@@ -422,6 +435,9 @@
 "TUIKitVideoSavedFailed" = "فشل حفظ الفيديو";
 "TUIKitPictureSavedSuccess" = "تم حفظ الصورة بنجاح";
 "TUIKitPictureSavedFailed" = "فشل حفظ الصورة";
+"TUIKitPictureCheckRisk" = "لقد تم اكتشاف أن الصورة تحتوي على محتوى حساس ولا يمكن عرضها مؤقتًا.";
+"TUIKitVideoCheckRisk" = "تم اكتشاف أن الفيديو يحتوي على محتوى حساس ولا يمكن مشاهدته مؤقتًا.";
+"TUIKitVideoCheckRiskCancel" = "أرى";
 /***************************** 视频、图片加载 & 保存 *************************/
 
 "TUIKitGroupSetAdminsForbidden" = "لا يدعم الدردشة الجماعية الحالية إعداد المشرفين";
@@ -641,6 +657,36 @@
 "TUIGroupNoteNotDatePickerFRI" = " الجمعة";
 "TUIGroupNoteNotDatePickerSAT" = " السبت";
 "TUIGroupNoteNotDatePickerSUN" = " الأحد";
+
+"TUICustomerServiceAccounts" = "رقم خدمة العملاء";
+"TUICustomerServiceBranchMessage" = "[أخبار الفرع]";
+"TUICustomerServiceCardMessage" = "[رسالة البطاقة]";
+"TUICustomerServiceCollectInfomation" = "[جمع المعلومات]";
+"TUICustomerServiceSatisfactionEvaluation" = "[تقييم الرضا]";
+"TUICustomerServiceTimeout" = "[انتهت مهلة جلسة خدمة العملاء وانتهت تلقائيًا.]";
+"TUICustomerServiceEnd" = "[انتهت جلسة خدمة العملاء]";
+"TUICustomerServiceFillProductInfo" = "يرجى ملء معلومات المنتج";
+"TUICustomerServiceSubmitProductInfo" = "إرسال معلومات المنتج";
+"TUICustomerServiceClose" = "إنهاء";
+"TUICustomerServiceName" = "اسم";
+"TUICustomerServiceFillProductName" = "يرجى ملء اسم المنتج";
+"TUICustomerServiceDesc" = "يصف";
+"TUICustomerServiceFillProductDesc" = "يرجى ملء الوصف ذي الصلة";
+"TUICustomerServicePic" = "صورة";
+"TUICustomerServiceFillPicLink" = "يرجى ملء رابط الصورة";
+"TUICustomerServiceJumpLink" = "القفز";
+"TUICustomerServiceFillJumpLink" = "يرجى ملء رابط القفز للبطاقة";
+"TUICustomerServiceSubmitEvaluation" = "إرسال المراجعة";
+"TUICustomerService" = "البرنامج المساعد لخدمة العملاء";
+"TUICustomerServiceSendProduct" = "إرسال البضائع";
+"TUICustomerServiceCommonPhrase" = "التعبيرات شائعة الاستخدام";
+"TUICustomerServiceCommonPhraseStock" = "هل هو في المخزون؟";
+"TUICustomerServiceCommonPhraseCheaper" = "هل يمكن أن يكون أرخص؟";
+"TUICustomerServiceCommonPhraseGift" = "أي هدايا مجانية؟";
+"TUICustomerServiceCommonPhraseShipping" = "ما هو تاريخ الشحن؟";
+"TUICustomerServiceCommonPhraseDelivery" = "أي نوع من التسليم السريع؟";
+"TUICustomerServiceCommonPhraseArrive" = "متى ستصل؟";
+
 "TUIConversationGroupAll" = "الكل";
 "TUIConversationGroupUnread" = "غير مقروءة";
 "TUIConversationGroupAtMe" = "@ لي";

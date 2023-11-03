@@ -22,6 +22,7 @@
 @property(nonatomic, strong) UILabel *abstractName;
 @property(nonatomic, strong) UILabel *abstractBreak;
 @property(nonatomic, strong) UILabel *abstractDetail;
+@property(nonatomic, assign) CGFloat abstractNameLimitedWidth;
 - (void)fillWithData:(NSAttributedString *)name detailContent:(NSAttributedString *)detailContent;
 @end
 @implementation TUIMergeMessageDetailRow
@@ -84,7 +85,7 @@
         make.leading.mas_equalTo(0);
         make.top.mas_equalTo(0);
         make.trailing.mas_lessThanOrEqualTo(self.abstractBreak.mas_leading);
-        make.width.mas_lessThanOrEqualTo(self.mas_width).multipliedBy(0.33);
+        make.width.mas_equalTo(self.abstractNameLimitedWidth);
     }];
     
     [self.abstractBreak sizeToFit];
@@ -100,13 +101,17 @@
         make.leading.mas_equalTo(self.abstractBreak.mas_trailing);
         make.top.mas_equalTo(0);
         make.trailing.mas_lessThanOrEqualTo(self.mas_trailing).mas_offset(-15);
-        make.bottom.mas_equalTo(self);
     }];
 }
 - (void)fillWithData:(NSAttributedString *)name detailContent:(NSAttributedString *)detailContent {
 
-    self.abstractName.text = name.string;
+    self.abstractName.attributedText = name;
     self.abstractDetail.attributedText = detailContent;
+    
+    NSAttributedString * senderStr = [[NSAttributedString alloc] initWithString:self.abstractName.text];
+    CGRect senderRect = [senderStr boundingRectWithSize:CGSizeMake(70, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                context:nil];
+    self.abstractNameLimitedWidth = MIN(ceil(senderRect.size.width), 70);
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
 
@@ -196,7 +201,7 @@
         make.leading.mas_equalTo(self.relayTitleLabel);
         make.top.mas_equalTo(self.relayTitleLabel.mas_bottom).mas_offset(3);
         make.trailing.mas_equalTo(self.container);
-        make.height.mas_lessThanOrEqualTo(self.relayData.abstractRow1Size.height);
+        make.height.mas_equalTo(self.relayData.abstractRow1Size.height);
     }];
     [self.contentRowView2 mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.relayTitleLabel);
@@ -208,7 +213,7 @@
         make.leading.mas_equalTo(self.relayTitleLabel);
         make.top.mas_equalTo(self.contentRowView2.mas_bottom).mas_offset(3);
         make.trailing.mas_equalTo(self.container);
-        make.height.mas_lessThanOrEqualTo(self.relayData.abstractRow3Size.height);
+        make.height.mas_equalTo(self.relayData.abstractRow3Size.height);
     }];
     
     
@@ -349,12 +354,16 @@
     if (abstractSendDetailList.count <= index){
         return CGSizeZero;
     }
-    NSAttributedString * str = abstractSendDetailList[index][@"sender"];
-    NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithAttributedString:str];
+    NSAttributedString * senderStr = abstractSendDetailList[index][@"sender"];
+    CGRect senderRect = [senderStr boundingRectWithSize:CGSizeMake(70, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                context:nil];
+    
+    NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithString:@""];
     [abstr appendAttributedString:[[NSAttributedString alloc] initWithString:@":"]];
     [abstr appendAttributedString:abstractSendDetailList[index][@"detail"]];
 
-    CGRect rect = [abstr boundingRectWithSize:CGSizeMake(200 - 20, MAXFLOAT)
+    CGFloat senderWidth = MIN(CGFLOAT_CEIL(senderRect.size.width), 70);
+    CGRect rect = [abstr boundingRectWithSize:CGSizeMake(200 - 20 - senderWidth, MAXFLOAT)
                                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                                 context:nil];
     CGSize size = CGSizeMake(200, MIN(TRelayMessageCell_Text_Height_Max/3.0, CGFLOAT_CEIL(rect.size.height)));

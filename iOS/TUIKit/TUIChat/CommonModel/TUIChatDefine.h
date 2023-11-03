@@ -6,8 +6,8 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
-#ifndef TUIChatDefine_h
-#define TUIChatDefine_h
+#ifndef TUI_COMPONENTS_IOS_TUICHAT_COMMONMODEL_TUICHATDEFINE_H_
+#define TUI_COMPONENTS_IOS_TUICHAT_COMMONMODEL_TUICHATDEFINE_H_
 
 static NSString* const kMemberCellReuseId = @"kMemberCellReuseId";
 
@@ -75,5 +75,6 @@ typedef NS_ENUM(NSInteger, TUIChatSmallTongueType) {
 #define TUITencentCloudHomePageEN @"https://www.tencentcloud.com/document/product/1047/45913"
 
 #define TUIChatSendMessageNotification @"TUIChatSendMessageNotification"
+#define TUIChatSendMessageWithoutUpdateUINotification @"TUIChatSendMessageWithoutUpdateUINotification"
 
-#endif /* TUIChatDefine_h */
+#endif  // TUI_COMPONENTS_IOS_TUICHAT_COMMONMODEL_TUICHATDEFINE_H_

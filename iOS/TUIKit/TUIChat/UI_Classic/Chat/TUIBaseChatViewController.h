@@ -107,6 +107,13 @@
 @property TUIBaseMessageController *messageController;
 
 /**
+ * 底部的自定义容器视图，通常用于添加插件子视图。
+ *
+ * The custom container view at the bottom, which is usually used to add plugin subviews.
+ */
+@property (nonatomic, strong) UIView *bottomContainerView;
+
+/**
  *  TUIKit 信息输入控制器
  *  负责接收用户输入，同时显示“+”按钮与语音输入按钮、表情按钮等。
  *  同时 TUIInputController 整合了消息的发送功能，您可以直接使用 TUIInputController 进行消息的输入采集与发送。

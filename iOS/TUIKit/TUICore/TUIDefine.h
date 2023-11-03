@@ -46,6 +46,20 @@
 #define BussinessID_GroupNote @"group_note"
 #define BussinessID_GroupNoteTips @"group_note_tips"
 #define BussinessID_GroupRoomMessage @"group_room_message"
+// Supported in 7.6 and later
+#define BussinessID_CustomerService @"customerServicePlugin"
+#define BussinessID_Src @"src"
+#define BussinessID_Src_CustomerService_Request @"7"
+#define BussinessID_Src_CustomerService_Evaluation @"9"
+#define BussinessID_Src_CustomerService_EvaluationSelected @"10"
+#define BussinessID_Src_CustomerService_Typing @"12"
+#define BussinessID_Src_CustomerService_Branch @"15"
+#define BussinessID_Src_CustomerService_End @"19"
+#define BussinessID_Src_CustomerService_Timeout @"20"
+#define BussinessID_Src_CustomerService_Collection @"21"
+#define BussinessID_Src_CustomerService_Card @"22"
+#define BussinessID_Src_CustomerService_EvaluationRule @"23"
+#define BussinessID_Src_CustomerService_EvaluationTrigger @"24"
 
 /**
  * 创建群自定义消息业务版本
@@ -140,6 +154,7 @@
 #define TIMCommonBundle @"TIMCommon"
 #define TUITranslationBundle @"TUITranslation"
 #define TUIVoiceToTextBundle @"TUIVoiceToText"
+#define TUICustomerServicePluginBundle @"TUICustomerServicePlugin"
 
 #define TUIKitLocalizableBundle @"TUIKitLocalizable"
 #define TUICoreLocalizableBundle TUIKitLocalizableBundle
@@ -169,6 +184,7 @@
 #define TUIKitLocalizableBundle_Key_Class @"TUICore"
 #define TUIChatLocalizableBundle_Key_Class @"TUIChatService"
 #define TIMCommonLocalizableBundle_Key_Class @"TIMConfig"
+#define TUICustomerServicePluginBundle_Key_Class         @"TUICustomerServicePluginService"
 
 static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     if ([bundleKeyClass isEqualToString:TUICoreBundle_Key_Class] || [bundleKeyClass isEqualToString:TUIKitLocalizableBundle_Key_Class]) {
@@ -257,6 +273,7 @@ static inline NSString *getTUIGetBundlePath(NSString *bundleName, NSString *bund
 #define TUITranslationThemePath TUIBundlePath(@"TUITranslationTheme", TUITranslationBundle_Key_Class)
 #define TUIVoiceToTextThemePath TUIBundlePath(@"TUIVoiceToTextTheme", TUIVoiceToTextBundle_Key_Class)
 #define TUICallKitThemePath TUIBundlePath(@"TUICallKitTheme", TUICallKitBundle_Key_Class)
+#define TUICustomerServicePluginThemePath TUIBundlePath(@"TUICustomerServicePluginTheme",TUICustomerServicePluginBundle_Key_Class)
 
 static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     if ([bundleName isEqualToString:TUIChatLocalizableBundle] || [bundleName isEqualToString:TUIChatFaceBundle]) {
@@ -286,6 +303,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TIMCommonImagePath(imageName) [TUIBundlePath(TIMCommonBundle, TIMCommonBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUITranslationImagePath(imageName) [TUIBundlePath(TUITranslationBundle, TUITranslationBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUIVoiceToTextImagePath(imageName) [TUIBundlePath(TUIVoiceToTextBundle, TUIVoiceToTextBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUICustomerServicePluginImagePath(imageName) \
+    [TUIBundlePath(TUICustomerServicePluginBundle,TUICustomerServicePluginBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 //-----Minimalist-------
 #define TUIDemoBundle_Minimalist @"TUIDemo_Minimalist"
@@ -636,10 +655,16 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUIKitNotification_onReceivedUnsupportInterfaceError @"TUIKitNotification_onReceivedUnsupportInterfaceError"
 
 /**
- * 收到增值包不支持接口的错误通知
- * Received error notification that the package is not supported
+ * 收到增值包不支持接口的错误通知，需要联系技术人员开启内测
+ * Received error notification that the package is not supported, need contact to experience
  */
-#define TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError @"TUIKitNotification_onReceivedValueAddedUnsupportInterfaceError"
+#define TUIKitNotification_onReceivedValueAddedUnsupportContactNeededError @"TUIKitNotification_onReceivedValueAddedUnsupportContactNeededError"
+
+/**
+ * 收到增值包不支持接口的错误通知，需要购买
+ * Received error notification that the package is not supported, need to purchase
+ */
+#define TUIKitNotification_onReceivedValueAddedUnsupportPurchaseNeededError @"TUIKitNotification_onReceivedValueAddedUnsupportPurchaseNeededError"
 
 /**
  * 会话列表更新时收到的未读数更新通知
@@ -650,6 +675,9 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUIKitNotification_onConversationMarkUnreadCountChanged_MarkUnreadCount @"markUnreadCount"
 #define TUIKitNotification_onConversationMarkUnreadCountChanged_MarkHideUnreadCount @"markHideUnreadCount"
 #define TUIKitNotification_onConversationMarkUnreadCountChanged_MarkUnreadMap @"markUnreadMap"
+
+#define TUIKitNotification_onMessageVCBottomMarginChanged @"TUIKitNotification_onMessageVCBottomMarginChanged"
+#define TUIKitNotification_onMessageVCBottomMarginChanged_Margin @"bottonMargin"
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                             TUICore
@@ -666,6 +694,9 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatService_SendMessageMethod @"TUICore_TUIChatService_SendMessageMethod"
 #define TUICore_TUIChatService_SendMessageMethod_MsgKey @"TUICore_TUIChatService_SendMessageMethod_MsgKey"
 
+#define TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI @"TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI"
+#define TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey @"TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey"
+
 #define TUICore_TUIChatService_SetChatExtensionMethod @"TUICore_TUIChatService_SetChatExtensionMethod"
 #define TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey @"TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey"
 #define TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey @"TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey"
@@ -679,6 +710,11 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatNotify_SendMessageSubKey_Code @"TUICore_TUIChatNotify_SendMessageSubKey_Code"
 #define TUICore_TUIChatNotify_SendMessageSubKey_Desc @"TUICore_TUIChatNotify_SendMessageSubKey_Desc"
 #define TUICore_TUIChatNotify_SendMessageSubKey_Message @"TUICore_TUIChatNotify_SendMessageSubKey_Message"
+#define TUICore_TUIChatNotify_KeyboardWillHideSubKey @"TUICore_TUIChatNotify_KeyboardWillHideSubKey"
+#define TUICore_TUIChatNotify_ViewDidLoadSubKey @"TUICore_TUIChatNotify_ViewDidLoadSubKey"
+#define TUICore_TUIChatNotify_ViewDidLoadSubKey_UserID @"TUICore_TUIChatNotify_ViewDidLoadSubKey_UserID"
+#define TUICore_TUIChatNotify_ViewWillDeallocSubKey @"TUICore_TUIChatNotify_ViewWillDeallocSubKey"
+#define TUICore_TUIChatNotify_ViewWillDeallocSubKey_UserID @"TUICore_TUIChatNotify_ViewWillDeallocSubKey_UserID"
 // 消息 cellData 被展示的通知
 // The notification of displaying the message cell data
 #define TUICore_TUIChatNotify_MessageDisplayedSubKey @"TUICore_TUIChatNotify_MessageDisplayedSubKey"
@@ -689,6 +725,14 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_GetMoreCellInfo_UserID @"TUICore_TUIChatExtension_GetMoreCellInfo_UserID"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_GroupID @"TUICore_TUIChatExtension_GetMoreCellInfo_GroupID"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_View @"TUICore_TUIChatExtension_GetMoreCellInfo_View"
+
+// 聊天界面消息列表点击头像的 UI 扩展
+// UI extension when clicking the avatar in message list
+#define TUICore_TUIChatExtension_ClickAvatar_ClassicExtensionID @"TUICore_TUIChatExtension_ClickAvatar_ClassicExtensionID"
+#define TUICore_TUIChatExtension_ClickAvatar_MinimalistExtensionID @"TUICore_TUIChatExtension_ClickAvatar_MinimalistExtensionID"
+#define TUICore_TUIChatExtension_ClickAvatar_UserID @"TUICore_TUIChatExtension_ClickAvatar_UserID"
+#define TUICore_TUIChatExtension_ClickAvatar_GroupID @"TUICore_TUIChatExtension_ClickAvatar_GroupID"
+#define TUICore_TUIChatExtension_ClickAvatar_PushVC @"TUICore_TUIChatExtension_ClickAvatar_PushVC"
 
 // 聊天页面导航栏右侧的 "更多" UI 扩展
 // UI extension on the right side of navigation bar in chat page
@@ -729,6 +773,10 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID @"TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID"
 #define TUICore_TUIChatExtension_BottomContainer_CellData @"TUICore_TUIChatExtension_BottomContainer_CellData"
 #define TUICore_TUIChatExtension_BottomContainer_VC @"TUICore_TUIChatExtension_BottomContainer_VC"
+// Chat page UI extension below chatVC
+#define TUICore_TUIChatExtension_ChatVCBottomContainer_ClassicExtensionID @"TUICore_TUIChatExtension_ChatVCBottomContainer_ClassicExtensionID"
+#define TUICore_TUIChatExtension_ChatVCBottomContainer_VC @"TUICore_TUIChatExtension_ChatVCBottomContainer_VC"
+#define TUICore_TUIChatExtension_ChatVCBottomContainer_UserID @"TUICore_TUIChatExtension_ChatVCBottomContainer_UserID"
 
 #pragma mark - TUICore_TUIChat_ObjectFactory
 #define TUICore_TUIChatObjectFactory @"TUICore_TUIChatObjectFactory"
@@ -750,6 +798,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation @"TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation"
 
 #pragma mark - TUICore_TUIConversation_Service
 #define TUICore_TUIConversationService @"TUICore_TUIConversationService"
@@ -874,6 +923,12 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIContactExtension_MeSettingMenu_View @"TUICore_TUIContactExtension_MeSettingMenu_View"
 #define TUICore_TUIContactExtension_MeSettingMenu_Weight @"TUICore_TUIContactExtension_MeSettingMenu_Weight"
 
+// "通讯录" 界面的联系人群组类型扩展
+// UI extension for group type in the "Contact" page
+#define TUICore_TUIContactExtension_ContactMenu_ClassicExtensionID @"TUICore_TUIContactExtension_ContactMenu_ClassicExtensionID"
+#define TUICore_TUIContactExtension_ContactMenu_MinimalistExtensionID @"TUICore_TUIContactExtension_ContactMenu_MinimalistExtensionID"
+#define TUICore_TUIContactExtension_ContactMenu_Nav @"TUICore_TUIContactExtension_ContactMenu_Nav"
+
 #pragma mark - TUICore_TUIContact_ObjectFactory
 #define TUICore_TUIContactObjectFactory @"TUICore_TUIContactObjectFactory"
 #define TUICore_TUIContactObjectFactory_Minimalist @"TUICore_TUIContactObjectFactory_Minimalist"
@@ -993,6 +1048,11 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUICallingService_EnableFloatWindowMethod @"TUICore_TUICallingService_EnableFloatWindowMethod"
 #define TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow @"TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow"
 
+#define TUICore_TUICallingService_SetAudioPlaybackDeviceMethod @"TUICore_TUICallingService_SetAudioPlaybackDeviceMethod"
+#define TUICore_TUICallingService_SetAudioPlaybackDevice_AudioPlaybackDevice @"TUICore_TUICallingService_SetAudioPlaybackDevice_AudioPlaybackDevice"
+#define TUICore_TUICallingService_SetIsMicMuteMethod @"TUICore_TUICallingService_SetIsMicMuteMethod"
+#define TUICore_TUICallingService_SetIsMicMuteMethod_IsMicMute @"TUICore_TUICallingService_SetIsMicMuteMethod_IsMicMute"
+
 #pragma mark - TUICore_TUICallKit_TUIAudioMessageRecordService
 #define TUICore_TUIAudioMessageRecordService @"TUIAudioMessageRecordService"
 #define TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod @"TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod"
@@ -1027,6 +1087,9 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 #define TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey @"TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey"
 #define TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey_Message @"TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey_Message"
+
+#define TUICore_TUIPluginNotify_PluginViewDidAddToSuperview @"TUICore_TUIPluginNotify_PluginViewDidAddToSuperview"
+#define TUICore_TUIPluginNotify_PluginViewDidAddToSuperviewSubKey_PluginViewHeight @"TUICore_TUIPluginNotify_PluginViewDidAddToSuperviewSubKey_PluginViewHeight"
 
 #define TUICore_TUIPluginNotify_DidChangePluginViewSubKey @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey"
 #define TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data"
@@ -1137,6 +1200,12 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_PrivacyService_EnableScreenShareAntifraudReminderMethod_Cancel -1
 #define TUICore_PrivacyService_EnableScreenShareAntifraudReminderMethod_Continue 0
 
+#define TUICore_PrivacyService_CallKitAntifraudReminderMethod @"TUICore_PrivacyService_CallKitAntifraudReminderMethod"
+
+#pragma mark - TUICore_TUICallKitVoIPExtension_Notify
+#define TUICore_TUICallKitVoIPExtensionNotify @"TUICore_TUICallKitVoIPExtension_Notify"
+#define TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey @"TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey"
+#define TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey @"TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey"
 
 /////////////////////////////////////////////////////////////////////////////////
 //

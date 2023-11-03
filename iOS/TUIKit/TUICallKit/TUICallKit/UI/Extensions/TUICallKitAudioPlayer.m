@@ -9,6 +9,9 @@
 #import "TUICallKitAudioPlayer.h"
 #import <AVFoundation/AVFoundation.h>
 #import "TUICallingCommon.h"
+#import "TUICallKitHeader.h"
+
+static const int32_t CALLKIT_AUDIO_DIAL_ID = 48;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval startTime;
 @property (nonatomic, assign) BOOL loop;
 @property (nonatomic, strong, nullable) AVAudioPlayer *player;
+
 @end
 
 NS_ASSUME_NONNULL_END
@@ -48,44 +52,46 @@ BOOL playAudioWithFilePath(NSString *filePath) {
     return [[TUICallKitAudioPlayer sharedInstance] playAudio:url params:param];
 }
 
-BOOL playAudio(CallingAudioType type) {
+void playAudio(CallingAudioType type) {
     NSBundle *bundle = [TUICallingCommon callingBundle];
     TUICallKitAudioParam *param = [[TUICallKitAudioParam alloc] init];
     switch (type) {
         case CallingAudioTypeHangup: {
             NSString *path = [[[bundle bundlePath] stringByAppendingPathComponent:@"AudioFile"] stringByAppendingPathComponent:@"phone_hangup.mp3"];
             NSURL *url = [NSURL fileURLWithPath:path];
-            if (!url) {
-                return NO;
+            if (url) {
+                [[TUICallKitAudioPlayer sharedInstance] playAudio:url params:param];
             }
-            return [[TUICallKitAudioPlayer sharedInstance] playAudio:url params:param];
         } break;
         case CallingAudioTypeCalled: {
             NSString *path = [[[bundle bundlePath] stringByAppendingPathComponent:@"AudioFile"] stringByAppendingPathComponent:@"phone_ringing.mp3"];
             NSURL *url = [NSURL fileURLWithPath:path];
-            if (!url) {
-                return NO;
+            if (url) {
+                param.loop = YES;
+                [[TUICallKitAudioPlayer sharedInstance] playAudio:url params:param];
             }
-            param.loop = YES;
-            return [[TUICallKitAudioPlayer sharedInstance] playAudio:url params:param];
         } break;
         case CallingAudioTypeDial: {
             NSString *path = [[[bundle bundlePath] stringByAppendingPathComponent:@"AudioFile"] stringByAppendingPathComponent:@"phone_dialing.m4a"];
-            NSURL *url = [NSURL fileURLWithPath:path];
-            if (!url) {
-                return NO;
-            }
-            param.loop = YES;
-            return [[TUICallKitAudioPlayer sharedInstance] playAudio:url params:param];
+            TXAudioMusicParam *audioMusicParam = [[TXAudioMusicParam alloc] init];
+            audioMusicParam.ID = CALLKIT_AUDIO_DIAL_ID;
+            audioMusicParam.isShortFile = YES;
+            audioMusicParam.path = path;
+            TXAudioEffectManager *audioEffectManager = [[[TUICallEngine createInstance] getTRTCCloudInstance] getAudioEffectManager];
+            [audioEffectManager setMusicPlayoutVolume:CALLKIT_AUDIO_DIAL_ID volume:100];
+            [audioEffectManager startPlayMusic:audioMusicParam
+                                       onStart:nil
+                                    onProgress:nil
+                                    onComplete:nil];
         } break;
         default:
             break;
     }
-    return NO;
 }
 
 void stopAudio(void) {
     [[TUICallKitAudioPlayer sharedInstance] stopAudio];
+    [[[[TUICallEngine createInstance] getTRTCCloudInstance] getAudioEffectManager] stopPlayMusic:CALLKIT_AUDIO_DIAL_ID];
 }
 
 @implementation TUICallKitAudioParam

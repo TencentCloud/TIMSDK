@@ -1,41 +1,17 @@
-/* 
+/*
  CallingLocalized.strings
  TRTCCalling
  
  Created by adams on 2021/5/13.
  */
 
-"LoginNetwork.ProfileManager.sendfailed" = "发送失败，请稍后重试";
-"V2.Live.LoginMock.sendtheverificatcode" = "请发送验证码";
-"LoginNetwork.ProfileManager.loginfailed" = "登录失败，请稍后重试";
-"LoginNetwork.ProfileManager.queryfailed" = "查询失败，请稍候重试";
-"LoginNetwork.ProfileManager.registerfailed" = "注册失败，请稍后重试";
-"Demo.TRTC.calling.callingrequest" = "您有一个通话请求";
-"Demo.TRTC.calling.syserror"= "系统错误";
-"Demo.TRTC.calling.yourphonenumber" = "您的手机号 ";
-"Demo.TRTC.calling.searchphonenumber" = "搜索手机号";
-"Demo.TRTC.calling.searching" = "搜索";
-"Demo.TRTC.calling.searchandcall" = "搜索添加已注册用户\n以发起通话";
-"Demo.TRTC.calling.callingbegan" = "进入通话";
-"Demo.TRTC.calling.callingcancel" = "取消了通话";
-"Demo.TRTC.calling.callingtimeout" = "通话超时";
 "Demo.TRTC.calling.callingrefuse" = "拒绝了通话";
 "Demo.TRTC.calling.callingleave" = "离开了通话";
 "Demo.TRTC.calling.callingnoresponse" = "未响应";
 "Demo.TRTC.calling.callingbusy" = "忙线";
-"Demo.TRTC.calling.searchingfailed" = "查询失败";
-"Demo.TRTC.calling.cantinviteself" = "不能邀请自己";
-"Demo.TRTC.calling.muteon" = "开启静音";
-"Demo.TRTC.calling.muteoff" = "关闭静音";
-"Demo.TRTC.calling.handsfreeon" = "开启免提";
-"Demo.TRTC.calling.handsfreeoff" = "关闭免提";
-"LoginNetwork.AppUtils.warmprompt" = "温馨提示";
-"LoginNetwork.AppUtils.tomeettheregulatory" = "为配合相关部门监管要求，本App内音视频互动全程均有录音录像存档，严禁色情、辱骂、暴恐、涉政等违规内容。";
-"LoginNetwork.AppUtils.determine" = "确定";
 "Demo.TRTC.calling.invitetovideocall" = "邀请你视频通话";
 "Demo.TRTC.calling.invitetoaudiocall" = "邀请你音频通话";
-"Demo.TRTC.Streaming.call" = "呼叫";
-
+"LoginNetwork.AppUtils.determine" = "确定";
 "TUICallKit.Audio.call" = "语音通话";
 "TUICallKit.Video.call" = "视频通话";
 
@@ -50,7 +26,6 @@
 "Demo.TRTC.Calling.othernetworkpoor" = "对方网络不佳";
 "Demo.TRTC.Calling.yournetworkpoor" = "己方网络不佳";
 "Demo.TRTC.Salon.invitelimited" = "请求正在处理，请稍后再试";
-"Demo.TRTC.Login.countrycode" = "国际电话区号";
 "Demo.TRTC.Calling.calleeTip" = "他们也在";
 "Demo.TRTC.Calling.FloatingWindow.waitaccept" = "等待接听";
 "Demo.TRTC.Calling.FloatingWindow.dailing" = "呼叫中…";

@@ -11,14 +11,14 @@
 
 @implementation TUIReplyPreviewData
 
-+ (NSString *)displayAbstract:(NSInteger)type abstract:(NSString *)abstract withFileName:(BOOL)withFilename {
++ (NSString *)displayAbstract:(NSInteger)type abstract:(NSString *)abstract withFileName:(BOOL)withFilename isRisk:(BOOL)isRisk {
     NSString *text = abstract;
     if (type == V2TIM_ELEM_TYPE_IMAGE) {
-        text = TIMCommonLocalizableString(TUIkitMessageTypeImage);
+        text = isRisk? TIMCommonLocalizableString(TUIkitMessageTypeRiskImage):TIMCommonLocalizableString(TUIkitMessageTypeImage);
     } else if (type == V2TIM_ELEM_TYPE_VIDEO) {
-        text = TIMCommonLocalizableString(TUIkitMessageTypeVideo);
+        text = isRisk? TIMCommonLocalizableString(TUIkitMessageTypeRiskVideo):TIMCommonLocalizableString(TUIkitMessageTypeVideo);
     } else if (type == V2TIM_ELEM_TYPE_SOUND) {
-        text = TIMCommonLocalizableString(TUIKitMessageTypeVoice);
+        text = isRisk? TIMCommonLocalizableString(TUIkitMessageTypeRiskVoice):TIMCommonLocalizableString(TUIKitMessageTypeVoice);
     } else if (type == V2TIM_ELEM_TYPE_FACE) {
         text = TIMCommonLocalizableString(TUIKitMessageTypeAnimateEmoji);
     } else if (type == V2TIM_ELEM_TYPE_FILE) {

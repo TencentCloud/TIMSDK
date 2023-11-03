@@ -53,12 +53,36 @@
               data.cselector = @selector(onBlackList:);
               data;
           })];
+    
+    [self addExtensionsToList:list];
     self.firstGroupData = [NSArray arrayWithArray:list];
 
     [self setupNavigator];
     [self setupViews];
 
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+}
+
+- (void)addExtensionsToList:(NSMutableArray *)list {
+    NSDictionary *param = @{TUICore_TUIContactExtension_ContactMenu_Nav: self.navigationController};
+    NSArray<TUIExtensionInfo *> *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_ContactMenu_ClassicExtensionID param:param];
+    NSArray *sortedExtensionList = [extensionList sortedArrayUsingComparator:^NSComparisonResult(TUIExtensionInfo *obj1, TUIExtensionInfo *obj2) {
+        if (obj1.weight <= obj2.weight) {
+          return NSOrderedDescending;
+        } else {
+          return NSOrderedAscending;
+        }
+    }];
+    for (TUIExtensionInfo *info in sortedExtensionList) {
+        [list addObject:({
+            TUIContactActionCellData *data = [[TUIContactActionCellData alloc] init];
+            data.icon = info.icon;
+            data.title = info.text;
+            data.cselector = @selector(onExtensionClicked:);
+            data.onClicked = info.onClicked;
+            data;
+        })];
+    }
 }
 
 - (void)dealloc {
@@ -319,6 +343,12 @@
       [self onSelectFriend:cell];
     };
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onExtensionClicked:(TUIContactActionCell *)cell {
+    if (cell.actionData.onClicked) {
+        cell.actionData.onClicked(nil);
+    }
 }
 
 - (void)runSelector:(SEL)selector withObject:(id)object {

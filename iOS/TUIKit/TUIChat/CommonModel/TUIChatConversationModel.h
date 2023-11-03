@@ -81,6 +81,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL enabelRoom;
 
+@property(nonatomic, assign) BOOL isLimitedPortraitOrientation;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -56,6 +56,14 @@
     return YES;
 }
 
+- (BOOL)canLongPress {
+    return YES;
+}
+
+- (BOOL)shouldHide {
+    return NO;
+}
+
 - (CGSize)msgStatusSize {
     if (self.direction == MsgDirectionOutgoing) {
         return CGSizeMake(54, 14);

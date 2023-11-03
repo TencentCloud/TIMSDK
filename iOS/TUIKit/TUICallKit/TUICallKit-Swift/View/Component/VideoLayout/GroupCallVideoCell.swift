@@ -203,7 +203,7 @@ class GroupCallVideoCell: UICollectionViewCell {
     
     //MARK: Update UI
     func initWaitingUI() {
-        titleLabel.text = viewModel.remoteUser.nickname.value
+        titleLabel.text = User.getUserDisplayName(user: viewModel.remoteUser)
         setUserAvatar()
         
         if viewModel.isSelf {
@@ -222,6 +222,13 @@ class GroupCallVideoCell: UICollectionViewCell {
                     renderView = VideoFactory.instance.createVideoView(userId: viewModel.selfUser.value.id.value, frame: CGRect.zero)
                     renderView.isHidden = false
                     viewModel.openCamera(videoView: renderView)
+                } else {
+                    if viewModel.isCameraOpen.value == true {
+                        renderView.isHidden = false
+                        viewModel.openCamera(videoView: renderView)
+                    } else {
+                        avatarImageView.isHidden = false
+                    }
                 }
             } else if viewModel.selfUserStatus.value == .accept {
                 if !VideoFactory.instance.isExistVideoView(videoView: renderView) {
@@ -295,16 +302,13 @@ class GroupCallVideoCell: UICollectionViewCell {
     
     //MARK: Private Method
     func setUserAvatar() {
+        let userIcon: UIImage? = TUICallKitCommon.getBundleImage(name: "userIcon")
+        
         if viewModel.remoteUser.avatar.value == "" {
-            if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
-                avatarImageView.image = image
-            }
-        } else if let image = TUICallKitCommon.getUrlImage(url: viewModel.remoteUser.avatar.value){
+            guard let image = userIcon else { return }
             avatarImageView.image = image
         } else {
-            if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
-                avatarImageView.image = image
-            }
+            avatarImageView.sd_setImage(with: URL(string: viewModel.remoteUser.avatar.value), placeholderImage: userIcon)
         }
     }
 }

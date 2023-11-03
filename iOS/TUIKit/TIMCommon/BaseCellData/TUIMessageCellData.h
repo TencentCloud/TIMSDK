@@ -271,6 +271,10 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 /// If cell content can be forwarded.
 - (BOOL)canForward;
 
+- (BOOL)canLongPress;
+
+- (BOOL)shouldHide;
+
 /**
  *  根据消息方向（收/发）初始化消息单元
  *  - 除了基本消息的初始化外，还包括根据方向设置方向变量、昵称字体等。

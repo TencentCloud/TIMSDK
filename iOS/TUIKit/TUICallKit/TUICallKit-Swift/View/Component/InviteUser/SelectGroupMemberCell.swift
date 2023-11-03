@@ -44,7 +44,7 @@ class SelectGroupMemberCell: UITableViewCell {
     func activateConstraints() {
         selectImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.width.height.equalTo(10)
+            make.width.height.equalTo(15)
             make.centerY.equalToSuperview()
         }
 
@@ -72,11 +72,7 @@ class SelectGroupMemberCell: UITableViewCell {
         } else {
             selectImageView.image = TUICallKitCommon.getBundleImage(name: "tuicallkit_check_box_group_unselected")
         }
-        
-        if user.nickname.value.isEmpty {
-            nameLabel.text = user.id.value
-        } else {
-            nameLabel.text = user.nickname.value
-        }
+                
+        nameLabel.text = User.getUserDisplayName(user: user)
     }
 }

@@ -223,6 +223,7 @@
 "TUIKitGroupKickOffTipsFormat" = "您已被踢出 %@ 群";
 "TUIKitGroupDropoutTipsFormat" = "您已退出 %@ 群";
 
+"TUIKitMessageTipsNormalRecallMessage" = "有一条消息被撤回";
 "TUIKitMessageTipsYouRecallMessage" = "您撤回了一条消息";
 "TUIKitMessageTipsReEditMessage" = "重新编辑";
 "TUIKitMessageTipsRecallMessageFormat" = "\"%@\"撤回了一条消息";
@@ -243,6 +244,9 @@
 "TUIKitMessageTipsUnsupportCustomMessage" = "[自定义消息]";
 "TUIKitMessageTipsMute" = "被禁言";
 "TUIKitMessageTipsUnmute" = "被解除禁言";
+"TUIKitMessageTipsRecallRiskContent" = "违规消息被撤回";
+"TUIKitMessageDisplayRiskContent" = "[违规消息]";
+
 
 "TUIKitSignalingFinishGroupChat" = "结束群聊";
 "TUIKitSignalingFinishConversationAndTimeFormat" = "通话时长";
@@ -265,7 +269,17 @@
 "TUIkitMessageTypeFile" = "[文件]";
 "TUIKitMessageTypeAnimateEmoji" = "[动画表情]";
 "TUIKitMessageTypeDraftFormat" = "[草稿] ";
+
+"TUIkitMessageTypeRiskImage" = "[违规图片]";
+"TUIkitMessageTypeRiskVoice" = "[违规语音]";
+"TUIkitMessageTypeRiskVideo" = "[违规视频]";
+
 "TUIKitMessageTypeLastMsgCountFormat" = "条";
+"TUIKitMessageTypeSecurityStrike" = "涉及敏感内容，发送失败";
+"TUIKitMessageTypeSecurityStrikeVoice" = "涉及敏感内容，无法收听";
+"TUIKitMessageTypeSecurityStrikeImage" = "涉及敏感内容，无法查看";
+"TUIKitMessageTypeSecurityStrikeTranslate" = "涉及敏感内容，翻译失败";
+
 
 "TUIKitMessageReadPartRead" = "人已读";
 "TUIKitMessageReadPartUnread" = "人未读";
@@ -290,6 +304,8 @@
 "TUIKitMoreLinkDetails" = "查看详情>>";
 "TUIKitMorePoll" = "投票";
 "TUIKitMoreGroupNote" = "群接龙";
+"TUIKitMoreEvaluation" = "服务评价";
+"TUIKitMoreCard" = "卡片消息";
 
 "TUIKitCallInviteYouVideoCall" = "邀请你视频通话";
 "TUIKitCallTurningOnMute" = "开启静音";
@@ -423,6 +439,9 @@
 "TUIKitVideoSavedFailed" = "视频保存失败";
 "TUIKitPictureSavedSuccess" = "图片保存成功";
 "TUIKitPictureSavedFailed" = "图片保存失败";
+"TUIKitPictureCheckRisk" = "检测到图片涉及敏感内容，暂时无法查看";
+"TUIKitVideoCheckRisk" = "检测到视频涉及敏感内容，暂时无法查看";
+"TUIKitVideoCheckRiskCancel" = "我知道了";
 /***************************** 视频、图片加载 & 保存 *************************/
 
 "TUIKitGroupSetAdminsForbidden" = "当前类型群聊暂不支持设置管理员";
@@ -643,6 +662,35 @@
 "TUIGroupNoteNotDatePickerFRI" = " 周五";
 "TUIGroupNoteNotDatePickerSAT" = " 周六";
 "TUIGroupNoteNotDatePickerSUN" = " 周日";
+
+"TUICustomerServiceAccounts" = "客服号";
+"TUICustomerServiceBranchMessage" = "[分支消息]";
+"TUICustomerServiceCardMessage" = "[卡片消息]";
+"TUICustomerServiceCollectInfomation" = "[收集信息]";
+"TUICustomerServiceSatisfactionEvaluation" = "[满意度评价]";
+"TUICustomerServiceTimeout" = "[客服会话已超时，自动结束]";
+"TUICustomerServiceEnd" = "[客服会话已结束]";
+"TUICustomerServiceFillProductInfo" = "请填写商品信息";
+"TUICustomerServiceSubmitProductInfo" = "提交商品信息";
+"TUICustomerServiceClose" = "关闭";
+"TUICustomerServiceName" = "名称";
+"TUICustomerServiceFillProductName" = "请填写产品名称";
+"TUICustomerServiceDesc" = "描述";
+"TUICustomerServiceFillProductDesc" = "请填写相关描述";
+"TUICustomerServicePic" = "图片";
+"TUICustomerServiceFillPicLink" = "请填写图片链接";
+"TUICustomerServiceJumpLink" = "跳转";
+"TUICustomerServiceFillJumpLink" = "请填写卡片跳转链接";
+"TUICustomerServiceSubmitEvaluation" = "提交评价";
+"TUICustomerService" = "客服插件";
+"TUICustomerServiceSendProduct" = "发送商品";
+"TUICustomerServiceCommonPhrase" = "常用语";
+"TUICustomerServiceCommonPhraseStock" = "是否有货？";
+"TUICustomerServiceCommonPhraseCheaper" = "可以便宜一点吗？";
+"TUICustomerServiceCommonPhraseGift" = "有什么赠品？";
+"TUICustomerServiceCommonPhraseShipping" = "什么时候发货？";
+"TUICustomerServiceCommonPhraseDelivery" = "发什么快递？";
+"TUICustomerServiceCommonPhraseArrive" = "什么时候到货？";
 
 "TUIConversationGroupAll" = "全部";
 "TUIConversationGroupUnread" = "未读";

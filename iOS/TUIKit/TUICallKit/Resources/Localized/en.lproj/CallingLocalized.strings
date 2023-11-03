@@ -5,37 +5,13 @@
  Created by adams on 2021/5/13.
  */
 
-"LoginNetwork.ProfileManager.sendfailed" = "Send failed. Please try again later.";
-"V2.Live.LoginMock.sendtheverificatcode" = "Please send the verification code";
-"LoginNetwork.ProfileManager.loginfailed" = "Login failed. Please try again later.";
-"LoginNetwork.ProfileManager.queryfailed" = "Query failed. Please try again later.";
-"LoginNetwork.ProfileManager.registerfailed" = "Registration failed. Please try again later";
-"Demo.TRTC.calling.callingrequest" = "You have a call invitation.";
-"Demo.TRTC.calling.syserror"= "System error";
-"Demo.TRTC.calling.yourphonenumber" = "Your mobile number ";
-"Demo.TRTC.calling.searchphonenumber" = "Mobile number";
-"Demo.TRTC.calling.searching" = "Search";
-"Demo.TRTC.calling.searchandcall" = "Search for a registered user\n to start a call";
-"Demo.TRTC.calling.callingbegan" = "Joined call";
-"Demo.TRTC.calling.callingcancel" = "Cancelled the call";
-"Demo.TRTC.calling.callingtimeout" = "Call timed out";
 "Demo.TRTC.calling.callingrefuse" = "declined the call";
 "Demo.TRTC.calling.callingleave" = "left the call";
 "Demo.TRTC.calling.callingnoresponse" = "didn’t answer";
 "Demo.TRTC.calling.callingbusy" = "is busy";
-"Demo.TRTC.calling.searchingfailed" = "Search failed";
-"Demo.TRTC.calling.cantinviteself" = "You cannot invite yourself.";
-"Demo.TRTC.calling.muteon" = "Muted";
-"Demo.TRTC.calling.muteoff" = "Unmuted";
-"Demo.TRTC.calling.handsfreeon" = "Speaker on";
-"Demo.TRTC.calling.handsfreeoff" = "Speaker off";
-"LoginNetwork.AppUtils.warmprompt" = "Note";
-"LoginNetwork.AppUtils.tomeettheregulatory" = "In accordance with relevant regulations, the app forbids pornographic, abusive, violent, terrorist, and politically sensitive content. All voice/video calls and live streams are recorded and archived.";
-"LoginNetwork.AppUtils.determine" = "OK";
 "Demo.TRTC.calling.invitetovideocall" = "invites you to a video call";
 "Demo.TRTC.calling.invitetoaudiocall" = "invites you to a voice call";
-"Demo.TRTC.Streaming.call" = "Call";
-
+"LoginNetwork.AppUtils.determine" = "OK";
 "TUICallKit.Audio.call" = "Voice Call";
 "TUICallKit.Video.call" = "Video Call";
 
@@ -47,10 +23,7 @@
 "Demo.TRTC.Calling.camera" = "Camera";
 "Demo.TRTC.Calling.switchtoaudio" = "Switch to Voice Call";
 "Demo.TRTC.Calling.answer" = "Answer";
-"Demo.TRTC.Calling.othernetworkpoor" = "The other party's network connection is poor";
-"Demo.TRTC.Calling.yournetworkpoor" = "Your network connection is poor";
 "Demo.TRTC.Salon.invitelimited" = "The request is being processed, please try again later";
-"Demo.TRTC.Login.countrycode" = "Country Code";
 "Demo.TRTC.Calling.calleeTip" = "They also";
 "Demo.TRTC.Calling.FloatingWindow.waitaccept" = "Waiting";
 "Demo.TRTC.Calling.FloatingWindow.dailing" = "Waiting";

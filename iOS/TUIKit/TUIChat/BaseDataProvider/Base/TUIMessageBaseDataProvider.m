@@ -246,8 +246,7 @@
         }
     }
 }
-
-- (void)onRecvMessageRevoked:(NSString *)msgID {
+- (void)onRecvMessageRevoked:(NSString *)msgID operateUser:(V2TIMUserFullInfo *)operateUser reason:(NSString *)reason {
     @weakify(self);
     [TUITool dispatchMainAsync:^{
       @strongify(self);
@@ -256,7 +255,12 @@
           if ([uiMsg.msgID isEqualToString:msgID]) {
               [self.dataSource dataProviderDataSourceWillChange:self];
               NSUInteger index = [self.uiMsgs indexOfObject:uiMsg];
-              TUIMessageCellData *revokeCellData = [self.class getRevokeCellData:uiMsg.innerMessage];
+              TUISystemMessageCellData *revokeCellData = (TUISystemMessageCellData *)[self.class getRevokeCellData:uiMsg.innerMessage];
+              revokeCellData.content = [self.class getRevokeDispayString:uiMsg.innerMessage operateUser:operateUser reason:reason];
+              if(![operateUser.userID isEqualToString:uiMsg.innerMessage.sender]) {
+                  //Super User revoke
+                  revokeCellData.supportReEdit = NO;
+              }
               [self replaceUIMsg:revokeCellData atIndex:index];
               [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload atIndex:index animation:YES];
               [self.dataSource dataProviderDataSourceDidChange:self];
@@ -677,7 +681,6 @@
     [self.class revokeMessage:imMsg
                          succ:^{
                            @strongify(self);
-                           [self onRecvMessageRevoked:imMsg.msgID];
                            if (succ) {
                                succ();
                            }
@@ -860,7 +863,8 @@
     if (index >= 1) {
         lastData = uiMsgs[index - 1];
         if (![lastData isKindOfClass:[TUISystemMessageCellData class]]) {
-            if ([lastData.identifier isEqualToString:data.identifier]) {
+            if ([lastData.identifier isEqualToString:data.identifier] &&
+                ![data isKindOfClass:[TUISystemMessageCellData class]]) {
                 lastData.sameToNextMsgSender = YES;
                 lastData.showAvatar = NO;
             } else {
@@ -892,6 +896,8 @@
 @end
 
 @implementation TUIMessageBaseDataProvider (IMSDK)
+
+static const int kOfflinePushVersion = 1;
 
 + (NSString *)sendMessage:(V2TIMMessage *)message
            toConversation:(TUIChatConversationModel *)conversationData
@@ -931,17 +937,25 @@
         senderId = senderId ?: @"";
         NSString *nickName = isGroup ? (conversationData.title) : ([TUILogin getNickName] ?: [TUILogin getUserID]);
         nickName = nickName ?: @"";
+        NSString * content = [self getDisplayString:message] ?: @"";
         NSDictionary *ext = @{
             @"entity" : @{
                 @"action" : @1,
-                @"content" : [self getDisplayString:message] ?: @"",
+                @"content" : content,
                 @"sender" : senderId,
                 @"nickname" : nickName,
                 @"faceUrl" : [TUILogin getFaceUrl] ?: @"",
-                @"chatType" : isGroup ? @(V2TIM_GROUP) : @(V2TIM_C2C)
+                @"chatType" : isGroup ? @(V2TIM_GROUP) : @(V2TIM_C2C),
+                @"version": @(kOfflinePushVersion),
             }
         };
         NSData *data = [NSJSONSerialization dataWithJSONObject:ext options:NSJSONWritingPrettyPrinted error:nil];
+        if (content.length > 0) {
+            pushInfo.desc = content;
+        }
+        if (nickName.length > 0) {
+            pushInfo.title = nickName;
+        }
         pushInfo.ext = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         pushInfo.AndroidOPPOChannelID = @"tuikit";
         pushInfo.AndroidSound = TUIConfig.defaultConfig.enableCustomRing ? @"private_ring" : nil;
@@ -1082,23 +1096,40 @@
 }
 
 + (NSString *)getRevokeDispayString:(V2TIMMessage *)message {
-    NSString *str = nil;
-    if (message.isSelf) {
-        str = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
-    } else if (message.groupID != nil) {
-        NSString *userString = message.nameCard;
-        ;
-        if (userString.length == 0) {
-            userString = message.nickName;
-        }
-        if (userString.length == 0) {
-            userString = message.sender;
-        }
-        str = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userString];
-    } else if (message.userID != nil) {
-        str = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
+    return [self getRevokeDispayString:message operateUser:nil reason:nil];
+}
+
++ (NSString *)getRevokeDispayString:(V2TIMMessage *)message operateUser:(V2TIMUserFullInfo *)operateUser reason:(NSString *)reason {
+    V2TIMUserFullInfo *revokerInfo = message.revokerInfo ? message.revokerInfo : operateUser;
+    BOOL hasRiskContent = message.hasRiskContent;
+    NSString *revoker = message.sender;
+    NSString *messageSender = message.sender;
+    if (revokerInfo) {
+        revoker = revokerInfo.userID;
     }
-    return rtlString(str);
+    NSString *content = TIMCommonLocalizableString(TUIKitMessageTipsNormalRecallMessage);
+    if ([revoker isEqualToString:messageSender]) {
+        if (message.isSelf) {
+            content = TIMCommonLocalizableString(TUIKitMessageTipsYouRecallMessage);
+        } else {
+            if (message.userID.length > 0) {
+                // c2c
+                content = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
+            } else if (message.groupID.length > 0) {
+                NSString *userName = [self.class getShowName:message];
+                content = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+            } else {
+                // empty
+            }
+        }
+    } else {
+        NSString *userName = [self.class getShowName:message];
+        if (revokerInfo) {
+            userName = revokerInfo.showName;
+        }
+        content = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitMessageTipsRecallMessageFormat), userName];
+    }
+    return rtlString(content);
 }
 
 + (NSString *)getGroupTipsDisplayString:(V2TIMMessage *)message {
@@ -1174,6 +1205,10 @@
 
 + (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data {
     return [[V2TIMManager sharedInstance] createCustomMessage:data];
+}
+
++ (V2TIMMessage *)getCustomMessageWithJsonData:(NSData *)data desc:(NSString *)desc extension:(NSString *)extension {
+    return [[V2TIMManager sharedInstance] createCustomMessage:data desc:desc extension:extension];
 }
 
 + (NSString *)opGroupInfoChagedFormatStr:(NSString *)opUser ofUserList:(NSMutableArray<NSString *> *)userList ofTips:(V2TIMGroupTipsElem *)tips{

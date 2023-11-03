@@ -18,7 +18,7 @@ class InviteeAvatarCell: UICollectionViewCell {
         }
         return imageView
     }()
-        
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -27,7 +27,7 @@ class InviteeAvatarCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -36,7 +36,7 @@ class InviteeAvatarCell: UICollectionViewCell {
         activateConstraints()
         isViewReady = true
     }
-
+    
     private func constructViewHierarchy() {
         contentView.addSubview(userIcon)
     }
@@ -46,21 +46,20 @@ class InviteeAvatarCell: UICollectionViewCell {
             make.edges.equalTo(self.contentView)
         }
     }
-
+    
     func initCell(user: User) {
         self.user = user
         setUserIcon()
     }
     
     private func setUserIcon() {
+        let userImage: UIImage? = TUICallKitCommon.getBundleImage(name: "userIcon")
+        
         if user.avatar.value == "" {
-            if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
-                userIcon.image = image
-            }
+            guard let image = userImage else { return }
+            userIcon.image = image
         } else {
-            if let image = TUICallKitCommon.getUrlImage(url: user.avatar.value) {
-                userIcon.image = image
-            }
+            userIcon.sd_setImage(with: URL(string: user.avatar.value), placeholderImage: userImage)
         }
     }
 }

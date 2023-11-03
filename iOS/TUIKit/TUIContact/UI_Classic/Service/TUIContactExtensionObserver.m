@@ -49,6 +49,7 @@
     if (userID.length > 0) {
         TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
         info.icon = TUIContactBundleThemeImage(@"chat_nav_more_menu_img", @"chat_nav_more_menu");
+        info.weight = 100;
         info.onClicked = ^(NSDictionary *_Nonnull param) {
           UINavigationController *pushVC = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_PushVC asClass:UINavigationController.class];
           if (pushVC) {
