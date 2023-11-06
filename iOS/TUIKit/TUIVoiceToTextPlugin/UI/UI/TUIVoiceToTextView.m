@@ -24,6 +24,7 @@
 
 @property(nonatomic, strong) UIImageView *loadingView;
 @property(nonatomic, strong) TUITextView *textView;
+@property(nonatomic, strong) UIImageView *retryView;
 
 @property(nonatomic, strong) TUIMessageCellData *cellData;
 
@@ -82,7 +83,10 @@
         [self startLoading];
     } else if (status == TUIVoiceToTextViewStatusShown) {
         [self stopLoading];
-        [self updateConversionViewByText:self.text];
+        [self updateConversionViewByText:self.text translationViewStatus:TUIVoiceToTextViewStatusShown];
+    } else if (status == TUIVoiceToTextViewStatusSecurityStrike) {
+        [self stopLoading];
+        [self updateConversionViewByText:self.text translationViewStatus:TUIVoiceToTextViewStatusSecurityStrike];
     }
     
     // tell constraints they need updating
@@ -127,8 +131,10 @@
                                   attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16],
                                                NSParagraphStyleAttributeName: paragraphStyle}
                                      context:nil];
-    return CGSizeMake(MAX(textRect.size.width, minTextWidth) + commonMargins,
-                      MAX(textRect.size.height, oneLineTextHeight) + commonMargins);
+    
+    CGSize result = CGSizeMake(MAX(textRect.size.width, minTextWidth) + commonMargins,
+                               MAX(textRect.size.height, oneLineTextHeight) + commonMargins);
+    return CGSizeMake(ceil(result.width), ceil(result.height));
 }
 
 #pragma mark - UI
@@ -153,6 +159,12 @@
     [self addSubview:self.textView];
     self.textView.hidden = YES;
     self.textView.userInteractionEnabled = NO;
+
+    self.retryView = [[UIImageView alloc] init];
+    self.retryView.image = [UIImage imageNamed:TUIChatImagePath(@"msg_error")];
+    self.retryView.hidden = YES;
+    [self addSubview:self.retryView];
+
 }
 
 - (void)setupGesture {
@@ -176,6 +188,18 @@
         }];
         MASAttachKeys(self.loadingView);
     } else {
+        [self.retryView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.cellData.direction == MsgDirectionOutgoing){
+                make.leading.mas_equalTo(self.mas_leading).mas_offset(-27);
+            }
+            else {
+                make.trailing.mas_equalTo(self.mas_trailing).mas_offset(27);
+            }
+            make.centerY.mas_equalTo(self.mas_centerY);
+            make.width.mas_equalTo(20);
+            make.height.mas_equalTo(20);
+        }];
+        
         [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.leading.mas_equalTo(10);
             make.trailing.mas_equalTo(-10);
@@ -185,12 +209,23 @@
     }
 }
 
-- (void)updateConversionViewByText:(NSString *)text {
+- (void)updateConversionViewByText:(NSString *)text translationViewStatus:(TUIVoiceToTextViewStatus)status  {
     BOOL isConverted = text.length > 0;
+    
+    UIColor *textColor = TUIVoiceToTextDynamicColor(@"convert_voice_text_view_text_color", @"#000000");
+    UIColor *bgColor = TUIVoiceToTextDynamicColor(@"convert_voice_text_view_bg_color", @"#F2F7FF");
+    if (status == TUIVoiceToTextViewStatusSecurityStrike) {
+        bgColor = [UIColor tui_colorWithHex:@"#FA5151" alpha:0.16];
+        textColor = TUITranslationDynamicColor(@"", @"#DA2222");
+    }
+    self.bgColor = bgColor;
+    self.backgroundColor = bgColor;
+    self.textView.textColor = textColor;
     if (isConverted) {
         self.textView.text = rtlString(text);
     }
     self.textView.hidden = !isConverted;
+    self.retryView.hidden = !(status == TUIVoiceToTextViewStatusSecurityStrike);
 }
 
 #pragma mark - Public
@@ -225,6 +260,8 @@
 
     TUIChatPopMenu *popMenu = [[TUIChatPopMenu alloc] init];
 
+    TUIVoiceToTextViewStatus status = [TUIVoiceToTextDataProvider getConvertedTextStatus:self.cellData.innerMessage];
+    BOOL hasRiskContent = (status == TUIVoiceToTextViewStatusSecurityStrike);
     @weakify(self);
     TUIChatPopMenuAction *copy = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Copy)
                                                                        image:TUIVoiceToTextBundleThemeImage(@"convert_voice_text_view_pop_menu_copy_img", @"icon_copy")
@@ -243,7 +280,9 @@
                                              @strongify(self);
                                              [self onForward:self.text];
                                            }];
-    [popMenu addAction:forward];
+    if(!hasRiskContent) {
+        [popMenu addAction:forward];
+    }
 
     TUIChatPopMenuAction *hide = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Hide)
                                                                        image:TUIVoiceToTextBundleThemeImage(@"convert_voice_text_view_pop_menu_hide_img", @"icon_hide")
@@ -303,6 +342,15 @@
                   subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
                   object:nil
                    param:param];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // tell constraints they need updating
+        [self setNeedsUpdateConstraints];
+
+        // update constraints now so we can animate the change
+        [self updateConstraintsIfNeeded];
+
+        [self layoutIfNeeded];
+    });
 }
 
 @end

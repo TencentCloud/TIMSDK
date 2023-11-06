@@ -193,6 +193,10 @@ static NSString *const kKeyTranslationViewStatus = @"translation_view_status";
 }
 
 + (NSString *)getTranslationText:(V2TIMMessage *)message {
+    BOOL hasRiskContent = message.hasRiskContent;
+    if (hasRiskContent){
+        return TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrikeTranslate);
+    }
     if (message.localCustomData.length == 0) {
         return nil;
     }
@@ -204,6 +208,10 @@ static NSString *const kKeyTranslationViewStatus = @"translation_view_status";
 }
 
 + (TUITranslationViewStatus)getTranslationStatus:(V2TIMMessage *)message {
+    BOOL hasRiskContent = message.hasRiskContent;
+    if (hasRiskContent){
+        return TUITranslationViewStatusSecurityStrike;
+    }
     if (message.localCustomData.length == 0) {
         return TUITranslationViewStatusUnknown;
     }

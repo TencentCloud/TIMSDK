@@ -26,6 +26,7 @@
 @property(nonatomic, strong) UILabel *tipsLabel;
 @property(nonatomic, strong) UIImageView *loadingView;
 @property(nonatomic, strong) TUITextView *textView;
+@property(nonatomic, strong) UIImageView *retryView;
 
 @property(nonatomic, strong) TUIMessageCellData *cellData;
 
@@ -83,8 +84,19 @@
         [self startLoading];
     } else if (status == TUITranslationViewStatusShown) {
         [self stopLoading];
-        [self updateTransaltionViewByText:self.text];
+        [self updateTransaltionViewByText:self.text translationViewStatus:status];
+    } else if (status == TUITranslationViewStatusSecurityStrike) {
+        [self stopLoading];
+        [self updateTransaltionViewByText:self.text translationViewStatus:status];
     }
+    // tell constraints they need updating
+    [self setNeedsUpdateConstraints];
+
+    // update constraints now so we can animate the change
+    [self updateConstraintsIfNeeded];
+
+    [self layoutIfNeeded];
+
 }
 
 - (CGSize)calcSizeOfStatus:(TUITranslationViewStatus)status {
@@ -123,8 +135,9 @@
     textRect = [attrStr boundingRectWithSize:CGSizeMake(maxTextWidth, MAXFLOAT)
                                      options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                      context:nil];
-    return CGSizeMake(MAX(textRect.size.width, minTextWidth) + commonMargins,
-                      MAX(textRect.size.height, oneLineTextHeight) + commonMargins + tipsHeight + tipsBottomMargin);
+    CGSize result = CGSizeMake(MAX(textRect.size.width, minTextWidth) + commonMargins,
+                               MAX(textRect.size.height, oneLineTextHeight) + commonMargins + tipsHeight + tipsBottomMargin);
+    return CGSizeMake(ceil(result.width), ceil(result.height));
 }
 
 #pragma mark - UI
@@ -143,6 +156,7 @@
     self.textView.textContainer.lineFragmentPadding = 0;
     self.textView.scrollEnabled = NO;
     self.textView.editable = NO;
+    self.textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     [self addSubview:self.textView];
     self.textView.hidden = YES;
     self.textView.userInteractionEnabled = NO;
@@ -158,8 +172,15 @@
     self.tipsLabel.text = TIMCommonLocalizableString(TUIKitTranslateDefaultTips);
     self.tipsLabel.textColor = TUITranslationDynamicColor(@"translation_view_tips_color", @"#000000");
     self.tipsLabel.alpha = 0.4;
+    self.tipsLabel.numberOfLines = 0;
+    self.tipsLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     [self addSubview:self.tipsLabel];
     self.tipsLabel.hidden = YES;
+    
+    self.retryView = [[UIImageView alloc] init];
+    self.retryView.image = [UIImage imageNamed:TUIChatImagePath(@"msg_error")];
+    self.retryView.hidden = YES;
+    [self addSubview:self.retryView];
 }
 
 - (void)setupGesture {
@@ -167,27 +188,86 @@
     [longPress addTarget:self action:@selector(onLongPressed:)];
     [self addGestureRecognizer:longPress];
 }
-
-- (void)layoutSubviews {
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+ 
     if (self.text.length == 0) {
-        self.loadingView.mm_height(15).mm_width(15).mm_left(10).mm__centerY(self.mm_h / 2.0);
+        [self.loadingView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(15);
+            make.width.mas_equalTo(15);
+            make.leading.mas_equalTo(10);
+            make.centerY.mas_equalTo(self.mas_centerY);
+        }];
+        MASAttachKeys(self.loadingView);
     } else {
-        self.textView.mm_top(10).mm_left(10).mm_height(self.mm_h - 10 - 40 + 2).mm_width(self.mm_w - 2 * 10);
-        self.tipsIcon.mm_top(self.textView.mm_maxY + 14).mm_left(10).mm_height(13).mm_width(13);
-        self.tipsLabel.mm_height(20).mm_sizeToFit().mm__centerY(self.tipsIcon.mm_centerY).mm_left(self.tipsIcon.mm_maxX + 4);
+        [self.retryView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.cellData.direction == MsgDirectionOutgoing){
+                make.leading.mas_equalTo(self.mas_leading).mas_offset(-27);
+            }
+            else {
+                make.trailing.mas_equalTo(self.mas_trailing).mas_offset(27);
+            }
+            make.centerY.mas_equalTo(self.mas_centerY);
+            make.width.mas_equalTo(20);
+            make.height.mas_equalTo(20);
+        }];
+        [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.mm_h - 10 - 40 + 2);
+            make.leading.mas_equalTo(10);
+            make.trailing.mas_equalTo(-10);
+            make.top.mas_equalTo(10);
+        }];
+        MASAttachKeys(self.textView);
+        [self.tipsIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.textView.mas_bottom).mas_offset(14);
+            make.leading.mas_equalTo(10);
+            make.height.mas_equalTo(13);
+            make.width.mas_equalTo(13);
+        }];
+        MASAttachKeys(self.tipsIcon);
+        [self.tipsLabel sizeToFit];
+        [self.tipsLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.tipsIcon.mas_centerY);
+            make.leading.mas_equalTo(self.tipsIcon.mas_trailing).mas_offset(4);
+            make.trailing.mas_equalTo(self.textView.mas_trailing);
+        }];
+        MASAttachKeys(self.tipsLabel);
     }
+    
 }
 
-- (void)updateTransaltionViewByText:(NSString *)text {
+
+- (void)updateTransaltionViewByText:(NSString *)text translationViewStatus:(TUITranslationViewStatus)status  {
     BOOL isTranslated = text.length > 0;
+    UIColor *textColor = TUITranslationDynamicColor(@"translation_view_text_color", @"#000000");
+    UIColor *bgColor = TUITranslationDynamicColor(@"translation_view_bg_color", @"#F2F7FF");
+    if (status == TUITranslationViewStatusSecurityStrike) {
+        bgColor = [UIColor tui_colorWithHex:@"#FA5151" alpha:0.16];
+        textColor = TUITranslationDynamicColor(@"", @"#DA2222");
+    }
+    self.bgColor = bgColor;
+    self.backgroundColor = bgColor;
+
     if (isTranslated) {
-        self.textView.attributedText = [text getAdvancedFormatEmojiStringWithFont:[UIFont systemFontOfSize:16]
-                                                                        textColor:TUITranslationDynamicColor(@"translation_view_text_color", @"#000000")
-                                                                   emojiLocations:nil];
+        NSAttributedString *originAttributedText = [text getAdvancedFormatEmojiStringWithFont:[UIFont systemFontOfSize:16]
+                                                                                    textColor:textColor
+                                                                               emojiLocations:nil];
+        if (isRTL()) {
+            self.textView.attributedText = rtlAttributeString(originAttributedText,NSTextAlignmentRight);
+        }
+        else {
+            self.textView.attributedText = originAttributedText;
+        }
     }
     self.textView.hidden = !isTranslated;
     self.tipsIcon.hidden = !isTranslated;
     self.tipsLabel.hidden = !isTranslated;
+    self.retryView.hidden = !(status == TUITranslationViewStatusSecurityStrike);
+
 }
 
 #pragma mark - Public
@@ -221,6 +301,8 @@
     }
 
     TUIChatPopMenu *popMenu = [[TUIChatPopMenu alloc] init];
+    TUITranslationViewStatus status = [TUITranslationDataProvider getTranslationStatus:self.cellData.innerMessage];
+    BOOL hasRiskContent = (status == TUITranslationViewStatusSecurityStrike);
 
     @weakify(self);
     TUIChatPopMenuAction *copy = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Copy)
@@ -240,7 +322,9 @@
                                              @strongify(self);
                                              [self onForward:self.text];
                                            }];
-    [popMenu addAction:forward];
+    if (!hasRiskContent) {
+        [popMenu addAction:forward];
+    }
 
     TUIChatPopMenuAction *hide = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Hide)
                                                                        image:TUITranslationBundleThemeImage(@"translation_view_pop_menu_hide_img", @"icon_hide")
@@ -286,14 +370,29 @@
 }
 
 - (void)notifyTranslationForward:(NSString *)text {
-    NSDictionary *param = @{TUICore_TUITranslationNotify_WillForwardTranslationSubKey_Text : text};
-    [TUICore notifyEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_WillForwardTranslationSubKey object:nil param:param];
+    NSDictionary *param = @{TUICore_TUIPluginNotify_WillForwardTextSubKey_Text : text};
+    [TUICore notifyEvent:TUICore_TUIPluginNotify
+                  subKey:TUICore_TUIPluginNotify_WillForwardTextSubKey
+                  object:nil
+                   param:param];
 }
 
 - (void)notifyTranslationChanged {
-    NSDictionary *param =
-        @{TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data : self.cellData, TUICore_TUITranslationNotify_DidChangeTranslationSubKey_VC : self};
-    [TUICore notifyEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:nil param:param];
+    NSDictionary *param = @{TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data : self.cellData,
+                            TUICore_TUIPluginNotify_DidChangePluginViewSubKey_VC : self};
+    [TUICore notifyEvent:TUICore_TUIPluginNotify
+                  subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
+                  object:nil
+                   param:param];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // tell constraints they need updating
+        [self setNeedsUpdateConstraints];
+
+        // update constraints now so we can animate the change
+        [self updateConstraintsIfNeeded];
+
+        [self layoutIfNeeded];
+    });
 }
 
 @end

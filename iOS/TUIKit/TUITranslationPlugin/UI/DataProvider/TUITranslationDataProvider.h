@@ -17,6 +17,7 @@ typedef NS_ENUM(NSInteger, TUITranslationViewStatus) {
     TUITranslationViewStatusHidden = 1,
     TUITranslationViewStatusLoading = 2,
     TUITranslationViewStatusShown = 3,
+    TUITranslationViewStatusSecurityStrike = 4,
 };
 
 typedef void (^TUITranslateMessageCompletion)(NSInteger code, NSString *desc, TUIMessageCellData *data, NSInteger status, NSString *text);

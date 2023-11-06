@@ -75,9 +75,25 @@ static id gShareInstance = nil;
         if (cellData.innerMessage.elemType != V2TIM_ELEM_TYPE_TEXT) {
             return NO;
         }
-
+        NSMutableDictionary *cacheMap = parentView.tui_extValueObj;
+        TUITranslationView *cacheView = nil;
+        if (!cacheMap){
+            cacheMap = [NSMutableDictionary dictionaryWithCapacity:3];
+        }
+        else if ([cacheMap isKindOfClass:NSDictionary.class]) {
+            cacheView = [cacheMap objectForKey:@"TUITranslationView"];
+        }
+        else {
+            //cacheMap is not a dic ;
+        }
+        if (cacheView) {
+            [cacheView removeFromSuperview];
+            cacheView = nil;
+        }
         TUITranslationView *view = [[TUITranslationView alloc] initWithData:cellData];
         [parentView addSubview:view];
+        [cacheMap setObject:view forKey:@"TUITranslationView"];
+        parentView.tui_extValueObj  = cacheMap;
         return YES;
     }
     return NO;
@@ -125,17 +141,21 @@ static id gShareInstance = nil;
             info.icon = [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_translate")];
         }
         info.onClicked = ^(NSDictionary *_Nonnull action) {
-          TUIMessageCellData *cellData = cell.messageData;
-          V2TIMMessage *message = cellData.innerMessage;
-          if (message.elemType != V2TIM_ELEM_TYPE_TEXT) {
+            TUIMessageCellData *cellData = cell.messageData;
+            V2TIMMessage *message = cellData.innerMessage;
+            if (message.elemType != V2TIM_ELEM_TYPE_TEXT) {
               return;
-          }
-          [TUITranslationDataProvider
-              translateMessage:cellData
-                    completion:^(NSInteger code, NSString *_Nonnull desc, TUIMessageCellData *_Nonnull data, NSInteger status, NSString *_Nonnull text) {
-                      NSDictionary *param = @{TUICore_TUITranslationNotify_DidChangeTranslationSubKey_Data : cellData};
-                      [TUICore notifyEvent:TUICore_TUITranslationNotify subKey:TUICore_TUITranslationNotify_DidChangeTranslationSubKey object:nil param:param];
-                    }];
+            }
+            [TUITranslationDataProvider translateMessage:cellData
+                                            completion:^(NSInteger code, NSString *_Nonnull desc,
+                                                         TUIMessageCellData *_Nonnull data, NSInteger status,
+                                                         NSString *_Nonnull text) {
+                NSDictionary *param = @{TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data : cellData};
+                [TUICore notifyEvent:TUICore_TUIPluginNotify
+                              subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
+                              object:nil
+                               param:param];
+            }];
         };
         return @[ info ];
     } else if ([extensionID isEqualToString:TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID] ||

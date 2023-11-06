@@ -113,6 +113,10 @@ static NSString *const kKeyVoiceToTextViewStatus = @"voice_to_text_view_status";
 }
 
 + (NSString *)getConvertedText:(V2TIMMessage *)message {
+    BOOL hasRiskContent = message.hasRiskContent;
+    if (hasRiskContent){
+        return TIMCommonLocalizableString(TUIKitMessageTypeSecurityStrikeTranslate);
+    }
     if (message.localCustomData.length == 0) {
         return nil;
     }
@@ -124,6 +128,11 @@ static NSString *const kKeyVoiceToTextViewStatus = @"voice_to_text_view_status";
 }
 
 + (TUIVoiceToTextViewStatus)getConvertedTextStatus:(V2TIMMessage *)message {
+    BOOL hasRiskContent = message.hasRiskContent;
+    if (hasRiskContent){
+        return TUIVoiceToTextViewStatusSecurityStrike;
+    }
+
     if (message.localCustomData.length == 0) {
         return TUIVoiceToTextViewStatusUnknown;
     }

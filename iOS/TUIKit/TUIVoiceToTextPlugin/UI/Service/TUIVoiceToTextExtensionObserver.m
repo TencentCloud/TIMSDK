@@ -67,8 +67,26 @@ static id gShareInstance = nil;
             return NO;
         }
 
+        NSMutableDictionary *cacheMap = parentView.tui_extValueObj;
+        TUIVoiceToTextView *cacheView = nil;
+        if (!cacheMap){
+            cacheMap = [NSMutableDictionary dictionaryWithCapacity:3];
+        }
+        else if ([cacheMap isKindOfClass:NSDictionary.class]) {
+            cacheView = [cacheMap objectForKey:@"TUIVoiceToTextView"];
+        }
+        else {
+            //cacheMap is not a dic ;
+        }
+        if (cacheView) {
+            [cacheView removeFromSuperview];
+            cacheView = nil;
+        }
         TUIVoiceToTextView *view = [[TUIVoiceToTextView alloc] initWithData:cellData];
         [parentView addSubview:view];
+
+        [cacheMap setObject:view forKey:@"TUIVoiceToTextView"];
+        parentView.tui_extValueObj  = cacheMap;
         return YES;
     }
     return NO;

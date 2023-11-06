@@ -17,6 +17,7 @@ typedef NS_ENUM(NSInteger, TUIVoiceToTextViewStatus) {
     TUIVoiceToTextViewStatusHidden = 1,
     TUIVoiceToTextViewStatusLoading = 2,
     TUIVoiceToTextViewStatusShown = 3,
+    TUIVoiceToTextViewStatusSecurityStrike = 4,
 };
 
 typedef void (^TUIVoiceToTextCompletion)(NSInteger code, NSString *desc, TUIMessageCellData *data, NSInteger status, NSString *text);
