@@ -19,9 +19,11 @@ Pod::Spec.new do |spec|
 
   #spec.dependency 'TXIMSDK_Plus_iOS'
   #spec.library = 'c++', 'resolv', 'sqlite3'
-  
   spec.preserve_paths = 'TIMPush.framework'
-  spec.vendored_frameworks = 'TIMPush.framework'
+  spec.public_header_files = 'Framework/TIMPush.framework/Headers/*.h'
+  spec.source_files = '**/TIMPush.framework/Headers/*.h'
+  spec.vendored_frameworks = '**/TIMPush.framework'
+  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TIMPush/Framework/TIMPush.framework/Headers/'}
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
   }
