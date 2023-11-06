@@ -39,5 +39,5 @@ project(':tuivoicetotextplugin').projectDir = new File(settingsDir, '../TUIKit/T
 include ':tuiroomkit'
 project(':tuiroomkit').projectDir = new File(settingsDir, '../TUIKit/TUIRoomKit/tuiroomkit')
 
-include ':tuiofflinepush'
-project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
+//include ':tuiofflinepush'
+//project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
