@@ -13,7 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
-import com.tencent.cloud.tuikit.roomkit.view.base.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.QRCodeViewModel;
 
 public class QRCodeView extends BaseBottomDialog implements View.OnClickListener {

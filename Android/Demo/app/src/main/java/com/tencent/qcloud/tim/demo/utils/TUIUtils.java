@@ -15,7 +15,6 @@ import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageBean;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageDispatcher;
-import com.tencent.qcloud.tim.tuiofflinepush.utils.TUIOfflinePushLog;
 import com.tencent.qcloud.tuicore.BuildConfig;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -83,7 +82,7 @@ public class TUIUtils {
         Context context = TIMAppService.getAppContext();
         if (V2TIMManager.getInstance().getLoginStatus() == V2TIMManager.V2TIM_STATUS_LOGOUT) {
             if (TUIConfig.getTUIHostType() == TUIConfig.TUI_HOST_TYPE_RTCUBE) {
-                TUIOfflinePushLog.e(TAG, "rtcube not logined");
+                DemoLog.e(TAG, "rtcube not logined");
                 Map<String, Object> param = new HashMap<>();
                 param.put(TUIConstants.TIMAppKit.OFFLINE_PUSH_INTENT_DATA, intent);
                 TUICore.notifyEvent(TUIConstants.TIMAppKit.NOTIFY_RTCUBE_EVENT_KEY, TUIConstants.TIMAppKit.NOTIFY_RTCUBE_LOGIN_SUB_KEY, param);
@@ -125,6 +124,7 @@ public class TUIUtils {
 
     public static void handleOfflinePush(String ext, HandleOfflinePushCallBack callBack) {
         Context context = TIMAppService.getAppContext();
+        DemoLog.d(TAG, "handleOfflinePush ext = " + ext);
         if (V2TIMManager.getInstance().getLoginStatus() == V2TIMManager.V2TIM_STATUS_LOGOUT) {
             if (TUIConfig.getTUIHostType() == TUIConfig.TUI_HOST_TYPE_RTCUBE) {
                 offlineData = ext;
@@ -136,7 +136,7 @@ public class TUIUtils {
             intentAction.addCategory("android.intent.category.LAUNCHER");
             intentAction.addCategory("android.intent.category.DEFAULT");
             if (!TextUtils.isEmpty(ext)) {
-                intentAction.putExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY, ext);
+                intentAction.putExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY, ext);
             }
             intentAction.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intentAction);

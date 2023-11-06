@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -63,7 +64,27 @@ public class ImageMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgID = msg.getId();
-        performImage((ImageMessageBean) msg, position);
+        if (hasRiskContent) {
+            progressContainer.setVisibility(View.GONE);
+            videoPlayBtn.setVisibility(View.GONE);
+            videoDurationText.setVisibility(View.GONE);
+            sendingProgress.setVisibility(View.GONE);
+            downloadCallback = null;
+            progressListener = null;
+            ViewGroup.LayoutParams params = contentImage.getLayoutParams();
+            params.width = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            params.height = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            GlideEngine.loadImage(contentImage, R.drawable.chat_risk_image_replace_icon);
+            contentImage.setLayoutParams(params);
+            if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+                setRiskContent(itemView.getResources().getString(R.string.chat_risk_send_message_failed_alert));
+            } else {
+                setRiskContent(itemView.getResources().getString(R.string.chat_risk_image_message_alert));
+            }
+            msgContentFrame.setOnClickListener(null);
+        } else {
+            performImage((ImageMessageBean) msg, position);
+        }
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final ImageMessageBean msg) {

@@ -3,7 +3,7 @@ package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class VideoCallerWaitingViewModel {
@@ -27,11 +27,11 @@ class VideoCallerWaitingViewModel {
     }
 
     fun switchCamera(camera: TUICommonDefine.Camera) {
-        CallEngineManager.instance.switchCamera(camera)
+        EngineManager.instance.switchCamera(camera)
     }
 
     fun hangup() {
-        CallEngineManager.instance.hangup(object : TUICommonDefine.Callback {
+        EngineManager.instance.hangup(object : TUICommonDefine.Callback {
             override fun onSuccess() {}
 
             override fun onError(errCode: Int, errMsg: String?) {}

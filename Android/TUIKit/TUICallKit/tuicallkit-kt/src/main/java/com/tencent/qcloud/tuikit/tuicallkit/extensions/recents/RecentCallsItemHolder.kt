@@ -9,14 +9,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.tencent.imsdk.v2.V2TIMManager
-import com.tencent.imsdk.v2.V2TIMUserFullInfo
-import com.tencent.imsdk.v2.V2TIMValueCallback
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.util.DateTimeUtil
+import com.tencent.qcloud.tuikit.TUICommonDefine.ValueCallback
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.CallRecords
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.data.User
+import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
 import java.util.Date
 
 class RecentCallsItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -79,8 +79,8 @@ class RecentCallsItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         list.add(records.inviter.trim { it <= ' ' })
         list.remove(TUILogin.getLoginUser())
         callIconView.tag = list
-        V2TIMManager.getInstance().getUsersInfo(list, object : V2TIMValueCallback<List<V2TIMUserFullInfo>?> {
-            override fun onSuccess(userFullInfoList: List<V2TIMUserFullInfo>?) {
+        UserInfoUtils.getUserListInfo(list, object : ValueCallback<List<User>?> {
+            override fun onSuccess(userFullInfoList: List<User>?) {
                 if (userFullInfoList.isNullOrEmpty()) {
                     return
                 }
@@ -88,11 +88,9 @@ class RecentCallsItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                 val newUserList: MutableList<String> = ArrayList()
                 val nameList: MutableList<String> = ArrayList()
                 for (i in userFullInfoList.indices) {
-                    avatarList.add(userFullInfoList[i].faceUrl)
-                    newUserList.add(userFullInfoList[i].userID)
-                    val name =
-                        if (TextUtils.isEmpty(userFullInfoList[i].nickName)) userFullInfoList[i].userID else userFullInfoList[i].nickName
-                    nameList.add(name)
+                    avatarList.add(userFullInfoList[i].avatar)
+                    newUserList.add(userFullInfoList[i].id!!)
+                    nameList.add(userFullInfoList[i].nickname.get())
                 }
                 if (!TextUtils.isEmpty(records.groupId)) {
                     avatarList.add(TUILogin.getFaceUrl())
@@ -107,7 +105,7 @@ class RecentCallsItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                 }
             }
 
-            override fun onError(errorCode: Int, errorMsg: String) {
+            override fun onError(code: Int, desc: String?) {
                 val list: MutableList<Any?> = ArrayList()
                 list.add(TUILogin.getFaceUrl())
                 callIconView.displayImage(list).load(records.callId)

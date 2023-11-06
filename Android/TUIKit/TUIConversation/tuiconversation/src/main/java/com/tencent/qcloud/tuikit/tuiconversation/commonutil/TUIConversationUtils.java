@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.tuiconversation.commonutil;
 
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 
 public class TUIConversationUtils {
@@ -20,5 +22,12 @@ public class TUIConversationUtils {
         if (callBack != null) {
             callBack.onSuccess(data);
         }
+    }
+
+    public static boolean hasRiskContent(V2TIMMessage v2TIMMessage) {
+        if (v2TIMMessage != null) {
+            return v2TIMMessage.hasRiskContent() && v2TIMMessage.getStatus() != V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED;
+        }
+        return false;
     }
 }

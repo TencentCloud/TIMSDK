@@ -20,6 +20,17 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     public static final int AT_TYPE_AT_ALL = V2TIMGroupAtInfo.TIM_AT_ALL;
     public static final int AT_TYPE_AT_ALL_AND_ME = V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME;
     public static final int AT_TYPE_UNKNOWN = V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
+
+    public static final int USER_STATUS_UNKNOWN = V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN;
+    public static final int USER_STATUS_ONLINE = V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE;
+
+    public static final int LAST_MSG_STATUS_UNKNOWN = 0;
+    public static final int LAST_MSG_STATUS_SENDING = V2TIMMessage.V2TIM_MSG_STATUS_SENDING;
+    public static final int LAST_MSG_STATUS_SEND_FAIL = V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
+    public static final int LAST_MSG_STATUS_HAS_DELETED = V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED;
+    public static final int LAST_MSG_STATUS_LOCAL_IMPORTED = V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_IMPORTED;
+    public static final int LAST_MSG_STATUS_LOCAL_REVOKED = V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED;
+
     /**
      * 会话类型，自定义会话or普通会话
      *
@@ -48,7 +59,7 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
      */
     private String id;
 
-    private int statusType = V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN;
+    private int statusType = USER_STATUS_UNKNOWN;
 
     private V2TIMConversation conversation;
 
@@ -342,6 +353,15 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         }
 
         return null;
+    }
+
+    public int getLastMessageStatus() {
+        if (conversation != null) {
+            if (conversation.getLastMessage() != null) {
+                return conversation.getLastMessage().getStatus();
+            }
+        }
+        return LAST_MSG_STATUS_UNKNOWN;
     }
 
     @Override

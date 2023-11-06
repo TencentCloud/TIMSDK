@@ -1,18 +1,26 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import android.content.Context;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_PLAY_VOLUME_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_VIDEO_BITRATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_VIDEO_FPS_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_VIDEO_RESOLUTION_CHANGED;
+
 import android.content.res.Configuration;
+import android.util.Log;
 
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.component.SettingView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.mediasettings.SettingView;
 
 import java.util.Map;
 
 public class SettingViewModel
         implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
+    private static final String TAG = "SettingViewModel";
 
     private RoomStore   mRoomStore;
     private SettingView mSettingView;
@@ -20,41 +28,37 @@ public class SettingViewModel
     public SettingViewModel(SettingView settingView) {
         mSettingView = settingView;
         mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
+
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+
+        eventCenter.subscribeEngine(LOCAL_VIDEO_FPS_CHANGED, this);
+        eventCenter.subscribeEngine(LOCAL_VIDEO_RESOLUTION_CHANGED, this);
+        eventCenter.subscribeEngine(LOCAL_VIDEO_BITRATE_CHANGED, this);
+        eventCenter.subscribeEngine(LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED, this);
+        eventCenter.subscribeEngine(LOCAL_AUDIO_PLAY_VOLUME_CHANGED, this);
+        eventCenter.subscribeEngine(LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED, this);
     }
+
 
     public void destroy() {
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+
+        eventCenter.unsubscribeEngine(LOCAL_VIDEO_FPS_CHANGED, this);
+        eventCenter.unsubscribeEngine(LOCAL_VIDEO_RESOLUTION_CHANGED, this);
+        eventCenter.unsubscribeEngine(LOCAL_VIDEO_BITRATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED, this);
+        eventCenter.unsubscribeEngine(LOCAL_AUDIO_PLAY_VOLUME_CHANGED, this);
+        eventCenter.unsubscribeEngine(LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED, this);
     }
 
-    public void setVideoBitrate(int bitrate) {
-        if (bitrate == mRoomStore.videoModel.bitrate) {
-            return;
-        }
-        RoomEngineManager.sharedInstance().setVideoBitrate(bitrate);
-    }
+    public void updateViewInitState() {
+        mSettingView.onVideoFpsChanged(mRoomStore.videoModel.getFps());
+        mSettingView.onVideoResolutionChanged(mRoomStore.videoModel.getCurrentResolutionName());
 
-    public void setVideoResolution(int resolution) {
-        if (resolution == mRoomStore.videoModel.resolution) {
-            return;
-        }
-        RoomEngineManager.sharedInstance().setVideoResolution(resolution);
-    }
-
-    public void setVideoFps(int fps) {
-        if (fps == mRoomStore.videoModel.fps) {
-            return;
-        }
-        RoomEngineManager.sharedInstance().setVideoFps(fps);
-    }
-
-    public void setVideoLocalMirror(boolean enable) {
-        if (enable == mRoomStore.videoModel.isLocalMirror) {
-            return;
-        }
-        RoomEngineManager.sharedInstance().enableVideoLocalMirror(enable);
+        mSettingView.onAudioCaptureVolumeChanged(mRoomStore.audioModel.getCaptureVolume());
+        mSettingView.onAudioPlayVolumeChanged(mRoomStore.audioModel.getPlayVolume());
     }
 
     public void setAudioCaptureVolume(int volume) {
@@ -69,17 +73,21 @@ public class SettingViewModel
         RoomEngineManager.sharedInstance().enableAudioVolumeEvaluation(enable);
     }
 
-    public void startFileDumping(String filePath) {
-        RoomEngineManager.sharedInstance().startAudioRecording(filePath);
-    }
-
-    public void stopFileDumping() {
-        RoomEngineManager.sharedInstance().stopAudioRecording();
-    }
-
     @Override
     public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+        switch (event) {
+            case LOCAL_VIDEO_FPS_CHANGED:
+                mSettingView.onVideoFpsChanged(mRoomStore.videoModel.getFps());
+                break;
 
+            case LOCAL_VIDEO_RESOLUTION_CHANGED:
+                mSettingView.onVideoResolutionChanged(mRoomStore.videoModel.getCurrentResolutionName());
+                break;
+
+            default:
+                Log.w(TAG, "onEngineEvent un handle : " + event);
+                break;
+        }
     }
 
     @Override

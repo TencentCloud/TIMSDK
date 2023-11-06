@@ -1,10 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -13,12 +12,13 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +52,21 @@ public class ImageVideoScanPresenter {
     private int mIndex = 0;
     private boolean mIsForwardMode = false;
 
+    private C2CChatEventListener c2CChatEventListener;
+
     public ImageVideoScanPresenter() {
         messageChangedListener.presenterWeakReference = new WeakReference<>(this);
         TUICore.registerEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, messageChangedListener);
+    }
+
+    public void initChatEventListener() {
+        c2CChatEventListener = new C2CChatEventListener() {
+            @Override
+            public void onRecvMessageModified(TUIMessageBean messageBean) {
+                onMessageStatusChanged(messageBean);
+            }
+        };
+        TUIChatService.getInstance().addC2CChatEventListener(c2CChatEventListener);
     }
 
     public void setActivity(ImageVideoScanActivity activity) {
@@ -62,6 +74,17 @@ public class ImageVideoScanPresenter {
     }
 
     public void onMessageStatusChanged(TUIMessageBean messageBean) {
+        if (activity != null && messageBean.hasRiskContent()) {
+            TUIMessageBean currentMessageBean = activity.getCurrentMessageBean();
+            if (currentMessageBean != null && TextUtils.equals(messageBean.getId(), currentMessageBean.getId())
+                    && !currentMessageBean.hasRiskContent()) {
+                if (mAdapter != null) {
+                    mAdapter.onMessageHasRiskContent(messageBean);
+                }
+                activity.onCurrentMessageHasRiskContent(messageBean);
+            }
+            return;
+        }
         if (mAdapter != null) {
             mAdapter.onDataChanged(messageBean);
         }

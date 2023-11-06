@@ -29,7 +29,6 @@ class InviteUserButton(context: Context) : ImageView(context) {
 
     private fun addObserver() {
         viewModel.callStatus.observe(callStatusObserver)
-        viewModel.registerEvent()
     }
 
     fun clear() {
@@ -38,7 +37,6 @@ class InviteUserButton(context: Context) : ImageView(context) {
 
     private fun removeObserver() {
         viewModel.callStatus.removeObserver(callStatusObserver)
-        viewModel.unRegisterEvent()
     }
 
     private fun initView() {

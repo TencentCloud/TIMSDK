@@ -35,7 +35,12 @@ class CallKitActivity : AppCompatActivity() {
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.None) {
             TUILog.i(TAG, "callStatusObserver None -> finishActivity")
+            removeObserver()
             finishActivity()
+            VideoViewFactory.instance.clear()
+            if (TUICallDefine.Status.None == TUICallState.instance.selfUser.get().callStatus.get()) {
+                FloatWindowService.stopService()
+            }
         }
     }
 
@@ -73,24 +78,24 @@ class CallKitActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         TUILog.i(TAG, "onCreate")
         setScreenLockParams(window)
-        mActivity = this
+        activity = this
         setContentView(R.layout.tuicallkit_activity_call_kit)
         initStatusBar()
         addObserver()
+        initView()
     }
 
     override fun onResume() {
         super.onResume()
         TUILog.i(TAG, "onResume")
         if (TUICallDefine.Status.None == TUICallState.instance.selfUser.get().callStatus.get()) {
-            if (null != mActivity) {
-                mActivity?.finish()
+            if (null != activity) {
+                activity?.finish()
             }
-            mActivity = null
+            activity = null
             removeObserver()
             return
         }
-        initView()
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
         notificationManager?.cancelAll()
     }
@@ -160,37 +165,26 @@ class CallKitActivity : AppCompatActivity() {
         ToastUtil.toastLongMessage(ServiceInitializer.getAppContext().getString(msgId, userName))
     }
 
-    private fun finishActivity() {
-        if (null != mActivity) {
-            mActivity?.finish()
-        }
-        mActivity = null
-        removeObserver()
-        if (null != baseCallView && null != baseCallView!!.parent) {
-            (baseCallView!!.parent as ViewGroup).removeView(baseCallView)
-        }
-        if (null != baseCallView && baseCallView is GroupCallView) {
-            (baseCallView as GroupCallView).clear()
-        }
-        if (null != baseCallView && baseCallView is SingleCallView) {
-            (baseCallView as SingleCallView).clear()
-        }
-        baseCallView = null
-        layoutContainer = null
-        VideoViewFactory.instance.clear()
-        if (TUICallDefine.Status.None == TUICallState.instance.selfUser.get().callStatus.get()) {
-            FloatWindowService.stopService()
-        }
-    }
-
     companion object {
-        private var mActivity: AppCompatActivity? = null
+        private var activity: CallKitActivity? = null
         const val TAG = "CallKitActivity"
 
         fun finishActivity() {
-            if (null != mActivity) {
-                mActivity!!.finish()
+            if (null != activity) {
+                activity?.finish()
             }
+            if (null != activity?.baseCallView && null != activity?.baseCallView?.parent) {
+                (activity?.baseCallView?.parent as ViewGroup).removeView(activity?.baseCallView)
+            }
+            if (null != activity?.baseCallView && activity?.baseCallView is GroupCallView) {
+                (activity?.baseCallView as GroupCallView).clear()
+            }
+            if (null != activity?.baseCallView && activity?.baseCallView is SingleCallView) {
+                (activity?.baseCallView as SingleCallView).clear()
+            }
+            activity?.baseCallView = null
+            activity?.layoutContainer = null
+            activity = null
         }
     }
 }

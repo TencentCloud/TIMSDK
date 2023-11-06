@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +12,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
@@ -31,6 +32,7 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupManagerPresenter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -93,7 +95,7 @@ public class SetGroupManagerActivity extends BaseLightActivity {
             public void onSuccess(GroupMemberInfo data) {
                 ownerID = data.getAccount();
                 String faceUrl = data.getIconUrl();
-                String displayName = getDisplayName(data);
+                String displayName = data.getDisplayName();
                 GlideEngine.loadUserIcon(ownerFace, faceUrl);
                 ownerName.setText(displayName);
             }
@@ -238,8 +240,7 @@ public class SetGroupManagerActivity extends BaseLightActivity {
                     return true;
                 }
             });
-            String displayName = getDisplayName(groupMemberInfo);
-            holder.managerName.setText(displayName);
+            holder.managerName.setText(groupMemberInfo.getDisplayName());
             GlideEngine.loadUserIcon(holder.faceIcon, groupMemberInfo.getIconUrl());
         }
 
@@ -261,17 +262,6 @@ public class SetGroupManagerActivity extends BaseLightActivity {
                 managerName = itemView.findViewById(R.id.group_manage_name);
             }
         }
-    }
-
-    private String getDisplayName(GroupMemberInfo groupMemberInfo) {
-        String displayName = groupMemberInfo.getNameCard();
-        if (TextUtils.isEmpty(displayName)) {
-            displayName = groupMemberInfo.getNickName();
-        }
-        if (TextUtils.isEmpty(displayName)) {
-            displayName = groupMemberInfo.getAccount();
-        }
-        return displayName;
     }
 
     interface OnItemLongClickListener {

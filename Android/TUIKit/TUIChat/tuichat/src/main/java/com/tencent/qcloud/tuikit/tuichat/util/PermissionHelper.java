@@ -23,8 +23,12 @@ public class PermissionHelper {
         String deniedAlert = null;
         ApplicationInfo applicationInfo = TUIChatService.getAppContext().getApplicationInfo();
         int permissionIcon = 0;
+        CharSequence labelCharSequence = applicationInfo.loadLabel(TUIChatService.getAppContext().getPackageManager());
+        String appName = "App";
+        if (!TextUtils.isEmpty(labelCharSequence)) {
+            appName = labelCharSequence.toString();
+        }
         Resources resources = TUIChatService.getAppContext().getResources();
-        String appName = resources.getString(applicationInfo.labelRes);
         switch (type) {
             case PERMISSION_MICROPHONE: {
                 permission = PermissionRequester.PermissionConstants.MICROPHONE;

@@ -5,6 +5,7 @@ import android.util.Pair;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -59,8 +60,8 @@ public class GroupChatPresenter extends ChatPresenter {
             }
 
             @Override
-            public void handleRevoke(String msgId) {
-                GroupChatPresenter.this.handleRevoke(msgId);
+            public void onRecvMessageRevoked(String msgID, UserBean userBean, String reason) {
+                GroupChatPresenter.this.handleRevoke(msgID, userBean);
             }
 
             @Override

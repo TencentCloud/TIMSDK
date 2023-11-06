@@ -12,13 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMUserFullInfo;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
+import com.tencent.qcloud.tuikit.tuicallkit.base.CallingUserModel;
+import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +33,7 @@ public class RecentCallsItemHolder extends RecyclerView.ViewHolder {
     protected RelativeLayout   mLayoutDelete;
     protected CheckBox         mCheckBoxSelectCall;
     protected ConstraintLayout mLayoutView;
+    private   UserInfoUtils    mUserInfoUtils;
 
     public RecentCallsItemHolder(@NonNull View itemView) {
         super(itemView);
@@ -87,22 +87,23 @@ public class RecentCallsItemHolder extends RecyclerView.ViewHolder {
         list.remove(TUILogin.getLoginUser());
         mCallIconView.setTag(list);
 
-        V2TIMManager.getInstance().getUsersInfo(list, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
+        if (mUserInfoUtils == null) {
+            mUserInfoUtils = new UserInfoUtils();
+        }
+
+        mUserInfoUtils.getUserInfoByIdList(list, new UserInfoUtils.UserCallback() {
             @Override
-            public void onSuccess(List<V2TIMUserFullInfo> userFullInfoList) {
-                if (null == userFullInfoList || userFullInfoList.isEmpty()) {
+            public void onSuccess(List<CallingUserModel> list) {
+                if (list.isEmpty()) {
                     return;
                 }
-
                 List<Object> avatarList = new ArrayList<>();
                 List<String> newUserList = new ArrayList<>();
                 List<String> nameList = new ArrayList<>();
-                for (int i = 0; i < userFullInfoList.size(); i++) {
-                    avatarList.add(userFullInfoList.get(i).getFaceUrl());
-                    newUserList.add(userFullInfoList.get(i).getUserID());
-                    String name = (TextUtils.isEmpty(userFullInfoList.get(i).getNickName())) ?
-                            userFullInfoList.get(i).getUserID() : userFullInfoList.get(i).getNickName();
-                    nameList.add(name);
+                for (int i = 0; i < list.size(); i++) {
+                    avatarList.add(list.get(i).userAvatar);
+                    newUserList.add(list.get(i).userId);
+                    nameList.add(list.get(i).userName);
                 }
                 if (!TextUtils.isEmpty(records.groupId)) {
                     avatarList.add(TUILogin.getFaceUrl());
@@ -117,7 +118,7 @@ public class RecentCallsItemHolder extends RecyclerView.ViewHolder {
             }
 
             @Override
-            public void onError(int errorCode, String errorMsg) {
+            public void onFailed(int errorCode, String errorMsg) {
                 List<Object> list = new ArrayList<>();
                 list.add(TUILogin.getFaceUrl());
                 mCallIconView.displayImage(list).load(records.callId);

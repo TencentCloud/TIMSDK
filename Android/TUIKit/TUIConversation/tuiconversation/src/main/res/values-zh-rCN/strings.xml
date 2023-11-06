@@ -17,6 +17,7 @@
     <string name="ui_at_me">[有人@我]</string>
     <string name="ui_at_all_me">[@所有人][有人@我]</string>
     <string name="drafts">[草稿]</string>
+    <string name="conversation_risk_message_extra">[违规消息]</string>
     <string name="titlebar_mutiselect">多选</string>
     <string name="message_num">条</string>
     

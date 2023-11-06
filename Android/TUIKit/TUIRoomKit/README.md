@@ -1,25 +1,22 @@
 # TUIRoomKit Android 示例工程快速跑通
 _中文 | [English](README.en.md)_
 
-本文档主要介绍如何快速跑通 `TUIRoomKit` 示例工程，体验多人音视频互动，更详细的 `TUIRoomKit` 组件接入流程，请点击腾讯云官网文档： [**TUIRoomKit 组件 Android 接入说明** ](https://write.woa.com/document/93119926066618368)...
->!该产品目前处于限免公测期，暂不收取额外费用，目前服务计费与即时通信IM、实时音视频TRTC产品计费服务保持一致 ，您可限时免费下载 SDK 并接入体验多人音视频会话能力。若未来多人音视频 SDK 的计费方式、功能和限免公测时间等有所变更，我们将提前在官网发布公告进行说明，并通过站内信、短信、邮件等方式提前通知您，敬请关注。
-<img src="https://qcloudimg.tencent-cloud.cn/raw/526f1e79040089c7a7bb5f9be6f084f9.svg" width="900">
+本文档主要介绍如何快速跑通 `TUIRoomKit` 示例工程，体验多人音视频互动，更详细的 `TUIRoomKit` 组件接入流程，请点击腾讯云官网文档： [**TUIRoomKit 组件 Android 接入说明** ](https://cloud.tencent.com/document/product/647/81961)...
+
 
 ## 目录结构
 
 ```
 Android
 ├─ app              // 主面板，多人音视频互动场景入口
-├─ basic            // 基础模块，包含一些基础类与方法
 ├─ debug            // 调试相关
-├─ tuibeauty        // 美颜面板，包含美颜，滤镜，动效等效果
-├─ tuicore          // tui公共库，用于挂载tui组件
-├─ tuivideoseat     // 视频组件，用于播放视频流
+├─ timcommon        // 调聊天界面公共组件
+├─ tuichat          // 聊天界面组件
 └─ tuiroomkit       // 多人音视频房间业务逻辑
 ```
 
 ## 环境准备
-- 最低兼容 Android 4.2（SDK API Level 17），建议使用 Android 5.0 （SDK API Level 21）及以上版本
+- 最低兼容 Android 4.4（SDK API Level 19），建议使用 Android 5.0 （SDK API Level 21）及以上版本
 - Android Studio 3.5及以上版本
 
 ## 运行示例

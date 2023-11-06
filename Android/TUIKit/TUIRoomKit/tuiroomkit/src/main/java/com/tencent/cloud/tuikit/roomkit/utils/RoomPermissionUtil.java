@@ -2,12 +2,16 @@ package com.tencent.cloud.tuikit.roomkit.utils;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
+
+import androidx.core.content.ContextCompat;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 
@@ -50,5 +54,10 @@ public class RoomPermissionUtil {
                 .settingsTip(tip)
                 .callback(callback)
                 .request();
+    }
+
+    public static boolean hasAudioPermission() {
+        return ContextCompat.checkSelfPermission(TUILogin.getAppContext(), Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED;
     }
 }

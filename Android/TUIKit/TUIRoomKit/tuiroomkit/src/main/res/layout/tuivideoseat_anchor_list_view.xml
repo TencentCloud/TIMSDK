@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dp" />
+        android:layout_marginBottom="8dp" />
 
     <com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserDisplayView
         android:id="@+id/tuivideoseat_user_talking_video_view"

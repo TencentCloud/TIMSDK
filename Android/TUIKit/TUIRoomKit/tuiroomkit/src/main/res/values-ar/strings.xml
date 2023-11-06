@@ -13,7 +13,7 @@
     <string name="tuiroomkit_you_have_transferred_master">لقد قمت بنقل المالك</string>
     <string name="tuiroomkit_mute_all_audio">كتم الكل</string>
     <string name="tuiroomkit_not_mute_all_audio">إلغاء كتم الكل</string>
-    <string name="tuiroomkit_toast_not_mute_all_audio">يقوم المالك بإيقاف كتم الميكروفون لجميع الأعضاء، ويمكن للجمهور تشغيل الميكروفون بأنفسهم</string>
+    <string name="tuiroomkit_toast_not_mute_all_audio">يقوم المضيف بكتم صوت جميع الأعضاء، ويمكن للمشاهدين إعادة صوت صوتهم</string>
     <string name="tuiroomkit_mute_all_video">إيقاف الفيديوهات</string>
     <string name="tuiroomkit_not_mute_all_video">تشغيل الفيديوهات</string>
     <string name="tuiroomkit_toast_not_mute_all_video">يقوم المالك بإيقاف تشغيل الكاميرا لجميع الأعضاء، ويمكن للجمهور تشغيل الكاميرا بأنفسهم</string>
@@ -22,8 +22,8 @@
     <string name="tuiroomkit_dialog_cancel">إلغاء</string>
     <string name="tuiroomkit_tv_member_list">الأعضاء (%d)</string>
     <string name="tuiroomkit_confirm">تأكيد</string>
-    <string name="tuiroomkit_mute_audio_by_master">تم كتم ميكروفونك من قبل مالك الغرفة.</string>
-    <string name="tuiroomkit_un_mute_audio_by_master">تم إلغاء كتم ميكروفونك من قبل مالك الغرفة.</string>
+    <string name="tuiroomkit_mute_audio_by_master">لقد تم اسكاتك</string>
+    <string name="tuiroomkit_un_mute_audio_by_master">لقد قام المشرف بإلغاء كتم صوتك</string>
     <string name="tuiroomkit_mute_video_by_master">قام مالك الغرفة بإيقاف تشغيل كاميراك.</string>
     <string name="tuiroomkit_un_mute_video_by_master">قام مالك الغرفة بتشغيل كاميراك.</string>
     <string name="tuiroomkit_title_collection_volume">مستوى جمع الصوت</string>
@@ -57,8 +57,6 @@
     <string name="tuiroomkit_item_float">النافذة العائمة</string>
     <string name="tuiroomkit_item_expand">توسيع</string>
     <string name="tuiroomkit_item_close">إغلاق</string>
-    <string name="tuiroomkit_turn_on_camera">الكاميرا</string>
-    <string name="tuiroomkit_turn_on_microphone">الميكروفون</string>
     <string name="tuiroomkit_enter_room">الانضمام</string>
     <string name="tuiroomkit_please_input_room_number">أدخل معرف المؤتمر</string>
     <string name="tuiroomkit_create_room">إنشاء غرفة</string>
@@ -67,7 +65,6 @@
     <string name="tuiroomkit_room_type">نوع الغرفة</string>
     <string name="tuiroomkit_room_free_speech">غرفة الحديث الحر</string>
     <string name="tuiroomkit_room_raise_hand">غرفة الرفع اليدوي</string>
-    <string name="tuiroomkit_turn_on_speaker">السماعة</string>
     <string name="tuiroomkit_logout">تسجيل الخروج</string>
     <string name="tuiroomkit_kiecked_off_line">لقد قمت بتسجيل الدخول في مكان آخر</string>
     <string name="tuiroomkit_cancel">إلغاء</string>
@@ -112,10 +109,10 @@
     <string name="tuiroomkit_accept_invite">%s قبل دعوتك</string>
     <string name="tuiroomkit_reject_invite">%s رفض دعوتك</string>
     <string name="tuiroomkit_raise_hand_tip">إذا كنت تريد التحدث، فيرجى رفع يدك على الميكروفون</string>
-    <string name="tuiroomkit_receive_invitation">يدعوك المضيف للتحدث على المنصة، وقبول الدعوة يمكن تشغيل الكاميرا والميكروفون</string>
-    <string name="tuiroomkit_can_not_open_mic">لقد كتم المالك الميكروفون لجميع الأعضاء، ولا يمكن فتح الميكروفون</string>
+    <string name="tuiroomkit_receive_invitation">يدعوك المضيف للتحدث على المسرح. بمجرد صعودك على المسرح، يمكنك تشغيل الكاميرا وإلغاء كتم صوتك</string>
+    <string name="tuiroomkit_can_not_open_mic">لقد قام المضيف بكتم صوت كافة الأعضاء ولا يمكنه إعادة صوت نفسه</string>
     <string name="tuiroomkit_can_not_open_camera">لقد كتم المالك الكاميرا لجميع الأعضاء، ولا يمكن فتح الكاميرا</string>
-    <string name="tuiroomkit_mute_all_mic_toast">تم كتم الميكروفون لجميع الأعضاء، ولن يتمكن الجمهور من تشغيله</string>
+    <string name="tuiroomkit_mute_all_mic_toast">تم تشغيل جميع عمليات كتم الصوت، ولن يتمكن المشاهدون من إعادة كتم صوتها</string>
     <string name="tuiroomkit_mute_all_camera_toast">تم كتم الكاميرا لجميع الأعضاء، ولن يتمكن الجمهور من تشغيلها</string>
     <string name="tuiroomkit_item_close_camera">إغلاق الكاميرا</string>
     <string name="tuiroomkit_item_open_microphone">فتح الميكروفون</string>
@@ -154,8 +151,8 @@
     <string name="tuiroomkit_chat_access_room_invite_accept">قبول</string>
     <string name="tuiroomkit_chat_access_room_invite_reject">رفض</string>
     <string name="tuiroomkit_chat_access_room_extension_settings">إعدادات الاجتماع السريع</string>
-    <string name="tuiroomkit_chat_access_room_extension_settings_microphone">الانضمام إلى المؤتمر وتشغيل الميكروفون</string>
-    <string name="tuiroomkit_chat_access_room_extension_settings_camera">الانضمام إلى الاجتماع وتشغيل الكاميرا</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_audio">تمكين الصوت عند الانضمام إلى اجتماع</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_video">تمكين الفيديو عند الانضمام إلى اجتماع</string>
     <string name="tuiroomkit_can_not_join_room_tip">الصوت والفيديو مشغولان بواسطة وظائف أخرى، لذلك لا يمكن الانضمام إلى الاجتماع</string>
     <string name="tuiroomkit_hint_stop_live_screen">إيقاف مشاركة شاشة البث المباشر</string>
     <string name="tuiroomkit_hint_stop_live_screen_cancel">إلغاء</string>
@@ -164,8 +161,13 @@
     <string name="tuiroomkit_take_seat_request_accepted">وافق المشرف على طلبك للجلوس</string>
     <string name="tuiroomkit_take_seat_request_rejected">رفض المشرف طلبك للجلوس</string>
     <string name="tuiroomkit_other_user_in_screen_sharing">قام مستخدمون آخرون بتشغيل مشاركة الشاشة</string>
-    <string name="tuiroomkit_open_mic_agree">%s وافق على فتح طلب الميكروفون</string>
-    <string name="tuiroomkit_open_mic_reject">%s رفض طلب فتح الميكروفون</string>
+    <string name="tuiroomkit_open_mic_agree">%s وافق على طلب إلغاء كتم الصوت</string>
+    <string name="tuiroomkit_open_mic_reject">%s تم رفض طلب إلغاء كتم الصوت</string>
     <string name="tuiroomkit_open_camera_agree">%s وافق على طلب فتح الفيديو</string>
     <string name="tuiroomkit_open_camera_reject">%s رفض طلب فتح الفيديو</string>
+
+    <string name="tuiroomkit_video_resolution_smooth">سلس</string>
+    <string name="tuiroomkit_video_resolution_sd">الوضوح القياسي</string>
+    <string name="tuiroomkit_video_resolution_hd">الوضوح العالي</string>
+    <string name="tuiroomkit_video_resolution_uhd">الوضوح الفائق</string>
 </resources>

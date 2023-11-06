@@ -37,6 +37,9 @@ public class SoundMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
         SoundMessageBean message = (SoundMessageBean) msg;
+        if (hasRiskContent) {
+            setRiskContent(itemView.getResources().getString(R.string.chat_risk_sound_message_alert));
+        }
         if (message.isSelf()) {
             Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
             playingDrawable.setAutoMirrored(true);
@@ -78,14 +81,19 @@ public class SoundMessageHolder extends MessageContentHolder {
         }
 
         audioTimeText.setText(duration + "''");
-        msgContentFrame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onMessageClick(view, position, message);
+        if (!hasRiskContent) {
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(view, position, message);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            unreadAudioText.setVisibility(View.GONE);
+            msgContentFrame.setOnClickListener(null);
+        }
 
         if (message.isPlaying()) {
             audioPlayImage.setImageResource(R.drawable.play_voice_message);

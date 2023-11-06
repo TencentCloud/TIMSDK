@@ -9,8 +9,8 @@
 
     <RelativeLayout
         android:id="@+id/ll_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/tuiroomkit_bottom_view_width"
+        android:layout_height="@dimen/tuiroomkit_bottom_view_height"
         android:layout_alignParentTop="true"
         android:layout_marginTop="60dp"
         android:background="@drawable/tuiroomkit_bg_bottom_item_black" >
@@ -18,8 +18,8 @@
         <RelativeLayout
             android:id="@+id/bottom_extension_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_height="@dimen/tuiroomkit_bottom_list_view_height"
+            android:layout_marginTop="@dimen/tuiroomkit_bottom_extension_view_margin_top"
             android:visibility="invisible" >
 
         </RelativeLayout>
@@ -27,22 +27,20 @@
         <LinearLayout
             android:id="@+id/bottom_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/tuiroomkit_bottom_list_view_height"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="8dp"
             android:orientation="horizontal">
 
             <RelativeLayout
                 android:id="@+id/bottom_main_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_width="@dimen/tuiroomkit_bottom_main_view_width"
+                android:layout_height="wrap_content" />
 
             <RelativeLayout
                 android:id="@+id/ll_item_expand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
                 android:orientation="vertical">
 
                 <LinearLayout

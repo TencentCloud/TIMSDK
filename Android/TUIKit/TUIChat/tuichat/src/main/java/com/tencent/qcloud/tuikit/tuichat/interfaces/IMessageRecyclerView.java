@@ -29,4 +29,6 @@ public interface IMessageRecyclerView {
     boolean isDisplayJumpMessageLayout();
 
     void displayBackToNewMessage(boolean display, String messageId, int count);
+
+    default void scrollToEnd() {}
 }

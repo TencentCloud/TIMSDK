@@ -3,7 +3,7 @@ package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class AudioAndVideoCalleeWaitingViewModel {
@@ -14,7 +14,7 @@ class AudioAndVideoCalleeWaitingViewModel {
     }
 
     fun reject() {
-        CallEngineManager.instance.reject(object : TUICommonDefine.Callback {
+        EngineManager.instance.reject(object : TUICommonDefine.Callback {
             override fun onSuccess() {}
 
             override fun onError(errCode: Int, errMsg: String?) {}
@@ -22,7 +22,7 @@ class AudioAndVideoCalleeWaitingViewModel {
     }
 
     fun accept() {
-        CallEngineManager.instance.accept(object : TUICommonDefine.Callback{
+        EngineManager.instance.accept(object : TUICommonDefine.Callback{
             override fun onSuccess() {}
 
             override fun onError(errCode: Int, errMsg: String?) {}

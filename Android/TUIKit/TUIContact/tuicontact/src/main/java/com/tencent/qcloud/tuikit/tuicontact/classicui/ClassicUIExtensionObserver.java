@@ -30,6 +30,7 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
             if (userID instanceof String) {
                 TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
                 extensionInfo.setIcon(TUIThemeManager.getAttrResId(getContext(), R.attr.contact_chat_extension_title_bar_more_menu));
+                extensionInfo.setWeight(100);
                 extensionInfo.setExtensionListener(new TUIExtensionEventListener() {
                     @Override
                     public void onClicked(Map<String, Object> param) {

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.tencent.qcloud.tuicore.TUIConstants
+import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
@@ -53,6 +55,8 @@ class GroupCallView(context: Context) : BaseCallView(context) {
         refreshInviteUserIconView()
         refreshCallStatusView()
         refreshTimerView()
+
+        showAntiFraudReminder()
     }
 
     init {
@@ -166,7 +170,10 @@ class GroupCallView(context: Context) : BaseCallView(context) {
     }
 
     private fun refreshInviteUserIconView() {
-        if (TUICallDefine.Role.Caller == viewModel.callRole.get() || TUICallDefine.Status.Accept == viewModel.callStatus.get()) {
+        if ((TUICallDefine.Role.Caller == viewModel.callRole.get()
+                    && TUICallDefine.Status.None != viewModel.callStatus.get())
+            || TUICallDefine.Status.Accept == viewModel.callStatus.get()
+        ) {
             layoutInviteUserIcon?.removeAllViews()
             inviteUserButton?.clear()
             inviteUserButton = InviteUserButton(context)
@@ -220,6 +227,21 @@ class GroupCallView(context: Context) : BaseCallView(context) {
             layoutRender!!.removeAllViews()
             layoutRender!!.addView(groupCallVideoLayout)
         }
+    }
+
+    private fun showAntiFraudReminder() {
+        if (TUICallDefine.Status.Accept != viewModel.callStatus.get()) {
+            return
+        }
+
+        if (TUICore.getService(TUIConstants.Service.TUI_PRIVACY) == null) {
+            return
+        }
+        var map = HashMap<String, Any?>()
+        map[TUIConstants.Privacy.PARAM_DIALOG_CONTEXT] = context
+        TUICore.callService(
+            TUIConstants.Service.TUI_PRIVACY, TUIConstants.Privacy.METHOD_ANTO_FRAUD_REMINDER, map, null
+        )
     }
 
     private fun addObserver() {

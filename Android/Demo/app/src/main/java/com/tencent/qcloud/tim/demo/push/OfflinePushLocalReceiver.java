@@ -15,7 +15,7 @@ public class OfflinePushLocalReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         DemoLog.d(TAG, "BROADCAST_PUSH_RECEIVER intent = " + intent);
         if (intent != null) {
-            String ext = intent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
+            String ext = intent.getStringExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY);
             TUIUtils.handleOfflinePush(ext, null);
         } else {
             DemoLog.e(TAG, "onReceive ext is null");

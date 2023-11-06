@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuivoicetotextplugin.widget;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -86,6 +87,13 @@ public class VoiceToTextMessageLayoutProxy {
             if (TextUtils.equals(themeStyle, TUIConstants.TUIChat.THEME_STYLE_MINIMALIST)) {
                 convertedText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                     convertedText.getResources().getDimension(com.tencent.qcloud.tuikit.timcommon.R.dimen.chat_minimalist_message_text_size));
+            } else {
+                if (msg.hasRiskContent()) {
+                    convertedText.setText(R.string.convert_to_text_risk_content_failed_tip);
+                    convertedText.setTextColor(viewGroup.getResources().getColor(R.color.convert_to_text_risk_tip_color));
+                    return;
+                }
+                convertedText.setTextColor(Color.BLACK);
             }
             if (MessageProperties.getInstance().getChatContextFontSize() != 0) {
                 convertedText.setTextSize(MessageProperties.getInstance().getChatContextFontSize());

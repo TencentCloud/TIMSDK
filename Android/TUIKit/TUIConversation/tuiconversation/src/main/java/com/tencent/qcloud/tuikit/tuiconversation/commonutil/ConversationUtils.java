@@ -209,15 +209,6 @@ public class ConversationUtils {
         return maxWidth;
     }
 
-    public static void checkRepeatForList(List<?> list) {
-        if (list == null || list.isEmpty()) {
-            return;
-        }
-        LinkedHashSet hashSet = new LinkedHashSet<>(list);
-        list.clear();
-        list.addAll(hashSet);
-    }
-
     public static String getConversationAllGroupName() {
         return TUIConversationService.getAppContext().getResources().getString(R.string.conversation_page_all);
     }

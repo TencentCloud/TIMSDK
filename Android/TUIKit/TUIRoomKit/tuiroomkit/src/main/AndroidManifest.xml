@@ -15,7 +15,7 @@
     <application>
 
         <activity
-            android:name=".view.activity.RoomMainActivity"
+            android:name=".view.page.RoomMainActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -41,7 +41,7 @@
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name="com.tencent.cloud.tuikit.roomkit.view.service.RoomFloatViewService"
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.floatwindow.videoplaying.RoomFloatViewService"
             android:enabled="true"
             android:exported="false" />
         <provider

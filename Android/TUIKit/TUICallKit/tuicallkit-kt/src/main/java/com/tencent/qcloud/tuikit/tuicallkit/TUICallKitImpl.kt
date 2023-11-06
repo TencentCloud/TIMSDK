@@ -21,7 +21,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.data.OfflinePushInfoConfig
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingKeepAliveFeature
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
 import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
@@ -74,7 +74,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
         TUILog.i(TAG, "TUICallKit call{userId:${userId}, callMediaType:${callMediaType}, params:${params?.toString()}")
         callingBellFeature = CallingBellFeature(context)
         callingKeepAliveFeature = CallingKeepAliveFeature(context)
-        CallEngineManager.instance.call(userId, callMediaType, params, object : Callback {
+        EngineManager.instance.call(userId, callMediaType, params, object : Callback {
             override fun onSuccess() {
                 initAudioPlayDevice()
                 var intent = Intent(context, CallKitActivity::class.java)
@@ -108,7 +108,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
         )
         callingBellFeature = CallingBellFeature(context)
         callingKeepAliveFeature = CallingKeepAliveFeature(context)
-        CallEngineManager.instance.groupCall(groupId, userIdList, callMediaType!!, params, object : Callback {
+        EngineManager.instance.groupCall(groupId, userIdList, callMediaType!!, params, object : Callback {
             override fun onSuccess() {
                 initAudioPlayDevice()
                 var intent = Intent(context, CallKitActivity::class.java)
@@ -126,7 +126,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
 
     override fun joinInGroupCall(roomId: RoomId?, groupId: String?, mediaType: TUICallDefine.MediaType?) {
         TUILog.i(TAG, "TUICallKit joinInGroupCall{roomId:${roomId}, groupId:${groupId}, mediaType:${mediaType}")
-        CallEngineManager.instance.joinInGroupCall(roomId, groupId, mediaType)
+        EngineManager.instance.joinInGroupCall(roomId, groupId, mediaType)
     }
 
     override fun setCallingBell(filePath: String?) {
@@ -137,12 +137,12 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
 
     override fun enableMuteMode(enable: Boolean) {
         TUILog.i(TAG, "TUICallKit enableMuteMode{enable:${enable}")
-        CallEngineManager.instance.enableMuteMode(enable)
+        EngineManager.instance.enableMuteMode(enable)
     }
 
     override fun enableFloatWindow(enable: Boolean) {
         TUILog.i(TAG, "TUICallKit enableFloatWindow{enable:${enable}")
-        CallEngineManager.instance.enableFloatWindow(enable)
+        EngineManager.instance.enableFloatWindow(enable)
     }
 
     fun queryOfflineCall() {
@@ -291,6 +291,6 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
         } else {
             TUICommonDefine.AudioPlaybackDevice.Speakerphone
         }
-        TUICallState.instance.audioPlayoutDevice.set(device)
+        EngineManager.instance.selectAudioPlaybackDevice(device)
     }
 }

@@ -43,6 +43,7 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
     public void initDefault() {
         mContactListView.setPresenter(presenter);
         presenter.setContactListView(mContactListView);
+        presenter.setIsClassicStyle(true);
         mContactListView.loadDataSource(ContactListView.DataSource.CONTACT_LIST);
     }
 

@@ -24,10 +24,10 @@
 
         <ImageView
             android:id="@+id/file_icon_iv"
-            android:background="@color/transparent"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
+            android:background="@color/transparent"
             android:scaleType="fitXY"
             android:src="@drawable/chat_file_type_icon_none" />
 
@@ -57,13 +57,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/file_content" />
 
-        <com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLineTextLayout
-            android:id="@+id/file_msg_time_in_line_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-3dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/file_size_tv"
-            app:layout_constraintTop_toTopOf="@id/file_size_tv" />
+    <com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLineTextLayout
+        android:id="@+id/file_msg_time_in_line_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/file_size_tv"
+        app:layout_constraintTop_toTopOf="@id/file_size_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

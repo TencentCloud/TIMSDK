@@ -14,7 +14,8 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.activity.RoomMainActivity;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomPermissionUtil;
+import com.tencent.cloud.tuikit.roomkit.view.page.RoomMainActivity;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 public class TUIRoomKitImpl extends TUIRoomKit {
@@ -63,9 +64,9 @@ public class TUIRoomKitImpl extends TUIRoomKit {
     }
 
     @Override
-    public void enterRoom(String roomId, boolean enableMic, boolean enableCamera, boolean isSoundOnSpeaker,
+    public void enterRoom(String roomId, boolean enableAudio, boolean enableVideo, boolean isSoundOnSpeaker,
                           TUIRoomDefine.GetRoomInfoCallback callback) {
-        Log.i(TAG, "enterRoom roomId=" + roomId + " enableMic=" + enableMic + " enableCamera=" + enableCamera
+        Log.i(TAG, "enterRoom roomId=" + roomId + " enableAudio=" + enableAudio + " enableVideo=" + enableVideo
                 + " isSoundOnSpeaker=" + isSoundOnSpeaker);
         if (TextUtils.isEmpty(roomId)) {
             if (callback != null) {
@@ -79,7 +80,7 @@ public class TUIRoomKitImpl extends TUIRoomKit {
                 if (RoomEngineManager.sharedInstance().getRoomStore().isAutoShowRoomMainUi()) {
                     goRoomMainActivity();
                 }
-                decideMediaStatus(enableMic, enableCamera, isSoundOnSpeaker);
+                decideMediaStatus(enableAudio, enableVideo, isSoundOnSpeaker);
                 if (callback != null) {
                     callback.onSuccess(roomInfo);
                 }
@@ -94,22 +95,41 @@ public class TUIRoomKitImpl extends TUIRoomKit {
         });
     }
 
-    private void decideMediaStatus(boolean enableMic, boolean enableCamera, boolean isSoundOnSpeaker) {
+    private void decideMediaStatus(boolean enableAudio, boolean enableVideo, boolean isSoundOnSpeaker) {
         decideAudioRoute(isSoundOnSpeaker);
-        if (isMicCanOpen(enableMic)) {
+
+        boolean isPushAudio = isPushAudio(enableAudio);
+        if (RoomPermissionUtil.hasAudioPermission()) {
+            if (!isPushAudio) { // 先静音再开 mic，避免漏音
+                RoomEngineManager.sharedInstance().muteLocalAudio();
+            }
             RoomEngineManager.sharedInstance().openLocalMicrophone(new TUIRoomDefine.ActionCallback() {
                 @Override
                 public void onSuccess() {
-                    decideCameraStatus(enableCamera);
+                    decideCameraStatus(enableVideo);
                 }
 
                 @Override
                 public void onError(TUICommonDefine.Error error, String s) {
-                    decideCameraStatus(enableCamera);
+                    decideCameraStatus(enableVideo);
                 }
             });
         } else {
-            decideCameraStatus(enableCamera);
+            if (isPushAudio) {
+                RoomEngineManager.sharedInstance().openLocalMicrophone(new TUIRoomDefine.ActionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        decideCameraStatus(enableVideo);
+                    }
+
+                    @Override
+                    public void onError(TUICommonDefine.Error error, String s) {
+                        decideCameraStatus(enableVideo);
+                    }
+                });
+            } else {
+                decideCameraStatus(enableVideo);
+            }
         }
     }
 
@@ -117,9 +137,9 @@ public class TUIRoomKitImpl extends TUIRoomKit {
         RoomEngineManager.sharedInstance().setAudioRoute(isSoundOnSpeaker);
     }
 
-    private void decideCameraStatus(boolean enableCamera) {
+    private void decideCameraStatus(boolean enableVideo) {
         RoomStore roomStore = RoomEngineManager.sharedInstance().getRoomStore();
-        if (!enableCamera) {
+        if (!enableVideo) {
             return;
         }
         if (roomStore.roomInfo.isCameraDisableForAllUser && roomStore.userModel.role == GENERAL_USER) {
@@ -130,15 +150,18 @@ public class TUIRoomKitImpl extends TUIRoomKit {
         }
     }
 
-    private boolean isMicCanOpen(boolean enableMic) {
+    private boolean isPushAudio(boolean enableAudio) {
         RoomStore roomStore = RoomEngineManager.sharedInstance().getRoomStore();
-        if (!enableMic) {
+        if (!enableAudio) {
             return false;
         }
         if (roomStore.roomInfo.isMicrophoneDisableForAllUser && roomStore.userModel.role == GENERAL_USER) {
             return false;
         }
-        return roomStore.roomInfo.speechMode != SPEAK_AFTER_TAKING_SEAT || roomStore.userModel.role == ROOM_OWNER;
+        if (roomStore.userModel.role == ROOM_OWNER) {
+            return true;
+        }
+        return roomStore.roomInfo.speechMode != SPEAK_AFTER_TAKING_SEAT;
     }
 
     private void goRoomMainActivity() {

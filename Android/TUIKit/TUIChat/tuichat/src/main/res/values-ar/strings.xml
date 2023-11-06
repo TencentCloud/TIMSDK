@@ -258,4 +258,16 @@
     <string name="chat_quick_tap_message_action_from_me">أنا %s "%s"</string>
     <string name="chat_quick_tap_message_action_to_me">"%s" %s لي</string>
     <string name="chat_quick_tap_message_action">"%s" %s "%s"</string>
+
+    <string name="chat_risk_image_message_alert">يحتوي على محتوى حساس، غير قادر على العرض</string>
+    <string name="chat_risk_sound_message_alert">يحتوي على محتوى حساس، غير قادر على الاستماع</string>
+    <string name="chat_risk_send_message_failed_alert">يحتوي على محتوى حساس، فشل في الإرسال</string>
+    <string name="chat_risk_quote_message_alert">يحتوي على محتوى حساس، فشلت الاقتباس</string>
+    <string name="chat_risk_reply_message_alert">يحتوي على محتوى حساس، فشلت الرد</string>
+    <string name="chat_scan_risk_image_message_alert">تم اكتشاف أن الصورة تحتوي على محتوى حساس، غير قادر على العرض مؤقتا</string>
+    <string name="chat_scan_risk_video_message_alert">تم اكتشاف أن الفيديو يحتوي على محتوى حساس، غير قادر على العرض مؤقتا</string>
+    <string name="chat_risk_content">[محتوى مخالف]</string>
+    <string name="chat_risk_sound">[صوت مخالف]</string>
+    <string name="chat_risk_image">[صورة مخالفة]</string>
+    <string name="chat_risk_video">[فيديو مخالف]</string>
 </resources>

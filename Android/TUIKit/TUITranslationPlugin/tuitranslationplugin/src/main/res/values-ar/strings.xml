@@ -10,4 +10,5 @@
     <string name="forward_action">إعادة توجيه</string>
     <string name="hide_action">إخفاء</string>
     <string name="copy_success_tip">تم النسخ بنجاح</string>
+    <string name="translation_risk_content_failed_tip">يحتوي على محتوى حساس، فشل الترجمة</string>
 </resources>

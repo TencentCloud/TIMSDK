@@ -13,6 +13,9 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +63,14 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
         param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.USER_ID, chatInfo.getId());
         List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, param);
         if (!extensionInfoList.isEmpty()) {
+            Collections.sort(extensionInfoList, new Comparator<TUIExtensionInfo>() {
+                @Override
+                public int compare(TUIExtensionInfo o1, TUIExtensionInfo o2) {
+                    return o2.getWeight() - o1.getWeight();
+                }
+            });
+
+            Collections.singletonList(extensionInfoList);
             TUIExtensionInfo extensionInfo = extensionInfoList.get(0);
             titleBar.setRightIcon((Integer) extensionInfo.getIcon());
             titleBar.setOnRightClickListener(new View.OnClickListener() {

@@ -226,7 +226,7 @@ public class TUICallingViewManager implements ITUINotification {
         if (TUICallDefine.Status.Waiting.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())) {
             initSingleWaitingView();
         } else {
-            initAudioPlayDevice();
+            mCallingAction.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece);
             initSingleAcceptCallView();
         }
 
@@ -417,7 +417,6 @@ public class TUICallingViewManager implements ITUINotification {
         mBaseCallView.updateFunctionView(mFunctionView);
 
         updateViewColor();
-        updateFunctionStatus();
         initFloatingWindowBtn();
     }
 
@@ -573,6 +572,11 @@ public class TUICallingViewManager implements ITUINotification {
         TUICallDefine.MediaType mediaType = TUICallingStatusManager.sharedInstance(mContext).getMediaType();
         TUICommonDefine.AudioPlaybackDevice device = TUICallDefine.MediaType.Audio.equals(mediaType)
                 ? TUICommonDefine.AudioPlaybackDevice.Earpiece : TUICommonDefine.AudioPlaybackDevice.Speakerphone;
+        if (Role.Caller.equals(TUICallingStatusManager.sharedInstance(mContext).getCallRole())) {
+            mCallingAction.selectAudioPlaybackDevice(device);
+        } else {
+            mCallingAction.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone);
+        }
         TUICallingStatusManager.sharedInstance(mContext).updateAudioPlaybackDevice(device);
     }
 

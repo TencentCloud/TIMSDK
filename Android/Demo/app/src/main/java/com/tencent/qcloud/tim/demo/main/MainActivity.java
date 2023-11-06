@@ -665,8 +665,8 @@ public class MainActivity extends BaseLightActivity {
                 Intent minimalistIntent = new Intent(this, MainMinimalistActivity.class);
                 minimalistIntent.putExtras(intent);
                 if (intent != null) {
-                    String ext = intent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
-                    minimalistIntent.putExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY, ext);
+                    String ext = intent.getStringExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY);
+                    minimalistIntent.putExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY, ext);
                 }
                 minimalistIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(minimalistIntent);
@@ -685,7 +685,7 @@ public class MainActivity extends BaseLightActivity {
                 }
             });
         } else {
-            String ext = intent.getStringExtra(TUIConstants.TUIOfflinePush.NOTIFICATION_EXT_KEY);
+            String ext = intent.getStringExtra(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY);
             TUIUtils.handleOfflinePush(ext, new HandleOfflinePushCallBack() {
                 @Override
                 public void onHandleOfflinePush(boolean hasLogged) {

@@ -42,7 +42,6 @@ public class QuoteMessageHolder extends TextMessageHolder {
     private final FrameLayout imageFrame;
     private final ImageView imageIv;
     private final ImageView playIv;
-    protected String mImagePath = null;
     // file
     private final FrameLayout fileFrame;
     private final TextView fileNameTv;
@@ -81,6 +80,9 @@ public class QuoteMessageHolder extends TextMessageHolder {
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msg.setSelectText(msg.getExtra());
+        if (hasRiskContent) {
+            setRiskContent(itemView.getResources().getString(R.string.chat_risk_send_message_failed_alert));
+        }
         QuoteMessageBean quoteMessageBean = (QuoteMessageBean) msg;
         TUIMessageBean replyContentBean = quoteMessageBean.getContentMessageBean();
         String replyContent = replyContentBean.getExtra();
@@ -136,7 +138,19 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
         TUIReplyQuoteBean replyQuoteBean = quoteMessageBean.getReplyQuoteBean();
         if (originMessage != null) {
-            performQuote(replyQuoteBean, quoteMessageBean);
+            if (replyQuoteBean != null && replyQuoteBean.hasRiskContent()) {
+                String originAbstract = itemView.getResources().getString(R.string.chat_risk_content);
+                if (replyQuoteBean instanceof SoundReplyQuoteBean) {
+                    originAbstract = itemView.getResources().getString(R.string.chat_risk_sound);
+                } else if (replyQuoteBean instanceof ImageReplyQuoteBean) {
+                    originAbstract = itemView.getResources().getString(R.string.chat_risk_image);
+                } else if (replyQuoteBean instanceof VideoReplyQuoteBean) {
+                    originAbstract = itemView.getResources().getString(R.string.chat_risk_video);
+                }
+                performTextMessage(originAbstract);
+            } else {
+                performQuote(replyQuoteBean, quoteMessageBean);
+            }
         } else {
             performNotFound(replyQuoteBean, quoteMessageBean);
         }

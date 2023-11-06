@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="suggest">建议投诉</string>
+    <string name="session_end">会话结束</string>
+    <string name="session_timeout">会话超时</string>
+    <string name="invite_to_evaluation">感谢您使用我们的服务，请对此次服务进行评价</string>
+    <string name="submit_the_evaluation">提交评价</string>
+    <string name="satisfaction_evaluation">满意度评价</string>
+    <string name="extension_satisfaction_evaluation">服务评价</string>
+    <string name="customer_service">客服号</string>
+    <string name="send_product_info">发送商品</string>
+    <string name="product_card_input_info">请填写商品信息</string>
+    <string name="product_card_close">关闭</string>
+    <string name="product_card_name">名称</string>
+    <string name="product_card_description">描述</string>
+    <string name="product_card_picture_url">图片</string>
+    <string name="product_card_jump_url">跳转</string>
+    <string name="product_card_confirm">提交商品信息</string>
+    <string name="product_info_input_empty">输入不能为空</string>
+    <string name="common_phrases">常用语</string>
+    <string name="customer_service_unsupport_tips">客服插件是增值付费功能，当前处于内测阶段，请点击进入[腾讯云即时通信 IM 群]申请开通试用</string>
+    <string name="customer_service_buying_guidelines">腾讯云即时通信 IM 群</string>
+    <string name="customer_service_i_know">我知道了</string>
+
+    <string-array name="common_phrases_list">
+        <item>是否有货？</item>
+        <item>可以便宜一点吗？</item>
+        <item>有什么赠品？</item>
+        <item>什么时候发货？</item>
+        <item>发什么快递？</item>
+        <item>什么时候到货？</item>
+    </string-array>
+</resources>

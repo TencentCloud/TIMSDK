@@ -30,6 +30,7 @@ public final class TUIConstants {
         public static final String TUI_LIVE                = "TUILiveService";
         public static final String TUI_BEAUTY              = "TUIBeauty";
         public static final String TUI_OFFLINEPUSH         = "TUIOfflinePushService";
+        public static final String TIM_PUSH_PLUGIN         = "TIMPushService";
         public static final String TUI_COMMUNITY           = "TUICommunityService";
         public static final String TUI_DEMO                = "TIMAppService";
         public static final String TUI_POLL                = "TUIPollService";
@@ -115,7 +116,12 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_DISPLAY_MESSAGE_BEAN  = "eventSubKeyDisplayMessageBean";
         public static final String EVENT_SUB_KEY_MESSAGE_BOTTOM_CHANGED  = "eventSubKeyMessageBottomChanged";
 
+        public static final String EVENT_KEY_CHAT_VIEW_EVENT = "eventKeyChatViewEvent";
+        public static final String EVENT_SUB_KEY_CHAT_VIEW_OPEN = "eventSubKeyChatViewOpen";
+        public static final String EVENT_SUB_KEY_CHAT_VIEW_EXIT = "eventSubKeyChatViewExit";
+
         public static final String C2C_CHAT_ACTIVITY_NAME   = "TUIC2CChatActivity";
+
         public static final String GROUP_CHAT_ACTIVITY_NAME = "TUIGroupChatActivity";
         public static final String CHAT_ID                  = "chatId";
         public static final String CHAT_NAME                = "chatName";
@@ -221,6 +227,15 @@ public final class TUIConstants {
                 public static final String CLASSIC_EXTENSION_ID    = "ChatMessageBottomExtensionClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ChatMessageBottomExtensionMinimalistID";
             }
+
+            public static class ChatUserIconClickedProcessor {
+                public static final String CLASSIC_EXTENSION_ID = "ChatUserIconClickedProcessorExtensionClassicID";
+                public static final String USER_ID = "ChatUserID";
+            }
+
+            public static class InputViewFloatLayer {
+                public static final String CLASSIC_EXTENSION_ID = "InputViewFloatLayerExtensionClassicID";
+            }
         }
 
         public static class Method {
@@ -322,6 +337,7 @@ public final class TUIConstants {
 
         public static final String GROUP_TYPE_KEY              = "type";
         public static final String COMMUNITY_SUPPORT_TOPIC_KEY = "communitySupportTopic";
+        public static final String CONTEXT = "context";
 
         public static final int GROUP_TYPE_PRIVATE   = 0;
         public static final int GROUP_TYPE_PUBLIC    = 1;
@@ -336,6 +352,11 @@ public final class TUIConstants {
                 public static final String CLASSIC_EXTENSION_ID    = "ContactFriendProfileItemClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ContactFriendProfileItemMinimalistID";
                 public static final String USER_ID                 = "ContactFriendProfileUserID";
+            }
+
+            public static class ContactItem {
+                public static final String CLASSIC_EXTENSION_ID = "ContactItemClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "ContactItemMinimalistID";
             }
         }
 
@@ -544,6 +565,89 @@ public final class TUIConstants {
         public static final String NOTIFICATION_BROADCAST_ACTION = "com.tencent.tuiofflinepush.BROADCAST_PUSH_RECEIVER";
     }
 
+    public static final class TIMPush {
+        public static final String SERVICE_NAME = Service.TIM_PUSH_PLUGIN;
+
+        public static final String METHOD_REGISTER_PUSH = "registerTIMPush";
+        public static final String METHOD_REGISTER_PUSH_WITH_JSON = "registerTIMPushWithJsonParam";
+        public static final String REGISTER_PUSH_WITH_JSON_KEY = "registerTIMPushWithJsonParamKey";
+        public static final String METHOD_UNREGISTER_PUSH = "unRegiterTIMPush";
+
+        public static final String METHOD_SET_PUSH_BRAND_ID = "setTIMPushBrandId";
+        public static final String METHOD_GET_PUSH_BRAND_ID = "getTIMPushBrandId";
+        public static final String PUSH_BRAND_ID_KEY = "TIMPushBrandIdKey";
+
+        public static final String METHOD_CONFIG_FCM_PRIVATE_RING = "configTIMPushFCMPrivateRing";
+        public static final String CONFIG_FCM_CHANNEL_ID_KEY = "configTIMPushFCMChannelIdKey";
+        public static final String CONFIG_FCM_PRIVATE_RING_NAME_KEY = "configTIMPushFCMPrivateRingNameKey";
+        public static final String CONFIG_ENABLE_FCM_PRIVATE_RING_KEY = "configEnableTIMPushFCMPrivateRingKey";
+
+        public static final String METHOD_CHECK_PUSH_STATUS = "checkTIMPushStatus";
+        public static final String CHECK_PUSH_STATUS_RESULT_LEY = "checkTIMPushStatusResultKey";
+
+        public static final String METHOD_ENABLE_NOTIFICATION_LISTENER = "enableNotificationListener";
+        public static final String ENABLE_NOTIFICATION_LISTENER_KEY = "enableNotificationListenerKey";
+
+        public static final String METHOD_DISABLE_AUTO_REGISTER_PUSH = "disableAutoRegisterPush";
+        public static final String DISABLE_AUTO_REGISTER_PUSH_KEY = "disableAutoRegisterPushKey";
+
+        public static final String EVENT_NOTIFY = "TIMPushNotifyEvent";
+        public static final String EVENT_NOTIFY_NOTIFICATION = "TIMPushNotifyEvent";
+        public static final String NOTIFICATION_INTENT_KEY = "TIMPushNotifyIntentKey";
+        public static final String NOTIFICATION_EXT_KEY = "ext";
+
+        public static final String NOTIFICATION_BROADCAST_ACTION = "com.tencent.TIMPush.BROADCAST_PUSH_RECEIVER";
+
+        public static final String METHOD_XIAOMI_CLICK_INTENT = "xiaomiClickIntent";
+        public static final String XIAOMI_CLICK_INTENT_KEY = "xiaomiClickIntentKey";
+
+        public static class XiaoMi {
+            public static final String XIAOMI_SERVICE_NAME = "TIMXiaoMiPushPlugin";
+            public static final String METHOD_REGISTER_XIAOMI_PUSH = "registerTIMXiaoMiPush";
+            public static final String XIAOMI_APPID = "xiaoMiAppId";
+            public static final String XIAOMI_APPKEY = "xiaomiAppKey";
+        }
+
+        public static class HuaWei {
+            public static final String HUAWEI_SERVICE_NAME = "TIMHuaWeiPushPlugin";
+            public static final String METHOD_REGISTER_HUAWEI_PUSH = "registerTIMHuaWeiPush";
+        }
+
+        public static class FCM {
+            public static final String FCM_SERVICE_NAME = "TIMFCMPushPlugin";
+            public static final String METHOD_REGISTER_FCM_PUSH = "registerTIMFCMPush";
+            public static final String ENABLE_FCM_PRIVATE_RING = "enableFCMPrivateRing";
+            public static final String FCM_CHANNEL_ID = "fcmChannelId";
+            public static final String FCM_CHANNEL_SOUND_NAME = "fcmChannelSoundName";
+        }
+
+        public static class Honor {
+            public static final String HONOR_SERVICE_NAME = "TIMHonorPushPlugin";
+            public static final String METHOD_REGISTER_HONOR_PUSH = "registerTIMHonorPush";
+        }
+
+        public static class MeiZu {
+            public static final String MEIZU_SERVICE_NAME = "TIMMeiZuPushPlugin";
+            public static final String METHOD_REGISTER_MEIZU_PUSH = "registerTIMMeiZuPush";
+            public static final String MEIZU_APPID = "meiZuAppId";
+            public static final String MEIZU_APPKEY = "meiZuAppKey";
+            public static final String METHOD_IS_MEIZU_DEVICE = "isMeiZuDeviceMethod";
+            public static final String IS_MEIZU_DEVICE_KEY = "isMeiZuDeviceKey";
+        }
+
+        public static class OPPO {
+            public static final String OPPO_SERVICE_NAME = "TIMOPPOPushPlugin";
+            public static final String METHOD_REGISTER_OPPO_PUSH = "registerTIMOPPOPush";
+            public static final String OPPO_APPSECRET = "OPPOAppSecret";
+            public static final String OPPO_APPKEY = "OPPOAppKey";
+        }
+
+        public static class VIVO {
+            public static final String VIVO_SERVICE_NAME = "TIMVIVOPushPlugin";
+            public static final String METHOD_REGISTER_VIVO_PUSH = "registerTIMVIVOPush";
+        }
+    }
+
     public static final class TUICommunity {
         public static final String SERVICE_NAME = Service.TUI_COMMUNITY;
 
@@ -691,6 +795,22 @@ public final class TUIConstants {
         }
     }
 
+    public static final class TUICustomerServicePlugin {
+        public static final String CUSTOMER_SERVICE_MESSAGE_KEY = "customerServicePlugin";
+        public static final String CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY = "src";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_GET_EVALUATION_SETTING = "7";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION = "9";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION_SELECTED = "10";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_TYPING = "12";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_BRANCH = "15";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_END = "19";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_TIMEOUT = "20";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_COLLECTION = "21";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_CARD = "22";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION_SETTING = "23";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_TRIGGER_EVALUATION = "24";
+    }
+
     public static final class Message {
         public static final String CUSTOM_BUSINESS_ID_KEY = "businessID";
         public static final String CALLING_TYPE_KEY       = "call_type";
@@ -710,6 +830,8 @@ public final class TUIConstants {
 
         public static final String BUYING_PRICE_DESC_EN = "https://www.tencentcloud.com/document/product/1047/34349#basic-services";
         public static final String BUYING_PRICE_DESC    = "https://cloud.tencent.com/document/product/269/11673?from=17219#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85";
+        public static final String BUYING_PLUGIN_URL = "https://buy.cloud.tencent.com/avc?activeId=plugin&regionId=1";
+        public static final String BUYING_GROUP_CHAT = "https://zhiliao.qq.com/";
 
         public static final String BUYING_FEATURE_MESSAGE_RECEIPT = "buying_chat_message_read_receipt";
         public static final String BUYING_FEATURE_COMMUNITY       = "buying_community";

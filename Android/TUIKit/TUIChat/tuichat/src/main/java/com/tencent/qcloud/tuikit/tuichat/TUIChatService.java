@@ -14,12 +14,14 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
+import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
@@ -35,6 +37,7 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
@@ -128,7 +131,7 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             IBaseMessageSender messageSender = getMessageSender();
             if (messageSender != null) {
                 TUIMessageBean message = ChatMessageBuilder.buildCustomMessage(content, description, extension.getBytes());
-                return messageSender.sendMessage(message, chatId, TUIChatUtils.isGroupChat(chatType));
+                return messageSender.sendMessage(message, chatId, TUIChatUtils.isGroupChat(chatType), false);
             }
         } else if (TextUtils.equals(TUIConstants.TUIChat.METHOD_EXIT_CHAT, method)) {
             String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
@@ -204,6 +207,12 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
         if (TextUtils.equals(subKey, TUIChatConstants.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING)) {
             Boolean isPrivateRing = (Boolean) param.get(TUIChatConstants.OFFLINE_MESSAGE_PRIVATE_RING);
             TUIChatConfigs.getConfigs().getGeneralConfig().setEnableAndroidPrivateRing(isPrivateRing);
+
+            Map<String, Object> paramRing = new HashMap<>();
+            paramRing.put(TUIConstants.TIMPush.CONFIG_FCM_CHANNEL_ID_KEY, OfflinePushInfoUtils.FCM_PUSH_CHANNEL_ID);
+            paramRing.put(TUIConstants.TIMPush.CONFIG_FCM_PRIVATE_RING_NAME_KEY, OfflinePushInfoUtils.PRIVATE_RING_NAME);
+            paramRing.put(TUIConstants.TIMPush.CONFIG_ENABLE_FCM_PRIVATE_RING_KEY, isPrivateRing);
+            TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_CONFIG_FCM_PRIVATE_RING, paramRing);
         }
     }
 
@@ -442,14 +451,30 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             }
 
             @Override
-            public void onRecvMessageRevoked(String msgId) {
+            public void onRecvMessageRevoked(String msgID) {
                 List<C2CChatEventListener> c2CChatEventListenerList = getInstance().getC2CChatEventListenerList();
                 for (C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
-                    c2CChatEventListener.handleRevoke(msgId);
+                    c2CChatEventListener.onRecvMessageRevoked(msgID, null, null);
                 }
                 List<GroupChatEventListener> groupChatEventListenerList = getInstance().getGroupChatEventListenerList();
                 for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
-                    groupChatEventListener.handleRevoke(msgId);
+                    groupChatEventListener.onRecvMessageRevoked(msgID, null, null);
+                }
+            }
+
+            @Override
+            public void onRecvMessageRevoked(String msgID, V2TIMUserFullInfo operateUser, String reason) {
+                UserBean userBean = new UserBean();
+                userBean.setUserId(operateUser.getUserID());
+                userBean.setNikeName(operateUser.getNickName());
+                userBean.setFaceUrl(operateUser.getFaceUrl());
+                List<C2CChatEventListener> c2CChatEventListenerList = getInstance().getC2CChatEventListenerList();
+                for (C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
+                    c2CChatEventListener.onRecvMessageRevoked(msgID, userBean, reason);
+                }
+                List<GroupChatEventListener> groupChatEventListenerList = getInstance().getGroupChatEventListenerList();
+                for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
+                    groupChatEventListener.onRecvMessageRevoked(msgID, userBean, reason);
                 }
             }
 
@@ -663,5 +688,14 @@ public class TUIChatService extends ServiceInitializer implements ITUIChatServic
             return messageSender.get();
         }
         return null;
+    }
+
+    public String sendMessage(TUIMessageBean messageBean, String chatId, int chatType, boolean onlineUserOnly) {
+        IBaseMessageSender messageSender = getMessageSender();
+        if (messageSender != null) {
+            return messageSender.sendMessage(messageBean, chatId, TUIChatUtils.isGroupChat(chatType), onlineUserOnly);
+        } else {
+            return null;
+        }
     }
 }

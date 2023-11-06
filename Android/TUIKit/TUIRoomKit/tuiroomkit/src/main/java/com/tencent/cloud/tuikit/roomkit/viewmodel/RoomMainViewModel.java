@@ -1,17 +1,17 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
@@ -19,9 +19,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.videoseat.ui.TUIVideoSeatView;
-import com.tencent.cloud.tuikit.roomkit.view.component.RoomMainView;
-import com.tencent.liteav.device.TXDeviceManager;
+import com.tencent.cloud.tuikit.roomkit.view.page.RoomMainView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
@@ -60,6 +58,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.OWNER_EXIT_ROOM_ACTION, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW, this);
+        eventCenter.subscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
 
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
@@ -88,6 +87,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.OWNER_EXIT_ROOM_ACTION, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW, this);
+        eventCenter.unsubscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
 
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
@@ -107,13 +107,12 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         return TUIRoomDefine.Role.ROOM_OWNER.equals(mRoomStore.userModel.role);
     }
 
-    public View getVideoSeatView() {
-        TUIVideoSeatView seatView = new TUIVideoSeatView(mContext);
-        return seatView;
-    }
-
     public void responseRequest(TUIRoomDefine.RequestAction requestAction, String requestId, boolean agree) {
         RoomEngineManager.sharedInstance().responseRemoteRequest(requestAction, requestId, agree, null);
+    }
+
+    public void setCameraResolutionMode(Configuration configuration) {
+        RoomEngineManager.sharedInstance().setCameraResolutionMode(configuration.orientation == ORIENTATION_PORTRAIT);
     }
 
     public UserModel getUserModel() {
@@ -163,6 +162,9 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
                 break;
             case RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW:
                 mRoomMainView.showMemberInviteList();
+                break;
+            case BAR_SHOW_TIME_RECOUNT:
+                mRoomMainView.recountBarShowTime();
                 break;
             default:
                 break;

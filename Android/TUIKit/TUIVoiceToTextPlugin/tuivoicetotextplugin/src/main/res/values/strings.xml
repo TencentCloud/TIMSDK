@@ -6,4 +6,5 @@
     <string name="forward_action">Forward</string>
     <string name="hide_action">Hide</string>
     <string name="copy_success_tip">Copy Success</string>
+    <string name="convert_to_text_risk_content_failed_tip">Contains sensitive content, text conversion failed</string>
 </resources>

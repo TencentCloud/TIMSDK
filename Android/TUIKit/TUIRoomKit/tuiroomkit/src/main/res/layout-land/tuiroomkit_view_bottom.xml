@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/ll_root"
+        android:background="@android:color/black"/>
+
+    <RelativeLayout
+        android:id="@+id/ll_root"
+        android:layout_width="@dimen/tuiroomkit_bottom_view_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_black" >
+
+        <RelativeLayout
+            android:id="@+id/bottom_extension_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:visibility="invisible" >
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/bottom_main_view"
+                android:layout_width="@dimen/tuiroomkit_bottom_main_view_width"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:id="@+id/ll_item_expand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="@dimen/tuiroomkit_bottom_item_view_width"
+                    android:layout_height="@dimen/tuiroomkit_bottom_item_view_height"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/tuiroomkit_bg_radius_light_black"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/image_expand"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="3dp"
+                        android:clickable="false"
+                        android:maxWidth="24dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/tuiroomkit_ic_expand" />
+
+                    <TextView
+                        android:id="@+id/expand_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="@string/tuiroomkit_item_expand"
+                        android:textColor="@color/tuiroomkit_color_text_light_grey"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_raise_hand_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="70dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/tuiroomkit_bg_raise_hand_tip"
+        android:gravity="center_horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_raise_hand_tip"
+            android:textColor="@color/tuiroomkit_color_white"
+            android:textSize="14sp"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/tuiroomkit_ic_cancel_raise_hand_tip" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -3,8 +3,6 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
 
@@ -19,7 +17,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.component.TransferMasterView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.transferownercontrolpanel.TransferMasterPanel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +27,10 @@ public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventR
         RoomEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "TransferMasterViewModel";
 
-    private RoomStore          mRoomStore;
-    private TransferMasterView mTransferMasterView;
+    private RoomStore           mRoomStore;
+    private TransferMasterPanel mTransferMasterView;
 
-    public TransferMasterViewModel(TransferMasterView transferMasterView) {
+    public TransferMasterViewModel(TransferMasterPanel transferMasterView) {
         mTransferMasterView = transferMasterView;
         mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
         subscribeEvent();

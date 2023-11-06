@@ -23,7 +23,7 @@ public class OfflinePushConfigs {
     /*
      * Demo 集成了两种推送注册方式，获取应用正在使用的推送服务注册方式：
      *
-     * REGISTER_PUSH_MODE_AUTO，组件自动监听账号登录成功后，注册推送服务，需要手动配置推送参数到推送组件的 PrivateConstants 里；
+     * REGISTER_PUSH_MODE_AUTO，组件自动监听账号登录成功后，注册推送服务，需要控制台下载推送数据并配置到工程中即可；
      * REGISTER_PUSH_MODE_API，手动注册离线推送服务, IM 账号登录成功时调用，推送参数见接口说明;
      *
      *

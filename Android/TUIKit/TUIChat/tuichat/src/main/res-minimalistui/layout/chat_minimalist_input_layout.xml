@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -28,13 +28,13 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
-            android:textAlignment="viewStart"
             android:layout_toStartOf="@id/reply_preview_bar_close_btn"
             android:layout_toEndOf="@id/reply_preview_bar_line"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
             android:textColor="#000000"
             android:textSize="14sp"
-            android:maxLines="1"
-            android:ellipsize="end"
             tools:text="name" />
 
         <TextView
@@ -42,12 +42,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/reply_preview_bar_name"
-            android:textAlignment="viewStart"
             android:layout_alignStart="@id/reply_preview_bar_name"
-            android:layout_toStartOf="@id/reply_preview_bar_close_btn"
             android:layout_marginTop="8dp"
-            android:maxLines="1"
+            android:layout_toStartOf="@id/reply_preview_bar_close_btn"
             android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
             android:textColor="#99000000"
             android:textSize="14sp"
             tools:text="desc" />
@@ -132,42 +132,43 @@
         <FrameLayout
             android:id="@+id/chat_voice_input_layout"
             android:layout_width="match_parent"
+            android:layout_height="36dp"
             android:layout_marginStart="14dp"
             android:layout_marginEnd="16dp"
-            android:layout_height="36dp"
             android:layout_weight="1"
             android:visibility="gone">
-        <Button
-            android:id="@+id/chat_voice_input"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="start|center_vertical"
-            android:text="0:00"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color_gray"
-            android:visibility="visible" />
+
+            <Button
+                android:id="@+id/chat_voice_input"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="start|center_vertical"
+                android:text="0:00"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color_gray"
+                android:visibility="visible" />
 
             <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview.VoiceWaveView.VoiceWaveView
                 android:id="@+id/voice_wave_view"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
-                app:lineWidth="2dp"
-                app:lineSpace="2dp"
                 android:layout_marginStart="55dp"
+                android:gravity="center"
                 app:lineColor="@color/white"
-                app:waveMode="left_right"
-                android:gravity="center" />
+                app:lineSpace="2dp"
+                app:lineWidth="2dp"
+                app:waveMode="left_right" />
         </FrameLayout>
 
         <Button
             android:id="@+id/input_voice_btn"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/chat_minimalist_input_voice_icon" />
 
         <ImageView
@@ -182,26 +183,26 @@
 
     <LinearLayout
         android:id="@+id/quote_preview_bar"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/quote_text"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:textAlignment="viewStart"
-            tools:text="test"
-            android:maxLines="1"
+            android:layout_weight="1"
             android:ellipsize="end"
-            android:textSize="@dimen/reply_text_size"/>
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textSize="@dimen/reply_text_size"
+            tools:text="test" />
 
         <ImageView
             android:id="@+id/quote_close_btn"

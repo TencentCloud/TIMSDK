@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.RelativeLayout
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
-import com.tencent.qcloud.tuikit.tuicallkit.manager.CallEngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.videolayout.GroupCallVideoLayoutViewModel
@@ -53,21 +53,25 @@ class GroupCallVideoLayout(context: Context) : BaseCallView(context) {
         for ((index, user) in viewModel.userList.get().withIndex()) {
             var videoView = VideoViewFactory.instance.createVideoView(user, context)
             if (videoView != null && videoView?.parent != null) {
-                var parent : RelativeLayout = videoView?.parent as RelativeLayout
+                var parent: RelativeLayout = videoView?.parent as RelativeLayout
                 parent.removeView(videoView)
             }
             videoView?.layoutParams = paramList[index]
             addView(videoView)
             if (TUICallDefine.MediaType.Video == viewModel.mediaType.get()) {
-                if (index == 0 && !viewModel.isCameraOpen.get()) {
-                    user.videoAvailable.set(true)
-                    CallEngineManager.instance.openCamera(
-                        viewModel.isFrontCamera.get(),
-                        videoView?.getVideoView(),
-                        null
-                    )
+                if (index == 0) {
+                    if ((TUICallDefine.Role.Caller == user.callRole.get() && TUICallDefine.Status.Waiting == user.callStatus.get())
+                        || (TUICallDefine.Role.Called == user.callRole.get() && TUICallDefine.Status.Accept == user.callStatus.get())
+                    ) {
+                        user.videoAvailable.set(true)
+                        EngineManager.instance.openCamera(
+                            viewModel.isFrontCamera.get(),
+                            videoView?.getVideoView(),
+                            null
+                        )
+                    }
                 } else {
-                    CallEngineManager.instance.startRemoteView(
+                    EngineManager.instance.startRemoteView(
                         user.id,
                         videoView?.getVideoView(),
                         null
@@ -81,7 +85,7 @@ class GroupCallVideoLayout(context: Context) : BaseCallView(context) {
         if (user.callStatus.get() == TUICallDefine.Status.None) {
             var videoView = VideoViewFactory.instance.findVideoView(user.id)
             if (videoView != null && videoView?.parent != null) {
-                var parent : RelativeLayout = videoView?.parent as RelativeLayout
+                var parent: RelativeLayout = videoView?.parent as RelativeLayout
                 parent.removeView(videoView)
                 videoView.clear()
                 videoView = null
@@ -90,11 +94,11 @@ class GroupCallVideoLayout(context: Context) : BaseCallView(context) {
         } else {
             var videoView = VideoViewFactory.instance.createVideoView(user, context)
             if (videoView != null && videoView?.parent != null) {
-                var parent : RelativeLayout = videoView?.parent as RelativeLayout
+                var parent: RelativeLayout = videoView?.parent as RelativeLayout
                 parent.removeView(videoView)
             }
             addView(videoView)
-            CallEngineManager.instance.startRemoteView(
+            EngineManager.instance.startRemoteView(
                 user.id,
                 videoView?.getVideoView(),
                 null

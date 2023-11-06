@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="customer_service_item_text_color_lively">#ff7756</color>
+    <color name="customer_service_reply_quote_text_color_lively">#FFE1EC</color>
+    <color name="product_close_color_lively">#ff5739</color>
+    <color name="evaluation_number_default_color_lively">#ff7756</color>
+    <color name="submit_bg_color_lively">#ff9d85</color>
+</resources>

@@ -155,6 +155,9 @@ public class RoomEventDispatcher extends TUIRoomObserver {
             if (entry.getValue() < VOLUME_CAN_HEARD_MIN_LIMIT) {
                 continue;
             }
+            if (TextUtils.equals(userId, mRoomStore.userModel.userId) && !mRoomStore.audioModel.isHasAudioStream()) {
+                continue;
+            }
             mRoomStore.updateUserAudioVolume(userId, entry.getValue());
         }
         Map<String, Object> map = new HashMap<>();
@@ -195,12 +198,14 @@ public class RoomEventDispatcher extends TUIRoomObserver {
     @Override
     public void onSeatListChanged(List<TUIRoomDefine.SeatInfo> seatList, List<TUIRoomDefine.SeatInfo> seatedList,
                                   List<TUIRoomDefine.SeatInfo> leftList) {
+        Log.d(TAG, "onSeatListChanged");
         RoomEngineManager manager = RoomEngineManager.sharedInstance();
         for (TUIRoomDefine.SeatInfo item : seatedList) {
             mRoomStore.setUserOnSeat(item.userId, true);
             manager.getUserInfo(item.userId, new TUIRoomDefine.GetUserInfoCallback() {
                 @Override
                 public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
+                    Log.d(TAG, "onSeatListChanged remoteUserTakeSeat userId=" + userInfo.userId);
                     mRoomStore.remoteUserTakeSeat(userInfo);
                 }
 
@@ -213,6 +218,7 @@ public class RoomEventDispatcher extends TUIRoomObserver {
 
         for (TUIRoomDefine.SeatInfo item : leftList) {
             mRoomStore.setUserOnSeat(item.userId, false);
+            Log.d(TAG, "onSeatListChanged remoteUserLeaveSeat userId=" + item.userId);
             mRoomStore.remoteUserLeaveSeat(item.userId);
         }
     }
@@ -222,6 +228,16 @@ public class RoomEventDispatcher extends TUIRoomObserver {
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_REQUEST, request);
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, map);
+
+        if (TUIRoomDefine.RequestAction.REQUEST_TO_TAKE_SEAT == request.requestAction) {
+            if (mRoomStore.userModel.role == TUIRoomDefine.Role.ROOM_OWNER && TextUtils.equals(request.userId,
+                    mRoomStore.userModel.userId)) {
+                RoomEngineManager.sharedInstance()
+                        .responseRemoteRequest(request.requestAction, request.requestId, true, null);
+            } else {
+                mRoomStore.addTakeSeatRequest(request);
+            }
+        }
     }
 
     @Override
@@ -230,6 +246,8 @@ public class RoomEventDispatcher extends TUIRoomObserver {
         map.put(RoomEventConstant.KEY_REQUEST_ID, requestId);
         map.put(RoomEventConstant.KEY_USER_ID, userId);
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REQUEST_CANCELLED, map);
+
+        mRoomStore.removeTakeSeatRequest(requestId);
     }
 
     @Override

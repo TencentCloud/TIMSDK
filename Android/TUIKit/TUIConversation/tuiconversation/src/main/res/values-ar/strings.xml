@@ -17,6 +17,7 @@
     <string name="ui_at_me">[شخص ما @ لي]</string>
     <string name="ui_at_all_me">[@الجميع][شخص ما @ لي]</string>
     <string name="drafts">[مسودة]</string>
+    <string name="conversation_risk_message_extra">[رسالة مخالفة]</string>
     <string name="titlebar_mutiselect">تحديد متعدد</string>
     <string name="message_num">رسالة</string>
 

@@ -3,6 +3,8 @@ package com.tencent.qcloud.tuikit.tuicallkit.view.root
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
+import com.tencent.qcloud.tuicore.TUIConstants
+import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
@@ -36,6 +38,7 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         refreshFunctionView()
         refreshTimerView()
+        showAntiFraudReminder()
     }
 
     private var mediaTypeObserver = Observer<TUICallDefine.MediaType> {
@@ -175,5 +178,20 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
         if (null != functionView) {
             layoutFunction!!.addView(functionView)
         }
+    }
+
+    private fun showAntiFraudReminder() {
+        if (TUICallDefine.Status.Accept != viewModel.callStatus.get()) {
+            return
+        }
+
+        if (TUICore.getService(TUIConstants.Service.TUI_PRIVACY) == null) {
+            return
+        }
+        var map = HashMap<String, Any?>()
+        map[TUIConstants.Privacy.PARAM_DIALOG_CONTEXT] = context
+        TUICore.callService(
+            TUIConstants.Service.TUI_PRIVACY, TUIConstants.Privacy.METHOD_ANTO_FRAUD_REMINDER, map, null
+        )
     }
 }

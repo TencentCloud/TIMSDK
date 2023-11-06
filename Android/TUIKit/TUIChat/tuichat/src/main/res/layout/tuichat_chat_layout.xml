@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/chat_background_color">
 
     <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
@@ -13,9 +13,9 @@
 
     <View
         android:id="@+id/view_line"
-        android:layout_below="@+id/chat_title_bar"
         android:layout_width="match_parent"
         android:layout_height="0.3dp"
+        android:layout_below="@+id/chat_title_bar"
         android:background="@color/chat_title_line_color" />
 
     <FrameLayout
@@ -45,34 +45,34 @@
         android:id="@+id/chat_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/chat_input_layout"
+        android:layout_above="@+id/fl_input_float"
         android:layout_below="@+id/chat_notice_layout"
         android:baselineAligned="false"
         android:clickable="false"
-        android:descendantFocusability="blocksDescendants" />
+        android:descendantFocusability="beforeDescendants" />
 
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="4dp"
-        app:cardElevation="6dp"
-        app:cardUseCompatPadding="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/chat_input_layout"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/btn_margin_right"
         android:layout_marginBottom="@dimen/btn_margin_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        app:cardCornerRadius="4dp"
+        app:cardElevation="6dp"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:id="@+id/jump_message_layout"
             android:layout_width="wrap_content"
             android:layout_height="33.6dp"
-            android:paddingTop="9.12dp"
-            android:paddingBottom="8.64dp"
-            android:paddingStart="10.08dp"
-            android:paddingEnd="9.6dp"
             android:background="#FFFFFF"
             android:gravity="center"
             android:orientation="horizontal"
+            android:paddingStart="10.08dp"
+            android:paddingTop="9.12dp"
+            android:paddingEnd="9.6dp"
+            android:paddingBottom="8.64dp"
             android:visibility="visible">
 
             <ImageView
@@ -80,9 +80,9 @@
                 android:layout_width="11.52dp"
                 android:layout_height="11.52dp"
                 android:layout_gravity="center"
+                android:background="?attr/chat_jump_recent_down_icon"
                 android:clickable="false"
-                android:scaleType="fitCenter"
-                android:background="?attr/chat_jump_recent_down_icon" />
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/jump_message_content"
@@ -97,6 +97,15 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <FrameLayout
+        android:id="@+id/fl_input_float"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_input_layout"
+        android:paddingTop="5dp"
+        android:background="?attr/chat_input_area_bg"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView
         android:id="@+id/chat_input_layout"
@@ -105,38 +114,45 @@
         android:layout_above="@id/forward_layout"
         android:layout_alignParentBottom="true" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/voice_recording_view"
         android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/ic_volume_dialog_bg"
-        android:visibility="gone">
+        android:gravity="center_horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+        <TextView
+            android:id="@+id/voice_count_down_tv"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:textDirection="ltr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
+        <ImageView
+            android:id="@+id/recording_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/recording_icon"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/recording_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="12sp" />
 
-
-            <TextView
-                android:id="@+id/recording_tips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_marginTop="10dp" />
-
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/forward_layout"

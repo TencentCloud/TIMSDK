@@ -263,4 +263,16 @@
     <string name="chat_quick_tap_message_action_from_me">我%s"%s"</string>
     <string name="chat_quick_tap_message_action_to_me">"%s"%s我</string>
     <string name="chat_quick_tap_message_action">"%s"%s"%s"</string>
+
+    <string name="chat_risk_image_message_alert">涉及敏感内容，无法查看</string>
+    <string name="chat_risk_sound_message_alert">涉及敏感内容，无法收听</string>
+    <string name="chat_risk_send_message_failed_alert">涉及敏感内容，发送失败</string>
+    <string name="chat_risk_quote_message_alert">涉及敏感内容，引用失败</string>
+    <string name="chat_risk_reply_message_alert">涉及敏感内容，回复失败</string>
+    <string name="chat_scan_risk_image_message_alert">检测到图片涉及敏感内容，暂时无法查看</string>
+    <string name="chat_scan_risk_video_message_alert">检测到视频涉及敏感内容，暂时无法查看</string>
+    <string name="chat_risk_content">[违规内容]</string>
+    <string name="chat_risk_sound">[违规语音]</string>
+    <string name="chat_risk_image">[违规图片]</string>
+    <string name="chat_risk_video">[违规视频]</string>
 </resources>

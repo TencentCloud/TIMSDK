@@ -464,6 +464,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         return mHandler.isListEnd(lastPosition);
     }
 
+    @Override
     public void scrollToEnd() {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
             ThreadUtils.runOnUiThread(new Runnable() {

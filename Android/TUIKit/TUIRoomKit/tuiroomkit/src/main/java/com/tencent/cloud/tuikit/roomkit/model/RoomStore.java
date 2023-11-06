@@ -15,12 +15,14 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.model.entity.AudioModel;
+import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.entity.VideoModel;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -36,6 +38,8 @@ public class RoomStore {
     public List<UserEntity> allUserList;
     public List<UserEntity> seatUserList;
 
+    public List<TakeSeatRequestEntity> takeSeatRequestList;
+
     private boolean isInFloatWindow      = false;
     private boolean isAutoShowRoomMainUi = true;
 
@@ -47,6 +51,50 @@ public class RoomStore {
         videoModel = new VideoModel();
         allUserList = new CopyOnWriteArrayList<>();
         seatUserList = new CopyOnWriteArrayList<>();
+        takeSeatRequestList = new LinkedList<>();
+    }
+
+    public void addTakeSeatRequest(TUIRoomDefine.Request request) {
+        UserEntity user = findUser(allUserList, request.userId);
+        if (user == null) {
+            Log.e(TAG, "addTakeSeatRequest user is null");
+            return;
+        }
+        TakeSeatRequestEntity takeSeatRequestEntity =
+                new TakeSeatRequestEntity(user.getUserId(), user.getUserName(), user.getAvatarUrl(), request);
+        takeSeatRequestList.add(takeSeatRequestEntity);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(RoomEventConstant.KEY_USER_POSITION, takeSeatRequestList.size() - 1);
+        RoomEventCenter.getInstance()
+                .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_ADD, map);
+    }
+
+    public void removeTakeSeatRequest(String requestId) {
+        int index = -1;
+        for (int i = 0; i < takeSeatRequestList.size(); i++) {
+            if (TextUtils.equals(requestId, takeSeatRequestList.get(i).getRequest().requestId)) {
+                index = i;
+                takeSeatRequestList.remove(i);
+                break;
+            }
+        }
+        if (index == -1) {
+            return;
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put(RoomEventConstant.KEY_USER_POSITION, index);
+        RoomEventCenter.getInstance()
+                .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_REMOVE, map);
+    }
+
+    public TakeSeatRequestEntity getTakeSeatRequestEntity(String userId) {
+        for (TakeSeatRequestEntity item : takeSeatRequestList) {
+            if (TextUtils.equals(item.getUserId(), userId)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public boolean hasScreenSharingInRoom() {
@@ -121,14 +169,31 @@ public class RoomStore {
     }
 
     public void remoteUserTakeSeat(TUIRoomDefine.UserInfo userInfo) {
+        Log.d(TAG, "remoteUserTakeSeat userId=" + userInfo.userId);
         if (TextUtils.equals(userInfo.userId, TUILogin.getUserId())) {
             userModel.isOnSeat = true;
         }
         if (userInfo.hasScreenStream) {
-            seatUserList.add(0, UserEntity.toUserEntityForScreenStream(userInfo));
-            Map<String, Object> map = new HashMap<>();
-            map.put(RoomEventConstant.KEY_USER_POSITION, 0);
-            RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, map);
+            boolean isUserExist = false;
+            for (UserEntity item : seatUserList) {
+                if (TextUtils.equals(item.getUserId(), userInfo.userId) && item.getVideoStreamType() == SCREEN_STREAM) {
+                    isUserExist = true;
+                    break;
+                }
+            }
+            if (!isUserExist) {
+                seatUserList.add(0, UserEntity.toUserEntityForScreenStream(userInfo));
+                Map<String, Object> map = new HashMap<>();
+                map.put(RoomEventConstant.KEY_USER_POSITION, 0);
+                RoomEventCenter.getInstance()
+                        .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, map);
+            }
+        }
+
+        for (UserEntity item : seatUserList) {
+            if (TextUtils.equals(item.getUserId(), userInfo.userId) && item.getVideoStreamType() != SCREEN_STREAM) {
+                return;
+            }
         }
         seatUserList.add(UserEntity.toUserEntityForCameraStream(userInfo));
         Map<String, Object> map = new HashMap<>();
@@ -137,6 +202,7 @@ public class RoomStore {
     }
 
     public void remoteUserLeaveSeat(String userId) {
+        Log.d(TAG, "remoteUserLeaveSeat userId=" + userId);
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
             userModel.isOnSeat = false;
         }
@@ -194,7 +260,7 @@ public class RoomStore {
         int seatPosition = USER_NOT_FOUND;
         for (int i = 0; i < seatUserList.size(); i++) {
             if (TextUtils.equals(userId, seatUserList.get(i).getUserId())
-                    && allUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
+                    && seatUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
                 seatUserList.get(i).setHasAudioStream(hasAudio);
                 seatPosition = i;
                 break;
@@ -210,7 +276,7 @@ public class RoomStore {
             }
         }
         if (TextUtils.equals(TUILogin.getUserId(), userId)) {
-            audioModel.setMicOpened(hasAudio);
+            audioModel.setHasAudioStream(hasAudio);
         }
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_SEAT_USER_POSITION, seatPosition);
@@ -224,7 +290,7 @@ public class RoomStore {
         int seatPosition = USER_NOT_FOUND;
         for (int i = 0; i < seatUserList.size(); i++) {
             if (TextUtils.equals(userId, seatUserList.get(i).getUserId())
-                    && allUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
+                    && seatUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
                 seatUserList.get(i).setHasVideoStream(hasCamera);
                 seatUserList.get(i).setVideoStreamType(streamType);
                 seatPosition = i;

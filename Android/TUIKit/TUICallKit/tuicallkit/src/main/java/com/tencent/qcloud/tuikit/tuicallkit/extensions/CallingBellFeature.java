@@ -10,15 +10,27 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
 
+import androidx.core.content.ContextCompat;
+
+import com.tencent.liteav.audio.TXAudioEffectManager;
 import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine;
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine;
 import com.tencent.qcloud.tuikit.tuicallkit.R;
+import com.tencent.qcloud.tuikit.tuicallkit.base.TUICallingStatusManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CallingBellFeature {
     public static final String PROFILE_TUICALLKIT = "per_profile_tuicallkit";
     public static final String PROFILE_CALL_BELL  = "per_call_bell";
     public static final String PROFILE_MUTE_MODE  = "per_mute_mode";
+
+    private static final int    AUDIO_DIAL_ID = 48;
+    private              String mDialPath;
 
     private       Context     mContext;
     private final MediaPlayer mMediaPlayer;
@@ -29,13 +41,50 @@ public class CallingBellFeature {
     public CallingBellFeature(Context context) {
         mContext = context.getApplicationContext();
         mMediaPlayer = new MediaPlayer();
+        preHandler();
+        if (mHandler != null) {
+            mHandler.post(() -> mDialPath = getBellPath(mContext, R.raw.phone_dialing, "phone_dialing.mp3"));
+        }
     }
 
-    public void startDialingMusic() {
-        start("", R.raw.phone_dialing);
+    public void playMusic() {
+        if (TUICallDefine.Role.Caller.equals(TUICallingStatusManager.sharedInstance(mContext).getCallRole())) {
+            startDialingMusic();
+        } else {
+            startRing();
+        }
     }
 
-    public void startRing() {
+    public void stopMusic() {
+        if (TUICallDefine.Role.Caller.equals(TUICallingStatusManager.sharedInstance(mContext).getCallRole())) {
+            TUICallEngine.createInstance(mContext).getTRTCCloudInstance().getAudioEffectManager()
+                    .stopPlayMusic(AUDIO_DIAL_ID);
+            return;
+        }
+
+        if (mHandler != null) {
+            mHandler.post(() -> {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.stop();
+                }
+                mCallingBellResourceId = -1;
+                mCallingBellResourcePath = "";
+            });
+        }
+    }
+
+    private void startDialingMusic() {
+        if (TextUtils.isEmpty(mDialPath)) {
+            mDialPath = getBellPath(mContext, R.raw.phone_dialing, "phone_dialing.mp3");
+        }
+        TUICallEngine.createInstance(mContext).getTRTCCloudInstance().getAudioEffectManager()
+                .setMusicPlayoutVolume(AUDIO_DIAL_ID, 100);
+        TXAudioEffectManager.AudioMusicParam param = new TXAudioEffectManager.AudioMusicParam(AUDIO_DIAL_ID, mDialPath);
+        param.isShortFile = true;
+        TUICallEngine.createInstance(mContext).getTRTCCloudInstance().getAudioEffectManager().startPlayMusic(param);
+    }
+
+    private void startRing() {
         if (SPUtils.getInstance(PROFILE_TUICALLKIT).getBoolean(PROFILE_MUTE_MODE, false)) {
             return;
         }
@@ -45,10 +94,6 @@ public class CallingBellFeature {
         } else {
             start(path, -1);
         }
-    }
-
-    public void stopMusic() {
-        stop();
     }
 
     private void start(String resPath, int resId) {
@@ -84,16 +129,16 @@ public class CallingBellFeature {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     AudioAttributes attrs = new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                             .build();
                     mMediaPlayer.setAudioAttributes(attrs);
                 }
                 AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
                 if (audioManager != null) {
-                    audioManager.setMode(AudioManager.MODE_NORMAL);
+                    audioManager.setMode(AudioManager.MODE_RINGTONE);
                 }
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
 
                 try {
                     if (null != afd) {
@@ -128,20 +173,34 @@ public class CallingBellFeature {
         mHandler = new Handler(thread.getLooper());
     }
 
-    private void stop() {
-        if (null == mHandler) {
-            return;
+    private String getBellPath(Context context, int resId, String name) {
+        String savePath = ContextCompat.getExternalFilesDirs(context, null)[0].getAbsolutePath();
+        File dir = new File(savePath);
+        if (!dir.exists()) {
+            dir.mkdir();
         }
 
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mMediaPlayer.isPlaying()) {
-                    mMediaPlayer.stop();
-                }
-                mCallingBellResourceId = -1;
-                mCallingBellResourcePath = "";
+        try {
+            File file = new File(savePath + "/" + name);
+            if (file.exists()) {
+                return file.getAbsolutePath();
             }
-        });
+
+            InputStream inputStream = context.getResources().openRawResource(resId);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[2048];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+
+            return file.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

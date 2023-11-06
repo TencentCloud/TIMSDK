@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/tuiroomkit_bg_bottom_dialog_black_portrait"
@@ -7,18 +8,24 @@
     android:paddingBottom="61dp">
 
     <View
+        android:id="@+id/tuiroomkit_room_info_hide"
         android:layout_width="24dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
-        android:background="@drawable/tuiroomkit_bottom_dialog_tip" />
+        android:background="@drawable/tuiroomkit_bottom_dialog_hide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
+        android:id="@+id/tuiroomkit_ll_room_info_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_room_info_hide">
 
         <TextView
             android:id="@+id/tv_info_name"
@@ -40,13 +47,15 @@
 
 
     <LinearLayout
+        android:id="@+id/tuiroomkit_ll_room_owner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_ll_room_info_name">
 
         <TextView
             android:id="@+id/tv_master_title"
@@ -67,13 +76,15 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/tuiroomkit_ll_room_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_ll_room_owner">
 
         <TextView
             android:id="@+id/tv_type_title"
@@ -94,12 +105,14 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/tuiroomkit_rl_room_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_ll_room_type">
 
         <TextView
             android:id="@+id/tv_room_id_title"
@@ -155,7 +168,8 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_rl_room_id">
 
         <TextView
             android:id="@+id/tv_room_link_title"
@@ -208,4 +222,4 @@
         </LinearLayout>
     </RelativeLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,4 +6,5 @@
     <string name="forward_action">转发</string>
     <string name="hide_action">隐藏</string>
     <string name="copy_success_tip">复制成功</string>
+    <string name="convert_to_text_risk_content_failed_tip">涉及敏感内容，转文字失败</string>
 </resources>

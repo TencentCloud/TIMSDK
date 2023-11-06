@@ -30,6 +30,9 @@ public class TextMessageHolder extends MessageContentHolder {
         if (!(msg instanceof TextMessageBean)) {
             return;
         }
+        if (hasRiskContent) {
+            setRiskContent(itemView.getResources().getString(R.string.chat_risk_send_message_failed_alert));
+        }
         TextMessageBean textMessageBean = (TextMessageBean) msg;
 
         if (isForwardMode || isReplyDetailMode || !textMessageBean.isSelf()) {

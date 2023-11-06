@@ -3,16 +3,16 @@
     <string name="tuicalling_toast_user_reject_call">%1$s拒绝通话</string>
     <string name="tuicalling_toast_user_not_response">%1$s无响应</string>
     <string name="tuicalling_toast_user_busy">%1$s忙线</string>
-    <string name="tuicalling_toast_enable_mute">开启静音</string>
-    <string name="tuicalling_toast_disable_mute">关闭静音</string>
+    <string name="tuicalling_toast_enable_mute">麦克风已关</string>
+    <string name="tuicalling_toast_disable_mute">麦克风已开</string>
     <string name="tuicalling_toast_speaker">使用扬声器</string>
     <string name="tuicalling_toast_use_handset">使用听筒</string>
     <string name="tuicalling_toast_user_end">%s 结束通话</string>
     <string name="tuicalling_other_party_network_low_quality">对方网络不佳</string>
     <string name="tuicalling_self_network_low_quality">己方网络不佳</string>
     <string name="tuicalling_toast_switch_camera">切换摄像头</string>
-    <string name="tuicalling_toast_enable_camera">开启摄像头</string>
-    <string name="tuicalling_toast_disable_camera">关闭摄像头</string>
+    <string name="tuicalling_toast_enable_camera">摄像头已开</string>
+    <string name="tuicalling_toast_disable_camera">摄像头已关</string>
     <string name="tuicalling_waiting_accept">正在等待对方接受邀请...</string>
     <string name="tuicalling_invite_audio_call">邀请您进行语音通话…</string>
     <string name="tuicalling_invite_video_call">邀请您进行视频通话…</string>
@@ -29,7 +29,7 @@
     <string name="tuicalling_user_exceed_limit">暂支持最多9人通话。如需多人会议，请使用TUIRoom</string>
     <string name="tuicalling_wait_resonse">等待接听</string>
 
-    <string name="tuicalling_permission_camera">相机</string>
+    <string name="tuicalling_permission_camera">摄像头</string>
     <string name="tuicalling_permission_microphone">麦克风</string>
     <string name="tuicalling_permission_bluetooth">蓝牙</string>
     <string name="tuicalling_permission_separator">、</string>

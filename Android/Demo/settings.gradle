@@ -24,17 +24,20 @@ project(':tuigroup').projectDir = new File(settingsDir, '../TUIKit/TUIGroup/tuig
 include ':tuicallkit'
 project(':tuicallkit').projectDir = new File(settingsDir, '../TUIKit/TUICallKit/tuicallkit')
 
-include ':tuiofflinepush'
-project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
-
 include ':tuicommunity'
 project(':tuicommunity').projectDir = new File(settingsDir, '../TUIKit/TUICommunity/tuicommunity')
 
 include ':tuitranslationplugin'
 project(':tuitranslationplugin').projectDir = new File(settingsDir, '../TUIKit/TUITranslationPlugin/tuitranslationplugin')
 
+include ':tuicustomerserviceplugin'
+project(':tuicustomerserviceplugin').projectDir = new File(settingsDir, '../TUIKit/TUICustomerServicePlugin/tuicustomerserviceplugin')
+
 include ':tuivoicetotextplugin'
 project(':tuivoicetotextplugin').projectDir = new File(settingsDir, '../TUIKit/TUIVoiceToTextPlugin/tuivoicetotextplugin')
 
 include ':tuiroomkit'
 project(':tuiroomkit').projectDir = new File(settingsDir, '../TUIKit/TUIRoomKit/tuiroomkit')
+
+include ':tuiofflinepush'
+project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
