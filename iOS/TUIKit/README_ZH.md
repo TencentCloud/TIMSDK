@@ -20,6 +20,8 @@
 
 [最新 TUIVoiceToTextPlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUIVoiceToTextPlugin.zip)
 
+[最新 TUICustomerServicePlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUICustomerServicePlugin.zip)
+
 [最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUICore.zip)
 
 [最新 TIMCommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TIMCommon.zip)

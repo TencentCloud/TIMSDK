@@ -18,6 +18,8 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUIVoiceToTextPlugin download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUIVoiceToTextPlugin.zip)
 
+[Latest TUICustomerServicePlugin download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUICustomerServicePlugin.zip)
+
 [Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUICore.zip)
 
 [Latest TIMCommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TIMCommon.zip)
