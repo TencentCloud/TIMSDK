@@ -22,6 +22,7 @@ target 'TUIKitDemo' do
   pod 'TUIConversationGroupPlugin', '7.6.5011'
   pod 'TUIConversationMarkPlugin', '7.6.5011'
   pod 'TUIVoiceToTextPlugin', '7.6.5011'
+  pod 'TUICustomerServicePlugin', '7.6.5011'
   pod 'TUICallKit'
   pod 'TUIRoomKit','1.5.1'
   pod 'MJRefresh'
