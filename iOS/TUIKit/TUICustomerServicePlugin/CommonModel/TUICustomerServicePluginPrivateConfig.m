@@ -67,10 +67,28 @@ static NSString *gOnlineDoctor = @"@im_agent#online_doctor";
     [TUITool checkCommercialAbility:kTUICustomerServiceCommercialAbility
                                succ:^(BOOL enabled) {
         gEnableCustomerService = enabled;
+        if (gEnableCustomerService) {
+            [self reportTUIConversationGroupComponentUsage];
+        }
     }
                                fail:^(int code, NSString *desc) {
         gEnableCustomerService = NO;
     }];
+}
+
++ (void)reportTUIConversationGroupComponentUsage {
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    param[@"UIComponentType"] = @(14);
+    param[@"UIStyleType"] = @(0);
+    NSData *dataParam = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *strParam = [[NSString alloc] initWithData:dataParam encoding:NSUTF8StringEncoding];
+    [[V2TIMManager sharedInstance] callExperimentalAPI:@"reportTUIComponentUsage"
+                                                 param:strParam
+                                                  succ:^(NSObject *result) {
+                                                    NSLog(@"success");
+                                                  }
+                                                  fail:^(int code, NSString *desc){
+                                                  }];
 }
 
 #pragma mark - Getter
