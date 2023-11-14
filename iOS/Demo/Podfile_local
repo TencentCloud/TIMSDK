@@ -44,7 +44,7 @@ target 'TUIKitDemo' do
   # 其他 Pod
   # Other Pod
   pod 'TUICallKit'
-  pod 'TUIRoomKit','1.4.5'
+  pod 'TUIRoomKit','>=1.5.1'
   pod 'MJRefresh'
   pod 'Masonry'
 end
