@@ -144,14 +144,14 @@
   </tr>
     
   <tr>
-     <td rowspan='2' style="text-align:center">接入离线推送</td>
+     <td rowspan='2' style="text-align:center">接入消息推送插件</td>
      <td style="text-align:center">iOS</td>
-     <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/74284">TUIKit-iOS接入离线推送</a></td>
+     <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/100621#.E7.AC.AC.E4.B8.80.E6.AD.A5.EF.BC.9A.E5.85.8D.E8.B4.B9.E5.BC.80.E9.80.9A---.E5.88.9B.E5.BB.BA.E5.AE.A2.E6.9C.8D.E8.99.9A.E6.8B.9F.E5.8F.B7">TIMPush-iOS开通使用消息推送插件</a></td>
   </tr>
 
   <tr>
      <td style="text-align:center">Android</td>
-     <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/74285">TUIKit-Android接入离线推送</a></td>
+     <td style="text-align:center"><a href="https://cloud.tencent.com/document/product/269/100621#.E7.AC.AC.E4.B8.80.E6.AD.A5.EF.BC.9A.E5.85.8D.E8.B4.B9.E5.BC.80.E9.80.9A---.E5.88.9B.E5.BB.BA.E5.AE.A2.E6.9C.8D.E8.99.9A.E6.8B.9F.E5.8F.B7">TIMPush-Android开通使用消息推送插件</a></td>
   </tr>
 
 </table>
