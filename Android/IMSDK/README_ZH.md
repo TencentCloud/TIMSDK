@@ -5,16 +5,16 @@
 ## 下载地址
 
 ### 增强版（推荐）
-[最新增强版 IM SDK 下载](https://im.sdk.qcloud.com/download/plus/7.6.5011/imsdk-plus-7.6.5011.aar) 
+[最新增强版 IM SDK 下载](https://im.sdk.qcloud.com/download/plus/7.7.5282/imsdk-plus-7.7.5282.aar) 
 
 ### 增强版 Pro (网络层增加axp-quic多路传输协议，弱网抗性更加优异)
 [最新增强版 Pro IM SDK 下载](https://im.sdk.qcloud.com/download/plus/7.6.5011/imsdk-plus-pro-7.6.5011.aar) 
 
 ### C 接口版
-[最新C接口下载](https://im.sdk.qcloud.com/download/plus/7.6.5011/cross_platform/ImSDK_Android_C_7.6.5011.zip)
+[最新C接口下载](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Android_C_7.7.5282.zip)
 
 ### C++ 接口版
-[最新C++接口下载](https://im.sdk.qcloud.com/download/plus/7.6.5011/cross_platform/ImSDK_Android_CPP_7.6.5011.zip)
+[最新C++接口下载](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Android_CPP_7.7.5282.zip)
 
 #### maven 集成 (Android 平台)
  如果使用增强版 SDK，请在 gradle 里添加如下依赖
