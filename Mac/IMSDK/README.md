@@ -5,16 +5,16 @@ English | [简体中文](./README_ZH.md)
 ## Download Links
 
 ### Enhanced Edition(Recommend)
-[Latest ImSDKForMac_Plus.framework download](https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDKForMac_Plus_7.6.5011.framework.zip)
+[Latest ImSDKForMac_Plus.framework download](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip)
 
 ### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
-[Latest ImSDKForMac_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDKForMac_Plus_Pro_7.6.5011.framework.zip)
+Starting from version 7.7.5282, there is no longer a separate Pro version for the MacOS system. The [latest ImSDKForMac_Plus.framework version](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip) already supports QUIC and encryption capabilities.
 
 ### C++ API edition
-[Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.6.5011/cross_platform/ImSDK_Mac_CPP_7.6.5011.framework.zip)
+Starting from version 7.7.5282, there is no longer a separate C++ API version for MacOS systems. The [latest ImSDKForMac_Plus.framework version](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip)now includes C++ header files.
 
 ### C API edition
-[Latest C API download](https://im.sdk.qcloud.com/download/plus/7.6.5011/cross_platform/ImSDK_Mac_C_7.6.5011.framework.zip)
+Starting from version 7.7.5282, there is no longer a separate C API version for MacOS systems. The [latest ImSDKForMac_Plus.framework version](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip)now includes C header files.
 
 ## CocoaPods Integration
 
