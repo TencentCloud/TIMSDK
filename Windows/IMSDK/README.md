@@ -4,8 +4,8 @@ English | [简体中文](./README_ZH.md)
 
 ## Download Links
 
-### 增强版 (包含 C++ 接口和 C 接口 )
-[最新 Windows 接口下载](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Windows_7.7.5282.zip)
+### Enhanced Edition (Includes C++ API and C API)
+[Latest Windows API download](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Windows_7.7.5282.zip)
 
 ## TIMSDK for Windows
 
