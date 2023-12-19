@@ -14,10 +14,6 @@ English | [简体中文](./README_ZH.md)
 
 [Latest ImSDK_Plus.xcframework.zip download](https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDK_Plus_7.6.5011.xcframework.zip)
 
-#### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
-
-[Latest ImSDK_Plus_Pro.framework download](https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDK_Plus_Pro_7.6.5011.framework.zip)
-
 ### Enhanced Edition (Swift)
 
 #### Enhanced XCFramework edition (supporting Mac Catalyst)
@@ -29,6 +25,14 @@ English | [简体中文](./README_ZH.md)
 
 ### C++ API edition
 [Latest C++ API download](https://im.sdk.qcloud.com/download/plus/7.6.5011/cross_platform/ImSDK_iOS_CPP_7.6.5011.framework.zip)
+
+### Quic Plugin for IM SDK (Providing axp-quic multiplex transmission protocol to enhance network performance)
+
+[Latest Quic Plugin download](https://im.sdk.qcloud.com/download/plus/7.7.5282/TIMQuicPlugin_7.7.5282.framework.zip)
+
+### Advanced Encryption Plugin for IM SDK (Providing database encryption and SM4 encryption algorithm)
+
+[Latest Advanced Encryption Plugin download](https://im.sdk.qcloud.com/download/plus/7.7.5282/TIMAdvancedEncryptionPlugin_7.7.5282.framework.zip)
 
 ## CocoaPods Integration
 If you are using the SDK enhanced edition, edit the Podfile as follows:
@@ -53,13 +57,23 @@ pod 'TXIMSDK_Plus_iOS_XCFramework'
 end
 ```
 
-If you are using the SDK enhanced edition Pro, edit the Podfile as follows:
+If you are using the Quic Plugin, edit the Podfile as follows:
 ```
 platform :ios, '8.0'
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'App' do
-pod 'TXIMSDK_Plus_Pro_iOS'
+pod 'TXIMSDK_Plus_QuicPlugin'
+end
+```
+
+If you are using the Advanced Encryption Plugin, edit the Podfile as follows:
+```
+platform :ios, '8.0'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'App' do
+pod 'TXIMSDK_Plus_AdvancedEncryptionPlugin'
 end
 ```
 
