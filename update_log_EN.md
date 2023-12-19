@@ -2,6 +2,29 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.7.5282 @2023.12.18 - Enhanced Version
+### SDK
+- Added V2TIMCommunityManager and V2TIMCommunityListener to integrate community topic interfaces
+- SDK supports Quic and encryption plug-ins
+- Optimized conversation filtering logic
+- Topic information added createTime field
+- Live group supports setting administrators and pulling administrator list
+- Local content moderation regular expressions default ignore English case
+- Fixed occasional jni issues
+- Fixed occasional weak network message send callback error
+- Fixed occasional group tips message intValue change issue
+- Fixed Android SDK search English question mark failure problem
+
+### TUIKit & Demo
+- Added ChatBot plugin for intelligent chat, supporting FAQ question-and-answer format and streaming text message display
+- TUIKit adapted to Gradle 8.0
+- Simplified TUIKit component initialization steps and increased component dependency configuration
+- TUIChat supports half screen horizontal display in RoomKit
+- TUIChat supports adding message click and long press event listeners
+- Optimized TIMPush plugin
+- Optimized customer service plugin experience
+- Improved voice message click effect
+
 ## 7.6.5011 @2023.11.03 - Enhanced Version 
 ### SDK
 - Online status supports returning terminal type
