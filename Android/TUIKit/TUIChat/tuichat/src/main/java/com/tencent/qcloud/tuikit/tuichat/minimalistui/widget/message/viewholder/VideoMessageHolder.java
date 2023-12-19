@@ -88,7 +88,7 @@ public class VideoMessageHolder extends ImageMessageHolder {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(v, position, msg);
+                        onItemClickListener.onMessageClick(v, msg);
                     }
                 }
             });

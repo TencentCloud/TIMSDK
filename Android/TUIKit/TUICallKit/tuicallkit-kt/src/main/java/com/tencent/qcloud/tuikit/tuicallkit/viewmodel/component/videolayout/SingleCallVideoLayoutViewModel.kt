@@ -12,6 +12,8 @@ class SingleCallVideoLayoutViewModel {
     public var isFrontCamera = LiveData<TUICommonDefine.Camera>()
     public var currentReverseRenderView = false
     public var lastReverseRenderView = false
+    public var isShowFullScreen = false
+
     init {
         selfUser = TUICallState.instance.selfUser.get()
         var remoteUserList = TUICallState.instance.remoteUserList.get()
@@ -28,5 +30,10 @@ class SingleCallVideoLayoutViewModel {
     public fun reverseRenderLayout(reverse: Boolean) {
         currentReverseRenderView = reverse
         TUICallState.instance.reverse1v1CallRenderView = reverse
+    }
+
+    public fun showFullScreen() {
+        isShowFullScreen = !isShowFullScreen
+        TUICallState.instance.isShowFullScreen.set(isShowFullScreen)
     }
 }

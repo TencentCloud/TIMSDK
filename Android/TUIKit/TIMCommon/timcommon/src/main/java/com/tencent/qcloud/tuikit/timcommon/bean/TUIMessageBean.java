@@ -44,6 +44,21 @@ public abstract class TUIMessageBean implements Serializable {
      */
     public static final int MSG_STATUS_REVOKE = V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED;
 
+    /**
+     * 消息来源未知
+     */
+    public static final int MSG_SOURCE_UNKNOWN = 0;
+
+    /**
+     * 后台主动 push 的消息
+     */
+    public static final int MSG_SOURCE_ONLINE_PUSH = 1;
+
+    /**
+     * SDK 拉取的历史消息
+     */
+    public static final int MSG_SOURCE_GET_HISTORY = 2;
+
     private V2TIMMessage v2TIMMessage;
     private long msgTime;
     private String extra;
@@ -56,6 +71,7 @@ public abstract class TUIMessageBean implements Serializable {
     private boolean isEnableForward = true;
     private UserBean revoker;
     private boolean hasRiskContent = false;
+    private int messageSource = 0;
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -391,6 +407,18 @@ public abstract class TUIMessageBean implements Serializable {
 
     public void setHasRiskContent(boolean hasRiskContent) {
         this.hasRiskContent = hasRiskContent;
+    }
+
+    public int getMessageSource() {
+        return messageSource;
+    }
+
+    public void setMessageSource(int messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    public boolean customReloadWithNewMsg(V2TIMMessage v2TIMMessage) {
+        return false;
     }
 
     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {

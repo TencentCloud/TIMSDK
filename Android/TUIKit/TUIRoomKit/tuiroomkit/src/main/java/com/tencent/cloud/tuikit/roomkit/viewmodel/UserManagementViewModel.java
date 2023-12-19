@@ -19,7 +19,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel.UserManagementView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserManagementView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
@@ -333,7 +333,7 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        if (TextUtils.equals(mRoomStore.seatUserList.get(position).getUserId(), TUILogin.getUserId())) {
+        if (TextUtils.equals(mRoomStore.allUserList.get(position).getUserId(), mUser.getUserId())) {
             mUserManagementView.updateLayout(isOnSeat);
         }
     }

@@ -28,7 +28,7 @@ class InviteUserButtonModel {
         val groupId = TUICallState.instance.groupId.get()
         if (TextUtils.isEmpty(groupId)) {
             ToastUtil.toastShortMessage(
-                ServiceInitializer.getAppContext().getString(R.string.tuicalling_groupid_is_empty)
+                ServiceInitializer.getAppContext().getString(R.string.tuicallkit_group_id_is_empty)
             )
             return
         }

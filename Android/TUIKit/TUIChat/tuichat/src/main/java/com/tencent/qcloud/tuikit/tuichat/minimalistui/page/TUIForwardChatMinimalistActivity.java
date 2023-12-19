@@ -19,6 +19,7 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageAdap
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 public class TUIForwardChatMinimalistActivity extends BaseMinimalistLightActivity {
     private static final String TAG = TUIForwardChatMinimalistActivity.class.getSimpleName();
@@ -59,7 +60,7 @@ public class TUIForwardChatMinimalistActivity extends BaseMinimalistLightActivit
 
         mFowardChatMessageRecyclerView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
+            public void onUserIconClick(View view, TUIMessageBean messageInfo) {
                 if (!(messageInfo instanceof MergeMessageBean)) {
                     return;
                 }
@@ -72,7 +73,7 @@ public class TUIForwardChatMinimalistActivity extends BaseMinimalistLightActivit
             }
 
             @Override
-            public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+            public void onMessageClick(View view, TUIMessageBean messageBean) {
                 if (messageBean instanceof MergeMessageBean) {
                     Intent intent = new Intent(view.getContext(), TUIForwardChatMinimalistActivity.class);
                     intent.putExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);

@@ -31,4 +31,5 @@
     <color name="test_blue">#338BFF</color>
     <color name="timcommon_transparent">#00000000</color>
 
+    <color name="timcommon_text_highlight_color">#80338BFF</color>
 </resources>

@@ -70,19 +70,23 @@ public class CallingMessageHolder extends TextMessageHolder {
                 }
             });
 
-            msgArea.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener onRecallClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onRecallClick(v, position, msg);
+                        onItemClickListener.onRecallClick(v, msg);
                     }
                 }
-            });
+            };
+
+            msgArea.setOnClickListener(onRecallClickListener);
+            mCallingLayout.setOnClickListener(onRecallClickListener);
 
             if (isForwardMode || isReplyDetailMode) {
                 return;
             }
-            setSelectableTextHelper(msg, msgBodyText, position, false);
+            setSelectableTextHelper(msg, msgBodyText, position);
+            msgBodyText.setOnClickListener(onRecallClickListener);
         }
     }
 }

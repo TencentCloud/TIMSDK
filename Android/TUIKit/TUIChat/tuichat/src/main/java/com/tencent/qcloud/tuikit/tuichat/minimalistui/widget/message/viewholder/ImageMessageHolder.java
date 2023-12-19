@@ -106,7 +106,7 @@ public class ImageMessageHolder extends MessageContentHolder {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(v, position, msg);
+                        onItemClickListener.onMessageClick(v, msg);
                     }
                 }
             });
@@ -131,7 +131,7 @@ public class ImageMessageHolder extends MessageContentHolder {
                 @Override
                 public boolean onLongClick(View view) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(msgArea, position, msg);
+                        onItemClickListener.onMessageLongClick(msgArea, msg);
                     }
                     return true;
                 }

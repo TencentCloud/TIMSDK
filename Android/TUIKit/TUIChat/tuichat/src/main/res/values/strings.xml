@@ -124,7 +124,7 @@
     <string name="play_error_tip">The voice file is damaged or does not exist</string>
     <string name="input_tip">No nickname. Enter again.</string>
     <string name="chat_camera_occupied_tip">Other functions are using the camera.</string>
-
+    <string name="chat_mic_is_being_used_cant_record">Microphone is being used by another function, unable to record.</string>
 
     <string name="delivered">Delivered to</string>
     <string name="someone_unread">%d unread</string>

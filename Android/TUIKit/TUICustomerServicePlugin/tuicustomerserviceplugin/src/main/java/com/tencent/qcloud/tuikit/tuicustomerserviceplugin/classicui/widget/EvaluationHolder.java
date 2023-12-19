@@ -18,6 +18,7 @@ import java.util.List;
 
 public class EvaluationHolder extends MessageBaseHolder {
     private final String TAG = EvaluationHolder.class.getSimpleName();
+    private static final int UNSELECT = -1;
     private View rootView;
     private ViewGroup llStar, llNumber;
     private ImageView ivStar1, ivStar2, ivStar3, ivStar4, ivStar5;
@@ -32,7 +33,7 @@ public class EvaluationHolder extends MessageBaseHolder {
     private TextView tvEvaluationTail;
     private TextView tvSubmitEvaluation;
     private View vSubmitEvaluationFloatLayer;
-    private int selectedIndex;
+    private int selectedIndex = -1;
 
     public EvaluationHolder(View itemView) {
         super(itemView);
@@ -127,20 +128,26 @@ public class EvaluationHolder extends MessageBaseHolder {
             llNumber.setVisibility(View.VISIBLE);
         }
 
-        if (selectedMenu == null && V2TIMManager.getInstance().getServerTime() < expiredTime) {
-            // 未评价过且没过期
-            vSubmitEvaluationFloatLayer.setVisibility(View.GONE);
-            tvSubmitEvaluation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    EvaluationBean.Menu submitMenu = evaluationBean.getMenuList().get(selectedIndex);
-                    presenter.sendEvaluationMessage(submitMenu, evaluationBean.getSessionID());
+        tvSubmitEvaluation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selectedIndex == UNSELECT) {
+                    return;
                 }
-            });
+
+                EvaluationBean.Menu submitMenu = evaluationBean.getMenuList().get(selectedIndex);
+                presenter.sendEvaluationMessage(submitMenu, evaluationBean.getSessionID());
+            }
+        });
+
+        if (selectedMenu == null && V2TIMManager.getInstance().getServerTime() < expiredTime && selectedIndex != UNSELECT) {
+            // 未评价过且没过期且已经选择了分数
+            vSubmitEvaluationFloatLayer.setVisibility(View.GONE);
+            tvSubmitEvaluation.setClickable(true);
         } else {
-            // 已评价或者已过期
+            // 已评价或者已过期或者还未选择分数
             vSubmitEvaluationFloatLayer.setVisibility(View.VISIBLE);
-            tvSubmitEvaluation.setOnClickListener(null);
+            tvSubmitEvaluation.setClickable(false);
         }
 
         if (selectedMenu == null && V2TIMManager.getInstance().getServerTime() < expiredTime) {
@@ -154,6 +161,9 @@ public class EvaluationHolder extends MessageBaseHolder {
                         @Override
                         public void onClick(View view) {
                             selectedIndex = finalI;
+                            // 选择了分数，才可点击
+                            vSubmitEvaluationFloatLayer.setVisibility(View.GONE);
+                            tvSubmitEvaluation.setClickable(true);
                             for (int j = 0; j < ivStarList.size(); j++) {
                                 if (j <= finalI) {
                                     ivStarList.get(j).setBackgroundResource(R.drawable.evaluation_star_active);
@@ -175,6 +185,9 @@ public class EvaluationHolder extends MessageBaseHolder {
                         @Override
                         public void onClick(View view) {
                             selectedIndex = finalI;
+                            // 选择了分数，才可点击
+                            vSubmitEvaluationFloatLayer.setVisibility(View.GONE);
+                            tvSubmitEvaluation.setClickable(true);
                             for (int j = 0; j < tvNumberList.size(); j++) {
                                 if (j <= finalI) {
                                     tvNumberList.get(j).setBackgroundResource(R.drawable.evaluation_number_active_bg_light);

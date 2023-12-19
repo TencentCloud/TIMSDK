@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function
 
 import com.tencent.qcloud.tuikit.TUICommonDefine
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
@@ -12,6 +13,8 @@ class VideoCallerAndCalleeAcceptedViewModel {
     public var isSpeaker = LiveData<Boolean>()
     public var isCameraOpen = LiveData<Boolean>()
     public var frontCamera = LiveData<Boolean>()
+    public var isBottomViewExpanded = LiveData<Boolean>()
+    public var scene = LiveData<TUICallDefine.Scene>()
 
     private var isFrontCameraObserver = Observer<TUICommonDefine.Camera> {
         frontCamera.set(it == TUICommonDefine.Camera.Front)
@@ -27,6 +30,9 @@ class VideoCallerAndCalleeAcceptedViewModel {
         isCameraOpen = TUICallState.instance.isCameraOpen
         frontCamera.set(TUICallState.instance.isFrontCamera.get() == TUICommonDefine.Camera.Front)
 
+        isBottomViewExpanded = TUICallState.instance.isBottomViewExpand
+        scene = TUICallState.instance.scene
+
         addObserver()
     }
 
@@ -40,6 +46,10 @@ class VideoCallerAndCalleeAcceptedViewModel {
         TUICallState.instance.audioPlayoutDevice?.removeObserver(audioPlayoutDeviceObserver)
     }
 
+    fun updateView() {
+        TUICallState.instance.isBottomViewExpand.set(!TUICallState.instance.isBottomViewExpand.get())
+    }
+
     fun closeCamera() {
         EngineManager.instance.closeCamera()
     }
@@ -50,13 +60,25 @@ class VideoCallerAndCalleeAcceptedViewModel {
         } else {
             TUICommonDefine.Camera.Back
         }
-        var videoView = VideoViewFactory.instance.videoEntityList.get(TUICallState.instance.selfUser.get().id)?.videoView
+        val videoView =
+            VideoViewFactory.instance.videoEntityList.get(TUICallState.instance.selfUser.get().id)?.videoView
         EngineManager.instance.openCamera(camera, videoView?.getVideoView(), object :
             TUICommonDefine.Callback {
             override fun onSuccess() {}
 
             override fun onError(errCode: Int, errMsg: String?) {}
         })
+
+        updateGroupCallLargeView()
+    }
+
+    private fun updateGroupCallLargeView() {
+        if (scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            return
+        }
+        if (TUICallState.instance.showLargeViewUserId.get() != TUICallState.instance.selfUser.get().id) {
+            TUICallState.instance.showLargeViewUserId.set(TUICallState.instance.selfUser.get().id)
+        }
     }
 
     fun switchCamera(camera: TUICommonDefine.Camera) {

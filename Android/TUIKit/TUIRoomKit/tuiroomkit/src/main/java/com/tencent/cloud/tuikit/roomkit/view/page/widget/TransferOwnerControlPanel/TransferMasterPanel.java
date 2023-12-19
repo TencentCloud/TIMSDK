@@ -1,4 +1,6 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.transferownercontrolpanel;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel;
+
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_OWNER_EXIT_ROOM_PANEL;
 
 import android.content.Context;
 import android.text.Editable;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.TransferMasterViewModel;
@@ -36,8 +39,9 @@ public class TransferMasterPanel extends BaseBottomDialog implements View.OnClic
     }
 
     @Override
-    public void cancel() {
-        super.cancel();
+    public void dismiss() {
+        super.dismiss();
+        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_OWNER_EXIT_ROOM_PANEL, null);
         mViewModel.destroy();
     }
 

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="tuiroomkit_panel_corner">14dp</dimen>
+
     <dimen name="tuiroomkit_top_view_margin_start">0dp</dimen>
     <dimen name="tuiroomkit_top_view_margin_end">0dp</dimen>
     <dimen name="tuiroomkit_top_view_margin_top">52dp</dimen>
@@ -36,8 +38,6 @@
     <dimen name="tuiroomkit_radio_button_padding_vertical">12dp</dimen>
     <dimen name="tuiroomkit_radio_button_bounds_horizon">24dp</dimen>
     <dimen name="tuiroomkit_radio_button_bounds_vertical">24dp</dimen>
-    <dimen name="tuiroomkit_create_room_margin_bottom">100dp</dimen>
-    <dimen name="tuiroomkit_enter_room_margin_bottom">20dp</dimen>
     <dimen name="tuiroomkit_room_float_view_size">50dp</dimen>
     <dimen name="tuiroomkit_room_video_float_view_width">100dp</dimen>
     <dimen name="tuiroomkit_room_video_float_view_height">180dp</dimen>

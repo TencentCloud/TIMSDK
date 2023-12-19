@@ -167,7 +167,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 } else {
                     ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
                 }
-                return;
             } else {
                 if (position == mHighShowPosition && baseHolder.mContentLayout != null) {
                     baseHolder.startHighLight();
@@ -208,31 +207,31 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
             baseHolder.setOnItemClickListener(new OnItemClickListener() {
                 @Override
-                public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {}
+                public void onMessageLongClick(View view, TUIMessageBean messageInfo) {}
 
                 @Override
-                public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
+                public void onUserIconClick(View view, TUIMessageBean messageInfo) {
                     changeCheckedStatus(messageBean);
                 }
 
                 @Override
-                public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
+                public void onUserIconLongClick(View view, TUIMessageBean messageInfo) {
                     changeCheckedStatus(messageBean);
                 }
 
                 @Override
-                public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {}
+                public void onReEditRevokeMessage(View view, TUIMessageBean messageInfo) {}
 
                 @Override
-                public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {}
+                public void onRecallClick(View view, TUIMessageBean messageInfo) {}
 
                 @Override
-                public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {
+                public void onReplyMessageClick(View view, TUIMessageBean messageBean) {
                     changeCheckedStatus(messageBean);
                 }
 
                 @Override
-                public void onMessageClick(View view, int position, TUIMessageBean messageInfo) {
+                public void onMessageClick(View view, TUIMessageBean messageInfo) {
                     changeCheckedStatus(messageBean);
                 }
             });

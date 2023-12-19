@@ -120,6 +120,7 @@ public class RoomEventDispatcher extends TUIRoomObserver {
     public void onUserRoleChanged(String userId, TUIRoomDefine.Role role) {
         if (TextUtils.equals(userId, mRoomStore.userModel.userId)) {
             mRoomStore.userModel.role = role;
+            RoomEngineManager.sharedInstance().autoTakeSeatForOwner(null);
         }
         if (role == TUIRoomDefine.Role.ROOM_OWNER) {
             mRoomStore.roomInfo.ownerId = userId;
@@ -271,5 +272,6 @@ public class RoomEventDispatcher extends TUIRoomObserver {
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_USER_ID, userId);
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.KICKED_OFF_SEAT, map);
+        mRoomStore.audioModel.setMicOpen(false);
     }
 }

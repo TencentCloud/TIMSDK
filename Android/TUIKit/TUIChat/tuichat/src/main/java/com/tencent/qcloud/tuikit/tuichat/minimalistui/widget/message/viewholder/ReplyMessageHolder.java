@@ -74,7 +74,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onReplyMessageClick(v, position, replyMessageBean);
+                    onItemClickListener.onReplyMessageClick(v, replyMessageBean);
                 }
             }
         });
@@ -83,7 +83,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
             @Override
             public boolean onLongClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(msgArea, position, replyMessageBean);
+                    onItemClickListener.onMessageLongClick(msgArea, replyMessageBean);
                 }
                 return true;
             }

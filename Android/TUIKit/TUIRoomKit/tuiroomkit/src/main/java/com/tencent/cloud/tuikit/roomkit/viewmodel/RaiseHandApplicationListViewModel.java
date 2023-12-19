@@ -16,7 +16,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.raisehandcontrolpanel.RaiseHandApplicationListPanel;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
 
 import java.util.ArrayList;
 import java.util.List;

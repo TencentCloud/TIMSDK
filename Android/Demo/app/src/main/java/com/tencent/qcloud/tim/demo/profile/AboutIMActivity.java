@@ -31,7 +31,12 @@ public class AboutIMActivity extends BaseLightActivity implements View.OnClickLi
     private void setupViews() {
         titleBarLayout.getRightIcon().setVisibility(View.GONE);
         titleBarLayout.setTitle(getResources().getString(R.string.about_im), ITitleBarLayout.Position.MIDDLE);
-        titleBarLayout.setOnLeftClickListener(this);
+        titleBarLayout.setOnLeftClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         String sdkVersion = V2TIMManager.getInstance().getVersion();
         sdkVersionLv.setContent(sdkVersion);

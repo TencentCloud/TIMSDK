@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/community_topic_list_item_bg"
@@ -43,15 +44,63 @@
         android:textColor="@color/black_font_color"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/topic_last_msg"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topic_title"
-        android:layout_alignStart="@id/topic_title"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="#999999"
-        android:textSize="12sp" />
+        android:layout_alignStart="@id/topic_title" >
+        <TextView
+            android:id="@+id/topic_at_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/read_dot_bg"
+            android:textSize="13.44sp"
+            android:visibility="gone"
+            android:text="@string/ui_at_all"
+            tools:visibility="visible"
+            tools:text="[at all]"/>
+
+        <TextView
+            android:id="@+id/topic_at_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/topic_at_all"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/read_dot_bg"
+            android:textSize="13.44sp"
+            android:visibility="gone"
+            android:text="@string/ui_at_me"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/topic_draft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/topic_at_me"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/read_dot_bg"
+            android:textSize="13.44sp"
+            android:visibility="gone"
+            android:text="@string/drafts"
+            tools:visibility="visible" />
+        <TextView
+            android:id="@+id/topic_last_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/topic_draft"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            tools:text="消息内容"/>
+    </RelativeLayout>
 
 </RelativeLayout>

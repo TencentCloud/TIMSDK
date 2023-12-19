@@ -35,6 +35,7 @@ import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
@@ -295,6 +296,11 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mSendAudioButton.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (TUILogin.getCurrentBusinessScene() != TUILogin.TUIBusinessScene.NONE) {
+                    TUIChatLog.w(TAG, "Microphone is being used by another function, unable to record.");
+                    ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.chat_mic_is_being_used_cant_record));
+                    return true;
+                }
                 PermissionHelper.requestPermission(PermissionHelper.PERMISSION_MICROPHONE, new PermissionHelper.PermissionCallback() {
                     @Override
                     public void onGranted() {
@@ -1330,11 +1336,11 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM, true);
         } else {
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL,
-                !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableVideoCall() || !getChatInfo().isEnableVideoCall());
+                !TUIChatConfigs.getGeneralConfig().isEnableVideoCall() || !getChatInfo().isEnableVideoCall());
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL,
-                !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAudioCall() || !getChatInfo().isEnableAudioCall());
+                !TUIChatConfigs.getGeneralConfig().isEnableAudioCall() || !getChatInfo().isEnableAudioCall());
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM,
-                !TUIChatConfigs.getConfigs().getGeneralConfig().isEnableRoomKit() || !getChatInfo().isEnableRoom());
+                !TUIChatConfigs.getGeneralConfig().isEnableRoomKit() || !getChatInfo().isEnableRoom());
         }
         param.put(TUIConstants.TUIChat.Extension.InputMore.INPUT_MORE_LISTENER, chatInputMoreListener);
         List<TUIExtensionInfo> extensionList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID, param);

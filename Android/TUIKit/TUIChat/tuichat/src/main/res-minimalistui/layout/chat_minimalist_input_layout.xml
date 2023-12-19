@@ -150,7 +150,7 @@
                 android:textColor="@color/text_color_gray"
                 android:visibility="visible" />
 
-            <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview.VoiceWaveView.VoiceWaveView
+            <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview.VoiceWaveView
                 android:id="@+id/voice_wave_view"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"

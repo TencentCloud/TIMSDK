@@ -32,4 +32,10 @@ public class TUIC2CChatActivity extends TUIBaseChatActivity {
         chatFragment.setPresenter(presenter);
         getSupportFragmentManager().beginTransaction().replace(R.id.empty_view, chatFragment).commitAllowingStateLoss();
     }
+
+    @Override
+    protected void onDestroy() {
+        presenter.removeC2CChatEventListener();
+        super.onDestroy();
+    }
 }

@@ -556,7 +556,8 @@ public class ConversationPresenter {
         ArrayList<ConversationInfo> changedInfoList = new ArrayList<>();
         ArrayList<ConversationInfo> addInfoList = new ArrayList<>();
         // 会话列表处理：折叠列表新增/折叠列表更新替换/折叠列表删除/UI加载列表新增/UI加载列表更新替换  process conversation list: add to fold list/update fold
-        // list/delete from fold list/add to ui list/update in ui list 1、存在于折叠列表  exist in fold list
+        // list/delete from fold list/add to ui list/update in ui list
+        // 1、存在于折叠列表  exist in fold list
         //  1.1 是折叠的，替换折叠列表中的对应会话  is folded status, replace it from fold list
         //  1.2 非折叠的，从折叠列表删除该会话，并收集到新增列表中 is not folded status, delete it from fold list, and collect it in added list
         // 2、不存在于折叠列表  not exist in fold list

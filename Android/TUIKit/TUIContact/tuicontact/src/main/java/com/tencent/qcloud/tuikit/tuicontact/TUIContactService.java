@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.tuicontact;
 
 import android.content.Context;
+
+import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
@@ -10,6 +12,10 @@ import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
@@ -20,7 +26,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class TUIContactService extends ServiceInitializer implements ITUIContactService {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency("TIMCommon")
+@TUIInitializerID("TUIContact")
+public class TUIContactService implements TUIInitializer, ITUIContactService {
     public static final String TAG = TUIContactService.class.getSimpleName();
 
     private static TUIContactService instance;
@@ -34,6 +43,7 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
     @Override
     public void init(Context context) {
         instance = this;
+        initTheme();
         initService();
         initEvent();
         initIMListener();
@@ -207,18 +217,13 @@ public class TUIContactService extends ServiceInitializer implements ITUIContact
         contactEventListenerList.add(reference);
     }
 
-    @Override
-    public int getLightThemeResId() {
-        return R.style.TUIContactLightTheme;
+    private void initTheme() {
+        TUIThemeManager.addLightTheme(R.style.TUIContactLightTheme);
+        TUIThemeManager.addLivelyTheme(R.style.TUIContactLivelyTheme);
+        TUIThemeManager.addSeriousTheme(R.style.TUIContactSeriousTheme);
     }
 
-    @Override
-    public int getLivelyThemeResId() {
-        return R.style.TUIContactLivelyTheme;
-    }
-
-    @Override
-    public int getSeriousThemeResId() {
-        return R.style.TUIContactSeriousTheme;
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

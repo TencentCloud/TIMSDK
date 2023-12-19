@@ -131,7 +131,13 @@ public class TUIOfflinePushManager {
         TUIOfflinePushLog.d(TAG, "callJsNotificationCallback ext = " + ext);
         if (jsNotificationCallback != null) {
             JSONObject data = new JSONObject();
-            data.put(TUIOfflinePushModule.RESPONSE_NOTIFICATION_KEY, ext);
+            data.put(TUIOfflinePushModule.RESPONSE_CODE_KEY, TUIOfflinePushModule.RESPONSE_CODE_SUCCESS);
+            data.put(TUIOfflinePushModule.RESPONSE_MSG_KEY, "success");
+
+            JSONObject dataData = new JSONObject();
+            dataData.put(TUIOfflinePushModule.RESPONSE_NOTIFICATION_KEY, ext);
+
+            data.put(TUIOfflinePushModule.RESPONSE_DATA_KEY, dataData);
             TUIOfflinePushLog.d(TAG, "callJsNotificationCallback invoke data--" + data);
             jsNotificationCallback.invokeAndKeepAlive(data);
             mClickIntentData = null;

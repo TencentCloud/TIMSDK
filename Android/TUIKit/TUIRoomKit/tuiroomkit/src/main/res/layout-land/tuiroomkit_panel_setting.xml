@@ -98,7 +98,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="1px"
                 android:layout_marginBottom="1px"
-                android:background="#B2BBD1"/>
+                android:background="@color/tuiroomkit_color_divide_line"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/tuiroomkit_settings_video_fps"
@@ -219,7 +219,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="1px"
                 android:layout_marginBottom="1px"
-                android:background="#B2BBD1"/>
+                android:background="@color/tuiroomkit_color_divide_line"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -273,7 +273,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="1px"
                 android:layout_marginBottom="1px"
-                android:background="#B2BBD1"/>
+                android:background="@color/tuiroomkit_color_divide_line"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -291,12 +291,12 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/tuiroomkit_switch_audio_volume_evaluation"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
-                    android:thumb="@drawable/tuiroomkit_switch_thumb"
-                    android:track="@drawable/tuiroomkit_switch_track"
+                    android:thumb="@drawable/tuiroomkit_switch_thumb_selector"
+                    app:track="@drawable/tuiroomkit_switch_track_selector"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"

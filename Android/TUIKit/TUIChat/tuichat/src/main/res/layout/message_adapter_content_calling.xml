@@ -10,7 +10,6 @@
         android:id="@+id/left_icon"
         android:layout_width="15.36dp"
         android:layout_height="15.36dp"
-        android:layout_centerInParent="true"
         android:clickable="false"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_audio_call" />
@@ -30,7 +29,6 @@
         android:id="@+id/right_icon"
         android:layout_width="15.36dp"
         android:layout_height="15.36dp"
-        android:layout_centerInParent="true"
         android:scaleType="fitCenter"
         android:clickable="false"
         android:src="@drawable/ic_audio_call" />

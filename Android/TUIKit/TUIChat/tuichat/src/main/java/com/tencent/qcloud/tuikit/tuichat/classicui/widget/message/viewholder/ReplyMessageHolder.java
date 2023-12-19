@@ -42,6 +42,9 @@ public class ReplyMessageHolder extends MessageContentHolder {
         originMsgLayout = itemView.findViewById(R.id.origin_msg_abs_layout);
         quoteFrameLayout = itemView.findViewById(R.id.quote_frame_layout);
         line = itemView.findViewById(R.id.reply_line);
+
+        replyContentTv.setTextIsSelectable(true);
+        replyContentTv.setHighlightColor(itemView.getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.timcommon_text_highlight_color));
     }
 
     @Override
@@ -92,11 +95,8 @@ public class ReplyMessageHolder extends MessageContentHolder {
         if (isForwardMode || isReplyDetailMode) {
             return;
         }
-        boolean isEmoji = false;
-        if (!TextUtils.isEmpty(replyContent)) {
-            isEmoji = FaceManager.handlerEmojiText(replyContentTv, replyContent, false);
-        }
-        setSelectableTextHelper(msg, replyContentTv, position, isEmoji);
+
+        setSelectableTextHelper(msg, replyContentTv, position);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onReplyMessageClick(v, position, replyMessageBean);
+                        onItemClickListener.onReplyMessageClick(v, replyMessageBean);
                     }
                 }
             });

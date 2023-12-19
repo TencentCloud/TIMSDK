@@ -63,15 +63,10 @@ class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
         ImageLoader.loadImage(context, imageAvatar, mViewModel.avatar.get(), R.drawable.tuicallkit_ic_avatar)
         textUserName!!.text = mViewModel.nickname.get()
         textInviteHint!!.text = mViewModel.callTag
-        val textColor = if (TUICallDefine.MediaType.Video == mViewModel.mediaType.get()) {
-            context.resources.getColor(R.color.tuicalling_color_white)
-        }else {
-            context.resources.getColor(R.color.tuicalling_color_black)
-        }
-        textInviteHint?.setTextColor(textColor)
-        textUserName?.setTextColor(textColor)
-        if(mViewModel.callStatus.get() == TUICallDefine.Status.Accept
-            || mViewModel.mediaType.get() == TUICallDefine.MediaType.Audio) {
+
+        if (mViewModel.callStatus.get() == TUICallDefine.Status.Accept
+            || mViewModel.mediaType.get() == TUICallDefine.MediaType.Audio
+        ) {
             this.visibility = GONE
         } else {
             this.visibility = VISIBLE

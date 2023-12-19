@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="11.52dp"
+    android:focusable="true"
+    android:paddingBottom="11.52dp">
+
+    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
+        android:id="@+id/chat_bot_avatar"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="15.36dp"
+        android:layout_marginStart="15.36dp"/>
+
+    <TextView
+        android:id="@+id/chat_bot_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11.52dp"
+        android:layout_marginStart="11.52dp"
+        android:gravity="start"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:textSize="17.28sp"
+        tools:text="客服1"/>
+</LinearLayout>

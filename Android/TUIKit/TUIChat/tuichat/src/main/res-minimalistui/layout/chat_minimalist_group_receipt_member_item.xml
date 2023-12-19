@@ -19,7 +19,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:scaleType="centerCrop"
-        app:round_radius="16dp" />
+        app:round_radius="32dp" />
 
     <TextView
         android:id="@+id/name_tv"

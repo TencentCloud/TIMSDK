@@ -1,10 +1,12 @@
 package com.tencent.cloud.tuikit.roomkit.view.component;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +23,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.cloud.tuikit.roomkit.R;
 
 public abstract class BaseBottomDialog extends BottomSheetDialog {
+    private static final String TAG = "BaseBottomDialog";
+
     private View                      bottomSheetView;
     private BottomSheetBehavior<View> mBehavior;
 
+    private Context mContext;
+
     public BaseBottomDialog(@NonNull Context context) {
         super(context);
+        mContext = context;
     }
 
     @Override
@@ -67,6 +74,13 @@ public abstract class BaseBottomDialog extends BottomSheetDialog {
     }
 
     private void handleScreenOrientationChanged(Configuration configuration) {
+        if (mContext != null && mContext instanceof Activity) {
+            Activity activity = (Activity) mContext;
+            if (activity.isFinishing()) {
+                Log.e(TAG, "handleScreenOrientationChanged activity is finishing");
+                return;
+            }
+        }
         Window window = getWindow();
         if (window == null) {
             return;

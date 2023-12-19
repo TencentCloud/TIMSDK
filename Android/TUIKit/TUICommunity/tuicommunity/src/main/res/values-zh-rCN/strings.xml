@@ -107,4 +107,12 @@
     <string name="community_coming_soon">敬请期待</string>
     <string name="community_accept">同意</string>
     <string name="community_refuse">拒绝</string>
+
+    <string name="ui_at_all">[@所有人]</string>
+    <string name="ui_at_me">[有人@我]</string>
+    <string name="ui_at_all_me">[@所有人][有人@我]</string>
+    <string name="drafts">[草稿]</string>
+
+    <string name="clear_message">清除聊天记录</string>
+    <string name="clear_message_tip">确认清除聊天记录？</string>
 </resources>

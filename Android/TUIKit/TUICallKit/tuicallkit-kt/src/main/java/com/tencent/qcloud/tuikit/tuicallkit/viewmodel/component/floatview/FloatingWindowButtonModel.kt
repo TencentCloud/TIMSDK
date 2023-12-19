@@ -4,18 +4,22 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatWindowService
-import com.tencent.qcloud.tuikit.tuicallkit.view.floatwindow.FloatingWindowView
+import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 
 class FloatingWindowButtonModel {
-    public var mediaType = LiveData<TUICallDefine.MediaType>()
-    public var enableFloatWindow : Boolean
+    public var scene = LiveData<TUICallDefine.Scene>()
+    public var enableFloatWindow: Boolean
+    public var callStatus = LiveData<TUICallDefine.Status>()
+    public var callRole = LiveData<TUICallDefine.Role>()
 
     init {
-        mediaType = TUICallState.instance.mediaType
+        scene = TUICallState.instance.scene
         enableFloatWindow = TUICallState.instance.enableFloatWindow
+        callStatus = TUICallState.instance.selfUser.get().callStatus
+        callRole = TUICallState.instance.selfUser.get().callRole
     }
 
-    fun startFloatService(view: FloatingWindowView) {
+    fun startFloatService(view: BaseCallView) {
         FloatWindowService.startFloatService(view)
     }
 }

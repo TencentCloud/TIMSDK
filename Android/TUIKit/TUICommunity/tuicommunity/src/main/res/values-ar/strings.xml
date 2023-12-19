@@ -105,4 +105,12 @@
     <string name="community_coming_soon">قريبًا</string>
     <string name="community_accept">موافق</string>
     <string name="community_refuse">رفض</string>
+
+    <string name="ui_at_all">[@الجميع]</string>
+    <string name="ui_at_me">[شخص ما @ لي]</string>
+    <string name="ui_at_all_me">[@الجميع][شخص ما @ لي]</string>
+    <string name="drafts">[مسودة]</string>
+
+    <string name="clear_message">مسح سجل الدردشة</string>
+    <string name="clear_message_tip">هل تريد بالتأكيد مسح سجل الدردشة؟</string>
 </resources>

@@ -3,14 +3,19 @@ package com.tencent.qcloud.tuikit.tuichat.classicui;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
@@ -80,7 +85,10 @@ import java.util.Set;
 /**
  * Internal service for ClassicUI
  */
-public class ClassicUIService extends ServiceInitializer implements ITUIExtension, ITUIService {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency("TUIChat")
+@TUIInitializerID("TUIChatClassic")
+public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIService {
     private static ClassicUIService instance;
 
     public static ClassicUIService getInstance() {
@@ -96,6 +104,7 @@ public class ClassicUIService extends ServiceInitializer implements ITUIExtensio
     @Override
     public void init(Context context) {
         instance = this;
+        initTheme();
         initService();
         initMessage();
         initExtension();
@@ -189,19 +198,10 @@ public class ClassicUIService extends ServiceInitializer implements ITUIExtensio
         return emptyViewGroupMessageSet.contains(viewType);
     }
 
-    @Override
-    public int getLightThemeResId() {
-        return R.style.TUIChatLightTheme;
-    }
-
-    @Override
-    public int getLivelyThemeResId() {
-        return R.style.TUIChatLivelyTheme;
-    }
-
-    @Override
-    public int getSeriousThemeResId() {
-        return R.style.TUIChatSeriousTheme;
+    private void initTheme() {
+        TUIThemeManager.addLightTheme(R.style.TUIChatLightTheme);
+        TUIThemeManager.addLivelyTheme(R.style.TUIChatLivelyTheme);
+        TUIThemeManager.addSeriousTheme(R.style.TUIChatSeriousTheme);
     }
 
     @Override
@@ -270,5 +270,9 @@ public class ClassicUIService extends ServiceInitializer implements ITUIExtensio
         if (messageReplyBeanClass != null && messageReplyViewClass != null) {
             addReplyMessage(messageReplyBeanClass, messageReplyViewClass);
         }
+    }
+
+    public static Context getAppContext() {
+        return TUIChatService.getAppContext();
     }
 }

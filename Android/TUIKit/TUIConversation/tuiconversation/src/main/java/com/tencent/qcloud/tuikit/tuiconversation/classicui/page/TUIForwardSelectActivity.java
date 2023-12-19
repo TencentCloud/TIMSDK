@@ -24,7 +24,6 @@ public class TUIForwardSelectActivity extends BaseLightActivity {
     protected void onNewIntent(Intent intent) {
         TUIConversationLog.i(TAG, "onNewIntent");
         super.onNewIntent(intent);
-        ;
     }
 
     @Override

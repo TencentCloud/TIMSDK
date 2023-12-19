@@ -40,38 +40,45 @@ public class TipsMessageHolder extends MessageBaseHolder {
             mChatTipsTv.setTextSize(properties.getTipsMessageFontSize());
         }
 
+        mReEditText.setVisibility(View.GONE);
+        mReEditText.setOnClickListener(null);
+
         if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-            String showString = itemView.getResources().getString(R.string.revoke_tips_other);
-            if (msg.isSelf()) {
-                int msgType = msg.getMsgType();
-                if (msgType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
-                    long nowtime = V2TIMManager.getInstance().getServerTime();
-                    long msgtime = msg.getMessageTime();
-                    if ((int) (nowtime - msgtime) < 2 * 60) {
-                        mReEditText.setVisibility(View.VISIBLE);
-                        mReEditText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                onItemClickListener.onReEditRevokeMessage(view, position, msg);
-                            }
-                        });
-                    } else {
-                        mReEditText.setVisibility(View.GONE);
-                    }
-                }
-                showString = itemView.getResources().getString(R.string.revoke_tips_you);
-            } else if (msg.isGroup()) {
-                String sender = TUIChatConstants.covert2HTMLString(msg.getUserDisplayName());
-                showString = sender + itemView.getResources().getString(R.string.revoke_tips);
-                mReEditText.setVisibility(View.GONE);
-                mReEditText.setOnClickListener(null);
-            }
-            mChatTipsTv.setText(Html.fromHtml(showString));
+            handleRevoke(msg);
         }
 
         if (msg instanceof TipsMessageBean) {
             mChatTipsTv.setText(Html.fromHtml(((TipsMessageBean) msg).getText()));
         }
+    }
+
+    private void handleRevoke(TUIMessageBean msg) {
+        String showString = itemView.getResources().getString(R.string.revoke_tips_other);
+        if (msg.isSelf()) {
+            int msgType = msg.getMsgType();
+            if (msgType == V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
+                long nowtime = V2TIMManager.getInstance().getServerTime();
+                long msgtime = msg.getMessageTime();
+                if ((int) (nowtime - msgtime) < 2 * 60) {
+                    mReEditText.setVisibility(View.VISIBLE);
+                    mReEditText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onItemClickListener.onReEditRevokeMessage(view, msg);
+                        }
+                    });
+                } else {
+                    mReEditText.setVisibility(View.GONE);
+                }
+            }
+            showString = itemView.getResources().getString(R.string.revoke_tips_you);
+        } else if (msg.isGroup()) {
+            String sender = TUIChatConstants.covert2HTMLString(msg.getUserDisplayName());
+            showString = sender + itemView.getResources().getString(R.string.revoke_tips);
+            mReEditText.setVisibility(View.GONE);
+            mReEditText.setOnClickListener(null);
+        }
+        mChatTipsTv.setText(Html.fromHtml(showString));
     }
 
     @Override

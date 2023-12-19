@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.videoseat.ui.view;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -77,13 +78,6 @@ public class UserDisplayView extends FrameLayout {
             return;
         }
         addRoomVideoView(model);
-        if (model.isSelf()) {
-            mViewBackground.setVisibility(model.isVideoAvailable() ? GONE : VISIBLE);
-            mUserHeadImg.setVisibility(model.isVideoAvailable() ? GONE : VISIBLE);
-        } else {
-            mViewBackground.setVisibility(model.isVideoPlaying() ? GONE : VISIBLE);
-            mUserHeadImg.setVisibility(model.isVideoPlaying() ? GONE : VISIBLE);
-        }
         updateUserAvatarIfNeeded(mMemberEntity, model);
 
         mUserNameTv.setText(model.getUserName());
@@ -97,6 +91,7 @@ public class UserDisplayView extends FrameLayout {
         mTopLayout.setVisibility(VISIBLE);
 
         mMemberEntity = model;
+        updateVideoEnableEffect();
     }
 
     private void updateUserAvatarIfNeeded(UserEntity oldUser, UserEntity newUser) {
@@ -119,15 +114,21 @@ public class UserDisplayView extends FrameLayout {
         if (videoView == null) {
             return;
         }
-        ViewParent viewParent = videoView.getParent();
-        if (viewParent != null && (viewParent instanceof ViewGroup)) {
-            if (viewParent == mVideoContainer) {
-                return;
+        // addView 需要在 ViewGroup 测量、布局之后才能执行；
+        post(new Runnable() {
+            @Override
+            public void run() {
+                ViewParent viewParent = videoView.getParent();
+                if (viewParent != null && (viewParent instanceof ViewGroup)) {
+                    if (viewParent == mVideoContainer) {
+                        return;
+                    }
+                    ((ViewGroup) viewParent).removeView(videoView);
+                }
+                mVideoContainer.removeAllViews();
+                mVideoContainer.addView(videoView);
             }
-            ((ViewGroup) viewParent).removeView(videoView);
-        }
-        mVideoContainer.removeAllViews();
-        mVideoContainer.addView(videoView);
+        });
     }
 
     public void clearUserEntity() {
@@ -139,6 +140,19 @@ public class UserDisplayView extends FrameLayout {
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         mOnClickListener = l;
+    }
+
+    public void updateVideoEnableEffect() {
+        if (mMemberEntity == null) {
+            return;
+        }
+        if (mMemberEntity.isSelf()) {
+            mViewBackground.setVisibility(mMemberEntity.isVideoAvailable() ? GONE : VISIBLE);
+            mUserHeadImg.setVisibility(mMemberEntity.isVideoAvailable() ? GONE : VISIBLE);
+        } else {
+            mViewBackground.setVisibility(mMemberEntity.isVideoPlaying() ? GONE : VISIBLE);
+            mUserHeadImg.setVisibility(mMemberEntity.isVideoPlaying() ? GONE : VISIBLE);
+        }
     }
 
     public void enableVolumeEffect(boolean enable) {

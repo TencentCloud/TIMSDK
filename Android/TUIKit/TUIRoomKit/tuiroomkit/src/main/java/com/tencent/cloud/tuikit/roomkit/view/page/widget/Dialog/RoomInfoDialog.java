@@ -1,4 +1,6 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.dialog;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog;
+
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomInfoViewModel;
@@ -34,8 +37,9 @@ public class RoomInfoDialog extends BaseBottomDialog {
     }
 
     @Override
-    public void cancel() {
-        super.cancel();
+    public void dismiss() {
+        super.dismiss();
+        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_MEETING_INFO, null);
         mViewModel.destroy();
     }
 

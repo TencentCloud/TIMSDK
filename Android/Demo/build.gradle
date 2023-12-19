@@ -1,16 +1,32 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import org.gradle.util.VersionNumber
 
 buildscript {
-    ext.kotlin_version = '1.5.31'
     repositories {
         mavenCentral()
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
+        // 配置HMS Core SDK的Maven仓地址。
+        maven {url 'https://developer.huawei.com/repo/'}
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.0'
+        VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
+        if (currentGradleVersion.major >= 8) {
+            classpath 'com.android.tools.build:gradle:8.0.2'
+        } else if (currentGradleVersion.major >= 7) {
+            classpath 'com.android.tools.build:gradle:7.0.0'
+        } else {
+            classpath 'com.android.tools.build:gradle:4.2.0'
+        }
         classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.huawei.agconnect:agcp:1.4.1.300'
         classpath 'com.kezong:fat-aar:1.2.17'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        if (currentGradleVersion.major >= 8) {
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+        } else {
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+        }
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -20,6 +36,8 @@ allprojects {
     repositories {
         mavenCentral()
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
+        // 配置HMS Core SDK的Maven仓地址。
+        maven {url 'https://developer.huawei.com/repo/'}
     }
 
     tasks.withType(Javadoc) {
@@ -39,10 +57,11 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 30
     versionCode = 1
-    versionName = "7.6.5011"
+    versionName = "7.7.5282"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"
+
 }
 
 task clean(type: Delete) {

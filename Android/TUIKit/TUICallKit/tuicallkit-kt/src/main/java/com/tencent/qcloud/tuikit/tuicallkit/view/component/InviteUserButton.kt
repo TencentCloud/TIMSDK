@@ -40,11 +40,7 @@ class InviteUserButton(context: Context) : ImageView(context) {
     }
 
     private fun initView() {
-        if (TUICallDefine.MediaType.Video == viewModel.mediaType.get()) {
-            setBackgroundResource(R.drawable.tuicallkit_ic_add_user_white)
-        } else {
-            setBackgroundResource(R.drawable.tuicallkit_ic_add_user_black)
-        }
+        setBackgroundResource(R.drawable.tuicallkit_ic_add_user_black)
         val lp = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT

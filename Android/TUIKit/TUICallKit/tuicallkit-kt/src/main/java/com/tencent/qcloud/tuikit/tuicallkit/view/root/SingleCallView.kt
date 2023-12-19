@@ -8,28 +8,27 @@ import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.view.component.SwitchAudioView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.CallTimerView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatingWindowButton
-import com.tencent.qcloud.tuikit.tuicallkit.view.component.function.*
-import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.SingleCallVideoLayout
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.function.AudioAndVideoCalleeWaitingView
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.function.AudioCallerWaitingAndAcceptedView
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.function.VideoCallerAndCalleeAcceptedView
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.function.VideoCallerWaitingView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.userinfo.single.AudioCallUserInfoView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.userinfo.single.VideoCallUserInfoView
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.SingleCallVideoLayout
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.root.SingleCallViewModel
 
 class SingleCallView(context: Context) : RelativeLayout(context) {
-
     private var layoutTimer: RelativeLayout? = null
     private var layoutUserInfoVideo: RelativeLayout? = null
     private var layoutUserInfoAudio: RelativeLayout? = null
-    private var layoutSwitchAudio: RelativeLayout? = null
     private var layoutFunction: RelativeLayout? = null
     private var layoutFloatIcon: RelativeLayout? = null
     private var layoutRender: RelativeLayout? = null
 
     private var functionView: BaseCallView? = null
     private var userInfoView: BaseCallView? = null
-    private var switchAudioView: SwitchAudioView? = null
     private var callTimerView: CallTimerView? = null
     private var singleCallVideoLayout: SingleCallVideoLayout? = null
     private var floatingWindowButton: FloatingWindowButton? = null
@@ -45,22 +44,34 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
         if (it != TUICallDefine.MediaType.Unknown) {
             refreshUserInfoView()
             refreshFunctionView()
-            refreshSwitchAudioView()
             refreshRenderView()
             refreshFloatView()
         }
     }
 
+    private var isShowFullScreenObserver = Observer<Boolean> {
+        if (it) {
+            layoutFloatIcon?.visibility = GONE
+            layoutTimer?.visibility = GONE
+            layoutFunction?.visibility = GONE
+        } else {
+            layoutFloatIcon?.visibility = VISIBLE
+            layoutTimer?.visibility = VISIBLE
+            layoutFunction?.visibility = VISIBLE
+            layoutFloatIcon?.bringToFront()
+            layoutTimer?.bringToFront()
+            layoutFunction?.bringToFront()
+        }
+    }
+
     init {
         initView()
-
         addObserver()
     }
 
     fun clear() {
         functionView?.clear()
         userInfoView?.clear()
-        switchAudioView?.clear()
         callTimerView?.clear()
         singleCallVideoLayout?.clear()
         floatingWindowButton?.clear()
@@ -73,13 +84,11 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
         layoutFloatIcon = findViewById(R.id.rl_layout_float_icon)
         layoutUserInfoVideo = findViewById(R.id.rl_video_user_info_layout)
         layoutUserInfoAudio = findViewById(R.id.rl_audio_user_info_layout)
-        layoutSwitchAudio = findViewById(R.id.rl_switch_audio)
         layoutTimer = findViewById(R.id.rl_single_time)
         layoutFunction = findViewById(R.id.rl_single_function)
 
         refreshUserInfoView()
         refreshFunctionView()
-        refreshSwitchAudioView()
         refreshTimerView()
         refreshRenderView()
         refreshFloatView()
@@ -113,25 +122,16 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
         }
     }
 
-    private fun refreshSwitchAudioView() {
-        if (viewModel.mediaType.get() == TUICallDefine.MediaType.Video) {
-            switchAudioView = SwitchAudioView(context)
-            layoutSwitchAudio!!.removeAllViews()
-            layoutSwitchAudio!!.addView(switchAudioView)
-        } else {
-            layoutSwitchAudio!!.removeAllViews()
-            switchAudioView = null
-        }
-    }
-
     private fun addObserver() {
         viewModel.callStatus.observe(callStatusObserver)
         viewModel.mediaType.observe(mediaTypeObserver)
+        viewModel.isShowFullScreen.observe(isShowFullScreenObserver)
     }
 
     private fun removeObserver() {
         viewModel.callStatus.removeObserver(callStatusObserver)
         viewModel.mediaType.removeObserver(mediaTypeObserver)
+        viewModel.isShowFullScreen.removeObserver(isShowFullScreenObserver)
     }
 
     private fun refreshUserInfoView() {

@@ -30,13 +30,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
-        <provider
-            android:name=".TIMAppService"
-            android:authorities="${applicationId}.TIMApp.Init"
-            android:enabled="true"
-            android:exported="false" />
-
-
         <activity android:name=".login.ThemeSelectActivity"
             android:screenOrientation="portrait"/>
 

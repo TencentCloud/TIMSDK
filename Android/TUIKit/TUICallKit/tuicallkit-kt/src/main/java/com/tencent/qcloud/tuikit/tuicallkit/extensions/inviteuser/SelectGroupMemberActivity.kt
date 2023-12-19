@@ -15,9 +15,12 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberFullInfo
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfoResult
 import com.tencent.imsdk.v2.V2TIMManager
 import com.tencent.imsdk.v2.V2TIMValueCallback
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
+import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class SelectGroupMemberActivity : AppCompatActivity() {
     private var recyclerUserList: RecyclerView? = null
@@ -25,13 +28,20 @@ class SelectGroupMemberActivity : AppCompatActivity() {
     private val groupMemberList: MutableList<GroupMemberInfo> = ArrayList()
     private var alreadySelectList: List<String?> = ArrayList()
     private var adapter: SelectGroupMemberAdapter? = null
+
+    private var callStatusObserver = Observer<TUICallDefine.Status> {
+        if (it == TUICallDefine.Status.None) {
+            finish()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tuicallkit_activity_group_user)
-        activity = this
         initStatusBar()
         initView()
         initData()
+        addObserver()
     }
 
     private fun initView() {
@@ -108,14 +118,16 @@ class SelectGroupMemberActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private var activity: AppCompatActivity? = null
-        fun finishActivity() {
-            if (activity == null || activity!!.isFinishing) {
-                return
-            }
-            activity!!.finish()
-            activity = null
-        }
+    private fun addObserver() {
+        TUICallState.instance.selfUser.get().callStatus.observe(callStatusObserver)
+    }
+
+    private fun removeObserver() {
+        TUICallState.instance.selfUser.get().callStatus.removeObserver(callStatusObserver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removeObserver()
     }
 }

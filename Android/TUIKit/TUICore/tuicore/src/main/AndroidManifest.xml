@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tencent.qcloud.tuicore">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
         <activity
-            android:name=".permission.PermissionActivity"
+            android:name="com.tencent.qcloud.tuicore.permission.PermissionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/CoreActivityTranslucent"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <activity
-            android:name=".util.PermissionRequester$PermissionActivity"
+            android:name="com.tencent.qcloud.tuicore.util.PermissionRequester$PermissionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:multiprocess="true"
             android:launchMode="singleTask"
@@ -19,8 +18,9 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <provider
-            android:name=".ServiceInitializer"
+            android:name="com.tencent.qcloud.tuicore.ServiceInitializer"
             android:authorities="${applicationId}.TUICore.Init"
+            android:initOrder="99999"
             android:enabled="true"
             android:exported="false"/>
 

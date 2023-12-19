@@ -35,7 +35,7 @@ public class TranslationPresenter {
                 param.put(TUIChatConstants.MESSAGE_BEAN, messageBean);
                 param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION_WITHOUT_HIGH_LIGHT);
                 TUICore.notifyEvent(
-                    TUIConstants.TUITranslationPlugin.EVENT_KEY_TRANSLATION_EVENT, TUIConstants.TUITranslationPlugin.EVENT_SUB_KEY_TRANSLATION_CHANGED, param);
+                    TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
             }
 
             @Override
@@ -50,14 +50,14 @@ public class TranslationPresenter {
                 param.put(TUIChatConstants.MESSAGE_BEAN, messageBean);
                 param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
                 TUICore.notifyEvent(
-                    TUIConstants.TUITranslationPlugin.EVENT_KEY_TRANSLATION_EVENT, TUIConstants.TUITranslationPlugin.EVENT_SUB_KEY_TRANSLATION_CHANGED, param);
+                        TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
             }
         });
 
         Map<String, Object> param = new HashMap<>();
         param.put(TUIChatConstants.MESSAGE_BEAN, messageBean);
         param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
-        TUICore.notifyEvent(TUIConstants.TUITranslationPlugin.EVENT_KEY_TRANSLATION_EVENT, TUIConstants.TUITranslationPlugin.EVENT_SUB_KEY_TRANSLATION_CHANGED, param);
+        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
     }
 
     public int getTranslationStatus(V2TIMMessage v2TIMMessage) {

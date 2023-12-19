@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.tencent.qcloud.tim.tuiofflinepush">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- ********OPPO 推送 start******** -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
@@ -88,15 +87,16 @@
             android:enabled="true" />
         <!-- 注：此service必须在2.2.5版本以后（包括2.2.5版本）加入 -->
 
-        <receiver
+        <!-- <receiver
             android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-            android:exported="true">
+            android:exported="false"
+            tools:replace="android:exported">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </receiver>
+        </receiver> -->
         <receiver
             android:name="com.xiaomi.push.service.receivers.PingReceiver"
             android:exported="false"

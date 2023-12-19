@@ -57,9 +57,6 @@
     <string name="tuiroomkit_item_float">النافذة العائمة</string>
     <string name="tuiroomkit_item_expand">توسيع</string>
     <string name="tuiroomkit_item_close">إغلاق</string>
-    <string name="tuiroomkit_enter_room">الانضمام</string>
-    <string name="tuiroomkit_please_input_room_number">أدخل معرف المؤتمر</string>
-    <string name="tuiroomkit_create_room">إنشاء غرفة</string>
     <string name="tuiroomkit_setting_before_room">إعدادات قبل الانضمام إلى الغرفة</string>
     <string name="tuiroomkit_room_id">معرف الغرفة</string>
     <string name="tuiroomkit_room_type">نوع الغرفة</string>
@@ -109,7 +106,8 @@
     <string name="tuiroomkit_accept_invite">%s قبل دعوتك</string>
     <string name="tuiroomkit_reject_invite">%s رفض دعوتك</string>
     <string name="tuiroomkit_raise_hand_tip">إذا كنت تريد التحدث، فيرجى رفع يدك على الميكروفون</string>
-    <string name="tuiroomkit_receive_invitation">يدعوك المضيف للتحدث على المسرح. بمجرد صعودك على المسرح، يمكنك تشغيل الكاميرا وإلغاء كتم صوتك</string>
+    <string name="tuiroomkit_receive_invitation_title">يدعوك المضيف للتحدث على المسرح</string>
+    <string name="tuiroomkit_receive_invitation_content">يدعوك المضيف للتحدث على المسرح. بمجرد صعودك على المسرح، يمكنك تشغيل الكاميرا وإلغاء كتم صوتك</string>
     <string name="tuiroomkit_can_not_open_mic">لقد قام المضيف بكتم صوت كافة الأعضاء ولا يمكنه إعادة صوت نفسه</string>
     <string name="tuiroomkit_can_not_open_camera">لقد كتم المالك الكاميرا لجميع الأعضاء، ولا يمكن فتح الكاميرا</string>
     <string name="tuiroomkit_mute_all_mic_toast">تم تشغيل جميع عمليات كتم الصوت، ولن يتمكن المشاهدون من إعادة كتم صوتها</string>

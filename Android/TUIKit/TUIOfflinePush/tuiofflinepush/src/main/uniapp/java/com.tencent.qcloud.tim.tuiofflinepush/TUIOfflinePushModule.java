@@ -169,9 +169,17 @@ public class TUIOfflinePushModule extends UniModule {
     /*
      *  收到推送消息，点击通知栏事件回调，透传自定义消息
      *
+     *  回调数据 data 格式为：
      *      callback：
      *      {
-     *       "notification": "",
+     *       "code": 0,
+     *       "msg": "",
+     *       "data": {}
+     *      }
+     *
+     *      data:
+     *      {
+     *        "notification": "",
      *      }
      *
      * note：

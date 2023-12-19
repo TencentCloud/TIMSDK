@@ -162,13 +162,6 @@ public class SearchMoreMsgListActivity extends BaseLightActivity {
                     chatInfo.setType(ChatInfo.TYPE_C2C);
                     chatInfo.setId(mSearchDataBean.getUserID());
                 }
-                String chatName = mSearchDataBean.getUserID();
-                if (!TextUtils.isEmpty(mSearchDataBean.getRemark())) {
-                    chatName = mSearchDataBean.getRemark();
-                } else if (!TextUtils.isEmpty(mSearchDataBean.getNickName())) {
-                    chatName = mSearchDataBean.getNickName();
-                }
-                chatInfo.setChatName(chatName);
                 ClassicSearchUtils.startChatActivity(chatInfo);
             }
         });

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tencent.cloud.tuikit.roomkit">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -15,37 +14,44 @@
     <application>
 
         <activity
-            android:name=".view.page.RoomMainActivity"
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.RoomMainActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
-            android:name=".imaccess.view.InviteToJoinRoomActivity"
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.Chat.ChatActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize|adjustPan"
+            android:theme="@style/TUIRoomActivityTransparent" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.imaccess.view.InviteToJoinRoomActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/TUIRoomActivityTransparent" />
         <activity
-            android:name=".imaccess.view.InvitedToJoinRoomActivity"
+            android:name="com.tencent.cloud.tuikit.roomkit.imaccess.view.InvitedToJoinRoomActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".imaccess.view.Chat2RoomExtensionSettingsActivity"
+            android:name="com.tencent.cloud.tuikit.roomkit.imaccess.view.Chat2RoomExtensionSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <service
-            android:name=".service.KeepAliveService"
+            android:name="com.tencent.cloud.tuikit.roomkit.service.KeepAliveService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.floatwindow.videoplaying.RoomFloatViewService"
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomFloatViewService"
             android:enabled="true"
             android:exported="false" />
         <provider
-            android:name=".service.RoomServiceInitializer"
+            android:name="com.tencent.cloud.tuikit.roomkit.service.RoomServiceInitializer"
             android:authorities="${applicationId}.TUIRoom.Init"
             android:enabled="true"
             android:exported="false" />

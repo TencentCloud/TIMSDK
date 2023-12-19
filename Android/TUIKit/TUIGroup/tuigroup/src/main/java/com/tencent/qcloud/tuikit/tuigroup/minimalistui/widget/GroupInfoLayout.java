@@ -558,13 +558,16 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
                 mLayoutFold.setVisibility(View.GONE);
             }
 
+            mMsgRevOptionSwitchView.setCheckListener(null);
             mMsgRevOptionSwitchView.setChecked(mGroupInfo.getMessageReceiveOption());
             mMsgRevOptionSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
+                    mMsgRevOptionSwitchView.setMask(true);
                     mPresenter.setGroupNotDisturb(mGroupInfo, isChecked, new IUIKitCallback<Void>() {
                         @Override
                         public void onSuccess(Void data) {
+                            mMsgRevOptionSwitchView.setMask(false);
                             if (!isChecked) {
                                 mLayoutFold.setVisibility(View.GONE);
                                 if (mGroupInfo.isFolded()) {
@@ -587,6 +590,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
 
                         @Override
                         public void onError(String module, int errCode, String errMsg) {
+                            mMsgRevOptionSwitchView.setMask(false);
                             ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
                         }
                     });

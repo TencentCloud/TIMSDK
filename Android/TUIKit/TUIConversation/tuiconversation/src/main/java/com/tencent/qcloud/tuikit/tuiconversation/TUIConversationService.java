@@ -3,6 +3,8 @@ package com.tencent.qcloud.tuikit.tuiconversation;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+
+import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -12,6 +14,10 @@ import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationGroupBean;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -27,7 +33,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class TUIConversationService extends ServiceInitializer implements ITUIConversationService {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency("TIMCommon")
+@TUIInitializerID("TUIConversation")
+public class TUIConversationService implements TUIInitializer, ITUIConversationService {
     public static final String TAG = TUIConversationService.class.getSimpleName();
     private static TUIConversationService instance;
 
@@ -45,24 +54,16 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
     @Override
     public void init(Context context) {
         instance = this;
+        initTheme();
         initService();
         initEvent();
         initIMListener();
     }
 
-    @Override
-    public int getLightThemeResId() {
-        return R.style.TUIConversationLightTheme;
-    }
-
-    @Override
-    public int getLivelyThemeResId() {
-        return R.style.TUIConversationLivelyTheme;
-    }
-
-    @Override
-    public int getSeriousThemeResId() {
-        return R.style.TUIConversationSeriousTheme;
+    private void initTheme() {
+        TUIThemeManager.addLightTheme(R.style.TUIConversationLightTheme);
+        TUIThemeManager.addLivelyTheme(R.style.TUIConversationLivelyTheme);
+        TUIThemeManager.addSeriousTheme(R.style.TUIConversationSeriousTheme);
     }
 
     private void initService() {
@@ -545,5 +546,9 @@ public class TUIConversationService extends ServiceInitializer implements ITUICo
 
     public void setConversationAllGroupUnreadDiff(int diff) {
         this.conversationAllGroupUnreadDiff = diff;
+    }
+
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

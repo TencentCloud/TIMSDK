@@ -40,4 +40,10 @@
     <color name="tuivideoseat_color_blue">#006EFF</color>
     <color name="tuivideoseat_color_grey">#888888</color>
     <color name="tuivideoseat_color_user_talking">#A5FE33</color>
+    <color name="tuiroomkit_chat_navigation_bar_color">#F7F7F7</color>
+
+    <color name="tuiroomkit_color_bg_base_dialog">#B30F1014</color>
+
+    <color name="tuiroomkit_color_user_list_panel_btn">#4D4F586B</color>
+    <color name="tuiroomkit_color_divide_line">#33B2BBD1</color>
 </resources>

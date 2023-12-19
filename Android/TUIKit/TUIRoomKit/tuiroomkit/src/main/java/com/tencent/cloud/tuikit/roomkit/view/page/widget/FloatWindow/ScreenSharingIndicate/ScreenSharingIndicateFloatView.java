@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.floatwindow.screensharingindicate;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.ScreenSharingIndicate;
 
 import android.content.Context;
 import android.util.AttributeSet;

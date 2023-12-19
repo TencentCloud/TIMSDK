@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_bot_message_bg">#FBFBFB</color>
+    <color name="grey_line_color">#eeeeee</color>
+    <color name="chat_bot_title_color">#171538</color>
+</resources>

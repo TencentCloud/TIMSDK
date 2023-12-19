@@ -23,15 +23,17 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.TUIVideoSeatView;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.bottomnavigationbar.BottomLayout;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.dialog.ExitRoomDialog;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.localaudioindicator.LocalAudioToggleView;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.dialog.InviteUserDialog;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.raisehandcontrolpanel.RaiseHandApplicationListPanel;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.dialog.RoomInfoDialog;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.topnavigationbar.TopView;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.transferownercontrolpanel.TransferMasterPanel;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel.UserListPanel;
+import com.tencent.cloud.tuikit.roomkit.view.component.BaseDialogFragment;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar.BottomLayout;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator.LocalAudioToggleView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings.MediaSettingPanel;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.TopView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel.TransferMasterPanel;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserListPanel;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.ExitRoomDialog;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.InviteUserDialog;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.RoomInfoDialog;
 import com.tencent.cloud.tuikit.roomkit.view.component.ConfirmDialog;
 import com.tencent.cloud.tuikit.roomkit.view.component.QRCodeView;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomMainViewModel;
@@ -42,7 +44,8 @@ import java.lang.reflect.Method;
 public class RoomMainView extends RelativeLayout {
     private static final String TAG = "RoomMainView";
 
-    private static final int ROOM_BARS_DISAPPEAR_DELAY_MS = 3 * 1000;
+    private static final int ROOM_BARS_DISMISS_DELAY_MS   = 3 * 1000;
+    private static final int ROOM_BARS_FIRST_SHOW_TIME_MS = 6 * 1000;
 
     private Context                      mContext;
     private View                         mFloatingWindow;
@@ -58,6 +61,7 @@ public class RoomMainView extends RelativeLayout {
 
     private Handler mMainHandler = new Handler(Looper.getMainLooper());
 
+    private boolean mIsBarsFirstShow      = true;
     private boolean mIsBarsShowed         = true;
     private boolean mIsBottomViewExpanded = false;
 
@@ -141,6 +145,11 @@ public class RoomMainView extends RelativeLayout {
         mViewModel.setCameraResolutionMode(newConfig);
     }
 
+    public void showMediaSettingsPanel() {
+        MediaSettingPanel mediaSettingPanel = new MediaSettingPanel(mContext);
+        mediaSettingPanel.show();
+    }
+
     public void showRoomInfo() {
         RoomInfoDialog roomInfoView = new RoomInfoDialog(mContext);
         roomInfoView.show();
@@ -151,7 +160,7 @@ public class RoomMainView extends RelativeLayout {
         userListView.show();
     }
 
-    public void showMemberInviteList() {
+    public void showMemberInvitePanel() {
         InviteUserDialog memberInviteView = new InviteUserDialog(mContext);
         memberInviteView.show();
     }
@@ -178,55 +187,6 @@ public class RoomMainView extends RelativeLayout {
 
     public void recountBarShowTime() {
         showRoomBars();
-    }
-
-    public void showInvitationDialog(final String inviteId, final TUIRoomDefine.RequestAction requestAction) {
-        String message = "";
-        String positiveText = "";
-        String negativeText = "";
-        switch (requestAction) {
-            case REQUEST_TO_OPEN_REMOTE_CAMERA:
-                message = mContext.getString(R.string.tuiroomkit_request_open_camera);
-                positiveText = mContext.getString(R.string.tuiroomkit_agree);
-                negativeText = mContext.getString(R.string.tuiroomkit_refuse);
-                break;
-            case REQUEST_TO_OPEN_REMOTE_MICROPHONE:
-                message = mContext.getString(R.string.tuiroomkit_request_open_microphone);
-                positiveText = mContext.getString(R.string.tuiroomkit_agree);
-                negativeText = mContext.getString(R.string.tuiroomkit_refuse);
-                break;
-            case REQUEST_REMOTE_USER_ON_SEAT:
-                message = mContext.getString(R.string.tuiroomkit_receive_invitation);
-                positiveText = mContext.getString(R.string.tuiroomkit_agree_on_stage);
-                negativeText = mContext.getString(R.string.tuiroomkit_refuse);
-                break;
-            default:
-                break;
-        }
-        final ConfirmDialog confirmDialog = new ConfirmDialog(mContext);
-        confirmDialog.setCancelable(true);
-        confirmDialog.setMessage(message);
-        if (confirmDialog.isShowing()) {
-            confirmDialog.dismiss();
-            return;
-        }
-        confirmDialog.setPositiveText(positiveText);
-        confirmDialog.setNegativeText(negativeText);
-        confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
-            @Override
-            public void onClick() {
-                mViewModel.responseRequest(requestAction, inviteId, true);
-                confirmDialog.dismiss();
-            }
-        });
-        confirmDialog.setNegativeClickListener(new ConfirmDialog.NegativeClickListener() {
-            @Override
-            public void onClick() {
-                mViewModel.responseRequest(requestAction, inviteId, false);
-                confirmDialog.dismiss();
-            }
-        });
-        confirmDialog.show();
     }
 
     public void showExitRoomConfirmDialog(String message) {
@@ -361,16 +321,7 @@ public class RoomMainView extends RelativeLayout {
 
     public void onExpandStateChanged(boolean isExpanded) {
         mIsBottomViewExpanded = isExpanded;
-        if (isExpanded) {
-            mMainHandler.removeCallbacksAndMessages(null);
-        } else {
-            mMainHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    hideRoomBars();
-                }
-            }, ROOM_BARS_DISAPPEAR_DELAY_MS);
-        }
+        showRoomBars();
     }
 
     public void onClick(View v) {
@@ -393,12 +344,17 @@ public class RoomMainView extends RelativeLayout {
         if (mIsBottomViewExpanded) {
             return;
         }
+        int showTime = ROOM_BARS_DISMISS_DELAY_MS;
+        if (mIsBarsFirstShow) {
+            mIsBarsFirstShow = false;
+            showTime = ROOM_BARS_FIRST_SHOW_TIME_MS;
+        }
         mMainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 hideRoomBars();
             }
-        }, ROOM_BARS_DISAPPEAR_DELAY_MS);
+        }, showTime);
     }
 
     private void hideRoomBars() {

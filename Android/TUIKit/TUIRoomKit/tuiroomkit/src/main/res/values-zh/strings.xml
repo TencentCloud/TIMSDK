@@ -57,9 +57,6 @@
     <string name="tuiroomkit_item_float">悬浮窗</string>
     <string name="tuiroomkit_item_expand">展开</string>
     <string name="tuiroomkit_item_close">收起</string>
-    <string name="tuiroomkit_enter_room">加入房间</string>
-    <string name="tuiroomkit_please_input_room_number">请输入房间号</string>
-    <string name="tuiroomkit_create_room">新建房间</string>
     <string name="tuiroomkit_setting_before_room">进房前设置</string>
     <string name="tuiroomkit_room_id">房间号</string>
     <string name="tuiroomkit_room_type">房间类型</string>
@@ -109,7 +106,8 @@
     <string name="tuiroomkit_accept_invite">%s已同意您的上台邀请</string>
     <string name="tuiroomkit_reject_invite">%s拒绝了您的上台邀请</string>
     <string name="tuiroomkit_raise_hand_tip">如果您想发言请先举手上麦</string>
-    <string name="tuiroomkit_receive_invitation">主持人邀请您上台发言，上台后可以打开摄像头和取消静音</string>
+    <string name="tuiroomkit_receive_invitation_title">主持人邀请您上台发言</string>
+    <string name="tuiroomkit_receive_invitation_content">主持人邀请您上台发言，上台后可以打开摄像头和取消静音</string>
     <string name="tuiroomkit_can_not_open_mic">主持人开启了全员静音，无法自行取消静音</string>
     <string name="tuiroomkit_can_not_open_camera">主持人开启了全员禁画，无法开启视频</string>
     <string name="tuiroomkit_mute_all_mic_toast">已开启全员静音，观众将无法解除静音</string>

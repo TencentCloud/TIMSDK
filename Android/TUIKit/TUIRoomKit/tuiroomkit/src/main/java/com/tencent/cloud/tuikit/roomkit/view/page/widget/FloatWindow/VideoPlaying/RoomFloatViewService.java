@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.floatwindow.videoplaying;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
@@ -65,8 +65,9 @@ public class RoomFloatViewService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "onStartCommand");
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Override

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tuiroomkit_fl_chat"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent">
+
+    <Button
+        android:id="@+id/tuiroomKit_btn_dismiss"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomKit_guideline_chat"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/tuiroomKit_guideline_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.RoundRelativeLayout
+        android:id="@+id/tuiroomkit_fl_chat_fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomKit_guideline_chat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:topLeftRadius="@dimen/tuiroomkit_panel_corner"
+        app:bottomLeftRadius="@dimen/tuiroomkit_panel_corner"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

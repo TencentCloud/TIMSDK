@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -24,7 +23,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
@@ -170,7 +168,7 @@ public class VideoMessageHolder extends MessageContentHolder {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(v, position, msg);
+                        onItemClickListener.onMessageClick(v, msg);
                     }
                 }
             });
@@ -211,8 +209,8 @@ public class VideoMessageHolder extends MessageContentHolder {
                     Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoScanActivity.class);
                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     if (isForwardMode) {
-                        if (getDataSource() != null && !getDataSource().isEmpty()) {
-                            intent.putExtra(TUIChatConstants.OPEN_MESSAGES_SCAN_FORWARD, (Serializable) getDataSource());
+                        if (getForwardDataSource() != null && !getForwardDataSource().isEmpty()) {
+                            intent.putExtra(TUIChatConstants.OPEN_MESSAGES_SCAN_FORWARD, (Serializable) getForwardDataSource());
                         }
                     }
 

@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.single.AudioCallUserInfoViewModel
 
 class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
+    private var imageBackground: ImageView? = null
     private var imageAvatar: ImageView? = null
     private var textUserName: TextView? = null
     private var textWaitHint: TextView? = null
@@ -22,7 +23,16 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
         if (it == TUICallDefine.Status.Waiting) {
             textWaitHint?.visibility = VISIBLE
         } else if (it == TUICallDefine.Status.Accept) {
-            textWaitHint?.visibility = GONE
+            if (viewModel.callRole.get() == TUICallDefine.Role.Caller
+                && viewModel.mediaType.get() == TUICallDefine.MediaType.Audio
+            ) {
+                textWaitHint?.text = context.getString(R.string.tuicallkit_accept_single)
+                postDelayed({
+                    textWaitHint?.visibility = GONE
+                }, 2000)
+            } else {
+                textWaitHint?.visibility = GONE
+            }
         }
     }
 
@@ -30,6 +40,7 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
         if (!TextUtils.isEmpty(it)) {
             ImageLoader.loadImage(context.applicationContext, imageAvatar, it, R.drawable.tuicallkit_ic_avatar)
         }
+        setBackground()
     }
 
     private var nicknameObserver = Observer<String> {
@@ -54,25 +65,25 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
 
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.tuicallkit_user_info_audio, this)
+        imageBackground = findViewById(R.id.img_user_background)
         imageAvatar = findViewById(R.id.img_avatar)
         textUserName = findViewById(R.id.tv_name)
         textWaitHint = findViewById(R.id.tv_tag)
         ImageLoader.loadImage(context, imageAvatar, viewModel!!.avatar.get(), R.drawable.tuicallkit_ic_avatar)
         textUserName!!.text = viewModel.nickname.get()
         textWaitHint!!.text = viewModel.callTag.get()
-        val textColor = if (TUICallDefine.MediaType.Video == viewModel.mediaType.get()) {
-            context.resources.getColor(R.color.tuicalling_color_white)
-        } else {
-            context.resources.getColor(R.color.tuicalling_color_black)
-        }
-        textWaitHint?.setTextColor(textColor)
-        textUserName?.setTextColor(textColor)
 
         if (viewModel.callStatus.get() == TUICallDefine.Status.Accept) {
             textWaitHint?.visibility = GONE
         } else {
             textWaitHint?.visibility = VISIBLE
         }
+
+        setBackground()
+    }
+
+    private fun setBackground() {
+        ImageLoader.loadBlurImage(context, imageBackground, viewModel.avatar.get())
     }
 
     private fun addObserver() {
@@ -86,5 +97,4 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
         viewModel.avatar.removeObserver(avatarObserver)
         viewModel.nickname.removeObserver(nicknameObserver)
     }
-
 }

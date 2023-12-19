@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="false"
-    tools:parentTag="android.widget.RelativeLayout">
+    android:layout_height="match_parent">
 
-    <View
+    <ImageView
+        android:id="@+id/img_video_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FF55534F" />
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/view_shader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#9522262E"
+        android:visibility="gone" />
 
     <com.tencent.qcloud.tuikit.TUIVideoView
         android:id="@+id/tx_cloud_view"
@@ -17,15 +23,14 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
+    <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/img_head"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
         android:scaleType="fitXY"
         android:src="@drawable/tuicallkit_ic_avatar" />
 
-    <ImageView
+    <com.tencent.qcloud.tuikit.tuicallkit.view.common.CustomLoadingView
         android:id="@+id/img_loading"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -38,20 +43,33 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="10dp"
-        android:layout_marginBottom="4dp"
-        android:background="@color/tuicalling_color_transparent"
-        android:textColor="@color/tuicalling_color_white"
+        android:layout_marginBottom="8dp"
+        android:background="@color/tuicallkit_color_transparent"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/tuicallkit_color_white"
         android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/iv_audio_input"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toEndOf="@+id/tv_name"
+        android:background="@drawable/tuicallkit_ic_audio_input"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_switch_camera"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/tuicallkit_ic_mic_mute"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/tuicallkit_ic_switch_camera_group"
         android:visibility="gone" />
-</merge>
+</RelativeLayout>
 

@@ -145,34 +145,39 @@ public class OEMPushSetting implements PushSettingInterface {
                 break;
             case TUIOfflinePushConfig.BRAND_VIVO:
                 // vivo离线推送
-                PushClient.getInstance(context).initialize();
+                try {
+                    PushClient.getInstance(context).initialize();
 
-                TUIOfflinePushLog.i(TAG, "vivo support push: " + PushClient.getInstance(context).isSupport());
-                PushClient.getInstance(context).turnOnPush(new IPushActionListener() {
-                    @Override
-                    public void onStateChanged(int state) {
-                        if (state == 0) {
-                            String regId = PushClient.getInstance(context).getRegId();
-                            TUIOfflinePushLog.i(TAG, "vivopush open vivo push success regId = " + regId);
-                            if (mPushCallback != null) {
-                                mPushCallback.onTokenCallback(regId);
+                    TUIOfflinePushLog.i(TAG, "vivo support push: " + PushClient.getInstance(context).isSupport());
+                    PushClient.getInstance(context).turnOnPush(new IPushActionListener() {
+                        @Override
+                        public void onStateChanged(int state) {
+                            if (state == 0) {
+                                String regId = PushClient.getInstance(context).getRegId();
+                                TUIOfflinePushLog.i(TAG, "vivopush open vivo push success regId = " + regId);
+                                if (mPushCallback != null) {
+                                    mPushCallback.onTokenCallback(regId);
+                                } else {
+                                    TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                                }
                             } else {
-                                TUIOfflinePushLog.e(TAG, "mPushCallback is null");
-                            }
-                        } else {
-                            // 根据vivo推送文档说明，state = 101 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
-                            TUIOfflinePushLog.e(TAG, "vivopush open vivo push fail state = " + state);
-                            if (mPushCallback != null) {
-                                TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
-                                errorBean.setErrorCode(state);
-                                errorBean.setErrorDescription("vivo error code: " + String.valueOf(state));
-                                mPushCallback.onTokenErrorCallBack(errorBean);
-                            } else {
-                                TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                                // 根据vivo推送文档说明，state = 101
+                                // 表示该vivo机型或者版本不支持vivo推送，链接：https://dev.vivo.com.cn/documentCenter/doc/156
+                                TUIOfflinePushLog.e(TAG, "vivopush open vivo push fail state = " + state);
+                                if (mPushCallback != null) {
+                                    TUIOfflinePushErrorBean errorBean = new TUIOfflinePushErrorBean();
+                                    errorBean.setErrorCode(state);
+                                    errorBean.setErrorDescription("vivo error code: " + String.valueOf(state));
+                                    mPushCallback.onTokenErrorCallBack(errorBean);
+                                } else {
+                                    TUIOfflinePushLog.e(TAG, "mPushCallback is null");
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                } catch (Exception e) {
+                    TUIOfflinePushLog.e(TAG, "register vivo e = " + e);
+                }
                 break;
             default:
                 if (isGoogleServiceSupport()) {

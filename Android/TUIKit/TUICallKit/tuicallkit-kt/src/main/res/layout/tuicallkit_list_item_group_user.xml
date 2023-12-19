@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="58dp"
-    android:background="@color/tuicalling_color_white"
+    android:background="@color/tuicallkit_color_white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -53,7 +53,7 @@
             android:layout_marginStart="4dp"
             android:gravity="center_vertical"
             android:text="@string/tuicallkit_group_hint_you"
-            android:textColor="@color/tuicalling_color_gray"
+            android:textColor="@color/tuicallkit_color_gray"
             android:textSize="14sp"
             android:visibility="gone" />
     </LinearLayout>

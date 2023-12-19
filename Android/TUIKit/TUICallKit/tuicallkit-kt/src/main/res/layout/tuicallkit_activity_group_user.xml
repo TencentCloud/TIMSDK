@@ -3,40 +3,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tuicalling_color_white">
+    android:background="@color/tuicallkit_color_white">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_group"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_group_user_title"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginTop="28dp"
-        android:layoutDirection="locale"
+        android:layout_height="wrap_content"
+        android:background="?attr/core_header_start_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/tuicallkit_ic_back">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:singleLine="true"
-            android:text="@string/tuicallkit_group_title_add_user"
-            android:textColor="@color/tuicalling_color_black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_group"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_marginTop="28dp"
+            android:layoutDirection="locale"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/tuicallkit_ic_back">
 
-        <Button
-            android:id="@+id/btn_group_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:background="@android:color/transparent"
-            android:text="@string/tuicallkit_group_btn_ok"
-            android:textAllCaps="false"
-            android:textColor="#0365F9"
-            android:textSize="16sp" />
-    </androidx.appcompat.widget.Toolbar>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:text="@string/tuicallkit_group_title_add_user"
+                android:textColor="?attr/core_header_text_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_group_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:background="@android:color/transparent"
+                android:text="@string/tuicallkit_group_btn_ok"
+                android:textAllCaps="false"
+                android:textColor="#0365F9"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.Toolbar>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_user_list"
@@ -45,5 +55,5 @@
         android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_group" />
+        app:layout_constraintTop_toBottomOf="@+id/cl_group_user_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>

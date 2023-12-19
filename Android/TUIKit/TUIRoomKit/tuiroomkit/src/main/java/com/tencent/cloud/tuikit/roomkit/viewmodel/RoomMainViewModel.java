@@ -4,6 +4,24 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_EXIT_ROOM_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_OWNER_EXIT_ROOM_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_QRCODE_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_APPLY_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_MEDIA_SETTING_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_OWNER_EXIT_ROOM_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
@@ -38,6 +56,9 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     private RoomStore     mRoomStore;
     private RoomMainView  mRoomMainView;
 
+    private boolean mIsFirstPanelShowed  = false;
+    private boolean mIsSecondPanelShowed = false;
+
     public RoomMainViewModel(Context context, RoomMainView meetingView) {
         mContext = context;
         mRoomMainView = meetingView;
@@ -51,13 +72,24 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
     private void subscribeEvent() {
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_APPLY_LIST, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.OWNER_EXIT_ROOM_ACTION, this);
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW, this);
+        eventCenter.subscribeUIEvent(SHOW_MEETING_INFO, this);
+        eventCenter.subscribeUIEvent(DISMISS_MEETING_INFO, this);
+        eventCenter.subscribeUIEvent(SHOW_USER_LIST, this);
+        eventCenter.subscribeUIEvent(DISMISS_USER_LIST, this);
+        eventCenter.subscribeUIEvent(SHOW_QRCODE_VIEW, this);
+        eventCenter.subscribeUIEvent(DISMISS_QRCODE_VIEW, this);
+        eventCenter.subscribeUIEvent(SHOW_MEDIA_SETTING_PANEL, this);
+        eventCenter.subscribeUIEvent(DISMISS_MEDIA_SETTING_PANEL, this);
+        eventCenter.subscribeUIEvent(SHOW_APPLY_LIST, this);
+        eventCenter.subscribeUIEvent(DISMISS_APPLY_LIST, this);
+        eventCenter.subscribeUIEvent(SHOW_EXIT_ROOM_VIEW, this);
+        eventCenter.subscribeUIEvent(DISMISS_EXIT_ROOM_VIEW, this);
+        eventCenter.subscribeUIEvent(SHOW_OWNER_EXIT_ROOM_PANEL, this);
+        eventCenter.subscribeUIEvent(DISMISS_OWNER_EXIT_ROOM_PANEL, this);
+        eventCenter.subscribeUIEvent(SHOW_INVITE_PANEL, this);
+        eventCenter.subscribeUIEvent(DISMISS_INVITE_PANEL, this);
+        eventCenter.subscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
+        eventCenter.subscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
         eventCenter.subscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
 
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
@@ -65,7 +97,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED, this);
@@ -80,13 +111,24 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
     private void unSubscribeEvent() {
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_APPLY_LIST, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.OWNER_EXIT_ROOM_ACTION, this);
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW, this);
+        eventCenter.unsubscribeUIEvent(SHOW_MEETING_INFO, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_MEETING_INFO, this);
+        eventCenter.unsubscribeUIEvent(SHOW_USER_LIST, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_USER_LIST, this);
+        eventCenter.unsubscribeUIEvent(SHOW_QRCODE_VIEW, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_QRCODE_VIEW, this);
+        eventCenter.unsubscribeUIEvent(SHOW_MEDIA_SETTING_PANEL, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_MEDIA_SETTING_PANEL, this);
+        eventCenter.unsubscribeUIEvent(SHOW_APPLY_LIST, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_APPLY_LIST, this);
+        eventCenter.unsubscribeUIEvent(SHOW_EXIT_ROOM_VIEW, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_EXIT_ROOM_VIEW, this);
+        eventCenter.unsubscribeUIEvent(SHOW_OWNER_EXIT_ROOM_PANEL, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_OWNER_EXIT_ROOM_PANEL, this);
+        eventCenter.unsubscribeUIEvent(SHOW_INVITE_PANEL, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_INVITE_PANEL, this);
+        eventCenter.unsubscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
         eventCenter.unsubscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
 
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
@@ -94,7 +136,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED, this);
@@ -135,39 +176,132 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
-        switch (key) {
-            case RoomEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO:
-                mRoomMainView.showRoomInfo();
-                break;
-            case RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST:
-                mRoomMainView.showUserList();
-                break;
-            case RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW:
-                mRoomMainView.showExitRoomDialog();
-                break;
-            case RoomEventCenter.RoomKitUIEvent.OWNER_EXIT_ROOM_ACTION:
-                mRoomMainView.showTransferMasterView();
-                break;
-            case RoomEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW:
-                if (params == null) {
-                    break;
-                }
-                String url = (String) params.get(RoomEventConstant.KEY_ROOM_URL);
-                if (!TextUtils.isEmpty(url)) {
-                    mRoomMainView.showQRCodeView(url);
-                }
-                break;
-            case RoomEventCenter.RoomKitUIEvent.SHOW_APPLY_LIST:
-                mRoomMainView.showApplyList();
-                break;
-            case RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW:
-                mRoomMainView.showMemberInviteList();
-                break;
-            case BAR_SHOW_TIME_RECOUNT:
-                mRoomMainView.recountBarShowTime();
-                break;
-            default:
-                break;
+        handleEventOfShowTimeRecount(key);
+        handleEventOfMediaSettings(key);
+        handleEventOfMeetingInfo(key);
+        handleEventOfUserList(key);
+        handleEventOfOwnerExitRoom(key);
+        handleEventOfUserExitRoom(key);
+        handleEventOfApplyList(key);
+        handleEventOfInvite(key);
+        handleEventOfInviteSecond(key);
+    }
+
+    private void handleEventOfShowTimeRecount(String key) {
+        if (TextUtils.equals(key, BAR_SHOW_TIME_RECOUNT)) {
+            mRoomMainView.recountBarShowTime();
+        }
+    }
+
+    private void handleEventOfMediaSettings(String key) {
+        if (TextUtils.equals(key, DISMISS_MEDIA_SETTING_PANEL)) {
+            mIsFirstPanelShowed = false;
+            return;
+        }
+        if (mIsFirstPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_MEDIA_SETTING_PANEL)) {
+            mRoomMainView.showMediaSettingsPanel();
+            mIsFirstPanelShowed = true;
+        }
+    }
+
+    private void handleEventOfMeetingInfo(String key) {
+        if (TextUtils.equals(key, DISMISS_MEETING_INFO)) {
+            mIsFirstPanelShowed = false;
+            return;
+        }
+        if (mIsFirstPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_MEETING_INFO)) {
+            mRoomMainView.showRoomInfo();
+            mIsFirstPanelShowed = true;
+        }
+    }
+
+    private void handleEventOfUserList(String key) {
+        if (TextUtils.equals(key, DISMISS_USER_LIST)) {
+            mIsFirstPanelShowed = false;
+            return;
+        }
+        if (mIsFirstPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_USER_LIST)) {
+            mRoomMainView.showUserList();
+            mIsFirstPanelShowed = true;
+        }
+    }
+
+    private void handleEventOfOwnerExitRoom(String key) {
+        if (TextUtils.equals(key, DISMISS_OWNER_EXIT_ROOM_PANEL)) {
+            mIsSecondPanelShowed = false;
+            return;
+        }
+        if (mIsSecondPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_OWNER_EXIT_ROOM_PANEL)) {
+            mRoomMainView.showTransferMasterView();
+            mIsSecondPanelShowed = true;
+        }
+    }
+
+    private void handleEventOfUserExitRoom(String key) {
+        if (TextUtils.equals(key, DISMISS_EXIT_ROOM_VIEW)) {
+            mIsFirstPanelShowed = false;
+            return;
+        }
+        if (mIsFirstPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_EXIT_ROOM_VIEW)) {
+            mRoomMainView.showExitRoomDialog();
+            mIsFirstPanelShowed = true;
+        }
+    }
+
+    private void handleEventOfApplyList(String key) {
+        if (TextUtils.equals(key, DISMISS_APPLY_LIST)) {
+            mIsFirstPanelShowed = false;
+            return;
+        }
+        if (mIsFirstPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_APPLY_LIST)) {
+            mRoomMainView.showApplyList();
+            mIsFirstPanelShowed = true;
+        }
+    }
+
+    private void handleEventOfInvite(String key) {
+        if (TextUtils.equals(key, DISMISS_INVITE_PANEL)) {
+            mIsFirstPanelShowed = false;
+            return;
+        }
+        if (mIsFirstPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_INVITE_PANEL)) {
+            mRoomMainView.showMemberInvitePanel();
+            mIsFirstPanelShowed = true;
+        }
+    }
+
+    private void handleEventOfInviteSecond(String key) {
+        if (TextUtils.equals(key, DISMISS_INVITE_PANEL_SECOND)) {
+            mIsSecondPanelShowed = false;
+            return;
+        }
+        if (mIsSecondPanelShowed) {
+            return;
+        }
+        if (TextUtils.equals(key, SHOW_INVITE_PANEL_SECOND)) {
+            mRoomMainView.showMemberInvitePanel();
+            mIsSecondPanelShowed = true;
         }
     }
 
@@ -196,9 +330,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
                 break;
             case USER_MIC_STATE_CHANGED:
                 onUserMicStateChanged(params);
-                break;
-            case REQUEST_RECEIVED:
-                onRequestReceived(params);
                 break;
             case ALL_USER_CAMERA_DISABLE_CHANGED:
                 allUserCameraDisableChanged(params);
@@ -273,27 +404,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         }
     }
 
-    private void onRequestReceived(Map<String, Object> params) {
-        if (params == null) {
-            return;
-        }
-        TUIRoomDefine.Request request = (TUIRoomDefine.Request) params.get(RoomEventConstant.KEY_REQUEST);
-        if (request == null) {
-            return;
-        }
-        switch (request.requestAction) {
-            case REQUEST_TO_OPEN_REMOTE_MICROPHONE:
-            case REQUEST_REMOTE_USER_ON_SEAT:
-            case REQUEST_TO_OPEN_REMOTE_CAMERA:
-                mRoomMainView.showInvitationDialog(request.requestId, request.requestAction);
-                break;
-            default:
-                Log.i(TAG, "onRequestReceived ignore, request type :" + request.requestAction);
-                break;
-        }
-    }
-
-
     private void allUserCameraDisableChanged(Map<String, Object> params) {
         if (params == null) {
             return;
@@ -355,7 +465,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         }
 
         if (TUIRoomDefine.Role.ROOM_OWNER.equals(role)) {
-            RoomEngineManager.sharedInstance().takeSeat(SEAT_INDEX, REQ_TIME_OUT, null);
             mRoomMainView.showSingleConfirmDialog(mContext.getString(R.string.tuiroomkit_have_become_master));
         }
     }

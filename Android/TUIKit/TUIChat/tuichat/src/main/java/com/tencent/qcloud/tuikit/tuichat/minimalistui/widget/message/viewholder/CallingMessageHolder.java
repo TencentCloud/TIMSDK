@@ -51,7 +51,15 @@ public class CallingMessageHolder extends TextMessageHolder {
                 @Override
                 public void onClick(View view) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onRecallClick(view, position, msg);
+                        onItemClickListener.onRecallClick(view, msg);
+                    }
+                }
+            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onRecallClick(itemView, callingMessageBean);
                     }
                 }
             });
@@ -59,12 +67,13 @@ public class CallingMessageHolder extends TextMessageHolder {
                 @Override
                 public boolean onLongClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(msgArea, position, callingMessageBean);
+                        onItemClickListener.onMessageLongClick(msgArea, callingMessageBean);
                     }
                     return true;
                 }
             });
         } else {
+            itemView.setOnClickListener(null);
             timeInLineTextLayout.getTextView().setOnLongClickListener(null);
             timeInLineTextLayout.getTextView().setOnClickListener(null);
         }

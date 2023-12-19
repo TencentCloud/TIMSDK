@@ -57,9 +57,6 @@
     <string name="tuiroomkit_item_float">Floating</string>
     <string name="tuiroomkit_item_expand">Expand</string>
     <string name="tuiroomkit_item_close">Close</string>
-    <string name="tuiroomkit_enter_room">Join</string>
-    <string name="tuiroomkit_please_input_room_number">Enter a conference ID</string>
-    <string name="tuiroomkit_create_room">Create Room</string>
     <string name="tuiroomkit_setting_before_room">Setting before entering the room</string>
     <string name="tuiroomkit_room_id">Room ID</string>
     <string name="tuiroomkit_room_type">Room Type</string>
@@ -109,7 +106,8 @@
     <string name="tuiroomkit_accept_invite">%s  accepted your invitation</string>
     <string name="tuiroomkit_reject_invite">%s  rejected your invitation</string>
     <string name="tuiroomkit_raise_hand_tip">If you want to speak, please raise your hand on the microphone</string>
-    <string name="tuiroomkit_receive_invitation">The host invites you to speak on stage. Once on stage, you can turn on the camera and unmute yourself</string>
+    <string name="tuiroomkit_receive_invitation_title">The host invites you to speak on stage</string>
+    <string name="tuiroomkit_receive_invitation_content">The host invites you to speak on stage. Once on stage, you can turn on the camera and unmute yourself</string>
     <string name="tuiroomkit_can_not_open_mic">The host has muted all members and cannot unmute himself</string>
     <string name="tuiroomkit_can_not_open_camera">The Master has muted camera for all members, and cannot open the camera</string>
     <string name="tuiroomkit_mute_all_mic_toast">All mutes have been turned on, and viewers will not be able to unmute them</string>

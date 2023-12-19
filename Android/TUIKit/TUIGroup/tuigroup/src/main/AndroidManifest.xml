@@ -1,56 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tencent.qcloud.tuikit.tuigroup">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <provider
-            android:name=".TUIGroupService"
-            android:authorities="${applicationId}.TUIGroup.Init"
-            android:enabled="true"
-            android:exported="false" />
-
-
 
         <!-- **************** Classic UI Activity Start **************** -->
-        <activity android:name=".classicui.page.GroupNoticeActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupNoticeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".classicui.page.SetGroupManagerActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.classicui.page.SetGroupManagerActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".classicui.page.GroupMemberActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupMemberActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".classicui.page.ManageGroupActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.classicui.page.ManageGroupActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".classicui.page.GroupInfoActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupInfoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".classicui.page.GroupApplyManagerActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupApplyManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".classicui.page.GroupApplyDetailActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupApplyDetailActivity"
         android:screenOrientation="portrait"
         android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <provider
-            android:name=".classicui.ClassicUIExtensionObserver"
-            android:authorities="${applicationId}.TUIGroup.ClassicUI.Init"
-            android:enabled="true"
-            android:exported="false" />
+
         <!-- **************** Classic UI Activity End **************** -->
 
 
 
 
         <!-- **************** Minimalist UI Activity Start **************** -->
-        <activity android:name=".minimalistui.page.GroupNoticeMinimalistActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupNoticeMinimalistActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".minimalistui.page.GroupMemberMinimalistActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupMemberMinimalistActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".minimalistui.page.ManageGroupMinimalistActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.ManageGroupMinimalistActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".minimalistui.page.GroupInfoMinimalistActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupInfoMinimalistActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".minimalistui.page.GroupApplyManagerMinimalistActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupApplyManagerMinimalistActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".minimalistui.page.GroupApplyDetailMinimalistActivity"
+        <activity android:name="com.tencent.qcloud.tuikit.tuigroup.minimalistui.page.GroupApplyDetailMinimalistActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <!-- **************** Minimalist UI Activity End **************** -->

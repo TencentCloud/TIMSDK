@@ -37,7 +37,7 @@
        <View
            android:layout_width="match_parent"
            android:layout_height="1px"
-           android:background="#4F586B"
+           android:background="@color/tuiroomkit_color_divide_line"
            app:layout_constraintTop_toTopOf="parent"/>
 
        <TextView
@@ -71,7 +71,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#4F586B"
+            android:background="@color/tuiroomkit_color_divide_line"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
@@ -105,7 +105,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#4F586B"
+            android:background="@color/tuiroomkit_color_divide_line"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
@@ -139,7 +139,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#4F586B"
+            android:background="@color/tuiroomkit_color_divide_line"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
@@ -167,7 +167,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#4F586B"
+        android:background="@color/tuiroomkit_color_divide_line"
         app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_video_resolution_super"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

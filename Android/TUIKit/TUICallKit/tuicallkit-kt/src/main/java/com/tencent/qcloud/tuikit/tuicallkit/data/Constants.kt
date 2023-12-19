@@ -9,6 +9,4 @@ object Constants {
     const val EVENT_START_ACTIVITY = "eventStartActivity"
     const val GROUP_ID = "groupId"
     const val SELECT_MEMBER_LIST = "selectMemberList"
-    const val EVENT_TUICALLING_CHANGED = "eventTUICallingChanged"
-    const val EVENT_SUB_GROUP_MEMBER_SELECTED = "eventSubGroupMemberSelected"
 }

@@ -1,11 +1,9 @@
 package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.single
 
-import android.text.TextUtils
 import com.tencent.qcloud.tuicore.ServiceInitializer
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class VideoCallUserInfoViewModel {
@@ -20,9 +18,9 @@ class VideoCallUserInfoViewModel {
         avatar = userModel.avatar
         nickname = userModel.nickname
         callTag = if (TUICallDefine.Role.Caller == TUICallState.instance.selfUser.get().callRole.get()) {
-            ServiceInitializer.getAppContext().getString(R.string.tuicalling_waiting_accept)
+            ServiceInitializer.getAppContext().getString(R.string.tuicallkit_waiting_accept)
         } else {
-            ServiceInitializer.getAppContext().getString(R.string.tuicalling_invite_video_call)
+            ServiceInitializer.getAppContext().getString(R.string.tuicallkit_invite_video_call)
         }
 
         mediaType = TUICallState.instance.mediaType

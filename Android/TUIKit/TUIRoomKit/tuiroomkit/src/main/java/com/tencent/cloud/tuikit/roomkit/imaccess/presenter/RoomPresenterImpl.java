@@ -76,6 +76,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     @Override
     public void createRoom() {
         Log.d(TAG, "createRoom mSelfRoomStatus=" + mSelfRoomStatus);
+        BusinessSceneUtil.setChatAccessRoom(true);
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
@@ -219,6 +220,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     @Override
     public void enterRoom(RoomMsgData roomMsgData) {
         Log.d(TAG, "enterRoom roomId=" + roomMsgData.getRoomId() + " messageId=" + roomMsgData.getMessageId());
+        BusinessSceneUtil.setChatAccessRoom(true);
         mRoomTaskStoreHouse.postTask(new Runnable() {
             @Override
             public void run() {
@@ -305,7 +307,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     @Override
     public void onEnterRoom(String roomId, AccessRoomConstants.RoomResult result) {
         Log.d(TAG, "onEnterRoom");
-        BusinessSceneUtil.setChatAccessRoom(true);
         BusinessSceneUtil.setCurRoomId(roomId);
         if (result == AccessRoomConstants.RoomResult.FAILED) {
             mJoinRoomLatch.countDown();

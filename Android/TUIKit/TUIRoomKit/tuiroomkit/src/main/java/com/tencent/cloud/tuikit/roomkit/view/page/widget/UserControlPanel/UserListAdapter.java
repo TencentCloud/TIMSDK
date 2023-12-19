@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_MODEL;

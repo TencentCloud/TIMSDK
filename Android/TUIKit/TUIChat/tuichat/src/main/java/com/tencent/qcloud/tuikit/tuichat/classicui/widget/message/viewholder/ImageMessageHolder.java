@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -155,7 +154,7 @@ public class ImageMessageHolder extends MessageContentHolder {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(v, position, msg);
+                        onItemClickListener.onMessageClick(v, msg);
                     }
                 }
             });
@@ -167,8 +166,8 @@ public class ImageMessageHolder extends MessageContentHolder {
                 Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoScanActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 if (isForwardMode) {
-                    if (getDataSource() != null && !getDataSource().isEmpty()) {
-                        intent.putExtra(TUIChatConstants.OPEN_MESSAGES_SCAN_FORWARD, (Serializable) getDataSource());
+                    if (getForwardDataSource() != null && !getForwardDataSource().isEmpty()) {
+                        intent.putExtra(TUIChatConstants.OPEN_MESSAGES_SCAN_FORWARD, (Serializable) getForwardDataSource());
                     }
                 }
 
@@ -181,7 +180,7 @@ public class ImageMessageHolder extends MessageContentHolder {
             @Override
             public boolean onLongClick(View view) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(view, position, msg);
+                    onItemClickListener.onMessageLongClick(view, msg);
                 }
                 return true;
             }

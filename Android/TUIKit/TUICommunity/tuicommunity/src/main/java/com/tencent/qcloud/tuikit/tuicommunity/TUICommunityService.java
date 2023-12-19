@@ -3,6 +3,8 @@ package com.tencent.qcloud.tuikit.tuicommunity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+
+import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupListener;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
@@ -12,10 +14,13 @@ import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.CommunityChangeBean;
 import com.tencent.qcloud.tuikit.tuicommunity.bean.TopicBean;
@@ -33,7 +38,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class TUICommunityService extends ServiceInitializer implements ITUINotification, ITUIExtension {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency("TIMCommon")
+@TUIInitializerID("TUICommunity")
+public class TUICommunityService implements TUIInitializer, ITUINotification, ITUIExtension {
     private static final String TAG = TUICommunityService.class.getSimpleName();
     private static TUICommunityService instance;
 
@@ -330,5 +338,9 @@ public class TUICommunityService extends ServiceInitializer implements ITUINotif
             }
         }
         return null;
+    }
+
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

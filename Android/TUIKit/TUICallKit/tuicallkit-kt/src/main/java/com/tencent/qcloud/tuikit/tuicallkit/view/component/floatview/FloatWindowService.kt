@@ -13,10 +13,9 @@ import android.view.View
 import android.view.WindowManager
 import com.tencent.qcloud.tuicore.ServiceInitializer
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
-import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
-import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
-import com.tencent.qcloud.tuikit.tuicallkit.view.floatwindow.FloatingWindowView
+import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
+import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 
 class FloatWindowService : Service() {
     private var windowManager: WindowManager? = null
@@ -34,9 +33,10 @@ class FloatWindowService : Service() {
     private var isMove = false
 
     companion object {
-        private var callView: FloatingWindowView? = null
-        fun startFloatService(callView: FloatingWindowView) {
-            this.callView = callView
+        private var callView: BaseCallView? = null
+
+        fun startFloatService(view: BaseCallView) {
+            this.callView = view
             this.callView?.setOnClickListener {
                 stopService()
                 if (TUICallState.instance.selfUser.get().callStatus.get() != TUICallDefine.Status.None) {
@@ -68,7 +68,7 @@ class FloatWindowService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
@@ -84,7 +84,6 @@ class FloatWindowService : Service() {
         windowLayoutParams = viewParams
         screenWidth = windowManager!!.defaultDisplay.width
         if (null != callView) {
-            callView!!.setBackgroundResource(R.drawable.tuicallkit_bg_floatwindow_left)
             windowManager!!.addView(callView, windowLayoutParams)
             callView!!.setOnTouchListener(FloatingListener())
         }
@@ -101,7 +100,7 @@ class FloatWindowService : Service() {
             windowLayoutParams!!.flags = (WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            windowLayoutParams!!.gravity = Gravity.LEFT or Gravity.TOP
+            windowLayoutParams!!.gravity = Gravity.START or Gravity.TOP
             windowLayoutParams!!.x = 0
             windowLayoutParams!!.y = windowManager!!.defaultDisplay.height / 2
             windowLayoutParams!!.width = WindowManager.LayoutParams.WRAP_CONTENT
@@ -126,7 +125,6 @@ class FloatWindowService : Service() {
                     startX = event.rawX.toInt()
                     startY = event.rawY.toInt()
                 }
-
                 MotionEvent.ACTION_MOVE -> {
                     touchCurrentX = event.rawX.toInt()
                     touchCurrentY = event.rawY.toInt()
@@ -137,19 +135,6 @@ class FloatWindowService : Service() {
                     }
                     touchStartX = touchCurrentX
                     touchStartY = touchCurrentY
-                    stopX = event.rawX.toInt()
-                    stopY = event.rawY.toInt()
-                    if (Math.abs(startX - stopX) >= 5 || Math.abs(startY - stopY) >= 5) {
-                        isMove = true
-                        if (null != callView) {
-                            callViewWidth = callView!!.width
-                            if (touchCurrentX > screenWidth / 2) {
-                                startScroll(stopX, screenWidth - callViewWidth, false)
-                            } else {
-                                startScroll(stopX, 0, true)
-                            }
-                        }
-                    }
                 }
 
                 MotionEvent.ACTION_UP -> {
@@ -183,11 +168,12 @@ class FloatWindowService : Service() {
             callViewWidth = callView!!.width
             if (isLeft) {
                 windowLayoutParams!!.x = (start * (1 - animation.animatedFraction)).toInt()
-                callView!!.setBackgroundResource(R.drawable.tuicallkit_bg_floatwindow_left)
             } else {
                 val end = (screenWidth - start - callViewWidth) * animation.animatedFraction
                 windowLayoutParams!!.x = (start + end).toInt()
-                callView!!.setBackgroundResource(R.drawable.tuicallkit_bg_floatwindow_right)
+            }
+            if (windowLayoutParams!!.x > screenWidth - callViewWidth) {
+                windowLayoutParams!!.x = screenWidth - callViewWidth
             }
             calculateHeight()
             windowManager!!.updateViewLayout(callView, windowLayoutParams)

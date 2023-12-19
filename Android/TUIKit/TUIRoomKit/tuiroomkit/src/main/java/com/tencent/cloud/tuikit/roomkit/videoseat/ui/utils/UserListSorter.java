@@ -62,7 +62,7 @@ public class UserListSorter {
     }
 
     public boolean isSpeakerOfScreenSharing(List<UserEntity> userList) {
-        if (userList.size() < Constants.SPEAKER_MODE_MEMBER_MIN_LIMIT) {
+        if (userList.isEmpty()) {
             return false;
         }
         return userList.get(0).isScreenShareAvailable();

@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.raisehandcontrolpanel;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel;
 
 import android.content.Context;
 import android.view.LayoutInflater;

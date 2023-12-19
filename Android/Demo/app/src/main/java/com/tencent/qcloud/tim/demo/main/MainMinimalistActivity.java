@@ -42,7 +42,7 @@ import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
-import com.tencent.qcloud.tuicore.BuildConfig;
+import com.tencent.qcloud.tuikit.timcommon.BuildConfig;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;

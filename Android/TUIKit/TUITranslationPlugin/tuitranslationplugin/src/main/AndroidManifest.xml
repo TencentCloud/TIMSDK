@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tencent.qcloud.tuikit.tuitranslationplugin">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <provider
-            android:name="com.tencent.qcloud.tuikit.tuitranslationplugin.TUITranslationService"
-            android:authorities="${applicationId}.TUITranslation.Init"
-            android:enabled="true"
-            android:exported="false" />
+
     </application>
 
 </manifest>

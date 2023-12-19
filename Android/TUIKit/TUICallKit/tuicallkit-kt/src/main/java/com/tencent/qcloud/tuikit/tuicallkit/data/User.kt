@@ -61,13 +61,13 @@ class User {
     override fun toString(): String {
         return ("User {"
                 + "id='" + id
-                + ", avatar='" + avatar
-                + ", nickname='" + nickname
-                + ", callRole='" + callRole
-                + ", callStates=" + callStatus
-                + ", audioAvailable=" + audioAvailable
-                + ", videoAvailable=" + videoAvailable
-                + ", playoutVolume=" + playoutVolume
+                + ", avatar='" + avatar.get()
+                + ", nickname='" + nickname.get()
+                + ", callRole='" + callRole.get()
+                + ", callStates=" + callStatus.get()
+                + ", audioAvailable=" + audioAvailable.get()
+                + ", videoAvailable=" + videoAvailable.get()
+                + ", playoutVolume=" + playoutVolume.get()
                 + '}')
     }
 }

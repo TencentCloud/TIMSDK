@@ -101,7 +101,7 @@ public class MessageReplyDetailActivity extends BaseLightActivity implements Inp
             messageRecyclerView.setAdapter(messageAdapter);
             messageRecyclerView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
-                public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+                public void onMessageClick(View view, TUIMessageBean messageBean) {
                     if (messageBean instanceof MergeMessageBean) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);

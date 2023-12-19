@@ -62,7 +62,7 @@ public class FloatWindowService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class FloatWindowService extends Service {
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 
-        mWindowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+        mWindowLayoutParams.gravity = Gravity.START | Gravity.TOP;
         mWindowLayoutParams.x = 0;
         mWindowLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 2;
 
