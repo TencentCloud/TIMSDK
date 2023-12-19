@@ -24,7 +24,7 @@ target 'TUIKitDemo' do
   pod 'TUIVoiceToTextPlugin', '7.7.5282'
   pod 'TUICustomerServicePlugin', '7.7.5282'
   pod 'TUICallKit'
-  pod 'TUIRoomKit','>= 1.5.1'
+#  pod 'TUIRoomKit','>= 1.5.1'
   pod 'MJRefresh'
   pod 'Masonry'
 
