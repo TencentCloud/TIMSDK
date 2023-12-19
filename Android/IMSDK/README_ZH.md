@@ -26,3 +26,17 @@
    api 'com.tencent.imsdk:imsdk-plus:版本号'
  }
  ```
+
+ 如果使用 Quic 插件，请在 gradle 里添加如下依赖
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:timquic-plugin:版本号'
+ }
+ ```
+
+ 如果使用高级加密插件，请在 gradle 里添加如下依赖
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:timadvancedencryption-plugin:版本号'
+ }
+ ```
