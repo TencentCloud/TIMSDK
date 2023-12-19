@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TIMPush'
-  spec.version      = '7.6.5011'
-  spec.platform     = :ios 
+  spec.version      = '7.7.5282'
+  spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.6.5011/ios/TIMPush_7.6.5011.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.7.5282/ios/TIMPush_7.7.5282.framework.zip'}
 
   #spec.dependency 'TXIMSDK_Plus_iOS'
   #spec.library = 'c++', 'resolv', 'sqlite3'
