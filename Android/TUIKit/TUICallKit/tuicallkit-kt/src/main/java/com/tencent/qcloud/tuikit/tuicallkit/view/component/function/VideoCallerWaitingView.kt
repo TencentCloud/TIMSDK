@@ -21,13 +21,13 @@ class VideoCallerWaitingView(context: Context) : BaseCallView(context) {
 
 
     override fun clear() {
-        if(viewModel != null) {
+        if (viewModel != null) {
             viewModel.removeObserver()
         }
     }
 
     private fun initView() {
-        LayoutInflater.from(context).inflate(R.layout.tuicallkit_funcation_view_video_inviting, this)
+        LayoutInflater.from(context).inflate(R.layout.tuicallkit_function_view_video_inviting, this)
         layoutCancel = findViewById(R.id.ll_cancel)
         imageSwitchCamera = findViewById(R.id.img_switch_camera)
 
@@ -37,10 +37,11 @@ class VideoCallerWaitingView(context: Context) : BaseCallView(context) {
     private fun initViewListener() {
         layoutCancel?.setOnClickListener { viewModel?.hangup() }
         imageSwitchCamera!!.setOnClickListener {
-            viewModel?.switchCamera(if (viewModel?.frontCamera?.get() == true) TUICommonDefine.Camera.Back else
-                TUICommonDefine
-                .Camera.Front)
-            ToastUtil.toastShortMessage(context.getString(R.string.tuicalling_toast_switch_camera))
+            viewModel?.switchCamera(
+                if (viewModel?.frontCamera?.get() == true) TUICommonDefine.Camera.Back else
+                    TUICommonDefine.Camera.Front
+            )
+            ToastUtil.toastShortMessage(context.getString(R.string.tuicallkit_toast_switch_camera))
         }
     }
 }

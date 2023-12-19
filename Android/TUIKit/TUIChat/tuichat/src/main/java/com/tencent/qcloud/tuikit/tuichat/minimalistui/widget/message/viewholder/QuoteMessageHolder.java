@@ -102,7 +102,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onReplyMessageClick(view, position, quoteMessageBean);
+                    onItemClickListener.onReplyMessageClick(view, quoteMessageBean);
                 }
             }
         });

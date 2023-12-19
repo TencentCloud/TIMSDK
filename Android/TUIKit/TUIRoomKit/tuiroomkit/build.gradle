@@ -1,13 +1,20 @@
+import org.gradle.util.VersionNumber
+
 apply plugin: 'com.android.library'
 def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
 
 android {
+    namespace "com.tencent.cloud.tuikit.roomkit"
     compileSdkVersion 30
-    buildToolsVersion "28.0.3"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -15,6 +22,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    def roomSourceJavaVersion = JavaVersion.VERSION_1_8
+    VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
+    if (currentGradleVersion.major >= 8) {
+        roomSourceJavaVersion = JavaVersion.VERSION_17
+    }
+
+    compileOptions {
+        sourceCompatibility roomSourceJavaVersion
+        targetCompatibility roomSourceJavaVersion
     }
 }
 
@@ -33,12 +51,12 @@ dependencies {
     implementation project(':timcommon')
     implementation project(':tuichat')
 
-    api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "com.tencent.liteav.tuikit:tuiroomengine:1.6.0.16"
-    implementation rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_TRTC:11.4.0.13217"
+    api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "com.tencent.liteav.tuikit:tuiroomengine:1.7.0.137"
+    implementation rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_TRTC:11.5.0.13312"
     if (projects.contains("tuicore")) {
         api project(':tuicore')
     } else {
-        api "com.tencent.liteav.tuikit:tuicore:7.6.5011"
-        implementation rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:7.6.5011"
+        api "com.tencent.liteav.tuikit:tuicore:7.7.5282"
+        implementation rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:7.7.5282"
     }
 }

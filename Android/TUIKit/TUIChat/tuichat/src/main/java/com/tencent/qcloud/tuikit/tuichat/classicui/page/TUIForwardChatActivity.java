@@ -19,6 +19,7 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageAdapter
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 public class TUIForwardChatActivity extends BaseLightActivity {
     private static final String TAG = TUIForwardChatActivity.class.getSimpleName();
@@ -59,7 +60,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
 
         mFowardChatMessageRecyclerView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
+            public void onUserIconClick(View view, TUIMessageBean messageInfo) {
                 if (!(messageInfo instanceof MergeMessageBean)) {
                     return;
                 }
@@ -72,7 +73,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
             }
 
             @Override
-            public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+            public void onMessageClick(View view, TUIMessageBean messageBean) {
                 if (messageBean instanceof MergeMessageBean) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);

@@ -1,6 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_MANAGEMENT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
@@ -17,7 +18,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel.UserListPanel;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserListPanel;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class UserListViewModel
     private final TUIRoomEngine mRoomEngine;
 
     private List<UserEntity> mUserModelList;
+    private boolean mIsUserManagementPanelShowed = false;
 
     public UserListViewModel(Context context, UserListPanel userListView) {
         mContext = context;
@@ -65,7 +67,9 @@ public class UserListViewModel
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT, this);
+
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT, this);
+        eventCenter.subscribeUIEvent(DISMISS_USER_MANAGEMENT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, this);
         eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
@@ -85,7 +89,9 @@ public class UserListViewModel
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT, this);
+
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_USER_MANAGEMENT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, this);
         eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
@@ -335,15 +341,21 @@ public class UserListViewModel
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
         switch (key) {
             case RoomEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT:
-                if (params == null) {
+                if (mIsUserManagementPanelShowed || params == null) {
                     break;
                 }
                 UserEntity user = (UserEntity) params.get(RoomEventConstant.KEY_USER_MODEL);
                 if (user == null) {
                     break;
                 }
+                mIsUserManagementPanelShowed = true;
                 mUserListView.showUserManagementView(user);
                 break;
+
+            case DISMISS_USER_MANAGEMENT:
+                mIsUserManagementPanelShowed = false;
+                break;
+
             case RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT:
                 if (params == null) {
                     break;

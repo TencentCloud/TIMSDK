@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.root;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -221,11 +222,12 @@ public class TUICallingSingleView extends BaseCallView {
                 ViewGroup.LayoutParams params = layout.getLayoutParams();
                 if (params instanceof LayoutParams) {
                     LayoutParams layoutParams = (LayoutParams) layout.getLayoutParams();
-                    int newX = (int) (layoutParams.leftMargin + (e2.getX() - e1.getX()));
+                    float offsetX = isRTL() ? (e1.getX() - e2.getX()) : (e2.getX() - e1.getX());
+                    int newX = (int) (layoutParams.getMarginStart() + offsetX);
                     int newY = (int) (layoutParams.topMargin + (e2.getY() - e1.getY()));
                     if (newX >= 0 && newX <= (getWidth() - layout.getWidth())
                             && newY >= 0 && newY <= (getHeight() - layout.getHeight())) {
-                        layoutParams.leftMargin = newX;
+                        layoutParams.setMarginStart(newX);
                         layoutParams.topMargin = newY;
                         layout.setLayoutParams(layoutParams);
                     }
@@ -284,5 +286,11 @@ public class TUICallingSingleView extends BaseCallView {
         mUserLayoutFactory.mLayoutEntityList.remove(entity);
         mUserLayoutFactory.mLayoutEntityList.addLast(entity);
         makeFloatLayout();
+    }
+
+    private boolean isRTL() {
+        Configuration configuration = getContext().getResources().getConfiguration();
+        int layoutDirection = configuration.getLayoutDirection();
+        return layoutDirection == View.LAYOUT_DIRECTION_RTL;
     }
 }

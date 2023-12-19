@@ -70,7 +70,7 @@ public class MergeMessageHolder extends MessageContentHolder {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(v, position, messageBean);
+                        onItemClickListener.onMessageClick(v, messageBean);
                     }
                 }
             });
@@ -80,7 +80,7 @@ public class MergeMessageHolder extends MessageContentHolder {
             @Override
             public boolean onLongClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(v, position, msg);
+                    onItemClickListener.onMessageLongClick(v, msg);
                 }
                 return true;
             }
@@ -90,7 +90,7 @@ public class MergeMessageHolder extends MessageContentHolder {
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onMessageClick(view, position, msg);
+                    onItemClickListener.onMessageClick(view, msg);
                 }
             }
         });

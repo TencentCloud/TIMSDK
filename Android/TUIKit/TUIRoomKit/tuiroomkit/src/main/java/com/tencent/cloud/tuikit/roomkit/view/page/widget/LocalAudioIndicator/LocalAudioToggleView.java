@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.localaudioindicator;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator;
 
 import android.content.Context;
 import android.view.View;

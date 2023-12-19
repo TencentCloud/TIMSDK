@@ -115,10 +115,7 @@ public final class TUIConstants {
         public static final String EVENT_SUB_KEY_REPLY_MESSAGE_SUCCESS = "eventSubKeyReplyMessageSuccess";
         public static final String EVENT_SUB_KEY_DISPLAY_MESSAGE_BEAN  = "eventSubKeyDisplayMessageBean";
         public static final String EVENT_SUB_KEY_MESSAGE_BOTTOM_CHANGED  = "eventSubKeyMessageBottomChanged";
-
-        public static final String EVENT_KEY_CHAT_VIEW_EVENT = "eventKeyChatViewEvent";
-        public static final String EVENT_SUB_KEY_CHAT_VIEW_OPEN = "eventSubKeyChatViewOpen";
-        public static final String EVENT_SUB_KEY_CHAT_VIEW_EXIT = "eventSubKeyChatViewExit";
+        public static final String EVENT_SUB_KEY_MESSAGE_INFO_CHANGED  = "eventSubKeyMessageInfoChanged";
 
         public static final String C2C_CHAT_ACTIVITY_NAME   = "TUIC2CChatActivity";
 
@@ -236,6 +233,20 @@ public final class TUIConstants {
             public static class InputViewFloatLayer {
                 public static final String CLASSIC_EXTENSION_ID = "InputViewFloatLayerExtensionClassicID";
             }
+
+            public static class MultiSelectMessageBar {
+                public static final String CLASSIC_EXTENSION_ID = "MultiSelectMessageBarExtensionClassicID";
+                public static final String USER_ID = "ChatUserID";
+                public static final String ENABLE_FORWARD_MESSAGE = "EnableForwardMessage";
+            }
+
+            public static class ChatView {
+                public static final String GET_CONFIG_PARAMS = "GetConfigParams";
+                public static final String MESSAGE_NEED_READ_RECEIPT = "MessageNeedReadReceipt";
+                public static final String ENABLE_VIDEO_CALL = "EnableVideoCall";
+                public static final String ENABLE_AUDIO_CALL = "EnableAudioCall";
+                public static final String ENABLE_CUSTOM_HELLO_MESSAGE = "EnableCustomHelloMessage";
+            }
         }
 
         public static class Method {
@@ -250,6 +261,23 @@ public final class TUIConstants {
                 public static final String MESSAGE_REPLY_BEAN_CLASS  = "ChatMessageReplyBeanClass";
                 public static final String MESSAGE_REPLY_VIEW_CLASS  = "ChatMessageReplyViewClass";
                 public static final String IS_NEED_EMPTY_VIEW_GROUP  = "ChatMessageIsNeedEmptyViewGroup";
+            }
+        }
+
+        public static class ObjectFactory {
+
+            public static final String OBJECT_FACTORY_NAME = "ChatObjectFactory";
+
+            public static class ChatFragment {
+                public static final String OBJECT_NAME = "ChatFragment";
+                public static final int CHAT_TYPE_C2C = 0;
+                public static final int CHAT_TYPE_GROUP = 1;
+                public static final String CHAT_ID = "chatId";
+                public static final String CHAT_TYPE = "chatType";
+                public static final String ENABLE_ROOM = "enableRoom";
+                public static final String ENABLE_AUDIO_CALL = "enableAudioCall";
+                public static final String ENABLE_VIDEO_CALL = "enableVideoCall";
+                public static final String ENABLE_CUSTOM_HELLO_MESSAGE = "enableCustomHelloMessage";
             }
         }
 
@@ -567,6 +595,7 @@ public final class TUIConstants {
 
     public static final class TIMPush {
         public static final String SERVICE_NAME = Service.TIM_PUSH_PLUGIN;
+        public static final String CONTEXT = "context";
 
         public static final String METHOD_REGISTER_PUSH = "registerTIMPush";
         public static final String METHOD_REGISTER_PUSH_WITH_JSON = "registerTIMPushWithJsonParam";
@@ -748,21 +777,6 @@ public final class TUIConstants {
         }
     }
 
-    public static final class TUITranslationPlugin {
-        // show translation view
-        public static final String EVENT_KEY_TRANSLATION_EVENT        = "eventKeyTranslationEvent";
-        public static final String EVENT_SUB_KEY_TRANSLATION_CHANGED  = "eventSubKeyTranslationChanged";
-        // select target language
-        public static final String METHOD_SELECT_TRANSLATION_LANGUAGE = "selectTranslationLanguage";
-        public static final String LANGUAGE_NAME                      = "languageName";
-    }
-
-    public static final class TUIVoiceToTextPlugin {
-        // show translation view
-        public static final String EVENT_KEY_VOICE_TO_TEXT_EVENT        = "eventKeyVoiceToTextEvent";
-        public static final String EVENT_SUB_KEY_VOICE_TO_TEXT_CHANGED  = "eventSubKeyVoiceToTextChanged";
-    }
-
     public static final class TUIConversationGroupPlugin {
         public static final String SERVICE_NAME                       = Service.TUI_CONVERSATION_GROUP;
         public static final String OBJECT_FACTORY_NAME                = ObjectFactory.FACTORY_CONVERSATION_GROUP;
@@ -809,6 +823,15 @@ public final class TUIConstants {
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_CARD = "22";
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION_SETTING = "23";
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_TRIGGER_EVALUATION = "24";
+    }
+
+    public static final class TUIChatBotPlugin {
+        public static final String CHAT_BOT_MESSAGE_KEY = "chatbotPlugin";
+        public static final int CHAT_BOT_MESSAGE_VALUE = 1;
+        public static final String CHAT_BOT_BUSINESS_ID_SRC_KEY = "src";
+        public static final int CHAT_BOT_BUSINESS_ID_SRC_STREAM_TEXT = 2;
+        public static final int CHAT_BOT_BUSINESS_ID_SRC_HELLO_REQUEST = 7;
+        public static final int CHAT_BOT_BUSINESS_ID_SRC_RESPONSE = 15;
     }
 
     public static final class Message {

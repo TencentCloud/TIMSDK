@@ -24,7 +24,6 @@ public class TUIForwardSelectMinimalistActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         TUIConversationLog.i(TAG, "onNewIntent");
         super.onNewIntent(intent);
-        ;
     }
 
     @Override

@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuicommunity.R;
@@ -117,6 +119,7 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
                 } else {
                     GlideEngine.loadImageSetDefault(holder.topicFace, topicBean.getFaceUrl(), R.drawable.community_text_topic_icon);
                 }
+
                 holder.topicTitle.setText(topicBean.getTopicName());
                 holder.lastMsgAbstract.setText(topicBean.getLastMsgAbstract());
                 if (topicBean.getUnreadCount() != 0) {
@@ -125,6 +128,7 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
                 } else {
                     holder.topicUnread.setVisibility(GONE);
                 }
+
                 holder.itemView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -133,6 +137,24 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
                         }
                     }
                 });
+
+                if (topicBean.getAtType() == V2TIMGroupAtInfo.TIM_AT_ME) {
+                    holder.atMeTv.setVisibility(View.VISIBLE);
+                } else if (topicBean.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL) {
+                    holder.atAllTv.setVisibility(View.VISIBLE);
+                } else if (topicBean.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME) {
+                    holder.atAllTv.setVisibility(View.VISIBLE);
+                    holder.atMeTv.setVisibility(View.VISIBLE);
+                } else {
+                    holder.atAllTv.setVisibility(View.GONE);
+                    holder.atMeTv.setVisibility(View.GONE);
+                }
+
+                holder.draftTv.setVisibility(View.GONE);
+                if (!TextUtils.isEmpty(topicBean.getDraftText())) {
+                    holder.draftTv.setVisibility(View.VISIBLE);
+                    holder.lastMsgAbstract.setText(topicBean.getDraftText());
+                }
             } else if (viewHolder instanceof TopicCategoryViewHolder) {
                 TopicCategoryViewHolder holder = (TopicCategoryViewHolder) viewHolder;
                 TreeNode<ITopicBean> node = data.get(position);
@@ -192,6 +214,9 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
             private final TextView topicTitle;
             private final TextView lastMsgAbstract;
             private final ImageView topicFace;
+            private final TextView atAllTv;
+            private final TextView atMeTv;
+            private final TextView draftTv;
 
             public TopicViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -199,6 +224,9 @@ public class CommunityTopicList extends RecyclerView implements ICommunityTopicL
                 topicTitle = itemView.findViewById(R.id.topic_title);
                 lastMsgAbstract = itemView.findViewById(R.id.topic_last_msg);
                 topicUnread = itemView.findViewById(R.id.topic_unread);
+                atAllTv = itemView.findViewById(R.id.topic_at_all);
+                atMeTv = itemView.findViewById(R.id.topic_at_me);
+                draftTv = itemView.findViewById(R.id.topic_draft);
             }
         }
 

@@ -16,6 +16,8 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.ChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
@@ -56,14 +58,12 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
         chatView.setChatInfo(groupInfo);
         chatView.getMessageLayout().setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onMessageLongClick(View view, int position, TUIMessageBean messageBean) {
-                // 因为adapter中第一条为加载条目，位置需减1
-                // Because the first entry in the adapter is the load entry, the position needs to be decremented by 1
-                chatView.getMessageLayout().showItemPopMenu(position - 1, messageBean, view);
+            public void onMessageLongClick(View view, TUIMessageBean messageBean) {
+                chatView.getMessageLayout().showItemPopMenu(messageBean, view);
             }
 
             @Override
-            public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+            public void onMessageClick(View view, TUIMessageBean messageBean) {
                 if (messageBean instanceof MergeMessageBean && getChatInfo() != null) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);
@@ -73,7 +73,7 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
             }
 
             @Override
-            public void onUserIconClick(View view, int position, TUIMessageBean messageBean) {
+            public void onUserIconClick(View view, TUIMessageBean messageBean) {
                 if (null == messageBean) {
                     return;
                 }
@@ -87,14 +87,14 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
             }
 
             @Override
-            public void onUserIconLongClick(View view, int position, TUIMessageBean messageBean) {
+            public void onUserIconLongClick(View view, TUIMessageBean messageBean) {
                 String resultId = messageBean.getV2TIMMessage().getSender();
                 String resultName = messageBean.getV2TIMMessage().getNickName();
                 chatView.getInputLayout().addInputText(resultName, resultId);
             }
 
             @Override
-            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+            public void onReEditRevokeMessage(View view, TUIMessageBean messageInfo) {
                 if (messageInfo == null) {
                     return;
                 }
@@ -109,7 +109,7 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
             @Override
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
                 chatView.getMessageLayout().setSelectedPosition(position);
-                chatView.getMessageLayout().showItemPopMenu(position - 1, messageInfo, view);
+                chatView.getMessageLayout().showItemPopMenu(messageInfo, view);
             }
 
             @Override

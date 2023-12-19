@@ -5,10 +5,8 @@ import static com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView.
 
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
@@ -25,7 +23,6 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,13 +128,17 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             MessageContentHolder messageContentHolder = (MessageContentHolder) holder;
             messageContentHolder.isForwardMode = isForwardMode;
             messageContentHolder.isReplyDetailMode = isReplyDetailMode;
-            messageContentHolder.setShowRead(TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt());
+            if (TUIChatConfigs.getGeneralConfig().isMsgNeedReadReceipt() && presenter.getChatInfo() != null && presenter.getChatInfo().isNeedReadReceipt()) {
+                messageContentHolder.setShowRead(true);
+            } else {
+                messageContentHolder.setShowRead(false);
+            }
             messageContentHolder.setNeedShowBottomLayout(presenter.isNeedShowBottom());
             messageContentHolder.setRecyclerView(mRecycleView);
             messageContentHolder.setFragment(fragment);
 
             if (isForwardMode) {
-                messageContentHolder.setDataSource(dataSource);
+                messageContentHolder.setForwardDataSource(dataSource);
             }
         }
         return holder;
@@ -208,31 +209,22 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
             baseHolder.setOnItemClickListener(new OnItemClickListener() {
                 @Override
-                public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {}
-
-                @Override
-                public void onUserIconClick(View view, int position, TUIMessageBean messageInfo) {
+                public void onUserIconClick(View view, TUIMessageBean messageInfo) {
                     changeCheckedStatus(messageBean);
                 }
 
                 @Override
-                public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
+                public void onUserIconLongClick(View view, TUIMessageBean messageInfo) {
                     changeCheckedStatus(messageBean);
                 }
 
                 @Override
-                public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {}
-
-                @Override
-                public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {}
-
-                @Override
-                public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {
+                public void onReplyMessageClick(View view, TUIMessageBean messageBean) {
                     changeCheckedStatus(messageBean);
                 }
 
                 @Override
-                public void onMessageClick(View view, int position, TUIMessageBean messageInfo) {
+                public void onMessageClick(View view, TUIMessageBean messageInfo) {
                     changeCheckedStatus(messageBean);
                 }
             });

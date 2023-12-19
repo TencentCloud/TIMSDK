@@ -155,7 +155,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         return mSelectedPosition;
     }
 
-    public void showItemPopMenu(final int index, final TUIMessageBean messageInfo, View view) {
+    public void showItemPopMenu(final TUIMessageBean messageInfo, View view) {
         initPopActions(messageInfo);
 
         if (mChatPopMenu != null) {
@@ -387,46 +387,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         return actionList;
     }
 
-    @Override
-    public void onScrollStateChanged(int state) {
-        super.onScrollStateChanged(state);
-        if (mAdapter != null) {
-            mAdapter.resetSelectableText();
-        }
-        if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            if (mHandler != null) {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
-                int firstPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
-                int lastPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                if (firstPosition == 0 && ((lastPosition - firstPosition + 1) < getAdapter().getItemCount())) {
-                    if (getAdapter() instanceof MessageAdapter) {
-                        ((MessageAdapter) getAdapter()).showLoading();
-                    }
-                    mHandler.loadMore(TUIChatConstants.GET_MESSAGE_FORWARD);
-                } else if (isLastItemVisibleCompleted()) {
-                    if (getAdapter() instanceof MessageAdapter) {
-                        ((MessageAdapter) getAdapter()).showLoading();
-                    }
-                    mHandler.loadMore(TUIChatConstants.GET_MESSAGE_BACKWARD);
-
-                    mHandler.displayBackToLastMessage(false);
-                    mHandler.displayBackToNewMessage(false, "", 0);
-                    presenter.resetCurrentChatUnreadCount();
-                }
-
-                if (isDisplayJumpMessageLayout()) {
-                    mHandler.displayBackToLastMessage(true);
-                } else {
-                    mHandler.displayBackToLastMessage(false);
-                }
-            }
-        } else if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
-            if (mHandler != null) {
-                mHandler.hideBackToAtMessage();
-            }
-        }
-    }
-
     public void displayBackToNewMessage(boolean display, String messageId, int count) {
         if (mHandler != null) {
             mHandler.displayBackToNewMessage(display, messageId, count);
@@ -500,47 +460,83 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     public void setAdapterListener() {
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onMessageLongClick(View view, int position, TUIMessageBean messageInfo) {
+            public void onMessageLongClick(View view, TUIMessageBean messageInfo) {
+                if (TUIChatUtils.chatEventOnMessageLongClicked(view, messageInfo)) {
+                    return;
+                }
                 if (mOnItemClickListener != null) {
                     BeginnerGuidePage.showBeginnerGuideThen(view, new Runnable() {
                         @Override
                         public void run() {
-                            mOnItemClickListener.onMessageLongClick(view, position, messageInfo);
+                            mOnItemClickListener.onMessageLongClick(view, messageInfo);
                         }
                     });
                 }
             }
 
             @Override
-            public void onUserIconClick(View view, int position, TUIMessageBean info) {
+            public void onMessageClick(View view, TUIMessageBean messageBean) {
+                if (TUIChatUtils.chatEventOnMessageClicked(view, messageBean)) {
+                    return;
+                }
+                if (messageBean instanceof SoundMessageBean) {
+                    onSoundMessageClicked((SoundMessageBean) messageBean);
+                    return;
+                }
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onUserIconClick(view, position, info);
+                    mOnItemClickListener.onMessageClick(view, messageBean);
                 }
             }
 
             @Override
-            public void onUserIconLongClick(View view, int position, TUIMessageBean messageInfo) {
+            public void onMessageReadStatusClick(View view, TUIMessageBean messageBean) {
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onUserIconLongClick(view, position, messageInfo);
+                    mOnItemClickListener.onMessageReadStatusClick(view, messageBean);
                 }
             }
 
             @Override
-            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+            public void onUserIconClick(View view, TUIMessageBean messageBean) {
+                if (TUIChatUtils.chatEventOnUserIconClicked(view, messageBean)) {
+                    return;
+                }
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onReEditRevokeMessage(view, position, messageInfo);
+                    mOnItemClickListener.onUserIconClick(view, messageBean);
                 }
             }
 
             @Override
-            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {
+            public void onUserIconLongClick(View view, TUIMessageBean messageInfo) {
+                if (TUIChatUtils.chatEventOnUserIconLongClicked(view, messageInfo)) {
+                    return;
+                }
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onRecallClick(view, position, messageInfo);
+                    mOnItemClickListener.onUserIconLongClick(view, messageInfo);
                 }
             }
 
             @Override
-            public void onReplyMessageClick(View view, int position, TUIMessageBean messageBean) {
+            public void onReEditRevokeMessage(View view, TUIMessageBean messageInfo) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onReEditRevokeMessage(view, messageInfo);
+                }
+            }
+
+            @Override
+            public void onRecallClick(View view, TUIMessageBean messageInfo) {
+                if (TUIChatUtils.chatEventOnMessageClicked(view, messageInfo)) {
+                    return;
+                }
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onRecallClick(view, messageInfo);
+                }
+            }
+
+            @Override
+            public void onReplyMessageClick(View view, TUIMessageBean messageBean) {
+                if (TUIChatUtils.chatEventOnMessageClicked(view, messageBean)) {
+                    return;
+                }
                 if (messageBean instanceof ReplyMessageBean) {
                     showRootMessageReplyDetail(((ReplyMessageBean) messageBean).getMsgRootId());
                 } else if (messageBean instanceof QuoteMessageBean) {
@@ -559,7 +555,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             }
 
             @Override
-            public void onSendFailBtnClick(View view, int position, TUIMessageBean messageInfo) {
+            public void onSendFailBtnClick(View view, TUIMessageBean messageInfo) {
                 new TUIKitDialog(getContext())
                     .builder()
                     .setCancelable(true)
@@ -583,28 +579,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
             @Override
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
+                if (TUIChatUtils.chatEventOnMessageLongClicked(view, messageInfo)) {
+                    return;
+                }
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onTextSelected(view, position, messageInfo);
                 }
             }
 
-            @Override
-            public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
-                if (messageBean instanceof SoundMessageBean) {
-                    onSoundMessageClicked((SoundMessageBean) messageBean);
-                    return;
-                }
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onMessageClick(view, position, messageBean);
-                }
-            }
-
-            @Override
-            public void onMessageReadStatusClick(View view, TUIMessageBean messageBean) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onMessageReadStatusClick(view, messageBean);
-                }
-            }
         });
     }
 
@@ -973,13 +955,8 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     }
 
     public interface OnLoadMoreHandler {
-        void loadMore(int type);
-
-        void displayBackToLastMessage(boolean display);
 
         void displayBackToNewMessage(boolean display, String messageId, int count);
-
-        void hideBackToAtMessage();
 
         void loadMessageFinish();
 

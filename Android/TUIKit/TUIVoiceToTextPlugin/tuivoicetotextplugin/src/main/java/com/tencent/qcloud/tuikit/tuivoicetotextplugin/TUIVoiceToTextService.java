@@ -7,13 +7,17 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
@@ -25,7 +29,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class TUIVoiceToTextService extends ServiceInitializer implements ITUIExtension {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency({"TUIChat"})
+@TUIInitializerID("TUIVoiceToTextPlugin")
+public class TUIVoiceToTextService implements TUIInitializer, ITUIExtension {
     public static final String TAG = TUIVoiceToTextService.class.getSimpleName();
     private static TUIVoiceToTextService instance;
 
@@ -143,5 +150,9 @@ public class TUIVoiceToTextService extends ServiceInitializer implements ITUIExt
             return value;
         }
         return defaultValue;
+    }
+
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

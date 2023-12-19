@@ -70,7 +70,7 @@ public class TipsMessageHolder extends MessageBaseHolder {
                         mReEditText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                onItemClickListener.onReEditRevokeMessage(view, position, msg);
+                                onItemClickListener.onReEditRevokeMessage(view, msg);
                             }
                         });
                     }

@@ -86,7 +86,7 @@ public class SoundMessageHolder extends MessageContentHolder {
                 @Override
                 public void onClick(View view) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(view, position, message);
+                        onItemClickListener.onMessageClick(view, message);
                     }
                 }
             });

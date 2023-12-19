@@ -70,21 +70,33 @@ public class RoomEventCenter {
     }
 
     public static class RoomKitUIEvent {
-        public static final String ROOM_KIT_EVENT        = "RoomKitEvent";
-        public static final String CONFIGURATION_CHANGE  = "appConfigurationChange";
-        public static final String KICKED_OFF_LINE       = "kickedOffLine";
-        public static final String AGREE_TAKE_SEAT       = "agreeTakeSeat";
-        public static final String DISAGREE_TAKE_SEAT    = "disagreeTakeSeat";
-        public static final String INVITE_TAKE_SEAT      = "inviteTakeSeat";
-        public static final String SHOW_USER_MANAGEMENT  = "showUserManagement";
-        public static final String SHOW_EXIT_ROOM_VIEW   = "showLeaveRoomView";
-        public static final String SHOW_MEETING_INFO     = "showMeetingInfo";
-        public static final String SHOW_USER_LIST        = "showUserList";
-        public static final String SHOW_APPLY_LIST       = "showApplyList";
-        public static final String SHOW_QRCODE_VIEW      = "showQRCodeView";
-        public static final String SHOW_INVITE_VIEW      = "showInviteView";
+        public static final String ROOM_KIT_EVENT        = "ROOM_KIT_EVENT";
+        public static final String CONFIGURATION_CHANGE  = "CONFIGURATION_CHANGE";
+        public static final String KICKED_OFF_LINE       = "KICKED_OFF_LINE";
+        public static final String AGREE_TAKE_SEAT       = "AGREE_TAKE_SEAT";
+        public static final String DISAGREE_TAKE_SEAT    = "DISAGREE_TAKE_SEAT";
+        public static final String INVITE_TAKE_SEAT      = "INVITE_TAKE_SEAT";
 
-        public static final String OWNER_EXIT_ROOM_ACTION = "OWNER_EXIT_ROOM_ACTION";
+        public static final String SHOW_USER_MANAGEMENT          = "SHOW_USER_MANAGEMENT";
+        public static final String DISMISS_USER_MANAGEMENT       = "DISMISS_USER_MANAGEMENT";
+        public static final String SHOW_EXIT_ROOM_VIEW           = "SHOW_EXIT_ROOM_VIEW";
+        public static final String DISMISS_EXIT_ROOM_VIEW        = "DISMISS_EXIT_ROOM_VIEW";
+        public static final String SHOW_MEETING_INFO             = "SHOW_MEETING_INFO";
+        public static final String DISMISS_MEETING_INFO          = "DISMISS_MEETING_INFO";
+        public static final String SHOW_USER_LIST                = "SHOW_USER_LIST";
+        public static final String DISMISS_USER_LIST             = "DISMISS_USER_LIST";
+        public static final String SHOW_APPLY_LIST               = "SHOW_APPLY_LIST";
+        public static final String DISMISS_APPLY_LIST            = "DISMISS_APPLY_LIST";
+        public static final String SHOW_QRCODE_VIEW              = "SHOW_QRCODE_VIEW";
+        public static final String DISMISS_QRCODE_VIEW           = "DISMISS_QRCODE_VIEW";
+        public static final String SHOW_MEDIA_SETTING_PANEL      = "SHOW_MEDIA_SETTING_PANEL";
+        public static final String DISMISS_MEDIA_SETTING_PANEL   = "DISMISS_MEDIA_SETTING_PANEL";
+        public static final String SHOW_INVITE_PANEL             = "SHOW_INVITE_PANEL";
+        public static final String DISMISS_INVITE_PANEL          = "DISMISS_INVITE_PANEL";
+        public static final String SHOW_INVITE_PANEL_SECOND      = "SHOW_INVITE_PANEL_SECOND";
+        public static final String DISMISS_INVITE_PANEL_SECOND   = "DISMISS_INVITE_PANEL_SECOND";
+        public static final String SHOW_OWNER_EXIT_ROOM_PANEL    = "SHOW_OWNER_EXIT_ROOM_PANEL";
+        public static final String DISMISS_OWNER_EXIT_ROOM_PANEL = "DISMISS_OWNER_EXIT_ROOM_PANEL";
 
         public static final String ENTER_FLOAT_WINDOW = "ENTER_FLOAT_WINDOW";
         public static final String EXIT_FLOAT_WINDOW  = "EXIT_FLOAT_WINDOW";

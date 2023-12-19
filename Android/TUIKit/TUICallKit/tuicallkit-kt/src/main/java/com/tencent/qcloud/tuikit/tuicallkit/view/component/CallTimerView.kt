@@ -25,14 +25,6 @@ class CallTimerView(context: Context) : AppCompatTextView(context) {
         }
     }
 
-    private var mediaTypeObserver = Observer<TUICallDefine.MediaType> {
-        if (TUICallDefine.MediaType.Video == it) {
-            setTextColor(context.resources.getColor(R.color.tuicalling_color_white))
-        }else {
-            setTextColor(context.resources.getColor(R.color.tuicalling_color_black))
-        }
-    }
-
     init {
         initView()
         addObserver()
@@ -43,11 +35,8 @@ class CallTimerView(context: Context) : AppCompatTextView(context) {
     }
 
     private fun initView() {
-        if (TUICallDefine.MediaType.Video == viewmodel.mediaType.get()) {
-            setTextColor(context.resources.getColor(R.color.tuicalling_color_white))
-        }else {
-            setTextColor(context.resources.getColor(R.color.tuicalling_color_black))
-        }
+        setTextColor(context.resources.getColor(R.color.tuicallkit_color_white))
+
         if (viewmodel.callStatus.get() == TUICallDefine.Status.Accept) {
             text = DateTimeUtil.formatSecondsTo00(viewmodel.timeCount.get())
             visibility = VISIBLE
@@ -58,11 +47,9 @@ class CallTimerView(context: Context) : AppCompatTextView(context) {
 
     private fun addObserver() {
         viewmodel.timeCount.observe(timeCountObserver)
-        viewmodel.mediaType.observe(mediaTypeObserver)
     }
 
     private fun removeObserver() {
         viewmodel.timeCount.removeObserver(timeCountObserver)
-        viewmodel.mediaType.removeObserver(mediaTypeObserver)
     }
 }

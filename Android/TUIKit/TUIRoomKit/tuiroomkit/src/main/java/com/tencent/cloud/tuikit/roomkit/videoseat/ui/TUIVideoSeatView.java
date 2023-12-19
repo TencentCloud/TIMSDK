@@ -57,7 +57,7 @@ public class TUIVideoSeatView extends RelativeLayout {
 
     private int mCurrentPageIndex = 0;
 
-    private long mSmallVideoLastUpdateTime = 0L;
+    private long mSmallUserLastUpdateTime = 0L;
 
     private OnClickListener mClickListener;
     private boolean         mIsClickAction;
@@ -123,6 +123,7 @@ public class TUIVideoSeatView extends RelativeLayout {
             @Override
             public void onPageSelect(int pageIndex) {
                 Log.d(TAG, "onPageSelect pageIndex=" + pageIndex);
+                refreshSmallScreenForPageBack(mCurrentPageIndex, pageIndex);
                 if (mIsSpeakerModeOn && mCurrentPageIndex == 0 && pageIndex == 1) {
                     post(new Runnable() {
                         @Override
@@ -131,6 +132,7 @@ public class TUIVideoSeatView extends RelativeLayout {
                         }
                     });
                 }
+
                 mCurrentPageIndex = pageIndex;
                 updateUserTalkingViewVisible(pageIndex);
                 updateCircleIndicator();
@@ -143,6 +145,23 @@ public class TUIVideoSeatView extends RelativeLayout {
             }
         });
         mRecyclerView.setLayoutManager(mPageLayoutManager);
+    }
+
+    private void refreshSmallScreenForPageBack(int oldPageIndex, int newPageIndex) {
+        if (!mIsSpeakerModeOn || !(oldPageIndex == 1) || !(newPageIndex == 0)) {
+            return;
+        }
+        UserEntity smallUser = mUserDisplayView.getUserEntity();
+        if (smallUser == null) {
+            return;
+        }
+        mUserDisplayView.setUserEntity(smallUser);
+        if (smallUser.isVideoAvailable()) {
+            startVideoPlay(smallUser);
+        } else {
+            stopVideoPlay(smallUser);
+        }
+        ensureUserTalkingViewFullyDisplayed();
     }
 
     private void initListView() {
@@ -220,60 +239,61 @@ public class TUIVideoSeatView extends RelativeLayout {
         }
     }
 
-    private void updateUserTalkingView(int position) {
-        if (position < 0 || position >= mMemberEntityList.size()) {
-            return;
+    private void updateAudioForSmallScreen(int position) {
+        updateUserInSpeakerMode(position);
+        UserEntity newUser = mMemberEntityList.get(position);
+        UserEntity curUser = mUserDisplayView.getUserEntity();
+        if (curUser != null && TextUtils.equals(newUser.getUserId(), curUser.getUserId())) {
+            mUserDisplayView.enableVolumeEffect(newUser.isAudioAvailable());
+            mUserDisplayView.updateVolumeEffect(newUser.getAudioVolume());
+            mUserDisplayView.setVolume(newUser.isTalk());
+            // sdk 最后不会回调音量0，所以 app 需要每次将音量清 0
+            newUser.setAudioVolume(VOLUME_NO_SOUND);
         }
-        UserEntity newEntity = mMemberEntityList.get(position);
-        UserEntity curEntity = mUserDisplayView.getUserEntity();
-        if (isSmallVideoTwinkleInSpeaker(newEntity, curEntity)) {
-            return;
-        }
-        updateSmallVideoFlushTimeInSpeaker(newEntity, curEntity);
+    }
 
-        mUserDisplayView.setUserEntity(newEntity);
-        if (newEntity.isVideoAvailable()) {
-            startVideoPlay(newEntity);
+    private void updateUserInSpeakerMode(int position) {
+        if (!mIsSpeakerModeOn) {
+            return;
+        }
+        if (System.currentTimeMillis() - mSmallUserLastUpdateTime < SMALL_VIDEO_UPDATE_INTERVAL) {
+            return;
+        }
+        UserEntity newUser = mMemberEntityList.get(position);
+        if (!newUser.isAudioAvailable()) {
+            return;
+        }
+        UserEntity curUser = mUserDisplayView.getUserEntity();
+        if (curUser != null && TextUtils.equals(newUser.getUserId(), curUser.getUserId())) {
+            return;
+        }
+        mUserDisplayView.setUserEntity(newUser);
+        mSmallUserLastUpdateTime = System.currentTimeMillis();
+        updateVideoForSmallScreen(position);
+    }
+
+    private void updateUserInTwoPersonMode(int position) {
+        if (!mIsTwoPersonVideoOn) {
+            return;
+        }
+        UserEntity newUser = mMemberEntityList.get(position);
+        mUserDisplayView.setUserEntity(newUser);
+        updateVideoForSmallScreen(position);
+    }
+
+    private void updateVideoForSmallScreen(int position) {
+        UserEntity newUser = mMemberEntityList.get(position);
+        UserEntity curUser = mUserDisplayView.getUserEntity();
+        if (curUser == null || !TextUtils.equals(newUser.getUserId(), curUser.getUserId())) {
+            return;
+        }
+        if (newUser.isVideoAvailable()) {
+            startVideoPlay(newUser);
         } else {
-            stopVideoPlay(newEntity);
+            stopVideoPlay(newUser);
         }
-
         ensureUserTalkingViewFullyDisplayed();
-        mUserDisplayView.enableVolumeEffect(newEntity.isAudioAvailable());
-        mUserDisplayView.updateVolumeEffect(newEntity.getAudioVolume());
-        mUserDisplayView.setVolume(newEntity.isTalk());
-        // sdk 最后不会回调音量0，所以 app 需要每次将音量清 0
-        newEntity.setAudioVolume(VOLUME_NO_SOUND);
-    }
-
-    private boolean isSmallVideoTwinkleInSpeaker(UserEntity newUser, UserEntity curUser) {
-        if (newUser == null || curUser == null) {
-            return false;
-        }
-        if (!mIsSpeakerModeOn) {
-            return false;
-        }
-        if (TextUtils.equals(newUser.getUserId(), curUser.getUserId())) {
-            return false;
-        }
-        return System.currentTimeMillis() - mSmallVideoLastUpdateTime < SMALL_VIDEO_UPDATE_INTERVAL;
-    }
-
-    private void updateSmallVideoFlushTimeInSpeaker(UserEntity newUser, UserEntity curUser) {
-        if (curUser == null) {
-            mSmallVideoLastUpdateTime = System.currentTimeMillis();
-            return;
-        }
-        if (newUser == null) {
-            return;
-        }
-        if (!mIsSpeakerModeOn) {
-            return;
-        }
-        if (TextUtils.equals(newUser.getUserId(), curUser.getUserId())) {
-            return;
-        }
-        mSmallVideoLastUpdateTime = System.currentTimeMillis();
+        mUserDisplayView.updateVideoEnableEffect();
     }
 
     private void ensureUserTalkingViewFullyDisplayed() {
@@ -394,11 +414,8 @@ public class TUIVideoSeatView extends RelativeLayout {
         if (mMemberListAdapter == null) {
             return;
         }
-        if (mIsTwoPersonVideoOn) {
-            updateUserTalkingView(mIsTwoPersonSwitched ? 0 : 1);
-        }
-        if (needUpdateUserTalkingViewForSpeaker(position)) {
-            updateUserTalkingView(position);
+        if (mIsTwoPersonVideoOn || needUpdateUserTalkingViewForSpeaker(position)) {
+            updateVideoForSmallScreen(position);
         }
         if (position < mVisibleRange.getMinVisibleRange()
                 || position > mVisibleRange.getMaxVisibleRange()) {
@@ -415,11 +432,8 @@ public class TUIVideoSeatView extends RelativeLayout {
     }
 
     public void notifyItemAudioStateChanged(int position) {
-        if (needUpdateUserTalkingViewForSpeaker(position)) {
-            updateUserTalkingView(position);
-        }
-        if (mIsTwoPersonVideoOn) {
-            updateUserTalkingView(mIsTwoPersonSwitched ? 0 : 1);
+        if (mIsTwoPersonVideoOn || needUpdateUserTalkingViewForSpeaker(position)) {
+            updateAudioForSmallScreen(position);
         }
         if (mMemberListAdapter != null) {
             mMemberListAdapter.notifyItemChanged(position, UserListAdapter.PAYLOAD_AUDIO);
@@ -485,7 +499,7 @@ public class TUIVideoSeatView extends RelativeLayout {
         updateUserTalkingViewVisible();
         if (enable) {
             initUserTalkingViewLayout();
-            updateUserTalkingView(mIsTwoPersonSwitched ? 0 : 1);
+            updateUserInTwoPersonMode(mIsTwoPersonSwitched ? 0 : 1);
             setUserDisplayViewClickListener();
         } else {
             UserEntity displayUserEntity = mUserDisplayView.getUserEntity();
@@ -509,7 +523,7 @@ public class TUIVideoSeatView extends RelativeLayout {
     }
 
     public void notifyTalkingViewDataChanged() {
-        updateUserTalkingView(mIsTwoPersonSwitched ? 0 : 1);
+        updateUserInTwoPersonMode(mIsTwoPersonSwitched ? 0 : 1);
     }
 
     private UserEntity findUserEntityFromLMember(UserEntity userEntity) {
@@ -538,7 +552,7 @@ public class TUIVideoSeatView extends RelativeLayout {
     private void switchTwoPersonVideoMeeting() {
         mIsTwoPersonSwitched = !mIsTwoPersonSwitched;
         Log.d(TAG, "switchTwoPersonVideoMeeting mIsTwoPersonSwitched=" + mIsTwoPersonSwitched);
-        updateUserTalkingView(mIsTwoPersonSwitched ? 0 : 1);
+        updateUserInTwoPersonMode(mIsTwoPersonSwitched ? 0 : 1);
         mPageLayoutManager.enableTwoPersonMeeting(mIsTwoPersonVideoOn, mIsTwoPersonSwitched);
         mMemberListAdapter.notifyItemChanged(mIsTwoPersonSwitched ? 1 : 0);
     }

@@ -95,7 +95,6 @@
     <string name="hint_search_group_id">Search by group ID</string>
     <string name="hint_add_wording">Enter verification message</string>
     <string name="contact_add">Add</string>
-    <string name="contact_refuse">Refuse</string>
     <string name="user_id">ID</string>
     <string name="add_wording">Verification Message</string>
     <string name="create_group">Create Group</string>

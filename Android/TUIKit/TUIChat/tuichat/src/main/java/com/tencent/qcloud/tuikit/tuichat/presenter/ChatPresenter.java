@@ -6,6 +6,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
@@ -153,6 +154,20 @@ public abstract class ChatPresenter {
 
     public void loadMessage(int type, TUIMessageBean locateMessage, IUIKitCallback<List<TUIMessageBean>> callback) {}
 
+    public void locateLastMessage(String chatID, boolean isGroup, IUIKitCallback<Void> callback) {
+        provider.loadLastMessage(chatID, isGroup, true, new IUIKitCallback<TUIMessageBean>() {
+            @Override
+            public void onSuccess(TUIMessageBean lastMessage) {
+                locateMessage(lastMessage.getId(), callback);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+            }
+        });
+    }
+
     public void clearMessage() {
         loadedMessageInfoList.clear();
         messageListAdapter.onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
@@ -233,7 +248,7 @@ public abstract class ChatPresenter {
                     return;
                 }
                 loadedMessageInfoList.clear();
-                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, 0);
                 loadMessage(TUIChatConstants.GET_MESSAGE_LOCATE, data, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> data) {}
@@ -691,6 +706,7 @@ public abstract class ChatPresenter {
     protected void onRecvNewMessage(TUIMessageBean msg) {
         TUIChatLog.i(TAG, "onRecvNewMessage msgID:" + msg.getId());
         if (!isHaveMoreNewMessage) {
+            msg.setMessageSource(TUIMessageBean.MSG_SOURCE_ONLINE_PUSH);
             addMessage(msg);
         }
     }
@@ -831,13 +847,6 @@ public abstract class ChatPresenter {
         isNeedShowBottom = needShowBottom;
     }
 
-    private void notifyTyping() {
-        if (!safetyCall()) {
-            TUIChatLog.w(TAG, "notifyTyping unSafetyCall");
-            return;
-        }
-    }
-
     public String sendMessage(final TUIMessageBean messageInfo, String receiver, boolean isGroup, boolean onlineUserOnly) {
         if (!TextUtils.isEmpty(receiver)) {
             if (!TextUtils.equals(getChatInfo().getId(), receiver) || isGroup != TUIChatUtils.isGroupChat(getChatInfo().getType())) {
@@ -855,8 +864,11 @@ public abstract class ChatPresenter {
         if (message == null || message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             return null;
         }
-        boolean isNeedReadReceipt = TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt();
-        message.setNeedReadReceipt(isNeedReadReceipt);
+        if (TUIChatConfigs.getGeneralConfig().isMsgNeedReadReceipt() && getChatInfo() != null && getChatInfo().isNeedReadReceipt()) {
+            message.setNeedReadReceipt(true);
+        } else {
+            message.setNeedReadReceipt(false);
+        }
         assembleGroupMessage(message);
         notifyConversationInfo(getChatInfo());
 
@@ -1313,7 +1325,8 @@ public abstract class ChatPresenter {
             forwardMessageMerge(msgInfos, isGroup, id, offlineTitle, selfConversation, callBack);
         } else if (forwardMode == TUIChatConstants.FORWARD_MODE_NEW_MESSAGE) {
             TUIMessageBean messageBean = msgInfos.get(0);
-            forwardMessageInternal(messageBean, isGroup, id, null, callBack);
+            OfflinePushInfo offlinePushInfo = getOfflinePushInfo(messageBean, isGroup, id, offlineTitle);
+            forwardMessageInternal(messageBean, isGroup, id, offlinePushInfo, callBack);
         } else {
             TUIChatLog.d(TAG, "invalid forwardMode");
         }
@@ -1349,28 +1362,7 @@ public abstract class ChatPresenter {
                     if (isGroup) {
                         filterGroupMessageReceipt(message, id);
                     }
-                    OfflineMessageBean entity = new OfflineMessageBean();
-                    entity.content = message.getExtra().toString();
-                    entity.sender = message.getSender();
-                    entity.nickname = TUIConfig.getSelfNickName();
-                    entity.faceUrl = TUIConfig.getSelfFaceUrl();
-                    OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
-                    containerBean.entity = entity;
-
-                    if (isGroup) {
-                        entity.chatType = ChatInfo.TYPE_GROUP;
-                        entity.sender = id;
-                    }
-
-                    OfflinePushInfo offlinePushInfo = new OfflinePushInfo();
-                    offlinePushInfo.setExtension(new Gson().toJson(containerBean).getBytes());
-                    offlinePushInfo.setDescription(offlineTitle);
-                    // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
-                    // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
-                    offlinePushInfo.setAndroidOPPOChannelID("tuikit");
-                    if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {
-                        offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
-                    }
+                    OfflinePushInfo offlinePushInfo = getOfflinePushInfo(message, isGroup, id, offlineTitle);
 
                     forwardMessageInternal(message, isGroup, id, offlinePushInfo, callBack);
                     try {
@@ -1384,6 +1376,33 @@ public abstract class ChatPresenter {
         Thread forwardThread = new Thread(forwardMessageRunnable);
         forwardThread.setName("ForwardMessageThread");
         ThreadUtils.execute(forwardThread);
+    }
+
+    @NonNull
+    private static OfflinePushInfo getOfflinePushInfo(TUIMessageBean message, boolean isGroup, String id, String offlineTitle) {
+        OfflineMessageBean entity = new OfflineMessageBean();
+        entity.content = message.getExtra().toString();
+        entity.sender = message.getSender();
+        entity.nickname = TUIConfig.getSelfNickName();
+        entity.faceUrl = TUIConfig.getSelfFaceUrl();
+        OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
+        containerBean.entity = entity;
+
+        if (isGroup) {
+            entity.chatType = ChatInfo.TYPE_GROUP;
+            entity.sender = id;
+        }
+
+        OfflinePushInfo offlinePushInfo = new OfflinePushInfo();
+        offlinePushInfo.setExtension(new Gson().toJson(containerBean).getBytes());
+        offlinePushInfo.setDescription(offlineTitle);
+        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+        // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
+        offlinePushInfo.setAndroidOPPOChannelID("tuikit");
+        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {
+            offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
+        }
+        return offlinePushInfo;
     }
 
     public void sendMessages(List<TUIMessageBean> messageBeans) {
@@ -1464,28 +1483,7 @@ public abstract class ChatPresenter {
             filterGroupMessageReceipt(msgInfo, id);
         }
 
-        OfflineMessageBean entity = new OfflineMessageBean();
-        entity.content = msgInfo.getExtra().toString();
-        entity.sender = msgInfo.getSender();
-        entity.nickname = TUIConfig.getSelfNickName();
-        entity.faceUrl = TUIConfig.getSelfFaceUrl();
-        OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
-        containerBean.entity = entity;
-
-        if (isGroup) {
-            entity.chatType = ChatInfo.TYPE_GROUP;
-            entity.sender = id;
-        }
-
-        OfflinePushInfo offlinePushInfo = new OfflinePushInfo();
-        offlinePushInfo.setExtension(new Gson().toJson(containerBean).getBytes());
-        offlinePushInfo.setDescription(offlineTitle);
-        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
-        // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
-        offlinePushInfo.setAndroidOPPOChannelID("tuikit");
-        if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {
-            offlinePushInfo.setAndroidSound(OfflinePushInfoUtils.PRIVATE_RING_NAME);
-        }
+        OfflinePushInfo offlinePushInfo = getOfflinePushInfo(msgInfo, isGroup, id, offlineTitle);
 
         forwardMessageInternal(msgInfo, isGroup, id, offlinePushInfo, callBack);
     }
@@ -1541,7 +1539,7 @@ public abstract class ChatPresenter {
                 }
                 TUIChatUtils.callbackOnError(callBack, errCode, errMsg);
                 if (errCode == TUIChatConstants.ERR_SVR_COMM_SENSITIVE_IMAGE || errCode == TUIChatConstants.ERR_SVR_COMM_SENSITIVE_TEXT
-                        || errCode == TUIChatConstants.ERR_LOCAL_COMM_SENSITIVE_TEXT) {
+                    || errCode == TUIChatConstants.ERR_LOCAL_COMM_SENSITIVE_TEXT) {
                     message.setHasRiskContent(true);
                 }
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_FAIL);
@@ -1674,6 +1672,9 @@ public abstract class ChatPresenter {
         for (int i = 0; i < size; i++) {
             TUIMessageBean replacedMessage = loadedMessageInfoList.get(i);
             if (TextUtils.equals(replacedMessage.getId(), messageBean.getId())) {
+                if (replacedMessage.customReloadWithNewMsg(messageBean.getV2TIMMessage())) {
+                    return;
+                }
                 loadedMessageInfoList.set(i, messageBean);
                 isFound = true;
                 break;

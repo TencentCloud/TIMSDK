@@ -1,8 +1,11 @@
 package com.tencent.qcloud.tuikit.tuichat.model;
 
+import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
+import static com.tencent.imsdk.BaseConstants.ERR_SUCC;
+import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
+
 import android.text.TextUtils;
 import android.util.Pair;
-
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
@@ -56,16 +59,11 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
-import static com.tencent.imsdk.BaseConstants.ERR_SUCC;
-import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 public class ChatProvider {
     private static final String TAG = ChatProvider.class.getSimpleName();
@@ -147,6 +145,36 @@ public class ChatProvider {
             public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
                 List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(v2TIMMessages);
                 TUIChatUtils.callbackOnSuccess(callBack, Pair.create(messageInfoList, v2TIMMessages.size()));
+            }
+        });
+    }
+
+    public void loadLastMessage(String chatId, boolean isGroup, boolean isGetLocalMessage, IUIKitCallback<TUIMessageBean> callBack) {
+        V2TIMMessageListGetOption optionBackward = new V2TIMMessageListGetOption();
+        optionBackward.setCount(1);
+        optionBackward.setGetType(
+            isGetLocalMessage ? V2TIMMessageListGetOption.V2TIM_GET_LOCAL_OLDER_MSG : V2TIMMessageListGetOption.V2TIM_GET_CLOUD_OLDER_MSG);
+        if (isGroup) {
+            optionBackward.setGroupID(chatId);
+        } else {
+            optionBackward.setUserID(chatId);
+        }
+
+        V2TIMManager.getMessageManager().getHistoryMessageList(optionBackward, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callBack, TAG, code, desc);
+                TUIChatLog.e(TAG, "loadLastMessage failed, code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(v2TIMMessages);
+                if (messageInfoList == null || messageInfoList.isEmpty()) {
+                    TUIChatUtils.callbackOnError(callBack, TAG, -1, "load last message failed.");
+                } else {
+                    TUIChatUtils.callbackOnSuccess(callBack, messageInfoList.get(0));
+                }
             }
         });
     }
@@ -255,8 +283,10 @@ public class ChatProvider {
     }
 
     public String sendTypingStatusMessage(TUIMessageBean message, String receiver, IUIKitCallback<TUIMessageBean> callBack) {
+        V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
+        v2TIMMessage.setExcludedFromContentModeration(true);
         String msgID = V2TIMManager.getMessageManager().sendMessage(
-            message.getV2TIMMessage(), receiver, null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, true, null, new V2TIMSendCallback<V2TIMMessage>() {
+            v2TIMMessage, receiver, null, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, true, null, new V2TIMSendCallback<V2TIMMessage>() {
                 @Override
                 public void onError(int code, String desc) {
                     TUIChatLog.v(TAG, "sendMessage fail:" + code + "=" + ErrorMessageConverter.convertIMError(code, desc));
@@ -580,7 +610,7 @@ public class ChatProvider {
     public void getGroupMessageBySeq(String chatId, long seq, IUIKitCallback<Pair<List<TUIMessageBean>, Integer>> callback) {
         V2TIMMessageListGetOption optionBackward = new V2TIMMessageListGetOption();
         optionBackward.setCount(1);
-        optionBackward.setGetType(V2TIMMessageListGetOption.V2TIM_GET_LOCAL_OLDER_MSG);
+        optionBackward.setGetType(V2TIMMessageListGetOption.V2TIM_GET_CLOUD_OLDER_MSG);
         optionBackward.setLastMsgSeq(seq);
         optionBackward.setGroupID(chatId);
 

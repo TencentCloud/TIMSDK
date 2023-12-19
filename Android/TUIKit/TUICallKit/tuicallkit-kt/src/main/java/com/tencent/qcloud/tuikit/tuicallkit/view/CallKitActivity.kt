@@ -5,22 +5,15 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.tencent.qcloud.tuicore.ServiceInitializer
-import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_KEY_CODE
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_KEY_MESSAGE
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_KEY_USER_ID
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils.setScreenLockParams
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatWindowService
@@ -44,33 +37,11 @@ class CallKitActivity : AppCompatActivity() {
         }
     }
 
-    private var callEventObserver = Observer<TUICallEvent> {
-        if (it.eventType == TUICallEvent.EventType.TIP) {
-            when (it.event) {
-                (TUICallEvent.Event.USER_REJECT) -> {
-                    var userId = it.param?.get(EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_reject_call)
-                }
-                (TUICallEvent.Event.USER_LEAVE) -> {
-                    var userId = it.param?.get(EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_end)
-                }
-                (TUICallEvent.Event.USER_LINE_BUSY) -> {
-                    var userId = it.param?.get(EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_busy)
-                }
-                (TUICallEvent.Event.USER_NO_RESPONSE) -> {
-                    var userId = it.param?.get(EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_not_response)
-                }
-                (TUICallEvent.Event.USER_EXCEED_LIMIT) -> {
-                    ToastUtil.toastLongMessage(getString(R.string.tuicalling_user_exceed_limit))
-                }
-                else -> {}
-            }
-        } else if (TUICallEvent.EventType.ERROR == it.eventType && TUICallEvent.Event.ERROR_COMMON == it.event) {
-            var code = it.param?.get(EVENT_KEY_CODE) as Int
-            var msg = it.param?.get(EVENT_KEY_MESSAGE) as String
+    private var isShowFullScreenObserver = Observer<Boolean> {
+        if (it) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
     }
 
@@ -115,6 +86,11 @@ class CallKitActivity : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = Color.TRANSPARENT
+            val lp = window.getAttributes();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            }
+            window.setAttributes(lp);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
@@ -136,33 +112,12 @@ class CallKitActivity : AppCompatActivity() {
 
     private fun addObserver() {
         TUICallState.instance.selfUser.get().callStatus.observe(callStatusObserver)
-        TUICallState.instance.event.observe(callEventObserver)
+        TUICallState.instance.isShowFullScreen.observe(isShowFullScreenObserver)
     }
 
     private fun removeObserver() {
         TUICallState.instance.selfUser.get().callStatus.removeObserver(callStatusObserver)
-        TUICallState.instance.event.removeObserver(callEventObserver)
-    }
-
-    private fun showUserToast(userId: String, msgId: Int) {
-        if (TextUtils.isEmpty(userId)) {
-            return
-        }
-        var userName = userId
-        if (userId == TUICallState.instance.selfUser.get().id) {
-            if (!TextUtils.isEmpty(TUICallState.instance.selfUser.get().nickname.get())) {
-                userName = TUICallState.instance.selfUser.get().nickname.get()
-            }
-        } else {
-            for (user in TUICallState.instance.remoteUserList.get()) {
-                if (null != user && !TextUtils.isEmpty(user.id) && userId == user.id) {
-                    if (!TextUtils.isEmpty(user.nickname.get())) {
-                        userName = user.nickname.get()
-                    }
-                }
-            }
-        }
-        ToastUtil.toastLongMessage(ServiceInitializer.getAppContext().getString(msgId, userName))
+        TUICallState.instance.isShowFullScreen.removeObserver(isShowFullScreenObserver)
     }
 
     companion object {

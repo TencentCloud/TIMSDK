@@ -21,7 +21,10 @@ import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.Pair;
+import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -71,11 +74,9 @@ public class SelectTextHelper {
     private int mPopSpanCount;
     private int mPopBgResource;
     private int mPopArrowImg;
-    private boolean mIsEmoji = false;
     private List<Pair<Integer, String>> itemTextList;
     private List<Builder.OnSeparateItemClickListener> itemListenerList = new LinkedList<>();
 
-    private BackgroundColorSpan mSpan;
     private boolean isHideWhenScroll;
     private boolean isHide = true;
     private boolean usedClickListener = false;
@@ -116,7 +117,6 @@ public class SelectTextHelper {
         private int mPopSpanCount = 5;
         private int mPopBgResource = 0;
         private int mPopArrowImg = 0;
-        private boolean mIsEmoji = false;
         private List<Pair<Integer, String>> itemTextList = new LinkedList<>();
         private List<OnSeparateItemClickListener> itemListenerList = new LinkedList<>();
 
@@ -197,11 +197,6 @@ public class SelectTextHelper {
             return this;
         }
 
-        public Builder setIsEmoji(boolean isEmoji) {
-            mIsEmoji = isEmoji;
-            return this;
-        }
-
         public Builder addItem(@DrawableRes int drawableId, @StringRes int textResId, OnSeparateItemClickListener listener) {
             itemTextList.add(new Pair<>(drawableId, mTextView.getContext().getResources().getString(textResId)));
             itemListenerList.add(listener);
@@ -229,7 +224,6 @@ public class SelectTextHelper {
         mSelectedColor = builder.mSelectedColor;
         mCursorHandleColor = builder.mCursorHandleColor;
         mSelectAll = builder.mSelectAll;
-        mIsEmoji = builder.mIsEmoji;
         mScrollShow = builder.mScrollShow;
         mMagnifierShow = builder.mMagnifierShow;
         mPopSpanCount = builder.mPopSpanCount;
@@ -436,10 +430,9 @@ public class SelectTextHelper {
 
     private void resetSelectionInfo() {
         mSelectionInfo.mSelectionContent = null;
-        if (mSpannable != null && mSpan != null) {
+        if (mSpannable != null) {
             TIMCommonLog.d(TAG, "mSpannable.removeSpan(mSpan);");
-            mSpannable.removeSpan(mSpan);
-            mSpan = null;
+            Selection.removeSelection(mSpannable);
         }
     }
 
@@ -512,40 +505,11 @@ public class SelectTextHelper {
             mSelectionInfo.mStart = mSelectionInfo.mEnd;
             mSelectionInfo.mEnd = temp;
         }
-
-        if (mSpannable != null) {
-            if (mSpan == null) {
-                mSpan = new BackgroundColorSpan(mSelectedColor);
-            }
-            mSelectionInfo.mSelectionContent = mSpannable.subSequence(mSelectionInfo.mStart, mSelectionInfo.mEnd).toString();
-            mSpannable.setSpan(mSpan, mSelectionInfo.mStart, mSelectionInfo.mEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            if (mSelectListener != null) {
-                mSelectListener.onTextSelected(mSelectionInfo.mSelectionContent);
-            }
-
-            if (mIsEmoji) {
-                // handlerEmojiSelectText();
-            }
-        }
-    }
-
-    private void handlerEmojiSelectText() {
-        String regex = "\\[(\\S+?)\\]";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(mSelectionInfo.mSelectionContent);
-
-        while (m.find()) {
-            String emojiName = m.group();
-            Bitmap bitmap = FaceManager.getEmoji(emojiName);
-            if (bitmap != null) {
-                Drawable drawable = new BitmapDrawable(bitmap);
-                ShapeDrawable background = new ShapeDrawable();
-                background.getPaint().setColor(mTextView.getContext().getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.text_select_color));
-                LayerDrawable layerDrawable = new LayerDrawable(new Drawable[] {background, drawable});
-                layerDrawable.setBounds(0, 0, 64, 64);
-                ImageSpan image = new ImageSpan(layerDrawable, ImageSpan.ALIGN_BASELINE);
-                mSpannable.setSpan(image, mSelectionInfo.mStart, mSelectionInfo.mEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            }
+        mTextView.requestFocus();
+        mSelectionInfo.mSelectionContent = mSpannable.subSequence(mSelectionInfo.mStart, mSelectionInfo.mEnd).toString();
+        Selection.setSelection(mSpannable, mSelectionInfo.mStart, mSelectionInfo.mEnd);
+        if (mSelectListener != null) {
+            mSelectListener.onTextSelected(mSelectionInfo.mSelectionContent);
         }
     }
 

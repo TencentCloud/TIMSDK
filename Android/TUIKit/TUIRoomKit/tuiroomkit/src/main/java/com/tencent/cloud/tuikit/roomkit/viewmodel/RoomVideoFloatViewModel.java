@@ -20,7 +20,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.floatwindow.videoplaying.RoomVideoFloatView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomVideoFloatView;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.List;

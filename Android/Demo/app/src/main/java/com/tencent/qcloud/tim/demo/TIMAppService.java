@@ -6,18 +6,29 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.auto.service.AutoService;
 import com.tencent.qcloud.tim.demo.config.InitSetting;
+import com.tencent.qcloud.tim.demo.custom.CustomConfigHelper;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
+
 import java.util.Map;
 
-public class TIMAppService extends ServiceInitializer implements ITUIService, ITUINotification {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency("TIMCommon")
+@TUIInitializerID("TIMAppService")
+public class TIMAppService implements TUIInitializer, ITUIService, ITUINotification {
     public static final String TAG = TIMAppService.class.getSimpleName();
     private static TIMAppService instance;
 
@@ -45,17 +56,13 @@ public class TIMAppService extends ServiceInitializer implements ITUIService, IT
     private void initService() {
         TUICore.registerService(TUIConstants.TIMAppKit.SERVICE_NAME, this);
 
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
-                TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, this);
-        TUICore.registerEvent(TUIConstants.TIMAppKit.NOTIFY_RTCUBE_EVENT_KEY,
-                TUIConstants.TIMAppKit.NOFITY_IMLOGIN_SUCCESS_SUB_KEY, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, this);
+        TUICore.registerEvent(TUIConstants.TIMAppKit.NOTIFY_RTCUBE_EVENT_KEY, TUIConstants.TIMAppKit.NOFITY_IMLOGIN_SUCCESS_SUB_KEY, this);
     }
+
 
     @Override
     public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
@@ -106,5 +113,9 @@ public class TIMAppService extends ServiceInitializer implements ITUIService, IT
         }
 
         initSetting.initBeforeLogin(sdkappid);
+    }
+
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

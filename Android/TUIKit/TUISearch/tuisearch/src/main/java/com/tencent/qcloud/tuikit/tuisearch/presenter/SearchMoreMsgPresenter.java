@@ -86,7 +86,7 @@ public class SearchMoreMsgPresenter {
                         } else if (!TextUtils.isEmpty(message.getNickName())) {
                             title = message.getNickName();
                         } else {
-                            title = message.isGroup() ? message.getGroupId() : message.getUserId();
+                            title = message.getFromUser();
                         }
                         String subTitle = provider.getMessageText(message);
                         String path = message.getFaceUrl();

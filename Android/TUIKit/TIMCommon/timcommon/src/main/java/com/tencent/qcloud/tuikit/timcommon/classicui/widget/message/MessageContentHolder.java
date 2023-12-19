@@ -53,7 +53,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     public boolean isReplyDetailMode = false;
     public boolean isMultiSelectMode = false;
 
-    private List<TUIMessageBean> mDataSource = new ArrayList<>();
+    private List<TUIMessageBean> mForwardDataSource = new ArrayList<>();
     protected SelectTextHelper selectableTextHelper;
     // 是否显示底部的内容。合并转发的消息详情界面不用展示底部内容。
     // Whether to display the bottom content. The merged-forwarded message details activity does not display the bottom content.
@@ -89,9 +89,13 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         this.recyclerView = recyclerView;
     }
 
-    public void setDataSource(List<TUIMessageBean> dataSource) {
+    public RecyclerView getRecyclerView() {
+        return this.recyclerView;
+    }
+
+    public void setForwardDataSource(List<TUIMessageBean> dataSource) {
         if (dataSource == null || dataSource.isEmpty()) {
-            mDataSource = null;
+            mForwardDataSource = null;
         }
 
         List<TUIMessageBean> mediaSource = new ArrayList<>();
@@ -101,11 +105,11 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
                 mediaSource.add(messageBean);
             }
         }
-        mDataSource = mediaSource;
+        mForwardDataSource = mediaSource;
     }
 
-    public List<TUIMessageBean> getDataSource() {
-        return mDataSource;
+    public List<TUIMessageBean> getForwardDataSource() {
+        return mForwardDataSource;
     }
 
     public void resetSelectableText() {
@@ -239,7 +243,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
             msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    onItemClickListener.onMessageLongClick(v, position, msg);
+                    onItemClickListener.onMessageLongClick(v, msg);
                     return true;
                 }
             });
@@ -247,7 +251,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
             msgArea.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    onItemClickListener.onMessageLongClick(msgArea, position, msg);
+                    onItemClickListener.onMessageLongClick(msgArea, msg);
                     return true;
                 }
             });
@@ -255,20 +259,20 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
             leftUserIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onUserIconClick(view, position, msg);
+                    onItemClickListener.onUserIconClick(view, msg);
                 }
             });
             leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    onItemClickListener.onUserIconLongClick(view, position, msg);
+                    onItemClickListener.onUserIconLongClick(view, msg);
                     return true;
                 }
             });
             rightUserIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onUserIconClick(view, position, msg);
+                    onItemClickListener.onUserIconClick(view, msg);
                 }
             });
         }
@@ -279,7 +283,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
                 @Override
                 public void onClick(View view) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(msgContentFrame, position, msg);
+                        onItemClickListener.onMessageLongClick(msgContentFrame, msg);
                     }
                 }
             });
@@ -287,7 +291,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onSendFailBtnClick(statusImage, position, msg);
+                        onItemClickListener.onSendFailBtnClick(statusImage, msg);
                     }
                 }
             });
@@ -296,7 +300,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(msgContentFrame, position, msg);
+                        onItemClickListener.onMessageClick(msgContentFrame, msg);
                     }
                 }
             });
@@ -516,7 +520,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
                 @Override
                 public boolean onLongClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(v, 0, messageBean);
+                        onItemClickListener.onMessageLongClick(v, messageBean);
                     }
                     return true;
                 }
@@ -609,7 +613,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         }
     }
 
-    protected void setSelectableTextHelper(TUIMessageBean msg, TextView textView, int position, boolean isEmoji) {
+    protected void setSelectableTextHelper(TUIMessageBean msg, TextView textView, int position) {
         if (selectableTextHelper != null) {
             selectableTextHelper.destroy();
         }
@@ -618,7 +622,6 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
                                    .setCursorHandleSizeInDp(18)
                                    .setSelectedColor(TIMCommonService.getAppContext().getResources().getColor(R.color.test_blue))
                                    .setSelectAll(true)
-                                   .setIsEmoji(isEmoji)
                                    .setScrollShow(false)
                                    .setSelectedAllNoPop(true)
                                    .setMagnifierShow(false)
@@ -633,11 +636,14 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
 
             @Override
             public void onTextSelected(CharSequence content) {
-                String selectedText = content.toString();
-                msg.setSelectText(selectedText);
-                TIMCommonLog.d("TextMessageHolder", "onTextSelected selectedText = " + selectedText);
-                if (onItemClickListener != null) {
-                    onItemClickListener.onTextSelected(msgArea, position, msg);
+                String selectedText = "";
+                if (!TextUtils.isEmpty(content)) {
+                    selectedText = content.toString();
+                    msg.setSelectText(selectedText);
+                    TIMCommonLog.d("TextMessageHolder", "onTextSelected selectedText = " + selectedText);
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onTextSelected(msgArea, position, msg);
+                    }
                 }
             }
 

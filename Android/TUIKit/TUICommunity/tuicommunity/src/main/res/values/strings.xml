@@ -108,4 +108,12 @@
 
     <string name="community_accept">Agree</string>
     <string name="community_refuse">Decline</string>
+
+    <string name="ui_at_all">[@All]</string>
+    <string name="ui_at_me">[Someone @ me]</string>
+    <string name="ui_at_all_me">[@All][Someone @ me]</string>
+    <string name="drafts">[Drafts]</string>
+
+    <string name="clear_message">Clear Chat History</string>
+    <string name="clear_message_tip">Are you sure you want to clear the chat history?</string>
 </resources>

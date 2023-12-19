@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.topnavigationbar;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar;
 
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
 

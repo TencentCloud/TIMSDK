@@ -1,6 +1,8 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.dialog;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog;
 
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -42,9 +44,11 @@ public class InviteUserDialog extends BaseBottomDialog implements RoomEventCente
     }
 
     @Override
-    public void cancel() {
-        super.cancel();
+    public void dismiss() {
+        super.dismiss();
         RoomEventCenter.getInstance().unsubscribeUIEvent(CONFIGURATION_CHANGE, this);
+        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL, null);
+        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL_SECOND, null);
     }
 
     @Override

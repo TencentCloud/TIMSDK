@@ -1,14 +1,20 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL_SECOND;
+
+import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,6 +33,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 public class UserListPanel extends BaseBottomDialog implements View.OnClickListener {
+    private static final String TAG = "UserListPanel";
 
     private Context           mContext;
     private TextView          mBtnConfirm;
@@ -47,8 +54,9 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
     }
 
     @Override
-    public void cancel() {
-        super.cancel();
+    public void dismiss() {
+        super.dismiss();
+        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_USER_LIST, null);
         mViewModel.destroy();
     }
 
@@ -191,13 +199,21 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
         } else if (v.getId() == R.id.btn_mute_video_all) {
             mViewModel.muteAllUserVideo();
         } else if (v.getId() == R.id.btn_mute_more_options || v.getId() == R.id.btn_invite) {
-            RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW, null);
+            RoomEventCenter.getInstance().notifyUIEvent(SHOW_INVITE_PANEL_SECOND, null);
         }
     }
 
     public void showUserManagementView(UserEntity user) {
         UserManagementView userManagementView = new UserManagementView(mContext, user);
-        userManagementView.show();
+        try {
+            userManagementView.show();
+        } catch (WindowManager.BadTokenException e) {
+            e.printStackTrace();
+            if (mContext != null && mContext instanceof Activity) {
+                Activity activity = (Activity) mContext;
+                Log.e(TAG, "Activity is running : " + activity.isFinishing());
+            }
+        }
     }
 }
 

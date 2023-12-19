@@ -53,7 +53,7 @@ class RecentCallsItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         val colorId = if (CallRecords.Result.Missed == records.result) {
             R.color.tuicallkit_record_text_red
         } else {
-            R.color.tuicalling_color_black
+            R.color.tuicallkit_color_black
         }
         textUserTitle.setTextColor(context.resources.getColor(colorId))
         val imageId = if (TUICallDefine.MediaType.Video == records.mediaType) {

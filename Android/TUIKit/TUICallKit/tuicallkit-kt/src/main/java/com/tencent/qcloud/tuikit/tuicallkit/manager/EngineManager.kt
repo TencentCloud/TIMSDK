@@ -78,7 +78,7 @@ class EngineManager private constructor(context: Context) {
                         override fun onError(errCode: Int, errMsg: String) {
                             var errMsg: String? = errMsg
                             if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
-                                errMsg = context.getString(R.string.tuicalling_package_not_purchased)
+                                errMsg = context.getString(R.string.tuicallkit_package_not_purchased)
                             }
                             if (errCode == BaseConstants.ERR_SVR_MSG_IN_PEER_BLACKLIST) {
                                 errMsg = context.getString(R.string.tuicallkit_error_in_peer_blacklist)
@@ -119,7 +119,7 @@ class EngineManager private constructor(context: Context) {
             return
         }
         if (userIdList.size >= Constants.MAX_USER) {
-            ToastUtil.toastLongMessage(context.getString(R.string.tuicalling_user_exceed_limit))
+            ToastUtil.toastLongMessage(context.getString(R.string.tuicallkit_user_exceed_limit))
             TUILog.e(TAG, "groupCall failed, exceeding max user number: 9")
             callback?.onError(TUICallDefine.ERROR_PARAM_INVALID, "groupCall failed, exceeding max user number")
             return
@@ -154,7 +154,7 @@ class EngineManager private constructor(context: Context) {
                         override fun onError(errCode: Int, errMsg: String?) {
                             var errMsg: String? = errMsg
                             if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                errMsg = context.getString(R.string.tuicalling_package_not_support)
+                                errMsg = context.getString(R.string.tuicallkit_package_not_support)
                             }
                             ToastUtil.toastLongMessage(errMsg)
                             TUILog.e(TAG, "groupCall errCode:$errCode, errMsg:$errMsg")
@@ -209,7 +209,7 @@ class EngineManager private constructor(context: Context) {
                         override fun onError(errCode: Int, errMsg: String) {
                             var errMsg: String? = errMsg
                             if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                errMsg = context.getString(R.string.tuicalling_package_not_support)
+                                errMsg = context.getString(R.string.tuicallkit_package_not_support)
                             }
                             ToastUtil.toastLongMessage(errMsg)
                         }

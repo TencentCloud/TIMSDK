@@ -1,16 +1,23 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.mediasettings;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings;
+
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 
-public class VideoResolutionChoicePanel extends BaseBottomDialog {
+import java.util.Map;
+
+public class VideoResolutionChoicePanel extends BaseBottomDialog implements RoomEventCenter.RoomKitUIEventResponder {
     private TUIRoomDefine.VideoQuality[] mResolutionList = {
             TUIRoomDefine.VideoQuality.Q_360P, TUIRoomDefine.VideoQuality.Q_540P, TUIRoomDefine.VideoQuality.Q_720P,
             TUIRoomDefine.VideoQuality.Q_1080P};
@@ -25,6 +32,13 @@ public class VideoResolutionChoicePanel extends BaseBottomDialog {
 
     public VideoResolutionChoicePanel(@NonNull Context context) {
         super(context);
+        RoomEventCenter.getInstance().subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        RoomEventCenter.getInstance().unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     @Override
@@ -54,6 +68,14 @@ public class VideoResolutionChoicePanel extends BaseBottomDialog {
                 findViewById(mViewResolutionCheckedList[i]).setVisibility(View.VISIBLE);
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onNotifyUIEvent(String key, Map<String, Object> params) {
+        if (RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key) && params != null) {
+            Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
+            changeConfiguration(configuration);
         }
     }
 }

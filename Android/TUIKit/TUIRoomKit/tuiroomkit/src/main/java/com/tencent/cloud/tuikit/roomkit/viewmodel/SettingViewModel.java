@@ -14,7 +14,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.mediasettings.SettingView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings.MediaSettingPanel;
 
 import java.util.Map;
 
@@ -22,10 +22,10 @@ public class SettingViewModel
         implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "SettingViewModel";
 
-    private RoomStore   mRoomStore;
-    private SettingView mSettingView;
+    private RoomStore         mRoomStore;
+    private MediaSettingPanel mSettingView;
 
-    public SettingViewModel(SettingView settingView) {
+    public SettingViewModel(MediaSettingPanel settingView) {
         mSettingView = settingView;
         mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
 

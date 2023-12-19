@@ -3,23 +3,30 @@ package com.tencent.qcloud.tuikit.tuicontact.classicui;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+
+import com.google.auto.service.AutoService;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.pages.FriendProfileActivity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class ClassicUIExtensionObserver extends ServiceInitializer implements ITUIExtension {
+@AutoService(TUIInitializer.class)
+@TUIInitializerID("TUIContactClassicUIExtensionObserver")
+@TUIInitializerDependency("TUIContact")
+public class ClassicUIExtensionObserver implements TUIInitializer, ITUIExtension {
     @Override
     public void init(Context context) {
-        super.init(context);
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, this);
     }
 
@@ -29,7 +36,7 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
             Object userID = param.get(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.USER_ID);
             if (userID instanceof String) {
                 TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
-                extensionInfo.setIcon(TUIThemeManager.getAttrResId(getContext(), R.attr.contact_chat_extension_title_bar_more_menu));
+                extensionInfo.setIcon(TUIThemeManager.getAttrResId(getAppContext(), R.attr.contact_chat_extension_title_bar_more_menu));
                 extensionInfo.setWeight(100);
                 extensionInfo.setExtensionListener(new TUIExtensionEventListener() {
                     @Override
@@ -45,5 +52,9 @@ public class ClassicUIExtensionObserver extends ServiceInitializer implements IT
             }
         }
         return null;
+    }
+
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

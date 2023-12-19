@@ -51,7 +51,7 @@ public class RoomStore {
         videoModel = new VideoModel();
         allUserList = new CopyOnWriteArrayList<>();
         seatUserList = new CopyOnWriteArrayList<>();
-        takeSeatRequestList = new LinkedList<>();
+        takeSeatRequestList = new CopyOnWriteArrayList<>();
     }
 
     public void addTakeSeatRequest(TUIRoomDefine.Request request) {
@@ -171,50 +171,119 @@ public class RoomStore {
     public void remoteUserTakeSeat(TUIRoomDefine.UserInfo userInfo) {
         Log.d(TAG, "remoteUserTakeSeat userId=" + userInfo.userId);
         if (TextUtils.equals(userInfo.userId, TUILogin.getUserId())) {
-            userModel.isOnSeat = true;
+            userModel.setSeatStatus(UserModel.SeatStatus.ON_SEAT);
         }
         if (userInfo.hasScreenStream) {
-            boolean isUserExist = false;
-            for (UserEntity item : seatUserList) {
-                if (TextUtils.equals(item.getUserId(), userInfo.userId) && item.getVideoStreamType() == SCREEN_STREAM) {
-                    isUserExist = true;
-                    break;
-                }
-            }
-            if (!isUserExist) {
-                seatUserList.add(0, UserEntity.toUserEntityForScreenStream(userInfo));
-                Map<String, Object> map = new HashMap<>();
-                map.put(RoomEventConstant.KEY_USER_POSITION, 0);
-                RoomEventCenter.getInstance()
-                        .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, map);
+            remoteScreenUserTakeSeat(userInfo);
+        }
+        remoteCameraUserTakeSeat(userInfo);
+    }
+
+    private void remoteScreenUserTakeSeat(TUIRoomDefine.UserInfo userInfo) {
+        for (UserEntity item : seatUserList) {
+            if (TextUtils.equals(item.getUserId(), userInfo.userId) && item.getVideoStreamType() == SCREEN_STREAM) {
+                return;
             }
         }
+        seatUserList.add(0, UserEntity.toUserEntityForScreenStream(userInfo));
+        int userPosition = USER_NOT_FOUND;
+        for (int i = 0; i < allUserList.size(); i++) {
+            if (TextUtils.equals(allUserList.get(i).getUserId(), userInfo.userId)
+                    && allUserList.get(i).getVideoStreamType() == SCREEN_STREAM) {
+                allUserList.get(i).setOnSeat(true);
+                userPosition = i;
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put(RoomEventConstant.KEY_SEAT_USER_POSITION, 0);
+        map.put(RoomEventConstant.KEY_USER_POSITION, userPosition);
+        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, map);
+    }
 
+    private void remoteCameraUserTakeSeat(TUIRoomDefine.UserInfo userInfo) {
         for (UserEntity item : seatUserList) {
             if (TextUtils.equals(item.getUserId(), userInfo.userId) && item.getVideoStreamType() != SCREEN_STREAM) {
                 return;
             }
         }
         seatUserList.add(UserEntity.toUserEntityForCameraStream(userInfo));
+        int userPosition = USER_NOT_FOUND;
+        for (int i = 0; i < allUserList.size(); i++) {
+            if (TextUtils.equals(allUserList.get(i).getUserId(), userInfo.userId)
+                    && allUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
+                allUserList.get(i).setOnSeat(true);
+                userPosition = i;
+            }
+        }
         Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_USER_POSITION, seatUserList.size() - 1);
+        map.put(RoomEventConstant.KEY_SEAT_USER_POSITION, seatUserList.size() - 1);
+        map.put(RoomEventConstant.KEY_USER_POSITION, userPosition);
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT, map);
     }
 
     public void remoteUserLeaveSeat(String userId) {
         Log.d(TAG, "remoteUserLeaveSeat userId=" + userId);
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
-            userModel.isOnSeat = false;
+            userModel.setSeatStatus(UserModel.SeatStatus.OFF_SEAT);
         }
+        remoteScreenUserLeaveSeat(userId);
+        remoteCameraUserLeaveSeat(userId);
+    }
+
+    private void remoteScreenUserLeaveSeat(String userId) {
+        int seatPosition = USER_NOT_FOUND;
         for (int i = 0; i < seatUserList.size(); i++) {
-            if (TextUtils.equals(userId, seatUserList.get(i).getUserId())) {
-                Map<String, Object> map = new HashMap<>();
-                map.put(RoomEventConstant.KEY_USER_POSITION, i);
-                RoomEventCenter.getInstance()
-                        .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT, map);
-                seatUserList.remove(i);
+            if (seatUserList.get(i).getVideoStreamType() == SCREEN_STREAM && TextUtils.equals(userId, seatUserList.get(i).getUserId())) {
+                seatPosition = i;
+                break;
             }
         }
+        if (seatPosition == USER_NOT_FOUND) {
+            return;
+        }
+        int userPosition = USER_NOT_FOUND;
+        for (int i = 0; i < allUserList.size(); i++) {
+            if (allUserList.get(i).getVideoStreamType() == SCREEN_STREAM && TextUtils.equals(userId, allUserList.get(i).getUserId())) {
+                userPosition = i;
+                allUserList.get(i).setOnSeat(false);
+                break;
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(RoomEventConstant.KEY_SEAT_USER_POSITION, seatPosition);
+        map.put(RoomEventConstant.KEY_USER_POSITION, userPosition);
+        RoomEventCenter.getInstance()
+                .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT, map);
+        seatUserList.remove(seatPosition);
+    }
+
+    private void remoteCameraUserLeaveSeat(String userId) {
+        int seatPosition = USER_NOT_FOUND;
+        for (int i = 0; i < seatUserList.size(); i++) {
+            if (seatUserList.get(i).getVideoStreamType() != SCREEN_STREAM && TextUtils.equals(userId, seatUserList.get(i).getUserId())) {
+                seatPosition = i;
+                break;
+            }
+        }
+        if (seatPosition == USER_NOT_FOUND) {
+            return;
+        }
+        int userPosition = USER_NOT_FOUND;
+        for (int i = 0; i < allUserList.size(); i++) {
+            if (allUserList.get(i).getVideoStreamType() != SCREEN_STREAM && TextUtils.equals(userId, allUserList.get(i).getUserId())) {
+                userPosition = i;
+                allUserList.get(i).setOnSeat(false);
+                break;
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(RoomEventConstant.KEY_SEAT_USER_POSITION, seatPosition);
+        map.put(RoomEventConstant.KEY_USER_POSITION, userPosition);
+        RoomEventCenter.getInstance()
+                .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT, map);
+        seatUserList.remove(seatPosition);
     }
 
     public void disableUserSendingMsg(String userId, boolean disable) {

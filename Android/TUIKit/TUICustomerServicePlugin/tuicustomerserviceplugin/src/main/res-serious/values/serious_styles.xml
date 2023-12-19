@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TUICustomerServiceSeriousTheme" parent="TUIBaseLightTheme">
+    <style name="TUICustomerServiceSeriousTheme" parent="TUIBaseSeriousTheme">
         <item name="customer_service_item_text_color">@color/customer_service_item_text_color_serious</item>
         <item name="product_close_color">@color/product_close_color_serious</item>
         <item name="evaluation_number_default_color">@color/evaluation_number_default_color_serious</item>

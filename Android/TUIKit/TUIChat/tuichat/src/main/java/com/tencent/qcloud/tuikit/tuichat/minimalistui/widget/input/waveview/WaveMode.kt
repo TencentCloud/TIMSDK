@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview.VoiceWaveView
+package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview
 
 enum class WaveMode {
     UP_DOWN,

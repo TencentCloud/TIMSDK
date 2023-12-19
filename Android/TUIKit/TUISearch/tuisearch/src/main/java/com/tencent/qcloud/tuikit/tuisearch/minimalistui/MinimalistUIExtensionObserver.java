@@ -5,19 +5,26 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.auto.service.AutoService;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuisearch.R;
 import java.util.List;
 import java.util.Map;
 
-public class MinimalistUIExtensionObserver extends ServiceInitializer implements ITUIExtension {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency({"TIMCommon"})
+@TUIInitializerID("TUISearchMinimalistUIExtensionObserver")
+public class MinimalistUIExtensionObserver implements TUIInitializer, ITUIExtension {
     @Override
     public void init(Context context) {
-        super.init(context);
         TUICore.registerExtension(TUIConstants.TUIConversation.Extension.ConversationListHeader.MINIMALIST_EXTENSION_ID, this);
     }
 
@@ -64,5 +71,9 @@ public class MinimalistUIExtensionObserver extends ServiceInitializer implements
             return defaultValue;
         }
         return defaultValue;
+    }
+
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

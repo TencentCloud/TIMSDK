@@ -1,6 +1,7 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.dialog;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.OWNER_EXIT_ROOM_ACTION;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_EXIT_ROOM_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_OWNER_EXIT_ROOM_PANEL;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -38,6 +39,12 @@ public class ExitRoomDialog extends BottomSheetDialog {
         setContentView(R.layout.tuiroomkit_dialog_exit_room);
         initWindow();
         initView();
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_EXIT_ROOM_VIEW, null);
     }
 
     private void initWindow() {
@@ -87,7 +94,7 @@ public class ExitRoomDialog extends BottomSheetDialog {
             @Override
             public void onClick(View v) {
                 if (isOwner) {
-                    RoomEventCenter.getInstance().notifyUIEvent(OWNER_EXIT_ROOM_ACTION, null);
+                    RoomEventCenter.getInstance().notifyUIEvent(SHOW_OWNER_EXIT_ROOM_PANEL, null);
                 } else {
                     RoomEngineManager.sharedInstance().exitRoom(null);
                 }

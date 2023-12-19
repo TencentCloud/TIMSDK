@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
@@ -18,6 +17,8 @@ public class TextMessageHolder extends MessageContentHolder {
     public TextMessageHolder(View itemView) {
         super(itemView);
         msgBodyText = itemView.findViewById(R.id.msg_body_tv);
+        msgBodyText.setTextIsSelectable(true);
+        msgBodyText.setHighlightColor(itemView.getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.timcommon_text_highlight_color));
     }
 
     @Override
@@ -69,17 +70,25 @@ public class TextMessageHolder extends MessageContentHolder {
                 return true;
             }
         });
-        boolean isEmoji = false;
         if (textMessageBean.getText() != null) {
-            isEmoji = FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getText(), false);
+            FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getText(), false);
         } else if (!TextUtils.isEmpty(textMessageBean.getExtra())) {
-            isEmoji = FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getExtra(), false);
+            FaceManager.handlerEmojiText(msgBodyText, textMessageBean.getExtra(), false);
         } else {
-            isEmoji = FaceManager.handlerEmojiText(msgBodyText, TUIChatService.getAppContext().getString(R.string.no_support_msg), false);
+            FaceManager.handlerEmojiText(msgBodyText, TUIChatService.getAppContext().getString(R.string.no_support_msg), false);
         }
         if (isForwardMode || isReplyDetailMode) {
             return;
         }
-        setSelectableTextHelper(msg, msgBodyText, position, isEmoji);
+        setSelectableTextHelper(msg, msgBodyText, position);
+
+        msgBodyText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageClick(v, textMessageBean);
+                }
+            }
+        });
     }
 }

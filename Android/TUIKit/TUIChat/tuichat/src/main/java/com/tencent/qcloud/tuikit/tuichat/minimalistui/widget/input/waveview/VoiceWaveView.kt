@@ -1,4 +1,4 @@
-package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview.VoiceWaveView
+package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.waveview
 
 import android.animation.ValueAnimator
 import android.content.Context

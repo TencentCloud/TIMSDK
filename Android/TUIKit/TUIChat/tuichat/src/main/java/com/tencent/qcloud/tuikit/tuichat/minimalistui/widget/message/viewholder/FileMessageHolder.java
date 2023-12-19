@@ -86,7 +86,7 @@ public class FileMessageHolder extends MessageContentHolder {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(v, position, msg);
+                        onItemClickListener.onMessageClick(v, msg);
                     }
                 }
             });

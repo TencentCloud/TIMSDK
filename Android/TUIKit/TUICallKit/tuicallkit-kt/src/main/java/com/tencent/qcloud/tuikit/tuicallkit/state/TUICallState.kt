@@ -8,17 +8,18 @@ import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuicore.util.SPUtils
+import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.TUICommonDefine.AudioPlaybackDevice
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallObserver
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
+import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent.Companion.EVENT_KEY_USER_ID
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
 
@@ -31,7 +32,6 @@ class TUICallState {
     public var timeCount = LiveData<Int>()
     public var roomId = LiveData<TUICommonDefine.RoomId>()
     public var groupId = LiveData<String?>()
-    public var event = LiveData<TUICallEvent>()
 
     public var isCameraOpen = LiveData<Boolean>()
     public var isFrontCamera = LiveData<TUICommonDefine.Camera>()
@@ -41,6 +41,9 @@ class TUICallState {
     public var enableMuteMode = false
     public var enableFloatWindow = false
     public var reverse1v1CallRenderView = false
+    public var isShowFullScreen = LiveData<Boolean>()
+    public var isBottomViewExpand = LiveData<Boolean>()
+    public var showLargeViewUserId = LiveData<String>()
 
     private var timeHandler: Handler? = null
     private var timeHandlerThread: HandlerThread? = null
@@ -60,6 +63,9 @@ class TUICallState {
         audioPlayoutDevice.set(AudioPlaybackDevice.Earpiece)
         enableMuteMode = SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLKIT)
             .getBoolean(CallingBellFeature.PROFILE_MUTE_MODE, false)
+        isShowFullScreen.set(false)
+        isBottomViewExpand.set(true)
+        showLargeViewUserId.set(null)
     }
 
     val mTUICallObserver: TUICallObserver = object : TUICallObserver() {
@@ -81,8 +87,7 @@ class TUICallState {
             }
 
             if (calleeIdList.size >= Constants.MAX_USER) {
-                var callEvent = TUICallEvent(TUICallEvent.EventType.TIP, TUICallEvent.Event.USER_EXCEED_LIMIT, null)
-                event.set(callEvent)
+                ToastUtil.toastLongMessage(TUILogin.getAppContext().getString(R.string.tuicallkit_user_exceed_limit))
                 return
             }
 
@@ -206,10 +211,7 @@ class TUICallState {
             if (userId.isNullOrEmpty()) {
                 return
             }
-            var param = HashMap<String, Any?>()
-            param[EVENT_KEY_USER_ID] = userId
-            var callEvent = TUICallEvent(TUICallEvent.EventType.TIP, TUICallEvent.Event.USER_REJECT, param)
-            event.set(callEvent)
+
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
@@ -223,10 +225,7 @@ class TUICallState {
             if (userId.isNullOrEmpty()) {
                 return
             }
-            var param = HashMap<String, Any?>()
-            param[EVENT_KEY_USER_ID] = userId
-            var callEvent = TUICallEvent(TUICallEvent.EventType.TIP, TUICallEvent.Event.USER_NO_RESPONSE, param)
-            event.set(callEvent)
+
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
@@ -240,10 +239,7 @@ class TUICallState {
             if (userId.isNullOrEmpty()) {
                 return
             }
-            var param = HashMap<String, Any?>()
-            param[EVENT_KEY_USER_ID] = userId
-            var callEvent = TUICallEvent(TUICallEvent.EventType.TIP, TUICallEvent.Event.USER_LINE_BUSY, param)
-            event.set(callEvent)
+
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
@@ -265,10 +261,7 @@ class TUICallState {
             if (userId.isNullOrEmpty()) {
                 return
             }
-            var param = HashMap<String, Any?>()
-            param[EVENT_KEY_USER_ID] = userId
-            var callEvent = TUICallEvent(TUICallEvent.EventType.TIP, TUICallEvent.Event.USER_LEAVE, param)
-            event.set(callEvent)
+
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
@@ -331,9 +324,15 @@ class TUICallState {
     fun clear() {
         TUILog.i(TAG, "clear")
         reverse1v1CallRenderView = false
+        isShowFullScreen.set(false)
+        isBottomViewExpand.set(true)
+        showLargeViewUserId.set(null)
         selfUser.get().callStatus.set(TUICallDefine.Status.None)
         selfUser.get().clear()
         selfUser.set(User())
+        for (user in remoteUserList.get()) {
+            user.clear()
+        }
         remoteUserList.set(LinkedHashSet())
         scene.set(null)
         mediaType.set(TUICallDefine.MediaType.Unknown)
@@ -356,6 +355,9 @@ class TUICallState {
         isFrontCamera.removeAll()
         isMicrophoneMute.removeAll()
         audioPlayoutDevice.removeAll()
+        isShowFullScreen.removeAll()
+        isBottomViewExpand.removeAll()
+        showLargeViewUserId.removeAll()
     }
 
     private fun resetCall() {
@@ -414,9 +416,7 @@ class TUICallState {
         if (user == null || TextUtils.isEmpty(user.id)) {
             return
         }
-        user.callStatus.set(TUICallDefine.Status.None)
-        user.videoAvailable.set(false)
-        user.audioAvailable.set(false)
+        user.clear()
         if (selfUser != null && selfUser.get() != null && user.id == selfUser.get().id) {
             selfUser.get().callStatus.set(TUICallDefine.Status.None)
         }

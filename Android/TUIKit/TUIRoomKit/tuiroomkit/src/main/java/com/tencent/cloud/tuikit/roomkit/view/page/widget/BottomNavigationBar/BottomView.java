@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.bottomnavigationbar;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -154,6 +154,11 @@ public class BottomView extends LinearLayout {
                     listener.onItemSelected(changed);
                 }
             });
+            textItemName.setText(selectItemData.isSelected() ? selectItemData.getSelectedName() :
+                    selectItemData.getUnSelectedName());
+            int btnBackgroundId = selectItemData.isSelected() ? selectItemData.getSelectedIconId() :
+                    selectItemData.getUnSelectedIconId();
+            button.setBackground(getResources().getDrawable(btnBackgroundId));
         } else {
             layout.setOnClickListener(new OnClickListener() {
                 @Override
@@ -263,20 +268,22 @@ public class BottomView extends LinearLayout {
 
     public void updateItemSelectStatus(BottomItemData.Type type, boolean isSelected) {
         BottomItemData itemData = mViewModel.findItemData(type);
-        if (itemData != null && itemData.getSelectItemData() != null) {
-            itemData.getSelectItemData().setSelected(isSelected);
+        if (itemData == null || itemData.getSelectItemData() == null) {
+            return;
         }
+        BottomSelectItemData selectItemData = itemData.getSelectItemData();
+        selectItemData.setSelected(isSelected);
         AppCompatImageButton button = mButtonMap.get(type);
         if (button != null) {
             button.setSelected(isSelected);
+            int btnBackgroundId = isSelected ? selectItemData.getSelectedIconId() :
+                    selectItemData.getUnSelectedIconId();
+            button.setBackground(getResources().getDrawable(btnBackgroundId));
         }
         TextView textView = mTextViewMap.get(type);
-        if (textView != null && itemData != null) {
-            BottomSelectItemData selectItemData = itemData.getSelectItemData();
+        if (textView != null) {
             String name = isSelected ? selectItemData.getSelectedName() : selectItemData.getUnSelectedName();
-            if (!TextUtils.isEmpty(name)) {
-                textView.setText(name);
-            }
+            textView.setText(name);
         }
     }
 
@@ -291,13 +298,14 @@ public class BottomView extends LinearLayout {
 
     public void updateItemEnableStatus(BottomItemData.Type type, boolean enable) {
         BottomItemData itemData = mViewModel.findItemData(type);
-        if (itemData != null) {
-            itemData.setEnable(enable);
-            if (!enable) {
-                BottomSelectItemData bottomSelectItemData = itemData.getSelectItemData();
-                if (bottomSelectItemData != null) {
-                    bottomSelectItemData.setSelected(false);
-                }
+        if (itemData == null) {
+            return;
+        }
+        itemData.setEnable(enable);
+        if (!enable) {
+            BottomSelectItemData bottomSelectItemData = itemData.getSelectItemData();
+            if (bottomSelectItemData != null) {
+                bottomSelectItemData.setSelected(false);
             }
         }
         AppCompatImageButton button = mButtonMap.get(type);

@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.tencent.qcloud.tuicore.BuildConfig;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuikit.timcommon.BuildConfig;
 import com.tencent.qcloud.tuikit.timcommon.R;
 
 import java.lang.ref.WeakReference;

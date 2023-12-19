@@ -1,4 +1,6 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.usercontrolpanel;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
+
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_MANAGEMENT;
 
 import android.content.Context;
 import android.view.View;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.view.component.ConfirmDialog;
@@ -45,6 +48,13 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
         mContext = context;
         mUser = user;
         mViewModel = new UserManagementViewModel(mContext, user, this);
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_USER_MANAGEMENT, null);
+        mViewModel.destroy();
     }
 
     @Override
@@ -100,7 +110,6 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
 
     public void updateLayout(boolean isOnSeat) {
         if (isOnSeat) {
-            mLayoutMuteUser.setVisibility(View.GONE);
             mLayoutKickoffStage.setVisibility(View.VISIBLE);
             mLayoutInviteToStage.setVisibility(View.GONE);
             mLayoutCamera.setVisibility(View.VISIBLE);
@@ -131,24 +140,20 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
     public void onClick(View v) {
         if (v.getId() == R.id.ll_mute_mic) {
             mViewModel.muteUserAudio();
-            dismiss();
         } else if (v.getId() == R.id.ll_close_camera) {
             mViewModel.muteUserVideo();
-            dismiss();
         } else if (v.getId() == R.id.ll_forward_master) {
             mViewModel.forwardMaster();
-            dismiss();
         } else if (v.getId() == R.id.ll_mute_user) {
             mViewModel.muteUser();
-            dismiss();
         } else if (v.getId() == R.id.ll_kick_out) {
-            dismiss();
             showKickDialog(mUser.getUserId(), mUser.getUserName());
         } else if (v.getId() == R.id.ll_kick_off_stage) {
             mViewModel.kickOffStage();
         } else if (v.getId() == R.id.ll_invite_to_stage) {
             mViewModel.inviteToStage();
         }
+        dismiss();
     }
 
     @Override
@@ -160,7 +165,6 @@ public class UserManagementView extends BaseBottomDialog implements View.OnClick
 
     @Override
     public void onDetachedFromWindow() {
-        mViewModel.destroy();
         super.onDetachedFromWindow();
         if (mGlideRequestManager != null) {
             mGlideRequestManager.clear(mImageHead);

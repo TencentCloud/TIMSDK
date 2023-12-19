@@ -1,49 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundShadowLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/tuicallkit_bg_floatwindow"
-        android:orientation="vertical">
+        android:background="@color/tuicallkit_color_white">
 
         <RelativeLayout
             android:id="@+id/rl_video_view"
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            android:orientation="vertical"
-            android:visibility="gone" />
-
-        <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
-            android:id="@+id/iv_avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="110dp"
+            android:layout_height="190dp"
             android:visibility="gone"
-            app:corner_radius="15dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/fl_avatar"
+            android:layout_width="110dp"
+            android:layout_height="190dp"
+            android:background="@color/tuicallkit_color_gray"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/iv_avatar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:src="@drawable/tuicallkit_ic_avatar"
+                android:visibility="visible" />
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/iv_audio_view_icon"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:layout_margin="4dp"
-            android:src="@drawable/tuicallkit_ic_float" />
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/tuicallkit_ic_float"
+            app:layout_constraintBottom_toTopOf="@+id/tv_call_status"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_call_status"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="4dp"
-            android:text="@string/tuicalling_wait_resonse"
-            android:textColor="@color/tuicalling_color_green"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="@string/tuicallkit_wait_response"
+            android:textColor="#12B969"
             android:textSize="12sp"
-            android:visibility="gone" />
-    </LinearLayout>
-</LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+</com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundShadowLayout>
 

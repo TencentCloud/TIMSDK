@@ -117,6 +117,7 @@
     <string name="play_error_tip">ملف الصوت تالف أو غير موجود</string>
     <string name="input_tip">لم تدخل الاسم المستعار، يرجى إعادة الملء</string>
     <string name="chat_camera_occupied_tip">تم احتلال الكاميرا بواسطة وظيفة أخرى</string>
+    <string name="chat_mic_is_being_used_cant_record">الميكروفون يتم استخدامه بواسطة وظيفة أخرى، غير قادر على التسجيل.</string>
 
 
     <string name="delivered">تم التوصيل</string>

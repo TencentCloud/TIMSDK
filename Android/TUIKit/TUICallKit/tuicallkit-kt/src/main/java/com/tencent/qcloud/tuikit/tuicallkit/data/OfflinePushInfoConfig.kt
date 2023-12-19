@@ -10,7 +10,7 @@ object OfflinePushInfoConfig {
     fun createOfflinePushInfo(context: Context): OfflinePushInfo {
         val pushInfo = OfflinePushInfo()
         pushInfo.title = TUILogin.getNickName()
-        pushInfo.desc = context.getString(R.string.tuicalling_have_a_new_call)
+        pushInfo.desc = context.getString(R.string.tuicallkit_have_a_new_call)
         //OPPO必须设置ChannelID才可以收到推送消息，如果在控制台已经配置,代码中无需调用
         //OPPO must set a ChannelID to receive push messages. If you set it on the console, you don't need set here.
         //pushInfo.androidOPPOChannelID = "tuikit"

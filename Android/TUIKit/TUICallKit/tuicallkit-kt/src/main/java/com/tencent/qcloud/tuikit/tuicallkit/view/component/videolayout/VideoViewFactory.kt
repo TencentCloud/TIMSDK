@@ -23,7 +23,7 @@ class VideoViewFactory {
             videoView.setUser(user)
             return videoView
         }
-        videoView = VideoView(context)
+        videoView = VideoView(context.applicationContext)
         videoView.setUser(user)
         var entity = UserVideoEntity(user?.id, videoView, user)
         user?.id?.let { videoEntityList.put(user?.id!!, entity) }

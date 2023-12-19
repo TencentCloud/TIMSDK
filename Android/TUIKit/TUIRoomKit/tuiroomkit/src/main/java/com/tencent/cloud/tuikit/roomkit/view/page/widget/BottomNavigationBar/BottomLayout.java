@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.bottomnavigationbar;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar;
 
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.KEY_ROOM_RAISE_HAND_TIP_SHOWED;
 

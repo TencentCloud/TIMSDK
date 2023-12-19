@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +104,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onReplyMessageClick(view, position, quoteMessageBean);
+                    onItemClickListener.onReplyMessageClick(view, quoteMessageBean);
                 }
             }
         });
@@ -113,11 +112,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
         if (isForwardMode || isReplyDetailMode) {
             return;
         }
-        boolean isEmoji = false;
-        if (!TextUtils.isEmpty(replyContent)) {
-            isEmoji = FaceManager.handlerEmojiText(msgBodyText, replyContent, false);
-        }
-        setSelectableTextHelper(msg, msgBodyText, position, isEmoji);
+        setSelectableTextHelper(msg, msgBodyText, position);
     }
 
     private void setThemeColor(TUIMessageBean messageBean) {

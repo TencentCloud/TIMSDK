@@ -1,20 +1,17 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.floatwindow
 
 import android.content.Context
-import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.tencent.qcloud.tuicore.ServiceInitializer
 import com.tencent.qcloud.tuicore.util.DateTimeUtil
-import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallEvent
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
@@ -23,6 +20,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.floatview.Floati
 
 class FloatingWindowView(context: Context) : BaseCallView(context) {
 
+    private var layoutAvatar: FrameLayout? = null
     private var layoutVideoView: RelativeLayout? = null
     private var imageAudioIcon: ImageView? = null
     private var textCallStatus: TextView? = null
@@ -31,41 +29,6 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
     private var viewModel: FloatingWindowViewModel = FloatingWindowViewModel()
     private val observer: Observer<Any> = Observer {
         updateView(it)
-    }
-
-    private var callEventObserver = Observer<TUICallEvent> {
-        if (it.eventType == TUICallEvent.EventType.TIP) {
-            when (it.event) {
-                (TUICallEvent.Event.USER_REJECT) -> {
-                    var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_reject_call)
-                }
-
-                (TUICallEvent.Event.USER_LEAVE) -> {
-                    var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_end)
-                }
-
-                (TUICallEvent.Event.USER_LINE_BUSY) -> {
-                    var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_busy)
-                }
-
-                (TUICallEvent.Event.USER_NO_RESPONSE) -> {
-                    var userId = it.param?.get(TUICallEvent.EVENT_KEY_USER_ID) as String
-                    showUserToast(userId, R.string.tuicalling_toast_user_not_response)
-                }
-
-                (TUICallEvent.Event.USER_EXCEED_LIMIT) -> {
-                    ToastUtil.toastLongMessage(context.getString(R.string.tuicalling_user_exceed_limit))
-                }
-
-                else -> {}
-            }
-        } else if (TUICallEvent.EventType.ERROR == it.eventType && TUICallEvent.Event.ERROR_COMMON == it.event) {
-            var code = it.param?.get(TUICallEvent.EVENT_KEY_CODE) as Int
-            var msg = it.param?.get(TUICallEvent.EVENT_KEY_MESSAGE) as String
-        }
     }
 
     init {
@@ -84,7 +47,6 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
         viewModel?.timeCount?.observe(observer)
         viewModel?.selfUser?.callStatus?.observe(observer)
         viewModel.remoteUser?.videoAvailable?.observe(observer)
-        viewModel.event?.observe(callEventObserver)
     }
 
     private fun removeObserver() {
@@ -92,7 +54,6 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
         viewModel?.timeCount?.removeObserver(observer)
         viewModel?.selfUser?.callStatus?.removeObserver(observer)
         viewModel.remoteUser?.videoAvailable?.removeObserver(observer)
-        viewModel.event?.removeObserver(callEventObserver)
     }
 
     private fun initView(context: Context) {
@@ -101,6 +62,7 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
         imageAvatar = findViewById(R.id.iv_avatar)
         textCallStatus = findViewById(R.id.tv_call_status)
         imageAudioIcon = findViewById(R.id.iv_audio_view_icon)
+        layoutAvatar = findViewById(R.id.fl_avatar)
 
         updateView(null)
     }
@@ -118,9 +80,9 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
             imageAudioIcon?.visibility = VISIBLE
             textCallStatus?.visibility = VISIBLE
             layoutVideoView?.visibility = GONE
-            imageAvatar?.visibility = GONE
+            layoutAvatar?.visibility = GONE
             if (viewModel.selfUser?.callStatus?.get() == TUICallDefine.Status.Waiting) {
-                textCallStatus?.text = context.getString(R.string.tuicalling_wait_resonse)
+                textCallStatus?.text = context.getString(R.string.tuicallkit_wait_response)
             } else if (viewModel.selfUser?.callStatus?.get() == TUICallDefine.Status.Accept) {
                 textCallStatus?.text = DateTimeUtil.formatSecondsTo00(viewModel.timeCount.get())
             } else {
@@ -130,25 +92,26 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
             }
         } else if (viewModel.mediaType.get() == TUICallDefine.MediaType.Video) {
             imageAudioIcon?.visibility = GONE
-            textCallStatus?.visibility = GONE
             if (viewModel.selfUser?.callStatus?.get() == TUICallDefine.Status.Waiting) {
                 layoutVideoView?.visibility = VISIBLE
-                imageAvatar?.visibility = GONE
+                layoutAvatar?.visibility = GONE
+                textCallStatus?.visibility = VISIBLE
+                textCallStatus?.text = context.getString(R.string.tuicallkit_wait_response)
+                textCallStatus?.setTextColor(context.resources.getColor(R.color.tuicallkit_color_white))
                 videoView = VideoViewFactory.instance.createVideoView(viewModel.selfUser, context)
                 if (videoView != null && videoView?.parent != null) {
-                    var parent: RelativeLayout = videoView?.parent as RelativeLayout
-                    parent.removeView(videoView)
+                    (videoView?.parent as ViewGroup).removeView(videoView)
                     layoutVideoView?.removeAllViews()
                 }
                 layoutVideoView?.addView(videoView)
             } else if (viewModel.selfUser?.callStatus?.get() == TUICallDefine.Status.Accept) {
                 if (viewModel.remoteUser?.videoAvailable?.get() == true) {
                     layoutVideoView?.visibility = VISIBLE
-                    imageAvatar?.visibility = GONE
+                    layoutAvatar?.visibility = GONE
+                    textCallStatus?.visibility = GONE
                     videoView = VideoViewFactory.instance.createVideoView(viewModel.remoteUser, context)
                     if (videoView != null && videoView?.parent != null) {
-                        var parent: RelativeLayout = videoView?.parent as RelativeLayout
-                        parent.removeView(videoView)
+                        (videoView?.parent as ViewGroup).removeView(videoView)
                         layoutVideoView?.removeAllViews()
                     }
                     layoutVideoView?.addView(videoView)
@@ -159,7 +122,7 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
                     )
                 } else {
                     layoutVideoView?.visibility = GONE
-                    imageAvatar?.visibility = VISIBLE
+                    layoutAvatar?.visibility = VISIBLE
 
                     ImageLoader.loadImage(
                         context,
@@ -175,26 +138,4 @@ class FloatingWindowView(context: Context) : BaseCallView(context) {
             }
         }
     }
-
-    private fun showUserToast(userId: String, msgId: Int) {
-        if (TextUtils.isEmpty(userId)) {
-            return
-        }
-        var userName = userId
-        if (userId == viewModel.selfUser?.id) {
-            if (!TextUtils.isEmpty(TUICallState.instance.selfUser.get().nickname.get())) {
-                userName = TUICallState.instance.selfUser.get().nickname.get()
-            }
-        } else {
-            for (user in viewModel.remoteUserList) {
-                if (null != user && !TextUtils.isEmpty(user.id) && userId == user.id) {
-                    if (!TextUtils.isEmpty(user.nickname.get())) {
-                        userName = user.nickname.get()
-                    }
-                }
-            }
-        }
-        ToastUtil.toastLongMessage(ServiceInitializer.getAppContext().getString(msgId, userName))
-    }
-
 }

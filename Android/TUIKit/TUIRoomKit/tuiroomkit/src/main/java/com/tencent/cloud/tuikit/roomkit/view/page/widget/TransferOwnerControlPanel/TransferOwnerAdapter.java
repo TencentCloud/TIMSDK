@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.transferownercontrolpanel;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel;
 
 import android.content.Context;
 import android.text.TextUtils;

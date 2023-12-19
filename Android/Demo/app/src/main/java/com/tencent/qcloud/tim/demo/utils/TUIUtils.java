@@ -15,7 +15,7 @@ import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageBean;
 import com.tencent.qcloud.tim.demo.push.OfflineMessageDispatcher;
-import com.tencent.qcloud.tuicore.BuildConfig;
+import com.tencent.qcloud.tuikit.timcommon.BuildConfig;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;

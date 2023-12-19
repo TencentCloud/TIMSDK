@@ -32,8 +32,7 @@ public class VoiceToTextPresenter {
                 Map<String, Object> param = new HashMap<>();
                 param.put(TUIChatConstants.MESSAGE_BEAN, tuiMessageBean);
                 param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION_WITHOUT_HIGH_LIGHT);
-                TUICore.notifyEvent(TUIConstants.TUIVoiceToTextPlugin.EVENT_KEY_VOICE_TO_TEXT_EVENT,
-                    TUIConstants.TUIVoiceToTextPlugin.EVENT_SUB_KEY_VOICE_TO_TEXT_CHANGED, param);
+                TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
             }
 
             @Override
@@ -46,16 +45,14 @@ public class VoiceToTextPresenter {
                 Map<String, Object> param = new HashMap<>();
                 param.put(TUIChatConstants.MESSAGE_BEAN, tuiMessageBean);
                 param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
-                TUICore.notifyEvent(TUIConstants.TUIVoiceToTextPlugin.EVENT_KEY_VOICE_TO_TEXT_EVENT,
-                    TUIConstants.TUIVoiceToTextPlugin.EVENT_SUB_KEY_VOICE_TO_TEXT_CHANGED, param);
+                TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
             }
         });
 
         Map<String, Object> param = new HashMap<>();
         param.put(TUIChatConstants.MESSAGE_BEAN, tuiMessageBean);
         param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
-        TUICore.notifyEvent(
-            TUIConstants.TUIVoiceToTextPlugin.EVENT_KEY_VOICE_TO_TEXT_EVENT, TUIConstants.TUIVoiceToTextPlugin.EVENT_SUB_KEY_VOICE_TO_TEXT_CHANGED, param);
+        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
     }
 
     public void saveConvertedResult(V2TIMMessage v2TIMMessage, String text, int status) {

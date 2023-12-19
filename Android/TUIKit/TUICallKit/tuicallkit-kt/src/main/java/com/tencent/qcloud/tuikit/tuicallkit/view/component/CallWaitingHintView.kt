@@ -20,7 +20,6 @@ class CallWaitingHintView(context: Context) : androidx.appcompat.widget.AppCompa
 
     init {
         initView()
-
         addObserver()
     }
 
@@ -29,20 +28,12 @@ class CallWaitingHintView(context: Context) : androidx.appcompat.widget.AppCompa
     }
 
     private fun initView() {
-        if (TUICallDefine.MediaType.Video == viewmodel.mediaType.get()) {
-            setTextColor(context.resources.getColor(R.color.tuicalling_color_white))
-        } else {
-            setTextColor(context.resources.getColor(R.color.tuicalling_color_black))
-        }
+        setTextColor(context.resources.getColor(R.color.tuicallkit_color_white))
 
-        text =  if (TUICallDefine.Role.Caller == viewmodel.callRole.get()) {
-            context.getString(R.string.tuicalling_waiting_accept)
+        text = if (TUICallDefine.Role.Caller == viewmodel.callRole.get()) {
+            context.getString(R.string.tuicallkit_wait_response)
         } else {
-            if (TUICallDefine.MediaType.Audio == viewmodel.mediaType.get()) {
-                context.getString(R.string.tuicalling_invite_audio_call)
-            } else {
-                context.getString(R.string.tuicalling_invite_video_call)
-            }
+            context.getString(R.string.tuicallkit_wait_accept_group)
         }
         visibility = if (viewmodel.callStatus.get() == TUICallDefine.Status.Waiting) {
             VISIBLE

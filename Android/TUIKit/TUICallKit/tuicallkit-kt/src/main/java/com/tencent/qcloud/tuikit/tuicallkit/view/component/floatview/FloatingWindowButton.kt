@@ -5,12 +5,12 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.tencent.qcloud.tuicore.ServiceInitializer
+import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
-import com.tencent.qcloud.tuikit.tuicallengine.utils.PermissionUtils
-import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
+import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
 import com.tencent.qcloud.tuikit.tuicallkit.view.floatwindow.FloatingWindowView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.floatview.FloatingWindowButtonModel
 
@@ -18,17 +18,14 @@ import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.floatview.Floati
 class FloatingWindowButton(context: Context) : ImageView(context) {
     private var viewModel = FloatingWindowButtonModel()
 
-    private var mediaTypeObserver = Observer<TUICallDefine.MediaType> {
-        if (TUICallDefine.MediaType.Video == it) {
-            setBackgroundResource(R.drawable.tuicallkit_ic_move_back_white)
-        } else {
-            setBackgroundResource(R.drawable.tuicallkit_ic_move_back_black)
+    private val callStatusObserver = Observer<TUICallDefine.Status> {
+        if (viewModel.enableFloatWindow && it == TUICallDefine.Status.Accept) {
+            this.visibility = VISIBLE
         }
     }
 
     init {
         initView()
-
         addObserver()
     }
 
@@ -37,11 +34,7 @@ class FloatingWindowButton(context: Context) : ImageView(context) {
     }
 
     private fun initView() {
-        if (TUICallDefine.MediaType.Video == viewModel.mediaType.get()) {
-            setBackgroundResource(R.drawable.tuicallkit_ic_move_back_white)
-        } else {
-            setBackgroundResource(R.drawable.tuicallkit_ic_move_back_black)
-        }
+        setBackgroundResource(R.drawable.tuicallkit_ic_move_back_white)
         val lp = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
@@ -49,26 +42,37 @@ class FloatingWindowButton(context: Context) : ImageView(context) {
         layoutParams = lp
 
         setOnClickListener {
-            if (PermissionUtils.hasPermission(ServiceInitializer.getAppContext())) {
-                viewModel.startFloatService(FloatingWindowView(context.applicationContext))
-                CallKitActivity.finishActivity()
+            if (PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION).has()) {
+                showFloatView()
             } else {
                 PermissionRequest.requestFloatPermission(ServiceInitializer.getAppContext())
             }
         }
 
-        if (viewModel.enableFloatWindow) {
+        val showFloatButton = viewModel.callStatus.get() == TUICallDefine.Status.Accept
+                || viewModel.callRole.get() == TUICallDefine.Role.Caller
+
+        if (viewModel.enableFloatWindow && showFloatButton) {
             visibility = VISIBLE
         } else {
             visibility = GONE
         }
     }
 
+    private fun showFloatView() {
+        if (viewModel.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+            viewModel.startFloatService(FloatingWindowGroupView(context.applicationContext))
+        } else {
+            viewModel.startFloatService(FloatingWindowView(context.applicationContext))
+        }
+        CallKitActivity.finishActivity()
+    }
+
     private fun addObserver() {
-        viewModel.mediaType.observe(mediaTypeObserver)
+        viewModel.callStatus.observe(callStatusObserver)
     }
 
     private fun removeObserver() {
-        viewModel.mediaType.removeObserver(mediaTypeObserver)
+        viewModel.callStatus.removeObserver(callStatusObserver)
     }
 }

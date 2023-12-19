@@ -3,7 +3,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-
+    namespace "com.tencent.qcloud.tim.demo"
     signingConfigs {
         release {
             storeFile file("$System.env.KEYSTORE_PATH")
@@ -32,12 +32,14 @@ android {
          *  "VIVO_APPID" : 厂商推送平台注册应用的 AppID
          */
         manifestPlaceholders = [
-                "VIVO_APPKEY" : " ",
+                "VIVO_APPKEY": " ",
                 "VIVO_APPID" : " ",
-                "HONOR_APPID" : " "
+                "HONOR_APPID": " "
         ]
     }
-
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -73,8 +75,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
-    implementation fileTree(include: ['*.jar','*.aar'], dir: '../libs')
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: '../libs')
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
@@ -108,80 +110,85 @@ dependencies {
     if (projects.contains("tuigroupnoteplugin")) {
         api project(':tuigroupnoteplugin')
     } else {
-        api "com.tencent.imsdk:tuigroupnote-plugin:7.6.5011"
+        api "com.tencent.imsdk:tuigroupnote-plugin:7.7.5282"
     }
 
     if (projects.contains("tuipollplugin")) {
         api project(':tuipollplugin')
     } else {
-        api "com.tencent.imsdk:tuipoll-plugin:7.6.5011"
+        api "com.tencent.imsdk:tuipoll-plugin:7.7.5282"
     }
 
     if (projects.contains("tuiconversationmarkplugin")) {
         api project(':tuiconversationmarkplugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationmark-plugin:7.6.5011"
+        api "com.tencent.imsdk:tuiconversationmark-plugin:7.7.5282"
     }
 
     if (projects.contains("tuiconversationgroupplugin")) {
-        api project(':tuiconversationgroup-plugin')
+        api project(':tuiconversationgroupplugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationgroup-plugin:7.6.5011"
-    }
-    api project(':tuivoicetotextplugin')
-    api project(':tuiroomkit')
-    if (projects.contains("tuicustomerserviceplugin")) {
-        api project(':tuicustomerserviceplugin')
+        api "com.tencent.imsdk:tuiconversationgroup-plugin:7.7.5282"
     }
 
     if (projects.contains("timpush")) {
         api project(':timpush')
     } else {
-        api 'com.tencent.timpush:timpush:7.6.5011'
+        api 'com.tencent.timpush:timpush:7.7.5282'
     }
 
     if (projects.contains("fcmpush")) {
         api project(':fcmpush')
     } else {
-        api 'com.tencent.timpush:fcm:7.6.5011'
+        api 'com.tencent.timpush:fcm:7.7.5282'
     }
 
     if (projects.contains("xiaomipush")) {
         api project(':xiaomipush')
     } else {
-        api 'com.tencent.timpush:xiaomi:7.6.5011'
+        api 'com.tencent.timpush:xiaomi:7.7.5282'
     }
 
     if (projects.contains("meizupush")) {
         api project(':meizupush')
     } else {
-        api 'com.tencent.timpush:meizu:7.6.5011'
+        api 'com.tencent.timpush:meizu:7.7.5282'
     }
 
     if (projects.contains("oppopush")) {
         api project(':oppopush')
     } else {
-        api 'com.tencent.timpush:oppo:7.6.5011'
+        api 'com.tencent.timpush:oppo:7.7.5282'
     }
 
     if (projects.contains("vivopush")) {
         api project(':vivopush')
     } else {
-        api 'com.tencent.timpush:vivo:7.6.5011'
+        api 'com.tencent.timpush:vivo:7.7.5282'
     }
 
     if (projects.contains("huaweipush")) {
         api project(':huaweipush')
     } else {
-        api 'com.tencent.timpush:huawei:7.6.5011'
+        api 'com.tencent.timpush:huawei:7.7.5282'
     }
 
     if (projects.contains("honorpush")) {
         api project(':honorpush')
     } else {
-        api 'com.tencent.timpush:honor:7.6.5011'
+        api 'com.tencent.timpush:honor:7.7.5282'
     }
 
-//    api project(':tuiofflinepush')
+    api project(':tuiroomkit')
+    if (projects.contains("tuivoicetotextplugin")) {
+        api project(':tuivoicetotextplugin')
+    }
+    if (projects.contains("tuicustomerserviceplugin")) {
+        api project(':tuicustomerserviceplugin')
+    }
+    if (projects.contains("tuichatbotplugin")) {
+        api project(':tuichatbotplugin')
+    }
+    annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
 
 }

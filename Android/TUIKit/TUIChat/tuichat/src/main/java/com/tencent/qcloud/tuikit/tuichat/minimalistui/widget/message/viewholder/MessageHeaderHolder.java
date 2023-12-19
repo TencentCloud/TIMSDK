@@ -33,9 +33,9 @@ public class MessageHeaderHolder extends MessageBaseHolder {
             param.width = LinearLayout.LayoutParams.MATCH_PARENT;
             itemView.setVisibility(View.VISIBLE);
         } else {
-            param.height = 0;
+            param.height = 1;
             param.width = 0;
-            itemView.setVisibility(View.GONE);
+            itemView.setVisibility(View.INVISIBLE);
         }
         itemView.setLayoutParams(param);
     }

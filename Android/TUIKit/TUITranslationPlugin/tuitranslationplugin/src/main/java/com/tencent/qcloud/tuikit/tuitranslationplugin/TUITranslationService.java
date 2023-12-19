@@ -8,13 +8,17 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
 import com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView;
@@ -31,7 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TUITranslationService extends ServiceInitializer implements ITUIExtension {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency({"TUIChat"})
+@TUIInitializerID("TUITranslationPlugin")
+public class TUITranslationService implements TUIInitializer, ITUIExtension {
     public static final String TAG = TUITranslationService.class.getSimpleName();
     private static TUITranslationService instance;
 
@@ -190,7 +197,7 @@ public class TUITranslationService extends ServiceInitializer implements ITUIExt
         String languageName = TUITranslationConfigs.getInstance().getTargetLanguageName();
         int languageIndex = TUITranslationConfigs.getInstance().getTargetLanguageNameList().indexOf(languageName);
         bundle.putInt(SelectionActivity.Selection.DEFAULT_SELECT_ITEM_INDEX, languageIndex);
-        SelectionActivity.startListSelection(getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
+        SelectionActivity.startListSelection(getAppContext(), bundle, new SelectionActivity.OnResultReturnListener() {
             @Override
             public void onReturn(Object text) {
                 int index = (Integer) text;
@@ -210,5 +217,9 @@ public class TUITranslationService extends ServiceInitializer implements ITUIExt
             return value;
         }
         return defaultValue;
+    }
+
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

@@ -5,6 +5,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineE
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_CAMERA_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_MEDIA_SETTING_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
@@ -24,9 +25,9 @@ import com.tencent.cloud.tuikit.roomkit.model.entity.BottomSelectItemData;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.utils.DrawOverlaysPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.utils.IntentUtils;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.bottomnavigationbar.BottomView;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.mediasettings.SettingView;
-import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar.BottomView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.Chat.ChatActivity;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings.MediaSettingPanel;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -43,12 +44,10 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
     private static final int SEAT_INDEX   = -1;
     private static final int REQ_TIME_OUT = 0;
 
-    private TUIRoomDefine.Request mLocalRequest;
-    private Context               mContext;
-    private BottomView            mBottomView;
-    private SettingView           mSettingView;
-    private RoomStore             mRoomStore;
-    private List<BottomItemData>  mItemDataList;
+    private Context              mContext;
+    private BottomView           mBottomView;
+    private RoomStore            mRoomStore;
+    private List<BottomItemData> mItemDataList;
 
     public BottomViewModel(Context context, BottomView bottomView) {
         mContext = context;
@@ -105,7 +104,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
         itemDataList.add(createMicItem());
         itemDataList.add(createCameraItem());
         if (isTakeSeatSpeechMode()) {
-            BottomItemData itemData = isOwner() ? createApplyListItem() : mRoomStore.userModel.isOnSeat
+            BottomItemData itemData = isOwner() ? createApplyListItem() : mRoomStore.userModel.isOnSeat()
                     ? createGetOffStageItem() : createRaiseHandItem();
             itemDataList.add(itemData);
         }
@@ -151,7 +150,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             @Override
             public void onItemSelected(boolean isSelected) {
                 RoomEventCenter.getInstance().notifyUIEvent(BAR_SHOW_TIME_RECOUNT, null);
-                if (isOffSeatInSeatMode()) {
+                if (isNotOnSeatInSeatMode()) {
                     return;
                 }
                 if (RoomEngineManager.sharedInstance().getRoomStore().videoModel.isScreenSharing()) {
@@ -250,7 +249,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             @Override
             public void onItemSelected(boolean isSelected) {
                 RoomEventCenter.getInstance().notifyUIEvent(BAR_SHOW_TIME_RECOUNT, null);
-                if (isOffSeatInSeatMode()) {
+                if (isNotOnSeatInSeatMode()) {
                     return;
                 }
                 enableCamera(isSelected);
@@ -268,7 +267,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
         raiseHandItemData.setName(mContext.getString(R.string.tuiroomkit_raise_hand));
         raiseHandItemData.setEnable(true);
         BottomSelectItemData raiseHandSelectItemData = new BottomSelectItemData();
-        raiseHandSelectItemData.setSelected(false);
+        raiseHandSelectItemData.setSelected(!RoomEngineManager.sharedInstance().getRoomStore().userModel.isOffSeat());
         raiseHandSelectItemData.setSelectedName(mContext.getString(R.string.tuiroomkit_hands_down));
         raiseHandSelectItemData.setUnSelectedName(mContext.getString(R.string.tuiroomkit_raise_hand));
         raiseHandSelectItemData.setSelectedIconId(R.drawable.tuiroomkit_ic_raise_hand);
@@ -342,16 +341,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
 
     public void showChatView() {
         Log.d(TAG, "showChatView");
-        Intent intent = new Intent();
-        intent.setClassName(mContext, "com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIGroupChatActivity");
-        intent.putExtra(TUIConstants.TUIChat.CHAT_TYPE, V2TIMConversation.V2TIM_GROUP);
-        intent.putExtra(TUIConstants.TUIChat.CHAT_ID, mRoomStore.roomInfo.roomId);
-        intent.putExtra(TUIConstants.TUIChat.CHAT_NAME, mContext.getString(R.string.tuiroomkit_item_chat));
-        intent.putExtra(TUIConstants.TUIChat.ENABLE_AUDIO_CALL, false);
-        intent.putExtra(TUIConstants.TUIChat.ENABLE_VIDEO_CALL, false);
-        intent.putExtra(TUIConstants.TUIChat.ENABLE_LINK, false);
-        intent.putExtra(TUIConstants.TUIChat.ENABLE_ROOM, false);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(mContext, ChatActivity.class);
         IntentUtils.safeStartActivity(mContext, intent);
     }
 
@@ -428,8 +418,8 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
         }
     }
 
-    private boolean isOffSeatInSeatMode() {
-        if (isTakeSeatSpeechMode() && !mRoomStore.userModel.isOnSeat) {
+    private boolean isNotOnSeatInSeatMode() {
+        if (isTakeSeatSpeechMode() && !mRoomStore.userModel.isOnSeat()) {
             ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_please_raise_hand));
             return true;
         }
@@ -463,61 +453,57 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
 
     private void raiseHand() {
         ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_toast_raised_hand));
-        mLocalRequest = RoomEngineManager.sharedInstance()
-                .takeSeat(SEAT_INDEX, REQ_TIME_OUT, new TUIRoomDefine.RequestCallback() {
-                    @Override
-                    public void onAccepted(String requestId, String userId) {
-                        if (mBottomView == null) {
-                            return;
-                        }
-                        mBottomView.replaceItem(BottomItemData.Type.RAISE_HAND, createGetOffStageItem());
-                        ToastUtil.toastShortMessageCenter(
-                                mContext.getString(R.string.tuiroomkit_take_seat_request_accepted));
-                    }
+        RoomEngineManager.sharedInstance().takeSeat(SEAT_INDEX, REQ_TIME_OUT, new TUIRoomDefine.RequestCallback() {
+            @Override
+            public void onAccepted(String requestId, String userId) {
+                if (mBottomView == null) {
+                    return;
+                }
+                mBottomView.replaceItem(BottomItemData.Type.RAISE_HAND, createGetOffStageItem());
+                ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_take_seat_request_accepted));
+            }
 
-                    @Override
-                    public void onRejected(String requestId, String userId, String message) {
-                        if (mBottomView == null) {
-                            return;
-                        }
-                        updateRaiseHandButton(false);
-                        ToastUtil.toastShortMessageCenter(
-                                mContext.getString(R.string.tuiroomkit_take_seat_request_rejected));
-                    }
+            @Override
+            public void onRejected(String requestId, String userId, String message) {
+                if (mBottomView == null) {
+                    return;
+                }
+                updateRaiseHandButton(false);
+                ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_take_seat_request_rejected));
+            }
 
-                    @Override
-                    public void onCancelled(String requestId, String userId) {
-                        if (mBottomView == null) {
-                            return;
-                        }
-                        updateRaiseHandButton(false);
-                    }
+            @Override
+            public void onCancelled(String requestId, String userId) {
+                if (mBottomView == null) {
+                    return;
+                }
+                updateRaiseHandButton(false);
+            }
 
-                    @Override
-                    public void onTimeout(String requestId, String userId) {
-                        if (mBottomView == null) {
-                            return;
-                        }
-                        updateRaiseHandButton(false);
-                    }
+            @Override
+            public void onTimeout(String requestId, String userId) {
+                if (mBottomView == null) {
+                    return;
+                }
+                updateRaiseHandButton(false);
+            }
 
-                    @Override
-                    public void onError(String requestId, String userId, TUICommonDefine.Error code, String message) {
-                        if (mBottomView == null) {
-                            return;
-                        }
-                        updateRaiseHandButton(false);
-                    }
-                });
+            @Override
+            public void onError(String requestId, String userId, TUICommonDefine.Error code, String message) {
+                if (mBottomView == null) {
+                    return;
+                }
+                updateRaiseHandButton(false);
+            }
+        });
     }
 
     private void downHand() {
-        if (mLocalRequest == null) {
+        if (TextUtils.isEmpty(mRoomStore.userModel.takeSeatRequestId)) {
             return;
         }
         ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_toast_hands_down));
-        RoomEngineManager.sharedInstance().cancelRequest(mLocalRequest.requestId, null);
-        mLocalRequest = null;
+        RoomEngineManager.sharedInstance().cancelRequest(mRoomStore.userModel.takeSeatRequestId, null);
     }
 
     private void getOffStage() {
@@ -598,7 +584,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             return;
         }
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
-        updateVideoItemEnableStatus(!isDisable && mRoomStore.userModel.isOnSeat);
+        updateVideoItemEnableStatus(!isDisable && mRoomStore.userModel.isOnSeat());
     }
 
     private void allUserMicrophoneDisableChanged(Map<String, Object> params) {
@@ -613,17 +599,17 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             return;
         }
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
-        updateAudioItemEnableStatus(!isDisable && mRoomStore.userModel.isOnSeat);
+        updateAudioItemEnableStatus(!isDisable && mRoomStore.userModel.isOnSeat());
     }
 
     private void updateBottomView(boolean isOwner) {
         if (isOwner) {
-            BottomItemData.Type type = mRoomStore.userModel.isOnSeat
+            BottomItemData.Type type = mRoomStore.userModel.isOnSeat()
                     ? BottomItemData.Type.OFF_STAGE
                     : BottomItemData.Type.RAISE_HAND;
             mBottomView.replaceItem(type, createApplyListItem());
         } else {
-            BottomItemData itemData = mRoomStore.userModel.isOnSeat
+            BottomItemData itemData = mRoomStore.userModel.isOnSeat()
                     ? createGetOffStageItem()
                     : createRaiseHandItem();
             mBottomView.replaceItem(BottomItemData.Type.APPLY, itemData);
@@ -638,7 +624,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
         if (position == USER_NOT_FOUND) {
             return;
         }
-        if (TextUtils.equals(mRoomStore.seatUserList.get(position).getUserId(), TUILogin.getUserId())) {
+        if (TextUtils.equals(mRoomStore.allUserList.get(position).getUserId(), TUILogin.getUserId())) {
             updateAudioItemEnableStatus(!mRoomStore.roomInfo.isMicrophoneDisableForAllUser);
             updateVideoItemEnableStatus(!mRoomStore.roomInfo.isCameraDisableForAllUser);
             mBottomView.replaceItem(BottomItemData.Type.RAISE_HAND, createGetOffStageItem());
@@ -653,7 +639,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
         if (position == USER_NOT_FOUND) {
             return;
         }
-        if (TextUtils.equals(mRoomStore.seatUserList.get(position).getUserId(), TUILogin.getUserId())) {
+        if (TextUtils.equals(mRoomStore.allUserList.get(position).getUserId(), TUILogin.getUserId())) {
             updateAudioItemEnableStatus(false);
             updateVideoItemEnableStatus(false);
             mBottomView.replaceItem(BottomItemData.Type.OFF_STAGE, createRaiseHandItem());
@@ -695,7 +681,7 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
             @Override
             public void onItemClick() {
                 RoomEventCenter.getInstance().notifyUIEvent(
-                        RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_VIEW, null);
+                        RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL, null);
             }
         });
         return inviteItemData;
@@ -763,10 +749,8 @@ public class BottomViewModel implements RoomEventCenter.RoomEngineEventResponder
         setttingItemData.setOnItemClickListener(new BottomItemData.OnItemClickListener() {
             @Override
             public void onItemClick() {
-                if (mSettingView == null) {
-                    mSettingView = new SettingView(mContext);
-                }
-                mSettingView.show();
+                RoomEventCenter.getInstance().notifyUIEvent(SHOW_MEDIA_SETTING_PANEL, null);
+                RoomEventCenter.getInstance().notifyUIEvent(BAR_SHOW_TIME_RECOUNT, null);
             }
         });
         return setttingItemData;

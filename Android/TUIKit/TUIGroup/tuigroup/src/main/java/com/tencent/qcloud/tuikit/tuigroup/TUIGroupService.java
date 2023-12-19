@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.tuigroup;
 
 import android.content.Context;
+
+import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupListener;
 import com.tencent.imsdk.v2.V2TIMGroupMemberChangeInfo;
@@ -10,6 +12,10 @@ import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
+import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
+import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.GroupEventListener;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupUtils;
 import java.lang.ref.WeakReference;
@@ -19,7 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class TUIGroupService extends ServiceInitializer implements ITUIGroupService {
+@AutoService(TUIInitializer.class)
+@TUIInitializerDependency({"TIMCommon"})
+@TUIInitializerID("TUIGroup")
+public class TUIGroupService implements TUIInitializer, ITUIGroupService {
     public static final String TAG = TUIGroupService.class.getSimpleName();
     private static TUIGroupService instance;
 
@@ -32,6 +41,7 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
     @Override
     public void init(Context context) {
         instance = this;
+        initTheme();
         TUICore.registerService(TUIConstants.TUIGroup.SERVICE_NAME, this);
         initIMListener();
     }
@@ -229,18 +239,13 @@ public class TUIGroupService extends ServiceInitializer implements ITUIGroupServ
         return listeners;
     }
 
-    @Override
-    public int getLightThemeResId() {
-        return R.style.TUIGroupLightTheme;
+    private void initTheme() {
+        TUIThemeManager.addLightTheme(R.style.TUIGroupLightTheme);
+        TUIThemeManager.addLivelyTheme(R.style.TUIGroupLivelyTheme);
+        TUIThemeManager.addSeriousTheme(R.style.TUIGroupSeriousTheme);
     }
 
-    @Override
-    public int getLivelyThemeResId() {
-        return R.style.TUIGroupLivelyTheme;
-    }
-
-    @Override
-    public int getSeriousThemeResId() {
-        return R.style.TUIGroupSeriousTheme;
+    public static Context getAppContext() {
+        return ServiceInitializer.getAppContext();
     }
 }

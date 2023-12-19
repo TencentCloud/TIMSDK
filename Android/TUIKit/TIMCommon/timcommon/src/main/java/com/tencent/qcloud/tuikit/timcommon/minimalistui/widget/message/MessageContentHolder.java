@@ -190,7 +190,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onItemClickListener.onMessageLongClick(msgArea, position, msg);
+                        onItemClickListener.onMessageLongClick(msgArea, msg);
                         return true;
                     }
                 });
@@ -198,7 +198,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 msgArea.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onItemClickListener.onMessageLongClick(msgArea, position, msg);
+                        onItemClickListener.onMessageLongClick(msgArea, msg);
                         return true;
                     }
                 });
@@ -206,20 +206,20 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 leftUserIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onItemClickListener.onUserIconClick(view, position, msg);
+                        onItemClickListener.onUserIconClick(view, msg);
                     }
                 });
                 leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        onItemClickListener.onUserIconLongClick(view, position, msg);
+                        onItemClickListener.onUserIconLongClick(view, msg);
                         return true;
                     }
                 });
                 rightUserIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onItemClickListener.onUserIconClick(view, position, msg);
+                        onItemClickListener.onUserIconClick(view, msg);
                     }
                 });
             }
@@ -231,7 +231,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     @Override
                     public void onClick(View v) {
                         if (onItemClickListener != null) {
-                            onItemClickListener.onSendFailBtnClick(messageStatusImage, position, msg);
+                            onItemClickListener.onSendFailBtnClick(messageStatusImage, msg);
                         }
                     }
                 });
@@ -240,7 +240,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                     @Override
                     public void onClick(View v) {
                         if (onItemClickListener != null) {
-                            onItemClickListener.onMessageClick(msgContentFrame, position, msg);
+                            onItemClickListener.onMessageClick(msgContentFrame, msg);
                         }
                     }
                 });
@@ -569,7 +569,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 @Override
                 public boolean onLongClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(msgArea, 0, messageBean);
+                        onItemClickListener.onMessageLongClick(msgArea, messageBean);
                     }
                     return true;
                 }
@@ -632,7 +632,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 @Override
                 public boolean onLongClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(msgArea, 0, messageBean);
+                        onItemClickListener.onMessageLongClick(msgArea, messageBean);
                     }
                     return true;
                 }
@@ -642,7 +642,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 @Override
                 public boolean onLongClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(msgArea, 0, messageBean);
+                        onItemClickListener.onMessageLongClick(msgArea, messageBean);
                     }
                     return true;
                 }

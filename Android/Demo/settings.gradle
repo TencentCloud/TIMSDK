@@ -41,3 +41,6 @@ project(':tuiroomkit').projectDir = new File(settingsDir, '../TUIKit/TUIRoomKit/
 
 //include ':tuiofflinepush'
 //project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
+
+include ':tuichatbotplugin'
+project(':tuichatbotplugin').projectDir = new File(settingsDir, '../TUIKit/TUIChatBotPlugin/tuichatbotplugin')

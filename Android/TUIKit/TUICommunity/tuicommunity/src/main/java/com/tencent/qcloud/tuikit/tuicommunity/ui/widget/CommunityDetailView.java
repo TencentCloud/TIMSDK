@@ -95,6 +95,7 @@ public class CommunityDetailView extends FrameLayout implements ICommunityDetail
                 bundle.putString(TUIConstants.TUIChat.CHAT_ID, topicBean.getID());
                 bundle.putString(TUIConstants.TUIChat.CHAT_NAME, topicBean.getTopicName());
                 bundle.putInt(TUIConstants.TUIChat.CHAT_TYPE, TopicBean.CHAT_TYPE_GROUP);
+                bundle.putString(TUIConstants.TUIChat.DRAFT_TEXT, topicBean.getDraftText());
                 TUICore.startActivity(TUIConstants.TUIChat.GROUP_CHAT_ACTIVITY_NAME, bundle);
             }
 

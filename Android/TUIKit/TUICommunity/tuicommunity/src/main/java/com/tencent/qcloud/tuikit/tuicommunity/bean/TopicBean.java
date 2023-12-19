@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuicommunity.bean;
 
 import android.text.Html;
 import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMTopicInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -9,6 +10,7 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuicommunity.interfaces.ITopicBean;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 
 public class TopicBean implements Serializable, ITopicBean {
     public static final int CHAT_TYPE_GROUP = V2TIMConversation.V2TIM_GROUP;
@@ -109,6 +111,44 @@ public class TopicBean implements Serializable, ITopicBean {
 
     public int getType() {
         return type;
+    }
+
+    public int getAtType() {
+        int atInfoType = 0;
+        boolean atMe = false;
+        boolean atAll = false;
+
+        if (v2TIMTopicInfo == null) {
+            return V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
+        }
+
+        List<V2TIMGroupAtInfo> atInfoList = v2TIMTopicInfo.getGroupAtInfoList();
+        for (V2TIMGroupAtInfo atInfo : atInfoList) {
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ME) {
+                atMe = true;
+                continue;
+            }
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL) {
+                atAll = true;
+                continue;
+            }
+            if (atInfo.getAtType() == V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME) {
+                atMe = true;
+                atAll = true;
+            }
+        }
+
+        if (atAll && atMe) {
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_ALL_AT_ME;
+        } else if (atAll) {
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_ALL;
+        } else if (atMe) {
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_ME;
+        } else {
+            atInfoType = V2TIMGroupAtInfo.TIM_AT_UNKNOWN;
+        }
+
+        return atInfoType;
     }
 
     public void setV2TIMTopicInfo(V2TIMTopicInfo v2TIMTopicInfo) {

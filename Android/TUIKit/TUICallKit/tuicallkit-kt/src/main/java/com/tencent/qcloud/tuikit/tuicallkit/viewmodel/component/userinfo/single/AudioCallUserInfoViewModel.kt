@@ -13,14 +13,15 @@ class AudioCallUserInfoViewModel {
     public var callTag = LiveData<String>()
     public var mediaType = LiveData<TUICallDefine.MediaType>()
     public var callStatus = LiveData<TUICallDefine.Status>()
+    public var callRole = LiveData<TUICallDefine.Role>()
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (TUICallDefine.Status.Waiting == it) {
             callTag.set(
                 if (TUICallDefine.Role.Caller == TUICallState.instance.selfUser.get().callRole.get()) {
-                    ServiceInitializer.getAppContext().getString(R.string.tuicalling_waiting_accept)
+                    ServiceInitializer.getAppContext().getString(R.string.tuicallkit_waiting_accept)
                 } else {
-                    ServiceInitializer.getAppContext().getString(R.string.tuicalling_invite_audio_call)
+                    ServiceInitializer.getAppContext().getString(R.string.tuicallkit_invite_audio_call)
                 }
             )
         } else if (TUICallDefine.Status.Accept == it) {
@@ -35,9 +36,9 @@ class AudioCallUserInfoViewModel {
 
         callTag.set(
             if (TUICallDefine.Role.Caller == TUICallState.instance.selfUser.get().callRole.get()) {
-                ServiceInitializer.getAppContext().getString(R.string.tuicalling_waiting_accept)
+                ServiceInitializer.getAppContext().getString(R.string.tuicallkit_waiting_accept)
             } else {
-                ServiceInitializer.getAppContext().getString(R.string.tuicalling_invite_audio_call)
+                ServiceInitializer.getAppContext().getString(R.string.tuicallkit_invite_audio_call)
             }
         )
         if (TUICallDefine.Status.Accept == TUICallState.instance.selfUser.get().callStatus.get()) {
@@ -45,6 +46,7 @@ class AudioCallUserInfoViewModel {
         }
         mediaType = TUICallState.instance.mediaType
         callStatus = TUICallState.instance.selfUser.get().callStatus
+        callRole = TUICallState.instance.selfUser.get().callRole
         addObserver()
     }
 

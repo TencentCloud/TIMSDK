@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.text.TextUtils
+import android.os.Build
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestOptions
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import java.lang.ref.WeakReference
 import java.security.MessageDigest
 
 object ImageLoader {
@@ -25,7 +26,7 @@ object ImageLoader {
     }
 
     @JvmStatic
-    fun loadImage(context: Context?, imageView: ImageView?, url: Any?, @DrawableRes errorResId: Int = 0,) {
+    fun loadImage(context: Context?, imageView: ImageView?, url: Any?, @DrawableRes errorResId: Int = 0) {
         loadImage(context, imageView, url, R.drawable.tuicallkit_ic_avatar, this.radius)
     }
 
@@ -40,13 +41,23 @@ object ImageLoader {
             }
             return
         }
-        Glide.with(context!!).load(url).error(loadTransform(context, errorResId, radius)).into(
-            imageView!!
-        )
+        Glide.with(context!!.applicationContext).load(url)
+            .error(loadTransform(context.applicationContext, errorResId, radius)).into(imageView!!)
     }
 
     fun loadGifImage(context: Context?, imageView: ImageView?, @RawRes @DrawableRes resourceId: Int) {
-        Glide.with(context!!).asGif().load(resourceId).into(imageView!!)
+        Glide.with(context!!.applicationContext).asGif().load(resourceId).into(imageView!!)
+    }
+
+    fun loadBlurImage(context: Context?, imageView: ImageView?, url: Any?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            loadImage(context, imageView, url, R.drawable.tuicallkit_ic_avatar)
+            val radius = 80f
+            imageView?.setRenderEffect(RenderEffect.createBlurEffect(radius, radius, Shader.TileMode.MIRROR))
+        } else {
+            Glide.with(context!!.applicationContext).load(url).error(R.drawable.tuicallkit_ic_avatar)
+                .apply(RequestOptions.bitmapTransform(BlurTransformation(context))).into(imageView!!)
+        }
     }
 
     @JvmStatic
@@ -54,11 +65,8 @@ object ImageLoader {
         Glide.with(context!!).clear(imageView!!)
     }
 
-
     private fun loadTransform(
-        context: Context?,
-        @DrawableRes placeholderId: Int,
-        radius: Int
+        context: Context?, @DrawableRes placeholderId: Int, radius: Int
     ): RequestBuilder<Drawable> {
         return Glide.with(context!!).load(placeholderId)
             .apply(RequestOptions().centerCrop().transform(GlideRoundTransform(context, radius)))
@@ -109,4 +117,38 @@ object ImageLoader {
         }
     }
 
+    class BlurTransformation(context: Context) : BitmapTransformation() {
+        private var radius = 24
+        private var sampling = 10
+        private var weakPreference: WeakReference<Context>
+
+        init {
+            weakPreference = WeakReference(context.applicationContext)
+        }
+
+        override fun updateDiskCacheKey(messageDigest: MessageDigest) {
+        }
+
+        override fun transform(pool: BitmapPool, toTransform: Bitmap, outWidth: Int, outHeight: Int): Bitmap? {
+            val width = toTransform.width
+            val height = toTransform.height
+            val scaleWidth = width / sampling
+            val scaleHeight = height / sampling
+
+            var bitmap = pool.get(scaleWidth, scaleHeight, Bitmap.Config.ARGB_8888)
+            bitmap.density = toTransform.density
+
+            val canvas = Canvas(bitmap)
+            canvas.scale(1 / sampling.toFloat(), 1 / sampling.toFloat())
+            val paint = Paint()
+            paint.flags = Paint.FILTER_BITMAP_FLAG
+            canvas.drawBitmap(toTransform, 0f, 0f, paint)
+
+            try {
+                return BlurUtils.rsbBlur(weakPreference.get(), bitmap, radius)
+            } catch (e: Exception) {
+                return BlurUtils.fastBlur(toTransform, radius, true)
+            }
+        }
+    }
 }

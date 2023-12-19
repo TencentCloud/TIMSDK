@@ -545,11 +545,11 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
     }
 
     private @Constants.SpeakerMode int getSpeakerModeFromData() {
-        if (mUserEntityList.size() < Constants.SPEAKER_MODE_MEMBER_MIN_LIMIT) {
-            return Constants.SPEAKER_MODE_NONE;
-        }
         if (mUserListSorter.isSpeakerOfScreenSharing(mUserEntityList)) {
             return Constants.SPEAKER_MODE_SCREEN_SHARING;
+        }
+        if (mUserEntityList.size() < Constants.SPEAKER_MODE_MEMBER_MIN_LIMIT) {
+            return Constants.SPEAKER_MODE_NONE;
         }
         if (mUserListSorter.isSpeakerOfPersonalVideoShow(mUserEntityList)) {
             return Constants.SPEAKER_MODE_PERSONAL_VIDEO_SHOW;
@@ -577,7 +577,13 @@ public class VideoSeatViewModel extends TUIRoomObserver implements IVideoSeatVie
         if (mUserEntityList.size() != Constants.TWO_PERSON_VIDEO_CONFERENCE_MEMBER_COUNT) {
             return false;
         }
-        return mUserEntityList.get(0).isVideoAvailable() || mUserEntityList.get(1).isVideoAvailable();
+        if (!mUserEntityList.get(0).isVideoAvailable() && !mUserEntityList.get(1).isVideoAvailable()) {
+            return false;
+        }
+        if (mUserEntityList.get(0).isScreenShareAvailable() || mUserEntityList.get(1).isScreenShareAvailable()) {
+            return false;
+        }
+        return true;
     }
 
     @Override

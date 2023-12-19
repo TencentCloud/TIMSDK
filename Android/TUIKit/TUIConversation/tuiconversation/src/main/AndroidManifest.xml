@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tencent.qcloud.tuikit.tuiconversation">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <provider
-            android:name=".TUIConversationService"
-            android:authorities="${applicationId}.TUIConversation.Init"
-            android:enabled="true"
-            android:exported="false"/>
-
 
         <!-- **************** Classic UI Activity Start **************** -->
         <activity
-            android:name=".classicui.page.TUIForwardSelectActivity"
+            android:name="com.tencent.qcloud.tuikit.tuiconversation.classicui.page.TUIForwardSelectActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".classicui.page.TUIFoldedConversationActivity"
+            android:name="com.tencent.qcloud.tuikit.tuiconversation.classicui.page.TUIFoldedConversationActivity"
             android:screenOrientation="portrait" />
         <!-- **************** Classic UI Activity End **************** -->
 
@@ -26,12 +19,12 @@
 
         <!-- **************** Minimalist UI Activity Start **************** -->
         <activity
-            android:name=".minimalistui.page.TUIForwardSelectMinimalistActivity"
+            android:name="com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIForwardSelectMinimalistActivity"
             android:theme="@style/ConversationTransparentPopActivityStyle"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".minimalistui.page.TUIFoldedConversationMinimalistActivity"
+            android:name="com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIFoldedConversationMinimalistActivity"
             android:screenOrientation="portrait" />
         <!-- **************** Minimalist UI Activity End **************** -->
 

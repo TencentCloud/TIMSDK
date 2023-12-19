@@ -67,7 +67,7 @@ class RecentCallsFragment : Fragment {
         recyclerRecent = rootView.findViewById(R.id.recycle_view_list)
         layoutTitle = rootView.findViewById(R.id.cl_record_title)
         if (RecentCalls.UI_STYLE_MINIMALIST == chatViewStyle) {
-            layoutTitle?.setBackgroundColor(resources.getColor(R.color.tuicalling_color_white))
+            layoutTitle?.setBackgroundColor(resources.getColor(R.color.tuicallkit_color_white))
         }
     }
 

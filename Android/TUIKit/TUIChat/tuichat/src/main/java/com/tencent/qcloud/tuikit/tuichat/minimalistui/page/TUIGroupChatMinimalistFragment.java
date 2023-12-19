@@ -17,6 +17,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragment {
     private static final String TAG = TUIGroupChatMinimalistFragment.class.getSimpleName();
@@ -51,12 +52,12 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
         chatView.setChatInfo(groupInfo);
         chatView.getMessageLayout().setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onMessageLongClick(View view, int position, TUIMessageBean messageBean) {
+            public void onMessageLongClick(View view, TUIMessageBean messageBean) {
                 chatView.getMessageLayout().showItemPopMenu(messageBean, view);
             }
 
             @Override
-            public void onUserIconClick(View view, int position, TUIMessageBean messageBean) {
+            public void onUserIconClick(View view, TUIMessageBean messageBean) {
                 if (null == messageBean) {
                     return;
                 }
@@ -70,14 +71,14 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
             }
 
             @Override
-            public void onUserIconLongClick(View view, int position, TUIMessageBean messageBean) {
+            public void onUserIconLongClick(View view, TUIMessageBean messageBean) {
                 String resultId = messageBean.getV2TIMMessage().getSender();
                 String resultName = messageBean.getV2TIMMessage().getNickName();
                 chatView.getInputLayout().addInputText(resultName, resultId);
             }
 
             @Override
-            public void onReEditRevokeMessage(View view, int position, TUIMessageBean messageInfo) {
+            public void onReEditRevokeMessage(View view, TUIMessageBean messageInfo) {
                 if (messageInfo == null) {
                     return;
                 }
@@ -90,7 +91,7 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
             }
 
             @Override
-            public void onRecallClick(View view, int position, TUIMessageBean messageInfo) {}
+            public void onRecallClick(View view, TUIMessageBean messageInfo) {}
 
             @Override
             public void onTextSelected(View view, int position, TUIMessageBean messageInfo) {
@@ -99,7 +100,7 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
             }
 
             @Override
-            public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+            public void onMessageClick(View view, TUIMessageBean messageBean) {
                 if (messageBean instanceof MergeMessageBean) {
                     if (getChatInfo() == null) {
                         return;

@@ -8,9 +8,9 @@ public class AppConfig {
     // app flavor
     public static String DEMO_FLAVOR_VERSION = Constants.FLAVOR_LOCAL;
     // app build version
-    public static String DEMO_VERSION_NAME = "7.6.5011";
+    public static String DEMO_VERSION_NAME = "7.7.5282";
     // 0,classic; 1,minimalist
-    public static int DEMO_UI_STYLE = 0;
+    public static int DEMO_UI_STYLE = 1;
     // long connection addr: china、india ...
     public static int DEMO_TEST_ENVIRONMENT = 0;
     // logined appid

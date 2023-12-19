@@ -1,4 +1,4 @@
-package com.tencent.cloud.tuikit.roomkit.view.page.widget.floatwindow.videoplaying;
+package com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying;
 
 import android.content.Context;
 import android.text.TextUtils;

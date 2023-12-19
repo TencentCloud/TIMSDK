@@ -207,7 +207,7 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
             ((MessageContentHolder) holder).setBottomContent(messageBean);
             ((MessageContentHolder) holder).setOnItemClickListener(new OnItemClickListener() {
                 @Override
-                public void onMessageClick(View view, int position, TUIMessageBean messageBean) {
+                public void onMessageClick(View view, TUIMessageBean messageBean) {
                     if (messageBean instanceof MergeMessageBean) {
                         Intent intent = new Intent(view.getContext(), TUIForwardChatMinimalistActivity.class);
                         intent.putExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);

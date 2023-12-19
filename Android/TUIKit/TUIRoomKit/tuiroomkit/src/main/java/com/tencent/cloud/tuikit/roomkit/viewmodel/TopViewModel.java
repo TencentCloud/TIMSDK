@@ -15,7 +15,7 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.utils.RTCubeUtils;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.topnavigationbar.TopView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.TopView;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -72,7 +72,7 @@ public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
         mTimeRunnable = new Runnable() {
             @Override
             public void run() {
-                int time = (int) (System.currentTimeMillis() - mRoomStore.roomInfo.createTime) / 1000;
+                int time = (int) (System.currentTimeMillis() - mRoomStore.userModel.enterRoomTime) / 1000;
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {

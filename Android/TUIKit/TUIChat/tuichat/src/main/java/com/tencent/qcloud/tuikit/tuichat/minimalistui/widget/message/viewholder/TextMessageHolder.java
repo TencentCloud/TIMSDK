@@ -40,7 +40,14 @@ public class TextMessageHolder extends MessageContentHolder {
                 timeInLineTextLayout.setTextColor(properties.getLeftChatContentFontColor());
             }
         }
-
+        timeInLineTextLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageClick(v, textMessageBean);
+                }
+            }
+        });
         if (textMessageBean.getText() != null) {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), textMessageBean.getText(), false);
         } else if (!TextUtils.isEmpty(textMessageBean.getExtra())) {

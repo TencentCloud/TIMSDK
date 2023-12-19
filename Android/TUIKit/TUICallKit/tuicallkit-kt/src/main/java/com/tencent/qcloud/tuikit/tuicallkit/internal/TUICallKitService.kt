@@ -157,14 +157,14 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         videoListener.mediaType = TUICallDefine.MediaType.Video
         videoListener.userID = userID
         videoListener.groupID = groupID
-        voiceCallExtension.text = appContext.getString(R.string.tuicalling_audio_call)
+        voiceCallExtension.text = appContext.getString(R.string.tuicallkit_audio_call)
         voiceCallExtension.icon = R.drawable.tuicallkit_ic_audio_call
         voiceCallExtension.extensionListener = voiceListener
         voiceListener.activityResultCaller = getOrDefault<ActivityResultCaller>(
             param,
             TUIConstants.TUIChat.Extension.InputMore.CONTEXT, null
         )
-        videoCallExtension.text = appContext.getString(R.string.tuicalling_video_call)
+        videoCallExtension.text = appContext.getString(R.string.tuicallkit_video_call)
         videoCallExtension.icon = R.drawable.tuicallkit_ic_video_call
         videoCallExtension.extensionListener = videoListener
         videoListener.activityResultCaller = getOrDefault<ActivityResultCaller>(
@@ -236,7 +236,7 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         videoListener.mediaType = TUICallDefine.MediaType.Video
         videoListener.groupID = groupID
         videoListener.isClassicUI = false
-        voiceCallExtension.text = appContext.getString(R.string.tuicalling_audio_call)
+        voiceCallExtension.text = appContext.getString(R.string.tuicallkit_audio_call)
         voiceCallExtension.icon = R.drawable.tuicallkit_profile_minimalist_audio_icon
         voiceCallExtension.extensionListener = voiceListener
         voiceListener.activityResultCaller = getOrDefault<ActivityResultCaller?>(
@@ -244,7 +244,7 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
             TUIConstants.TUIGroup.Extension.GroupProfileItem.CONTEXT, null
         )
         voiceListener.isClassicUI = false
-        videoCallExtension.text = appContext.getString(R.string.tuicalling_video_call)
+        videoCallExtension.text = appContext.getString(R.string.tuicallkit_video_call)
         videoCallExtension.icon = R.drawable.tuicallkit_profile_minimalist_video_icon
         videoCallExtension.extensionListener = videoListener
         videoListener.isClassicUI = false
@@ -270,9 +270,9 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         val videoListener = ResultTUIExtensionEventListener()
         videoListener.mediaType = TUICallDefine.MediaType.Video
         videoListener.userID = userID
-        voiceCallExtension.text = appContext.getString(R.string.tuicalling_audio_call)
+        voiceCallExtension.text = appContext.getString(R.string.tuicallkit_audio_call)
         voiceCallExtension.extensionListener = voiceListener
-        videoCallExtension.text = appContext.getString(R.string.tuicalling_video_call)
+        videoCallExtension.text = appContext.getString(R.string.tuicallkit_video_call)
         videoCallExtension.extensionListener = videoListener
         val extensionInfoList: MutableList<TUIExtensionInfo> = java.util.ArrayList()
         extensionInfoList.add(videoCallExtension)
@@ -295,10 +295,10 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         videoListener.userID = userID
         videoListener.isClassicUI = false
         voiceCallExtension.icon = R.drawable.tuicallkit_profile_minimalist_audio_icon
-        voiceCallExtension.text = appContext.getString(R.string.tuicalling_audio_call)
+        voiceCallExtension.text = appContext.getString(R.string.tuicallkit_audio_call)
         voiceCallExtension.extensionListener = voiceListener
         videoCallExtension.icon = R.drawable.tuicallkit_profile_minimalist_video_icon
-        videoCallExtension.text = appContext.getString(R.string.tuicalling_video_call)
+        videoCallExtension.text = appContext.getString(R.string.tuicallkit_video_call)
         videoCallExtension.extensionListener = videoListener
         val extensionInfoList: MutableList<TUIExtensionInfo> = java.util.ArrayList()
         extensionInfoList.add(videoCallExtension)

@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
@@ -23,12 +24,15 @@ import com.tencent.qcloud.tuikit.tuicommunity.presenter.TopicPresenter;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.interfaces.ITopicInfoActivity;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TopicInfoActivity extends BaseLightActivity implements ITopicInfoActivity {
     private TopicPresenter presenter;
 
     private TextView deleteTopicButton;
+    private TextView clearTopicMessageButton;
     private SettingsLinearView nameSetting;
     private SettingsLinearView categorySetting;
     private TopicBean topicBean;
@@ -42,6 +46,7 @@ public class TopicInfoActivity extends BaseLightActivity implements ITopicInfoAc
         setContentView(R.layout.community_activity_topic_info);
         nameSetting = findViewById(R.id.topic_name_setting);
         deleteTopicButton = findViewById(R.id.delete_topic_button);
+        clearTopicMessageButton = findViewById(R.id.clear_topic_message_button);
         categorySetting = findViewById(R.id.topic_category_setting);
         Intent intent = getIntent();
         String topicID = intent.getStringExtra(TUIConstants.TUICommunity.TOPIC_ID);
@@ -85,6 +90,33 @@ public class TopicInfoActivity extends BaseLightActivity implements ITopicInfoAc
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUICommunityLog.e("TopicInfoActivity", "getTopicBean failed, code=" + errCode + ", msg=" + errMsg);
+            }
+        });
+
+        clearTopicMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new TUIKitDialog(TopicInfoActivity.this)
+                        .builder()
+                        .setCancelable(true)
+                        .setCancelOutside(true)
+                        .setTitle(TopicInfoActivity.this.getString(R.string.clear_message_tip))
+                        .setDialogWidth(0.75f)
+                        .setPositiveButton(TopicInfoActivity.this.getString(com.tencent.qcloud.tuicore.R.string.sure),
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Map<String, Object> hashMap = new HashMap<>();
+                                        hashMap.put(TUIConstants.TUIGroup.GROUP_ID, topicID);
+                                        TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, hashMap);
+                                    }
+                                })
+                        .setNegativeButton(TopicInfoActivity.this.getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {}
+                                })
+                        .show();
             }
         });
     }

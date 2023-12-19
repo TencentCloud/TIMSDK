@@ -108,6 +108,10 @@ public class C2CChatPresenter extends ChatPresenter {
         initMessageSender();
     }
 
+    public void removeC2CChatEventListener() {
+        TUIChatService.getInstance().removeC2CChatEventListener(chatEventListener);
+    }
+
     /**
      * 拉取消息
      * @param type 向前，向后或者前后同时拉取

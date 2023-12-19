@@ -190,8 +190,7 @@ public class VoiceToTextMessageLayoutProxy {
         Map<String, Object> param = new HashMap<>();
         param.put(TUIChatConstants.MESSAGE_BEAN, messageBean);
         param.put(TUIChatConstants.DATA_CHANGE_TYPE, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
-        TUICore.notifyEvent(
-            TUIConstants.TUIVoiceToTextPlugin.EVENT_KEY_VOICE_TO_TEXT_EVENT, TUIConstants.TUIVoiceToTextPlugin.EVENT_SUB_KEY_VOICE_TO_TEXT_CHANGED, param);
+        TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
     }
 
     private void onForwardConvertedTextClick(BaseFragment fragment, String themeStyle, TUIMessageBean messageBean) {

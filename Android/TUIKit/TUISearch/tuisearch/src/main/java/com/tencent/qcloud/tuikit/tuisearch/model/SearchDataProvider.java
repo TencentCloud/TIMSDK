@@ -358,18 +358,11 @@ public class SearchDataProvider {
         if (searchDataBean.isGroup()) {
             chatInfo.setType(V2TIMConversation.V2TIM_GROUP);
             chatInfo.setId(searchDataBean.getGroupID());
-            chatInfo.setGroupType(searchDataBean.getGroupType());
         } else {
             chatInfo.setType(V2TIMConversation.V2TIM_C2C);
             chatInfo.setId(searchDataBean.getUserID());
         }
-        String chatName = searchDataBean.getUserID();
-        if (!TextUtils.isEmpty(searchDataBean.getRemark())) {
-            chatName = searchDataBean.getRemark();
-        } else if (!TextUtils.isEmpty(searchDataBean.getNickName())) {
-            chatName = searchDataBean.getNickName();
-        }
-        chatInfo.setChatName(chatName);
+
         chatInfo.setLocateMessage(MessageInfoUtil.convertTIMMessage2MessageInfo(searchDataBean.getLocateTimMessage()));
         chatInfo.getLocateMessage().setFaceUrl(searchDataBean.getIconPath());
         return chatInfo;

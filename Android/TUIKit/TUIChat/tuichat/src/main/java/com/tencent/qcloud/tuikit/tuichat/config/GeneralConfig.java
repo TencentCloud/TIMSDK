@@ -20,7 +20,6 @@ public class GeneralConfig {
     private boolean enableTypingStatus = true;
 
     private boolean msgNeedReadReceipt = false;
-
     private boolean enablePopMenuEmojiReactAction = true;
     private boolean enablePopMenuReplyAction = true;
     private boolean enablePopMenuReferenceAction = true;
@@ -368,5 +367,4 @@ public class GeneralConfig {
         return SPUtils.getInstance(TUIChatConstants.CHAT_SETTINGS_SP_NAME)
                 .getBoolean(TUIChatConstants.CHAT_SP_KEY_SPEAKER_MODE_ON, enableSoundMessageSpeakerMode);
         }
-
 }

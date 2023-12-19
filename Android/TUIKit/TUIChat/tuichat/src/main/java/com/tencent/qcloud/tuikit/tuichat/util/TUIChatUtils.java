@@ -4,7 +4,7 @@ import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATI
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
 
 import android.text.TextUtils;
-
+import android.view.View;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -14,7 +14,8 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
-
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.ChatEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -250,5 +251,37 @@ public class TUIChatUtils {
         }
 
         return splitResultByKeyList;
+    }
+
+    public static boolean chatEventOnUserIconClicked(View view, TUIMessageBean messageBean) {
+        ChatEventListener chatEventListener = TUIChatConfigs.getChatEventConfig().getChatEventListener();
+        if (chatEventListener != null) {
+            return chatEventListener.onUserIconClicked(view, messageBean);
+        }
+        return false;
+    }
+
+    public static boolean chatEventOnUserIconLongClicked(View view, TUIMessageBean messageBean) {
+        ChatEventListener chatEventListener = TUIChatConfigs.getChatEventConfig().getChatEventListener();
+        if (chatEventListener != null) {
+            return chatEventListener.onUserIconLongClicked(view, messageBean);
+        }
+        return false;
+    }
+
+    public static boolean chatEventOnMessageClicked(View view, TUIMessageBean messageBean) {
+        ChatEventListener chatEventListener = TUIChatConfigs.getChatEventConfig().getChatEventListener();
+        if (chatEventListener != null) {
+            return chatEventListener.onMessageClicked(view, messageBean);
+        }
+        return false;
+    }
+
+    public static boolean chatEventOnMessageLongClicked(View view, TUIMessageBean messageBean) {
+        ChatEventListener chatEventListener = TUIChatConfigs.getChatEventConfig().getChatEventListener();
+        if (chatEventListener != null) {
+            return chatEventListener.onMessageLongClicked(view, messageBean);
+        }
+        return false;
     }
 }
