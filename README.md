@@ -152,7 +152,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 ## Latest Enhanced Version 7.7.5282 @2023.12.18
 ### SDK
 - Added V2TIMCommunityManager and V2TIMCommunityListener to integrate community topic interfaces
-- SDK supports Quic and encryption plug-ins
+- SDK supports Quic and advanced encryption plugins
 - Optimized conversation filtering logic
 - Topic information added createTime field
 - Live group supports setting administrators and pulling administrator list
