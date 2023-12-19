@@ -58,7 +58,7 @@ pod 'TXIMSDK_Plus_iOS_XCFramework'
 end
 ```
 
-如果集成 Quic 插件，请您按照如下方式设置 Podfile 文件
+如果使用 Quic 插件，请您按照如下方式设置 Podfile 文件
 ```
 platform :ios, '8.0'
 source 'https://github.com/CocoaPods/Specs.git'
@@ -68,7 +68,7 @@ pod 'TXIMSDK_Plus_QuicPlugin'
 end
 ```
 
-如果集成高级加密插件，请您按照如下方式设置 Podfile 文件
+如果使用高级加密插件，请您按照如下方式设置 Podfile 文件
 ```
 platform :ios, '8.0'
 source 'https://github.com/CocoaPods/Specs.git'
