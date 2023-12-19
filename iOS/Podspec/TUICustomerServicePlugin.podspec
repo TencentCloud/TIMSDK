@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUICustomerServicePlugin'
-  spec.version      = '7.6.5011'
+  spec.version      = '7.7.5282'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,14 +16,16 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.6.5011/ios/TUICustomerServicePlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.7.5282/ios/TUICustomerServicePlugin.zip'}
+
+  spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUICustomerServicePlugin/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TUICore','7.6.5011'
-    commonModel.dependency 'TIMCommon','7.6.5011'
-    commonModel.dependency 'TUIChat','7.6.5011'
-    commonModel.dependency 'TUIContact','7.6.5011'
+    commonModel.dependency 'TUICore','7.7.5282'
+    commonModel.dependency 'TIMCommon','7.7.5282'
+    commonModel.dependency 'TUIChat','7.7.5282'
+    commonModel.dependency 'TUIContact','7.7.5282'
   end
 
   spec.subspec 'UI_Classic' do |commonUI|
@@ -31,9 +33,13 @@ Pod::Spec.new do |spec|
       dataProvider.source_files = '**/TUICustomerServicePlugin/UI_Classic/DataProvider/*.{h,m,mm}'
       dataProvider.dependency "TUICustomerServicePlugin/CommonModel"
     end
+    commonUI.subspec 'BaseCell' do |baseCell|
+      baseCell.source_files = '**/TUICustomerServicePlugin/UI_Classic/BaseCell/*.{h,m,mm}'
+      baseCell.dependency "TUICustomerServicePlugin/UI_Classic/DataProvider"
+    end
     commonUI.subspec 'UI' do |subUI|
       subUI.source_files = '**/TUICustomerServicePlugin/UI_Classic/UI/*.{h,m,mm}'
-      subUI.dependency "TUICustomerServicePlugin/UI_Classic/DataProvider"
+      subUI.dependency "TUICustomerServicePlugin/UI_Classic/BaseCell"
     end
     commonUI.subspec 'Service' do |service|
       service.source_files = '**/TUICustomerServicePlugin/UI_Classic/Service/*.{h,m,mm}'

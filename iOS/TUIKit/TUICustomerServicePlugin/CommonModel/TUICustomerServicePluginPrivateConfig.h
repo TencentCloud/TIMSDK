@@ -22,10 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isCustomerServiceSupported;
 + (void)checkCommercialAbility;
 
-+ (void)enableVideoAndAudioCall:(BOOL)enable;
-+ (void)cacheVideoAndAudioCall;
-+ (void)restoreVideoAndAudioCall;
-
 @end
 
 NS_ASSUME_NONNULL_END

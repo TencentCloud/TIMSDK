@@ -8,9 +8,6 @@
 #import "TUICustomerServicePluginPrivateConfig.h"
 #import <TUIChat/TUIChatConfig.h>
 
-static BOOL gEnableVideo;
-static BOOL gEnableAudio;
-static BOOL gEnableWelcome;
 static const long long kTUICustomerServiceCommercialAbility = 1LL << 40;
 static BOOL gEnableCustomerService = NO;
 static NSString *gOnlineShopping = @"@im_agent#online_shopping_mall";
@@ -44,51 +41,15 @@ static NSString *gOnlineDoctor = @"@im_agent#online_doctor";
     return gEnableCustomerService;
 }
 
-+ (void)enableVideoAndAudioCall:(BOOL)enable {
-    [TUIChatConfig defaultConfig].enableVideoCall = enable;
-    [TUIChatConfig defaultConfig].enableAudioCall = enable;
-    [TUIChatConfig defaultConfig].enableWelcomeCustomMessage = enable;
-}
-
-+ (void)cacheVideoAndAudioCall {
-    gEnableVideo = [TUIChatConfig defaultConfig].enableVideoCall;
-    gEnableAudio = [TUIChatConfig defaultConfig].enableAudioCall;
-    gEnableWelcome = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage;
-}
-
-+ (void)restoreVideoAndAudioCall {
-    [TUIChatConfig defaultConfig].enableVideoCall = gEnableVideo;
-    [TUIChatConfig defaultConfig].enableAudioCall = gEnableAudio;
-    [TUIChatConfig defaultConfig].enableWelcomeCustomMessage = gEnableWelcome;
-}
-
 #pragma mark - Private
 + (void)checkCommercialAbility {
     [TUITool checkCommercialAbility:kTUICustomerServiceCommercialAbility
                                succ:^(BOOL enabled) {
         gEnableCustomerService = enabled;
-        if (gEnableCustomerService) {
-            [self reportTUIConversationGroupComponentUsage];
-        }
     }
                                fail:^(int code, NSString *desc) {
         gEnableCustomerService = NO;
     }];
-}
-
-+ (void)reportTUIConversationGroupComponentUsage {
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    param[@"UIComponentType"] = @(14);
-    param[@"UIStyleType"] = @(0);
-    NSData *dataParam = [NSJSONSerialization dataWithJSONObject:param options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *strParam = [[NSString alloc] initWithData:dataParam encoding:NSUTF8StringEncoding];
-    [[V2TIMManager sharedInstance] callExperimentalAPI:@"reportTUIComponentUsage"
-                                                 param:strParam
-                                                  succ:^(NSObject *result) {
-                                                    NSLog(@"success");
-                                                  }
-                                                  fail:^(int code, NSString *desc){
-                                                  }];
 }
 
 #pragma mark - Getter

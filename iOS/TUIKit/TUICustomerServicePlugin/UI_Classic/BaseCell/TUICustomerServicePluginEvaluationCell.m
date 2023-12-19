@@ -77,6 +77,9 @@
 }
 
 - (void)onScoreButtonClicked:(UIButton *)sender {
+    if (self.customData.isExpired) {
+        return;
+    }
     self.selectedButton = sender;
     for (int i = 0; i < self.scoreButtonArray.count; i++) {
         UIButton *button = self.scoreButtonArray[i];
@@ -86,6 +89,9 @@
             [self updateScoreButton:button index:i selected:NO];
         }
     }
+    // The submit button can only be clicked after selecting ⭐️
+    self.submitButton.enabled = YES;
+    self.submitButton.alpha = 1.0;
 }
 
 - (void)notifyCellSizeChanged {
@@ -154,13 +160,8 @@
             [self.scoreButtonArray addObject:scoreButton];
         }
         
-        if (self.customData.isExpired) {
-            self.submitButton.enabled = NO;
-            self.submitButton.alpha = 0.8;
-        } else {
-            self.submitButton.enabled = YES;
-            self.submitButton.alpha = 1.0;
-        }
+        self.submitButton.enabled = NO;
+        self.submitButton.alpha = 0.8;
         self.bottomLabel.hidden = YES;
     }
     
