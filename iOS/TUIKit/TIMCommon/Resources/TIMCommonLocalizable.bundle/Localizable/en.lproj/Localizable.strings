@@ -279,6 +279,8 @@
 "TUIKitMessageTypeSecurityStrikeImage" = "Sensitive content involved and cannot be viewed";
 "TUIKitMessageTypeSecurityStrikeTranslate" = "Sensitive content involved, translation failed";
 
+"TUIKitMessageTypeOtherUseMic" = "Microphone is being used by another function, unable to record.";
+
 "TUIKitMessageReadPartRead" = "read";
 "TUIKitMessageReadPartUnread" = "unread";
 "TUIKitMessageReadPartDisable" = "disable read";
@@ -304,6 +306,8 @@
 "TUIKitMoreGroupNote" = "Group Note";
 "TUIKitMoreEvaluation" = "Service Evaluation";
 "TUIKitMoreCard" = "Card Message";
+
+"TUIKitFileSizeCheckLimited" = "File size exceeds size limit";
 
 "TUIKitCallInviteYouVideoCall" = "invited you to a video call.";
 "TUIKitCallTurningOnMute" = "Mute On";
@@ -693,6 +697,9 @@
 "TUICustomerServiceCommonPhraseShipping" = "What is the shipping date?";
 "TUICustomerServiceCommonPhraseDelivery" = "Which express company is it?";
 "TUICustomerServiceCommonPhraseArrive" = "When will it arrive?";
+
+"TUIChatBotAccounts" = "Chat Bot";
+"TUIChatBotChangeQuestion" = "Change it";
 
 "TUIConversationGroupAll" = "All";
 "TUIConversationGroupUnread" = "Unread";

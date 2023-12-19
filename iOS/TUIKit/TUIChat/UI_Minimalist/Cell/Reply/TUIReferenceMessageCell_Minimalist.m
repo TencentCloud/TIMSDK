@@ -290,18 +290,15 @@
     CGSize size = self.referenceData.bottomContainerSize;
     /// TransitionView should not cover the replyView.
     /// Add an extra tiny offset to the left or right of TransitionView if replyView is visible.
-    CGFloat offset = self.quoteLineView.hidden ? 0 : 1;
-    UIView *view = self.replyEmojiView.hidden ? self.bubbleView : self.replyEmojiView;
-    CGFloat topMargin = view.mm_maxY + self.nameLabel.mm_h + 6;
+    CGFloat offset = self.quoteLineView.hidden ? 0 : 2;
 
-    
     [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
         if (self.referenceData.direction == MsgDirectionIncoming) {
             make.leading.mas_equalTo(self.container.mas_leading).mas_offset(offset);
         } else {
             make.trailing.mas_equalTo(self.container.mas_trailing).mas_offset(-offset);
         }
-        make.top.mas_equalTo(view.mas_bottom).mas_offset(6);
+        make.top.mas_equalTo(self.quoteView.mas_bottom).mas_offset(6);
         make.size.mas_equalTo(size);
     }];
     

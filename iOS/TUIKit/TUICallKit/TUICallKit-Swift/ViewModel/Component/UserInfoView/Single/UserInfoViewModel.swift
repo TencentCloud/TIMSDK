@@ -44,15 +44,15 @@ class UserInfoViewModel {
         switch TUICallState.instance.mediaType.value {
         case .audio:
             if TUICallState.instance.selfUser.value.callRole.value == .call {
-                waitingText = TUICallKitLocalize(key: "Demo.TRTC.Calling.waitaccept") ?? ""
+                waitingText = TUICallKitLocalize(key: "TUICallKit.waitAccept") ?? ""
             } else {
-                waitingText = TUICallKitLocalize(key: "Demo.TRTC.calling.invitetoaudiocall") ?? ""
+                waitingText = TUICallKitLocalize(key: "TUICallKit.inviteToAudioCall") ?? ""
             }
         case .video:
             if TUICallState.instance.selfUser.value.callRole.value == .call {
-                waitingText = TUICallKitLocalize(key: "Demo.TRTC.Calling.waitaccept") ?? ""
+                waitingText = TUICallKitLocalize(key: "TUICallKit.waitAccept") ?? ""
             } else {
-                waitingText = TUICallKitLocalize(key: "Demo.TRTC.calling.invitetovideocall") ?? ""
+                waitingText = TUICallKitLocalize(key: "TUICallKit.inviteToVideoCall") ?? ""
             }
         case .unknown:
             break

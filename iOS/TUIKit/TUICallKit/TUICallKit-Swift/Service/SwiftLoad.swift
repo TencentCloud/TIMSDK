@@ -1,6 +1,6 @@
 //
 //  SwiftLoad.swift
-//  TUIVideoSeat
+//  TUICallKit
 //
 //  Created by WesleyLei on 2022/9/23.
 //  Copyright © 2022 Tencent. All rights reserved.
@@ -12,7 +12,7 @@ import TUICore
 extension NSObject {
     @objc class func swiftLoad() {
         let _ = TUICallKit.createInstance()
-
+        
         TUICore.registerService(TUICore_TUICallingService, object: TUICallKitService.instance)
         
         TUICore.registerService(TUICore_TUIAudioMessageRecordService, object: TUIAudioMessageRecordService.instance)

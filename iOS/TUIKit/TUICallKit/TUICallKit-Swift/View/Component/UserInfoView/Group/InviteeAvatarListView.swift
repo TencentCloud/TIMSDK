@@ -7,18 +7,28 @@
 
 import Foundation
 
-private let kItemWidth = 32.0
-private let kSpacing = 5.0
+private let kItemWidth = 32.scaleWidth()
+private let kSpacing = 5.scaleWidth()
 
 class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     let viewModel = InviteeAvatarListViewModel()
     let remoteUserListObserver = Observer()
+    
+    lazy var describeLabel: UILabel = {
+        let describeLabel = UILabel()
+        describeLabel.font = UIFont.systemFont(ofSize: 12.0)
+        describeLabel.textColor = UIColor.t_colorWithHexString(color: "#D5E0F2")
+        describeLabel.textAlignment = .center
+        describeLabel.isUserInteractionEnabled = false
+        describeLabel.text = TUICallKitLocalize(key: "TUICallKit.calleeTip") ?? ""
+        return describeLabel
+    }()
+    
     lazy var calleeCollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.minimumLineSpacing = 0
-        flowLayout.minimumInteritemSpacing = 0
-        let calleeCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let calleeCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         calleeCollectionView.delegate = self
         calleeCollectionView.dataSource = self
         calleeCollectionView.showsVerticalScrollIndicator = false
@@ -26,10 +36,9 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
         calleeCollectionView.backgroundColor = UIColor.clear
         return calleeCollectionView
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-
         registerObserveState()
     }
     
@@ -38,10 +47,10 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
     }
     
     deinit {
-        viewModel.remoteUserList.removeObserver(remoteUserListObserver)
+        viewModel.dataSource.removeObserver(remoteUserListObserver)
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -49,14 +58,22 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
         constructViewHierarchy()
         activateConstraints()
         bindInteraction()
+        updateDescribeLabel()
         isViewReady = true
     }
     
     func constructViewHierarchy() {
+        addSubview(describeLabel)
         addSubview(calleeCollectionView)
     }
     
     func activateConstraints() {
+        describeLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(calleeCollectionView.snp.top).offset(-5.scaleWidth())
+            make.centerX.equalTo(self)
+            make.width.equalTo(Screen_Width)
+            make.height.equalTo(20)
+        }
         calleeCollectionView.snp.makeConstraints { make in
             make.centerX.equalTo(self)
             make.width.equalTo(Screen_Width)
@@ -65,9 +82,7 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
     }
     
     func bindInteraction() {
-        for i in 0 ..< 8 {
-            calleeCollectionView.register(InviteeAvatarCell.self, forCellWithReuseIdentifier: "InviteeAvatarCell_\(i)")
-        }
+        calleeCollectionView.register(InviteeAvatarCell.self, forCellWithReuseIdentifier: "InviteeAvatarCell")
     }
     
     // MARK: Register TUICallState Observer && Update UI
@@ -76,66 +91,55 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
     }
     
     func remoteUserChanged() {
-        viewModel.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
+        viewModel.dataSource.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
+            self.updateDescribeLabel()
             self.calleeCollectionView.reloadData()
             self.calleeCollectionView.layoutIfNeeded()
         })
     }
+    
+    func updateDescribeLabel() {
+        let count = viewModel.dataSource.value.count
+        
+        if count >= 1 {
+            describeLabel.isHidden = false
+        } else {
+            describeLabel.isHidden = true
+        }
+    }
 }
 
-//MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
+// MARK: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 extension InviteeAvatarListView {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.remoteUserList.value.count
+        return viewModel.dataSource.value.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InviteeAvatarCell_\(indexPath.row)", for: indexPath) as! InviteeAvatarCell
-        var model: User
-        if indexPath.row == 0 {
-            model = viewModel.selfUser.value
-        } else {
-            model = viewModel.remoteUserList.value[indexPath.row]
-        }
-        cell.initCell(user: model)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InviteeAvatarCell", for: indexPath) as! InviteeAvatarCell
+        cell.initCell(user: viewModel.dataSource.value[indexPath.row])
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: kItemWidth, height: kItemWidth)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.size.width, height: 0.1)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return kSpacing
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.size.width, height: 0.1)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return kSpacing
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        let cellCount = collectionView.numberOfItems(inSection: section)
+        var inset = (collectionView.bounds.size.width - ((CGFloat(cellCount)) * kItemWidth) - ((CGFloat(cellCount) - 1) * kSpacing)) * 0.5
+        inset = max(inset, 0.0)
+        return UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: 0.0)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        let CellCount = viewModel.remoteUserList.value.count
-        let CellSpacing = CGFloat(1.0)
-        let totalCellWidth = kItemWidth * CGFloat(CellCount)
-        let totalSpacingWidth = CellSpacing * CGFloat(CellCount - 1)
-        let leftInset = (Screen_Width - CGFloat(totalCellWidth + totalSpacingWidth)) / 2
-        let rightInset = leftInset
-        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
-    }
 }

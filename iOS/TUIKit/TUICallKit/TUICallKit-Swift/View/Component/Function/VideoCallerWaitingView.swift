@@ -10,17 +10,18 @@ import Foundation
 class VideoCallerWaitingView: UIView {
     
     let viewModel = VideoCallerWaitingViewModel()
+    
     lazy var hangupBtn: BaseControlButton = {
         weak var weakSelf = self
         let btn = BaseControlButton.create(frame: CGRect.zero,
-                                           title: TUICallKitLocalize(key: "Demo.TRTC.Calling.hangup") ?? "",
+                                           title: TUICallKitLocalize(key: "TUICallKit.hangup") ?? "",
                                            imageSize: kBtnLargeSize) { sender in
             weakSelf?.hangupTouchEvent(sender: sender)
         }
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_hangup") {
+        if let image = TUICallKitCommon.getBundleImage(name: "icon_hangup") {
             btn.updateImage(image: image)
         }
-        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))
+        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
         return btn
     }()
     
@@ -32,15 +33,7 @@ class VideoCallerWaitingView: UIView {
         return btn
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -61,11 +54,10 @@ class VideoCallerWaitingView: UIView {
             make.center.equalTo(self)
             make.size.equalTo(kControlBtnSize)
         }
-        
         switchCameraBtn.snp.makeConstraints { make in
             make.centerY.equalTo(hangupBtn)
-            make.leading.equalTo(hangupBtn.snp.trailing).offset(20)
-            make.size.equalTo(CGSize(width: 36, height: 36))
+            make.leading.equalTo(hangupBtn.snp.trailing).offset(20.scaleWidth())
+            make.size.equalTo(CGSize(width: 28.scaleWidth(), height: 28.scaleWidth()))
         }
     }
     
@@ -73,7 +65,7 @@ class VideoCallerWaitingView: UIView {
         switchCameraBtn.addTarget(self, action: #selector(switchCameraTouchEvent(sender: )), for: .touchUpInside)
     }
     
-    //MARK: Action Event
+    // MARK: Action Event
     func hangupTouchEvent(sender: UIButton) {
         viewModel.hangup()
     }

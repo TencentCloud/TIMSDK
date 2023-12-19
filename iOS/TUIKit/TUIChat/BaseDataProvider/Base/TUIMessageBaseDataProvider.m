@@ -124,6 +124,7 @@
     }
 
     TUIMessageCellData *lastObj = cellDataList.lastObject;
+    lastObj.source = Msg_Source_OnlinePush;
 
     if ([lastObj isKindOfClass:TUITypingStatusCellData.class]) {
         if (![TUIChatConfig defaultConfig].enableTypingStatus) {
@@ -203,13 +204,13 @@
         if (cellData) {
             TUIMessageCellData *dateMsg = [self getSystemMsgFromDate:msg.timestamp];
             if (dateMsg) {
-                if (self.enableMergeSender) {
+                if (self.mergeAdjacentMsgsFromTheSameSender) {
                     dateMsg.showName = NO;
                 }
                 self.msgForDate = msg;
                 [uiMsgs addObject:dateMsg];
             }
-            if (self.enableMergeSender) {
+            if (self.mergeAdjacentMsgsFromTheSameSender) {
                 cellData.showName = NO;
             }
             [uiMsgs addObject:cellData];
@@ -283,38 +284,34 @@
     @weakify(self);
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.msgID isEqualToString:imMsg.msgID]) {
-            NSMutableArray *cellDataList = [self transUIMsgFromIMMsg:@[ imMsg ]];
-            for (TUIMessageCellData *cellData in cellDataList) {
-                if ([cellData.msgID isEqualToString:imMsg.msgID]) {
-                    cellData.messageReceipt = uiMsg.messageReceipt;
-                    break;
-                }
+            if ([uiMsg customReloadCellWithNewMsg:imMsg]) {
+                return;
             }
-            [self preProcessMessage:cellDataList
-                           callback:^{
-                             @strongify(self);
-                             if (cellDataList.count > 0) {
-                                 /**
-                                  * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
-                                  * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
-                                  */
-                                 TUIMessageCellData *cellData = cellDataList.lastObject;
-                                 NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
-                                 if (index < self.uiMsgs.count) {
-                                     [self.dataSource dataProviderDataSourceWillChange:self];
-                                     [self replaceUIMsg:cellData atIndex:index];
-                                     [self.dataSource dataProviderDataSourceChange:self
-                                                                          withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
-                                                                           atIndex:index
-                                                                         animation:YES];
-                                     [self.dataSource dataProviderDataSourceDidChange:self];
-                                 }
-                             }
-                           }];
+            NSMutableArray *newUIMsgs = [self transUIMsgFromIMMsg:@[ imMsg ]];
+            /**
+             * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
+             * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
+             */
+            TUIMessageCellData *newUIMsg = newUIMsgs.lastObject;
+            newUIMsg.messageReceipt = uiMsg.messageReceipt;
+            [self preProcessMessage:@[newUIMsg] callback:^{
+                @strongify(self);
+                NSInteger index = [self.uiMsgs indexOfObject:uiMsg];
+                if (index < self.uiMsgs.count) {
+                    [self.dataSource dataProviderDataSourceWillChange:self];
+                    [self replaceUIMsg:newUIMsg atIndex:index];
+                    [self.dataSource dataProviderDataSourceChange:self
+                                                         withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
+                                                          atIndex:index
+                                                        animation:YES];
+                    [self.dataSource dataProviderDataSourceDidChange:self];
+                }
+            }];
             return;
         }
     }
 }
+
 - (void)dealTypingByStatusCellData:(TUITypingStatusCellData *)stastusData {
     if (1 == stastusData.typingStatus) {
         // 再次收到对方输入中的通知 则重新计时
@@ -693,7 +690,7 @@
 
 - (void)addUIMsg:(TUIMessageCellData *)cellData {
     [self.uiMsgs_ addObject:cellData];
-    if (self.enableMergeSender) {
+    if (self.mergeAdjacentMsgsFromTheSameSender) {
         [self.class updateUIMsgStatus:cellData uiMsgs:self.uiMsgs_];
     }
 }
@@ -704,7 +701,7 @@
         if ([self.dataSource respondsToSelector:@selector(dataProvider:onRemoveHeightCache:)]) {
             [self.dataSource dataProvider:self onRemoveHeightCache:cellData];
         }
-        if (self.enableMergeSender) {
+        if (self.mergeAdjacentMsgsFromTheSameSender) {
             [self.class updateUIMsgStatus:cellData uiMsgs:self.uiMsgs_];
         }
     }
@@ -740,7 +737,7 @@
 
 - (void)insertUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs atIndexes:(NSIndexSet *)indexes {
     [self.uiMsgs_ insertObjects:uiMsgs atIndexes:indexes];
-    if (self.enableMergeSender) {
+    if (self.mergeAdjacentMsgsFromTheSameSender) {
         for (TUIMessageCellData *cellData in uiMsgs) {
             [self.class updateUIMsgStatus:cellData uiMsgs:self.uiMsgs_];
         }
@@ -749,7 +746,7 @@
 
 - (void)addUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs {
     [self.uiMsgs_ addObjectsFromArray:uiMsgs];
-    if (self.enableMergeSender) {
+    if (self.mergeAdjacentMsgsFromTheSameSender) {
         for (TUIMessageCellData *cellData in uiMsgs) {
             [self.class updateUIMsgStatus:cellData uiMsgs:self.uiMsgs_];
         }
@@ -782,7 +779,7 @@
         
         [self.uiMsgs_ replaceObjectAtIndex:index withObject:cellData];
         
-        if (self.enableMergeSender) {
+        if (self.mergeAdjacentMsgsFromTheSameSender) {
             [self.class updateUIMsgStatus:cellData uiMsgs:self.uiMsgs_];
         }
     } else {
@@ -962,7 +959,9 @@ static const int kOfflinePushVersion = 1;
         pushInfo.AndroidHuaWeiCategory = @"IM";
         pushInfo.AndroidVIVOCategory = @"IM";
     }
-    if ([self isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] || [self isGroupAVChatRoom:conversationData.groupType]) {
+
+    if ([self isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] ||
+        [self isGroupAVChatRoom:conversationData.groupType]) {
         message.needReadReceipt = NO;
     }
 
@@ -997,6 +996,28 @@ static const int kOfflinePushVersion = 1;
           }
           fail(code, desc);
         }];
+}
+
+- (void)getLastMessage:(BOOL)isFromLocal succ:(void (^)(V2TIMMessage *message))succ fail:(V2TIMFail)fail; {
+    V2TIMMessageListGetOption *option = [[V2TIMMessageListGetOption alloc] init];
+    if (self.conversationModel.userID.length > 0) {
+        option.userID = self.conversationModel.userID;
+    }
+    if (self.conversationModel.groupID.length > 0) {
+        option.groupID = self.conversationModel.groupID;
+    }
+    option.getType = isFromLocal ? V2TIM_GET_LOCAL_OLDER_MSG : V2TIM_GET_CLOUD_OLDER_MSG;
+    option.lastMsg = nil;
+    option.count = 1;
+    [[V2TIMManager sharedInstance] getHistoryMessageList:option succ:^(NSArray<V2TIMMessage *> *msgs) {
+        if (succ) {
+            succ(msgs.count > 0 ? msgs.firstObject : nil);
+        }
+    } fail:^(int code, NSString *desc) {
+        if (fail) {
+            fail(code, desc);
+        }
+    }];
 }
 
 + (BOOL)isGroupCommunity:(NSString *)groupType groupID:(NSString *)groupID {

@@ -56,7 +56,7 @@
     if (data.duration > 0) {
         _duration.text = [NSString stringWithFormat:@"%d:%.2d", (int)data.duration / 60, (int)data.duration % 60];
     } else {
-        _duration.text = @"0:00";
+        _duration.text = @"0:01";
     }
 
     if (self.voiceData.innerMessage.localCustomInt == 0 && self.voiceData.direction == MsgDirectionIncoming) self.voiceReadPoint.hidden = NO;
@@ -68,14 +68,25 @@
           [self startAnimating];
       } else {
           [self stopAnimating];
-          self.duration.text = [NSString stringWithFormat:@"%d:%.2d", (int)data.duration / 60, (int)data.duration % 60];
+          if (data.duration > 0) {
+              self.duration.text = [NSString stringWithFormat:@"%d:%.2d", (int)data.duration / 60, (int)data.duration % 60];
+          } else {
+              self.duration.text = @"0:01";
+          }
       }
     }];
 
-    data.playTime = ^(CGFloat time) {
-      @strongify(self);
-      self.duration.text = [NSString stringWithFormat:@"%d:%.2d", (int)time / 60, (int)time % 60];
-    };
+    [[RACObserve(data, currentTime) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSNumber *time) {
+        @strongify(self);
+        if (!data.isPlaying) {
+            return;
+        }
+        int min = (int)data.currentTime / 60;
+        int sec = (int)data.currentTime % 60;
+        NSString *forMatStr = [NSString stringWithFormat:@"%d:%.2d", min, sec];
+        self.duration.text = [NSString stringWithFormat:@"%d:%.2d", (int)data.currentTime / 60, (int)data.currentTime % 60];
+    }];
+
     
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];

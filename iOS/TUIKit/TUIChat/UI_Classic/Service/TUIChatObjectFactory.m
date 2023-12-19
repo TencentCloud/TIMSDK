@@ -50,6 +50,7 @@
     NSString *avatarUrl = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_AvatarUrl asClass:NSString.class];
     NSString *highlightKeyword = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_HighlightKeyword asClass:NSString.class];
     V2TIMMessage *locateMessage = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_LocateMessage asClass:V2TIMMessage.class];
+    NSString * atTipsStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_AtTipsStr asClass:NSString.class];
     NSArray * atMsgSeqs = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs asClass:NSArray.class];
     NSString *draft = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Draft asClass:NSString.class];
     NSString *isEnableVideoInfoStr = [param tui_objectForKey:TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call asClass:NSString.class];
@@ -65,15 +66,16 @@
     conversationModel.conversationID = conversationID;
     conversationModel.avatarImage = avatarImage;
     conversationModel.faceUrl = avatarUrl;
+    conversationModel.atTipsStr = atTipsStr;
     conversationModel.atMsgSeqs = [NSMutableArray arrayWithArray:atMsgSeqs];
     conversationModel.draftText = draft;
 
     if ([isEnableVideoInfoStr isEqualToString:@"0"]) {
-        conversationModel.enabelVideo = NO;
+        conversationModel.enableVideoCall = NO;
     }
     
     if ([isEnableAudioInfoStr isEqualToString:@"0"]) {
-        conversationModel.enabelAudio = NO;
+        conversationModel.enableAudioCall = NO;
     }
     
     if ([isEnableRoomInfoStr isEqualToString:@"0"]) {

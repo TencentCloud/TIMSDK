@@ -16,7 +16,7 @@ class CallWaitingHintView: UIView {
         waitingInviteLabel.font = UIFont.boldSystemFont(ofSize: 14.0)
         waitingInviteLabel.backgroundColor = UIColor.clear
         waitingInviteLabel.textAlignment = .center
-        waitingInviteLabel.text = TUICallKitLocalize(key: "Demo.TRTC.Calling.calleeTip")
+        waitingInviteLabel.text = TUICallKitLocalize(key: "TUICallKit.calleeTip")
         return waitingInviteLabel
     }()
     
@@ -28,7 +28,7 @@ class CallWaitingHintView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()

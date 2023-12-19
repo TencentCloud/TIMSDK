@@ -280,6 +280,8 @@
 "TUIKitMessageTypeSecurityStrikeImage" = "محتوى حساس متضمن ولا يمكن مشاهدته";
 "TUIKitMessageTypeSecurityStrikeTranslate" = "يتضمن محتوى حساسًا، فشلت الترجمة";
 
+"TUIKitMessageTypeOtherUseMic" = "الميكروفون يتم استخدامه بواسطة وظيفة أخرى، غير قادر على التسجيل.";
+
 "TUIKitMessageReadPartRead" = "شخص قرأ";
 "TUIKitMessageReadPartUnread" = "غير مقروء";
 "TUIKitMessageReadPartDisable" = "بدون حالة";
@@ -303,6 +305,8 @@
 "TUIKitMoreLinkDetails" = "عرض التفاصيل >>";
 "TUIKitMorePoll" = "استطلاع";
 "TUIKitMoreGroupNote" = "ملاحظة المجموعة";
+
+"TUIKitFileSizeCheckLimited" = "تم تجاوز الحد الأقصى للحجم";
 
 "TUIKitCallInviteYouVideoCall" = "يدعوك لمكالمة فيديو";
 "TUIKitCallTurningOnMute" = "تشغيل الصوت";
@@ -686,6 +690,9 @@
 "TUICustomerServiceCommonPhraseShipping" = "ما هو تاريخ الشحن؟";
 "TUICustomerServiceCommonPhraseDelivery" = "أي نوع من التسليم السريع؟";
 "TUICustomerServiceCommonPhraseArrive" = "متى ستصل؟";
+
+"TUIChatBotAccounts" = "إنسان آلي";
+"TUIChatBotChangeQuestion" = "غيره";
 
 "TUIConversationGroupAll" = "الكل";
 "TUIConversationGroupUnread" = "غير مقروءة";

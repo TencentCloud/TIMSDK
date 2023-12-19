@@ -68,8 +68,8 @@
 + (NSMutableArray *)formatAbstractSendDetailList:(NSArray *)originAbstractList {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:3];
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    style.lineSpacing = 4;
     style.alignment = isRTL()? NSTextAlignmentRight:NSTextAlignmentLeft;
+    style.lineBreakMode =  NSLineBreakByTruncatingTail;
     NSDictionary *attribute = @{
         NSForegroundColorAttributeName : [UIColor colorWithRed:187 / 255.0 green:187 / 255.0 blue:187 / 255.0 alpha:1 / 1.0],
         NSFontAttributeName : [UIFont systemFontOfSize:12.0],

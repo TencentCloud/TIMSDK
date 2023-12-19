@@ -148,18 +148,6 @@
 
 - (void)updateRootMsg {
     TUIMessageCellData *data = self.alertViewCellData;
-    TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
-    if ([data isKindOfClass:TUITextMessageCellData.class]) {
-        layout = TUIMessageCellLayout.incommingTextMessageLayout;
-    }
-    if ([data isKindOfClass:TUIReferenceMessageCellData.class]) {
-        layout = TUIMessageCellLayout.incommingTextMessageLayout;
-    }
-    if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
-        layout = [TUIMessageCellLayout incommingVoiceMessageLayout];
-    }
-    self.alertViewCellData.cellLayout = layout;
-    self.alertViewCellData.direction = MsgDirectionIncoming;
     self.alertViewCellData.showAvatar = NO;
     self.alertViewCellData.showMessageModifyReplies = NO;
 }
@@ -290,7 +278,11 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return [self.messageCellConfig getHeightFromMessageCellData:self.cellData];
+        CGFloat margin = 0;
+        if (self.cellData.sameToNextMsgSender) {
+            margin = 10;
+        }
+        return [self.messageCellConfig getHeightFromMessageCellData:self.cellData] + margin;
     }
     
     TUICommonCellData *data = [self members][indexPath.row];

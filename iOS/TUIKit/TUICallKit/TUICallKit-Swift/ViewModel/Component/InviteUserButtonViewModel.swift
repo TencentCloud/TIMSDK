@@ -15,10 +15,10 @@ class InviteUserButtonViewModel {
     
     let mediaTypeObserver = Observer()
     let mediaType: Observable<TUICallMediaType> = Observable(.unknown)
-
+    
     init() {
         mediaType.value = TUICallState.instance.mediaType.value
-
+        
         registerObserve()
     }
     
@@ -32,13 +32,12 @@ class InviteUserButtonViewModel {
             self.mediaType.value = newValue
         }
     }
-
+    
     func inviteUser() {
-        let navigationController = UINavigationController(rootViewController: SelectGroupMemberViewController())
-        navigationController.modalPresentationStyle = .fullScreen
-        navigationController.navigationBar.barTintColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
+        let selectGroupMemberVC = SelectGroupMemberViewController()
+        selectGroupMemberVC.modalPresentationStyle = .fullScreen
         let keyWindow = TUICallKitCommon.getKeyWindow()
-        keyWindow?.rootViewController?.present(navigationController, animated: false)
+        keyWindow?.rootViewController?.present(selectGroupMemberVC, animated: false)
     }
     
     func tui_valueCallback(param: [AnyHashable: Any]) {
@@ -51,7 +50,7 @@ class InviteUserButtonViewModel {
         for user in selectUserList {
             userIds.append(user.userId)
         }
-
+        
         CallEngineManager.instance.inviteUser(userIds: userIds)
     }
 }

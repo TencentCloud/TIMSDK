@@ -1,6 +1,6 @@
 //
 //  TUICallRecordCallsViewController.swift
-//  
+//
 //
 //  Created by vincepzhang on 2023/8/28.
 //
@@ -56,7 +56,7 @@ class TUICallRecordCallsViewController: UIViewController {
         let button = UIButton(type: .custom)
         button.setTitle(TUICallKitLocalize(key: "TUICallKit.Recents.done"), for: .normal)
         button.contentHorizontalAlignment = .right
-        button.setTitleColor(TUICoreDefineConvert.getTUICallKitDynamicColor(colorKey: "callkit_nav_title_text_color",
+        button.setTitleColor(TUICoreDefineConvert.getTUICallKitDynamicColor(colorKey: "callkit_nav_item_title_text_color",
                                                                             defaultHex: "#000000"), for: .normal)
         button.titleLabel?.sizeToFit()
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -150,7 +150,7 @@ class TUICallRecordCallsViewController: UIViewController {
         unregisterObserve()
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     override func viewDidLoad() {
         super.viewDidLoad()
         constructViewHierarchy()

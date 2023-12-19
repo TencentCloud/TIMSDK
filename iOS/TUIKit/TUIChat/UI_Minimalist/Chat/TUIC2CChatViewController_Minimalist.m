@@ -116,6 +116,7 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
 
     V2TIMMessage *msg = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
+    [msg setIsExcludedFromContentModeration:YES];
     TUISendMessageAppendParams *appendParams = [[TUISendMessageAppendParams alloc] init];
     appendParams.isSendPushInfo = NO;
     appendParams.isOnlineUserOnly = YES;

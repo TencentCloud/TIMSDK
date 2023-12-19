@@ -20,14 +20,14 @@ class SingleCallVideoLayoutModel {
     let selfCallStatus: Observable<TUICallStatus> = Observable(.none)
     let remoteUserList: Observable<[User]> = Observable(Array())
     let isCameraOpen: Observable<Bool> = Observable(false)
-
+    
     init() {
         selfUser.value = TUICallState.instance.selfUser.value
         mediaType.value = TUICallState.instance.mediaType.value
         selfCallStatus.value = TUICallState.instance.selfUser.value.callStatus.value
         remoteUserList.value = TUICallState.instance.remoteUserList.value
         isCameraOpen.value = TUICallState.instance.isCameraOpen.value
-
+        
         registerObserve()
     }
     
@@ -60,8 +60,8 @@ class SingleCallVideoLayoutModel {
             self.isCameraOpen.value = newValue
         }
     }
-
-    //MARK: CallEngine Method
+    
+    // MARK: CallEngine Method
     func openCamera(videoView: TUIVideoView) {
         CallEngineManager.instance.openCamera(videoView: videoView)
     }
@@ -77,4 +77,12 @@ class SingleCallVideoLayoutModel {
     func stopRemoteView(user: User) {
         CallEngineManager.instance.stopRemoteView(user: user)
     }
+    
+    // MARK: TUICallState isShowFullScreen
+    func clickFullScreen() {
+        if (TUICallState.instance.selfUser.value.callStatus.value == .accept) {
+            TUICallState.instance.isShowFullScreen.value = !TUICallState.instance.isShowFullScreen.value
+        }
+    }
+    
 }

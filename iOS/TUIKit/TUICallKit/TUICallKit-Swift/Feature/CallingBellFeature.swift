@@ -1,14 +1,19 @@
 //
-//  CallKitController.swift
-//  Alamofire
+//  CallingBellFeature.swift
+//  TUICallKit
 //
 //  Created by vincepzhang on 2022/12/30.
 //
 
 import Foundation
 import AVFAudio
-import TXLiteAVSDK_TRTC
 import TUICallEngine
+
+#if USE_TRTC
+import TXLiteAVSDK_TRTC
+#else
+import TXLiteAVSDK_Professional
+#endif
 
 let CALLKIT_AUDIO_DIAL_ID: Int32 = 48
 
@@ -112,7 +117,7 @@ class CallingBellFeature: NSObject, AVAudioPlayerDelegate {
         player = nil
     }
     
-    //MARK: AVAudioPlayerDelegate
+    // MARK: AVAudioPlayerDelegate
     internal func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if loop {
             player.play()

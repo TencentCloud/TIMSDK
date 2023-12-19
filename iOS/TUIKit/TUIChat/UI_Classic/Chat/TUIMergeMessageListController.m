@@ -30,6 +30,7 @@
 #import "TUIVideoMessageCell.h"
 #import "TUIVoiceMessageCell.h"
 #import "TUIMessageCellConfig.h"
+#import "TUIChatConfig.h"
 
 #define STR(x) @ #x
 
@@ -239,6 +240,15 @@
 
 #pragma mark - TUIMessageCellDelegate
 - (void)onSelectMessage:(TUIMessageCell *)cell {
+    
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageClicked:messageCellData:)]) {
+        BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onMessageClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
+
     if ([cell isKindOfClass:[TUIImageMessageCell class]]) {
         [self showImageMessage:(TUIImageMessageCell *)cell];
     }
@@ -272,7 +282,7 @@
     }
 }
 
-- (void)scrollLocateMessage:(V2TIMMessage *)locateMessage matchKeyword:(NSString *)msgAbstract {
+- (void)scrollToLocateMessage:(V2TIMMessage *)locateMessage matchKeyword:(NSString *)msgAbstract {
     CGFloat offsetY = 0;
     NSInteger index = 0;
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
@@ -373,7 +383,7 @@
               if ([cell isKindOfClass:TUIReplyMessageCell.class]) {
                   [self jumpDetailPageByMessage:message];
               } else if ([cell isKindOfClass:TUIReferenceMessageCell.class]) {
-                  [self scrollLocateMessage:message matchKeyword:msgAbstract];
+                  [self scrollToLocateMessage:message matchKeyword:msgAbstract];
               }
             }];
 }

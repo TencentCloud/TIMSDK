@@ -18,7 +18,7 @@
     pushInfo.title = @"";
     pushInfo.desc = TUICallingLocalize(@"TUICallKit.have.new.invitation");
     // iOS push type: if you want user VoIP, please modify type to TUICallIOSOfflinePushTypeVoIP
-    pushInfo.iOSPushType = TUICallIOSOfflinePushTypeVoIP;
+    pushInfo.iOSPushType = TUICallIOSOfflinePushTypeAPNs;
     pushInfo.ignoreIOSBadge = NO;
     pushInfo.iOSSound = @"phone_ringing.mp3";
     pushInfo.AndroidSound = @"phone_ringing";

@@ -355,7 +355,7 @@ static UIView *gCustomTopView;
     TUIMessageController_Minimalist *vc = [[TUIMessageController_Minimalist alloc] init];
     vc.hightlightKeyword = self.highlightKeyword;
     vc.locateMessage = self.locateMessage;
-    vc.isMsgNeedReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
+    vc.isMsgNeedReadReceipt = self.conversationData.msgNeedReadReceipt && [TUIChatConfig defaultConfig].msgNeedReadReceipt;
     _messageController = vc;
     _messageController.delegate = self;
     [_messageController setConversation:self.conversationData];
@@ -1097,21 +1097,19 @@ static UIView *gCustomTopView;
            * Forward to currernt chat vc
            */
           if ([convCellData.conversationID isEqualToString:self.conversationData.conversationID]) {
-              for (V2TIMMessage *imMsg in msgs) {
-                  dispatch_async(dispatch_get_main_queue(), ^{
-                    /**
-                     * 下面的函数涉及到 UI 的刷新，要放在主线程操作
-                     * The following functions involve the refresh of the UI and should be called on the main thread
-                     */
-                    [self.messageController sendMessage:imMsg];
-                  });
+              dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+              dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+              dispatch_async(queue, ^{
+                  for (V2TIMMessage *imMsg in msgs) {
+                      dispatch_async(dispatch_get_main_queue(), ^{
+                          [self.messageController sendMessage:imMsg];
+                          dispatch_semaphore_signal(semaphore);
+                      });
 
-                  /**
-                   * 此处的延时操作是为了在批量逐条转发时，尽可能保证接收端的顺序
-                   * The delay here is to ensure the order of the receiving end as much as possible when forwarding in batches one by one
-                   */
-                  [NSThread sleepForTimeInterval:timeInterval];
-              }
+                      dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                      [NSThread sleepForTimeInterval:timeInterval];
+                  }
+              });
               return;
           }
 
@@ -1120,7 +1118,7 @@ static UIView *gCustomTopView;
            * Forward to other chat user
            */
           for (V2TIMMessage *message in msgs) {
-              message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
+              message.needReadReceipt = self.conversationData.msgNeedReadReceipt && [TUIChatConfig defaultConfig].msgNeedReadReceipt;
               [TUIMessageDataProvider sendMessage:message
                   toConversation:convCellData
                   appendParams:appendParams
@@ -1276,7 +1274,7 @@ static UIView *gCustomTopView;
               [self.messageController sendMessage:message];
           } else {
               // Send to other conversation
-              message.needReadReceipt = [TUIChatConfig defaultConfig].msgNeedReadReceipt;
+              message.needReadReceipt = self.conversationData.msgNeedReadReceipt && [TUIChatConfig defaultConfig].msgNeedReadReceipt;
               [TUIMessageBaseDataProvider sendMessage:message
                   toConversation:conversation
                   appendParams:appendParams

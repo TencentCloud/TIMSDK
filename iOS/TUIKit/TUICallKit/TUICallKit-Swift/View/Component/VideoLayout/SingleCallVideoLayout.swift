@@ -33,7 +33,7 @@ class SingleCallVideoLayout: UIView {
         if VideoFactory.instance.viewMap[remoteUser.id.value] == nil {
             let _ = VideoFactory.instance.createVideoView(userId: remoteUser.id.value, frame: CGRect.zero)
         }
-        return  VideoFactory.instance.viewMap[remoteUser.id.value]?.videoView ?? VideoView(frame: CGRect.zero)
+        return VideoFactory.instance.viewMap[remoteUser.id.value]?.videoView ?? VideoView(frame: CGRect.zero)
     }
     var remoteUser: User?
     
@@ -44,7 +44,7 @@ class SingleCallVideoLayout: UIView {
         if viewModel.mediaType.value != .video {
             return
         }
-
+        
         initPreView()
         registerObserveState()
     }
@@ -92,7 +92,7 @@ class SingleCallVideoLayout: UIView {
         }
     }
     
-    //MARK: update UI
+    // MARK: update UI
     func switchPreview() {
         if isLocalPreViewLarge {
             UIView.animate(withDuration: 0.3) {
@@ -100,9 +100,6 @@ class SingleCallVideoLayout: UIView {
                 self.remotePreView.frame = kCallKitSingleLargeVideoViewFrame
             } completion: { finished in
                 self.sendSubviewToBack(self.remotePreView)
-                
-                self.localPreView.isUserInteractionEnabled = true
-                self.remotePreView.isUserInteractionEnabled = false
             }
             isLocalPreViewLarge = false
         } else {
@@ -111,9 +108,6 @@ class SingleCallVideoLayout: UIView {
                 self.remotePreView.frame = kCallKitSingleSmallVideoViewFrame
             } completion: { finished in
                 self.sendSubviewToBack(self.localPreView)
-                
-                self.localPreView.isUserInteractionEnabled = false
-                self.remotePreView.isUserInteractionEnabled = true
             }
             isLocalPreViewLarge = true
         }
@@ -127,9 +121,6 @@ class SingleCallVideoLayout: UIView {
             self.remotePreView.frame = kCallKitSingleLargeVideoViewFrame
         } completion: { finished in
             self.sendSubviewToBack(self.remotePreView)
-            
-            self.localPreView.isUserInteractionEnabled = true
-            self.remotePreView.isUserInteractionEnabled = false
         }
         isLocalPreViewLarge = false
     }
@@ -155,10 +146,10 @@ class SingleCallVideoLayout: UIView {
     func initLocalPreView() {
         localPreView.frame = kCallKitSingleLargeVideoViewFrame
         localPreView.delegate = self
-        localPreView.isUserInteractionEnabled = false
+        localPreView.isUserInteractionEnabled = true
         localPreView.isHidden = false
         addSubview(localPreView)
-                
+        
         if viewModel.selfCallStatus.value == .waiting {
             viewModel.openCamera(videoView: localPreView)
         } else if viewModel.selfCallStatus.value == .accept && viewModel.isCameraOpen.value == true {
@@ -176,6 +167,7 @@ class SingleCallVideoLayout: UIView {
         guard let remoteUser = self.viewModel.remoteUserList.value.first else { return }
         self.remoteUser = remoteUser
         remotePreView.frame = kCallKitSingleSmallVideoViewFrame
+        remotePreView.isUserInteractionEnabled = true
         remotePreView.delegate = self
         remotePreView.isHidden = true
         addSubview(self.remotePreView)
@@ -190,11 +182,14 @@ class SingleCallVideoLayout: UIView {
     }
 }
 
-extension  SingleCallVideoLayout: VideoViewDelegate {
+extension SingleCallVideoLayout: VideoViewDelegate {
     func tapGestureAction(tapGesture: UITapGestureRecognizer) {
         if  tapGesture.view?.frame.size.width == CGFloat(kCallKitSingleSmallVideoViewWidth) {
             switchPreview()
+        } else {
+            viewModel.clickFullScreen()
         }
+        
         if viewModel.isCameraOpen.value == false && self.isLocalPreViewLarge == false {
             self.localPreView.isHidden = true
         } else {
@@ -203,7 +198,7 @@ extension  SingleCallVideoLayout: VideoViewDelegate {
     }
     
     func panGestureAction(panGesture: UIPanGestureRecognizer) {
-        if  panGesture.view?.frame.size.width != CGFloat(kCallKitSingleSmallVideoViewWidth) { return }
+        if panGesture.view?.frame.size.width != CGFloat(kCallKitSingleSmallVideoViewWidth) { return }
         
         let smallView = panGesture.view?.superview
         if panGesture.state == .changed {

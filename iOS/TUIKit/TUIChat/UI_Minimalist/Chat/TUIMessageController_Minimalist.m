@@ -44,7 +44,7 @@
 
     if (self.conversationData.atMsgSeqs.count > 0) {
         TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
-        tongue.type = TUIChatSmallTongueType_SomeoneAtMe;
+        tongue.type = TUIChatSmallTongueType_SomeoneAt;
         tongue.atMsgSeqs = [self.conversationData.atMsgSeqs copy];
         [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
     }
@@ -114,11 +114,11 @@
         [self.conversationData.atMsgSeqs removeObject:@(deleteSeq)];
         if (self.conversationData.atMsgSeqs.count > 0) {
             TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
-            tongue.type = TUIChatSmallTongueType_SomeoneAtMe;
+            tongue.type = TUIChatSmallTongueType_SomeoneAt;
             tongue.atMsgSeqs = [self.conversationData.atMsgSeqs copy];
             [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
         } else {
-            [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_SomeoneAtMe];
+            [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_SomeoneAt];
         }
     }
 }
@@ -168,7 +168,7 @@
          * 去掉 "有人 @ 我" 小舌头
          * Remove the "someone @ me" bottom-banner-tips
          */
-        [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_SomeoneAtMe];
+        [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_SomeoneAt];
     } else {
         if (self.indicatorView.isAnimating) {
             [self.indicatorView stopAnimating];
@@ -209,9 +209,9 @@
     self.conversationData = conversationData;
     self.messageDataProvider = [[TUIMessageSearchDataProvider alloc] initWithConversationModel:self.conversationData];
     self.messageDataProvider.dataSource = self;
-    self.messageDataProvider.enableMergeSender = YES;
+    self.messageDataProvider.mergeAdjacentMsgsFromTheSameSender = YES;
     if (self.locateMessage) {
-        [self loadLocateMessages:NO];
+        [self loadAndScrollToLocateMessages:NO isHighlight:YES];
     } else {
         [[self messageSearchDataProvider] removeAllSearchData];
         [self loadMessages:YES];
@@ -223,7 +223,7 @@
     return (TUIMessageSearchDataProvider *)self.messageDataProvider;
 }
 
-- (void)loadLocateMessages:(BOOL)firstLoad {
+- (void)loadAndScrollToLocateMessages:(BOOL)isFirstLoad isHighlight:(BOOL)isHighlight{
     if (!self.locateMessage && self.locateGroupMessageSeq == 0) {
         return;
     }
@@ -234,13 +234,15 @@
                 ConversationInfo:self.conversationData
                     SucceedBlock:^(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *_Nonnull newMsgs) {
                       [self.indicatorView stopAnimating];
+                      [self.bottomIndicatorView stopAnimating];
                       self.indicatorView.mm_h = 0;
                       self.bottomIndicatorView.mm_h = 0;
                       [self.tableView reloadData];
-                      if (!firstLoad) {
+
+                      if (!isFirstLoad) {
                           /**
-                           * 在消息回复等跳转场景中，先将 tableview 滚动到最底部，再结合 scrollLocateMessage 来实现滚动定位效果
-                           * In jump scenarios such as message reply, first scroll the tableview to the bottom, and then combine scrollLocateMessage to achieve
+                           * 在消息回复等跳转场景中，先将 tableview 滚动到最底部，再结合 scrollToLocateMessage 来实现滚动定位效果
+                           * In jump scenarios such as message reply, first scroll the tableview to the bottom, and then combine scrollToLocateMessage to achieve
                            * scroll positioning effect
                            */
 
@@ -255,15 +257,17 @@
 
                       dispatch_async(dispatch_get_main_queue(), ^{
                         @strongify(self);
-                        [self scrollLocateMessage:firstLoad];
-                        [self highlightKeyword];
+                        [self scrollToLocateMessage:isFirstLoad];
+                        if (isHighlight) {
+                            [self highlightKeyword];
+                        }
                       });
                     }
-                       FailBlock:^(int code, NSString *desc){
-                       }];
+                    FailBlock:^(int code, NSString *desc){
+                    }];
 }
 
-- (void)scrollLocateMessage:(BOOL)firstLoad {
+- (void)scrollToLocateMessage:(BOOL)isFirstLoad {
     /**
      * 先找到 locateMsg 的坐标偏移
      * First find the coordinate offset of locateMsg
@@ -296,7 +300,7 @@
     }
 
     if (offsetY > TMessageController_Header_Height) {
-        if (firstLoad) {
+        if (isFirstLoad) {
             [self.tableView scrollRectToVisible:CGRectMake(0, self.tableView.contentOffset.y + offsetY, Screen_Width, self.tableView.bounds.size.height)
                                        animated:NO];
         } else {
@@ -487,7 +491,7 @@
         }
     }
     if (memoryExist) {
-        [self scrollLocateMessage:NO];
+        [self scrollToLocateMessage:NO];
         [self highlightKeyword];
         return;
     }
@@ -495,7 +499,7 @@
     TUIMessageSearchDataProvider *provider = (TUIMessageSearchDataProvider *)self.messageDataProvider;
     provider.isNewerNoMoreMsg = NO;
     provider.isOlderNoMoreMsg = NO;
-    [self loadLocateMessages:NO];
+    [self loadAndScrollToLocateMessages:NO isHighlight:YES];
 }
 
 #pragma mark - TUIMessageBaseDataProviderDataSource
@@ -563,31 +567,45 @@
 - (void)onChatSmallTongueClick:(TUIChatSmallTongue_Minimalist *)tongue {
     switch (tongue.type) {
         case TUIChatSmallTongueType_ScrollToBoom: {
-            [self scrollToBottom:YES];
+            @weakify(self)
+            [self.messageDataProvider getLastMessage:YES succ:^(V2TIMMessage * _Nonnull message) {
+                @strongify(self)
+                if (!message) return;
+                self.locateMessage = message;
+                for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
+                    if ([self isLocateMessage:cellData]) {
+                        [self scrollToLocateMessage:NO];
+                        return;
+                    }
+                }
+                [self loadAndScrollToLocateMessages:NO isHighlight:NO];
+            } fail:^(int code, NSString *desc) {
+                NSLog(@"getLastMessage failed");
+            }];
         } break;
         case TUIChatSmallTongueType_ReceiveNewMsg: {
             [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_ReceiveNewMsg];
             TUIMessageCellData *cellData = self.receiveMsgs.firstObject;
             if (cellData) {
                 self.locateMessage = cellData.innerMessage;
-                [self scrollLocateMessage:NO];
+                [self scrollToLocateMessage:NO];
                 [self highlightKeyword];
             }
             [self.receiveMsgs removeAllObjects];
         } break;
-        case TUIChatSmallTongueType_SomeoneAtMe: {
-            [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_SomeoneAtMe];
+        case TUIChatSmallTongueType_SomeoneAt: {
+            [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_SomeoneAt];
             [self.conversationData.atMsgSeqs removeAllObjects];
             ;
             self.locateGroupMessageSeq = [tongue.atMsgSeqs.firstObject integerValue];
             for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
                 if ([self isLocateMessage:cellData]) {
-                    [self scrollLocateMessage:NO];
+                    [self scrollToLocateMessage:NO];
                     [self highlightKeyword];
                     return;
                 }
             }
-            [self loadLocateMessages:NO];
+            [self loadAndScrollToLocateMessages:NO isHighlight:YES];
         } break;
         default:
             break;

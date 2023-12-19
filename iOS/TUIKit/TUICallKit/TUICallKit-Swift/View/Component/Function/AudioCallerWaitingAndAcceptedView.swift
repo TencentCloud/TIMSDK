@@ -11,65 +11,55 @@ import UIKit
 class AudioCallerWaitingAndAcceptedView : UIView {
     
     let viewModel = AudioCallerWaitingAndAcceptedViewModel()
-    let isMicMuteObserver = Observer()
-    let audioDeviceObserver = Observer()
-        
+    
     lazy var muteMicBtn: BaseControlButton = {
-        weak var weakSelf = self
+        let titleKey = viewModel.isMicMute.value ? "TUICallKit.muted" : "TUICallKit.unmuted"
         let muteAudioBtn = BaseControlButton.create(frame: CGRect.zero,
-                                                 title: TUICallKitLocalize(key: "Demo.TRTC.Calling.mic") ?? "" ,
-                                                 imageSize: kBtnSmallSize, buttonAction: { sender in
-            weakSelf?.muteMicEvent(sender: sender)
+                                                    title: TUICallKitLocalize(key: titleKey) ?? "",
+                                                    imageSize: kBtnSmallSize, buttonAction: { [weak self] sender in
+            guard let self = self else { return }
+            self.muteMicEvent(sender: sender)
         })
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_mute") {
+        
+        let imageName = viewModel.isMicMute.value ? "icon_mute_on" : "icon_mute"
+        if let image = TUICallKitCommon.getBundleImage(name: imageName) {
             muteAudioBtn.updateImage(image: image)
         }
-        muteAudioBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#242424"))
+        muteAudioBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
         return muteAudioBtn
     }()
     
     lazy var hangupBtn: BaseControlButton = {
-        weak var weakSelf = self
         let hangupBtn = BaseControlButton.create(frame: CGRect.zero,
-                                                 title: TUICallKitLocalize(key: "Demo.TRTC.Calling.hangup") ?? "" ,
-                                                 imageSize: kBtnLargeSize, buttonAction: { sender in
-            weakSelf?.hanguphEvent(sender: sender)
+                                                 title: TUICallKitLocalize(key: "TUICallKit.hangup") ?? "",
+                                                 imageSize: kBtnSmallSize, buttonAction: { [weak self] sender in
+            guard let self = self else { return }
+            self.hangupEvent(sender: sender)
         })
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_hangup") {
+        if let image = TUICallKitCommon.getBundleImage(name: "icon_hangup") {
             hangupBtn.updateImage(image: image)
         }
-        hangupBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#242424"))
+        hangupBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
         return hangupBtn
     }()
     
     lazy var changeSpeakerBtn: BaseControlButton = {
-        weak var weakSelf = self
+        let titleKey = (viewModel.audioDevice.value == .speakerphone) ? "TUICallKit.speakerPhone" : "TUICallKit.earpiece"
         let changeSpeakerBtn = BaseControlButton.create(frame: CGRect.zero,
-                                                        title: TUICallKitLocalize(key: "Demo.TRTC.Calling.speaker") ?? "" ,
-                                                        imageSize: kBtnSmallSize, buttonAction: { sender in
-            weakSelf?.changeSpeakerEvent(sender: sender)
+                                                        title: TUICallKitLocalize(key: titleKey) ?? "",
+                                                        imageSize: kBtnSmallSize, buttonAction: { [weak self] sender in
+            guard let self = self else { return }
+            self.changeSpeakerEvent(sender: sender)
         })
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_handsfree") {
+        let imageName = (viewModel.audioDevice.value == .speakerphone) ? "icon_handsfree_on" : "icon_handsfree"
+        if let image = TUICallKitCommon.getBundleImage(name: imageName) {
             changeSpeakerBtn.updateImage(image: image)
         }
-        changeSpeakerBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#242424"))
+        changeSpeakerBtn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
         return changeSpeakerBtn
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        viewModel.audioDevice.removeObserver(audioDeviceObserver)
-        viewModel.isMicMute.removeObserver(isMicMuteObserver)
-    }
-    
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -78,34 +68,32 @@ class AudioCallerWaitingAndAcceptedView : UIView {
         activateConstraints()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(muteMicBtn)
         addSubview(hangupBtn)
         addSubview(changeSpeakerBtn)
     }
-
+    
     func activateConstraints() {
         muteMicBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(hangupBtn.snp.leading).offset(-5)
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? 100.scaleWidth() : -100.scaleWidth())
             make.centerY.equalTo(hangupBtn)
             make.size.equalTo(kControlBtnSize)
         }
-        
         hangupBtn.snp.makeConstraints { make in
             make.centerX.equalTo(self)
             make.bottom.equalTo(self.snp.bottom)
             make.size.equalTo(kControlBtnSize)
         }
-        
         changeSpeakerBtn.snp.makeConstraints { make in
-            make.leading.equalTo(self.hangupBtn.snp.trailing).offset(5)
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? -100.scaleWidth() : 100.scaleWidth())
             make.centerY.equalTo(self.hangupBtn)
             make.size.equalTo(kControlBtnSize)
         }
     }
-
-    //MARK: Action Event
+    
+    // MARK: Action Event
     func muteMicEvent(sender: UIButton) {
         viewModel.muteMic()
         updateMuteAudioBtn(mute: viewModel.isMicMute.value == true)
@@ -116,19 +104,23 @@ class AudioCallerWaitingAndAcceptedView : UIView {
         updateChangeSpeakerBtn(isSpeaker: viewModel.audioDevice.value == .speakerphone)
     }
     
-    func hanguphEvent(sender: UIButton) {
+    func hangupEvent(sender: UIButton) {
         viewModel.hangup()
     }
     
-    //MARK: Update UI
+    // MARK: Update UI
     func updateMuteAudioBtn(mute: Bool) {
-        if let image = TUICallKitCommon.getBundleImage(name: mute ? "ic_mute_on" : "ic_mute") {
+        muteMicBtn.updateTitle(title: TUICallKitLocalize(key: mute ? "TUICallKit.muted" : "TUICallKit.unmuted") ?? "")
+        
+        if let image = TUICallKitCommon.getBundleImage(name: mute ? "icon_mute_on" : "icon_mute") {
             muteMicBtn.updateImage(image: image)
         }
     }
     
     func updateChangeSpeakerBtn(isSpeaker: Bool) {
-        if let image = TUICallKitCommon.getBundleImage(name: isSpeaker ? "ic_handsfree_on" : "ic_handsfree") {
+        changeSpeakerBtn.updateTitle(title: TUICallKitLocalize(key: isSpeaker ? "TUICallKit.speakerPhone" : "TUICallKit.earpiece") ?? "")
+        
+        if let image = TUICallKitCommon.getBundleImage(name: isSpeaker ? "icon_handsfree_on" : "icon_handsfree") {
             changeSpeakerBtn.updateImage(image: image)
         }
     }

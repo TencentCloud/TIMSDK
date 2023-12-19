@@ -116,7 +116,13 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 @property(nonatomic, assign, readonly) BOOL isLoadingData;
 @property(nonatomic, assign, readonly) BOOL isNoMoreMsg;
 @property(nonatomic, assign, readonly) BOOL isFirstLoad;
-@property(nonatomic, assign) BOOL enableMergeSender;
+
+/**
+ * 如果相邻的消息都为同一个用户发送，则合并消息展示
+ *
+ * If adjacent messages are sent by the same user, the messages will be merged for display.
+ */
+@property(nonatomic, assign) BOOL mergeAdjacentMsgsFromTheSameSender;
 
 /**
  * loadMessage 请求的分页大小, default is 20
@@ -193,6 +199,8 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
                  Progress:(nullable V2TIMProgress)progress
                 SuccBlock:(nullable V2TIMSucc)succ
                 FailBlock:(nullable V2TIMFail)fail;
+
+- (void)getLastMessage:(BOOL)isFromLocal succ:(void (^)(V2TIMMessage *message))succ fail:(V2TIMFail)fail;
 
 + (void)markC2CMessageAsRead:(NSString *)userID succ:(nullable V2TIMSucc)succ fail:(nullable V2TIMFail)fail;
 

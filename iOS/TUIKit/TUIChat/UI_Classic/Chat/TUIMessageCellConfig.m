@@ -47,6 +47,11 @@ static NSMutableDictionary *gCustomMessageInfoMap = nil;
 
 @end
 
+@implementation TUIMessageCellConfig (MessageCellWidth)
++ (void)setMaxTextSize:(CGSize)maxTextSz {
+    [TUITextMessageCell setMaxTextSize:maxTextSz];
+}
+@end
 #pragma mark - 自定义消息注册 Custom Message Register
 @implementation TUIMessageCellConfig (CustomMessageRegister)
 

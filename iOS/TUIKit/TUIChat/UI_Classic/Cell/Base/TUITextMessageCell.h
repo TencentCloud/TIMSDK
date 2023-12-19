@@ -78,4 +78,6 @@ typedef void (^TUIChatSelectAllContentCallback)(BOOL);
  */
 @property(nonatomic, class) UIFont *incommingTextFont;
 
++ (void)setMaxTextSize:(CGSize)maxTextSz;
+
 @end

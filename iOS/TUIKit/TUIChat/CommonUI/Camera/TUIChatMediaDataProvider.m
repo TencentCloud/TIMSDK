@@ -609,9 +609,15 @@
                              error:&error
                         byAccessor:^(NSURL *newURL) {
                           @strongify(self);
-                          NSData *fileData = [NSData dataWithContentsOfURL:url];
+                          NSData *fileData = [NSData dataWithContentsOfURL:newURL options:NSDataReadingMappedIfSafe error:nil];
                           NSString *fileName = [url lastPathComponent];
                           NSString *filePath = [TUIKit_File_Path stringByAppendingString:fileName];
+                          if (fileData.length > 1e9) { // 1e9 bytes = 1GB
+                                UIAlertController *ac = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitFileSizeCheckLimited) message:nil preferredStyle:UIAlertControllerStyleAlert];
+                                [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
+                                [self.presentViewController presentViewController:ac animated:YES completion:nil];
+                                return;
+                          }
                           if ([NSFileManager.defaultManager fileExistsAtPath:filePath]) {
                               /**
                                * 存在同名文件，对文件名进行递增

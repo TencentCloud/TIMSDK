@@ -13,7 +13,9 @@ class InviteeAvatarCell: UICollectionViewCell {
     private let userIcon = {
         let imageView = UIImageView(frame: CGRect.zero)
         imageView.contentMode = .scaleAspectFill
-        if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 2.0
+        if let image = TUICallKitCommon.getBundleImage(name: "default_user_icon") {
             imageView.image = image
         }
         return imageView
@@ -53,7 +55,7 @@ class InviteeAvatarCell: UICollectionViewCell {
     }
     
     private func setUserIcon() {
-        let userImage: UIImage? = TUICallKitCommon.getBundleImage(name: "userIcon")
+        let userImage: UIImage? = TUICallKitCommon.getBundleImage(name: "default_user_icon")
         
         if user.avatar.value == "" {
             guard let image = userImage else { return }

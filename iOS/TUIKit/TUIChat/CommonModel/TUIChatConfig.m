@@ -26,7 +26,6 @@
         self.enableFloatWindowForCall = YES;
         self.enableMultiDeviceForCall = NO;
         self.timeIntervalForMessageRecall = 120;
-
         [self updateEmojiGroups];
     }
     return self;
@@ -103,5 +102,14 @@
 
     return nil;
 }
+- (TUIChatEventConfig *)eventConfig {
+    if (!_eventConfig) {
+        _eventConfig = [[TUIChatEventConfig alloc] init];
+    }
+    return _eventConfig;
+}
+@end
+
+@implementation TUIChatEventConfig
 
 @end

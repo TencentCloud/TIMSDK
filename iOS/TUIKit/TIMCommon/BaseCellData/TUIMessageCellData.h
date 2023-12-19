@@ -49,6 +49,19 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 };
 
 /**
+ *  消息来源
+ *  可以根据消息的来源做不同的展示逻辑。
+ *
+ *  The source of message
+ *  Different display logic can be done according to the source of the message.
+ */
+typedef NS_ENUM(NSUInteger, TMsgSource) {
+    Msg_Source_Unkown = 0,    // 未知
+    Msg_Source_OnlinePush,    // 后台主动 Push 的消息
+    Msg_Source_GetHistory,    // SDK 主动请求后台拉取的历史消息
+};
+
+/**
  * 【模块名称】TUIMessageCellData
  * 【功能说明】聊天消息单元数据源，配合消息控制器实现消息收发的业务逻辑。
  *  - 用于存储消息管理与逻辑实现所需要的各类数据与信息。包括消息状态、消息发送者 ID 与头像等一系列数据。
@@ -63,7 +76,6 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
  * SDK.
  */
 @interface TUIMessageCellData : TUICommonCellData
-
 /**
  *  Getting cellData according to message
  */
@@ -180,6 +192,12 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 @property(nonatomic, assign) TMsgStatus status;
 
 /**
+ * 消息来源
+ * Message source
+ */
+@property(nonatomic, assign) TMsgSource source;
+
+/**
  * 内层消息
  * IM SDK 提供的消息对象。内含各种获取消息信息的成员函数，包括获取优先级、获取元素索引、获取离线消息配置信息等。
  * 详细信息请参考 TXIMSDK__Plus_iOS\Frameworks\ImSDK_Plus.framework\Headers\V2TIMMessage.h
@@ -274,6 +292,9 @@ typedef NS_ENUM(NSUInteger, TMsgDirection) {
 - (BOOL)canLongPress;
 
 - (BOOL)shouldHide;
+
+/// Custom cell refresh when message modified
+- (BOOL)customReloadCellWithNewMsg:(V2TIMMessage *)newMessage;
 
 /**
  *  根据消息方向（收/发）初始化消息单元

@@ -31,6 +31,7 @@
 #import "TUIVideoMessageCell_Minimalist.h"
 #import "TUIVoiceMessageCell_Minimalist.h"
 #import "TUIMessageCellConfig_Minimalist.h"
+#import "TUIChatConfig.h"
 
 #define STR(x) @ #x
 
@@ -216,6 +217,13 @@
 
 #pragma mark - TUIMessageCellDelegate
 - (void)onSelectMessage:(TUIMessageCell *)cell {
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageClicked:messageCellData:)]) {
+        BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onMessageClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
     if ([cell isKindOfClass:[TUIImageMessageCell_Minimalist class]]) {
         [self showImageMessage:(TUIImageMessageCell_Minimalist *)cell];
     }
@@ -249,7 +257,7 @@
     }
 }
 
-- (void)scrollLocateMessage:(V2TIMMessage *)locateMessage {
+- (void)scrollToLocateMessage:(V2TIMMessage *)locateMessage {
     CGFloat offsetY = 0;
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.innerMessage.msgID isEqualToString:locateMessage.msgID]) {
@@ -342,7 +350,7 @@
               if ([cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
                   [self jumpDetailPageByMessage:message];
               } else if ([cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
-                  [self scrollLocateMessage:message];
+                  [self scrollToLocateMessage:message];
               }
             }];
 }

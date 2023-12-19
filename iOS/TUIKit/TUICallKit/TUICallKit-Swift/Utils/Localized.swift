@@ -8,7 +8,7 @@
 import Foundation
 import TUICore
 
-//MARK: Base
+// MARK: Base
 func TUICallKitBundle() -> Bundle? {
     var bundle: Bundle?
     let onceToken = DispatchSemaphore(value: 1)
@@ -17,7 +17,7 @@ func TUICallKitBundle() -> Bundle? {
         onceToken.signal()
     }
     if bundle == nil {
-        if let bundleUrl = Bundle.main.url(forResource: "TUICallingKitBundle", withExtension: "bundle") {
+        if let bundleUrl = Bundle.main.url(forResource: "TUICallKitBundle", withExtension: "bundle") {
             bundle = Bundle(url: bundleUrl)
         } else {
             var bundleUrl = Bundle.main.url(forResource: "Frameworks", withExtension: nil)
@@ -25,7 +25,7 @@ func TUICallKitBundle() -> Bundle? {
             bundleUrl = bundleUrl?.appendingPathExtension("framework")
             guard let url = bundleUrl else { return nil }
             guard let associateBundle = Bundle(url: url) else { return nil }
-            guard let bundleUrl = associateBundle.url(forResource: "TUICallingKitBundle", withExtension: "bundle") else { return nil }
+            guard let bundleUrl = associateBundle.url(forResource: "TUICallKitBundle", withExtension: "bundle") else { return nil }
             bundle = Bundle(url: bundleUrl)
         }
     }
@@ -33,7 +33,7 @@ func TUICallKitBundle() -> Bundle? {
 }
 
 func TUICallKitLocalizeFromTable(key: String, table: String) -> String? {
-    guard let bundlePath = TUICallKitBundle()?.path(forResource: TUIGlobalization.tk_localizableLanguageKey() ?? "", 
+    guard let bundlePath = TUICallKitBundle()?.path(forResource: TUIGlobalization.getPreferredLanguage() ?? "",
                                                     ofType: "lproj") else { return nil}
     let bundle = Bundle(path: bundlePath)
     return bundle?.localizedString(forKey: key, value: "", table: table)
@@ -44,7 +44,7 @@ func TUICallKitLocalizerFromTableAndCommon(key: String, common: String, table: S
 }
 
 // MARK: CallKit
-let TUICallKit_Localize_TableName = "CallingLocalized"
+let TUICallKit_Localize_TableName = "Localized"
 func TUICallKitLocalize(key: String) -> String? {
     return TUICallKitLocalizeFromTable(key: key, table: TUICallKit_Localize_TableName)
 }

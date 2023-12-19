@@ -247,7 +247,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     
     NSString *businessID = nil;
     BOOL excludeFromHistory = NO;
-    BOOL isCustomerService = NO;
     
     V2TIMSignalingInfo *signalingInfo = [V2TIMManager.sharedInstance getSignallingInfo:message];
     if (signalingInfo) {
@@ -263,7 +262,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     } else {
         // This message is normal custom message
         excludeFromHistory = NO;
-        businessID = [self getCustomBusinessID:message isCustomerService:&isCustomerService];
+        businessID = [self getCustomBusinessID:message];
     }
     
     if (excludeFromHistory) {
@@ -285,8 +284,8 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
                 return data;
             }
         }
-        // CustomerService 场景，不支持的消息直接不展示
-        if (isCustomerService) {
+        // CustomerService、ChatBot 场景，不支持的消息直接不展示
+        if ([businessID containsString:BussinessID_CustomerService] || [businessID containsString:BussinessID_ChatBot]) {
             return nil;
         }
         return [self getUnsupportedCellData:message];
@@ -465,7 +464,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     
     NSString *businessID = nil;
     BOOL excludeFromHistory = NO;
-    BOOL isCustomerService = NO;
 
     V2TIMSignalingInfo *signalingInfo = [V2TIMManager.sharedInstance getSignallingInfo:message];
     if (signalingInfo) {
@@ -475,7 +473,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     } else {
         // This message is normal custom message
         excludeFromHistory = NO;
-        businessID = [self getCustomBusinessID:message isCustomerService:&isCustomerService];
+        businessID = [self getCustomBusinessID:message];
     }
 
     if (excludeFromHistory) {
@@ -491,8 +489,8 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         if (cellDataClass && [cellDataClass respondsToSelector:@selector(getDisplayString:)]) {
             return [cellDataClass getDisplayString:message];
         }
-        // CustomerService 场景，不支持的消息，直接不展示
-        if (isCustomerService) {
+        // CustomerService、ChatBot 场景，不支持的消息直接不展示
+        if ([businessID containsString:BussinessID_CustomerService] || [businessID containsString:BussinessID_ChatBot]) {
             return nil;
         }
         return TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
@@ -597,7 +595,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 }
 
 #pragma mark - Utils
-+ (nullable NSString *)getCustomBusinessID:(V2TIMMessage *)message isCustomerService:(BOOL *)isCustomerService {
++ (nullable NSString *)getCustomBusinessID:(V2TIMMessage *)message {
     if (message == nil || message.customElem.data == nil) {
         return nil;
     }
@@ -615,13 +613,16 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     if (businessID.length > 0 && [businessID isKindOfClass:[NSString class]]) {
         return businessID;
     } else {
-        if (![param.allKeys containsObject:BussinessID_CustomerService]) {
-            return nil;
-        }
-        *isCustomerService = YES;
-        NSString *src = param[BussinessID_Src];
-        if (src.length > 0 && [src isKindOfClass:[NSString class]]) {
-            return src;
+        if ([param.allKeys containsObject:BussinessID_CustomerService]) {
+            NSString *src = param[BussinessID_Src_CustomerService];
+            if (src.length > 0 && [src isKindOfClass:[NSString class]]) {
+                return [NSString stringWithFormat:@"%@%@", BussinessID_CustomerService, src];
+            }
+        } else if ([param.allKeys containsObject:BussinessID_ChatBot]) {
+            NSNumber *src = param[BussinessID_Src_ChatBot];
+            if (src && [src isKindOfClass:[NSNumber class]]) {
+                return [NSString stringWithFormat:@"%@%@", BussinessID_ChatBot, src];
+            }
         }
         return nil;
     }

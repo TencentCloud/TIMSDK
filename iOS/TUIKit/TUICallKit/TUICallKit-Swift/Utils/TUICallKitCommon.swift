@@ -1,6 +1,6 @@
 //
 //  TUICallKitCommon.swift
-//  TUICallKit-Swift
+//  TUICallKit
 //
 //  Created by vincepzhang on 2023/8/14.
 //
@@ -21,7 +21,7 @@ class TUICallKitCommon {
     }
     
     static func getTUICallKitBundle() -> Bundle? {
-        guard let url: URL = Bundle.main.url(forResource: "TUICallingKitBundle", withExtension: "bundle") else { return nil }
+        guard let url: URL = Bundle.main.url(forResource: "TUICallKitBundle", withExtension: "bundle") else { return nil }
         return Bundle(url: url)
     }
     
@@ -62,15 +62,15 @@ class TUICallKitCommon {
         
         switch deniedType {
         case .audio:
-            title = TUICallKitLocalize(key: "TUICallKit.failedtogetmicrophonepermission.Title") ?? ""
-            message = TUICallKitLocalize(key: "TUICallKit.failedtogetmicrophonepermission.Tips") ?? ""
-            laterMessage = TUICallKitLocalize(key: "TUICallKit.failedtogetmicrophonepermission.Later") ?? ""
-            openSettingMessage = TUICallKitLocalize(key: "TUICallKit.failedtogetmicrophonepermission.Enable") ?? ""
+            title = TUICallKitLocalize(key: "TUICallKit.FailedToGetMicrophonePermission.Title") ?? ""
+            message = TUICallKitLocalize(key: "TUICallKit.FailedToGetMicrophonePermission.Tips") ?? ""
+            laterMessage = TUICallKitLocalize(key: "TUICallKit.FailedToGetMicrophonePermission.Later") ?? ""
+            openSettingMessage = TUICallKitLocalize(key: "TUICallKit.FailedToGetMicrophonePermission.Enable") ?? ""
         case .video:
-            title = TUICallKitLocalize(key: "TUICallKit.failedtogetcamerapermission.Title") ?? ""
-            message = TUICallKitLocalize(key: "TUICallKit.failedtogetcamerapermission.Tips") ?? ""
-            laterMessage = TUICallKitLocalize(key: "TUICallKit.failedtogetcamerapermission.Later") ?? ""
-            openSettingMessage = TUICallKitLocalize(key: "TUICallKit.failedtogetcamerapermission.Enable") ?? ""
+            title = TUICallKitLocalize(key: "TUICallKit.FailedToGetCameraPermission.Title") ?? ""
+            message = TUICallKitLocalize(key: "TUICallKit.FailedToGetCameraPermission.Tips") ?? ""
+            laterMessage = TUICallKitLocalize(key: "TUICallKit.FailedToGetCameraPermission.Later") ?? ""
+            openSettingMessage = TUICallKitLocalize(key: "TUICallKit.FailedToGetCameraPermission.Enable") ?? ""
         }
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert )

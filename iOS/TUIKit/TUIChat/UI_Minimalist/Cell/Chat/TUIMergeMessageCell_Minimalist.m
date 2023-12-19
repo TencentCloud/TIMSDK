@@ -100,6 +100,7 @@
         make.leading.mas_equalTo(self.abstractBreak.mas_trailing);
         make.top.mas_equalTo(0);
         make.trailing.mas_lessThanOrEqualTo(self.mas_trailing).mas_offset(-15);
+        make.bottom.mas_equalTo(self);
     }];
 }
 - (void)fillWithData:(NSAttributedString *)name detailContent:(NSAttributedString *)detailContent {

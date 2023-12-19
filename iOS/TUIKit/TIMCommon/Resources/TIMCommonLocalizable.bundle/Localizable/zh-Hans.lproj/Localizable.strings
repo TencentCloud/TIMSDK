@@ -279,6 +279,7 @@
 "TUIKitMessageTypeSecurityStrikeVoice" = "涉及敏感内容，无法收听";
 "TUIKitMessageTypeSecurityStrikeImage" = "涉及敏感内容，无法查看";
 "TUIKitMessageTypeSecurityStrikeTranslate" = "涉及敏感内容，翻译失败";
+"TUIKitMessageTypeOtherUseMic" = "其他功能正在使用麦克风，无法录制";
 
 
 "TUIKitMessageReadPartRead" = "人已读";
@@ -306,6 +307,8 @@
 "TUIKitMoreGroupNote" = "群接龙";
 "TUIKitMoreEvaluation" = "服务评价";
 "TUIKitMoreCard" = "卡片消息";
+
+"TUIKitFileSizeCheckLimited" = "文件大小超出限制";
 
 "TUIKitCallInviteYouVideoCall" = "邀请你视频通话";
 "TUIKitCallTurningOnMute" = "开启静音";
@@ -691,6 +694,9 @@
 "TUICustomerServiceCommonPhraseShipping" = "什么时候发货？";
 "TUICustomerServiceCommonPhraseDelivery" = "发什么快递？";
 "TUICustomerServiceCommonPhraseArrive" = "什么时候到货？";
+
+"TUIChatBotAccounts" = "机器人";
+"TUIChatBotChangeQuestion" = "换一换";
 
 "TUIConversationGroupAll" = "全部";
 "TUIConversationGroupUnread" = "未读";

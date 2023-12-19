@@ -297,6 +297,11 @@
 }
 
 - (void)initHandsFree:(TUIAudioPlaybackDevice)audioPlaybackDevice {
+    if (([TUICallingStatusManager shareInstance].callRole == TUICallRoleCalled) &&
+        ([TUICallingStatusManager shareInstance].callStatus != TUICallStatusAccept)) {
+        return;
+    }
+    
     [[TUICallEngine createInstance] selectAudioPlaybackDevice:audioPlaybackDevice];
     [TUICallingStatusManager shareInstance].audioPlaybackDevice = audioPlaybackDevice;
     [self updateAudioPlaybackDevice];

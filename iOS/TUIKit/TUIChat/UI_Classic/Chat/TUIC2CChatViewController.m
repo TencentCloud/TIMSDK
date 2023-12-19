@@ -29,23 +29,17 @@
 
 - (void)dealloc {
     self.sendTypingBaseCondationInVC = NO;
-    
-    // notify
-    NSDictionary *param = @{TUICore_TUIChatNotify_ViewWillDeallocSubKey_UserID: self.conversationData.userID ? : @""};
-    [TUICore notifyEvent:TUICore_TUIChatNotify
-                  subKey:TUICore_TUIChatNotify_ViewWillDeallocSubKey
-                  object:nil
-                   param:param];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.sendTypingBaseCondationInVC = NO;
     
     // notify
-    NSDictionary *param = @{TUICore_TUIChatNotify_ViewDidLoadSubKey_UserID: self.conversationData.userID ? : @""};
+    NSDictionary *param = @{TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey_UserID: self.conversationData.userID ? : @""};
     [TUICore notifyEvent:TUICore_TUIChatNotify
-                  subKey:TUICore_TUIChatNotify_ViewDidLoadSubKey
+                  subKey:TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey
                   object:nil
                    param:param];
 }
@@ -134,6 +128,7 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
 
     V2TIMMessage *msg = [TUIMessageDataProvider getCustomMessageWithJsonData:data];
+    [msg setIsExcludedFromContentModeration:YES];
     TUISendMessageAppendParams *appendParams = [[TUISendMessageAppendParams alloc] init];
     appendParams.isSendPushInfo = NO;
     appendParams.isOnlineUserOnly = YES;

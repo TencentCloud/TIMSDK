@@ -9,15 +9,10 @@ import Foundation
 
 class WindowManager: NSObject, FloatingWindowViewDelegate {
     
-    enum FloatWindowCornerType {
-        case all
-        case left
-        case right
-    }
-        
     static let instance = WindowManager()
     
     var isFloating = false
+    var floatWindowBeganPoint: CGPoint = .zero
     
     let mediaTypeObserver = Observer()
     
@@ -27,9 +22,6 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
         view.layer.masksToBounds = true
         return view
     }()
-    
-    var floatWindowBeganPoint: CGPoint?
-    var floatWindowBeganOrigin: CGPoint?
     
     override init() {
         super.init()
@@ -57,11 +49,10 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
         let floatViewController = FloatWindowViewController()
         floatViewController.delegate = self
         floatWindow.rootViewController = floatViewController
-        floatWindow.backgroundColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
+        floatWindow.backgroundColor = UIColor.clear
         floatWindow.isHidden = false
         floatWindow.frame = getFloatWindowFrame()
         updateFloatWindowFrame()
-        setFloatWindowCorner(.left)
         floatWindow.t_makeKeyAndVisible()
         isFloating = true
     }
@@ -73,39 +64,32 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     }
     
     func getFloatWindowFrame() -> CGRect {
+        if TUICallState.instance.scene.value == .group {
+            return kMicroGroupViewRect
+        }
+        
         if TUICallState.instance.mediaType.value == .audio {
             return kMicroAudioViewRect
         } else {
-            if TUICallState.instance.remoteUserList.value.first != nil {
-                if TUICallState.instance.remoteUserList.value[0].videoAvailable.value {
-                    return kMicroVideoViewRect
-                } else {
-                    return kMicroVideoDisAvailableViewRect
-                }
-            }
+            return kMicroVideoViewRect
         }
-        return kMicroVideoViewRect
     }
     
     func updateFloatWindowFrame() {
         let originY = floatWindow.frame.origin.y
-        if TUICallState.instance.scene.value == .single {
-            if TUICallState.instance.mediaType.value == .audio {
-                let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroAudioViewWidth)
-                floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroAudioViewWidth, height: kMicroAudioViewHeight)
-            } else {
-                let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroVideoViewWidth)
-                if TUICallState.instance.remoteUserList.value.first != nil {
-                    if TUICallState.instance.remoteUserList.value[0].videoAvailable.value {
-                        floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroVideoViewWidth, height: kMicroVideoViewHeight)
-                    } else {
-                        floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroVideoViewWidth, height: kMicroVideoViewHeight - 10)
-                    }
-                }
-            }
-        } else {
+        
+        if TUICallState.instance.scene.value == .group {
+            let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroGroupViewWidth)
+            floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroGroupViewWidth, height: kMicroGroupViewHeight)
+            return
+        }
+        
+        if TUICallState.instance.mediaType.value == .audio {
             let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroAudioViewWidth)
             floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroAudioViewWidth, height: kMicroAudioViewHeight)
+        } else {
+            let dstX = floatWindow.frame.origin.x < (Screen_Width / 2.0) ? 0 : (Screen_Width - kMicroVideoViewWidth)
+            floatWindow.frame = CGRect(x: dstX, y: originY, width: kMicroVideoViewWidth, height: kMicroVideoViewHeight)
         }
     }
     
@@ -118,21 +102,20 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
         })
     }
     
-    //MARK: FloatingWindowViewDelegate
+    // MARK: FloatingWindowViewDelegate
     func tapGestureAction(tapGesture: UITapGestureRecognizer) {
         showCallWindow()
     }
-
+    
     func panGestureAction(panGesture: UIPanGestureRecognizer) {
         switch panGesture.state {
         case .began:
             floatWindowBeganPoint = floatWindow.frame.origin
-            floatWindowBeganOrigin = floatWindow.frame.origin
             break
         case.changed:
             let point = panGesture.translation(in: floatWindow)
-            var dstX = (floatWindowBeganPoint?.x ?? 0) + CGFloat(point.x)
-            var dstY = (floatWindowBeganPoint?.y ?? 0) + CGFloat(point.y)
+            var dstX = floatWindowBeganPoint.x + point.x
+            var dstY = floatWindowBeganPoint.y + point.y
             
             if dstX < 0 {
                 dstX = 0
@@ -146,59 +129,31 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
                 dstY = Screen_Height - floatWindow.frame.size.height
                 
             }
+            
             floatWindow.frame = CGRect(x: dstX,
                                        y: dstY,
                                        width: floatWindow.frame.size.width,
                                        height: floatWindow.frame.size.height)
-            
-            setFloatWindowCorner(.all)
-
             break
         case.cancelled:
             break
         case.ended:
             var dstX: CGFloat = 0
-            if floatWindow.frame.origin.x < Screen_Width / 2 {
+            let currentCenterX: CGFloat = floatWindow.frame.origin.x + floatWindow.frame.size.width / 2.0
+            
+            if currentCenterX < Screen_Width / 2 {
                 dstX = CGFloat(0)
-            } else if floatWindow.frame.origin.x > Screen_Width / 2 {
+            } else if currentCenterX > Screen_Width / 2 {
                 dstX = CGFloat(Screen_Width - floatWindow.frame.size.width)
             }
+            
             floatWindow.frame = CGRect(x: dstX,
                                        y: floatWindow.frame.origin.y,
                                        width: floatWindow.frame.size.width,
                                        height: floatWindow.frame.size.height)
-            
-            if dstX == 0 {
-                setFloatWindowCorner(.right)
-            } else {
-                setFloatWindowCorner(.left)
-            }
-            
             break
         default:
             break
         }
-    }
-        
-    func setFloatWindowCorner(_ type: FloatWindowCornerType) {
-        var roundingCorners: UIRectCorner
-        switch type {
-        case .all:
-            roundingCorners = [.allCorners]
-            break
-        case .right:
-            roundingCorners = [.topRight, .bottomRight]
-            break
-        case .left:
-            roundingCorners = [.topLeft, .bottomLeft]
-            break
-        }
-        
-        let maskLayer = CAShapeLayer()
-        let path = UIBezierPath(roundedRect: floatWindow.bounds,
-                                byRoundingCorners: roundingCorners,
-                                cornerRadii: CGSize(width: 10, height: 10))
-        maskLayer.path = path.cgPath
-        floatWindow.layer.mask = maskLayer
     }
 }

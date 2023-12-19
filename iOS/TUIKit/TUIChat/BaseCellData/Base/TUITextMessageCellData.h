@@ -46,7 +46,14 @@ NS_ASSUME_NONNULL_BEGIN
  * picture expression. This string is responsible for storing the converted result of the above process.
  *
  */
-- (NSMutableAttributedString *)getAttributedString:(UIFont *)textFont;
+- (NSAttributedString *)getContentAttributedString:(UIFont *)textFont;
+
+/**
+ *  获取文本字符串的展示大小
+ *
+ *  Get the display size of content string
+ */
+- (CGSize)getContentAttributedStringSize:(NSAttributedString *)attributeString maxTextSize:(CGSize)maxTextSize;
 
 /**
  *  NSValue（NSRange） 存储的 emoji 转换后的字符串在 attributedString 的位置。

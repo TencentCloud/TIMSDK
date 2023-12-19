@@ -1,6 +1,6 @@
 //
 //  CallKitViewController.swift
-//  Alamofire
+//  TUICallKit
 //
 //  Created by vincepzhang on 2022/12/30.
 //
@@ -12,11 +12,11 @@ import TUICore
 class CallKitViewController: UIViewController {
     
     let callEventObserver = Observer()
-        
+    
     deinit {
         TUICallState.instance.event.removeObserver(callEventObserver)
     }
-        
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         if TUICallState.instance.scene.value == .single {
@@ -36,37 +36,6 @@ class CallKitViewController: UIViewController {
                 guard let errorCode = newValue.param[EVENT_KEY_CODE] as? Int32 else { return }
                 guard let errorMessage = newValue.param[EVENT_KEY_MESSAGE] as? String else { return }
                 TUITool.makeToast("error:\(errorCode):\(errorMessage)")
-            } else if newValue.eventType == .TIP {
-                
-                switch newValue.event {
-                case .USER_EXCEED_LIMIT:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.Calling.User.Exceed.Limit") else { return }
-                    TUITool.makeToast(userId + toastString)
-                    
-                case .USER_NO_RESPONSE:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingnoresponse") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                case .USER_LINE_BUSY:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingbusy") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                case .USER_REJECT:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingrefuse") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                case .USER_LEAVE:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingleave") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                default:
-                    break
-                }
             }
         }
     }

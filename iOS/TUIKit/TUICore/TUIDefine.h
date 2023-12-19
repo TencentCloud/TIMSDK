@@ -48,7 +48,7 @@
 #define BussinessID_GroupRoomMessage @"group_room_message"
 // Supported in 7.6 and later
 #define BussinessID_CustomerService @"customerServicePlugin"
-#define BussinessID_Src @"src"
+#define BussinessID_Src_CustomerService @"src"
 #define BussinessID_Src_CustomerService_Request @"7"
 #define BussinessID_Src_CustomerService_Evaluation @"9"
 #define BussinessID_Src_CustomerService_EvaluationSelected @"10"
@@ -60,6 +60,14 @@
 #define BussinessID_Src_CustomerService_Card @"22"
 #define BussinessID_Src_CustomerService_EvaluationRule @"23"
 #define BussinessID_Src_CustomerService_EvaluationTrigger @"24"
+#define GetCustomerServiceBussinessID(src) [NSString stringWithFormat:@"%@%@",BussinessID_CustomerService, src]
+// Supported in 7.7 and later
+#define BussinessID_ChatBot @"chatbotPlugin"
+#define BussinessID_Src_ChatBot @"src"
+#define BussinessID_Src_ChatBot_Stream_Text @(2)
+#define BussinessID_Src_ChatBot_Request @(7)
+#define BussinessID_Src_ChatBot_Welcome_Clarify_Selected @(15)
+#define GetChatBotBussinessID(src) [NSString stringWithFormat:@"%@%@",BussinessID_ChatBot, src]
 
 /**
  * 创建群自定义消息业务版本
@@ -155,6 +163,7 @@
 #define TUITranslationBundle @"TUITranslation"
 #define TUIVoiceToTextBundle @"TUIVoiceToText"
 #define TUICustomerServicePluginBundle @"TUICustomerServicePlugin"
+#define TUIChatBotPluginBundle @"TUIChatBotPlugin"
 
 #define TUIKitLocalizableBundle @"TUIKitLocalizable"
 #define TUICoreLocalizableBundle TUIKitLocalizableBundle
@@ -184,7 +193,8 @@
 #define TUIKitLocalizableBundle_Key_Class @"TUICore"
 #define TUIChatLocalizableBundle_Key_Class @"TUIChatService"
 #define TIMCommonLocalizableBundle_Key_Class @"TIMConfig"
-#define TUICustomerServicePluginBundle_Key_Class         @"TUICustomerServicePluginService"
+#define TUICustomerServicePluginBundle_Key_Class @"TUICustomerServicePluginService"
+#define TUIChatBotPluginBundle_Key_Class @"TUIChatBotPluginService"
 
 static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     if ([bundleKeyClass isEqualToString:TUICoreBundle_Key_Class] || [bundleKeyClass isEqualToString:TUIKitLocalizableBundle_Key_Class]) {
@@ -226,6 +236,12 @@ static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     }
     if ([bundleKeyClass isEqualToString:TUIVoiceToTextBundle_Key_Class]) {
         return @"TUIVoiceToTextPlugin";
+    }
+    if ([bundleKeyClass isEqualToString:TUICustomerServicePluginBundle_Key_Class]) {
+        return @"TUICustomerServicePlugin";
+    }
+    if ([bundleKeyClass isEqualToString:TUIChatBotPluginBundle_Key_Class]) {
+        return @"TUIChatBotPlugin";
     }
     return @"";
 }
@@ -274,6 +290,7 @@ static inline NSString *getTUIGetBundlePath(NSString *bundleName, NSString *bund
 #define TUIVoiceToTextThemePath TUIBundlePath(@"TUIVoiceToTextTheme", TUIVoiceToTextBundle_Key_Class)
 #define TUICallKitThemePath TUIBundlePath(@"TUICallKitTheme", TUICallKitBundle_Key_Class)
 #define TUICustomerServicePluginThemePath TUIBundlePath(@"TUICustomerServicePluginTheme",TUICustomerServicePluginBundle_Key_Class)
+#define TUIChatBotPluginThemePath TUIBundlePath(@"TUIChatBotPluginTheme",TUIChatBotPluginBundle_Key_Class)
 
 static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     if ([bundleName isEqualToString:TUIChatLocalizableBundle] || [bundleName isEqualToString:TUIChatFaceBundle]) {
@@ -305,6 +322,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUIVoiceToTextImagePath(imageName) [TUIBundlePath(TUIVoiceToTextBundle, TUIVoiceToTextBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUICustomerServicePluginImagePath(imageName) \
     [TUIBundlePath(TUICustomerServicePluginBundle,TUICustomerServicePluginBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIChatBotPluginImagePath(imageName) \
+    [TUIBundlePath(TUIChatBotPluginBundle,TUIChatBotPluginBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 //-----Minimalist-------
 #define TUIDemoBundle_Minimalist @"TUIDemo_Minimalist"
@@ -703,6 +722,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatService_SetChatExtensionMethod_EnableLinkKey @"TUICore_TUIChatService_SetChatExtensionMethod_EnableLinkKey"
 
 #define TUICore_TUIChatService_AppendCustomMessageMethod @"TUICore_TUIChatService_AppendCustomMessageMethod"
+#define TUICore_TUIChatService_SetMaxTextSize @"TUICore_TUIChatService_SetMaxTextSize"
+
 
 #pragma mark - TUICore_TUIChat_Notify
 #define TUICore_TUIChatNotify @"TUICore_TUIChatNotify"
@@ -711,10 +732,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatNotify_SendMessageSubKey_Desc @"TUICore_TUIChatNotify_SendMessageSubKey_Desc"
 #define TUICore_TUIChatNotify_SendMessageSubKey_Message @"TUICore_TUIChatNotify_SendMessageSubKey_Message"
 #define TUICore_TUIChatNotify_KeyboardWillHideSubKey @"TUICore_TUIChatNotify_KeyboardWillHideSubKey"
-#define TUICore_TUIChatNotify_ViewDidLoadSubKey @"TUICore_TUIChatNotify_ViewDidLoadSubKey"
-#define TUICore_TUIChatNotify_ViewDidLoadSubKey_UserID @"TUICore_TUIChatNotify_ViewDidLoadSubKey_UserID"
-#define TUICore_TUIChatNotify_ViewWillDeallocSubKey @"TUICore_TUIChatNotify_ViewWillDeallocSubKey"
-#define TUICore_TUIChatNotify_ViewWillDeallocSubKey_UserID @"TUICore_TUIChatNotify_ViewWillDeallocSubKey_UserID"
+#define TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey @"TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey"
+#define TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey_UserID @"TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey_UserID"
 // 消息 cellData 被展示的通知
 // The notification of displaying the message cell data
 #define TUICore_TUIChatNotify_MessageDisplayedSubKey @"TUICore_TUIChatNotify_MessageDisplayedSubKey"
@@ -725,6 +744,14 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_GetMoreCellInfo_UserID @"TUICore_TUIChatExtension_GetMoreCellInfo_UserID"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_GroupID @"TUICore_TUIChatExtension_GetMoreCellInfo_GroupID"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_View @"TUICore_TUIChatExtension_GetMoreCellInfo_View"
+
+// 聊天界面 config 配置扩展
+#define TUICore_TUIChatExtension_GetChatConversationModelParams @"TUICore_TUIChatExtension_GetChatConversationModelParams"
+#define TUICore_TUIChatExtension_GetChatConversationModelParams_UserID @"TUICore_TUIChatExtension_GetChatConversationModelParams_UserID"
+#define TUICore_TUIChatExtension_GetChatConversationModelParams_MsgNeedReadReceipt @"TUICore_TUIChatExtension_GetChatConversationModelParams_MsgNeedReadReceipt" //bool
+#define TUICore_TUIChatExtension_GetChatConversationModelParams_EnableVideoCall @"TUICore_TUIChatExtension_GetChatConversationModelParams_EnableVideoCall" //bool
+#define TUICore_TUIChatExtension_GetChatConversationModelParams_EnableAudioCall @"TUICore_TUIChatExtension_GetChatConversationModelParams_EnableAudioCall" //bool
+#define TUICore_TUIChatExtension_GetChatConversationModelParams_EnableWelcomeCustomMessage @"TUICore_TUIChatExtension_GetChatConversationModelParams_EnableWelcomeCustomMessage" //bool
 
 // 聊天界面消息列表点击头像的 UI 扩展
 // UI extension when clicking the avatar in message list
@@ -793,6 +820,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatObjectFactory_ChatViewController_AvatarUrl @"TUICore_TUIChatObjectFactory_ChatViewController_AvatarUrl"
 #define TUICore_TUIChatObjectFactory_ChatViewController_HighlightKeyword @"TUICore_TUIChatObjectFactory_ChatViewController_HighlightKeyword"
 #define TUICore_TUIChatObjectFactory_ChatViewController_LocateMessage @"TUICore_TUIChatObjectFactory_ChatViewController_LocateMessage"
+#define TUICore_TUIChatObjectFactory_ChatViewController_AtTipsStr @"TUICore_TUIChatObjectFactory_ChatViewController_AtTipsStr"
 #define TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs @"TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Draft @"TUICore_TUIChatObjectFactory_ChatViewController_Draft"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call"

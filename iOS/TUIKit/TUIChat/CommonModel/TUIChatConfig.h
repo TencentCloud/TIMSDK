@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <TIMCommon/TIMCommonModel.h>
-
+#import <TIMCommon/TUIMessageCellData.h>
+@class TUIChatEventConfig;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIChatConfig : NSObject
@@ -18,16 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  发送消息是否需要已读回执，默认 NO
- *  A read receipt is required to send a message, the default is NO
+ *  A read receipt is required to send a message
  */
-
 @property(nonatomic, assign) BOOL msgNeedReadReceipt;
 
 /**
  *  是否展示视频通话按钮，如果集成了 TUICalling 组件，默认 YES
  *  Display the video call button, if the TUICalling component is integrated, the default is YES
  */
-
 @property(nonatomic, assign) BOOL enableVideoCall;
 
 /**
@@ -40,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  是否展示自定义的欢迎消息按钮，默认 YES
  *  Display custom welcome message button, default YES
  */
-
 @property(nonatomic, assign) BOOL enableWelcomeCustomMessage;
 
 /**
@@ -109,6 +107,66 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, assign) NSUInteger timeIntervalForMessageRecall;
 
+/**
+ * 本类用来从外部向 Chat 注册事件监听器，用来监听 Chat 的各个事件并作出相应的处理，比如监听点击头像事件，长按消息事件等
+ * 需要设置一个实现方法的被委托方 TUIChatConfig.defaultConfig.eventConfig.chatEventListener = "YourDelegateViewController"
+ * 在您的YourDelegateViewController需要遵循 <TUIChatEventListener>协议，并实现协议方法。
+ * 以- (BOOL)onUserIconClicked:messageCellData:为例 ， 返回为NO时为插入行为， 此事件不被拦截，Chat 内部会继续处理。
+ * 以- (BOOL)onUserIconClicked:messageCellData:为例 ， 返回为YES时为重写行为，此事件会被拦截，只会执行重写的方法，Chat内部不会继续处理。
+ *
+ * This class is used to register event listeners for Chat from external sources, to listen for various events in Chat and respond accordingly,
+ * such as listening for avatar click events, long-press message events, etc.
+ * You need to set a delegate for the implementation method: TUIChatConfig.defaultConfig.eventConfig.chatEventListener = "YourDelegateViewController".
+ * YourDelegateViewController needs to conform to the <TUIChatEventListener> protocol and implement the protocol method.
+ * Taking - (BOOL)onUserIconClicked:messageCellData: as an example, returning NO indicates an insertion behavior, 
+ * which is not intercepted and will be further processed by the Chat module.
+ * Taking - (BOOL)onUserIconClicked:messageCellData: as an example, returning YES indicates an override behavior, 
+ * which will be intercepted and only the overridden method will be executed. The Chat module will not continue to process it.
+ */
+@property(nonatomic, strong) TUIChatEventConfig * eventConfig;
 @end
 
 NS_ASSUME_NONNULL_END
+
+
+NS_ASSUME_NONNULL_BEGIN
+
+@protocol TUIChatEventListener <NSObject>
+
+/**
+ * 聊天列表界面用户头像被点击时触发此回调，返回 YES 表示此事件已经被拦截，Chat 内部后续不再处理， 
+ * 返回 NO 表示此事件不被拦截， Chat 内部会继续处理
+ * This callback is triggered when a user avatar in the chat list interface is clicked. Returning YES indicates that this event has been intercepted,
+ * and Chat will not process it further. Returning NO indicates that this event is not intercepted, and Chat will continue to process it.
+ */
+- (BOOL)onUserIconClicked:(UIView *)view messageCellData:(TUIMessageCellData *)celldata;
+/**
+ * 聊天列表界面用户头像被长按时触发此回调，返回 YES 表示此事件已经被拦截，Chat 内部后续不再处理， 
+ * 返回 NO 表示此事件不被拦截， Chat 内部会继续处理
+ * This callback is triggered when a user avatar in the chat list interface is long-pressed. Returning YES indicates that this event has been intercepted,
+ * and Chat will not process it further. Returning NO indicates that this event is not intercepted, and Chat will continue to process it.
+ */
+- (BOOL)onUserIconLongClicked:(UIView *)view messageCellData:(TUIMessageCellData *)celldata;
+
+/**
+ * 聊天列表界面消息被点击时触发此回调，返回 YES 表示此事件已经被拦截，Chat 内部后续不再处理， 
+ * 返回 NO 表示此事件不被拦截， Chat 内部会继续处理
+ * This callback is triggered when a message in the chat list interface is clicked. Returning YES indicates that this event has been intercepted,
+ * and Chat will not process it further. Returning NO indicates that this event is not intercepted, and Chat will continue to process it.
+ */
+- (BOOL)onMessageClicked:(UIView *)view messageCellData:(TUIMessageCellData *)celldata;
+
+/**
+ * 聊天列表界面消息被长按时触发此回调，返回 YES 表示此事件已经被拦截，Chat 内部后续不再处理，
+ * 返回 NO 表示此事件不被拦截， Chat 内部会继续处理
+ * This callback is triggered when a message in the chat list interface is long-pressed. Returning YES indicates that this event has been intercepted,
+ * and Chat will not process it further. Returning NO indicates that this event is not intercepted, and Chat will continue to process it.
+ */
+- (BOOL)onMessageLongClicked:(UIView *)view messageCellData:(TUIMessageCellData *)celldata;
+@end
+
+@interface TUIChatEventConfig : NSObject
+@property (nonatomic,weak)id <TUIChatEventListener>chatEventListener;
+@end
+NS_ASSUME_NONNULL_END
+

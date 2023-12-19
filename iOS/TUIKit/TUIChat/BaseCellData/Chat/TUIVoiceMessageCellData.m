@@ -216,9 +216,7 @@
     @weakify(self);
     dispatch_async(dispatch_get_main_queue(), ^{
       @strongify(self);
-      if (self.playTime) {
-          self.playTime(self.audioPlayer.currentTime);
-      }
+        self.currentTime = self.audioPlayer.currentTime;
     });
 }
 
@@ -236,7 +234,7 @@
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag;
 {
-    self.isPlaying = NO;
+    [self stopVoiceMessage];
     [[NSFileManager defaultManager] removeItemAtPath:self.wavPath error:nil];
 
     if (self.audioPlayerDidFinishPlayingBlock) {

@@ -63,6 +63,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSString *draftText;
 
 /**
+ *  群@ 消息提示语
+ *  Group@ message tip string
+ */
+@property(nonatomic, strong) NSString *atTipsStr;
+
+/**
  *  群@ 消息 seq 列表
  *  Sequence list of group-at message
  */
@@ -75,9 +81,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL otherSideTyping;
 
-@property(nonatomic, assign) BOOL enabelVideo;
+/**
+ *  发送消息是否需要已读回执，默认 YES
+ *  A read receipt is required to send a message, the default is YES
+ */
+@property(nonatomic, assign) BOOL msgNeedReadReceipt;
 
-@property(nonatomic, assign) BOOL enabelAudio;
+/**
+ *  是否展示视频通话按钮，如果集成了 TUICalling 组件，默认 YES
+ *  Display the video call button, if the TUICalling component is integrated, the default is YES
+ */
+
+@property(nonatomic, assign) BOOL enableVideoCall;
+
+/**
+ *  是否展示音频通话按钮，如果集成了 TUICalling 组件，默认 YES
+ *  Whether to display the audio call button, if the TUICalling component is integrated, the default is YES
+ */
+@property(nonatomic, assign) BOOL enableAudioCall;
+
+/**
+ *  是否展示自定义的欢迎消息按钮，默认 YES
+ *  Display custom welcome message button, default YES
+ */
+@property(nonatomic, assign) BOOL enableWelcomeCustomMessage;
 
 @property(nonatomic, assign) BOOL enabelRoom;
 

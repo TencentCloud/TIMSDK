@@ -82,7 +82,7 @@
         textColor = self.class.outgoingTextColor;
         textFont = self.class.outgoingTextFont;
     }
-    self.textView.attributedText = [data getAttributedString:textFont];
+    self.textView.attributedText = [data getContentAttributedString:textFont];
     self.textView.textColor = textColor;
     self.textView.font = textFont;
 
@@ -217,28 +217,29 @@
     return height;
 }
 
+static CGSize gMaxTextSize;
++ (void)setMaxTextSize:(CGSize)maxTextSz {
+    gMaxTextSize = maxTextSz;
+}
 + (CGSize)getContentSize:(TUIMessageCellData *)data {
     NSAssert([data isKindOfClass:TUITextMessageCellData.class], @"data must be kind of TUITextMessageCellData");
     TUITextMessageCellData *textCellData = (TUITextMessageCellData *)data;
-    static CGSize maxTextSize;
-    if (CGSizeEqualToSize(maxTextSize, CGSizeZero)) {
-        maxTextSize = CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT);
-    }
+
+    NSAttributedString *attributeString = [textCellData getContentAttributedString:
+                                           data.direction == MsgDirectionIncoming ? self.incommingTextFont : self.outgoingTextFont];
     
-    NSAttributedString *attributeString = [textCellData getAttributedString:data.direction == MsgDirectionIncoming ?
-                                                                            self.incommingTextFont : self.outgoingTextFont];
-    CGRect rect = [attributeString boundingRectWithSize:maxTextSize
-                                                      options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                      context:nil];
-
-    CGFloat width = CGFLOAT_CEIL(rect.size.width);
-    CGFloat height = CGFLOAT_CEIL(rect.size.height);
-
-    textCellData.textSize = CGSizeMake(width, height);
+    if (CGSizeEqualToSize(gMaxTextSize, CGSizeZero)) {
+        gMaxTextSize = CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT);
+    }
+    CGSize contentSize = [textCellData getContentAttributedStringSize:attributeString maxTextSize:gMaxTextSize];
+    textCellData.textSize = contentSize;
 
     CGPoint textOrigin = CGPointMake(textCellData.cellLayout.bubbleInsets.left,
-                                 textCellData.cellLayout.bubbleInsets.top);
+                                     textCellData.cellLayout.bubbleInsets.top);
     textCellData.textOrigin = textOrigin;
+    
+    CGFloat height = contentSize.height;
+    CGFloat width = contentSize.width;
 
     height += textCellData.cellLayout.bubbleInsets.top;
     height += textCellData.cellLayout.bubbleInsets.bottom;

@@ -36,7 +36,7 @@
      
     [super updateConstraints];
     
-    CGFloat topMargin = 0;
+    CGFloat topMargin = 5;
     CGFloat height = self.container.mm_h;
     [self.face mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(kScale390(88));

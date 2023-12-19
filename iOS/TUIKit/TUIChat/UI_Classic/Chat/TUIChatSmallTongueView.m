@@ -7,6 +7,7 @@
 //
 
 #import "TUIChatSmallTongueView.h"
+#import <TUICore/NSString+TUIUtil.h>
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatConfig.h"
@@ -108,7 +109,20 @@
         titleCacheFormat = [NSMutableDictionary dictionary];
         [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatBackToLatestLocation) forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
         [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatNewMessages) forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
-        [titleCacheFormat setObject:TIMCommonLocalizableString(TUIKitChatTipsAtMe) forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
+    }
+    
+    if (tongue.type == TUIChatSmallTongueType_SomeoneAt) {
+        NSString *atMeStr = TIMCommonLocalizableString(TUIKitConversationTipsAtMe);
+        NSString *atAllStr = TIMCommonLocalizableString(TUIKitConversationTipsAtAll);
+        if ([tongue.atTipsStr containsString:atMeStr]) {
+            atMeStr = [atMeStr stringByReplacingOccurrencesOfString:@"[" withString:@""];
+            atMeStr = [atMeStr stringByReplacingOccurrencesOfString:@"]" withString:@""];
+            [titleCacheFormat setObject:atMeStr forKey:@(TUIChatSmallTongueType_SomeoneAt)];
+        } else if ([tongue.atTipsStr containsString:atAllStr]) {
+            atAllStr = [atAllStr stringByReplacingOccurrencesOfString:@"[" withString:@""];
+            atAllStr = [atAllStr stringByReplacingOccurrencesOfString:@"]" withString:@""];
+            [titleCacheFormat setObject:atAllStr forKey:@(TUIChatSmallTongueType_SomeoneAt)];
+        }
     }
 
     if (tongue.type == TUIChatSmallTongueType_ReceiveNewMsg) {
@@ -125,7 +139,7 @@ static NSMutableDictionary *gImageCache;
         gImageCache = [NSMutableDictionary dictionary];
         [gImageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down") ?: UIImage.new forKey:@(TUIChatSmallTongueType_ScrollToBoom)];
         [gImageCache setObject:TUIChatBundleThemeImage(@"chat_drop_down_img", @"drop_down") ?: UIImage.new forKey:@(TUIChatSmallTongueType_ReceiveNewMsg)];
-        [gImageCache setObject:TUIChatBundleThemeImage(@"chat_pull_up_img", @"pull_up") ?: UIImage.new forKey:@(TUIChatSmallTongueType_SomeoneAtMe)];
+        [gImageCache setObject:TUIChatBundleThemeImage(@"chat_pull_up_img", @"pull_up") ?: UIImage.new forKey:@(TUIChatSmallTongueType_SomeoneAt)];
     }
     return [gImageCache objectForKey:@(tongue.type)];
 }

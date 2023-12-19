@@ -27,6 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@interface TUIMessageCellConfig (MessageCellWidth)
++ (void)setMaxTextSize:(CGSize)maxTextSz;
+@end
+
 @interface TUIMessageCellConfig (MessageCellHeight)
 
 /**

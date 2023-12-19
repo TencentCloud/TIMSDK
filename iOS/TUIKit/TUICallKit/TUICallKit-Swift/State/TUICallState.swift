@@ -1,5 +1,6 @@
 //
 //  TUICallState.swift
+//  TUICallKit
 //
 //  Created by vincepzhang on 2022/12/30.
 //
@@ -25,6 +26,8 @@ class TUICallState: NSObject {
     let isMicMute: Observable<Bool> = Observable(false)
     let isFrontCamera: Observable<TUICamera> = Observable(TUICamera.front)
     let audioDevice: Observable<TUIAudioPlaybackDevice> = Observable(TUIAudioPlaybackDevice.earpiece)
+    let isShowFullScreen: Observable<Bool> = Observable(false)
+    let showLargeViewUserId: Observable<String> = Observable("")
     
     var enableMuteMode: Bool = {
         let enable = UserDefaults.standard.bool(forKey: ENABLE_MUTEMODE_USERDEFAULT)
@@ -70,7 +73,6 @@ extension TUICallState: TUICallObserver {
                 
                 if user.id.value == callerId {
                     user.callRole.value = TUICallRole.call
-
                 } else {
                     user.callRole.value = TUICallRole.called
                 }
@@ -102,13 +104,15 @@ extension TUICallState: TUICallObserver {
         
         TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
         TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
-                
+        
         if callMediaType == .audio {
             TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+            TUICallState.instance.isCameraOpen.value = false
         } else if callMediaType == .video {
             TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+            TUICallState.instance.isCameraOpen.value = true
         }
-
+        
         CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeCalled)
     }
     
@@ -260,7 +264,7 @@ extension TUICallState: TUICallObserver {
     }
 }
 
-//MARK: private method
+// MARK: private method
 extension TUICallState {
     private func cleanState() {
         TUICallState.instance.remoteUserList.value.removeAll()
@@ -273,10 +277,12 @@ extension TUICallState {
         TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.none
         
         TUICallState.instance.timeCount.value = 0
-        
         TUICallState.instance.isMicMute.value = false
         TUICallState.instance.isFrontCamera.value = .front
         TUICallState.instance.audioDevice.value = .earpiece
+        TUICallState.instance.isCameraOpen.value = false
+        TUICallState.instance.isShowFullScreen.value = false
+        TUICallState.instance.showLargeViewUserId.value = ""
         
         GCDTimer.cancel(timerName: timerName) { return }
         
@@ -298,7 +304,7 @@ extension TUICallState {
         if mediaType == .video && statusVideo == .denied {
             deniedType = .video
         }
-
+        
         TUICallKitCommon.showAuthorizationAlert(deniedType: deniedType) {
             CallEngineManager.instance.hangup()
         } cancelHandler: {

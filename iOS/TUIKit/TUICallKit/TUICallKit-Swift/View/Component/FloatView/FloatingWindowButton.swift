@@ -11,9 +11,10 @@ class FloatingWindowButton: UIView {
     
     let viewModel = FloatingWindowButtonViewModel()
     let mediaTypeObserver = Observer()
-    let floatButton: UIButton = {
-    let floatButton = UIButton(type: .system)
-    return floatButton
+    
+    let floatButton: FloatingWindowCustomButton = {
+        let floatButton = FloatingWindowCustomButton(type: .system)
+        return floatButton
     }()
     
     override init(frame: CGRect) {
@@ -31,7 +32,7 @@ class FloatingWindowButton: UIView {
         viewModel.mediaType.removeObserver(mediaTypeObserver)
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -41,22 +42,22 @@ class FloatingWindowButton: UIView {
         bindInteraction()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(floatButton)
     }
-
+    
     func activateConstraints() {
         floatButton.snp.makeConstraints { make in
             make.center.equalTo(self)
-            make.size.equalTo(kFloatWindowButtonSize)
+            make.width.height.equalTo(24)
         }
     }
-
+    
     func bindInteraction() {
         floatButton.addTarget(self, action: #selector(clickFloatButton(sender: )), for: .touchUpInside)
     }
-
+    
     // MARK:  Action Event
     @objc func clickFloatButton(sender: UIButton) {
         WindowManager.instance.showFloatWindow()
@@ -69,16 +70,17 @@ class FloatingWindowButton: UIView {
             self.updateImage()
         }
     }
-
+    
     func updateImage() {
-        if viewModel.mediaType.value == .audio {
-            if let image = TUICallKitCommon.getBundleImage(name: "ic_min_window_dark") {
-                floatButton.setBackgroundImage(image, for: .normal)
-            }
-        } else if viewModel.mediaType.value == .video {
-            if let image = TUICallKitCommon.getBundleImage(name: "ic_min_window_white") {
-                floatButton.setBackgroundImage(image, for: .normal)
-            }
+        if let image = TUICallKitCommon.getBundleImage(name: "icon_min_window") {
+            floatButton.setBackgroundImage(image, for: .normal)
         }
+    }
+}
+
+class FloatingWindowCustomButton: UIButton {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let expandedBounds = bounds.insetBy(dx: -6, dy: -6)
+        return expandedBounds.contains(point) ? self : nil
     }
 }

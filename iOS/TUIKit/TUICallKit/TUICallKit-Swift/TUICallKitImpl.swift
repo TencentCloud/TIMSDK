@@ -1,6 +1,6 @@
 //
 //  TUICallKitImpl.swift
-//  TUICallKitSwift
+//  TUICallKit
 //
 //  Created by vincepzhang on 2023/1/4.
 //
@@ -22,7 +22,6 @@ class TUICallKitImpl: TUICallKit {
     
     override init() {
         super.init()
-        initEngine()
         registerNotifications()
         registerObserveState()
     }
@@ -64,7 +63,7 @@ class TUICallKitImpl: TUICallKit {
         
         if WindowManager.instance.isFloating {
             fail(ERROR_PARAM_INVALID, "call failed, Unable to restart the call")
-            TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.UnableToRestartTheCall"))
+            TUITool.makeToast(TUICallKitLocalize(key: "TUICallKit.UnableToRestartTheCall"))
             return
         }
         
@@ -105,7 +104,7 @@ class TUICallKitImpl: TUICallKit {
         
         if userIdList.count >= MAX_USER {
             fail(ERROR_PARAM_INVALID, "groupCall failed, currently supports call with up to 9 people")
-            TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.User.Exceed.Limit"))
+            TUITool.makeToast(TUICallKitLocalize(key: "TUICallKit.User.Exceed.Limit"))
             return
         }
         
@@ -116,7 +115,7 @@ class TUICallKitImpl: TUICallKit {
         
         if WindowManager.instance.isFloating {
             fail(ERROR_PARAM_INVALID, "call failed, Unable to restart the call")
-            TUITool.makeToast(TUICallKitLocalize(key: "Demo.TRTC.Calling.UnableToRestartTheCall"))
+            TUITool.makeToast(TUICallKitLocalize(key: "TUICallKit.UnableToRestartTheCall"))
             return
         }
         
@@ -248,7 +247,7 @@ private extension TUICallKitImpl {
     }
     
     func initEngine() {
-        CallEngineManager.instance.initEigine(sdkAppId:TUILogin.getSdkAppID(),
+        CallEngineManager.instance.initEngine(sdkAppId:TUILogin.getSdkAppID(),
                                               userId: TUILogin.getUserID() ?? "",
                                               userSig: TUILogin.getUserSig() ?? "") {} fail: { Int32errCode, errMessage in }
         
@@ -320,11 +319,11 @@ private extension TUICallKitImpl {
     func handleAbilityFailErrorMessage(code: Int32, message: String?) {
         var errorMessage: String? = message
         if code == ERROR_PACKAGE_NOT_PURCHASED {
-            errorMessage = TUICallKitLocalize(key: "Demo.TRTC.Calling.purchased")
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.purchased")
         } else if code == ERROR_PACKAGE_NOT_SUPPORTED {
-            errorMessage = TUICallKitLocalize(key: "Demo.TRTC.Calling.support")
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.support")
         } else if code == ERR_SVR_MSG_IN_PEER_BLACKLIST.rawValue {
-            errorMessage = TUICallKitLocalize(key: "Demo.TRTC.Calling.ErrorInPeerBlacklist")
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.ErrorInPeerBlacklist")
         }
         TUITool.makeToast(errorMessage ?? "", duration: 4)
     }

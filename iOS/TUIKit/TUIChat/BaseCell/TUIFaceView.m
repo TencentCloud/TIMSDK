@@ -62,6 +62,11 @@
     [self addSubview:_pageControl];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self defaultLayout];
+}
+
 - (void)defaultLayout {
     _lineView.frame = CGRectMake(0, 0, self.frame.size.width, TLine_Heigh);
     _pageControl.frame = CGRectMake(0, self.frame.size.height - TFaceView_Page_Height, self.frame.size.width, TFaceView_Page_Height);

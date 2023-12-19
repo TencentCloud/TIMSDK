@@ -1,0 +1,60 @@
+//
+//  Localized.strings
+//  TUICallKit
+//
+//  Created by noah on 2023/12/4.
+//  Copyright © 2023 Tencent. All rights reserved.
+//
+
+"TUICallKit.inviteToVideoCall" = "邀请你视频通话";
+"TUICallKit.inviteToAudioCall" = "邀请你语音通话";
+"TUICallKit.waitAccept" = "等待对方接受邀请";
+"TUICallKit.accept" = "已接通";
+"TUICallKit.Group.inviteToGroupCall" = "邀请你加入多人通话";
+"TUICallKit.Group.waitAccept" = "等待接听";
+"TUICallKit.determine" = "确定";
+
+"TUICallKit.hangup" = "挂断";
+"TUICallKit.decline" = "拒接";
+"TUICallKit.switchToAudio" = "切换到语音通话";
+"TUICallKit.answer" = "接听";
+"TUICallKit.yournetworkpoor" = "己方网络不佳";
+"TUICallKit.calleeTip" = "他们也在";
+"TUICallKit.FloatingWindow.waitAccept" = "等待接听";
+
+"TUICallKit.User.Exceed.Limit" = "暂支持最多9人通话。如需多人会议，请使用TUIRoom";
+"TUICallKit.UnableToRestartTheCall" = "正在通话中，无法再次发起";
+"TUICallKit.ErrorInPeerBlacklist" = "发起通话失败，用户在黑名单中，禁止发起！";
+
+"TUICallKit.FailedToGetCameraPermission.Title" = "相机权限未开启";
+"TUICallKit.FailedToGetCameraPermission.Tips"  = "无法使用视频通话功能，点击\"去开启\"打开相机权限";
+"TUICallKit.FailedToGetCameraPermission.Later" = "以后再说";
+"TUICallKit.FailedToGetCameraPermission.Enable" = "去开启";
+
+"TUICallKit.FailedToGetMicrophonePermission.Title" = "麦克风权限未开启";
+"TUICallKit.FailedToGetMicrophonePermission.Tips"  = "无法使用发送音视频通话功能，点击\"去开启\"打开麦克风权限";
+"TUICallKit.FailedToGetMicrophonePermission.Later" = "以后再说";
+"TUICallKit.FailedToGetMicrophonePermission.Enable" = "去开启";
+
+"TUICallKit.package.not.purchased" = "您当前未购买音视频通话能力套餐，请前往IM 控制台开通免费体验或加购正式版";
+"TUICallKit.package.not.support" = "您当前购买的音视频通话能力套餐不支持该功能，建议您升级套餐类型";
+"TUICallKit.have.new.invitation" = "您有一个新的通话";
+
+"TUICallKit.Recents.all" = "所有通话";
+"TUICallKit.Recents.missed" = "未接通话";
+"TUICallKit.Recents.calls" = "通话记录";
+"TUICallKit.Recents.clear" = "清除";
+"TUICallKit.Recents.done" = "完成";
+"TUICallKit.Recents.delete" = "删除";
+"TUICallKit.Recents.addUser" = "添加成员";
+"TUICallKit.Recents.clear.all" = "清除所有记录";
+"TUICallKit.Recents.clear.cancel" = "取消";
+"TUICallKit.Recents.incoming" = "来电";
+"TUICallKit.Recents.outgoing" = "去电";
+
+"TUICallKit.unmuted" = "麦克风已开";
+"TUICallKit.muted" = "麦克风已关";
+"TUICallKit.speakerPhone" = "扬声器已开";
+"TUICallKit.earpiece" = "扬声器已关";
+"TUICallKit.cameraOn" = "摄像头已开";
+"TUICallKit.cameraOff" = "摄像头已关";

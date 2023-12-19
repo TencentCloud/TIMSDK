@@ -101,7 +101,7 @@
         case TUIChatSmallTongueType_ReceiveNewMsg: {
             tongueHeight = kScale390(47);
         } break;
-        case TUIChatSmallTongueType_SomeoneAtMe: {
+        case TUIChatSmallTongueType_SomeoneAt: {
             tongueHeight = kScale390(47);
         } break;
         default:
@@ -119,7 +119,7 @@
         case TUIChatSmallTongueType_ReceiveNewMsg: {
             tongueText = [NSString stringWithFormat:@"%@", tongue.unreadMsgCount > 99 ? @"99+" : @(tongue.unreadMsgCount)];
         } break;
-        case TUIChatSmallTongueType_SomeoneAtMe: {
+        case TUIChatSmallTongueType_SomeoneAt: {
             tongueText = [NSString stringWithFormat:@"%@", tongue.atMsgSeqs.count > 99 ? @"99+" : @(tongue.atMsgSeqs.count)];
         } break;
         default:
@@ -138,7 +138,7 @@
             tongueImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"small_tongue_scroll_to_boom")];
             break;
         }
-        case TUIChatSmallTongueType_SomeoneAtMe: {
+        case TUIChatSmallTongueType_SomeoneAt: {
             tongueImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"small_tongue_someone_at_me")];
         } break;
         default:

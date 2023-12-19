@@ -146,6 +146,7 @@
     [self hiddenMicroFloatingWindow];
     if (self.delegate && [self.delegate respondsToSelector:@selector(floatingWindowDidClickView)]) {
         dispatch_callkit_main_async_safe(^{
+            [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
             [self.delegate floatingWindowDidClickView];
         });
     }

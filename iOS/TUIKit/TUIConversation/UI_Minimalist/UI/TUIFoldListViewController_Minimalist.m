@@ -153,6 +153,7 @@
         TUICore_TUIChatObjectFactory_ChatViewController_AvatarUrl : conversation.faceUrl ?: @"",
         TUICore_TUIChatObjectFactory_ChatViewController_AvatarImage : conversation.avatarImage ?: [UIImage new],
         TUICore_TUIChatObjectFactory_ChatViewController_Draft : conversation.draftText ?: @"",
+        TUICore_TUIChatObjectFactory_ChatViewController_AtTipsStr : conversation.atTipsStr ?: @"",
         TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs : conversation.atMsgSeqs ?: @[]
     };
     [self.navigationController pushViewController:TUICore_TUIChatObjectFactory_ChatViewController_Minimalist param:param forResult:nil];

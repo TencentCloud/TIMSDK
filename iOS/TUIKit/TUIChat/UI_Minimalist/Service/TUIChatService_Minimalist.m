@@ -7,8 +7,8 @@
 #import <TUICore/TUILogin.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatConfig.h"
-#import "TUIMessageDataProvider.h"
 #import "TUIMessageCellConfig_Minimalist.h"
+#import "TUIBaseMessageController_Minimalist.h"
 
 @interface TUIChatService_Minimalist () <TUINotificationProtocol, TUIExtensionProtocol>
 
@@ -50,7 +50,7 @@
 }
 
 - (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return [TUIMessageDataProvider getDisplayString:message];
+    return [TUIBaseMessageController_Minimalist getDisplayString:message];
 }
 
 #pragma mark - TUIServiceProtocol

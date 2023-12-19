@@ -8,17 +8,15 @@
 import Foundation
 
 class InviteeAvatarListViewModel {
-
+    
     let remoteUserListObserver = Observer()
-    let selfUserObserver = Observer()
-
-    let remoteUserList: Observable<[User]> = Observable(Array())
-    let selfUser = Observable(User())
+    
+    let dataSource: Observable<[User]> = Observable(Array())
     
     init() {
-        remoteUserList.value = TUICallState.instance.remoteUserList.value
-        selfUser.value = TUICallState.instance.selfUser.value
-        
+        var dataList = TUICallState.instance.remoteUserList.value
+        dataList.append(TUICallState.instance.selfUser.value)
+        dataSource.value = removeCallUser(remoteUserList: dataList)
         registerObserve()
     }
     
@@ -26,11 +24,18 @@ class InviteeAvatarListViewModel {
         TUICallState.instance.remoteUserList.removeObserver(remoteUserListObserver)
     }
     
+    func removeCallUser(remoteUserList: [User]) -> [User] {
+        let userList = remoteUserList.filter { $0.callRole.value != .call }
+        return userList
+    }
+    
     func registerObserve() {
         TUICallState.instance.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
-            self.remoteUserList.value = newValue
+            var dataList = newValue
+            dataList.append(TUICallState.instance.selfUser.value)
+            self.dataSource.value = self.removeCallUser(remoteUserList: dataList)
         })
     }
-
+    
 }

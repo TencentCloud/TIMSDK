@@ -71,7 +71,7 @@
         textColor = self.class.outgoingTextColor;
         textFont = self.class.outgoingTextFont;
     }
-    self.textView.attributedText = [data getAttributedString:textFont];
+    self.textView.attributedText = [data getContentAttributedString:textFont];
     self.textView.textColor = textColor;
     self.textView.font = textFont;
     self.textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
@@ -212,22 +212,22 @@
     TUITextMessageCellData *textCellData = (TUITextMessageCellData *)data;
 
     UIFont *textFont = textCellData.direction == MsgDirectionIncoming ? self.incommingTextFont : self.outgoingTextFont;
-    NSAttributedString *attributeString = [textCellData getAttributedString:textFont];
+    NSAttributedString *attributeString = [textCellData getContentAttributedString:textFont];
     CGRect rect = [attributeString boundingRectWithSize:CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT)
                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                 context:nil];
-    CGSize size = rect.size;
+    CGSize size = CGSizeMake(ceil(rect.size.width), ceil(rect.size.height));
 
     CGRect rect2 = [attributeString boundingRectWithSize:CGSizeMake(MAXFLOAT, [textFont lineHeight])
                                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                  context:nil];
-    CGSize size2 = rect2.size;
+    CGSize size2 =  CGSizeMake(ceil(rect2.size.width), ceil(rect2.size.height));
 
     // 如果有多行，判断下最后一行的字体宽度是否超过了消息状态的位置，如果超过，消息状态换行
     // 如果只有一行，直接加上消息状态的宽度
     int max_width = size.height > [textFont lineHeight] ? size.width : TTextMessageCell_Text_Width_Max;
     if ((int)size2.width / max_width > 0) {
-        if ((int)size2.width % max_width == 0 || (int)size2.width % max_width + textCellData.msgStatusSize.width > max_width) {
+        if ((int)size2.width % max_width == 0 || (int)size2.width % max_width + textCellData.msgStatusSize.width >= max_width) {
             size.height += textCellData.msgStatusSize.height;
         }
     } else {

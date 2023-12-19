@@ -639,6 +639,7 @@
             TUICore_TUIChatObjectFactory_ChatViewController_AvatarImage : data.avatarImage ?: [UIImage new],
             TUICore_TUIChatObjectFactory_ChatViewController_AvatarUrl : data.faceUrl ?: @"",
             TUICore_TUIChatObjectFactory_ChatViewController_ConversationID : data.conversationID ?: @"",
+            TUICore_TUIChatObjectFactory_ChatViewController_AtTipsStr : data.atTipsStr ?: @"",
             TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs : data.atMsgSeqs ?: @[],
             TUICore_TUIChatObjectFactory_ChatViewController_Draft : data.draftText ?: @""
         };

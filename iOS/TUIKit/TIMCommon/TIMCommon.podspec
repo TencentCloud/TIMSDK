@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TIMCommon'
-  spec.version      = '7.6.5011'
-  spec.platform     = :ios 
+  spec.version      = '7.7.5282'
+  spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE

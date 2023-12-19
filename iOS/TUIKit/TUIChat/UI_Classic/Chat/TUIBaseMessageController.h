@@ -22,6 +22,8 @@
 #import "TUIChatConversationModel.h"
 #import "TUIChatDefine.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class TUIConversationCellData;
 @class TUIBaseMessageController;
 @class TUIReplyMessageCell;
@@ -48,6 +50,8 @@
  *
  */
 @interface TUIBaseMessageController : UITableViewController
+
++ (nullable NSString *)getDisplayString:(V2TIMMessage *)message;
 
 @property(nonatomic, weak) id<TUIBaseMessageControllerDelegate> delegate;
 
@@ -101,3 +105,5 @@
 - (void)scrollCellToBottomOfMessage:(NSString *)messageID;
 
 @end
+
+NS_ASSUME_NONNULL_END

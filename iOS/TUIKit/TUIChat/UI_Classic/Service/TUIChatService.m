@@ -8,8 +8,8 @@
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatConfig.h"
 #import "TUIChatDefine.h"
-#import "TUIMessageDataProvider.h"
 #import "TUIMessageCellConfig.h"
+#import "TUIBaseMessageController.h"
 
 @interface TUIChatService () <TUINotificationProtocol, TUIExtensionProtocol>
 
@@ -51,7 +51,7 @@
 }
 
 - (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return [TUIMessageDataProvider getDisplayString:message];
+    return [TUIBaseMessageController getDisplayString:message];
 }
 
 #pragma mark - TUIServiceProtocol
@@ -84,6 +84,12 @@
             NSString *cellName = param[TMessageCell_Name];
             NSString *cellDataName = param[TMessageCell_Data_Name];
             [TUIMessageCellConfig registerCustomMessageCell:cellName messageCellData:cellDataName forBusinessID:businessID isPlugin:YES];
+        }
+    }
+    else if ([method isEqualToString:TUICore_TUIChatService_SetMaxTextSize]) {
+        if ([param isKindOfClass:NSDictionary.class]) {
+            CGSize sizeVa = [param[@"maxsize"] CGSizeValue];
+            [TUIMessageCellConfig setMaxTextSize:sizeVa];
         }
     }
 

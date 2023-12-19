@@ -68,7 +68,7 @@ typedef NS_ENUM(NSInteger, TUIChatSmallTongueType) {
     TUIChatSmallTongueType_None,
     TUIChatSmallTongueType_ScrollToBoom,
     TUIChatSmallTongueType_ReceiveNewMsg,
-    TUIChatSmallTongueType_SomeoneAtMe,
+    TUIChatSmallTongueType_SomeoneAt,
 };
 
 #define TUITencentCloudHomePageCN @"https://cloud.tencent.com/document/product/269/68228"

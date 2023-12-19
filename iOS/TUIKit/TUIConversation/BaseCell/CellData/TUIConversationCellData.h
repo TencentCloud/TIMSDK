@@ -89,6 +89,12 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
 @property(nonatomic, strong) NSMutableAttributedString *subTitle;
 
 /**
+ *  群@ 消息提示语
+ *  Group@ message tips string
+ */
+@property(nonatomic, strong) NSString *atTipsStr;
+
+/**
  *  群@ 消息 seq 列表
  *  Sequence list of group-at message
  */

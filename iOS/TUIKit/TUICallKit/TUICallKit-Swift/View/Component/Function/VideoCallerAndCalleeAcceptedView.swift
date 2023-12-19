@@ -11,59 +11,59 @@ import SnapKit
 class VideoCallerAndCalleeAcceptedView: UIView {
     
     let viewModel = VideoCallerAndCalleeAcceptedViewModel()
+    
     lazy var muteMicBtn: BaseControlButton = {
-        weak var weakSelf = self
+        let titleKey = viewModel.isMicMute.value ? "TUICallKit.muted" : "TUICallKit.unmuted"
         let btn = BaseControlButton.create(frame: CGRect.zero,
-                                           title: TUICallKitLocalize(key: "Demo.TRTC.Calling.mic") ?? "",
-                                           imageSize: kBtnSmallSize) { sender in
-            weakSelf?.muteMicEvent(sender: sender)
+                                           title: TUICallKitLocalize(key: titleKey) ?? "",
+                                           imageSize: kBtnSmallSize) { [weak self] sender in
+            guard let self = self else { return }
+            self.muteMicEvent(sender: sender)
         }
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_mute") {
+        let imageName = viewModel.isMicMute.value ? "icon_mute_on" : "icon_mute"
+        if let image = TUICallKitCommon.getBundleImage(name: imageName) {
             btn.updateImage(image: image)
         }
-        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))
+        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
         return btn
     }()
     
     lazy var closeCameraBtn: BaseControlButton = {
-        weak var weakSelf = self
+        let titleKey = viewModel.isCameraOpen.value ? "TUICallKit.cameraOn" : "TUICallKit.cameraOff"
         let btn = BaseControlButton.create(frame: CGRect.zero,
-                                           title: TUICallKitLocalize(key: "Demo.TRTC.Calling.camera") ?? "",
-                                           imageSize: kBtnSmallSize) { sender in
-            weakSelf?.closeCameraTouchEvent(sender: sender)
+                                           title: TUICallKitLocalize(key: titleKey) ?? "",
+                                           imageSize: kBtnSmallSize) { [weak self] sender in
+            guard let self = self else { return }
+            self.closeCameraTouchEvent(sender: sender)
         }
-        if let image = TUICallKitCommon.getBundleImage(name: "camera_on") {
+        let imageName = viewModel.isCameraOpen.value ? "icon_camera_on" : "icon_camera_off"
+        if let image = TUICallKitCommon.getBundleImage(name: imageName) {
             btn.updateImage(image: image)
         }
-        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))
+        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
         return btn
     }()
     
     lazy var changeSpeakerBtn: BaseControlButton = {
-        weak var weakSelf = self
+        let titleKey = (viewModel.audioDevice.value == .speakerphone) ? "TUICallKit.speakerPhone" : "TUICallKit.earpiece"
         let btn = BaseControlButton.create(frame: CGRect.zero,
-                                           title: TUICallKitLocalize(key: "Demo.TRTC.Calling.speaker") ?? "",
-                                           imageSize: kBtnSmallSize) { sender in
-            weakSelf?.changeSpeakerEvent(sender: sender)
+                                           title: TUICallKitLocalize(key: titleKey) ?? "",
+                                           imageSize: kBtnSmallSize) { [weak self] sender in
+            guard let self = self else { return }
+            self.changeSpeakerEvent(sender: sender)
         }
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_handsfree_on") {
+        let imageName = (viewModel.audioDevice.value == .speakerphone) ? "icon_handsfree_on" : "icon_handsfree"
+        if let image = TUICallKitCommon.getBundleImage(name: imageName) {
             btn.updateImage(image: image)
         }
-        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))
+        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
         return btn
     }()
     
-    lazy var hangupBtn: BaseControlButton = {
-        weak var weakSelf = self
-        let btn = BaseControlButton.create(frame: CGRect.zero,
-                                           title: TUICallKitLocalize(key: "Demo.TRTC.Calling.hangup") ?? "",
-                                           imageSize: kBtnLargeSize) { sender in
-            weakSelf?.hangupTouchEvent(sender: sender)
-        }
-        if let image = TUICallKitCommon.getBundleImage(name: "ic_hangup") {
-            btn.updateImage(image: image)
-        }
-        btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#F2F2F2"))
+    lazy var hangupBtn: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.addTarget(self,action:#selector(hangupTouchEvent(sender:)), for: .touchUpInside)
+        btn.setBackgroundImage(TUICallKitCommon.getBundleImage(name: "icon_hangup"), for: .normal)
         return btn
     }()
     
@@ -76,15 +76,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
         return btn
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -93,7 +85,7 @@ class VideoCallerAndCalleeAcceptedView: UIView {
         activateConstraints()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(muteMicBtn)
         addSubview(changeSpeakerBtn)
@@ -101,45 +93,41 @@ class VideoCallerAndCalleeAcceptedView: UIView {
         addSubview(hangupBtn)
         addSubview(switchCameraBtn)
     }
-
+    
     func activateConstraints() {
         muteMicBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(changeSpeakerBtn.snp.leading)
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? 100.scaleWidth() : -100.scaleWidth())
             make.centerY.equalTo(changeSpeakerBtn)
             make.size.equalTo(kControlBtnSize)
         }
-        
         changeSpeakerBtn.snp.makeConstraints { make in
             make.centerX.equalTo(self)
-            make.bottom.equalTo(hangupBtn.snp.top).offset(-10)
+            make.bottom.equalTo(hangupBtn.snp.top).offset(-20.scaleHeight())
             make.size.equalTo(kControlBtnSize)
         }
-        
         closeCameraBtn.snp.makeConstraints { make in
-            make.leading.equalTo(changeSpeakerBtn.snp.trailing)
-            make.centerY.equalTo(changeSpeakerBtn)
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? -100.scaleWidth() : 100.scaleWidth())
+            make.centerY.equalTo(self.changeSpeakerBtn)
             make.size.equalTo(kControlBtnSize)
         }
-        
         hangupBtn.snp.makeConstraints { make in
             make.centerX.equalTo(self)
             make.bottom.equalTo(snp.bottom)
-            make.size.equalTo(kControlBtnSize)
+            make.width.height.equalTo(60.scaleWidth())
         }
-        
         switchCameraBtn.snp.makeConstraints { make in
             make.centerY.equalTo(hangupBtn)
-            make.leading.equalTo(hangupBtn.snp.trailing).offset(20)
-            make.size.equalTo(CGSize(width: 36, height: 36))
+            make.leading.equalTo(hangupBtn.snp.trailing).offset(20.scaleWidth())
+            make.size.equalTo(CGSize(width: 28.scaleWidth(), height: 28.scaleWidth()))
         }
     }
-
-    //MARK: Action Event
+    
+    // MARK: Action Event
     func muteMicEvent(sender: UIButton) {
         viewModel.muteMic()
         updateMuteAudioBtn(mute: viewModel.isMicMute.value == true)
     }
-
+    
     func closeCameraTouchEvent(sender: UIButton) {
         updateCloseCameraBtn(open: viewModel.isCameraOpen.value != true)
         if viewModel.isCameraOpen.value == true {
@@ -149,35 +137,41 @@ class VideoCallerAndCalleeAcceptedView: UIView {
             viewModel.openCamera(videoView: videoViewEntity.videoView)
         }
     }
-
+    
     func changeSpeakerEvent(sender: UIButton) {
         viewModel.changeSpeaker()
         updateChangeSpeakerBtn(isSpeaker: viewModel.audioDevice.value == .speakerphone)
     }
-
-    func hangupTouchEvent(sender: UIButton) {
+    
+    @objc func hangupTouchEvent(sender: UIButton) {
         viewModel.hangup()
     }
-
+    
     @objc func switchCameraTouchEvent(sender: UIButton) {
         viewModel.switchCamera()
     }
     
-    //MARK: Update UI
+    // MARK: Update UI
     func updateMuteAudioBtn(mute: Bool) {
-        if let image = TUICallKitCommon.getBundleImage(name: mute ? "ic_mute_on" : "ic_mute") {
+        muteMicBtn.updateTitle(title: TUICallKitLocalize(key: mute ? "TUICallKit.muted" : "TUICallKit.unmuted") ?? "")
+        
+        if let image = TUICallKitCommon.getBundleImage(name: mute ? "icon_mute_on" : "icon_mute") {
             muteMicBtn.updateImage(image: image)
         }
     }
     
     func updateChangeSpeakerBtn(isSpeaker: Bool) {
-        if let image = TUICallKitCommon.getBundleImage(name: isSpeaker ? "ic_handsfree_on" : "ic_handsfree") {
+        changeSpeakerBtn.updateTitle(title: TUICallKitLocalize(key: isSpeaker ? "TUICallKit.speakerPhone" : "TUICallKit.earpiece") ?? "")
+        
+        if let image = TUICallKitCommon.getBundleImage(name: isSpeaker ? "icon_handsfree_on" : "icon_handsfree") {
             changeSpeakerBtn.updateImage(image: image)
         }
     }
     
     func updateCloseCameraBtn(open: Bool) {
-        if let image = TUICallKitCommon.getBundleImage(name: open ? "camera_on" : "camera_off") {
+        closeCameraBtn.updateTitle(title: TUICallKitLocalize(key: open ? "TUICallKit.cameraOn" : "TUICallKit.cameraOff") ?? "")
+        
+        if let image = TUICallKitCommon.getBundleImage(name: open ? "icon_camera_on" : "icon_camera_off") {
             closeCameraBtn.updateImage(image: image)
         }
     }

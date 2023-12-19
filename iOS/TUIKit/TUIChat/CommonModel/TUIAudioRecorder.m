@@ -48,6 +48,10 @@
 #pragma mark - Public
 - (void)record {
     [self checkMicPermissionWithCompletion:^(BOOL isGranted, BOOL isFirstChek) {
+      if (TUILogin.getCurrentBusinessScene != None) {
+          [TUITool makeToast:TIMCommonLocalizableString(TUIKitMessageTypeOtherUseMic) duration:3];
+          return;
+      }
       if (isFirstChek) {
           if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didCheckPermission:isFirstTime:)]) {
               [self.delegate audioRecorder:self didCheckPermission:isGranted isFirstTime:YES];

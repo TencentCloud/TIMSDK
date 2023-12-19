@@ -23,19 +23,19 @@ class VideoView: TUIVideoView {
     }()
     
     let gestureView = UIView()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         backgroundColor = UIColor.t_colorWithHexString(color: "#55534F")
-
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -45,12 +45,12 @@ class VideoView: TUIVideoView {
         bindInteraction()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(gestureView)
         addSubview(volumeProgress)
     }
-
+    
     func activateConstraints() {
         
         gestureView.snp.makeConstraints { make in
@@ -62,7 +62,7 @@ class VideoView: TUIVideoView {
             make.height.equalTo(4)
         }
     }
-
+    
     func bindInteraction() {
         gestureView.backgroundColor = UIColor.clear
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapGesture(tapGesture: )))
@@ -72,7 +72,7 @@ class VideoView: TUIVideoView {
         gestureView.addGestureRecognizer(pan)
     }
     
-    //MARK: Gesture Action
+    // MARK: Gesture Action
     @objc func tapGesture(tapGesture: UITapGestureRecognizer) {
         if self.delegate != nil && ((self.delegate?.responds(to: Selector(("tapGestureAction")))) != nil) {
             self.delegate?.tapGestureAction?(tapGesture: tapGesture)

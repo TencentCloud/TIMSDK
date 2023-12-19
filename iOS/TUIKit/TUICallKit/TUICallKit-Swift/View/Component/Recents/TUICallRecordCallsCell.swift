@@ -109,7 +109,7 @@ class TUICallRecordCallsCell: UITableViewCell {
     private func activateConstraints() {
         avatarImageView.snp.makeConstraints { make in
             make.centerY.equalTo(contentView)
-            make.leading.equalTo(contentView).offset(8)
+            make.leading.equalTo(contentView).offset(16)
             make.width.height.equalTo(40)
         }
         titleLabel.snp.makeConstraints { make in

@@ -8,20 +8,25 @@
 import Foundation
 import TUICore
 
+protocol FloatingWindowViewDelegate: NSObject {
+    func tapGestureAction(tapGesture: UITapGestureRecognizer)
+    func panGestureAction(panGesture: UIPanGestureRecognizer)
+}
+
 class FloatWindowViewController: UIViewController, FloatingWindowViewDelegate {
     
     let callEventObserver = Observer()
-    let floatView = FloatingWindowView(frame: CGRect.zero)
     weak var delegate: FloatingWindowViewDelegate?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(floatView)
-        floatView.snp.makeConstraints { make in
-            make.center.equalTo(self.view)
-            make.size.equalTo(self.view)
+        
+        if TUICallState.instance.scene.value == .group {
+            addFloatingWindowGroupView()
+        } else if TUICallState.instance.scene.value == .single {
+            addFloatingWindowSignalView()
         }
-        floatView.delegate = self
+        
         registerObserver()
     }
     
@@ -32,7 +37,27 @@ class FloatWindowViewController: UIViewController, FloatingWindowViewDelegate {
         }
     }
     
-    //MARK: FloatingWindowViewDelegate
+    func addFloatingWindowGroupView() {
+        let floatView = FloatingWindowGroupView(frame: CGRect.zero)
+        view.addSubview(floatView)
+        floatView.snp.makeConstraints { make in
+            make.center.equalTo(self.view)
+            make.size.equalTo(self.view)
+        }
+        floatView.delegate = self
+    }
+    
+    func addFloatingWindowSignalView() {
+        let floatView = FloatingWindowSignalView(frame: CGRect.zero)
+        view.addSubview(floatView)
+        floatView.snp.makeConstraints { make in
+            make.center.equalTo(self.view)
+            make.size.equalTo(self.view)
+        }
+        floatView.delegate = self
+    }
+    
+    // MARK: FloatingWindowViewDelegate
     func tapGestureAction(tapGesture: UITapGestureRecognizer) {
         if self.delegate != nil && ((self.delegate?.responds(to: Selector(("tapGestureAction")))) != nil) {
             self.delegate?.tapGestureAction(tapGesture: tapGesture)
@@ -51,39 +76,8 @@ class FloatWindowViewController: UIViewController, FloatingWindowViewDelegate {
                 guard let errorCode = newValue.param[EVENT_KEY_CODE] as? Int32 else { return }
                 guard let errorMessage = newValue.param[EVENT_KEY_MESSAGE] as? String else { return }
                 TUITool.makeToast("error:\(errorCode):\(errorMessage)")
-            } else if newValue.eventType == .TIP {
-                
-                switch newValue.event {
-                case .USER_EXCEED_LIMIT:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.Calling.User.Exceed.Limit") else { return }
-                    TUITool.makeToast(userId + toastString)
-                    
-                case .USER_NO_RESPONSE:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingnoresponse") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                case .USER_LINE_BUSY:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingbusy") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                case .USER_REJECT:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingrefuse") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                case .USER_LEAVE:
-                    guard let userId = newValue.param[EVENT_KEY_USER_ID] as? String else { return }
-                    guard let toastString = TUICallKitLocalize(key: "Demo.TRTC.calling.callingleave") else { return }
-                    TUITool.makeToast(userId + toastString)
-
-                default:
-                    break
-                }
             }
         }
     }
-
+    
 }

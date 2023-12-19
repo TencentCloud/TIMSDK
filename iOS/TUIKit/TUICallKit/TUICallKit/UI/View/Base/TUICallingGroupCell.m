@@ -81,6 +81,7 @@
         self.renderView = renderView;
         // avatarImageView
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        imageView.clipsToBounds = YES;
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.contentView addSubview:imageView];
         self.avatarImageView = imageView;

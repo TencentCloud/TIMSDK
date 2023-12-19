@@ -12,9 +12,10 @@ class InviteUserButton: UIView {
     
     let viewModel = InviteUserButtonViewModel()
     let mediaTypeObserver = Observer()
-    let inviteUserButton: UIButton = {
-    let inviteUserButton = UIButton(type: .system)
-    return inviteUserButton
+    
+    let inviteUserButton: InviteUserCustomButton = {
+        let inviteUserButton = InviteUserCustomButton(type: .system)
+        return inviteUserButton
     }()
     
     override init(frame: CGRect) {
@@ -32,7 +33,7 @@ class InviteUserButton: UIView {
         viewModel.mediaType.removeObserver(mediaTypeObserver)
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -42,22 +43,22 @@ class InviteUserButton: UIView {
         bindInteraction()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(inviteUserButton)
     }
-
+    
     func activateConstraints() {
         inviteUserButton.snp.makeConstraints { make in
             make.center.equalTo(self)
-            make.size.equalTo(kInviteUserButtonSize)
+            make.width.height.equalTo(24)
         }
     }
-
+    
     func bindInteraction() {
         inviteUserButton.addTarget(self, action: #selector(clickButton(sender: )), for: .touchUpInside)
     }
-
+    
     // MARK:  Action Event
     @objc func clickButton(sender: UIButton) {
         viewModel.inviteUser()
@@ -70,16 +71,17 @@ class InviteUserButton: UIView {
             self.updateImage()
         }
     }
-
+    
     func updateImage() {
-        if viewModel.mediaType.value == .audio {
-            if let image = TUICallKitCommon.getBundleImage(name: "ic_add_user_dark") {
-                inviteUserButton.setBackgroundImage(image, for: .normal)
-            }
-        } else if viewModel.mediaType.value == .video {
-            if let image = TUICallKitCommon.getBundleImage(name: "ic_add_user") {
-                inviteUserButton.setBackgroundImage(image, for: .normal)
-            }
+        if let image = TUICallKitCommon.getBundleImage(name: "icon_add_user") {
+            inviteUserButton.setBackgroundImage(image, for: .normal)
         }
+    }
+}
+
+class InviteUserCustomButton: UIButton {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let expandedBounds = bounds.insetBy(dx: -6, dy: -6)
+        return expandedBounds.contains(point) ? self : nil
     }
 }

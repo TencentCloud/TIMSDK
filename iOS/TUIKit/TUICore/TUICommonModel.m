@@ -611,7 +611,7 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    if (@available(iOS 15.0, *)) {
+    if (@available(iOS 13.0, *)) {
         UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
         [appearance configureWithDefaultBackground];
         appearance.shadowColor = nil;

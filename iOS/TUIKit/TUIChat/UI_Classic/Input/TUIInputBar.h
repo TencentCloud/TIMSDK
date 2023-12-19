@@ -200,6 +200,10 @@
 
 @property(nonatomic, weak) id<TUIInputBarDelegate> delegate;
 
+@property(nonatomic, assign) BOOL isFromReplyPage;
+
+- (void)defaultLayout;
+
 /**
  *  添加表情
  *  用于实现在当前文本输入框中输入 emoji

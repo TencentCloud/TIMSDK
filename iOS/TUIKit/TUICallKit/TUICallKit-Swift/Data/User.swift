@@ -10,8 +10,15 @@ import ImSDK_Plus
 import TUICallEngine
 import TUICore
 
-class User {
+enum UserUpdate {
+    case delete(Int)
+    case insert(User, Int)
+    case move(Int, Int)
+    case reload(Int)
+}
 
+class User {
+    
     let id: Observable<String> = Observable("")
     let nickname: Observable<String> = Observable("")
     let avatar: Observable<String> = Observable("")
@@ -24,8 +31,11 @@ class User {
     let videoAvailable: Observable<Bool> = Observable(false)
     let playoutVolume: Observable<Float> = Observable(0)
     
+    var index: Int = -1
+    var lastUpdate = Date()
+    
     static func convertUserFromImFullInfo(user: V2TIMGroupMemberFullInfo) -> User {
-        var dstUser = User()
+        let dstUser = User()
         dstUser.nickname.value = user.nickName ?? ""
         dstUser.avatar.value = user.faceURL ?? ""
         dstUser.id.value = user.userID ?? ""
@@ -37,7 +47,7 @@ class User {
     }
     
     static func convertUser(user: V2TIMUserInfo, volume: Float) -> User {
-        var dstUser = User()
+        let dstUser = User()
         dstUser.nickname.value = user.nickName ?? ""
         dstUser.avatar.value = user.faceURL ?? ""
         dstUser.id.value = user.userID ?? ""
@@ -46,13 +56,12 @@ class User {
     }
     
     static func getUserInfosFromIM(userIDs: [String], response: @escaping ([User]) -> Void ) {
-        
-        V2TIMManager.sharedInstance().getFriendsInfo(userIDs) { imFrientInfosOptional in
-            guard let imFrientInfos = imFrientInfosOptional else { return }
+        V2TIMManager.sharedInstance().getFriendsInfo(userIDs) { friendInfosOptional in
+            guard let friendInfos = friendInfosOptional else { return }
             var userModels: [User] = Array()
-            for imFriendInfo in imFrientInfos {
-                let userModel = convertUser(user: imFriendInfo.friendInfo.userFullInfo)
-                userModel.remark.value = imFriendInfo.friendInfo.friendRemark ?? ""
+            for friendInfo in friendInfos {
+                let userModel = convertUser(user: friendInfo.friendInfo.userFullInfo)
+                userModel.remark.value = friendInfo.friendInfo.friendRemark ?? ""
                 userModels.append(userModel)
             }
             response(userModels)
@@ -60,7 +69,7 @@ class User {
             print("getUsersInfo file code:\(code) message:\(message ?? "")  ")
         }
     }
-
+    
     static func getSelfUserInfo(response: @escaping (User) -> Void ){
         guard let selfId = TUILogin.getUserID() else { return }
         var selfInfo = User()
@@ -80,8 +89,14 @@ class User {
         if !user.nickname.value.isEmpty {
             return user.nickname.value
         }
-
+        
         return user.id.value
     }
-
+    
+    var isUpdated: Bool? {
+        didSet {
+            lastUpdate = Date()
+        }
+    }
+    
 }

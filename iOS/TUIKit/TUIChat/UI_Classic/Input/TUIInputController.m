@@ -38,6 +38,15 @@
     [self setupViews];
 }
 - (void)viewWillAppear:(BOOL)animated {
+    _inputBar.frame = CGRectMake(0, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width, TTextView_Height);
+    [_inputBar setNeedsLayout];
+    _faceView.frame = CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width, TFaceView_Height);
+    [_faceView setNeedsLayout];
+    _menuView.frame = CGRectMake(0, self.faceView.frame.origin.y + self.faceView.frame.size.height, self.view.frame.size.width, TMenuView_Menu_Height);
+    [_menuView setNeedsLayout];
+    _moreView.frame = CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.faceView.frame.size.width, _moreView.frame.size.height);
+    [_moreView setNeedsLayout];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -63,7 +72,7 @@
     self.view.backgroundColor = TUIChatDynamicColor(@"chat_input_controller_bg_color", @"#EBF0F6");
     _status = Input_Status_Input;
 
-    _inputBar = [[TUIInputBar alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width, TTextView_Height)];
+    _inputBar = [[TUIInputBar alloc] initWithFrame:CGRectZero];
     _inputBar.delegate = self;
     [self.view addSubview:_inputBar];
 }
@@ -128,9 +137,8 @@
 
     self.faceView.hidden = NO;
     CGRect frame = self.faceView.frame;
-    frame.origin.y = Screen_Height;
+    frame.origin.y = self.view.window.frame.size.height;
     self.faceView.frame = frame;
-
     self.menuView.hidden = NO;
     frame = self.menuView.frame;
     frame.origin.y = self.faceView.frame.origin.y + self.faceView.frame.size.height;
@@ -174,7 +182,7 @@
 
     self.moreView.hidden = NO;
     CGRect frame = self.moreView.frame;
-    frame.origin.y = Screen_Height;
+    frame.origin.y = self.view.window.frame.size.height;
     self.moreView.frame = frame;
     __weak typeof(self) ws = self;
     [UIView animateWithDuration:0.3

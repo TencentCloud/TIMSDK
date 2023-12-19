@@ -35,6 +35,9 @@ class CallEngineManager {
                 TUICallState.instance.remoteUserList.value = mInviteeList
                 
                 for index in 0..<TUICallState.instance.remoteUserList.value.count {
+                    guard index < TUICallState.instance.remoteUserList.value.count else {
+                        break
+                    }
                     TUICallState.instance.remoteUserList.value[index].callStatus.value = TUICallStatus.waiting
                     TUICallState.instance.remoteUserList.value[index].callRole.value = TUICallRole.called
                 }
@@ -47,8 +50,10 @@ class CallEngineManager {
             
             if callMediaType == .audio {
                 TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+                TUICallState.instance.isCameraOpen.value = false
             } else if callMediaType == .video {
                 TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+                TUICallState.instance.isCameraOpen.value = true
             }
             
             let _ = CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeDial)
@@ -73,6 +78,9 @@ class CallEngineManager {
             User.getUserInfosFromIM(userIDs: userIdList) { mInviteeList in
                 TUICallState.instance.remoteUserList.value = mInviteeList
                 for index in 0..<TUICallState.instance.remoteUserList.value.count {
+                    guard index < TUICallState.instance.remoteUserList.value.count else {
+                        break
+                    }
                     TUICallState.instance.remoteUserList.value[index].callStatus.value = TUICallStatus.waiting
                     TUICallState.instance.remoteUserList.value[index].callRole.value = TUICallRole.called
                 }
@@ -86,8 +94,10 @@ class CallEngineManager {
             
             if callMediaType == .audio {
                 TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+                TUICallState.instance.isCameraOpen.value = false
             } else if callMediaType == .video {
                 TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+                TUICallState.instance.isCameraOpen.value = true
             }
             
             let _ = CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeDial)
@@ -108,8 +118,10 @@ class CallEngineManager {
             
             if callMediaType == .audio {
                 TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+                TUICallState.instance.isCameraOpen.value = false
             } else if callMediaType == .video {
                 TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+                TUICallState.instance.isCameraOpen.value = true
             }
             
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER), object: nil)
@@ -251,7 +263,7 @@ class CallEngineManager {
         engine.removeObserver(observer)
     }
     
-    func initEigine(sdkAppId: Int32, userId: String, userSig: String, succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
+    func initEngine(sdkAppId: Int32, userId: String, userSig: String, succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
         engine.`init`(sdkAppId, userId: userId, userSig: userSig) {
             succ()
         } fail: { code, message in

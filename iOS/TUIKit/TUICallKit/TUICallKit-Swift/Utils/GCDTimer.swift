@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 typealias GCDTimerTaskEvent = () -> Void
 
 class GCDTimer {
@@ -18,9 +17,9 @@ class GCDTimer {
         
         let codeTimer = DispatchSource.makeTimerSource(queue: async ? DispatchQueue.global() : DispatchQueue.main)
         
-        let  timerName = String(Date().timeIntervalSinceReferenceDate)
+        let timerName = String(Date().timeIntervalSinceReferenceDate)
         timerDic[timerName] = codeTimer
-
+        
         codeTimer.schedule(deadline: .now(), repeating: .seconds(interval))
         codeTimer.setEventHandler(handler: {
             DispatchQueue.main.async {
@@ -31,7 +30,7 @@ class GCDTimer {
                 }
             }
         })
-
+        
         if codeTimer.isCancelled { return timerName}
         codeTimer.resume()
         return timerName
@@ -59,7 +58,7 @@ class GCDTimer {
         
         return (hour, min, sec)
     }
-
+    
     static func secondToHMSString(second: Int) -> String {
         let time = GCDTimer.secondToHMS(second: second)
         var hour: String
@@ -81,7 +80,7 @@ class GCDTimer {
         } else {
             min = String(time.min) + ":"
         }
-
+        
         if time.sec <= 0 {
             seconds = "00"
         } else if time.sec >= 0 && time.sec < 10 {

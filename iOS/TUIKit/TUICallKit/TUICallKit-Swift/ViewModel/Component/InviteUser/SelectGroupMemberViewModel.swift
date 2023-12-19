@@ -1,6 +1,6 @@
 //
-//  SelectGroupMeberViewModel.swift
-//  Alamofire
+//  SelectGroupMemberViewModel.swift
+//  TUICallKit
 //
 //  Created by vincepzhang on 2023/5/15.
 //

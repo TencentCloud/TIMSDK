@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>id</key>
+	<string>serious</string>
+	<key>name</key>
+	<string>严肃</string>
+	<key>name_en</key>
+	<string>Business</string>
+	<key>callkit_recents_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>callkit_nav_title_text_color</key>
+	<string>#FFFFFF</string>
+	<key>callkit_recents_tableHeader_title_text_color</key>
+	<string>#000000</string>
+	<key>callkit_recents_cell_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>callkit_recents_cell_title_color</key>
+	<string>#000000</string>
+	<key>callkit_recents_cell_subtitle_color</key>
+	<string>#888888</string>
+	<key>callkit_recents_cell_time_color</key>
+	<string>#BBBBBB</string>
+	<key>callkit_float_window_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>callkit_select_group_member_name_color</key>
+	<string>#242424</string>
+	<key>callkit_select_group_member_cell_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>callkit_select_group_member_bg_color</key>
+	<string>#F2F2F2</string>
+	<key>callkit_nav_item_title_text_color</key>
+	<string>#FFFFFF</string>
+	<key>icon_nav_back_image</key>
+	<string>nav_back.png</string>
+</dict>
+</plist>

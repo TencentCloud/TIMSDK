@@ -20,10 +20,10 @@ public class Observable<Type> {
             observer: AnyObject,
             options: [ObservableOptions],
             closure: @escaping (Type, ObservableOptions) -> Void) {
-            self.observer = observer
-            self.options = options
-            self.closure = closure
-        }
+                self.observer = observer
+                self.options = options
+                self.closure = closure
+            }
     }
     
     // MARK: - Properties  利用Swift 的didSet 特性把值回调给callback
@@ -65,15 +65,15 @@ public class Observable<Type> {
         removeIfExists: Bool = true,
         options: [ObservableOptions] = [.new],
         closure: @escaping (Type, ObservableOptions) -> Void) {
-        if removeIfExists {
-            removeObserver(observer)
+            if removeIfExists {
+                removeObserver(observer)
+            }
+            let callback = Callback(observer: observer, options: options, closure: closure)
+            callbacks.append(callback)
+            if options.contains(.initial) {
+                closure(value, .initial)
+            }
         }
-        let callback = Callback(observer: observer, options: options, closure: closure)
-        callbacks.append(callback)
-        if options.contains(.initial) {
-            closure(value, .initial)
-        }
-    }
     
     public func removeObserver(_ observer: AnyObject) {
         callbacks = callbacks.filter { $0.observer !== observer }

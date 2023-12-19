@@ -10,11 +10,12 @@ import Foundation
 class GroupCallerUserInfoView: UIView {
     let viewModel = GroupCallerUserInfoViewModel()
     let remoteUserListObserver = Observer()
+    
     let userHeadImageView: UIImageView = {
         let userHeadImageView = UIImageView(frame: CGRect.zero)
         userHeadImageView.layer.masksToBounds = true
-        userHeadImageView.layer.cornerRadius = 5.0
-        if let image = TUICallKitCommon.getBundleImage(name: "userIcon") {
+        userHeadImageView.layer.cornerRadius = 6.0
+        if let image = TUICallKitCommon.getBundleImage(name: "default_user_icon") {
             userHeadImageView.image = image
         }
         return userHeadImageView
@@ -22,7 +23,7 @@ class GroupCallerUserInfoView: UIView {
     
     let userNameLabel: UILabel = {
         let userNameLabel = UILabel(frame: CGRect.zero)
-        userNameLabel.textColor = UIColor.t_colorWithHexString(color: "#242424")
+        userNameLabel.textColor = UIColor.t_colorWithHexString(color: "#D5E0F2")
         userNameLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         userNameLabel.backgroundColor = UIColor.clear
         userNameLabel.textAlignment = .center
@@ -31,16 +32,16 @@ class GroupCallerUserInfoView: UIView {
     
     let waitingInviteLabel: UILabel = {
         let waitingInviteLabel = UILabel(frame: CGRect.zero)
-        waitingInviteLabel.textColor = UIColor.t_colorWithHexString(color: "#242424")
+        waitingInviteLabel.textColor = UIColor.t_colorWithHexString(color: "#8F9AB2")
         waitingInviteLabel.font = UIFont.boldSystemFont(ofSize: 14.0)
         waitingInviteLabel.backgroundColor = UIColor.clear
+        waitingInviteLabel.text = TUICallKitLocalize(key: "TUICallKit.Group.inviteToGroupCall") ?? ""
         waitingInviteLabel.textAlignment = .center
         return waitingInviteLabel
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setWaitingText()
         setUserImageAndName()
         registerObserveState()
     }
@@ -53,7 +54,7 @@ class GroupCallerUserInfoView: UIView {
         viewModel.remoteUserList.removeObserver(remoteUserListObserver)
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -62,34 +63,32 @@ class GroupCallerUserInfoView: UIView {
         activateConstraints()
         isViewReady = true
     }
-
+    
     func constructViewHierarchy() {
         addSubview(userHeadImageView)
         addSubview(userNameLabel)
         addSubview(waitingInviteLabel)
     }
-
+    
     func activateConstraints() {
-        self.userHeadImageView.snp.makeConstraints { make in
+        userHeadImageView.snp.makeConstraints { make in
             make.top.centerX.equalTo(self)
-            make.size.equalTo(CGSize(width: 120, height: 120))
+            make.size.equalTo(CGSize(width: 100.scaleWidth(), height: 100.scaleWidth()))
         }
-        
-        self.userNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(userHeadImageView.snp.bottom).offset(10)
+        userNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(userHeadImageView.snp.bottom).offset(10.scaleHeight())
             make.centerX.equalTo(self)
             make.width.equalTo(self)
             make.height.equalTo(30)
         }
-        
-        self.waitingInviteLabel.snp.makeConstraints { make in
-            make.top.equalTo(userNameLabel.snp.bottom).offset(5)
+        waitingInviteLabel.snp.makeConstraints { make in
+            make.top.equalTo(userNameLabel.snp.bottom).offset(20.scaleHeight())
             make.centerX.equalTo(self)
             make.width.equalTo(self)
             make.height.equalTo(20)
         }
     }
-
+    
     // MARK: Register TUICallState Observer && Update UI
     func registerObserveState() {
         viewModel.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
@@ -105,18 +104,6 @@ class GroupCallerUserInfoView: UIView {
         
         if let url = URL(string: remoteUser.avatar.value) {
             userHeadImageView.sd_setImage(with: url)
-        }
-    }
-
-    func setWaitingText() {
-        self.waitingInviteLabel.text = viewModel.getCurrentWaitingText()
-        
-        if viewModel.mediaType.value == .audio {
-            waitingInviteLabel.textColor = UIColor.t_colorWithHexString(color: "#242424")
-            userNameLabel.textColor = UIColor.t_colorWithHexString(color: "#242424")
-        } else if viewModel.mediaType.value == .video {
-            waitingInviteLabel.textColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
-            userNameLabel.textColor = UIColor.t_colorWithHexString(color: "#F2F2F2")
         }
     }
 }

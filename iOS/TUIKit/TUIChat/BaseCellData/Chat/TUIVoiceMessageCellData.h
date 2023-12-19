@@ -7,8 +7,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^VoicePlayTime)(CGFloat);
-
 typedef NS_ENUM(NSUInteger, TUIVoiceAudioPlaybackStyle) {
     TUIVoiceAudioPlaybackStyleLoudspeaker = 1,
     TUIVoiceAudioPlaybackStyleHandset = 2,
@@ -23,7 +21,7 @@ typedef NS_ENUM(NSUInteger, TUIVoiceAudioPlaybackStyle) {
 @property(nonatomic, assign) BOOL isDownloading;
 @property(nonatomic, assign) BOOL isPlaying;
 @property(nonatomic, assign) CGFloat voiceHeight;
-@property(nonatomic, copy) VoicePlayTime playTime;
+@property(nonatomic, assign) NSTimeInterval currentTime;
 
 /**
  *  播放动画图片

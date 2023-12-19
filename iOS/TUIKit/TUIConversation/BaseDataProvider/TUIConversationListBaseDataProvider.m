@@ -876,6 +876,7 @@
         data.faceUrl = conversation.faceUrl;
         data.subTitle = [self getLastDisplayString:conversation];
         data.foldSubTitle = [self getLastDisplayStringForFoldList:conversation];
+        data.atTipsStr = [self getGroupAtTipString:conversation];
         data.atMsgSeqs = [self getGroupatMsgSeqs:conversation];
         data.time = [self getLastDisplayDate:conversation];
         data.isOnTop = conversation.isPinned;
@@ -1085,7 +1086,7 @@
     }
     // 客服会话对端正在输入
     if ([param.allKeys containsObject:BussinessID_CustomerService]) {
-        NSString *src = param[BussinessID_Src];
+        NSString *src = param[BussinessID_Src_CustomerService];
         if (src && [src isKindOfClass:[NSString class]] && [src isEqualToString:BussinessID_Src_CustomerService_Typing]) {
             return YES;
         }

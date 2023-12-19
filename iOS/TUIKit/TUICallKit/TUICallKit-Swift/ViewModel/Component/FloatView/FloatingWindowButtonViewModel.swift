@@ -12,10 +12,10 @@ class FloatingWindowButtonViewModel {
     
     let mediaTypeObserver = Observer()
     let mediaType: Observable<TUICallMediaType> = Observable(.unknown)
-
+    
     init() {
         mediaType.value = TUICallState.instance.mediaType.value
-
+        
         registerObserve()
     }
     

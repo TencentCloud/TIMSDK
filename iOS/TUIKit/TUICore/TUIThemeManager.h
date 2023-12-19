@@ -89,6 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUITranslationDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleTranslation, defaultHex)
 #define TUIVoiceToTextDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleVoiceToText, defaultHex)
 #define TUICustomerServicePluginDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleCustomerService, defaultHex)
+#define TUIChatBotPluginDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleChatBot, defaultHex)
 
 /**
  * 动态获取图片
@@ -109,6 +110,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIVoiceToTextBundleThemeImage(imageKey, defaultImageName) TUIVoiceToTextDynamicImage(imageKey, TUIVoiceToTextCommonBundleImage(defaultImageName))
 #define TUICustomerServicePluginBundleThemeImage(imageKey,defaultImageName) \
     TUICustomerServicePluginDynamicImage(imageKey,TUICustomerServicePluginCommonBundleImage(defaultImageName))
+#define TUIChatBotPluginBundleThemeImage(imageKey,defaultImageName) \
+    TUIChatBotPluginDynamicImage(imageKey,TUIChatBotPluginCommonBundleImage(defaultImageName))
 
 #define TUIDynamicImage(imageKey, themeModule, defaultImg) [TUITheme dynamicImage:imageKey module:themeModule defaultImage:defaultImg]
 #define TUIDemoDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleDemo, defaultImg)
@@ -126,6 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUITranslationDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleTranslation, defaultImg)
 #define TUIVoiceToTextDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleVoiceToText, defaultImg)
 #define TUICustomerServicePluginDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleCustomerService, defaultImg)
+#define TUIChatBotPluginDynamicImage(imageKey, defaultImg) TUIDynamicImage(imageKey, TUIThemeModuleChatBot, defaultImg)
 
 #define __TUIDefaultBundleImage(imageBundlePath) [UIImage imageWithContentsOfFile:imageBundlePath]
 #define TUIDemoCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIDemoImagePath(imageName))
@@ -142,6 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUITranslationCommonBundleImage(imageName) __TUIDefaultBundleImage(TUITranslationImagePath(imageName))
 #define TUIVoiceToTextCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIVoiceToTextImagePath(imageName))
 #define TUICustomerServicePluginCommonBundleImage(imageName) __TUIDefaultBundleImage(TUICustomerServicePluginImagePath(imageName))
+#define TUIChatBotPluginCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIChatBotPluginImagePath(imageName))
 
 /**
  * 主题模块
@@ -175,6 +180,7 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
     TUIThemeModuleConversationGroup = 0x1 << 20,
     TUIThemeModuleVoiceToText = 0x1 << 21,
     TUIThemeModuleCustomerService = 0x1 << 22,
+    TUIThemeModuleChatBot = 0x1 << 23,
 };
 
 @interface TUITheme : NSObject

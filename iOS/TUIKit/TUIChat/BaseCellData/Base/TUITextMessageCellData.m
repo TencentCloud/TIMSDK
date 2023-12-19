@@ -30,6 +30,9 @@
 @end
 
 @implementation TUITextMessageCellData
+{
+    NSString *_content;
+}
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     TUITextMessageCellData *textData = [[TUITextMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
@@ -64,7 +67,18 @@
     return self;
 }
 
-- (NSMutableAttributedString *)getAttributedString:(UIFont *)textFont {
+- (void)setContent:(NSString *)content {
+    if (![_content isEqualToString:content]) {
+        _content = content;
+        _attributedString = nil;
+    }
+}
+
+- (NSString *)content {
+    return _content;
+}
+
+- (NSAttributedString *)getContentAttributedString:(UIFont *)textFont {
     if (!_attributedString) {
         _emojiLocations = [NSMutableArray array];
         _attributedString = [self.content getFormatEmojiStringWithFont:textFont emojiLocations:_emojiLocations];
@@ -95,6 +109,16 @@
         }
     }
     return _attributedString;
+}
+
+- (CGSize)getContentAttributedStringSize:(NSAttributedString *)attributeString maxTextSize:(CGSize)maxTextSize {
+    CGRect rect = [attributeString boundingRectWithSize:maxTextSize
+                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                context:nil];
+
+    CGFloat width = CGFLOAT_CEIL(rect.size.width);
+    CGFloat height = CGFLOAT_CEIL(rect.size.height);
+    return CGSizeMake(width, height);
 }
 
 @end

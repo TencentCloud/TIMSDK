@@ -338,11 +338,6 @@ callMediaType:(TUICallMediaType)callMediaType
 - (void)enableMuteMode:(BOOL)enable {
     TUILog(@"TUICallKit - enableMuteMode, enable:%d", enable);
     self.enableMuteMode = enable;
-    if (enable) {
-        [TUICallingAction openMicrophone];
-    } else {
-        [TUICallingAction closeMicrophone];
-    }
 }
 
 - (void)enableFloatWindow:(BOOL)enable {
@@ -727,7 +722,6 @@ callMediaType:(TUICallMediaType)callMediaType
     [self enableAutoLockScreen:YES];
     self.timerName = nil;
     self.groupID = nil;
-    [[TUICallEngine createInstance] selectAudioPlaybackDevice:TUIAudioPlaybackDeviceSpeakerphone];
     [[TUICallingStatusManager shareInstance] clearAllStatus];
 }
 

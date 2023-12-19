@@ -20,7 +20,9 @@
 #define Input_SendBtn_ImageName @"Input_SendBtn_ImageName"
 
 @interface TUIChatDataProvider ()
-@property(nonatomic, strong) NSArray<TUIInputMoreCellData *> *customInputMoreMenus;
+@property(nonatomic, strong) TUIInputMoreCellData *welcomeInputMoreMenu;
+
+@property(nonatomic, strong) NSMutableArray<TUIInputMoreCellData *> *customInputMoreMenus;
 @property(nonatomic, strong) NSArray<TUIInputMoreCellData *> *builtInInputMoreMenus;
 
 @property(nonatomic, strong) NSArray<TUICustomActionSheetItem *> *customInputMoreActionItemList;
@@ -41,16 +43,14 @@
     self.builtInInputMoreActionItemList = nil;
 }
 
-- (NSArray<TUIInputMoreCellData *> *)customInputMoreMenus {
-    NSMutableArray *arrayM = [NSMutableArray array];
-    if (TUIChatConfig.defaultConfig.enableWelcomeCustomMessage) {
-        // Link
+- (TUIInputMoreCellData *)welcomeInputMoreMenu {
+    if (!_welcomeInputMoreMenu) {
         __weak typeof(self) weakSelf = self;
-        TUIInputMoreCellData *linkData = [[TUIInputMoreCellData alloc] init];
-        linkData.priority = 0;
-        linkData.title = TIMCommonLocalizableString(TUIKitMoreLink);
-        linkData.image = TUIChatBundleThemeImage(@"chat_more_link_img", @"chat_more_link_img");
-        linkData.onClicked = ^(NSDictionary *actionParam) {
+        _welcomeInputMoreMenu = [[TUIInputMoreCellData alloc] init];
+        _welcomeInputMoreMenu.priority = 0;
+        _welcomeInputMoreMenu.title = TIMCommonLocalizableString(TUIKitMoreLink);
+        _welcomeInputMoreMenu.image = TUIChatBundleThemeImage(@"chat_more_link_img", @"chat_more_link_img");
+        _welcomeInputMoreMenu.onClicked = ^(NSDictionary *actionParam) {
           NSString *text = TIMCommonLocalizableString(TUIKitWelcome);
           NSString *link = TUITencentCloudHomePageEN;
           NSString *language = [TUIGlobalization tk_localizableLanguageKey];
@@ -69,9 +69,15 @@
               [weakSelf.delegate dataProvider:weakSelf sendMessage:message];
           }
         };
-        [arrayM addObject:linkData];
     }
-    return [arrayM copy];
+    return _welcomeInputMoreMenu;
+}
+
+- (NSMutableArray<TUIInputMoreCellData *> *)customInputMoreMenus {
+    if (!_customInputMoreMenus) {
+        _customInputMoreMenus = [NSMutableArray array];
+    }
+    return _customInputMoreMenus;
 }
 
 - (NSArray<TUIInputMoreCellData *> *)builtInInputMoreMenus {
@@ -233,12 +239,19 @@
                                          conversationModel:(TUIChatConversationModel *)conversationModel
                                                  actionController:(id<TIMInputViewMoreActionProtocol>)actionController {
     
-    BOOL isNeedVideoCall = [TUIChatConfig defaultConfig].enableVideoCall && conversationModel.enabelVideo;
-    BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall && conversationModel.enabelAudio;
+    BOOL isNeedVideoCall = [TUIChatConfig defaultConfig].enableVideoCall && conversationModel.enableVideoCall;
+    BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall && conversationModel.enableAudioCall;
+    BOOL isNeedWelcomeCustomMessage = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage && conversationModel.enableWelcomeCustomMessage;
     BOOL isNeedRoom = conversationModel.enabelRoom;
     
     NSMutableArray *moreMenus = [NSMutableArray array];
     [moreMenus addObjectsFromArray:self.builtInInputMoreMenus];
+    
+    if (isNeedWelcomeCustomMessage) {
+        if (![self.customInputMoreMenus containsObject:self.welcomeInputMoreMenu]) {
+            [self.customInputMoreMenus addObject:self.welcomeInputMoreMenu];
+        }
+    }
     [moreMenus addObjectsFromArray:self.customInputMoreMenus];
 
     // Extension menus

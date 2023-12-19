@@ -566,6 +566,13 @@
 
 #pragma mark - TUIMessageCellDelegate
 - (void)onSelectMessage:(TUIMessageCell *)cell {
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageClicked:messageCellData:)]) {
+        BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onMessageClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
     if ([cell isKindOfClass:[TUIImageMessageCell_Minimalist class]]) {
         [self showImageMessage:(TUIImageMessageCell_Minimalist *)cell];
     }

@@ -1,6 +1,6 @@
 //
 //  TUICallKitExtension.swift
-//  TUICallKit-Swift
+//  TUICallKit
 //
 //  Created by vincepzhang on 2023/8/14.
 //
@@ -58,7 +58,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
         }
     }
 
-    //MARK: TUIExtensionProtocol
+    // MARK: TUIExtensionProtocol
     func onGetExtension(_ extensionID: String, param: [AnyHashable : Any]?) -> [TUIExtensionInfo]? {
         if extensionID.isEmpty {
             return nil

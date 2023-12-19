@@ -52,7 +52,7 @@
 }
 
 - (void)defaultLayout {
-    CGSize backSize = Record_Background_Size;
+    CGSize backSize = CGSizeMake(150, 150);
     _title.text = TIMCommonLocalizableString(TUIKitInputRecordSlideToCancel);
     CGSize titleSize = [_title sizeThatFits:CGSizeMake(Screen_Width, Screen_Height)];
     CGSize timeSize = CGSizeMake(100, 15);

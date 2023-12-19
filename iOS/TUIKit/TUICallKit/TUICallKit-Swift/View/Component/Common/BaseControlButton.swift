@@ -17,10 +17,12 @@ class BaseControlButton: UIView {
     var imageSize: CGSize
     
     let titleLabel: UILabel = {
-        let titleLable = UILabel(frame: CGRect.zero)
-        titleLable.font = UIFont.systemFont(ofSize: 12.0)
-        titleLable.textAlignment = .center
-        return titleLable
+        let titleLabel = UILabel(frame: CGRect.zero)
+        titleLabel.font = UIFont.systemFont(ofSize: 12.0)
+        titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 2
+        titleLabel.lineBreakMode = .byTruncatingTail
+        return titleLabel
     }()
     
     let button: UIButton = {
@@ -45,7 +47,7 @@ class BaseControlButton: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: UI Specification Processing
+    // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -62,15 +64,15 @@ class BaseControlButton: UIView {
     }
     
     func activateConstraints() {
-        
-        titleLabel.snp.makeConstraints { make in
-            make.leading.trailing.centerX.bottom.equalTo(self)
-        }
-        
         button.snp.makeConstraints { make in
+            make.top.equalTo(self)
             make.centerX.equalTo(self)
             make.size.equalTo(imageSize)
-            make.bottom.equalTo(titleLabel.snp.top).offset(-10)
+        }
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(self)
+            make.top.equalTo(button.snp.bottom).offset(10)
+            make.width.equalTo(100.scaleWidth())
         }
     }
     
@@ -83,15 +85,17 @@ class BaseControlButton: UIView {
         button.setBackgroundImage(image, for: .normal)
     }
     
+    func updateTitle(title: String) {
+        titleLabel.text = title
+    }
+    
     func updateTitleColor(titleColor: UIColor) {
         titleLabel.textColor = titleColor
     }
     
-    //MARK: Event Action
+    // MARK: Event Action
     @objc func buttonActionEvent(sender: UIButton) {
         guard let buttonActionBlock = buttonActionBlock else { return }
         buttonActionBlock(sender)
     }
 }
-
-

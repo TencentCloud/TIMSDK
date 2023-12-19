@@ -1,0 +1,59 @@
+//
+//  Localized.strings
+//  TUICallKit
+//
+//  Created by noah on 2023/12/4.
+//  Copyright © 2023 Tencent. All rights reserved.
+//
+
+"TUICallKit.inviteToVideoCall" = "ビデオ通話に招待されました";
+"TUICallKit.inviteToAudioCall" = "音声通話に招待されました";
+"TUICallKit.waitAccept" = "応答を待っています";
+"TUICallKit.accept" = "接続済み";
+"TUICallKit.Group.inviteToGroupCall" = "グループ通話に招待します";
+"TUICallKit.Group.waitAccept" = "待機中";
+"TUICallKit.determine" = "もちろん";
+
+"TUICallKit.hangup" = "通話終了";
+"TUICallKit.decline" = "拒否";
+"TUICallKit.switchToAudio" = "音声通話に切り替えます";
+"TUICallKit.answer" = "応答";
+"TUICallKit.calleeTip" = "参加者：";
+"TUICallKit.FloatingWindow.waitAccept" = "応答を待っています...";
+
+"TUICallKit.User.Exceed.Limit" = "一時的に最大9人の通話をサポートします。多人数の会議が必要な場合は、TUIRoomを使用してください";
+"TUICallKit.UnableToRestartTheCall" = "通話中のため、再度発信できません";
+"TUICallKit.ErrorInPeerBlacklist" = "通話の開始に失敗しました。ユーザーがブラックリストに登録されているため、発信が禁止されています！";
+
+"TUICallKit.FailedToGetCameraPermission.Title" = "カメラの権限が開かれていません";
+"TUICallKit.FailedToGetCameraPermission.Tips" = "ビデオ通話機能が使用できません。\"開く\"をクリックしてカメラの権限を開きます";
+"TUICallKit.FailedToGetCameraPermission.Later" = "後で言う";
+"TUICallKit.FailedToGetCameraPermission.Enable" = "開く";
+
+"TUICallKit.FailedToGetMicrophonePermission.Title" = "マイクの権限が開かれていません";
+"TUICallKit.FailedToGetMicrophonePermission.Tips" = "音声・ビデオ通話機能が使用できません。\"開く\"をクリックしてマイクの権限を開きます";
+"TUICallKit.FailedToGetMicrophonePermission.Later" = "後で言う";
+"TUICallKit.FailedToGetMicrophonePermission.Enable" = "開く";
+
+"TUICallKit.package.not.purchased" = "TUICallKit パッケージを購入していません。コンソールで無料トライアル版をアクティブ化するか、正式版を購入してください。";
+"TUICallKit.package.not.support" = "購入したTUICallKitパッケージはこの機能をサポートしていません。パッケージタイプをアップグレードすることをお勧めします。";
+"TUICallKit.have.new.invitation" = "新しい通話があります";
+
+"TUICallKit.Recents.all" = "すべて";
+"TUICallKit.Recents.missed" = "不在着信";
+"TUICallKit.Recents.calls" = "通話履歴";
+"TUICallKit.Recents.clear" = "削除";
+"TUICallKit.Recents.done" = "完了";
+"TUICallKit.Recents.delete" = "削除";
+"TUICallKit.Recents.addUser" = "メンバーを招待";
+"TUICallKit.Recents.clear.all" = "すべての履歴を消去";
+"TUICallKit.Recents.clear.cancel" = "キャンセル";
+"TUICallKit.Recents.incoming" = "着信";
+"TUICallKit.Recents.outgoing" = "発信";
+
+"TUICallKit.unmuted" = "マイクオン";
+"TUICallKit.muted" = "マイクオフ";
+"TUICallKit.speakerPhone" = "スピーカーオン";
+"TUICallKit.earpiece" = "スピーカーオフ";
+"TUICallKit.cameraOn" = "カメラオン";
+"TUICallKit.cameraOff" = "カメラオフ";

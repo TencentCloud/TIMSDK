@@ -146,7 +146,6 @@
         make.leading.mas_equalTo(self.quoteView).mas_offset(4);
         make.top.mas_equalTo(self.quoteView.mas_bottom).mas_offset(12);
         make.trailing.mas_lessThanOrEqualTo(self.quoteView);
-        make.bottom.mas_equalTo(self.bubbleView).mas_offset(-4);
     }];
 
     [self.senderLabel mas_remakeConstraints:^(MASConstraintMaker *make) {

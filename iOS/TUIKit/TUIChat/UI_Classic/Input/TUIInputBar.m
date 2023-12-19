@@ -57,6 +57,7 @@
 
     _lineView = [[UIView alloc] init];
     _lineView.backgroundColor = TIMCommonDynamicColor(@"separator_color", @"#FFFFFF");
+    [self addSubview:_lineView];
 
     _micButton = [[UIButton alloc] init];
     [_micButton addTarget:self action:@selector(onMicButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -128,24 +129,53 @@
 }
 
 - (void)defaultLayout {
-    _lineView.frame = CGRectMake(0, 0, Screen_Width, TLine_Heigh);
+    [_lineView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(0);
+        make.width.mas_equalTo(self);
+        make.height.mas_equalTo(TLine_Heigh);
+    }];
+
     CGSize buttonSize = TTextView_Button_Size;
     CGFloat buttonOriginY = (TTextView_Height - buttonSize.height) * 0.5;
-    _micButton.frame = CGRectMake(TTextView_Margin, buttonOriginY, buttonSize.width, buttonSize.height);
-    _keyboardButton.frame = _micButton.frame;
-    _moreButton.frame = CGRectMake(Screen_Width - buttonSize.width - TTextView_Margin, buttonOriginY, buttonSize.width, buttonSize.height);
-    _faceButton.frame = CGRectMake(_moreButton.frame.origin.x - buttonSize.width - TTextView_Margin, buttonOriginY, buttonSize.width, buttonSize.height);
 
-    CGFloat beginX = _micButton.frame.origin.x + _micButton.frame.size.width + TTextView_Margin;
-    CGFloat endX = _faceButton.frame.origin.x - TTextView_Margin;
-    _recordButton.frame = CGRectMake(beginX, (TTextView_Height - TTextView_TextView_Height_Min) * 0.5, endX - beginX, TTextView_TextView_Height_Min);
-    _inputTextView.frame = _recordButton.frame;
-    
-    if(isRTL()) {
-        for (UIView *subviews in self.subviews) {
-            [subviews resetFrameToFitRTL];
+    [_micButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(self.mas_leading);
+        make.centerY.mas_equalTo(self);
+        make.size.mas_equalTo(buttonSize);
+    }];
+
+    [_keyboardButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(_micButton);
+    }];
+
+    [_moreButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(self.mas_trailing).mas_offset(- TTextView_Margin);
+        make.size.mas_equalTo(buttonSize);
+        make.centerY.mas_equalTo(self);
+    }];
+    [_faceButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(_moreButton.mas_leading).mas_offset(- TTextView_Margin);
+        make.size.mas_equalTo(buttonSize);
+        make.centerY.mas_equalTo(self);
+    }];
+    [_recordButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.leading.mas_equalTo(_micButton.mas_trailing);
+        make.trailing.mas_equalTo(_faceButton.mas_leading);
+        make.height.mas_equalTo(TTextView_TextView_Height_Min);
+        make.centerY.mas_equalTo(self);
+    }];
+
+    [_inputTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.isFromReplyPage) {
+            make.leading.mas_equalTo(self.mas_leading).mas_offset(10);
         }
-    }
+        else {
+            make.leading.mas_equalTo(_micButton.mas_trailing).mas_offset(10);
+        }
+        make.trailing.mas_equalTo(_faceButton.mas_leading).mas_offset(-10);;
+        make.height.mas_equalTo(TTextView_TextView_Height_Min);
+        make.centerY.mas_equalTo(self);
+    }];
 }
 
 - (void)layoutButton:(CGFloat)height {
@@ -170,7 +200,10 @@
     voiceFrame.origin.y = originY;
     _micButton.frame = voiceFrame;
 
-    _keyboardButton.frame = _faceButton.frame;
+    [_keyboardButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(_faceButton);
+    }];
+
 
     if (_delegate && [_delegate respondsToSelector:@selector(inputBar:didChangeInputHeight:)]) {
         [_delegate inputBar:self didChangeInputHeight:offset];
@@ -189,7 +222,9 @@
     if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchMore:)]) {
         [_delegate inputBarDidTouchVoice:self];
     }
-    _keyboardButton.frame = _micButton.frame;
+    [_keyboardButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(_micButton);
+    }];
 }
 
 - (void)onKeyboardButtonClicked:(UIButton *)sender {
@@ -213,7 +248,9 @@
     if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchFace:)]) {
         [_delegate inputBarDidTouchFace:self];
     }
-    _keyboardButton.frame = _faceButton.frame;
+    [_keyboardButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(_faceButton);
+    }];
 }
 
 - (void)onMoreButtonClicked:(UIButton *)sender {
@@ -361,9 +398,11 @@
     __weak typeof(self) ws = self;
     [UIView animateWithDuration:0.3
                      animations:^{
-                       CGRect textFrame = ws.inputTextView.frame;
-                       textFrame.size.height += newHeight - oldHeight;
-                       ws.inputTextView.frame = textFrame;
+                       [ws.inputTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                         make.leading.mas_equalTo(ws.micButton.mas_trailing);
+                         make.trailing.mas_equalTo(ws.faceButton.mas_leading);
+                         make.height.mas_equalTo(newHeight);
+                       }];
                        [ws layoutButton:newHeight + 2 * TTextView_Margin];
                      }];
 }
@@ -587,6 +626,10 @@
 
 - (void)updateViewsToRecordingStatus {
     [self.window addSubview:self.recordView];
+    [self.recordView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.mas_equalTo(self.window);
+        make.width.height.mas_equalTo(self.window);
+    }];
     self.recordStartTime = [NSDate date];
     [self.recordView setStatus:Record_Status_Recording];
     self.recordButton.backgroundColor = [UIColor lightGrayColor];
@@ -645,7 +688,7 @@
 - (TUIRecordView *)recordView {
     if (!_recordView) {
         _recordView = [[TUIRecordView alloc] init];
-        _recordView.frame = [UIScreen mainScreen].bounds;
+        _recordView.frame = self.frame;
     }
     return _recordView;
 }

@@ -8,14 +8,16 @@
 import TUICallEngine
 
 class SingleCallViewModel {
- 
+    
     let callStatusObserver = Observer()
     let mediaTypeObserver = Observer()
     let selfCallRoleObserver = Observer()
-
+    let isShowFullScreenObserver = Observer()
+    
     let selfCallStatus: Observable<TUICallStatus> = Observable(.none)
     let selfCallRole: Observable<TUICallRole> = Observable(.none)
     let mediaType: Observable<TUICallMediaType> = Observable(.unknown)
+    let isShowFullScreen: Observable<Bool> = Observable(false)
     
     let enableFloatWindow = TUICallState.instance.enableFloatWindow
     
@@ -23,7 +25,8 @@ class SingleCallViewModel {
         selfCallStatus.value = TUICallState.instance.selfUser.value.callStatus.value
         selfCallRole.value = TUICallState.instance.selfUser.value.callRole.value
         mediaType.value = TUICallState.instance.mediaType.value
-
+        isShowFullScreen.value = TUICallState.instance.isShowFullScreen.value
+        
         registerObserve()
     }
     
@@ -31,6 +34,7 @@ class SingleCallViewModel {
         TUICallState.instance.selfUser.value.callRole.removeObserver(selfCallRoleObserver)
         TUICallState.instance.selfUser.value.callStatus.removeObserver(callStatusObserver)
         TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
+        TUICallState.instance.isShowFullScreen.removeObserver(isShowFullScreenObserver)
     }
     
     func registerObserve() {
@@ -38,22 +42,21 @@ class SingleCallViewModel {
         TUICallState.instance.selfUser.value.callRole.addObserver(selfCallRoleObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.selfCallRole.value = newValue
-            
-            print("SingleCallViewModel-callRole")
         })
         
         TUICallState.instance.selfUser.value.callStatus.addObserver(callStatusObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.selfCallStatus.value = newValue
-            print("SingleCallViewModel-callStatus")
-
         })
         
         TUICallState.instance.mediaType.addObserver(mediaTypeObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.mediaType.value = newValue
-            print("SingleCallViewModel-mediaType")
-
+        })
+        
+        TUICallState.instance.isShowFullScreen.addObserver(isShowFullScreenObserver, closure: { [weak self] newValue, _ in
+            guard let self = self else { return }
+            self.isShowFullScreen.value = newValue
         })
     }
 }

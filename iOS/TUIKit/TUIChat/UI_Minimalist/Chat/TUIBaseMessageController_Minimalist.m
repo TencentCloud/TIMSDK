@@ -53,8 +53,8 @@ typedef NSNumber * HeightNumber;
 
 @interface TUIBaseMessageController_Minimalist () <TUIMessageCellDelegate,
                                                    TUIJoinGroupMessageCellDelegate_Minimalist,
-                                                   TUIMessageDataProviderDataSource,
                                                    TUIMessageProgressManagerDelegate,
+                                                   TUIMessageDataProviderDataSource,
                                                    TIMPopActionProtocol,
                                                    TUINotificationProtocol>
 
@@ -72,12 +72,15 @@ typedef NSNumber * HeightNumber;
 @end
 
 @implementation TUIBaseMessageController_Minimalist
-
-#pragma mark - Life Cycle
 + (void)initialize {
     [TUIMessageDataProvider setDataSourceClass:self];
 }
 
++ (nullable NSString *)getDisplayString:(V2TIMMessage *)message {
+    return [TUIMessageDataProvider getDisplayString:message];
+}
+
+#pragma mark - Life Cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
@@ -167,7 +170,7 @@ typedef NSNumber * HeightNumber;
     if (!self.messageDataProvider) {
         self.messageDataProvider = [[TUIMessageDataProvider alloc] initWithConversationModel:conversationData];
         self.messageDataProvider.dataSource = self;
-        self.messageDataProvider.enableMergeSender = YES;
+        self.messageDataProvider.mergeAdjacentMsgsFromTheSameSender = YES;
     }
     [self loadMessage];
 }
@@ -798,6 +801,13 @@ static NSMutableArray *reloadMsgIndexs = nil;
 #pragma mark - TUIMessageCellDelegate
 
 - (void)onSelectMessage:(TUIMessageCell *)cell {
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageClicked:messageCellData:)]) {
+        BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onMessageClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
     if (self.showCheckBox && [self supportCheckBox:(TUIMessageCellData *)cell.data]) {
         TUIMessageCellData *data = (TUIMessageCellData *)cell.data;
         data.selected = !data.selected;
@@ -952,7 +962,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     TUIChatPopContextExtionItem *audioPlaybackStyleItem = [self setupAudioPlaybackStyleAction:alertController targetCell:cell];
 
     if (isChatNoramlMessageOrCustomMessage) {
-        if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC  && imMsg.soundElem) {
+        if (imMsg.soundElem) {
             [items addObject:audioPlaybackStyleItem];
         }
         if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
@@ -1094,6 +1104,13 @@ static NSMutableArray *reloadMsgIndexs = nil;
     alertController.items = allPageItemsArray[0];
 }
 - (void)onLongPressMessage:(TUIMessageCell *)cell {
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageLongClicked:messageCellData:)]) {
+        BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onMessageLongClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
     TUIMessageCellData *data = cell.messageData;
     if ([data isKindOfClass:[TUISystemMessageCellData class]]) {
         return;
@@ -1103,6 +1120,13 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell {
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onUserIconLongClicked:messageCellData:)]) {
+        BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onUserIconLongClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
     if (_delegate && [_delegate respondsToSelector:@selector(messageController:onLongSelectMessageAvatar:)]) {
         [_delegate messageController:self onLongSelectMessageAvatar:cell];
     }
@@ -1128,6 +1152,13 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (void)onSelectMessageAvatar:(TUIMessageCell *)cell {
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onUserIconClicked:messageCellData:)]) {
+       BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onUserIconClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
     if ([self.delegate respondsToSelector:@selector(messageController:onSelectMessageAvatar:)]) {
         [self.delegate messageController:self onSelectMessageAvatar:cell];
     }

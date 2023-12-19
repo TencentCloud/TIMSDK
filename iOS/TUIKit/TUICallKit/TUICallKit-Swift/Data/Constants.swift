@@ -1,5 +1,6 @@
 //
 //  Constants.swift
+//  TUICallKit
 //
 //  Created by vincepzhang on 2022/12/30.
 //
@@ -29,16 +30,26 @@ let Bottom_SafeHeight = {var bottomSafeHeight: CGFloat = 0
 }()
 
 // MARK: FloatWindow UI Param
-let kMicroAudioViewWidth = 80.0
-let kMicroAudioViewHeight = 80.0
-let kMicroVideoViewWidth = 100.0
-let kMicroVideoViewHeight = (100.0 * 16) / 9.0
-let kMicroAudioViewRect = CGRect(x: Screen_Width - kMicroAudioViewWidth, y: 150, width: kMicroAudioViewWidth, height: kMicroAudioViewHeight)
-let kMicroVideoViewRect = CGRect(x: Screen_Width - kMicroVideoViewWidth, y: 150, width: kMicroVideoViewWidth, height: kMicroVideoViewHeight)
-let kMicroVideoDisAvailableViewRect = CGRect(x: Screen_Width - kMicroVideoViewWidth,
-                                             y: 150,
-                                             width: kMicroVideoViewWidth,
-                                             height: kMicroVideoViewHeight - 10)
+
+let kMicroAudioViewWidth = 88.scaleWidth()
+let kMicroAudioViewHeight = 88.scaleWidth()
+let kMicroVideoViewWidth = 110.scaleWidth()
+let kMicroVideoViewHeight = 196.scaleHeight()
+let kMicroGroupViewWidth = 88.scaleWidth()
+let kMicroGroupViewHeight = 106.scaleWidth()
+
+let kMicroAudioViewRect = CGRect(x: Screen_Width - kMicroAudioViewWidth, 
+                                 y: 150.scaleHeight(),
+                                 width: kMicroAudioViewWidth,
+                                 height: kMicroAudioViewHeight)
+let kMicroVideoViewRect = CGRect(x: Screen_Width - kMicroVideoViewWidth, 
+                                 y: 150.scaleHeight(),
+                                 width: kMicroVideoViewWidth,
+                                 height: kMicroVideoViewHeight)
+let kMicroGroupViewRect = CGRect(x: Screen_Width - kMicroGroupViewWidth,
+                                 y: 150.scaleHeight(),
+                                 width: kMicroGroupViewWidth,
+                                 height: kMicroGroupViewHeight)
 
 // MARK: UI Size Param
 let kFloatWindowButtonSize = CGSize(width: 30, height: 30)
@@ -52,9 +63,9 @@ let MAX_USER = 9
 let ENABLE_MUTEMODE_USERDEFAULT = "ENABLE_MUTEMODE_USERDEFAULT"
 let TUI_CALLKIT_SIGNALING_MAX_TIME : Int32 = 30
 
-let kControlBtnSize = CGSize(width: 100, height: 92)
-let kBtnLargeSize = CGSize(width: 64, height: 64)
-let kBtnSmallSize = CGSize(width: 52, height: 52)
+let kControlBtnSize = CGSize(width: 100.scaleWidth(), height: 94.scaleWidth())
+let kBtnLargeSize = CGSize(width: 64.scaleWidth(), height: 64.scaleWidth())
+let kBtnSmallSize = CGSize(width: 60.scaleWidth(), height: 60.scaleWidth())
 
 class Constants {
     static let EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER = "eventShowTUICallKitViewController"

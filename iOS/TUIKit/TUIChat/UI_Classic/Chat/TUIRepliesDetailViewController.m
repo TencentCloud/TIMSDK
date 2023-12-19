@@ -189,6 +189,7 @@
     _inputController.view.frame =
         CGRectMake(0, self.view.frame.size.height - TTextView_Height - Bottom_SafeHeight, self.view.frame.size.width, TTextView_Height + Bottom_SafeHeight);
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    _inputController.inputBar.isFromReplyPage = YES;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
     TUIFaceGroup *group = TIMConfig.defaultConfig.faceGroups[0];
@@ -198,7 +199,7 @@
     data.isSelected = YES;
     [_inputController.menuView setData:(id) @[ data ]];
     _inputController.view.hidden = !TUIChatConfig.defaultConfig.enableMainPageInputBar;
-    CGFloat margin = 20;
+    CGFloat margin = 0;
     CGFloat padding = 10;
     _inputController.inputBar.inputTextView.frame =
         CGRectMake(margin, _inputController.inputBar.inputTextView.frame.origin.y,
@@ -211,11 +212,12 @@
                    _inputController.inputBar.faceButton.frame.size.height);
 
     if (_inputController.inputBar.micButton) {
-        [_inputController.inputBar.micButton removeFromSuperview];
+        _inputController.inputBar.micButton.alpha = 0;
     }
     if (_inputController.inputBar.moreButton) {
-        [_inputController.inputBar.moreButton removeFromSuperview];
+        _inputController.inputBar.moreButton.alpha = 0;
     }
+    [_inputController.inputBar defaultLayout];
 }
 
 - (void)updateRootMsg {
@@ -525,6 +527,13 @@
 
 #pragma mark - TUIMessageCellDelegate
 - (void)onSelectMessage:(TUIMessageCell *)cell {
+    if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
+        [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageClicked:messageCellData:)]) {
+        BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onMessageClicked:cell messageCellData:cell.messageData];
+        if (result) {
+            return;
+        }
+    }
     if ([cell isKindOfClass:[TUIImageMessageCell class]]) {
         [self showImageMessage:(TUIImageMessageCell *)cell];
     }
