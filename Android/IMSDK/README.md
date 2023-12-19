@@ -26,3 +26,17 @@ English | [简体中文](./README_ZH.md)
    api 'com.tencent.imsdk:imsdk-plus:Version number'
  }
  ```
+
+ If you use the Quic Plugin, add the following dependencies to the `gradle` file:
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:timquic-plugin:Version number'
+ }
+ ```
+
+ If you use the Advanced Encryption Plugin, add the following dependencies to the `gradle` file:
+ ```
+ dependencies {
+   api 'com.tencent.imsdk:timadvancedencryption-plugin:Version number'
+ }
+ ```
