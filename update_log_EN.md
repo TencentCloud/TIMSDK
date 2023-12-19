@@ -5,7 +5,7 @@ English | [简体中文](./版本历史.md)
 ## 7.7.5282 @2023.12.18 - Enhanced Version
 ### SDK
 - Added V2TIMCommunityManager and V2TIMCommunityListener to integrate community topic interfaces
-- SDK supports Quic and encryption plug-ins
+- The SDK supports Quic and advanced encryption plugins
 - Optimized conversation filtering logic
 - Topic information added createTime field
 - Live group supports setting administrators and pulling administrator list
