@@ -6,8 +6,8 @@ English | [简体中文](./README_ZH.md)
 
 <table >
   <tr>
-    <th width="180px" style="text-align:center">IM SDK Type</th>
-    <th width="600px" style="text-align:center">Introduction</th>
+    <th width="240px" style="text-align:center">IM SDK Type</th>
+    <th width="540px" style="text-align:center">Introduction</th>
     <th width="220px" style="text-align:center">Download Links</th>
   </tr>
 
@@ -19,13 +19,13 @@ English | [简体中文](./README_ZH.md)
     
   <tr >
      <td style="text-align:center">XCFramework Edition</td>
-     <td style="text-align:center">Support Objective-C API 和 Mac catalyst</td>
+     <td style="text-align:center">Support Objective-C API and Mac catalyst</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDK_Plus_7.6.5011.xcframework.zip">ImSDK_Plus.xcframework</a></td>
   </tr>
 	
   <tr >
      <td style="text-align:center">Swift Edition</td>
-     <td style="text-align:center">Support Swift API 和 Mac catalyst</td>
+     <td style="text-align:center">Support Swift API and Mac catalyst</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDK_Plus_Swift_7.6.5011.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
   </tr>
 </table>
@@ -34,8 +34,8 @@ English | [简体中文](./README_ZH.md)
 
 <table >
   <tr>
-    <th width="200px" style="text-align:center">IM SDK Plugin Type</th>
-    <th width="560px" style="text-align:center">Introduction</th>
+    <th width="260px" style="text-align:center">IM SDK Plugin Type</th>
+    <th width="500px" style="text-align:center">Introduction</th>
     <th width="240px" style="text-align:center">Download Links</th>
   </tr>
 

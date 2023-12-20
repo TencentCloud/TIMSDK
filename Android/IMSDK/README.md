@@ -6,8 +6,8 @@ English | [简体中文](./README_ZH.md)
 
 <table >
   <tr>
-    <th width="180px" style="text-align:center">IM SDK Type</th>
-    <th width="600px" style="text-align:center">Introduction</th>
+    <th width="240px" style="text-align:center">IM SDK Type</th>
+    <th width="540px" style="text-align:center">Introduction</th>
     <th width="220px" style="text-align:center">Download Links</th>
   </tr>
 
@@ -22,9 +22,9 @@ English | [简体中文](./README_ZH.md)
 
 <table >
   <tr>
-    <th width="200px" style="text-align:center">IM SDK 插件类型</th>
-    <th width="520px" style="text-align:center">简介</th>
-    <th width="280px" style="text-align:center">下载地址</th>
+    <th width="240px" style="text-align:center">IM SDK 插件类型</th>
+    <th width="420px" style="text-align:center">简介</th>
+    <th width="320px" style="text-align:center">下载地址</th>
   </tr>
 
   <tr >
