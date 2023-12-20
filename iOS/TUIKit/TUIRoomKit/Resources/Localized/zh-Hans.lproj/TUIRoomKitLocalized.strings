@@ -23,8 +23,8 @@
 
 "TUIRoom.sure.destroy.room" = "你确定要结束会议吗？";
 "TUIRoom.sure.leave.room" = "你确定要离开房间吗？";
-"TUIRoom.destroy.room.cancel" = "再等等";
-"TUIRoom.ok" = "确认";
+"TUIRoom.wait" = "再等等";
+"TUIRoom.ok" = "确定";
 "TUIRoom.cancel" = "取消";
 "TUIRoom.invite.join" = "您可以分享房间号或链接邀请更多人加入房间";
 "TUIRoom.logout.member.list" = "成员列表";
@@ -40,8 +40,6 @@
 "TUIRoom.inviteMember" = "邀请成员";
 "TUIRoom.kick.off.error.toast" = "xx被移除失败";
 "TUIRoom.suer.kick.off.xx" = "你确定要移除\"xx\"吗？";
-"TUIRoom.mute.audio.success.toast" = "同意了麦克风开启请求";
-"TUIRoom.mute.video.success.toast" = "同意了摄像头开启请求";
 "TUIRoom.mute.audio.reject.toast" = "拒绝了麦克风开启请求";
 "TUIRoom.mute.video.reject.toast" = "拒绝了摄像头开启请求";
 "TUIRoom.copy.success" = "房间号复制成功";
@@ -63,6 +61,7 @@
 "TUIRoom.mute" = "静音";
 "TUIRoom.unmute" = "解除静音";
 "TUIRoom.request.open.video" = "请求开启视频";
+"TUIRoom.request.open.audio" = "请求开启音频";
 "TUIRoom.close.video" = "关闭视频";
 "TUIRoom.change.host" = "转交房主";
 "TUIRoom.mute.message" = "禁言";
@@ -87,7 +86,7 @@
 "TUIRoom.leave.seat" = "下台";
 "TUIRoom.hand.down" = "手放下";
 "TUIRoom.invite.to.speak" = "主持人邀请您上台发言";
-"TUIRoom.agree.to.speak" = "主持人邀请您上台发言，上台后可以打开摄像头和麦克风";
+"TUIRoom.agree.to.speak" = "主持人邀请您上台发言，上台后可以打开摄像头和取消静音";
 "TUIRoom.decline" = "拒绝";
 "TUIRoom.agree" = "同意";
 "TUIRoom.quick.meeting" = "快速会议";
@@ -105,7 +104,8 @@
 "TUIRoom.invite.turn.on.video" = "主持人邀请您开启视频画面";
 "TUIRoom.dismiss.meeting.Title" = "如果您不想结束会议";
 "TUIRoom.appoint.new.host" = "请在离开会议前指定新的主持人";
-"TUIRoom.leave.room.tip" = "如果您不想结束房间，请在离开房间前指定新的主持人";
+"TUIRoom.appoint.owner" = "如果您不想结束房间，请在离开房间前指定新的主持人";
+"TUIRoom.leave.room.tip"= "您确定要离开房间吗";
 "TUIRoom.leave.meeting" = "离开会议";
 "TUIRoom.leave.room" = "离开房间";
 "TUIRoom.dismiss.meeting" = "结束会议";
@@ -115,8 +115,7 @@
 "TUIRoom.have.become.master" = "您已成为主持人";
 "TUIRoom.have.transferred.master" = "您已转让了房主";
 "TUIRoom.raise.hand.apply" = "举手申请";
-"TUIRoom.mute.audio.seat.reason" = "举手发言房间，请先举手申请上麦";
-"TUIRoom.mute.video.seat.reason" = "举手发言房间，请先举手申请上麦";
+"TUIRoom.mute.seat.reason" = "举手发言房间，请先举手";
 "TUIRoom.mute.audio.room.reason" = "全员静音中，无法开启麦克风";
 "TUIRoom.mute.video.room.reason" = "全员禁画中，无法开启摄像头";
 "TUIRoom.all.mute.video.prompt" = "主持人已将全体成员禁画";
@@ -134,8 +133,8 @@
 "TUIRoom.exit" = "结束";
 "TUIRoom.share.on" = "共享屏幕";
 "TUIRoom.share.off" = "停止共享";
-"TUIRoom.video" = "视频";
-"TUIRoom.audio" = "音频";
+"TUIRoom.video.settings" = "视频设置";
+"TUIRoom.audio.settings" = "音频设置";
 "TUIRoom.setting" = "设置";
 "TUIRoom.advancedSetting" = "高级设置";
 "TUIRoom.frame.rate" = "帧率";
@@ -161,7 +160,7 @@
 "TUIRoom.fail.permission.Later" = "以后再说";
 "TUIRoom.fail.permission.Enable" = "去开启";
 "TUIRoom.device.set" = "快速会议设置";
-"TUIRoom.mic.set" = "入会开启麦克风";
+"TUIRoom.mic.set" = "入会开启音频";
 "TUIRoom.camera.set" = "入会开启摄像头";
 "TUIRoom.sharing.screen" = "你正在共享屏幕";
 "TUIRoom.stop.share.screen" = "停止共享";
@@ -175,3 +174,17 @@
 "TUIRoom.raised.hand" = "您已举手，请等待主持人操作";
 "TUIRoom.rejected.take.seat" = "主持人拒绝了您的上台申请";
 "TUIRoom.taken.seat" = "主持人同意了您的上台申请";
+"TUIRoom.in.another.room" = "您已经在其他房间中";
+"TUIRoom.others.screen.sharing" = "当前已有成员正在进行共享，请稍后再操作";
+"TUIRoom.smooth.resolution" = "流畅";
+"TUIRoom.standard.resolution" = "标清";
+"TUIRoom.high.resolution" = "高清";
+"TUIRoom.super.resolution" = "超清";
+"TUIRoom.invited.take.seat" = "已向观众发出上台邀请";
+"TUIRoom.invited.open.audio" = "已向观众发出开启音频邀请";
+"TUIRoom.invited.open.video" = "已向观众发出开启视频邀请";
+"TUIRoom.refused.take.seat.invitation" = "拒绝了您的上台邀请";
+"TUIRoom.take.seat.invitation.timeout" = "上麦邀请已经超时";
+"TUIRoom.open.video.invitation.timeout" = "开启视频的邀请已经超时";
+"TUIRoom.open.audio.invitation.timeout" = "开启音频的邀请已经超时";
+"TUIRoom.sure.kick.out" = "是否将xx移出房间？";

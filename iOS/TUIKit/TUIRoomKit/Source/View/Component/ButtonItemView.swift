@@ -9,21 +9,35 @@
 import Foundation
 
 class ButtonItemView: UIView {    
-    let itemData: ButtonItemData
+    var itemData: ButtonItemData
     
-    let controlButton: UIButton = {
+    lazy var controlButton: UIButton = {
         let button = UIButton()
-        button.contentVerticalAlignment = .bottom
-        button.contentHorizontalAlignment = isRTL ? .right : .left
-        button.setTitleColor(UIColor(0xD5E0F2), for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10.scale375(), bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        button.backgroundColor = itemData.backgroundColor
+        if let cornerRadius = itemData.cornerRadius {
+            button.layer.cornerRadius = cornerRadius
+        }
         return button
     }()
-    let lineView: UIView = {
+    
+    lazy var label: UILabel = {
+        let label = UILabel()
+        label.textAlignment = isRTL ? .right : .left
+        label.font = itemData.titleFont ?? UIFont(name: "PingFangSC-Regular", size: 14)
+        label.textColor = itemData.titleColor ?? UIColor(0xD5E0F2)
+        label.adjustsFontSizeToFitWidth = true
+        return label
+    }()
+    
+    lazy var imageView: UIImageView = {
+        let view = UIImageView()
+        return view
+    }()
+    
+    lazy var lineView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(0x4F586B,alpha: 0.1)
+        view.isHidden = itemData.hasLineView ? false : true
         return view
     }()
     // MARK: - initialized function
@@ -48,28 +62,41 @@ class ButtonItemView: UIView {
     }
     
     func constructViewHierarchy() {
-        addSubview(controlButton)
         addSubview(lineView)
+        addSubview(controlButton)
+        controlButton.addSubview(imageView)
+        controlButton.addSubview(label)
     }
     
     func activateConstraints() {
         controlButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16.scale375())
-            make.left.right.equalToSuperview()
-            make.height.equalTo(20.scale375())
+            make.edges.equalToSuperview()
         }
-        if itemData.buttonType == .muteMessageItemType {
-            lineView.snp.remakeConstraints { make in
-                make.top.equalToSuperview().offset(52.scale375())
-                make.left.right.equalToSuperview()
-                make.height.equalTo(5.scale375Height())
+        imageView.snp.makeConstraints { make in
+            if let size = itemData.imageSize {
+                make.size.equalTo(size)
+            } else {
+                make.width.height.equalTo(20)
             }
-        } else {
-            lineView.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(52.scale375())
-                make.left.right.equalToSuperview()
-                make.height.equalTo(1.scale375())
+            if itemData.orientation == .left {
+                make.leading.equalToSuperview()
+            } else {
+                make.trailing.equalToSuperview()
             }
+            make.centerY.equalToSuperview()
+        }
+        label.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            if itemData.orientation == .left {
+                make.leading.equalTo(imageView.snp.trailing).offset(10)
+            } else {
+                make.trailing.equalTo(imageView.snp.leading).offset(-10)
+            }
+        }
+        lineView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(1.scale375())
         }
     }
     
@@ -79,16 +106,11 @@ class ButtonItemView: UIView {
     }
     
     func setupViewState(item: ButtonItemData) {
+        itemData = item
         controlButton.isSelected = item.isSelect
         controlButton.isEnabled = item.isEnabled
-        if let normalImage = item.normalImage {
-            controlButton.setImage(normalImage, for: .normal)
-        }
-        if let selectedImage = item.selectedImage {
-            controlButton.setImage(selectedImage, for: .selected)
-        }
-        controlButton.setTitle(item.normalTitle, for: .normal)
-        controlButton.setTitle(item.selectedTitle, for: .selected)
+        imageView.image = item.isSelect ? itemData.selectedImage : itemData.normalImage
+        label.text = item.isSelect ? itemData.selectedTitle : itemData.normalTitle
     }
     
     @objc func clickMenuButton(sender: UIButton) {

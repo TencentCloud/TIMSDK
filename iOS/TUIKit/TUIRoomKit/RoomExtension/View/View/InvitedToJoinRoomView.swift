@@ -152,8 +152,6 @@ class InvitedToJoinRoomView: UIView {
         userNameLabel.text = viewModel.inviteUserName
         let placeholderImage = UIImage(named: "room_default_avatar", in: tuiRoomKitBundle(), compatibleWith: nil)
         userImageView.sd_setImage(with: URL(string: viewModel.avatarUrl), placeholderImage: placeholderImage)
-        disagreeButton.layoutButton(style: .Top, imageTitleSpace: 5, imageFrame: CGSize(width: 24, height: 24))
-        agreeButton.layoutButton(style: .Top, imageTitleSpace: 5, imageFrame: CGSize(width: 24, height: 24))
     }
     @objc private func disagreeAction(sender: UIButton) {
         viewModel.disagreeAction()

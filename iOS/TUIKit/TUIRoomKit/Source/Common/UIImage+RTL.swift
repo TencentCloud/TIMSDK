@@ -16,7 +16,7 @@ extension UIImage {
             bitmap.translateBy(x: self.size.width / 2, y: self.size.height / 2)
             bitmap.scaleBy(x: -1.0, y: -1.0)
             bitmap.translateBy(x: -self.size.width / 2, y: -self.size.height / 2)
-            bitmap.draw(cgImage, in: CGRectMake(0, 0, self.size.width, self.size.height))
+            bitmap.draw(cgImage, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
             let image = UIGraphicsGetImageFromCurrentImageContext()
             return image
         }

@@ -66,14 +66,15 @@ class RoomManager {
     
     func enterRoom(roomId: String) {
         roomObserver.registerObserver()
-        TUIRoomKit.createInstance().enterRoom(roomId: roomId, enableMic: engineManager.store.isOpenMicrophone,
-                                              enableCamera: engineManager.store.isOpenCamera, isSoundOnSpeaker: true, onSuccess: { [weak self] in
+        engineManager.store.isImAccess = true
+        engineManager.enterRoom(roomId: roomId, enableAudio: engineManager.store.isOpenMicrophone, enableVideo:
+                                    engineManager.store.isOpenCamera, isSoundOnSpeaker: true) { [weak self] in
             guard let self = self else { return }
             self.roomObserver.enteredRoom()
-        }, onError: {code, message in
+        } onError: { code, message in
             RoomCommon.getCurrentWindowViewController()?.view.makeToast(message)
             debugPrint("enterRoom:code:\(code),message:\(message)")
-        })
+        }
     }
     
     func exitRoom(onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {

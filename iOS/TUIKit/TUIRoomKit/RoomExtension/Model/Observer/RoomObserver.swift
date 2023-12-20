@@ -85,6 +85,7 @@ class RoomObserver: NSObject {
     }
     
     func exitedRoom() {
+        RoomVideoFloatView.dismiss()
         userList = userList.filter { userDic in
             if let userId = userDic["userId"] as? String, userId != userId {
                 return true
@@ -105,6 +106,7 @@ class RoomObserver: NSObject {
     }
     
     func destroyedRoom() {
+        RoomVideoFloatView.dismiss()
         messageModel.roomState = .destroyed
         if messageModel.owner == userId {
             messageManager.resendRoomMessage(message: messageModel, dic: ["roomState":RoomMessageModel.RoomState.destroyed.rawValue])

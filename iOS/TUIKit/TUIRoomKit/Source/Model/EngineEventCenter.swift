@@ -59,6 +59,10 @@ class EngineEventCenter: NSObject {
         case onUserScreenCaptureStopped
         case onRequestReceived
         case onSendMessageForUserDisableChanged
+        case onRemoteUserEnterRoom
+        case onRemoteUserLeaveRoom
+        case onUserRoleChanged
+        case onSeatListChanged
     }
     
     enum RoomUIEvent: String {
@@ -68,7 +72,7 @@ class EngineEventCenter: NSObject {
         case TUIRoomKitService_RenewSeatList
         case TUIRoomKitService_UserOnSeatChanged
         case TUIRoomKitService_ShowRoomMainView
-        case TUIRoomKitService_ShowRoomFloatView
+        case TUIRoomKitService_ShowRoomVideoFloatView
         case TUIRoomKitService_ExitedRoom
         case TUIRoomKitService_DestroyedRoom
         case TUIRoomKitService_CurrentUserHasAudioStream
@@ -79,6 +83,9 @@ class EngineEventCenter: NSObject {
         case TUIRoomKitService_UserListManagerDisplayStatusChanged
         case TUIRoomKitService_ChangeToolBarHiddenState //更改工具栏显示或者隐藏状态
         case TUIRoomKitService_SetToolBarDelayHidden //设定工具栏是否3秒之后隐藏（参数：isDelay）
+        case TUIRoomKitService_HiddenChatWindow //隐藏聊天窗口
+        case TUIRoomKitService_ShowExitRoomView //显示离开房间页面
+        case TUIRoomKitService_RenewVideoSeatView //更新视频页面
     }
     
     /// 注册UI响应相关监听事件

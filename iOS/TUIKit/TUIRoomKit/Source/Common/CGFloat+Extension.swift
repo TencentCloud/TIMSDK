@@ -9,8 +9,12 @@
 import Foundation
 import UIKit
 
-let kScreenWidth = UIScreen.main.bounds.width
-let kScreenHeight = UIScreen.main.bounds.height
+var kScreenWidth: CGFloat {
+    UIScreen.main.bounds.width
+}
+var kScreenHeight: CGFloat {
+    UIScreen.main.bounds.height
+}
 
 public let kDeviceIsiPhoneX : Bool = {
     if UIDevice.current.userInterfaceIdiom == .pad {
@@ -32,9 +36,12 @@ public let kDeviceSafeBottomHeight : CGFloat = {
         return 0
     }
 }()
-
-private let width = UIScreen.main.bounds.width
-private let height = UIScreen.main.bounds.height
+private var width: CGFloat {
+    return min(kScreenHeight, kScreenWidth)
+}
+private var height: CGFloat {
+    return max(kScreenWidth, kScreenHeight)
+}
 
 extension CGFloat {
     

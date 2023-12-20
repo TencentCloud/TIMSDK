@@ -37,7 +37,7 @@ class ListCellItemView: UIView {
     
     let sliderLabel: UILabel = {
         let view = UILabel()
-        view.textAlignment = isRTL ? .right : .left
+        view.textAlignment = isRTL ? .left : .right
         view.backgroundColor = .clear
         view.textColor = UIColor(0xD1D9EC)
         view.font = UIFont(name: "PingFangSC-Medium", size: 14)
@@ -53,16 +53,15 @@ class ListCellItemView: UIView {
         return view
     }()
     
-    lazy var rightButton: UIButton = {
-        let button = UIButton(type: .custom)
-        let normalIcon = UIImage(named: "room_drop_down", in: tuiRoomKitBundle(), compatibleWith: nil)
-        button.setImage(normalIcon, for: .normal)
-        button.setTitleColor(UIColor(0xB2BBD1), for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 12)
-        button.backgroundColor = UIColor(0x6B758A).withAlphaComponent(0.7)
-        button.layer.cornerRadius = 4
-        button.layer.masksToBounds = true
+    lazy var rightButton: ButtonItemView = {
+        let button = ButtonItemView(itemData: itemData.buttonData ?? ButtonItemData())
         return button
+    }()
+    
+    let downLineView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(0x6B758A,alpha: 0.3)
+        return view
     }()
     
     init(itemData: ListCellItemData) {
@@ -91,6 +90,7 @@ class ListCellItemView: UIView {
         addSubview(sliderLabel)
         addSubview(rightSwitch)
         addSubview(rightButton)
+        addSubview(downLineView)
     }
     
     func activateConstraints() {
@@ -104,38 +104,48 @@ class ListCellItemView: UIView {
         messageLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(80.scale375())
             make.centerY.equalToSuperview()
-            make.width.equalTo(188.scale375())
+            if itemData.hasRightButton  {
+                make.trailing.equalTo(rightButton.snp.leading)
+            } else if (itemData.hasSwitch) {
+                make.trailing.equalTo(rightSwitch.snp.trailing)
+            } else {
+                make.trailing.equalToSuperview()
+            }
             make.height.equalTo(20.scale375())
         }
         
-        sliderLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(85.scale375())
-            make.trailing.equalToSuperview().offset(-185.scale375())
-            make.centerY.equalToSuperview()
-        }
-        
         slider.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-12.scale375())
+            make.trailing.equalToSuperview()
             make.width.equalTo(152.scale375())
             make.centerY.equalToSuperview()
         }
         
-        rightSwitch.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-20)
+        sliderLabel.snp.makeConstraints { make in
+            make.leading.equalTo(titleLabel.snp.trailing).offset(5.scale375())
+            make.trailing.equalTo(slider.snp.leading).offset(-5.scale375())
             make.centerY.equalToSuperview()
         }
-        if itemData.hasRightButton {
-            rightButton.snp.remakeConstraints { make in
-                make.centerY.equalToSuperview()
-                make.trailing.equalToSuperview()
+        
+        rightSwitch.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        rightButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview()
+            if let size = itemData.buttonData?.size {
+                make.width.equalTo(size.width)
+                make.height.equalTo(size.height)
+            } else {
                 make.width.equalTo(60.scale375())
                 make.height.equalTo(26.scale375Height())
             }
-        } else {
-            rightButton.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
-                make.trailing.equalToSuperview().offset(-20.scale375())
-            }
+        }
+        downLineView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(0.5)
         }
     }
     
@@ -145,44 +155,33 @@ class ListCellItemView: UIView {
             let tap = UITapGestureRecognizer(target: self, action: #selector(overAllAction(sender:)))
             addGestureRecognizer(tap)
         }
-        rightButton.addTarget(self, action: #selector(rightButtonAction(sender:)), for: .touchUpInside)
         rightSwitch.addTarget(self, action: #selector(switchAction(sender:)), for: .touchUpInside)
         slider.addTarget(self, action: #selector(sliderAction(sender:)), for: .valueChanged)
     }
     
     func setupViewState(item: ListCellItemData) {
-        if item.titleText.isEmpty {
-            titleLabel.isHidden = true
-        }
-        if item.messageText.isEmpty {
-            messageLabel.isHidden = true
-        }
-        if !item.hasSwitch {
-            rightSwitch.isHidden = true
-        }
-        if !item.hasRightButton {
-            rightButton.isHidden = true
-        }
-        if !item.hasSlider {
-            slider.isHidden = true
-        }
-        if !item.hasSliderLabel {
-            sliderLabel.isHidden = true
-        }
+        //UILabel配置
+        titleLabel.isHidden = item.titleText.isEmpty
+        titleLabel.text = item.titleText
+        messageLabel.isHidden = item.messageText.isEmpty
+        messageLabel.text = item.messageText
+        //UISwitch配置
+        rightSwitch.isHidden = !item.hasSwitch
         rightSwitch.isOn = item.isSwitchOn
+        //TUIButton配置
+        rightButton.isHidden = !item.hasRightButton
+        if let buttonData = item.buttonData {
+            rightButton.setupViewState(item: buttonData)
+        }
+        //UISlider配置
+        slider.isHidden = !item.hasSlider
+        sliderLabel.isHidden = !item.hasSliderLabel
         slider.minimumValue = item.minimumValue / item.sliderStep
         slider.maximumValue = item.maximumValue / item.sliderStep
         slider.value = item.sliderDefault / item.sliderStep
         sliderLabel.text = String(Int(slider.value) * Int(item.sliderStep)) + item.sliderUnit
-        titleLabel.text = item.titleText
-        messageLabel.text = item.messageText
-        if let normalImage = item.normalImage {
-            rightButton.setImage(normalImage, for: .normal)
-        }
-        if let selectedImage = item.selectedImage {
-            rightButton.setImage(selectedImage, for: .selected)
-        }
-        rightButton.setTitle(item.normalText, for: .normal)
+        //下划线配置
+        downLineView.isHidden = !itemData.hasDownLineView
     }
     
     @objc func overAllAction(sender: UIView) {

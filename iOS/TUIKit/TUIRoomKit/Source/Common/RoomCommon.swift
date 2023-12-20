@@ -13,6 +13,12 @@ var isRTL: Bool {
     TUIGlobalization.getRTLOption()
 }
 
+var isLandscape: Bool {
+    guard let orientationIsLandscape = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation.isLandscape as? Bool
+    else { return false }
+    return orientationIsLandscape
+}
+
 class RoomCommon {
     enum AuthorizationDeniedType {
         case microphone

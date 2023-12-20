@@ -30,6 +30,12 @@ class ButtonItemData {
         case kickOutItemType
         case normal
         case advancedSettingItemType
+        case switchMicItemType
+        case switchCamaraItemType
+    }
+    enum Orientation {
+        case left
+        case right
     }
     var buttonType: ButtonType = .normal
     var normalIcon: String = ""
@@ -38,6 +44,9 @@ class ButtonItemData {
     
     var normalTitle: String = ""
     var selectedTitle: String = ""
+    
+    var titleFont: UIFont?
+    var titleColor: UIColor?
     
     var resourceBundle: Bundle = Bundle.main
     
@@ -55,8 +64,13 @@ class ButtonItemData {
         return UIImage(named: disabledIcon, in: resourceBundle, compatibleWith: nil)?.checkOverturn()
     }
     
+    var cornerRadius: CGFloat?
+    var hasLineView: Bool = false
+    var orientation: Orientation = .left //文字和按钮的相对位置，默认是图案在左，文字在右，为left
+    var imageSize: CGSize?
     var size: CGSize?
     var backgroundColor: UIColor?
     var isSelect: Bool = false
     var isEnabled: Bool = true
+    var isHidden: Bool = false
 }

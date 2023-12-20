@@ -37,9 +37,9 @@ import TUIRoomEngine
         EngineManager.createInstance().createRoom(roomInfo: roomInfo, onSuccess: onSuccess, onError: onError)
     }
     
-    public func enterRoom(roomId: String, enableMic: Bool, enableCamera: Bool, isSoundOnSpeaker: Bool,
+    public func enterRoom(roomId: String, enableAudio: Bool, enableVideo: Bool, isSoundOnSpeaker: Bool,
                           onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        EngineManager.createInstance().enterRoom(roomId: roomId, enableMic: enableMic, enableCamera: enableCamera,
+        EngineManager.createInstance().enterRoom(roomId: roomId, enableAudio: enableAudio, enableVideo: enableVideo,
                                                  isSoundOnSpeaker: isSoundOnSpeaker, onSuccess: onSuccess, onError: onError)
     }
     

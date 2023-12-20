@@ -10,8 +10,7 @@ import Foundation
 import TUIRoomEngine
 
 class AudioModel {
-    var isMicDeviceOpened: Bool = false //是否已打开麦克风设备
-    var isMicOpened: Bool = true //进房前选择是否打开麦克风状态
+    var isMicOpened: Bool = false
     var isSoundOnSpeaker: Bool = true
     var captureVolume: Int = 100
     var playVolume: Int = 100
