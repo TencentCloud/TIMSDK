@@ -14,19 +14,19 @@
   <tr >
      <td style="text-align:center">Objective-C 版本</td>
      <td style="text-align:center">支持 Objective-C API</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDK_Plus_7.6.5011.framework.zip">ImSDK_Plus.framework</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDK_Plus_7.7.5282.framework.zip">ImSDK_Plus.framework</a></td>
   </tr>
     
   <tr >
      <td style="text-align:center">XCFramework 版本</td>
      <td style="text-align:center">支持 Objective-C API 和 Mac catalyst</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDK_Plus_7.6.5011.xcframework.zip">ImSDK_Plus.xcframework</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDK_Plus_7.7.5282.xcframework.zip">ImSDK_Plus.xcframework</a></td>
   </tr>
 	
   <tr >
      <td style="text-align:center">Swift 版本</td>
      <td style="text-align:center">支持 Swift API 和 Mac catalyst</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.6.5011/ImSDK_Plus_Swift_7.6.5011.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDK_Plus_Swift_7.7.5282.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
   </tr>
 </table>
 
@@ -75,4 +75,4 @@ end
 
 如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/75284)。
 
-此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/7.6.5011/cross_platform/ImSDK_iOS_C_7.6.5011.framework.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/7.6.5011/cross_platform/ImSDK_iOS_CPP_7.6.5011.framework.zip)。
+此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_iOS_C_7.7.5282.framework.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_iOS_CPP_7.7.5282.framework.zip)。
