@@ -7,8 +7,8 @@
 <table >
   <tr>
     <th width="220px" style="text-align:center">IM SDK 类型</th>
-    <th width="560px" style="text-align:center">简介</th>
-    <th width="220px" style="text-align:center">下载地址</th>
+    <th width="440px" style="text-align:center">简介</th>
+    <th width="340px" style="text-align:center">下载地址</th>
   </tr>
 
   <tr >
@@ -24,7 +24,7 @@
   <tr>
     <th width="220px" style="text-align:center">IM SDK 插件类型</th>
     <th width="440px" style="text-align:center">简介</th>
-    <th width="320px" style="text-align:center">下载地址</th>
+    <th width="340px" style="text-align:center">下载地址</th>
   </tr>
 
   <tr >

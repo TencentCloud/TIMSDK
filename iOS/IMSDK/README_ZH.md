@@ -6,9 +6,9 @@
 
 <table >
   <tr>
-    <th width="190px" style="text-align:center">IM SDK 类型</th>
-    <th width="590px" style="text-align:center">简介</th>
-    <th width="220px" style="text-align:center">下载地址</th>
+    <th width="180px" style="text-align:center">IM SDK 类型</th>
+    <th width="510px" style="text-align:center">简介</th>
+    <th width="330px" style="text-align:center">下载地址</th>
   </tr>
 
   <tr >
