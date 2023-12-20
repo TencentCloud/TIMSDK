@@ -22,9 +22,9 @@ English | [简体中文](./README_ZH.md)
 
 <table >
   <tr>
-    <th width="240px" style="text-align:center">IM SDK 插件类型</th>
-    <th width="440px" style="text-align:center">简介</th>
-    <th width="320px" style="text-align:center">下载地址</th>
+    <th width="240px" style="text-align:center">IM SDK Plugin Type</th>
+    <th width="440px" style="text-align:center">Introduction</th>
+    <th width="320px" style="text-align:center">Download Links</th>
   </tr>
 
   <tr >
