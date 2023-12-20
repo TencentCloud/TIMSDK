@@ -1,4 +1,4 @@
-[English](./README.md) | 简体中文
+English | [简体中文](./README_ZH.md)
 
 # TIM SDK 7.7.5282 (iOS)
 
