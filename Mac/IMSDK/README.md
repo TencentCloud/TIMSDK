@@ -1,45 +1,23 @@
-English | [简体中文](./README_ZH.md)
+[English](./README.md) | 简体中文
 
-# TIM SDK (Mac)
+# TIM SDK 7.7.5282 (Mac)
 
-## Download Links
+## Download IM SDK
 
-### Enhanced Edition(Recommend)
-[Latest ImSDKForMac_Plus.framework download](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip)
+[Download ImSDKForMac_Plus.framework Edition](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip)
 
-### Enhanced Edition Pro (Providing axp-quic multiplex transmission protocol to enhance network performance)
-Starting from version 7.7.5282, there is no longer a separate Pro version for the MacOS system. The [latest ImSDKForMac_Plus.framework version](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip) already supports QUIC and encryption capabilities.
-
-### C++ API edition
-Starting from version 7.7.5282, there is no longer a separate C++ API version for MacOS systems. The [latest ImSDKForMac_Plus.framework version](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip)now includes C++ header files.
-
-### C API edition
-Starting from version 7.7.5282, there is no longer a separate C API version for MacOS systems. The [latest ImSDKForMac_Plus.framework version](https://im.sdk.qcloud.com/download/plus/7.7.5282/ImSDKForMac_Plus_7.7.5282.framework.zip)now includes C header files.
+Note: The SDK supports three types of APIs: Objective-C, C, and C++. It is strongly recommended that you choose one type of API and avoid mixing it with other types of APIs.
 
 ## CocoaPods Integration
-
-If you are using the SDK enhanced edition, edit the Podfile as follows:
-
-```
-source 'https://github.com/CocoaPods/Specs.git'
-platform :macos, '10.10'
-
-target 'TUIKitDemo' do
-   pod 'TXIMSDK_Plus_Mac'
-
-end
-
-```
-
-If you are using the SDK enhanced edition Pro, edit the Podfile as follows:
+Add the dependency to your Podfile.
 
 ```
 source 'https://github.com/CocoaPods/Specs.git'
 platform :macos, '10.10'
 
 target 'TUIKitDemo' do
-   pod 'TXIMSDK_Plus_Pro_Mac'
-
+    pod 'TXIMSDK_Plus_Mac'
 end
-
 ```
+
+If you need more detailed integration guidance, please [refer to the complete integration documentation](https://www.tencentcloud.com/document/product/1047/34308)。

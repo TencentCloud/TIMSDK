@@ -1,14 +1,11 @@
 [English](./README.md) | 简体中文
 
-# 跨平台库 （Windows）
+# TIM SDK 7.7.5282（Windows）
 
-## 下载地址
+## 下载 IM SDK
 
-### 增强版 (包含 C++ 接口和 C 接口 )
-[最新 Windows 接口下载](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Windows_7.7.5282.zip)
+[下载 ImSDK_Windows 版本](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Windows_7.7.5282.zip)
 
-## TIMSDK for Windows
+说明：SDK 同时支持 C 和 C++ 两种类型的 API；强烈建议您选定一种类型的 API 之后，不要与另一种类型的 API 混合使用。
 
-[集成SDK](https://cloud.tencent.com/document/product/269/75287)
-
-[概述](https://cloud.tencent.com/document/product/269/33490)
+如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/75287)。

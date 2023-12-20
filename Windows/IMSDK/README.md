@@ -1,14 +1,11 @@
-English | [简体中文](./README_ZH.md)
+[English](./README.md) | 简体中文
 
-# Cross-Platform Library (Windows)
+# TIM SDK 7.7.5282（Windows）
 
-## Download Links
+## Download IM SDK
 
-### Enhanced Edition (Includes C++ API and C API)
-[Latest Windows API download](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Windows_7.7.5282.zip)
+[Download ImSDK_Windows Edition](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Windows_7.7.5282.zip)
 
-## TIMSDK for Windows
+Note: The SDK supports two types of APIs: C and C++. It is strongly recommended that you choose one type of API and avoid mixing it with the other type of API.
 
-[SDK Integration](https://intl.cloud.tencent.com/document/product/1047/34310)
-
-[Overview](https://intl.cloud.tencent.com/document/product/1047/34304)
+If you need more detailed integration guidance, please [refer to the complete integration documentation](https://www.tencentcloud.com/document/product/1047/34310)。
