@@ -27,6 +27,7 @@ English | [简体中文](./版本历史.md)
 
 ## 7.6.5011 @2023.11.03 - Enhanced Version 
 ### SDK
+- Add official account feature
 - Online status supports returning terminal type
 - Save security strike status locally after sending text and image messages are hit by security
 - C interface layer's session information supplements session avatar and group specific type
