@@ -518,11 +518,14 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         TUIReplyMessageCellData *myData = (TUIReplyMessageCellData *)cellData;
         __weak typeof(myData) weakMyData = myData;
         myData.onFinish = ^{
-          @strongify(self);
-          [self.dataSource dataProviderDataSourceWillChange:self];
-          NSUInteger index = [self.uiMsgs indexOfObject:weakMyData];
-          [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload atIndex:index animation:NO];
-          [self.dataSource dataProviderDataSourceDidChange:self];
+            NSUInteger index = [self.uiMsgs indexOfObject:weakMyData];
+            if (index != NSNotFound) {
+                //if messageData exist In datasource, reload this data.
+                @strongify(self);
+                [self.dataSource dataProviderDataSourceWillChange:self];
+                [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload atIndex:index animation:NO];
+                [self.dataSource dataProviderDataSourceDidChange:self];
+            }
         };
         dispatch_group_enter(group);
         [self loadOriginMessageFromReplyData:myData

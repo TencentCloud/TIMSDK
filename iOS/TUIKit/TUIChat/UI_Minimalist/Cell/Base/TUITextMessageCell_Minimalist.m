@@ -216,12 +216,12 @@
     CGRect rect = [attributeString boundingRectWithSize:CGSizeMake(TTextMessageCell_Text_Width_Max, MAXFLOAT)
                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                 context:nil];
-    CGSize size = CGSizeMake(ceil(rect.size.width), ceil(rect.size.height));
+    CGSize size = rect.size;
 
     CGRect rect2 = [attributeString boundingRectWithSize:CGSizeMake(MAXFLOAT, [textFont lineHeight])
                                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                  context:nil];
-    CGSize size2 =  CGSizeMake(ceil(rect2.size.width), ceil(rect2.size.height));
+    CGSize size2 =  rect2.size;
 
     // 如果有多行，判断下最后一行的字体宽度是否超过了消息状态的位置，如果超过，消息状态换行
     // 如果只有一行，直接加上消息状态的宽度
