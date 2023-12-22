@@ -32,12 +32,6 @@
      <td style="text-align:center">提供 axp-quic 多路传输协议，弱网抗性更优</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/timquic-plugin-7.7.5282.aar">timquic-plugin.aar</a></td>
   </tr>
-    
-  <tr >
-     <td style="text-align:center">高级加密插件</td>
-     <td style="text-align:center">提供数据库加密和 SM4 国密算法</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/timadvancedencryption-plugin-7.7.5282.aar">timadvancedencryption-plugin.aar</a></td>
-  </tr>
 </table>
 
 
@@ -50,9 +44,6 @@ dependencies {
 
     // 如果您需要添加 Quic 插件，请取消下一行的注释（注意：要求插件版本号和 IM SDK 版本号相同）
     // api "com.tencent.imsdk:timquic-plugin:版本号"
-
-    // 如果您需要添加高级加密插件，请取消下一行的注释（注意：要求插件版本号和 IM SDK 版本号相同）
-    // api "com.tencent.imsdk:timadvancedencryption-plugin:版本号"
 }
 ```
 

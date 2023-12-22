@@ -32,12 +32,6 @@ English | [简体中文](./README_ZH.md)
      <td style="text-align:center">Providing axp-quic multiplex transmission protocol to enhance network performance</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/timquic-plugin-7.7.5282.aar">timquic-plugin.aar</a></td>
   </tr>
-    
-  <tr >
-     <td style="text-align:center">Advanced Encryption Plugin</td>
-     <td style="text-align:center">Providing database encryption and SM4 encryption algorithm</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/timadvancedencryption-plugin-7.7.5282.aar">timadvancedencryption-plugin.aar</a></td>
-  </tr>
 </table>
 
 ## Maven Integration
@@ -49,9 +43,6 @@ dependencies {
 
     // If you need to add the Quic plugin, please uncomment the next line (Note: the plugin version number must match the IM SDK version number)
     // api "com.tencent.imsdk:timquic-plugin:Version number"
-
-    // If you need to add the advanced encryption plugin, please uncomment the next line (Note: the plugin version number must match the IM SDK version number)
-    // api "com.tencent.imsdk:timadvancedencryption-plugin:Version number"
 }
 ```
 

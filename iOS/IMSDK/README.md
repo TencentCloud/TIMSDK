@@ -7,8 +7,8 @@ English | [简体中文](./README_ZH.md)
 <table >
   <tr>
     <th width="240px" style="text-align:center">IM SDK Type</th>
-    <th width="440px" style="text-align:center">Introduction</th>
-    <th width="320px" style="text-align:center">Download Links</th>
+    <th width="460px" style="text-align:center">Introduction</th>
+    <th width="300px" style="text-align:center">Download Links</th>
   </tr>
 
   <tr >
@@ -34,21 +34,15 @@ English | [简体中文](./README_ZH.md)
 
 <table >
   <tr>
-    <th width="260px" style="text-align:center">IM SDK Plugin Type</th>
-    <th width="500px" style="text-align:center">Introduction</th>
-    <th width="240px" style="text-align:center">Download Links</th>
+    <th width="240px" style="text-align:center">IM SDK Plugin Type</th>
+    <th width="460px" style="text-align:center">Introduction</th>
+    <th width="300px" style="text-align:center">Download Links</th>
   </tr>
 
   <tr >
      <td style="text-align:center">Quic Plugin</td>
      <td style="text-align:center">Providing axp-quic multiplex transmission protocol to enhance network performance</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/TIMQuicPlugin_7.7.5282.framework.zip">TIMQuicPlugin.framework</a></td>
-  </tr>
-    
-  <tr >
-     <td style="text-align:center">Advanced Encryption Plugin</td>
-     <td style="text-align:center">Providing database encryption and SM4 encryption algorithm</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/TIMAdvancedEncryptionPlugin_7.7.5282.framework.zip">TIMAdvancedEncryptionPlugin.framework</a></td>
   </tr>
 </table>
 
@@ -67,9 +61,6 @@ target 'App' do
 
     # If you need to add the Quic plugin, please uncomment the next line (Note: the plugin version number must match the IM SDK version number)
     # pod 'TXIMSDK_Plus_QuicPlugin'
-
-    # If you need to add the advanced encryption plugin, please uncomment the next line (Note: the plugin version number must match the IM SDK version number)
-    # pod 'TXIMSDK_Plus_AdvancedEncryptionPlugin'
 end
 ```
 

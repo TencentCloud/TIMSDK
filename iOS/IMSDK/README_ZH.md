@@ -8,7 +8,7 @@
   <tr>
     <th width="180px" style="text-align:center">IM SDK 类型</th>
     <th width="510px" style="text-align:center">简介</th>
-    <th width="330px" style="text-align:center">下载地址</th>
+    <th width="300px" style="text-align:center">下载地址</th>
   </tr>
 
   <tr >
@@ -34,21 +34,15 @@
 
 <table >
   <tr>
-    <th width="200px" style="text-align:center">IM SDK 插件类型</th>
-    <th width="560px" style="text-align:center">简介</th>
-    <th width="240px" style="text-align:center">下载地址</th>
+    <th width="180px" style="text-align:center">IM SDK 插件类型</th>
+    <th width="510px" style="text-align:center">简介</th>
+    <th width="300px" style="text-align:center">下载地址</th>
   </tr>
 
   <tr >
      <td style="text-align:center">Quic 插件</td>
      <td style="text-align:center">提供 axp-quic 多路传输协议，弱网抗性更优</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/TIMQuicPlugin_7.7.5282.framework.zip">TIMQuicPlugin.framework</a></td>
-  </tr>
-    
-  <tr >
-     <td style="text-align:center">高级加密插件</td>
-     <td style="text-align:center">提供数据库加密和 SM4 国密算法</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5282/TIMAdvancedEncryptionPlugin_7.7.5282.framework.zip">TIMAdvancedEncryptionPlugin.framework</a></td>
   </tr>
 </table>
 
@@ -67,9 +61,6 @@ target 'App' do
 
     # 如果您需要添加 Quic 插件，请取消下一行的注释（注意：要求插件版本号和 IM SDK 版本号相同）
     # pod 'TXIMSDK_Plus_QuicPlugin'
-
-    # 如果您需要添加高级加密插件，请取消下一行的注释（注意：要求插件版本号和 IM SDK 版本号相同）
-    # pod 'TXIMSDK_Plus_AdvancedEncryptionPlugin'
 end
 ```
 
