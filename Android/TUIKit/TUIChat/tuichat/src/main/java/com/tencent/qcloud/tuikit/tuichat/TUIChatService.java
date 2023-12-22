@@ -585,7 +585,7 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
      */
     public void addCustomMessageType(String businessId, Class<? extends TUIMessageBean> beanClass, boolean isDefault) {
         if (customMessageMap.containsKey(businessId)) {
-            TUIChatLog.e(TAG, "addCustomMessageType: businessID can not be same with the exists: " + businessId);
+            TUIChatLog.i(TAG, "addCustomMessageType: businessID already exists: " + businessId);
             return;
         }
         customMessageMap.put(businessId, beanClass);
