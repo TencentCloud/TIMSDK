@@ -8,6 +8,8 @@
 
 #import "TUIChatConfig.h"
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 
 @implementation TUIChatConfig
 
@@ -102,14 +104,56 @@
 
     return nil;
 }
+
 - (TUIChatEventConfig *)eventConfig {
     if (!_eventConfig) {
         _eventConfig = [[TUIChatEventConfig alloc] init];
     }
     return _eventConfig;
 }
+
 @end
 
 @implementation TUIChatEventConfig
+
+@end
+
+
+@implementation TUIChatConfig (CustomMessageRegiser)
+
+- (void)registerCustomMessage:(NSString *)businessID
+             messageCellClassName:(NSString *)cellName
+         messageCellDataClassName:(NSString *)cellDataName {
+    [self registerCustomMessage:businessID
+           messageCellClassName:cellName
+       messageCellDataClassName:cellDataName
+                      styleType:TUIChatRegisterCustomMessageStyleTypeClassic];
+}
+
+- (void)registerCustomMessage:(NSString *)businessID
+              messageCellClassName:(NSString *)cellName
+          messageCellDataClassName:(NSString *)cellDataName
+                    styleType:(TUIChatRegisterCustomMessageStyleType)styleType {
+    
+    if (businessID.length <0 || cellName.length <0 ||cellDataName.length <0) {
+        NSLog(@"registerCustomMessage Error, check info %s", __func__);
+        return;
+    }
+    NSString * serviceName = @"";
+    if (styleType == TUIChatRegisterCustomMessageStyleTypeClassic) {
+        serviceName = TUICore_TUIChatService;
+    }
+    else {
+        serviceName = TUICore_TUIChatService_Minimalist;
+    }
+    [TUICore callService:serviceName
+                  method:TUICore_TUIChatService_AppendCustomMessageMethod
+                   param:@{BussinessID : businessID,
+                           TMessageCell_Name : cellName,
+                           TMessageCell_Data_Name : cellDataName
+                         }
+    ];
+}
+
 
 @end

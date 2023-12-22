@@ -10,6 +10,12 @@
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TUIMessageCellData.h>
 @class TUIChatEventConfig;
+
+typedef NS_ENUM(NSUInteger, TUIChatRegisterCustomMessageStyleType) {
+    TUIChatRegisterCustomMessageStyleTypeClassic = 0,
+    TUIChatRegisterCustomMessageStyleTypeMinimalist = 1,
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIChatConfig : NSObject
@@ -124,6 +130,7 @@ NS_ASSUME_NONNULL_BEGIN
  * which will be intercepted and only the overridden method will be executed. The Chat module will not continue to process it.
  */
 @property(nonatomic, strong) TUIChatEventConfig * eventConfig;
+
 @end
 
 NS_ASSUME_NONNULL_END
@@ -168,5 +175,48 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIChatEventConfig : NSObject
 @property (nonatomic,weak)id <TUIChatEventListener>chatEventListener;
 @end
+
+// Regiser custom message category
+// You can call this method like :
+//
+// [TUIChatConfig.defaultConfig registerCustomMessage:@"YourBusinessID"
+//                               messageCellClassName:@"YourCustomCellNameString"
+//                           messageCellDataClassName:@"YourCustomCellDataNameString"];
+@interface TUIChatConfig (CustomMessageRegiser)
+
+/**
+ * 注册自定义消息  ，默认向经典版 UI 注册
+ * @param businessID 自定义消息 businessID（注意不能重复）
+ * @param cellName 自定义消息 messageCell 类名
+ * @param cellDataName 自定义消息 messageCellData  类名
+ *
+ * Register custom message ,  by default, register to the classic UI.
+ * param businessID Custom message businessID (note that it must be unique)
+ * param cellName Custom message messagCell  type
+ * param cellDataName Custom message  MessagCellData type
+ */
+- (void)registerCustomMessage:(NSString *)businessID
+         messageCellClassName:(NSString *)cellName
+     messageCellDataClassName:(NSString *)cellDataName;
+
+/**
+ * 注册自定义消息
+ * @param businessID 自定义消息 businessID（注意不能重复）
+ * @param cellName 自定义消息 messageCellClass 类名
+ * @param cellDataName 自定义消息 messageCellDataClass的 类名
+ * @param styleType 此自定义消息对应的 UI 风格，例如 TUIChatRegisterCustomMessageStyleTypeClassic
+ *
+ * Register custom message
+ * param businessID Custom message businessID (note that it must be unique)
+ * param cellName Custom message messagCell  type
+ * param cellDataName Custom message  MessagCellData type
+ * param styleType UI style corresponding to this custom message, for example TUIChatRegisterCustomMessageStyleTypeClassic
+ */
+- (void)registerCustomMessage:(NSString *)businessID
+         messageCellClassName:(NSString *)cellName
+     messageCellDataClassName:(NSString *)cellDataName
+                    styleType:(TUIChatRegisterCustomMessageStyleType)styleType;
+@end
+
 NS_ASSUME_NONNULL_END
 
