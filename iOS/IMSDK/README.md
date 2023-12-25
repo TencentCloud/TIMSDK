@@ -59,10 +59,13 @@ target 'App' do
     # pod 'TXIMSDK_Plus_iOS_XCFramework'
     # pod 'TXIMSDK_Plus_Swift_iOS_XCFramework'
 
-    # If you need to add the Quic plugin, please uncomment the next line (Note: the plugin version number must match the IM SDK version number)
+    # If you need to add the Quic plugin, please uncomment the next line.
+    # Note: This plugin must be used with the Objective-C edition or XCFramework edition of the IM SDK, and the plugin version number must match the IM SDK version number.
     # pod 'TXIMSDK_Plus_QuicPlugin'
 end
 ```
+
+If you need to use the Quic feature in the Swift version of the IMSDK, [please contact us](https://www.tencentcloud.com/document/product/1047/41676).
 
 If you need more detailed integration guidance, please [refer to the complete integration documentation](https://www.tencentcloud.com/document/product/1047/34307).
 
