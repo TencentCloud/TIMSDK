@@ -5,7 +5,7 @@ English | [简体中文](./版本历史.md)
 ## 7.7.5294 @2023.12.27 - Enhanced Version
 ### SDK
 - Optimize Room control logic
-- Solve the problem that the SDK cannot receive session group deletion notifications when the local session does not exist
+- Solve the problem that the SDK cannot receive notifications of conversation deletion from the group when the local conversation does not exist
 - Solve the problem that a conversation's last message can still be searched when it is in a withdrawn state
 - Solve the problem that message senders cannot receive message change callbacks after live group messages are modified by third-party callbacks
 - Fix occasional stability problems in the log module
