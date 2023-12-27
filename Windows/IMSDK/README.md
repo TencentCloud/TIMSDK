@@ -1,10 +1,10 @@
 English | [简体中文](./README_ZH.md)
 
-# TIM SDK 7.7.5282（Windows）
+# TIM SDK 7.7.5294（Windows）
 
 ## Download IM SDK
 
-[Download ImSDK_Windows Edition](https://im.sdk.qcloud.com/download/plus/7.7.5282/cross_platform/ImSDK_Windows_7.7.5282.zip)
+[Download ImSDK_Windows Edition](https://im.sdk.qcloud.com/download/plus/7.7.5294/cross_platform/ImSDK_Windows_7.7.5294.zip)
 
 Note: The SDK supports two types of APIs: C and C++. It is strongly recommended that you choose one type of API and avoid mixing it with the other type of API.
 
