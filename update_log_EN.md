@@ -2,6 +2,15 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.7.5294 @2023.12.27 - Enhanced Version
+### SDK
+- Optimize Room control logic
+- Solve the problem that the SDK cannot receive session group deletion notifications when the local session does not exist
+- Solve the problem that a conversation's last message can still be searched when it is in a withdrawn state
+- Solve the problem that message senders cannot receive message change callbacks after live group messages are modified by third-party callbacks
+- Fix occasional stability problems in the log module
+- Optimize community topic unread count logic
+- 
 ## 7.7.5282 @2023.12.18 - Enhanced Version
 ### SDK
 - Added V2TIMCommunityManager and V2TIMCommunityListener to integrate community topic interfaces
