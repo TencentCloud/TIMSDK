@@ -4,19 +4,22 @@
 
 ## 步骤1：创建应用
 1. 登录即时通信 IM [控制台](https://console.cloud.tencent.com/avc)。
->?如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
->
-2. 在【应用列表】页，单击【创建应用接入】。
-3. 在【创建新应用】对话框中，填写新建应用的信息，单击【确认】。
-应用创建完成后，自动生成一个应用标识 SDKAppID，请记录 SDKAppID 信息。
+> 如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
+2. 在应用管理页面，单击创建新应用，在弹出的对话框中输入应用名称，选择合适的数据中心，单击确定。
+![](https://write-document-release-1258344699.cos.ap-guangzhou.tencentcos.cn/100027937867/6fc4b61ba62d11eeae9a525400c26da5.png?q-sign-algorithm=sha1&q-ak=AKID2R7tLDF_vlveaNTTR3qs7HdRt6tsl0fKDMVHHpXNMxTLgJHsuHp5NYOXM--72JDy&q-sign-time=1705041321;1705044921&q-key-time=1705041321;1705044921&q-header-list=&q-url-param-list=&q-signature=f533fa8be64c49ab562163e56cd4986d0000aff8&x-cos-security-token=9ppkNO9PtSvH4JbxBSmHE82h1D9Fjrua1fcebe235c87f42f214d99e3ddd175ed_G6fbYPfiMADONai5bOUWdr3nJkinW0mqjfc7aTs7AISjyZsb6TZiPj7ZUYZcva29WNd7iyw1w-4N7T1LFRUDyF60aiD-wjM5SKi2Wysl7vCqj-RoeEpjvk7yr0hBEASFcEoyCtYqI_QSH7nVrqXgtbYOJQr5jFbSX96VIxdzSRtw3L_eH58KXNMiplGn1ahlYJ345uR9hOLS0FBRUuXp8XTL2gOSkHwX6qjY-4KlImyS-CfR6HAc6OhHvhtbPJeCdh5g8fZITwQVlMZPRWRUW7N7xAN4jOGNL97wYTjqfjtomp2r2I5yZxLjtC5oDDZN17BIaAwe0TGyLFlnwR1KNQlQ4RuZOsEQJJvYoLOaRVfmvmP4TshXpFMjBJ2ag8a)
+![](https://write-document-release-1258344699.cos.ap-guangzhou.tencentcos.cn/100027937867/6fbc3f98a62d11ee9fd6525400bb593a.png?q-sign-algorithm=sha1&q-ak=AKIDPwe6pqU-RnSVbdCZrun0wxBi-uXIyd9_u4ElR2nanFdeQ6r68ULdNkBzdahmUsW-&q-sign-time=1705041321;1705044921&q-key-time=1705041321;1705044921&q-header-list=&q-url-param-list=&q-signature=af7f754a00fdb65fd5848145b39bc9bf9185d690&x-cos-security-token=9ppkNO9PtSvH4JbxBSmHE82h1D9Fjruad2fbd6fb6b49030895823ed0dce3d45e_G6fbYPfiMADONai5bOUWdr3nJkinW0mqjfc7aTs7AISjyZsb6TZiPj7ZUYZcva29WNd7iyw1w-4N7T1LFRUDyF60aiD-wjM5SKi2Wysl7vCqj-RoeEpjvk7yr0hBEASFcEoyCtYqI_QSH7nVrqXgtbYOJQr5jFbSX96VIxdzSRtw3L_eH58KXNMiplGn1ahjSj_kgAUbV5ezrtqPU_3Rw6GGTGBYUTg-aY3nLTaAXF9Ls9XPYl2w8GijqlxCtUIytAjiscy5oyaQKcqXpPvrmJYmDaR5Ks4vIQiq2JEAo4euM2IGbU5VvDL89Fc0qcuE5-n6sOjdZ6rzE4iM3g1lEomjV1Ib5BQ-npye-Dh6Wh-ft30xROKz57hEhSHzq6g)
+3. 创建完成后，可在应用管理页面查看、搜索、管理应用。请记录 SDKAppID 信息。
+![](https://write-document-release-1258344699.cos.ap-guangzhou.tencentcos.cn/100027937867/6fcb1f76a62d11ee9939525400461a83.png?q-sign-algorithm=sha1&q-ak=AKIDVD2vIt54ixTf0QhZppp8jvneKnCbCC7cYGuqfWGiD3KwrNqI0kDROe5MSL5Tj2zH&q-sign-time=1705041321;1705044921&q-key-time=1705041321;1705044921&q-header-list=&q-url-param-list=&q-signature=5a0050227ee027c9c84d4be4b90fad73c8470ae2&x-cos-security-token=9ppkNO9PtSvH4JbxBSmHE82h1D9Fjrua2a491a422bb339b62bdf7c4f461e2e36_G6fbYPfiMADONai5bOUWdr3nJkinW0mqjfc7aTs7AISjyZsb6TZiPj7ZUYZcva29WNd7iyw1w-4N7T1LFRUDyF60aiD-wjM5SKi2Wysl7vCqj-RoeEpjvk7yr0hBEASFcEoyCtYqI_QSH7nVrqXgtbYOJQr5jFbSX96VIxdzSRtw3L_eH58KXNMiplGn1ahNgNiQlZ0juftKVUFkiygn_W3rvjSLIm4gpnWISRukeVhBQiorz9m7PF5q-9RkTcfS29DQYvW0sg_ekNdGI0MeDpiOyXjKqcT47hGVTNsy7VyO8MjiuR3RkId6XKpqhePl1cWGATcZII9C6JhUTWDAZxcsDtalFMr35ES8-fOuPVF4Lv0pYbVlx1tWa5vBbDb)
 
 ## 步骤2：获取密钥信息
 
-1. 单击目标应用所在行的【应用配置】，进入应用详情页面。
-3. 单击**账号体系集成**右侧的【编辑】，配置**账号管理员**信息，单击【保存】。
-![](https://main.qcloudimg.com/raw/2ad153a77fe6f838633d23a0c6a4dde1.png)
-4. 单击【查看密钥】，拷贝并保存密钥信息。
->!请妥善保管密钥信息，谨防泄露。
+1. 在应用管理页面的操作中单击查看密钥。
+![](https://write-document-release-1258344699.cos.ap-guangzhou.tencentcos.cn/100027269567/ecb86072b11311ee9fd6525400bb593a.png?q-sign-algorithm=sha1&q-ak=AKIDccwHwiaKs1zZASGFRQ3tNJvDGWsqubRgoI4D_iNrbonzVD4qv7zEEPeuovJM2t2e&q-sign-time=1705041321;1705044921&q-key-time=1705041321;1705044921&q-header-list=&q-url-param-list=&q-signature=d9deb00235c65787247dd560425a99db16dd5c94&x-cos-security-token=GhZpk0pF2CizBUrN0bW5tlarp9KJGD0ab514201872c5cb9444912a8c8c8f9d6bLvvJzap6DWP7R36kGigcgvUMGXYwZ6IqwB8FjO4F96E4SxeYxahI1AltuBfjeMXmfi9HCVNnUJjZvooIQtEUq7IqXLSaryDKcK7O8MXMHyzgvNybEWZow1zB6cJ6dEKsngqDhKc9M41ZjQWsXm-xncp7Rv4gQjLU5uAw9h4L3ko5jEJdtd4G549PvJqIdvhBWgNoQVY3yD7ST-iLPkdnwjZY_Rqd4HlqA5Jh_I9k2kfcjJl60RjR6z8G2oFGUOtwzp4CJqltmWkL8OUDzxHq0ZXVesfBDJUMSonjfcTxdYApBahJz5MZ9el7OE2QpjnqEjYQPqqx-a_Ll898RVIAtqy1T_Y4pWmkxak_eGAqljyFsTA-61p_NfulgjBzMsME)
+2. 在弹出的对话框中，单击显示密钥，复制并保存密钥信息。
+![](https://write-document-release-1258344699.cos.ap-guangzhou.tencentcos.cn/100027269567/f1d63334b11311eeae9a525400c26da5.png?q-sign-algorithm=sha1&q-ak=AKID9l6AMH0HkGUpETTygUSLq-OdLGol_zYiH5S5YGV_VKPMtI4n5INkaRRiB10WMa5d&q-sign-time=1705041321;1705044921&q-key-time=1705041321;1705044921&q-header-list=&q-url-param-list=&q-signature=4e945e058a1ffcbc287130ecc9ba6a3cce4dde92&x-cos-security-token=9ppkNO9PtSvH4JbxBSmHE82h1D9Fjruab80bda0fa2814297db0adf4ac6bc9c65_G6fbYPfiMADONai5bOUWdr3nJkinW0mqjfc7aTs7AISjyZsb6TZiPj7ZUYZcva29WNd7iyw1w-4N7T1LFRUDyF60aiD-wjM5SKi2Wysl7vCqj-RoeEpjvk7yr0hBEASFcEoyCtYqI_QSH7nVrqXgtbYOJQr5jFbSX96VIxdzSSvkzF659HECTPUQjNANdxvl-Pe7hHa8vk8Gons8iP0PcmSe8YE7VRUSpOKIkfwqZGOOCEyT94A9ilepUP1g93gMh5G9QP9xdjFazstbYu1uc4f4EhWJrZ3XjMZSsXfn9uA2wvmfdJEuSN4B8I0_ifZ3hoad-w2xm34K329ehxdFMawRQ4aKC0EH9Jq3T6FcMWdcog1MedNgGDCkTYqdJlh)
+
+> 请妥善保管密钥信息，谨防泄露。
+
 
 ## 步骤3：下载并配置 Demo 源码
 

@@ -4,17 +4,20 @@ This document introduces how to quickly run through the IM demo.
 
 ## Step 1. Create an App
 1. Log in to the [IM console](https://intl.cloud.tencent.com/login).
-> If you already have an app, record its SDKAppID and [obtain key information](#step2).
->
-2. On the **Application List** page, click **Create Application**.
-3. In the **Create Application** dialog box, enter the app information and click **Confirm**.
-After the app is created, an app ID (SDKAppID) will be automatically generated, which should be noted down.
+> If you already have an app, record its SDKAppID and [configure the app](#step2).
+2. Click **Create Application**, enter your app name, and click **Confirm**.
+![](https://cloudcache.intl.tencent-cloud.com/cms/backend-cms/2dc3464956bd11ee974d5254005f490f.png)
+3. After creation, you can see the status, service version, SDKAppID, creation time, tag, and expiry time of the new app on the overview page of the console. Record the SDKAppID.
+![](https://cloudcache.intl.tencent-cloud.com/cms/backend-cms/2dc4751956bd11ee94c3525400d793d0.png)
 
 ## Step 2: Obtain Key Information
 
-1. Click **Application Configuration** in the row of the target app to enter the app details page.
-2. Click **View Key** and copy and save the key information.
->! Please store the key information properly to prevent disclosure.
+1. Click the **target app card** to go to the **basic configuration** page of the app.
+![](https://cloudcache.intl.tencent-cloud.com/cms/backend-cms/2de94e1b56bd11ee94c3525400d793d0.png)
+2. In the Basic Information area, click Display key, and then copy and save the key information.
+> Please store the key information properly to prevent leakage.
+
+![](https://cloudcache.intl.tencent-cloud.com/cms/backend-cms/2de94e1b56bd11ee94c3525400d793d0.png)
 
 ## Step 3: Download and Configure the Demo Source Code
 
