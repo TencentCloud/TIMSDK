@@ -55,6 +55,11 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Windows/IMSDK">GitHub (Recommended)</a></td>
 <td style="text-align:left" ><a href="https://www.tencentcloud.com/document/product/1047/34310">[General Integration] SDK Integration (Windows)</a></td>
 </tr>
+<tr>
+<td style="text-align:center">HarmonyOS  </td>
+<td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/HarmonyOS/IMSDK">GitHub (Recommended)</a></td>
+<td style="text-align:left" ><a href="TODO">[General Integration] SDK Integration (HarmonyOS)</a></td>
+</tr>
 </table>
 
 ## TUIKit Integration
