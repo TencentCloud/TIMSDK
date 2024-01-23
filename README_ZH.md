@@ -55,6 +55,11 @@
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Windows/IMSDK">Github(推荐)</a></td>
 <td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/75287">【常规集成】快速导入到工程 (Windows)</a></td>
 </tr>
+<tr>
+<td style="text-align:center">HarmonyOS  </td>
+<td style="text-align:center" ><a href="https://gitee.com/cloudtencent/TIMSDK/tree/master/HarmonyOS/IMSDK">Gitee(推荐)</a></td>
+<td style="text-align:left" ><a href="TODO">【常规集成】快速导入到工程 (HarmonyOS)</a></td>
+</tr>
 </table>
 
 ## TUIKit集成
