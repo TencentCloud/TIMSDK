@@ -2,7 +2,7 @@
 
 本文主要介绍如何快速运行腾讯云即时通信 IM Demo（HarmonyOS）。
 
-如果您需要更详细的运行指南，请 [查看完整的运行文档](TODO)。
+如果您需要更详细的运行指南，请 [查看完整的运行文档](https://cloud.tencent.com/document/product/269/103557)。
 
 ## 环境要求
 
@@ -93,6 +93,6 @@
 
 ## 相关链接
 
-- [集成 IM SDK（HarmonyOS）](TODO)
+- [集成 IM SDK（HarmonyOS）](https://cloud.tencent.com/document/product/269/103558)
 
-- [API 文档（HarmonyOS）](TODO)
+- [API 文档（HarmonyOS）](https://cloud.tencent.com/document/product/269/103559)
