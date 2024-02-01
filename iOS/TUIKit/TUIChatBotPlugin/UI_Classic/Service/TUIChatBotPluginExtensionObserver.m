@@ -10,7 +10,6 @@
 #import <TUICore/TUIDefine.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatBotPluginDataProvider.h"
-#import "TUIChatBotPluginConfig.h"
 #import "TUIChatBotPluginPrivateConfig.h"
 #import "TUIChatBotPluginAccountController.h"
 #import <TUIChat/TUIBaseChatViewController.h>
@@ -135,6 +134,8 @@ static id _instance = nil;
         if (nav) {
             [[V2TIMManager sharedInstance] getUsersInfo:@[userID]
                                                    succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
+                TUIChatBotPluginUserController *vc = [[TUIChatBotPluginUserController alloc] initWithUserInfo:infoList.firstObject];
+                [nav pushViewController:vc animated:YES];
             } fail:^(int code, NSString *desc) {
                 
             }];

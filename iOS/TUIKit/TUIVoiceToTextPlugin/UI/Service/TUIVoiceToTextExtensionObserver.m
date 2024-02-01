@@ -34,6 +34,9 @@ static id gShareInstance = nil;
 
     // UI extensions in pop menu when message is long pressed.
     [TUICore registerExtension:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID object:TUIVoiceToTextExtensionObserver.shareInstance];
+    
+    [TUICore registerExtension:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID object:TUIVoiceToTextExtensionObserver.shareInstance];
+    
 }
 
 + (instancetype)shareInstance {
@@ -121,6 +124,52 @@ static id gShareInstance = nil;
         if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID]) {
             info.icon = TUIChatBundleThemeImage(@"chat_icon_convert_voice_to_text_img", @"icon_convert_voice_to_text");
         }
+        info.onClicked = ^(NSDictionary *_Nonnull action) {
+            TUIMessageCellData *cellData = cell.messageData;
+            V2TIMMessage *message = cellData.innerMessage;
+            if (message.elemType != V2TIM_ELEM_TYPE_SOUND) {
+                return;
+            }
+            [TUIVoiceToTextDataProvider convertMessage:cellData
+                                            completion:^(NSInteger code, NSString * _Nonnull desc,
+                                                         TUIMessageCellData * _Nonnull data, NSInteger status,
+                                                         NSString * _Nonnull text) {
+                if (code != 0 || (text.length == 0 && status == TUIVoiceToTextViewStatusHidden)) {
+                    [TUITool makeToast:TIMCommonLocalizableString(TUIKitConvertToTextFailed)];
+                }
+                NSDictionary *param = @{TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data : cellData};
+                [TUICore notifyEvent:TUICore_TUIPluginNotify
+                              subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
+                              object:nil
+                               param:param];
+            }];
+        };
+        return @[ info ];
+    }
+    
+    if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID]) {
+        // Extension entrance in pop menu when message is long pressed.
+        if (![param isKindOfClass:NSDictionary.class]) {
+            return nil;
+        }
+        TUIMessageCell *cell = param[TUICore_TUIChatExtension_PopMenuActionItem_ClickCell];
+        if (([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID] &&
+            ![cell isKindOfClass:TUIVoiceMessageCell.class])) {
+            return nil;
+        }
+        if (cell.messageData.innerMessage.elemType != V2TIM_ELEM_TYPE_SOUND ||
+            cell.messageData.innerMessage.status != V2TIM_MSG_STATUS_SEND_SUCC) {
+            return nil;
+        }
+        if ([TUIVoiceToTextDataProvider shouldShowConvertedText:cell.messageData.innerMessage]) {
+            return nil;
+        }
+
+        TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
+        info.weight = 2000;
+        info.text = TIMCommonLocalizableString(TUIKitConvertToText);
+        info.icon = TUIChatBundleThemeImage(@"chat_icon_convert_voice_to_text_img", @"icon_convert_voice_to_text");
+
         info.onClicked = ^(NSDictionary *_Nonnull action) {
             TUIMessageCellData *cellData = cell.messageData;
             V2TIMMessage *message = cellData.innerMessage;

@@ -29,7 +29,7 @@
     self.view.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
 
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = TIMCommonLocalizableString(TUICustomerServiceAccounts);
+    titleLabel.text = TIMCommonLocalizableString(TUIChatBotAccounts);
     titleLabel.font = [UIFont boldSystemFontOfSize:17.0];
     titleLabel.textColor = TIMCommonDynamicColor(@"nav_title_text_color", @"#000000");
     [titleLabel sizeToFit];
