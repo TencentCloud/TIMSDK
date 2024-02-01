@@ -4,7 +4,7 @@ English | [简体中文](./README_ZH.md)
 
 ## Download IM SDK
 
-[Download ImSDK_Windows Edition](https://im.sdk.qcloud.com/download/plus/7.7.5294/cross_platform/ImSDK_Windows_7.7.5294.zip)
+[Download ImSDK_Windows Edition](https://im.sdk.qcloud.com/download/plus/7.8.5483/cross_platform/ImSDK_Windows_7.8.5483.zip)
 
 Note: The SDK supports two types of APIs: C and C++. It is strongly recommended that you choose one type of API and avoid mixing it with the other type of API.
 
