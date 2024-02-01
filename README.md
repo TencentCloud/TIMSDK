@@ -38,7 +38,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 <td style="text-align:center">Android  </td>
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Android/IMSDK">GitHub (Recommended)</a></td>
 <td style="text-align:left" ><a href="https://www.tencentcloud.com/document/product/1047/50057">[Quick Integration] TUIKit Integration (Android)</a><br><a href="https://www.tencentcloud.com/document/product/1047/34306">[General Integration] SDK Integration (Android)</a></td>
-<td style="text-align:center" rowspan='4'><a href="https://intl.cloud.tencent.com/document/product/1047/34282">Update Log (Native)</a> </td>
+<td style="text-align:center" rowspan='5'><a href="https://intl.cloud.tencent.com/document/product/1047/34282">Update Log (Native)</a> </td>
 </tr>
 <tr>
 <td style="text-align:center">iOS  </td>
@@ -58,7 +58,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 <tr>
 <td style="text-align:center">HarmonyOS  </td>
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/HarmonyOS/IMSDK">GitHub (Recommended)</a></td>
-<td style="text-align:left" ><a href="TODO">[General Integration] SDK Integration (HarmonyOS)</a></td>
+<td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/103558">[General Integration] SDK Integration (HarmonyOS)</a></td>
 </tr>
 </table>
 

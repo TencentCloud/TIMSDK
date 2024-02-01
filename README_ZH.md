@@ -38,7 +38,7 @@
 <td style="text-align:center">Android  </td>
 <td style="text-align:center" ><a href="https://github.com/tencentyun/TIMSDK/tree/master/Android/IMSDK">Github(推荐)</a></td>
 <td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/37059">【极速集成】导入TUIKit (Android)</a><br><a href="https://cloud.tencent.com/document/product/269/75283">【常规集成】快速导入到工程 (Android)</a></td>
-<td style="text-align:center" rowspan='4'><a href="https://cloud.tencent.com/document/product/269/1606">更新日志(终端)</a> </td>
+<td style="text-align:center" rowspan='5'><a href="https://cloud.tencent.com/document/product/269/1606">更新日志(终端)</a> </td>
 </tr>
 <tr>
 <td style="text-align:center">iOS  </td>
@@ -58,7 +58,7 @@
 <tr>
 <td style="text-align:center">HarmonyOS  </td>
 <td style="text-align:center" ><a href="https://gitee.com/cloudtencent/TIMSDK/tree/master/HarmonyOS/IMSDK">Gitee(推荐)</a></td>
-<td style="text-align:left" ><a href="TODO">【常规集成】快速导入到工程 (HarmonyOS)</a></td>
+<td style="text-align:left" ><a href="https://cloud.tencent.com/document/product/269/103558">【常规集成】快速导入到工程 (HarmonyOS)</a></td>
 </tr>
 </table>
 
