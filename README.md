@@ -154,11 +154,29 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.7.5294 @2023.12.27
+## Latest Enhanced Version 7.8.5483 @2024.02.01
 ### SDK
-- Optimize Room control logic
-- Solve the problem that the SDK cannot receive notifications of conversation deletion from the group when the local conversation does not exist
-- Solve the problem that a conversation's last message can still be searched when it is in a withdrawn state
-- Solve the problem that message senders cannot receive message change callbacks after live group messages are modified by third-party callbacks
-- Fix occasional stability problems in the log module
-- Optimize community topic unread count logic
+- Support HarmonyOS platform
+- Support Loongson architecture
+- Release TIMPush-UniApp
+- FCM push supports pass-through messages
+- Add permission group function for community topics
+- Add stranger attention/fan function
+- Support configuring cloud message audit policy
+- Support deleting accounts
+- Topic information supports obtaining the readSequence field
+- Fix the problem that after deleting a local inserted group message, the new message received does not update the unread count
+- Fix the problem that the SDK does not callback occasionally after the user subscribes to multiple official accounts at the same time
+- Fix the inconsistency of msgID before and after sending official account messages
+- Fix the problem that the callback does not occur occasionally after subscribing to conversation group unread counts
+- Fix the problem of abnormal creation time of topics
+- Fix the problem that when pulling topic information before and after joining the community, the unread count does not change.
+- Fix the problem of incorrect notification message type for topic information updates
+- Fix the problem that withdrawn status messages can be searched under certain conditions
+- Fix the issue of onApplicationProcessed callback being called multiple times
+
+### TUIKit & Demo
+- Add the TUIEmojiPlugin plugin to support emoticon response functions
+- TUIChat supports adding and displaying gif dynamic emoticons
+- Upgrade the built-in small emoji pack in TUIChat to the new version of yellow face emojis
+- Fix the problem of TUIChat on iOS black screen when clicking image messages
