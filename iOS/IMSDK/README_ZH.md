@@ -1,6 +1,6 @@
 [English](./README.md) | 简体中文
 
-# TIM SDK 7.7.5294（iOS）
+# TIM SDK 7.8.5483（iOS）
 
 ## 下载 IM SDK
 
@@ -14,19 +14,19 @@
   <tr >
      <td style="text-align:center">Objective-C 版本</td>
      <td style="text-align:center">支持 Objective-C API</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5294/ImSDK_Plus_7.7.5294.framework.zip">ImSDK_Plus.framework</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5483/ImSDK_Plus_7.8.5483.framework.zip">ImSDK_Plus.framework</a></td>
   </tr>
     
   <tr >
      <td style="text-align:center">XCFramework 版本</td>
      <td style="text-align:center">支持 Objective-C API 和 Mac catalyst</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5294/ImSDK_Plus_7.7.5294.xcframework.zip">ImSDK_Plus.xcframework</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5483/ImSDK_Plus_7.8.5483.xcframework.zip">ImSDK_Plus.xcframework</a></td>
   </tr>
 	
   <tr >
      <td style="text-align:center">Swift 版本</td>
      <td style="text-align:center">支持 Swift API 和 Mac catalyst</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5294/ImSDK_Plus_Swift_7.7.5294.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5483/ImSDK_Plus_Swift_7.8.5483.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
   </tr>
 </table>
 
@@ -42,7 +42,7 @@
   <tr >
      <td style="text-align:center">Quic 插件</td>
      <td style="text-align:center">提供 axp-quic 多路传输协议，弱网抗性更优</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.7.5294/TIMQuicPlugin_7.7.5294.framework.zip">TIMQuicPlugin.framework</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5483/TIMQuicPlugin_7.8.5483.framework.zip">TIMQuicPlugin.framework</a></td>
   </tr>
 </table>
 
@@ -69,4 +69,4 @@ end
 
 如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/75284)。
 
-此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/7.7.5294/cross_platform/ImSDK_iOS_C_7.7.5294.framework.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/7.7.5294/cross_platform/ImSDK_iOS_CPP_7.7.5294.framework.zip)。
+此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/7.8.5483/cross_platform/ImSDK_iOS_C_7.8.5483.framework.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/7.8.5483/cross_platform/ImSDK_iOS_CPP_7.8.5483.framework.zip)。
