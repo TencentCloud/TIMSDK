@@ -2,6 +2,33 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 7.8.5483 @2024.02.01 - Enhanced Version
+### SDK
+- Support HarmonyOS platform
+- Support Loongson architecture
+- Release TIMPush-UniApp
+- FCM push supports pass-through messages
+- Add permission group function for community topics
+- Add stranger attention/fan function
+- Support configuring cloud message audit policy
+- Support deleting accounts
+- Topic information supports obtaining the readSequence field
+- Fix the problem that after deleting a local inserted group message, the new message received does not update the unread count
+- Fix the problem that the SDK does not callback occasionally after the user subscribes to multiple official accounts at the same time
+- Fix the inconsistency of msgID before and after sending official account messages
+- Fix the problem that the callback does not occur occasionally after subscribing to conversation group unread counts
+- Fix the problem of abnormal creation time of topics
+- Fix the problem that when pulling topic information before and after joining the community, the unread count does not change.
+- Fix the problem of incorrect notification message type for topic information updates
+- Fix the problem that withdrawn status messages can be searched under certain conditions
+- Fix the issue of onApplicationProcessed callback being called multiple times
+
+### TUIKit & Demo
+- Add the TUIEmojiPlugin plugin to support emoticon response functions
+- TUIChat supports adding and displaying gif dynamic emoticons
+- Upgrade the built-in small emoji pack in TUIChat to the new version of yellow face emojis
+- Fix the problem of TUIChat on iOS black screen when clicking image messages
+
 ## 7.7.5294 @2023.12.27 - Enhanced Version
 ### SDK
 - Optimize Room control logic
