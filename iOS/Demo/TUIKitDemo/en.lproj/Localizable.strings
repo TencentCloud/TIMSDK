@@ -44,14 +44,14 @@
 
 "TabBarItemMessageText" = "Message";
 "TabBarItemContactText" = "Contacts";
-"TabBarItemMeText"      = "Me";
+"TabBarItemMeText"      = "Settings";
 
 "ChatsCreateFailed" = "Create Group Failed";
 
 "ChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
 "ChatSecurityWarningReport" = "Report";
 
-"MeAbout" = "About TencentCloud·IM";
+"MeAbout" = "About TencentCloud Chat";
 "MeDevelop" = "Develop and Debug";
 "MeReportMemoryLeak" = "Report Memory Leak";
 

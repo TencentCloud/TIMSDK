@@ -43,7 +43,7 @@
 
 "TabBarItemMessageText" = "الرسائل";
 "TabBarItemContactText" = "جهات الاتصال";
-"TabBarItemMeText"      = "أنا";
+"TabBarItemMeText"      = "الإعدادات";
 
 "ChatsCreateFailed" = "فشل إنشاء المجموعة";
 

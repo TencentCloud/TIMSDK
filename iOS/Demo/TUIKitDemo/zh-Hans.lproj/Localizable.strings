@@ -44,7 +44,7 @@
 
 "TabBarItemMessageText" = "消息";
 "TabBarItemContactText" = "通讯录";
-"TabBarItemMeText"      = "我";
+"TabBarItemMeText"      = "设置";
 
 "ChatsCreateFailed" = "创建群失败";
 

@@ -26,6 +26,9 @@
 #import "TUIThemeSelectController.h"
 #import "TUIUtil.h"
 #import "TUIWarningView.h"
+#import "TIMCommonMediator.h"
+#import "TUIEmojiMeditorProtocol.h"
+
 
 NSString *kHaveViewedIMIntroduction = @"TUIKitDemo_HaveViewedIMIntroduction";
 
@@ -128,7 +131,7 @@ static BOOL g_hasAddedCustomFace = NO;
         return;
     }
     g_hasAddedCustomFace = YES;
-    NSMutableArray *faceGroups = [NSMutableArray arrayWithArray:TIMConfig.defaultConfig.faceGroups];
+    id<TUIEmojiMeditorProtocol> service = [[TIMCommonMediator share] getObject:@protocol(TUIEmojiMeditorProtocol)];
     NSString *bundlePath = TUIBundlePath(@"CustomFaceResource", TUIDemoBundle_Key_Class);
     // 4350 group
     NSMutableArray *faces4350 = [NSMutableArray array];
@@ -148,7 +151,7 @@ static BOOL g_hasAddedCustomFace = NO;
         group4350.rowCount = 2;
         group4350.itemCountPerRow = 5;
         group4350.menuPath = [bundlePath stringByAppendingPathComponent:@"4350/menu"];  // TUIChatFaceImagePath(@"4350/menu");
-        [faceGroups addObject:group4350];
+        [service appendFaceGroup:group4350];
     }
 
     // 4351 group
@@ -169,7 +172,7 @@ static BOOL g_hasAddedCustomFace = NO;
         group4351.rowCount = 2;
         group4351.itemCountPerRow = 5;
         group4351.menuPath = [bundlePath stringByAppendingPathComponent:@"4351/menu"];  // TUIChatFaceImagePath(@"4351/menu");
-        [faceGroups addObject:group4351];
+        [service appendFaceGroup:group4351];
     }
 
     // 4352 group
@@ -190,10 +193,9 @@ static BOOL g_hasAddedCustomFace = NO;
         group4352.rowCount = 2;
         group4352.itemCountPerRow = 5;
         group4352.menuPath = [bundlePath stringByAppendingPathComponent:@"4352/menu"];  // TUIChatFaceImagePath(@"4352/menu");
-        [faceGroups addObject:group4352];
+        [service appendFaceGroup:group4352];
     }
 
-    TIMConfig.defaultConfig.faceGroups = faceGroups;
 }
 
 - (void)setupStyleConfig {
