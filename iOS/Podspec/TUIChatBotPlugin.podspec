@@ -1,8 +1,8 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChatBotPlugin'
-  spec.version      = '7.7.5282'
+  spec.version      = '7.8.5483'
   spec.platform     = :ios
-  spec.ios.deployment_target = '9.0'
+  spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE
         copyright 2017 tencent Ltd. All rights reserved.
@@ -16,16 +16,16 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.7.5282/ios/TUIChatBotPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.8.5483/ios/TUIChatBotPlugin.zip'}
 
   spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIChatBotPlugin/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TUICore','7.7.5282'
-    commonModel.dependency 'TIMCommon','7.7.5282'
-    commonModel.dependency 'TUIChat','7.7.5282'
-    commonModel.dependency 'TUIContact','7.7.5282'
+    commonModel.dependency 'TUICore','7.8.5483'
+    commonModel.dependency 'TIMCommon','7.8.5483'
+    commonModel.dependency 'TUIChat','7.8.5483'
+    commonModel.dependency 'TUIContact','7.8.5483'
   end
 
   spec.subspec 'UI_Classic' do |commonUI|
