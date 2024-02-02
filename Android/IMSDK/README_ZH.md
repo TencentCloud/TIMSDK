@@ -1,6 +1,6 @@
 [English](./README.md) | 简体中文
 
-# TIM SDK 7.8.5483（Android）
+# TIM SDK 7.8.5484（Android）
 
 ## 下载 IM SDK
 
@@ -14,7 +14,7 @@
   <tr >
      <td style="text-align:center">Java 版本</td>
      <td style="text-align:center">支持 Java API</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5483/imsdk-plus-7.8.5483.aar">imsdk-plus.aar</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5484/imsdk-plus-7.8.5484.aar">imsdk-plus.aar</a></td>
   </tr>
 </table>
 
@@ -49,4 +49,4 @@ dependencies {
 
 如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/75283)。
 
-此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/7.8.5483/cross_platform/ImSDK_Android_C_7.8.5483.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/7.8.5483/cross_platform/ImSDK_Android_CPP_7.8.5483.zip)。
+此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/7.8.5484/cross_platform/ImSDK_Android_C_7.8.5484.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/7.8.5484/cross_platform/ImSDK_Android_CPP_7.8.5484.zip)。
