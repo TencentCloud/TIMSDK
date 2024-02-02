@@ -64,7 +64,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:gravity="center"
-                android:text="@string/tuicallkit_wait_response"
                 android:textColor="#12B969"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"

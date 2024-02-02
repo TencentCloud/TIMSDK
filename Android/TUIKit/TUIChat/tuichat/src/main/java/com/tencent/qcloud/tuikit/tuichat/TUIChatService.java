@@ -1,14 +1,10 @@
 package com.tencent.qcloud.tuikit.tuichat;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.text.TextUtils;
-import androidx.annotation.Nullable;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
 import androidx.datastore.rxjava3.RxDataStore;
-import androidx.fragment.app.Fragment;
-
 import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
@@ -18,28 +14,23 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
-import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
-import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
-import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.bean.FaceGroup;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
-import com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIC2CChatFragment;
-import com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIGroupChatFragment;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
@@ -47,8 +38,6 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.IBaseMessageSender;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.NetworkConnectionListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
-import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
@@ -67,7 +56,7 @@ import java.util.Set;
 @AutoService(TUIInitializer.class)
 @TUIInitializerDependency("TIMCommon")
 @TUIInitializerID("TUIChat")
-public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObjectFactory {
+public class TUIChatService implements TUIInitializer, ITUIChatService {
     public static final String TAG = TUIChatService.class.getSimpleName();
     private static TUIChatService instance;
 
@@ -97,7 +86,6 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
         appContext = context;
         initMessageType();
         initService();
-        initObjectFactory();
         initEvent();
         initIMListener();
         initDataStore();
@@ -131,10 +119,10 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
         TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, this);
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, this);
         TUICore.registerEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, this);
         TUICore.registerEvent(TUIChatConstants.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING, TUIChatConstants.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING, this);
-        TUICore.registerEvent(
-            TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, this);
+        TUICore.registerEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, this);
         TUICore.registerEvent(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION,
             TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, this);
     }
@@ -208,6 +196,8 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
             handleFriendInfChangedEvent(subKey, param);
         } else if (key.equals(TUIConstants.TUIConversation.EVENT_UNREAD)) {
             handleUnreadChangedEvent(subKey, param);
+        } else if (TextUtils.equals(key, TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED)) {
+            handleInitStatusEvent(subKey);
         } else if (TextUtils.equals(key, TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED)) {
             handleLoginStatusEvent(subKey);
         } else if (TextUtils.equals(key, TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED)) {
@@ -247,6 +237,17 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
                     c2CChatEventListener.onMessageChanged((TUIMessageBean) msgBeanObj, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
                 }
             }
+        }
+    }
+
+    public void refreshMessage(TUIMessageBean messageBean) {
+        List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
+        for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
+            groupChatEventListener.onMessageChanged(messageBean, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
+        }
+        List<C2CChatEventListener> c2CChatEventListenerList = getC2CChatEventListenerList();
+        for (C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
+            c2CChatEventListener.onMessageChanged(messageBean, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
         }
     }
 
@@ -304,9 +305,6 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
 
     private void handleLoginStatusEvent(String subKey) {
         if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS)) {
-            // 加载默认 emoji 小表情
-            // load default emojis
-            FaceManager.loadEmojis();
             // 设置音视频通话的悬浮窗是否开启
             // Set whether to open the floating window for voice and video calls
             Map<String, Object> enableFloatWindowParam = new HashMap<>();
@@ -321,6 +319,36 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
                 TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE, TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMultiDeviceForCall());
             TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_MULTI_DEVICE, enableMultiDeviceParam);
         }
+    }
+
+    private void handleInitStatusEvent(String subKey) {
+        if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT)) {
+            loadBuildInFaces();
+        }
+    }
+
+    private void loadBuildInFaces() {
+        ThreadUtils.execute(() -> {
+            FaceGroup<Emoji> emojiFaceGroup = new FaceGroup<>();
+            // load chat default emojis
+            String[] emojiKeys = getAppContext().getResources().getStringArray(R.array.chat_buildin_emoji_key);
+            String[] emojiNames = getAppContext().getResources().getStringArray(R.array.chat_buildin_emoji_name);
+            String[] emojiPath = getAppContext().getResources().getStringArray(R.array.chat_buildin_emoji_file_name);
+            int emojiSize = getAppContext().getResources().getDimensionPixelSize(com.tencent.qcloud.tuikit.tuichat.R.dimen.chat_default_load_emoji_size);
+            for (int i = 0; i < emojiKeys.length; i++) {
+                String emojiKey = emojiKeys[i];
+                String emojiFilePath = "chatbuildinemojis/" + emojiPath[i];
+                Emoji emoji = FaceManager.loadAssetEmoji(emojiKey, emojiFilePath, emojiSize);
+                if (emoji != null) {
+                    emoji.setFaceName(emojiNames[i]);
+                    emojiFaceGroup.addFace(emojiKey, emoji);
+                }
+            }
+            emojiFaceGroup.setPageColumnCount(FaceManager.EMOJI_COLUMN_COUNT);
+            emojiFaceGroup.setPageRowCount(FaceManager.EMOJI_ROW_COUNT);
+            emojiFaceGroup.setFaceGroupIconUrl(com.tencent.qcloud.tuikit.tuichat.R.drawable.tuiemoji_default_emoji_group_icon);
+            FaceManager.addFaceGroup(FaceManager.EMOJI_GROUP_ID, emojiFaceGroup);
+        });
     }
 
     private void handleGroupEvent(String subKey, Map<String, Object> param) {
@@ -725,69 +753,6 @@ public class TUIChatService implements TUIInitializer, ITUIChatService, ITUIObje
         } else {
             return null;
         }
-    }
-
-    private void initObjectFactory() {
-        TUICore.registerObjectFactory(TUIConstants.TUIChat.ObjectFactory.OBJECT_FACTORY_NAME, this);
-    }
-
-    @Override
-    public Object onCreateObject(String objectName, Map<String, Object> param) {
-        if (TextUtils.equals(objectName, TUIConstants.TUIChat.ObjectFactory.ChatFragment.OBJECT_NAME)) {
-            return createChatFragmentObject(param);
-        }
-        return null;
-    }
-
-    @Nullable
-    private Fragment createChatFragmentObject(Map<String, Object> param) {
-        if (param != null && !param.isEmpty()) {
-            String chatID = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_ID, "");
-            int chatType =
-                getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE, TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE_GROUP);
-            if (TextUtils.isEmpty(chatID)) {
-                return null;
-            }
-            SPUtils.getInstance(TIMCommonConstants.CHAT_SETTINGS_SP_NAME).put(TIMCommonConstants.CHAT_REPLY_GUIDE_SHOW_SP_KEY, false);
-            if (chatType == TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE_GROUP) {
-                GroupInfo groupInfo = new GroupInfo();
-                groupInfo.setId(chatID);
-                boolean enableRoom = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_ROOM, true);
-                groupInfo.setEnableRoom(enableRoom);
-                boolean enableAudioCall = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_AUDIO_CALL, true);
-                groupInfo.setEnableAudioCall(enableAudioCall);
-                boolean enableVideoCall = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_VIDEO_CALL, true);
-                groupInfo.setEnableVideoCall(enableVideoCall);
-                boolean enableCustomHelloMessage = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_CUSTOM_HELLO_MESSAGE, false);
-                groupInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TUIChatConstants.CHAT_INFO, groupInfo);
-                TUIGroupChatFragment tuiGroupChatFragment = new TUIGroupChatFragment();
-                tuiGroupChatFragment.setArguments(bundle);
-                GroupChatPresenter presenter = new GroupChatPresenter();
-                presenter.initListener();
-                tuiGroupChatFragment.setPresenter(presenter);
-                return tuiGroupChatFragment;
-            } else {
-                ChatInfo chatInfo = new ChatInfo();
-                chatInfo.setId(chatID);
-                boolean enableAudioCall = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_AUDIO_CALL, true);
-                chatInfo.setEnableAudioCall(enableAudioCall);
-                boolean enableVideoCall = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_VIDEO_CALL, true);
-                chatInfo.setEnableVideoCall(enableVideoCall);
-                boolean enableCustomHelloMessage = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_CUSTOM_HELLO_MESSAGE, false);
-                chatInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TUIChatConstants.CHAT_INFO, chatInfo);
-                TUIC2CChatFragment tuic2CChatFragment = new TUIC2CChatFragment();
-                tuic2CChatFragment.setArguments(bundle);
-                C2CChatPresenter presenter = new C2CChatPresenter();
-                presenter.initListener();
-                tuic2CChatFragment.setPresenter(presenter);
-                return tuic2CChatFragment;
-            }
-        }
-        return null;
     }
 
     public static Context getAppContext() {

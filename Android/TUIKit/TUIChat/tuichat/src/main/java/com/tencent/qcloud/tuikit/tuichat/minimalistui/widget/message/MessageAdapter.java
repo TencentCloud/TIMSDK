@@ -1,13 +1,9 @@
 package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message;
 
-import static com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder.MSG_TYPE_HEADER_VIEW;
-
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
@@ -20,10 +16,9 @@ import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageHeaderHolder;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageHeadHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +64,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             return null;
         }
         ArrayList<TUIMessageBean> selectList = new ArrayList<>();
-        for (int i = 0; i < getItemCount() - 1; i++) {
+        for (int i = 0; i < mDataSource.size(); i++) {
             if (isItemChecked(mDataSource.get(i))) {
                 selectList.add(mDataSource.get(i));
             }
@@ -161,17 +156,15 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             setCheckBoxStatus(msg, baseHolder);
             baseHolder.layoutViews(msg, position);
 
-            if (getItemViewType(position) == MSG_TYPE_HEADER_VIEW) {
-                if (isForwardMode) {
-                    ((MessageHeaderHolder) baseHolder).setLoadingStatus(false);
-                } else {
-                    ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
-                }
+            if (position == mHighShowPosition && baseHolder.mContentLayout != null) {
+                baseHolder.startHighLight();
+                mHighShowPosition = -1;
+            }
+        } else if (holder instanceof MessageHeadHolder) {
+            if (isForwardMode) {
+                ((MessageHeadHolder) holder).setLoadingStatus(false);
             } else {
-                if (position == mHighShowPosition && baseHolder.mContentLayout != null) {
-                    baseHolder.startHighLight();
-                    mHighShowPosition = -1;
-                }
+                ((MessageHeadHolder) holder).setLoadingStatus(mLoading);
             }
         }
     }
@@ -414,13 +407,16 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     @Override
     public int getItemCount() {
-        return mDataSource.size() + 1;
+        return mDataSource.size() + 2;
     }
 
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
-            return MSG_TYPE_HEADER_VIEW;
+            return MessageViewHolderFactory.VIEW_TYPE_HEAD;
+        }
+        if (position == getItemCount() - 1) {
+            return MessageViewHolderFactory.VIEW_TYPE_TAIL;
         }
         TUIMessageBean msg = getItem(position);
         if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
@@ -462,13 +458,29 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     }
 
     public TUIMessageBean getItem(int position) {
-        if (position == 0 || mDataSource == null || mDataSource.size() == 0) {
+        if (position == 0 || mDataSource == null || mDataSource.isEmpty()) {
             return null;
         }
         if (position >= mDataSource.size() + 1) {
             return null;
         }
         return mDataSource.get(position - 1);
+    }
+
+    @Override
+    public TUIMessageBean getFirstMessageBean() {
+        if (mDataSource == null || mDataSource.isEmpty()) {
+            return null;
+        }
+        return mDataSource.get(0);
+    }
+
+    @Override
+    public TUIMessageBean getLastMessageBean() {
+        if (mDataSource == null || mDataSource.isEmpty()) {
+            return null;
+        }
+        return mDataSource.get(mDataSource.size() - 1);
     }
 
     public List<TUIMessageBean> getItemList(int first, int last) {
@@ -484,11 +496,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (mDataSource == null || mDataSource.size() == 0 || first > last) {
             return new ArrayList<>(0);
         }
-        if (first >= mDataSource.size() + 1 || last >= mDataSource.size() + 1) {
+        if (first >= mDataSource.size() + 1) {
             return new ArrayList<>(0);
         }
 
-        return new ArrayList<>(mDataSource.subList(first - 1, last));
+        return new ArrayList<>(mDataSource.subList(first - 1, last - 1));
     }
 
     public interface OnCheckListChangedListener {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/emoji_group_tabs"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="start|top"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:tabUnboundedRipple="true"
+        app:tabRippleColor="@null"
+        app:tabMode="auto"
+        app:tabIndicatorHeight="40dp"
+        app:tabMinWidth="10dp"
+        app:tabIndicatorGravity="center"
+        app:tabIndicator="@drawable/tuiemoji_tab_item_bg"
+        app:tabIndicatorColor="@color/white"
+        />
+
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/tuiemoji_divide_line_bg_color"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/emoji_group_pages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

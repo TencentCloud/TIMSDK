@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.tencent.qcloud.tuicore.util.DateTimeUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
@@ -29,12 +28,11 @@ class FloatingWindowGroupView(context: Context) : BaseCallView(context) {
     private var imageAvatar: ImageView? = null
     private var textName: TextView? = null
     private var videoView: VideoView? = null
-    private var layoutFloatContainer: ConstraintLayout? = null
     private var layoutFloatMark: LinearLayout? = null
     private var imageFloatVideoMark: ImageView? = null
     private var imageFloatAudioMark: ImageView? = null
 
-    private var currentShowUserId: String? = null
+    private var currentShowVideUserId: String? = null
     private var viewModel: FloatingWindowViewModel = FloatingWindowViewModel()
 
     private val observer: Observer<Any> = Observer {
@@ -54,7 +52,7 @@ class FloatingWindowGroupView(context: Context) : BaseCallView(context) {
 
     override fun clear() {
         removeObserver()
-        currentShowUserId = null
+        currentShowVideUserId = null
     }
 
     private fun addObserver() {
@@ -91,7 +89,6 @@ class FloatingWindowGroupView(context: Context) : BaseCallView(context) {
         layoutFloatMark = findViewById(R.id.ll_float_mark)
         imageFloatVideoMark = findViewById(R.id.iv_float_video_mark)
         imageFloatAudioMark = findViewById(R.id.iv_float_audio_mark)
-        layoutFloatContainer = findViewById(R.id.ll_float_container)
 
         updateView(null)
     }
@@ -122,25 +119,28 @@ class FloatingWindowGroupView(context: Context) : BaseCallView(context) {
                 textName?.text = user.nickname.get()
 
                 if (user.videoAvailable.get() == true) {
-                    if (user.id == currentShowUserId) {
+                    if (user.id == currentShowVideUserId) {
                         return
                     }
-                    currentShowUserId = user.id
+                    currentShowVideUserId = user.id
 
                     imageAvatar?.visibility = GONE
                     layoutVideoView?.visibility = VISIBLE
                     resetLayoutVideoView(user)
                     return
                 }
+                currentShowVideUserId = null
                 imageAvatar?.visibility = VISIBLE
                 layoutVideoView?.visibility = GONE
                 ImageLoader.loadImage(context, imageAvatar, user.avatar.get())
                 return
             }
         }
-
-        if (viewModel.selfUser.callStatus.get() == TUICallDefine.Status.Waiting) {
-            textCallStatus?.text = context.getString(R.string.tuicallkit_wait_response)
+        currentShowVideUserId = null
+        textCallStatus?.text = if (viewModel.selfUser.callStatus.get() == TUICallDefine.Status.Waiting) {
+            context.getString(R.string.tuicallkit_wait_response)
+        } else {
+            DateTimeUtil.formatSecondsTo00(viewModel.timeCount.get())
         }
 
         textCallStatus?.visibility = VISIBLE

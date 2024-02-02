@@ -31,6 +31,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageDetailListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
@@ -40,7 +41,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity {
+public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity implements IMessageDetailListener {
     private static final String TAG = MessageDetailMinimalistActivity.class.getSimpleName();
 
     private MessageReceiptPresenter presenter;
@@ -103,6 +104,9 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
         chatInfo = (ChatInfo) intent.getSerializableExtra(TUIChatConstants.CHAT_INFO);
         presenter = new MessageReceiptPresenter();
         presenter.setChatInfo(chatInfo);
+        presenter.setMessageBean(messageBean);
+        presenter.setMessageDetailListener(this);
+        presenter.initChatEventListener();
         presenter.setMessageReplyBean(messageBean, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
@@ -199,7 +203,14 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
         }
     }
 
+    @Override
+    public void updateMessage(TUIMessageBean messageBean) {
+        this.messageBean = messageBean;
+        setMsgAbstract();
+    }
+
     private void setMsgAbstract() {
+        messageArea.removeAllViews();
         int type = MinimalistUIService.getInstance().getViewType(messageBean.getClass());
         RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageArea, null, type);
         if (holder instanceof MessageContentHolder) {

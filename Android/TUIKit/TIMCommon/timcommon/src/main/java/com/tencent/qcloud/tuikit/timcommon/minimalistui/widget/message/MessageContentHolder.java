@@ -8,9 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
@@ -19,7 +17,6 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
@@ -27,11 +24,11 @@ import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class MessageContentHolder extends MessageBaseHolder {
     protected static final int READ_STATUS_UNREAD = 1;
@@ -289,7 +286,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             usernameText.setVisibility(View.GONE);
             messageStatusImage.setVisibility(View.GONE);
             replyPreviewView.setVisibility(View.GONE);
-            reactView.setVisibility(View.GONE);
+            reactionArea.setVisibility(View.GONE);
             chatTimeText.setVisibility(View.GONE);
         }
         if (isMessageDetailMode) {
@@ -561,36 +558,11 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     }
 
     private void setReactContent(TUIMessageBean messageBean) {
-        MessageReactBean messageReactBean = messageBean.getMessageReactBean();
-        if (messageReactBean != null && messageReactBean.getReactSize() > 0) {
-            reactView.setVisibility(View.VISIBLE);
-            reactView.setData(messageReactBean);
-            reactView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(msgArea, messageBean);
-                    }
-                    return true;
-                }
-            });
-
-            reactView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onReactOnClick(null, messageBean);
-                    }
-                }
-            });
-
-            if (isForwardMode) {
-                reactView.setOnLongClickListener(null);
-            }
-        } else {
-            reactView.setVisibility(View.GONE);
-            reactView.setOnLongClickListener(null);
-        }
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.MESSAGE, messageBean);
+        param.put(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.VIEW_TYPE,
+            TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.VIEW_TYPE_MINIMALIST);
+        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.EXTENSION_ID, reactionArea, param);
     }
 
     private void processReadStatus(TUIMessageBean msg) {

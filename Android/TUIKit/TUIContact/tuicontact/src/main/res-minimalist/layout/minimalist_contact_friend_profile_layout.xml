@@ -15,9 +15,78 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#1F000000"/>
+        android:background="#1F000000" />
+
+    <RelativeLayout
+        android:id="@+id/stranger_area"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
+            android:id="@+id/stranger_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:scaleType="centerCrop"
+            app:round_radius="40dp"
+            android:layout_marginEnd="10dp"
+            tools:background="@android:drawable/ic_menu_gallery" />
+
+        <TextView
+            android:id="@+id/stranger_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/stranger_icon"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="Name" />
+
+        <TextView
+            android:id="@+id/stranger_id_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stranger_name"
+            android:layout_marginTop="@dimen/contact_profile_text_margin"
+            android:layout_toEndOf="@id/stranger_icon"
+            android:gravity="center_vertical"
+            android:text="@string/contact_account_tag"
+            android:textColor="#999999"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/stranger_user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stranger_name"
+            android:layout_alignTop="@+id/stranger_id_tag"
+            android:layout_toEndOf="@id/stranger_id_tag"
+            android:gravity="center_vertical"
+            android:textColor="#999999"
+            android:textSize="13sp"
+            tools:text="99618" />
+
+        <TextView
+            android:id="@+id/add_friend_btn"
+            android:background="@drawable/contact_profile_btn_shape"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@id/stranger_icon"
+            android:layout_alignParentStart="true"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textColor="?attr/core_primary_color"
+            android:textSize="16sp"
+            android:layout_marginTop="6dp"
+            android:text="@string/add_friend"/>
+
+    </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/friend_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="40dp">
@@ -44,8 +113,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ellipsize="end"
-                android:textColor="@color/black"
                 android:singleLine="true"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="林" />
@@ -103,9 +172,9 @@
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:isSwitch="true"
-                app:name="@string/profile_msgrev_opt" />
+                app:name="@string/profile_msgrev_opt"
+                tools:visibility="visible" />
 
             <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/chat_to_top"
@@ -113,16 +182,16 @@
                 android:layout_height="55dp"
                 android:layout_marginTop="1dp"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:isSwitch="true"
-                app:name="@string/chat_to_top" />
+                app:name="@string/chat_to_top"
+                tools:visibility="visible" />
 
             <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/chat_background"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:visibility="gone"
                 android:layout_marginTop="1dp"
+                android:visibility="gone"
                 app:canNav="true"
                 app:name="@string/profile_chat_background"
                 tools:visibility="visible" />
@@ -133,28 +202,28 @@
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:isSwitch="true"
-                app:name="@string/profile_black" />
+                app:name="@string/profile_black"
+                tools:visibility="visible" />
 
             <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/clear_chat_history"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                tools:visibility="visible"
                 app:isSwitch="false"
-                app:name="@string/profile_clear_message"/>
+                app:name="@string/profile_clear_message"
+                tools:visibility="visible" />
 
             <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
                 android:id="@+id/btn_delete"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="1dp"
-                tools:visibility="visible"
                 android:visibility="gone"
                 app:isSwitch="false"
-                app:name="@string/profile_delete_friend" />
+                app:name="@string/profile_delete_friend"
+                tools:visibility="visible" />
 
         </LinearLayout>
     </ScrollView>

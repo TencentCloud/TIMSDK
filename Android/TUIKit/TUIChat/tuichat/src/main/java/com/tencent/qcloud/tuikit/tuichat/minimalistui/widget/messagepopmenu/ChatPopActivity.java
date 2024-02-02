@@ -2,8 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
@@ -12,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -31,13 +28,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
-import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
-import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
-import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -45,33 +42,32 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.util.BlurUtils;
-import java.io.IOException;
-import java.util.ArrayList;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatPopActivity extends AppCompatActivity {
     private static final String TAG = ChatPopActivity.class.getSimpleName();
 
     private static final int ACTION_MAX_NUM_PER_PAGE = 4;
-    private static final int RECENT_EMOJI_NUM = 6;
-    private static final String RECENT_EMOJI_KEY = "recentEmoji";
 
     private List<ChatPopMenuAction> chatPopMenuActionList;
-    private final List<Emoji> emojiList = new ArrayList<>();
-    private final List<String> recentEmojiList = new ArrayList<>();
 
     private boolean isShowFaces = true;
 
     private ViewGroup popupView;
     private View actionArea;
     private RecyclerView actionRecyclerView;
-    private RecyclerView recentFaceView;
+
     private MenuActionAdapter menuActionAdapter;
 
-    private FrameLayout frameLayout;
+    private FrameLayout messageArea;
+    private FrameLayout reactionArea;
     private RelativeLayout dialogContainer;
     private ScrollView scrollMessageContainer;
     private View moreBtn;
+    TUIMessageBean messageBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +78,7 @@ public class ChatPopActivity extends AppCompatActivity {
         moreBtn = popupView.findViewById(R.id.more_btn);
         actionArea = popupView.findViewById(R.id.action_area);
         actionRecyclerView = popupView.findViewById(R.id.chat_pop_menu_action_view);
-        recentFaceView = popupView.findViewById(R.id.recent_faces);
+        reactionArea = popupView.findViewById(R.id.reaction_area);
         scrollMessageContainer = popupView.findViewById(R.id.scroll_container);
         // message container can not scroll
         scrollMessageContainer.setOnTouchListener(new View.OnTouchListener() {
@@ -109,7 +105,7 @@ public class ChatPopActivity extends AppCompatActivity {
         } else {
             window.setBackgroundDrawable(new ColorDrawable(0xBF000000));
         }
-        frameLayout = findViewById(R.id.message_frame);
+        messageArea = findViewById(R.id.message_frame);
         setLocation();
         init();
     }
@@ -168,9 +164,9 @@ public class ChatPopActivity extends AppCompatActivity {
 
     private void init() {
         Intent intent = getIntent();
-        TUIMessageBean messageBean = (TUIMessageBean) intent.getSerializableExtra(TUIChatConstants.MESSAGE_BEAN);
+        messageBean = (TUIMessageBean) intent.getSerializableExtra(TUIChatConstants.MESSAGE_BEAN);
         int type = MinimalistUIService.getInstance().getViewType(messageBean.getClass());
-        RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(frameLayout, null, type);
+        RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageArea, null, type);
         if (holder instanceof MessageContentHolder) {
             ((MessageContentHolder) holder).setFloatMode(true);
             if (holder instanceof ImageMessageHolder) {
@@ -186,10 +182,10 @@ public class ChatPopActivity extends AppCompatActivity {
             ((MessageContentHolder) holder).setMessageBubbleBackground(ChatPopDataHolder.getMsgAreaBackground());
         }
         if (messageBean.isSelf()) {
-            RelativeLayout.LayoutParams faceViewLayoutParams = (RelativeLayout.LayoutParams) recentFaceView.getLayoutParams();
+            RelativeLayout.LayoutParams faceViewLayoutParams = (RelativeLayout.LayoutParams) reactionArea.getLayoutParams();
             faceViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
             faceViewLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_START);
-            recentFaceView.setLayoutParams(faceViewLayoutParams);
+            reactionArea.setLayoutParams(faceViewLayoutParams);
             RelativeLayout.LayoutParams messageContainerLayoutParams = (RelativeLayout.LayoutParams) scrollMessageContainer.getLayoutParams();
             messageContainerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
             messageContainerLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_START);
@@ -199,10 +195,10 @@ public class ChatPopActivity extends AppCompatActivity {
             actionAreaLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_START);
             actionArea.setLayoutParams(actionAreaLayoutParams);
         } else {
-            RelativeLayout.LayoutParams faceViewLayoutParams = (RelativeLayout.LayoutParams) recentFaceView.getLayoutParams();
+            RelativeLayout.LayoutParams faceViewLayoutParams = (RelativeLayout.LayoutParams) reactionArea.getLayoutParams();
             faceViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             faceViewLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END);
-            recentFaceView.setLayoutParams(faceViewLayoutParams);
+            reactionArea.setLayoutParams(faceViewLayoutParams);
             RelativeLayout.LayoutParams messageContainerLayoutParams = (RelativeLayout.LayoutParams) scrollMessageContainer.getLayoutParams();
             messageContainerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             messageContainerLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END);
@@ -212,7 +208,7 @@ public class ChatPopActivity extends AppCompatActivity {
             actionAreaLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_END);
             actionArea.setLayoutParams(actionAreaLayoutParams);
         }
-        frameLayout.addView(holder.itemView);
+        messageArea.addView(holder.itemView);
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,145 +232,31 @@ public class ChatPopActivity extends AppCompatActivity {
                 return false;
             }
         });
-        initEmojiList();
-
         // actions
         actionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         menuActionAdapter = new MenuActionAdapter();
         actionRecyclerView.setAdapter(menuActionAdapter);
 
-        // recent faces
-        recentFaceView.setItemAnimator(null);
-        LinearLayoutManager recentLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        int recentSpacing = ScreenUtil.dip2px(8f);
-        recentFaceView.addItemDecoration(new ChatPopActivity.GridDecoration(null, RECENT_EMOJI_NUM + 1, recentSpacing, 0));
-        recentFaceView.setLayoutManager(recentLayoutManager);
-        RecentFaceAdapter recentFaceAdapter = new RecentFaceAdapter();
-        recentFaceView.setAdapter(recentFaceAdapter);
-        if (!isShowFaces) {
-            recentFaceView.setVisibility(View.GONE);
-        }
+        // raise reaction area
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.Extension.MessagePopMenuTopAreaExtension.CHAT_POP_MENU, this);
+        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessagePopMenuTopAreaExtension.EXTENSION_ID, null, param);
     }
 
-    private void initEmojiList() {
-        emojiList.addAll(FaceManager.getEmojiList());
-        initDefaultEmoji();
-    }
-
-    private void initDefaultEmoji() {
-        List<String> emojis = null;
-        try {
-            emojis = (List<String>) RecentEmojiManager.getInstance().getCollection(RECENT_EMOJI_KEY);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (emojis == null) {
-            List<Emoji> subList = emojiList.subList(0, RECENT_EMOJI_NUM);
-            List<String> emojiKeys = new ArrayList<>();
-            for (Emoji emoji : subList) {
-                emojiKeys.add(emoji.getFaceKey());
-            }
-            emojis = new ArrayList<>(emojiKeys);
-            try {
-                RecentEmojiManager.getInstance().putCollection(RECENT_EMOJI_KEY, emojis);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        recentEmojiList.addAll(emojis);
-    }
-
-    private void updateRecentEmoji(Emoji emoji) {
-        recentEmojiList.remove(emoji.getFaceKey());
-        recentEmojiList.add(0, emoji.getFaceKey());
-        try {
-            RecentEmojiManager.getInstance().putCollection(RECENT_EMOJI_KEY, recentEmojiList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    class RecentFaceAdapter extends RecyclerView.Adapter<RecentFaceAdapter.RecentFaceViewHolder> {
-        private Emoji moreBtn;
-
-        @NonNull
-        @Override
-        public RecentFaceAdapter.RecentFaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View faceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_menu_recent_face_item_layout, parent, false);
-            moreBtn = new Emoji();
-            Bitmap bitMap = BitmapFactory.decodeResource(parent.getResources(), R.drawable.chat_pop_menu_add_icon);
-            moreBtn.setIcon(bitMap);
-            return new RecentFaceAdapter.RecentFaceViewHolder(faceView);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecentFaceAdapter.RecentFaceViewHolder holder, int position) {
-            Emoji emoji;
-            if (position == RECENT_EMOJI_NUM) {
-                emoji = moreBtn;
-            } else {
-                emoji = getEmoji(recentEmojiList.get(position));
-            }
-            if (emoji == null) {
-                return;
-            }
-            holder.faceIv.setImageBitmap(emoji.getIcon());
-            holder.faceIv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onEmojiClicked(emoji);
-                }
-            });
-        }
-
-        private void onEmojiClicked(Emoji emoji) {
-            if (emoji == moreBtn) {
-                ChatPopMenuEmojiDialogFragment dialogFragment = new ChatPopMenuEmojiDialogFragment();
-                dialogFragment.setEmojiClickListener(new ChatPopMenuEmojiDialogFragment.EmojiClickListener() {
-                    @Override
-                    public void onClick(Emoji clickedEmoji) {
-                        onEmojiClicked(clickedEmoji);
-                    }
-                });
-                dialogFragment.show(getSupportFragmentManager(), "ChatEmoji");
-                return;
-            }
-            ChatPopActivity.EmojiOnClickListener listener = ChatPopDataHolder.getEmojiOnClickListener();
-            if (listener != null) {
-                listener.onClick(emoji);
-                updateRecentEmoji(emoji);
-                hide();
-            }
-        }
-
-        private Emoji getEmoji(String emojiKey) {
-            for (Emoji emoji : emojiList) {
-                if (TextUtils.equals(emoji.getFaceKey(), emojiKey)) {
-                    return emoji;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        public int getItemCount() {
-            return RECENT_EMOJI_NUM + 1;
-        }
-
-        class RecentFaceViewHolder extends RecyclerView.ViewHolder {
-            ImageView faceIv;
-
-            public RecentFaceViewHolder(@NonNull View itemView) {
-                super(itemView);
-                faceIv = itemView.findViewById(R.id.face_iv);
-            }
-        }
-    }
-
-    private void hide() {
+    public void hide() {
         onBackPressed();
+    }
+
+    public TUIMessageBean getMessageBean() {
+        return messageBean;
+    }
+
+    public FrameLayout getReactionArea() {
+        return reactionArea;
+    }
+
+    public boolean isShowFaces() {
+        return isShowFaces;
     }
 
     private ChatPopMenuAction getChatPopMenuAction(int position) {
@@ -438,64 +320,6 @@ public class ChatPopActivity extends AppCompatActivity {
                 icon = itemView.findViewById(R.id.action_icon);
             }
         }
-    }
-
-    static class GridDecoration extends RecyclerView.ItemDecoration {
-        private final int columnNum;
-        private final int leftRightSpace;
-        private final int topBottomSpace;
-        private final Drawable divider;
-
-        public GridDecoration(Drawable divider, int columnNum, int leftRightSpace, int topBottomSpace) {
-            this.divider = divider;
-            this.columnNum = columnNum;
-            this.leftRightSpace = leftRightSpace;
-            this.topBottomSpace = topBottomSpace;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view);
-            int column = position % columnNum;
-
-            int left = column * leftRightSpace / columnNum;
-            int right = leftRightSpace * (columnNum - 1 - column) / columnNum;
-            if (LayoutUtil.isRTL()) {
-                outRect.left = right;
-                outRect.right = left;
-            } else {
-                outRect.left = left;
-                outRect.right = right;
-            }
-
-            if (position >= columnNum) {
-                outRect.top = topBottomSpace;
-            }
-        }
-
-        @Override
-        public void onDraw(@NonNull Canvas canvas, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-            if (divider == null) {
-                return;
-            }
-            canvas.save();
-            final int childCount = parent.getChildCount();
-            int rowNum = (int) Math.ceil(childCount * 1.0f / columnNum);
-            final int divideLine = rowNum - 1;
-            for (int i = 0; i < divideLine; i++) {
-                View startChild = parent.getChildAt(i * columnNum);
-                View endChild = parent.getChildAt((i + 1) * columnNum - 1);
-                final int bottom = startChild.getBottom();
-                final int top = bottom - divider.getIntrinsicHeight();
-                divider.setBounds(startChild.getLeft(), top + topBottomSpace / 2, endChild.getRight(), bottom + topBottomSpace / 2);
-                divider.draw(canvas);
-            }
-            canvas.restore();
-        }
-    }
-
-    public interface EmojiOnClickListener {
-        void onClick(Emoji emoji);
     }
 
     public static class ChatPopMenuAction {

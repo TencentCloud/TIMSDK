@@ -63,4 +63,9 @@
     <string name="tuicallkit_group_btn_ok">确定</string>
 
     <string name="tuicallkit_error_in_peer_blacklist">发起通话失败，用户在黑名单中，禁止发起！</string>
+    <string name="tuicallkit_error_invalid_login">登录失败,请重新登录</string>
+    <string name="tuicallkit_error_parameter_invalid">参数错误</string>
+    <string name="tuicallkit_error_request_refused">当前状态不支持调用</string>
+    <string name="tuicallkit_error_request_repeated">当前方法正在执行中，请勿重复调用</string>
+    <string name="tuicallkit_error_scene_not_support">当前通话场景，不支持该功能</string>
 </resources>

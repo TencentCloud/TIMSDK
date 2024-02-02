@@ -11,7 +11,7 @@ class CallingKeepAliveFeature(private val mContext: Context) {
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.None) {
             stopKeepAlive()
-        } else if (it == TUICallDefine.Status.Waiting) {
+        } else if (it == TUICallDefine.Status.Accept) {
             startKeepAlive()
         }
     }

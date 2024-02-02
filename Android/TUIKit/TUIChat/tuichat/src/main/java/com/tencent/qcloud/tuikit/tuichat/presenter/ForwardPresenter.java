@@ -3,8 +3,10 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
@@ -20,11 +22,22 @@ public class ForwardPresenter extends ChatPresenter {
     private ChatInfo chatInfo;
     private final ChatProvider provider;
 
-    List<TUIMessageBean> loadedData = new ArrayList<>();
+    private List<TUIMessageBean> loadedData = new ArrayList<>();
+    private C2CChatEventListener chatEventListener;
 
     public ForwardPresenter() {
         TUIChatLog.i(TAG, "ChatPresenter Init");
         provider = new ChatProvider();
+    }
+
+    public void initListener() {
+        chatEventListener = new C2CChatEventListener() {
+            @Override
+            public void onMessageChanged(TUIMessageBean messageBean, int dataChangeType) {
+                ForwardPresenter.this.updateMessageInfo(messageBean, dataChangeType);
+            }
+        };
+        TUIChatService.getInstance().addC2CChatEventListener(chatEventListener);
     }
 
     public void setMessageListAdapter(IMessageAdapter messageListAdapter) {
@@ -102,6 +115,19 @@ public class ForwardPresenter extends ChatPresenter {
     protected void updateAdapter(int type, TUIMessageBean locateMessage) {
         if (messageListAdapter != null) {
             messageListAdapter.onViewNeedRefresh(type, locateMessage);
+        }
+    }
+
+    public void updateMessageInfo(TUIMessageBean messageInfo, int dataChangeType) {
+        for (int i = 0; i < loadedData.size(); i++) {
+            if (loadedData.get(i) == null) {
+                continue;
+            }
+            if (TextUtils.equals(loadedData.get(i).getId(), messageInfo.getId())) {
+                loadedData.set(i, messageInfo);
+                updateAdapter(dataChangeType, messageInfo);
+                return;
+            }
         }
     }
 }

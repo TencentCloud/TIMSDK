@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/core_pop_menu_item_height"
-    android:gravity="center_vertical"
+    android:gravity="center_vertical|start"
+    android:layout_gravity="start"
     android:orientation="horizontal">
 
     <ImageView
@@ -13,9 +14,12 @@
 
     <TextView
         android:id="@+id/pop_menu_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textColor="#444444"
-        android:textSize="15.36sp" />
+        android:textAlignment="viewStart"
+        android:maxLines="1"
+        android:textSize="@dimen/core_pop_menu_text_size"/>
 
 </LinearLayout>

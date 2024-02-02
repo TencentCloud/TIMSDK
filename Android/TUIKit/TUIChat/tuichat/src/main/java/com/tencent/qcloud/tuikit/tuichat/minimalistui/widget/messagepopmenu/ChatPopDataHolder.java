@@ -14,8 +14,6 @@ public class ChatPopDataHolder {
 
     private ChatPopDataHolder() {}
 
-    private WeakReference<ChatPopActivity.EmojiOnClickListener> emojiOnClickListener;
-
     private WeakReference<Bitmap> chatPopBgBitmap;
     private WeakReference<List<ChatPopActivity.ChatPopMenuAction>> actionList;
     private WeakReference<Drawable> msgAreaBackground;
@@ -42,18 +40,6 @@ public class ChatPopDataHolder {
             return null;
         }
         return instance.actionList.get();
-    }
-
-    public static void setEmojiOnClickListener(ChatPopActivity.EmojiOnClickListener emojiOnClickListener) {
-        instance.emojiOnClickListener = new WeakReference<>(emojiOnClickListener);
-    }
-
-    public static ChatPopActivity.EmojiOnClickListener getEmojiOnClickListener() {
-        if (instance.emojiOnClickListener != null) {
-            return instance.emojiOnClickListener.get();
-        } else {
-            return null;
-        }
     }
 
     public static void setMsgAreaBackground(Drawable msgAreaBackground) {

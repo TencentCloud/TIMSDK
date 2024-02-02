@@ -19,18 +19,23 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
     private var rootLayout: MotionLayout? = null
     private var imageOpenCamera: ImageView? = null
     private var imageMute: ImageView? = null
-    private var imageHandsFree: ImageView? = null
+    private var imageAudioDevice: ImageView? = null
     private var imageHangup: ImageView? = null
     private var imageSwitchCamera: ImageView? = null
     private var imageExpandView: ImageView? = null
     private var textMute: TextView? = null
-    private var textHandsFree: TextView? = null
+    private var textAudioDevice: TextView? = null
     private var textCamera: TextView? = null
 
     private var viewModel = VideoCallerAndCalleeAcceptedViewModel()
 
     private var isCameraOpenObserver = Observer<Boolean> {
         imageOpenCamera?.isActivated = it
+        textCamera?.text = if (it) {
+            context.getString(R.string.tuicallkit_toast_enable_camera)
+        } else {
+            context.getString(R.string.tuicallkit_toast_disable_camera)
+        }
     }
 
     private var isMicMuteObserver = Observer<Boolean> {
@@ -38,11 +43,12 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
     }
 
     private var isSpeakerObserver = Observer<Boolean> {
-        imageHandsFree?.isActivated = it
+        imageAudioDevice?.isActivated = it
     }
 
     private val isBottomViewExpandedObserver = Observer<Boolean> {
         updateView(it)
+        enableSwipeFunctionView(true)
     }
 
     init {
@@ -75,8 +81,8 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
         rootLayout = findViewById(R.id.cl_view_video)
         imageMute = findViewById(R.id.iv_mute)
         textMute = findViewById(R.id.tv_mic)
-        imageHandsFree = findViewById(R.id.iv_speaker)
-        textHandsFree = findViewById(R.id.tv_speaker)
+        imageAudioDevice = findViewById(R.id.iv_speaker)
+        textAudioDevice = findViewById(R.id.tv_speaker)
         imageOpenCamera = findViewById(R.id.iv_camera)
         imageHangup = findViewById(R.id.iv_hang_up)
         textCamera = findViewById(R.id.tv_video_camera)
@@ -86,19 +92,39 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
 
         imageOpenCamera?.isActivated = viewModel.isCameraOpen.get() == true
         imageMute?.isActivated = viewModel.isMicMute.get() == true
-        imageHandsFree?.isActivated = viewModel.isSpeaker.get() == true
+        imageAudioDevice?.isActivated = viewModel.isSpeaker.get() == true
+
+        textCamera?.text = if (viewModel.isCameraOpen.get()) {
+            context.getString(R.string.tuicallkit_toast_enable_camera)
+        } else {
+            context.getString(R.string.tuicallkit_toast_disable_camera)
+        }
+
+        textAudioDevice?.text = if (viewModel.isSpeaker.get() == true) {
+            context.getString(R.string.tuicallkit_toast_speaker)
+        } else {
+            context.getString(R.string.tuicallkit_toast_use_earpiece)
+        }
 
         if (viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
             imageSwitchCamera?.visibility = VISIBLE
-            rootLayout?.enableTransition(R.id.video_function_view_transition, false)
         } else {
             imageSwitchCamera?.visibility = GONE
         }
 
-        if (!viewModel.isBottomViewExpanded.get()) {
+        if (!viewModel.isBottomViewExpanded.get() && viewModel.showLargerViewUserId.get() != null) {
             viewModel.updateView()
         }
         initViewListener()
+        enableSwipeFunctionView(false)
+    }
+
+    private fun enableSwipeFunctionView(enable: Boolean) {
+        if (viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            rootLayout?.enableTransition(R.id.video_function_view_transition, false)
+            return
+        }
+        rootLayout?.enableTransition(R.id.video_function_view_transition, enable)
     }
 
     private fun initViewListener() {
@@ -112,27 +138,22 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
             }
             textMute?.text = context.getString(resId)
         }
-        imageHandsFree?.setOnClickListener {
+        imageAudioDevice?.setOnClickListener {
             val resId = if (viewModel.isSpeaker.get() == true) {
                 viewModel.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
-                R.string.tuicallkit_toast_use_handset
+                R.string.tuicallkit_toast_use_earpiece
             } else {
                 viewModel.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
                 R.string.tuicallkit_toast_speaker
             }
-            textHandsFree?.text = context.getString(resId)
+            textAudioDevice?.text = context.getString(resId)
         }
         imageOpenCamera?.setOnClickListener {
-            val resId = if (viewModel.isCameraOpen.get() == true) {
+            if (viewModel.isCameraOpen.get() == true) {
                 viewModel.closeCamera()
-                R.string.tuicallkit_toast_disable_camera
-            } else {
-                if (VideoViewFactory.instance.videoEntityList.size > 0) {
-                    viewModel.openCamera(viewModel.frontCamera.get())
-                }
-                R.string.tuicallkit_toast_enable_camera
+            } else if (VideoViewFactory.instance.videoEntityList.size > 0) {
+                viewModel.openCamera(viewModel.frontCamera.get())
             }
-            textCamera?.text = context.getString(resId)
         }
         imageHangup?.setOnClickListener { viewModel.hangup() }
 

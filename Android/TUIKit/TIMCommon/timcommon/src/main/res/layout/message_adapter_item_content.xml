@@ -167,11 +167,11 @@
                         app:maxWidth="@dimen/chat_message_content_max_width" />
 
                     <!-- emoji react area -->
-                    <com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.ChatFlowReactView
-                        android:id="@+id/reacts_view"
+                    <FrameLayout
+                        android:id="@+id/message_reaction_area"
+                        android:paddingTop="5dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="5dp" />
+                        android:layout_height="wrap_content"/>
 
                     <FrameLayout
                         android:id="@+id/risk_content_line"

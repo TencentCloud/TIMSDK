@@ -42,6 +42,7 @@ import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -311,7 +312,7 @@ public class ChatProvider {
     }
 
     private V2TIMOfflinePushInfo createOfflinePushInfo(TUIMessageBean message, ChatInfo chatInfo) {
-        String description = message.getExtra();
+        String description = FaceManager.emojiJudge(message.getExtra());
         String sender = message.getSender();
         String chatName = chatInfo.getChatName();
         OfflineMessageBean entity = new OfflineMessageBean();

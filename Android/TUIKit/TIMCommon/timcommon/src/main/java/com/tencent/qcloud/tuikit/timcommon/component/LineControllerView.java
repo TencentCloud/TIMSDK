@@ -68,7 +68,7 @@ public class LineControllerView extends RelativeLayout {
             DrawableCompat.setAutoMirrored(arrowDrawable, true);
         }
         mNavArrowView.setVisibility(mIsJump ? VISIBLE : GONE);
-        ViewGroup contentLayout = findViewById(R.id.contentText);
+        ViewGroup contentLayout = findViewById(R.id.content_view);
         contentLayout.setVisibility(mIsSwitch ? GONE : VISIBLE);
         mSwitchView = findViewById(R.id.btnSwitch);
         mSwitchView.setVisibility(mIsSwitch ? VISIBLE : GONE);

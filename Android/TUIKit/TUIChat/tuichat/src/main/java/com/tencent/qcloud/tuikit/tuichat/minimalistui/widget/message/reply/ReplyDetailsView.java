@@ -6,15 +6,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -26,7 +22,6 @@ import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLin
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,8 +31,6 @@ import java.util.Map;
 public class ReplyDetailsView extends RecyclerView {
     private ReplyDetailsAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private FrameLayout bottomContentFrameLayout;
-    private Fragment fragment;
 
     public ReplyDetailsView(@NonNull Context context) {
         super(context);
@@ -66,10 +59,6 @@ public class ReplyDetailsView extends RecyclerView {
         adapter.notifyDataSetChanged();
     }
 
-    public void setFragment(Fragment fragment) {
-        this.fragment = fragment;
-    }
-
     public class ReplyDetailsAdapter extends Adapter<ReplyDetailsViewHolder> {
         Map<MessageRepliesBean.ReplyBean, TUIMessageBean> data;
 
@@ -81,7 +70,6 @@ public class ReplyDetailsView extends RecyclerView {
         @Override
         public ReplyDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_minimalist_reply_details_item_layout, parent, false);
-            bottomContentFrameLayout = view.findViewById(R.id.bottom_content_fl);
             return new ReplyDetailsViewHolder(view);
         }
 
@@ -106,7 +94,7 @@ public class ReplyDetailsView extends RecyclerView {
                 .into(holder.userFaceView);
             FaceManager.handlerEmojiText(holder.timeInLineTextLayout.getTextView(), messageText, false);
 
-            setBottomContent(messageBean);
+            setBottomContent(messageBean, holder);
 
             optimizeBackgroundAndAvatar(holder, replyBeanList, position);
         }
@@ -148,21 +136,23 @@ public class ReplyDetailsView extends RecyclerView {
         }
     }
 
-    private void setBottomContent(TUIMessageBean msg) {
+    private void setBottomContent(TUIMessageBean msg, ReplyDetailsViewHolder holder) {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.MESSAGE_BEAN, msg);
         param.put(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW, ReplyDetailsView.this);
 
-        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID, bottomContentFrameLayout, param);
+        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID, holder.bottomContentFrameLayout, param);
     }
 
     static class ReplyDetailsViewHolder extends RecyclerView.ViewHolder {
         public ImageView userFaceView;
         public View msgContent;
+        public View bottomContentFrameLayout;
         public TimeInLineTextLayout timeInLineTextLayout;
 
         public ReplyDetailsViewHolder(View itemView) {
             super(itemView);
+            bottomContentFrameLayout = itemView.findViewById(R.id.bottom_content_fl);
             userFaceView = itemView.findViewById(R.id.user_icon);
             timeInLineTextLayout = itemView.findViewById(R.id.time_in_line_text);
             msgContent = itemView.findViewById(R.id.msg_content);

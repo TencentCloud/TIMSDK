@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/core_pop_menu_padding_top"
     android:paddingBottom="@dimen/core_pop_menu_padding_bottom"
     android:paddingStart="20dp"
-    android:paddingEnd="10dp">
+    android:paddingEnd="20dp">
 
     <ListView
         android:id="@+id/menu_pop_list"

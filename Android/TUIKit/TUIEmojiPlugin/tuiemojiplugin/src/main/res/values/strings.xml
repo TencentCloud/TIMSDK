@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tuiemoji_add_reaction_failed_tip">Failed to add emoji reaction</string>
+    <string name="tuiemoji_remove_reaction_failed_tip">Failed to remove emoji reaction</string>
+    <string name="chat_tap_to_remove">Tap to remove</string>
+
+</resources>

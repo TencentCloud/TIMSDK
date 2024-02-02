@@ -40,7 +40,6 @@ public class MergeMessageHolder extends MessageContentHolder {
         if (msg == null) {
             return;
         }
-        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.chat_react_other_text_color));
         if (isForwardMode || isReplyDetailMode) {
             setMessageBubbleBackground(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);

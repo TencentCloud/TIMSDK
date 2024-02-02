@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.timcommon;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.google.auto.service.AutoService;
 import com.tencent.qcloud.tuicore.ServiceInitializer;

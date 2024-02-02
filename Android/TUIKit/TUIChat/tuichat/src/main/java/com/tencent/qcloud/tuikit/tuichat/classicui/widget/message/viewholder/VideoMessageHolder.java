@@ -223,10 +223,6 @@ public class VideoMessageHolder extends MessageContentHolder {
             }
         });
 
-        if (msg.getMessageReactBean() == null || msg.getMessageReactBean().getReactSize() <= 0) {
-            setMessageBubbleBackground(null);
-            setMessageBubbleZeroPadding();
-        }
     }
 
     private void loadSnapshotImage(TUIMessageBean messageBean, String snapshotPath) {

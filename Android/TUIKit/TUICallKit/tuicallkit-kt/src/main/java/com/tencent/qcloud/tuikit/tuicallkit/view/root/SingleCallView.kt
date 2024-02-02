@@ -2,7 +2,9 @@ package com.tencent.qcloud.tuikit.tuicallkit.view.root
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
@@ -20,16 +22,17 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.SingleCal
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.root.SingleCallViewModel
 
 class SingleCallView(context: Context) : RelativeLayout(context) {
-    private var layoutTimer: RelativeLayout? = null
-    private var layoutUserInfoVideo: RelativeLayout? = null
-    private var layoutUserInfoAudio: RelativeLayout? = null
-    private var layoutFunction: RelativeLayout? = null
-    private var layoutFloatIcon: RelativeLayout? = null
-    private var layoutRender: RelativeLayout? = null
+    private var layoutTimer: FrameLayout? = null
+    private var layoutUserInfoVideo: FrameLayout? = null
+    private var layoutUserInfoAudio: FrameLayout? = null
+    private var layoutFunction: FrameLayout? = null
+    private var layoutFloatIcon: FrameLayout? = null
+    private var layoutRender: FrameLayout? = null
 
     private var functionView: BaseCallView? = null
     private var userInfoView: BaseCallView? = null
     private var callTimerView: CallTimerView? = null
+    private var textViewAcceptHint: TextView? = null
     private var singleCallVideoLayout: SingleCallVideoLayout? = null
     private var floatingWindowButton: FloatingWindowButton? = null
     private var viewModel = SingleCallViewModel()
@@ -38,6 +41,13 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
         refreshFunctionView()
         refreshTimerView()
         showAntiFraudReminder()
+
+        if (it == TUICallDefine.Status.Accept && viewModel.selfUser.get().callRole.get() == TUICallDefine.Role.Caller) {
+            textViewAcceptHint?.visibility = VISIBLE
+            postDelayed({
+                textViewAcceptHint?.visibility = GONE
+            }, 2000)
+        }
     }
 
     private var mediaTypeObserver = Observer<TUICallDefine.MediaType> {
@@ -86,6 +96,7 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
         layoutUserInfoAudio = findViewById(R.id.rl_audio_user_info_layout)
         layoutTimer = findViewById(R.id.rl_single_time)
         layoutFunction = findViewById(R.id.rl_single_function)
+        textViewAcceptHint = findViewById(R.id.tv_caller_accept_hint)
 
         refreshUserInfoView()
         refreshFunctionView()

@@ -7,6 +7,7 @@ import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter
 import com.tencent.qcloud.tuicore.util.SPUtils
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.TUICommonDefine
@@ -14,7 +15,6 @@ import com.tencent.qcloud.tuikit.TUICommonDefine.ValueCallback
 import com.tencent.qcloud.tuikit.TUIVideoView
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.CallParams
-import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.ERROR_PERMISSION_DENIED
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.R
@@ -23,8 +23,10 @@ import com.tencent.qcloud.tuikit.tuicallkit.data.OfflinePushInfoConfig
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
+import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest.requestPermissions
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
+import java.util.Collections
 
 class EngineManager private constructor(context: Context) {
 
@@ -76,21 +78,15 @@ class EngineManager private constructor(context: Context) {
                         }
 
                         override fun onError(errCode: Int, errMsg: String) {
-                            var errMsg: String? = errMsg
-                            if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
-                                errMsg = context.getString(R.string.tuicallkit_package_not_purchased)
-                            }
-                            if (errCode == BaseConstants.ERR_SVR_MSG_IN_PEER_BLACKLIST) {
-                                errMsg = context.getString(R.string.tuicallkit_error_in_peer_blacklist)
-                            }
-                            ToastUtil.toastLongMessage(errMsg)
-                            callback?.onError(errCode, errMsg)
+                            val errMessage: String = convertErrorMsg(errCode, errMsg)
+                            ToastUtil.toastLongMessage(errMessage)
+                            callback?.onError(errCode, errMessage)
                         }
                     })
             }
 
             override fun onDenied() {
-                callback?.onError(ERROR_PERMISSION_DENIED, "request Permissions failed")
+                callback?.onError(TUICallDefine.ERROR_PERMISSION_DENIED, "request Permissions failed")
             }
         })
     }
@@ -113,12 +109,17 @@ class EngineManager private constructor(context: Context) {
             callback?.onError(TUICallDefine.ERROR_PARAM_INVALID, "groupCall failed, callMediaType is Unknown")
             return
         }
-        if (userIdList == null || userIdList.isEmpty()) {
+
+        val list = userIdList?.toHashSet()?.toMutableList()
+        list?.remove(TUILogin.getLoginUser())
+        list?.removeAll(Collections.singleton(null))
+
+        if (list == null || list.isEmpty()) {
             TUILog.e(TAG, "groupCall failed, userIdList is empty")
             callback?.onError(TUICallDefine.ERROR_PARAM_INVALID, "groupCall failed, userIdList is empty")
             return
         }
-        if (userIdList.size >= Constants.MAX_USER) {
+        if (list.size >= Constants.MAX_USER) {
             ToastUtil.toastLongMessage(context.getString(R.string.tuicallkit_user_exceed_limit))
             TUILog.e(TAG, "groupCall failed, exceeding max user number: 9")
             callback?.onError(TUICallDefine.ERROR_PARAM_INVALID, "groupCall failed, exceeding max user number")
@@ -129,10 +130,11 @@ class EngineManager private constructor(context: Context) {
         TUICallState.instance.selfUser.get().id = TUILogin.getLoginUser()
         requestPermissions(context, callMediaType, object : PermissionCallback() {
             override fun onGranted() {
-                TUICallEngine.createInstance(context).groupCall(groupId, userIdList, callMediaType,
+                TUICallEngine.createInstance(context).groupCall(
+                    groupId, list, callMediaType,
                     params, object : TUICommonDefine.Callback {
                         override fun onSuccess() {
-                            for (userId in userIdList) {
+                            for (userId in list) {
                                 if (!TextUtils.isEmpty(userId)) {
                                     val model = User()
                                     model.id = userId
@@ -151,20 +153,17 @@ class EngineManager private constructor(context: Context) {
                             callback?.onSuccess()
                         }
 
-                        override fun onError(errCode: Int, errMsg: String?) {
-                            var errMsg: String? = errMsg
-                            if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                errMsg = context.getString(R.string.tuicallkit_package_not_support)
-                            }
-                            ToastUtil.toastLongMessage(errMsg)
-                            TUILog.e(TAG, "groupCall errCode:$errCode, errMsg:$errMsg")
-                            callback?.onError(errCode, errMsg)
+                        override fun onError(errCode: Int, errMsg: String) {
+                            val errMessage: String = convertErrorMsg(errCode, errMsg)
+                            ToastUtil.toastLongMessage(errMessage)
+                            TUILog.e(TAG, "groupCall errCode:$errCode, errMsg:$errMessage")
+                            callback?.onError(errCode, errMessage)
                         }
                     })
             }
 
             override fun onDenied() {
-                callback?.onError(ERROR_PERMISSION_DENIED, "request Permissions failed")
+                callback?.onError(TUICallDefine.ERROR_PERMISSION_DENIED, "request Permissions failed")
             }
         })
     }
@@ -207,11 +206,8 @@ class EngineManager private constructor(context: Context) {
                         }
 
                         override fun onError(errCode: Int, errMsg: String) {
-                            var errMsg: String? = errMsg
-                            if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                errMsg = context.getString(R.string.tuicallkit_package_not_support)
-                            }
-                            ToastUtil.toastLongMessage(errMsg)
+                            val errMessage = convertErrorMsg(errCode, errMsg)
+                            ToastUtil.toastLongMessage(errMessage)
                         }
                     })
             }
@@ -264,38 +260,30 @@ class EngineManager private constructor(context: Context) {
         })
     }
 
-    fun switchCallMediaType(callMediaType: TUICallDefine.MediaType?) {
-        TUICallEngine.createInstance(context).switchCallMediaType(callMediaType)
-        if (callMediaType == TUICallDefine.MediaType.Audio) {
-            if (TUICallDefine.Status.Accept == TUICallState.instance.selfUser.get().callStatus.get()) {
-                instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
-            } else {
-                if (TUICallDefine.Role.Caller == TUICallState.instance.selfUser.get().callRole.get()) {
-                    instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
-                } else {
-                    instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
-                }
-            }
-        } else {
-            selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
-        }
-    }
-
     fun openCamera(camera: TUICommonDefine.Camera?, videoView: TUIVideoView?, callback: TUICommonDefine.Callback?) {
-        TUICallEngine.createInstance(context).openCamera(camera, videoView, object : TUICommonDefine.Callback {
-            override fun onSuccess() {
-                val status: TUICallDefine.Status = TUICallState.instance.selfUser.get().callStatus.get()
-                if (TUICallDefine.Status.None != status) {
-                    val camera: TUICommonDefine.Camera = TUICallState.instance.isFrontCamera.get()
-                    TUICallState.instance.isCameraOpen.set(true)
-                    TUICallState.instance.isFrontCamera.set(camera)
-                    TUICallState.instance.selfUser.get().videoAvailable.set(true)
-                }
-                callback?.onSuccess()
+        PermissionRequest.requestCameraPermission(context, object : PermissionCallback() {
+            override fun onGranted() {
+
+                TUICallEngine.createInstance(context).openCamera(camera, videoView, object : TUICommonDefine.Callback {
+                    override fun onSuccess() {
+                        val status: TUICallDefine.Status = TUICallState.instance.selfUser.get().callStatus.get()
+                        if (TUICallDefine.Status.None != status) {
+                            val camera: TUICommonDefine.Camera = TUICallState.instance.isFrontCamera.get()
+                            TUICallState.instance.isCameraOpen.set(true)
+                            TUICallState.instance.isFrontCamera.set(camera)
+                            TUICallState.instance.selfUser.get().videoAvailable.set(true)
+                        }
+                        callback?.onSuccess()
+                    }
+
+                    override fun onError(errCode: Int, errMsg: String) {
+                        callback?.onError(errCode, errMsg)
+                    }
+                })
             }
 
-            override fun onError(errCode: Int, errMsg: String) {
-                callback?.onError(errCode, errMsg)
+            override fun onDenied() {
+                TUILog.w(TAG, "refused to access to the camera")
             }
         })
     }
@@ -368,7 +356,7 @@ class EngineManager private constructor(context: Context) {
                     }
                     val userList = data as List<String>
                     TUILog.i(TAG, "inviteUsersToGroupCall success, list:$userList")
-                    UserInfoUtils.getUserListInfo(userList, object : ValueCallback<List<User>?>{
+                    UserInfoUtils.getUserListInfo(userList, object : ValueCallback<List<User>?> {
                         override fun onSuccess(data: List<User>?) {
                             if (data.isNullOrEmpty()) {
                                 TUILog.e(TAG, "getUsersInfo onSuccess list = null")
@@ -383,11 +371,35 @@ class EngineManager private constructor(context: Context) {
                         override fun onError(errCode: Int, errMsg: String?) {
                             TUILog.e(TAG, "getUsersInfo onError errorCode = $errCode , errorMsg = $errMsg")
                         }
-
                     })
                 }
 
                 override fun onError(errCode: Int, errMsg: String) {}
             })
+    }
+
+    private fun getCommonErrorMap(): Map<Int, String> {
+        val map = HashMap<Int, String>()
+        map[TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED] = context.getString(R.string.tuicallkit_package_not_purchased)
+        map[TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED] = context.getString(R.string.tuicallkit_package_not_support)
+        map[TUICallDefine.ERROR_INIT_FAIL] = context.getString(R.string.tuicallkit_error_invalid_login)
+        map[TUICallDefine.ERROR_PARAM_INVALID] = context.getString(R.string.tuicallkit_error_parameter_invalid)
+        map[TUICallDefine.ERROR_REQUEST_REFUSED] = context.getString(R.string.tuicallkit_error_request_refused)
+        map[TUICallDefine.ERROR_REQUEST_REPEATED] = context.getString(R.string.tuicallkit_error_request_repeated)
+        map[TUICallDefine.ERROR_SCENE_NOT_SUPPORTED] = context.getString(R.string.tuicallkit_error_scene_not_support)
+        return map
+    }
+
+    private fun convertErrorMsg(errorCode: Int, msg: String): String {
+        if (errorCode == BaseConstants.ERR_SVR_MSG_IN_PEER_BLACKLIST) {
+            return context.getString(R.string.tuicallkit_error_in_peer_blacklist)
+        }
+
+        val commonErrorMap = getCommonErrorMap()
+        if (commonErrorMap.containsKey(errorCode)) {
+            return commonErrorMap[errorCode]!!
+        }
+
+        return ErrorMessageConverter.convertIMError(errorCode, msg)
     }
 }

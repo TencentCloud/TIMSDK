@@ -1,8 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message;
 
-import static com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder.MSG_TYPE_HEADER_VIEW;
-import static com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION_AND_UPDATE;
-
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -16,7 +13,7 @@ import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.ClassicUIService;
-import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.MessageHeaderHolder;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.MessageHeadHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
@@ -68,7 +65,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             return null;
         }
         ArrayList<TUIMessageBean> selectList = new ArrayList<>();
-        for (int i = 0; i < getItemCount() - 1; i++) {
+        for (int i = 0; i < dataSource.size(); i++) {
             if (isItemChecked(dataSource.get(i))) {
                 selectList.add(dataSource.get(i));
             }
@@ -157,18 +154,15 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             setCheckBoxStatus(msg, baseHolder);
             baseHolder.layoutViews(msg, position);
 
-            if (getItemViewType(position) == MSG_TYPE_HEADER_VIEW) {
-                if (isForwardMode) {
-                    ((MessageHeaderHolder) baseHolder).setLoadingStatus(false);
-                } else {
-                    ((MessageHeaderHolder) baseHolder).setLoadingStatus(mLoading);
-                }
-                return;
+            if (position == mHighShowPosition && baseHolder.mContentLayout != null) {
+                baseHolder.startHighLight();
+                mHighShowPosition = -1;
+            }
+        } else if (holder instanceof MessageHeadHolder) {
+            if (isForwardMode) {
+                ((MessageHeadHolder) holder).setLoadingStatus(false);
             } else {
-                if (position == mHighShowPosition && baseHolder.mContentLayout != null) {
-                    baseHolder.startHighLight();
-                    mHighShowPosition = -1;
-                }
+                ((MessageHeadHolder) holder).setLoadingStatus(mLoading);
             }
         }
     }
@@ -341,7 +335,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                     return;
                 }
                 mRecycleView.scrollToPosition(position);
-            } else if (type == DATA_CHANGE_SCROLL_TO_POSITION_AND_UPDATE) {
+            } else if (type == IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION_AND_UPDATE) {
                 int position = getMessagePosition(messageBean);
                 if (position == ITEM_POSITION_UNKNOWN) {
                     return;
@@ -401,7 +395,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     @Override
     public int getItemCount() {
-        return dataSource.size() + 1;
+        return dataSource.size() + 2;
     }
 
     public int getViewPositionByDataPosition(int position) {
@@ -414,13 +408,16 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
-            return MSG_TYPE_HEADER_VIEW;
+            return MessageViewHolderFactory.VIEW_TYPE_HEAD;
+        } else if (position == getItemCount() - 1) {
+            return MessageViewHolderFactory.VIEW_TYPE_TAIL;
+        } else {
+            TUIMessageBean msg = getItem(position);
+            if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+                return ClassicUIService.getInstance().getViewType(TipsMessageBean.class);
+            }
+            return ClassicUIService.getInstance().getViewType(msg.getClass());
         }
-        TUIMessageBean msg = getItem(position);
-        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-            return ClassicUIService.getInstance().getViewType(TipsMessageBean.class);
-        }
-        return ClassicUIService.getInstance().getViewType(msg.getClass());
     }
 
     @Override
@@ -448,14 +445,31 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         return position + 1;
     }
 
+    @Override
     public TUIMessageBean getItem(int position) {
-        if (position == 0 || dataSource == null || dataSource.size() == 0) {
+        if (position == 0 || dataSource == null || dataSource.isEmpty()) {
             return null;
         }
         if (position >= dataSource.size() + 1) {
             return null;
         }
         return dataSource.get(position - 1);
+    }
+
+    @Override
+    public TUIMessageBean getFirstMessageBean() {
+        if (dataSource == null || dataSource.isEmpty()) {
+            return null;
+        }
+        return dataSource.get(0);
+    }
+
+    @Override
+    public TUIMessageBean getLastMessageBean() {
+        if (dataSource == null || dataSource.isEmpty()) {
+            return null;
+        }
+        return dataSource.get(dataSource.size() - 1);
     }
 
     public List<TUIMessageBean> getItemList(int first, int last) {
@@ -471,10 +485,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (dataSource == null || dataSource.size() == 0 || first > last) {
             return new ArrayList<>(0);
         }
-        if (first >= dataSource.size() + 1 || last >= dataSource.size() + 1) {
+        if (first >= dataSource.size() + 1) {
             return new ArrayList<>(0);
         }
 
-        return new ArrayList<>(dataSource.subList(first - 1, last));
+        return new ArrayList<>(dataSource.subList(first - 1, last - 1));
     }
 }

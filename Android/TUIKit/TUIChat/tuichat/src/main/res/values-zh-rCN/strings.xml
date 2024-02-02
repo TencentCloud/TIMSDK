@@ -122,6 +122,7 @@
     <string name="input_tip">没有输入昵称，请重新填写</string>
     <string name="chat_camera_occupied_tip">摄像头被其他功能占用</string>
     <string name="chat_mic_is_being_used_cant_record">其他功能正在使用麦克风，无法录制</string>
+    <string name="chat_record_audio_failed">音频录制失败</string>
 
     <string name="delivered">已送达</string>
     <string name="someone_unread">%d人未读</string>
@@ -275,4 +276,8 @@
     <string name="chat_risk_sound">[违规语音]</string>
     <string name="chat_risk_image">[违规图片]</string>
     <string name="chat_risk_video">[违规视频]</string>
+
+    <string name="chat_recent_use">最近使用</string>
+    <string name="chat_all_emojis">所有表情</string>
+
 </resources>

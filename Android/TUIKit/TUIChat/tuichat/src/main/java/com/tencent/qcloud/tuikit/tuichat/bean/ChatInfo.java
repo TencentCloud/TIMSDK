@@ -28,6 +28,8 @@ public class ChatInfo implements Serializable {
     boolean enableVideoCall = true;
     boolean enableRoom = true;
     boolean enableCustomHelloMessage = true;
+    boolean enablePoll = true;
+    boolean enableGroupNote = true;
     boolean needReadReceipt = true;
     private DraftInfo draft;
 
@@ -210,6 +212,22 @@ public class ChatInfo implements Serializable {
 
     public void setEnableCustomHelloMessage(boolean enableCustomHelloMessage) {
         this.enableCustomHelloMessage = enableCustomHelloMessage;
+    }
+
+    public void setEnablePoll(boolean enablePoll) {
+        this.enablePoll = enablePoll;
+    }
+
+    public boolean isEnablePoll() {
+        return enablePoll;
+    }
+
+    public void setEnableGroupNote(boolean enableGroupNote) {
+        this.enableGroupNote = enableGroupNote;
+    }
+
+    public boolean isEnableGroupNote() {
+        return enableGroupNote;
     }
 
     public boolean isNeedReadReceipt() {

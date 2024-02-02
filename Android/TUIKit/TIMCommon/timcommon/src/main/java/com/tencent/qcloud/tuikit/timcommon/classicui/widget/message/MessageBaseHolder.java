@@ -21,8 +21,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import java.util.Date;
 
 public abstract class MessageBaseHolder<T extends TUIMessageBean> extends RecyclerView.ViewHolder {
-    public static final int MSG_TYPE_HEADER_VIEW = -99;
-
     public ICommonMessageAdapter mAdapter;
     public MessageProperties properties = MessageProperties.getInstance();
     protected OnItemClickListener onItemClickListener;
@@ -32,7 +30,7 @@ public abstract class MessageBaseHolder<T extends TUIMessageBean> extends Recycl
     public LinearLayout msgReplyDetailLayout;
     public LinearLayout msgArea;
     public LinearLayout msgAreaAndReply;
-    public ChatFlowReactView reactView;
+    public FrameLayout reactionArea;
     public CheckBox mMutiSelectCheckBox;
     public RelativeLayout rightGroupLayout;
     public RelativeLayout mContentLayout;
@@ -44,7 +42,7 @@ public abstract class MessageBaseHolder<T extends TUIMessageBean> extends Recycl
         chatTimeText = itemView.findViewById(R.id.message_top_time_tv);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
         msgReplyDetailLayout = itemView.findViewById(R.id.msg_reply_detail_fl);
-        reactView = itemView.findViewById(R.id.reacts_view);
+        reactionArea = itemView.findViewById(R.id.message_reaction_area);
         msgArea = itemView.findViewById(R.id.msg_area);
         msgAreaAndReply = itemView.findViewById(R.id.msg_area_and_reply);
         mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);

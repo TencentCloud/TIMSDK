@@ -23,16 +23,7 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
         if (it == TUICallDefine.Status.Waiting) {
             textWaitHint?.visibility = VISIBLE
         } else if (it == TUICallDefine.Status.Accept) {
-            if (viewModel.callRole.get() == TUICallDefine.Role.Caller
-                && viewModel.mediaType.get() == TUICallDefine.MediaType.Audio
-            ) {
-                textWaitHint?.text = context.getString(R.string.tuicallkit_accept_single)
-                postDelayed({
-                    textWaitHint?.visibility = GONE
-                }, 2000)
-            } else {
-                textWaitHint?.visibility = GONE
-            }
+            textWaitHint?.visibility = GONE
         }
     }
 

@@ -37,11 +37,13 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
     }
 
     private fun addObserver() {
-        viewModel.selfUser?.callStatus?.observe(callStatusObserver)
+        viewModel.selfUser.callStatus.observe(callStatusObserver)
+        viewModel.remoteUser.callStatus.observe(callStatusObserver)
     }
 
     private fun removeObserver() {
-        viewModel.selfUser?.callStatus?.removeObserver(callStatusObserver)
+        viewModel.selfUser.callStatus.removeObserver(callStatusObserver)
+        viewModel.remoteUser.callStatus.removeObserver(callStatusObserver)
     }
 
     private fun initView() {
@@ -130,14 +132,14 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
                 return true
             }
 
-            override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
                 val params = view?.layoutParams
                 if (params is LayoutParams) {
-                    val offsetX = if (isRTL) (e2.x - e1.x) else (e1.x - e2.x)
+                    val offsetX = if (isRTL) (e2.x - (e1?.x ?: 0f)) else ((e1?.x ?: 0f) - e2.x)
 
                     val layoutParams = view.layoutParams as LayoutParams
                     val newX = (layoutParams.marginEnd + offsetX).toInt()
-                    val newY = (layoutParams.topMargin + (e2.y - e1.y)).toInt()
+                    val newY = (layoutParams.topMargin + (e2.y - (e1?.y ?: 0f))).toInt()
                     if (newX >= 0 && newX <= width - view.width && newY >= 0 && newY <= height - view.height) {
                         layoutParams.marginEnd = newX
                         layoutParams.topMargin = newY

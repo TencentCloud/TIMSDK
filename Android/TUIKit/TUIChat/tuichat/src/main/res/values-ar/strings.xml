@@ -118,6 +118,7 @@
     <string name="input_tip">لم تدخل الاسم المستعار، يرجى إعادة الملء</string>
     <string name="chat_camera_occupied_tip">تم احتلال الكاميرا بواسطة وظيفة أخرى</string>
     <string name="chat_mic_is_being_used_cant_record">الميكروفون يتم استخدامه بواسطة وظيفة أخرى، غير قادر على التسجيل.</string>
+    <string name="chat_record_audio_failed">فشل تسجيل الصوت</string>
 
 
     <string name="delivered">تم التوصيل</string>
@@ -271,4 +272,7 @@
     <string name="chat_risk_sound">[صوت مخالف]</string>
     <string name="chat_risk_image">[صورة مخالفة]</string>
     <string name="chat_risk_video">[فيديو مخالف]</string>
+
+    <string name="chat_recent_use">الاستخدام الأخير</string>
+    <string name="chat_all_emojis">جميع الرموز التعبيرية</string>
 </resources>

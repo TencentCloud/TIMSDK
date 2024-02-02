@@ -19,7 +19,6 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.TIMCommonService;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
@@ -32,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public abstract class MessageContentHolder<T extends TUIMessageBean> extends MessageBaseHolder<T> {
     public UserIconView leftUserIcon;
@@ -512,40 +512,11 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     }
 
     private void setReactContent(TUIMessageBean messageBean) {
-        MessageReactBean messageReactBean = messageBean.getMessageReactBean();
-        if (messageReactBean != null && messageReactBean.getReactSize() > 0) {
-            reactView.setVisibility(View.VISIBLE);
-            reactView.setData(messageReactBean);
-            reactView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onMessageLongClick(v, messageBean);
-                    }
-                    return true;
-                }
-            });
-            if (!isForwardMode) {
-                reactView.setReactOnClickListener(new ChatFlowReactView.ReactOnClickListener() {
-                    @Override
-                    public void onClick(String emojiId) {
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onReactOnClick(emojiId, messageBean);
-                        }
-                    }
-                });
-            } else {
-                reactView.setOnLongClickListener(null);
-            }
-        } else {
-            reactView.setVisibility(View.GONE);
-            reactView.setOnLongClickListener(null);
-        }
-        if (!messageBean.isSelf() || isForwardMode || isReplyDetailMode) {
-            reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), R.attr.chat_react_other_text_color));
-        } else {
-            reactView.setThemeColorId(0);
-        }
+        Map<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.MESSAGE, messageBean);
+        param.put(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.VIEW_TYPE,
+                TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.VIEW_TYPE_CLASSIC);
+        TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.EXTENSION_ID, reactionArea, param);
     }
 
     private void showReadText(TUIMessageBean msg) {

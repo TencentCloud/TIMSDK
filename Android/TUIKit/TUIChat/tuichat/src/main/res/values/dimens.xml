@@ -46,7 +46,6 @@
     <dimen name="chat_pop_menu_padding_top">15.48dp</dimen>
     <dimen name="chat_pop_menu_padding_left_right">16.32dp</dimen>
     <dimen name="chat_pop_menu_item_top_space">16.32dp</dimen>
-    <dimen name="chat_pop_menu_recent_face_space">15dp</dimen>
     <dimen name="chat_pop_menu_padding_bottom">10.96dp</dimen>
     <dimen name="chat_pop_menu_item_height">35.8dp</dimen>
     <dimen name="chat_pop_menu_icon_size">19.2dp</dimen>
@@ -60,5 +59,10 @@
 
     <dimen name="chat_image_message_error_size">140dp</dimen>
 
-
+    <dimen name="chat_face_input_fragment_height">270dp</dimen>
+    <dimen name="chat_face_input_bottom_margin">20dp</dimen>
+    <dimen name="chat_default_load_emoji_size">36dp</dimen>
+    <dimen name="chat_input_emoji_top_space">12dp</dimen>
+    <dimen name="chat_input_emoji_left_space">10dp</dimen>
+    <dimen name="chat_face_detail_layout_size">160dp</dimen>
 </resources>

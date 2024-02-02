@@ -18,7 +18,7 @@ class RoundShadowLayout(context: Context, attrs: AttributeSet?) : FrameLayout(co
     private var shadowX = 0f
     private var shadowY = 0f
 
-    private var roundRadius = 18f
+    private var roundRadius = 32f
     private var roundPaint: Paint
     private var roundRect: RectF
     private var roundPath: Path
@@ -82,7 +82,7 @@ class RoundShadowLayout(context: Context, attrs: AttributeSet?) : FrameLayout(co
         }
     }
 
-    override fun dispatchDraw(canvas: Canvas?) {
+    override fun dispatchDraw(canvas: Canvas) {
         roundRect[shadowRadius, shadowRadius, width - shadowRadius] = height - shadowRadius
         canvas!!.saveLayer(roundRect, null, Canvas.ALL_SAVE_FLAG)
         super.dispatchDraw(canvas)

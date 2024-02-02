@@ -63,4 +63,9 @@
     <string name="tuicallkit_group_btn_ok">تأكيد</string>
 
     <string name="tuicallkit_error_in_peer_blacklist">فشلت المكالمة ، المستخدم في القائمة السوداء ، ممنوع الإطلاق.</string>
+    <string name="tuicallkit_error_invalid_login">الرجاء تسجيل الدخول مرة أخرى، تسجيل الدخول غير صحيح</string>
+    <string name="tuicallkit_error_parameter_invalid">خطأ المعلمة</string>
+    <string name="tuicallkit_error_request_refused">الحالة الحالية لا تدعم نداء الدالة</string>
+    <string name="tuicallkit_error_request_repeated">الطريقة الحالية تتم تنفيذها، يرجى عدم استدعاءها مرة أخرى</string>
+    <string name="tuicallkit_error_scene_not_support">مشهد المكالمة الحالي لا يدعم هذه الوظيفة</string>
 </resources>

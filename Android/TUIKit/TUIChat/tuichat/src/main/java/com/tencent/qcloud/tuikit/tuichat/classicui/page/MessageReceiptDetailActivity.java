@@ -20,11 +20,11 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -37,6 +37,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -224,7 +225,7 @@ public class MessageReceiptDetailActivity extends BaseLightActivity {
             if (messageBean instanceof FileMessageBean) {
                 msgAbstract.setText(messageBean.getExtra() + ((FileMessageBean) messageBean).getFileName());
             } else {
-                FaceManager.handlerEmojiText(msgAbstract, messageBean.getExtra(), false);
+                FaceUtil.handlerEmojiText(msgAbstract, messageBean.getExtra(), false);
             }
         }
     }

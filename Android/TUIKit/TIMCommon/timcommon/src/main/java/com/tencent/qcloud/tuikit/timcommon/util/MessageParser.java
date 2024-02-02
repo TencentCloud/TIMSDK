@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import java.util.HashMap;
@@ -13,32 +12,6 @@ import java.util.Map;
 
 public class MessageParser {
     private static final String TAG = MessageParser.class.getSimpleName();
-
-    public static MessageReactBean parseMessageReact(TUIMessageBean messageBean) {
-        V2TIMMessage message = messageBean.getV2TIMMessage();
-        String cloudCustomData = message.getCloudCustomData();
-
-        try {
-            Gson gson = new Gson();
-            HashMap hashMap = gson.fromJson(cloudCustomData, HashMap.class);
-            if (hashMap != null) {
-                Object reactContentObj = hashMap.get(TIMCommonConstants.MESSAGE_REACT_KEY);
-                MessageReactBean reactBean = null;
-                if (reactContentObj instanceof Map) {
-                    reactBean = gson.fromJson(gson.toJson(reactContentObj), MessageReactBean.class);
-                }
-                if (reactBean != null) {
-                    if (reactBean.getVersion() > MessageReactBean.VERSION) {
-                        return null;
-                    }
-                    return reactBean;
-                }
-            }
-        } catch (JsonSyntaxException e) {
-            TIMCommonLog.e(TAG, " getCustomJsonMap error ");
-        }
-        return null;
-    }
 
     public static MessageRepliesBean parseMessageReplies(TUIMessageBean messageBean) {
         V2TIMMessage message = messageBean.getV2TIMMessage();

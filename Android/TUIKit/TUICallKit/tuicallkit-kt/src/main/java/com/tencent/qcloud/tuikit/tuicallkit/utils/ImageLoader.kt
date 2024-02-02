@@ -27,7 +27,7 @@ object ImageLoader {
 
     @JvmStatic
     fun loadImage(context: Context?, imageView: ImageView?, url: Any?, @DrawableRes errorResId: Int = 0) {
-        loadImage(context, imageView, url, R.drawable.tuicallkit_ic_avatar, this.radius)
+        loadImage(context, imageView, url, errorResId, this.radius)
     }
 
     @JvmStatic

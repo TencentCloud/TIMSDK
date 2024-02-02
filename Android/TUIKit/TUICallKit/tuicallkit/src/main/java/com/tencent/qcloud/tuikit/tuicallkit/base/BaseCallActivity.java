@@ -85,6 +85,8 @@ public class BaseCallActivity extends AppCompatActivity {
                 ((ViewGroup) mBaseCallView.getParent()).removeView(mBaseCallView);
             }
             mLayoutContainer.addView(mBaseCallView);
+        } else {
+            finishActivity();
         }
     }
 

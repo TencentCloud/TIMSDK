@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/tab_item_icon"
+        android:layout_width="25.6dp"
+        android:layout_height="25.6dp"
+        android:layout_gravity="center"
+        android:scaleType="centerInside"/>
+
+</FrameLayout>

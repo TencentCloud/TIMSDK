@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuicore.util;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
@@ -48,6 +50,15 @@ public class ToastUtil {
                     if (textView != null) {
                         textView.setGravity(Gravity.CENTER);
                     }
+                }
+                if (TUIBuild.getVersionInt() >= Build.VERSION_CODES.R) {
+                    toast.addCallback(new Toast.Callback() {
+                        @Override
+                        public void onToastHidden() {
+                            super.onToastHidden();
+                            toast = null;
+                        }
+                    });
                 }
                 toast.show();
             }

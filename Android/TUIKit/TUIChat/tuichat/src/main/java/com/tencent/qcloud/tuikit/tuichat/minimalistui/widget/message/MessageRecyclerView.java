@@ -19,6 +19,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.app.SharedElementCallback;
 import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.NestedScrollingParentHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,12 +31,12 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.MessageProperties;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
@@ -57,6 +58,7 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.Chat
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,14 +78,11 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     protected OnLoadMoreHandler mHandler;
     protected OnEmptySpaceClickListener mEmptySpaceClickListener;
     protected MessageAdapter mAdapter;
+    protected LinearLayoutManager linearLayoutManager;
     protected List<ChatPopActivity.ChatPopMenuAction> mPopActions = new ArrayList<>();
-    protected ChatPopActivity.EmojiOnClickListener emojiOnClickListener;
-    private Bitmap dialogBgBitmap;
     protected List<ChatPopActivity.ChatPopMenuAction> mMorePopActions = new ArrayList<>();
     protected OnChatPopActionClickListener mOnPopActionClickListener;
     private final MessageProperties properties = MessageProperties.getInstance();
-
-    private OnMenuEmojiClickListener menuEmojiOnClickListener;
 
     private ChatPresenter presenter;
 
@@ -112,7 +111,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         setFocusableInTouchMode(false);
         setFocusable(true);
         setClickable(true);
-        LinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getContext());
+        linearLayoutManager = new CustomLinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         setLayoutManager(linearLayoutManager);
         SimpleItemAnimator animator = (SimpleItemAnimator) getItemAnimator();
@@ -137,6 +136,15 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 }
                 return false;
             }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                if (mEmptySpaceClickListener != null) {
+                    mEmptySpaceClickListener.onClick();
+                    return true;
+                }
+                return false;
+            }
         };
 
         GestureDetector gestureDetector = new GestureDetector(getContext(), gestureListener);
@@ -149,6 +157,16 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 return false;
             }
         });
+    }
+
+    // Always return last visible item for laying out other items from tail to head.
+    @Override
+    public View getFocusedChild() {
+        if (linearLayoutManager != null) {
+            int position = linearLayoutManager.findLastVisibleItemPosition();
+            return linearLayoutManager.findViewByPosition(position);
+        }
+        return super.getFocusedChild();
     }
 
     public void setSelectedPosition(int position) {
@@ -185,21 +203,19 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         canvas.drawColor(Color.WHITE, PorterDuff.Mode.DST_OVER);
         ChatPopDataHolder.setChatPopBgBitmap(dialogBgBitmap);
 
-        emojiOnClickListener = new ChatPopActivity.EmojiOnClickListener() {
-            @Override
-            public void onClick(Emoji emoji) {
-                if (menuEmojiOnClickListener != null) {
-                    menuEmojiOnClickListener.onClick(emoji, messageInfo);
-                }
-            }
-        };
-        ChatPopDataHolder.setEmojiOnClickListener(emojiOnClickListener);
         ChatPopDataHolder.setActionList(mPopActions);
         Intent intent = new Intent(getContext(), ChatPopActivity.class);
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, "messageAreaTransition");
         Bundle bundle = optionsCompat.toBundle();
         intent.putExtra(TUIChatConstants.MESSAGE_BEAN, messageInfo);
         getActivity().startActivity(intent, bundle);
+        getActivity().setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                TUIChatService.getInstance().refreshMessage(messageInfo);
+                getActivity().setExitSharedElementCallback((SharedElementCallback) null);
+            }
+        });
     }
 
     public AppCompatActivity getActivity() {
@@ -486,10 +502,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         mOnPopActionClickListener = listener;
     }
 
-    public void setMenuEmojiOnClickListener(OnMenuEmojiClickListener menuEmojiOnClickListener) {
-        this.menuEmojiOnClickListener = menuEmojiOnClickListener;
-    }
-
     public void setAdapterListener() {
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -567,11 +579,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             }
 
             @Override
-            public void onReactOnClick(String emojiId, TUIMessageBean messageBean) {
-                showMessageReactDetail(messageBean);
-            }
-
-            @Override
             public void onSendFailBtnClick(View view, TUIMessageBean messageInfo) {
                 new TUIKitDialog(getContext())
                     .builder()
@@ -611,21 +618,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 }
             }
         });
-    }
-
-    private void showMessageReactDetail(TUIMessageBean messageBean) {
-        ChatReactDialogFragment fragment = new ChatReactDialogFragment();
-        fragment.setMessageBean(messageBean);
-        fragment.setChatInfo(presenter.getChatInfo());
-        fragment.setOnReactClickListener(new ChatReactDialogFragment.OnReactClickListener() {
-            @Override
-            public void onClick(String userID, String emojiKey) {
-                if (TextUtils.equals(userID, TUILogin.getLoginUser())) {
-                    presenter.reactMessage(emojiKey, messageBean);
-                }
-            }
-        });
-        fragment.show(getActivity().getSupportFragmentManager(), "react");
     }
 
     private void locateOriginMessage(String originMsgId) {
@@ -892,10 +884,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         if (mHandler != null) {
             mHandler.scrollMessageFinish();
         }
-    }
-
-    public interface OnMenuEmojiClickListener {
-        void onClick(Emoji emoji, TUIMessageBean messageBean);
     }
 
     public interface OnLoadMoreHandler {

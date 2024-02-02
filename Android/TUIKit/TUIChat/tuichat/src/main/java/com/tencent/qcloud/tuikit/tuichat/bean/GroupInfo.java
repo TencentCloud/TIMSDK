@@ -206,19 +206,4 @@ public class GroupInfo extends ChatInfo {
         this.messageReceiveOption = messageReceiveOption;
     }
 
-    public GroupInfo covertTIMGroupDetailInfo(V2TIMGroupInfoResult infoResult) {
-        if (infoResult.getResultCode() != 0) {
-            return this;
-        }
-        setChatName(infoResult.getGroupInfo().getGroupName());
-        setGroupName(infoResult.getGroupInfo().getGroupName());
-        setId(infoResult.getGroupInfo().getGroupID());
-        setNotice(infoResult.getGroupInfo().getNotification());
-        setMemberCount(infoResult.getGroupInfo().getMemberCount());
-        setGroupType(infoResult.getGroupInfo().getGroupType());
-        setOwner(infoResult.getGroupInfo().getOwner());
-        setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
-        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
-        return this;
-    }
 }

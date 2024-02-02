@@ -59,16 +59,6 @@ public class FriendProfileActivity extends BaseLightActivity {
             layout.initData(intent.getSerializableExtra(TUIContactConstants.ProfileType.CONTENT));
         }
         layout.setOnButtonClickListener(new FriendProfileLayout.OnButtonClickListener() {
-            @Override
-            public void onStartConversationClick(ContactItemBean info) {
-                String chatName = info.getId();
-                if (!TextUtils.isEmpty(info.getRemark())) {
-                    chatName = info.getRemark();
-                } else if (!TextUtils.isEmpty(info.getNickName())) {
-                    chatName = info.getNickName();
-                }
-                ContactStartChatUtils.startChatActivity(info.getId(), ContactItemBean.TYPE_C2C, chatName, "");
-            }
 
             @Override
             public void onDeleteFriendClick(String id) {

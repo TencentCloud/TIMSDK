@@ -9,6 +9,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
+
 import java.util.List;
 
 public class MergeReplyQuoteView extends TUIReplyQuoteView {

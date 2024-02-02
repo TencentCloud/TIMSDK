@@ -67,7 +67,6 @@ public class FileMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
         msgId = msg.getId();
-        reactView.setThemeColorId(TUIThemeManager.getAttrResId(reactView.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.chat_react_other_text_color));
         if (isForwardMode || isReplyDetailMode) {
             setMessageBubbleBackground(R.drawable.chat_bubble_other_cavity_bg);
             statusImage.setVisibility(View.GONE);

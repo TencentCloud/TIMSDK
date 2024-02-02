@@ -3,7 +3,7 @@
     <string name="tuicallkit_toast_enable_mute">Muted</string>
     <string name="tuicallkit_toast_disable_mute">Unmuted</string>
     <string name="tuicallkit_toast_speaker">Speaker</string>
-    <string name="tuicallkit_toast_use_handset">Earpiece</string>
+    <string name="tuicallkit_toast_use_earpiece">Earpiece</string>
     <string name="tuicallkit_toast_user_end">%s end the call.</string>
     <string name="tuicallkit_other_party_network_low_quality">The other party\'s network connection is poor</string>
     <string name="tuicallkit_self_network_low_quality">Your network connection is poor</string>
@@ -63,4 +63,9 @@
     <string name="tuicallkit_group_btn_ok">Confirm</string>
 
     <string name="tuicallkit_error_in_peer_blacklist">The identifier is in blacklist. Failed to send this message!</string>
+    <string name="tuicallkit_error_invalid_login">Invalid login, please login again</string>
+    <string name="tuicallkit_error_parameter_invalid">Parameter error</string>
+    <string name="tuicallkit_error_request_refused">The current status can not use this function</string>
+    <string name="tuicallkit_error_request_repeated">The current status is waiting/accept, please do not call it repeatedly</string>
+    <string name="tuicallkit_error_scene_not_support">The current scene does not support this function</string>
 </resources>

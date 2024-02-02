@@ -13,26 +13,26 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/rl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/rl_audio_user_info_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/rl_layout_float_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="57dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/rl_video_user_info_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -41,13 +41,24 @@
         android:id="@+id/tv_single_call_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/rl_single_function"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/tv_caller_accept_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/tuicallkit_accept_single"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/rl_single_function"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
         android:id="@+id/rl_single_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +69,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rl_layout_float_icon" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/rl_single_function"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
