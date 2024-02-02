@@ -8,8 +8,8 @@
 import Foundation
 
 private let kCallKitSingleSmallVideoViewWidth = 100.0
-private let kCallKitSingleSmallVideoViewFrame = CGRect(x: ScreenSize.width - kCallKitSingleSmallVideoViewWidth - 18,
-                                                       y: StatusBar_Height + 20,
+private let kCallKitSingleSmallVideoViewFrame = CGRect(x: ScreenSize.width - kCallKitSingleSmallVideoViewWidth,
+                                                       y: StatusBar_Height + 40,
                                                        width: kCallKitSingleSmallVideoViewWidth,
                                                        height: kCallKitSingleSmallVideoViewWidth / 9.0 * 16.0)
 private let kCallKitSingleLargeVideoViewFrame = CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.height)

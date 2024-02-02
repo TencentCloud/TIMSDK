@@ -151,6 +151,7 @@
 #define TUICoreBundle @"TUICore"
 #define TUIChatBundle @"TUIChat"
 #define TUIChatFaceBundle @"TUIChatFace"
+
 #define TUIConversationBundle @"TUIConversation"
 #define TUIConversationGroupBundle @"TUIConversationGroup"
 #define TUIConversationMarkBundle @"TUIConversationMark"
@@ -204,6 +205,7 @@ static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
         [bundleKeyClass isEqualToString:TUIChatLocalizableBundle_Key_Class]) {
         return @"TUIChat";
     }
+
     if ([bundleKeyClass isEqualToString:TUIConversationBundle_Key_Class]) {
         return @"TUIConversation";
     }
@@ -297,7 +299,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
         return [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIChatLocalizableBundle_Key_Class)];
     } else if ([bundleName isEqualToString:TIMCommonLocalizableBundle]) {
         return [NSBundle bundleWithPath:TUIBundlePath(bundleName, TIMCommonLocalizableBundle_Key_Class)];
-    } else {
+    }
+    else {
         return [NSBundle bundleWithPath:TUIBundlePath(bundleName, TUIKitLocalizableBundle_Key_Class)];
     }
 }
@@ -307,6 +310,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICoreImagePath(imageName) [TUIBundlePath(TUICoreBundle, TUICoreBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUIChatImagePath(imageName) [TUIBundlePath(TUIChatBundle, TUIChatBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUIChatFaceImagePath(imageName) [TUIBundlePath(TUIChatFaceBundle, TUIChatFaceBundle_Key_Class) stringByAppendingPathComponent:imageName]
+
 #define TUIConversationImagePath(imageName) [TUIBundlePath(TUIConversationBundle, TUIConversationBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUIConversationGroupImagePath(imageName) \
     [TUIBundlePath(TUIConversationGroupBundle, TUIConversationGroupBundle_Key_Class) stringByAppendingPathComponent:imageName]
@@ -472,15 +476,15 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TTextView_TextView_Height_Max 80
 
 // face view
-#define TFaceView_Height 180
-#define TFaceView_Margin 12
+#define TFaceView_Height 287
+#define TFaceView_Margin 10
 #define TFaceView_Page_Padding 20
 #define TFaceView_Page_Height 30
 
 // menu view
 #define TMenuView_Send_Color RGBA(87, 190, 105, 1.0)
 #define TMenuView_Margin 6
-#define TMenuView_Menu_Height 40
+#define TMenuView_Menu_Height 59
 
 // more view
 #define TMoreView_Column_Count 4
@@ -782,6 +786,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall @"TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall"
 #define TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall @"TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall"
 #define TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom @"TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom"
+#define TUICore_TUIChatExtension_InputViewMoreItem_FilterPoll @"TUICore_TUIChatExtension_InputViewMoreItem_FilterPoll"
+#define TUICore_TUIChatExtension_InputViewMoreItem_FilterGroupNote @"TUICore_TUIChatExtension_InputViewMoreItem_FilterGroupNote"
 #define TUICore_TUIChatExtension_InputViewMoreItem_ItemSize @"TUICore_TUIChatExtension_InputViewMoreItem_ItemSize"
 #define TUICore_TUIChatExtension_InputViewMoreItem_ItemImage @"TUICore_TUIChatExtension_InputViewMoreItem_ItemImage"
 #define TUICore_TUIChatExtension_InputViewMoreItem_ItemTitle @"TUICore_TUIChatExtension_InputViewMoreItem_ItemTitle"
@@ -791,10 +797,23 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 // 聊天页面消息长按弹框UI 扩展
 // Chat page message long press pop-up UI extension.
+#define TUICore_TUIChatExtension_ChatPopMenuReactRecentView_ClassicExtensionID @"TUICore_TUIChatExtension_ChatPopMenuReactRecentView_ClassicExtensionID"
+#define TUICore_TUIChatExtension_ChatPopMenuReactRecentView_MinimalistExtensionID @"TUICore_TUIChatExtension_ChatPopMenuReactRecentView_MinimalistExtensionID"
+#define TUICore_TUIChatExtension_ChatPopMenuReactRecentView_Delegate @"TUICore_TUIChatExtension_ChatPopMenuReactRecentView_Delegate"
+
+
+#define TUICore_TUIChatExtension_ChatPopMenuReactDetailView_ClassicExtensionID @"TUICore_TUIChatExtension_ChatPopMenuReactDetailView_ClassicExtensionID"
+#define TUICore_TUIChatExtension_ChatPopMenuReactDetailView_MinimalistExtensionID @"TUICore_TUIChatExtension_ChatPopMenuReactDetailView_MinimalistExtensionID"
+
 #define TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID @"TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID"
 #define TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID @"TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID"
 #define TUICore_TUIChatExtension_PopMenuActionItem_TargetVC @"TUICore_TUIChatExtension_PopMenuActionItem_TargetVC"
 #define TUICore_TUIChatExtension_PopMenuActionItem_ClickCell @"TUICore_TUIChatExtension_PopMenuActionItem_ClickCell"
+// Chat message cell container UI extension.
+#define TUICore_TUIChatExtension_ChatMessageReactPreview_ClassicExtensionID @"TUICore_TUIChatExtension_ChatMessageReactPreview_ClassicExtensionID"
+#define TUICore_TUIChatExtension_ChatMessageReactPreview_MinimalistExtensionID @"TUICore_TUIChatExtension_ChatMessageReactPreview_MinimalistExtensionID"
+#define TUICore_TUIChatExtension_ChatMessageReactPreview_Delegate @"TUICore_TUIChatExtension_ChatMessageReactPreview_Delegate"
+
 // Chat message cell bottom container UI extension.
 #define TUICore_TUIChatExtension_BottomContainer_ClassicExtensionID @"TUICore_TUIChatExtension_BottomContainer_ClassicExtensionID"
 #define TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID @"TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID"
@@ -826,7 +845,10 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_WelcomeCustomMessage @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_WelcomeCustomMessage"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation @"TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Poll @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Poll"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_GroupNote @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_GroupNote"
 
 #pragma mark - TUICore_TUIConversation_Service
 #define TUICore_TUIConversationService @"TUICore_TUIConversationService"
@@ -1122,6 +1144,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIPluginNotify_DidChangePluginViewSubKey @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey"
 #define TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data"
 #define TUICore_TUIPluginNotify_DidChangePluginViewSubKey_VC @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey_VC"
+#define TUICore_TUIPluginNotify_DidChangePluginViewSubKey_isAllowScroll2Bottom @"TUICore_TUIPluginNotify_DidChangePluginViewSubKey_isAllowScroll2Bottom"
 
 #define TUICore_TUIPluginNotify_WillForwardTextSubKey @"TUICore_TUIPluginNotify_WillForwardTextSubKey"
 #define TUICore_TUIPluginNotify_WillForwardTextSubKey_Text @"TUICore_TUIPluginNotify_WillForwardTextSubKey_Text"

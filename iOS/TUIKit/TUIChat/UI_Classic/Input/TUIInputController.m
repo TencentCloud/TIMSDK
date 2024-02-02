@@ -24,6 +24,9 @@
 #import "TUIMessageDataProvider.h"
 #import "TUITextMessageCell.h"
 #import "TUIVoiceMessageCell.h"
+#import <TIMCommon/TIMCommonMediator.h>
+#import <TIMCommon/TUIEmojiMeditorProtocol.h>
+
 
 @interface TUIInputController () <TUIInputBarDelegate, TUIMenuViewDelegate, TUIFaceViewDelegate, TUIMoreViewDelegate>
 @property(nonatomic, assign) InputStatus status;
@@ -38,13 +41,13 @@
     [self setupViews];
 }
 - (void)viewWillAppear:(BOOL)animated {
-    _inputBar.frame = CGRectMake(0, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width, TTextView_Height);
+    _inputBar.frame = CGRectMake(16, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width - 32, TTextView_Height);
     [_inputBar setNeedsLayout];
-    _faceView.frame = CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width, TFaceView_Height);
-    [_faceView setNeedsLayout];
-    _menuView.frame = CGRectMake(0, self.faceView.frame.origin.y + self.faceView.frame.size.height, self.view.frame.size.width, TMenuView_Menu_Height);
+    _menuView.frame = CGRectMake(16, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width - 32, TMenuView_Menu_Height);
     [_menuView setNeedsLayout];
-    _moreView.frame = CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.faceView.frame.size.width, _moreView.frame.size.height);
+    _faceSegementScrollView.frame = CGRectMake(0, _menuView.frame.origin.y + _menuView.frame.size.height, self.view.frame.size.width, TFaceView_Height);
+    [_faceSegementScrollView setNeedsLayout];
+    _moreView.frame = CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width, _moreView.frame.size.height);
     [_moreView setNeedsLayout];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -109,8 +112,8 @@
 }
 
 - (void)hideFaceAnimation {
-    self.faceView.hidden = NO;
-    self.faceView.alpha = 1.0;
+    self.faceSegementScrollView.hidden = NO;
+    self.faceSegementScrollView.alpha = 1.0;
     self.menuView.hidden = NO;
     self.menuView.alpha = 1.0;
     __weak typeof(self) ws = self;
@@ -118,44 +121,58 @@
         delay:0
         options:UIViewAnimationOptionCurveEaseOut
         animations:^{
-          ws.faceView.alpha = 0.0;
+          ws.faceSegementScrollView.alpha = 0.0;
           ws.menuView.alpha = 0.0;
         }
         completion:^(BOOL finished) {
-          ws.faceView.hidden = YES;
-          ws.faceView.alpha = 1.0;
+          ws.faceSegementScrollView.hidden = YES;
+          ws.faceSegementScrollView.alpha = 1.0;
           ws.menuView.hidden = YES;
           ws.menuView.alpha = 1.0;
           [ws.menuView removeFromSuperview];
-          [ws.faceView removeFromSuperview];
+          [ws.faceSegementScrollView removeFromSuperview];
         }];
 }
 
 - (void)showFaceAnimation {
-    [self.view addSubview:self.faceView];
+    [self.view addSubview:self.faceSegementScrollView];
     [self.view addSubview:self.menuView];
-
-    self.faceView.hidden = NO;
-    CGRect frame = self.faceView.frame;
-    frame.origin.y = self.view.window.frame.size.height;
-    self.faceView.frame = frame;
-    self.menuView.hidden = NO;
-    frame = self.menuView.frame;
-    frame.origin.y = self.faceView.frame.origin.y + self.faceView.frame.size.height;
-    self.menuView.frame = frame;
-
     __weak typeof(self) ws = self;
+    [self.faceSegementScrollView updateRecentView];
+    [self.faceSegementScrollView setAllFloatCtrlViewAllowSendSwitch:(self.inputBar.inputTextView.text.length > 0)?YES:NO];
+    self.faceSegementScrollView.onScrollCallback = ^(NSInteger indexPage) {
+        [ws.menuView scrollToMenuIndex:indexPage];
+    };
+    self.inputBar.inputBarTextChanged = ^(UITextView *textview) {
+        if(textview.text.length > 0) {
+            [ws.faceSegementScrollView setAllFloatCtrlViewAllowSendSwitch:YES];
+        }
+        else {
+            [ws.faceSegementScrollView setAllFloatCtrlViewAllowSendSwitch:NO];
+        }
+    };
+    
+    
+    self.faceSegementScrollView.hidden = NO;
+    CGRect frame = self.menuView.frame;
+    frame.origin.y = self.view.window.frame.size.height;
+    self.menuView.frame = frame;
+    self.menuView.hidden = NO;
+    frame = self.faceSegementScrollView.frame;
+    frame.origin.y = self.menuView.frame.origin.y + self.menuView.frame.size.height;
+    self.faceSegementScrollView.frame = frame;
+
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                       CGRect newFrame = ws.faceView.frame;
+                       CGRect newFrame = ws.menuView.frame;
                        newFrame.origin.y = CGRectGetMaxY(ws.inputBar.frame);  // ws.inputBar.frame.origin.y + ws.inputBar.frame.size.height;
-                       ws.faceView.frame = newFrame;
-
-                       newFrame = ws.menuView.frame;
-                       newFrame.origin.y = ws.faceView.frame.origin.y + ws.faceView.frame.size.height;
                        ws.menuView.frame = newFrame;
+
+                       newFrame = ws.faceSegementScrollView.frame;
+                       newFrame.origin.y = ws.menuView.frame.origin.y + ws.menuView.frame.size.height;
+                       ws.faceSegementScrollView.frame = newFrame;
                      }
                      completion:nil];
 }
@@ -233,6 +250,9 @@
     if ([TIMConfig defaultConfig].faceGroups.count == 0) {
         return;
     }
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
     if (_status == Input_Status_Input_More) {
         [self hideMoreAnimation];
     }
@@ -240,7 +260,7 @@
     _status = Input_Status_Input_Face;
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didChangeHeight:)]) {
         [_delegate inputController:self
-                   didChangeHeight:CGRectGetMaxY(_inputBar.frame) + self.faceView.frame.size.height + self.menuView.frame.size.height + Bottom_SafeHeight];
+                   didChangeHeight:CGRectGetMaxY(_inputBar.frame) + self.faceSegementScrollView.frame.size.height + self.menuView.frame.size.height ];
     }
     [self showFaceAnimation];
 }
@@ -567,7 +587,7 @@
 }
 
 - (void)menuView:(TUIMenuView *)menuView didSelectItemAtIndex:(NSInteger)index {
-    [self.faceView scrollToFaceGroupIndex:index];
+    [self.faceSegementScrollView  setPageIndex:index];
 }
 
 - (void)menuViewDidSendMessage:(TUIMenuView *)menuView {
@@ -597,11 +617,16 @@
     [_inputBar backDelete];
 }
 
+- (void)faceViewClickSendMessageBtn {
+    [self menuViewDidSendMessage:self.menuView];
+}
+
 - (void)faceView:(TUIFaceView *)faceView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    TUIFaceGroup *group = [TIMConfig defaultConfig].faceGroups[indexPath.section];
+    TUIFaceGroup *group = faceView.faceGroups[indexPath.section];
     TUIFaceCellData *face = group.faces[indexPath.row];
-    if (indexPath.section == 0) {
+    if (group.isNeedAddInInputBar) {
         [_inputBar addEmoji:face];
+        [self updateRecentMenuQueue:face.name];
     } else {
         if (face.name) {
             V2TIMMessage *message = [[V2TIMManager sharedInstance] createFaceMessage:group.groupIndex data:[face.name dataUsingEncoding:NSUTF8StringEncoding]];
@@ -612,6 +637,11 @@
     }
 }
 
+- (void)updateRecentMenuQueue:(NSString *)faceName {
+    id<TUIEmojiMeditorProtocol> service = [[TIMCommonMediator share] getObject:@protocol(TUIEmojiMeditorProtocol)];
+    return [service updateRecentMenuQueue:faceName];
+}
+
 #pragma mark - more view delegate
 - (void)moreView:(TUIMoreView *)moreView didSelectMoreCell:(TUIInputMoreCell *)cell {
     if (_delegate && [_delegate respondsToSelector:@selector(inputController:didSelectMoreCell:)]) {
@@ -620,20 +650,25 @@
 }
 
 #pragma mark - lazy load
-- (TUIFaceView *)faceView {
-    if (!_faceView) {
-        _faceView = [[TUIFaceView alloc]
-            initWithFrame:CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width, TFaceView_Height)];
-        _faceView.delegate = self;
-        [_faceView setData:[TIMConfig defaultConfig].faceGroups];
-    }
-    return _faceView;
-}
 
+- (TUIFaceSegementScrollView *)faceSegementScrollView {
+    if(!_faceSegementScrollView) {
+        _faceSegementScrollView = [[TUIFaceSegementScrollView alloc]
+            initWithFrame:CGRectMake(0,
+                                     _inputBar.frame.origin.y + _inputBar.frame.size.height,
+                                     self.view.frame.size.width,
+                                     TFaceView_Height)];
+        [_faceSegementScrollView setItems:[TIMConfig defaultConfig].faceGroups delegate:self];
+    }
+    return _faceSegementScrollView;
+}
 - (TUIMoreView *)moreView {
     if (!_moreView) {
         _moreView =
-            [[TUIMoreView alloc] initWithFrame:CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.faceView.frame.size.width, 0)];
+            [[TUIMoreView alloc] initWithFrame:CGRectMake(0,
+                                                          _inputBar.frame.origin.y + _inputBar.frame.size.height,
+                                                          _faceSegementScrollView.frame.size.width,
+                                                          0)];
         _moreView.delegate = self;
     }
     return _moreView;
@@ -642,7 +677,7 @@
 - (TUIMenuView *)menuView {
     if (!_menuView) {
         _menuView = [[TUIMenuView alloc]
-            initWithFrame:CGRectMake(0, self.faceView.frame.origin.y + self.faceView.frame.size.height, self.view.frame.size.width, TMenuView_Menu_Height)];
+            initWithFrame:CGRectMake(16, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width - 32, TMenuView_Menu_Height)];
         _menuView.delegate = self;
 
         TIMConfig *config = [TIMConfig defaultConfig];

@@ -47,7 +47,6 @@ extension TUICallState: TUICallObserver {
         param[EVENT_KEY_MESSAGE] = message
         let callEvent = TUICallEvent(eventType: .ERROR, event: .ERROR_COMMON, param: param)
         TUICallState.instance.event.value = callEvent
-        
     }
     
     func onCallReceived(callerId: String, calleeIdList: [String], groupId: String?, callMediaType: TUICallMediaType) {
@@ -103,17 +102,20 @@ extension TUICallState: TUICallObserver {
         TUICallState.instance.mediaType.value = callMediaType
         
         TUICallState.instance.selfUser.value.callRole.value = TUICallRole.called
-        TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
         
-        if callMediaType == .audio {
-            TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
-            TUICallState.instance.isCameraOpen.value = false
-        } else if callMediaType == .video {
-            TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
-            TUICallState.instance.isCameraOpen.value = true
+        DispatchQueue.main.async {
+            TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.waiting
+            
+            if callMediaType == .audio {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.earpiece
+                TUICallState.instance.isCameraOpen.value = false
+            } else if callMediaType == .video {
+                TUICallState.instance.audioDevice.value = TUIAudioPlaybackDevice.speakerphone
+                TUICallState.instance.isCameraOpen.value = true
+            }
+            
+            let _ = CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeCalled)
         }
-        
-        CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeCalled)
     }
     
     func onCallCancelled(callerId: String) {
@@ -266,7 +268,10 @@ extension TUICallState: TUICallObserver {
 
 // MARK: private method
 extension TUICallState {
-    private func cleanState() {
+    func cleanState() {
+        TUICallState.instance.isCameraOpen.value = false
+        TUICallState.instance.isMicMute.value = false
+        
         TUICallState.instance.remoteUserList.value.removeAll()
         
         TUICallState.instance.mediaType.value = .unknown
@@ -277,10 +282,8 @@ extension TUICallState {
         TUICallState.instance.selfUser.value.callStatus.value = TUICallStatus.none
         
         TUICallState.instance.timeCount.value = 0
-        TUICallState.instance.isMicMute.value = false
         TUICallState.instance.isFrontCamera.value = .front
         TUICallState.instance.audioDevice.value = .earpiece
-        TUICallState.instance.isCameraOpen.value = false
         TUICallState.instance.isShowFullScreen.value = false
         TUICallState.instance.showLargeViewUserId.value = ""
         

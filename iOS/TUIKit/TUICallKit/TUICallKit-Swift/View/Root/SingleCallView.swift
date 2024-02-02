@@ -7,7 +7,13 @@
 
 import SnapKit
 
+protocol SingleCallViewDelegate: AnyObject {
+    func handleStatusBarHidden(isHidden: Bool)
+}
+
 class SingleCallView: UIView {
+    
+    weak var delegate: SingleCallViewDelegate?
     
     let viewModel = SingleCallViewModel()
     let selfCallStatusObserver = Observer()
@@ -183,15 +189,7 @@ class SingleCallView: UIView {
     
     func handleFloatingWindowBtn() {
         if viewModel.enableFloatWindow {
-            if viewModel.selfCallRole.value == .call {
-                floatingWindowBtn.isHidden = viewModel.isShowFullScreen.value
-            } else {
-                if viewModel.selfCallStatus.value != .accept {
-                    floatingWindowBtn.isHidden = true
-                } else {
-                    floatingWindowBtn.isHidden = viewModel.isShowFullScreen.value
-                }
-            }
+            floatingWindowBtn.isHidden = viewModel.isShowFullScreen.value
         } else {
             floatingWindowBtn.isHidden = true
         }
@@ -305,6 +303,7 @@ class SingleCallView: UIView {
             guard let self = self else { return }
             self.videoFunctionView.isHidden = newValue
             self.timerView.isHidden = newValue
+            self.delegate?.handleStatusBarHidden(isHidden: newValue)
             
             if self.viewModel.enableFloatWindow {
                 self.floatingWindowBtn.isHidden = newValue

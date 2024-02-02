@@ -21,6 +21,7 @@
 #import "TUIInputBar_Minimalist.h"
 #import "TUIMenuView_Minimalist.h"
 #import "TUIReplyPreviewBar_Minimalist.h"
+#import "TUIFaceSegementScrollView.h"
 
 @class TUIInputController_Minimalist;
 
@@ -124,7 +125,8 @@
  * group.
  *
  */
-@property(nonatomic, strong) TUIFaceView *faceView;
+
+@property(nonatomic, strong) TUIFaceSegementScrollView *faceSegementScrollView;
 
 /**
  *  菜单视图

@@ -80,6 +80,10 @@ class FloatingWindowViewModel {
         TUICallState.instance.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.remoteUserList.value = newValue
+            
+            if !newValue.contains(where: { $0.id.value == self.currentSpeakUser.value.id.value }) {
+                self.updateCurrentSpeakUser(user: TUICallState.instance.selfUser.value)
+            }
         })
     }
     

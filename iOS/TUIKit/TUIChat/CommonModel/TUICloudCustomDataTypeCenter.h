@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_OPTIONS(NSUInteger, TUICloudCustomDataType) {
     TUICloudCustomDataType_None = 1 << 0,
     TUICloudCustomDataType_MessageReply = 1 << 1,
-    TUICloudCustomDataType_MessageReact = 1 << 2,
+//    TUICloudCustomDataType_MessageReact = 1 << 2,
     TUICloudCustomDataType_MessageReplies = 1 << 3,
     TUICloudCustomDataType_MessageReference = 1 << 4,
 };
@@ -55,29 +55,6 @@ FOUNDATION_EXTERN TUICustomType messageFeature;
 @end
 @interface TUICloudCustomDataTypeCenter : NSObject
 + (NSString *)convertType2String:(TUICloudCustomDataType)type;
-//+ (TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
-//+ (BOOL)versionControl:(int)CurrentVersion
-//               ByType :(TUICloudCustomDataType)type;
-@end
-
-@class TUIReactModelMessageReact;
-@class TUIReactModelReacts;
-
-#pragma mark - Object interfaces
-
-@interface TUIReactModelMessageReact : NSObject
-
-@property(nonatomic, strong) NSMutableArray<TUIReactModelReacts *> *reacts;
-@property(nonatomic, nullable, copy) NSString *version;
-
-- (void)applyWithDic:(NSDictionary *)orignMessageReactDic emojiName:(NSString *)emojiName loginUser:(NSString *)loginUser;
-- (NSDictionary *)descriptionDic;
-@end
-
-@interface TUIReactModelReacts : NSObject
-@property(nonatomic, strong) NSMutableArray<NSString *> *emojiIdArray;
-@property(nonatomic, nullable, copy) NSString *emojiKey;
-- (NSDictionary *)descriptionDic;
 @end
 
 NS_ASSUME_NONNULL_END

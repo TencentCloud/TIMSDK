@@ -146,7 +146,12 @@ class TUICallKitImpl: TUICallKit {
             return
         }
         
-        CallEngineManager.instance.joinInGroupCall(roomId: roomId, groupId: groupId, callMediaType: callMediaType)
+        CallEngineManager.instance.joinInGroupCall(roomId: roomId, groupId: groupId, callMediaType: callMediaType) {
+            
+        } fail: { [weak self] code, message in
+            guard let self = self else { return }
+            self.handleAbilityFailErrorMessage(code: code, message: message)
+        }
     }
     
     override func setCallingBell(filePath: String) {
@@ -237,7 +242,9 @@ private extension TUICallKitImpl {
     }
     
     @objc func logoutSuccessNotification(noti: Notification) {
-        CallEngineManager.instance.removeObserver(TUICallState.instance)
+        CallEngineManager.instance.hangup()
+        TUICallEngine.destroyInstance()
+        TUICallState.instance.cleanState()
     }
     
     @objc func showViewControllerNotification(noti: Notification) {
@@ -316,7 +323,7 @@ private extension TUICallKitImpl {
         return callParams
     }
     
-    func handleAbilityFailErrorMessage(code: Int32, message: String?) {
+    func convertCallKitError(code: Int32, message: String?) -> String {
         var errorMessage: String? = message
         if code == ERROR_PACKAGE_NOT_PURCHASED {
             errorMessage = TUICallKitLocalize(key: "TUICallKit.purchased")
@@ -324,7 +331,22 @@ private extension TUICallKitImpl {
             errorMessage = TUICallKitLocalize(key: "TUICallKit.support")
         } else if code == ERR_SVR_MSG_IN_PEER_BLACKLIST.rawValue {
             errorMessage = TUICallKitLocalize(key: "TUICallKit.ErrorInPeerBlacklist")
+        } else if code == ERROR_INIT_FAIL {
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.ErrorInvalidLogin")
+        } else if code == ERROR_PARAM_INVALID {
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.ErrorParameterInvalid")
+        } else if code == ERROR_REQUEST_REFUSED {
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.ErrorRequestRefused")
+        } else if code == ERROR_REQUEST_REPEATED {
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.ErrorRequestRepeated")
+        } else if code == ERROR_SCENE_NOT_SUPPORTED {
+            errorMessage = TUICallKitLocalize(key: "TUICallKit.ErrorSceneNotSupport")
         }
+        return errorMessage ?? ""
+    }
+    
+    func handleAbilityFailErrorMessage(code: Int32, message: String?) {
+        let errorMessage = TUITool.convertIMError(Int(code), msg: convertCallKitError(code: code, message: message))
         TUITool.makeToast(errorMessage ?? "", duration: 4)
     }
     

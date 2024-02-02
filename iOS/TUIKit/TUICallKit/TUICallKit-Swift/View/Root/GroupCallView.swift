@@ -196,11 +196,7 @@ class GroupCallView: UIView {
     
     func handleFloatingWindowBtn() {
         if viewModel.enableFloatWindow {
-            if viewModel.selfCallRole.value == .call {
-                floatingWindowBtn.isHidden = false
-            } else {
-                floatingWindowBtn.isHidden = (viewModel.selfCallStatus.value != .accept)
-            }
+            floatingWindowBtn.isHidden = false
         } else {
             floatingWindowBtn.isHidden = true
         }

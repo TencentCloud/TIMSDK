@@ -85,6 +85,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, assign) NSUInteger uploadProgress;
 
+@property(nonatomic, assign) BOOL  isSuperLongImage;
+
 /**
  *  获取图像
  *  本函数整合调用了 IM SDK，通过 SDK 提供的接口在线获取图像。

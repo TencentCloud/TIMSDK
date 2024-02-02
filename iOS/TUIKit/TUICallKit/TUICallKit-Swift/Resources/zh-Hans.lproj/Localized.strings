@@ -19,12 +19,20 @@
 "TUICallKit.switchToAudio" = "切换到语音通话";
 "TUICallKit.answer" = "接听";
 "TUICallKit.yournetworkpoor" = "己方网络不佳";
-"TUICallKit.calleeTip" = "他们也在";
+"TUICallKit.calleeTip" = "参与通话的还有：";
 "TUICallKit.FloatingWindow.waitAccept" = "等待接听";
 
 "TUICallKit.User.Exceed.Limit" = "暂支持最多9人通话。如需多人会议，请使用TUIRoom";
 "TUICallKit.UnableToRestartTheCall" = "正在通话中，无法再次发起";
+
+"TUICallKit.purchased" = "您当前未购买音视频通话能力套餐，请前往IM 控制台开通免费体验或加购正式版";
+"TUICallKit.support" = "您当前购买的音视频通话能力套餐不支持该功能，建议您升级套餐类型";
 "TUICallKit.ErrorInPeerBlacklist" = "发起通话失败，用户在黑名单中，禁止发起！";
+"TUICallKit.ErrorInvalidLogin" = "登录失败,请重新登录";
+"TUICallKit.ErrorParameterInvalid" = "参数错误";
+"TUICallKit.ErrorRequestRefused" = "当前状态不支持调用";
+"TUICallKit.ErrorRequestRepeated" = "当前方法正在执行中，请勿重复调用";
+"TUICallKit.ErrorSceneNotSupport" = "当前通话场景，不支持该功能";
 
 "TUICallKit.FailedToGetCameraPermission.Title" = "相机权限未开启";
 "TUICallKit.FailedToGetCameraPermission.Tips"  = "无法使用视频通话功能，点击\"去开启\"打开相机权限";
@@ -36,8 +44,6 @@
 "TUICallKit.FailedToGetMicrophonePermission.Later" = "以后再说";
 "TUICallKit.FailedToGetMicrophonePermission.Enable" = "去开启";
 
-"TUICallKit.package.not.purchased" = "您当前未购买音视频通话能力套餐，请前往IM 控制台开通免费体验或加购正式版";
-"TUICallKit.package.not.support" = "您当前购买的音视频通话能力套餐不支持该功能，建议您升级套餐类型";
 "TUICallKit.have.new.invitation" = "您有一个新的通话";
 
 "TUICallKit.Recents.all" = "所有通话";

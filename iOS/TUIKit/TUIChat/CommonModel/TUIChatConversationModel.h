@@ -110,6 +110,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL isLimitedPortraitOrientation;
 
+@property(nonatomic, assign) BOOL enablePoll;
+
+@property(nonatomic, assign) BOOL enableGroupNote;
+
 @end
 
 NS_ASSUME_NONNULL_END

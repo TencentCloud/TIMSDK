@@ -29,11 +29,17 @@
 
 "Demo.TRTC.Calling.FloatingWindow.dailing" = "電話中...";
 
-"Demo.TRTC.Calling.User.Exceed.Limit" = "一時的に最大9人の通話をサポートします。多人数の会議が必要な場合は、TUIRoomを使用してください"; 
+"Demo.TRTC.Calling.User.Exceed.Limit" = "一時的に最大9人の通話をサポートします。多人数の会議が必要な場合は、TUIRoomを使用してください";
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "通話中のため、再度発信できません";
 "Demo.TRTC.Calling.ErrorInPeerBlacklist" = "通話の開始に失敗しました。ユーザーがブラックリストに登録されているため、発信が禁止されています！";
 
-"TUICallKit.failedtogetcamerapermission.Title" = "カメラの権限が開かれていません"; 
+"TUICallKit.ErrorInvalidLogin" = "ログイン失敗しました。もう一度ログインしてください";
+"TUICallKit.ErrorParameterInvalid" = "パラメータエラー";
+"TUICallKit.ErrorRequestRefused" = "現在の状態では、この機能の呼び出しはサポートされていません";
+"TUICallKit.ErrorRequestRepeated" = "現在実行中のメソッドを呼び出すことはできません";
+"TUICallKit.ErrorSceneNotSupport" = "現在の通話シーンでは、この機能はサポートしていません";
+
+"TUICallKit.failedtogetcamerapermission.Title" = "カメラの権限が開かれていません";
 "TUICallKit.failedtogetcamerapermission.Tips" = "ビデオ通話機能が使用できません。\"開く\"をクリックしてカメラの権限を開きます";
 "TUICallKit.failedtogetcamerapermission.Later" = "後で言う";
 "TUICallKit.failedtogetcamerapermission.Enable" = "開く";

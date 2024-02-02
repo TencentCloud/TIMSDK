@@ -20,7 +20,9 @@ class TUICallKitService: NSObject, TUIServiceProtocol {
         }
         
         if groupID.isEmpty {
-            guard let userID = userIDs.first else { return }
+            guard let userID = userIDs.first else {
+                return
+            }
             TUICallKit.createInstance().call(userId: userID, callMediaType: callingType)
         } else {
             TUICallKit.createInstance().groupCall(groupId: groupID, userIdList: userIDs, callMediaType: callingType)
@@ -31,49 +33,65 @@ class TUICallKitService: NSObject, TUIServiceProtocol {
 // MARK: TUIServiceProtocol
 extension TUICallKitService {
     func onCall(_ method: String, param: [AnyHashable : Any]?) -> Any? {
-        guard let param = param else { return nil }
+        guard let param = param else {
+            return nil
+        }
+        
         if param.isEmpty {
             return nil
         }
         
         if method == TUICore_TUICallingService_EnableFloatWindowMethod {
-            let key = TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow
-            guard let enableFloatWindow = param[key] as? Bool else { return nil }
+            guard let enableFloatWindow = param[TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow] as? Bool else {
+                return nil
+            }
             TUICallKit.createInstance().enableFloatWindow(enable: enableFloatWindow)
         } else if method == TUICore_TUICallingService_ShowCallingViewMethod {
-            guard let userIDs = param[TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey] as? [ String] else { return nil }
-            guard let mediaTypeIndex = param[TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey] as? Int else { return nil }
+            guard let userIDs = param[TUICore_TUICallingService_ShowCallingViewMethod_UserIDsKey] as? [ String],
+                  let mediaTypeIndex = param[TUICore_TUICallingService_ShowCallingViewMethod_CallTypeKey] as? String else {
+                return nil
+            }
+            
             var mediaType: TUICallMediaType = .unknown
-            if mediaTypeIndex == 0 {
+            if mediaTypeIndex == "0" {
                 mediaType = .audio
-            } else if mediaTypeIndex == 1 {
+            } else if mediaTypeIndex == "1" {
                 mediaType = .video
             }
-            guard let groupID = param[TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey] as? String else { return nil }
-            startCall(groupID: groupID, userIDs: userIDs, callingType: mediaType)
+            let groupId = param[TUICore_TUICallingService_ShowCallingViewMethod_GroupIDKey] as? String ?? ""
+            startCall(groupID: groupId, userIDs: userIDs, callingType: mediaType)
         } else if method == TUICore_TUICallingService_ReceivePushCallingMethod {
-            guard let signalingInfo = param[TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo] as? V2TIMSignalingInfo else { return nil }
-            let groupID = signalingInfo.groupID
+            guard let signalingInfo = param[TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo] as? V2TIMSignalingInfo else {
+                return nil
+            }
             
+            let groupID = signalingInfo.groupID
             var selector = NSSelectorFromString("onReceiveGroupCallAPNs")
+            
             if TUICallEngine.createInstance().responds(to: selector) {
                 TUICallEngine.createInstance().perform(selector, with: signalingInfo)
             }
         } else if method == TUICore_TUICallingService_EnableMultiDeviceAbilityMethod {
-            guard let enableMultiDeviceAbility = param[TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility]
-                    as? Bool else { return nil }
+            let key = TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility
+            guard let enableMultiDeviceAbility = param[key] as? Bool else {
+                return nil
+            }
             TUICallEngine.createInstance().enableMultiDeviceAbility(enable: enableMultiDeviceAbility) {
                 
             } fail: { code, message in
                 
             }
         } else if method == TUICore_TUICallingService_SetAudioPlaybackDeviceMethod {
-            guard let audioPlaybackDevice = param[TUICore_TUICallingService_SetAudioPlaybackDevice_AudioPlaybackDevice]
-                    as? TUIAudioPlaybackDevice else { return nil }
+            let key = TUICore_TUICallingService_SetAudioPlaybackDevice_AudioPlaybackDevice
+            guard let audioPlaybackDevice = param[key] as? TUIAudioPlaybackDevice else {
+                return nil
+            }
+            
             TUICallState.instance.audioDevice.value = audioPlaybackDevice
         } else if method == TUICore_TUICallingService_SetIsMicMuteMethod {
-            guard let isMicMute = param[TUICore_TUICallingService_SetIsMicMuteMethod_IsMicMute]
-                    as? Bool else { return nil }
+            guard let isMicMute = param[TUICore_TUICallingService_SetIsMicMuteMethod_IsMicMute] as? Bool else {
+                return nil
+            }
             TUICallState.instance.isMicMute.value = !isMicMute
         }
         

@@ -8,7 +8,7 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TUIMessageCell.h>
 #import <TIMCommon/TUISystemMessageCellData.h>
-#import <TIMCommon/TUITagsModel.h>
+#import <TIMCommon/TUIRelationUserModel.h>
 #import <TUICore/NSString+TUIUtil.h>
 #import <TUICore/TUICore.h>
 #import <TUICore/TUILogin.h>
@@ -407,20 +407,24 @@
 
 - (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback {
     @weakify(self);
-    [self preProcessReactMessage:uiMsgs
-                   reactCallback:^{
+    [self preProcessReplyUserModelMessage:uiMsgs
+                        userModelcallback:^{
                      @strongify(self);
                      [self preProcessReplyMessageV2:uiMsgs callback:callback];
                    }];
 }
 
-- (void)preProcessReactMessage:(NSArray<TUIMessageCellData *> *)uiMsgs reactCallback:(void (^)(void))reactCallback {
+- (void)preProcessReplyUserModelMessage:(NSArray<TUIMessageCellData *> *)uiMsgs userModelcallback:(void (^)(void))userModelcallback {
     if (uiMsgs.count == 0) {
-        if (reactCallback) {
-            reactCallback();
+        if (userModelcallback) {
+            userModelcallback();
         }
         return;
     }
+    
+    // fetch react
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TUIKitFetchReactNotification" object:uiMsgs];
+    
     dispatch_group_t group = dispatch_group_create();
     NSArray *arrayWithoutDuplicates = [self getIDsAboutWhoUseModifyMessage:uiMsgs];
     NSMutableDictionary *modifyUserMap = [NSMutableDictionary dictionaryWithCapacity:3];
@@ -431,7 +435,7 @@
             memberList:arrayWithoutDuplicates
             succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
               [memberList enumerateObjectsUsingBlock:^(V2TIMGroupMemberFullInfo *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                TUITagsUserModel *userModel = [[TUITagsUserModel alloc] init];
+                TUIRelationUserModel *userModel = [[TUIRelationUserModel alloc] init];
                 userModel.userID = obj.userID;
                 userModel.friendRemark = obj.friendRemark;
                 userModel.nameCard = obj.nameCard;
@@ -450,7 +454,7 @@
         [[V2TIMManager sharedInstance] getFriendsInfo:arrayWithoutDuplicates
             succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
               [resultList enumerateObjectsUsingBlock:^(V2TIMFriendInfoResult *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                TUITagsUserModel *userModel = [[TUITagsUserModel alloc] init];
+                TUIRelationUserModel *userModel = [[TUIRelationUserModel alloc] init];
                 userModel.userID = obj.friendInfo.userID;
                 userModel.nickName = obj.friendInfo.userFullInfo.nickName;
                 userModel.friendRemark = obj.friendInfo.friendRemark;
@@ -474,50 +478,25 @@
           if ([modifyUserMap allKeys].count > 0) {
               myData.messageModifyUserInfos = modifyUserMap;
           }
-
-          __weak typeof(myData) weakMyData = myData;
-          static TUIMessageCell *cell = nil;
-          if (cell == nil) {
-              cell = [[TUIMessageCell alloc] initWithFrame:CGRectZero];
-          }
-          if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count > 0) {
-              [cell prepareReactTagUI:cell.container];
-              [cell fillWithData:myData];
-              [cell layoutIfNeeded];
-              [cell.tagView updateView];
-              weakMyData.messageModifyReactsSize = cell.tagView.frame.size;
-          }
       }
 
-      if (reactCallback) {
-          reactCallback();
+      if (userModelcallback) {
+          userModelcallback();
       }
     });
 }
-
 - (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback {
+    //Subclasses implement this method
     return;
 }
 
-// Find all ids that who use React Emoji / reply
+// Find all ids that who use reply
 - (NSArray *)getIDsAboutWhoUseModifyMessage:(NSArray<TUIMessageCellData *> *)uiMsgs {
     NSMutableArray *hasReactArray = [NSMutableArray arrayWithCapacity:3];
 
     for (TUIMessageCellData *cellData in uiMsgs) {
         TUIMessageCellData *myData = (TUIMessageCellData *)cellData;
-
-        // Emoji React
-        if ([myData.messageModifyReacts isKindOfClass:NSDictionary.class] && [myData.messageModifyReacts allKeys].count > 0) {
-            [myData.messageModifyReacts enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
-              if (obj && [obj isKindOfClass:NSArray.class]) {
-                  NSArray *arr = (NSArray *)obj;
-                  if (arr.count > 0) {
-                      [hasReactArray addObjectsFromArray:obj];
-                  }
-              }
-            }];
-        }
-
+        
         // Replies
         if ([myData.messageModifyReplies isKindOfClass:NSArray.class] && myData.messageModifyReplies.count > 0) {
             [myData.messageModifyReplies enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {

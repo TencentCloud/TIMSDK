@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '7.7.5282'
+  spec.version      = '7.8.5483'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -20,7 +20,7 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
 
   spec.vendored_libraries = ['VoiceConvert/libopencore-amrnb.a', 'VoiceConvert/libopencore-amrwb.a']
-  spec.source = { :path => './' }
+  spec.source = { :git => 'https://git.woa.com/lynxzhang/tui-components.git', :tag => spec.version}
   spec.source_files = '**/*.{h,m,mm,c}'
   spec.resource = [
   'Resources/*.bundle'

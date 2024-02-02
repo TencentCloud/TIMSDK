@@ -159,8 +159,8 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 - (void)replaceUIMsg:(TUIMessageCellData *)cellData atIndex:(NSUInteger)index;
 
 /**
- * 预处理互动消息、回复消息(异步加载原始消息以及下载对应的缩略图)
- * Preprocessing interactive messages, reply messages (asynchronously loading original messages and downloading corresponding thumbnails)
+ * 预处理回复消息(异步加载原始消息以及下载对应的缩略图)
+ * Preprocessing reply messages (asynchronously loading original messages and downloading corresponding thumbnails)
  */
 - (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;
 

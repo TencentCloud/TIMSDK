@@ -157,12 +157,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)messageController:(TUIBaseMessageController *)controller onReferenceMessage:(TUIMessageCellData *)data;
 
 /**
- * 表情回应消息（一般是长按消息内容后点击emoji表情触发）
- * Callback for emoji-reacting message (triggered by long-pressing the message content and then clicking the emoji)
- */
-- (void)messageController:(TUIBaseMessageController *)controller modifyMessage:(nonnull TUIMessageCellData *)cellData reactEmoji:(NSString *)emojiName;
-
-/**
  * 重新编辑消息（一般用于撤回消息）
  * Callback for re-editing message (usually for re-calling a message)
  */

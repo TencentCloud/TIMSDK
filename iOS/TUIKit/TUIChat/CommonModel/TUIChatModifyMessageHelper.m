@@ -23,8 +23,6 @@
 @property(nonatomic, copy) NSString *msgID;
 
 @property(nonatomic, strong) V2TIMMessage *msg;
-// react
-@property(nonatomic, copy) NSString *reactEmoji;
 // reply
 @property(nonatomic, strong) NSDictionary *simpleCurrentContent;
 // revoke
@@ -41,48 +39,11 @@
 }
 
 - (V2TIMMessage *)resolveOriginCloudCustomData:(V2TIMMessage *)rootMsg {
-    if (self.reactEmoji) {
-        return [self.class resolveOriginCloudCustomData:rootMsg reactEmoji:self.reactEmoji];
-    }
     if (self.simpleCurrentContent) {
         return [self.class resolveOriginCloudCustomData:rootMsg simpleCurrentContent:self.simpleCurrentContent];
     }
     if (self.revokeMsgID) {
         return [self.class resolveOriginCloudCustomData:rootMsg revokeMsgID:self.revokeMsgID];
-    }
-    return rootMsg;
-}
-// react
-+ (V2TIMMessage *)resolveOriginCloudCustomData:(V2TIMMessage *)rootMsg reactEmoji:(NSString *)emojiName {
-    NSMutableDictionary *resultDic = [[NSMutableDictionary alloc] initWithCapacity:5];
-
-    if (rootMsg.cloudCustomData) {
-        NSDictionary *originDic = [TUITool jsonData2Dictionary:rootMsg.cloudCustomData];
-        if (originDic && [originDic isKindOfClass:[NSDictionary class]]) {
-            [resultDic addEntriesFromDictionary:originDic];
-        }
-    }
-
-    NSDictionary *orignMessageReactDic = resultDic[@"messageReact"];
-    TUIReactModelMessageReact *welcome = [[TUIReactModelMessageReact alloc] init];
-
-    NSString *loginUser = [TUILogin getUserID] ?: @"";
-
-    if (orignMessageReactDic && [orignMessageReactDic isKindOfClass:NSDictionary.class]) {
-        [welcome applyWithDic:orignMessageReactDic emojiName:emojiName loginUser:loginUser];
-    } else {
-        welcome.version = @"1";
-        TUIReactModelReacts *react = [[TUIReactModelReacts alloc] init];
-        react.emojiKey = emojiName;
-        react.emojiIdArray = [NSMutableArray arrayWithArray:@[ loginUser ]];
-        welcome.reacts = [NSMutableArray arrayWithCapacity:3];
-        [welcome.reacts addObject:react];
-    }
-    [resultDic setValue:[welcome descriptionDic] forKey:@"messageReact"];
-
-    NSData *data = [TUITool dictionary2JsonData:resultDic];
-    if (data) {
-        rootMsg.cloudCustomData = data;
     }
     return rootMsg;
 }
@@ -296,7 +257,7 @@
 #pragma mark - public
 
 - (void)modifyMessage:(V2TIMMessage *)msg reactEmoji:(NSString *)emojiName {
-    [self modifyMessage:msg reactEmoji:emojiName simpleCurrentContent:nil revokeMsgID:nil timeControl:0];
+    [self modifyMessage:msg reactEmoji:nil simpleCurrentContent:nil revokeMsgID:nil timeControl:0];
 }
 
 - (void)modifyMessage:(V2TIMMessage *)msg simpleCurrentContent:(NSDictionary *)simpleCurrentContent {
@@ -322,9 +283,7 @@
     obj.msgID = msgID;
     obj.msg = msg;
     obj.time = time;
-    if (emojiName) {
-        obj.reactEmoji = emojiName;
-    }
+    
     if (simpleCurrentContent) {
         obj.simpleCurrentContent = simpleCurrentContent;
     }
@@ -358,7 +317,7 @@
             TUIChatModifyMessageObj *obj = strongSelf.modifyMessageHelperMap[msgID];
             if (obj && [obj isKindOfClass:[TUIChatModifyMessageObj class]]) {
                 [strongSelf modifyMessage:obj.msg
-                               reactEmoji:obj.reactEmoji
+                               reactEmoji:nil
                      simpleCurrentContent:obj.simpleCurrentContent
                               revokeMsgID:obj.revokeMsgID
                               timeControl:obj.time];

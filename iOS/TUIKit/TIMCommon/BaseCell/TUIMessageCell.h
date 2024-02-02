@@ -29,8 +29,6 @@
 #import <UIKit/UIKit.h>
 #import "TUIFitButton.h"
 #import "TUIMessageCellData.h"
-#import "TUITagsModel.h"
-#import "TUITagsView.h"
 #import "TUISecurityStrikeView.h"
 
 
@@ -117,13 +115,6 @@
  */
 - (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data;
 
-/**
- * 点击表情回复 view 跳转到表情回复详情页
- * Clicking the emoji reply view to jump to the multi-person reply details page
- */
-- (void)onJumpToRepliesEmojiPage:(TUIMessageCellData *)data faceList:(NSArray<TUITagsModel *> *)listModel;
-
-- (void)onEmojiClickCallback:(TUIMessageCellData *)data faceName:(NSString *)faceName;
 
 - (void)onJumpToMessageInfoPage:(TUIMessageCellData *)data selectCell:(TUIMessageCell *)cell;
 
@@ -202,13 +193,6 @@
 @property (nonatomic, strong) TUISecurityStrikeView * securityStrikeView;
 
 /**
- *  表情回复标签列表
- *
- *  Emoji reply tag list
- */
-@property(nonatomic, strong) NSMutableArray<TUITagsModel *> *reactlistArr;
-
-/**
  *  消息回复详情按钮
  *  Message reply details button
  */
@@ -279,18 +263,6 @@
  * Update the content of the read label
  */
 - (void)updateReadLabelText;
-
-/**
- * 「表情互动消息」的容器视图
- * Container view of "Emoji Interactive Message"
- */
-@property(nonatomic, strong) TUITagsView *tagView;
-
-/**
- * 添加容器视图到 container 上
- * Add a container view to the container
- */
-- (void)prepareReactTagUI:(UIView *)containerView;
 
 /// Preset bottom container in cell, which can be added custom view/viewControllers.
 @property(nonatomic, strong) UIView *bottomContainer;

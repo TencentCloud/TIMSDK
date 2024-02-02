@@ -30,9 +30,6 @@ typedef NS_ENUM(NSInteger, TUIMessageStatus) {
 @interface TUIMessageCell_Minimalist : TUIMessageCell
 @property(nonatomic, strong) UIImageView *replyLineView;
 @property(nonatomic, strong) NSMutableArray *replyAvatarImageViews;
-@property(nonatomic, strong) UIImageView *replyEmojiView;
-@property(nonatomic, strong) UILabel *replyEmojiCount;
-@property(nonatomic, strong) NSMutableArray *replyEmojiImageViews;
 @property(nonatomic, strong) UIImageView *msgStatusView;
 @property(nonatomic, strong) UILabel *msgTimeLabel;
 

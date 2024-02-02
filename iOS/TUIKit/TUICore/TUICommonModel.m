@@ -574,7 +574,18 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
     }
     UIImage *image = [_faceCache objectForKey:path];
     if (!image) {
-        image = [UIImage imageWithContentsOfFile:path];
+        // gif extion
+        if ([path containsString:@".gif"]) {
+            image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:path]];
+        }
+        else {
+            image = [UIImage imageWithContentsOfFile:path];
+            if (!image) {
+                // gif
+                NSString *formatPath = [path stringByAppendingString:@".gif"];
+                image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:formatPath]];
+            }
+        }
         if (!image) {
             image = [_faceCache objectForKey:TUIChatFaceImagePath(@"ic_unknown_image")];
         }
@@ -608,27 +619,28 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
     return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     if (@available(iOS 13.0, *)) {
         UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
         [appearance configureWithDefaultBackground];
         appearance.shadowColor = nil;
         appearance.backgroundEffect = nil;
-        appearance.backgroundColor = self.tintColor;
-        self.navigationBar.backgroundColor = self.tintColor;
-        self.navigationBar.barTintColor = self.tintColor;
+        appearance.backgroundColor = self.navigationBackColor;
+        self.navigationBar.backgroundColor = self.navigationBackColor;
+        self.navigationBar.barTintColor = self.navigationBackColor;
         self.navigationBar.shadowImage = [UIImage new];
         self.navigationBar.standardAppearance = appearance;
         self.navigationBar.scrollEdgeAppearance = appearance;
 
     } else {
-        self.navigationBar.backgroundColor = self.tintColor;
-        self.navigationBar.barTintColor = self.tintColor;
+        self.navigationBar.backgroundColor = self.navigationBackColor;
+        self.navigationBar.barTintColor = self.navigationBackColor;
         self.navigationBar.shadowImage = [UIImage new];
     }
-
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
     self.delegate = self;
 }
 
@@ -639,9 +651,17 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
     [self popViewControllerAnimated:YES];
 }
 
+- (UIColor *)navigationBackColor {
+    if (!_navigationBackColor) {
+        _navigationBackColor = [self tintColor];
+    }
+    return _navigationBackColor;
+}
+
 - (UIColor *)tintColor {
     return TUICoreDynamicColor(@"head_bg_gradient_start_color", @"#EBF0F6");
 }
+
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (self.viewControllers.count != 0) {

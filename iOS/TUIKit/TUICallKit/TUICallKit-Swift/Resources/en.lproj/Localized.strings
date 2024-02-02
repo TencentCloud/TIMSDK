@@ -18,12 +18,20 @@
 "TUICallKit.decline" = "Decline";
 "TUICallKit.switchToAudio" = "Switch to Voice Call";
 "TUICallKit.answer" = "Answer";
-"TUICallKit.calleeTip" = "They also";
+"TUICallKit.calleeTip" = "Also on the call:";
 "TUICallKit.FloatingWindow.waitAccept" = "Waiting";
 
 "TUICallKit.User.Exceed.Limit" = "TUICalling currently supports call with up to 9 people.For larger conference calls,try using TUIRoom";
 "TUICallKit.UnableToRestartTheCall" = "Unable to restart the call";
+
+"TUICallKit.purchased" = "You do not have TUICallKit package, please open the free experience in the console or purchase the official package";
+"TUICallKit.support" = "The package you purchased does not support this ability";
 "TUICallKit.ErrorInPeerBlacklist" = "The identifier is in blacklist. Failed to send this message!";
+"TUICallKit.ErrorInvalidLogin" = "Invalid login, please login again";
+"TUICallKit.ErrorParameterInvalid" = "Parameter error";
+"TUICallKit.ErrorRequestRefused" = "The current status can not use this function";
+"TUICallKit.ErrorRequestRepeated" = "The current status is waiting/accept, please do not call it repeatedly";
+"TUICallKit.ErrorSceneNotSupport" = "The current scene does not support this function";
 
 "TUICallKit.FailedToGetCameraPermission.Title" = "No access to camera";
 "TUICallKit.FailedToGetCameraPermission.Tips"  = "Unable to use the video call function, click \"Authorize Now\" to open the camera permission.";
@@ -35,8 +43,6 @@
 "TUICallKit.FailedToGetMicrophonePermission.Later" = "Later";
 "TUICallKit.FailedToGetMicrophonePermission.Enable" = "Authorize Now";
 
-"TUICallKit.package.not.purchased" = "You do not have TUICallKit package, please open the free experience in the console or purchase the official package";
-"TUICallKit.package.not.support" = "The package you purchased does not support this ability";
 "TUICallKit.have.new.invitation" = "You have a new call";
 
 "TUICallKit.Recents.all" = "All";

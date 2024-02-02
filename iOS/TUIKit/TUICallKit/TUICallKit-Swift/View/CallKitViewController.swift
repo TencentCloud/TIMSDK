@@ -9,18 +9,25 @@ import Foundation
 import UIKit
 import TUICore
 
-class CallKitViewController: UIViewController {
+class CallKitViewController: UIViewController, SingleCallViewDelegate {
     
     let callEventObserver = Observer()
+    var isStatusBarHidden = false
     
     deinit {
         TUICallState.instance.event.removeObserver(callEventObserver)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewDidLoad(){
         super.viewDidLoad()
         if TUICallState.instance.scene.value == .single {
             let callView: SingleCallView? = SingleCallView(frame: CGRect.zero)
+            callView?.delegate = self
             view.addSubview(callView ?? UIView())
         } else if TUICallState.instance.scene.value == .group {
             let groupCallView = GroupCallView()
@@ -39,6 +46,21 @@ class CallKitViewController: UIViewController {
             }
         }
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return self.isStatusBarHidden
+    }
+    
+    // MARK: SingleCallViewDelegate
+    func handleStatusBarHidden(isHidden: Bool) {
+        self.isStatusBarHidden = isHidden
+        self.setNeedsStatusBarAppearanceUpdate()
+    }
+    
 }
 
 class CallKitNavigationController: UINavigationController {

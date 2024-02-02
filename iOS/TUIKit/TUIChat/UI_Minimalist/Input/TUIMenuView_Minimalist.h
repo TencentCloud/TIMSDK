@@ -64,8 +64,6 @@
 ///
 @interface TUIMenuView_Minimalist : UIView
 
-@property(nonatomic, strong) UIButton *sendButton;
-
 @property(nonatomic, strong) UICollectionView *menuCollectionView;
 
 @property(nonatomic, strong) UICollectionViewFlowLayout *menuFlowLayout;

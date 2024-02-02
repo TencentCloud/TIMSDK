@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class TUIMessageDataProvider;
 @interface TUIMessageReadViewController : UIViewController
+@property(copy, nonatomic) void (^viewWillDismissHandler)(void);
 
 - (instancetype)initWithCellData:(TUIMessageCellData *)data
                     dataProvider:(TUIMessageDataProvider *)dataProvider

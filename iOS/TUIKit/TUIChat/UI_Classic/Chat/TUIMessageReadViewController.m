@@ -142,6 +142,12 @@
     [self layoutViews];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (_viewWillDismissHandler) {
+        _viewWillDismissHandler();
+    }
+}
 - (void)dealloc {
     NSLog(@"%s dealloc", __FUNCTION__);
 }

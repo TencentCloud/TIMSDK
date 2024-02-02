@@ -18,12 +18,20 @@
 "TUICallKit.decline" = "拒否";
 "TUICallKit.switchToAudio" = "音声通話に切り替えます";
 "TUICallKit.answer" = "応答";
-"TUICallKit.calleeTip" = "参加者：";
+"TUICallKit.calleeTip" = "通話に参加している人物";
 "TUICallKit.FloatingWindow.waitAccept" = "応答を待っています...";
 
 "TUICallKit.User.Exceed.Limit" = "一時的に最大9人の通話をサポートします。多人数の会議が必要な場合は、TUIRoomを使用してください";
 "TUICallKit.UnableToRestartTheCall" = "通話中のため、再度発信できません";
+
+"TUICallKit.purchased" = "TUICallKit パッケージを購入していません。コンソールで無料トライアル版をアクティブ化するか、正式版を購入してください。";
+"TUICallKit.support" = "購入したTUICallKitパッケージはこの機能をサポートしていません。パッケージタイプをアップグレードすることをお勧めします。";
 "TUICallKit.ErrorInPeerBlacklist" = "通話の開始に失敗しました。ユーザーがブラックリストに登録されているため、発信が禁止されています！";
+"TUICallKit.ErrorInvalidLogin" = "ログイン失敗しました。もう一度ログインしてください";
+"TUICallKit.ErrorParameterInvalid" = "パラメータエラー";
+"TUICallKit.ErrorRequestRefused" = "現在の状態では、この機能の呼び出しはサポートされていません";
+"TUICallKit.ErrorRequestRepeated" = "現在実行中のメソッドを呼び出すことはできません";
+"TUICallKit.ErrorSceneNotSupport" = "現在の通話シーンでは、この機能はサポートしていません";
 
 "TUICallKit.FailedToGetCameraPermission.Title" = "カメラの権限が開かれていません";
 "TUICallKit.FailedToGetCameraPermission.Tips" = "ビデオ通話機能が使用できません。\"開く\"をクリックしてカメラの権限を開きます";
@@ -35,8 +43,6 @@
 "TUICallKit.FailedToGetMicrophonePermission.Later" = "後で言う";
 "TUICallKit.FailedToGetMicrophonePermission.Enable" = "開く";
 
-"TUICallKit.package.not.purchased" = "TUICallKit パッケージを購入していません。コンソールで無料トライアル版をアクティブ化するか、正式版を購入してください。";
-"TUICallKit.package.not.support" = "購入したTUICallKitパッケージはこの機能をサポートしていません。パッケージタイプをアップグレードすることをお勧めします。";
 "TUICallKit.have.new.invitation" = "新しい通話があります";
 
 "TUICallKit.Recents.all" = "すべて";

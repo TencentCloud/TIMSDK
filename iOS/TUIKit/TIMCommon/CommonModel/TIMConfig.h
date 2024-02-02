@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
  * them with your own emoticons when you go online, otherwise you will face legal risks.
  */
 @property(nonatomic, strong) NSArray<TUIFaceGroup *> *faceGroups;
-- (void)appendFaceGroup:(TUIFaceGroup *)faceGroup;
 
 /**
  * 聊天界面上长按消息后显示的表情列表

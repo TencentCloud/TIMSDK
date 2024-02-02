@@ -307,6 +307,7 @@
 "TUIKitMoreGroupNote" = "ملاحظة المجموعة";
 
 "TUIKitFileSizeCheckLimited" = "تم تجاوز الحد الأقصى للحجم";
+"TUIKitImageSizeCheckLimited" = "حجم الصورة يتجاوز الحد";
 
 "TUIKitCallInviteYouVideoCall" = "يدعوك لمكالمة فيديو";
 "TUIKitCallTurningOnMute" = "تشغيل الصوت";
@@ -735,7 +736,7 @@
 "TIMAppMainDisconnectTitle" = "تينسنت كلاود · IM (غير متصل)";
 "TIMAppTabBarItemMessageText" = "الرسائل";
 "TIMAppTabBarItemContactText" = "جهات الاتصال";
-"TIMAppTabBarItemMeText"      = "أنا";
+"TIMAppTabBarItemMeText"      = "الإعدادات";
 "TIMAppTabBarItemMessageText_mini" = "الدردشة";
 "TIMAppTabBarItemContactText_mini" = "جهات الاتصال";
 "TIMAppTabBarItemSettingText_mini" = "الإعدادات";
@@ -778,4 +779,5 @@
 "zh-Hans" = "الصينية المبسطة";
 "en"      = "إنجليزي";
 "ar"      = "عربي";
-
+"TUIChatFaceGroupAllEmojiName" = "جميع التعبيرات";
+"TUIChatFaceGroupRecentEmojiName" = "مستخدم حديثا";

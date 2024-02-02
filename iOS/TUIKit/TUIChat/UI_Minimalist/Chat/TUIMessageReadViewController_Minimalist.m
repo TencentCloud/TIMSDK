@@ -76,6 +76,12 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (_viewWillDismissHandler) {
+        _viewWillDismissHandler(_alertView);
+    }
+}
 - (void)dealloc {
     NSLog(@"%s dealloc", __FUNCTION__);
 }

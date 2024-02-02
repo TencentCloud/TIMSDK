@@ -9,7 +9,7 @@
 #import <TIMCommon/TUIMessageCell.h>
 #import <TIMCommon/TUIMessageCellData.h>
 #import <UIKit/UIKit.h>
-#import "TUIChatPopContextRecentView.h"
+#import "TUIChatPopContextExtionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

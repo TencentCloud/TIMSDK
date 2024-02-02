@@ -110,16 +110,8 @@
             make.height.mas_equalTo(size.height);
         }];
     }
-
-    // tell constraints they need updating
-    [self setNeedsUpdateConstraints];
-
-    // update constraints now so we can animate the change
-    [self updateConstraintsIfNeeded];
-
-    [self layoutIfNeeded];
-    
 }
+
 - (void)layoutSubviews {
     [super layoutSubviews];
 }

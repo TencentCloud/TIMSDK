@@ -320,7 +320,9 @@ typedef enum : NSUInteger {
  *  The image view for displaying emoticon
  */
 @property(nonatomic, strong) UIImageView *face;
-
+@property(nonatomic, strong) UIImage *staicImage;
+@property(nonatomic, strong) UIImage *gifImage;
+@property(nonatomic, copy) void(^longPressCallback)(UILongPressGestureRecognizer *recognizer);
 - (void)setData:(TUIFaceCellData *)data;
 @end
 
@@ -388,6 +390,13 @@ typedef enum : NSUInteger {
  *  The path to the cover image of the emoticon group
  */
 @property(nonatomic, strong) NSString *menuPath;
+
+@property(nonatomic, strong) TUIFaceGroup *recentGroup;
+
+@property(nonatomic, assign) BOOL isNeedAddInInputBar;
+
+@property(nonatomic, copy) NSString *groupName;
+
 @end
 
 @interface TUIEmojiTextAttachment : NSTextAttachment

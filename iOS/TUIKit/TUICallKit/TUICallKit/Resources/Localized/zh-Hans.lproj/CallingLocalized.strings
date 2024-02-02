@@ -34,6 +34,12 @@
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "正在通话中，无法再次发起";
 "Demo.TRTC.Calling.ErrorInPeerBlacklist" = "发起通话失败，用户在黑名单中，禁止发起！";
 
+"TUICallKit.ErrorInvalidLogin" = "登录失败,请重新登录";
+"TUICallKit.ErrorParameterInvalid" = "参数错误";
+"TUICallKit.ErrorRequestRefused" = "当前状态不支持调用";
+"TUICallKit.ErrorRequestRepeated" = "当前方法正在执行中，请勿重复调用";
+"TUICallKit.ErrorSceneNotSupport" = "当前通话场景，不支持该功能";
+
 "TUICallKit.failedtogetcamerapermission.Title" = "相机权限未开启";
 "TUICallKit.failedtogetcamerapermission.Tips"  = "无法使用视频通话功能，点击\"去开启\"打开相机权限";
 "TUICallKit.failedtogetcamerapermission.Later" = "以后再说";

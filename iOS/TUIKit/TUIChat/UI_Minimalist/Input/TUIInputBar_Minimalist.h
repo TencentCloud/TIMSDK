@@ -221,6 +221,7 @@ typedef NS_ENUM(NSInteger, TUIRecordStatus) {
 @property(nonatomic, assign) CGRect recordAnimateCoverViewFrame;
 
 @property(nonatomic, weak) id<TUIInputBarDelegate_Minimalist> delegate;
+@property(nonatomic, copy) void (^inputBarTextChanged)(UITextView * textview);
 
 /**
  *  添加表情

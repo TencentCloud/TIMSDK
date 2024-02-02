@@ -240,7 +240,7 @@
     [self addChildViewController:_inputController];
     [self.containerView addSubview:_inputController.view];
     TUIFaceGroup *group = TIMConfig.defaultConfig.faceGroups[0];
-    [_inputController.faceView setData:(id) @[ group ]];
+    [_inputController.faceSegementScrollView setItems:(id) @[ group ] delegate:(id)_inputController];
     TUIMenuCellData *data = [[TUIMenuCellData alloc] init];
     data.path = group.menuPath;
     data.isSelected = YES;
@@ -717,8 +717,13 @@
 - (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
     if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
         TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
+        NSInteger section = 1;
+        if ([data.msgID isEqualToString:self.cellData.msgID] ) {
+            //root section
+            section = 0;
+        }
         [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
-        [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID section:1];
+        [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID section:section];
     }
 }
 
@@ -740,7 +745,9 @@
         return;
     }
     [UIView performWithoutAnimation:^{
-      [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
+        });
     }];
 }
 

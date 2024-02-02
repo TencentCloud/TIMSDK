@@ -261,18 +261,11 @@ typedef NS_ENUM(NSUInteger, TMsgSource) {
  */
 @property(nonatomic, strong) NSArray *messageModifyReplies;
 
-/**
- * 「表情互动消息」的用户信息
- * key: emoji key    value: user_id
- *
- * User information of "Emoji Interactive Message"
- */
-@property(nonatomic, strong) NSDictionary *messageModifyReacts;
-@property(nonatomic, assign) CGSize messageModifyReactsSize;
+@property(nonatomic, assign) CGSize messageContainerAppendSize;
 
 /**
- *  当前会话参与消息编辑(回复、表情回应)的好友信息
- * Information about friends who participate in message editing (reply, emoticon react) in the current conversation
+ *  当前会话参与消息编辑(回复)的好友信息
+ * Information about friends who participate in message editing (reply) in the current conversation
  */
 
 @property(nonatomic, strong) NSDictionary *messageModifyUserInfos;

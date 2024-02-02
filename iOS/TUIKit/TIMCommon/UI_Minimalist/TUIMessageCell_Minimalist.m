@@ -10,6 +10,8 @@
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
 #import "NSString+TUIEmoji.h"
+#import <TUICore/TUICore.h>
+#import <TIMCommon/TUIRelationUserModel.h>
 
 @interface TUIMessageCell_Minimalist ()
 @property(nonatomic, assign) TUIMessageStatus status;
@@ -24,24 +26,6 @@
         _replyLineView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _replyLineView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.contentView addSubview:_replyLineView];
-
-        _replyEmojiView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        _replyEmojiView.layer.borderWidth = 1;
-        _replyEmojiView.layer.borderColor = RGBA(221, 221, 221, 1).CGColor;
-        _replyEmojiView.layer.masksToBounds = true;
-        _replyEmojiView.layer.cornerRadius = 10;
-        _replyEmojiView.backgroundColor = [UIColor whiteColor];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onJumpToRepliesEmojiPage)];
-        [_replyEmojiView addGestureRecognizer:tap];
-        _replyEmojiView.userInteractionEnabled = YES;
-        [self.contentView addSubview:_replyEmojiView];
-
-        _replyEmojiCount = [[UILabel alloc] init];
-        [_replyEmojiCount setTextColor:RGBA(153, 153, 153, 1)];
-        _replyEmojiCount.rtlAlignment = TUITextRTLAlignmentLeading;
-        [_replyEmojiCount setFont:[UIFont systemFontOfSize:12]];
-        [_replyEmojiView addSubview:_replyEmojiCount];
-
         [self.messageModifyRepliesButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
         if(isRTL()) {
             self.messageModifyRepliesButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
@@ -53,7 +37,7 @@
 
         _msgStatusView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _msgStatusView.contentMode = UIViewContentModeScaleAspectFit;
-        _msgStatusView.layer.zPosition = CGFLOAT_MAX;
+        _msgStatusView.layer.zPosition = FLT_MAX;
         UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onJumpToMessageInfoPage)];
         [_msgStatusView addGestureRecognizer:tap2];
         _msgStatusView.userInteractionEnabled = YES;
@@ -63,7 +47,7 @@
         _msgTimeLabel.textColor = RGB(102, 102, 102);
         _msgTimeLabel.font = [UIFont systemFontOfSize:12];
         _msgTimeLabel.rtlAlignment = TUITextRTLAlignmentTrailing;
-        _msgTimeLabel.layer.zPosition = CGFLOAT_MAX;
+        _msgTimeLabel.layer.zPosition = FLT_MAX;
         [self.container addSubview:_msgTimeLabel];
 
         self.animationImages = [NSMutableArray array];
@@ -73,18 +57,16 @@
             UIImage *image = [[TUIImageCache sharedInstance] getResourceFromCache:imagePath];
             [self.animationImages addObject:image];
         }
-
-        _replyEmojiImageViews = [NSMutableArray array];
         _replyAvatarImageViews = [NSMutableArray array];
     }
     return self;
 }
 
-- (void)onJumpToRepliesEmojiPage {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(onJumpToRepliesEmojiPage:faceList:)]) {
-        [self.delegate onJumpToRepliesEmojiPage:self.messageData faceList:self.reactlistArr];
-    }
+- (void)prepareReactTagUI:(UIView *)containerView {
+    NSDictionary *param = @{TUICore_TUIChatExtension_ChatMessageReactPreview_Delegate: self};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_ChatMessageReactPreview_MinimalistExtensionID parentView:containerView param:param];
 }
+
 
 - (void)onJumpToMessageInfoPage {
     if (self.delegate && [self.delegate respondsToSelector:@selector(onJumpToMessageInfoPage:selectCell:)]) {
@@ -219,64 +201,8 @@
           make.size.mas_equalTo(CGSizeMake(repliesBtnTextWidth + 10, 30));
         }];
     }
-
-    if (self.tagView) {
-        [self.tagView mas_remakeConstraints:^(MASConstraintMaker *make) {
-          make.trailing.mas_equalTo(self.container.mas_trailing);
-          make.bottom.mas_equalTo(self.container.mas_bottom);
-          make.size.mas_equalTo(CGSizeZero);
-        }];
-    }
     
     CGSize contentSize = [self.class getContentSize:self.messageData];
-    
-    if ((self.messageData.messageModifyReacts.count > 0) &&_replyEmojiImageViews.count > 0) {
-        CGFloat emojiSize = 12;
-        CGFloat emojiSpace = kScale390(4);
-        __block UIImageView * preEmojiView = nil;
-        for (int i = 0; i < _replyEmojiImageViews.count; ++i) {
-            UIImageView *emojiView = _replyEmojiImageViews[i];
-            if (i == 0) {
-                preEmojiView = nil;
-            }
-            else {
-                preEmojiView = _replyEmojiImageViews[i-1];
-            }
-            [emojiView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                if (i == 0){
-                    make.leading.mas_equalTo(_replyEmojiView.mas_leading).mas_offset(kScale390(8));
-                }
-                else {
-                    make.leading.mas_equalTo(preEmojiView.mas_trailing).mas_offset(emojiSpace);
-                }
-                make.width.height.mas_equalTo(emojiSize);
-                make.centerY.mas_equalTo(_replyEmojiView.mas_centerY);
-            }];
-            emojiView.layer.masksToBounds = YES;
-            emojiView.layer.cornerRadius = emojiSize / 2.0;
-        }
-        UIImageView * lastEmojiView = _replyEmojiImageViews.lastObject;
-        [_replyEmojiCount mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.mas_equalTo(lastEmojiView.mas_trailing).mas_offset(kScale390(8));
-            make.trailing.mas_equalTo(_replyEmojiView.mas_trailing);
-            make.width.mas_equalTo(emojiSize + 10);
-            make.height.mas_equalTo(emojiSize);
-            make.centerY.mas_equalTo(_replyEmojiView.mas_centerY);
-        }];
-        
-        [_replyEmojiView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            if (self.messageData.direction == MsgDirectionIncoming) {
-                make.leading.mas_greaterThanOrEqualTo(self.container).mas_offset(kScale390(16));
-            } else {
-                make.trailing.mas_lessThanOrEqualTo(self.container).mas_offset(-kScale390(16));
-            }
-            make.top.mas_equalTo(self.container.mas_bottom).mas_offset(-4);
-            make.height.mas_equalTo(20);
-        }];
-    } else {
-        _replyEmojiCount.frame = CGRectZero;
-        _replyEmojiView.frame = CGRectZero;
-    }
 
     if (self.messageData.showMessageModifyReplies && _replyAvatarImageViews.count > 0)  {
         CGFloat lineViewW = 17;
@@ -378,51 +304,11 @@
 - (void)fillWithData:(TUIMessageCellData *)data {
     [super fillWithData:data];
     self.readReceiptLabel.hidden = YES;
-    self.tagView.hidden = YES;
     self.messageModifyRepliesButton.hidden = YES;
     [self.messageModifyRepliesButton setImage:nil forState:UIControlStateNormal];
-
-    // emoji 回复
-    if (_replyEmojiImageViews.count > 0) {
-        for (UIImageView *emojiView in _replyEmojiImageViews) {
-            [emojiView removeFromSuperview];
-        }
-        [_replyEmojiImageViews removeAllObjects];
-    }
-    _replyEmojiView.hidden = YES;
-    _replyEmojiCount.hidden = YES;
-    if (self.messageData.messageModifyReacts.count > 0) {
-        _replyEmojiView.hidden = NO;
-        _replyEmojiCount.hidden = NO;
-
-        NSInteger emojiCount = 0;
-        NSInteger emojiMaxCount = 6;
-        NSInteger replyEmojiTotalCount = 0;
-        NSMutableDictionary *existEmojiMap = [NSMutableDictionary dictionary];
-        for (TUITagsModel *model in self.reactlistArr) {
-            if (!model.emojiKey) {
-                continue;
-            }
-            replyEmojiTotalCount += model.followIDs.count;
-
-            if (emojiCount >= emojiMaxCount || existEmojiMap[model.emojiKey]) {
-                continue;
-            }
-            UIImageView *emojiView = [[UIImageView alloc] init];
-            if (emojiCount < emojiMaxCount - 1) {
-                existEmojiMap[model.emojiKey] = model;
-                [emojiView setImage:[model.emojiKey getEmojiImage]];
-            } else {
-                [emojiView setImage:[[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath_Minimalist(@"msg_reply_more_icon")]];
-            }
-            [_replyEmojiView addSubview:emojiView];
-            [_replyEmojiImageViews addObject:emojiView];
-
-            emojiCount++;
-        }
-        _replyEmojiCount.text = [@(replyEmojiTotalCount) stringValue];
-    }
-
+    //react
+    [self prepareReactTagUI:self.contentView];
+    
     // 文本回复
     if (_replyAvatarImageViews.count > 0) {
         for (UIImageView *imageView in _replyAvatarImageViews) {
@@ -454,7 +340,7 @@
         for (NSDictionary *senderMap in self.messageData.messageModifyReplies) {
             NSString *sender = senderMap[@"messageSender"];
 
-            TUITagsUserModel *userModel = self.messageData.messageModifyUserInfos[sender];
+            TUIRelationUserModel *userModel = self.messageData.messageModifyUserInfos[sender];
             NSURL *headUrl = [NSURL URLWithString:userModel.faceURL];
 
             NSString *existSender = existSenderMap[@"messageSender"];
@@ -565,13 +451,7 @@
 #pragma mark - TUIMessageCellProtocol
 + (CGFloat)getHeight:(TUIMessageCellData *)data withWidth:(CGFloat)width {
     NSAssert([data isKindOfClass:TUIMessageCellData.class], @"data must be kind of TUIMessageCellData");
-    data.messageModifyReactsSize = CGSizeZero;
     CGFloat height = [super getHeight:data withWidth:width];
-
-    if (data.messageModifyReacts.count > 0) {
-        height += kScale375(16);
-    }
-
     if (data.sameToNextMsgSender) {
         height -= kScale375(16);
     }

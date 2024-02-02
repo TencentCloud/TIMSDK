@@ -149,12 +149,7 @@
         [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.voice.mas_bottom);
             make.width.mas_equalTo(self.bubbleView);
-            if(self.tagView) {
-                make.bottom.mas_equalTo(self.container).mas_offset(- self.messageData.messageModifyReactsSize.height);
-            }
-            else {
-                make.bottom.mas_equalTo(self.container);
-            }
+            make.bottom.mas_equalTo(self.container).mas_offset(- self.messageData.messageContainerAppendSize.height);
         }];
     }
     

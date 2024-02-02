@@ -1146,19 +1146,46 @@
 
 - (void)setupViews {
     _face = [[UIImageView alloc] init];
-    _face.contentMode = UIViewContentModeScaleAspectFit;
+    _face.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:_face];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
+    [self addGestureRecognizer:longPress];
+    [self setUserInteractionEnabled:YES];
 }
 
 - (void)defaultLayout {
     CGSize size = self.frame.size;
     _face.frame = CGRectMake(0, 0, size.width, size.height);
 }
-
+#define kTUIFaceCellAllowDynamicImageShow 0
 - (void)setData:(TUIFaceCellData *)data {
-    _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
+    if (!kTUIFaceCellAllowDynamicImageShow) {
+        UIImage * image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
+        SDImageFormat imageFormat = [image sd_imageFormat];
+        if (SDImageFormatGIF == imageFormat ) {
+            self.gifImage = image;
+            if (image.images.count > 1) {
+                self.staicImage = image.images[0];
+            }
+        }
+        else {
+            self.staicImage = image;
+        }
+        
+        _face.image = self.staicImage;
+    }
+    else {
+        _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
+    }
     [self defaultLayout];
 }
+
+- (void)onLongPress:(UILongPressGestureRecognizer *)longPress {
+    if (self.longPressCallback) {
+        self.longPressCallback(longPress);
+    }
+}
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1175,7 +1202,7 @@
                       proposedLineFragment:(CGRect)lineFrag
                              glyphPosition:(CGPoint)position
                             characterIndex:(NSUInteger)charIndex {
-    return CGRectMake(0, 0, _emojiSize.width, _emojiSize.height);
+    return CGRectMake( 0 , -0.4* lineFrag.size.height, kTIMDefaultEmojiSize.width , kTIMDefaultEmojiSize.height);
 }
 
 @end

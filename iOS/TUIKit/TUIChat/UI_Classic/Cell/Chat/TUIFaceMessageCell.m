@@ -40,12 +40,10 @@
     
     CGFloat topMargin = 0;
     CGFloat height = self.container.mm_h;
-    if (self.messageData.messageModifyReactsSize.height > 0) {
-        if (self.tagView) {
-            topMargin = 10;
-            CGFloat tagViewTopPadding = 6;
-             height = self.container.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopPadding;
-        }
+    if (self.messageData.messageContainerAppendSize.height > 0) {
+        topMargin = 10;
+        CGFloat tagViewTopPadding = 6;
+         height = self.container.mm_h - topMargin - self.messageData.messageContainerAppendSize.height - tagViewTopPadding;
         self.bubbleView.hidden = NO;
     } else {
         self.bubbleView.hidden = YES;

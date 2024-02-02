@@ -525,7 +525,8 @@ static UIView *gCustomTopView;
         } else if (self.conversationData.groupID.length > 0) {
             [TUIChatDataProvider getGroupInfoWithGroupID:self.conversationData.groupID
                                                SuccBlock:^(V2TIMGroupInfoResult *_Nonnull groupResult) {
-                                                 if (groupResult.info.groupName.length > 0) {
+                                                 if (groupResult.info.groupName.length > 0 &&
+                                                     self.conversationData.enabelRoom) {
                                                      self.conversationData.title = groupResult.info.groupName;
                                                  }
                                                }
@@ -1204,26 +1205,6 @@ static UIView *gCustomTopView;
       referenceData.originMessage = data.innerMessage;
       [self.inputController showReferencePreview:referenceData];
     }];
-}
-
-#pragma mark - Message react
-/*
- "messageReact": {
-     "reacts": [
-         {
-             "emojiId1": ["userId1","userId2"]
-         },
-         {
-             "emojiId2": ["userId3","userId4"]
-         },
-     ],
-     "version": "1",
- }
- */
-- (void)messageController:(TUIBaseMessageController *)controller modifyMessage:(nonnull TUIMessageCellData *)cellData reactEmoji:(NSString *)emojiName {
-    V2TIMMessage *rootMsg = cellData.innerMessage;
-
-    [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg reactEmoji:emojiName];
 }
 
 #pragma mark - Message translation forward

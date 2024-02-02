@@ -15,7 +15,7 @@ class FloatingWindowGroupView: UIView {
     weak var delegate: FloatingWindowViewDelegate?
     
     let selfCallStatusObserver = Observer()
-    let remoteUserListObserver = Observer()
+    let remoteVideoAvailableObserver = Observer()
     let callTimeObserver = Observer()
     let currentSpeakUserObserver = Observer()
     let currentSpeakUserVideoAvailableObserver = Observer()
@@ -29,7 +29,7 @@ class FloatingWindowGroupView: UIView {
     }
     
     var remotePreView: VideoView {
-        guard let remoteUser = viewModel.remoteUserList.value.first else { return VideoView(frame: CGRect.zero) }
+        let remoteUser = viewModel.currentSpeakUser.value
         if VideoFactory.instance.viewMap[remoteUser.id.value] == nil {
             let _ = VideoFactory.instance.createVideoView(userId: remoteUser.id.value, frame: CGRect.zero)
         }
@@ -48,7 +48,7 @@ class FloatingWindowGroupView: UIView {
     let containerView: UIView = {
         let containerView = UIView()
         containerView.backgroundColor = TUICoreDefineConvert.getTUICallKitDynamicColor(colorKey: "callkit_float_window_bg_color",
-                                                                                    defaultHex:  "#FFFFFF")
+                                                                                       defaultHex:  "#FFFFFF")
         containerView.layer.cornerRadius = 12.scaleWidth()
         containerView.layer.masksToBounds = true
         containerView.isUserInteractionEnabled = false
@@ -58,14 +58,14 @@ class FloatingWindowGroupView: UIView {
     let audioContainerView: UIView = {
         let containerView = UIView()
         containerView.backgroundColor = TUICoreDefineConvert.getTUICallKitDynamicColor(colorKey: "callkit_float_window_bg_color",
-                                                                                    defaultHex:  "#FFFFFF")
+                                                                                       defaultHex:  "#FFFFFF")
         return containerView
     }()
     
     let shadowView: UIView = {
         let shadowView = UIView()
         shadowView.backgroundColor = TUICoreDefineConvert.getTUICallKitDynamicColor(colorKey: "callkit_float_window_bg_color",
-                                                                                 defaultHex:  "#FFFFFF")
+                                                                                    defaultHex:  "#FFFFFF")
         shadowView.layer.shadowColor = UIColor.t_colorWithHexString(color: "353941").cgColor
         shadowView.layer.shadowOpacity = 0.4
         shadowView.layer.shadowRadius = 4.scaleWidth()
@@ -135,6 +135,12 @@ class FloatingWindowGroupView: UIView {
         viewModel.selfCallStatus.removeObserver(currentSpeakUserObserver)
         viewModel.currentSpeakUser.value.videoAvailable.removeObserver(currentSpeakUserVideoAvailableObserver)
         viewModel.selfCallStatus.removeObserver(callTimeObserver)
+        for index in 0..<viewModel.remoteUserList.value.count {
+            guard index < viewModel.remoteUserList.value.count else {
+                break
+            }
+            viewModel.remoteUserList.value[index].videoAvailable.removeObserver(remoteVideoAvailableObserver)
+        }
     }
     
     func constructViewHierarchy() {
@@ -225,6 +231,7 @@ class FloatingWindowGroupView: UIView {
         registerCurrentSpeakUserObserver()
         registerCurrentSpeakUserVideoAvailableObserver()
         registerCallTimeObserver()
+        registerUserVideoAvailableChange()
     }
     
     func registerCallStatusObserver() {
@@ -267,11 +274,16 @@ class FloatingWindowGroupView: UIView {
         })
     }
     
-    func userVideoAvailableChange() {
-        if viewModel.remoteUserList.value.first != nil {
-            viewModel.remoteUserList.value.first?.videoAvailable.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
+    func registerUserVideoAvailableChange() {
+        for index in 0..<viewModel.remoteUserList.value.count {
+            guard index < viewModel.remoteUserList.value.count else {
+                break
+            }
+            viewModel.remoteUserList.value[index].videoAvailable.addObserver(remoteVideoAvailableObserver, closure: { [weak self] newValue, _ in
                 guard let self = self else { return }
-                self.updateUI()
+                if (self.viewModel.currentSpeakUser.value.id.value == self.viewModel.remoteUserList.value[index].id.value) {
+                    self.updateUI()
+                }
             })
         }
     }
@@ -337,7 +349,6 @@ class FloatingWindowGroupView: UIView {
         containerView.bringSubviewToFront(groupNameLabel)
     }
     
-    
     func setGroupLocalVideoAvailableUI() {
         avatarImageView.isHidden = true
         containerView.addSubview(localPreView)
@@ -349,7 +360,7 @@ class FloatingWindowGroupView: UIView {
     func setGroupRemoteVideoAvailableUI() {
         avatarImageView.isHidden = true
         containerView.addSubview(remotePreView)
-        remotePreView.snp.remakeConstraints { make in
+        remotePreView.snp.makeConstraints { make in
             make.edges.equalTo(avatarImageView)
         }
         viewModel.startRemoteView(user: viewModel.currentSpeakUser.value, videoView: remotePreView)
@@ -358,8 +369,6 @@ class FloatingWindowGroupView: UIView {
     func setGroupVideoNotAvailableUI() {
         avatarImageView.isHidden = false
         containerView.bringSubviewToFront(avatarImageView)
-        containerView.bringSubviewToFront(groupNameLabel)
-        
     }
     
     func cleanView() {

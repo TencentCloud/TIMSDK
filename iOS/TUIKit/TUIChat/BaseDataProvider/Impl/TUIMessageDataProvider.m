@@ -165,23 +165,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         }
     }
 
-    /**
-     * 判断是否包含「消息响应」
-     * Determine whether to include "react-message"
-     */
-    if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReact]) {
-        [message doThingsInContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReact
-                                                callback:^(BOOL isContains, id obj) {
-                                                  if (isContains) {
-                                                      if (obj && [obj isKindOfClass:NSDictionary.class]) {
-                                                          NSDictionary *dic = (NSDictionary *)obj;
-                                                          if ([dic isKindOfClass:NSDictionary.class]) {
-                                                              data.messageModifyReacts = dic.copy;
-                                                          }
-                                                      }
-                                                  }
-                                                }];
-    }
 
     /**
      * 判断是否包含「消息回复数」

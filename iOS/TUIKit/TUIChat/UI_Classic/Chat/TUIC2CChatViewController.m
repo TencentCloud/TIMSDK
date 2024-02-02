@@ -45,6 +45,15 @@
 }
 
 #pragma mark - Override Methods
+
+- (void)inputControllerDidInputAt:(TUIInputController *)inputController {
+    [super inputControllerDidInputAt:inputController];
+    NSAttributedString *spaceString = [[NSAttributedString alloc]
+        initWithString:@"@"
+            attributes:@{NSFontAttributeName : kTUIInputNoramlFont, NSForegroundColorAttributeName : kTUIInputNormalTextColor}];
+    [self.inputController.inputBar addWordsToInputBar:spaceString];
+}
+
 - (NSString *)forwardTitleWithMyName:(NSString *)nameStr {
     NSString *title = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitRelayChatHistoryForSomebodyFormat), self.conversationData.title, nameStr];
     return rtlString(title);

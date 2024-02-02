@@ -58,6 +58,7 @@
 @property(nonatomic, assign) BOOL showCheckBox;
 @property(nonatomic, assign) BOOL scrollingTriggeredByUser;
 @property(nonatomic, assign) BOOL isAutoScrolledToBottom;
+@property(nonatomic, assign) BOOL hasCoverPage;
 @property(nonatomic, strong) TUIMessageCellConfig *messageCellConfig;
 @end
 
@@ -219,14 +220,19 @@
     [self.tableView layoutIfNeeded];
 }
 
-- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID {
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID needScroll:(BOOL)isNeedScroll {
     // Dispatch the task to RunLoop to ensure that they are executed after the UITableView refresh is complete.
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadCellOfMessage:messageID];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self scrollCellToBottomOfMessage:messageID];
+            if (isNeedScroll) {
+                [self scrollCellToBottomOfMessage:messageID];
+            }
         });
     });
+}
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID {
+    [self reloadAndScrollToBottomOfMessage:messageID needScroll:YES];
 }
 
 - (void)reloadCellOfMessage:(NSString *)messageID {
@@ -242,6 +248,9 @@
 }
 
 - (void)scrollCellToBottomOfMessage:(NSString *)messageID {
+    if (self.hasCoverPage) {
+        return;
+    }
     NSIndexPath *indexPath = [self indexPathOfMessage:messageID];
     
     // Scroll the tableView only if the bottom of the cell is invisible.
@@ -438,14 +447,28 @@
         V2TIMMessage *message = param[TUICore_TUIPluginNotify_PluginViewSizeChangedSubKey_Message];
         for (TUIMessageCellData *data in self.messageDataProvider.uiMsgs) {
             if (data.innerMessage == message) {
-                [self clearAndReloadCellOfData:data];
-                return;
+                [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
+                [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID];
+                NSIndexPath *indexPath = [self indexPathOfMessage:data.innerMessage.msgID];
+                [self.tableView beginUpdates];
+                [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
+                [self.tableView endUpdates];
+                break;
             }
         }
     } else if ([key isEqualToString: TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
         // Plugin View is Shown or content changed.
         TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
-        [self clearAndReloadCellOfData:data];
+        BOOL isAllowScroll2Bottom = YES;
+        if ([param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_isAllowScroll2Bottom] isEqualToString:@"0"] ) {
+            isAllowScroll2Bottom = NO ;
+            TUIMessageCellData *lasData = [self.messageDataProvider.uiMsgs lastObject];
+            if ([lasData.msgID isEqualToString:data.msgID] ) {
+                isAllowScroll2Bottom = YES;
+            }
+        }
+        [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
+        [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID needScroll:isAllowScroll2Bottom];
     } else if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_WillForwardTextSubKey]) {
         // Text will be forwarded.
         NSString *text = param[TUICore_TUIPluginNotify_WillForwardTextSubKey_Text];
@@ -453,11 +476,6 @@
             [self.delegate messageController:self onForwardText:text];
         }
     }
-}
-
-- (void)clearAndReloadCellOfData:(TUIMessageCellData *)data {
-    [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
-    [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID];
 }
 
 #pragma mark - TUIMessageProgressManagerDelegate
@@ -886,53 +904,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
-- (void)tryShowGuidance {
-    if (isRTL()){
-        return;
-    }
-    BOOL hasShow = [NSUserDefaults.standardUserDefaults boolForKey:@"chat_reply_guide_showKey"];
-    if (hasShow) {
-        return;
-    } else {
-        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"chat_reply_guide_showKey"];
-        [NSUserDefaults.standardUserDefaults synchronize];
-    }
-    
-    TUICSToastStyle *style = [[TUICSToastStyle alloc] initWithDefaultStyle];
-    style.backgroundColor = [UIColor clearColor];
-    style.maxWidthPercentage = 1;
-    style.maxHeightPercentage = 1;
-    style.fadeDuration = 0;
-    style.verticalPadding = 0;
-    style.horizontalPadding = 0;
-    style.imageSize = CGSizeMake(Screen_Width, Screen_Height);
-    style.activitySize = CGSizeMake(Screen_Width, Screen_Height);
-    style.imageContentMode = UIViewContentModeScaleAspectFill;
-    
-    [[UIApplication sharedApplication].keyWindow makeToastParam:@{
-        @"message" : @"",
-        @"title" : @"",
-        @"image" : TUIChatCommonBundleImage(@"chat_reference_guide") ?: [UIImage new],
-    }
-                                                       duration:[[NSDate distantFuture] timeIntervalSince1970]
-                                                       position:TUICSToastPositionCenter
-                                                          style:style
-                                                     completion:^(BOOL didTap){
-        
-    }];
-    [[UIApplication sharedApplication].keyWindow makeToastParam:@{
-        @"message" : @"",
-        @"title" : @"",
-        @"image" : TUIChatCommonBundleImage(@"chat_reply_guide") ?: [UIImage new],
-    }
-                                                       duration:[[NSDate distantFuture] timeIntervalSince1970]
-                                                       position:TUICSToastPositionCenter
-                                                          style:style
-                                                     completion:^(BOOL didTap){
-        
-    }];
-}
-
 - (void)onLongPressMessage:(TUIMessageCell *)cell {
     if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
         [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageLongClicked:messageCellData:)]) {
@@ -951,20 +922,12 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         return;
     }
     
-    [self tryShowGuidance];
-    
     self.menuUIMsg = data;
     
     __weak typeof(self) weakSelf = self;
     TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] initWithEmojiView:YES frame:CGRectZero];
+    menu.targetCellData = data;
     __weak typeof(menu) weakMenu = menu;
-    menu.reactClickCallback = ^(NSString *_Nonnull faceName) {
-        __weak typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(messageController:modifyMessage:reactEmoji:)]) {
-            [strongSelf.delegate messageController:strongSelf modifyMessage:cell.messageData reactEmoji:faceName];
-            [weakMenu hideWithAnimation];
-        }
-    };
     BOOL isPluginCustomMessage = [TUIMessageCellConfig isPluginCustomMessageCellData:data];
     BOOL isChatNoramlMessageOrCustomMessage = !isPluginCustomMessage;
     
@@ -1380,15 +1343,21 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (void)pushMessageReadViewController:(TUIMessageCellData *)data {
+    self.hasCoverPage = YES;
     TUIMessageReadViewController *controller = [[TUIMessageReadViewController alloc] initWithCellData:data
                                                                                          dataProvider:self.messageDataProvider
                                                                                 showReadStatusDisable:NO
                                                                                       c2cReceiverName:self.conversationData.title
                                                                                     c2cReceiverAvatar:self.conversationData.faceUrl];
     [self.navigationController pushViewController:controller animated:YES];
+    __weak typeof(self) weakSelf = self;
+    controller.viewWillDismissHandler = ^{
+        weakSelf.hasCoverPage = NO;
+    };
 }
 
 - (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data {
+    self.hasCoverPage = YES;
     TUIRepliesDetailViewController *repliesDetailVC = [[TUIRepliesDetailViewController alloc] initWithCellData:data conversationData:self.conversationData];
     repliesDetailVC.delegate = self.delegate;
     [self.navigationController pushViewController:repliesDetailVC animated:YES];
@@ -1396,14 +1365,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     __weak typeof(self) weakSelf = self;
     repliesDetailVC.willCloseCallback = ^() {
       [weakSelf.tableView reloadData];
+      weakSelf.hasCoverPage = NO;
     };
 }
 
-- (void)onEmojiClickCallback:(TUIMessageCellData *)data faceName:(NSString *)faceName {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(messageController:modifyMessage:reactEmoji:)]) {
-        [self.delegate messageController:self modifyMessage:data reactEmoji:faceName];
-    }
-}
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     if (action == @selector(onDelete:) || action == @selector(onRevoke:) || action == @selector(onReSend:) || action == @selector(onCopyMsg:) ||

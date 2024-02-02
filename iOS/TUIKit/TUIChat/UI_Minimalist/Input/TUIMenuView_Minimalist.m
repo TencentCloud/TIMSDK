@@ -36,15 +36,7 @@
 }
 
 - (void)setupViews {
-    self.backgroundColor = [UIColor whiteColor];
-
-    _sendButton = [[UIButton alloc] init];
-    _sendButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
-    [_sendButton setTitle:TIMCommonLocalizableString(Send) forState:UIControlStateNormal];
-    _sendButton.backgroundColor = RGBA(20, 122, 255, 1);
-    [_sendButton addTarget:self action:@selector(sendUpInside:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_sendButton];
-
+    self.backgroundColor = [UIColor clearColor];
     _menuFlowLayout = [[TUICollectionRTLFitFlowLayout alloc] init];
     _menuFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _menuFlowLayout.minimumLineSpacing = 0;
@@ -65,20 +57,12 @@
 }
 
 - (void)defaultLayout {
-    CGFloat buttonWidth = self.frame.size.height * 1.3;
-    [_sendButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.mas_equalTo(self.mas_trailing);
-        make.width.mas_equalTo(buttonWidth);
-        make.height.mas_equalTo(self);
-        make.centerY.mas_equalTo(self);
-    }];
     [_menuCollectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.mas_equalTo(16);
-        make.trailing.mas_equalTo(_sendButton.mas_leading).mas_offset(- 30);
-        make.height.mas_equalTo(self);
+        make.leading.mas_equalTo(0);
+        make.trailing.mas_equalTo(self.mas_trailing).mas_offset(0);
+        make.height.mas_equalTo(40);
         make.centerY.mas_equalTo(self);
     }];
-
 }
 
 - (void)sendUpInside:(UIButton *)sender {

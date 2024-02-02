@@ -13,7 +13,7 @@
 
 + (NSString *)getRegex_emoji {
     
-    NSString *regex_emoji = @"\\[[a-zA-Z0-9\\/\\u4e00-\\u9fa5]+\\]";  // match emoji
+    NSString *regex_emoji = @"\\[[a-zA-Z0-9_\\u4e00-\\u9fa5]+\\]";  // match emoji
 
     return regex_emoji;
 }
@@ -164,22 +164,24 @@
                  * - 新建 NSTextAttachment 来存放我们的图片
                  * - Create a new NSTextAttachment to store our image
                  */
-                NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
-                /**
-                 * - 给附件添加图片
-                 * - Add pictures to attachments
-                 */
-                textAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:face.path];
-                /**
-                 * - 调整一下图片的位置,如果你的图片偏上或者偏下，调整一下 bounds 的 y 值即可
-                 * - Adjust the position of the picture. If your picture is up or down, adjust the y value of bounds
-                 */
-                textAttachment.bounds = CGRectMake(0, -(textFont.lineHeight - textFont.pointSize) / 2, textFont.pointSize, textFont.pointSize);
+                TUIEmojiTextAttachment *emojiTextAttachment = [[TUIEmojiTextAttachment alloc] init];
+                emojiTextAttachment.faceCellData = face;
+
+                NSString *localizableFaceName =  face.name;
+
+                // Set tag and image
+                emojiTextAttachment.emojiTag = localizableFaceName;
+                emojiTextAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:face.path];
+                
+                // Set emoji size
+                emojiTextAttachment.emojiSize = kTIMDefaultEmojiSize;
+                NSAttributedString *str = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
+
                 /**
                  * - 把附件转换成可变字符串，用于替换掉源字符串中的表情文字
                  * - Convert attachments to mutable strings to replace emoji text in source strings
                  */
-                NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:textAttachment];
+                NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
                 /**
                  * - 把图片和图片对应的位置存入字典中
                  * - Save the picture and the corresponding position of the picture into the dictionary
@@ -306,7 +308,7 @@
                 emojiTextAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:face.path];
 
                 // Set emoji size
-                emojiTextAttachment.emojiSize = kChatDefaultEmojiSize;
+                emojiTextAttachment.emojiSize = kTIMDefaultEmojiSize;
 
                 NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
 

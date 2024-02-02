@@ -91,23 +91,6 @@ TUICustomType messageFeature = @"messageFeature";
         return;
     }
 
-    if (type == TUICloudCustomDataType_MessageReact) {
-        NSDictionary *messageReact = [dict valueForKey:typeStr];
-        NSDictionary *reacts = [messageReact valueForKey:@"reacts"];
-        if (reacts == nil || ![reacts isKindOfClass:NSDictionary.class]) {
-            return;
-        }
-        if (![messageReact.allKeys containsObject:@"version"] || [messageReact[@"version"] intValue] > kMessageReplyVersion) {
-            NSLog(@"not match the version of react");
-            return;
-        }
-
-        if (callback) {
-            callback(YES, reacts);
-        }
-        return;
-    }
-
     if (type == TUICloudCustomDataType_MessageReplies) {
         NSDictionary *messageReplies = [dict valueForKey:typeStr];
         NSArray *reply = [messageReplies valueForKey:@"replies"];
@@ -181,19 +164,6 @@ TUICustomType messageFeature = @"messageFeature";
         return YES;
     }
 
-    if (type == TUICloudCustomDataType_MessageReact) {
-        NSDictionary *messageReact = [dict valueForKey:typeStr];
-        NSDictionary *reacts = [messageReact valueForKey:@"reacts"];
-        if (reacts == nil || ![reacts isKindOfClass:NSDictionary.class]) {
-            return NO;
-        }
-        if (![messageReact.allKeys containsObject:@"version"] || [messageReact[@"version"] intValue] > kMessageReplyVersion) {
-            NSLog(@"not match the version of react");
-            return NO;
-        }
-
-        return YES;
-    }
     if (type == TUICloudCustomDataType_MessageReplies) {
         NSDictionary *messageReplies = [dict valueForKey:typeStr];
         NSArray *reply = [messageReplies valueForKey:@"replies"];
@@ -269,9 +239,6 @@ TUICustomType messageFeature = @"messageFeature";
         case TUICloudCustomDataType_MessageReference:
             resultString = @"messageReply";
             break;
-        case TUICloudCustomDataType_MessageReact:
-            resultString = @"messageReact";
-            break;
         case TUICloudCustomDataType_MessageReplies:
             resultString = @"messageReplies";
             break;
@@ -280,57 +247,4 @@ TUICustomType messageFeature = @"messageFeature";
     }
     return resultString;
 }
-@end
-
-@implementation TUIReactModelMessageReact
-
-- (void)applyWithDic:(NSDictionary *)orignMessageReactDic emojiName:(NSString *)emojiName loginUser:(NSString *)loginUser {
-    self.version = orignMessageReactDic[@"version"];
-    self.reacts = [NSMutableArray arrayWithCapacity:3];
-
-    if ([orignMessageReactDic[@"reacts"] objectForKey:emojiName]) {
-        for (NSString *key in orignMessageReactDic[@"reacts"]) {
-            TUIReactModelReacts *react = [[TUIReactModelReacts alloc] init];
-            react.emojiKey = key;
-            react.emojiIdArray = orignMessageReactDic[@"reacts"][key];
-            if ([key isEqualToString:emojiName]) {
-                if ([react.emojiIdArray containsObject:loginUser]) {
-                    [react.emojiIdArray removeObject:loginUser];
-                } else {
-                    [react.emojiIdArray addObject:loginUser];
-                }
-            }
-            if (react.emojiIdArray.count > 0) {
-                [self.reacts addObject:react];
-            }
-        }
-    } else {
-        for (NSString *key in orignMessageReactDic[@"reacts"]) {
-            TUIReactModelReacts *react = [[TUIReactModelReacts alloc] init];
-            react.emojiKey = key;
-            react.emojiIdArray = orignMessageReactDic[@"reacts"][key];
-            [self.reacts addObject:react];
-        }
-        TUIReactModelReacts *react = [[TUIReactModelReacts alloc] init];
-        react.emojiKey = emojiName;
-        react.emojiIdArray = [NSMutableArray array];
-        [react.emojiIdArray addObject:loginUser];
-        [self.reacts addObject:react];
-    }
-}
-- (NSDictionary *)descriptionDic {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-
-    [dic setValue:self.version forKey:@"version"];
-    NSMutableDictionary *reacts = [NSMutableDictionary dictionary];
-    for (TUIReactModelReacts *react in self.reacts) {
-        [reacts setObject:react.emojiIdArray forKey:react.emojiKey];
-    }
-    [dic setObject:reacts forKey:@"reacts"];
-    return dic;
-}
-@end
-
-@implementation TUIReactModelReacts
-
 @end

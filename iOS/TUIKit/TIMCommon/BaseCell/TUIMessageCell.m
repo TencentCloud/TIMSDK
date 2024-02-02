@@ -12,7 +12,8 @@
 #import <TUICore/TUITool.h>
 #import "NSString+TUIEmoji.h"
 #import "TUISystemMessageCellData.h"
-#import "TUITagsView.h"
+#import <TUICore/TUICore.h>
+
 @interface TUIMessageCell () <CAAnimationDelegate>
 @property(nonatomic, strong) TUIMessageCellData *messageData;
 
@@ -51,8 +52,8 @@
     _container = [[UIView alloc] init];
     _container.backgroundColor = [UIColor clearColor];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onSelectMessage:)];
-    [_container addGestureRecognizer:tap];
     tap.cancelsTouchesInView = NO;
+    [_container addGestureRecognizer:tap];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
     [_container addGestureRecognizer:longPress];
     [self.contentView addSubview:_container];
@@ -191,18 +192,18 @@
     CGFloat contentWidth = csize.width;
     CGFloat contentHeight = csize.height;
 
-    if (!CGSizeEqualToSize(self.messageData.messageModifyReactsSize, CGSizeZero)) {
+    if (!CGSizeEqualToSize(self.messageData.messageContainerAppendSize, CGSizeZero)) {
         /**
          * 在「表情回复消息」和文本内容中间取最大宽度
          * Taking the maximum width between the "emoji reply message" and the text content
          */
-        contentWidth = MAX(self.messageData.messageModifyReactsSize.width, csize.width);
+        contentWidth = MAX(self.messageData.messageContainerAppendSize.width, csize.width);
         /**
          * 限制最大宽度为 Screen_Width *0.25 * 3
          * Limit the maximum width to Screen_Width *0.25 * 3
          */
         contentWidth = MIN(contentWidth, Screen_Width * 0.25 * 3);
-        contentHeight = csize.height + self.messageData.messageModifyReactsSize.height;
+        contentHeight = csize.height + self.messageData.messageContainerAppendSize.height;
     }
     if (self.messageData.direction == MsgDirectionIncoming) {
         self.avatarView.hidden = !self.messageData.showAvatar;
@@ -280,14 +281,6 @@
         }];
     }
 
-    if (self.tagView) {
-        [self.tagView updateView];
-        self.tagView.frame = CGRectMake(0, _container.frame.size.height - self.messageData.messageModifyReactsSize.height, contentWidth,
-                                        self.messageData.messageModifyReactsSize.height);
-        if (isRTL() && self.tagView.frame.size.width>0 ) {
-            [self.tagView updateRTLView];
-        }
-    }
 
     // according to apple super should be called at end of method
     [super updateConstraints];
@@ -317,10 +310,10 @@
      */
 
     /**
-     * 一旦消息复用，说明即将新消息出现，label 内容改为未读
-     * Once the message is reused, it means that a new message is about to appear, and the label content is changed to unread.
+     * 一旦消息复用，说明即将新消息出现，label 内容改为空
+     * Once the message is reused, it means that a new message is about to appear, and the label content is changed to empty string.
      */
-    _readReceiptLabel.text = TIMCommonLocalizableString(Unread);
+    _readReceiptLabel.text = @"";
     _readReceiptLabel.hidden = YES;
 }
 
@@ -363,7 +356,6 @@
         self.nameLabel.font = self.class.outgoingNameFont;
     }
 
-    [self updateReadLabelText];
 
     self.retryView.image = [UIImage imageNamed:TUIChatImagePath(@"msg_error")];
 
@@ -385,10 +377,11 @@
             if (self.messageData.showReadReceipt && self.messageData.direction == MsgDirectionOutgoing && self.messageData.innerMessage.needReadReceipt &&
                 (self.messageData.innerMessage.userID || self.messageData.innerMessage.groupID) &&
                 ![self.messageData isKindOfClass:TUISystemMessageCellData.class]) {
+                [self updateReadLabelText];
                 _readReceiptLabel.hidden = NO;
             }
         } else if (data.status == Msg_Status_Sending) {
-            [_indicator stopAnimating];
+            [_indicator startAnimating];
             _readReceiptLabel.hidden = YES;
         }
         self.retryView.hidden = YES;
@@ -399,14 +392,11 @@
         NSString *title = [NSString stringWithFormat:@"%ld%@", data.messageModifyReplies.count, TIMCommonLocalizableString(TUIKitRepliesNum)];
         [self.messageModifyRepliesButton setTitle:title forState:UIControlStateNormal];
         [self.messageModifyRepliesButton sizeToFit];
+        [self.messageModifyRepliesButton setNeedsUpdateConstraints];
+        [self.messageModifyRepliesButton updateConstraintsIfNeeded];
+        [self.messageModifyRepliesButton layoutIfNeeded];
     }
 
-    if (data.messageModifyReacts) {
-        [self updateMessageModifyReacts:data.messageModifyReacts];
-        self.tagView.hidden = NO;
-    } else {
-        self.tagView.hidden = YES;
-    }
     NSString *imageName = (data.showCheckBox && data.selected) ? TIMCommonImagePath(@"icon_select_selected") : TIMCommonImagePath(@"icon_select_normal");
     self.selectedIcon.image = [UIImage imageNamed:imageName];
 
@@ -536,8 +526,8 @@
     if (data.showName) height += kScale375(20);
     if (data.showMessageModifyReplies) height += kScale375(22);
     
-    if (data.messageModifyReactsSize.height > 0) {
-        height += data.messageModifyReactsSize.height;
+    if (data.messageContainerAppendSize.height > 0) {
+        height += data.messageContainerAppendSize.height;
     }
     
     CGSize containerSize = [self getContentSize:data];
@@ -579,14 +569,6 @@
 }
 
 - (void)onSelectMessage:(UIGestureRecognizer *)recognizer {
-    if ([recognizer isKindOfClass:[UIGestureRecognizer class]]) {
-        CGPoint point = [recognizer locationInView:self.tagView];
-        BOOL result = [self.tagView.layer containsPoint:point];
-        if (result) {
-            return;
-        }
-    }
-
     if (_delegate && [_delegate respondsToSelector:@selector(onSelectMessage:)]) {
         [_delegate onSelectMessage:self];
     }
@@ -627,63 +609,6 @@
     } else {
         return ![self.readReceiptLabel.text isEqualToString:TIMCommonLocalizableString(TUIKitMessageReadAllRead)];
     }
-}
-
-- (void)prepareReactTagUI:(UIView *)containerView {
-    TUITagsView *tagView = [[TUITagsView alloc] init];
-    [containerView addSubview:tagView];
-    self.tagView = tagView;
-    __weak typeof(self) weakSelf = self;
-
-    tagView.emojiClickCallback = ^(TUITagsModel *_Nonnull model) {
-      __strong typeof(weakSelf) strongSelf = weakSelf;
-      if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(onEmojiClickCallback:faceName:)]) {
-          [strongSelf.delegate onEmojiClickCallback:strongSelf.messageData faceName:model.emojiKey];
-      }
-    };
-    tagView.signSelectTag = ^(TUITagsModel *_Nonnull model) {
-      NSString *selectTagStr = (model.alias == nil || [model.alias isEqualToString:@""]) ? model.name : model.alias;
-      NSLog(@"The name of the selected label is：%@", selectTagStr);
-    };
-}
-
-- (NSMutableArray *)reactlistArr {
-    if (!_reactlistArr) {
-        _reactlistArr = [NSMutableArray array];
-    }
-    return _reactlistArr;
-}
-- (void)updateMessageModifyReacts:(NSDictionary *)messageModifyReacts {
-    [self.reactlistArr removeAllObjects];
-    if (messageModifyReacts && [messageModifyReacts isKindOfClass:NSDictionary.class]) {
-        [messageModifyReacts enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
-          if (obj && [obj isKindOfClass:NSArray.class]) {
-              NSArray *arr = (NSArray *)obj;
-              if (arr.count > 0) {
-                  TUITagsModel *model = [[TUITagsModel alloc] init];
-                  model.defaultColor = [TIMCommonDynamicColor(@"", @"#DADADA") colorWithAlphaComponent:0.5];
-                  model.textColor = TIMCommonDynamicColor(@"", @"#888888");
-                  model.emojiKey = key;
-                  model.emojiPath = [key getEmojiImagePath];
-                  model.followIDs = [NSMutableArray arrayWithArray:obj];
-
-                  for (NSString *userID in obj) {
-                      TUITagsUserModel *userModel = [self.messageData.messageModifyUserInfos objectForKey:userID];
-                      NSString *name = [userModel getDisplayName];
-                      if (name.length > 0) {
-                          [model.followUserNames addObject:name];
-                      }
-                      if (userModel) {
-                          [model.followUserModels addObject:userModel];
-                      }
-                  }
-                  [self.reactlistArr addObject:model];
-              }
-          }
-        }];
-    }
-    self.tagView.listArrM = self.reactlistArr;
-    [self.tagView updateView];
 }
 
 - (UIFont *)fontWithSize:(CGFloat)size {

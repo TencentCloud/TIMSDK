@@ -221,7 +221,7 @@
     NSString *display = [self.delegate dataProvider:self mergeForwardMsgAbstactForMessage:msg];
 
     if (display.length == 0) {
-        display = [TUIMessageDataProvider getDisplayString:msg];
+        display = [self.class parseAbstractDisplayWStringFromMessageElement:msg];
     }
     NSString * splitStr = @":";
     splitStr = @"\u202C:";
@@ -232,6 +232,17 @@
     return desc;
 }
 
++ (nullable NSString *)parseAbstractDisplayWStringFromMessageElement:(V2TIMMessage *)message {
+    NSString *str = nil;
+    if (message.elemType == V2TIM_ELEM_TYPE_TEXT) {
+        NSString *content = message.textElem.text;
+        str = content;
+    }
+    else {
+        str =  [TUIMessageDataProvider getDisplayString:message];
+    }
+    return str;
+}
 #pragma mark - CellData
 
 - (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
@@ -243,7 +254,9 @@
     BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall && conversationModel.enableAudioCall;
     BOOL isNeedWelcomeCustomMessage = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage && conversationModel.enableWelcomeCustomMessage;
     BOOL isNeedRoom = conversationModel.enabelRoom;
-    
+    BOOL isNeedPoll = conversationModel.enablePoll;
+    BOOL isNeedGroupNote = conversationModel.enableGroupNote;
+
     NSMutableArray *moreMenus = [NSMutableArray array];
     [moreMenus addObjectsFromArray:self.builtInInputMoreMenus];
     
@@ -264,6 +277,8 @@
     extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall] = @(!isNeedVideoCall);
     extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall] = @(!isNeedAudioCall);
     extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom]  = @(!isNeedRoom);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterPoll]  = @(!isNeedPoll);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterGroupNote]  = @(!isNeedGroupNote);
     extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_ActionVC] = actionController;
     NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID param:extensionParam];
     for (TUIExtensionInfo *info in extensionList) {

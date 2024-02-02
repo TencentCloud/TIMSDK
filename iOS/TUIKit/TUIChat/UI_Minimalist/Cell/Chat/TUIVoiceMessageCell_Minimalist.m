@@ -9,6 +9,7 @@
 #import "TUIVoiceMessageCell_Minimalist.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUICore.h>
 
 @interface TUIVoiceMessageCell_Minimalist ()
 
@@ -43,8 +44,25 @@
         [_voiceReadPoint.layer setCornerRadius:_voiceReadPoint.frame.size.width / 2];
         [_voiceReadPoint.layer setMasksToBounds:YES];
         [self.bubbleView addSubview:_voiceReadPoint];
+        
+        self.bottomContainer = [[UIView alloc] init];
+        [self.contentView addSubview:self.bottomContainer];
+
     }
     return self;
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    for (UIView *view in self.bottomContainer.subviews) {
+        [view removeFromSuperview];
+    }
+}
+
+// Override
+- (void)notifyBottomContainerReadyOfData:(TUIMessageCellData *)cellData {
+    NSDictionary *param = @{TUICore_TUIChatExtension_BottomContainer_CellData : self.voiceData};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_BottomContainer_MinimalistExtensionID parentView:self.bottomContainer param:param];
 }
 
 - (void)fillWithData:(TUIVoiceMessageCellData *)data;
@@ -58,6 +76,8 @@
     } else {
         _duration.text = @"0:01";
     }
+
+    self.bottomContainer.hidden = CGSizeEqualToSize(data.bottomContainerSize, CGSizeZero);
 
     if (self.voiceData.innerMessage.localCustomInt == 0 && self.voiceData.direction == MsgDirectionIncoming) self.voiceReadPoint.hidden = NO;
 
@@ -140,6 +160,38 @@
           make.size.mas_equalTo(CGSizeMake(5, 5));
         }];
     }
+    [self layoutBottomContainer];
+
+}
+- (void)layoutBottomContainer {
+    if (CGSizeEqualToSize(self.voiceData.bottomContainerSize, CGSizeZero)) {
+        return;
+    }
+
+    CGSize size = self.voiceData.bottomContainerSize;
+    
+    [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (self.voiceData.direction == MsgDirectionIncoming) {
+            make.leading.mas_equalTo(self.container.mas_leading);
+        } else {
+            make.trailing.mas_equalTo(self.container.mas_trailing);
+        }
+        make.top.mas_equalTo(self.container.mas_bottom).offset(6);
+        make.size.mas_equalTo(size);
+    }];
+
+    CGFloat repliesBtnTextWidth = self.messageModifyRepliesButton.frame.size.width;
+    if (!self.messageModifyRepliesButton.hidden) {
+        [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if (self.voiceData.direction == MsgDirectionIncoming) {
+              make.leading.mas_equalTo(self.container.mas_leading);
+            } else {
+              make.trailing.mas_equalTo(self.container.mas_trailing);
+            }
+            make.top.mas_equalTo(self.bottomContainer.mas_bottom);
+            make.size.mas_equalTo(CGSizeMake(repliesBtnTextWidth + 10, 30));
+        }];
+    }
 }
 
 - (void)startAnimating {
@@ -155,6 +207,13 @@
 }
 
 #pragma mark - TUIMessageCellProtocol
++ (CGFloat)getHeight:(TUIMessageCellData *)data withWidth:(CGFloat)width {
+    CGFloat height = [super getHeight:data withWidth:width];
+    if (data.bottomContainerSize.height > 0) {
+        height += data.bottomContainerSize.height + kScale375(6);
+    }
+    return height;
+}
 + (CGSize)getContentSize:(TUIMessageCellData *)data {
     NSAssert([data isKindOfClass:TUIVoiceMessageCellData.class], @"data must be kind of TUIVoiceMessageCellData");
     TUIVoiceMessageCellData *voiceCellData = (TUIVoiceMessageCellData *)data;

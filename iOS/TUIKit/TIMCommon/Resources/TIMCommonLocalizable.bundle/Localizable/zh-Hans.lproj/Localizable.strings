@@ -309,6 +309,7 @@
 "TUIKitMoreCard" = "卡片消息";
 
 "TUIKitFileSizeCheckLimited" = "文件大小超出限制";
+"TUIKitImageSizeCheckLimited" = "图片大小超出限制";
 
 "TUIKitCallInviteYouVideoCall" = "邀请你视频通话";
 "TUIKitCallTurningOnMute" = "开启静音";
@@ -740,7 +741,7 @@
 "TIMAppMainDisconnectTitle" = "腾讯云·IM(未连接)";
 "TIMAppTabBarItemMessageText" = "消息";
 "TIMAppTabBarItemContactText" = "通讯录";
-"TIMAppTabBarItemMeText"      = "我";
+"TIMAppTabBarItemMeText"      = "设置";
 "TIMAppTabBarItemMessageText_mini" = "聊天";
 "TIMAppTabBarItemContactText_mini" = "联系人";
 "TIMAppTabBarItemSettingText_mini" = "设置";
@@ -781,6 +782,10 @@
 "TUIGroupCreateTipsMessage" = "创建群组";
 "TUICommunityCreateTipsMessage" = "创建社群";
 
+//languageID
 "zh-Hans" = "简体中文";
 "en"      = "英语";
 "ar"      = "阿拉伯语";
+
+"TUIChatFaceGroupAllEmojiName" = "所有表情";
+"TUIChatFaceGroupRecentEmojiName" = "最近使用";

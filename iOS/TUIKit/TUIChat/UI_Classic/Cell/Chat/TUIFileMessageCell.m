@@ -11,6 +11,7 @@
 #import <TUICore/TUIThemeManager.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIMessageProgressManager.h"
+#import <TUICore/TUICore.h>
 
 @interface TUIFileMessageCell () <V2TIMSDKListener, TUIMessageProgressManagerDelegate>
 
@@ -50,7 +51,6 @@
         [self.fileContainer.layer insertSublayer:self.borderLayer atIndex:0];
         [self.fileContainer.layer setMask:self.maskLayer];
 
-        [self prepareReactTagUI:self.container];
         [V2TIMManager.sharedInstance addIMSDKListener:self];
         [TUIMessageProgressManager.shareManager addDelegate:self];
     }
@@ -65,6 +65,7 @@
     _length.text = [self formatLength:data.length];
     _image.image = [[TUIImageCache sharedInstance] getResourceFromCache:[self getImagePathByCurrentFileType:data.fileName.pathExtension]];
     @weakify(self);
+    [self prepareReactTagUI:self.container];
 
     dispatch_async(dispatch_get_main_queue(), ^{
       @strongify(self);
@@ -227,21 +228,11 @@
     }];
     
     
-    if (self.messageData.messageModifyReactsSize.height > 0) {
+    if (self.messageData.messageContainerAppendSize.height > 0) {
         [self.fileContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.center.mas_equalTo(self.container);
             make.size.mas_equalTo(self.container);
         }];
-        
-        if (self.tagView) {
-            [self.tagView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.leading.mas_equalTo(self.container);
-                make.bottom.mas_equalTo(self.container);
-                make.width.mas_equalTo(self.container);
-                make.height.mas_equalTo(self.messageData.messageModifyReactsSize.height);
-            }];
-        }
-        
         self.bubble.hidden = NO;
     } else {
         self.bubble.hidden = YES;
@@ -352,6 +343,11 @@
         _animateHighlightView.backgroundColor = [UIColor orangeColor];
     }
     return _animateHighlightView;
+}
+
+- (void)prepareReactTagUI:(UIView *)containerView {
+    NSDictionary *param = @{TUICore_TUIChatExtension_ChatMessageReactPreview_Delegate: self};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_ChatMessageReactPreview_ClassicExtensionID parentView:containerView param:param];
 }
 
 #pragma mark - TUIMessageCellProtocol

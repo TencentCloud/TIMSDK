@@ -19,6 +19,8 @@
         self.enabelRoom  = YES;
         self.enableWelcomeCustomMessage  = YES;
         self.isLimitedPortraitOrientation = NO;
+        self.enablePoll = YES;
+        self.enableGroupNote = YES;
     }
     return self;
 }

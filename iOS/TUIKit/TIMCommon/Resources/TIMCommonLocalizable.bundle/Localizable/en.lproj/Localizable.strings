@@ -308,6 +308,7 @@
 "TUIKitMoreCard" = "Card Message";
 
 "TUIKitFileSizeCheckLimited" = "File size exceeds size limit";
+"TUIKitImageSizeCheckLimited" = "Image size exceeds size limit";
 
 "TUIKitCallInviteYouVideoCall" = "invited you to a video call.";
 "TUIKitCallTurningOnMute" = "Mute On";
@@ -743,7 +744,7 @@
 "TIMAppMainDisconnectTitle" = "TencentCloud·IM (not connected)";
 "TIMAppTabBarItemMessageText" = "Message";
 "TIMAppTabBarItemContactText" = "Contacts";
-"TIMAppTabBarItemMeText"      = "Me";
+"TIMAppTabBarItemMeText"      = "Settings";
 "TIMAppTabBarItemMessageText_mini" = "Chats";
 "TIMAppTabBarItemContactText_mini" = "Contact";
 "TIMAppTabBarItemSettingText_mini" = "Settings";
@@ -768,7 +769,7 @@
 "TIMApp1Billion+" = "1 billion+";
 "TIMApp10000+" = "10,000+";
 "TIMApp1Minute" = "1 minute";
-"TIMAppMeAbout" = "About TencentCloud·IM";
+"TIMAppMeAbout" = "About TencentCloud Chat";
 "TIMAppConfirmLogout" = "Leave now?";
 "TIMAppConfirm" = "OK";
 "TIMAppCancel" = "Cancel";
@@ -786,3 +787,5 @@
 "zh-Hans" = "Simple Chinese";
 "en"      = "English";
 "ar"      = "Arabic";
+"TUIChatFaceGroupAllEmojiName" = "All";
+"TUIChatFaceGroupRecentEmojiName" = "Recently";

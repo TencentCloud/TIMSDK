@@ -149,7 +149,7 @@
     }];
 
     [_moreButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.mas_equalTo(self.mas_trailing).mas_offset(- TTextView_Margin);
+        make.trailing.mas_equalTo(self.mas_trailing).mas_offset(0);
         make.size.mas_equalTo(buttonSize);
         make.centerY.mas_equalTo(self);
     }];
@@ -159,8 +159,8 @@
         make.centerY.mas_equalTo(self);
     }];
     [_recordButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.mas_equalTo(_micButton.mas_trailing);
-        make.trailing.mas_equalTo(_faceButton.mas_leading);
+        make.leading.mas_equalTo(_micButton.mas_trailing).mas_offset(10);
+        make.trailing.mas_equalTo(_faceButton.mas_leading).mas_offset(-10);;
         make.height.mas_equalTo(TTextView_TextView_Height_Min);
         make.centerY.mas_equalTo(self);
     }];
@@ -381,6 +381,9 @@
             [_delegate inputTextViewShouldEndTyping:textView];
         }
     }
+    if (self.inputBarTextChanged) {
+        self.inputBarTextChanged(_inputTextView);
+    }
     CGSize size = [_inputTextView sizeThatFits:CGSizeMake(_inputTextView.frame.size.width, TTextView_TextView_Height_Max)];
     CGFloat oldHeight = _inputTextView.frame.size.height;
     CGFloat newHeight = size.height;
@@ -399,9 +402,10 @@
     [UIView animateWithDuration:0.3
                      animations:^{
                        [ws.inputTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                         make.leading.mas_equalTo(ws.micButton.mas_trailing);
-                         make.trailing.mas_equalTo(ws.faceButton.mas_leading);
+                         make.leading.mas_equalTo(ws.micButton.mas_trailing).mas_offset(10);
+                         make.trailing.mas_equalTo(ws.faceButton.mas_leading).mas_offset(-10);
                          make.height.mas_equalTo(newHeight);
+                         make.centerY.mas_equalTo(self);
                        }];
                        [ws layoutButton:newHeight + 2 * TTextView_Margin];
                      }];
@@ -517,9 +521,9 @@
     // Set tag and image
     emojiTextAttachment.emojiTag = localizableFaceName;
     emojiTextAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:emoji.path];
-
+    
     // Set emoji size
-    emojiTextAttachment.emojiSize = kChatDefaultEmojiSize;
+    emojiTextAttachment.emojiSize = kTIMDefaultEmojiSize;
     NSAttributedString *str = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
 
     NSRange selectedRange = _inputTextView.selectedRange;

@@ -4,39 +4,67 @@
 <array>
 	<dict>
 		<key>face_name</key>
-		<string>[龇牙]</string>
+		<string>[TUIEmoji_Smile]</string>
+		<key>face_file</key>
+		<string>emoji_0</string>
 		<key>face_id</key>
 		<string>001</string>
 	</dict>
 	<dict>
 		<key>face_name</key>
-		<string>[调皮]</string>
+		<string>[TUIEmoji_Expect]</string>
+		<key>face_file</key>
+		<string>emoji_1</string>
 		<key>face_id</key>
 		<string>002</string>
 	</dict>
 	<dict>
 		<key>face_name</key>
-		<string>[流汗]</string>
+		<string>[TUIEmoji_Blink]</string>
+		<key>face_file</key>
+		<string>emoji_2</string>
 		<key>face_id</key>
 		<string>003</string>
 	</dict>
 	<dict>
 		<key>face_name</key>
-		<string>[偷笑]</string>
+		<string>[TUIEmoji_Guffaw]</string>
+		<key>face_file</key>
+		<string>emoji_3</string>
 		<key>face_id</key>
 		<string>004</string>
 	</dict>
 	<dict>
 		<key>face_name</key>
-		<string>[再见]</string>
+		<string>[TUIEmoji_KindSmile]</string>
+		<key>face_file</key>
+		<string>emoji_4</string>
 		<key>face_id</key>
 		<string>005</string>
 	</dict>
 	<dict>
 		<key>face_name</key>
-		<string>[敲打]</string>
+		<string>[TUIEmoji_Haha]</string>
+		<key>face_file</key>
+		<string>emoji_5</string>
 		<key>face_id</key>
 		<string>006</string>
+	</dict>
+	<dict>
+		<key>face_name</key>
+		<string>[TUIEmoji_Cheerful]</string>
+		<key>face_file</key>
+		<string>emoji_6</string>
+		<key>face_id</key>
+		<string>007</string>
+	</dict>
+	<dict>
+		<key>face_name</key>
+		<string>[TUIEmoji_Speechless]</string>
+		<key>face_file</key>
+		<string>emoji_7</string>
+		<key>face_id</key>
+		<string>008</string>
 	</dict>
 </array>
 </plist>

@@ -42,6 +42,14 @@
     return rtlString(title);
 }
 
+- (void)inputControllerDidInputAt:(TUIInputController_Minimalist *)inputController {
+    [super inputControllerDidInputAt:inputController];
+    NSAttributedString *spaceString = [[NSAttributedString alloc]
+        initWithString:@"@"
+            attributes:@{NSFontAttributeName : kTUIInputNoramlFont, NSForegroundColorAttributeName : kTUIInputNormalTextColor}];
+    [self.inputController.inputBar addWordsToInputBar:spaceString];
+}
+
 - (void)inputControllerBeginTyping:(TUIInputController_Minimalist *)inputController {
     [super inputControllerBeginTyping:inputController];
 

@@ -392,6 +392,9 @@
             [_delegate inputTextViewShouldEndTyping:textView];
         }
     }
+    if (self.inputBarTextChanged) {
+        self.inputBarTextChanged(_inputTextView);
+    }
     CGSize size = [_inputTextView sizeThatFits:CGSizeMake(_inputTextView.frame.size.width, TTextView_TextView_Height_Max)];
     CGFloat oldHeight = _inputTextView.frame.size.height;
     CGFloat newHeight = size.height;
@@ -526,7 +529,7 @@
     emojiTextAttachment.image = [[TUIImageCache sharedInstance] getFaceFromCache:emoji.path];
 
     // Set emoji size
-    emojiTextAttachment.emojiSize = kChatDefaultEmojiSize;
+    emojiTextAttachment.emojiSize = kTIMDefaultEmojiSize;
     NSAttributedString *str = [NSAttributedString attributedStringWithAttachment:emojiTextAttachment];
 
     NSRange selectedRange = _inputTextView.selectedRange;

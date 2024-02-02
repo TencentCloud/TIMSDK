@@ -180,6 +180,14 @@
           }
           data = UIImageJPEGRepresentation(newImage, 0.75);
       }
+      else {
+          if (imageData.length > 10 * 1024 * 1024) {
+              if ([self.listener respondsToSelector:@selector(onProvideFileError:)]) {
+                  [self.listener onProvideFileError:TIMCommonLocalizableString(TUIKitImageSizeCheckLimited)];
+              }
+              return;
+          }
+      }
 
       [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
       if ([self.listener respondsToSelector:@selector(onProvideImage:)]) {
@@ -612,7 +620,7 @@
                           NSData *fileData = [NSData dataWithContentsOfURL:newURL options:NSDataReadingMappedIfSafe error:nil];
                           NSString *fileName = [url lastPathComponent];
                           NSString *filePath = [TUIKit_File_Path stringByAppendingString:fileName];
-                          if (fileData.length > 1e9) { // 1e9 bytes = 1GB
+                          if (fileData.length > 1e9 || fileData.length == 0) { // 1e9 bytes = 1GB
                                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitFileSizeCheckLimited) message:nil preferredStyle:UIAlertControllerStyleAlert];
                                 [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
                                 [self.presentViewController presentViewController:ac animated:YES completion:nil];

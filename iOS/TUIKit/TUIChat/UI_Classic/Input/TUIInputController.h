@@ -22,6 +22,7 @@
 #import "TUIMenuView.h"
 #import "TUIMoreView.h"
 #import "TUIReplyPreviewBar.h"
+#import "TUIFaceSegementScrollView.h"
 
 @class TUIInputController;
 
@@ -149,8 +150,9 @@
  * group.
  *
  */
-@property(nonatomic, strong) TUIFaceView *faceView;
+//@property(nonatomic, strong) TUIFaceView *faceView;
 
+@property(nonatomic, strong) TUIFaceSegementScrollView *faceSegementScrollView;
 /**
  *  菜单视图
  *  菜单视图位于表情视图下方，负责提供表情分组单元以及发送按钮。

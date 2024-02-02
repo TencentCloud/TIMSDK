@@ -125,15 +125,13 @@
     /// TransitionView should not cover the replyView.
     /// Add an extra tiny offset to the left or right of TransitionView if replyView is visible.
     CGFloat offset = self.replyLineView.hidden ? 0 : 1;
-    UIView *view = self.replyEmojiView.hidden ? self.bubbleView : self.replyEmojiView;
-
     [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
         if (self.textData.direction == MsgDirectionIncoming) {
             make.leading.mas_equalTo(self.container.mas_leading).mas_offset(offset);
         } else {
             make.trailing.mas_equalTo(self.container.mas_trailing).mas_offset(-offset);
         }
-        make.top.mas_equalTo(view.mas_bottom).mas_offset(6);
+        make.top.mas_equalTo(self.bubbleView.mas_bottom).mas_offset(self.messageData.messageContainerAppendSize.height + 6);
         make.size.mas_equalTo(size);
     }];
 
@@ -226,7 +224,7 @@
     // 如果有多行，判断下最后一行的字体宽度是否超过了消息状态的位置，如果超过，消息状态换行
     // 如果只有一行，直接加上消息状态的宽度
     int max_width = size.height > [textFont lineHeight] ? size.width : TTextMessageCell_Text_Width_Max;
-    if ((int)size2.width / max_width > 0) {
+    if ((int)size2.width / max_width > 1) {
         if ((int)size2.width % max_width == 0 || (int)size2.width % max_width + textCellData.msgStatusSize.width >= max_width) {
             size.height += textCellData.msgStatusSize.height;
         }

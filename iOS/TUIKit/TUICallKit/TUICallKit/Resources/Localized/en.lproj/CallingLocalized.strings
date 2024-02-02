@@ -32,6 +32,12 @@
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "Unable to restart the call";
 "Demo.TRTC.Calling.ErrorInPeerBlacklist" = "The identifier is in blacklist. Failed to send this message!";
 
+"TUICallKit.ErrorInvalidLogin" = "Invalid login, please login again";
+"TUICallKit.ErrorParameterInvalid" = "Parameter error";
+"TUICallKit.ErrorRequestRefused" = "The current status can not use this function";
+"TUICallKit.ErrorRequestRepeated" = "The current status is waiting/accept, please do not call it repeatedly";
+"TUICallKit.ErrorSceneNotSupport" = "The current scene does not support this function";
+
 "TUICallKit.failedtogetcamerapermission.Title" = "No access to camera";
 "TUICallKit.failedtogetcamerapermission.Tips"  = "Unable to use the video call function, click \"Authorize Now\" to open the camera permission.";
 "TUICallKit.failedtogetcamerapermission.Later" = "Later";

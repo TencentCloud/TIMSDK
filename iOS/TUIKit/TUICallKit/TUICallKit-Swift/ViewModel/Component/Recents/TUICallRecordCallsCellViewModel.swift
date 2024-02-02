@@ -105,11 +105,11 @@ class TUICallRecordCallsCellViewModel {
     private func configResult(_ callResultType: TUICallResultType) {
         switch callResultType {
         case .missed:
-            resultLabelStr = "Missed"
+            resultLabelStr = TUICallKitLocalize(key: "TUICallKit.Recents.missed") ?? "Missed"
         case .incoming:
-            resultLabelStr = "Incoming"
+            resultLabelStr = TUICallKitLocalize(key: "TUICallKit.Recents.incoming") ?? "Incoming"
         case .outgoing:
-            resultLabelStr = "Outgoing"
+            resultLabelStr = TUICallKitLocalize(key: "TUICallKit.Recents.outgoing") ?? "Outgoing"
         case .unknown:
             break
         @unknown default:

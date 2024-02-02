@@ -19,7 +19,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.delegate = self;
-        self.minimumZoomScale = 1.0f;
+        self.minimumZoomScale = 0.5f;
         self.maximumZoomScale = 2.0f;
         _imageNormalHeight = frame.size.height;
         _imageNormalWidth = frame.size.width;
@@ -127,7 +127,7 @@
     self.imageView = [[UIImageView alloc] init];
     self.imageView.layer.cornerRadius = 5.0;
     [self.imageView.layer setMasksToBounds:YES];
-    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.backgroundColor = [UIColor clearColor];
     [self.scrollView.containerView addSubview:self.imageView];
     self.imageView.mm_fill();
@@ -233,6 +233,7 @@
       @strongify(self);
       if (thumbImage) {
           self.imageView.image = thumbImage;
+          [self setNeedsLayout];
       }
     }];
 
@@ -241,6 +242,7 @@
       @strongify(self);
       if (largeImage) {
           self.imageView.image = largeImage;
+          [self setNeedsLayout];
       }
     }];
     [[[RACObserve(data, largeProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
@@ -270,6 +272,7 @@
       @strongify(self);
       if (originImage) {
           self.imageView.image = originImage;
+          [self setNeedsLayout];
       }
     }];
     [[[RACObserve(data, originProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
@@ -304,10 +307,16 @@
     self.animateCircleView.tui_mm_center();
     self.downloadBtn.mm_width(31).mm_height(31).mm_right(16).mm_bottom(48);
     self.scrollView.mm_width(self.mm_w).mm_height(self.mm_h).mm__centerX(self.mm_w / 2).mm__centerY(self.mm_h / 2);
-    self.scrollView.imageNormalWidth = self.mm_w;
-    self.scrollView.imageNormalHeight = self.mm_h;
-    self.imageView.frame = self.scrollView.bounds;
+    self.scrollView.imageNormalWidth =  self.imageView.image.size.width;
+    self.scrollView.imageNormalHeight = self.imageView.image.size.height;
+    self.imageView.frame =  CGRectMake(self.scrollView.bounds.origin.x,
+                                       self.scrollView.bounds.origin.y,
+                                       self.imageView.image.size.width,
+                                       self.imageView.image.size.height);
+    
     [self.imageView layoutIfNeeded];
+
+    [self adjustScale];
 }
 
 - (void)onDeviceOrientationChange:(NSNotification *)noti {
@@ -316,7 +325,9 @@
 - (void)reloadAllView {
     for (UIView *subview in self.subviews) {
         if (subview) {
-            [subview removeFromSuperview];
+            [UIView animateWithDuration:0.1 animations:^{
+                [subview removeFromSuperview];
+            }];
         }
     }
     [self setupViews];
@@ -352,5 +363,17 @@
                                                   }]];
 
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
+}
+
+- (void)adjustScale {
+    CGFloat scale = 1;
+    if (Screen_Width > self.imageView.image.size.width) {
+        scale = 1;
+    }
+    else {
+        scale = Screen_Width/ self.imageView.image.size.width;
+    }
+    self.scrollView.containerView.frame = CGRectMake(0, 0,MIN(Screen_Width,self.imageView.image.size.width), self.imageView.image.size.height);
+    [self.scrollView pictureZoomWithScale:scale];
 }
 @end

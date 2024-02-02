@@ -170,12 +170,7 @@
         else {
             make.trailing.mas_equalTo(self.bubbleView).mas_offset(- 15);
         }
-        if (self.replyEmojiView.isHidden) {
-            make.top.mas_equalTo(self.container.mas_bottom).mas_offset(6);
-        }
-        else {
-            make.top.mas_equalTo(self.replyEmojiView.mas_bottom).mas_offset(6);
-        }
+        make.top.mas_equalTo(self.bubbleView.mas_bottom).mas_offset(self.messageData.messageContainerAppendSize.height + 6);
         make.size.mas_equalTo(self.referenceData.quoteSize);
     }];
     
@@ -405,7 +400,7 @@
     
     CGFloat cellHeight = [super getHeight:referenceCellData withWidth:width];
     cellHeight += referenceCellData.quoteSize.height + referenceCellData.bottomContainerSize.height;
-    cellHeight += kScale375(6);
+    cellHeight += kScale375(12);
     return cellHeight;
 }
 

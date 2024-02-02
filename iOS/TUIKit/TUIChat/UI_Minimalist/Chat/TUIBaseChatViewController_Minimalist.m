@@ -30,7 +30,6 @@
 #import "TUIChatConfig.h"
 #import "TUIChatDataProvider.h"
 #import "TUIChatMediaDataProvider.h"
-#import "TUIChatMembersReactController.h"
 #import "TUIChatModifyMessageHelper.h"
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIFileMessageCellData.h"
@@ -1068,7 +1067,6 @@ static UIView *gCustomTopView;
     [self presentViewController:floatVC
                        animated:YES
                      completion:^{
-                       weakSelf.responseKeyboard = NO;
                        [weakSelf openMultiChooseBoard:NO];
                        [weakSelf.messageController enableMultiSelectedMode:NO];
                      }];
@@ -1219,38 +1217,6 @@ static UIView *gCustomTopView;
       referenceData.originMessage = data.innerMessage;
       [self.inputController showReferencePreview:referenceData];
     }];
-}
-
-#pragma mark - Message react
-/*
- "messageReact": {
-     "reacts": [
-         {
-             "emojiId1": ["userId1","userId2"]
-         },
-         {
-             "emojiId2": ["userId3","userId4"]
-         },
-     ],
-     "version": "1",
- }
- */
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller
-            modifyMessage:(nonnull TUIMessageCellData *)cellData
-               reactEmoji:(NSString *)emojiName {
-    V2TIMMessage *rootMsg = cellData.innerMessage;
-
-    [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:rootMsg reactEmoji:emojiName];
-}
-
-- (void)messageController:(TUIBaseMessageController_Minimalist *)controller
-            modifyMessage:(TUIMessageCellData *)data
-                 faceList:(NSArray<TUITagsModel *> *)listModel {
-    TUIChatMembersReactController *detailController = [[TUIChatMembersReactController alloc] initWithChatConversationModel:self.conversationData];
-    detailController.modalPresentationStyle = UIModalPresentationCustom;
-    detailController.tagsArray = listModel;
-    detailController.originData = data;
-    [self presentViewController:detailController animated:YES completion:nil];
 }
 
 #pragma mark - Translation forward

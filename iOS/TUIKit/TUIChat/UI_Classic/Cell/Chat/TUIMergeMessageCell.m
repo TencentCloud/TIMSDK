@@ -9,6 +9,7 @@
 #import "TUIMergeMessageCell.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUICore.h>
 
 #ifndef CGFLOAT_CEIL
 #ifdef CGFLOAT_IS_DOUBLE
@@ -179,7 +180,6 @@
     [self.container.layer insertSublayer:self.borderLayer atIndex:0];
     [self.container.layer setMask:self.maskLayer];
 
-    [self prepareReactTagUI:self.container];
 }
 
 + (BOOL)requiresConstraintBasedLayout {
@@ -290,6 +290,9 @@
         default:
             break;
     }
+    
+    [self prepareReactTagUI:self.container];
+
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
 
@@ -326,6 +329,11 @@
 
 - (void)onThemeChanged {
     [self applyBorderTheme];
+}
+
+- (void)prepareReactTagUI:(UIView *)containerView {
+    NSDictionary *param = @{TUICore_TUIChatExtension_ChatMessageReactPreview_Delegate: self};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_ChatMessageReactPreview_ClassicExtensionID parentView:containerView param:param];
 }
 
 #pragma mark - TUIMessageCellProtocol

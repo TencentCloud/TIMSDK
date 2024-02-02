@@ -9,6 +9,7 @@
 #import "TUIMergeMessageListController.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TUISystemMessageCell.h>
+#import <TUICore/TUICore.h>
 #import <TUICore/TUIDarkModel.h>
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUIThemeManager.h>
@@ -34,7 +35,7 @@
 
 #define STR(x) @ #x
 
-@interface TUIMergeMessageListController () <TUIMessageCellDelegate, TUIMessageBaseDataProviderDataSource>
+@interface TUIMergeMessageListController () <TUIMessageCellDelegate, TUIMessageBaseDataProviderDataSource,TUINotificationProtocol>
 @property(nonatomic, strong) NSArray<V2TIMMessage *> *imMsgs;
 @property(nonatomic, strong) NSMutableArray<TUIMessageCellData *> *uiMsgs;
 @property(nonatomic, strong) NSMutableDictionary *stylesCache;
@@ -45,6 +46,16 @@
 @end
 
 @implementation TUIMergeMessageListController
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [TUICore registerEvent:TUICore_TUIPluginNotify
+                        subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
+                        object:self];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -511,4 +522,58 @@
     }
 }
 
+#pragma mark - TUINotificationProtocol
+- (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
+    if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
+        TUIMessageCellData *data = param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_Data];
+        [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
+        [self reloadAndScrollToBottomOfMessage:data.innerMessage.msgID section:0];
+    }
+}
+
+- (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
+    // Dispatch the task to RunLoop to ensure that they are executed after the UITableView refresh is complete.
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self reloadCellOfMessage:messageID section:section];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self scrollCellToBottomOfMessage:messageID section:section];
+      });
+    });
+}
+
+- (void)reloadCellOfMessage:(NSString *)messageID section:(NSInteger)section {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
+
+    // Disable animation when loading to avoid cell jumping.
+    if (indexPath == nil) {
+        return;
+    }
+    [UIView performWithoutAnimation:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
+        });
+    }];
+}
+
+- (void)scrollCellToBottomOfMessage:(NSString *)messageID section:(NSInteger)section {
+    NSIndexPath *indexPath = [self indexPathOfMessage:messageID section:section];
+
+    // Scroll the tableView only if the bottom of the cell is invisible.
+    CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+    CGRect tableViewRect = self.tableView.bounds;
+    BOOL isBottomInvisible = cellRect.origin.y < CGRectGetMaxY(tableViewRect) && CGRectGetMaxY(cellRect) > CGRectGetMaxY(tableViewRect);
+    if (isBottomInvisible) {
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+}
+
+- (NSIndexPath *)indexPathOfMessage:(NSString *)messageID section:(NSInteger)section {
+    for (int i = 0; i < self.uiMsgs.count; i++) {
+        TUIMessageCellData *data = self.uiMsgs[i];
+        if ([data.innerMessage.msgID isEqualToString:messageID]) {
+            return [NSIndexPath indexPathForRow:i inSection:section];
+        }
+    }
+    return nil;
+}
 @end

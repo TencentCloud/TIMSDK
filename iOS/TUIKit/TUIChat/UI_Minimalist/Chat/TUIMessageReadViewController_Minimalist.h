@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(copy, nonatomic) void (^viewWillShowHandler)(TUIMessageCell *alertView);
 @property(copy, nonatomic) void (^viewDidShowHandler)(TUIMessageCell *alertView);
+@property(copy, nonatomic) void (^viewWillDismissHandler)(TUIMessageCell *alertView);
 
 - (instancetype)initWithCellData:(TUIMessageCellData *)data
                     dataProvider:(TUIMessageDataProvider *)dataProvider

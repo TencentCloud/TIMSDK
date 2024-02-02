@@ -56,7 +56,7 @@ class VideoCallerWaitingView: UIView {
         }
         switchCameraBtn.snp.makeConstraints { make in
             make.centerY.equalTo(hangupBtn)
-            make.leading.equalTo(hangupBtn.snp.trailing).offset(20.scaleWidth())
+            make.leading.equalTo(hangupBtn.snp.trailing).offset(40.scaleWidth())
             make.size.equalTo(CGSize(width: 28.scaleWidth(), height: 28.scaleWidth()))
         }
     }

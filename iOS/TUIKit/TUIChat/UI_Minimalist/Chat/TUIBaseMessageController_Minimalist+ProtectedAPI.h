@@ -24,8 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data;
 
-- (void)onJumpToRepliesEmojiPage:(TUIMessageCellData *)data faceList:(NSArray<TUITagsModel *> *)listModel;
-
 @end
 
 NS_ASSUME_NONNULL_END

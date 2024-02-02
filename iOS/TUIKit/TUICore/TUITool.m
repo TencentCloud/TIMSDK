@@ -441,7 +441,8 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
     }
 
     dispatch_async(queue, ^{
-      // gif
+      // 路径结尾明确是.gif
+      // The path ends with gif:
       if ([path containsString:@".gif"]) {
           UIImage *image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:path]];
           callback(path, image);
@@ -454,6 +455,15 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
           image = [UIImage imageWithContentsOfFile:path];
       }
 
+      // 没有路径结尾，但实际可能是gif图片
+      // There is no path ending, but it may actually be a gif image
+      if (image == nil) {
+         NSString *formatPath = [path stringByAppendingString:@".gif"];
+         image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:formatPath]];
+         callback(formatPath, image);
+         return;
+      }
+        
       if (image == nil) {
           callback(path, image);
           return;

@@ -181,6 +181,8 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
     TUIThemeModuleVoiceToText = 0x1 << 21,
     TUIThemeModuleCustomerService = 0x1 << 22,
     TUIThemeModuleChatBot = 0x1 << 23,
+    
+    TUIThemeModuleRoomKit = 0x1 << 24,
 };
 
 @interface TUITheme : NSObject

@@ -31,7 +31,7 @@ NSBundle *TUICallingBundle(void) {
 NSString *TUICallingLocalizeFromTable(NSString *key, NSString *table) {
     NSString *bundlePath = [TUICallingBundle() pathForResource:[TUIGlobalization tk_localizableLanguageKey] ?: @"" ofType:@"lproj"];
     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
-    return [bundle localizedStringForKey:key value:@"" table:table];
+    return [bundle localizedStringForKey:key value:@"" table:table] ?: @"";
 }
 
 NSString *TUICallingLocalizeFromTableAndCommon(NSString *key, NSString *common, NSString *table) {

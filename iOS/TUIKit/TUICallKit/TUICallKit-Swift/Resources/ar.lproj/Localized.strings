@@ -18,12 +18,20 @@
 "TUICallKit.decline" = "رفض";
 "TUICallKit.switchToAudio" = "التبديل إلى المكالمة الصوتية";
 "TUICallKit.answer" = "الرد";
-"TUICallKit.calleeTip" = "هم أيضا هنا";
+"TUICallKit.calleeTip" = "أيضًا على المكالمة";
 "TUICallKit.FloatingWindow.waitAccept" = "في انتظار الرد";
 
 "TUICallKit.User.Exceed.Limit" = "يدعم مكالمات مؤقتة لما يصل إلى 9 أشخاص. لاستخدام المؤتمرات متعددة الأطراف ، يرجى استخدام TUIRoom";
 "TUICallKit.UnableToRestartTheCall" = "لا يمكن إعادة بدء المكالمة أثناء المكالمة";
+
+"TUICallKit.purchased" = "لم تشترِ حزمة قدرات المكالمات الصوتية والمرئية ، يرجى الانتقال إلى لوحة تحكم IM لتجربة مجانية أو شراء الإصدار الرسمي";
+"TUICallKit.support" = "لا يدعم حزمة قدرات المكالمات الصوتية والمرئية التي اشتريتها حاليًا هذه الميزة ، نوصي بترقية نوع الحزمة";
 "TUICallKit.ErrorInPeerBlacklist" = "المعرف في القائمة السوداء. فشل في إرسال هذه الرسالة!";
+"TUICallKit.ErrorInvalidLogin" = "الرجاء تسجيل الدخول مرة أخرى، تسجيل الدخول غير صحيح";
+"TUICallKit.ErrorParameterInvalid" = "خطأ المعلمة";
+"TUICallKit.ErrorRequestRefused" = "الحالة الحالية لا تدعم نداء الدالة";
+"TUICallKit.ErrorRequestRepeated" = "الطريقة الحالية تتم تنفيذها، يرجى عدم استدعاءها مرة أخرى";
+"TUICallKit.ErrorSceneNotSupport" = "مشهد المكالمة الحالي لا يدعم هذه الوظيفة";
 
 "TUICallKit.FailedToGetCameraPermission.Title" = "لم يتم تمكين إذن الكاميرا";
 "TUICallKit.FailedToGetCameraPermission.Tips"  = "لا يمكن استخدام وظيفة المكالمة المرئية ، انقر فوق \"فتح\" لفتح إذن الكاميرا";
@@ -35,8 +43,6 @@
 "TUICallKit.FailedToGetMicrophonePermission.Later" = "قل ذلك لاحقًا";
 "TUICallKit.FailedToGetMicrophonePermission.Enable" = "فتح";
 
-"TUICallKit.package.not.purchased" = "لم تشترِ حزمة قدرات المكالمات الصوتية والمرئية ، يرجى الانتقال إلى لوحة تحكم IM لتجربة مجانية أو شراء الإصدار الرسمي";
-"TUICallKit.package.not.support" = "لا يدعم حزمة قدرات المكالمات الصوتية والمرئية التي اشتريتها حاليًا هذه الميزة ، نوصي بترقية نوع الحزمة";
 "TUICallKit.have.new.invitation" = "لديك مكالمة جديدة";
 
 "TUICallKit.Recents.all" = "جميع المكالمات";

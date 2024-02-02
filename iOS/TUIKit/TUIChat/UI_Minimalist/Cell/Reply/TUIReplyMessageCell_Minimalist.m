@@ -238,15 +238,13 @@
     }
 
     CGSize size = self.replyData.bottomContainerSize;
-    UIView *view = self.replyEmojiView.hidden ? self.bubbleView : self.replyEmojiView;
-    CGFloat topMargin = view.mm_maxY + self.nameLabel.mm_h + 6;
     [self.bottomContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
         if (self.replyData.direction == MsgDirectionIncoming) {
             make.leading.mas_equalTo(self.container.mas_leading);
         } else {
             make.trailing.mas_equalTo(self.container.mas_trailing);
         }
-        make.top.mas_equalTo(view.mas_bottom).mas_offset(6);
+        make.top.mas_equalTo(self.bubbleView.mas_bottom).mas_offset(self.messageData.messageContainerAppendSize.height + 6);
         make.size.mas_equalTo(size);
     }];
 

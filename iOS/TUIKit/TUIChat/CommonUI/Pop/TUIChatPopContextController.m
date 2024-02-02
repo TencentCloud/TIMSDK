@@ -8,11 +8,11 @@
 
 #import "TUIChatPopContextController.h"
 #import <TIMCommon/TIMDefine.h>
-#import "TUIChatContextEmojiDetailController.h"
 #import "UIImage+ImageEffects.h"
+#import <TUICore/TUICore.h>
 
-@interface TUIChatPopContextController () <TUIChatPopContextRecentEmojiDelegate>
-@property(nonatomic, strong) TUIChatPopContextRecentView *recentView;
+@interface TUIChatPopContextController ()
+@property(nonatomic, strong) UIView *recentView;
 @property(nonatomic, strong) UIView *alertContainerView;
 @property(nonatomic, strong) TUIMessageCell *alertView;
 @property(nonatomic, strong) TUIChatPopContextExtionView *extionView;
@@ -248,11 +248,16 @@
 }
 
 - (void)configRecentView {
-    _recentView = [[TUIChatPopContextRecentView alloc] init];
-    _recentView.backgroundColor = [UIColor whiteColor];
-    _recentView.delegate = self;
+    _recentView = [[UIView alloc] init];
+    _recentView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_recentView];
-    _recentView.frame = CGRectMake(_originFrame.origin.x, _originFrame.origin.y - kScale390(8 + 40), kScale390(208), kScale390(40));
+    _recentView.frame = CGRectMake(_originFrame.origin.x,
+                                   _originFrame.origin.y - kScale390(8 + 40),
+                                   MAX(kTIMDefaultEmojiSize.width *8,kScale390(208)),
+                                   kScale390(40));
+    NSDictionary *param = @{TUICore_TUIChatExtension_ChatPopMenuReactRecentView_Delegate : self};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_ChatPopMenuReactRecentView_MinimalistExtensionID parentView:self.recentView param:param];
+
 }
 
 - (void)configExtionView {
@@ -437,32 +442,5 @@
     [self dismissViewControllerAnimated:NO];
 }
 
-#pragma mark - delegate
-
-- (void)popRecentViewClickArrow:(TUIChatPopContextRecentView *)faceView {
-    [self showDetailPage];
-}
-- (void)popRecentViewClickface:(TUIChatPopContextRecentView *)faceView tag:(NSInteger)tag {
-    TUIFaceGroup *group = faceView.faceGroups[0];
-    TUIFaceCellData *face = group.faces[tag];
-    NSString *faceName = face.name;
-    NSLog(@"FaceName:%@", faceName);
-    if (self.reactClickCallback) {
-        self.reactClickCallback(faceName);
-    }
-}
-
-- (void)showDetailPage {
-    TUIChatContextEmojiDetailController *detailController = [[TUIChatContextEmojiDetailController alloc] init];
-    detailController.modalPresentationStyle = UIModalPresentationCustom;
-    __weak typeof(self) weakSelf = self;
-    detailController.reactClickCallback = ^(NSString *_Nonnull faceName) {
-      __strong typeof(weakSelf) strongSelf = weakSelf;
-      if (strongSelf.reactClickCallback) {
-          strongSelf.reactClickCallback(faceName);
-      }
-    };
-    [self presentViewController:detailController animated:YES completion:nil];
-}
 
 @end

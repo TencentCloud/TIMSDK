@@ -134,5 +134,7 @@
 	<string>#000000</string>
 	<key>second_confirm_confirm_btn_title_color</key>
 	<string>#FF7756</string>
+	<key>chat_react_desc_color</key>
+	<string>#FFFFFF</string>
 </dict>
 </plist>

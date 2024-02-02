@@ -10,8 +10,10 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatPopActionsView.h"
-#import "TUIChatPopEmojiView.h"
-#import "TUIChatPopRecentView.h"
+#import <TIMCommon/TIMCommonMediator.h>
+#import <TIMCommon/TUIEmojiMeditorProtocol.h>
+#import <TUICore/TUICore.h>
+#import "TUIFaceView.h"
 
 #define maxColumns 5
 #define kContainerInsets UIEdgeInsetsMake(3, 0, 3, 0)
@@ -37,7 +39,7 @@
 
 @end
 
-@interface TUIChatPopMenu () <UIGestureRecognizerDelegate, TUIFaceViewDelegate, TUIChatPopRecentEmojiDelegate>
+@interface TUIChatPopMenu () <UIGestureRecognizerDelegate>
 
 /**
  * emojiRecent 视图和 emoji 二级页视图
@@ -58,10 +60,6 @@
 @property(nonatomic, strong) CAShapeLayer *arrowLayer;
 
 @property(nonatomic, assign) CGFloat emojiHeight;
-
-@property(nonatomic, strong) TUIChatPopRecentView *emojiRecentView;
-
-@property(nonatomic, strong) TUIChatPopEmojiView *emojiAdvanceView;
 
 @property(nonatomic, strong) TUIChatPopActionsView *actionsView;
 
@@ -374,28 +372,21 @@
     [self setupEmojiAdvanceView];
 }
 - (void)setupEmojiRecentView {
-    self.emojiRecentView = [[TUIChatPopRecentView alloc] initWithFrame:CGRectZero];
-    [self.emojiContainerView addSubview:_emojiRecentView];
-    _emojiRecentView.frame = CGRectMake(0, 0, self.emojiContainerView.mm_w, self.emojiHeight);
-    _emojiRecentView.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
-    _emojiRecentView.needShowbottomLine = YES;
-    _emojiRecentView.delegate = self;
+    NSDictionary *param = @{TUICore_TUIChatExtension_ChatPopMenuReactRecentView_Delegate : self};
+    BOOL isRaiseEmojiExtensionSuccess = [TUICore raiseExtension:TUICore_TUIChatExtension_ChatPopMenuReactRecentView_ClassicExtensionID
+                                                     parentView:self.emojiContainerView
+                                                          param:param];
+    if (!isRaiseEmojiExtensionSuccess) {
+        self.emojiHeight = 0;
+    }
 }
 - (void)setupEmojiAdvanceView {
-    self.emojiAdvanceView = [[TUIChatPopEmojiView alloc] initWithFrame:CGRectZero];
-    [self.emojiContainerView addSubview:_emojiAdvanceView];
-
-    [_emojiAdvanceView setData:(id)[TIMConfig defaultConfig].chatPopDetailGroups];
-    _emojiAdvanceView.delegate = self;
-    _emojiAdvanceView.alpha = 0;
-    _emojiAdvanceView.faceCollectionView.scrollEnabled = YES;
-    _emojiAdvanceView.faceCollectionView.delaysContentTouches = NO;
-    _emojiAdvanceView.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
-    _emojiAdvanceView.faceCollectionView.backgroundColor = _emojiAdvanceView.backgroundColor;
+    NSDictionary *param = @{TUICore_TUIChatExtension_ChatPopMenuReactRecentView_Delegate : self};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_ChatPopMenuReactDetailView_ClassicExtensionID parentView:self.emojiContainerView param:param];
 }
+
 - (void)updateLayout {
-    self.emojiAdvanceView.frame =
-        CGRectMake(0, self.emojiHeight - 0.5, self.emojiContainerView.mm_w, TChatEmojiView_CollectionHeight + 10 + TChatEmojiView_Page_Height);
+    
     self.actionsView.frame = CGRectMake(0, -0.5, self.containerView.frame.size.width, self.containerView.frame.size.height);
 
     int columns = self.actions.count < maxColumns ? (int)self.actions.count : maxColumns;
@@ -518,76 +509,5 @@
 
 - (void)onThemeChanged {
     [self applyBorderTheme];
-}
-
-// MARK: TUIFaceViewDelegate
-- (void)faceView:(TUIFaceView *)faceView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    TUIFaceGroup *group = faceView.faceGroups[indexPath.section];
-
-    TUIFaceCellData *face = group.faces[indexPath.row];
-    if (indexPath.section == 0) {
-        NSString *faceName = face.name;
-        NSLog(@"FaceName:%@", faceName);
-        [self updateRecentMenuQueue:faceName];
-        if (self.reactClickCallback) {
-            self.reactClickCallback(faceName);
-        }
-    }
-}
-
-- (NSArray *)getChatPopMenuQueue {
-    NSArray *emojis = [[NSUserDefaults standardUserDefaults] objectForKey:@"TUIChatPopMenuQueue"];
-    if (emojis && [emojis isKindOfClass:[NSArray class]]) {
-        if (emojis.count > 0) {
-            return emojis;
-        }
-    }
-    return [NSArray arrayWithContentsOfFile:TUIChatFaceImagePath(@"emoji/emojiRecentDefaultList.plist")];
-}
-- (void)updateRecentMenuQueue:(NSString *)faceName {
-    NSArray *emojis = [self getChatPopMenuQueue];
-    NSMutableArray *muArray = [NSMutableArray arrayWithArray:emojis];
-
-    BOOL hasInQueue = NO;
-    for (NSDictionary *dic in emojis) {
-        NSString *name = [dic objectForKey:@"face_name"];
-        if ([name isEqualToString:faceName]) {
-            hasInQueue = YES;
-        }
-    }
-    if (hasInQueue) {
-        return;
-    }
-
-    [muArray removeObjectAtIndex:0];
-    [muArray addObject:@{@"face_name" : faceName, @"face_id" : @""}];
-    [[NSUserDefaults standardUserDefaults] setObject:muArray forKey:@"TUIChatPopMenuQueue"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-// MARK: TUIChatPopRecentEmojiDelegate
-- (void)popRecentViewClickArrow:(TUIChatPopRecentView *)faceView {
-    if (faceView.arrowButton.selected) {
-        [self hideDetailPage];
-    } else {
-        [self showDetailPage];
-    }
-}
-- (void)popRecentViewClickface:(TUIChatPopRecentView *)faceView tag:(NSInteger)tag {
-    TUIFaceGroup *group = faceView.faceGroups[0];
-    TUIFaceCellData *face = group.faces[tag];
-    NSString *faceName = face.name;
-    NSLog(@"FaceName:%@", faceName);
-    if (self.reactClickCallback) {
-        self.reactClickCallback(faceName);
-    }
-}
-- (void)showDetailPage {
-    self.containerView.alpha = 0;
-    self.emojiAdvanceView.alpha = 1;
-}
-- (void)hideDetailPage {
-    self.emojiAdvanceView.alpha = 0;
-    self.containerView.alpha = 1;
 }
 @end

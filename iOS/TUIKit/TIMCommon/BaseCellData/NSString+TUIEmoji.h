@@ -8,10 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
+#import "TIMDefine.h"
 NS_ASSUME_NONNULL_BEGIN
 
-#define kChatDefaultEmojiSize CGSizeMake(15, 15)
 #define kSplitStringResultKey @"result"
 #define kSplitStringTextKey @"text"
 #define kSplitStringTextIndexKey @"textIndex"

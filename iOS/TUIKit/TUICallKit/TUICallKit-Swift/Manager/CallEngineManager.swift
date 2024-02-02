@@ -107,7 +107,11 @@ class CallEngineManager {
         }
     }
     
-    func joinInGroupCall(roomId: TUIRoomId, groupId: String, callMediaType: TUICallMediaType) {
+    func joinInGroupCall(roomId: TUIRoomId,
+                         groupId: String,
+                         callMediaType: TUICallMediaType,
+                         succ: @escaping TUICallSucc,
+                         fail: @escaping TUICallFail) {
         engine.joinInGroupCall(roomId: roomId, groupId: groupId, callMediaType: callMediaType) {
             TUICallState.instance.mediaType.value = callMediaType
             TUICallState.instance.scene.value = TUICallScene.group
@@ -125,7 +129,9 @@ class CallEngineManager {
             }
             
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: Constants.EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER), object: nil)
+            succ()
         } fail: { code, message in
+            fail(code, message)
         }
     }
     

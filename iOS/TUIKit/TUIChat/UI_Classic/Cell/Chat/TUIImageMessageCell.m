@@ -25,7 +25,7 @@
         [_thumb.layer setMasksToBounds:YES];
         _thumb.contentMode = UIViewContentModeScaleAspectFit;
         _thumb.backgroundColor = [UIColor clearColor];        
-        [self.bubbleView addSubview:_thumb];
+        [self.container addSubview:_thumb];
         _progress = [[UILabel alloc] init];
         _progress.textColor = [UIColor whiteColor];
         _progress.font = [UIFont systemFontOfSize:15];
@@ -103,20 +103,25 @@
 
     [super updateConstraints];
 
+    if (self.imageData.isSuperLongImage) {
+        self.thumb.contentMode = UIViewContentModeScaleToFill;
+    }
+    else {
+        self.thumb.contentMode = UIViewContentModeScaleAspectFit;
+    }
+    
     CGFloat topMargin = 0;
     CGFloat height = self.bubbleView.mm_h;
-    if (self.messageData.messageModifyReactsSize.height > 0) {
-        if (self.tagView) {
-            topMargin = 10;
-            CGFloat tagViewTopMargin = 6;
-            height = self.bubbleView.mm_h - topMargin - self.messageData.messageModifyReactsSize.height - tagViewTopMargin;
-            [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(height);
-                make.width.mas_equalTo(self.bubbleView.mas_width);
-                make.top.mas_equalTo(self.bubbleView).mas_offset(topMargin);
-                make.leading.mas_equalTo(self.bubbleView);
-            }];
-        }
+    if (self.messageData.messageContainerAppendSize.height > 0) {
+        topMargin = 10;
+        CGFloat tagViewTopMargin = 6;
+        height = self.bubbleView.mm_h - topMargin - self.messageData.messageContainerAppendSize.height - tagViewTopMargin;
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(height);
+            make.width.mas_equalTo(self.bubbleView.mas_width);
+            make.top.mas_equalTo(self.bubbleView).mas_offset(topMargin);
+            make.leading.mas_equalTo(self.bubbleView);
+        }];
     } else {
         [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.bubbleView).mas_offset(self.messageData.cellLayout.bubbleInsets.top);
@@ -136,12 +141,7 @@
         [self.securityStrikeView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.thumb.mas_bottom);
             make.width.mas_equalTo(self.bubbleView);
-            if(self.tagView) {
-                make.bottom.mas_equalTo(self.container).mas_offset(- self.messageData.messageModifyReactsSize.height);
-            }
-            else {
-                make.bottom.mas_equalTo(self.container);
-            }
+            make.bottom.mas_equalTo(self.container).mas_offset(- self.messageData.messageContainerAppendSize.height);
         }];
     }
 
@@ -269,8 +269,15 @@
         return size;
     }
     if (size.height > size.width) {
-        size.width = size.width / size.height * TImageMessageCell_Image_Height_Max;
-        size.height = TImageMessageCell_Image_Height_Max;
+        if (size.height > 5* size.width) {
+            size.width = TImageMessageCell_Image_Width_Max;
+            size.height = TImageMessageCell_Image_Height_Max;
+            imageCellData.isSuperLongImage = YES;
+        }
+        else {
+            size.width = size.width / size.height * TImageMessageCell_Image_Height_Max;
+            size.height = TImageMessageCell_Image_Height_Max;
+        }
     } else {
         size.height = size.height / size.width * TImageMessageCell_Image_Width_Max;
         size.width = TImageMessageCell_Image_Width_Max;

@@ -128,6 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) UIViewController *currentShowVC;
 @property(nonatomic, weak) id<TUINavigationControllerDelegate> uiNaviDelegate;
 @property(nonatomic, strong) UIImage *navigationItemBackArrowImage;
+@property(nonatomic, strong) UIColor *navigationBackColor;
 @end
 
 @interface UIAlertController (TUITheme)

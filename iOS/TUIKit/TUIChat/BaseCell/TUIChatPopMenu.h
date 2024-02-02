@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "TUIChatConfig.h"
+#import "TUIChatPopMenuDefine.h"
+#import <TIMCommon/TUIMessageCellData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,12 +34,15 @@ typedef void (^TUIChatPopMenuHideCallback)(void);
 @interface TUIChatPopMenu : UIView
 @property(nonatomic, copy) TUIChatPopMenuHideCallback hideCallback;
 @property(nonatomic, copy) void (^reactClickCallback)(NSString *faceName);
-
+@property(nonatomic, weak) TUIMessageCellData *targetCellData;
 /**
  * TUIChatPopMenu 默认不带 emojiView。如果要显示，需要使用该方法初始化。
  * TUIChatPopMenu has no emojiView by default. If you need a chatPopMenu with emojiView, use this initializer.
  */
 - (instancetype)initWithEmojiView:(BOOL)hasEmojiView frame:(CGRect)frame;
+
+@property(nonatomic, strong, readonly) UIView *emojiContainerView;
+@property(nonatomic, strong, readonly) UIView *containerView;
 
 - (void)addAction:(TUIChatPopMenuAction *)action;
 - (void)removeAllAction;

@@ -9,6 +9,7 @@
 #import "TUIMergeMessageCellData.h"
 #import <TIMCommon/TIMDefine.h>
 #import "TUITextMessageCellData.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 
 @implementation TUIMergeMessageCellData
 
@@ -89,7 +90,7 @@
         NSString *sender = result[0];
         NSString *detail = result[1];
         sender =  [NSString stringWithFormat:@"%@",sender];
-        detail =  [NSString stringWithFormat:@"%@",detail];
+        detail =  [NSString stringWithFormat:@"%@",detail.getLocalizableStringWithFaceContent];
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:3];
         if(sender.length>0 ){
             NSMutableAttributedString *abstr = [[NSMutableAttributedString alloc] initWithString:@""];

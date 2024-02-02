@@ -32,6 +32,12 @@
 "Demo.TRTC.Calling.UnableToRestartTheCall" = "لا يمكن إعادة بدء المكالمة أثناء المكالمة";
 "Demo.TRTC.Calling.ErrorInPeerBlacklist" = "المعرف في القائمة السوداء. فشل في إرسال هذه الرسالة!";
 
+"TUICallKit.ErrorInvalidLogin" = "الرجاء تسجيل الدخول مرة أخرى، تسجيل الدخول غير صحيح";
+"TUICallKit.ErrorParameterInvalid" = "خطأ المعلمة";
+"TUICallKit.ErrorRequestRefused" = "الحالة الحالية لا تدعم نداء الدالة";
+"TUICallKit.ErrorRequestRepeated" = "الطريقة الحالية تتم تنفيذها، يرجى عدم استدعاءها مرة أخرى";
+"TUICallKit.ErrorSceneNotSupport" = "مشهد المكالمة الحالي لا يدعم هذه الوظيفة";
+
 "TUICallKit.failedtogetcamerapermission.Title" = "لم يتم تمكين إذن الكاميرا";
 "TUICallKit.failedtogetcamerapermission.Tips"  = "لا يمكن استخدام وظيفة المكالمة المرئية ، انقر فوق \"فتح\" لفتح إذن الكاميرا";
 "TUICallKit.failedtogetcamerapermission.Later" = "قل ذلك لاحقًا";

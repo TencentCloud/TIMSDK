@@ -9,6 +9,7 @@
 #import "TUIBubbleMessageCell.h"
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
+#import <TUICore/TUICore.h>
 
 @implementation TUIBubbleMessageCell
 
@@ -18,7 +19,6 @@
         _bubbleView = [[UIImageView alloc] initWithFrame:self.container.bounds];
         [self.container addSubview:_bubbleView];
         _bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self prepareReactTagUI:self.container];
         self.securityStrikeView = [[TUISecurityStrikeView alloc] init];
         [self.bubbleView addSubview:self.securityStrikeView];
 
@@ -38,6 +38,7 @@
         self.securityStrikeView.hidden = NO;
     }
     
+    [self prepareReactTagUI:self.container];
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
 
@@ -160,6 +161,11 @@
     } else {
         return self.class.outgoingAnimatedHighlightedAlpha20;
     }
+}
+
+- (void)prepareReactTagUI:(UIView *)containerView {
+    NSDictionary *param = @{TUICore_TUIChatExtension_ChatMessageReactPreview_Delegate: self};
+    [TUICore raiseExtension:TUICore_TUIChatExtension_ChatMessageReactPreview_ClassicExtensionID parentView:containerView param:param];
 }
 
 + (CGFloat)getBubbleTop:(TUIBubbleMessageCellData *)data {
