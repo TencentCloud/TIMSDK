@@ -9,21 +9,22 @@ target 'TUIKitDemo' do
   use_modular_headers!
 
   # Pods for Example
-  pod 'TUIChat', '7.7.5282'
-  pod 'TIMCommon', '7.7.5282'
-  pod 'TUIConversation', '7.7.5282'
-  pod 'TUIContact', '7.7.5282'
-  pod 'TUIGroup', '7.7.5282'
-  pod 'TUISearch', '7.7.5282'
-  pod 'TIMPush', '7.7.5282'
-  pod 'TUIPollPlugin', '7.7.5282'
-  pod 'TUIGroupNotePlugin', '7.7.5282'
-  pod 'TUITranslationPlugin', '7.7.5282'
-  pod 'TUIConversationGroupPlugin', '7.7.5282'
-  pod 'TUIConversationMarkPlugin', '7.7.5282'
-  pod 'TUIVoiceToTextPlugin', '7.7.5282'
-  pod 'TUICustomerServicePlugin', '7.7.5282'
-  pod 'TUIChatBotPlugin', '7.7.5282'
+  pod 'TUIChat', '7.8.5483'
+  pod 'TIMCommon', '7.8.5483'
+  pod 'TUIConversation', '7.8.5483'
+  pod 'TUIContact', '7.8.5483'
+  pod 'TUIGroup', '7.8.5483'
+  pod 'TUISearch', '7.8.5483'
+  pod 'TIMPush', '7.8.5483'
+  pod 'TUIPollPlugin', '7.8.5483'
+  pod 'TUIGroupNotePlugin', '7.8.5483'
+  pod 'TUITranslationPlugin', '7.8.5483'
+  pod 'TUIConversationGroupPlugin', '7.8.5483'
+  pod 'TUIConversationMarkPlugin', '7.8.5483'
+  pod 'TUIVoiceToTextPlugin', '7.8.5483'
+  pod 'TUICustomerServicePlugin', '7.8.5483'
+  pod 'TUIChatBotPlugin', '7.8.5483'
+  pod 'TUIEmojiPlugin', '7.8.5483'
   pod 'TUICallKit'
   pod 'TUIRoomKit','>= 1.7.0'
   pod 'MJRefresh'
@@ -34,7 +35,7 @@ end
 target 'pushservice' do
   use_frameworks!
   use_modular_headers!
-  pod 'TIMPush', '7.7.5282'
+  pod 'TIMPush', '7.8.5483'
 end
 #Pods config
 #Fix Xcode14 Bundle target error
