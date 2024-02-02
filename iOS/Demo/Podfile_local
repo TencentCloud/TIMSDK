@@ -23,7 +23,7 @@ target 'TUIKitDemo' do
   
   #Note: When using the local integration solution, if you need to upgrade, you need to obtain the latest component code from https://github.com/TencentCloud/TIMSDK/tree/master/iOS/TUIKit and place it in the specified local directory, such as /TIMSDK/ios/TUIKit/TUICore.
   #Note: When there are conflicts between the private modification and the remote, manual merging and conflict resolution are required.
-  
+
   pod 'TUICore', :path => "../TUIKit/TUICore"
   pod 'TIMCommon', :path => "../TUIKit/TIMCommon"
   pod 'TUIChat', :path => "../TUIKit/TUIChat"
@@ -34,12 +34,12 @@ target 'TUIKitDemo' do
   
   # 注意:插件需要跟随版本，需要和TUICore.spec中一致，正常情况下我们会帮您修改一致。
   # Note:TUIKit plugins need to follow the version.
-  pod 'TIMPush', '7.7.5282'
-  pod 'TUIPollPlugin', '7.7.5282'
-  pod 'TUIGroupNotePlugin', '7.7.5282'
-  pod 'TUITranslationPlugin', '7.7.5282'
-  pod 'TUIConversationGroupPlugin','7.7.5282'
-  pod 'TUIConversationMarkPlugin', '7.7.5282'
+  pod 'TIMPush', '7.8.5483'
+  pod 'TUIPollPlugin', '7.8.5483'
+  pod 'TUIGroupNotePlugin', '7.8.5483'
+  pod 'TUITranslationPlugin', '7.8.5483'
+  pod 'TUIConversationGroupPlugin','7.8.5483'
+  pod 'TUIConversationMarkPlugin', '7.8.5483'
   
   # 其他 Pod
   # Other Pod
@@ -52,7 +52,7 @@ end
 target 'pushservice' do
   use_frameworks!
   use_modular_headers!
-  pod 'TIMPush', '7.7.5282'
+  pod 'TIMPush', '7.8.5483'
 end
 
 
