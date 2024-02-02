@@ -30,7 +30,7 @@
   <tr >
      <td style="text-align:center">Quic 插件</td>
      <td style="text-align:center">提供 axp-quic 多路传输协议，弱网抗性更优</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5483/timquic-plugin-7.8.5483.aar">timquic-plugin.aar</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.8.5484/timquic-plugin-7.8.5484.aar">timquic-plugin.aar</a></td>
   </tr>
 </table>
 
