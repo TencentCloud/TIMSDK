@@ -16,6 +16,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.TextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 

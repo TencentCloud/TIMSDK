@@ -16,11 +16,11 @@ class SingleCallVideoLayoutViewModel {
 
     init {
         selfUser = TUICallState.instance.selfUser.get()
-        var remoteUserList = TUICallState.instance.remoteUserList.get()
-        if (remoteUserList != null && remoteUserList.size > 0) {
-            remoteUser = remoteUserList.first()
+        val remoteUserList = TUICallState.instance.remoteUserList.get()
+        remoteUser = if (remoteUserList != null && remoteUserList.size > 0) {
+            remoteUserList.first()
         } else {
-            remoteUser = User()
+            User()
         }
         isCameraOpen = TUICallState.instance.isCameraOpen
         isFrontCamera = TUICallState.instance.isFrontCamera

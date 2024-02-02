@@ -15,11 +15,11 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -549,6 +549,8 @@ public abstract class ChatPresenter {
      * otherwise the original message was not found
      */
     protected void preProcessMessage(List<TUIMessageBean> data, IUIKitCallback<List<TUIMessageBean>> callback) {
+        TUIChatUtils.notifyProcessMessage(data);
+
         List<String> msgIdList = new ArrayList<>();
         for (TUIMessageBean messageBean : data) {
             if (messageBean instanceof QuoteMessageBean) {
@@ -591,26 +593,21 @@ public abstract class ChatPresenter {
         };
         ThreadUtils.execute(findMessageRunnable);
 
-        Runnable parseReactUserNameRunnable = new Runnable() {
+        Runnable parseReplyUserNameRunnable = new Runnable() {
             @Override
             public void run() {
-                Set<String> userIdSet = getReactUserNames(data);
-                userIdSet.addAll(getReplyUserNames(data));
+                Set<String> userIdSet = getReplyUserNames(data);
                 if (userIdSet.isEmpty()) {
                     latch.countDown();
                     return;
                 }
-                getReactUserBean(userIdSet, new IUIKitCallback<Map<String, UserBean>>() {
+                getUserBean(userIdSet, new IUIKitCallback<Map<String, UserBean>>() {
                     @Override
-                    public void onSuccess(Map<String, UserBean> map) {
+                    public void onSuccess(Map<String, UserBean> userBeanMap) {
                         for (TUIMessageBean messageBean : data) {
-                            MessageReactBean reactBean = messageBean.getMessageReactBean();
-                            if (reactBean != null) {
-                                reactBean.setReactUserBeanMap(map);
-                            }
                             MessageRepliesBean repliesBean = messageBean.getMessageRepliesBean();
                             if (repliesBean != null) {
-                                setMessageReplyBean(repliesBean, map);
+                                setMessageReplyBean(repliesBean, userBeanMap);
                             }
                         }
                         latch.countDown();
@@ -623,7 +620,7 @@ public abstract class ChatPresenter {
                 });
             }
         };
-        ThreadUtils.execute(parseReactUserNameRunnable);
+        ThreadUtils.execute(parseReplyUserNameRunnable);
 
         Runnable mergeRunnable = new Runnable() {
             @Override
@@ -677,17 +674,17 @@ public abstract class ChatPresenter {
     public Set<String> getReactUserNames(List<TUIMessageBean> messageBeans) {
         Set<String> userIdSet = new HashSet<>();
         for (TUIMessageBean messageBean : messageBeans) {
-            MessageReactBean bean = messageBean.getMessageReactBean();
-            if (bean == null) {
-                continue;
-            }
-            Map<String, Set<String>> map = bean.getReacts();
-            if (map == null) {
-                continue;
-            }
-            for (Set<String> idSet : map.values()) {
-                userIdSet.addAll(idSet);
-            }
+//            MessageReactBean bean = messageBean.getMessageReactBean();
+//            if (bean == null) {
+//                continue;
+//            }
+//            Map<String, Set<String>> map = bean.getReacts();
+//            if (map == null) {
+//                continue;
+//            }
+//            for (Set<String> idSet : map.values()) {
+//                userIdSet.addAll(idSet);
+//            }
         }
         return userIdSet;
     }
@@ -1381,7 +1378,7 @@ public abstract class ChatPresenter {
     @NonNull
     private static OfflinePushInfo getOfflinePushInfo(TUIMessageBean message, boolean isGroup, String id, String offlineTitle) {
         OfflineMessageBean entity = new OfflineMessageBean();
-        entity.content = message.getExtra().toString();
+        entity.content = FaceManager.emojiJudge(message.getExtra());
         entity.sender = message.getSender();
         entity.nickname = TUIConfig.getSelfNickName();
         entity.faceUrl = TUIConfig.getSelfFaceUrl();
@@ -1806,34 +1803,6 @@ public abstract class ChatPresenter {
         ChatModifyMessageHelper.enqueueTask(task);
     }
 
-    public void reactMessage(String emojiId, TUIMessageBean messageBean) {
-        IUIKitCallback<TUIMessageBean> callback = new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                // do nothing, when reactMessage successfully ,you can receive onRecvMessageModified callback in TUIChatService.java
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("reactMessage failed code=" + errCode + " msg=" + errMsg);
-            }
-        };
-        ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(messageBean, callback) {
-            @Override
-            public TUIMessageBean packageMessage(TUIMessageBean originMessage) {
-                MessageReactBean reactBean = originMessage.getMessageReactBean();
-                if (reactBean == null) {
-                    reactBean = new MessageReactBean();
-                }
-
-                reactBean.operateUser(emojiId, TUILogin.getLoginUser());
-                originMessage.setMessageReactBean(reactBean);
-                return originMessage;
-            }
-        };
-        ChatModifyMessageHelper.enqueueTask(task);
-    }
-
     public void modifyMessage(TUIMessageBean messageBean) {
         provider.modifyMessage(messageBean, new IUIKitCallback<TUIMessageBean>() {
             @Override
@@ -1852,10 +1821,10 @@ public abstract class ChatPresenter {
 
     public void getChatFaceUrl(String chatID, IUIKitCallback<List<Object>> callback) {}
 
-    public void getReactUserBean(Set<String> userIds, IUIKitCallback<Map<String, UserBean>> callback) {
-        Map<String, UserBean> reactUserBeanMap = new HashMap<>();
+    public void getUserBean(Set<String> userIds, IUIKitCallback<Map<String, UserBean>> callback) {
+        Map<String, UserBean> userBeanHashMap = new HashMap<>();
         for (String id : userIds) {
-            reactUserBeanMap.put(id, null);
+            userBeanHashMap.put(id, null);
         }
         ChatInfo chatInfo = getChatInfo();
         if (chatInfo instanceof GroupInfo) {
@@ -1863,15 +1832,15 @@ public abstract class ChatPresenter {
                 @Override
                 public void onSuccess(List<GroupMemberInfo> data) {
                     for (GroupMemberInfo memberInfo : data) {
-                        UserBean reactUserBean = new UserBean();
-                        reactUserBean.setUserId(memberInfo.getAccount());
-                        reactUserBean.setFriendRemark(memberInfo.getFriendRemark());
-                        reactUserBean.setNameCard(memberInfo.getNameCard());
-                        reactUserBean.setNikeName(memberInfo.getNickName());
-                        reactUserBean.setFaceUrl(memberInfo.getIconUrl());
-                        reactUserBeanMap.put(reactUserBean.getUserId(), reactUserBean);
+                        UserBean userBean = new UserBean();
+                        userBean.setUserId(memberInfo.getAccount());
+                        userBean.setFriendRemark(memberInfo.getFriendRemark());
+                        userBean.setNameCard(memberInfo.getNameCard());
+                        userBean.setNikeName(memberInfo.getNickName());
+                        userBean.setFaceUrl(memberInfo.getIconUrl());
+                        userBeanHashMap.put(userBean.getUserId(), userBean);
                     }
-                    TUIChatUtils.callbackOnSuccess(callback, reactUserBeanMap);
+                    TUIChatUtils.callbackOnSuccess(callback, userBeanHashMap);
                 }
 
                 @Override
@@ -1884,9 +1853,9 @@ public abstract class ChatPresenter {
                 @Override
                 public void onSuccess(List<UserBean> data) {
                     for (UserBean userBean : data) {
-                        reactUserBeanMap.put(userBean.getUserId(), userBean);
+                        userBeanHashMap.put(userBean.getUserId(), userBean);
                     }
-                    TUIChatUtils.callbackOnSuccess(callback, reactUserBeanMap);
+                    TUIChatUtils.callbackOnSuccess(callback, userBeanHashMap);
                 }
 
                 @Override

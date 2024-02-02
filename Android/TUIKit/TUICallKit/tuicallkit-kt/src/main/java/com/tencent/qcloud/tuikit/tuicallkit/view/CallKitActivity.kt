@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
@@ -23,7 +24,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.root.SingleCallView
 
 class CallKitActivity : AppCompatActivity() {
     private var baseCallView: RelativeLayout? = null
-    private var layoutContainer: RelativeLayout? = null
+    private var layoutContainer: FrameLayout? = null
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.None) {
@@ -102,12 +103,23 @@ class CallKitActivity : AppCompatActivity() {
         if (baseCallView != null && baseCallView?.parent != null) {
             (baseCallView?.parent as ViewGroup).removeView(baseCallView)
         }
-        if (TUICallState.instance.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
-            baseCallView = SingleCallView(this)
-        } else {
-            baseCallView = GroupCallView(this)
+
+        when (TUICallState.instance.scene.get()) {
+            TUICallDefine.Scene.SINGLE_CALL -> {
+                baseCallView = SingleCallView(this)
+                layoutContainer?.addView(baseCallView)
+            }
+
+            TUICallDefine.Scene.GROUP_CALL -> {
+                baseCallView = GroupCallView(this)
+                layoutContainer?.addView(baseCallView)
+            }
+
+            else -> {
+                TUILog.w(TAG, "current scene is invalid")
+                finishActivity()
+            }
         }
-        layoutContainer?.addView(baseCallView)
     }
 
     private fun addObserver() {

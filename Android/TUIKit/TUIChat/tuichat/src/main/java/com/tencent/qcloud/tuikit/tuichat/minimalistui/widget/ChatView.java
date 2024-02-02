@@ -38,7 +38,6 @@ import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
@@ -57,8 +56,8 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
-import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
+import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.component.dialog.ChatBottomSelectSheet;
@@ -381,13 +380,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     hideBackToAtMessages();
                 }
-            }
-        });
-
-        mMessageRecyclerView.setMenuEmojiOnClickListener(new MessageRecyclerView.OnMenuEmojiClickListener() {
-            @Override
-            public void onClick(Emoji emoji, TUIMessageBean messageBean) {
-                reactMessage(emoji, messageBean);
             }
         });
 
@@ -739,9 +731,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
     @Override
     public void loadMessages(int type) {
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
-            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getItem(1) : null, type);
+            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getFirstMessageBean() : null, type);
         } else if (type == TUIChatConstants.GET_MESSAGE_BACKWARD) {
-            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getItem(mAdapter.getItemCount() - 1) : null, type);
+            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getLastMessageBean() : null, type);
         }
     }
 
@@ -908,11 +900,15 @@ public class ChatView extends LinearLayout implements IChatLayout {
                     case RECORD_START:
                         startRecording();
                         break;
+                    case RECORD_CONTINUE:
+                        showContinueRecord();
+                        break;
                     case RECORD_STOP:
+                    case RECORD_CANCEL:
                         stopRecording();
                         break;
-                    case RECORD_CANCEL:
-                        cancelRecording();
+                    case RECORD_READY_TO_CANCEL:
+                        readyToCancelRecord();
                         break;
                     case RECORD_TOO_SHORT:
                     case RECORD_FAILED:
@@ -925,7 +921,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
             @Override
             public void onUserTyping(boolean status, long curTime) {
-                if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTypingStatus()) {
+                if (!TUIChatConfigs.getGeneralConfig().isEnableTypingStatus()) {
                     return;
                 }
 
@@ -954,51 +950,36 @@ public class ChatView extends LinearLayout implements IChatLayout {
             }
 
             private void startRecording() {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AudioPlayer.getInstance().stopPlay();
-                        mRecordingGroup.setVisibility(View.VISIBLE);
-                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.left_cancle_send));
-                    }
+                post(() -> {
+                    AudioPlayer.getInstance().stopPlay();
+                    mRecordingGroup.setVisibility(View.VISIBLE);
+                    mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.left_cancle_send));
+                });
+            }
+
+            private void showContinueRecord() {
+                post(() -> {
+                    mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.left_cancle_send));
                 });
             }
 
             private void stopRecording() {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecordingGroup.setVisibility(View.GONE);
-                    }
-                }, 500);
+                post(() -> mRecordingGroup.setVisibility(View.GONE));
             }
 
             private void stopAbnormally(final int status) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (status == RECORD_TOO_SHORT) {
-                            mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.say_time_short));
-                        } else {
-                            mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.record_fail));
-                        }
+                post(() -> {
+                    if (status == RECORD_TOO_SHORT) {
+                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.say_time_short));
+                    } else {
+                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.record_fail));
                     }
                 });
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecordingGroup.setVisibility(View.GONE);
-                    }
-                }, 1000);
+                postDelayed(() -> mRecordingGroup.setVisibility(View.GONE), 500);
             }
 
-            private void cancelRecording() {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.up_cancle_send));
-                    }
-                });
+            private void readyToCancelRecord() {
+                post(() -> mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.up_cancle_send)));
             }
         });
 
@@ -1143,10 +1124,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
         ReplyPreviewBean replyPreviewBean = ChatMessageBuilder.buildReplyPreviewBean(messageBean);
         replyPreviewBean.setMessageRootID(null);
         mInputView.showReplyPreview(replyPreviewBean);
-    }
-
-    protected void reactMessage(Emoji emoji, TUIMessageBean messageBean) {
-        presenter.reactMessage(emoji.getFaceKey(), messageBean);
     }
 
     protected void showMessageInfo(TUIMessageBean messageBean) {
@@ -1400,8 +1377,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     }
 
     public void exitChat() {
-        //        getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
-        AudioRecorder.getInstance().stopRecord();
+        AudioRecorder.cancelRecord();
         AudioPlayer.getInstance().stopPlay();
         presenter.markMessageAsRead(mChatInfo);
     }

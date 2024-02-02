@@ -36,6 +36,8 @@
     <dimen name="core_pop_menu_padding_top">16dp</dimen>
     <dimen name="core_pop_menu_padding_bottom">8dp</dimen>
     <dimen name="core_pop_menu_icon_size">20dp</dimen>
+    <dimen name="core_pop_menu_icon_margin">12dp</dimen>
+    <dimen name="core_pop_menu_text_size">14sp</dimen>
 
     <dimen name="core_title_text_size">17.28sp</dimen>
 
@@ -49,5 +51,7 @@
     <dimen name="chat_message_area_padding_left_right">11.52dp</dimen>
     <dimen name="chat_message_area_padding_top_bottom">9.6dp</dimen>
     <dimen name="chat_message_content_max_width">235dp</dimen>
+
+    <dimen name="common_default_emoji_size">28dp</dimen>
 
 </resources>

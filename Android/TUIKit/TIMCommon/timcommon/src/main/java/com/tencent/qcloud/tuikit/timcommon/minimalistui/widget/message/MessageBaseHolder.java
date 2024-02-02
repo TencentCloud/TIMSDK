@@ -24,8 +24,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
-    public static final int MSG_TYPE_HEADER_VIEW = -99;
-
     public ICommonMessageAdapter mAdapter;
     public MessageProperties properties = MessageProperties.getInstance();
     protected OnItemClickListener onItemClickListener;
@@ -33,7 +31,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public FrameLayout msgContentFrame;
     public LinearLayout msgArea;
     public LinearLayout msgAreaAndReply;
-    public ChatReactView reactView;
+    public FrameLayout reactionArea;
     public CheckBox mMutiSelectCheckBox;
     public View mContentLayout;
 
@@ -47,7 +45,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public MessageBaseHolder(View itemView) {
         super(itemView);
         msgContentFrame = itemView.findViewById(R.id.msg_content_fl);
-        reactView = itemView.findViewById(R.id.reacts_view);
+        reactionArea = itemView.findViewById(R.id.message_reaction_area);
         msgArea = itemView.findViewById(R.id.msg_area);
         msgAreaAndReply = itemView.findViewById(R.id.msg_area_and_reply);
         mMutiSelectCheckBox = itemView.findViewById(R.id.select_checkbox);

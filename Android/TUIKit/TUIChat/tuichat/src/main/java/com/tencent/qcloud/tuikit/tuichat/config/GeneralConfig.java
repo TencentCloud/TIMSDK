@@ -7,6 +7,10 @@ public class GeneralConfig {
     public static final int DEFAULT_AUDIO_RECORD_MAX_TIME = 60;
     public static final int DEFAULT_VIDEO_RECORD_MAX_TIME = 15;
     public static final int DEFAULT_MESSAGE_RECALL_TIME_INTERVAL = 120;
+    public static final int FILE_MAX_SIZE = 100 * 1024 * 1024;
+    public static final int VIDEO_MAX_SIZE = 100 * 1024 * 1024;
+    public static final int IMAGE_MAX_SIZE = 28 * 1024 * 1024;
+    public static final int GIF_IMAGE_MAX_SIZE = 10 * 1024 * 1024;
 
     private int audioRecordMaxTime = DEFAULT_AUDIO_RECORD_MAX_TIME;
     private int videoRecordMaxTime = DEFAULT_VIDEO_RECORD_MAX_TIME;
@@ -29,6 +33,8 @@ public class GeneralConfig {
     private boolean enableAudioCall = true;
     private boolean enableVideoCall = true;
     private boolean enableRoomKit = true;
+    private boolean enablePoll = true;
+    private boolean enableGroupNote = true;
 
     private boolean enableFloatWindowForCall = true;
     private boolean enableMultiDeviceForCall = false;
@@ -165,6 +171,38 @@ public class GeneralConfig {
      */
     public boolean isEnableRoomKit() {
         return enableRoomKit;
+    }
+
+    /**
+     *  设置是否展示群接龙按钮，如果集成了 TUIGroupNotePlugin 插件，默认展示
+     *  Set whether to display the group note button. If the TUIGroupNotePlugin is integrated, it is displayed by default.
+     */
+    public void setEnableGroupNote(boolean enableGroupNote) {
+        this.enableGroupNote = enableGroupNote;
+    }
+
+    /**
+     * 获取是否展示群接龙按钮
+     * Get whether to display the group note button
+     */
+    public boolean isEnableGroupNote() {
+        return enableGroupNote;
+    }
+
+    /**
+     *  设置是否展示群投票按钮，如果集成了 TUIPollPlugin 组件，默认展示
+     *  Set whether to display the group voting button. If the TUIPollPlugin component is integrated, it is displayed by default.
+     */
+    public void setEnablePoll(boolean enablePoll) {
+        this.enablePoll = enablePoll;
+    }
+
+    /**
+     * 获取是否展示群投票
+     * Get whether to display the group voting button
+     */
+    public boolean isEnablePoll() {
+        return enablePoll;
     }
 
     /**

@@ -49,4 +49,9 @@
 
     <color name="order_message_color">#FF7201</color>
     <color name="window_background_color">#BF000000</color>
+
+    <color name="tuiemoji_divide_line_bg_color">#1A000000</color>
+
+    <color name="tuichat_face_view_bg">#EBF0F6</color>
+
 </resources>

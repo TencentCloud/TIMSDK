@@ -9,12 +9,13 @@ import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
 
 class VideoCallerAndCalleeAcceptedViewModel {
-    public var isMicMute = LiveData<Boolean>()
-    public var isSpeaker = LiveData<Boolean>()
-    public var isCameraOpen = LiveData<Boolean>()
-    public var frontCamera = LiveData<Boolean>()
-    public var isBottomViewExpanded = LiveData<Boolean>()
-    public var scene = LiveData<TUICallDefine.Scene>()
+    var isMicMute = LiveData<Boolean>()
+    var isSpeaker = LiveData<Boolean>()
+    var isCameraOpen = LiveData<Boolean>()
+    var frontCamera = LiveData<Boolean>()
+    var isBottomViewExpanded = LiveData<Boolean>()
+    var showLargerViewUserId = LiveData<String>()
+    var scene = LiveData<TUICallDefine.Scene>()
 
     private var isFrontCameraObserver = Observer<TUICommonDefine.Camera> {
         frontCamera.set(it == TUICommonDefine.Camera.Front)
@@ -31,6 +32,7 @@ class VideoCallerAndCalleeAcceptedViewModel {
         frontCamera.set(TUICallState.instance.isFrontCamera.get() == TUICommonDefine.Camera.Front)
 
         isBottomViewExpanded = TUICallState.instance.isBottomViewExpand
+        showLargerViewUserId = TUICallState.instance.showLargeViewUserId
         scene = TUICallState.instance.scene
 
         addObserver()

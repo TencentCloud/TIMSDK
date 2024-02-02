@@ -11,10 +11,9 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
-import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -457,7 +456,7 @@ public class ChatMessageParser {
         } else {
             displayString = messageBean.onGetDisplayString();
         }
-        displayString = FaceManager.emojiJudge(displayString);
+        displayString = FaceUtil.emojiJudge(displayString);
         return displayString;
     }
 

@@ -4,7 +4,6 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.PowerManager
 import android.text.TextUtils
-import android.util.DisplayMetrics
 import android.view.Window
 import android.view.WindowManager
 
@@ -58,19 +57,5 @@ object DeviceUtils {
             }
         }
         return false
-    }
-
-    fun getScreenWidth(context: Context): Int {
-        val metric = DisplayMetrics()
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        wm.defaultDisplay.getMetrics(metric)
-        return metric.widthPixels
-    }
-
-    fun getScreenHeight(context: Context): Int {
-        val metric = DisplayMetrics()
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        wm.defaultDisplay.getMetrics(metric)
-        return metric.heightPixels
     }
 }

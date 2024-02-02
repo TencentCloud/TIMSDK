@@ -2,29 +2,18 @@ package com.tencent.qcloud.tuikit.timcommon.classicui.widget.message;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
-import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.Pair;
-import android.view.ActionMode;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -36,13 +25,8 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
-import com.tencent.qcloud.tuikit.timcommon.classicui.component.BeginnerGuidePage;
-import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonLog;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SelectTextHelper {
     private static final String TAG = SelectTextHelper.class.getSimpleName();
@@ -240,7 +224,6 @@ public class SelectTextHelper {
      * 重置弹窗
      */
     public void reset() {
-        TIMCommonLog.d(TAG, "reset");
         hideSelectView();
         resetSelectionInfo();
         // 重置弹窗回调
@@ -305,12 +288,7 @@ public class SelectTextHelper {
         mTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                BeginnerGuidePage.showBeginnerGuideThen(mTextView, new Runnable() {
-                    @Override
-                    public void run() {
-                        onLongTextViewClick();
-                    }
-                });
+                onLongTextViewClick();
                 return true;
             }
 
@@ -419,11 +397,9 @@ public class SelectTextHelper {
         isHide = true;
         usedClickListener = false;
         if (mStartHandle != null) {
-            TIMCommonLog.d(TAG, "mStartHandle.dismiss();");
             mStartHandle.dismiss();
         }
         if (mEndHandle != null) {
-            TIMCommonLog.d(TAG, "mEndHandle.dismiss();");
             mEndHandle.dismiss();
         }
     }
@@ -431,7 +407,6 @@ public class SelectTextHelper {
     private void resetSelectionInfo() {
         mSelectionInfo.mSelectionContent = null;
         if (mSpannable != null) {
-            TIMCommonLog.d(TAG, "mSpannable.removeSpan(mSpan);");
             Selection.removeSelection(mSpannable);
         }
     }
@@ -505,6 +480,7 @@ public class SelectTextHelper {
             mSelectionInfo.mStart = mSelectionInfo.mEnd;
             mSelectionInfo.mEnd = temp;
         }
+
         mTextView.requestFocus();
         mSelectionInfo.mSelectionContent = mSpannable.subSequence(mSelectionInfo.mStart, mSelectionInfo.mEnd).toString();
         Selection.setSelection(mSpannable, mSelectionInfo.mStart, mSelectionInfo.mEnd);

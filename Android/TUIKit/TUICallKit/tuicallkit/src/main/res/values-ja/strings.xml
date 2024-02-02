@@ -63,4 +63,9 @@
     <string name="tuicallkit_group_btn_ok">OK</string>
 
     <string name="tuicallkit_error_in_peer_blacklist">ユーザーはブラックリストに登録され、通話が開始できませんでした。</string>
+    <string name="tuicallkit_error_invalid_login">ログイン失敗しました。もう一度ログインしてください</string>
+    <string name="tuicallkit_error_parameter_invalid">パラメータエラー</string>
+    <string name="tuicallkit_error_request_refused">現在の状態では、この機能の呼び出しはサポートされていません</string>
+    <string name="tuicallkit_error_request_repeated">現在実行中のメソッドを呼び出すことはできません</string>
+    <string name="tuicallkit_error_scene_not_support">現在の通話シーンでは、この機能はサポートしていません</string>
 </resources>

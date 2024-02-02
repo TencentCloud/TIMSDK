@@ -12,15 +12,20 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class MessageViewHolderFactory {
+    public static final int VIEW_TYPE_HEAD = -99;
+    public static final int VIEW_TYPE_TAIL = -98;
+
     public static RecyclerView.ViewHolder getInstance(ViewGroup parent, ICommonMessageAdapter adapter, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder holder = null;
         View view = null;
 
-        if (viewType == MessageBaseHolder.MSG_TYPE_HEADER_VIEW) {
+        if (viewType == VIEW_TYPE_HEAD) {
             view = inflater.inflate(R.layout.chat_loading_progress_bar, parent, false);
-            holder = new MessageHeaderHolder(view);
-            return holder;
+            return new MessageHeadHolder(view);
+        }
+        if (viewType == VIEW_TYPE_TAIL) {
+            return new MessageTailHolder(new View(parent.getContext()));
         }
 
         if (MinimalistUIService.getInstance().isNeedEmptyViewGroup(viewType)) {

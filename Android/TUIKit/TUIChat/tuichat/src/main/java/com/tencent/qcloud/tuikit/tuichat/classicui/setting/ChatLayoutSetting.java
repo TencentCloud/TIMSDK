@@ -75,7 +75,7 @@ public class ChatLayoutSetting {
         // Set the default avatar, the default is the same as your friend's and your own avatar
         //        messageRecyclerView.setAvatar(R.drawable.ic_more_file);
         //        // 设置头像圆角 Set avatar rounded corners
-        //        messageRecyclerView.setAvatarRadius(50);
+        messageRecyclerView.setAvatarRadius(4);
         //        // 设置头像大小 Set avatar size
         //        messageRecyclerView.setAvatarSize(new int[]{48, 48});
         //

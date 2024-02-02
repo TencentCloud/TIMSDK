@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tuiemoji_add_reaction_failed_tip">فشل في إضافة رد فعل الرموز التعبيرية</string>
+    <string name="tuiemoji_remove_reaction_failed_tip">فشل في إزالة رد فعل الرموز التعبيرية</string>
+    <string name="chat_tap_to_remove">اضغط للإزالة</string>
+</resources>

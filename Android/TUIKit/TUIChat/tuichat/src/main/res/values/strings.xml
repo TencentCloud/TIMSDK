@@ -125,6 +125,7 @@
     <string name="input_tip">No nickname. Enter again.</string>
     <string name="chat_camera_occupied_tip">Other functions are using the camera.</string>
     <string name="chat_mic_is_being_used_cant_record">Microphone is being used by another function, unable to record.</string>
+    <string name="chat_record_audio_failed">Audio recording failed.</string>
 
     <string name="delivered">Delivered to</string>
     <string name="someone_unread">%d unread</string>
@@ -275,4 +276,8 @@
     <string name="chat_risk_sound">[Violation audio]</string>
     <string name="chat_risk_image">[Violation image]</string>
     <string name="chat_risk_video">[Violation video]</string>
+
+    <string name="chat_recent_use">Recent Use</string>
+    <string name="chat_all_emojis">All Emojis</string>
+
 </resources>

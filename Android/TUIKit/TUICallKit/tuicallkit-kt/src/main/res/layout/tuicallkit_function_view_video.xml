@@ -97,8 +97,7 @@
         android:src="@drawable/tuicallkit_ic_switch_camera"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/iv_hang_up"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_hang_up"
+        app:layout_constraintStart_toStartOf="@+id/iv_camera"
         app:layout_constraintTop_toTopOf="@+id/iv_hang_up" />
 
     <ImageView

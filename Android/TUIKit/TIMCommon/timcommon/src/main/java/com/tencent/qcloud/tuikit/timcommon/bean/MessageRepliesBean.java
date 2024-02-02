@@ -8,58 +8,6 @@ import java.util.List;
 
 public class MessageRepliesBean implements Serializable {
     public static final int VERSION = 1;
-
-    public static class ReplyBean implements Serializable {
-        private String messageID;
-        private String messageAbstract;
-        private String messageSender;
-        private transient String senderFaceUrl;
-        private transient String senderShowName;
-
-        public String getMessageID() {
-            return messageID;
-        }
-
-        public void setMessageID(String messageID) {
-            this.messageID = messageID;
-        }
-
-        public String getMessageAbstract() {
-            return messageAbstract;
-        }
-
-        public void setMessageAbstract(String messageAbstract) {
-            this.messageAbstract = messageAbstract;
-        }
-
-        public String getMessageSender() {
-            return messageSender;
-        }
-
-        public void setMessageSender(String messageSender) {
-            this.messageSender = messageSender;
-        }
-
-        public void setSenderFaceUrl(String senderFaceUrl) {
-            this.senderFaceUrl = senderFaceUrl;
-        }
-
-        public String getSenderFaceUrl() {
-            return senderFaceUrl;
-        }
-
-        public void setSenderShowName(String senderShowName) {
-            this.senderShowName = senderShowName;
-        }
-
-        public String getSenderShowName() {
-            if (TextUtils.isEmpty(senderShowName)) {
-                return messageSender;
-            }
-            return senderShowName;
-        }
-    }
-
     private List<ReplyBean> replies;
     private int version = VERSION;
 
@@ -113,4 +61,57 @@ public class MessageRepliesBean implements Serializable {
         }
         return 0;
     }
+
+
+    public static class ReplyBean implements Serializable {
+        private String messageID;
+        private String messageAbstract;
+        private String messageSender;
+        private transient String senderFaceUrl;
+        private transient String senderShowName;
+
+        public String getMessageID() {
+            return messageID;
+        }
+
+        public void setMessageID(String messageID) {
+            this.messageID = messageID;
+        }
+
+        public String getMessageAbstract() {
+            return messageAbstract;
+        }
+
+        public void setMessageAbstract(String messageAbstract) {
+            this.messageAbstract = messageAbstract;
+        }
+
+        public String getMessageSender() {
+            return messageSender;
+        }
+
+        public void setMessageSender(String messageSender) {
+            this.messageSender = messageSender;
+        }
+
+        public void setSenderFaceUrl(String senderFaceUrl) {
+            this.senderFaceUrl = senderFaceUrl;
+        }
+
+        public String getSenderFaceUrl() {
+            return senderFaceUrl;
+        }
+
+        public void setSenderShowName(String senderShowName) {
+            this.senderShowName = senderShowName;
+        }
+
+        public String getSenderShowName() {
+            if (TextUtils.isEmpty(senderShowName)) {
+                return messageSender;
+            }
+            return senderShowName;
+        }
+    }
+
 }

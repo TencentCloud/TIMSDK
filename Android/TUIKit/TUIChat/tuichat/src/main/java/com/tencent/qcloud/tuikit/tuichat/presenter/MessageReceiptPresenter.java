@@ -1,16 +1,19 @@
 package com.tencent.qcloud.tuikit.tuichat.presenter;
 
+import android.text.TextUtils;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageDetailListener;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,9 +27,33 @@ public class MessageReceiptPresenter {
     private final ChatProvider provider;
     private ChatPresenter chatPresenter;
     private ChatInfo chatInfo;
+    private C2CChatEventListener chatEventListener;
+    private TUIMessageBean messageBean;
+    private IMessageDetailListener messageDetailListener;
 
     public MessageReceiptPresenter() {
         provider = new ChatProvider();
+    }
+
+    public void initChatEventListener() {
+        chatEventListener = new C2CChatEventListener() {
+            @Override
+            public void onMessageChanged(TUIMessageBean changedMessage, int dataChangeType) {
+                if (changedMessage != null && messageBean != null && TextUtils.equals(changedMessage.getId(), messageBean.getId())) {
+                    updateMessage(changedMessage);
+                }
+            }
+        };
+        TUIChatService.getInstance().addC2CChatEventListener(chatEventListener);
+    }
+
+    public void setMessageBean(TUIMessageBean messageBean) {
+        this.messageBean = messageBean;
+        TUIChatUtils.notifyProcessMessage(Collections.singletonList(messageBean));
+    }
+
+    public void setMessageDetailListener(IMessageDetailListener messageDetailListener) {
+        this.messageDetailListener = messageDetailListener;
     }
 
     public void setChatInfo(ChatInfo chatInfo) {
@@ -46,7 +73,7 @@ public class MessageReceiptPresenter {
             return;
         }
         Set<String> userIds = new HashSet<>(chatPresenter.getReplyUserNames(Collections.singletonList(message)));
-        chatPresenter.getReactUserBean(userIds, new IUIKitCallback<Map<String, UserBean>>() {
+        chatPresenter.getUserBean(userIds, new IUIKitCallback<Map<String, UserBean>>() {
             @Override
             public void onSuccess(Map<String, UserBean> data) {
                 MessageRepliesBean repliesBean = message.getMessageRepliesBean();
@@ -59,6 +86,12 @@ public class MessageReceiptPresenter {
                 TUIChatUtils.callbackOnError(callback, errCode, errMsg);
             }
         });
+    }
+
+    private void updateMessage(TUIMessageBean messageBean) {
+        if (messageDetailListener != null) {
+            messageDetailListener.updateMessage(messageBean);
+        }
     }
 
     public void getGroupMessageReadMembers(TUIMessageBean messageBean, boolean isRead, long nextSeq, IUIKitCallback<GroupMessageReadMembersInfo> callback) {

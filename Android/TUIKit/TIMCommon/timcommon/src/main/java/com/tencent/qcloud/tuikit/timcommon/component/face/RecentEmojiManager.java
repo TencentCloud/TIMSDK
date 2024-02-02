@@ -3,15 +3,18 @@ package com.tencent.qcloud.tuikit.timcommon.component.face;
 import android.text.TextUtils;
 import android.util.Base64;
 import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecentEmojiManager {
-    public static final String PREFERENCE_NAME = "recentFace"; //"preference";
+    public static final String PREFERENCE_NAME = "recentFace";
+    public static final int DEFAULT_RECENT_NUM = 10;
+    private static final String DEFAULT_RECENT_EMOJI_KEY = "recentEmoji";
 
     private static final RecentEmojiManager instance = new RecentEmojiManager();
 
@@ -30,25 +33,55 @@ public class RecentEmojiManager {
         return this;
     }
 
-    public RecentEmojiManager putCollection(String key, Collection collection) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        objectOutputStream.writeObject(collection);
-        String collectionString = new String(Base64.encode(byteArrayOutputStream.toByteArray(), Base64.DEFAULT));
-        objectOutputStream.close();
-        return putString(key, collectionString);
+    public static void putCollection(List<String> emojiList) {
+        getInstance().putCollection(DEFAULT_RECENT_EMOJI_KEY, emojiList);
     }
 
-    public Collection getCollection(String key) throws IOException, ClassNotFoundException {
-        String collectionString = getString(key);
-        if (TextUtils.isEmpty(collectionString) || TextUtils.isEmpty(collectionString.trim())) {
+    public RecentEmojiManager putCollection(String key, List<String> emojiList) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(emojiList);
+            String collectionString = new String(Base64.encode(byteArrayOutputStream.toByteArray(), Base64.DEFAULT));
+            objectOutputStream.close();
+            return putString(key, collectionString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    public List<String> getCollection(String key) {
+        try {
+            String collectionString = getString(key);
+            if (TextUtils.isEmpty(collectionString) || TextUtils.isEmpty(collectionString.trim())) {
+                return null;
+            }
+            byte[] mobileBytes = Base64.decode(collectionString.getBytes(), Base64.DEFAULT);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(mobileBytes);
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+            Object collectionObj = objectInputStream.readObject();
+            List<String> collection = null;
+            if (collectionObj instanceof List) {
+                collection = (List<String>) collectionObj;
+            }
+            return collection;
+        } catch (Exception e) {
             return null;
         }
-        byte[] mobileBytes = Base64.decode(collectionString.getBytes(), Base64.DEFAULT);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(mobileBytes);
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        Collection collection = (Collection) objectInputStream.readObject();
-        objectInputStream.close();
-        return collection;
+    }
+
+    public static List<String> getCollection() {
+        return getInstance().getCollection(DEFAULT_RECENT_EMOJI_KEY);
+    }
+
+    public static void updateRecentUseEmoji(String emojiKey) {
+        List<String> recentList = getCollection();
+        recentList.remove(emojiKey);
+        recentList.add(0, emojiKey);
+        if (recentList.size() > DEFAULT_RECENT_NUM) {
+            recentList.remove(recentList.size() - 1);
+        }
+        putCollection(recentList);
     }
 }

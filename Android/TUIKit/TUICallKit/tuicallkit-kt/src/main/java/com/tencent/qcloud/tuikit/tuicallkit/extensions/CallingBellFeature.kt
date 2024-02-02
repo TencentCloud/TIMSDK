@@ -10,13 +10,14 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
-import com.tencent.liteav.audio.TXAudioEffectManager
 import com.tencent.liteav.audio.TXAudioEffectManager.AudioMusicParam
+import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.util.SPUtils
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
+import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -47,7 +48,9 @@ class CallingBellFeature(context: Context) {
                 }
 
                 TUICallDefine.Status.Waiting -> {
-                    startRing()
+                    if (DeviceUtils.isAppRunningForeground(TUIConfig.getAppContext())) {
+                        startRing()
+                    }
                 }
 
                 TUICallDefine.Status.Accept -> {

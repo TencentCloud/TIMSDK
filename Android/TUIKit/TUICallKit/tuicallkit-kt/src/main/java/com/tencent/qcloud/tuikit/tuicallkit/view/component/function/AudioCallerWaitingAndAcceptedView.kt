@@ -76,13 +76,12 @@ class AudioCallerWaitingAndAcceptedView(context: Context) : BaseCallView(context
                 R.string.tuicallkit_toast_enable_mute
             }
             textMic?.setText(context.getString(resId))
-
         }
         layoutHangup?.setOnClickListener { viewModel?.hangup() }
         layoutHandsFree?.setOnClickListener {
             val resId = if (viewModel?.isSpeaker?.get() == true) {
                 viewModel?.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
-                R.string.tuicallkit_toast_use_handset
+                R.string.tuicallkit_toast_use_earpiece
             } else {
                 viewModel?.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
                 R.string.tuicallkit_toast_speaker

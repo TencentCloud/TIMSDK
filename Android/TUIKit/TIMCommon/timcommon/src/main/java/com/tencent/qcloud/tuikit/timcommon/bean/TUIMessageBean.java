@@ -72,6 +72,8 @@ public abstract class TUIMessageBean implements Serializable {
     private UserBean revoker;
     private boolean hasRiskContent = false;
     private int messageSource = 0;
+    private MessageReceiptInfo messageReceiptInfo;
+    private MessageRepliesBean messageRepliesBean;
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -97,21 +99,9 @@ public abstract class TUIMessageBean implements Serializable {
         isEnableForward = enableForward;
     }
 
-    private MessageReceiptInfo messageReceiptInfo;
-    private MessageRepliesBean messageRepliesBean;
-    private MessageReactBean messageReactBean;
-
-    public MessageReactBean getMessageReactBean() {
-        return messageReactBean;
-    }
 
     public MessageRepliesBean getMessageRepliesBean() {
         return messageRepliesBean;
-    }
-
-    public void setMessageReactBean(MessageReactBean messageReactBean) {
-        this.messageReactBean = messageReactBean;
-        MessageBuilder.mergeCloudCustomData(this, TIMCommonConstants.MESSAGE_REACT_KEY, messageReactBean);
     }
 
     public void setMessageRepliesBean(MessageRepliesBean messageRepliesBean) {
@@ -170,7 +160,6 @@ public abstract class TUIMessageBean implements Serializable {
             }
         }
 
-        messageReactBean = MessageParser.parseMessageReact(this);
         messageRepliesBean = MessageParser.parseMessageReplies(this);
     }
 

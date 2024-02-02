@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
     namespace "com.tencent.qcloud.tuikit.tuicallkit"
 
     defaultConfig {
         versionName "1.0"
         versionCode 1
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 34
     }
 
     buildTypes {
@@ -37,8 +37,8 @@ dependencies {
     if (projects.contains("tuicore")) {
         api project(':tuicore')
     } else {
-        api "com.tencent.imsdk:imsdk-plus:7.7.5282"
-        api "com.tencent.liteav.tuikit:tuicore:7.7.5285"
+        api "com.tencent.imsdk:imsdk-plus:7.8.5483"
+        api "com.tencent.liteav.tuikit:tuicore:7.8.5483"
     }
 
     if (projects.contains("tuicallengine")) {
@@ -46,6 +46,6 @@ dependencies {
     } else {
         api "com.google.code.gson:gson:2.9.1"
         api "com.tencent.liteav:LiteAVSDK_TRTC:11.4.0.13189"
-        api 'com.tencent.liteav.tuikit:tuicallengine:2.1.0.810'
+        api 'com.tencent.liteav.tuikit:tuicallengine:2.2.0.860'
     }
 }

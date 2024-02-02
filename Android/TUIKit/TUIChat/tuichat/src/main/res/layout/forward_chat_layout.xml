@@ -19,7 +19,7 @@
     <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView
         android:id="@+id/chat_message_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/view_line"
         android:baselineAligned="false"
         android:clickable="false"

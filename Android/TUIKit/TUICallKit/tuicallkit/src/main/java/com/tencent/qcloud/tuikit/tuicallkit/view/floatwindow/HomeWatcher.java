@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 
 public class HomeWatcher {
     private Context               mContext;
@@ -24,7 +25,11 @@ public class HomeWatcher {
 
     public void startWatch() {
         if (null != mReceiver && !mIsRegisted) {
-            mContext.registerReceiver(mReceiver, mFilter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mContext.registerReceiver(mReceiver, mFilter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                mContext.registerReceiver(mReceiver, mFilter);
+            }
             mIsRegisted = true;
         }
     }

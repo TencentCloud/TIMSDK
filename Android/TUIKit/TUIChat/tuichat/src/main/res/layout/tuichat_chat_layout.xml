@@ -49,7 +49,7 @@
         android:layout_below="@+id/chat_notice_layout"
         android:baselineAligned="false"
         android:clickable="false"
-        android:descendantFocusability="beforeDescendants" />
+        android:descendantFocusability="blocksDescendants" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"

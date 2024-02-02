@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageReactBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
@@ -18,6 +17,7 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.IReplyMessageHandler;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,15 +32,16 @@ public class ReplyPresenter {
     private C2CChatEventListener c2CChatEventListener;
     private ChatPresenter chatPresenter;
     private ChatInfo chatInfo;
-    private String messageId;
+    private TUIMessageBean messageBean;
     private IReplyMessageHandler replyHandler;
 
     public ReplyPresenter() {
         provider = new ChatProvider();
     }
 
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setMessageBean(TUIMessageBean messageBean) {
+        this.messageBean = messageBean;
+        TUIChatUtils.notifyProcessMessage(Collections.singletonList(messageBean));
     }
 
     public void setChatInfo(ChatInfo chatInfo) {
@@ -62,20 +63,32 @@ public class ReplyPresenter {
         if (chatPresenter instanceof C2CChatPresenter) {
             c2CChatEventListener = new C2CChatEventListener() {
                 @Override
-                public void onRecvMessageModified(TUIMessageBean messageBean) {
-                    if (TextUtils.equals(messageBean.getId(), messageId)) {
+                public void onRecvMessageModified(TUIMessageBean changedMessage) {
+                    if (changedMessage != null && messageBean != null && TextUtils.equals(messageBean.getId(), changedMessage.getId())) {
+                        messageBean.setMessageRepliesBean(changedMessage.getMessageRepliesBean());
                         onMessageModified(messageBean);
                     }
+                }
+
+                @Override
+                public void onMessageChanged(TUIMessageBean messageBean, int dataChangeType) {
+                    onRecvMessageModified(messageBean);
                 }
             };
             TUIChatService.getInstance().addC2CChatEventListener(c2CChatEventListener);
         } else {
             groupChatEventListener = new GroupChatEventListener() {
                 @Override
-                public void onRecvMessageModified(TUIMessageBean messageBean) {
-                    if (TextUtils.equals(messageBean.getId(), messageId)) {
+                public void onRecvMessageModified(TUIMessageBean changedMessage) {
+                    if (changedMessage != null && messageBean != null && TextUtils.equals(messageBean.getId(), changedMessage.getId())) {
+                        messageBean.setMessageRepliesBean(changedMessage.getMessageRepliesBean());
                         onMessageModified(messageBean);
                     }
+                }
+
+                @Override
+                public void onMessageChanged(TUIMessageBean messageBean, int dataChangeType) {
+                    onRecvMessageModified(messageBean);
                 }
             };
             TUIChatService.getInstance().addGroupChatEventListener(groupChatEventListener);
@@ -132,7 +145,7 @@ public class ReplyPresenter {
             }
             return;
         }
-        chatPresenter.getReactUserBean(userIDSet, new IUIKitCallback<Map<String, UserBean>>() {
+        chatPresenter.getUserBean(userIDSet, new IUIKitCallback<Map<String, UserBean>>() {
             @Override
             public void onSuccess(Map<String, UserBean> data) {
                 for (Map.Entry<String, UserBean> dataEntry : data.entrySet()) {
@@ -186,33 +199,6 @@ public class ReplyPresenter {
                         TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                     }
                 });
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
-            }
-        });
-    }
-
-    public void getReactUserBean(TUIMessageBean messageBean, IUIKitCallback<Void> callback) {
-        List<TUIMessageBean> messageBeanList = new ArrayList<>();
-        messageBeanList.add(messageBean);
-        Set<String> userIdSet = chatPresenter.getReactUserNames(messageBeanList);
-        if (userIdSet.isEmpty()) {
-            TUIChatUtils.callbackOnSuccess(callback, null);
-            return;
-        }
-        chatPresenter.getReactUserBean(userIdSet, new IUIKitCallback<Map<String, UserBean>>() {
-            @Override
-            public void onSuccess(Map<String, UserBean> map) {
-                for (TUIMessageBean messageBean : messageBeanList) {
-                    MessageReactBean reactBean = messageBean.getMessageReactBean();
-                    if (reactBean != null) {
-                        reactBean.setReactUserBeanMap(map);
-                    }
-                }
-                TUIChatUtils.callbackOnSuccess(callback, null);
             }
 
             @Override

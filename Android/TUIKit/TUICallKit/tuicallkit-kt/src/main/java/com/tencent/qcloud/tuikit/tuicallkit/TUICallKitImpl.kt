@@ -2,6 +2,9 @@ package com.tencent.qcloud.tuikit.tuicallkit
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+
 import com.tencent.liteav.beauty.TXBeautyManager
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
@@ -15,6 +18,7 @@ import com.tencent.qcloud.tuikit.TUICommonDefine.Callback
 import com.tencent.qcloud.tuikit.TUICommonDefine.RoomId
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.CallParams
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.Status
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
@@ -30,6 +34,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
     private val context: Context
     private var callingBellFeature: CallingBellFeature? = null
     private var callingKeepAliveFeature: CallingKeepAliveFeature? = null
+    private val mainHandler: Handler = Handler(Looper.getMainLooper())
 
     init {
         this.context = context.applicationContext
@@ -149,7 +154,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
         TUILog.i(TAG, "queryOfflineCall start")
         if (TUICallDefine.Status.Accept != TUICallState.instance.selfUser.get().callStatus.get()) {
             val role: TUICallDefine.Role = TUICallState.instance.selfUser.get().callRole.get()
-            val mediaType: TUICallDefine.MediaType =  TUICallState.instance.mediaType.get()
+            val mediaType: TUICallDefine.MediaType = TUICallState.instance.mediaType.get()
             if (TUICallDefine.Role.None == role || TUICallDefine.MediaType.Unknown == mediaType) {
                 return
             }
@@ -221,28 +226,34 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
                 callingBellFeature = CallingBellFeature(context)
                 callingKeepAliveFeature = CallingKeepAliveFeature(context)
             } else if (Constants.EVENT_START_ACTIVITY == subKey) {
-                TUILog.i(TAG, "onNotifyEvent EVENT_START_ACTIVITY")
-                PermissionRequest.requestPermissions(context, TUICallState.instance.mediaType.get(), object :
-                    PermissionCallback() {
-                    override fun onGranted() {
-                        if (TUICallDefine.Status.None != TUICallState.instance.selfUser.get().callStatus.get()) {
-                            initAudioPlayDevice()
-                            TUILog.i(TAG, "onNotifyEvent requestPermissions onGranted")
-                            var intent = Intent(context, CallKitActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            context.startActivity(intent)
-                        } else {
+                mainHandler.post {
+                    val status = TUICallState.instance.selfUser.get().callStatus.get()
+                    TUILog.i(TAG, "onNotifyEvent EVENT_START_ACTIVITY, current status: $status")
+                    if (status == Status.None) {
+                        return@post
+                    }
+                    PermissionRequest.requestPermissions(context, TUICallState.instance.mediaType.get(), object :
+                        PermissionCallback() {
+                        override fun onGranted() {
+                            if (TUICallDefine.Status.None != TUICallState.instance.selfUser.get().callStatus.get()) {
+                                initAudioPlayDevice()
+                                TUILog.i(TAG, "onNotifyEvent requestPermissions onGranted")
+                                val intent = Intent(context, CallKitActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(intent)
+                            } else {
+                                TUICallState.instance.clear()
+                            }
+                        }
+
+                        override fun onDenied() {
+                            if (TUICallState.instance.selfUser.get().callRole.get() == TUICallDefine.Role.Called) {
+                                TUICallEngine.createInstance(context).reject(null)
+                            }
                             TUICallState.instance.clear()
                         }
-                    }
-
-                    override fun onDenied() {
-                        if (TUICallState.instance.selfUser.get().callRole.get() == TUICallDefine.Role.Called) {
-                            TUICallEngine.createInstance(context).reject(null)
-                        }
-                        TUICallState.instance.clear()
-                    }
-                })
+                    })
+                }
             }
         }
     }

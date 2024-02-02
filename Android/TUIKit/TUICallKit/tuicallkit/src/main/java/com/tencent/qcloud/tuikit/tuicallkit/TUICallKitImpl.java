@@ -14,6 +14,7 @@ import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.TUICommonDefine;
@@ -36,6 +37,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils;
 import com.tencent.qcloud.tuikit.tuicallkit.view.TUICallingViewManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -149,12 +151,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
                             @Override
                             public void onError(int errCode, String errMsg) {
-                                if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED) {
-                                    errMsg = mContext.getString(R.string.tuicalling_package_not_purchased);
-                                }
-                                if (errCode == BaseConstants.ERR_SVR_MSG_IN_PEER_BLACKLIST) {
-                                    errMsg = mContext.getString(R.string.tuicallkit_error_in_peer_blacklist);
-                                }
+                                errMsg = convertErrorMsg(errCode, errMsg);
                                 ToastUtil.toastLongMessage(errMsg);
                                 callbackError(callback, errCode, errMsg);
                             }
@@ -234,9 +231,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
                             @Override
                             public void onError(int errCode, String errMsg) {
-                                if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                    errMsg = mContext.getString(R.string.tuicalling_package_not_support);
-                                }
+                                errMsg = convertErrorMsg(errCode, errMsg);
                                 ToastUtil.toastLongMessage(errMsg);
                                 callbackError(callback, errCode, errMsg);
                             }
@@ -255,9 +250,6 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
         mCallingViewManager.createCallingView(mInviteeList, mInviter);
         TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.Waiting);
         queryUserInfo();
-
-        mCallingKeepAliveFeature.startKeepAlive();
-        mCallingScreenSensorFeature.registerSensorEventListener();
 
         mCallingViewManager.showCallingView();
     }
@@ -301,9 +293,7 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
                             @Override
                             public void onError(int errCode, String errMsg) {
-                                if (errCode == TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED) {
-                                    errMsg = mContext.getString(R.string.tuicalling_package_not_support);
-                                }
+                                errMsg = convertErrorMsg(errCode, errMsg);
                                 ToastUtil.toastLongMessage(errMsg);
                             }
                         });
@@ -418,26 +408,36 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
 
             if (isAppInBackground && !hasBgPermission) {
                 TUILog.w(TAG, "App is in background");
-                mCallingBellFeature.playMusic();
                 return;
             }
 
             TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.Waiting);
 
-            PermissionRequest.requestPermissions(mContext, callMediaType, new PermissionCallback() {
+            runOnMainThread(new Runnable() {
                 @Override
-                public void onGranted() {
-                    if (TextUtils.isEmpty(mInviter.userId)) {
+                public void run() {
+                    Status status = TUICallingStatusManager.sharedInstance(mContext).getCallStatus();
+                    TUILog.i(TAG, "onCallReceived, current status: " + status);
+                    if (Status.None.equals(status)) {
                         return;
                     }
-                    showCallingView();
-                    mCallingBellFeature.playMusic();
-                }
 
-                @Override
-                public void onDenied() {
-                    TUICallEngine.createInstance(mContext).reject(null);
-                    resetCall();
+                    PermissionRequest.requestPermissions(mContext, callMediaType, new PermissionCallback() {
+                        @Override
+                        public void onGranted() {
+                            if (TextUtils.isEmpty(mInviter.userId)) {
+                                return;
+                            }
+                            showCallingView();
+                            mCallingBellFeature.playMusic();
+                        }
+
+                        @Override
+                        public void onDenied() {
+                            TUICallEngine.createInstance(mContext).reject(null);
+                            resetCall();
+                        }
+                    });
                 }
             });
         }
@@ -455,6 +455,8 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
             mCallingBellFeature.stopMusic();
             TUICallingStatusManager.sharedInstance(mContext).updateCallStatus(TUICallDefine.Status.Accept);
             showTimeCount();
+            mCallingKeepAliveFeature.startKeepAlive();
+            mCallingScreenSensorFeature.registerSensorEventListener();
         }
 
         @Override
@@ -580,21 +582,15 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
     };
 
     private void resetCall() {
-        runOnMainThread(new Runnable() {
-            @Override
-            public void run() {
+        stopTimeCount();
+        mCallingBellFeature.stopMusic();
+        mCallingKeepAliveFeature.stopKeepAlive();
+        mCallingScreenSensorFeature.unregisterSensorEventListener();
 
-                stopTimeCount();
-                mCallingBellFeature.stopMusic();
-                mCallingKeepAliveFeature.stopKeepAlive();
-                mCallingScreenSensorFeature.unregisterSensorEventListener();
-
-                mCallingViewManager.closeCallingView();
-                mInviter = new CallingUserModel();
-                mInviteeList.clear();
-                TUICallingStatusManager.sharedInstance(mContext).clear();
-            }
-        });
+        mCallingViewManager.closeCallingView();
+        mInviter = new CallingUserModel();
+        mInviteeList.clear();
+        TUICallingStatusManager.sharedInstance(mContext).clear();
     }
 
     private void runOnMainThread(Runnable task) {
@@ -800,6 +796,33 @@ public final class TUICallKitImpl extends TUICallKit implements ITUINotification
                 resetCall();
             }
         }
+    }
+
+    private Map<Integer, String> getCommonErrorMap() {
+        Map<Integer, String> map = new HashMap<>();
+        map.put(TUICallDefine.ERROR_PACKAGE_NOT_PURCHASED,
+                mContext.getString(R.string.tuicalling_package_not_purchased));
+        map.put(TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED, mContext.getString(R.string.tuicalling_package_not_support));
+        map.put(TUICallDefine.ERROR_INIT_FAIL, mContext.getString(R.string.tuicallkit_error_invalid_login));
+        map.put(TUICallDefine.ERROR_PARAM_INVALID, mContext.getString(R.string.tuicallkit_error_parameter_invalid));
+        map.put(TUICallDefine.ERROR_REQUEST_REFUSED, mContext.getString(R.string.tuicallkit_error_request_refused));
+        map.put(TUICallDefine.ERROR_REQUEST_REPEATED, mContext.getString(R.string.tuicallkit_error_request_repeated));
+        map.put(TUICallDefine.ERROR_SCENE_NOT_SUPPORTED,
+                mContext.getString(R.string.tuicallkit_error_scene_not_support));
+        return map;
+    }
+
+    private String convertErrorMsg(int errorCode, String msg) {
+        if (errorCode == BaseConstants.ERR_SVR_MSG_IN_PEER_BLACKLIST) {
+            return mContext.getString(R.string.tuicallkit_error_in_peer_blacklist);
+        }
+
+        Map<Integer, String> commonErrorMap = getCommonErrorMap();
+        if (commonErrorMap.containsKey(errorCode)) {
+            return commonErrorMap.get(errorCode);
+        }
+
+        return ErrorMessageConverter.convertIMError(errorCode, msg);
     }
 
     public void callbackSuccess(TUICommonDefine.Callback callback) {

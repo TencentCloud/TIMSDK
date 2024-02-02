@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -34,6 +36,11 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ChatReplyDialogFragment extends DialogFragment implements IReplyMessageHandler {
+    // 取一个足够大的偏移保证能一次性滚动到最底部
+    // Take a large enough offset to scroll to the bottom at one time
+    private static final int SCROLL_TO_END_OFFSET = 999999;
+    private static final int SCROLL_TO_END_DELAY = 500;
+
     private BottomSheetDialog dialog;
 
     private TUIMessageBean originMessage;
@@ -41,6 +48,7 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
     private View cancelBtn;
     private TextView title;
     private FrameLayout messageContent;
+    private NestedScrollView scrollView;
 
     private ReplyDetailsView repliesList;
     private ReplyPresenter presenter;
@@ -70,8 +78,15 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
         View view = inflater.inflate(R.layout.chat_reply_dialog_layout, container);
         cancelBtn = view.findViewById(R.id.cancel_btn);
         title = view.findViewById(R.id.title);
+        scrollView = view.findViewById(R.id.scroll_view);
         messageContent = view.findViewById(R.id.message_content);
         repliesList = view.findViewById(R.id.replies_list);
+        messageContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                messageContent.requestLayout();
+            }
+        });
 
         initData();
         return view;
@@ -87,28 +102,10 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
 
     private void initData() {
         if (originMessage != null) {
-            messageContent.removeAllViews();
-            int type = MinimalistUIService.getInstance().getViewType(originMessage.getClass());
-            RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageContent, null, type);
-            if (holder instanceof MessageBaseHolder) {
-                ((MessageContentHolder) holder).isMessageDetailMode = true;
-                ((MessageContentHolder) holder).setBottomContent(originMessage);
-                ((MessageContentHolder) holder).setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onMessageClick(View view, TUIMessageBean messageBean) {
-                        if (messageBean instanceof MergeMessageBean) {
-                            Intent intent = new Intent(view.getContext(), TUIForwardChatMinimalistActivity.class);
-                            intent.putExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);
-                            startActivity(intent);
-                        }
-                    }
-                });
-                ((MessageBaseHolder) holder).layoutViews(originMessage, 0);
-            }
-            messageContent.addView(holder.itemView);
+            showMessage();
 
             presenter = new ReplyPresenter();
-            presenter.setMessageId(originMessage.getId());
+            presenter.setMessageBean(originMessage);
             presenter.setChatInfo(chatInfo);
             presenter.setChatEventListener();
             presenter.setReplyHandler(this);
@@ -129,19 +126,53 @@ public class ChatReplyDialogFragment extends DialogFragment implements IReplyMes
         }
     }
 
+    private void showMessage() {
+        messageContent.removeAllViews();
+        int type = MinimalistUIService.getInstance().getViewType(originMessage.getClass());
+        RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageContent, null, type);
+        if (holder instanceof MessageBaseHolder) {
+            ((MessageContentHolder) holder).isMessageDetailMode = true;
+            ((MessageContentHolder) holder).setBottomContent(originMessage);
+            ((MessageContentHolder) holder).setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onMessageClick(View view, TUIMessageBean messageBean) {
+                    if (messageBean instanceof MergeMessageBean) {
+                        Intent intent = new Intent(view.getContext(), TUIForwardChatMinimalistActivity.class);
+                        intent.putExtra(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);
+                        startActivity(intent);
+                    }
+                }
+            });
+            ((MessageBaseHolder) holder).layoutViews(originMessage, 0);
+        }
+        messageContent.addView(holder.itemView);
+    }
+
     @Override
     public void updateData(TUIMessageBean messageBean) {
+        if (messageBean == null) {
+            return;
+        }
         this.originMessage = messageBean;
         if (!isAdded()) {
             return;
         }
-        initData();
+        showMessage();
+        MessageRepliesBean repliesBean = messageBean.getMessageRepliesBean();
+        if (repliesBean != null) {
+            presenter.findReplyMessages(repliesBean);
+        }
     }
 
     @Override
     public void onRepliesMessageFound(Map<MessageRepliesBean.ReplyBean, TUIMessageBean> messageBeanMap) {
         if (repliesList != null) {
             repliesList.setData(messageBeanMap);
+            scrollToEnd();
         }
+    }
+
+    public void scrollToEnd() {
+        scrollView.postDelayed(() -> scrollView.smoothScrollBy(0, SCROLL_TO_END_OFFSET), SCROLL_TO_END_DELAY);
     }
 }

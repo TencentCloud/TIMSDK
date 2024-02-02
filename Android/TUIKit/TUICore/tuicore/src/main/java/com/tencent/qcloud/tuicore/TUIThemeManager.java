@@ -213,6 +213,8 @@ public class TUIThemeManager {
 
         applyLanguage(context.getApplicationContext());
         applyLanguage(context);
+
+        TUICore.notifyEvent(TUIConstants.TUICore.LANGUAGE_EVENT_SUB_KEY, TUIConstants.TUICore.LANGUAGE_CHANGED_EVENT_SUB_KEY, null);
     }
 
     public void applyLanguage(Context context) {

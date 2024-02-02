@@ -3,7 +3,7 @@ package com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout
 import android.content.Context
 import android.view.View
 import android.widget.RelativeLayout
-import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
+import com.tencent.qcloud.tuicore.util.ScreenUtil
 
 open class GroupCallFlowLayout(context: Context) : RelativeLayout(context) {
     companion object {
@@ -16,7 +16,7 @@ open class GroupCallFlowLayout(context: Context) : RelativeLayout(context) {
     private val changeList = ArrayList<View>()
 
     init {
-        screenWidth = DeviceUtils.getScreenWidth(context)
+        screenWidth = ScreenUtil.getScreenWidth(context)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

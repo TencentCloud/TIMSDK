@@ -27,8 +27,8 @@ public class CustomLinearLayoutManager extends LinearLayoutManager {
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         try {
             super.onLayoutChildren(recycler, state);
-        } catch (IndexOutOfBoundsException e) {
-            Log.w("CustomLinearLayoutManager", e.getLocalizedMessage());
+        } catch (Throwable e) {
+            Log.w("CustomLinearLayoutManager", "" + e.getLocalizedMessage());
         }
     }
 }

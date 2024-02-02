@@ -3,7 +3,7 @@
     <string name="tuicallkit_toast_enable_mute">マイクオフ</string>
     <string name="tuicallkit_toast_disable_mute">マイクオン</string>
     <string name="tuicallkit_toast_speaker">スピーカーオン</string>
-    <string name="tuicallkit_toast_use_handset">スピーカーオフ</string>
+    <string name="tuicallkit_toast_use_earpiece">スピーカーオフ</string>
     <string name="tuicallkit_toast_user_end">%s 通話終了</string>
     <string name="tuicallkit_other_party_network_low_quality">相手のネットワーク接続が不安定です</string>
     <string name="tuicallkit_self_network_low_quality">ネットワーク接続が不安定です</string>
@@ -63,4 +63,9 @@
     <string name="tuicallkit_group_btn_ok">OK</string>
 
     <string name="tuicallkit_error_in_peer_blacklist">ユーザーはブラックリストに登録され、通話が開始できませんでした。</string>
+    <string name="tuicallkit_error_invalid_login">ログイン失敗しました。もう一度ログインしてください</string>
+    <string name="tuicallkit_error_parameter_invalid">パラメータエラー</string>
+    <string name="tuicallkit_error_request_refused">現在の状態では、この機能の呼び出しはサポートされていません</string>
+    <string name="tuicallkit_error_request_repeated">現在実行中のメソッドを呼び出すことはできません</string>
+    <string name="tuicallkit_error_scene_not_support">現在の通話シーンでは、この機能はサポートしていません</string>
 </resources>

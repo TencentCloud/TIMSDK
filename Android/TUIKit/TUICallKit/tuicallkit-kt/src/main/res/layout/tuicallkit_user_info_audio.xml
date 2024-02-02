@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:textColor="@color/tuicallkit_color_white"
+        android:textColor="@color/tuicallkit_color_audio_waiting_hint"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

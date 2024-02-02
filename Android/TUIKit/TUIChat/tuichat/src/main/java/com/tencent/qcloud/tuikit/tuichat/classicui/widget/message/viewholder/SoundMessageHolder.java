@@ -52,6 +52,7 @@ public class SoundMessageHolder extends MessageContentHolder {
             Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
             playingDrawable.setAutoMirrored(true);
             audioPlayImage.setImageDrawable(playingDrawable);
+            audioPlayImage.setRotation(0f);
             audioContentView.removeView(audioPlayImage);
             audioContentView.addView(audioPlayImage, 0);
             if (!message.hasPlayed()) {

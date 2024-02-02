@@ -19,7 +19,7 @@ class FloatingWindowButton(context: Context) : ImageView(context) {
     private var viewModel = FloatingWindowButtonModel()
 
     private val callStatusObserver = Observer<TUICallDefine.Status> {
-        if (viewModel.enableFloatWindow && it == TUICallDefine.Status.Accept) {
+        if (viewModel.enableFloatWindow) {
             this.visibility = VISIBLE
         }
     }
@@ -49,10 +49,7 @@ class FloatingWindowButton(context: Context) : ImageView(context) {
             }
         }
 
-        val showFloatButton = viewModel.callStatus.get() == TUICallDefine.Status.Accept
-                || viewModel.callRole.get() == TUICallDefine.Role.Caller
-
-        if (viewModel.enableFloatWindow && showFloatButton) {
+        if (viewModel.enableFloatWindow) {
             visibility = VISIBLE
         } else {
             visibility = GONE

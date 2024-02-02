@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -125,6 +126,11 @@ public class ReplyPreviewView extends FrameLayout {
     }
 
     private void loadAvatar(ImageView imageView, Object url) {
+        if (getContext() instanceof Activity) {
+            if (((Activity) getContext()).isDestroyed() || ((Activity) getContext()).isFinishing()) {
+                return;
+            }
+        }
         Glide.with(getContext())
             .load(url)
             .centerCrop()

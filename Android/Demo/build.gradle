@@ -7,6 +7,8 @@ buildscript {
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
         // 配置HMS Core SDK的Maven仓地址。
         maven {url 'https://developer.huawei.com/repo/'}
+        maven {url 'https://developer.hihonor.com/repo'}
+
     }
     dependencies {
         VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
@@ -19,6 +21,7 @@ buildscript {
         }
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.huawei.agconnect:agcp:1.4.1.300'
+        classpath 'com.hihonor.mcs:asplugin:2.0.1.300'
         classpath 'com.kezong:fat-aar:1.2.17'
 
         if (currentGradleVersion.major >= 8) {
@@ -38,6 +41,7 @@ allprojects {
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
         // 配置HMS Core SDK的Maven仓地址。
         maven {url 'https://developer.huawei.com/repo/'}
+        maven {url 'https://developer.hihonor.com/repo'}
     }
 
     tasks.withType(Javadoc) {
@@ -57,7 +61,7 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 30
     versionCode = 1
-    versionName = "7.7.5282"
+    versionName = "7.8.5483"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"

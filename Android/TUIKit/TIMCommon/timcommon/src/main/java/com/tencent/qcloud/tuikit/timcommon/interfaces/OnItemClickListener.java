@@ -21,8 +21,6 @@ public abstract class OnItemClickListener {
 
     public void onReplyDetailClick(TUIMessageBean messageBean) {}
 
-    public void onReactOnClick(String emojiId, TUIMessageBean messageBean) {}
-
     public void onSendFailBtnClick(View view, TUIMessageBean messageBean) {}
 
     public void onTextSelected(View view, int position, TUIMessageBean messageBean) {}

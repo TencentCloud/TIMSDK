@@ -505,13 +505,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         });
     }
 
-    private void chat() {
-        if (mListener != null || mContactInfo != null) {
-            mListener.onStartConversationClick(mContactInfo);
-        }
-        ((Activity) getContext()).finish();
-    }
-
     @Override
     public void onClick(View v) {
         if (v == deleteFriendBtn) {
@@ -635,7 +628,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     }
 
     public interface OnButtonClickListener {
-        void onStartConversationClick(ContactItemBean info);
 
         void onDeleteFriendClick(String id);
 

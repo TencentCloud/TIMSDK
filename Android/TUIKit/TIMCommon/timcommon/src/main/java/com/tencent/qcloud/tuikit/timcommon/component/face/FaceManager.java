@@ -3,6 +3,9 @@ package com.tencent.qcloud.tuikit.timcommon.component.face;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.Spannable;
@@ -12,9 +15,8 @@ import android.text.style.ImageSpan;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -23,11 +25,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.TIMCommonService;
-import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.ChatFace;
+import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
+import com.tencent.qcloud.tuikit.timcommon.bean.FaceGroup;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonLog;
-import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,30 +47,19 @@ public class FaceManager {
     }
 
     public static final int EMOJI_GROUP_ID = 0;
-    private static final int EMOJI_SIZE = 20;
-    private static final int EMOJI_COLUMN_COUNT = 8;
-    private static final int EMOJI_ROW_COUNT = 3;
+    public static final int EMOJI_COLUMN_COUNT = 8;
+    public static final int EMOJI_ROW_COUNT = 3;
 
     private final Map<String, Emoji> emojiMap = new LinkedHashMap<>();
     private final Context context;
-    private final String[] emojiKeys;
-    private final String[] emojiNames;
 
-    private final Map<Integer, FaceGroup> faceGroupMap = new ConcurrentHashMap<>();
-
-    /**
-     * Does the emojis need to be loaded
-     * 表情是否需要加载
-     */
-    private boolean needLoad = true;
+    private final Map<Integer, FaceGroup<?>> faceGroupMap = new ConcurrentHashMap<>();
 
     private FaceManager() {
         context = TIMCommonService.getAppContext();
-        emojiKeys = context.getResources().getStringArray(R.array.emoji_key);
-        emojiNames = context.getResources().getStringArray(R.array.emoji_name);
     }
 
-    public static FaceManager getInstance() {
+    private static FaceManager getInstance() {
         return FaceManagerHolder.instance;
     }
 
@@ -75,66 +67,37 @@ public class FaceManager {
         return new ArrayList<>(getInstance().emojiMap.values());
     }
 
+    public static Map<String, Emoji> getEmojiMap() {
+        return Collections.unmodifiableMap(getInstance().emojiMap);
+    }
+
+    public static int getEmojiCount() {
+        return getInstance().emojiMap.size();
+    }
+
     /**
      * add a new faceGroup
      * @param groupID must >= 1
      * @param faceGroup the faceGroup be added
      */
-    public static void addFaceGroup(int groupID, FaceGroup faceGroup) {
+    public static <T extends ChatFace> void addFaceGroup(int groupID, FaceGroup<T> faceGroup) {
         faceGroup.setGroupID(groupID);
         getInstance().faceGroupMap.put(groupID, faceGroup);
+        if (faceGroup.isEmojiGroup()) {
+            List<T> faces = faceGroup.getFaces();
+            for (T face : faces) {
+                getInstance().emojiMap.put(face.getFaceKey(), (Emoji) face);
+            }
+        }
     }
 
     public static List<FaceGroup> getFaceGroupList() {
         return new ArrayList<>(getInstance().faceGroupMap.values());
     }
 
-    public static String[] getEmojiNames() {
-        return getInstance().emojiNames;
-    }
-
-    public static String[] getEmojiKey() {
-        return getInstance().emojiKeys;
-    }
-
-    public static void loadEmojis() {
-        getInstance().internalLoadEmojis();
-    }
-
-    private synchronized void internalLoadEmojis() {
-        if (!needLoad) {
-            return;
-        }
-        needLoad = false;
-        TIMCommonLog.i(TAG, "start load emojis");
-        Thread loadEmojiThread = new Thread() {
-            @Override
-            public void run() {
-                // load chat default emojis
-                FaceGroup emojiFaceGroup = new FaceGroup();
-                for (String emojiKey : getInstance().emojiKeys) {
-                    String emojiFilePath = "emoji/" + emojiKey + "@2x.png";
-                    Emoji emoji = loadAssetEmoji(emojiKey, emojiFilePath);
-                    if (emoji != null) {
-                        emojiMap.put(emojiKey, emoji);
-                        emojiFaceGroup.addFace(emojiKey, emoji);
-                    }
-                }
-                emojiFaceGroup.setPageColumnCount(EMOJI_COLUMN_COUNT);
-                emojiFaceGroup.setPageRowCount(EMOJI_ROW_COUNT);
-                emojiFaceGroup.setFaceGroupIconUrl("file:///android_asset/emoji/[可爱]@2x.png");
-                addFaceGroup(EMOJI_GROUP_ID, emojiFaceGroup);
-                TIMCommonLog.i(TAG, "load emojis finished");
-            }
-        };
-        loadEmojiThread.setName("TUIChatLoadEmojiThread");
-        ThreadUtils.execute(loadEmojiThread);
-    }
-
-    private Emoji loadAssetEmoji(String emojiKey, String assetFilePath) {
+    public static Emoji loadAssetEmoji(String emojiKey, String assetFilePath, int size) {
         String realPath = "file:///android_asset/" + assetFilePath;
-        int emojiSize = ScreenUtil.dip2px(EMOJI_SIZE);
-        Bitmap bitmap = loadBitmap(realPath, emojiSize, emojiSize);
+        Bitmap bitmap = loadBitmap(realPath, size, size);
         if (bitmap == null) {
             return null;
         }
@@ -144,10 +107,10 @@ public class FaceManager {
         return emoji;
     }
 
-    private Bitmap loadBitmap(String resUrl, int width, int height) {
+    private static Bitmap loadBitmap(String resUrl, int width, int height) {
         Bitmap bitmap = null;
         try {
-            bitmap = Glide.with(context)
+            bitmap = Glide.with(TIMCommonService.getAppContext())
                          .asBitmap()
                          .load(resUrl)
                          .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
@@ -289,15 +252,14 @@ public class FaceManager {
         }
     }
 
-    public static Map<String, Emoji> getEmojiMap() {
-        return getInstance().emojiMap;
-    }
-
     public static boolean isFaceChar(String faceChar) {
         return getEmojiMap().get(faceChar) != null;
     }
 
     public static boolean handlerEmojiText(TextView comment, CharSequence content, boolean typing) {
+        if (comment == null) {
+            return false;
+        }
         if (content == null) {
             comment.setText(null);
             return false;
@@ -325,7 +287,10 @@ public class FaceManager {
                 if (bitmap != null) {
                     imageFound = true;
 
-                    ImageSpan imageSpan = new ImageSpan(getInstance().context, bitmap);
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(getInstance().context.getResources(), bitmap);
+                    int size = getInstance().context.getResources().getDimensionPixelSize(R.dimen.common_default_emoji_size);
+                    bitmapDrawable.setBounds(0, 0, size, size);
+                    ImageSpan imageSpan = new CenterImageSpan(bitmapDrawable);
                     spannable.setSpan(imageSpan, m.start(), m.end(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
             }
@@ -359,10 +324,10 @@ public class FaceManager {
             return "";
         }
 
-        String[] emojiList = FaceManager.getEmojiKey();
-        if (emojiList == null || emojiList.length == 0) {
+        if (getEmojiCount() == 0) {
             return text;
         }
+
         SpannableStringBuilder sb = new SpannableStringBuilder(text);
         String regex = "\\[(\\S+?)\\]";
         Pattern p = Pattern.compile(regex);
@@ -372,26 +337,24 @@ public class FaceManager {
         // Traverse to find matching characters and store
         int lastMentionIndex = -1;
         while (m.find()) {
-            String emojiName = m.group();
+            String emojiKey = m.group();
             int start;
             if (lastMentionIndex != -1) {
-                start = text.indexOf(emojiName, lastMentionIndex);
+                start = text.indexOf(emojiKey, lastMentionIndex);
             } else {
-                start = text.indexOf(emojiName);
+                start = text.indexOf(emojiKey);
             }
-            int end = start + emojiName.length();
+            int end = start + emojiKey.length();
             lastMentionIndex = end;
 
-            int index = findEmoji(emojiName);
-            String[] emojiListValues = FaceManager.getEmojiNames();
-            if (index != -1 && emojiListValues != null && emojiListValues.length >= index) {
-                emojiName = emojiListValues[index];
+            Emoji emoji = getEmojiMap().get(emojiKey);
+            if (emoji == null) {
+                continue;
             }
-
             EmojiData emojiData = new EmojiData();
             emojiData.setStart(start);
             emojiData.setEnd(end);
-            emojiData.setEmojiText(emojiName);
+            emojiData.setEmojiText(emoji.getFaceName());
 
             emojiDataArrayList.add(emojiData);
         }
@@ -446,27 +409,6 @@ public class FaceManager {
         }
 
         return emojiKeyList;
-    }
-
-    private static int findEmoji(String text) {
-        int result = -1;
-        if (TextUtils.isEmpty(text)) {
-            return result;
-        }
-
-        String[] emojiList = FaceManager.getEmojiKey();
-        if (emojiList == null || emojiList.length == 0) {
-            return result;
-        }
-
-        for (int i = 0; i < emojiList.length; i++) {
-            if (text.equals(emojiList[i])) {
-                result = i;
-                break;
-            }
-        }
-
-        return result;
     }
 
     private static class EmojiData {
@@ -564,5 +506,28 @@ public class FaceManager {
         String regexEmoji = risequence + "|" + element + "(" + zwj + "(" + risequence + "|" + element + "))*";
 
         return regexEmoji;
+    }
+
+    static class CenterImageSpan extends ImageSpan {
+
+        public CenterImageSpan(@NonNull Drawable drawable) {
+            super(drawable);
+        }
+
+        @Override
+        public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
+            Drawable drawable = getDrawable();
+            Rect rect = drawable.getBounds();
+            Paint.FontMetricsInt paintFm = paint.getFontMetricsInt();
+            int center = (paintFm.top + paintFm.bottom) / 2;
+            if (fm != null) {
+                fm.ascent = center - (rect.height() / 2);
+                fm.descent = center + (rect.height() / 2);
+                fm.top = fm.ascent;
+                fm.bottom = fm.descent;
+            }
+
+            return rect.right;
+        }
     }
 }

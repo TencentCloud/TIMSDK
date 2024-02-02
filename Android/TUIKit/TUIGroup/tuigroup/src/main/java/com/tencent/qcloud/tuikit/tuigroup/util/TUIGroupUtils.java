@@ -5,7 +5,6 @@ import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATI
 
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.imsdk.v2.V2TIMGroupInfoResult;
@@ -19,7 +18,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +58,11 @@ public class TUIGroupUtils {
         V2TIMManager.getGroupManager().getGroupsInfo(groupList, new V2TIMValueCallback<List<V2TIMGroupInfoResult>>() {
             @Override
             public void onSuccess(List<V2TIMGroupInfoResult> v2TIMGroupInfoResults) {
+                if (v2TIMGroupInfoResults.isEmpty()) {
+                    toastGroupEventByName(type, groupID);
+                    TUIGroupLog.e(TAG, "toastGroupEvent failed, group info result is empty");
+                    return;
+                }
                 V2TIMGroupInfoResult v2TIMGroupInfoResult = v2TIMGroupInfoResults.get(0);
                 if (v2TIMGroupInfoResult.getResultCode() == 0) {
                     V2TIMGroupInfo groupInfo = v2TIMGroupInfoResult.getGroupInfo();

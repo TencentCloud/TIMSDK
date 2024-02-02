@@ -60,17 +60,6 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
         }
         layout.setOnButtonClickListener(new FriendProfileLayout.OnButtonClickListener() {
             @Override
-            public void onStartConversationClick(ContactItemBean info) {
-                String chatName = info.getId();
-                if (!TextUtils.isEmpty(info.getRemark())) {
-                    chatName = info.getRemark();
-                } else if (!TextUtils.isEmpty(info.getNickName())) {
-                    chatName = info.getNickName();
-                }
-                ContactStartChatUtils.startChatActivity(info.getId(), ContactItemBean.TYPE_C2C, chatName, info.getAvatarUrl(), null);
-            }
-
-            @Override
             public void onDeleteFriendClick(String id) {
                 finish();
             }

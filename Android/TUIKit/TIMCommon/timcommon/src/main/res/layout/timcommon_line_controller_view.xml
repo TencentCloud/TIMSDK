@@ -21,26 +21,30 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/core_line_controller_margin_left"
-            android:layout_weight="1"
             android:maxLines="2"
             android:textAlignment="viewStart"
             android:textColor="@color/core_line_controller_title_color"
             android:textSize="@dimen/core_line_controller_text_size" />
 
         <LinearLayout
-            android:id="@+id/contentText"
-            android:layout_width="wrap_content"
+            android:id="@+id/content_container"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:gravity="end"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/content_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
+                android:gravity="end|center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
@@ -64,20 +68,21 @@
                     android:layout_marginStart="10.56dp"
                     android:src="@drawable/arrow_right" />
             </LinearLayout>
-        </LinearLayout>
 
-        <Switch
-            android:id="@+id/btnSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:thumb="@drawable/switch_thumb"
-            android:track="@drawable/switch_track"
-            android:switchMinWidth="@dimen/switch_mini_width"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:textOff=""
-            android:textOn=""
-            android:layout_marginEnd="15dp" />
+            <Switch
+                android:id="@+id/btnSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_track"
+                android:switchMinWidth="@dimen/switch_mini_width"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textOff=""
+                android:textOn=""
+                android:layout_marginEnd="15dp" />
+
+        </LinearLayout>
 
         <View
             android:id="@+id/disable_mask"

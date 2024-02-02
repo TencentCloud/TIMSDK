@@ -38,7 +38,6 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuikit.timcommon.component.face.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
@@ -60,8 +59,8 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.setting.ChatLayoutSetting;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
-import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer;
-import com.tencent.qcloud.tuikit.tuichat.component.AudioRecorder;
+import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.TotalUnreadCountListener;
@@ -71,6 +70,7 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -410,13 +410,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
             }
         });
 
-        mMessageRecyclerView.setMenuEmojiOnClickListener(new MessageRecyclerView.OnMenuEmojiClickListener() {
-            @Override
-            public void onClick(Emoji emoji, TUIMessageBean messageBean) {
-                reactMessage(emoji, messageBean);
-            }
-        });
-
         loadMessages(
             chatInfo.getLocateMessage(), chatInfo.getLocateMessage() == null ? TUIChatConstants.GET_MESSAGE_FORWARD : TUIChatConstants.GET_MESSAGE_TWO_WAY);
         setTotalUnread();
@@ -646,9 +639,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
     @Override
     public void loadMessages(int type) {
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
-            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getItem(1) : null, type);
+            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getFirstMessageBean() : null, type);
         } else if (type == TUIChatConstants.GET_MESSAGE_BACKWARD) {
-            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getItem(mAdapter.getItemCount() - 1) : null, type);
+            loadMessages(mAdapter.getItemCount() > 0 ? mAdapter.getLastMessageBean() : null, type);
         }
     }
 
@@ -834,9 +827,10 @@ public class ChatView extends LinearLayout implements IChatLayout {
                         startCountDown();
                         break;
                     case RECORD_STOP:
+                    case RECORD_CANCEL:
                         stopRecordingAnim();
                         break;
-                    case RECORD_CANCEL:
+                    case RECORD_READY_TO_CANCEL:
                         showRecordingPauseAnim();
                         break;
                     case RECORD_TOO_SHORT:
@@ -844,7 +838,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
                         stopAbnormally(status);
                         break;
                     case RECORD_CONTINUE:
-                        showRecordingAnim();
+                        showContinueAnim();
                         break;
                     default:
                         break;
@@ -896,6 +890,19 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 });
             }
 
+            private void showContinueAnim() {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecordingIcon.setImageResource(R.drawable.recording_volume);
+                        mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
+                        mVolumeAnim.start();
+                        mRecordingTips.setTextColor(Color.WHITE);
+                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.down_cancle_send));
+                    }
+                });
+            }
+
             private void stopRecordingAnim() {
                 stopCountDown();
                 post(new Runnable() {
@@ -914,7 +921,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        mVolumeAnim.stop();
+                        if (mVolumeAnim != null) {
+                            mVolumeAnim.stop();
+                        }
                         mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_length_short);
                         mRecordingTips.setTextColor(Color.WHITE);
                         if (status == RECORD_TOO_SHORT) {
@@ -924,12 +933,12 @@ public class ChatView extends LinearLayout implements IChatLayout {
                         }
                     }
                 });
-                post(new Runnable() {
+                postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mRecordingGroup.setVisibility(View.GONE);
                     }
-                });
+                }, 500);
             }
 
             private void showRecordingPauseAnim() {
@@ -1098,10 +1107,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
         ReplyPreviewBean replyPreviewBean = ChatMessageBuilder.buildReplyPreviewBean(messageBean);
         replyPreviewBean.setMessageRootID(null);
         mInputView.showReplyPreview(replyPreviewBean);
-    }
-
-    protected void reactMessage(Emoji emoji, TUIMessageBean messageBean) {
-        presenter.reactMessage(emoji.getFaceKey(), messageBean);
     }
 
     private void resetTitleBar(String leftTitle) {
@@ -1381,7 +1386,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
     public void exitChat() {
         getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
-        AudioRecorder.getInstance().stopRecord();
+        AudioRecorder.cancelRecord();
         AudioPlayer.getInstance().stopPlay();
         presenter.markMessageAsRead(mChatInfo);
     }

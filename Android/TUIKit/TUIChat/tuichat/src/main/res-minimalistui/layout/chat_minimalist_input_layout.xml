@@ -102,7 +102,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp">
 
-            <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input.TIMMentionEditText
+            <com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditText
                 android:id="@+id/input_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

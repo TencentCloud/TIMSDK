@@ -72,7 +72,12 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
     }
 
     private var playoutVolumeAvailableObserver = Observer<Int> {
-        if (it > Constants.MIN_AUDIO_VOLUME && viewModel?.scene?.get() == TUICallDefine.Scene.GROUP_CALL) {
+        if (viewModel?.scene?.get() == TUICallDefine.Scene.GROUP_CALL
+            && viewModel?.user == viewModel?.selfUser && viewModel?.selfUser?.audioAvailable?.get() == false
+        ) {
+            imageAudioInput?.setImageResource(R.drawable.tuicallkit_ic_self_mute)
+            imageAudioInput?.visibility = VISIBLE
+        } else if (it > Constants.MIN_AUDIO_VOLUME && viewModel?.scene?.get() == TUICallDefine.Scene.GROUP_CALL) {
             imageAudioInput?.setImageResource(R.drawable.tuicallkit_ic_audio_input)
             imageAudioInput?.visibility = VISIBLE
         } else {
@@ -110,6 +115,7 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
         } else {
             GONE
         }
+        refreshUserNameView()
     }
 
     init {
@@ -176,27 +182,6 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
     }
 
     private fun refreshView() {
-        var layoutParams: LayoutParams = imageAvatar?.layoutParams as LayoutParams
-        if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()) {
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.removeRule(CENTER_IN_PARENT)
-            textUserName?.visibility = VISIBLE
-        } else {
-            layoutParams.addRule(CENTER_IN_PARENT)
-            layoutParams.width = ScreenUtil.dip2px(80.0f)
-            layoutParams.height = ScreenUtil.dip2px(80.0f)
-            textUserName?.visibility = GONE
-            imageAvatar?.round = 12f
-        }
-        ImageLoader.loadImage(context, imageAvatar, viewModel?.user?.avatar?.get(), R.drawable.tuicallkit_ic_avatar)
-        imageAvatar?.layoutParams = layoutParams
-
-        textUserName?.text = if (TextUtils.isEmpty(viewModel?.user?.nickname?.get())) {
-            viewModel?.user?.id
-        } else {
-            viewModel?.user?.nickname?.get()
-        }
         if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()
             && TUICallDefine.Status.Waiting == viewModel?.user?.callStatus?.get()
         ) {
@@ -219,8 +204,11 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
             imageLoading?.stopLoading()
         }
 
-        imageSwitchCamera?.visibility = if (viewModel?.selfUser?.videoAvailable?.get() == true
-            && viewModel?.showLargeViewUserId?.get() == viewModel?.selfUser?.id
+        refreshUserAvatarView()
+        refreshUserNameView()
+
+        imageSwitchCamera?.visibility = if (viewModel?.user?.videoAvailable?.get() == true
+            && viewModel?.showLargeViewUserId?.get() == viewModel?.user?.id
         ) {
             VISIBLE
         } else {
@@ -239,31 +227,45 @@ class VideoView constructor(context: Context) : BaseCallView(context) {
         imageBackground = findViewById(R.id.img_video_background)
         viewShader = findViewById(R.id.view_shader)
 
-        var layoutParams: LayoutParams = imageAvatar?.layoutParams as LayoutParams
+        refreshUserAvatarView()
+        refreshUserNameView()
+
+        imageSwitchCamera?.setOnClickListener() {
+            val camera = if (viewModel?.isFrontCamera == Camera.Front) Camera.Back else Camera.Front
+            EngineManager.instance.switchCamera(camera)
+        }
+    }
+
+    private fun refreshUserAvatarView() {
+        val layoutParams: LayoutParams = imageAvatar?.layoutParams as LayoutParams
         if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()) {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.removeRule(CENTER_IN_PARENT)
-            textUserName?.visibility = VISIBLE
+            imageAvatar?.round = 0f
         } else {
             layoutParams.addRule(CENTER_IN_PARENT)
             layoutParams.width = ScreenUtil.dip2px(80.0f)
             layoutParams.height = ScreenUtil.dip2px(80.0f)
-            textUserName?.visibility = GONE
             imageAvatar?.round = 12f
         }
         ImageLoader.loadImage(context, imageAvatar, viewModel?.user?.avatar?.get(), R.drawable.tuicallkit_ic_avatar)
         imageAvatar?.layoutParams = layoutParams
+    }
+
+    private fun refreshUserNameView() {
+        if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()
+            && viewModel?.showLargeViewUserId?.get() == viewModel?.user?.id
+        ) {
+            textUserName?.visibility = VISIBLE
+        } else {
+            textUserName?.visibility = GONE
+        }
 
         textUserName?.text = if (TextUtils.isEmpty(viewModel?.user?.nickname?.get())) {
             viewModel?.user?.id
         } else {
             viewModel?.user?.nickname?.get()
-        }
-
-        imageSwitchCamera?.setOnClickListener() {
-            val camera = if (viewModel?.isFrontCamera == Camera.Front) Camera.Back else Camera.Front
-            EngineManager.instance.switchCamera(camera)
         }
     }
 

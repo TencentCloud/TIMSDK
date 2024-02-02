@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tuiemoji_add_reaction_failed_tip">添加表情回应失败</string>
+    <string name="tuiemoji_remove_reaction_failed_tip">删除表情回应失败</string>
+    <string name="chat_tap_to_remove">点击删除</string>
+
+</resources>

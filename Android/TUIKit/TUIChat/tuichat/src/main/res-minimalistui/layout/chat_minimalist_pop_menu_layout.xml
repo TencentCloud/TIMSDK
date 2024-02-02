@@ -13,23 +13,18 @@
         android:layout_height="match_parent"
         android:background="@color/transparent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recent_faces"
+        <FrameLayout
+            android:id="@+id/reaction_area"
             android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
             android:layout_alignParentTop="true"
-            android:background="@drawable/chat_minimalist_menu_emoji_list_border"
-            android:paddingStart="8dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="10dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <ScrollView
             android:id="@+id/scroll_container"
             android:scrollbars="none"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/recent_faces"
+            android:layout_below="@id/reaction_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

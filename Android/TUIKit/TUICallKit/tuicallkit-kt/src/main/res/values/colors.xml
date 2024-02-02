@@ -11,4 +11,5 @@
     <color name="tuicallkit_color_gray">#696969</color>
     <color name="tuicallkit_record_text_red">#FF584C</color>
     <color name="tuicallkit_record_edit">#0365F9</color>
+    <color name="tuicallkit_color_audio_waiting_hint">#8F9AB2</color>
 </resources>
