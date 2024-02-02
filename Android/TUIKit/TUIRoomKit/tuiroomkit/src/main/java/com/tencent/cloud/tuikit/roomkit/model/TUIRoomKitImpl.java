@@ -3,7 +3,6 @@ package com.tencent.cloud.tuikit.roomkit.model;
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ROOM_ID_INVALID;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.Role.GENERAL_USER;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.Role.ROOM_OWNER;
-import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.SpeechMode.SPEAK_AFTER_TAKING_SEAT;
 
 import android.content.Context;
 import android.content.Intent;
@@ -142,10 +141,10 @@ public class TUIRoomKitImpl extends TUIRoomKit {
         if (!enableVideo) {
             return;
         }
-        if (roomStore.roomInfo.isCameraDisableForAllUser && roomStore.userModel.role == GENERAL_USER) {
+        if (roomStore.roomInfo.isCameraDisableForAllUser && roomStore.userModel.getRole() == GENERAL_USER) {
             return;
         }
-        if (roomStore.roomInfo.speechMode != SPEAK_AFTER_TAKING_SEAT || roomStore.userModel.role == ROOM_OWNER) {
+        if (!roomStore.roomInfo.isSeatEnabled || roomStore.userModel.getRole() == ROOM_OWNER) {
             RoomEngineManager.sharedInstance().openLocalCamera(null);
         }
     }
@@ -155,13 +154,13 @@ public class TUIRoomKitImpl extends TUIRoomKit {
         if (!enableAudio) {
             return false;
         }
-        if (roomStore.roomInfo.isMicrophoneDisableForAllUser && roomStore.userModel.role == GENERAL_USER) {
+        if (roomStore.roomInfo.isMicrophoneDisableForAllUser && roomStore.userModel.getRole() == GENERAL_USER) {
             return false;
         }
-        if (roomStore.userModel.role == ROOM_OWNER) {
+        if (roomStore.userModel.getRole() == ROOM_OWNER) {
             return true;
         }
-        return roomStore.roomInfo.speechMode != SPEAK_AFTER_TAKING_SEAT;
+        return !roomStore.roomInfo.isSeatEnabled;
     }
 
     private void goRoomMainActivity() {

@@ -51,7 +51,7 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="16dp"
         android:background="@drawable/tuiroomkit_bg_bottom_item_red"
-        android:text="拒绝上台"
+        android:text="@string/tuiroomkit_refuse_on_stage"
         android:textColor="@color/tuiroomkit_color_white"
         app:layout_constraintBottom_toBottomOf="@+id/btn_agree_apply"
         app:layout_constraintEnd_toEndOf="@id/cl_apply_item_root"

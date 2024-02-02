@@ -23,7 +23,6 @@ public class RoomEventConstant {
     public static final String KEY_IS_FREE_SPEECH = "isFreeSpeech";
     public static final String KEY_CONFIGURATION  = "configuration";
     public static final String KEY_IS_DISABLE     = "isDisable";
-    public static final String KEY_SPEECH_MODE    = "speechMode";
     public static final String KEY_MAX_SEAT_COUNT = "maxSeatCount";
     public static final String KEY_ROOM_NAME      = "roomName";
 

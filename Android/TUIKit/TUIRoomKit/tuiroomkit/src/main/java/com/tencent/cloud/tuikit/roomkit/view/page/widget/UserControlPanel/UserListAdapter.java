@@ -5,6 +5,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.utils.ImageLoader;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
@@ -31,35 +33,19 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
-    private boolean                  mIsOwner;
-    private String                   mSelfId;
-    private Context                  mContext;
-    private TUIRoomDefine.SpeechMode mSpeechMode;
-    private TUIRoomDefine.RoomInfo   mRoomInfo;
-
-    private List<UserEntity> mUserList;
+    private Context                mContext;
+    private TUIRoomDefine.RoomInfo mRoomInfo  = RoomEngineManager.sharedInstance().getRoomStore().roomInfo;
+    private UserModel              mLocalUser = RoomEngineManager.sharedInstance().getRoomStore().userModel;
+    private List<UserEntity>       mUserList;
 
     public UserListAdapter(Context context) {
         super();
         mContext = context;
-        mRoomInfo = RoomEngineManager.sharedInstance().getRoomStore().roomInfo;
     }
 
     public void setDataList(List<UserEntity> userList) {
         mUserList = userList;
         notifyDataSetChanged();
-    }
-
-    public void setUserId(String userId) {
-        mSelfId = userId;
-    }
-
-    public void setOwner(boolean isOwner) {
-        mIsOwner = isOwner;
-    }
-
-    public void setSpeechMode(TUIRoomDefine.SpeechMode speechMode) {
-        mSpeechMode = speechMode;
     }
 
     @NonNull
@@ -87,7 +73,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         private CircleImageView      mImageHead;
         private AppCompatImageButton mImageAudio;
         private AppCompatImageButton mImageVideo;
-        private LinearLayout         mOwnerIdentify;
+        private LinearLayout         mLayoutRoomOwner;
+        private LinearLayout         mLayoutRoomManager;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -101,57 +88,94 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             mBtnInvite = itemView.findViewById(R.id.tv_invite_to_stage);
             mImageAudio = itemView.findViewById(R.id.img_audio);
             mImageVideo = itemView.findViewById(R.id.img_video);
-            mOwnerIdentify = itemView.findViewById(R.id.room_owner);
+            mLayoutRoomOwner = itemView.findViewById(R.id.tuiroomkit_ll_room_owner);
+            mLayoutRoomManager = itemView.findViewById(R.id.tuiroomkit_ll_room_manager);
         }
 
-        public void bind(Context context, final UserEntity user) {
+        private void bind(Context context, final UserEntity user) {
+            if (hideItemForScreenSharing(user)) {
+                return;
+            }
+            setUserInfo(context, user);
+            setRoomAdminFlag(user);
+            setMediaState(user);
+            initInviteUser(user);
+            initUserManager(user);
+        }
+
+        private boolean hideItemForScreenSharing(UserEntity user) {
             if (user.getVideoStreamType() == SCREEN_STREAM) {
                 mRootView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
-                return;
+                return true;
             }
             if (mRootView.getHeight() == 0) {
                 mRootView.setLayoutParams(
                         new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtil.dip2px(70)));
             }
-            ImageLoader.loadImage(context, mImageHead, user.getAvatarUrl(), R.drawable.tuiroomkit_head);
+            return false;
+        }
+
+        private void setUserInfo(Context context, UserEntity user) {
             String userName = user.getUserName();
             if (TextUtils.isEmpty(userName)) {
                 userName = user.getUserId();
             }
-            if (TextUtils.equals(user.getUserId(), mSelfId)) {
+            if (TextUtils.equals(user.getUserId(), mLocalUser.userId)) {
                 userName = userName + mContext.getString(R.string.tuiroomkit_me);
             }
-            mOwnerIdentify.setVisibility(
-                    TextUtils.equals(user.getUserId(), mRoomInfo.ownerId) ? View.VISIBLE : View.GONE);
             mTextUserName.setText(userName);
-            mImageAudio.setSelected(user.isHasAudioStream());
-            mImageVideo.setSelected(user.isHasVideoStream());
+            ImageLoader.loadImage(context, mImageHead, user.getAvatarUrl(), R.drawable.tuiroomkit_head);
+        }
 
-            if (TUIRoomDefine.SpeechMode.FREE_TO_SPEAK.equals(mSpeechMode) || user.isOnSeat()) {
+        private void setRoomAdminFlag(UserEntity user) {
+            if (user.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
+                mLayoutRoomOwner.setVisibility(View.INVISIBLE);
+                mLayoutRoomManager.setVisibility(View.INVISIBLE);
+                return;
+            }
+            if (user.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
+                mLayoutRoomOwner.setVisibility(View.VISIBLE);
+                mLayoutRoomManager.setVisibility(View.INVISIBLE);
+                return;
+            }
+            mLayoutRoomOwner.setVisibility(View.INVISIBLE);
+            mLayoutRoomManager.setVisibility(View.VISIBLE);
+        }
+
+        private void setMediaState(UserEntity user) {
+            if (!mRoomInfo.isSeatEnabled || user.isOnSeat()) {
                 mImageAudio.setVisibility(View.VISIBLE);
                 mImageVideo.setVisibility(View.VISIBLE);
-                mBtnInvite.setVisibility(View.GONE);
+                mImageAudio.setSelected(user.isHasAudioStream());
+                mImageVideo.setSelected(user.isHasVideoStream());
             } else {
                 mImageAudio.setVisibility(View.GONE);
                 mImageVideo.setVisibility(View.GONE);
-                mBtnInvite.setVisibility(mIsOwner ? View.VISIBLE : View.GONE);
+            }
+        }
+
+        private void initInviteUser(UserEntity user) {
+            if (shouldShowInviteUser(user)) {
+                mBtnInvite.setVisibility(View.VISIBLE);
                 mBtnInvite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mIsOwner) {
-                            Map<String, Object> params = new HashMap<>();
-                            params.put("userId", user.getUserId());
-                            RoomEventCenter.getInstance()
-                                    .notifyUIEvent(RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, params);
-                        }
+                        Map<String, Object> params = new HashMap<>();
+                        params.put("userId", user.getUserId());
+                        RoomEventCenter.getInstance()
+                                .notifyUIEvent(RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, params);
                     }
-
                 });
+            } else {
+                mBtnInvite.setVisibility(View.GONE);
             }
+        }
+
+        private void initUserManager(UserEntity user) {
             mRootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!mIsOwner && !TextUtils.equals(mSelfId, user.getUserId())) {
+                    if (!hasAbilityToManageUser(user)) {
                         return;
                     }
                     Map<String, Object> params = new HashMap<>();
@@ -160,6 +184,38 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                             .notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT, params);
                 }
             });
+        }
+
+        private boolean shouldShowInviteUser(UserEntity user) {
+            if (!mRoomInfo.isSeatEnabled) {
+                return false;
+            }
+            if (user.isOnSeat()) {
+                return false;
+            }
+            if (mLocalUser.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
+                return false;
+            }
+            if (mLocalUser.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
+                return true;
+            }
+            return user.getRole() == TUIRoomDefine.Role.GENERAL_USER;
+        }
+
+        private boolean hasAbilityToManageUser(UserEntity user) {
+            if (TextUtils.equals(mLocalUser.userId, user.getUserId())) {
+                return false;
+            }
+            if (mLocalUser.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
+                return true;
+            }
+            if (mLocalUser.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
+                return TextUtils.equals(mLocalUser.userId, user.getUserId());
+            }
+            if (TextUtils.equals(mLocalUser.userId, user.getUserId())) {
+                return true;
+            }
+            return user.getRole() == TUIRoomDefine.Role.GENERAL_USER;
         }
     }
 }

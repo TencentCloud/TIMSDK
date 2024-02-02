@@ -161,18 +161,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btn_mute_video_all" />
 
-    <TextView
-        android:id="@+id/btn_confirm"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:background="@drawable/tuiroomkit_bg_user_list_panel_view"
-        android:gravity="center"
-        android:text="@string/tuiroomkit_confirm"
-        android:textColor="@color/tuiroomkit_color_text_light_grey"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_mute_audio_all" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

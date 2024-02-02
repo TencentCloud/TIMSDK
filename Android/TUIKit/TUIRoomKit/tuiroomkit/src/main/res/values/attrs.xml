@@ -7,4 +7,10 @@
         <attr name="bottomRightRadius" format="dimension" />
         <attr name="bottomLeftRadius" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="UserVolumePromptView">
+        <attr name="backgroundStateOpen" format="reference" />
+        <attr name="backgroundStateClose" format="reference" />
+        <attr name="boardLineWidth" format="dimension" />
+    </declare-styleable>
 </resources>

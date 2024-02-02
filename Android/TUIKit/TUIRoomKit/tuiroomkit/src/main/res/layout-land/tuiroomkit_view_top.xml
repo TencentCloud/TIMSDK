@@ -48,7 +48,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        android:src="@drawable/tuiroomkit_ic_speaker" />
+        android:src="@drawable/tuiroomkit_icon_speaker" />
 
     <ImageView
         android:id="@+id/img_camera_switch"

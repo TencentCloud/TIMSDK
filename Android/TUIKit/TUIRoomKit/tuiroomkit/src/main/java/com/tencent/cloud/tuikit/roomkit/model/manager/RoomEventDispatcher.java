@@ -12,6 +12,7 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -99,14 +100,6 @@ public class RoomEventDispatcher extends TUIRoomObserver {
     }
 
     @Override
-    public void onRoomSpeechModeChanged(String roomId, TUIRoomDefine.SpeechMode speechMode) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_ROOM_ID, roomId);
-        map.put(RoomEventConstant.KEY_SPEECH_MODE, speechMode);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.ROOM_SPEECH_MODE_CHANGED, map);
-    }
-
-    @Override
     public void onRemoteUserEnterRoom(String roomId, TUIRoomDefine.UserInfo userInfo) {
         mRoomStore.remoteUserEnterRoom(userInfo);
     }
@@ -118,17 +111,12 @@ public class RoomEventDispatcher extends TUIRoomObserver {
 
     @Override
     public void onUserRoleChanged(String userId, TUIRoomDefine.Role role) {
+        Log.d(TAG, "onUserRoleChanged userId=" + userId + " role=" + role);
         if (TextUtils.equals(userId, mRoomStore.userModel.userId)) {
-            mRoomStore.userModel.role = role;
+            mRoomStore.userModel.setRole(role);
             RoomEngineManager.sharedInstance().autoTakeSeatForOwner(null);
         }
-        if (role == TUIRoomDefine.Role.ROOM_OWNER) {
-            mRoomStore.roomInfo.ownerId = userId;
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_USER_ID, userId);
-        map.put(RoomEventConstant.KEY_ROLE, role);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, map);
+        mRoomStore.handleUserRoleChanged(userId, role);
     }
 
     @Override
@@ -168,7 +156,7 @@ public class RoomEventDispatcher extends TUIRoomObserver {
 
     @Override
     public void onSendMessageForUserDisableChanged(String roomId, String userId, boolean isDisable) {
-        mRoomStore.disableUserSendingMsg(userId, isDisable);
+        mRoomStore.enableUserSendingMsg(userId, !isDisable);
     }
 
     @Override
@@ -202,7 +190,6 @@ public class RoomEventDispatcher extends TUIRoomObserver {
         Log.d(TAG, "onSeatListChanged");
         RoomEngineManager manager = RoomEngineManager.sharedInstance();
         for (TUIRoomDefine.SeatInfo item : seatedList) {
-            mRoomStore.setUserOnSeat(item.userId, true);
             manager.getUserInfo(item.userId, new TUIRoomDefine.GetUserInfoCallback() {
                 @Override
                 public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
@@ -218,7 +205,6 @@ public class RoomEventDispatcher extends TUIRoomObserver {
         }
 
         for (TUIRoomDefine.SeatInfo item : leftList) {
-            mRoomStore.setUserOnSeat(item.userId, false);
             Log.d(TAG, "onSeatListChanged remoteUserLeaveSeat userId=" + item.userId);
             mRoomStore.remoteUserLeaveSeat(item.userId);
         }
@@ -226,12 +212,15 @@ public class RoomEventDispatcher extends TUIRoomObserver {
 
     @Override
     public void onRequestReceived(TUIRoomDefine.Request request) {
+        Log.d(TAG, "onRequestReceived userId=" + request.userId + " action=" + request.requestAction);
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_REQUEST, request);
+        UserEntity user = mRoomStore.findUserWithCameraStream(mRoomStore.allUserList, request.userId);
+        map.put(RoomEventConstant.KEY_ROLE, user == null ? TUIRoomDefine.Role.ROOM_OWNER : user.getRole());
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED, map);
 
         if (TUIRoomDefine.RequestAction.REQUEST_TO_TAKE_SEAT == request.requestAction) {
-            if (mRoomStore.userModel.role == TUIRoomDefine.Role.ROOM_OWNER && TextUtils.equals(request.userId,
+            if (mRoomStore.userModel.getRole() == TUIRoomDefine.Role.ROOM_OWNER && TextUtils.equals(request.userId,
                     mRoomStore.userModel.userId)) {
                 RoomEngineManager.sharedInstance()
                         .responseRemoteRequest(request.requestAction, request.requestId, true, null);

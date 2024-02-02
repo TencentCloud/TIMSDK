@@ -1,5 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
+import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.REQUEST_ID_REPEAT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_MANAGEMENT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
@@ -34,7 +35,6 @@ public class UserListViewModel
     private final Context       mContext;
     private final RoomStore     mRoomStore;
     private final UserListPanel mUserListView;
-    private final TUIRoomEngine mRoomEngine;
 
     private List<UserEntity> mUserModelList;
     private boolean mIsUserManagementPanelShowed = false;
@@ -42,18 +42,18 @@ public class UserListViewModel
     public UserListViewModel(Context context, UserListPanel userListView) {
         mContext = context;
         mUserListView = userListView;
-        mRoomEngine = RoomEngineManager.sharedInstance(context).getRoomEngine();
-        mRoomStore = RoomEngineManager.sharedInstance(mContext).getRoomStore();
+        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
 
         initUserModelList();
         subscribeEvent();
+        Log.d(TAG, "UserListViewModel new : " + this);
     }
 
     public void updateViewInitState() {
         mUserListView.updateMuteVideoView(mRoomStore.roomInfo.isCameraDisableForAllUser);
         mUserListView.updateMuteAudioView(mRoomStore.roomInfo.isMicrophoneDisableForAllUser);
         mUserListView.updateMemberCount(mRoomStore.getTotalUserCount());
-        mUserListView.setOwner(isOwner());
+        mUserListView.updateViewForRole(mRoomStore.userModel.getRole());
     }
 
     private void subscribeEvent() {
@@ -76,6 +76,7 @@ public class UserListViewModel
 
     public void destroy() {
         unSubscribeEvent();
+        Log.d(TAG, "UserListViewModel destroy : " + this);
     }
 
     private void unSubscribeEvent() {
@@ -100,67 +101,6 @@ public class UserListViewModel
         mUserModelList = mRoomStore.allUserList;
     }
 
-    public void muteAllUserAudio() {
-        if (!isOwner()) {
-            return;
-        }
-        boolean isMute = !mRoomStore.roomInfo.isMicrophoneDisableForAllUser;
-        if (isMute) {
-            onMuteAllUserAudio();
-        } else {
-            onUnMuteAllUserAudio();
-        }
-        mUserListView.updateMuteAudioView(isMute);
-    }
-
-    private boolean isOwner() {
-        return TUIRoomDefine.Role.ROOM_OWNER.equals(mRoomStore.userModel.role);
-    }
-
-    private void onMuteAllUserAudio() {
-        mRoomEngine.disableDeviceForAllUserByAdmin(TUIRoomDefine.MediaDevice.MICROPHONE, true,
-                new TUIRoomDefine.ActionCallback() {
-                    @Override
-                    public void onSuccess() {
-                        mUserListView.disableMuteAllAudio(true);
-                    }
-
-                    @Override
-                    public void onError(TUICommonDefine.Error error, String message) {
-                        Log.e(TAG, "disableDeviceForAllUserByAdmin MICROPHONE error:" + error + ",msg:" + message);
-                    }
-                });
-    }
-
-    private void onUnMuteAllUserAudio() {
-        mRoomEngine.disableDeviceForAllUserByAdmin(TUIRoomDefine.MediaDevice.MICROPHONE, false,
-                new TUIRoomDefine.ActionCallback() {
-                    @Override
-                    public void onSuccess() {
-                        mUserListView.disableMuteAllAudio(false);
-                    }
-
-                    @Override
-                    public void onError(TUICommonDefine.Error error, String message) {
-                        Log.e(TAG, "enableDeviceForAllUserByAdmin MICROPHONE error:" + error + ",msg:" + message);
-                    }
-                });
-    }
-
-    public void muteAllUserVideo() {
-        if (!isOwner()) {
-            return;
-        }
-
-        boolean isMute = !mRoomStore.roomInfo.isCameraDisableForAllUser;
-        if (isMute) {
-            onMuteAllVideo();
-        } else {
-            onUnMuteAllUserVideo();
-        }
-        mUserListView.updateMuteVideoView(isMute);
-    }
-
     public List<UserEntity> getUserList() {
         return mUserModelList;
     }
@@ -179,44 +119,14 @@ public class UserListViewModel
         return searchList;
     }
 
-    private void onMuteAllVideo() {
-        mRoomEngine.disableDeviceForAllUserByAdmin(TUIRoomDefine.MediaDevice.CAMERA, true,
-                new TUIRoomDefine.ActionCallback() {
-                    @Override
-                    public void onSuccess() {
-                        mUserListView.disableMuteAllVideo(true);
-                    }
-
-                    @Override
-                    public void onError(TUICommonDefine.Error error, String message) {
-                        Log.e(TAG, "enableDeviceForAllUserByAdmin CAMERA error:" + error + ",msg:" + message);
-                    }
-                });
-    }
-
-    private void onUnMuteAllUserVideo() {
-        mRoomEngine.disableDeviceForAllUserByAdmin(TUIRoomDefine.MediaDevice.CAMERA, false,
-                new TUIRoomDefine.ActionCallback() {
-                    @Override
-                    public void onSuccess() {
-                        mUserListView.disableMuteAllVideo(false);
-                    }
-
-                    @Override
-                    public void onError(TUICommonDefine.Error error, String message) {
-                        Log.e(TAG, "enableDeviceForAllUserByAdmin CAMERA error:" + error + ",msg:" + message);
-                    }
-                });
-    }
-
     @Override
     public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case ALL_USER_CAMERA_DISABLE_CHANGED:
-                allUserCameraDisableChanged(params);
+                onAllUserCameraDisableChanged(params);
                 break;
             case ALL_USER_MICROPHONE_DISABLE_CHANGED:
-                allUserMicrophoneDisableChanged(params);
+                onAllUserMicrophoneDisableChanged(params);
                 break;
             case USER_ROLE_CHANGED:
                 onUserRoleChange(params);
@@ -244,34 +154,26 @@ public class UserListViewModel
         }
     }
 
-    private void allUserCameraDisableChanged(Map<String, Object> params) {
+    private void onAllUserCameraDisableChanged(Map<String, Object> params) {
         if (params == null) {
             return;
         }
-        if (isOwner()) {
-            return;
-        }
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        if (TextUtils.isEmpty(userId)) {
-            return;
-        }
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
-        mUserListView.disableMuteAllVideo(isDisable);
+        mUserListView.toastForAllVideoDisableState(isDisable);
+        if (mRoomStore.userModel.getRole() != TUIRoomDefine.Role.GENERAL_USER) {
+            mUserListView.updateMuteVideoView(isDisable);
+        }
     }
 
-    private void allUserMicrophoneDisableChanged(Map<String, Object> params) {
+    private void onAllUserMicrophoneDisableChanged(Map<String, Object> params) {
         if (params == null) {
             return;
         }
-        if (isOwner()) {
-            return;
-        }
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        if (TextUtils.isEmpty(userId)) {
-            return;
-        }
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
-        mUserListView.disableMuteAllAudio(isDisable);
+        mUserListView.toastForAllAudioDisableState(isDisable);
+        if (mRoomStore.userModel.getRole() != TUIRoomDefine.Role.GENERAL_USER) {
+            mUserListView.updateMuteAudioView(isDisable);
+        }
     }
 
     private void onUserRoleChange(Map<String, Object> params) {
@@ -279,16 +181,16 @@ public class UserListViewModel
             return;
         }
 
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        if (TextUtils.isEmpty(userId) || !mRoomStore.userModel.userId.equals(userId)) {
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
             return;
         }
-        TUIRoomDefine.Role role = (TUIRoomDefine.Role) params.get(RoomEventConstant.KEY_ROLE);
-        if (role == null) {
-            return;
+        UserEntity changeUser = mRoomStore.allUserList.get(position);
+        if (TextUtils.equals(mRoomStore.userModel.userId, changeUser.getUserId())) {
+            mUserListView.updateViewForRole(mRoomStore.userModel.getRole());
+        } else {
+            mUserListView.notifyUserStateChanged(position);
         }
-
-        mUserListView.setOwner(TUIRoomDefine.Role.ROOM_OWNER.equals(role));
     }
 
     private void onUserCameraStateChanged(Map<String, Object> params) {
@@ -383,35 +285,40 @@ public class UserListViewModel
         if (userEntity == null) {
             return;
         }
-        ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_toast_invite_audience_to_stage));
-        mRoomEngine.takeUserOnSeatByAdmin(SEAT_INDEX, userId, INVITE_TIME_OUT, new TUIRoomDefine.RequestCallback() {
-            @Override
-            public void onAccepted(String requestId, String userId) {
-                ToastUtil.toastShortMessageCenter(
-                        mContext.getString(R.string.tuiroomkit_accept_invite, userEntity.getUserName()));
-            }
+        RoomEngineManager.sharedInstance()
+                .takeUserOnSeatByAdmin(SEAT_INDEX, userId, INVITE_TIME_OUT, new TUIRoomDefine.RequestCallback() {
+                    @Override
+                    public void onAccepted(String requestId, String userId) {
+                        ToastUtil.toastShortMessageCenter(
+                                mContext.getString(R.string.tuiroomkit_accept_invite, userEntity.getUserName()));
+                    }
 
-            @Override
-            public void onRejected(String requestId, String userId, String message) {
-                ToastUtil.toastShortMessageCenter(
-                        mContext.getString(R.string.tuiroomkit_reject_invite, userEntity.getUserName()));
-            }
+                    @Override
+                    public void onRejected(String requestId, String userId, String message) {
+                        ToastUtil.toastShortMessageCenter(
+                                mContext.getString(R.string.tuiroomkit_reject_invite, userEntity.getUserName()));
+                    }
 
-            @Override
-            public void onCancelled(String requestId, String userId) {
-                Log.e(TAG, "takeSeat onRejected requestId : " + requestId + ",userId:" + userId);
-            }
+                    @Override
+                    public void onCancelled(String requestId, String userId) {
+                        Log.e(TAG, "takeUserOnSeatByAdmin onRejected requestId : " + requestId + ",userId:" + userId);
+                    }
 
-            @Override
-            public void onTimeout(String requestId, String userId) {
-                Log.e(TAG, "takeSeat onTimeout userId : " + userId);
-            }
+                    @Override
+                    public void onTimeout(String requestId, String userId) {
+                        Log.e(TAG, "takeUserOnSeatByAdmin onTimeout userId : " + userId);
+                    }
 
-            @Override
-            public void onError(String requestId, String userId, TUICommonDefine.Error code, String message) {
-                Log.e(TAG, "takeSeat onError userId:" + userId + ",code : " + code + ",message:" + message);
-            }
-        });
+                    @Override
+                    public void onError(String requestId, String userId, TUICommonDefine.Error code, String message) {
+                        Log.e(TAG, "takeUserOnSeatByAdmin onError userId:" + userId + ",code : " + code + ",message:"
+                                + message);
+                        if (code == REQUEST_ID_REPEAT) {
+                            ToastUtil.toastShortMessageCenter(
+                                    mContext.getString(R.string.tuiroomkit_toast_request_repeated));
+                        }
+                    }
+                });
     }
 
     private void onRemoteUserSeatStateChanged(Map<String, Object> params) {

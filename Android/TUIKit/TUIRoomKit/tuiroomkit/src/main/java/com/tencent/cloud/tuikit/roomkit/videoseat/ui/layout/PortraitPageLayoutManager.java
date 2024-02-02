@@ -107,9 +107,9 @@ public class PortraitPageLayoutManager extends PageLayoutManager {
 
     private void layoutForNoItem(RecyclerView.Recycler recycler) {
         removeAndRecycleAllViews(recycler);
-        setPageCount(0);
-        setPageIndex(0);
-        return;
+        if (mPageListener != null) {
+            mPageListener.onItemVisible(-1, -1);
+        }
     }
 
     private void layoutForOneItem(RecyclerView.Recycler recycler) {

@@ -33,7 +33,7 @@ public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
         mContext = context;
         mTopView = topView;
         mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
-        boolean isGeneralUser = TUIRoomDefine.Role.GENERAL_USER.equals(mRoomStore.userModel.role);
+        boolean isGeneralUser = TUIRoomDefine.Role.GENERAL_USER.equals(mRoomStore.userModel.getRole());
         mTopView.showReportView(isGeneralUser && RTCubeUtils.isRTCubeApp(context));
         mTopView.setTitle(TextUtils.isEmpty(mRoomStore.roomInfo.name) ? mRoomStore.roomInfo.roomId
                 : mRoomStore.roomInfo.name + mContext.getString(R.string.tuiroomkit_meeting_title));

@@ -333,7 +333,7 @@ public class TUIVideoSeatView extends RelativeLayout {
      * @param toItem
      */
     private void processVideoPlay(int fromItem, int toItem) {
-        if (mViewModel == null) {
+        if (mViewModel == null || fromItem < 0 || toItem >= mMemberEntityList.size()) {
             return;
         }
         List<String> newUserIds = new ArrayList<>();

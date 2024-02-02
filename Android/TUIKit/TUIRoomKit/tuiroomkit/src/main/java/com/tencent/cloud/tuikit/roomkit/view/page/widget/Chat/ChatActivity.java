@@ -63,6 +63,7 @@ public class ChatActivity extends AppCompatActivity {
                 RoomEngineManager.sharedInstance().getRoomStore().roomInfo.roomId);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE,
                 TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE_GROUP);
+        map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TITLE, getString(R.string.tuiroomkit_item_chat));
         Object object = TUICore.createObject(TUIConstants.TUIChat.ObjectFactory.OBJECT_FACTORY_NAME,
                 TUIConstants.TUIChat.ObjectFactory.ChatFragment.OBJECT_NAME, map);
         if (object == null || !(object instanceof Fragment)) {

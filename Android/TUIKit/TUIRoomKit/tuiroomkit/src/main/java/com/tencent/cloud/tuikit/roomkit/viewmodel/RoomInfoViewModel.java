@@ -67,7 +67,7 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
     public String getRoomType() {
         String roomType;
-        if (TUIRoomDefine.SpeechMode.SPEAK_AFTER_TAKING_SEAT.equals(mRoomStore.roomInfo.speechMode)) {
+        if (mRoomStore.roomInfo.isSeatEnabled) {
             roomType = mContext.getString(R.string.tuiroomkit_room_raise_hand);
         } else {
             roomType = mContext.getString(R.string.tuiroomkit_room_free_speech);

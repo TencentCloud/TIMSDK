@@ -5,6 +5,8 @@ import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEv
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,15 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+
+import java.util.List;
 
 public class ExitRoomDialog extends BottomSheetDialog {
     private static final String TAG = "ExitRoomDialog";
@@ -79,7 +85,7 @@ public class ExitRoomDialog extends BottomSheetDialog {
     protected void initView() {
         UserModel userModel = RoomEngineManager.sharedInstance(mContext).getRoomStore().userModel;
         boolean isOnlyOneUserInRoom = RoomEngineManager.sharedInstance().getRoomStore().getTotalUserCount() == 1;
-        boolean isOwner = TUIRoomDefine.Role.ROOM_OWNER.equals(userModel.role);
+        boolean isOwner = TUIRoomDefine.Role.ROOM_OWNER.equals(userModel.getRole());
 
         TextView leaveRoomTipsTv = findViewById(R.id.tv_leave_tips);
         leaveRoomTipsTv.setText(
@@ -94,7 +100,7 @@ public class ExitRoomDialog extends BottomSheetDialog {
             @Override
             public void onClick(View v) {
                 if (isOwner) {
-                    RoomEventCenter.getInstance().notifyUIEvent(SHOW_OWNER_EXIT_ROOM_PANEL, null);
+                    handleOwnerExitRoom();
                 } else {
                     RoomEngineManager.sharedInstance().exitRoom(null);
                 }
@@ -108,5 +114,48 @@ public class ExitRoomDialog extends BottomSheetDialog {
                 dismiss();
             }
         });
+    }
+
+    private void handleOwnerExitRoom() {
+        UserEntity nextOwner = filterRoomOwner();
+        if (nextOwner == null) {
+            RoomEventCenter.getInstance().notifyUIEvent(SHOW_OWNER_EXIT_ROOM_PANEL, null);
+            return;
+        }
+        RoomEngineManager manager = RoomEngineManager.sharedInstance();
+        manager.changeUserRole(nextOwner.getUserId(), TUIRoomDefine.Role.ROOM_OWNER, new TUIRoomDefine.ActionCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "changeUserRole onSuccess");
+                manager.exitRoom(null);
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String message) {
+                Log.e(TAG, "changeUserRole onError error=" + error + " message=" + message);
+            }
+        });
+    }
+
+    private UserEntity filterRoomOwner() {
+        List<UserEntity> list = RoomEngineManager.sharedInstance().getRoomStore().allUserList;
+        String localUserId = RoomEngineManager.sharedInstance().getRoomStore().userModel.userId;
+        int count = 0;
+        UserEntity nextOwner = null;
+        for (UserEntity user : list) {
+            if (TextUtils.equals(user.getUserId(), localUserId)
+                    || user.getVideoStreamType() == TUIRoomDefine.VideoStreamType.SCREEN_STREAM) {
+                continue;
+            }
+            count++;
+            if (count > 1) {
+                break;
+            }
+            nextOwner = user;
+        }
+        if (count > 1) {
+            return null;
+        }
+        return nextOwner;
     }
 }

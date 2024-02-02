@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="53dp"
-    android:background="@color/tuiroomkit_bg_main_color_black"
-    android:foreground="@drawable/tuiroomkit_bg_top_view"
+    android:background="@drawable/tuiroomkit_bg_top_view"
     android:paddingTop="5dp">
 
     <RelativeLayout
@@ -50,7 +49,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        android:src="@drawable/tuiroomkit_ic_speaker" />
+        android:src="@drawable/tuiroomkit_icon_speaker" />
 
     <ImageView
         android:id="@+id/img_camera_switch"

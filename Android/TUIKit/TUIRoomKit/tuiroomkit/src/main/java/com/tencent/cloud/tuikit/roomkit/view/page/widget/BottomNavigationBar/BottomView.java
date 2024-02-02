@@ -45,21 +45,12 @@ public class BottomView extends LinearLayout {
         mTextViewMap = new HashMap<>();
         mViewModel = new BottomViewModel(mContext, this);
 
-        if (type == MAINVIEW) {
-            createBottomMainViewModel();
-        } else if (type == EXTENSIONVIEW) {
-            createBottomExtensionViewModel();
-        }
+        initData();
     }
 
-    private void createBottomMainViewModel() {
+    private void initData() {
         mDataList = mViewModel.getItemDataList();
-        mViewModel.initMainData();
-    }
-
-    private void createBottomExtensionViewModel() {
-        mDataList = mViewModel.getItemDataList();
-        mViewModel.initExtensionItemData();
+        mViewModel.initData(mType);
     }
 
     private void updateItemsPosition() {
@@ -107,10 +98,13 @@ public class BottomView extends LinearLayout {
         super.setVisibility(visibility);
     }
 
-    public void addItem(int index, final BottomItemData itemData) {
-        if (index < 0 || index > mDataList.size()) {
-            return;
-        }
+    public void clear() {
+        removeAllViews();
+        mButtonMap.clear();
+        mTextViewMap.clear();
+    }
+
+    public void addItem(final BottomItemData itemData) {
         if (itemData == null) {
             return;
         }
@@ -142,7 +136,6 @@ public class BottomView extends LinearLayout {
         button.setScaleType(ImageView.ScaleType.FIT_XY);
         StateListDrawable stateListDrawable = createStateListDrawable(itemData);
         button.setBackground(stateListDrawable);
-        button.setEnabled(itemData.isEnable());
         final BottomSelectItemData selectItemData = itemData.getSelectItemData();
         if (selectItemData != null) {
             button.setSelected(selectItemData.isSelected());
@@ -168,10 +161,11 @@ public class BottomView extends LinearLayout {
                 }
             });
         }
-        addView(layout, index);
+        addView(layout);
         mButtonMap.put(itemData.getType(), button);
         mTextViewMap.put(itemData.getType(), textItemName);
         updateItemsPosition();
+        updateItemEnableStatus(itemData.getType(), itemData.isEnable());
     }
 
     public void replaceItem(BottomItemData.Type type, BottomItemData itemData) {
@@ -302,18 +296,14 @@ public class BottomView extends LinearLayout {
             return;
         }
         itemData.setEnable(enable);
-        if (!enable) {
-            BottomSelectItemData bottomSelectItemData = itemData.getSelectItemData();
-            if (bottomSelectItemData != null) {
-                bottomSelectItemData.setSelected(false);
-            }
-        }
         AppCompatImageButton button = mButtonMap.get(type);
         if (button != null) {
             button.setEnabled(enable);
-            if (!enable) {
-                button.setSelected(false);
-            }
+            button.setAlpha(enable ? 1.0f : 0.5f);
+        }
+        TextView textView = mTextViewMap.get(type);
+        if (textView != null) {
+            textView.setAlpha(enable ? 1.0f : 0.5f);
         }
     }
 }

@@ -3,9 +3,11 @@ package com.tencent.cloud.tuikit.roomkit.videoseat.ui.view;
 import static com.tencent.cloud.tuikit.roomkit.videoseat.Constants.VOLUME_NO_SOUND;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -29,6 +31,10 @@ public class UserVolumePromptView extends View {
     private int mVolumeAreaRight;
     private int mVolumeAreaBottom;
     private int mVolumeAreaRadius;
+    private int mLineWidth;
+
+    private Drawable mDrawableOpen;
+    private Drawable mDrawableClose;
 
     private Handler mMainHandler;
 
@@ -40,11 +46,23 @@ public class UserVolumePromptView extends View {
         super(context, attrs);
         setWillNotDraw(false);
 
-        setBackground(context.getResources().getDrawable(R.drawable.tuivideoseat_bg_litle_mic));
+     //   setBackground(context.getResources().getDrawable(R.drawable.tuiroomkit_video_seat_mic_open));
         mPaint = new Paint();
         mPaint.setColor(0xFFA5FE33);
 
         mVolume = VOLUME_NO_SOUND;
+
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.UserVolumePromptView);
+        mDrawableOpen = typedArray.getDrawable(R.styleable.UserVolumePromptView_backgroundStateOpen);
+        if (mDrawableOpen == null) {
+            mDrawableOpen = context.getResources().getDrawable(R.drawable.tuiroomkit_video_seat_mic_open);
+        }
+        mDrawableClose = typedArray.getDrawable(R.styleable.UserVolumePromptView_backgroundStateClose);
+        if (mDrawableClose == null) {
+            mDrawableClose = context.getResources().getDrawable(R.drawable.tuiroomkit_video_seat_mic_close);
+        }
+        mLineWidth = typedArray.getDimensionPixelOffset(R.styleable.UserVolumePromptView_boardLineWidth, 0);
+        typedArray.recycle();
     }
 
     /**
@@ -74,8 +92,7 @@ public class UserVolumePromptView extends View {
     }
 
     public void enableVolumeEffect(boolean enable) {
-        int resId = enable ? R.drawable.tuivideoseat_bg_litle_mic : R.drawable.tuivideoseat_mic_close;
-        setBackground(getContext().getResources().getDrawable(resId));
+        setBackground(enable ? mDrawableOpen : mDrawableClose);
         if (!enable && mVolume != VOLUME_NO_SOUND) {
             updateVolumeEffect(VOLUME_NO_SOUND);
         }
@@ -110,10 +127,11 @@ public class UserVolumePromptView extends View {
         super.onLayout(changed, left, top, right, bottom);
         // 这参数是根据背景图 UI 设计上的比例换算得出，保证 View 在不同宽高下的显示效果
         int width = right - left;
-        mVolumeAreaLeft = (width << 1) / 7;
-        mVolumeAreaTop = 0;
+        int height = bottom - top;
+        mVolumeAreaLeft = (width << 1) / 7 + mLineWidth;
+        mVolumeAreaTop = (int) (height * 0.050) + mLineWidth;
         mVolumeAreaRight = width - mVolumeAreaLeft;
-        mVolumeAreaBottom = (bottom - top) * 5 / 7;
+        mVolumeAreaBottom = (int) (height * 0.76) - mLineWidth;
         mVolumeAreaRadius = Math.min(mVolumeAreaRight - mVolumeAreaLeft, mVolumeAreaBottom - mVolumeAreaTop) >> 1;
     }
 

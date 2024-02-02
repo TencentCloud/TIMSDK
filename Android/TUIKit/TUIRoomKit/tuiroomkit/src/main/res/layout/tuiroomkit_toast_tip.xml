@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:maxWidth="250dp"
+    android:paddingStart="20dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="8dp"
+    android:orientation="horizontal"
+    android:background="@drawable/tuiroomkit_bg_toast_tip">
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/tuiroomkit_icon_toast_tip" />
+
+    <TextView
+        android:id="@+id/tuiroomkit_tv_toast_tip_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_gravity="center_vertical"
+        android:inputType="textMultiLine"
+        android:textColor="#DCE7FA"
+        android:textSize="14sp"
+        android:text="This is a custom toast" />
+
+</LinearLayout>

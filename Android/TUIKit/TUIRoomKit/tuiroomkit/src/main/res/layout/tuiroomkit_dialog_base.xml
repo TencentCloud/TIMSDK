@@ -15,6 +15,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:gravity="center"
+        android:inputType="textMultiLine"
         android:textColor="@color/tuiroomkit_color_black"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -27,6 +28,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
         android:gravity="center"
+        android:inputType="textMultiLine"
         android:textColor="@color/tuiroomkit_color_black"
         android:textSize="14sp" />
 

@@ -71,8 +71,7 @@ public class BaseDialogFragment extends DialogFragment {
     public void showDialog(@NonNull FragmentManager manager, @Nullable String tag) {
         Fragment fragment = manager.findFragmentByTag(tag);
         if (fragment != null && fragment instanceof DialogFragment) {
-            DialogFragment dialogFragment = (DialogFragment) fragment;
-            dialogFragment.dismissAllowingStateLoss();
+            return;
         }
         setCancelable(false);
         this.show(manager, tag);

@@ -86,6 +86,7 @@
         android:layout_marginStart="@dimen/tuiroomkit_top_view_margin_start"
         android:layout_marginEnd="@dimen/tuiroomkit_top_view_margin_end"
         android:layout_marginTop="@dimen/tuiroomkit_top_view_margin_top"
+        android:background="@color/tuiroomkit_bg_main_color_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

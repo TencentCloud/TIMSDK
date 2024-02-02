@@ -22,6 +22,7 @@ import com.tencent.cloud.tuikit.roomkit.imaccess.utils.BusinessSceneUtil;
 import com.tencent.cloud.tuikit.roomkit.imaccess.utils.RoomSpUtil;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.utils.FetchRoomId;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.Map;
@@ -155,8 +156,8 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
             public void onSuccess() {
                 Log.d(TAG, "waitUntilGiveUpRoomOwner onSuccess thread name=" + Thread.currentThread().getName());
                 mGiveUpRoomManagerLatch.countDown();
-                RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomStore().userModel.role =
-                        TUIRoomDefine.Role.GENERAL_USER;
+                RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomStore().userModel.setRole(
+                        TUIRoomDefine.Role.GENERAL_USER);
             }
 
             @Override
@@ -173,31 +174,40 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
     }
 
     private void waitUntilCreateRoom() {
-        addObserver();
-        String roomId = RoomSpUtil.getUniqueRoomId();
-        mSendMsgLatch = new CountDownLatch(1);
-        mRoomObserver.initMsgData(roomId);
-        try {
-            mSendMsgLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         mSelfRoomStatus = JOINING_ROOM;
-        mJoinRoomLatch = new CountDownLatch(1);
-        Log.d(TAG, "waitUntilCreateRoom start roomId=" + roomId);
-        mRoomManager.enableAutoShowRoomMainUi(false);
-        boolean isOpenVideo = RoomSpUtil.getVideoSwitchFromSp();
-        boolean isOpenAudio = RoomSpUtil.getAudioSwitchFromSp();
-        boolean isUseSpeaker = true;
-        mRoomManager.createRoom(roomId, isOpenAudio, isOpenVideo, isUseSpeaker);
-        try {
-            mJoinRoomLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        mRoomManager.enableAutoShowRoomMainUi(true);
-        Log.d(TAG, "waitUntilCreateRoom end");
-        mSelfRoomStatus = JOINED_ROOM;
+        FetchRoomId.fetch(new FetchRoomId.GetRoomIdCallback() {
+            @Override
+            public void onGetRoomId(String roomId) {
+                mRoomTaskStoreHouse.postTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        addObserver();
+                        mSendMsgLatch = new CountDownLatch(1);
+                        mRoomObserver.initMsgData(roomId);
+                        try {
+                            mSendMsgLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mJoinRoomLatch = new CountDownLatch(1);
+                        Log.d(TAG, "waitUntilCreateRoom start roomId=" + roomId);
+                        mRoomManager.enableAutoShowRoomMainUi(false);
+                        boolean isOpenVideo = RoomSpUtil.getVideoSwitchFromSp();
+                        boolean isOpenAudio = RoomSpUtil.getAudioSwitchFromSp();
+                        boolean isUseSpeaker = true;
+                        mRoomManager.createRoom(roomId, isOpenAudio, isOpenVideo, isUseSpeaker);
+                        try {
+                            mJoinRoomLatch.await(WAIT_TIME_S, TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mRoomManager.enableAutoShowRoomMainUi(true);
+                        Log.d(TAG, "waitUntilCreateRoom end");
+                        mSelfRoomStatus = JOINED_ROOM;
+                    }
+                });
+            }
+        });
     }
 
     private void addObserver() {
@@ -348,7 +358,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         removeObserver();
         sRoomPresenter = null;
         mRoomTaskStoreHouse.destroyRoomTaskStoreHouse();
-        BusinessSceneUtil.clearJoinRoomFlag();
         BusinessSceneUtil.setChatAccessRoom(false);
         RoomEventCenter.getInstance().unsubscribeUIEvent(SEND_IM_MSG_COMPLETE, this);
     }

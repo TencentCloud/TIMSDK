@@ -41,12 +41,11 @@
         android:paddingEnd="8dp">
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/img_master"
+            android:id="@+id/tuiroomkit_iv_room_manage"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerInParent="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/tuivideoseat_ic_master"
             app:roundPercent="1"/>
 
         <com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserVolumePromptView

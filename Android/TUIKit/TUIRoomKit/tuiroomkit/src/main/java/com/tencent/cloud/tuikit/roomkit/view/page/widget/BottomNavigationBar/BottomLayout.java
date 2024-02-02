@@ -86,10 +86,9 @@ public class BottomLayout extends LinearLayout {
     }
 
     private boolean shouldShowRaiseHandTip() {
-        boolean shouldShow = TUIRoomDefine.SpeechMode.SPEAK_AFTER_TAKING_SEAT.equals(
-                RoomEngineManager.sharedInstance().getRoomStore().roomInfo.speechMode)
+        boolean shouldShow = RoomEngineManager.sharedInstance().getRoomStore().roomInfo.isSeatEnabled
                 && !TUIRoomDefine.Role.ROOM_OWNER.equals(
-                RoomEngineManager.sharedInstance().getRoomStore().userModel.role);
+                RoomEngineManager.sharedInstance().getRoomStore().userModel.getRole());
         boolean isShowedBefore = SPUtils.getInstance().getBoolean(KEY_ROOM_RAISE_HAND_TIP_SHOWED, false);
         return shouldShow && !isShowedBefore;
     }
@@ -135,7 +134,7 @@ public class BottomLayout extends LinearLayout {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                int top = (int)animator.getAnimatedValue();
+                int top = (int) animator.getAnimatedValue();
                 drawable.setBounds(0, top, view.getWidth(), bottom);
             }
         });
@@ -191,7 +190,7 @@ public class BottomLayout extends LinearLayout {
         ObjectAnimator riseBtnAnimator = verticalMoveAnimator(mMainLayout,
                 0f, -mMainLayout.getHeight(), 250);
         ObjectAnimator riseTipAnimator = verticalMoveAnimator(mLayoutRaiseHandTip,
-                 0f, -mMainLayout.getHeight(),250);
+                0f, -mMainLayout.getHeight(), 250);
         ValueAnimator alphaBtnAnimator = alphaAnimator(mExtensionLayout,
                 1f, 0f, 300);
         int initHeight = 0;

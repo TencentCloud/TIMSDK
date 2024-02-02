@@ -6,4 +6,6 @@ public interface LocalAudioToggleViewResponder {
     void onLocalAudioDisabled();
 
     void onLocalAudioVolumedChanged(int volume);
+
+    void onLocalAudioVisibilityChanged(boolean visible);
 }

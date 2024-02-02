@@ -87,7 +87,6 @@ public class RoomServiceInitializer extends ServiceInitializer implements ITUIEx
                 if (!BusinessSceneUtil.canJoinRoom()) {
                     return;
                 }
-                BusinessSceneUtil.setJoinRoomFlag();
 
                 Context context = TUIConfig.getAppContext();
                 if (context == null) {

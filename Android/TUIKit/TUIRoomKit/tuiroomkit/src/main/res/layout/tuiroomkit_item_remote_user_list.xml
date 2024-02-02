@@ -95,7 +95,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_user_name" />
 
     <LinearLayout
-        android:id="@+id/room_owner"
+        android:id="@+id/tuiroomkit_ll_room_owner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -106,22 +106,48 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_user_name">
 
         <ImageView
+            android:id="@+id/tuiroomkit_image_room_owner"
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:layout_gravity="center_vertical"
-            app:srcCompat="@drawable/tuiroomkit_ic_owner" />
+            app:srcCompat="@drawable/tuiroomkit_icon_user_room_owner" />
 
         <TextView
+            android:id="@+id/tuiroomkit_text_room_owner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="12sp"
             android:textColor="@color/tuiroomkit_color_owner_name"
             android:text="@string/tuiroomkit_master" />
-
-
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/tuiroomkit_ll_room_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toEndOf="@+id/img_head"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name">
 
+        <ImageView
+            android:id="@+id/tuiroomkit_image_room_manager"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/tuiroomkit_icon_user_room_manager" />
+
+        <TextView
+            android:id="@+id/tuiroomkit_text_room_manager"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColor="@color/tuiroomkit_color_room_manager_name"
+            android:text="@string/tuiroomkit_room_manager" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

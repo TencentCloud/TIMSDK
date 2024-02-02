@@ -15,7 +15,6 @@ public class RoomClickListener extends TUIExtensionEventListener {
     public void onClicked(Map<String, Object> param) {
         if (BusinessSceneUtil.canJoinRoom()) {
             RoomPresenter.getInstance().createRoom();
-            BusinessSceneUtil.setJoinRoomFlag();
         } else {
             ToastUtil.toastLongMessage(
                     TUILogin.getAppContext().getResources().getString(R.string.tuiroomkit_can_not_join_room_tip));

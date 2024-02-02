@@ -111,7 +111,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private View                 mTalkView;
         private View                 mViewBackground;
         private TextView             mUserNameTv;
-        private ImageView            mIvMaster;
+        private ImageView            mIvRoomManage;
         private UserVolumePromptView mUserMic;
         private ImageFilterView      mUserHeadImg;
         private UserEntity           mMemberEntity;
@@ -161,7 +161,12 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 mViewBackground.setVisibility(model.isVideoPlaying() ? GONE : VISIBLE);
                 mUserHeadImg.setVisibility(model.isVideoPlaying() ? GONE : VISIBLE);
             }
-            mIvMaster.setVisibility(model.getRole() == TUIRoomDefine.Role.ROOM_OWNER ? VISIBLE : GONE);
+            mIvRoomManage.setVisibility(model.getRole() != TUIRoomDefine.Role.GENERAL_USER ? VISIBLE : GONE);
+            if (model.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
+                mIvRoomManage.setBackgroundResource(R.drawable.tuiroomkit_icon_video_room_owner);
+            } else if (model.getRole() == TUIRoomDefine.Role.MANAGER) {
+                mIvRoomManage.setBackgroundResource(R.drawable.tuiroomkit_icon_video_room_manager);
+            }
             if (mViewType == TYPE_SELF) {
                 itemView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -228,7 +233,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mVideoContainer = itemView.findViewById(R.id.fl_container);
             mUserHeadImg = itemView.findViewById(R.id.img_user_head);
             mUserMic = itemView.findViewById(R.id.tuivideoseat_user_mic);
-            mIvMaster = itemView.findViewById(R.id.img_master);
+            mIvRoomManage = itemView.findViewById(R.id.tuiroomkit_iv_room_manage);
             mTalkView = itemView.findViewById(R.id.talk_view);
             mViewBackground = itemView.findViewById(R.id.view_background);
         }

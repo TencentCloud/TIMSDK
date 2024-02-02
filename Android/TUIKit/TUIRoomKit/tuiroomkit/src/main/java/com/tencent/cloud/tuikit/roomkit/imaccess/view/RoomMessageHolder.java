@@ -92,7 +92,6 @@ public class RoomMessageHolder extends MessageContentHolder {
             Log.d(TAG, "mFullJoinBtn onclick userId=" + TUILogin.getUserId() + " userName=" + TUILogin.getNickName());
             if (BusinessSceneUtil.canJoinRoom()) {
                 RoomPresenter.getInstance().enterRoom(mRoomMsgData);
-                BusinessSceneUtil.setJoinRoomFlag();
             } else {
                 ToastUtil.toastLongMessage(
                         TUILogin.getAppContext().getResources().getString(R.string.tuiroomkit_can_not_join_room_tip));

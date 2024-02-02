@@ -54,8 +54,8 @@ public class RaiseHandApplicationListViewModel
 
     private void unSubscribeEvent() {
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
-        eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
+        eventCenter.unsubscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
+        eventCenter.unsubscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
 
         eventCenter.unsubscribeUIEvent(AGREE_TAKE_SEAT, this);
         eventCenter.unsubscribeUIEvent(DISAGREE_TAKE_SEAT, this);

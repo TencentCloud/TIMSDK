@@ -3,6 +3,7 @@
     <color name="tuiroomkit_color_white">#ffffff</color>
     <color name="tuiroomkit_color_blue">#006CFF</color>
     <color name="tuiroomkit_color_owner_name">#4791FF</color>
+    <color name="tuiroomkit_color_room_manager_name">#F06C4B</color>
     <color name="tuiroomkit_color_bg_dialog">#66000000</color>
     <color name="tuiroomkit_color_black">#373A43</color>
     <color name="tuiroomkit_text_color_second">#666666</color>

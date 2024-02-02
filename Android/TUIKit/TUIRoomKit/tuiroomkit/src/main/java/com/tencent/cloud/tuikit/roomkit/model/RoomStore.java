@@ -54,6 +54,35 @@ public class RoomStore {
         takeSeatRequestList = new CopyOnWriteArrayList<>();
     }
 
+    public void handleUserRoleChanged(String userId, TUIRoomDefine.Role role) {
+        if (role == TUIRoomDefine.Role.ROOM_OWNER) {
+            roomInfo.ownerId = userId;
+        }
+
+        int seatPosition = USER_NOT_FOUND;
+        for (int i = 0; i < seatUserList.size(); i++) {
+            if (TextUtils.equals(userId, seatUserList.get(i).getUserId())
+                    && seatUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
+                seatUserList.get(i).setRole(role);
+                seatPosition = i;
+                break;
+            }
+        }
+        int userPosition = USER_NOT_FOUND;
+        for (int i = 0; i < allUserList.size(); i++) {
+            if (TextUtils.equals(userId, allUserList.get(i).getUserId())
+                    && allUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
+                allUserList.get(i).setRole(role);
+                userPosition = i;
+                break;
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put(RoomEventConstant.KEY_SEAT_USER_POSITION, seatPosition);
+        map.put(RoomEventConstant.KEY_USER_POSITION, userPosition);
+        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, map);
+    }
+
     public void addTakeSeatRequest(TUIRoomDefine.Request request) {
         UserEntity user = findUser(allUserList, request.userId);
         if (user == null) {
@@ -123,15 +152,6 @@ public class RoomStore {
         isAutoShowRoomMainUi = autoShowRoomMainUi;
     }
 
-    public void setUserOnSeat(String userId, boolean isOnSeat) {
-        for (UserEntity item : allUserList) {
-            if (TextUtils.equals(userId, item.getUserId()) && item.getVideoStreamType() != SCREEN_STREAM) {
-                item.setOnSeat(isOnSeat);
-                break;
-            }
-        }
-    }
-
     public int getTotalUserCount() {
         if (allUserList.isEmpty()) {
             return 0;
@@ -143,6 +163,12 @@ public class RoomStore {
     }
 
     public void remoteUserEnterRoom(TUIRoomDefine.UserInfo userInfo) {
+        if (findUser(allUserList, userInfo.userId) != null) {
+            return;
+        }
+        if (TextUtils.equals(userInfo.userId, userModel.userId)) {
+            userModel.setRole(userInfo.userRole);
+        }
         if (userInfo.hasScreenStream) {
             allUserList.add(0, UserEntity.toUserEntityForScreenStream(userInfo));
             Map<String, Object> map = new HashMap<>();
@@ -159,11 +185,11 @@ public class RoomStore {
     public void remoteUserLeaveRoom(String userId) {
         for (int i = 0; i < allUserList.size(); i++) {
             if (TextUtils.equals(userId, allUserList.get(i).getUserId())) {
+                allUserList.remove(i);
                 Map<String, Object> map = new HashMap<>();
                 map.put(RoomEventConstant.KEY_USER_POSITION, i);
                 RoomEventCenter.getInstance()
                         .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM, map);
-                allUserList.remove(i);
             }
         }
     }
@@ -172,6 +198,10 @@ public class RoomStore {
         Log.d(TAG, "remoteUserTakeSeat userId=" + userInfo.userId);
         if (TextUtils.equals(userInfo.userId, TUILogin.getUserId())) {
             userModel.setSeatStatus(UserModel.SeatStatus.ON_SEAT);
+        }
+        // 规避刚进房时 onSeatListChanged 的回调
+        if (findUser(allUserList, userInfo.userId) == null) {
+            return;
         }
         if (userInfo.hasScreenStream) {
             remoteScreenUserTakeSeat(userInfo);
@@ -192,6 +222,7 @@ public class RoomStore {
                     && allUserList.get(i).getVideoStreamType() == SCREEN_STREAM) {
                 allUserList.get(i).setOnSeat(true);
                 userPosition = i;
+                break;
             }
         }
         Map<String, Object> map = new HashMap<>();
@@ -213,6 +244,7 @@ public class RoomStore {
                     && allUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
                 allUserList.get(i).setOnSeat(true);
                 userPosition = i;
+                break;
             }
         }
         Map<String, Object> map = new HashMap<>();
@@ -286,12 +318,12 @@ public class RoomStore {
         seatUserList.remove(seatPosition);
     }
 
-    public void disableUserSendingMsg(String userId, boolean disable) {
+    public void enableUserSendingMsg(String userId, boolean enable) {
         int seatPosition = USER_NOT_FOUND;
         for (int i = 0; i < seatUserList.size(); i++) {
             if (TextUtils.equals(userId, seatUserList.get(i).getUserId())
                     && seatUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
-                seatUserList.get(i).setDisableSendingMessage(disable);
+                seatUserList.get(i).setEnableSendingMessage(enable);
                 seatPosition = i;
                 break;
             }
@@ -300,7 +332,7 @@ public class RoomStore {
         for (int i = 0; i < allUserList.size(); i++) {
             if (TextUtils.equals(userId, allUserList.get(i).getUserId())
                     && allUserList.get(i).getVideoStreamType() != SCREEN_STREAM) {
-                allUserList.get(i).setDisableSendingMessage(disable);
+                allUserList.get(i).setEnableSendingMessage(enable);
                 userPosition = i;
                 break;
             }
@@ -413,6 +445,9 @@ public class RoomStore {
             RoomEventCenter.getInstance()
                     .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM, map);
         } else {
+            if (allUserList.isEmpty() || !TextUtils.equals(allUserList.get(0).getUserId(), userId)) {
+                return;
+            }
             allUserList.get(0).setHasVideoStream(false);
             if (!seatUserList.isEmpty()) {
                 seatUserList.get(0).setHasVideoStream(false);

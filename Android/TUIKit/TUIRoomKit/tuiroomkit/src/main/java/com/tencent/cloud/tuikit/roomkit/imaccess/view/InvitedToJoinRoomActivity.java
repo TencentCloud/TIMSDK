@@ -66,7 +66,6 @@ public class InvitedToJoinRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "rejectBtn onClick");
-                BusinessSceneUtil.clearJoinRoomFlag();
                 finish();
             }
         });

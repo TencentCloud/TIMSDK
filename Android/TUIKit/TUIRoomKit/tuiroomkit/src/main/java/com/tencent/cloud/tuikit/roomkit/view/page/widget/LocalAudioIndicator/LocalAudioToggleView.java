@@ -36,6 +36,11 @@ public class LocalAudioToggleView extends FrameLayout implements LocalAudioToggl
         mVolumePromptView.updateVolumeEffect(volume);
     }
 
+    @Override
+    public void onLocalAudioVisibilityChanged(boolean visible) {
+        setVisibility(visible ? VISIBLE : INVISIBLE);
+    }
+
     public LocalAudioToggleView(Context context) {
         super(context);
         mContext = context;

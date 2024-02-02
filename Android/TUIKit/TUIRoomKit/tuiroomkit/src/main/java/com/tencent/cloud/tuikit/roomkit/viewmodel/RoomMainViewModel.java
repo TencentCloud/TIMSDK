@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.KICKED_OFF_SEAT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
@@ -103,6 +104,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_SCREEN_CAPTURE_STOPPED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
         eventCenter.subscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(KICKED_OFF_SEAT, this);
     }
 
     public void destroy() {
@@ -142,10 +144,11 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_SCREEN_CAPTURE_STOPPED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
         eventCenter.unsubscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(KICKED_OFF_SEAT, this);
     }
 
     public boolean isOwner() {
-        return TUIRoomDefine.Role.ROOM_OWNER.equals(mRoomStore.userModel.role);
+        return TUIRoomDefine.Role.ROOM_OWNER.equals(mRoomStore.userModel.getRole());
     }
 
     public void responseRequest(TUIRoomDefine.RequestAction requestAction, String requestId, boolean agree) {
@@ -348,13 +351,16 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
                 onScreenShareStateChanged();
                 break;
 
+            case KICKED_OFF_SEAT:
+                onKickedOffSeat();
+                break;
+
             default:
                 break;
         }
     }
 
     private void onRoomDisMissed() {
-        ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_toast_end_room));
         if (isOwner()) {
             showDestroyDialog();
         } else {
@@ -373,7 +379,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     private void onUserCameraStateChanged(Map<String, Object> params) {
-        if (params == null) {
+        if (params == null || !mRoomStore.userModel.isOnSeat()) {
             return;
         }
         int position = (int) params.get(KEY_USER_POSITION);
@@ -389,7 +395,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     private void onUserMicStateChanged(Map<String, Object> params) {
-        if (params == null) {
+        if (params == null || !mRoomStore.userModel.isOnSeat()) {
             return;
         }
         int position = (int) params.get(KEY_USER_POSITION);
@@ -404,40 +410,28 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         }
     }
 
+    private void onKickedOffSeat() {
+        ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_tip_kicked_off_seat));
+    }
+
     private void allUserCameraDisableChanged(Map<String, Object> params) {
         if (params == null) {
             return;
         }
-        if (isOwner()) {
-            return;
-        }
-
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
         int stringResId = isDisable
                 ? R.string.tuiroomkit_mute_all_camera_toast
                 : R.string.tuiroomkit_toast_not_mute_all_video;
         ToastUtil.toastShortMessageCenter(mContext.getString(stringResId));
-
-        if (isDisable) {
-            RoomEngineManager.sharedInstance().closeLocalCamera();
-        }
     }
 
     private void allUserMicrophoneDisableChanged(Map<String, Object> params) {
         if (params == null) {
             return;
         }
-        if (isOwner()) {
-            return;
-        }
-
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
         int resId = isDisable ? R.string.tuiroomkit_mute_all_mic_toast : R.string.tuiroomkit_toast_not_mute_all_audio;
         ToastUtil.toastShortMessageCenter(mContext.getString(resId));
-
-        if (isDisable) {
-            RoomEngineManager.sharedInstance().closeLocalMicrophone();
-        }
     }
 
     private void sendMessageForAllUserDisableChanged(Map<String, Object> params) {

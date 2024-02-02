@@ -35,7 +35,7 @@
             android:layout_height="20dp"
             android:layout_centerInParent="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/tuivideoseat_ic_master" />
+            android:src="@drawable/tuiroomkit_icon_video_room_owner" />
 
         <com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserVolumePromptView
             android:id="@+id/tuiroomkit_user_mic"

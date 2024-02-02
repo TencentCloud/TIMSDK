@@ -62,7 +62,7 @@ public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventR
                 .changeUserRole(userId, TUIRoomDefine.Role.ROOM_OWNER, new TUIRoomDefine.ActionCallback() {
                     @Override
                     public void onSuccess() {
-                        mRoomStore.userModel.role = TUIRoomDefine.Role.GENERAL_USER;
+                        mRoomStore.userModel.setRole(TUIRoomDefine.Role.GENERAL_USER);
                         RoomEngineManager.sharedInstance().exitRoom(null);
                     }
 

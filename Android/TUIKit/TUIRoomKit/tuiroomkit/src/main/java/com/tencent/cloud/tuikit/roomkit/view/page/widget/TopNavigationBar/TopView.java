@@ -84,7 +84,7 @@ public class TopView extends FrameLayout implements View.OnClickListener {
 
     public void setHeadsetImg(boolean isUseSpeaker) {
         if (mImgHeadset != null) {
-            mImgHeadset.setImageResource(isUseSpeaker ? R.drawable.tuiroomkit_ic_speaker :
+            mImgHeadset.setImageResource(isUseSpeaker ? R.drawable.tuiroomkit_icon_speaker :
                     R.drawable.tuiroomkit_ic_headset);
         }
     }

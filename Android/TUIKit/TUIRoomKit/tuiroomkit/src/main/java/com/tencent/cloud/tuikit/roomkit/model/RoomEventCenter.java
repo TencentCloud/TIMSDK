@@ -67,6 +67,9 @@ public class RoomEventCenter {
         LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED,
         LOCAL_AUDIO_PLAY_VOLUME_CHANGED,
         LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED,
+        LOCAL_USER_GENERAL_TO_MANAGER,
+        LOCAL_USER_MANAGER_TO_GENERAL,
+        LOCAL_USER_TO_OWNER,
     }
 
     public static class RoomKitUIEvent {

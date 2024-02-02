@@ -30,6 +30,7 @@
 
     <dimen name="tuiroomkit_user_management_panel_height">720dp</dimen>
     <dimen name="tuiroomkit_transfer_master_panel_height">720dp</dimen>
+    <dimen name="tuiroomkit_transfer_master_list_item_height">70dp</dimen>
     <dimen name="tuiroomkit_raise_hand_panel_height">720dp</dimen>
 
     <dimen name="tuiroomkit_item_title_size">16sp</dimen>

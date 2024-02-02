@@ -15,7 +15,9 @@ public class UserEntity {
 
     private boolean isOnSeat = false;
 
-    private boolean disableSendingMessage = false;
+    private boolean enableSendingMessage = true;
+
+    private TUIRoomDefine.Role role = TUIRoomDefine.Role.GENERAL_USER;
 
     public String getUserId() {
         return userId;
@@ -81,12 +83,20 @@ public class UserEntity {
         isOnSeat = onSeat;
     }
 
-    public boolean isDisableSendingMessage() {
-        return disableSendingMessage;
+    public boolean isEnableSendingMessage() {
+        return enableSendingMessage;
     }
 
-    public void setDisableSendingMessage(boolean disableSendingMessage) {
-        this.disableSendingMessage = disableSendingMessage;
+    public void setEnableSendingMessage(boolean enableSendingMessage) {
+        this.enableSendingMessage = enableSendingMessage;
+    }
+
+    public TUIRoomDefine.Role getRole() {
+        return role;
+    }
+
+    public void setRole(TUIRoomDefine.Role role) {
+        this.role = role;
     }
 
     public UserEntity copy() {
@@ -99,7 +109,8 @@ public class UserEntity {
         userEntity.setHasVideoStream(hasVideoStream);
         userEntity.setVideoStreamType(videoStreamType);
         userEntity.setOnSeat(isOnSeat);
-        userEntity.setDisableSendingMessage(disableSendingMessage);
+        userEntity.setEnableSendingMessage(enableSendingMessage);
+        userEntity.setRole(role);
         return userEntity;
     }
 
@@ -111,6 +122,7 @@ public class UserEntity {
         userEntity.hasAudioStream  = userInfo.hasAudioStream;
         userEntity.hasVideoStream = userInfo.hasVideoStream;
         userEntity.videoStreamType = TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
+        userEntity.role = userInfo.userRole;
         return userEntity;
     }
 
@@ -122,6 +134,7 @@ public class UserEntity {
         userEntity.hasAudioStream  = userInfo.hasAudioStream;
         userEntity.hasVideoStream = userInfo.hasScreenStream;
         userEntity.videoStreamType = TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
+        userEntity.role = userInfo.userRole;
         return userEntity;
     }
 }

@@ -1,5 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel;
 
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
+import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.utils.ImageLoader;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 import java.util.List;
 
@@ -50,18 +54,7 @@ public class TransferOwnerAdapter extends RecyclerView.Adapter<TransferOwnerAdap
     @Override
     public void onBindViewHolder(@NonNull TransferOwnerAdapter.ViewHolder holder, int position) {
         UserEntity user = mUserList.get(position);
-        int visibility = TextUtils.equals(user.getUserId(), mSelectedUserId) ? View.VISIBLE : View.GONE;
-        holder.imageSelected.setVisibility(visibility);
-        ImageLoader.loadImage(mContext, holder.imageHead, user.getAvatarUrl(), R.drawable.tuiroomkit_head);
-        String userName = TextUtils.isEmpty(user.getUserName()) ? user.getUserId() : user.getUserName();
-        holder.textUserName.setText(userName);
-        holder.rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSelectedUserId = user.getUserId();
-                notifyDataSetChanged();
-            }
-        });
+        holder.bind(user);
     }
 
     @Override
@@ -85,6 +78,38 @@ public class TransferOwnerAdapter extends RecyclerView.Adapter<TransferOwnerAdap
             imageHead = itemView.findViewById(R.id.img_head);
             textUserName = itemView.findViewById(R.id.tv_user_name);
             imageSelected = itemView.findViewById(R.id.img_selected);
+        }
+
+        private void bind(UserEntity user) {
+            if (hideItemIfNeeded(user)) {
+                return;
+            }
+            int visibility = TextUtils.equals(user.getUserId(), mSelectedUserId) ? View.VISIBLE : View.GONE;
+            imageSelected.setVisibility(visibility);
+            ImageLoader.loadImage(mContext, imageHead, user.getAvatarUrl(), R.drawable.tuiroomkit_head);
+            String userName = TextUtils.isEmpty(user.getUserName()) ? user.getUserId() : user.getUserName();
+            textUserName.setText(userName);
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSelectedUserId = user.getUserId();
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
+        private boolean hideItemIfNeeded(UserEntity user) {
+            if (user.getVideoStreamType() == SCREEN_STREAM || TextUtils.equals(user.getUserId(),
+                    RoomEngineManager.sharedInstance().getRoomStore().userModel.userId)) {
+                rootView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
+                return true;
+            }
+            if (rootView.getHeight() == 0) {
+                rootView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        (int) mContext.getResources()
+                                .getDimension(R.dimen.tuiroomkit_transfer_master_list_item_height)));
+            }
+            return false;
         }
     }
 }
