@@ -2,8 +2,6 @@ plugins {
     id 'com.android.library'
 }
 
-apply from: 'publish-mavencentral.gradle'
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"

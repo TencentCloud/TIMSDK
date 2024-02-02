@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.huawei.agconnect'
+apply plugin: 'com.hihonor.mcs.asplugin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -104,7 +106,7 @@ dependencies {
     api project(':tuichat')
     api project(':tuisearch')
     api project(':tuigroup')
-    api project(':tuicallkit')
+    api project(':tuicallkit-kt')
     api project(':tuitranslationplugin')
 
     if (projects.contains("tuigroupnoteplugin")) {
@@ -188,6 +190,9 @@ dependencies {
     }
     if (projects.contains("tuichatbotplugin")) {
         api project(':tuichatbotplugin')
+    }
+    if (projects.contains("tuiemojiplugin")) {
+        api project(':tuiemojiplugin')
     }
     annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
 
