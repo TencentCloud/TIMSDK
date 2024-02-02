@@ -112,73 +112,73 @@ dependencies {
     if (projects.contains("tuigroupnoteplugin")) {
         api project(':tuigroupnoteplugin')
     } else {
-        api "com.tencent.imsdk:tuigroupnote-plugin:7.8.5483"
+        api "com.tencent.imsdk:tuigroupnote-plugin:7.8.5484"
     }
 
     if (projects.contains("tuipollplugin")) {
         api project(':tuipollplugin')
     } else {
-        api "com.tencent.imsdk:tuipoll-plugin:7.8.5483"
+        api "com.tencent.imsdk:tuipoll-plugin:7.8.5484"
     }
 
     if (projects.contains("tuiconversationmarkplugin")) {
         api project(':tuiconversationmarkplugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationmark-plugin:7.8.5483"
+        api "com.tencent.imsdk:tuiconversationmark-plugin:7.8.5484"
     }
 
     if (projects.contains("tuiconversationgroupplugin")) {
         api project(':tuiconversationgroupplugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationgroup-plugin:7.8.5483"
+        api "com.tencent.imsdk:tuiconversationgroup-plugin:7.8.5484"
     }
 
     if (projects.contains("timpush")) {
         api project(':timpush')
     } else {
-        api 'com.tencent.timpush:timpush:7.8.5483'
+        api 'com.tencent.timpush:timpush:7.8.5484'
     }
 
     if (projects.contains("fcmpush")) {
         api project(':fcmpush')
     } else {
-        api 'com.tencent.timpush:fcm:7.8.5483'
+        api 'com.tencent.timpush:fcm:7.8.5484'
     }
 
     if (projects.contains("xiaomipush")) {
         api project(':xiaomipush')
     } else {
-        api 'com.tencent.timpush:xiaomi:7.8.5483'
+        api 'com.tencent.timpush:xiaomi:7.8.5484'
     }
 
     if (projects.contains("meizupush")) {
         api project(':meizupush')
     } else {
-        api 'com.tencent.timpush:meizu:7.8.5483'
+        api 'com.tencent.timpush:meizu:7.8.5484'
     }
 
     if (projects.contains("oppopush")) {
         api project(':oppopush')
     } else {
-        api 'com.tencent.timpush:oppo:7.8.5483'
+        api 'com.tencent.timpush:oppo:7.8.5484'
     }
 
     if (projects.contains("vivopush")) {
         api project(':vivopush')
     } else {
-        api 'com.tencent.timpush:vivo:7.8.5483'
+        api 'com.tencent.timpush:vivo:7.8.5484'
     }
 
     if (projects.contains("huaweipush")) {
         api project(':huaweipush')
     } else {
-        api 'com.tencent.timpush:huawei:7.8.5483'
+        api 'com.tencent.timpush:huawei:7.8.5484'
     }
 
     if (projects.contains("honorpush")) {
         api project(':honorpush')
     } else {
-        api 'com.tencent.timpush:honor:7.8.5483'
+        api 'com.tencent.timpush:honor:7.8.5484'
     }
 
     api project(':tuiroomkit')
