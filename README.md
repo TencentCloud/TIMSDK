@@ -154,7 +154,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.8.5483 @2024.02.01
+## Latest Enhanced Version 7.8.5483 @2024.02.01（The version for Android is 7.8.5484）
 ### SDK
 - Support HarmonyOS platform
 - Support Loongson architecture
