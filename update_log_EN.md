@@ -2,7 +2,7 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
-## 7.8.5483 @2024.02.01 - Enhanced Version
+## 7.8.5483 @2024.02.01 - Enhanced Version（The version for Android is 7.8.5484）
 ### SDK
 - Support HarmonyOS platform
 - Support Loongson architecture
