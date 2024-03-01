@@ -1,6 +1,15 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 7.8.5505 @2024.03.01 - Enhanced Version
+### SDK
+- Add PrivacyInfo.xcprivacy privacy file for iOS & Mac SDK
+- Fix the issue that C++ SDK cannot set localCustomData
+- Fix the issue of Swift SDK location message data type error
+- Fix the occasional issue of triggering "message update" callback when pulling historical messages
+- Fix the topic at message exception issue
+- Fix the issue of fetching exceptions in group and topic lists
+- Fix other stability issues
 
 ## 7.8.5483 @2024.02.01 - Enhanced Version（The version for Android is 7.8.5484）
 ### SDK
