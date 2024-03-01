@@ -156,7 +156,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ## Latest Enhanced Version 7.8.5505 @2024.03.01
 ### SDK
-- Add PrivacyInfo.xcprivacy privacy file for iOS & Mac SDK
+- Add PrivacyInfo.xcprivacy privacy file for iOS SDK
 - Fix the issue that C++ SDK cannot set localCustomData
 - Fix the issue of Swift SDK location message data type error
 - Fix the occasional issue of triggering "message update" callback when pulling historical messages

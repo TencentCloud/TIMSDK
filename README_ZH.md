@@ -168,7 +168,7 @@
 ## 最新增强版 7.8.5505 @2024.03.01
 ### SDK
 
-- 增加 iOS & Mac SDK 的 PrivacyInfo.xcprivac 隐私文件
+- 增加 iOS SDK 的 PrivacyInfo.xcprivac 隐私文件
 - 修复 C++ SDK 无法设置 localCustomData 的问题
 - 修复 Swift SDK 位置消息数据类型错误问题
 - 修复偶现的拉取历史消息触发“消息更新”回调问题
