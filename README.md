@@ -154,29 +154,12 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.8.5483 @2024.02.01（The version for Android is 7.8.5484）
+## Latest Enhanced Version 7.8.5505 @2024.03.01
 ### SDK
-- Support HarmonyOS platform
-- Support Loongson architecture
-- Release TIMPush-UniApp
-- FCM push supports pass-through messages
-- Add permission group function for community topics
-- Add stranger attention/fan function
-- Support configuring cloud message audit policy
-- Support deleting accounts
-- Topic information supports obtaining the readSequence field
-- Fix the problem that after deleting a local inserted group message, the new message received does not update the unread count
-- Fix the problem that the SDK does not callback occasionally after the user subscribes to multiple official accounts at the same time
-- Fix the inconsistency of msgID before and after sending official account messages
-- Fix the problem that the callback does not occur occasionally after subscribing to conversation group unread counts
-- Fix the problem of abnormal creation time of topics
-- Fix the problem that when pulling topic information before and after joining the community, the unread count does not change.
-- Fix the problem of incorrect notification message type for topic information updates
-- Fix the problem that withdrawn status messages can be searched under certain conditions
-- Fix the issue of onApplicationProcessed callback being called multiple times
-
-### TUIKit & Demo
-- Add the TUIEmojiPlugin plugin to support emoticon response functions
-- TUIChat supports adding and displaying gif dynamic emoticons
-- Upgrade the built-in small emoji pack in TUIChat to the new version of yellow face emojis
-- Fix the problem of TUIChat on iOS black screen when clicking image messages
+- Add PrivacyInfo.xcprivacy privacy file for iOS & Mac SDK
+- Fix the issue that C++ SDK cannot set localCustomData
+- Fix the issue of Swift SDK location message data type error
+- Fix the occasional issue of triggering "message update" callback when pulling historical messages
+- Fix the topic at message exception issue
+- Fix the issue of fetching exceptions in group and topic lists
+- Fix other stability issues
