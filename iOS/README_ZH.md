@@ -93,6 +93,7 @@ pod install
 3. 如果安装失败，运行以下命令更新本地的 CocoaPods 仓库列表
 ```
 pod repo update
+pod update
 ```
 4. 进入 iOS/Demo 文件夹，打开 `TUIKitDemo.xcworkspace` 编译运行。
 
