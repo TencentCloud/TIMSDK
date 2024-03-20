@@ -113,7 +113,7 @@ public class GenerateTestUserSig {
     /**
      * 计算 UserSig 签名
      * <p>
-     * 函数内部使用 HMAC-SHA256 非对称加密算法，对 SDKAPPID、userId 和 EXPIRETIME 进行加密。
+     * 函数内部使用 HMAC-SHA256 对称加密算法，对 SDKAPPID、userId 和 EXPIRETIME 进行加密。
      *
      * @note: 请不要将如下代码发布到您的线上正式版本的 App 中，原因如下：
      * <p>
@@ -130,7 +130,7 @@ public class GenerateTestUserSig {
     /**
      * Calculate UserSig
      * <p>
-     * The asymmetric encryption algorithm HMAC-SHA256 is used in the function to calculate UserSig based on SDKAppID, UserID, and EXPIRETIME.
+     * The symmetric encryption algorithm HMAC-SHA256 is used in the function to calculate UserSig based on SDKAppID, UserID, and EXPIRETIME.
      *
      * @note: Do not use the code below in your commercial application. This is because:
      * <p>
