@@ -60,8 +60,9 @@ target 'App' do
     # pod 'TXIMSDK_Plus_Swift_iOS_XCFramework'
 
     # 如果您需要添加 Quic 插件，请取消下一行的注释
-    # 注意：这个插件必须搭配 TXIMSDK_Plus_iOS 版本或 TXIMSDK_Plus_iOS_XCFramework 版本的 IMSDK 使用，并且插件版本号必须和 IM SDK 版本号相同
-    # 对于 TXIMSDK_Plus_Swift_iOS_XCFramework 版本，不需要添加这个插件，如果您需要在这个版本中使用 Quic 功能，请您联系我们
+    # 注意：
+    # - 这个插件必须搭配 TXIMSDK_Plus_iOS 或 TXIMSDK_Plus_iOS_XCFramework 版本的 IM SDK 使用，并且插件版本号必须和 IM SDK 版本号相同
+    # - 对于 TXIMSDK_Plus_Swift_iOS_XCFramework 版本，不需要添加这个插件，如果您需要在这个版本中使用 Quic 功能，请您联系我们
     # pod 'TXIMSDK_Plus_QuicPlugin'
 end
 ```
