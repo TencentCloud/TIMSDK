@@ -60,7 +60,9 @@ target 'App' do
     # pod 'TXIMSDK_Plus_Swift_iOS_XCFramework'
 
     # If you need to add the Quic plugin, please uncomment the next line.
-    # Note: This plugin must be used with the Objective-C edition or XCFramework edition of the IM SDK, and the plugin version number must match the IM SDK version number.
+    # Note:
+    # - This plugin must be used with the TXIMSDK_Plus_iOS or TXIMSDK_Plus_iOS_XCFramework edition of the IM SDK, and the plugin version number must match the IM SDK version number.
+    # - For the TXIMSDK_Plus_Swift_iOS_XCFramework edition, there is no need to add this plugin. If you need to use the Quic feature in this edition, please contact us.
     # pod 'TXIMSDK_Plus_QuicPlugin'
 end
 ```
