@@ -14,23 +14,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 /**
- * TUIChatService 目前提供两个服务：
- * 1、创建聊天类
- * 2、通过 V2TIMMessage 对象获取展示文本信息
- *
- * 您可以通过 [TUICore callService:..] 方法唤起服务，不同的服务传参如下：
- *
- * > 通过 V2TIMMessage 对象获取展示文本信息：
- *  serviceName: TUICore_TUIChatService
- *  method ：TUICore_TUIChatService_GetDisplayStringMethod
- *  param: @{TUICore_TUIChatService_GetDisplayStringMethod_MsgKey:V2TIMMessage};
- *
- * > 发送消息
- *  serviceName: TUICore_TUIChatService
- *  method: TUICore_TUIChatService_SendMessageMethod
- *  param: @{TUICore_TUIChatService_SendMessageMethod_MsgKey:V2TIMMessage};
- *
- *
  * TUIChatService currently provides two services:
  * 1. Creating chat class
  * 2. Getting display text information through V2TIMMessage object

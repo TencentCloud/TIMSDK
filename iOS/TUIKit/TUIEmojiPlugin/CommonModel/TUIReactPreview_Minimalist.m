@@ -54,7 +54,7 @@
 }
 
 - (void)updateView {
-    // emoji 回复
+    // emoji 
     if (_replyEmojiImageViews.count > 0) {
         for (UIImageView *emojiView in _replyEmojiImageViews) {
             [emojiView removeFromSuperview];

@@ -10,7 +10,6 @@
 #import "TUIMessageBaseDataProvider+ProtectedAPI.h"
 
 /**
- * 消息拉取方式
  * Message pull method
  */
 typedef NS_ENUM(NSInteger, TUIMediaLoadType) {
@@ -45,7 +44,6 @@ typedef NS_ENUM(NSInteger, TUIMediaLoadType) {
     self.loadMessage = curMessage;
     self.loadType = TUIMediaLoadType_Older_And_Newer;
     /**
-     * 消息处于发送中的时候，通过消息拉取前后视频（图片）消息会异常，这里暂时只展示当前消息
      * When the message is being sent, an exception will occur when pulling the before and after video (picture) messages through the current message. Only the
      * current message is displayed here for the time being.
      */
@@ -145,7 +143,6 @@ typedef NS_ENUM(NSInteger, TUIMediaLoadType) {
     __block NSString *failDesc = nil;
 
     /**
-     * 以定位消息为起点，加载最旧的20条富媒体消息
      * Loading the oldest 20 media messages starting from the positioning message
      */
     if (TUIMediaLoadType_Older == type || TUIMediaLoadType_Older_And_Newer == type) {
@@ -174,7 +171,6 @@ typedef NS_ENUM(NSInteger, TUIMediaLoadType) {
     }
 
     /**
-     * 以定位消息为起点，加载最新的20条富媒体消息
      * Load the latest 20 rich media messages starting from the positioning message
      */
     if (TUIMediaLoadType_Newer == type || TUIMediaLoadType_Older_And_Newer == type) {

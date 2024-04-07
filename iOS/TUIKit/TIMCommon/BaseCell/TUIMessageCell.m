@@ -3,7 +3,7 @@
 //  UIKit
 //
 //  Created by kennethmiao on 2018/9/17.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 
 #import "TUIMessageCell.h"
@@ -194,12 +194,10 @@
 
     if (!CGSizeEqualToSize(self.messageData.messageContainerAppendSize, CGSizeZero)) {
         /**
-         * 在「表情回复消息」和文本内容中间取最大宽度
          * Taking the maximum width between the "emoji reply message" and the text content
          */
         contentWidth = MAX(self.messageData.messageContainerAppendSize.width, csize.width);
         /**
-         * 限制最大宽度为 Screen_Width *0.25 * 3
          * Limit the maximum width to Screen_Width *0.25 * 3
          */
         contentWidth = MIN(contentWidth, Screen_Width * 0.25 * 3);
@@ -305,12 +303,10 @@
 - (void)prepareForReuse {
     [super prepareForReuse];
     /**
-     * 今后任何关于复用产生的 UI 问题，都可以在此尝试编码解决。
      * In the future, any UI problems caused by reuse can be solved by coding here.
      */
 
     /**
-     * 一旦消息复用，说明即将新消息出现，label 内容改为空
      * Once the message is reused, it means that a new message is about to appear, and the label content is changed to empty string.
      */
     _readReceiptLabel.text = @"";
@@ -370,7 +366,6 @@
         } else if (data.status == Msg_Status_Succ) {
             [_indicator stopAnimating];
             /**
-             * 消息发送成功，说明 indicator 和 error 已不会显示在 label，可以开始显示已读回执 label
              * The message is sent successfully, indicating that the indicator and error are no longer displayed on the label, and the read receipt label can be
              * displayed.
              */
@@ -405,7 +400,6 @@
     _timeLabel.hidden = !data.showMessageTime;
 
     /**
-     * 文本高亮显示 - 此处的异步操作是为了让其执行顺序与子类一致
      * Text highlighting - asynchronous operations are here to keep the order of execution consistent with subclasses
      */
     __weak typeof(self) weakSelf = self;

@@ -118,11 +118,6 @@
 }
 
 /**
- * 对于获取文本内容中昵称的准确位置，利用了以下性质：userName 在数组中的存放顺序，和最终文本显示的顺序必定相同。
- * 例如：文本内容为，“A 邀请了 B、C、D 加入群组”，那么 userName 中元素的存放顺序必定为 ABCD。
- * 故使用“从头查找，接力查找”的方式。例如，先查找第一个元素 A，因为 rangeOfString 的特性，必定查找到头部位置的 A。
- * 在查找到头部位置的 A 后，我们把 A 从查找范围中剔除，查找范围变为了 “邀请了 B、C、D 加入群组”，然后继续查找下一个元素，也就是 B。
- *
  * To obtain the exact position of the nickname in the text content, the following properties are used: the storage order of userName in the array must be the
  * same as the order in which the final text is displayed. For example: the text content is, "A invited B, C, D to join the group", then the storage order of
  * the elements in userName must be ABCD. Therefore, the method of "searching from the beginning and searching in succession" is used. For example, find the

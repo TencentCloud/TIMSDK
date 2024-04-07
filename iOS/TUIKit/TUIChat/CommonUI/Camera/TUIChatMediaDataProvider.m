@@ -287,7 +287,97 @@
             }];
         }
     });
+    
+}
 
+- (void)transcodeIfNeed:(BOOL)succ message:(NSString *)message videoUrl:(NSURL *)url placeHolderCellData:(TUIMessageCellData*)placeHolderCellData {
+    if (succ == NO || url == nil) {
+        [self handleVideoPick:NO message:message videoUrl:nil];
+        return;
+    }
+
+    if ([url.pathExtension.lowercaseString isEqualToString:@"mp4"]) {
+        [self handleVideoPick:succ message:message videoUrl:url];
+        return;
+    }
+
+    NSString *tempPath = NSTemporaryDirectory();
+    NSURL *urlName = [url URLByDeletingPathExtension];
+    NSURL *newUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@%@.mp4", tempPath, [urlName.lastPathComponent stringByRemovingPercentEncoding]]];
+
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:newUrl.path]) {
+        NSError *error;
+        BOOL success = [fileManager removeItemAtPath:newUrl.path error:&error];
+        if (!success || error) {
+            NSAssert1(NO, @"removeItemFail: %@", error.localizedDescription);
+            return;
+        }
+    }
+
+    // mov to mp4
+    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPresetHighestQuality];
+    exportSession.outputURL = newUrl;
+    exportSession.outputFileType = AVFileTypeMPEG4;
+    exportSession.shouldOptimizeForNetworkUse = YES;
+    
+    // intercept FirstTime VideoPicture
+    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts];
+    NSInteger duration = (NSInteger)urlAsset.duration.value / urlAsset.duration.timescale;
+    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:urlAsset];
+    gen.appliesPreferredTrackTransform = YES;
+    gen.maximumSize = CGSizeMake(192, 192);
+    NSError *error = nil;
+    CMTime actualTime;
+    CMTime time = CMTimeMakeWithSeconds(0.5, 30);
+    CGImageRef imageRef = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+        
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.listener respondsToSelector:@selector(onProvidePlaceholderVideoSnapshot:SnapImage:Completion:)]) {
+            [exportSession exportAsynchronouslyWithCompletionHandler:^{
+              switch ([exportSession status]) {
+                  case AVAssetExportSessionStatusFailed:
+                      NSLog(@"Export session failed");
+                      break;
+                  case AVAssetExportSessionStatusCancelled:
+                      NSLog(@"Export canceled");
+                      break;
+                  case AVAssetExportSessionStatusCompleted: {
+                      // Video conversion finished
+                      NSLog(@"Successful!");
+                      [self handleVideoPick:succ message:message videoUrl:newUrl placeHolderCellData:placeHolderCellData];
+                  }
+                      break;
+                  default:
+                      break;
+              }
+            }];
+            
+            [NSTimer tui_scheduledTimerWithTimeInterval:.1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+                if (exportSession.status == AVAssetExportSessionStatusExporting) {
+                    NSLog(@"exportSession.progress:%f",exportSession.progress);
+                    placeHolderCellData.videoTranscodingProgress = exportSession.progress;
+                }
+            }];
+        }
+        else {
+            [exportSession exportAsynchronouslyWithCompletionHandler:^{
+              switch ([exportSession status]) {
+                  case AVAssetExportSessionStatusCompleted: {
+                      // Video conversion finished
+                      NSLog(@"Successful!");
+                      [self handleVideoPick:succ message:message videoUrl:newUrl];
+                  } break;
+                  default:
+                      break;
+              }
+            }];
+        }
+    });
     
 }
 
@@ -332,6 +422,7 @@
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14)) {
     dispatch_async(dispatch_get_main_queue(), ^{
       [picker dismissViewControllerAnimated:YES completion:nil];
+      [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
     });
 
     if (!results || results.count == 0) {
@@ -376,24 +467,28 @@
                                                });
                                              }];
     } else if ([itemProvoider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
-        [itemProvoider loadDataRepresentationForTypeIdentifier:(NSString *)kUTTypeMovie
-                                             completionHandler:^(NSData *_Nullable data, NSError *_Nullable error) {
-                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                 // 非 mp4 格式视频，暂时用 mov 后缀，后面会统一转换成 mp4 格式
-                                                 // Non-mp4 format video, temporarily use mov suffix, will be converted to mp4 format later
-                                                 NSDate *datenow = [NSDate date];
-                                                 NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)([datenow timeIntervalSince1970]*1000)];
-                                                 NSString *fileName = [NSString stringWithFormat:@"%@_temp.mov",timeSp];
-                                                 NSString *tempPath = NSTemporaryDirectory();
-                                                 NSString *filePath = [tempPath stringByAppendingPathComponent:fileName];
-                                                 if ([NSFileManager.defaultManager isDeletableFileAtPath:filePath]) {
-                                                     [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
-                                                 }
-                                                 NSURL *newUrl = [NSURL fileURLWithPath:filePath];
-                                                 BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
-                                                 [weakSelf transcodeIfNeed:flag message:flag ? nil : @"movie not found" videoUrl:newUrl];
-                                               });
-                                             }];
+        // Mov type: screen first
+        if ([self.listener respondsToSelector:@selector(onProvidePlaceholderVideoSnapshot:SnapImage:Completion:)]) {
+            [self.listener onProvidePlaceholderVideoSnapshot:@"" SnapImage:nil Completion:^(BOOL finished, TUIMessageCellData * _Nonnull placeHolderCellData) {
+                [itemProvoider loadDataRepresentationForTypeIdentifier:(NSString *)kUTTypeMovie
+                                                     completionHandler:^(NSData *_Nullable data, NSError *_Nullable error) {
+                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                         // Non-mp4 format video, temporarily use mov suffix, will be converted to mp4 format later
+                                                         NSDate *datenow = [NSDate date];
+                                                         NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)([datenow timeIntervalSince1970]*1000)];
+                                                         NSString *fileName = [NSString stringWithFormat:@"%@_temp.mov",timeSp];
+                                                         NSString *tempPath = NSTemporaryDirectory();
+                                                         NSString *filePath = [tempPath stringByAppendingPathComponent:fileName];
+                                                         if ([NSFileManager.defaultManager isDeletableFileAtPath:filePath]) {
+                                                             [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
+                                                         }
+                                                         NSURL *newUrl = [NSURL fileURLWithPath:filePath];
+                                                         BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
+                                                         [weakSelf transcodeIfNeed:flag message:flag ? nil : @"movie not found" videoUrl:newUrl placeHolderCellData:placeHolderCellData];
+                                                       });
+                                                     }];
+            }];
+        }
     } else {
         NSString *typeIdentifier = result.itemProvider.registeredTypeIdentifiers.firstObject;
         [itemProvoider loadFileRepresentationForTypeIdentifier:typeIdentifier
@@ -447,7 +542,6 @@
                                      }
 
                                      /**
-                                      * 在某些情况下，UIImagePickerControllerMediaURL 可能为空，使用 UIImagePickerControllerPHAsset
                                       * In some cases UIImagePickerControllerMediaURL may be empty, use UIImagePickerControllerPHAsset
                                       */
                                      PHAsset *asset = nil;
@@ -465,8 +559,6 @@
                                      }
 
                                      /**
-                                      * 在 ios 12 的情况下，UIImagePickerControllerMediaURL 及 UIImagePickerControllerPHAsset
-                                      * 可能为空，需要使用其他方式获取视频文件原始路径 In the case of ios 12, UIImagePickerControllerMediaURL and
                                       * UIImagePickerControllerPHAsset may be empty, and other methods need to be used to obtain the original path of the video
                                       * file
                                       */
@@ -492,7 +584,6 @@
 }
 
 /**
- * 根据 UIImagePickerControllerReferenceURL 获取原始文件路径
  * Get the original file path based on UIImagePickerControllerReferenceURL
  */
 - (void)originURLWithRefrenceURL:(NSURL *)URL completion:(void (^)(BOOL success, NSURL *URL))completion {
@@ -547,7 +638,7 @@
         options:options
         dataReceivedHandler:^(NSData *_Nonnull data) {
           /**
-           * 此处会有重复回调的问题
+           * 
            * There will be a problem of repeated callbacks here
            */
           if (invoked) {
@@ -628,7 +719,6 @@
                           }
                           if ([NSFileManager.defaultManager fileExistsAtPath:filePath]) {
                               /**
-                               * 存在同名文件，对文件名进行递增
                                * If a file with the same name exists, increment the file name
                                */
                               int i = 0;

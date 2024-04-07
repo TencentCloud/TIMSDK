@@ -370,7 +370,6 @@
 }
 + (BOOL)followSystemChangeThemeSwitch {
     /**
-     * 第一次启动/未设置 默认跟随系统
      * The first time to start or not setting, follow the system settings in default
      */
     if ([[self.class getCacheThemeID] isEqualToString:@"system"]) {
@@ -441,14 +440,12 @@
     }
     if (cellModel && ![cellModel.themeID isEqualToString:@"system"]) {
         /**
-         * 只要选了皮肤，就关闭开关
          * As long as the theme is selected, turn off the switch
          */
         [self.class changeFollowSystemChangeThemeSwitch:YES];
     }
 
     /**
-     * 切换主题
      * Change the theme
      */
     self.selectModel.selected = NO;
@@ -457,7 +454,6 @@
     [self.collectionView reloadData];
 
     /**
-     * 缓存当前选中的主题
      * Cache the currently selected theme
      */
     [self.class cacheThemeID:self.selectModel.themeID];
@@ -488,7 +484,6 @@ static BOOL gDisableFollowSystemStyle = NO;
 
     if (lastThemeID == nil || lastThemeID.length == 0 || [lastThemeID isEqual:@"system"]) {
         /**
-         * 卸载主题， 跟随系统变化
          * Uninstall the theme and let it follow system changes
          */
         [TUIShareThemeManager unApplyThemeForModule:TUIThemeModuleAll];
@@ -504,19 +499,16 @@ static BOOL gDisableFollowSystemStyle = NO;
       if (@available(iOS 13.0, *)) {
           if (lastThemeID == nil || lastThemeID.length == 0 || [lastThemeID isEqual:@"system"]) {
               /**
-               * 跟随系统
                * Following system settings
                */
               UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = 0;
           } else if ([lastThemeID isEqual:@"dark"]) {
               /**
-               * 强制切换成黑夜
                * Mandatory switch to dark mode
                */
               UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
           } else {
               /**
-               * 忽略系统的设置，强制修改成白天模式，并应用当前的主题
                * Ignoring the system settings, mandatory swtich  to light mode, and apply the current theme
                */
               UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;

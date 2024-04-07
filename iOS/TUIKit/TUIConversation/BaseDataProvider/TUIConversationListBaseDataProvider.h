@@ -33,25 +33,25 @@ static NSString *gGroup_conversationFoldListMockID = @"group_conversationFoldLis
 
 @interface TUIConversationListBaseDataProvider : NSObject
 /**
- * 会话拉取过滤器
+ * 
  * The conversations pull filter
  */
 @property(nonatomic, strong) V2TIMConversationListFilter *filter;
 
 /**
- * 分页大小，默认 100 个
+ * ， 100 
  * The count of conversations per page, default is 100
  */
 @property(nonatomic, assign) NSUInteger pageSize;
 
 /**
- * 当前分页的索引
+ * 
  * The index of the current page
  */
 @property(nonatomic, assign) NSUInteger pageIndex;
 
 /**
- * 标识是否已经拉到了最后一页
+ * 
  * An identifier that identifies whether the paging data has been completely pulled
  */
 @property(nonatomic, assign, readonly, getter=isLastPage) BOOL lastPage;

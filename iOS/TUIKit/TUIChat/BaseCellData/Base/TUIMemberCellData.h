@@ -3,9 +3,6 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 /******************************************************************************
  *
- *  本文件声明了 TUIMemberCellData 类。
- *  作用是为 TUIMemberCell 类提供数据源，主要应用于消息已读成员列表界面等。
- *
  *  This file declares the TUIMemberCellData class.
  *  It provides a data source for the TUIMemberCell class, which is mainly used in the message read member list interface, etc.
  *

@@ -30,12 +30,6 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 
 @optional
 /**
- * 消息已读事件
- *
- * @param userId C2C 消息接收对象
- * @param timestamp 已读回执时间，这个时间戳之前的消息都可以认为对方已读
- */
-/**
  * Message read event
  *
  * @param userID recevier of one-to-one message
@@ -43,14 +37,6 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
  */
 - (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider ReceiveReadMsgWithUserID:(NSString *)userId Time:(time_t)timestamp;
 
-/**
- * 群消息已读事件
- *
- * @param groupID 群 ID
- * @param msgID 消息 ID
- * @param readCount 消息已读数
- * @param unreadCount 消息未读数
- */
 
 /**
  * Group message read event
@@ -67,11 +53,6 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
                   unreadCount:(NSUInteger)unreadCount;
 
 /**
- * 收到一条新消息, 数据的更改, 刷新, 内部已经处理, 可以在这个方法中做后续的处理
- *
- * @param uiMsg 新消息
- */
-/**
  * A new message is received, the data has been changed, refreshed, it has been processed internally, and subsequent processing can be done in this method
  *
  * @param uiMsg The new message
@@ -79,15 +60,12 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 - (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg;
 
 /**
- * 收到一条撤回消息
+ * 
  * Reveived a recalled message
  */
 - (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg;
 
 /**
- * 在请求新消息完成后、收到新消息时, 会触发该事件
- * 外部可以通过该方法来实现修改要展示的CellData、加入消息(如时间消息)、自定义消息
- *
  * This event is fired when a new message is received after the request for a new message is completed
  * External can use this method to modify the CellData to be displayed, add messages (such as time messages), and customize messages
  */
@@ -96,11 +74,6 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 @end
 
 /**
- * 【模块名称】聊天消息列表视图模型（TUIMessageDataProvider）
- *
- * 【功能说明】负责实现聊天页面中的消息列表的数据处理和业务逻辑
- *  1、视图模型能够通过 IM SDK 提供的接口从服务端拉取消息列表数据，并将数据加载。
- *  2、视图模型能够在用户需要删除会话列表时，同步移除消息列表的数据。
  *
  * 【Module name】Chat message list view model (TUIMessageDataProvider)
  * 【Function description】Responsible for implementing the data processing and business logic of the message list in the chat page
@@ -118,14 +91,13 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 @property(nonatomic, assign, readonly) BOOL isFirstLoad;
 
 /**
- * 如果相邻的消息都为同一个用户发送，则合并消息展示
+ * ，
  *
  * If adjacent messages are sent by the same user, the messages will be merged for display.
  */
 @property(nonatomic, assign) BOOL mergeAdjacentMsgsFromTheSameSender;
 
 /**
- * loadMessage 请求的分页大小, default is 20
  *
  * Count of per page, default is 20.
  */
@@ -159,25 +131,21 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 - (void)replaceUIMsg:(TUIMessageCellData *)cellData atIndex:(NSUInteger)index;
 
 /**
- * 预处理回复消息(异步加载原始消息以及下载对应的缩略图)
  * Preprocessing reply messages (asynchronously loading original messages and downloading corresponding thumbnails)
  */
 - (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;
 
 /**
- * 发送最新消息的已读回执
  * Send read receipts for latest messages
  */
 - (void)sendLatestMessageReadReceipt;
 
 /**
- * 发送指定 index 消息的已读回执
  * Send a read receipt for the specified index message
  */
 - (void)sendMessageReadReceiptAtIndexes:(NSArray *)indexes;
 
 /**
- * 通过 msgID 获取到 message 的 index
  * Get the index of the message in the mesage data through msgID
  */
 - (NSInteger)getIndexOfMessage:(NSString *)msgID;
@@ -186,7 +154,7 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 
 - (void)clearUIMsgList;
 
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;  // subclass override required
+- (void)processQuoteMessage:(NSArray<TUIMessageCellData *> *)uiMsgs;  // subclass override required
 
 + (void)updateUIMsgStatus:(TUIMessageCellData *)cellData uiMsgs:(NSArray *)uiMsgs;
 @end
@@ -215,13 +183,11 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 + (void)modifyMessage:(V2TIMMessage *)msg completion:(V2TIMMessageModifyCompletion)completion;
 
 /**
- * 发送消息已读回执
  * Send message read receipts
  */
 + (void)sendMessageReadReceipts:(NSArray *)msgs;
 
 /**
- * 获取群消息已读、未读成员列表
  * Getting the list of read and unread members of group messages
  */
 + (void)getReadMembersOfMessage:(V2TIMMessage *)msg
@@ -230,7 +196,6 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
                      completion:(void (^)(int code, NSString *desc, NSArray *members, NSUInteger nextSeq, BOOL isFinished))block;
 
 /**
- * 获取消息的阅读信息回执
  * Getting the read receipt of the message
  */
 + (void)getMessageReadReceipt:(NSArray *)messages succ:(nullable V2TIMMessageReadReceiptsSucc)succ fail:(nullable V2TIMFail)fail;

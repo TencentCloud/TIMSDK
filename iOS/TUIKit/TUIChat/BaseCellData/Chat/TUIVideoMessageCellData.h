@@ -3,12 +3,6 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
- *  1. 本文件声明了 TUIVideoItem 类、TUISnapshotItem 类和 TUIVideoMessageCellData 类。
- *    - TUIVideoItem 对应 IM SDK 中的 V2TIMVideoElem，我们将 SDK 中的类转换为 TUIVideoItem，方便我们进一步对数据进行处理与操作。
- *    - TUISnapshotItem 对应 IM SDK 中的视频封面类，本质上仍是一个图像，只是与对应 Video 绑定存在。
- *    - TUIVideoMessageCellData 继承于 TUIMessageCellData 类，用于存放图像消息单元所需的一系列数据与信息。
- *  2. 本文件中已经实现了获取视频信息和封面信息的业务逻辑。当您需要获取视频和封面数据时，直接调用本文件中声明的相关成员函数即可
- *
  *  1. This file declares the TUIVideoItem class, TUISnapshotItem class, and TUIVideoMessageCellData class.
  *    - TUIVideoItem corresponds to V2TIMVideoElem in the IM SDK. We convert the classes in the SDK to TUIVideoItem, which is convenient for us to further
  * process and operate the data.
@@ -49,16 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)getVideoUrl:(void (^)(NSString *url))urlCallBack;
 
 /**
- *  获取视频封面
- *
  *  Downloading the cover image of the video. It will download from server if the image not exist in local.
  */
 - (void)downloadThumb;
 - (void)downloadThumb:(TUIVideoMessageDownloadCallback)finish;
 
 /**
- *  获取视频
- *
  *  Downloading the video file. It will download from server if the video not exist  in local.
  */
 - (void)downloadVideo;

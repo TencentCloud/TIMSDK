@@ -3,7 +3,7 @@
 //  TUIContact
 //
 //  Created by lynxzhang on 2018/10/19.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 #import "TUISettingController_Minimalist.h"
 #import <TIMCommon/TIMCommonModel.h>

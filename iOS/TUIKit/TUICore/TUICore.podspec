@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUICore'
-  spec.version      = '7.8.5483'
+  spec.version      = '7.9.5666'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -26,7 +26,7 @@ Pod::Spec.new do |spec|
   spec.subspec 'Base' do |base|
       base.source_files = '*.{h,m,mm,c}'
       base.resource = [
-        'Resources/*.bundle'
+      'Resources/*.bundle','Resources/PrivacyInfo.xcprivacy'
       ]
   end
 end

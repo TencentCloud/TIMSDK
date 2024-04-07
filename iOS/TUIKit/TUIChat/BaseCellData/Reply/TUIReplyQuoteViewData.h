@@ -21,8 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGSize)contentSize:(CGFloat)maxWidth;
 
 /**
- * 自定义回复内容如果要异步下载，下载完成之后需要调用调用 callback，TUI 内部会自动刷新
- *
  * If you want to download the custom reply content asynchronously, you need to call the callback after the download is complete, and the TUI will be
  * automatically refreshed.
  */

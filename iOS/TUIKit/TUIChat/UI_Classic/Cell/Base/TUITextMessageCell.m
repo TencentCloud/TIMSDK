@@ -180,7 +180,6 @@
             NSAttributedString *originStr = emojiLocation[key];
             NSRange currentRange = [key rangeValue];
             /**
-             * 每次 emoji 替换后，字符串的长度都会发生变化，后面 emoji 的实际 location 也要相应改变
              * After each emoji is replaced, the length of the string will change, and the actual location of the emoji will also change accordingly.
              */
             currentRange.location += offsetLocation;

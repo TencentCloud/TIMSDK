@@ -12,7 +12,8 @@ import TUICallEngine
 class TUICallKitExtension: NSObject, TUIExtensionProtocol {
     
     static let instance = TUICallKitExtension()
-
+    var joinGroupCallViewModel = JoinInGroupCallViewModel()
+    
     func launchCall(type: TUICallMediaType, groupID: String, pushVC: UINavigationController, isClassic: Bool) {
         if !groupID.isEmpty {
             var requestParam: [String: Any] = [:]
@@ -20,7 +21,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             requestParam[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name] =
             TUIGlobalization.getLocalizedString(forKey: "Make-a-call", bundle: TIMCommonLocalizableBundle)
             let viewControllerKey = isClassic ? TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Classic :
-                                                TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Minimalist
+            TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Minimalist
             pushVC.push(viewControllerKey, param: requestParam) { [weak self] responseData in
                 guard let self = self else { return }
                 guard let modelList = responseData[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList]
@@ -30,13 +31,13 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             }
         }
     }
-
+    
     func startCall(groupID: String, userIDs: [String], callingType: TUICallMediaType) {
         let selector = NSSelectorFromString("setOnlineUserOnly")
         if TUICallEngine.createInstance().responds(to: selector) {
             TUICallEngine.createInstance().perform(selector, with: 0)
         }
-
+        
         if groupID.isEmpty {
             guard let userID = userIDs.first else { return }
             TUICallKit.createInstance().call(userId: userID, callMediaType: callingType)
@@ -44,12 +45,12 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             TUICallKit.createInstance().groupCall(groupId: groupID, userIdList: userIDs, callMediaType: callingType)
         }
     }
-
+    
     func doResponseInputViewExtension(param: [String: Any], type: TUICallMediaType, isClassic: Bool) {
         let userID = param[TUICore_TUIChatExtension_InputViewMoreItem_UserID] as? String ?? ""
         let groupId = param[TUICore_TUIChatExtension_InputViewMoreItem_GroupID] as? String ?? ""
         let pushVC = param[TUICore_TUIChatExtension_InputViewMoreItem_PushVC] as? UINavigationController
-
+        
         if !userID.isEmpty {
             startCall(groupID: "", userIDs: [userID], callingType: type)
         } else if !groupId.isEmpty {
@@ -57,8 +58,35 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             launchCall(type: type, groupID: groupId, pushVC: pushVC, isClassic: isClassic)
         }
     }
-
+    
     // MARK: TUIExtensionProtocol
+    func onRaiseExtension(_ extensionID: String, parentView: UIView, param: [AnyHashable : Any]?) -> Bool {
+        if extensionID.isEmpty {
+            return false
+        }
+        
+        guard let groupId = param?[TUICore_TUIChatExtension_ChatViewTopArea_ChatID] as? String,
+              let isGroup = param?[TUICore_TUIChatExtension_ChatViewTopArea_IsGroup], isGroup as! String == "1" else {
+            return false
+        }
+        
+        if extensionID == TUICore_TUIChatExtension_ChatViewTopArea_ClassicExtensionID ||
+            extensionID == TUICore_TUIChatExtension_ChatViewTopArea_MinimalistExtensionID {
+            let joinGroupCallView = JoinInGroupCallView()
+            joinGroupCallViewModel.setJoinGroupCallView(joinGroupCallView)
+            joinGroupCallViewModel.getGroupAttributes(groupId)
+            parentView.subviews.forEach {
+                if $0 is JoinInGroupCallView {
+                    $0.removeFromSuperview()
+                }
+            }
+            parentView.addSubview(joinGroupCallView)
+            return true
+        }
+        
+        return false
+    }
+    
     func onGetExtension(_ extensionID: String, param: [AnyHashable : Any]?) -> [TUIExtensionInfo]? {
         if extensionID.isEmpty {
             return nil
@@ -203,7 +231,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             let videoInfo = TUIExtensionInfo()
             videoInfo.weight = 100
             videoInfo.icon = TUICoreDefineConvert.getTUIDynamicImage(imageKey: "", module: TUIThemeModule.contact_Minimalist,
-                defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_video")) ?? UIImage())
+                                                                     defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_video")) ?? UIImage())
             videoInfo.text = TUICoreDefineConvert.getTIMCommonLocalizableString(key: "TUIKitVideo")
             videoInfo.onClicked = {[weak self] param in
                 guard let self = self else { return }
@@ -220,7 +248,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             let audioInfo = TUIExtensionInfo()
             audioInfo.weight = 200
             audioInfo.icon = TUICoreDefineConvert.getTUIDynamicImage(imageKey: "", module: TUIThemeModule.contact_Minimalist,
-                defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_audio")) ?? UIImage())
+                                                                     defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_audio")) ?? UIImage())
             audioInfo.text = TUICoreDefineConvert.getTIMCommonLocalizableString(key: "TUIKitAudio")
             audioInfo.onClicked = {[weak self] param in
                 guard let self = self else { return }
@@ -243,7 +271,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             let videoInfo = TUIExtensionInfo()
             videoInfo.weight = 100
             videoInfo.icon = TUICoreDefineConvert.getTUIDynamicImage(imageKey: "", module: TUIThemeModule.contact_Minimalist,
-                defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_video")) ?? UIImage())
+                                                                     defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_video")) ?? UIImage())
             videoInfo.text = TUICoreDefineConvert.getTIMCommonLocalizableString(key: "TUIKitVideo")
             videoInfo.onClicked = {[weak self] param in
                 guard let self = self else { return }
@@ -261,7 +289,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             let audioInfo = TUIExtensionInfo()
             audioInfo.weight = 200
             audioInfo.icon = TUICoreDefineConvert.getTUIDynamicImage(imageKey: "", module: TUIThemeModule.contact_Minimalist,
-                defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_audio")) ?? UIImage())
+                                                                     defaultImage: UIImage(named: TUICoreDefineConvert.getTUIContactImagePathMinimalist(imageName: "contact_info_audio")) ?? UIImage())
             audioInfo.text = TUICoreDefineConvert.getTIMCommonLocalizableString(key: "TUIKitAudio")
             audioInfo.onClicked = {[weak self] param in
                 guard let self = self else { return }
@@ -275,5 +303,5 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
         }
         return result
     }
-
+    
 }

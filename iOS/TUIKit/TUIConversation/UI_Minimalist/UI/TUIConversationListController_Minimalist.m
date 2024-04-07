@@ -466,7 +466,6 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
                     desc = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
                 } else if (msg.groupID.length > 0) {
                     /**
-                     * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
                      * For the name display of group messages, the group business card is displayed first, the nickname has the second priority, and the user ID
                      * has the lowest priority.
                      */
@@ -836,7 +835,6 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // 通过开启或关闭这个开关，控制最后一行分割线的长度
     // Turn on or off the length of the last line of dividers by controlling this switch
     BOOL needLastLineFromZeroToMax = NO;
     if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {

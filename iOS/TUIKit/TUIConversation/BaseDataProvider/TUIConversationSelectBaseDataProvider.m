@@ -30,7 +30,6 @@
 
 - (void)updateConversation:(NSArray *)convList {
     /**
-     * 更新 UI 会话列表，如果 UI 会话列表有新增的会话，就替换，如果没有，就新增
      * Update the conversation list on the UI, if it is an existing conversation, replace it, otherwise add it
      */
     for (int i = 0; i < convList.count; ++i) {
@@ -88,7 +87,6 @@
 
 - (void)sortDataList:(NSMutableArray<TUIConversationCellData *> *)dataList {
     /**
-     * 按时间排序，最近会话在上
      * Sorted by time, the latest conversation is at the top of the conversation list
      */
     [dataList sortUsingComparator:^NSComparisonResult(TUIConversationCellData *obj1, TUIConversationCellData *obj2) {
@@ -96,7 +94,6 @@
     }];
 
     /**
-     * 将置顶会话固定在最上面
      * Pinned conversations are at the top of the conversation list
      */
     NSArray *topList = [[TUIConversationPin sharedInstance] topConversationList];

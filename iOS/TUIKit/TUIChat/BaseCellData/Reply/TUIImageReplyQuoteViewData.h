@@ -9,8 +9,16 @@
 #import "TUIReplyMessageCellData.h"
 
 NS_ASSUME_NONNULL_BEGIN
+typedef NS_ENUM(NSUInteger, TUIImageReplyQuoteStatus) {
+    TUIImageReplyQuoteStatusInit,
+    TUIImageReplyQuoteStatusDownloading,
+    TUIImageReplyQuoteStatusSuccess,
+    TUIImageReplyQuoteStatusFailed,
+};
 
 @interface TUIImageReplyQuoteViewData : TUIReplyQuoteViewData
+
+@property(nonatomic, assign) TUIImageReplyQuoteStatus imageStatus;
 
 @property(nonatomic, strong) UIImage *image;
 

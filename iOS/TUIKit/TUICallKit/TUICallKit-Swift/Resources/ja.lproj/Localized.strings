@@ -13,6 +13,7 @@
 "TUICallKit.Group.inviteToGroupCall" = "グループ通話に招待します";
 "TUICallKit.Group.waitAccept" = "待機中";
 "TUICallKit.determine" = "もちろん";
+"TUICallKit.lineBusy" = "回線ビジー";
 
 "TUICallKit.hangup" = "通話終了";
 "TUICallKit.decline" = "拒否";
@@ -63,3 +64,8 @@
 "TUICallKit.earpiece" = "スピーカーオフ";
 "TUICallKit.cameraOn" = "カメラオン";
 "TUICallKit.cameraOff" = "カメラオフ";
+
+"TUICallKit.JoinGroupView.title" = "%d人が%@中です";
+"TUICallKit.JoinGroupView.join" = "参加する";
+"TUICallKit.JoinGroupView.audioCall" = "音声通話";
+"TUICallKit.JoinGroupView.videoCall" = "ビデオ通話";

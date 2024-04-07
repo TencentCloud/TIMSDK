@@ -30,7 +30,6 @@
     dispatch_source_set_event_handler(self.gcdTimer, ^{
       self.captureDuration += timeInterval;
       /**
-       * 主线程更新 UI
        * Updating UI on the main thread
        */
       dispatch_async(dispatch_get_main_queue(), ^{
@@ -40,12 +39,10 @@
       });
 
       /**
-       * 完成
        * Fnish
        */
       if (self.captureDuration >= self.maxCaptureTime) {
           /**
-           * 取消定时器
            * Invalid timer
            */
           CGFloat ratio = self.captureDuration / self.maxCaptureTime;
@@ -57,7 +54,6 @@
       }
     });
     /**
-     * 启动任务，GCD 定时器创建后需要手动启动
      * Start the task. After the GCD timer is created, it needs to be started manually
      */
     dispatch_resume(self.gcdTimer);

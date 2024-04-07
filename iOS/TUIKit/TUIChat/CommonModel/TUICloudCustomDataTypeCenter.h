@@ -27,24 +27,17 @@ FOUNDATION_EXTERN TUICustomType messageFeature;
 
 - (void)doThingsInContainsCloudCustomOfDataType:(TUICloudCustomDataType)type callback:(void (^)(BOOL isContains, id obj))callback;
 /**
- * 是否包含了这种状态
  * Whether this state is included
  */
 - (BOOL)isContainsCloudCustomOfDataType:(TUICloudCustomDataType)type;
 
 /**
- * 解析指定类型的数据
- * 返回值是：NSDictionary/NSArray/NSString/NSNumber 类型的数据
- *
  * Parse data of specified type
  * The return value is: data of type NSDictionary/NSArray/NSString/NSNumber
  */
 - (NSObject *)parseCloudCustomData:(TUICustomType)customType;
 
 /**
- * 设置指定类型的数据
- * jsonData: NSDictionary/NSArray/NSString/NSNumber 类型的数据，可以直接转换成 json 的
- *
  * Set the specified type of data
  * jsonData: NSDictionary/NSArray/NSString/NSNumber type data, which can be directly converted to json
  */

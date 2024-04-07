@@ -187,13 +187,13 @@
 @implementation UIImage (SnapshotImage)
 
 + (UIImage *)snapshotImageWithView:(UIView *)view {
-    // currentView 当前的view  创建一个基于位图的图形上下文并指定大小为
+    // currentView The current view creates a bitmap-based graphics context and specifies the size of
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, [UIScreen mainScreen].scale);
-    // renderInContext呈现接受者及其子范围到指定的上下文
+    // renderInContext Renders the receiver and its subscopes to the specified context
     [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
-    // 返回一个基于当前图形上下文的图片
+    // Returns an image based on the current graphics context
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    // 生成后的image
+    // generated image
     UIGraphicsEndImageContext();
 
     return image;

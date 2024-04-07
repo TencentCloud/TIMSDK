@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TUIMediaCollectionCellDelegate <NSObject>
 /**
- *  meida cell 被点击回调
+ *  meida cell 
  */
 - (void)onCloseMedia:(TUIMediaCollectionCell *)cell;
 @end

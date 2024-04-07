@@ -42,12 +42,10 @@
                       succ:(V2TIMSucc)succ
                       fail:(V2TIMFail)fail {
     [[V2TIMManager sharedInstance] addMessageReaction:v2Message reactionID:reactionID succ:^{
-        // 添加消息回应成功
         if (succ){
             succ();
         }
     } fail:^(int code, NSString *desc) {
-        // 添加消息回应失败
         if (fail){
             fail(code,desc);
         }
@@ -59,12 +57,10 @@
                          succ:(V2TIMSucc)succ
                          fail:(V2TIMFail)fail {
     [[V2TIMManager sharedInstance] removeMessageReaction:v2Message reactionID:reactionID succ:^{
-        // 删除消息回应成功
         if (succ){
             succ();
         }
     } fail:^(int code, NSString *desc) {
-        // 删除消息回应失败
         if (fail){
             fail(code,desc);
         }
@@ -84,7 +80,7 @@
         
         modifyUserMap = [NSMutableDictionary dictionaryWithCapacity:3];
         reactArray = [NSMutableArray arrayWithCapacity:3];
-        // 批量拉取消息回应信息成功
+        // Batch pull message response information successful
         for (V2TIMMessageReactionResult *result in resultList) {
             int32_t resultCode = result.resultCode;
             NSString *resultInfo = result.resultInfo;
@@ -114,14 +110,14 @@
     changedReactMap = [NSMutableDictionary dictionaryWithCapacity:3];
     changedReactArray = [NSMutableArray arrayWithCapacity:3];
     __weak typeof(self)weakSelf = self;
-    // 收到消息回应更新回调
+    //Response to the update callback after receiving the message
     for (V2TIMMessageReactionChangeInfo *changeInfo in changeList) {
         NSString *msgID = changeInfo.msgID;
         if (![msgID isEqualToString:self.msgId] ) {
-            //不是当前消息的变更
+            // Not the current message
             return;
         }
-        // 变更的 reaction 列表
+        //Changed reaction list
         NSArray *reactionList = changeInfo.reactionList;
         for (V2TIMMessageReaction *reaction in reactionList) {
             TUIReactModel * model = [TUIReactModel createTagsModelByReaction:reaction];

@@ -670,6 +670,12 @@
     if (self.backgroundView && [self.backgroundView respondsToSelector:@selector(updateCameraOpenStatus:)]) {
         [self.backgroundView updateCameraOpenStatus:![TUICallingStatusManager shareInstance].isCloseCamera];
     }
+    CallingUserModel *userModel = [TUICallingUserManager getUser:[TUICallingUserManager getSelfUserId]];
+    if (userModel) {
+        userModel.isVideoAvailable = ![TUICallingStatusManager shareInstance].isCloseCamera;
+        [TUICallingUserManager cacheUser:userModel];
+        [self.backgroundView updateUserInfo:userModel];
+    }
 }
 
 - (void)updateMicMute {

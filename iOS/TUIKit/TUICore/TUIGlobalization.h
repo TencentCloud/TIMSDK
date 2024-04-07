@@ -10,7 +10,6 @@
 #import "TUIDefine.h"
 
 /**
- * TUIKit 字符串国际化
  * Get localized strings in TUIKit
  */
 #define TUIKitLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIKitLocalizableBundle]
@@ -39,25 +38,21 @@
 @interface TUIGlobalization : NSObject
 
 /**
- * 获取本地化字符串
  * Get localized string
  */
 + (NSString *)getLocalizedStringForKey:(NSString *)key bundle:(NSString *)bundleName;
 
 /**
- * 获取首选语言
  * Get preferred language
  */
 + (NSString *)getPreferredLanguage;
 
 /**
- * 将首选语言设置为指定的值
  * Set the preferred language to the specified value.
  */
 + (void)setPreferredLanguage:(NSString *)language;
 
 /**
- * 忽略繁体中文，改用简体中文
  * Ignore traditional chinese and switch to simplified chinese
  */
 + (void)ignoreTraditionChinese:(BOOL)ignore;

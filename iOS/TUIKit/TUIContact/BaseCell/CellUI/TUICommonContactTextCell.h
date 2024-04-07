@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property UIColor *valueColor;
 
 /**
- * 允许 valueLabel 多行显示
+ *  valueLabel 
  * Allow valueLabel to be displayed on multiple lines
  */
 @property BOOL enableMultiLineValue;

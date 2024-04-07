@@ -106,12 +106,10 @@
 
 - (void)configHeadImageView:(TUIConversationCellData *)convData {
     /**
-     * 修改默认头像
      * Setup default avatar
      */
     if (convData.groupID.length > 0) {
         /**
-         * 群组, 则将群组默认头像修改成上次使用的头像
          * If it is a group, change the group default avatar to the last used avatar
          */
         convData.avatarImage = [TUIGroupAvatar getNormalGroupCacheAvatar:convData.groupID groupType:convData.groupType];

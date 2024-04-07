@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIReferenceMessageCell : TUIBubbleMessageCell
 /**
- * 引用的边框
+ * 
  * Border of quote view
  */
 @property(nonatomic, strong) CALayer *quoteBorderLayer;

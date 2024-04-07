@@ -19,21 +19,13 @@ static NSString *const gRecordCallsViewModelKVOKeyPath = @"dataSource";
 
 @interface TUICallRecordCallsViewController ()<UITableViewDelegate, UITableViewDataSource>
 
-/// 头部导航容器视图
 @property (nonatomic, strong) UIView *containerView;
-/// 开始编辑按钮
 @property (nonatomic, strong) UIButton *editButton;
-/// 清除所有记录按钮
 @property (nonatomic, strong) UIButton *clearButton;
-/// 编辑完成按钮
 @property (nonatomic, strong) UIButton *doneButton;
-/// 分段控制视图
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
-/// 无最近通话提示文本
 @property (nonatomic, strong) UILabel *notRecordCallsLabel;
-/// 列表表头视图
 @property (nonatomic, strong) UIView *tableHeaderView;
-/// 通话记录列表
 @property (nonatomic, strong) UITableView *recordCallsList;
 
 @property (nonatomic, readwrite, strong) TUICallRecordCallsViewModel *recordCallsViewModel;

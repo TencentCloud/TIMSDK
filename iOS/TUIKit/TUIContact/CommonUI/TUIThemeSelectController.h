@@ -55,25 +55,21 @@ typedef void (^ThemeSelectCallback)(TUIThemeSelectCollectionViewCellModel *cellM
 @property(nonatomic, assign) BOOL disable;
 
 /**
- * 禁用跟随系统风格
  * Disable follow system style.
  */
 + (void)disableFollowSystemStyle;
 
 /**
- * 应用主题，如果ID为空，则使用最近一次的设置
  * Applying the theme, if the id is empty, use the last setting.
  */
 + (void)applyTheme:(NSString *__nullable)themeID;
 
 /**
- * 应用最近一次使用的主题
  * Applying the last theme
  */
 + (void)applyLastTheme;
 
 /**
- * 获取上一次使用的主题名
  * Get the last used theme name
  */
 + (NSString *)getLastThemeName;

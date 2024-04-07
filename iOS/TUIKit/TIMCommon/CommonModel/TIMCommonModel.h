@@ -221,23 +221,17 @@ typedef enum : NSUInteger {
 @property NSString *title;
 
 /**
- *  请求者的加群简介。如“小明申请加入群聊”。
  *  The joining group introduction of the requester. Such as "Xiao Ming applied to join the group".
  */
 @property NSString *requestMsg;
 
 /**
- *  是否同意。YES：同意。
- *  此变量为 NO时，仅表明当前请求未同意，并不意味着请求已拒绝。
- *
  *  Agree or Not
  *  YES: Agree;  NO: Indicates that the current request was not granted, but does not mean that the request has been denied.
  */
 @property BOOL isAccepted;
 
 /**
- *  是否拒绝。YES：拒绝。
- *  此变量为 NO时，仅表明当前请求未拒绝，并不意味着请求已同意。
  *
  *  Refuse or Not
  *  YES: Refuse; NO: Indicates that the current request is not denied, but does not mean that the request has been granted.
@@ -275,40 +269,28 @@ typedef enum : NSUInteger {
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
- * 【模块名称】TUIFaceCellData
- * 【功能说明】存储表情的名称、本地存储路径。
- *
- *
  * 【Module name】 TUIFaceCellData
  * 【Function description]】The name and local storage path of the stored emoticon.
  */
 @interface TUIFaceCellData : NSObject
 
 /**
- * 表情名称
  * The name of emoticon
  */
 @property(nonatomic, strong) NSString *name;
 
 /**
- * 表情的本地化名称（国际化属性，如果为空或者length为0，默认显示name）
  * The localized name of the emoticon (the attribute used for internationalization, if it is empty or the length is 0, the name is displayed by default)
  */
 @property(nonatomic, copy) NSString *localizableName;
 
 /**
- * 表情在本地缓存的存储路径。
  * The storage path of the emoticon cached locally.
  */
 @property(nonatomic, strong) NSString *path;
 @end
 
 /**
- * 【模块名称】TUIFaceCell
- * 【功能说明】存储表情的图像，并根据 TUIFaceCellData 初始化 Cell。
- *  在表情视图中，TUIFaceCell 即为界面显示的单元。
- *
- *
  * 【Module name】TUIFaceCell
  * 【Function description】 Store the image of the emoticon, and initialize the Cell according to TUIFaceCellData.
  *  In the emoticon view, TUIFaceCell is the unit displayed on the interface.
@@ -316,7 +298,6 @@ typedef enum : NSUInteger {
 @interface TUIFaceCell : UICollectionViewCell
 
 /**
- *  表情图像
  *  The image view for displaying emoticon
  */
 @property(nonatomic, strong) UIImageView *face;
@@ -333,12 +314,6 @@ typedef enum : NSUInteger {
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
- * 【模块名称】TUIFaceGroup
- * 【功能说明】用于实现表情的分组，方便用户在不同表情主题下浏览、选择。
- *  该类存储了每组表情分组的自身标号，方便 FaceView 能够定位到每个表情分组。
- *  同时，该类存储了一个表情组下的表情路径，并提供数据如行数、每行表情数等用于精确在组内定位表情。
- *
- *
  * 【Module name】 TUIFaceGroup
  * 【Function description】 It is used to realize the grouping of emoticon, which is convenient for users to browse and select under different emoticon themes.
  *  This class stores the index of each emoticon group, so that FaceView can locate each emoticon group.
@@ -348,25 +323,21 @@ typedef enum : NSUInteger {
 @interface TUIFaceGroup : NSObject
 
 /**
- *  表情组索引号，从0开始。
  *  Index of emoticons group, begining with zero.
  */
 @property(nonatomic, assign) int groupIndex;
 
 /**
- *  表情组路径
  *  The resource path of the entire expression group
  */
 @property(nonatomic, strong) NSString *groupPath;
 
 /**
- *  表情组总行数
  *  The number of lines of emoticons in the emoticon group
  */
 @property(nonatomic, assign) int rowCount;
 
 /**
- *  每行所包含的表情数
  *  The number of emoticons contained in each line
  */
 @property(nonatomic, assign) int itemCountPerRow;
@@ -374,9 +345,6 @@ typedef enum : NSUInteger {
 @property(nonatomic, strong) NSMutableArray *faces;
 
 /**
- *  删除标志位
- *  当该位为 YES 时，FaceView 会在表情视图右下角中显示一个“删除”图标，使您无需呼出键盘即可进行表情的删除操作。
- *
  *  The flag of indicating whether to display the delete button
  *  When set to YES, FaceView will display a "delete" icon in the lower right corner of the emoticon view. Clicking the icon can delete the entered emoticon
  * directly without evoking the keyboard.
@@ -384,9 +352,6 @@ typedef enum : NSUInteger {
 @property(nonatomic, assign) BOOL needBackDelete;
 
 /**
- *  表情menu路径
- *  表情菜单即在表情视图最下方显示表情组缩略图与“发送按钮”的菜单视图。
- *
  *  The path to the cover image of the emoticon group
  */
 @property(nonatomic, strong) NSString *menuPath;
@@ -411,19 +376,17 @@ typedef enum : NSUInteger {
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                          TUIUnReadView（会话未读数）
+// TUIUnReadView
 //
 /////////////////////////////////////////////////////////////////////////////////
 @interface TUIUnReadView : UIView
 
 /**
- * 未读数展示 label
  * The label of displaying unread message count
  */
 @property(nonatomic, strong) UILabel *unReadLabel;
 
 /**
- * 设置未读数
  * Set the unread message count
  */
 - (void)setNum:(NSInteger)num;
@@ -441,18 +404,18 @@ extern NSString *kTopConversationListChangedNotification;
 + (instancetype)sharedInstance;
 
 /**
- * 获取置顶的会话列表
+ * 
  * Getting the list of pinned conversations
  */
 - (NSArray *)topConversationList;
 
 /**
- * 置顶会话
+ * 
  * Pin the conversation
  */
 - (void)addTopConversation:(NSString *)conv callback:(void (^__nullable)(BOOL success, NSString *__nullable errorMessage))callback;
 /**
- * 删除置顶的会话
+ * 
  * Remove pinned conversations
  */
 - (void)removeTopConversation:(NSString *)conv callback:(void (^__nullable)(BOOL success, NSString *__nullable errorMessage))callback;

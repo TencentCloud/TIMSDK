@@ -142,7 +142,6 @@ typedef NS_ENUM(NSUInteger, TUIEmojiFaceType) {
         if (emojis.count > 0) {
             //Randomly check whether an emoticon matches the current emoticon resource package
             //to avoid overwriting the installation context emoticon inconsistency.
-            //随机检验一个是否匹配当前表情资源包 避免覆盖安装上下文表情不一致。
             NSDictionary *dic = emojis.lastObject;
             NSString *name = [dic objectForKey:@"face_name"];
             NSString *fileName = [dic objectForKey:@"face_file"];

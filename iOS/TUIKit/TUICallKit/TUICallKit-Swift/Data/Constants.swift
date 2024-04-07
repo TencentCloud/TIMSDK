@@ -5,10 +5,10 @@
 //  Created by vincepzhang on 2022/12/30.
 //
 
-// 默认头像
+// Default avatar
 let TUI_CALL_DEFAULT_AVATAR: String = "https://imgcache.qq.com/qcloud/public/static//avatar1_100.20191230.png"
 
-// MARK: 屏幕尺寸相关
+// MARK: Screen Size Param
 let ScreenSize = UIScreen.main.bounds.size
 let Screen_Width = UIScreen.main.bounds.size.width
 let Screen_Height = UIScreen.main.bounds.size.height

@@ -3,7 +3,7 @@
 //  TUIKit
 //
 //  Created by annidyfeng on 2019/3/25.
-//  Copyright © 2019年 Tencent. All rights reserved.
+//  Copyright © 2019 Tencent. All rights reserved.
 //
 
 #import "TUIContactController_Minimalist.h"
@@ -123,13 +123,13 @@
     NSMutableArray *menus = [NSMutableArray array];
     TUIPopCellData *friend = [[TUIPopCellData alloc] init];
     friend.image = TUIContactDynamicImage(@"pop_icon_add_friend_img", [UIImage imageNamed:TUIContactImagePath(@"add_friend")]);
-    friend.title = TIMCommonLocalizableString(ContactsAddFriends);  //@"添加好友";
+    friend.title = TIMCommonLocalizableString(ContactsAddFriends);
     [menus addObject:friend];
 
     TUIPopCellData *group = [[TUIPopCellData alloc] init];
     group.image = TUIContactDynamicImage(@"pop_icon_add_group_img", [UIImage imageNamed:TUIContactImagePath(@"add_group")]);
 
-    group.title = TIMCommonLocalizableString(ContactsJoinGroup);  //@"添加群组";
+    group.title = TIMCommonLocalizableString(ContactsJoinGroup); 
     [menus addObject:group];
 
     CGFloat height = [TUIPopCell getHeight] * menus.count + TUIPopView_Arrow_Size.height;

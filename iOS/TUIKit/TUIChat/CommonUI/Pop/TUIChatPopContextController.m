@@ -77,21 +77,21 @@
         _viewDidShowHandler(_alertView);
     }
 
-    // 太靠上
+    // 
     // Too far to the top
     CGFloat moveY = 0;
     if (self.recentView.frame.origin.y < NavBar_Height) {
         CGFloat deal = NavBar_Height - self.recentView.frame.origin.y;
         moveY = deal + NavBar_Height + 50;
     }
-    // 太靠右
+    // 
     // Too far to the right
     CGFloat moveX = 0;
     if (self.recentView.frame.origin.x + self.recentView.frame.size.width > self.view.frame.size.width) {
         CGFloat deal = self.recentView.frame.origin.x + self.recentView.frame.size.width - self.view.frame.size.width;
         moveX = deal + 5;
     }
-    // 太靠下
+    // 
     // too far down
     if (self.extionView.frame.origin.y + self.extionView.frame.size.height > self.view.frame.size.height) {
         CGFloat deal = self.extionView.frame.origin.y + self.extionView.frame.size.height - self.view.frame.size.height;

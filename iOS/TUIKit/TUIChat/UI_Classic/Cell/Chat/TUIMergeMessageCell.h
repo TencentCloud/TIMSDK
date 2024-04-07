@@ -2,15 +2,6 @@
 //  Created by Tencent on 2023/06/09.
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
- *  本文件声明了 TUIMergeMessageCell 类。
- *  当多条消息被合并转发之后，会形成一条合并转发消息显示在聊天界面上。
- *
- *  我们在收到一条合并转发消息的时候，通常会在聊天界面这样显示：
- *  | vinson 和 lynx 的聊天记录                                                                            |        -- title
- *  | vinson：新版本 SDK 计划什么时候上线呢？                                                |        -- abstract1
- *  | lynx：计划下周一，具体时间要看下这两天的系统测试情况..                       |        -- abstract2
- *  | vinson：好的.                                                                                                |        -- abstract3
- *
  *
  *  This document declares the TUIMergeMessageCell class.
  *  When multiple messages are merged and forwarded, a merged-forward message will be displayed on the chat interface.
@@ -28,19 +19,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMergeMessageCell : TUIMessageCell
 /**
- * 转发消息的标题 title
  * Title of merged-forward message
  */
 @property(nonatomic, strong) UILabel *relayTitleLabel;
 
 /**
- * 水平分割线
  * Horizontal dividing line
  */
 @property(nonatomic, strong) UIView *separtorView;
 
 /**
- * 底部提示语
  *  bottom prompt
  */
 @property(nonatomic, strong) UILabel *bottomTipsLabel;

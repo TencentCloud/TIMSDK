@@ -142,13 +142,13 @@
     if (data.direction == MsgDirectionIncoming) {
         [[[RACObserve(data, thumbProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
           @strongify(self);
-          // 封面下载的进度回调
+          // Cover download progress callback
           int progress = [x intValue];
           self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
           self.progress.hidden = (progress >= 100 || progress == 0);
           self.animateCircleView.progress = progress;
           if (progress >= 100 || progress == 0) {
-              // 封面进度100时展示下载视频图标
+              // The progress of cover download is called back and the download video icon is displayed when the cover progress is 100.
               if ([data isVideoExist]) {
                   self.play.hidden = NO;
               } else {
@@ -160,7 +160,7 @@
           }
         }];
 
-        // 视频资源下载的进度回调
+        // Video resource download progress callback
         [[[RACObserve(data, videoProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
           @strongify(self);
           int progress = [x intValue];
@@ -198,13 +198,13 @@
         } else {
             [[[RACObserve(data, thumbProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
               @strongify(self);
-              // 封面下载的进度回调
+              // Cover download progress callback
               int progress = [x intValue];
               self.progress.text = [NSString stringWithFormat:@"%d%%", progress];
               self.progress.hidden = (progress >= 100 || progress == 0);
               self.animateCircleView.progress = progress;
               if (progress >= 100 || progress == 0) {
-                  // 封面进度100时展示下载视频图标
+                  // The download video icon is displayed when the cover progress reaches 100
                   if ([data isVideoExist]) {
                       self.play.hidden = NO;
                   } else {
@@ -216,7 +216,7 @@
               }
             }];
 
-            // 视频资源下载的进度回调
+            // Video resource download progress callback
             [[[RACObserve(data, videoProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
               @strongify(self);
               int progress = [x intValue];

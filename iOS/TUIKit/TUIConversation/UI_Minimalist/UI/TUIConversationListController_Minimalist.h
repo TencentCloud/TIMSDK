@@ -3,18 +3,6 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
- * 腾讯云通讯服务界面组件 TUIKIT - 会话列表组件。
- *
- * 本文件声明了话列表的视图组件。
- * 会话列表组件能够按照新消息发来时间顺序（越新的消息排序越靠前），展示各个会话的简要信息。
- * 会话列表所展示的会话信息包括：
- * 1、头像信息（用户头像/群头像）
- * 2、会话标题（用户昵称/群名称）
- * 3、会话消息概览（展示最新的一条的消息内容）
- * 4、未读消息数（若有未读消息的话）
- * 5、会话时间（最新消息的收到/发出时间）
- * 会话列表中展示的会话信息，由 TUIConversationCell 具体实现。详细信息请参考 TUIConversation\Cell\CellUI\TUIConversationCell.h
- *
  *
  * Tencent Cloud Communication Service Interface Component TUIKIT - Conversation List Component.
  *
@@ -40,16 +28,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * 【模块名称】会话列表界面组件（TUIConversationListController_Minimalist）
- *
- * 【功能说明】负责按消息的接收顺序展示各个会话，同时响应用户的操作，为用户提供多会话的管理功能。
- *  会话列表所展示的会话信息包括：
- *  1、头像信息（用户头像/群头像）
- *  2、会话标题（用户昵称/群名称）
- *  3、会话消息概览（展示最新的一条的消息内容）
- *  4、未读消息数（若有未读消息的话）
- *  5、会话时间（最新消息的收到/发出时间）
- *
  *
  * 【Module name】 message list interface component (TUIConversationListController_Minimalist)
  *

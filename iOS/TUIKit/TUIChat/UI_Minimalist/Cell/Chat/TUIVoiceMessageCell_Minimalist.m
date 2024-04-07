@@ -182,9 +182,10 @@
 
     CGFloat repliesBtnTextWidth = self.messageModifyRepliesButton.frame.size.width;
     if (!self.messageModifyRepliesButton.hidden) {
+        UIImageView *lastAvatarImageView = self.replyAvatarImageViews.lastObject;
         [self.messageModifyRepliesButton mas_remakeConstraints:^(MASConstraintMaker *make) {
             if (self.voiceData.direction == MsgDirectionIncoming) {
-              make.leading.mas_equalTo(self.container.mas_leading);
+                make.leading.mas_equalTo(lastAvatarImageView.mas_trailing);
             } else {
               make.trailing.mas_equalTo(self.container.mas_trailing);
             }

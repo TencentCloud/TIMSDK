@@ -84,7 +84,12 @@
         } else {
             // fail
             if ([weakSelf.delegate respondsToSelector:@selector(onError:desc:operate:)]) {
-                [weakSelf.delegate onError:code desc:desc operate:mute ? @"禁言" : @"解除禁言"];
+                [weakSelf.delegate onError:code
+                                      desc:desc
+                                   operate:mute ? 
+                        TIMCommonLocalizableString(TUIKitGroupShutupOption) : 
+                        TIMCommonLocalizableString(TUIKitGroupDisShutupOption)
+                ];
             }
         }
 

@@ -145,18 +145,6 @@ extension GroupCallVideoLayout {
             firstBigFlag = true
         }
         
-        // Perform any cell reloads without animation because there is no movement.
-        UIView.performWithoutAnimation {
-            calleeCollectionView.performBatchUpdates({
-                for update in remoteUpdates {
-                    if case let .reload(index) = update {
-                        viewModel.allUserList[index].isUpdated = true
-                        calleeCollectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
-                    }
-                }
-            })
-        }
-        
         showLargeViewIndex = (showLargeViewIndex == indexPath.row) ? -1 : indexPath.row
         if firstBigFlag {
             showLargeViewIndex = 0
@@ -165,6 +153,7 @@ extension GroupCallVideoLayout {
         viewModel.setShowLargeViewUserId(userId: (showLargeViewIndex >= 0) ? viewModel.allUserList[indexPath.row].id.value : " ")
         
         // Animate all other update types together.
+        calleeCollectionView.cancelInteractiveMovement()
         calleeCollectionView.performBatchUpdates({
             var deletes = [Int]()
             var inserts = [(user:User, index:Int)]()
@@ -184,8 +173,6 @@ extension GroupCallVideoLayout {
                                                   to: IndexPath(item: toIndex, section: 0))
                     deletes.append(fromIndex)
                     inserts.append((viewModel.allUserList[fromIndex], toIndex))
-                    
-                default: break
                 }
             }
             
@@ -198,9 +185,14 @@ extension GroupCallVideoLayout {
             })
             
             for insertion in sortedInserts {
-                viewModel.allUserList.insert(insertion.user, at: insertion.index)
+                if insertion.index >= viewModel.allUserList.startIndex && insertion.index <= viewModel.allUserList.endIndex {
+                    viewModel.allUserList.insert(insertion.user, at: insertion.index)
+                }
             }
-        })
+        }) { [weak self] _ in
+            guard let self = self else { return }
+            self.calleeCollectionView.endInteractiveMovement()
+        }
     }
     
     func getRemoteUpdates(indexPath: IndexPath) -> [UserUpdate] {

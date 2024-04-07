@@ -8,8 +8,10 @@
 import Foundation
 import TUICallEngine
 
-class OfflinePushInfoConfig {
-    static func createOfflinePushInfo() -> TUIOfflinePushInfo {
+@objc
+public class OfflinePushInfoConfig: NSObject {
+    @objc
+    public static func createOfflinePushInfo() -> TUIOfflinePushInfo {
         let pushInfo: TUIOfflinePushInfo = TUIOfflinePushInfo()
         pushInfo.title = ""
         pushInfo.desc = TUICallKitLocalize(key: "TUICallKit.have.new.invitation") ?? ""

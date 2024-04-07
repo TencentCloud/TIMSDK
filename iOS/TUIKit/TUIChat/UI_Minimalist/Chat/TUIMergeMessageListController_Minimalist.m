@@ -147,7 +147,7 @@
         }
         data.cellLayout = layout;
         data.direction = MsgDirectionIncoming;
-        //        data.showName = YES;
+        data.showName = NO;
         if (data) {
             data.innerMessage = msg;
             data.msgID = msg.msgID;

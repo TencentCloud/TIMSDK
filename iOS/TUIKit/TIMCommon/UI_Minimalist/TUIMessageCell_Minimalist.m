@@ -309,7 +309,6 @@
     //react
     [self prepareReactTagUI:self.contentView];
     
-    // 文本回复
     if (_replyAvatarImageViews.count > 0) {
         for (UIImageView *imageView in _replyAvatarImageViews) {
             [imageView removeFromSuperview];
@@ -345,7 +344,7 @@
 
             NSString *existSender = existSenderMap[@"messageSender"];
             if (!sender || [sender isEqualToString:existSender]) {
-                // 已经存在的用户头像不再重复添加
+                //exist sender head not add again
                 continue;
             }
             UIImageView *avatarView = [[UIImageView alloc] init];

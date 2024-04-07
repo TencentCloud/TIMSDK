@@ -42,7 +42,6 @@
 @interface TUIChatPopMenu () <UIGestureRecognizerDelegate>
 
 /**
- * emojiRecent 视图和 emoji 二级页视图
  * emojiRecent view and emoji secondary page view
  */
 @property(nonatomic, strong) UIView *emojiContainerView;
@@ -216,7 +215,6 @@
 }
 - (void)setupContainerPosition {
     /**
-     * 计算坐标，并修正，默认箭头朝下
      * Calculate the coordinates and correct them, the default arrow points down
      */
     CGFloat minTopBottomMargin = (Is_IPhoneX ? (100) : (0.0));
@@ -226,7 +224,6 @@
     CGFloat upContainerY = self.arrawPoint.y + self.adjustHeight + kArrowSize.height;  // The containerY value when arrow points up
 
     /**
-     * 默认箭头朝下
      * The default arrow points down
      */
     CGFloat containerX = self.arrawPoint.x - 0.5 * containerW;
@@ -236,17 +233,14 @@
     CGFloat arrawY = kArrowSize.height + containerH - 1.5;
 
     /**
-     * 修正纵向坐标
      * Corrected vertical coordinates
      */
     if (containerY < minTopBottomMargin) {
         /**
-         * 此时 container 太靠上了，计划将箭头调整为朝上
          * At this time, the container is too high, and it is planned to adjust the direction of the arrow to upward.
          */
         if (upContainerY + containerH + minTopBottomMargin > self.superview.bounds.size.height) {
             /**
-             * 朝上也不行，超出了屏幕 ==> 保持箭头朝下，移动 self.arrawPoint
              * After adjusting the upward arrow direction, it will cause the entire container to exceed the screen. At this time, the adjustment strategy is
              * changed to: keep the arrow direction downward and move self.arrawPoint
              */
@@ -256,7 +250,6 @@
 
         } else {
             /**
-             * 箭头可以朝上
              * Adjust the direction of the arrow to meet the requirements
              */
             top = YES;
@@ -267,12 +260,11 @@
     }
 
     /**
-     * 修正横向
+     * 
      * Corrected horizontal coordinates
      */
     if (containerX < minLeftRightMargin) {
         /**
-         * 此时 container 太靠左了，需要往右靠
          * At this time, the container is too close to the left side of the screen and needs to move to the right
          */
         CGFloat offset = (minLeftRightMargin - containerX);
@@ -284,7 +276,6 @@
 
     } else if (containerX + containerW + minLeftRightMargin > self.bounds.size.width) {
         /**
-         * 此时container 太靠右了，需要往左靠
          * At this time, the container is too close to the right side of the screen and needs to be moved to the left
          */
         CGFloat offset = containerX + containerW + minLeftRightMargin - self.bounds.size.width;
@@ -299,7 +290,6 @@
     self.containerView.frame = CGRectMake(containerX, containerY + self.emojiHeight, containerW, containerH);
 
     /**
-     * 绘制 箭头
      * Drawing arrow
      */
     self.arrowLayer = [[CAShapeLayer alloc] init];
@@ -352,7 +342,6 @@
     }
 
     /**
-     * 计算当前 container 的宽高
      * Calculating the size of container
      */
     int rows = (self.actions.count % maxColumns == 0) ? (int)self.actions.count / maxColumns : (int)(self.actions.count / maxColumns) + 1;

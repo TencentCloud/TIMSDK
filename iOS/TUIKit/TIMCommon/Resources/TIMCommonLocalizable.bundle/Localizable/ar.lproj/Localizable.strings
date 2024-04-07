@@ -419,6 +419,8 @@
 "TUIKitGroupManageAdminSetting" = "تعيين المشرفين";
 "TUIKitGroupManageShutAll" = "حظر الكل";
 "TUIKitGroupAddShutupMember" = "إضافة أعضاء المجموعة الذين يجب حظرهم";
+"TUIKitGroupShutupOption" = "صامت";
+"TUIKitGroupDisShutupOption" = "ضباب غائم";
 "TUIKitGroupOwner" = "مالك المجموعة";
 "TUIKitGroupManagerFormat" = "المشرفون (%zd/%zd)";
 "TUIKitSetShutupAllFormat" = "%@ تم تمكين الحظر الكلي للمستخدمين،";

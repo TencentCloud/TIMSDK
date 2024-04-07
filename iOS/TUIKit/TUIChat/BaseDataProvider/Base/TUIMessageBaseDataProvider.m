@@ -13,6 +13,7 @@
 #import <TUICore/TUICore.h>
 #import <TUICore/TUILogin.h>
 #import <TUICore/TUITool.h>
+#import <TUICore/OfflinePushExtInfo.h>
 #import "TUIChatConfig.h"
 #import "TUICloudCustomDataTypeCenter.h"
 #import "TUIMessageBaseDataProvider.h"
@@ -20,7 +21,6 @@
 #import "TUITypingStatusCellData.h"
 
 /**
- * 消息上方的日期时间间隔, 单位秒 , default is (5 * 60)
  * Date time interval above the message in the UIMessageCell, in seconds, default is (5 * 60)
  */
 #define MaxDateMessageDelay 5 * 60
@@ -165,7 +165,6 @@
 
                      if ([self.dataSource respondsToSelector:@selector(dataProvider:ReceiveNewUIMsg:)]) {
                          /**
-                          * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
                           * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
                           */
                          [self.dataSource dataProvider:self ReceiveNewUIMsg:cellDataList.lastObject];
@@ -178,7 +177,6 @@
     for (NSInteger k = msgs.count - 1; k >= 0; --k) {
         V2TIMMessage *msg = msgs[k];
         /**
-         * 不是当前会话的消息，直接忽略
          * Messages that are not the current session, ignore them directly
          */
         if (![msg.userID isEqualToString:self.conversationModel.userID] && ![msg.groupID isEqualToString:self.conversationModel.groupID]) {
@@ -187,7 +185,6 @@
 
         TUIMessageCellData *cellData = nil;
         /**
-         * 判断是否为外部的自定义消息
          * Determine whether it is a custom message outside the component
          */
         if ([self.dataSource respondsToSelector:@selector(dataProvider:CustomCellDataFromNewIMMessage:)]) {
@@ -195,7 +192,6 @@
         }
 
         /**
-         * 判断是否为组件内部消息
          * Determine whether it is a component internal message
          */
         if (!cellData) {
@@ -289,7 +285,6 @@
             }
             NSMutableArray *newUIMsgs = [self transUIMsgFromIMMsg:@[ imMsg ]];
             /**
-             * 注意这里不能取 firstObject，firstObject 有可能是展示系统时间的 SystemMessageCellData
              * Note that firstObject cannot be taken here, firstObject may be SystemMessageCellData that displays system time
              */
             TUIMessageCellData *newUIMsg = newUIMsgs.lastObject;
@@ -314,14 +309,11 @@
 
 - (void)dealTypingByStatusCellData:(TUITypingStatusCellData *)stastusData {
     if (1 == stastusData.typingStatus) {
-        // 再次收到对方输入中的通知 则重新计时
         // The timer is retimed upon receipt of the notification from the other party's input
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTypingStatus) object:nil];
 
         self.conversationModel.otherSideTyping = YES;
         self.conversationModel.title = [NSString stringWithFormat:@"%@...", TIMCommonLocalizableString(TUIKitTyping)];
-
-        // 如果对方没有继续输入，每隔5秒结束状态
         // If the other party does not continue typing, end the status every 5 seconds
         [self performSelector:@selector(resetTypingStatus) withObject:nil afterDelay:5.0];
     } else {
@@ -406,15 +398,42 @@
 }
 
 - (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback {
+    
+    // Synchronous message processing: Messages can be preprocessed here, and complex and time-consuming operations are not recommended.
+    [self processMessageSync:uiMsgs callback:callback];
+    
+    // Asynchronous processing of messages: Please handle complex time-consuming operations in this function and update them in the form of reload Cell.
+    [self processMessageAsync:uiMsgs];
+}
+
+- (void)processMessageSync:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback  {
+    
+    if (callback) {
+        callback();
+    }
+}
+- (void)processMessageAsync:(NSArray<TUIMessageCellData *> *)uiMsgs {
+    
     @weakify(self);
-    [self preProcessReplyUserModelMessage:uiMsgs
-                        userModelcallback:^{
+    
+    [self getReactFromMessage:uiMsgs];
+    
+    [self getUserModelFromMessage:uiMsgs
+                userModelCallback:^{
                      @strongify(self);
-                     [self preProcessReplyMessageV2:uiMsgs callback:callback];
+                     [self processQuoteMessage:uiMsgs];
                    }];
 }
 
-- (void)preProcessReplyUserModelMessage:(NSArray<TUIMessageCellData *> *)uiMsgs userModelcallback:(void (^)(void))userModelcallback {
+- (void)getReactFromMessage:(NSArray<TUIMessageCellData *> *)uiMsgs {
+    if (uiMsgs.count == 0) {
+        return;
+    }
+    // fetch react
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TUIKitFetchReactNotification" object:uiMsgs];
+
+}
+- (void)getUserModelFromMessage:(NSArray<TUIMessageCellData *> *)uiMsgs userModelCallback:(void (^)(void))userModelcallback {
     if (uiMsgs.count == 0) {
         if (userModelcallback) {
             userModelcallback();
@@ -422,54 +441,61 @@
         return;
     }
     
-    // fetch react
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TUIKitFetchReactNotification" object:uiMsgs];
-    
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+
     dispatch_group_t group = dispatch_group_create();
-    NSArray *arrayWithoutDuplicates = [self getIDsAboutWhoUseModifyMessage:uiMsgs];
+    __block NSArray *arrayWithoutDuplicates = nil;
+    dispatch_async(concurrentQueue, ^{
+        dispatch_group_enter(group);
+        arrayWithoutDuplicates = [self getIDsAboutWhoUseModifyMessage:uiMsgs];
+        dispatch_group_leave(group);
+    });
     NSMutableDictionary *modifyUserMap = [NSMutableDictionary dictionaryWithCapacity:3];
 
-    dispatch_group_enter(group);
-    if (self.conversationModel.groupID.length > 0 && arrayWithoutDuplicates.count > 0) {
-        [[V2TIMManager sharedInstance] getGroupMembersInfo:self.conversationModel.groupID
-            memberList:arrayWithoutDuplicates
-            succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-              [memberList enumerateObjectsUsingBlock:^(V2TIMGroupMemberFullInfo *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                TUIRelationUserModel *userModel = [[TUIRelationUserModel alloc] init];
-                userModel.userID = obj.userID;
-                userModel.friendRemark = obj.friendRemark;
-                userModel.nameCard = obj.nameCard;
-                userModel.nickName = obj.nickName;
-                userModel.faceURL = obj.faceURL;
-                if (userModel && userModel.userID.length > 0) {
-                    [modifyUserMap setObject:userModel forKey:userModel.userID];
+    dispatch_async(concurrentQueue, ^{
+        dispatch_group_enter(group);
+        if (self.conversationModel.groupID.length > 0 && arrayWithoutDuplicates.count > 0) {
+            [[V2TIMManager sharedInstance] getGroupMembersInfo:self.conversationModel.groupID
+                memberList:arrayWithoutDuplicates
+                succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+                  [memberList enumerateObjectsUsingBlock:^(V2TIMGroupMemberFullInfo *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                    TUIRelationUserModel *userModel = [[TUIRelationUserModel alloc] init];
+                    userModel.userID = obj.userID;
+                    userModel.friendRemark = obj.friendRemark;
+                    userModel.nameCard = obj.nameCard;
+                    userModel.nickName = obj.nickName;
+                    userModel.faceURL = obj.faceURL;
+                    if (userModel && userModel.userID.length > 0) {
+                        [modifyUserMap setObject:userModel forKey:userModel.userID];
+                    }
+                  }];
+                  dispatch_group_leave(group);
                 }
-              }];
-              dispatch_group_leave(group);
-            }
-            fail:^(int code, NSString *desc) {
-              dispatch_group_leave(group);
-            }];
-    } else {
-        [[V2TIMManager sharedInstance] getFriendsInfo:arrayWithoutDuplicates
-            succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
-              [resultList enumerateObjectsUsingBlock:^(V2TIMFriendInfoResult *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                TUIRelationUserModel *userModel = [[TUIRelationUserModel alloc] init];
-                userModel.userID = obj.friendInfo.userID;
-                userModel.nickName = obj.friendInfo.userFullInfo.nickName;
-                userModel.friendRemark = obj.friendInfo.friendRemark;
-                userModel.faceURL = obj.friendInfo.userFullInfo.faceURL;
-                if (userModel && userModel.userID.length > 0) {
-                    [modifyUserMap setObject:userModel forKey:userModel.userID];
-                }
-              }];
+                fail:^(int code, NSString *desc) {
+                  dispatch_group_leave(group);
+                }];
+        } else {
+            [[V2TIMManager sharedInstance] getFriendsInfo:arrayWithoutDuplicates
+                succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
+                  [resultList enumerateObjectsUsingBlock:^(V2TIMFriendInfoResult *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                    TUIRelationUserModel *userModel = [[TUIRelationUserModel alloc] init];
+                    userModel.userID = obj.friendInfo.userID;
+                    userModel.nickName = obj.friendInfo.userFullInfo.nickName;
+                    userModel.friendRemark = obj.friendInfo.friendRemark;
+                    userModel.faceURL = obj.friendInfo.userFullInfo.faceURL;
+                    if (userModel && userModel.userID.length > 0) {
+                        [modifyUserMap setObject:userModel forKey:userModel.userID];
+                    }
+                  }];
 
-              dispatch_group_leave(group);
-            }
-            fail:^(int code, NSString *desc) {
-              dispatch_group_leave(group);
-            }];
-    }
+                  dispatch_group_leave(group);
+                }
+                fail:^(int code, NSString *desc) {
+                  dispatch_group_leave(group);
+                }];
+        }
+
+    });
 
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
       for (TUIMessageCellData *cellData in uiMsgs) {
@@ -485,7 +511,8 @@
       }
     });
 }
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback {
+
+- (void)processQuoteMessage:(NSArray<TUIMessageCellData *> *)uiMsgs {
     //Subclasses implement this method
     return;
 }
@@ -621,14 +648,12 @@
                        uiMsg.name = [self.class getShowName:uiMsg.innerMessage];
 
                        /**
-                        * 注意：innerMessage.faceURL 在sendMessage 内部赋值，所以需要放在最后面。 TUIMessageCell 内部监听了 avatarUrl
-                        * 的变更,所以不需要再次刷新。 Notes: innerMessage.faceURL is assigned inside sendMessage, so it needs to be last. TUIMessageCell
+                        * Notes: innerMessage.faceURL is assigned inside sendMessage, so it needs to be last. TUIMessageCell
                         * internally monitors changes to avatarUrl, so it doesn't need to be refreshed again.
                         */
                        uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
 
                        /**
-                        * 发送消息需要携带【identifier】，否则再次发送消息，点击【我】的头像会导致无法进入的个人信息页面
                         * Sending a message needs to carry [identifier], otherwise sending the message again, clicking on the avatar of [Me] will result in an
                         * inaccessible personal information page
                         */
@@ -840,7 +865,7 @@
         lastData = uiMsgs[index - 1];
         if (![lastData isKindOfClass:[TUISystemMessageCellData class]]) {
             if ([lastData.identifier isEqualToString:data.identifier] &&
-                ![data isKindOfClass:[TUISystemMessageCellData class]]) {
+                ![data isKindOfClass:[TUISystemMessageCellData class]] &&(lastData.direction == data.direction)) {
                 lastData.sameToNextMsgSender = YES;
                 lastData.showAvatar = NO;
             } else {
@@ -853,7 +878,7 @@
     TUIMessageCellData *nextData = nil;
     if (index < uiMsgs.count - 1) {
         nextData = uiMsgs[index + 1];
-        if ([data.identifier isEqualToString:nextData.identifier]) {
+        if ([data.identifier isEqualToString:nextData.identifier] &&(data.direction == nextData.direction)) {
             data.sameToNextMsgSender = YES;
             data.showAvatar = NO;
         } else {
@@ -914,25 +939,22 @@ static const int kOfflinePushVersion = 1;
         NSString *nickName = isGroup ? (conversationData.title) : ([TUILogin getNickName] ?: [TUILogin getUserID]);
         nickName = nickName ?: @"";
         NSString * content = [self getDisplayString:message] ?: @"";
-        NSDictionary *ext = @{
-            @"entity" : @{
-                @"action" : @1,
-                @"content" : content,
-                @"sender" : senderId,
-                @"nickname" : nickName,
-                @"faceUrl" : [TUILogin getFaceUrl] ?: @"",
-                @"chatType" : isGroup ? @(V2TIM_GROUP) : @(V2TIM_C2C),
-                @"version": @(kOfflinePushVersion),
-            }
-        };
-        NSData *data = [NSJSONSerialization dataWithJSONObject:ext options:NSJSONWritingPrettyPrinted error:nil];
+        OfflinePushExtInfo *extInfo = [[OfflinePushExtInfo alloc] init];
+        OfflinePushExtBusinessInfo * entity = extInfo.entity;
+        entity.action = 1;
+        entity.content = content;
+        entity.sender = senderId;
+        entity.nickname = nickName;
+        entity.faceUrl = [TUILogin getFaceUrl] ?: @"";
+        entity.chatType = [isGroup ? @(V2TIM_GROUP) : @(V2TIM_C2C) integerValue];
+        entity.version = kOfflinePushVersion;
+        pushInfo.ext = [extInfo toReportExtString];
         if (content.length > 0) {
             pushInfo.desc = content;
         }
         if (nickName.length > 0) {
             pushInfo.title = nickName;
         }
-        pushInfo.ext = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         pushInfo.AndroidOPPOChannelID = @"tuikit";
         pushInfo.AndroidSound = TUIConfig.defaultConfig.enableCustomRing ? @"private_ring" : nil;
         pushInfo.AndroidHuaWeiCategory = @"IM";
@@ -944,7 +966,6 @@ static const int kOfflinePushVersion = 1;
         message.needReadReceipt = NO;
     }
 
-    // 被隐藏的会话从通讯录入口唤起聊天页面-发送消息，需要清空被隐藏标记
     // Hidden conversation evokes the chat page from the address book entry - to send a message, the hidden flag needs to be cleared
     if (conversationID.length > 0) {
         [V2TIMManager.sharedInstance markConversation:@[ conversationID ] markType:@(V2TIM_CONVERSATION_MARK_TYPE_HIDE) enableMark:NO succ:nil fail:nil];

@@ -138,6 +138,9 @@
     [self.view addSubview:_emptyView];
     _emptyView.mm_fill();
     _emptyView.hidden = YES;
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(contactListNilLabelTapped:)];
+    [_emptyView addGestureRecognizer:tapGesture];
+
 
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_emptyView addSubview:tipsLabel];
@@ -256,6 +259,10 @@
     [cell fillWithData:data];
 
     return cell;
+}
+
+- (void)contactListNilLabelTapped:(id)label {
+    [TUITool makeToast:TIMCommonLocalizableString(TUIKitTipsContactListNil)];
 }
 
 - (void)didSelectContactCell:(TUICommonContactSelectCell *)cell {

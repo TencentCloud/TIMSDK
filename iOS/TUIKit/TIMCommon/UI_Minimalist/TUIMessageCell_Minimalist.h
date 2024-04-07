@@ -2,12 +2,6 @@
 //  Created by Tencent on 2023/06/09.
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
- *
- *  本文件声明了 TUIBubbleMessageCell_Minimalist 类。
- *  气泡消息，即最常见的包含字符串与小表情的字符的消息类型
- *  TUIFileMessageCell_Minimalist 和 TUIVoiceMessageCell_Minimalist 均继承于本类，实现了气泡消息的 UI 视觉。
- *  如果开发者想要实现气泡消息的自定义，也可参照上述两个消息单元的实现方法，实现自己的气泡消息单元。
- *
  *  This document declares the TUIBubbleMessageCell_Minimalist class.
  *  Bubble messages, the most common type of messages that contain strings and emoticons.
  *  Both TUIFileMessageCell_Minimalist and TUIVoiceMessageCell_Minimalist inherit from this class and implement the userinterface of bubble messages.

@@ -47,7 +47,7 @@ static NSMutableDictionary *gCustomMessageInfoMap = nil;
 
 @end
 
-#pragma mark - 自定义消息注册 Custom Message Register
+#pragma mark -  Custom Message Register
 @implementation TUIMessageCellConfig_Minimalist (CustomMessageRegister)
 
 + (NSMutableDictionary *)getCustomMessageInfoMap {
@@ -66,7 +66,6 @@ static NSMutableDictionary *gCustomMessageInfoMap = nil;
 }
 
 + (void)registerExternalCustomMessageInfo {
-    // 在这里插入您自己的自定义消息 UI, 您的自定义消息 businessID 不能与内置的相同
     // Insert your own custom message UI here, your businessID can not be same with built-in
     //
     // Example:
@@ -142,7 +141,7 @@ static NSMutableDictionary *gCustomMessageInfoMap = nil;
 @end
 
 
-#pragma mark - 消息 Cell 的高度 Message cell height
+#pragma mark -  Cell  Message cell height
 @implementation TUIMessageCellConfig_Minimalist (MessageCellHeight)
 
 - (NSString *)getHeightCacheKey:(TUIMessageCellData *)msg {

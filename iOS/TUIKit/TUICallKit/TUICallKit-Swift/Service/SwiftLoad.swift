@@ -28,6 +28,11 @@ extension NSObject {
         TUICore.registerExtension(TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID,
                                   object: TUICallKitExtension.instance)
         
+        TUICore.registerExtension(TUICore_TUIChatExtension_ChatViewTopArea_ClassicExtensionID,
+                                  object: TUICallKitExtension.instance)
+        TUICore.registerExtension(TUICore_TUIChatExtension_ChatViewTopArea_MinimalistExtensionID,
+                                  object: TUICallKitExtension.instance)
+        
         TUICore.registerObjectFactory(TUICore_TUICallingObjectFactory, objectFactory: TUICallKitObjectFactory.instance)
         
         TUIThemeManager.share().registerThemeResourcePath(TUICoreDefineConvert.getTUICallKitThemePath(), for: .calling)

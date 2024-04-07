@@ -30,14 +30,14 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        // 阴影
+        // shadow
         self.layer.shadowColor = RGBA(0, 0, 0, 0.15).CGColor;
         self.layer.shadowOpacity = 1;
         self.layer.shadowOffset = CGSizeMake(0, 0);
         self.layer.shadowRadius = 2;
         self.clipsToBounds = NO;
 
-        // 背景图
+        // backgroudView
         UIImageView *backgroudView = [[UIImageView alloc] initWithFrame:frame];
         [self addSubview:backgroudView];
         backgroudView.mm_fill();
@@ -48,7 +48,7 @@
         ei = rtlEdgeInsetsWithInsets(ei);
         backgroudView.image = [bkImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
 
-        // 点击事件
+        // tap
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
         [self addGestureRecognizer:tap];
     }

@@ -398,18 +398,15 @@
     CGFloat quoteMaxWidth = kReplyQuoteViewMaxWidth;
     CGFloat quotePlaceHolderMarginWidth = 12;
 
-    // 动态计算发送者的尺寸
     // Calculate the size of label which displays the sender's displayname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}];
     CGRect senderRect = [[NSString stringWithFormat:@"%@:",referenceCellData.sender] boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                             attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}
                                                                context:nil];
-    // 动态计算自定义引用占位视图的尺寸
     // Calculate the size of customize quote placeholder view
     CGSize placeholderSize = [referenceCellData quotePlaceholderSizeWithType:referenceCellData.originMsgType data:referenceCellData.quoteData];
 
-    // 动态计算回复内容的尺寸
     // Calculate the size of label which displays the content of replying the original message
     NSAttributedString *attributeString = [referenceCellData.content getFormatEmojiStringWithFont:[UIFont systemFontOfSize:16.0] emojiLocations:nil];
 

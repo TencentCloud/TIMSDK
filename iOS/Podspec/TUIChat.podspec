@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '7.7.5282'
+  spec.version      = '7.9.5666'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.7.5282/ios/TUIChat.zip?time=3'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.9.5666/ios/TUIChat.zip?time=11'}
 
   spec.default_subspec = 'ALL'
 
@@ -28,9 +28,9 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIChat/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TXIMSDK_Plus_iOS','7.7.5282'
-    commonModel.dependency 'TUICore','7.7.5282'
-    commonModel.dependency 'TIMCommon','7.7.5282'
+    commonModel.dependency 'TXIMSDK_Plus_iOS'
+    commonModel.dependency 'TUICore'
+    commonModel.dependency 'TIMCommon','~> 7.9.5666'
     commonModel.dependency "TUIChat/VoiceConvert"
     commonModel.dependency 'ReactiveObjC'
     commonModel.dependency 'SDWebImage'
@@ -53,10 +53,6 @@ Pod::Spec.new do |spec|
       baseCellData.subspec 'Reply' do |reply|
             reply.source_files = '**/TUIChat/BaseCellData/Reply/*.{h,m,mm}'
             reply.dependency "TUIChat/BaseCellData/Custom"
-      end
-      baseCellData.subspec 'Emoji' do |emoji|
-          emoji.source_files = '**/TUIChat/BaseCellData/Emoji/*.{h,m,mm}'
-          emoji.dependency "TUIChat/BaseCellData/Custom"
       end
   end
   

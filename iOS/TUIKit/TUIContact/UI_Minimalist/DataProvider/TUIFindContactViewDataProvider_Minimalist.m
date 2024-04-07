@@ -71,7 +71,7 @@
               cellModel.avatarUrl = [NSURL URLWithString:info.faceURL];
               cellModel.mainTitle = info.groupName;
               cellModel.subTitle = info.groupID;
-              cellModel.desc = [NSString stringWithFormat:@"群类型: %@", info.groupType];
+              cellModel.desc = [NSString stringWithFormat:@"%@: %@",TIMCommonLocalizableString(TUIKitGroupProfileType),info.groupType];
               cellModel.type = TUIFindContactTypeGroup_Minimalist;
               cellModel.contactID = info.groupID;
               cellModel.groupInfo = info;

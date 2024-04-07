@@ -124,7 +124,6 @@ typedef NSNumber * HeightNumber;
 - (void)setupViews {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
     /**
-     * 解决触摸事件没有往下传递，导致手势和 collectionView didselect 冲突的问题
      * Solve the problem that the touch event is not passed down, causing the gesture to conflict with the collectionView didselect
      */
     tap.cancelsTouchesInView = NO;
@@ -531,7 +530,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messageDataProvider.uiMsgs.count - 1 - i inSection:0];
             TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             /**
-             * 通过回调时间戳判定当前的未读状态是否需要改为已读状态
+             * 
              * Determine whether the current unread needs to be changed to read by the callback timestamp
              */
             time_t msgTime = [cell.messageData.innerMessage.timestamp timeIntervalSince1970];
@@ -561,7 +560,6 @@ static NSMutableArray *reloadMsgIndexs = nil;
 
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
     /**
-     * 查看历史消息的时候根据当前 contentOffset 判断是否需要滑动到底部
      * When viewing historical messages, judge whether you need to slide to the bottom according to the current contentOffset
      */
     if (self.tableView.contentSize.height - self.tableView.contentOffset.y < Screen_Height * 1.5) {
@@ -587,7 +585,6 @@ static NSMutableArray *reloadMsgIndexs = nil;
     static uint64_t lastTs = 0;
     uint64_t curTs = [[NSDate date] timeIntervalSince1970];
     /**
-     * 超过 1s && 非首次，立即上报已读
      * More than 1s && Not the first time, report immediately
      */
     if (curTs - lastTs >= 1 && lastTs) {
@@ -595,7 +592,6 @@ static NSMutableArray *reloadMsgIndexs = nil;
         [self readReport];
     } else {
         /**
-         * 低于 1s || 首次  延迟 1s 合并上报
          * Less than 1s || First time, delay 1s and merge report
          */
         static BOOL delayReport = NO;
@@ -642,19 +638,6 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 /**
- * 接收方需发送可见消息已读回执的时机：
- * 1、messageVC 可见时。在 [self viewDidAppear:] 中获得通知。
- * 2、代码调用 [self scrollToBottom:] 后 scrollView 自动跳转到底部停止时（例如点击右下角 "x 条新消息" tips）。在 [UIScrollViewDelegate
- * scrollViewDidEndScrollingAnimation:] 中获得通知。
- *    + 注意需要借助 scrollView 的状态来准确判断 scrollView 是否真的停止了滑动。
- * 3、用户连续地拖拽 scrollView 滑动查看消息时。在 [UIScrollViewDelegate scrollViewDidScroll:] 中得到通知。
- *    + 注意此处要判断 scrollView 的滑动是否由用户手势触发（而不是自动代码触发）。因此借助 self.scrollingTriggeredByUser 标志位来区分。
- *    + self.scrollingTriggeredByUser 的更新逻辑：
- *      - 用户手指触碰到屏幕并且开始拖拽时（scrollViewWillBeginDragging:）置 YES；
- *      - 用户手指以一定的加速度拖拽后离开屏幕，屏幕自动停止滑动时（scrollViewDidEndDecelerating:）置 NO；
- *      - 用户手指滑动后不施加加速度，直接抬起手指时（scrollViewDidEndDragging:）置 NO。
- * 4、用户停留在最新消息界面，此时收到了新消息时。在 [self dataProvider:ReceiveNewUIMsg:] 中得到通知。
- *
  * When the receiver sends a visible message read receipt:
  * 1. The time when messageVC is visible.  You will be notified when [self viewDidAppear:] is invoked
  * 2. The time when scrollview scrolled to bottom by called [self scrollToBottom:] (For example, click the "x new message" tips in the lower right corner). You
@@ -760,7 +743,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
         TUITextMessageCellData *cellData = (TUITextMessageCellData *)self.messageDataProvider.uiMsgs[indexPath.row];
-        // 待 TUICallKit 按照标准流程接入后删除
+        // Delete after TUICallKit is connected according to the standard process
         if ([cellData isKindOfClass:TUITextMessageCellData.class]) {
             if ((cellData.isAudioCall || cellData.isVideoCall) && cellData.showUnreadPoint) {
                 cellData.innerMessage.localCustomInt = 1;
@@ -898,9 +881,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
     BOOL isChatNoramlMessageOrCustomMessage = !isPluginCustomMessage;
 
     /**
-     * 排序优先级:  复制(1)、转发(2)、多选(3)、引用(4)、回复(5)、翻译(6)、撤回(7)、详情(8)、删除(9)
      * Sort priorities: copy, forward, multiselect, reference, reply, Withdraw, delete
-     * 权重越大越靠前weight:  复制 10000  转发 9000 多选 8000 引用 7000 回复 5000 翻译 4000 撤回3000 详情 2000  删除 1000
      * The higher the weight, the more prioritized it is:
         Copy - 10000
         Forward - 9000
@@ -965,7 +946,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 
     } else {
         // common
-        // 多选（multiSelectItem） 引用（referenceItem） 回复（replyItem） 删除(deleteItem) 撤回(revocationItem)
+        // multiSelect（multiSelectItem） reference（referenceItem） reply（replyItem） delete(deleteItem) revocation(revocationItem)
         [items addObject:multiSelectItem];
 
         if ([TUIChatConfig defaultConfig].enablePopMenuReplyAction && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)) {
@@ -1208,7 +1189,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
 - (void)onCopyMsg:(id)sender {
     NSString *content = @"";
     /**
-     * 文本消息要以光标实际选中的消息内容为准
+     * 
      * The text message should be based on the content of the message actually selected by the cursor
      */
     if ([sender isKindOfClass:[TUITextMessageCell_Minimalist class]]) {

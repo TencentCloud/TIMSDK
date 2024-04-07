@@ -29,12 +29,12 @@ typedef void (^TUIReplySelectAllContentCallback)(BOOL);
 
 typedef NS_ENUM(NSInteger, TUIMultiResultOption) {
     /**
-     * 获取所有选中的结果
+     * 
      * Get all selected results
      */
     TUIMultiResultOptionAll = 0,
     /**
-     * 过滤掉不支持转发的数据
+     * 
      * Filter out data that does not support forwarding
      */
     TUIMultiResultOptionFiterUnsupportRelay = 1 << 0,

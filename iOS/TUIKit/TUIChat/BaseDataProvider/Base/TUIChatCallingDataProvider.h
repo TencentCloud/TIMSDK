@@ -15,7 +15,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * 通话协议类型
  * The protocol type of calls
  */
 typedef NS_ENUM(NSInteger, TUICallProtocolType) {
@@ -32,7 +31,6 @@ typedef NS_ENUM(NSInteger, TUICallProtocolType) {
 };
 
 /**
- * 通话流媒体类型
  * The stream media type of calls
  */
 typedef NS_ENUM(NSInteger, TUICallStreamMediaType) {
@@ -42,7 +40,6 @@ typedef NS_ENUM(NSInteger, TUICallStreamMediaType) {
 };
 
 /**
- * 通话的参与者样式
  * The participant style of calls
  */
 typedef NS_ENUM(NSInteger, TUICallParticipantType) {
@@ -52,7 +49,6 @@ typedef NS_ENUM(NSInteger, TUICallParticipantType) {
 };
 
 /**
- * 通话人员的角色
  * The role of participant
  */
 typedef NS_ENUM(NSInteger, TUICallParticipantRole) {
@@ -72,49 +68,43 @@ typedef NS_ENUM(NSInteger, TUICallMessageDirection) {
 @protocol TUIChatCallingInfoProtocol <NSObject>
 
 /**
- * 音视频通话的协议类型
  * The protocol type of voice-video-call
  */
 @property(nonatomic, assign, readonly) TUICallProtocolType protocolType;
 
 /**
- * 音视频通话的流媒体类型
  * The stream media type of voice-video-call
  */
 @property(nonatomic, assign, readonly) TUICallStreamMediaType streamMediaType;
 
 /**
- * 音视频通话的参与者类型，目前仅支持 C2C 和 Group
  * The participate type of voice-video-call, one-to-one and group are supported
  */
 @property(nonatomic, assign, readonly) TUICallParticipantType participantType;
 
 /**
- * 音视频通话的参与者角色，目前仅支持主叫和被叫
  * The participate role type of voice-video-call, caller and callee are supported
  */
 @property(nonatomic, assign, readonly) TUICallParticipantRole participantRole;
 
 /**
- * 是否在 TUIChat 消息列表上过滤，TUIChat 7.1 版本开始支持
  * Exclude from history of chat page，supported in TUIChat 7.1 and later
  */
 @property(nonatomic, assign, readonly) BOOL excludeFromHistory;
 
 /**
- * 音视频通话消息的展示文本
  * The display text of voice-video-call message
  */
 @property(nonatomic, copy, readonly, nonnull) NSString *content;
 
 /**
- * 音视频通话消息的展示方向
+ * 
  * The display direction of voice-video-call message
  */
 @property(nonatomic, assign, readonly) TUICallMessageDirection direction;
 
 /**
- * 通话记录是否展示未读红点
+ * 
  * Whether display unread point in call history
  */
 @property(nonatomic, assign, readonly) BOOL showUnreadPoint;
@@ -127,7 +117,6 @@ typedef NS_ENUM(NSInteger, TUICallMessageDirection) {
 @end
 
 /**
- * 音视频通话消息的 UI 外观
  * The style of voice-video-call message in TUIChat
  */
 typedef NS_ENUM(NSInteger, TUIChatCallingMessageAppearance) {
@@ -138,19 +127,16 @@ typedef NS_ENUM(NSInteger, TUIChatCallingMessageAppearance) {
 @protocol TUIChatCallingDataProtocol <NSObject>
 
 /**
- * 设置音视频通话消息的 UI 样式
  * Seting styles of voice-video-call message in TUIChat
  */
 - (void)setCallingMessageStyle:(TUIChatCallingMessageAppearance)style;
 
 /**
- * 基于当前的音视频消息，重拨（一般用于点击聊天页面的通话记录后重新拨打）
  * Redial based on the current voice-video-call message (generally used to redial after clicking the call history on the chat page)
  */
 - (void)redialFromMessage:(V2TIMMessage *)innerMessage;
 
 /**
- * 解析音视频通话消息
  * Parse voice-video-call message
  */
 - (BOOL)isCallingMessage:(V2TIMMessage *)innerMessage callingInfo:(id<TUIChatCallingInfoProtocol> __nullable *__nullable)callingInfo;

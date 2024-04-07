@@ -32,7 +32,7 @@
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {
-    return TIMCommonLocalizableString(TUIKitMessageTypeVoice);  // @"[语音]";
+    return TIMCommonLocalizableString(TUIKitMessageTypeVoice);  // @"[Voice]";
 }
 
 - (Class)getReplyQuoteViewDataClass {
@@ -134,7 +134,7 @@
         if (self.isDownloading) {
             return;
         }
-        // 网络下载
+        // 
         self.isDownloading = YES;
         @weakify(self);
         [imSound downloadSound:path

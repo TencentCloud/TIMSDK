@@ -422,6 +422,8 @@
 "TUIKitGroupManageAdminSetting" = "设置管理员";
 "TUIKitGroupManageShutAll" = "全员禁言";
 "TUIKitGroupAddShutupMember" = "添加需要禁言的群成员";
+"TUIKitGroupShutupOption" = "禁言";
+"TUIKitGroupDisShutupOption" = "解除禁言";
 "TUIKitGroupOwner" = "群主";
 "TUIKitGroupManagerFormat" = "管理员(%zd/%zd)";
 "TUIKitSetShutupAllFormat" = "%@ 开启全员禁言、";

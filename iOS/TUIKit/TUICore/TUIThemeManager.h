@@ -6,19 +6,6 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 /**
- *  每个模块主题的存储结构
- *      | 主题资源根路径（ThemeResourcePath）
- *      |
- *      |------ 主题1（以主题 id 命名）
- *      |                 |
- *      |                 |------- manifest.plist (主题的配置信息)
- *      |                 |------- resource （资源文件）
- *      |-------主题2
- *      |                 |
- *      |                 |------ manifest.plist (主题的配置信息)
- *      |                 |------ resource（资源文件）
- *
- *
  *
  * Storage structure of theme for each module
  *      | The root path of the theme resource（ThemeResourcePath）
@@ -44,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIShareThemeManager TUIThemeManager.shareManager
 
 /**
- * 应用的主题发生了变化的通知
  * Notifications when the app's theme has changed
  */
 #define TUIDidApplyingThemeChangedNotfication @"TUIDidApplyingThemeChangedNotfication"
@@ -52,25 +38,21 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIDidApplyingThemeChangedNotficationModuleKey @"TUIDidApplyingThemeChangedNotficationModuleKey"
 
 /**
- * 注册模块对应的主题资源根路径
  * Register the theme resource root path of the module
  */
 #define TUIRegisterThemeResourcePath(path, module) [TUIShareThemeManager registerThemeResourcePath:path forModule:module];
 
 /**
- * 获取当前使用的主题
  * Get the theme used by the module
  */
 #define TUICurrentTheme(module) [TUIShareThemeManager currentThemeForModule:module]
 
 /**
- * 获取对应的黑夜主题
  * Get the dark night theme of the module
  */
 #define TUIDarkTheme(module) [TUIShareThemeManager darkThemeForModule:module]
 
 /**
- * 获取动态颜色
  * Get dynamic colors that change with theme
  */
 #define TUIDynamicColor(colorKey, themeModule, defaultHex) [TUITheme dynamicColor:colorKey module:themeModule defaultColor:defaultHex]
@@ -92,7 +74,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIChatBotPluginDynamicColor(colorKey, defaultHex) TUIDynamicColor(colorKey, TUIThemeModuleChatBot, defaultHex)
 
 /**
- * 动态获取图片
  * Get dynamic image that change with theme
  */
 #define TUIDemoBundleThemeImage(imageKey, defaultImageName) TUIDemoDynamicImage(imageKey, TUIDemoCommonBundleImage(defaultImageName))
@@ -149,7 +130,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUIChatBotPluginCommonBundleImage(imageName) __TUIDefaultBundleImage(TUIChatBotPluginImagePath(imageName))
 
 /**
- * 主题模块
  * The module of the theme
  */
 typedef NS_ENUM(NSInteger, TUIThemeModule) {
@@ -201,7 +181,6 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
 @protocol TUIThemeManagerListener <NSObject>
 
 /**
- * 主题发生了变化，也可以监听 @ref TUIDidApplyingThemeChangedNotfication 通知
  * Callback for theme changes, you can also listen to the notification named TUIDidApplyingThemeChangedNotfication
  */
 - (void)onApplyTheme:(TUITheme *)theme module:(TUIThemeModule)module;
@@ -218,9 +197,6 @@ typedef NS_ENUM(NSInteger, TUIThemeModule) {
 - (void)removeListener:(id<TUIThemeManagerListener>)listener;
 
 /**
- * 注册主题资源根路径
- * 如果不指定黑夜主题的ID的话，内部默认使用 @"dark" 来表示黑夜模式
- *
  * Register the theme resource root path of the module
  * If the ID of the dark theme is not specified, @"dark" is used internally by default to indicate the dark mode
  */

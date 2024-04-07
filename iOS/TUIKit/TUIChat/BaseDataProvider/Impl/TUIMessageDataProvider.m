@@ -21,7 +21,6 @@
 #import "TUIVoiceMessageCellData.h"
 
 /**
- * 消息撤回后最大可编辑时间 , default is (2 * 60)
  * The maximum editable time after the message is recalled, default is (2 * 60)
  */
 #define MaxReEditMessageDelay 2 * 60
@@ -75,13 +74,11 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     TUIMessageCellData *data = nil;
     if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReply]) {
         /**
-         * 判断是否包含「回复消息」
          * Determine whether to include "reply-message"
          */
         data = [TUIReplyMessageCellData getCellData:message];
     } else if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReference]) {
         /**
-         * 判断是否包含「引用消息」
          * Determine whether to include "quote-message"
          */
         data = [TUIReferenceMessageCellData getCellData:message];
@@ -150,7 +147,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     }
 
     /**
-     * 更新消息的上传/下载进度
      * Update progress of message uploading/downloading
      */
     {
@@ -167,7 +163,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 
 
     /**
-     * 判断是否包含「消息回复数」
      * Determine whether to include "replies-message"
      */
     if ([message isContainsCloudCustomOfDataType:TUICloudCustomDataType_MessageReplies]) {
@@ -198,7 +193,8 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 + (nullable TUIMessageCellData *)getCustomMessageCellData:(V2TIMMessage *)message {
     // ************************************************************************************
     // ************************************************************************************
-    // ************** TUICallKit 的兼容处理逻辑，待 TUICallKit 按照标准流程接入后移除 *************
+    // **The compatible processing logic of TUICallKit will be removed after***************
+    // **TUICallKit is connected according to the standard process. ***********************
     // ************************************************************************************
     // ************************************************************************************
     TUIMessageCellData *data = nil;
@@ -267,7 +263,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
                 return data;
             }
         }
-        // CustomerService、ChatBot 场景，不支持的消息直接不展示
+        // In CustomerService and ChatBot scenarios, unsupported messages are not displayed directly.
         if ([businessID containsString:BussinessID_CustomerService] || [businessID containsString:BussinessID_ChatBot]) {
             return nil;
         }
@@ -328,7 +324,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         }
     } else if (message.groupID.length > 0) {
         /**
-         * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
          * For the name display of group messages, the group business card is displayed first, the nickname has the second priority, and the user ID has the
          * lowest priority.
          */
@@ -417,7 +412,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 + (nullable NSString *)getCustomDisplayString:(V2TIMMessage *)message {
     // ************************************************************************************
     // ************************************************************************************
-    // ************** TUICallKit 的兼容处理逻辑，待 TUICallKit 按照标准流程接入后移除 *************
+    // ************** TUICallKit ， TUICallKit  *************
     // ************************************************************************************
     // ************************************************************************************
     NSString *str = nil;
@@ -472,7 +467,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         if (cellDataClass && [cellDataClass respondsToSelector:@selector(getDisplayString:)]) {
             return [cellDataClass getDisplayString:message];
         }
-        // CustomerService、ChatBot 场景，不支持的消息直接不展示
+        // In CustomerService and ChatBot scenarios, unsupported messages are not displayed directly.
         if ([businessID containsString:BussinessID_CustomerService] || [businessID containsString:BussinessID_ChatBot]) {
             return nil;
         }
@@ -483,44 +478,50 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 }
 
 #pragma mark - Data source operate
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback {
+- (void)processQuoteMessage:(NSArray<TUIMessageCellData *> *)uiMsgs {
     if (uiMsgs.count == 0) {
-        if (callback) {
-            callback();
-        }
         return;
     }
 
     @weakify(self);
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t group = dispatch_group_create();
-    for (TUIMessageCellData *cellData in uiMsgs) {
-        if (![cellData isKindOfClass:TUIReplyMessageCellData.class]) {
-            continue;
-        }
-
-        TUIReplyMessageCellData *myData = (TUIReplyMessageCellData *)cellData;
-        __weak typeof(myData) weakMyData = myData;
-        myData.onFinish = ^{
-            NSUInteger index = [self.uiMsgs indexOfObject:weakMyData];
-            if (index != NSNotFound) {
-                //if messageData exist In datasource, reload this data.
-                @strongify(self);
-                [self.dataSource dataProviderDataSourceWillChange:self];
-                [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload atIndex:index animation:NO];
-                [self.dataSource dataProviderDataSourceDidChange:self];
+    
+    dispatch_async(concurrentQueue, ^{
+        for (TUIMessageCellData *cellData in uiMsgs) {
+            if (![cellData isKindOfClass:TUIReplyMessageCellData.class]) {
+                continue;
             }
-        };
-        dispatch_group_enter(group);
-        [self loadOriginMessageFromReplyData:myData
-                                dealCallback:^{
-                                  dispatch_group_leave(group);
-                                }];
-    }
+
+            TUIReplyMessageCellData *myData = (TUIReplyMessageCellData *)cellData;
+            __weak typeof(myData) weakMyData = myData;
+            myData.onFinish = ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSUInteger index = [self.uiMsgs indexOfObject:weakMyData];
+                    if (index != NSNotFound) {
+                        //if messageData exist In datasource, reload this data.
+                        [UIView performWithoutAnimation:^{
+                            @strongify(self);
+                            [self.dataSource dataProviderDataSourceWillChange:self];
+                            [self.dataSource dataProviderDataSourceChange:self withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
+                                                                  atIndex:index animation:NO];
+                            [self.dataSource dataProviderDataSourceDidChange:self];
+
+                        }];
+                    }
+                });
+            };
+            dispatch_group_enter(group);
+            [self loadOriginMessageFromReplyData:myData
+                                    dealCallback:^{
+                dispatch_group_leave(group);
+            }];
+        }
+    });
+    
 
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-      if (callback) {
-          callback();
-      }
+        // complete
     });
 }
 
@@ -638,7 +639,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     return businessID;
 }
 
-#pragma mark - TUICallKit 相关，待删除
+#pragma mark - TUICallKit 
 
 static TUIChatCallingDataProvider *gCallingDataProvider;
 + (TUIChatCallingDataProvider *)callingDataProvider {

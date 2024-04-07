@@ -102,7 +102,7 @@
         if (![businessID isKindOfClass:[NSString class]]) {
             return nil;
         }
-        // 判断是不是自定义跳转消息
+        // Determine whether it is a custom jump message
         if ([businessID isEqualToString:BussinessID_TextLink] || ([(NSString *)param[@"text"] length] > 0 && [(NSString *)param[@"link"] length] > 0)) {
             NSString *desc = param[@"text"];
             if (msg.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
@@ -121,7 +121,7 @@
                 } else if (msg.userID.length > 0) {
                     desc = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
                 } else if (msg.groupID.length > 0) {
-                    // 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
+                    // For the name display of group messages, the group business card is displayed first, the nickname is the second priority, and the user ID is the lowest priority.
                     NSString *userName = msg.nameCard;
                     if (userName.length == 0) {
                         userName = msg.nickName ?: msg.sender;

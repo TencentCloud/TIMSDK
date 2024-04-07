@@ -133,7 +133,6 @@
     AVAudioSessionRecordPermission permission = AVAudioSession.sharedInstance.recordPermission;
 
     /**
-     * 新安装后第一次请求授权，需要再次判断是否为 Undetermined，避免出现错误
      * For the first request for authorization after a new installation, it is necessary to
      * determine whether it is Undetermined again to avoid errors.
      */
@@ -165,28 +164,23 @@
 
     NSDictionary *recordSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
                                                             /**
-                                                             * 采样率：8000/11025/22050/44100/96000（该参数影响音频的质量）
                                                              * Sampling rate: 8000/11025/22050/44100/96000 (this parameter affects the audio
                                                              * quality)
                                                              */
                                                             [NSNumber numberWithFloat:16000.0], AVSampleRateKey,
                                                             /**
-                                                             * 音频格式
                                                              * Audio format
                                                              */
                                                             [NSNumber numberWithInt:kAudioFormatMPEG4AAC], AVFormatIDKey,
                                                             /**
-                                                             * 采样位数：  8、16、24、32 默认为 16
                                                              * Sampling bits: 8, 16, 24, 32, default is 16
                                                              */
                                                             [NSNumber numberWithInt:16], AVLinearPCMBitDepthKey,
                                                             /**
-                                                             * 音频通道数 1 或 2
                                                              * Number of audio channels 1 or 2
                                                              */
                                                             [NSNumber numberWithInt:1], AVNumberOfChannelsKey,
                                                             /**
-                                                             * 录音质量
                                                              * Recording quality
                                                              */
                                                             [NSNumber numberWithInt:AVAudioQualityHigh], AVEncoderAudioQualityKey, nil];

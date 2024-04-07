@@ -281,6 +281,10 @@ callMediaType:(TUICallMediaType)callMediaType
         CallingUserModel *sponsorModel = nil;
         
         for (CallingUserModel *userModel in modelList) {
+            if (self.currentCallingType == TUICallMediaTypeVideo
+                && (callScene == TUICallSceneSingle || [userModel.userId isEqualToString:[TUICallingUserManager getSelfUserId]])) {
+                userModel.isVideoAvailable = YES;
+            }
             if (sponsor && [userModel.userId isEqualToString:sponsor]) {
                 sponsorModel = userModel;
                 if ([allUserIDs containsObject:sponsor]) {

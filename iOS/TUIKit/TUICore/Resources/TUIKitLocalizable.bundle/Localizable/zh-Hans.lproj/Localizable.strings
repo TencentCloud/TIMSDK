@@ -95,6 +95,12 @@
 "TUIKitErrorSDKNetWaitInQueueTimeout" = "请求包等待进入待发送队列超时";
 "TUIKitErrorSDKNetWaitSendTimeout" = "请求包已进入待发送队列，等待进入系统的网络 buffer 超时";
 "TUIKitErrorSDKNetWaitAckTimeut" = "请求包已进入系统的网络 buffer ，等待服务端回包超时";
+"TUIKitErrorSDKWaitSendRemainingTimeout" =
+"请求包已进入待发送队列，部分数据已发送，等待发送剩余部分出现超时，可能上行带宽不足，请检查网络是否畅通，在回调错误时检测有联网，内部错误";
+"TUIKitErrorSDKNetPKGSizeLimit" = "请求包长度大于限制，最大支持 1MB 。";
+"TUIKitErrorSDKNetWaitSendTimeoutNoNetwork" = "请求包已进入待发送队列，等待进入系统的网络 buffer 超时，数据包较多 或 发送线程处理不过来，在回调错误码时检测到没有联网。";
+"TUIKitErrorSDKNetWaitAckTimeoutNoNetwork"  = "请求包已进入系统的网络 buffer ，等待服务端回包超时，可能请求包没离开终端设备、中间路由丢弃、服务端意外丢包或回包被系统网络层丢弃，在回调错误码时检测到没有联网。";
+"TUIKitErrorSDKNetRemainingTimeoutNoNetwork" = "请求包已进入待发送队列，部分数据已发送，等待发送剩余部分出现超时，可能上行带宽不足，请检查网络是否畅通，在回调错误码时检测到没有联网。";
 "TUIKitErrorSDKSVRSSOConnectLimit" = "Server 的连接数量超出限制，服务端拒绝服务。";
 "TUIKitErrorSDKSVRSSOVCode" = "验证码下发超时。";
 "TUIKitErrorSVRSSOD2Expired" = "Key 过期。Key 是根据 UserSig 生成的内部票据，Key 的有效期小于或等于 UserSig 的有效期。请重新调用 TIMManager.getInstance().login 登录接口生成新的 Key。";
@@ -191,6 +197,7 @@
 "TUIKitErrorSVRFriendshipPendencyLimit" = "未决数已达系统上限。";
 "TUIKitErrorSVRFriendshipBlacklistLimit" = "黑名单数已达系统上限。";
 "TUIKitErrorSVRFriendshipPeerFriendLimit" = "对方的好友数已达系统上限。";
+"TUIKitErrorSVRFriendshipAlreadyFriends" = "已经存在好友关系。";
 "TUIKitErrorSVRFriendshipInSelfBlacklist" = "对方在自己的黑名单中，不允许加好友。";
 "TUIKitErrorSVRFriendshipAllowTypeDenyAny" = "对方的加好友验证方式是不允许任何人添加自己为好友。";
 "TUIKitErrorSVRFriendshipInPeerBlackList" = "自己在对方的黑名单中，不允许加好友。";

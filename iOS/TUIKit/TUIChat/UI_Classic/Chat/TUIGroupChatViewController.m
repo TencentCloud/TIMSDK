@@ -97,13 +97,13 @@
     @weakify(self);
     vc.cellClickBlock = ^(TUIGroupPendencyCell *_Nonnull cell) {
       if (cell.pendencyData.isRejectd || cell.pendencyData.isAccepted) {
-          // 选择后不再进详情页了
+          // After selecting, you will no longer enter the details page.
           return;
       }
       @strongify(self);
       [[V2TIMManager sharedInstance] getUsersInfo:@[ cell.pendencyData.fromUser ]
                                              succ:^(NSArray<V2TIMUserFullInfo *> *profiles) {
-                                               // 显示用户资料 VC
+                                               // Show user profile VC
                                                NSDictionary *param = @{
                                                    TUICore_TUIContactObjectFactory_UserProfileController_UserProfile : profiles.firstObject,
                                                    TUICore_TUIContactObjectFactory_UserProfileController_PendencyData : cell.pendencyData,
@@ -150,7 +150,6 @@
 #pragma mark - TUIInputControllerDelegate
 - (void)inputController:(TUIInputController *)inputController didSendMessage:(V2TIMMessage *)msg {
     /**
-     * 文本消息如果有 @ 用户，需要 createTextAtMessage
      * If the text message has @ user, createTextAtMessage is required
      */
     if (msg.elemType == V2TIM_ELEM_TYPE_TEXT) {
@@ -166,7 +165,6 @@
             msg.cloudCustomData = cloudCustomData;
         }
         /**
-         * 消息发送完后 atUserList 要重置
          * After the message is sent, the atUserList need to be reset
          */
         [self.atUserList removeAllObjects];
@@ -177,7 +175,6 @@
 - (void)inputControllerDidInputAt:(TUIInputController *)inputController {
     [super inputControllerDidInputAt:inputController];
     /**
-     * 检测到 @ 字符的输入
      * Input of @ character detected
      */
     if (self.conversationData.groupID.length > 0) {

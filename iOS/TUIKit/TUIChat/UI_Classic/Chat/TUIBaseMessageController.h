@@ -3,11 +3,6 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
- *  本文件声明了用于实现消息收发逻辑的控制器类。
- *  消息控制器负责统一显示您发送/收到的消息，同时在您对这些消息进行交互（点击/长按等）时提供响应回调。
- *  消息控制器还负责对您发送的消息进行统一的数据处理，使其变为可以通过 IM SDK 发送的数据格式并进行发送。
- *  也就是说，当您使用本控制器时，您可以省去很大部分的数据处理上的工作，从而能够更快捷、更方便的接入 IM SDK。
- *
  *  This file declares the controller class used to implement the messaging logic
  *  The message controller is responsible for uniformly displaying the messages you send/receive, while providing response callbacks when you interact with
  * those messages (tap/long-press, etc.). The message controller is also responsible for unified data processing of the messages you send into a data format
@@ -35,10 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
- * 【模块名称】TUIBaseMessageController
- * 【功能说明】消息控制器，负责实现消息的接收、发送、显示等一系列业务逻辑。
- *  - 本类提供了接收/显示新消息、显示/隐藏菜单、点击消息头像等交互操作的回调接口。
- *  - 同时本类提供了图像、视频、文件信息的发送功能，直接整合调用了 IM SDK 实现发送功能。
  *
  * 【Module name】TUIBaseMessageController
  * 【Function description】The message controller is responsible for implementing a series of business logic such as receiving, sending, and displaying
@@ -58,7 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL isInVC;
 
 /**
- * 发送消息是否需要已读回执，默认 NO
  * Whether a read receipt is required to send a message, the default is NO
  */
 @property(nonatomic) BOOL isMsgNeedReadReceipt;
@@ -75,8 +65,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData;
 /**
- * 开启多选模式后，获取当前选中的结果
- * 如果多选模式关闭，返回空数组
  *
  * After enabling multi-selection mode, get the currently selected result
  * Returns an empty array if multiple selection mode is off
@@ -87,13 +75,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteMessages:(NSArray<TUIMessageCellData *> *)uiMsgs;
 
 /**
- * 会话已读上报
+ * Conversation read report
  *
  */
 - (void)readReport;
 
 /**
- * 子类实现点击回复消息
+ * Subclass implements click-to-reply messages
  */
 - (void)showReplyMessage:(TUIReplyMessageCell *)cell;
 - (void)willShowMediaMessage:(TUIMessageCell *)cell;

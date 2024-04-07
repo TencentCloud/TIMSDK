@@ -3,7 +3,6 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
  *
- *  本文件声明了 TUIGroupCreatedCell 的数据源
  *  This file declares the data source for TUIGroupCreatedCell
  */
 

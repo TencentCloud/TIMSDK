@@ -250,7 +250,7 @@ private extension TUICallKitImpl {
     @objc func showViewControllerNotification(noti: Notification) {
         TUICallState.instance.audioDevice.value = .earpiece
         CallEngineManager.instance.setAudioPlaybackDevice(device: .earpiece)
-        WindowManager.instance.showCallWindow()
+        WindowManager.instance.showCallWindow(false)
     }
     
     func initEngine() {

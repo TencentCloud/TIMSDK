@@ -93,6 +93,13 @@
 "TUIKitErrorSDKNetWaitInQueueTimeout" = "Timed out waiting for request packet to enter the to-be-sent queue.";
 "TUIKitErrorSDKNetWaitSendTimeout" = "Request packet has entered the to-be-sent queue. Timed out waiting to enter the network buffer of the system.";
 "TUIKitErrorSDKNetWaitAckTimeut" = "Request packet has entered the network buffer of the system. Timed out waiting for response from server.";
+"TUIKitErrorSDKWaitSendRemainingTimeout" =
+"The request packet has entered the queue to be sent, and part of the data has been sent. A timeout occurs while waiting for the remaining part to be sent. The uplink bandwidth may be insufficient. Please check whether the network is smooth. When the callback error occurs, it is detected that there is an Internet connection. Internal error";
+"TUIKitErrorSDKNetPKGSizeLimit" = "The request packet length is greater than the limit, the maximum supported is 1MB.";
+"TUIKitErrorSDKNetWaitSendTimeoutNoNetwork" = "The request packet length is greater than the limit, the maximum supported is 1MB. The request packet has entered the queue to be sent. The network buffer waiting to enter the system has timed out. There are too many data packets or the sending thread cannot process them. When the error code is called back, it is detected that there is no Internet connection.";
+"TUIKitErrorSDKNetWaitAckTimeoutNoNetwork"  = "The request packet has entered the network buffer of the system, and the wait for the return packet from the server has timed out. The request packet may not have left the terminal device, the intermediate route has discarded it, the server has accidentally lost the packet, or the return packet has been discarded by the system network layer. There is no error code detected when calling back. networking.";
+"TUIKitErrorSDKNetRemainingTimeoutNoNetwork" = "The request packet has entered the queue to be sent, and part of the data has been sent. A timeout occurs while waiting for the remaining part to be sent. The uplink bandwidth may be insufficient. Please check whether the network is smooth. When calling back the error code, it is detected that there is no Internet connection.";
+
 "TUIKitErrorSDKSVRSSOConnectLimit" = "The number of Server connections exceeds the limit. Service denied by the server.";
 "TUIKitErrorSDKSVRSSOVCode" = "Sending verification code timeout.";
 "TUIKitErrorSVRSSOD2Expired" = "Key expired. Key is an internal bill generated according to usersig. The validity period of the key is less than or equal to the validity period of usersig. Please call timmanager again getInstance(). The login interface generates a new key.";
@@ -189,6 +196,7 @@
 "TUIKitErrorSVRFriendshipPendencyLimit" = "You have reached the limit of pending friend requests.";
 "TUIKitErrorSVRFriendshipBlacklistLimit" = "The number of accounts in the blocked list exceeds the limit.";
 "TUIKitErrorSVRFriendshipPeerFriendLimit" = "The number of the other user's friends exceeds the limit.";
+"TUIKitErrorSVRFriendshipAlreadyFriends" = "Already a friend relationship";
 "TUIKitErrorSVRFriendshipInSelfBlacklist" = "You have blocked the other user. Unable to send friend request.";
 "TUIKitErrorSVRFriendshipAllowTypeDenyAny" = "The other user's friend request verification mode is \"Decline friend request from any user\".";
 "TUIKitErrorSVRFriendshipInPeerBlackList" = "You are blocked by the other user. Unable to send friend request.";

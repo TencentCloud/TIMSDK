@@ -128,7 +128,6 @@
     [super scrollViewDidScroll:scrollView];
     if (scrollView.contentOffset.y <= TMessageController_Header_Height && ![self messageSearchDataProvider].isOlderNoMoreMsg) {
         /**
-         * 显示下拉刷新
          * Display pull-to-refresh icon
          */
         if (!self.indicatorView.isAnimating) {
@@ -137,7 +136,6 @@
     } else if ([self isScrollToBottomIndicatorViewY:scrollView]) {
         if (![self messageSearchDataProvider].isNewerNoMoreMsg) {
             /**
-             * 显示上拉加载
              * Display pull-up-loading icon
              */
             if (!self.bottomIndicatorView.isAnimating) {
@@ -145,7 +143,6 @@
             }
         }
         /**
-         * 去掉 "回到最新位置", "xxx条新消息" 小舌头
          * Remove the "back to the latest position", "xxx new message" bottom-banner-tips
          */
         if (self.isInVC) {
@@ -155,7 +152,6 @@
     } else if (self.isInVC && 0 == self.receiveMsgs.count && self.tableView.contentSize.height - self.tableView.contentOffset.y >= Screen_Height * 2.0) {
         CGPoint point = [scrollView.panGestureRecognizer translationInView:scrollView];
         /**
-         * 下滑的时候，添加 "回到最新位置" 小舌头
          * When swiping, add a "back to last position" bottom-banner-tips
          */
         if (point.y > 0) {
@@ -165,7 +161,6 @@
         }
     } else if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= 20) {
         /**
-         * 去掉 "有人 @ 我" 小舌头
          * Remove the "someone @ me" bottom-banner-tips
          */
         [TUIChatSmallTongueManager_Minimalist removeTongue:TUIChatSmallTongueType_SomeoneAt];
@@ -183,13 +178,11 @@
     [super scrollViewDidEndDecelerating:scrollView];
     if (scrollView.contentOffset.y <= TMessageController_Header_Height && ![self messageSearchDataProvider].isOlderNoMoreMsg) {
         /**
-         * 拉取旧消息
          * Pull old news
          */
         [self loadMessages:YES];
     } else if ([self isScrollToBottomIndicatorViewY:scrollView] && ![self messageSearchDataProvider].isNewerNoMoreMsg) {
         /**
-         * 加载新的消息
          * Load latese message
          */
         [self loadMessages:NO];
@@ -198,7 +191,6 @@
 
 - (BOOL)isScrollToBottomIndicatorViewY:(UIScrollView *)scrollView {
     /**
-     * 滚到临界点,再 + 2 像素
      * +2 pixels when scrolling to critical point
      */
     return (scrollView.contentOffset.y + self.tableView.mm_h + 2) > (scrollView.contentSize.height - self.indicatorView.mm_h);
@@ -241,7 +233,7 @@
 
                       if (!isFirstLoad) {
                           /**
-                           * 在消息回复等跳转场景中，先将 tableview 滚动到最底部，再结合 scrollToLocateMessage 来实现滚动定位效果
+                           * ， tableview ， scrollToLocateMessage 
                            * In jump scenarios such as message reply, first scroll the tableview to the bottom, and then combine scrollToLocateMessage to achieve
                            * scroll positioning effect
                            */
@@ -269,7 +261,7 @@
 
 - (void)scrollToLocateMessage:(BOOL)isFirstLoad {
     /**
-     * 先找到 locateMsg 的坐标偏移
+     *  locateMsg 
      * First find the coordinate offset of locateMsg
      */
     CGFloat offsetY = 0;
@@ -283,7 +275,7 @@
     }
 
     /**
-     * 没有找到定位消息
+     * 
      * The locateMsg not found
      */
     if (index == [self messageSearchDataProvider].uiMsgs.count) {
@@ -291,7 +283,7 @@
     }
 
     /**
-     * 再偏移半个 tableview 的高度
+     *  tableview 
      * Offset half the height of the tableview
      */
     offsetY -= self.tableView.frame.size.height / 2.0;
@@ -506,7 +498,6 @@
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
     [super dataProvider:dataProvider ReceiveNewUIMsg:uiMsg];
     /**
-     * 查看历史消息的时候，如果滚动超过两屏，收到新消息后，添加 "xxx条新消息"小舌头
      * When viewing historical messages, if you scroll more than two screens, after receiving a new message, add a "xxx new message" bottom-banner-tips
      */
     if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= Screen_Height * 2.0) {
@@ -524,7 +515,6 @@
 
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveRevokeUIMsg:(TUIMessageCellData *)uiMsg {
     /**
-     * 撤回的消息要从 "xxx条新消息" 移除
      * Recalled messages need to be removed from "xxx new messages" bottom-banner-tips
      */
     [super dataProvider:dataProvider ReceiveRevokeUIMsg:uiMsg];
@@ -541,7 +531,6 @@
     }
 
     /*
-     *  当被撤回的消息是否是 "回复"类型的消息时，去查根消息删除当前被撤回的消息。
      *  When the retracted message is a "reply" type of message, go to the root message to delete the currently retracted message.
      */
 

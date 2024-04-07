@@ -3,7 +3,7 @@
 //  UIKit
 //
 //  Created by kennethmiao on 2018/9/18.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 
 #import "TUIInputController.h"
@@ -294,7 +294,6 @@
 
 - (void)inputBar:(TUIInputBar *)textView didSendText:(NSString *)text {
     /**
-     * 表情国际化 --> 恢复成实际的中文 key
      * Emoticon internationalization --> restore to actual Chinese key
      */
     NSString *content = [text getInternationalStringWithfaceContent];
@@ -340,9 +339,6 @@
                 [cloudResultDic addEntriesFromDictionary:originDic];
             }
             /**
-             * 接受 parent 里的数据，但是不能保存 messageReplies\messageReact，因为根消息话题创建者才有这个字段。
-             * 当前发送的新消息里不能存 messageReplies\messageReact
-             *
              * Accept the data in the parent, but cannot save messageReplies\messageReact, because the root message topic creator has this field.
              * messageReplies\messageReact cannot be stored in the new message currently sent
              */
@@ -356,7 +352,6 @@
         }
         if (!IS_NOT_EMPTY_NSSTRING(messageRootID)) {
             /**
-             * 如果源消息没有 messageRootID， 则需要将当前源消息的 msgID 作为 root
              * If the original message does not have a messageRootID, you need to use the msgID of the current original message as root
              */
             if (IS_NOT_EMPTY_NSSTRING(parentMsg.msgID)) {
@@ -596,7 +591,6 @@
         return;
     }
     /**
-     * 表情国际化 --> 恢复成实际的中文 key
      * Emoticon internationalization --> restore to actual Chinese key
      */
     NSString *content = [text getInternationalStringWithfaceContent];

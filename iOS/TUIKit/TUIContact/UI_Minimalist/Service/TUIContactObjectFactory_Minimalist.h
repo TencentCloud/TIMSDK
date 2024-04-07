@@ -12,28 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 /**
- * 您可以通过 [TUICore createObject:..] 方法唤起服务，不同的服务传参如下：
- * > 创建联系人列表：
- * factoryName: TUICore_TUIContactObjectFactory_Minimalist
- * key: TUICore_TUIContactObjectFactory_GetContactControllerMethod
- *
- * > 创建联系人选择器：
- * factoryName: TUICore_TUIContactObjectFactory_Minimalist
- * key ：TUICore_TUIContactObjectFactory_GetContactSelectControllerMethod
- *
- * > 创建好友资料 VC：
- * factoryName: TUICore_TUIContactObjectFactory_Minimalist
- * key: TUICore_TUIContactObjectFactory_GetFriendProfileControllerMethod
- *
- * > 创建用户资料 VC：
- * factoryName: TUICore_TUIContactObjectFactory_Minimalist
- * key: TUICore_TUIContactObjectFactory_UserProfileController_Minimalist
- *
- * > 根据 userID 获取好友或用户资料 VC：
- * factoryName: TUICore_TUIContactObjectFactory_Minimalist
- * key: TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod
- *
- *
  * TUIContactService currently provides the following services:
  * 1. Create a contact list
  * 2. Create a contact selector

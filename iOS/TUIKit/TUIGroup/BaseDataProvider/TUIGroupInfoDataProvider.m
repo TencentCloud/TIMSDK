@@ -153,6 +153,8 @@
               }
               [membersData addObject:data];
           }
+        
+        
           weakSelf.membersData = membersData;
           if (callback) {
               callback();

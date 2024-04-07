@@ -24,7 +24,6 @@
 }
 - (NSMutableAttributedString *)getLastDisplayString:(V2TIMConversation *)conv {
     /**
-     * 如果有群 @ ，展示群 @ 信息
      * If has group-at message, the group-at information will be displayed first
      */
     NSString *atStr = [self getGroupAtTipString:conv];
@@ -33,7 +32,6 @@
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
 
     /**
-     * 如果有草稿箱，优先展示草稿箱信息
      * If there is a draft box, the draft box information will be displayed first
      */
     if (conv.draftText.length > 0) {
@@ -48,13 +46,11 @@
         [attributeString appendAttributedString:draftContent];
     } else {
         /**
-         * 没有草稿箱，展示会话 lastMsg 信息
          * No drafts, show conversation lastMsg information
          */
         NSString *lastMsgStr = @"";
 
         /**
-         * 先看下外部有没自定义会话的 lastMsg 展示信息
          * Attempt to get externally customized display information
          */
         if (self.delegate && [self.delegate respondsToSelector:@selector(getConversationDisplayString:)]) {
@@ -62,7 +58,6 @@
         }
 
         /**
-         * 外部没有自定义，通过消息获取 lastMsg 展示信息
          * If there is no external customization, get the lastMsg display information through the message module
          */
         if (lastMsgStr.length == 0 && conv.lastMessage) {
@@ -70,7 +65,6 @@
         }
 
         /**
-         * 如果没有 lastMsg 展示信息，也没有草稿信息，直接返回 nil
          * If there is no lastMsg display information and no draft information, return nil directly
          */
         if (lastMsgStr.length == 0) {
@@ -80,9 +74,6 @@
     }
 
     /**
-     * 如果设置了免打扰，展示消息免打扰状态
-     * Meeting 群默认就是 V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE 状态，UI 上不特殊处理
-     *
      * If do-not-disturb is set, the message do-not-disturb state is displayed
      * The default state of the meeting type group is V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE, and the UI does not process it.
      */

@@ -60,6 +60,7 @@
 @property(nonatomic, assign) BOOL isAutoScrolledToBottom;
 @property(nonatomic, assign) BOOL hasCoverPage;
 @property(nonatomic, strong) TUIMessageCellConfig *messageCellConfig;
+@property(nonatomic, strong) TUIVoiceMessageCellData *currentVoiceMsg;
 @end
 
 @implementation TUIBaseMessageController
@@ -104,6 +105,13 @@
     self.isInVC = NO;
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (_currentVoiceMsg) {
+        [_currentVoiceMsg stopVoiceMessage];
+    }
+}
+
 - (void)applicationBecomeActive {
     self.isActive = YES;
     [self sendVisibleReadGroupMessages];
@@ -116,7 +124,6 @@
 - (void)setupViews {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewController)];
     /**
-     * 解决触摸事件没有往下传递，导致手势和 collectionView didselect 冲突的问题
      * Solve the problem that the touch event is not passed down, causing the gesture to conflict with the collectionView didselect
      */
     tap.cancelsTouchesInView = NO;
@@ -557,7 +564,7 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messageDataProvider.uiMsgs.count - 1 - i inSection:0];
             TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             /**
-             * 通过回调时间戳判定当前的未读状态是否需要改为已读状态
+             * 
              * Determine whether the current unread needs to be changed to read by the callback timestamp
              */
             time_t msgTime = [cell.messageData.innerMessage.timestamp timeIntervalSince1970];
@@ -587,7 +594,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 
 - (void)dataProvider:(TUIMessageDataProvider *)dataProvider ReceiveNewUIMsg:(TUIMessageCellData *)uiMsg {
     /**
-     * 查看历史消息的时候根据当前 contentOffset 判断是否需要滑动到底部
      * When viewing historical messages, judge whether you need to slide to the bottom according to the current contentOffset
      */
     if (self.tableView.contentSize.height - self.tableView.contentOffset.y < Screen_Height * 1.5) {
@@ -609,7 +615,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     static uint64_t lastTs = 0;
     uint64_t curTs = [[NSDate date] timeIntervalSince1970];
     /**
-     * 超过 1s && 非首次，立即上报已读
      * More than 1s && Not the first time, report immediately
      */
     if (curTs - lastTs >= 1 && lastTs) {
@@ -617,7 +622,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         [self readReport];
     } else {
         /**
-         * 低于 1s || 首次  延迟 1s 合并上报
          * Less than 1s || First time, delay 1s and merge report
          */
         static BOOL delayReport = NO;
@@ -664,19 +668,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 /**
- * 接收方需发送可见消息已读回执的时机：
- * 1、messageVC 可见时。在 [self viewDidAppear:] 中获得通知。
- * 2、代码调用 [self scrollToBottom:] 后 scrollView 自动跳转到底部停止时（例如点击右下角 "x 条新消息" tips）。在 [UIScrollViewDelegate
- * scrollViewDidEndScrollingAnimation:] 中获得通知。
- *    + 注意需要借助 scrollView 的状态来准确判断 scrollView 是否真的停止了滑动。
- * 3、用户连续地拖拽 scrollView 滑动查看消息时。在 [UIScrollViewDelegate scrollViewDidScroll:] 中得到通知。
- *    + 注意此处要判断 scrollView 的滑动是否由用户手势触发（而不是自动代码触发）。因此借助 self.scrollingTriggeredByUser 标志位来区分。
- *    + self.scrollingTriggeredByUser 的更新逻辑：
- *      - 用户手指触碰到屏幕并且开始拖拽时（scrollViewWillBeginDragging:）置 YES；
- *      - 用户手指以一定的加速度拖拽后离开屏幕，屏幕自动停止滑动时（scrollViewDidEndDecelerating:）置 NO；
- *      - 用户手指滑动后不施加加速度，直接抬起手指时（scrollViewDidEndDragging:）置 NO。
- * 4、用户停留在最新消息界面，此时收到了新消息时。在 [self dataProvider:ReceiveNewUIMsg:] 中得到通知。
- *
  * When the receiver sends a visible message read receipt:
  * 1. The time when messageVC is visible.  You will be notified when [self viewDidAppear:] is invoked
  * 2. The time when scrollview scrolled to bottom by called [self scrollToBottom:] (For example, click the "x new message" tips in the lower right corner). You
@@ -783,7 +774,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
         TUITextMessageCellData *cellData = (TUITextMessageCellData *)self.messageDataProvider.uiMsgs[indexPath.row];
-        // 待 TUICallKit 按照标准流程介入后删除
+        // It will be deleted after TUICallKit intervenes according to the standard process.
         if ([cellData isKindOfClass:TUITextMessageCellData.class]) {
             if ((cellData.isAudioCall || cellData.isVideoCall) && cellData.showUnreadPoint) {
                 cellData.innerMessage.localCustomInt = 1;
@@ -937,7 +928,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         [self addChatCommonActionToCell:cell ofMenu:menu];
     } else {
         // Plugin common Action
-        // 多选（multiAction） 引用（quoteAction） 回复（referenceAction） 删除(deleteAction) 撤回(recallAction)
+        // （multiAction） （quoteAction） （referenceAction） (deleteAction) (recallAction)
         [self addChatPluginCommonActionToCell:cell ofMenu:menu];
     }
     
@@ -946,7 +937,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     
     if ([data isKindOfClass:[TUITextMessageCellData class]]) {
         /**
-         * 文本消息选中状态的时候会默认 becomeFirstResponder 导致键盘消失，界面错乱，这里先收起已经弹出的键盘。
+         *  becomeFirstResponder ，，。
          * When the text message is selected, it will becomeFirstResponder by default, causing the keyboard to disappear and the interface to be chaotic. Here,
          * the keyboard that has popped up is put away first.
          */
@@ -1117,7 +1108,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
       [menu layoutSubview];
     };
     /**
-     * 如果是文本类型消息，设置文本消息光标选中状态，如果文字不是全选状态，只保留复制和转发
      * If it is a text type message, set the text message cursor selected state, if the text is not all selected state, only keep copy and forward
      */
     if ([data isKindOfClass:[TUITextMessageCellData class]]) {
@@ -1419,7 +1409,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (void)onCopyMsg:(id)sender {
     NSString *content = @"";
     /**
-     * 文本消息要以光标实际选中的消息内容为准
+     * 
      * The text message should be based on the content of the message actually selected by the cursor
      */
     if ([sender isKindOfClass:[TUITextMessageCell class]]) {
@@ -1571,6 +1561,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         TUIVoiceMessageCellData *voiceMsg = (TUIVoiceMessageCellData *)cellData;
         if (voiceMsg == cell.voiceData) {
             [voiceMsg playVoiceMessage];
+            self.currentVoiceMsg = voiceMsg;
             cell.voiceReadPoint.hidden = YES;
             NSMutableArray *unPlayVoiceMessageAfterSelectVoiceMessage = [self getCurrentUnPlayVoiceMessageAfterSelectVoiceMessage:voiceMsg];
             @weakify(self);

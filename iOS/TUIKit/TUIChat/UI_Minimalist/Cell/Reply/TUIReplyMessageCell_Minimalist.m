@@ -174,7 +174,6 @@
     }
 
     if (view == nil) {
-        //FIXME: celldata应该区分不同的Cell
         Class class = [originCellData getReplyQuoteViewClass];
         NSString *clsStr = NSStringFromClass(class);
         if (![clsStr containsString:@"_Minimalist"]) {
@@ -332,7 +331,6 @@
     CGFloat quoteMaxWidth = kReplyQuoteViewMaxWidth;
     CGFloat quotePlaceHolderMarginWidth = 12;
 
-    // 动态计算发送者的尺寸
     // Calculate the size of label which displays the sender's displyname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}];
     CGRect senderRect = [replyCellData.sender boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
@@ -340,11 +338,9 @@
                                                attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}
                                                   context:nil];
 
-    // 动态计算自定义引用占位视图的尺寸
     // Calculate the size of customize quote placeholder view
     CGSize placeholderSize = [replyCellData quotePlaceholderSizeWithType:replyCellData.originMsgType data:replyCellData.quoteData];
 
-    // 动态计算回复内容的尺寸
     // Calculate the size of label which displays the content of replying the original message
     UIFont *font = [UIFont systemFontOfSize:16.0];
     NSAttributedString *attributeString = [replyCellData.content getFormatEmojiStringWithFont:font emojiLocations:nil];
@@ -352,7 +348,6 @@
                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                             context:nil];
 
-    // 根据内容计算引用视图整体的大小
     // Calculate the size of quote view base the content
     quoteWidth = senderRect.size.width;
     if (quoteWidth < placeholderSize.width) {
@@ -375,7 +370,6 @@
     replyCellData.replyContentSize = CGSizeMake(replyContentRect.size.width, replyContentRect.size.height);
     replyCellData.quoteSize = CGSizeMake(quoteWidth, quoteHeight);
 
-    // 计算 cell 的高度
     // Calculate the height of cell
     height = 12 + quoteHeight + 12 + replyCellData.replyContentSize.height + 12;
 
@@ -383,7 +377,7 @@
                                                              options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                              context:nil];
 
-    // 判断下最后一行的宽度是否超过了消息状态的位置，如果超过，消息状态换行
+    // Determine whether the width of the last line exceeds the position of the message status. If it exceeds, the message status will be wrapped.
     if ((int)replyContentRect2.size.width % (int)quoteWidth == 0 ||
         (int)replyContentRect2.size.width % (int)quoteWidth + replyCellData.msgStatusSize.width > quoteWidth) {
         height += replyCellData.msgStatusSize.height;

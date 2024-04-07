@@ -19,19 +19,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (TUIReactModel *)createTagsModelByReaction:(V2TIMMessageReaction *)reaction;
 /**
- * 标签名字
  * Label name
  */
 @property(nonatomic, copy) NSString *name;
 
 /**
- * 标签别名
  * Label alias
  */
 @property(nonatomic, copy) NSString *alias;
 
 /**
- * 标签名字颜色
  * The color of label displaying name
  */
 @property(nonatomic, strong) UIColor *textColor;

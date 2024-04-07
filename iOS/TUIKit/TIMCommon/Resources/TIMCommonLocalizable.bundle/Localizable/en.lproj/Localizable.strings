@@ -421,6 +421,8 @@
 "TUIKitGroupManageAdminSetting" = "Set as Admin";
 "TUIKitGroupManageShutAll" = "Mute All";
 "TUIKitGroupAddShutupMember" = "Add members to mute";
+"TUIKitGroupShutupOption" = "Mute";
+"TUIKitGroupDisShutupOption" = "UnMute";
 "TUIKitGroupOwner" = "Group Owner";
 "TUIKitGroupManagerFormat" = "Admin (%zd/%zd)";
 "TUIKitSetShutupAllFormat" = "%@ enabled Mute All";

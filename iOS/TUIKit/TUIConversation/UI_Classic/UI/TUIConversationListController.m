@@ -144,7 +144,6 @@
     [self.tableViewContainer addSubview:self.tableViewForAll];
 
     if (self.isShowConversationGroup) {
-        // 延迟点时间加载，等待插件能力位异步加载完毕
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
           NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIConversationExtension_ConversationGroupListBanner_ClassicExtensionID param:nil];
           @weakify(self);
@@ -774,7 +773,6 @@
                     desc = TIMCommonLocalizableString(TUIKitMessageTipsOthersRecallMessage);
                 } else if (msg.groupID.length > 0) {
                     /**
-                     * 对于群组消息的名称显示，优先显示群名片，昵称优先级其次，用户ID优先级最低。
                      * For the name display of group messages, the group business card is displayed first, the nickname has the second priority, and the user ID
                      * has the lowest priority.
                      */

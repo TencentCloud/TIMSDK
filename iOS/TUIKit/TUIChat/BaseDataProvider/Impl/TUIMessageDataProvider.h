@@ -33,12 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message;
 
 #pragma mark - Data source operate
-- (void)preProcessReplyMessageV2:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void(^)(void))callback;
+- (void)processQuoteMessage:(NSArray<TUIMessageCellData *> *)uiMsgs;
 - (void)deleteUIMsgs:(NSArray<TUIMessageCellData *> *)uiMsgs SuccBlock:(nullable V2TIMSucc)succ FailBlock:(nullable V2TIMFail)fail;
 - (void)removeUIMsgList:(NSArray<TUIMessageCellData *> *)cellDatas;
 
 
-//FIXME: 待删除
 + (TUIChatCallingDataProvider *)callingDataProvider;
 
 @end

@@ -18,7 +18,6 @@
 
 @interface TUIC2CChatViewController ()
 
-// 如果满足了一次sendTypingBaseCondation 则当前会话未退出前都使用 sendTypingBaseCondationInVC
 // If one sendTypingBaseCondation is satisfied, sendTypingBaseCondationInVC is used until the current session exits
 
 @property(nonatomic, assign) BOOL sendTypingBaseCondationInVC;

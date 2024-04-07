@@ -14,4 +14,5 @@
 @interface TUIImageCollectionCell : TUIMediaCollectionCell
 
 - (void)fillWithData:(TUIImageMessageCellData *)data;
+- (void)reloadAllView;
 @end

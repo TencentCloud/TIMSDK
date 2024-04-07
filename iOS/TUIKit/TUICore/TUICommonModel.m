@@ -698,14 +698,12 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (navigationController.viewControllers.count == 1) {
         /**
-         * 如果堆栈内的视图控制器数量为1 说明只有根控制器，将 currentShowVC 清空，为了下面的方法禁用侧滑手势
          * If the number of view controllers in the stack is 1, it means only the root controller, clear the currentShowVC, and disable the swipe gesture for
          * the following method
          */
         self.currentShowVC = Nil;
     } else {
         /**
-         * 将 push 进来的视图控制器赋值给 currentShowVC
          * Assign the pushed view controller to currentShowVC
          */
         self.currentShowVC = viewController;
@@ -714,7 +712,6 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
     if ([navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         if (self.viewControllers.count == 1) {
             /**
-             * 禁止首页的侧滑返回
              * Forbid the sliding back of the home page
              */
             navigationController.interactivePopGestureRecognizer.enabled = NO;
@@ -726,7 +723,6 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     /**
-     * 监听侧边滑动返回的事件
      * Listen to the event returned by the side slide
      */
     __weak typeof(self) weakSelf = self;
@@ -747,7 +743,6 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
     if (gestureRecognizer == self.interactivePopGestureRecognizer) {
         if (self.currentShowVC == self.topViewController) {
             /**
-             * 如果 currentShowVC 存在说明堆栈内的控制器数量大于 1 ，允许激活侧滑手势
              * If currentShowVC exists, it means that the number of controllers in the stack is greater than 1, allowing the side slide gesture to be activated
              */
             return YES;

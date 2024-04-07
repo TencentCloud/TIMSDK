@@ -3,7 +3,7 @@
 //  UIKit
 //
 //  Created by kennethmiao on 2018/9/18.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 
 #import "TUIInputBar.h"
@@ -445,7 +445,6 @@
         return NO;
     } else if ([text isEqualToString:@""]) {
         if (textView.textStorage.length > range.location) {
-            // 一次性删除 @xxx 这种 @ 消息
             // Delete the @ message like @xxx at one time
             NSAttributedString *lastAttributedStr = [textView.textStorage attributedSubstringFromRange:NSMakeRange(range.location, 1)];
             NSString *lastStr = [lastAttributedStr getPlainString];
@@ -453,17 +452,15 @@
                 NSUInteger location = range.location;
                 NSUInteger length = range.length;
 
-                // '@' 对应的ascii码 '@'
                 // corresponds to ascii code
                 int at = 64;
-                // 空格(space) 对应的ascii码
+                // (space) ascii
                 // Space (space) corresponding ascii code
                 int space = 32;
 
                 while (location != 0) {
                     location--;
                     length++;
-                    // 将字符转成ascii码，复制给int,避免越界
                     // Convert characters to ascii code, copy to int, avoid out of bounds
                     int c = (int)[[[textView.textStorage attributedSubstringFromRange:NSMakeRange(location, 1)] getPlainString] characterAtIndex:0];
 
@@ -477,7 +474,6 @@
                         }
                         return NO;
                     } else if (c == space) {
-                        // 避免出现 "@昵称 你好，很高兴认识 你(space)  "" 在空格后按del 过度删除到@
                         // Avoid "@nickname Hello, nice to meet you (space) "" Press del after a space to over-delete to @
                         break;
                     }
@@ -485,7 +481,6 @@
             }
         }
     }
-    // 监听 @ 字符的输入，包含全角/半角
     // Monitor the input of @ character, including full-width/half-width
     else if ([text isEqualToString:@"@"] || [text isEqualToString:@"＠"]) {
         if (self.delegate && [self.delegate respondsToSelector:@selector(inputBarDidInputAt:)]) {
@@ -654,9 +649,6 @@
     if (time >= 55 && time <= maxDuration) {
         NSInteger seconds = maxDuration - time;
         /**
-         * 此处强转了 long 型，是为了消除编译器警告。
-         * 此处 +1 是为了向上取整，优化时间逻辑。
-         *
          * The long type is cast here to eliminate compiler warnings.
          * Here +1 is to round up and optimize the time logic.
          */

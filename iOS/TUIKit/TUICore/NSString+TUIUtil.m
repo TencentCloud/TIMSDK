@@ -3,7 +3,7 @@
 //
 //
 //  Created by Alexi on 12-11-5.
-//  Copyright (c) 2012年 . All rights reserved.
+//  Copyright (c) 2012 . All rights reserved.
 //
 
 #import <CommonCrypto/CommonDigest.h>

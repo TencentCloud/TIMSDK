@@ -16,8 +16,6 @@
     self = [super initWithDirection:direction];
     if (self) {
         self.showAvatar = NO;
-        
-        //FIXME: 待删除，放到 cell 中统一安排
         _contentFont = [UIFont systemFontOfSize:13];
         _contentColor = [UIColor d_systemGrayColor];
         self.cellLayout = [TUIMessageCellLayout systemMessageLayout];

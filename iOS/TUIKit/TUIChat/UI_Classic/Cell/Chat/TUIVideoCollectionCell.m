@@ -257,7 +257,7 @@
         self.animateCircleView.hidden = YES;
     } else {
         /**
-         * 已经下载的视频播放本地视频文件
+         * 
          * Downloaded videos can be played directly using local video files
          */
         self.videoPath = self.videoData.videoPath;

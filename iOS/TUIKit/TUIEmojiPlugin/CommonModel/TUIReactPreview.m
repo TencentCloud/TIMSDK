@@ -47,7 +47,6 @@
     }
 
     /**
-     * 外边距 （上下左右）
      * Margin, including top、bottom、left and right
      */
     CGFloat margin = 12;
@@ -56,19 +55,16 @@
     CGFloat bottomMargin = 3;
 
     /**
-     * 水平内边距
      * Padding in the horizontal direction
      */
     CGFloat padding = 6;
 
     /**
-     * 垂直内边距
      * Padding in the vertical direction
      */
     CGFloat verticalPadding = 8;
 
     /**
-     * TagView 的宽高
      * Size of tagview
      */
     CGFloat tagViewWidth = 0;
@@ -87,7 +83,6 @@
             tagViewHeight = 24;
             if (self.listArrM.count == 1) {
                 /**
-                 * 总共就一个
                  * If  there is only one tag
                  */
                 tagViewWidth = margin + cell.frame.size.width + rightmargin;
@@ -97,7 +92,6 @@
             CGFloat previousFrameRightPoint = preCell.frame.origin.x + preCell.frame.size.width;
 
             /**
-             * 放置在当前行，布局后需要的宽度
              * Placed in the current line, the width required after layout
              */
             CGFloat needWidth = (padding + cell.ItemWidth);
@@ -105,13 +99,11 @@
             BOOL condation = (needWidth < residueWidth);
             if (condation) {
                 /**
-                 * 这行还能放下 那就放
                  * Placed it in the same line if has enough space
                  */
                 cell.frame = CGRectMake(previousFrameRightPoint + padding, preCell.frame.origin.y, cell.ItemWidth, 24);
             } else {
                 /**
-                 * 放不下新起一行
                  * Placed it in the another line if not enough space
                  */
                 cell.frame = CGRectMake(margin, preCell.frame.origin.y + preCell.frame.size.height + verticalPadding, cell.ItemWidth, 24);

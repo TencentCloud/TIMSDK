@@ -249,7 +249,6 @@ NSString *const TUILogoutFailNotification = @"TUILogoutFailNotification";
               succ();
           }
           if (self.loginWithInit) {
-              // 使用的是新接口登录，退出时需要反初始化，并移除监听
               // The new interface is currently used to log in. When logging out, you need to deinitialize and remove the listener.
               [V2TIMManager.sharedInstance removeIMSDKListener:self];
               [V2TIMManager.sharedInstance unInitSDK];

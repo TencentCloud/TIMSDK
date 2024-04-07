@@ -68,7 +68,6 @@
 
 - (void)highlightWhenMatchKeyword:(NSString *)keyword {
     /**
-     * 父类实现默认高亮效果 - 闪烁
      * The parent class implements the default highlighting effect - flickering
      */
     if (keyword) {

@@ -171,7 +171,6 @@
             NSAttributedString *originStr = emojiLocation[key];
             NSRange currentRange = [key rangeValue];
             /**
-             * 每次 emoji 替换后，字符串的长度都会发生变化，后面 emoji 的实际 location 也要相应改变
              * After each emoji is replaced, the length of the string will change, and the actual location of the emoji will also change accordingly.
              */
             currentRange.location += offsetLocation;
@@ -221,8 +220,8 @@
                                                  context:nil];
     CGSize size2 =  rect2.size;
 
-    // 如果有多行，判断下最后一行的字体宽度是否超过了消息状态的位置，如果超过，消息状态换行
-    // 如果只有一行，直接加上消息状态的宽度
+    // If there are multiple lines, determine whether the font width of the last line exceeds the position of the message status. If so, the message status will wrap.
+    // If there is only one line, directly add the width of the message status
     int max_width = size.height > [textFont lineHeight] ? size.width : TTextMessageCell_Text_Width_Max;
     if ((int)size2.width / max_width > 1) {
         if ((int)size2.width % max_width == 0 || (int)size2.width % max_width + textCellData.msgStatusSize.width >= max_width) {

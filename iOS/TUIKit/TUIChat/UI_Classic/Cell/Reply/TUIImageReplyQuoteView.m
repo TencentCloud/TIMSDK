@@ -28,7 +28,7 @@
     }
     TUIImageReplyQuoteViewData *myData = (TUIImageReplyQuoteViewData *)data;
     self.imageView.image = myData.image;
-    if (myData.image == nil) {
+    if (myData.image == nil && myData.imageStatus != TUIImageReplyQuoteStatusDownloading) {
         [myData downloadImage];
     }
     // tell constraints they need updating

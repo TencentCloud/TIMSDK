@@ -53,7 +53,6 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
     __block NSString *failDesc = nil;
 
     /**
-     * 以定位消息为起点，加载最旧的pageCount条消息
      * Load the oldest pageCount messages starting from locating message
      */
     {
@@ -85,7 +84,6 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
             }];
     }
     /**
-     * 以定位消息为起点，加载最新的pageCount条消息
      * Load the latest pageCount messages starting from the locating message
      */
     {
@@ -131,13 +129,11 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
       [results addObjectsFromArray:olders];
       if (searchMsg) {
           /**
-           * 通过 msg 拉取消息不会返回 msg 对象本身，这里需要把 msg 主动添加到 results 列表
            * Pulling messages through the msg will not return the msg object itself, here you need to actively add the msg to the results list
            */
           [results addObject:searchMsg];
       } else {
           /**
-           * 通过 msg seq 拉取消息，拉取旧消息和新消息都会返回 msg 对象本身，这里需要在 results 对 msg 对象去重
            * Pulling messages through the msg seq, pulling old messages and new messages will return the msg object itself, here you need to deduplicate the msg
            * object in results
            */
@@ -191,9 +187,6 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
           }
 
           /**
-           * 更新 lastMsg 标志位
-           * -- 当前是从最新的时间点开始往旧的方向拉取
-           *
            * Update the lastMsg flag
            * -- The current pull operation is to pull from the latest time point to the past
            */
@@ -213,7 +206,6 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
           }
 
           /**
-           * 更新无数据标志
            * Update no data flag
            */
           if (msgs.count < requestCount) {
@@ -226,7 +218,6 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
 
           if (isLastest) {
               /**
-               * 当前是从最新的时间点往旧的方向拉取
                * The current pull operation is to pull from the latest time point to the past
                */
               self.isNewerNoMoreMsg = YES;
@@ -332,9 +323,6 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
 - (void)onRecvNewMessage:(V2TIMMessage *)msg {
     if (self.isNewerNoMoreMsg == NO) {
         /**
-         * 如果当前历史列表还没有加载到最新的一条数据，则不处理新消息；
-         * 此时如果处理的话，会导致新消息加到历史列表中，出现位置错乱问题。
-         *
          * If the current message list has not pulled the last message, ignore the new message;
          * If it is processed at this time, it will cause new messages to be added to the history list, resulting in the problem of position confusion.
          */

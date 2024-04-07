@@ -21,20 +21,17 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                            图片深色适配
+//                           Dark Mode
 //
 /////////////////////////////////////////////////////////////////////////////////
 
 @interface UIImage (TUIDarkModel)
 /**
- * path: 普通图片路径（不带 @x.png 后缀），深色图片路径必须为 "普通图片路径_dark"
  * path: normal image path (without @x.png suffix), dark image path must be "normal image path_dark"
  */
 + (UIImage *)d_imagePath:(NSString *)path __attribute__((deprecated("use TUIDemoBundleThemeImage(imageKey,defaultImageName)")));
 
 /**
- *  imageName: 普通图片名字，暗黑图片名字必须为 "普通图片名字_dark"
- *  bundleName:  存放图片的 bundleName
  *
  *  imageName: common image name, dark image name must be "ordinary image name_dark"
  *  bundleName: bundleName where the image is stored

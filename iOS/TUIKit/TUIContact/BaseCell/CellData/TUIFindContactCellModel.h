@@ -30,7 +30,7 @@ typedef void (^TUIFindContactOnCallback)(TUIFindContactCellModel *);
 @property(nonatomic, copy) NSString *desc;
 
 /**
- * c2c-> userID,  group就是群ID
+ * c2c-> userID,    group -> groupID
  * If the conversation type is c2c, contactID represents userid; if the conversation type is group, contactID represents groupID
  */
 @property(nonatomic, copy) NSString *contactID;

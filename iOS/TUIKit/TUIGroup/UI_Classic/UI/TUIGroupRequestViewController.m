@@ -3,7 +3,7 @@
 //  TUIKitDemo
 //
 //  Created by annidyfeng on 2019/5/20.
-//  Copyright © 2019年 Tencent. All rights reserved.
+//  Copyright © 2019 Tencent. All rights reserved.
 //
 #import "TUIGroupRequestViewController.h"
 #import <TIMCommon/TIMCommonModel.h>

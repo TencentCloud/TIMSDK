@@ -33,7 +33,7 @@
     __weak typeof(self)weakSelf = self;
     [[V2TIMManager sharedInstance] getMessageReactions:messageList maxUserCountPerReaction:maxUserCountPerReaction
         succ:^(NSArray<V2TIMMessageReactionResult *> *resultList) {
-        // 批量拉取消息回应信息成功
+        // 
         for (V2TIMMessageReactionResult *result in resultList) {
             int32_t resultCode = result.resultCode;
             NSString *msgID     = result.msgID;

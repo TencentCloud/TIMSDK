@@ -1,6 +1,6 @@
 //
 //  TUICallRecordCallsViewModel.swift
-//  
+//
 //
 //  Created by vincepzhang on 2023/8/28.
 //
@@ -10,16 +10,14 @@ import UIKit
 import TUICallEngine
 import TUICore
 
-/// 通话结果
 enum TUICallRecordCallsType: Int {
     case all
     case missed
 }
 
-/// UI 风格类型
 enum TUICallKitRecordCallsUIStyle: Int {
-    case classic // 经典风格
-    case minimalist // 简约风格
+    case classic
+    case minimalist
 }
 
 class TUICallRecordCallsViewModel {

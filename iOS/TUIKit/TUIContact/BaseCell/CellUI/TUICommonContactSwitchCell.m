@@ -60,7 +60,7 @@
         [self.contentView addSubview:_descLabel];
 
         _switcher = [[UISwitch alloc] init];
-        // 将开关开启时的颜色改为蓝色
+        // Change the color when the switch is on to blue
         _switcher.onTintColor = TIMCommonDynamicColor(@"common_switch_on_color", @"#147AFF");
         self.accessoryView = _switcher;
         [self.contentView addSubview:_switcher];

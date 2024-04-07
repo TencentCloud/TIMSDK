@@ -413,18 +413,15 @@
     CGFloat quoteMaxWidth = kReplyQuoteViewMaxWidth;
     CGFloat quotePlaceHolderMarginWidth = 12;
 
-    // 动态计算发送者的尺寸
     // Calculate the size of label which displays the sender's displayname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}];
     CGRect senderRect = [[NSString stringWithFormat:@"%@:",referenceCellData.sender] boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                             attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}
                                                                context:nil];
-    // 动态计算自定义引用占位视图的尺寸
     // Calculate the size of customize quote placeholder view
     CGSize placeholderSize = [referenceCellData quotePlaceholderSizeWithType:referenceCellData.originMsgType data:referenceCellData.quoteData];
 
-    // 动态计算回复内容的尺寸
     // Calculate the size of label which displays the content of replying the original message
     UIFont *textFont = [UIFont systemFontOfSize:16.0];
     NSAttributedString *attributeString = [referenceCellData.content getFormatEmojiStringWithFont:textFont emojiLocations:nil];
@@ -439,8 +436,8 @@
                                                              context:nil];
     CGSize size2 = replyContentRect2.size;
 
-    // 如果有多行，判断下最后一行的宽度是否超过了消息状态的位置，如果超过，消息状态换行
-    // 如果只有一行，需要加上消息状态的宽度
+    // If there are multiple lines, determine whether the font width of the last line exceeds the position of the message status. If so, the message status will wrap.
+    // If there is only one line, directly add the width of the message status
     if ((int)size2.width / (int)TTextMessageCell_Text_Width_Max > 0) {
         if ((int)size2.width % (int)TTextMessageCell_Text_Width_Max > TTextMessageCell_Text_Width_Max - referenceCellData.msgStatusSize.width) {
             size.height += referenceCellData.msgStatusSize.height;

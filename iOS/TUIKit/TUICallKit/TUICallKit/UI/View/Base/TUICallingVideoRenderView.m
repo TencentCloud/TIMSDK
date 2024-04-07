@@ -11,11 +11,15 @@
 #import "UIColor+TUICallingHex.h"
 #import "Masonry.h"
 #import "TUICallingUserModel.h"
+#import "TUICallingUserManager.h"
+#import "TUICallingCommon.h"
+#import "UIImageView+WebCache.h"
 
 @interface TUICallingVideoRenderView()
 
 @property (nonatomic, strong) CallingUserModel *userModel;
-@property (nonatomic, strong) UIProgressView *volumeProgress;
+@property (nonatomic, strong) UIView *maskView;
+@property (nonatomic, strong) UIImageView *userIconImageView;
 @property (nonatomic, assign) BOOL isViewReady;
 
 @end
@@ -43,27 +47,41 @@
     [pan requireGestureRecognizerToFail:tap];
     [gestureView addGestureRecognizer:pan];
     
+    [self addSubview:self.maskView];
+    [self addSubview:self.userIconImageView];
     [self addSubview:gestureView];
-    [self addSubview:self.volumeProgress];
     
-    [gestureView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.maskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
-    [self.volumeProgress mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.trailing.bottom.equalTo(self);
-        make.height.equalTo(@(4));
+    [self.userIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self);
+        make.width.height.equalTo(self.mas_width).multipliedBy(1 / 4.0);
+    }];
+    [gestureView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
     }];
 }
 
 - (void)configViewWithUserModel:(CallingUserModel *)userModel {
     self.backgroundColor = [UIColor t_colorWithHexString:@"#55534F"];
-    BOOL noModel = userModel.userId.length == 0;
     
-    if (!noModel) {
-        self.volumeProgress.progress = userModel.volume;
+    self.maskView.hidden = userModel.isVideoAvailable;
+    self.userIconImageView.hidden = userModel.isVideoAvailable;
+    
+    if (userModel.isVideoAvailable) {
+        return;
     }
     
-    self.volumeProgress.hidden = noModel;
+    if ([userModel.userId isEqualToString:[TUICallingUserManager getSelfUserId]]) {
+        self.maskView.backgroundColor = [UIColor t_colorWithHexString:@"#333333"];
+    } else {
+        self.maskView.backgroundColor = [UIColor t_colorWithHexString:@"#444444"];
+    }
+    
+    [self.userIconImageView sd_setImageWithURL:[NSURL URLWithString:userModel.avatar]
+                              placeholderImage:[TUICallingCommon getBundleImageWithName:@"userIcon"]];
+    
 }
 
 #pragma mark - Gesture Action
@@ -82,12 +100,24 @@
 
 #pragma mark - Setter and Getter
 
-- (UIProgressView *)volumeProgress {
-    if (!_volumeProgress) {
-        _volumeProgress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        _volumeProgress.backgroundColor = [UIColor clearColor];
+-(UIView *)maskView{
+    if (!_maskView) {
+        _maskView = [UIView new];
+        _maskView.userInteractionEnabled = true;
+        _maskView.backgroundColor = [UIColor t_colorWithHexString:@"#55534F"];
+        _maskView.hidden = YES;
     }
-    return _volumeProgress;
+    return _maskView;
+}
+
+- (UIImageView *)userIconImageView {
+    if (!_userIconImageView) {
+        _userIconImageView = [[UIImageView alloc] initWithFrame: CGRectZero];
+        _userIconImageView.layer.masksToBounds = YES;
+        _userIconImageView.layer.cornerRadius = 5.0;
+        _userIconImageView.hidden = YES;
+    }
+    return _userIconImageView;
 }
 
 @end

@@ -9,12 +9,14 @@ import Foundation
 import TUICallEngine
 import AVFoundation
 
-enum AuthorizationDeniedType {
+@objc
+public enum AuthorizationDeniedType: Int {
     case audio
     case video
 }
 
-class TUICallKitCommon {
+@objc
+public class TUICallKitCommon: NSObject {
     
     static func createRoomId() -> UInt32 {
         return  1 + arc4random() % (UINT32_MAX / 2  - 1)
@@ -37,7 +39,8 @@ class TUICallKitCommon {
         }
     }
     
-    static func checkAuthorizationStatusIsDenied(mediaType: TUICallMediaType) -> Bool {
+    @objc
+    public static func checkAuthorizationStatusIsDenied(mediaType: TUICallMediaType) -> Bool {
         let statusAudio: AVAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .audio)
         let statusVideo: AVAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
         
@@ -52,9 +55,10 @@ class TUICallKitCommon {
         return false
     }
     
-    static func showAuthorizationAlert(deniedType: AuthorizationDeniedType,
-                                       openSettingHandler: @escaping () -> Void,
-                                       cancelHandler: @escaping () -> Void) {
+    @objc
+    public static func showAuthorizationAlert(deniedType: AuthorizationDeniedType,
+                                              openSettingHandler: @escaping () -> Void,
+                                              cancelHandler: @escaping () -> Void) {
         var title: String
         var message: String
         var laterMessage: String

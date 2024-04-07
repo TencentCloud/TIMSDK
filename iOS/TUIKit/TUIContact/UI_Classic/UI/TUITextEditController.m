@@ -3,7 +3,7 @@
 //  TUIKit
 //
 //  Created by annidyfeng on 2019/3/11.
-//  Copyright © 2019年 annidyfeng. All rights reserved.
+//  Copyright © 2019 annidyfeng. All rights reserved.
 //
 
 #import "TUITextEditController.h"

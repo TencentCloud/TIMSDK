@@ -3,7 +3,7 @@
 //  TUIKit
 //
 //  Created by annidyfeng on 2019/4/19.
-//  Copyright © 2019年 Tencent. All rights reserved.
+//  Copyright © 2019 Tencent. All rights reserved.
 //
 
 #import "TUINewFriendViewController.h"

@@ -210,19 +210,16 @@
 @interface TUIThemeManager ()
 
 /**
- * 各模块的主题资源路径，module:主题路径
  * The theme resource path of each module, module: theme path
  */
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *themeResourcePathCache;
 
 /**
- * 当前module使用的主题，module: 主题
  * The theme currently used by module, module: theme
  */
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, TUITheme *> *currentThemeCache;
 
 /**
- * 每个module对应的黑夜模式主题, 如果有的话
  * The dark theme for each module, if any
  */
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, TUITheme *> *darkThemeCache;

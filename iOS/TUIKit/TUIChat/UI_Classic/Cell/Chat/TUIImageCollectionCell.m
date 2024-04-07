@@ -19,7 +19,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.delegate = self;
-        self.minimumZoomScale = 0.5f;
+        self.minimumZoomScale = 0.1f;
         self.maximumZoomScale = 2.0f;
         _imageNormalHeight = frame.size.height;
         _imageNormalWidth = frame.size.width;
@@ -218,8 +218,17 @@
         }
         return;
     }
-
     
+    //1.Read from cache
+    if ([self originImageFirst:data]) {
+        return;
+    }
+    
+    if ([self largeImageSecond:data]) {
+        return;
+    }
+    
+    //2. download image
     if (data.thumbImage == nil) {
         [data downloadImage:TImage_Type_Thumb];
     }
@@ -228,45 +237,33 @@
         [data downloadImage:TImage_Type_Large];
     }
 
+    [self fillThumbImageWithData:data];
+    [self fillLargeImageWithData:data];
+    [self fillOriginImageWithData:data];
+}
+
+- (BOOL)largeImageSecond:(TUIImageMessageCellData *)data {
+    BOOL isExist = NO;
+    NSString *path = [data getImagePath:TImage_Type_Large isExist:&isExist];
+    if (isExist) {
+        [data decodeImage:TImage_Type_Large];
+        [self fillLargeImageWithData:data];
+    }
+    return isExist;
+}
+
+- (BOOL)originImageFirst:(TUIImageMessageCellData *)data {
+    BOOL isExist = NO;
+    NSString *path = [data getImagePath:TImage_Type_Origin isExist:&isExist];
+    if (isExist) {
+        [data decodeImage:TImage_Type_Origin];
+        [self fillOriginImageWithData:data];
+    }
+    return isExist;
+}
+
+- (void)fillOriginImageWithData:(TUIImageMessageCellData *)data{
     @weakify(self);
-    [[RACObserve(data, thumbImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *thumbImage) {
-      @strongify(self);
-      if (thumbImage) {
-          self.imageView.image = thumbImage;
-          [self setNeedsLayout];
-      }
-    }];
-
-    // largeImage
-    [[RACObserve(data, largeImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *largeImage) {
-      @strongify(self);
-      if (largeImage) {
-          self.imageView.image = largeImage;
-          [self setNeedsLayout];
-      }
-    }];
-    [[[RACObserve(data, largeProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
-      @strongify(self);
-      int progress = [x intValue];
-      if (progress == 100) {
-          self.animateCircleView.progress = 99;
-          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.animateCircleView.progress = 100;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-              self.animateCircleView.progress = 0;
-              self.mainDownloadBtn.hidden = NO;
-              self.animateCircleView.hidden = YES;
-            });
-          });
-      } else if (progress > 1 && progress < 100) {
-          self.animateCircleView.progress = progress;
-          self.mainDownloadBtn.hidden = YES;
-          self.animateCircleView.hidden = NO;
-      } else {
-          self.animateCircleView.progress = progress;
-      }
-    }];
-
     // originImage
     [[RACObserve(data, originImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *originImage) {
       @strongify(self);
@@ -296,6 +293,49 @@
       } else {
           self.animateCircleView.progress = progress;
       }
+    }];
+}
+- (void)fillLargeImageWithData:(TUIImageMessageCellData *)data {
+    @weakify(self);
+    // largeImage
+    [[RACObserve(data, largeImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *largeImage) {
+      @strongify(self);
+      if (largeImage) {
+          self.imageView.image = largeImage;
+          [self setNeedsLayout];
+      }
+    }];
+    [[[RACObserve(data, largeProgress) takeUntil:self.rac_prepareForReuseSignal] distinctUntilChanged] subscribeNext:^(NSNumber *x) {
+      @strongify(self);
+      int progress = [x intValue];
+      if (progress == 100) {
+          self.animateCircleView.progress = 99;
+          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.animateCircleView.progress = 100;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+              self.animateCircleView.progress = 0;
+              self.mainDownloadBtn.hidden = NO;
+              self.animateCircleView.hidden = YES;
+            });
+          });
+      } else if (progress > 1 && progress < 100) {
+          self.animateCircleView.progress = progress;
+          self.mainDownloadBtn.hidden = YES;
+          self.animateCircleView.hidden = NO;
+      } else {
+          self.animateCircleView.progress = progress;
+      }
+    }];
+}
+
+- (void)fillThumbImageWithData:(TUIImageMessageCellData *)data {
+    @weakify(self);
+    [[RACObserve(data, thumbImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *thumbImage) {
+        @strongify(self);
+        if (thumbImage) {
+            self.imageView.image = thumbImage;
+            [self setNeedsLayout];
+        }
     }];
 }
 
@@ -369,11 +409,18 @@
     CGFloat scale = 1;
     if (Screen_Width > self.imageView.image.size.width) {
         scale = 1;
+        CGFloat  scaleHeight = Screen_Height/ self.imageView.image.size.height;
+        scale = MIN(scale, scaleHeight);
     }
     else {
         scale = Screen_Width/ self.imageView.image.size.width;
+        CGFloat  scaleHeight = Screen_Height/ self.imageView.image.size.height;
+        scale = MIN(scale, scaleHeight);
     }
     self.scrollView.containerView.frame = CGRectMake(0, 0,MIN(Screen_Width,self.imageView.image.size.width), self.imageView.image.size.height);
     [self.scrollView pictureZoomWithScale:scale];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.scrollView setZoomScale:scale animated:NO];
+    });
 }
 @end

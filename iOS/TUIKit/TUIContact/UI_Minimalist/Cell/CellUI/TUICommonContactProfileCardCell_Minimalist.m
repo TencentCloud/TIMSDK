@@ -3,7 +3,7 @@
 //  UIKit
 //
 //  Created by annidy on 2019/5/27.
-//  Copyright © 2019年 Tencent. All rights reserved.
+//  Copyright © 2019 Tencent. All rights reserved.
 //
 
 #import "TUICommonContactProfileCardCell_Minimalist.h"

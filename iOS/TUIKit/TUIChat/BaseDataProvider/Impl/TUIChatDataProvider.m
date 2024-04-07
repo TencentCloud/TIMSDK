@@ -82,48 +82,72 @@
 
 - (NSArray<TUIInputMoreCellData *> *)builtInInputMoreMenus {
     if (_builtInInputMoreMenus == nil) {
-        __weak typeof(self) weakSelf = self;
-        TUIInputMoreCellData *photoData = [[TUIInputMoreCellData alloc] init];
-        photoData.priority = 1000;
-        photoData.title = TIMCommonLocalizableString(TUIKitMorePhoto);
-        photoData.image = TUIChatBundleThemeImage(@"chat_more_picture_img", @"more_picture");
-        photoData.onClicked = ^(NSDictionary *actionParam) {
-          if ([weakSelf.delegate respondsToSelector:@selector(onSelectPhotoMoreCellData)]) {
-              [weakSelf.delegate onSelectPhotoMoreCellData];
-          }
-        };
+        return  [self configBuiltInInputMoreMenusWithConversationModel:nil];
+    }
+    return _builtInInputMoreMenus;
+}
+- (NSArray<TUIInputMoreCellData *> *)configBuiltInInputMoreMenusWithConversationModel:(TUIChatConversationModel *)conversationModel {
+    __weak typeof(self) weakSelf = self;
+    TUIInputMoreCellData *albumData = [[TUIInputMoreCellData alloc] init];
+    albumData.priority = 1000;
+    albumData.title = TIMCommonLocalizableString(TUIKitMorePhoto);
+    albumData.image = TUIChatBundleThemeImage(@"chat_more_picture_img", @"more_picture");
+    albumData.onClicked = ^(NSDictionary *actionParam) {
+      if ([weakSelf.delegate respondsToSelector:@selector(onSelectPhotoMoreCellData)]) {
+          [weakSelf.delegate onSelectPhotoMoreCellData];
+      }
+    };
 
-        TUIInputMoreCellData *pictureData = [[TUIInputMoreCellData alloc] init];
-        pictureData.priority = 900;
-        pictureData.title = TIMCommonLocalizableString(TUIKitMoreCamera);
-        pictureData.image = TUIChatBundleThemeImage(@"chat_more_camera_img", @"more_camera");
-        pictureData.onClicked = ^(NSDictionary *actionParam) {
-          if ([weakSelf.delegate respondsToSelector:@selector(onTakePictureMoreCellData)]) {
-              [weakSelf.delegate onTakePictureMoreCellData];
-          }
-        };
+    TUIInputMoreCellData *takePictureData = [[TUIInputMoreCellData alloc] init];
+    takePictureData.priority = 900;
+    takePictureData.title = TIMCommonLocalizableString(TUIKitMoreCamera);
+    takePictureData.image = TUIChatBundleThemeImage(@"chat_more_camera_img", @"more_camera");
+    takePictureData.onClicked = ^(NSDictionary *actionParam) {
+      if ([weakSelf.delegate respondsToSelector:@selector(onTakePictureMoreCellData)]) {
+          [weakSelf.delegate onTakePictureMoreCellData];
+      }
+    };
 
-        TUIInputMoreCellData *videoData = [[TUIInputMoreCellData alloc] init];
-        videoData.priority = 800;
-        videoData.title = TIMCommonLocalizableString(TUIKitMoreVideo);
-        videoData.image = TUIChatBundleThemeImage(@"chat_more_video_img", @"more_video");
-        videoData.onClicked = ^(NSDictionary *actionParam) {
-          if ([weakSelf.delegate respondsToSelector:@selector(onTakeVideoMoreCellData)]) {
-              [weakSelf.delegate onTakeVideoMoreCellData];
-          }
-        };
+    TUIInputMoreCellData *videoData = [[TUIInputMoreCellData alloc] init];
+    videoData.priority = 800;
+    videoData.title = TIMCommonLocalizableString(TUIKitMoreVideo);
+    videoData.image = TUIChatBundleThemeImage(@"chat_more_video_img", @"more_video");
+    videoData.onClicked = ^(NSDictionary *actionParam) {
+      if ([weakSelf.delegate respondsToSelector:@selector(onTakeVideoMoreCellData)]) {
+          [weakSelf.delegate onTakeVideoMoreCellData];
+      }
+    };
 
-        TUIInputMoreCellData *fileData = [[TUIInputMoreCellData alloc] init];
-        fileData.priority = 700;
-        fileData.title = TIMCommonLocalizableString(TUIKitMoreFile);
-        fileData.image = TUIChatBundleThemeImage(@"chat_more_file_img", @"more_file");
-        fileData.onClicked = ^(NSDictionary *actionParam) {
-          if ([weakSelf.delegate respondsToSelector:@selector(onSelectFileMoreCellData)]) {
-              [weakSelf.delegate onSelectFileMoreCellData];
-          }
-        };
-
-        _builtInInputMoreMenus = @[ photoData, pictureData, videoData, fileData ];
+    TUIInputMoreCellData *fileData = [[TUIInputMoreCellData alloc] init];
+    fileData.priority = 700;
+    fileData.title = TIMCommonLocalizableString(TUIKitMoreFile);
+    fileData.image = TUIChatBundleThemeImage(@"chat_more_file_img", @"more_file");
+    fileData.onClicked = ^(NSDictionary *actionParam) {
+      if ([weakSelf.delegate respondsToSelector:@selector(onSelectFileMoreCellData)]) {
+          [weakSelf.delegate onSelectFileMoreCellData];
+      }
+    };
+    
+    if (!conversationModel) {
+        _builtInInputMoreMenus = @[ albumData, takePictureData, videoData, fileData ];
+    }
+    else {
+        NSMutableArray *formatArray = [NSMutableArray array];
+        if (conversationModel.enableAlbum) {
+            [formatArray addObject:albumData];
+        }
+        
+        if (conversationModel.enableTakePhoto) {
+            [formatArray addObject:takePictureData];
+        }
+        
+        if (conversationModel.enableRecordVideo) {
+            [formatArray addObject:videoData];
+        }
+        if (conversationModel.enableFile) {
+            [formatArray addObject:fileData];
+        }
+        _builtInInputMoreMenus = [NSArray arrayWithArray:formatArray];
     }
     return _builtInInputMoreMenus;
 }
@@ -257,6 +281,8 @@
     BOOL isNeedPoll = conversationModel.enablePoll;
     BOOL isNeedGroupNote = conversationModel.enableGroupNote;
 
+    self.builtInInputMoreMenus = [self configBuiltInInputMoreMenusWithConversationModel:conversationModel];
+    
     NSMutableArray *moreMenus = [NSMutableArray array];
     [moreMenus addObjectsFromArray:self.builtInInputMoreMenus];
     

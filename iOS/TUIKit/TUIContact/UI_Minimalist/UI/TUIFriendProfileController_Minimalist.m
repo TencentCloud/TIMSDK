@@ -3,7 +3,7 @@
 //  TUIKit
 //
 //  Created by annidyfeng on 2019/4/29.
-//  Copyright © 2019年 kennethmiao. All rights reserved.
+//  Copyright © 2019 kennethmiao. All rights reserved.
 //
 
 #import "TUIFriendProfileController_Minimalist.h"
@@ -269,7 +269,7 @@
 
 - (void)onChangeRemark:(TUICommonContactTextCell *)cell {
     TUITextEditController_Minimalist *vc = [[TUITextEditController_Minimalist alloc] initWithText:self.friendProfile.friendRemark];
-    vc.title = TIMCommonLocalizableString(ProfileEditAlia);  // @"修改备注";
+    vc.title = TIMCommonLocalizableString(ProfileEditAlia);  // @"";
     vc.textValue = self.friendProfile.friendRemark;
     [self.navigationController pushViewController:vc animated:YES];
 

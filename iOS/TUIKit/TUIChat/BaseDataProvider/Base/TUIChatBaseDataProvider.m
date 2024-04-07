@@ -44,7 +44,7 @@ static NSArray *gCustomInputBtnInfo = nil;
                                   fail:(nullable V2TIMFail)fail {
     if (uiMsgs.count == 0) {
         if (fail) {
-            fail(ERR_SVR_PROFILE_INVALID_PARAMETERS, @"uiMsgs为空");
+            fail(ERR_SVR_PROFILE_INVALID_PARAMETERS, @"uiMsgs is empty");
         }
         return;
     }

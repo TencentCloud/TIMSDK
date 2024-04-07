@@ -36,7 +36,7 @@ class SingleCallView: UIView {
     let maskedView = {
         let maskedView = UIView(frame: CGRect.zero)
         maskedView.backgroundColor =  UIColor.t_colorWithHexString(color: "#22262E", alpha: 0.85)
-        return maskedView;
+        return maskedView
     }()
     
     let audioFunctionView = {

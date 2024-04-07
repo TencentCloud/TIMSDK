@@ -225,7 +225,7 @@
 
 - (NSString *)formatLength:(long)length {
     /**
-     * 默认显示文件大小
+     * 
      * Display file size by default
      */
     double len = length;
@@ -241,7 +241,7 @@
     NSString *str = [NSString stringWithFormat:@"%4.2f%@", len, array[factor]];
 
     /**
-     * 格式化显示字符
+     * 
      * Formatted display characters
      */
     if (self.fileData.isDownloading || (length == 0 && (self.fileData.status == Msg_Status_Sending || self.fileData.status == Msg_Status_Sending_2))) {

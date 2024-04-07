@@ -13,6 +13,7 @@
 "TUICallKit.Group.inviteToGroupCall" = "يدعوك إلى مكالمة";
 "TUICallKit.Group.waitAccept" = "منتظر";
 "TUICallKit.determine" = "تأكيد ";
+"TUICallKit.lineBusy" = "الخط مشغول";
 
 "TUICallKit.hangup" = "إنهاء المكالمة";
 "TUICallKit.decline" = "رفض";
@@ -63,3 +64,8 @@
 "TUICallKit.earpiece" = "سماعة الأذن";
 "TUICallKit.cameraOn" = "تشغيل الكاميرا";
 "TUICallKit.cameraOff" = "إيقاف الكاميرا";
+
+"TUICallKit.JoinGroupView.title" = "يرتاد %d أشخاص %@";
+"TUICallKit.JoinGroupView.join" = "الانضمام";
+"TUICallKit.JoinGroupView.audioCall" = "مكالمة صوتية";
+"TUICallKit.JoinGroupView.videoCall" = "مكالمة فيديو";

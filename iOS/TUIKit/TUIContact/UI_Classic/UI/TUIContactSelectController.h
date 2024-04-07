@@ -15,25 +15,21 @@ typedef void (^ContactSelectFinishBlock)(NSArray<TUICommonContactSelectCellData 
 @property(nonatomic, strong, nullable) TUIContactSelectViewDataProvider *viewModel;
 
 /**
- * 选择结束回调
  * Callback for contact selection end
  */
 @property(nonatomic, copy, nullable) ContactSelectFinishBlock finishBlock;
 
 /**
- * 最多选择个数，默认值为 0 表示不限制
  * Maximum number of selected contacts，defalut value is 0 which means no limit
  */
 @property(nonatomic, assign) NSInteger maxSelectCount;
 
 /**
- * 自定义的数据列表
  * List of pre-selected users
  */
 @property(nonatomic, strong, nullable) NSArray *sourceIds;
 
 /**
- * 需要禁用的数据列表
  * List of pre-banned users
  */
 @property(nonatomic, strong, nullable) NSArray *disableIds;

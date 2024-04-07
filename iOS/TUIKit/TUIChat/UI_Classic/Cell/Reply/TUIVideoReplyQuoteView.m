@@ -40,7 +40,12 @@
 
     [self.imageView mas_remakeConstraints:^(MASConstraintMaker *make) {
       make.leading.top.mas_equalTo(self);
-      make.size.mas_equalTo(myData.imageSize);
+      if (CGSizeEqualToSize(CGSizeZero, myData.imageSize)) {
+         make.size.mas_equalTo(CGSizeMake(60, 60));
+      }
+      else {
+          make.size.mas_equalTo(myData.imageSize);
+      }
     }];
 
     [self.playView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -49,24 +54,8 @@
     }];
 }
 - (void)fillWithData:(TUIReplyQuoteViewData *)data {
+    //TUIImageReplyQuoteView deal Image
     [super fillWithData:data];
-
-    if (![data isKindOfClass:TUIVideoReplyQuoteViewData.class]) {
-        return;
-    }
-    TUIVideoReplyQuoteViewData *myData = (TUIVideoReplyQuoteViewData *)data;
-    self.imageView.image = myData.image;
-    if (myData.image == nil) {
-        [myData downloadImage];
-    }
-
-    // tell constraints they need updating
-    [self setNeedsUpdateConstraints];
-
-    // update constraints now so we can animate the change
-    [self updateConstraintsIfNeeded];
-
-    [self layoutIfNeeded];
 }
 
 @end

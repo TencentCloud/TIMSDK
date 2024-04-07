@@ -30,6 +30,7 @@
     }
     myData.imageSize = [TUIImageReplyQuoteViewData displaySizeWithOriginSize:CGSizeMake(thumb ? thumb.width : 60, thumb ? thumb.height : 60)];
     myData.originCellData = originCellData;
+    myData.imageStatus = TUIImageReplyQuoteStatusInit;
     return myData;
 }
 
@@ -56,12 +57,14 @@
 
 - (void)downloadImage {
     @weakify(self);
+    self.imageStatus = TUIImageReplyQuoteStatusDownloading;
     if ([self.originCellData isKindOfClass:TUIImageMessageCellData.class]) {
         TUIImageMessageCellData *imageData = (TUIImageMessageCellData *)self.originCellData;
         [imageData downloadImage:TImage_Type_Thumb
                           finish:^{
                             @strongify(self);
                             self.image = imageData.thumbImage;
+                            self.imageStatus = TUIImageReplyQuoteStatusSuccess;
                             if (self.onFinish) {
                                 self.onFinish();
                             }

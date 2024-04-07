@@ -62,6 +62,16 @@
 {
     [super fillWithData:data];
     self.imageView.image = nil;
+     
+    //1.Read from cache
+    if ([self originImageFirst:data]) {
+        return;
+    }
+    
+    if ([self largeImageSecond:data]) {
+        return;
+    }
+    
     if (data.thumbImage == nil) {
         [data downloadImage:TImage_Type_Thumb];
     }
@@ -89,5 +99,59 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.downloadBtn.mm_width(31).mm_height(31).mm_right(16).mm_bottom(48);
+}
+
+- (BOOL)largeImageSecond:(TUIImageMessageCellData *)data {
+    @weakify(self);
+    BOOL isExist = NO;
+    NSString *path = [data getImagePath:TImage_Type_Large isExist:&isExist];
+    if (isExist) {
+        [data decodeImage:TImage_Type_Large];
+        [self fillLargeImageWithData:data];
+    }
+    return isExist;
+}
+
+
+- (BOOL)originImageFirst:(TUIImageMessageCellData *)data {
+    BOOL isExist = NO;
+    NSString *path = [data getImagePath:TImage_Type_Origin isExist:&isExist];
+    if (isExist) {
+        [data decodeImage:TImage_Type_Origin];
+        [self fillOriginImageImageWithData:data];
+    }
+    return isExist;
+}
+- (void)fillOriginImageImageWithData:(TUIImageMessageCellData *)data {
+    @weakify(self);
+    // originImage
+    [[RACObserve(data, originImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *originImage) {
+      @strongify(self);
+      if (originImage) {
+          self.imageView.image = originImage;
+      }
+    }];
+}
+
+
+- (void)fillLargeImageWithData:(TUIImageMessageCellData *)data {
+    @weakify(self);
+    // largeImage
+    [[RACObserve(data, largeImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *largeImage) {
+      @strongify(self);
+      if (largeImage) {
+          self.imageView.image = largeImage;
+      }
+    }];
+}
+
+- (void)fillThumbImageWithData:(TUIImageMessageCellData *)data {
+    @weakify(self);
+    [[RACObserve(data, thumbImage) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(UIImage *thumbImage) {
+      @strongify(self);
+      if (thumbImage) {
+          self.imageView.image = thumbImage;
+      }
+    }];
 }
 @end

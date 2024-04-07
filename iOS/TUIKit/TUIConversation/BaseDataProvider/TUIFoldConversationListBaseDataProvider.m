@@ -96,7 +96,6 @@
                 [addedDataList addObject:cellData];
             }
         } else {
-            // 如果没有被标记为折叠， 则这个会话是需要被移出折叠列表的数据
             // If not marked as folded, this conversation is the data that needs to be removed from the folded list
             if ([conversationMap objectForKey:cellData.conversationID]) {
                 [needHideByCancelMarkFoldDataList addObject:cellData];

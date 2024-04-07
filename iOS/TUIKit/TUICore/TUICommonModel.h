@@ -53,8 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIGroupAvatar : NSObject
 
 /**
- * 根据群 id 实时获取最新的群头像，头像更新后会缓存在本地，该接口会请求网络
- * 该接口不会读取缓存，如果需要读取缓存，请使用 getCacheGroupAvatar:imageCallback 或者 getCacheAvatarForGroup: number:
  *
  * Obtain the latest group avatar in real time according to the group id. After the avatar is updated, it will be cached locally. This interface will request
  * the network This interface will not use the cache. If you need to read the cache, please use getCacheGroupAvatar:imageCallback or getCacheAvatarForGroup:
@@ -63,32 +61,28 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)fetchGroupAvatars:(NSString *)groupID placeholder:(UIImage *)placeholder callback:(void (^)(BOOL success, UIImage *image, NSString *groupID))callback;
 
 /**
- * 根据给定的url数组创建群组头像
  * Create a group avatar based on the given url array
  */
 + (void)createGroupAvatar:(NSArray *)group finished:(void (^)(UIImage *groupAvatar))finished;
 
 /**
- * 根据群组 ID 和群组成员，缓存头像
  * Cache avatars based on group ID and number of group members
  */
 + (void)cacheGroupAvatar:(UIImage *)avatar number:(UInt32)memberNum groupID:(NSString *)groupID;
 
 /**
- * 异步获取头像缓存，该接口会请求接口获取当前群成员个数，并返回对应本地缓存的头像
  * Get the cached avatar asynchronously, this interface will request the interface to get the current number of group members, and return the avatar
  * corresponding to the local cache
  */
 + (void)getCacheGroupAvatar:(NSString *)groupID callback:(void (^)(UIImage *, NSString *groupID))imageCallBack;
 
 /**
- * 同步获取头像缓存，该接口不请求网络
  * Get the cached avatar synchronously, this interface does not request the network
  */
 + (UIImage *)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum;
 
 /**
- * 清理指定群组的头像缓存
+ * 
  * Clear the avatar cache of the specified group
  */
 + (void)asyncClearCacheAvatarForGroup:(NSString *)groupID;

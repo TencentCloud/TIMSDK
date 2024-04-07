@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)share;
 
-/// 注册 Protocol : Class
+///  Protocol : Class
 /// Register Protocol : Class
 - (void)registerService:(Protocol *)service class:(Class)cls;
 
-/// 通过 Protocol 读取 [Class new]
+///  Protocol  [Class new]
 /// get  [class new]  by Protocol 
 - (id)getObject:(Protocol *)service;
 

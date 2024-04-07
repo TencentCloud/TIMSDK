@@ -76,7 +76,9 @@ static NSString *gReuseIdentifier = @"ContactSelectCell";
     [self.view addSubview:_emptyView];
     _emptyView.mm_fill();
     _emptyView.hidden = YES;
-
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(contactListNilLabelTapped:)];
+    [_emptyView addGestureRecognizer:tapGesture];
+    
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_emptyView addSubview:tipsLabel];
     tipsLabel.text = TIMCommonLocalizableString(TUIKitTipsContactListNil);
@@ -199,6 +201,10 @@ static NSString *gReuseIdentifier = @"ContactSelectCell";
         [self.selectArray removeObject:data];
     }
     self.pickerView.selectArray = [self.selectArray copy];
+}
+
+- (void)contactListNilLabelTapped:(id)label {
+    [TUITool makeToast:TIMCommonLocalizableString(TUIKitTipsContactListNil)];
 }
 
 - (void)finishTask {

@@ -3,7 +3,7 @@
 //  UIKit
 //
 //  Created by kennethmiao on 2018/9/18.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 
 #import "TUIMediaView.h"
@@ -182,6 +182,13 @@
         if ([cell isKindOfClass:[TUIVideoCollectionCell class]]) {
             TUIVideoCollectionCell *videoCell = (TUIVideoCollectionCell *)cell;
             [videoCell reloadAllView];
+        }
+        else if ([cell isKindOfClass:[TUIImageCollectionCell class]]) {
+            TUIImageCollectionCell *imageCell =  (TUIImageCollectionCell *)cell;
+            [imageCell reloadAllView];
+        }
+        else {
+            //empty
         }
     }
     return cell;

@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIContact'
-  spec.version      = '7.8.5483'
-  spec.platform     = :ios 
+  spec.version      = '7.9.5666'
+  spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE
@@ -21,6 +21,6 @@ Pod::Spec.new do |spec|
   spec.source_files = '**/*.{h,m,mm,c}'
   
   spec.resource = [
-  'Resources/*.bundle'
+  'Resources/*.bundle','Resources/PrivacyInfo.xcprivacy'
   ]
 end

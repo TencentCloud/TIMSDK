@@ -28,8 +28,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             自定义消息业务版本号
-//                             Custom message protocol version number
+//    Custom message protocol version number
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define BussinessID @"businessID"
@@ -66,24 +65,21 @@
 #define BussinessID_Src_ChatBot @"src"
 #define BussinessID_Src_ChatBot_Stream_Text @(2)
 #define BussinessID_Src_ChatBot_Request @(7)
+#define BussinessID_Src_ChatBot_Rich_Text @(9)
 #define BussinessID_Src_ChatBot_Welcome_Clarify_Selected @(15)
 #define GetChatBotBussinessID(src) [NSString stringWithFormat:@"%@%@",BussinessID_ChatBot, src]
 
 /**
- * 创建群自定义消息业务版本
  * The business version of "Group-creating custom message"
  */
 #define GroupCreate_Version 4
 
 /**
- * 自定义 cell 业务版本（点击跳转官网）
  * The business version of "custom cell" - click to jump to the official website
  */
 #define TextLink_Version 4
 
 /**
- * 消息回复的协议版本
- *「消息自定义字段」中的「消息回复协议」版本号
  *
  * The version of the protocol for the message reply
  * "Message Reply Protocol" version number in "Message Custom Field"
@@ -91,8 +87,6 @@
 #define kMessageReplyVersion 1
 
 /**
- * 消息回复的协议版本
- *「草稿字段」中的「消息回复协议」版本号
  *
  * The version of the protocol for the message reply
  * "Message Reply Protocol" version number in "Draft Field"
@@ -101,32 +95,27 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             推送业务版本号
-//                             The version number of the push service
+// The version number of the push service
 //
 /////////////////////////////////////////////////////////////////////////////////
 /**
- * 推送版本
  * The version number of the push service
  */
 #define APNs_Version 1
 
 /**
- * 普通消息推送
  * General message push
  */
 #define APNs_Business_NormalMsg 1
 
 /**
- * 音视频通话推送
  * Pushing of audio and video call
  */
 #define APNs_Business_Call 2
 
 /////////////////////////////////////////////////////////////////////////////////
 //
-//                             设备系统相关
-//                             Device & Platform
+//  Device & Platform
 //
 /////////////////////////////////////////////////////////////////////////////////
 #define Screen_Width [UIScreen mainScreen].bounds.size.width
@@ -468,8 +457,13 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TRelayMessageCell_Text_Height_Max (100)
 #define TRelayMessageCell_Text_Width_Max (Screen_Width - TRelayMessageCell_Text_PADDING)
 
+// rich text cell
+#define TRichTextMessageCell_ReuserId @"TRichTextMessageCell"
+#define TRichTextMessageCell_Width_Max (Screen_Width * 0.7)
+#define TRichTextMessageCell_Height_Default (100)
+
 // text view
-#define TTextView_Height (49)
+#define TTextView_Height (52)
 #define TTextView_Button_Size CGSizeMake(30, 30)
 #define TTextView_Margin 6
 #define TTextView_TextView_Height_Min (TTextView_Height - 2 * TTextView_Margin)
@@ -666,31 +660,26 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /**
- * 消息状态变更通知
  * Notification of a change in message state
  */
 #define TUIKitNotification_onMessageStatusChanged @"TUIKitNotification_onMessageStatusChanged"
 
 /**
- * 收到套餐包不支持接口的错误通知
  * Received error notification that the package is not supported
  */
 #define TUIKitNotification_onReceivedUnsupportInterfaceError @"TUIKitNotification_onReceivedUnsupportInterfaceError"
 
 /**
- * 收到增值包不支持接口的错误通知，需要联系技术人员开启内测
  * Received error notification that the package is not supported, need contact to experience
  */
 #define TUIKitNotification_onReceivedValueAddedUnsupportContactNeededError @"TUIKitNotification_onReceivedValueAddedUnsupportContactNeededError"
 
 /**
- * 收到增值包不支持接口的错误通知，需要购买
  * Received error notification that the package is not supported, need to purchase
  */
 #define TUIKitNotification_onReceivedValueAddedUnsupportPurchaseNeededError @"TUIKitNotification_onReceivedValueAddedUnsupportPurchaseNeededError"
 
 /**
- * 会话列表更新时收到的未读数更新通知
  * Unread update notifications received when the Conversation list is updated
  */
 #define TUIKitNotification_onConversationMarkUnreadCountChanged @"TUIKitNotification_onConversationMarkUnreadCountChanged"
@@ -738,7 +727,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatNotify_KeyboardWillHideSubKey @"TUICore_TUIChatNotify_KeyboardWillHideSubKey"
 #define TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey @"TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey"
 #define TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey_UserID @"TUICore_TUIChatNotify_ChatVC_ViewDidLoadSubKey_UserID"
-// 消息 cellData 被展示的通知
 // The notification of displaying the message cell data
 #define TUICore_TUIChatNotify_MessageDisplayedSubKey @"TUICore_TUIChatNotify_MessageDisplayedSubKey"
 
@@ -749,7 +737,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_GetMoreCellInfo_GroupID @"TUICore_TUIChatExtension_GetMoreCellInfo_GroupID"
 #define TUICore_TUIChatExtension_GetMoreCellInfo_View @"TUICore_TUIChatExtension_GetMoreCellInfo_View"
 
-// 聊天界面 config 配置扩展
+// Chat interface configuration extension
 #define TUICore_TUIChatExtension_GetChatConversationModelParams @"TUICore_TUIChatExtension_GetChatConversationModelParams"
 #define TUICore_TUIChatExtension_GetChatConversationModelParams_UserID @"TUICore_TUIChatExtension_GetChatConversationModelParams_UserID"
 #define TUICore_TUIChatExtension_GetChatConversationModelParams_MsgNeedReadReceipt @"TUICore_TUIChatExtension_GetChatConversationModelParams_MsgNeedReadReceipt" //bool
@@ -757,7 +745,14 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_GetChatConversationModelParams_EnableAudioCall @"TUICore_TUIChatExtension_GetChatConversationModelParams_EnableAudioCall" //bool
 #define TUICore_TUIChatExtension_GetChatConversationModelParams_EnableWelcomeCustomMessage @"TUICore_TUIChatExtension_GetChatConversationModelParams_EnableWelcomeCustomMessage" //bool
 
-// 聊天界面消息列表点击头像的 UI 扩展
+// Chat page top area expansion
+#define TUICore_TUIChatExtension_ChatViewTopArea_ClassicExtensionID @"TUICore_TUIChatExtension_ChatViewTopArea_ClassicExtensionID"
+#define TUICore_TUIChatExtension_ChatViewTopArea_MinimalistExtensionID @"TUICore_TUIChatExtension_ChatViewTopArea_MinimalistExtensionID"
+#define TUICore_TUIChatExtension_ChatViewTopArea_ChangedNotification @"TUICore_TUIChatExtension_ChatViewTopArea_ChangedNotification"
+#define TUICore_TUIChatExtension_ChatViewTopArea_ViewType @"TUICore_TUIChatExtension_ChatViewTopArea_ViewType"
+#define TUICore_TUIChatExtension_ChatViewTopArea_ChatID @"TUICore_TUIChatExtension_ChatViewTopArea_ChatID"
+#define TUICore_TUIChatExtension_ChatViewTopArea_IsGroup @"TUICore_TUIChatExtension_ChatViewTopArea_IsGroup"
+
 // UI extension when clicking the avatar in message list
 #define TUICore_TUIChatExtension_ClickAvatar_ClassicExtensionID @"TUICore_TUIChatExtension_ClickAvatar_ClassicExtensionID"
 #define TUICore_TUIChatExtension_ClickAvatar_MinimalistExtensionID @"TUICore_TUIChatExtension_ClickAvatar_MinimalistExtensionID"
@@ -765,7 +760,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_ClickAvatar_GroupID @"TUICore_TUIChatExtension_ClickAvatar_GroupID"
 #define TUICore_TUIChatExtension_ClickAvatar_PushVC @"TUICore_TUIChatExtension_ClickAvatar_PushVC"
 
-// 聊天页面导航栏右侧的 "更多" UI 扩展
 // UI extension on the right side of navigation bar in chat page
 #define TUICore_TUIChatExtension_NavigationMoreItem_ClassicExtensionID @"TUICore_TUIChatExtension_NavigationMoreItem_ClassicExtensionID"
 #define TUICore_TUIChatExtension_NavigationMoreItem_MinimalistExtensionID @"TUICore_TUIChatExtension_NavigationMoreItem_MinimalistExtensionID"
@@ -777,7 +771,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_NavigationMoreItem_ItemImage @"TUICore_TUIChatExtension_NavigationMoreItem_ItemImage"
 #define TUICore_TUIChatExtension_NavigationMoreItem_PushVC @"TUICore_TUIChatExtension_NavigationMoreItem_PushVC"
 
-// 聊天页面底部输入区域 “更多” UI 扩展
 // UI extension for the input area at the bottom of the chat page
 #define TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID @"TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID"
 #define TUICore_TUIChatExtension_InputViewMoreItem_MinimalistExtensionID @"TUICore_TUIChatExtension_InputViewMoreItem_MinimalistExtensionID"
@@ -795,7 +788,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatExtension_InputViewMoreItem_VC @"TUICore_TUIChatExtension_InputViewMoreItem_VC"
 #define TUICore_TUIChatExtension_InputViewMoreItem_ActionVC @"TUICore_TUIChatExtension_InputViewMoreItem_ActionVC"
 
-// 聊天页面消息长按弹框UI 扩展
 // Chat page message long press pop-up UI extension.
 #define TUICore_TUIChatExtension_ChatPopMenuReactRecentView_ClassicExtensionID @"TUICore_TUIChatExtension_ChatPopMenuReactRecentView_ClassicExtensionID"
 #define TUICore_TUIChatExtension_ChatPopMenuReactRecentView_MinimalistExtensionID @"TUICore_TUIChatExtension_ChatPopMenuReactRecentView_MinimalistExtensionID"
@@ -849,6 +841,10 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation @"TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Poll @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Poll"
 #define TUICore_TUIChatObjectFactory_ChatViewController_Enable_GroupNote @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_GroupNote"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_TakePhoto @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_TakePhoto"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_RecordVideo @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_RecordVideo"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_File @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_File"
+#define TUICore_TUIChatObjectFactory_ChatViewController_Enable_Album @"TUICore_TUIChatObjectFactory_ChatViewController_Enable_Album"
 
 #pragma mark - TUICore_TUIConversation_Service
 #define TUICore_TUIConversationService @"TUICore_TUIConversationService"
@@ -861,7 +857,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey @"TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey"
 
 #pragma mark - TUICore_TUIConversation_Extension
-// 会话列表页面的 banner 扩展
 // UI extension for the banner in the conversation list page
 #define TUICore_TUIConversationExtension_ConversationListBanner_ClassicExtensionID @"TUICore_TUIConversationExtension_ConversationListBanner_ClassicExtensionID"
 #define TUICore_TUIConversationExtension_ConversationListBanner_MinimalistExtensionID \
@@ -888,23 +883,22 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIConversationObjectFactory_ConversationSelectVC_ResultList_GroupID \
     @"TUICore_TUIConversationObjectFactory_ConversationSelectVC_ResultList_GroupID"
 
-// 会话分组列表 banner 扩展
 // UI extension for the banner in the conversation group list
 #define TUICore_TUIConversationExtension_ConversationGroupListBanner_ClassicExtensionID \
     @"TUICore_TUIConversationExtension_ConversationGroupListBanner_ClassicExtensionID"
 #define TUICore_TUIConversationExtension_ConversationGroupListBanner_GroupItemKey @"TUICore_TUIConversationExtension_ConversationGroupListBanner_GroupItemKey"
-// 会话分组管理按钮扩展
+
 // UI extension for the conversation group manager
 #define TUICore_TUIConversationExtension_ConversationGroupManagerContainer_ClassicExtensionID \
     @"TUICore_TUIConversationExtension_ConversationGroupManagerContainer_ClassicExtensionID"
 #define TUICore_TUIConversationExtension_ConversationGroupManagerContainer_ParentVCKey \
     @"TUICore_TUIConversationExtension_ConversationGroupManagerContainer_ParentVCKey"
-// 会话列表界面扩展
+
 // UI extension for the conversation list
 #define TUICore_TUIConversationExtension_ConversationListContainer_ClassicExtensionID \
     @"TUICore_TUIConversationExtension_ConversationListContainer_ClassicExtensionID"
 #define TUICore_TUIConversationExtension_ConversationListContainer_GroupNameKey @"TUICore_TUIConversationExtension_ConversationListContainer_GroupNameKey"
-// 会话 cell 右上角区域扩展
+
 // UI extension for the conversation cell upper right corner
 #define TUICore_TUIConversationExtension_ConversationCellUpperRightCorner_ClassicExtensionID \
     @"TUICore_TUIConversationExtension_ConversationCellUpperRightCorner_ClassicExtensionID"
@@ -913,7 +907,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIConversationExtension_ConversationCellUpperRightCorner_MarkListKey \
     @"TUICore_TUIConversationExtension_ConversationCellUpperRightCorner_MarkListKey"
 
-// 会话 cell 左滑点击"更多"后的 action 扩展
 // UI extension for click more
 #define TUICore_TUIConversationExtension_ConversationCellMoreAction_ClassicExtensionID \
     @"TUICore_TUIConversationExtension_ConversationCellMoreAction_ClassicExtensionID"
@@ -952,7 +945,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     @"TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey_ConversationID"
 
 #pragma mark - TUICore_TUIContact_Extension
-// 好友资料页面的响应菜单扩展
 // UI extension for the action menus in the friend profile page
 #define TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID @"TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID"
 #define TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID @"TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID"
@@ -964,7 +956,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall @"TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall"
 #define TUICore_TUIContactExtension_FriendProfileActionMenu_PushVC @"TUICore_TUIContactExtension_FriendProfileActionMenu_PushVC"
 
-// "我" 个人设置页的设置项扩展
 // UI extension for the settings in the "Me" profile page
 #define TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID @"TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID"
 #define TUICore_TUIContactExtension_MeSettingMenu_MinimalistExtensionID @"TUICore_TUIContactExtension_MeSettingMenu_MinimalistExtensionID"
@@ -973,7 +964,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIContactExtension_MeSettingMenu_View @"TUICore_TUIContactExtension_MeSettingMenu_View"
 #define TUICore_TUIContactExtension_MeSettingMenu_Weight @"TUICore_TUIContactExtension_MeSettingMenu_Weight"
 
-// "通讯录" 界面的联系人群组类型扩展
 // UI extension for group type in the "Contact" page
 #define TUICore_TUIContactExtension_ContactMenu_ClassicExtensionID @"TUICore_TUIContactExtension_ContactMenu_ClassicExtensionID"
 #define TUICore_TUIContactExtension_ContactMenu_MinimalistExtensionID @"TUICore_TUIContactExtension_ContactMenu_MinimalistExtensionID"
@@ -1019,7 +1009,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey @"TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey"
 
 #pragma mark - TUICore_TUIContact_ObjectFactory_Route
-// 路由到用户个人资料页面
 // Route to user profile page
 #define TUICore_TUIContactObjectFactory_UserProfileController_Classic @"TUICore_TUIContactObjectFactory_UserProfileController_Classic"
 #define TUICore_TUIContactObjectFactory_UserProfileController_Minimalist @"TUICore_TUIContactObjectFactory_UserProfileController_Minimalist"
@@ -1045,7 +1034,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     @"TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID"
 
 #pragma mark - TUICore_TUIGroup_Extension
-// 群资料页面的响应菜单扩展
 // UI extension for the action menus in the group infomation page
 #define TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID @"TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID"
 #define TUICore_TUIGroupExtension_GroupInfoCardActionMenu_GroupID @"TUICore_TUIGroupExtension_GroupInfoCardActionMenu_GroupID"
@@ -1062,7 +1050,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     @"TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey"
 
 #pragma mark - TUICore_TUIGroup_ObjectFactory_Route
-// 路由到群成员选择页面，提供 TUIRoute 的跳转方式
 // Route to the page for selecting group member
 #define TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Classic @"TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Classic"
 #define TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Minimalist @"TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Minimalist"
@@ -1073,7 +1060,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     @"TUICore_TUIGroupService_GetSelectGroupMemberViewControllerMethod_SelectedUserIDListKey"
 #define TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList @"TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList"
 
-// 路由到群信息页面，提供 TUIRoute 的跳转方式
 // Route to group info page
 #define TUICore_TUIGroupObjectFactory_GetGroupInfoVC_Classic @"TUICore_TUIGroupObjectFactory_GetGroupInfoVC_Classic"
 #define TUICore_TUIGroupObjectFactory_GetGroupInfoVC_Minimalist @"TUICore_TUIGroupObjectFactory_GetGroupInfoVC_Minimalist"
@@ -1149,40 +1135,40 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUIPluginNotify_WillForwardTextSubKey @"TUICore_TUIPluginNotify_WillForwardTextSubKey"
 #define TUICore_TUIPluginNotify_WillForwardTextSubKey_Text @"TUICore_TUIPluginNotify_WillForwardTextSubKey_Text"
 
-// 初始化录制成功,录制成功
+// Initialization and recording successful, recording successful
 #define TUICore_RecordAudioMessageNotifyError_None 0
-// 参数为空
+// Parameter is empty
 #define TUICore_RecordAudioMessageNotifyError_InvalidParam -1001
-// 录音被拒绝,当前在通话中
+// Recording rejected, currently on a call
 #define TUICore_RecordAudioMessageNotifyError_StatusInCall -1002
-// 录音被拒绝,当前录音未结束
+// The recording was rejected and the current recording has not ended.
 #define TUICore_RecordAudioMessageNotifyError_StatusIsAudioRecording -1003
-// 录音被拒绝,获取麦克风权限失败
+// Recording rejected, failed to obtain microphone permission
 #define TUICore_RecordAudioMessageNotifyError_MicPermissionRefused -1004
-// 录音被拒绝,获取音频焦点失败
+// Recording rejected, failed to obtain audio focus
 #define TUICore_RecordAudioMessageNotifyError_RequestAudioFocusFailed -1005
 
-// -1, 初始化录制失败(onLocalRecordBegin)
+// -1, failed to initialize recording (onLocalRecordBegin)
 #define TUICore_RecordAudioMessageNotifyError_RecordInitFailed -2001
-// -2, 文件后缀名有误(onLocalRecordBegin)
+// -2, wrong file extension (onLocalRecordBegin)
 #define TUICore_RecordAudioMessageNotifyError_PathFormatNotSupport -2002
-// -1, 录制失败
+// -1, recording failed
 #define TUICore_RecordAudioMessageNotifyError_RecordFailed -2003
-// -3, 音频数据或者视频数据一直没有到达导致没有开始正式录制
+// -3, the audio data or video data has not arrived and the formal recording has not started.
 #define TUICore_RecordAudioMessageNotifyError_NoMessageToRecord -2004
 
-// -4, 签名错误(onLocalRecordBegin)
+// -4, signature error (onLocalRecordBegin)
 #define TUICore_RecordAudioMessageNotifyError_SignatureError -3001
-// -5, 签名过期(onLocalRecordBegin)
+// -5, signature expired (onLocalRecordBegin)
 #define TUICore_RecordAudioMessageNotifyError_SignatureExpired -3002
 
-// 打开麦克风失败，例如在 Windows 或 Mac 设备，麦克风的配置程序（驱动程序）异常，禁用后重新启用设备，或者重启机器，或者更新配置程序
+// Failed to open the microphone. For example, on Windows or Mac devices, the microphone configuration program (driver) is abnormal. Disable and then re-enable the device, or restart the machine, or update the configuration program.
 #define TUICore_RecordAudioMessageNotifyError_MicStartFail -1302
-// 麦克风设备未授权，通常在移动设备出现，可能是权限被用户拒绝了
+// The microphone device is not authorized. It usually appears on mobile devices. The permission may be denied by the user.
 #define TUICore_RecordAudioMessageNotifyError_MicNotAuthorized -1317
-// 麦克风设置参数失败
+// Microphone setting parameters failed
 #define TUICore_RecordAudioMessageNotifyError_MicSetParamFail -1318
-// 麦克风正在被占用中，例如移动设备正在通话时，打开麦克风会失败
+// The microphone is occupied. For example, when the mobile device is making a call, opening the microphone will fail.
 #define TUICore_RecordAudioMessageNotifyError_MicOccupy -1319
 
 #pragma mark - TUICore_TUIGiftExtension
@@ -1253,6 +1239,11 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 #define TUICore_PrivacyService_CallKitAntifraudReminderMethod @"TUICore_PrivacyService_CallKitAntifraudReminderMethod"
 
+#pragma mark - TUICore_PrivacyService_COMMUNICATION_EVENT
+#define TUICore_PrivacyService_ROOM_STATE_EVENT_CHANGED @"eventRoomStateChanged"
+#define TUICore_PrivacyService_ROOM_STATE_EVENT_SUB_KEY_START @"eventSubKeyStart"
+#define TUICore_PrivacyService_ROOM_STATE_EVENT_SUB_KEY_END @"eventSubKeyEnd"
+
 #pragma mark - TUICore_TUICallKitVoIPExtension_Notify
 #define TUICore_TUICallKitVoIPExtensionNotify @"TUICore_TUICallKitVoIPExtension_Notify"
 #define TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey @"TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey"
@@ -1265,7 +1256,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
- * 设置 VoIP 的证书 ID
  * Set certificate IDs for VoIP
  */
 #define TUIOfflinePushCertificateIDForVoIP(value) \
@@ -1274,7 +1264,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     }
 
 /**
- * 设置 APNs 的证书 ID
  * Set certificate IDs for APNs
  */
 #define TUIOfflinePushCertificateIDForAPNS(value) \
@@ -1283,7 +1272,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     }
 
 /**
- * 设置 TPNS 的配置信息
  * Set TPNS configuration information
  */
 #define TUIOfflinePushConfigForTPNS(access_id, access_key, tpn_domain)                                       \

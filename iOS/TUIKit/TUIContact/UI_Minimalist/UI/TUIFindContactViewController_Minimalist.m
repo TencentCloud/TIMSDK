@@ -46,7 +46,7 @@
 - (void)setupView {
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.definesPresentationContext = YES;  // 不设置会导致一些位置错乱，无动画等问题
+    self.definesPresentationContext = YES;  // Not setting it will cause some problems such as position confusion and no animation.
 
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = self.type == TUIFindContactTypeC2C_Minimalist ? TIMCommonLocalizableString(TUIKitAddFriend) : TIMCommonLocalizableString(TUIKitAddGroup);

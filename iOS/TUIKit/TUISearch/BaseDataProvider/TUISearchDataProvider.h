@@ -22,13 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 ///////////////////////////////////////////////////////////////////// Configuration /////////////////////////////////////////////////////////////////
 
 /**
- * 每个模块默认显示最多的个数，等于或超过之后显示「 查看更多*** 」
  * The default maximum number of each module, if it is equal to or exceeds, it will display "View More***"
  */
 #define kMaxNumOfPerModule 3
 
 /**
- * 枚举名称代表搜索的模块，枚举值代表模块之间的顺序
  * The enumeration name represents the searched module, and the enumeration value represents the order between modules
  */
 typedef NS_ENUM(NSInteger, TUISearchResultModule) {

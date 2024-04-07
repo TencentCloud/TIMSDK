@@ -29,7 +29,7 @@
 @property(readonly) CGFloat mm_maxX;  ///<< get CGRectGetMaxX
 @property(readonly) CGFloat mm_minX;  ///<< get CGRectGetMinX
 
-@property(readonly) UIView *mm_sibling;                   // 兄弟视图
+@property(readonly) UIView *mm_sibling;
 @property(readonly) UIViewController *mm_viewController;  // self Responder UIViewControler
 
 // iPhoneX adapt

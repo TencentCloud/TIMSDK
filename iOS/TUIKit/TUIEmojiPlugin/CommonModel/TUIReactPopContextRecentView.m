@@ -15,6 +15,7 @@
 #import <TIMCommon/TUIEmojiMeditorProtocol.h>
 #import "TUIReactContextEmojiDetailController.h"
 #import "TUIMessageCellData+Reaction.h"
+#define kTIMRecentDefaultEmojiSize CGSizeMake(30, 30)
 
 @interface TUIReactPopContextRecentView ()
 @property(nonatomic, strong) NSMutableArray *sectionIndexInGroup;
@@ -124,9 +125,9 @@
         UIButton *button = [self buttonWithCellImage:[[TUIImageCache sharedInstance] getFaceFromCache:cellData.path] Tag:tag];
         [self addSubview:button];
         if (tag == 0) {
-            button.mm_width(kTIMDefaultEmojiSize.width).mm_height(kTIMDefaultEmojiSize.height).mm_left(margin).mm_top(kScale390(8));
+            button.mm_width(kTIMRecentDefaultEmojiSize.width).mm_height( kTIMRecentDefaultEmojiSize.height).mm_left(margin).mm_top(kScale390(8));
         } else {
-            button.mm_width(kTIMDefaultEmojiSize.width).mm_height(kTIMDefaultEmojiSize.height).mm_left(preBtn.mm_x + preBtn.mm_w + padding).mm_top(kScale390(8));
+            button.mm_width(kTIMRecentDefaultEmojiSize.width).mm_height( kTIMRecentDefaultEmojiSize.height).mm_left(preBtn.mm_x + preBtn.mm_w + padding).mm_top(kScale390(8));
         }
         tag++;
         preBtn = button;
@@ -145,7 +146,7 @@
 
 - (UIButton *)buttonWithCellImage:(UIImage *)img Tag:(NSInteger)tag {
     TUIFitButton *actionButton = [TUIFitButton buttonWithType:UIButtonTypeCustom];
-    actionButton.imageSize = CGSizeMake(kTIMDefaultEmojiSize.width, kTIMDefaultEmojiSize.height);
+    actionButton.imageSize = CGSizeMake(kTIMRecentDefaultEmojiSize.width,kTIMRecentDefaultEmojiSize.height);
     [actionButton setImage:img forState:UIControlStateNormal];
     actionButton.contentMode = UIViewContentModeScaleAspectFit;
     [actionButton addTarget:self action:@selector(onClick:) forControlEvents:UIControlEventTouchUpInside];

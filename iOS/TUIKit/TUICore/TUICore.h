@@ -2,9 +2,6 @@
 //  Created by Tencent on 2023/06/09.
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
- *  TUI 插件核心类
- *  该模块主要负责 TUI 插件间数据的传递，通知的广播，功能的扩展等
- *
  *  TUICore
  *  This module is mainly responsible for data transfer, event notification and extension between TUI components.
  */
