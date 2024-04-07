@@ -28,6 +28,12 @@ English | [简体中文](./README_ZH.md)
      <td style="text-align:center">Support Swift API and Mac catalyst</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.9.5666/ImSDK_Plus_Swift_7.9.5666.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
   </tr>
+
+  <tr >
+     <td style="text-align:center">Apple Vision Pro Edition</td>
+     <td style="text-align:center">Support Swift API and visionOS</td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.9.5666/ImSDKForVision_Plus_7.9.5666.xcframework.zip">ImSDKForVision_Plus.xcframework</a></td>
+  </tr>
 </table>
 
 ## Download Plugin for IM SDK
@@ -58,6 +64,7 @@ target 'App' do
     pod 'TXIMSDK_Plus_iOS'
     # pod 'TXIMSDK_Plus_iOS_XCFramework'
     # pod 'TXIMSDK_Plus_Swift_iOS_XCFramework'
+    # pod 'TXIMSDK_Plus_Swift_Vision_XCFramework'
 
     # If you need to add the Quic plugin, please uncomment the next line.
     # Note:
