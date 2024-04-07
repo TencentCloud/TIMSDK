@@ -98,6 +98,7 @@ class BottomItemView: UIView {
         button.isEnabled = item.isEnabled
         imageView.image = item.isSelect ? itemData.selectedImage : itemData.normalImage
         label.text = item.isSelect ? itemData.selectedTitle : itemData.normalTitle
+        button.alpha = item.alpha
     }
     
     @objc

@@ -23,7 +23,7 @@ class ExitRoomView: UIView {
         control.backgroundColor = .clear
         return control
     }()
-
+    
     let contentView: UIView = {
         let view = UIView(frame: .zero)
         view.backgroundColor = UIColor(0x17181F)
@@ -38,7 +38,7 @@ class ExitRoomView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.text = viewModel.isShownExitRoomButton() && viewModel.isShownLeaveRoomButton() ? .appointOwnerText : .leaveRoomTipText
+        label.text = viewModel.isShownDestroyRoomButton() && viewModel.isShownLeaveRoomButton() ? .appointOwnerText : .leaveRoomTipText
         return label
     }()
     
@@ -64,7 +64,7 @@ class ExitRoomView: UIView {
         return view
     }()
     
-    let exitRoomButton: UIButton = {
+    let destroyRoomButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle(.exitRoomText, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)
@@ -90,9 +90,6 @@ class ExitRoomView: UIView {
         activateConstraints()
         bindInteraction()
         isViewReady = true
-        exitRoomButton.isHidden = !viewModel.isShownExitRoomButton()
-        leaveRoomButton.isHidden = !viewModel.isShownLeaveRoomButton()
-        boundary2View.isHidden = !viewModel.isShownExitRoomButton() || !viewModel.isShownLeaveRoomButton()
     }
     
     func constructViewHierarchy() {
@@ -102,15 +99,15 @@ class ExitRoomView: UIView {
         contentView.addSubview(boundary1View)
         contentView.addSubview(leaveRoomButton)
         contentView.addSubview(boundary2View)
-        contentView.addSubview(exitRoomButton)
+        contentView.addSubview(destroyRoomButton)
     }
     
     func activateConstraints() {
         let titleLabelHeight = 67.scale375Height()
         let leaveRoomButtonHeight = viewModel.isShownLeaveRoomButton() ? 57.scale375Height() : 0
-        let exitRoomButtonHeight = currentUser.userId == roomInfo.ownerId ? 57.scale375Height() : 0
+        let destroyRoomButtonHeight = currentUser.userId == roomInfo.ownerId ? 57.scale375Height() : 0
         let space = 20.scale375Height()
-        let contentViewHeight = titleLabelHeight + leaveRoomButtonHeight + exitRoomButtonHeight + space
+        let contentViewHeight = titleLabelHeight + leaveRoomButtonHeight + destroyRoomButtonHeight + space
         panelControl.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -139,18 +136,26 @@ class ExitRoomView: UIView {
             make.height.equalTo(1.scale375Height())
             make.leading.trailing.equalToSuperview()
         }
-        exitRoomButton.snp.makeConstraints { make in
+        destroyRoomButton.snp.makeConstraints { make in
             make.top.equalTo(boundary2View.snp.bottom)
-            make.height.equalTo(exitRoomButtonHeight)
+            make.height.equalTo(destroyRoomButtonHeight)
             make.leading.trailing.equalToSuperview()
         }
     }
     
     func bindInteraction() {
+        setupViewState()
+        viewModel.viewResponder = self
         leaveRoomButton.addTarget(self, action: #selector(leaveRoomAction), for: .touchUpInside)
-        exitRoomButton.addTarget(self, action: #selector(exitRoomAction), for: .touchUpInside)
+        destroyRoomButton.addTarget(self, action: #selector(destroyRoomAction), for: .touchUpInside)
         contentView.transform = CGAffineTransform(translationX: 0, y: kScreenHeight)
         panelControl.addTarget(self, action: #selector(clickBackgroundView), for: .touchUpInside)
+    }
+    
+    private func setupViewState() {
+        destroyRoomButton.isHidden = !viewModel.isShownDestroyRoomButton()
+        leaveRoomButton.isHidden = !viewModel.isShownLeaveRoomButton()
+        boundary2View.isHidden = !viewModel.isShownDestroyRoomButton() || !viewModel.isShownLeaveRoomButton()
     }
     
     @objc func clickBackgroundView() {
@@ -158,13 +163,11 @@ class ExitRoomView: UIView {
     }
     
     @objc func leaveRoomAction(sender: UIView) {
-        dismiss()
         viewModel.leaveRoomAction()
     }
     
-    @objc func exitRoomAction(sender: UIView) {
-        dismiss()
-        viewModel.exitRoom()
+    @objc func destroyRoomAction(sender: UIView) {
+        viewModel.destroyRoom()
     }
     
     func show(rootView: UIView) {
@@ -178,7 +181,7 @@ class ExitRoomView: UIView {
             self.contentView.transform = .identity
         }
     }
-
+    
     func dismiss() {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
@@ -198,6 +201,10 @@ class ExitRoomView: UIView {
 extension ExitRoomView: ExitRoomViewModelResponder {
     func makeToast(message: String) {
         makeToast(message)
+    }
+    
+    func dismissView() {
+        dismiss()
     }
 }
 

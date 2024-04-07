@@ -21,17 +21,16 @@ class ButtonItemData {
         case inviteItemType
         case inviteSeatItemType
         case floatWindowItemType
-        case recordItemType
         case setupItemType
-        case dropItemType
         case changeHostItemType
         case muteMessageItemType
-        case stepDownSeatItemType
         case kickOutItemType
         case normal
         case advancedSettingItemType
         case switchMicItemType
         case switchCamaraItemType
+        case setAdministratorItemType
+        case raiseHandApplyItemType
     }
     enum Orientation {
         case left
@@ -73,4 +72,5 @@ class ButtonItemData {
     var isSelect: Bool = false
     var isEnabled: Bool = true
     var isHidden: Bool = false
+    var alpha: CGFloat = 1
 }

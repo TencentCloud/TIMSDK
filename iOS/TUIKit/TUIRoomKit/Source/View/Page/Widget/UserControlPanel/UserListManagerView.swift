@@ -11,15 +11,16 @@ import Foundation
 class UserListManagerView: UIView {
     var viewModel: UserListManagerViewModel
     private var isViewReady: Bool = false
+    private var viewArray: [ButtonItemView] = []
     
     let dropView : UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(0x17181F)
         return view
     }()
     
     let dropImageView: UIImageView = {
         let view = UIImageView()
+        view.image = UIImage(named: "room_drop_arrow",in:tuiRoomKitBundle(),compatibleWith: nil)
         return view
     }()
     
@@ -33,7 +34,6 @@ class UserListManagerView: UIView {
     let userLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(0xD5E0F2)
-        label.backgroundColor = UIColor.clear
         label.textAlignment = isRTL ? .right : .left
         label.font = UIFont(name: "PingFangSC-Regular", size: 16)
         label.numberOfLines = 1
@@ -42,7 +42,6 @@ class UserListManagerView: UIView {
     
     let headView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(0x17181F)
         return view
     }()
     
@@ -55,23 +54,25 @@ class UserListManagerView: UIView {
         return view
     }()
     
-    let bottomView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(0x17181F)
-        return view
-    }()
-    
-    var viewArray: [UIView] = []
-    
     let backBlockView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(0x17181F)
+        view.alpha = 0.9
+        return view
+    }()
+    
+    let contentView: UIView = {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = UIColor(0x22262E)
+        view.layer.cornerRadius = 12
         return view
     }()
     
     init(viewModel: UserListManagerViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        contentView.transform = CGAffineTransform(translationX: 0, y: kScreenHeight)
+        alpha = 0
     }
     
     required init?(coder: NSCoder) {
@@ -87,29 +88,28 @@ class UserListManagerView: UIView {
         isViewReady = true
     }
     
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        headView.roundedRect(rect: headView.bounds,
-                             byRoundingCorners: [.topLeft, .topRight],
-                             cornerRadii: CGSize(width: 12, height: 12))
-    }
-    
     func constructViewHierarchy() {
         addSubview(backBlockView)
-        addSubview(dropView)
-        addSubview(headView)
-        addSubview(stackView)
+        addSubview(contentView)
+        contentView.addSubview(dropView)
+        contentView.addSubview(headView)
+        contentView.addSubview(stackView)
         dropView.addSubview(dropImageView)
         headView.addSubview(avatarImageView)
         headView.addSubview(userLabel)
+        setupStackView()
     }
     
     func activateConstraints() {
         backBlockView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        contentView.snp.makeConstraints { make in
+            make.bottom.leading.trailing.equalToSuperview()
+            make.height.equalTo(500.scale375())
+        }
         dropView.snp.makeConstraints { make in
-            make.top.left.right.equalTo(backBlockView)
+            make.top.left.right.equalToSuperview()
             make.height.equalTo(30.scale375())
         }
         dropImageView.snp.makeConstraints { make in
@@ -119,7 +119,7 @@ class UserListManagerView: UIView {
             make.width.equalTo(24.scale375())
         }
         headView.snp.makeConstraints { make in
-            make.top.equalTo(backBlockView).offset(10.scale375())
+            make.top.equalTo(dropView.snp.bottom).offset(10.scale375())
             make.leading.equalToSuperview().offset(16.scale375())
             make.trailing.equalToSuperview().offset(-16.scale375())
             make.height.equalTo(40.scale375())
@@ -145,11 +145,27 @@ class UserListManagerView: UIView {
     func bindInteraction() {
         viewModel.viewResponder = self
         setupViewState()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismiss))
+        backBlockView.addGestureRecognizer(tap)
+        let dropTap = UITapGestureRecognizer(target: self, action: #selector(dismiss))
+        dropView.addGestureRecognizer(dropTap)
     }
     
-    func setupViewState() {
+    private func setupStackView() {
+        for item in viewModel.userListManagerItems {
+            let view = ButtonItemView(itemData: item)
+            viewArray.append(view)
+            stackView.addArrangedSubview(view)
+                view.snp.makeConstraints { make in
+                    make.height.equalTo(53.scale375())
+                    make.width.equalToSuperview()
+                }
+        }
+    }
+    
+    private func setupViewState() {
         let placeholder = UIImage(named: "room_default_user", in: tuiRoomKitBundle(), compatibleWith: nil)
-        guard let attendeeModel = viewModel.attendeeList.first(where: { $0.userId == viewModel.userId }) else { return }
+        guard let attendeeModel = viewModel.attendeeList.first(where: { $0.userId == viewModel.selectUserId }) else { return }
         if let url = URL(string: attendeeModel.avatarUrl) {
             avatarImageView.sd_setImage(with: url, placeholderImage: placeholder)
         } else {
@@ -159,6 +175,45 @@ class UserListManagerView: UIView {
             userLabel.text = attendeeModel.userName + "(" + .meText + ")"
         } else {
             userLabel.text = attendeeModel.userName
+        }
+    }
+    
+    func updateStackView(items:[ButtonItemData]) {
+        for view in viewArray {
+            view.removeFromSuperview()
+        }
+        viewArray.removeAll()
+        for item in items {
+            let view = ButtonItemView(itemData: item)
+            viewArray.append(view)
+            stackView.addArrangedSubview(view)
+            view.snp.makeConstraints { make in
+                make.height.equalTo(53.scale375())
+                make.width.equalToSuperview()
+            }
+        }
+    }
+    
+    func show(rootView: UIView) {
+        rootView.addSubview(self)
+        self.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.alpha = 1
+            self.contentView.transform = .identity
+        }
+    }
+    
+    @objc func dismiss() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.alpha = 0
+            self.contentView.transform = CGAffineTransform(translationX: 0, y: kScreenHeight)
+        } completion: { [weak self] _ in
+            guard let self = self else { return }
+            self.removeFromSuperview()
         }
     }
     
@@ -172,42 +227,46 @@ class UserListManagerView: UIView {
 }
 
 extension UserListManagerView: UserListManagerViewEventResponder {
-    func showKickOutAlert(title: String, sureAction: (() -> ())?) {
-        RoomRouter.presentAlert(title: title, message: nil, sureTitle: .alertOkText, declineTitle: .cancelText, sureBlock: sureAction, declineBlock: nil)
+    func showAlert(title: String?, message: String?, sureTitle: String?, declineTitle: String?, sureBlock: (() -> ())?, declineBlock: (() -> ())?) {
+        RoomRouter.presentAlert(title: title, message: message, sureTitle: sureTitle, declineTitle: declineTitle, sureBlock: sureBlock, declineBlock: declineBlock)
     }
     
-    func updateUI(items: [ButtonItemData]) {
-        setupViewState()
-        viewArray.forEach { view in
-            stackView.removeArrangedSubview(view)
-        }
-        viewArray = []
-        for item in items {
-            let view = ButtonItemView(itemData: item)
+    func updateUI(item: ButtonItemData) {
+        guard let view = viewArray.first(where: { $0.itemData.buttonType == item.buttonType }) else { return }
+        view.setupViewState(item: item)
+    }
+    
+    func addStackView(item: ButtonItemData, index: Int?) {
+        let view = ButtonItemView(itemData: item)
+        if let index = index, viewArray.count > index + 1 {
+            viewArray.insert(view, at: index)
+            stackView.insertArrangedSubview(view, at: index)
+        } else {
             viewArray.append(view)
             stackView.addArrangedSubview(view)
-            
-            if view.itemData.buttonType == .muteMessageItemType {
-                view.snp.remakeConstraints { make in
-                    make.height.equalTo(60.scale375())
-                    make.width.equalToSuperview()
-                }
-            }else {
-                view.snp.makeConstraints { make in
-                    make.height.equalTo(53.scale375())
-                    make.width.equalToSuperview()
-                }
-            }
-            view.backgroundColor = item.backgroundColor ?? UIColor(0x17181F)
         }
+        view.snp.makeConstraints { make in
+            make.height.equalTo(53.scale375())
+            make.width.equalToSuperview()
+        }
+    }
+    
+    func removeStackView(itemType: ButtonItemData.ButtonType) {
+        let views = viewArray.filter({ view in
+            view.itemData.buttonType == itemType
+        })
+        views.forEach { view in
+            view.removeFromSuperview()
+        }
+        viewArray.removeAll(where: { $0.itemData.buttonType == itemType })
+    }
+    
+    func dismissView() {
+        dismiss()
     }
     
     func makeToast(text : String) {
         RoomRouter.makeToastInCenter(toast: text, duration: 0.5)
-    }
-    
-    func showTransferredRoomOwnerAlert() {
-        RoomRouter.presentAlert(title: .haveTransferredMasterText, message: nil, sureTitle: .alertOkText, declineTitle: nil, sureBlock: nil, declineBlock: nil)
     }
     
     func setUserListManagerViewHidden(isHidden: Bool) {
@@ -218,15 +277,6 @@ extension UserListManagerView: UserListManagerViewEventResponder {
 private extension String {
     static var meText: String {
         localized("TUIRoom.me")
-    }
-    static var alertOkText: String {
-        localized("TUIRoom.ok")
-    }
-    static var haveTransferredMasterText: String {
-        localized("TUIRoom.have.transferred.master")
-    }
-    static var cancelText: String {
-        localized("TUIRoom.cancel")
     }
 }
 

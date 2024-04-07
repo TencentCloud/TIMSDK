@@ -17,6 +17,9 @@ import TXLiteAVSDK_Professional
 protocol TopViewModelResponder: AnyObject {
     func updateTimerLabel(text: String)
     func updateStackView(item: ButtonItemData)
+#if RTCube_APPSTORE
+    func showReportView()
+#endif
 }
 
 class TopViewModel: NSObject {
@@ -68,6 +71,9 @@ class TopViewModel: NSObject {
             self.switchCameraItemAction(sender: button)
         }
         viewItems.append(cameraItem)
+#if RTCube_APPSTORE
+        injectReport()
+#endif
     }
     
     private func initialStatus() {
@@ -157,4 +163,27 @@ extension TopViewModel: RoomKitUIEventResponder {
         }
     }
 }
+
+#if RTCube_APPSTORE
+extension TopViewModel {
+    private func injectReport() {
+        if currentUser.userId == roomInfo.roomId {
+           return
+        }
+        let reportItem = ButtonItemData()
+        reportItem.normalIcon = "room_report"
+        reportItem.backgroundColor = UIColor(0xA3AEC7)
+        reportItem.resourceBundle = tuiRoomKitBundle()
+        reportItem.action = { [weak self] sender in
+            guard let self = self, let button = sender as? UIButton else { return }
+            self.reportItemAction(sender: button)
+        }
+        viewItems.append(reportItem)
+    }
+    
+    private func reportItemAction(sender: UIButton) {
+        viewResponder?.showReportView()
+    }
+}
+#endif
 

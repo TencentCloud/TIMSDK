@@ -55,7 +55,6 @@ class RoomMessageBubbleCellData: TUIBubbleMessageCellData {
         let roomInfo = TUIRoomInfo()
         roomInfo.roomId = roomId
         roomInfo.name = TUILogin.getNickName() ?? (TUILogin.getUserID() ?? "") + .quickMeetingText
-        roomInfo.speechMode = .freeToSpeak
         RoomManager.shared.createRoom(roomInfo: roomInfo)
     }
     

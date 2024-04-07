@@ -13,6 +13,7 @@ class UserEntity {
     var userId: String = ""
     var userName: String = ""
     var avatarUrl: String = ""
+    var userRole: TUIRole = .generalUser
     var userVoiceVolume: Int = 0
     var hasAudioStream: Bool = false
     var hasVideoStream: Bool = false
@@ -24,6 +25,7 @@ class UserEntity {
         userId = userInfo.userId
         userName = userInfo.userName
         avatarUrl = userInfo.avatarUrl
+        userRole = userInfo.userRole
         hasAudioStream = userInfo.hasAudioStream
         hasVideoStream = userInfo.hasVideoStream
         hasScreenStream = userInfo.hasScreenStream

@@ -57,6 +57,28 @@ class RoomRouter: NSObject {
     }
     
     func pushToChatController(user: UserEntity, roomInfo: TUIRoomInfo) {
+        guard let chatVC = makeChatController(user: user, roomInfo: roomInfo) else { return }
+        let appearance = context.appearance
+        appearance.backgroundColor = UIColor.white
+        let nav = !isLandscape ? navController : UINavigationController(rootViewController: chatVC)
+        nav?.navigationBar.standardAppearance = appearance
+        nav?.navigationBar.scrollEdgeAppearance = appearance
+        nav?.navigationBar.tintColor = UIColor.black
+        if !isLandscape {
+            push(viewController: chatVC)
+        } else {
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+            let chatWidth = min(kScreenWidth, kScreenHeight)
+            context.chatWindow = UIWindow(windowScene: windowScene)
+            context.chatWindow?.frame = CGRect(x: kScreenWidth - chatWidth - kDeviceSafeBottomHeight, y: 0, width: chatWidth, height: chatWidth)
+            context.chatWindow?.rootViewController = nav
+            context.chatWindow?.windowLevel = UIWindow.Level.statusBar + 1
+            context.chatWindow?.isHidden = false
+            context.chatWindow?.makeKeyAndVisible()
+        }
+    }
+    
+    func makeChatController(user: UserEntity, roomInfo: TUIRoomInfo) -> UIViewController? {
         let config: [String : Any] = [
             TUICore_TUIChatService_SetChatExtensionMethod_EnableVideoCallKey: false,
             TUICore_TUIChatService_SetChatExtensionMethod_EnableAudioCallKey: false,
@@ -74,27 +96,13 @@ class RoomRouter: NSObject {
             TUICore_TUIChatObjectFactory_ChatViewController_Enable_Video_Call : String(0),
             TUICore_TUIChatObjectFactory_ChatViewController_Enable_Audio_Call : String(0),
             TUICore_TUIChatObjectFactory_ChatViewController_Enable_Room : String(0),
-            TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation: String(1)
+            TUICore_TUIChatObjectFactory_ChatViewController_Limit_Portrait_Orientation: String(1),
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_Poll  : String(0),
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_GroupNote  : String(0),
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_WelcomeCustomMessage :String(0),
         ]
-        guard let chatVC = TUICore.createObject(TUICore_TUIChatObjectFactory, key: TUICore_TUIChatObjectFactory_ChatViewController_Classic,
-                                                param: param) as? UIViewController else { return }
-        let appearance = context.appearance
-        appearance.backgroundColor = UIColor.white
-        let nav = !isLandscape ? navController : UINavigationController(rootViewController: chatVC)
-        nav?.navigationBar.standardAppearance = appearance
-        nav?.navigationBar.scrollEdgeAppearance = appearance
-        nav?.navigationBar.tintColor = UIColor.black
-        if !isLandscape {
-            push(viewController: chatVC)
-        } else {
-            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-            context.chatWindow = UIWindow(windowScene: windowScene)
-            context.chatWindow?.frame = CGRect(x: kScreenWidth - chatWidth - kDeviceSafeBottomHeight, y: 0, width: chatWidth, height: chatWidth)
-            context.chatWindow?.rootViewController = nav
-            context.chatWindow?.windowLevel = UIWindow.Level.statusBar + 1
-            context.chatWindow?.isHidden = false
-            context.chatWindow?.makeKeyAndVisible()
-        }
+        return TUICore.createObject(TUICore_TUIChatObjectFactory, key: TUICore_TUIChatObjectFactory_ChatViewController_Classic,
+                                    param: param) as? UIViewController
     }
     
     func pushMainViewController(roomId: String) {
@@ -198,7 +206,7 @@ class RoomRouter: NSObject {
     
     class func makeToastInCenter(toast: String, duration:TimeInterval) {
         guard let windowView = shared.getCurrentWindowViewController()?.view else {return}
-        windowView.makeToast(toast,duration: duration,position:windowView.center)
+        windowView.makeToast(toast,duration: duration,position:TUICSToastPositionCenter)
     }
     
     class func getCurrentWindow() -> UIWindow? {

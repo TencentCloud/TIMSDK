@@ -10,59 +10,87 @@ import TUIRoomEngine
 
 protocol ExitRoomViewModelResponder: AnyObject {
     func makeToast(message: String)
+    func dismissView()
 }
 
 class ExitRoomViewModel {
-    var engineManager: EngineManager
-    var currentUser: UserEntity
-    var isRoomOwner: Bool
-    var isOnlyOneUserInRoom: Bool
-    weak var viewResponder: ExitRoomViewModelResponder?
-    
-    init() {
-        engineManager = EngineManager.createInstance()
-        currentUser =  engineManager.store.currentUser
-        isRoomOwner = currentUser.userId == engineManager.store.roomInfo.ownerId
-        isOnlyOneUserInRoom = engineManager.store.attendeeList.count == 1
+    var engineManager: EngineManager {
+        EngineManager.createInstance()
+    }
+    var isRoomOwner: Bool {
+        engineManager.store.currentUser.userId == engineManager.store.roomInfo.ownerId
     }
     
+    weak var viewResponder: ExitRoomViewModelResponder?
+    
     func isShownLeaveRoomButton() -> Bool {
-        if currentUser.userId == engineManager.store.roomInfo.ownerId {
-            return engineManager.store.attendeeList.count > 1
+        if isRoomOwner {
+            return getFilterRoomOwnerNumber() > 0
         } else {
             return true
         }
     }
     
-    func isShownExitRoomButton() -> Bool {
-        return currentUser.userId == engineManager.store.roomInfo.ownerId
+    func isShownDestroyRoomButton() -> Bool {
+        return isRoomOwner
     }
     
     func leaveRoomAction() {
-        if isRoomOwner && !isOnlyOneUserInRoom {
-            RoomRouter.shared.presentPopUpViewController(viewType: .transferMasterViewType, height: 720.scale375Height())
+        if isRoomOwner {
+            if getFilterRoomOwnerNumber() == 1, let userInfo = getNextRoomOwner() {
+                appointMasterAndExitRoom(userId: userInfo.userId)
+            } else if getFilterRoomOwnerNumber() > 1 {
+                viewResponder?.dismissView()
+                RoomRouter.shared.presentPopUpViewController(viewType: .transferMasterViewType, height: 720.scale375Height())
+            } else {
+                destroyRoom()
+            }
         } else {
             exitRoom()
         }
     }
     
     func exitRoom() {
-        if isRoomOwner {
-            engineManager.destroyRoom {
-                RoomRouter.shared.dismissAllRoomPopupViewController()
-                RoomRouter.shared.popToRoomEntranceViewController()
-            } onError: { [weak self] code, message in
-                guard let self = self else { return }
-                self.viewResponder?.makeToast(message: message)
-            }
-        } else {
-            engineManager.exitRoom {
-                RoomRouter.shared.dismissAllRoomPopupViewController()
-                RoomRouter.shared.popToRoomEntranceViewController()
-            } onError: { [weak self] code, message in
-                guard let self = self else { return }
-                self.viewResponder?.makeToast(message: message)
-            }
+        engineManager.exitRoom { [weak self] in
+            guard let self = self else { return }
+            self.viewResponder?.dismissView()
+            RoomRouter.shared.dismissAllRoomPopupViewController()
+            RoomRouter.shared.popToRoomEntranceViewController()
+        } onError: { [weak self] code, message in
+            guard let self = self else { return }
+            self.viewResponder?.makeToast(message: message)
+        }
+    }
+    
+    func destroyRoom() {
+        engineManager.destroyRoom { [weak self] in
+            guard let self = self else { return }
+            self.viewResponder?.dismissView()
+            RoomRouter.shared.dismissAllRoomPopupViewController()
+            RoomRouter.shared.popToRoomEntranceViewController()
+        } onError: { [weak self] code, message in
+            guard let self = self else { return }
+            self.viewResponder?.makeToast(message: message)
+        }
+    }
+    
+    private func getNextRoomOwner() -> UserEntity? {
+        let userInfoArray = engineManager.store.attendeeList.filter({ $0.userId != engineManager.store.roomInfo.ownerId })
+        return userInfoArray.first
+    }
+    
+    private func getFilterRoomOwnerNumber() -> Int {
+        let array = engineManager.store.attendeeList.filter({ $0.userId != engineManager.store.roomInfo.ownerId })
+        return array.count
+    }
+    
+    private func appointMasterAndExitRoom(userId: String) {
+        engineManager.changeUserRole(userId: userId, role: .roomOwner) { [weak self] in
+            guard let self = self else { return }
+            self.exitRoom()
+        } onError: { [weak self] code, message in
+            guard let self = self else { return }
+            self.viewResponder?.makeToast(message: message)
         }
     }
     

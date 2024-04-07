@@ -106,9 +106,6 @@ class TopView: UIView {
         activateConstraints()
         bindInteraction()
         isViewReady = true
-#if RTCube_APPSTORE
-        injectReport()
-#endif
     }
     
     func constructViewHierarchy() {
@@ -143,15 +140,15 @@ class TopView: UIView {
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalToSuperview().offset(44.scale375Height())
         }
-        stackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16.scale375())
-            make.top.bottom.equalToSuperview()
-            make.width.equalTo(64.scale375())
-        }
         meetingTitleView.snp.makeConstraints { make in
             make.width.equalTo(129.scale375())
             make.height.equalTo(44.scale375Height())
             make.centerX.centerY.equalToSuperview()
+        }
+        stackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalTo(meetingTitleView.snp.leading).offset(-16.scale375())
         }
         meetingNameLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -251,6 +248,7 @@ enum AlertAction {
 }
 
 extension TopView: TopViewModelResponder {
+    
     func updateStackView(item: ButtonItemData) {
         guard let view = viewArray.first(where: { $0.itemData.buttonType == item.buttonType }) else { return }
         view.setupViewState(item: item)
@@ -259,40 +257,17 @@ extension TopView: TopViewModelResponder {
     func updateTimerLabel(text: String) {
         self.timeLabel.text = text
     }
-}
-
-#if RTCube_APPSTORE
-extension TopView {
-
-    func injectReport() {
-        if viewModel.store.currentUser.userId == viewModel.store.roomInfo.roomId {
-           return
-        }
-        guard let menuView =  menuButtons.first else{ return}
-        let reportBtn = UIButton(type: .custom)
-        reportBtn.setImage(UIImage(named: "room_report", in: tuiRoomKitBundle(), compatibleWith: nil), for: .normal)
-        reportBtn.adjustsImageWhenHighlighted = false
-        
-        addSubview(reportBtn)
-        reportBtn.snp.makeConstraints({ make in
-            make.centerY.equalTo(menuView.snp.centerY)
-            make.trailing.equalTo(menuView.snp.leading).offset(-10)
-            make.width.height.equalTo(menuView)
-        })
-        reportBtn.addTarget(self, action: #selector(clickReport), for: .touchUpInside)
-
-    }
     
-    @objc func clickReport() {
+#if RTCube_APPSTORE
+    func showReportView() {
         let selector = NSSelectorFromString("showReportAlertWithRoomId:ownerId:")
         if responds(to: selector) {
             let roomInfo = viewModel.store.roomInfo
             perform(selector, with: roomInfo.roomId, with: roomInfo.ownerId)
         }
     }
-    
-}
 #endif
+}
 
 private extension String {
     static var leaveRoomTitle: String {

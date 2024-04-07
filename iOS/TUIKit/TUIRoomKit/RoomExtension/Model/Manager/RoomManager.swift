@@ -23,26 +23,9 @@ class RoomManager {
     private let messageManager = RoomMessageManager.shared
     let roomObserver: RoomObserver = RoomObserver()
     var roomId: String?
-    private init() {
-        roomId = getRoomId()
-    }
+    
     deinit {
         debugPrint("deinit \(self)")
-    }
-    
-    func getRoomId() -> String? {
-        guard let userId = TUILogin.getUserID() else { return nil }
-        //从100到999依次创建房间
-        var roomNumber = UserDefaults.standard.integer(forKey: "roomNumber")
-        if roomNumber >= 100 && roomNumber < 999 {
-            roomNumber = roomNumber + 1
-        } else {
-            roomNumber = 100
-        }
-        UserDefaults.standard.set(roomNumber, forKey: "roomNumber")
-        let userString = String(roomNumber) + userId
-        let roomId = String("\(userString)_room_kit".hash & roomHashNumber)
-        return roomId
     }
     
     //判断是否已经进入其他房间

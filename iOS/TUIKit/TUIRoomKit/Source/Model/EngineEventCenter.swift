@@ -63,6 +63,9 @@ class EngineEventCenter: NSObject {
         case onRemoteUserLeaveRoom
         case onUserRoleChanged
         case onSeatListChanged
+        case onAllUserCameraDisableChanged
+        case onAllUserMicrophoneDisableChanged
+        case onKickedOffSeat
     }
     
     enum RoomUIEvent: String {
@@ -80,7 +83,6 @@ class EngineEventCenter: NSObject {
         case TUIRoomKitService_CurrentUserRoleChanged
         case TUIRoomKitService_CurrentUserMuteMessage
         case TUIRoomKitService_RoomOwnerChanged
-        case TUIRoomKitService_UserListManagerDisplayStatusChanged
         case TUIRoomKitService_ChangeToolBarHiddenState //更改工具栏显示或者隐藏状态
         case TUIRoomKitService_SetToolBarDelayHidden //设定工具栏是否3秒之后隐藏（参数：isDelay）
         case TUIRoomKitService_HiddenChatWindow //隐藏聊天窗口

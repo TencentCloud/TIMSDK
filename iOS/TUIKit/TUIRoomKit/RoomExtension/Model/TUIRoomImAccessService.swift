@@ -17,6 +17,7 @@ class TUIRoomImAccessService: NSObject, TUIServiceProtocol  {
         super.init()
         initRoomMessage()
         initSignalingListener()
+        initThemeResource()
     }
     func initRoomMessage() {
         TUICore.callService(TUICore_TUIChatService, method: TUICore_TUIChatService_AppendCustomMessageMethod, param:
@@ -25,6 +26,9 @@ class TUIRoomImAccessService: NSObject, TUIServiceProtocol  {
     }
     func initSignalingListener() {
         V2TIMManager.sharedInstance().addSignalingListener(listener: self)
+    }
+    func initThemeResource() {
+        TUICoreThemeConvert.initThemeResource()
     }
     //字符串转成字典
     private func stringToDic(_ str: String) -> [String : Any]?{

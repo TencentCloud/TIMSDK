@@ -77,13 +77,7 @@ class RoomInfoViewModel {
         
         let roomTypeItem = ListCellItemData()
         roomTypeItem.titleText = .roomTypeText
-        switch roomInfo.speechMode {
-        case .freeToSpeak:
-            roomTypeItem.messageText = .freedomSpeakText
-        case .applySpeakAfterTakingSeat:
-            roomTypeItem.messageText = .raiseHandSpeakText
-        default: break
-        }
+        roomTypeItem.messageText = roomInfo.isSeatEnabled ?  .raiseHandSpeakText: .freedomSpeakText
         messageItems.append(roomTypeItem)
         
         let roomIdItem = createListCellItemData(titleText: .roomIdText, messageText: roomInfo.roomId, hasButton: true, copyType: .copyRoomIdType)

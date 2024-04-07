@@ -11,14 +11,6 @@ import Foundation
 class UserListView: UIView {
     let viewModel: UserListViewModel
     private var isSearching: Bool = false
-
-    let blurView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .dark)
-        let view = UIVisualEffectView(effect: blurEffect)
-        view.alpha = 0.9
-        view.isHidden = true
-        return view
-    }()
     
     let attendeeCountLabel: UILabel = {
         let label = UILabel()
@@ -65,11 +57,12 @@ class UserListView: UIView {
         button.setTitleColor(UIColor(0xB2BBD1), for: .normal)
         button.setTitle(.allUnMuteAudioText, for: .selected)
         button.setTitleColor(UIColor(0xF2504B), for: .selected)
+        button.setTitle(.allUnMuteAudioText, for: [.selected, .highlighted])
+        button.setTitleColor(UIColor(0xF2504B), for: [.selected, .highlighted])
         button.backgroundColor = UIColor(0x4F586B, alpha: 0.3)
         button.layer.cornerRadius = 6
         button.clipsToBounds = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.adjustsImageWhenHighlighted = false
         return button
     }()
     
@@ -80,14 +73,15 @@ class UserListView: UIView {
         button.setTitleColor(UIColor(0xB2BBD1), for: .normal)
         button.setTitle(.allUnMuteVideoText, for: .selected)
         button.setTitleColor(UIColor(0xF2504B), for: .selected)
+        button.setTitle(.allUnMuteVideoText, for: [.selected, .highlighted])
+        button.setTitleColor(UIColor(0xF2504B), for: [.selected, .highlighted])
         button.backgroundColor = UIColor(0x4F586B, alpha: 0.3)
         button.layer.cornerRadius = 6
         button.clipsToBounds = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.adjustsImageWhenHighlighted = false
         return button
     }()
-        
+    
     let moreFunctionButton: UIButton = {
         let button = UIButton(type: .custom)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
@@ -114,12 +108,6 @@ class UserListView: UIView {
         tableView.backgroundColor = UIColor(0x17181F)
         tableView.register(UserListCell.self, forCellReuseIdentifier: "UserListCell")
         return tableView
-    }()
-    
-    lazy var userListManagerView: UserListManagerView = {
-        let view = UserListManagerView(viewModel: viewModel.userManagerModel)
-        view.isHidden = true
-        return view
     }()
     
     init(viewModel: UserListViewModel) {
@@ -151,8 +139,6 @@ class UserListView: UIView {
         bottomView.addSubview(muteAllAudioButton)
         bottomView.addSubview(muteAllVideoButton)
         bottomView.addSubview(moreFunctionButton)
-        addSubview(blurView)
-        addSubview(userListManagerView)
         addSubview(searchControl)
     }
     
@@ -203,13 +189,6 @@ class UserListView: UIView {
             make.width.equalTo(108.scale375())
             make.height.equalTo(40.scale375())
         }
-        blurView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        userListManagerView.snp.makeConstraints { make in
-            make.bottom.leading.trailing.equalToSuperview()
-            make.height.equalTo(355.scale375())
-        }
         searchControl.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -224,9 +203,6 @@ class UserListView: UIView {
         muteAllAudioButton.addTarget(self, action: #selector(muteAllAudioAction), for: .touchUpInside)
         muteAllVideoButton.addTarget(self, action: #selector(muteAllVideoAction), for: .touchUpInside)
         moreFunctionButton.addTarget(self, action: #selector(moreFunctionAction), for: .touchUpInside)
-        let hideBlurTap = UITapGestureRecognizer(target: self, action: #selector(hideBlurViewAction))
-        blurView.addGestureRecognizer(hideBlurTap)
-        blurView.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideSearchControl(sender:)))
         searchControl.addGestureRecognizer(tap)
     }
@@ -234,14 +210,13 @@ class UserListView: UIView {
     func setupViewState() {
         let currentUser = viewModel.engineManager.store.currentUser
         let roomInfo = viewModel.engineManager.store.roomInfo
-        let isOwner: Bool = currentUser.userId == roomInfo.ownerId
-        muteAllAudioButton.isHidden = !isOwner
+        muteAllAudioButton.isHidden = currentUser.userRole == .generalUser
         muteAllAudioButton.isSelected = roomInfo.isMicrophoneDisableForAllUser
-        muteAllVideoButton.isHidden = !isOwner
+        muteAllVideoButton.isHidden = currentUser.userRole == .generalUser
         muteAllVideoButton.isSelected = roomInfo.isCameraDisableForAllUser
-        moreFunctionButton.isHidden = !isOwner
+        moreFunctionButton.isHidden = currentUser.userRole == .generalUser
     }
-        
+    
     @objc func inviteMemberAction(sender: UIButton) {
         RoomRouter.shared.dismissPopupViewController(viewType: .userListViewType,animated: false)
         RoomRouter.shared.presentPopUpViewController(viewType: .inviteViewType, height: 186)
@@ -258,11 +233,6 @@ class UserListView: UIView {
     @objc func moreFunctionAction(sender: UIButton) {
         RoomRouter.shared.dismissPopupViewController(viewType: .userListViewType,animated: false)
         RoomRouter.shared.presentPopUpViewController(viewType: .inviteViewType, height: 186)
-    }
-    
-    @objc func hideBlurViewAction(sender: UIButton) {
-        viewModel.hideUserManageViewAction(view: self)
-        blurView.isHidden = true
     }
     
     @objc func hideSearchControl(sender: UIView) {
@@ -319,23 +289,33 @@ extension UserListView: UITableViewDelegate {
     }
     
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 60.scale375Height()
     }
 }
 
 extension UserListView: UserListViewResponder {
+    func updateMuteAllAudioButtonState(isSelect: Bool) {
+        muteAllAudioButton.isSelected = isSelect
+    }
+    
+    func updateMuteAllVideoButtonState(isSelect: Bool) {
+        muteAllVideoButton.isSelected = isSelect
+    }
+    
+    func updateButtonHiddenState(isHidden: Bool) {
+        muteAllAudioButton.isHidden = isHidden
+        muteAllVideoButton.isHidden = isHidden
+        moreFunctionButton.isHidden = isHidden
+    }
+    
     func updateUserManagerViewDisplayStatus(isHidden: Bool) {
-        userListManagerView.isHidden = isHidden
+        let model = UserListManagerViewModel(selectUserId: viewModel.userId)
+        let view = UserListManagerView(viewModel: model)
+        view.show(rootView: self)
     }
     
     func makeToast(text: String) {
         RoomRouter.makeToastInCenter(toast: text, duration: 0.5)
-    }
-    
-    func updateUIWhenRoomOwnerChanged(isOwner: Bool) {
-        muteAllAudioButton.isHidden = !isOwner
-        muteAllVideoButton.isHidden = !isOwner
-        moreFunctionButton.isHidden = !isOwner
     }
     
     func reloadUserListView() {
@@ -344,8 +324,8 @@ extension UserListView: UserListViewResponder {
         userListTableView.reloadData()
     }
     
-    func updateBlurViewDisplayStatus(isHidden: Bool) {
-        blurView.isHidden = isHidden
+    func showAlert(title: String?, message: String?, sureTitle: String?, declineTitle: String?, sureBlock: (() -> ())?, declineBlock: (() -> ())?) {
+        RoomRouter.presentAlert(title: title, message: message, sureTitle: sureTitle, declineTitle: declineTitle, sureBlock: sureBlock, declineBlock: declineBlock)
     }
 }
 
@@ -373,7 +353,6 @@ class UserListCell: UITableViewCell {
     
     let roleImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "room_role_owner", in: tuiRoomKitBundle(), compatibleWith: nil)
         return imageView
     }()
     
@@ -382,7 +361,6 @@ class UserListCell: UITableViewCell {
         label.font = UIFont(name: "PingFangSC-Regular", size: 12)
         label.backgroundColor = UIColor.clear
         label.textColor = UIColor(0x4791FF)
-        label.text = .ownerText
         return label
     }()
     
@@ -467,12 +445,14 @@ class UserListCell: UITableViewCell {
         inviteStageButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.centerY.equalTo(self.avatarImageView)
+            make.width.equalTo(60.scale375())
+            make.height.equalTo(30.scale375Height())
         }
         userLabel.snp.makeConstraints { make in
-            if attendeeModel.userId == viewModel.roomInfo.ownerId {
-                make.top.equalToSuperview().offset(10.scale375Height())
-            } else {
+            if attendeeModel.userRole == .generalUser {
                 make.centerY.equalToSuperview()
+            } else {
+                make.top.equalToSuperview().offset(10.scale375Height())
             }
             make.leading.equalTo(avatarImageView.snp.trailing).offset(12.scale375())
             make.width.equalTo(150.scale375())
@@ -517,15 +497,24 @@ class UserListCell: UITableViewCell {
         } else {
             userLabel.text = item.userName
         }
-        roleImageView.isHidden = item.userId != viewModel.roomInfo.ownerId
-        roleLabel.isHidden = item.userId != viewModel.roomInfo.ownerId
+        switch item.userRole {
+        case .roomOwner:
+            roleImageView.image = UIImage(named: "room_role_owner", in: tuiRoomKitBundle(), compatibleWith: nil)
+            roleLabel.text = .ownerText
+        case .administrator:
+            roleImageView.image = UIImage(named: "room_role_administrator", in: tuiRoomKitBundle(), compatibleWith: nil)
+            roleLabel.text = .administratorText
+        default: break
+        }
+        roleImageView.isHidden = item.userRole == .generalUser
+        roleLabel.isHidden = item.userRole == .generalUser
         muteAudioButton.isSelected = !item.hasAudioStream
         muteVideoButton.isSelected = !item.hasVideoStream
         //判断是否显示邀请上台的按钮(房主在举手发言房间中可以邀请其他没有上台的用户)
-        guard viewModel.roomInfo.speechMode == .applySpeakAfterTakingSeat else { return }
+        guard viewModel.roomInfo.isSeatEnabled else { return }
         muteAudioButton.isHidden = !attendeeModel.isOnSeat
         muteVideoButton.isHidden = !attendeeModel.isOnSeat
-        if viewModel.currentUser.userId == viewModel.roomInfo.ownerId {
+        if viewModel.checkSelfInviteAbility(invitee: attendeeModel) {
             inviteStageButton.isHidden = attendeeModel.isOnSeat
         } else {
             inviteStageButton.isHidden = true
@@ -579,6 +568,9 @@ private extension String {
     }
     static var ownerText: String {
         localized("TUIRoom.role.owner")
+    }
+    static var administratorText: String {
+        localized("TUIRoom.role.administrator")
     }
     static var videoConferenceTitle: String {
         localized("TUIRoom.video.conference.title")

@@ -14,7 +14,7 @@ protocol RoomMainViewFactory {
     func makeTopView() -> TopView
     func makeVideoSeatView() -> UIView
     func makeRaiseHandNoticeView() -> UIView
-    func makeMuteAudioButton() -> UIButton
+    func makeLocalAudioView() -> UIView
 }
 
 struct RoomMainViewLayout { //横竖屏切换时的布局变化
@@ -61,8 +61,8 @@ class RoomMainView: UIView {
         return viewFactory.makeRaiseHandNoticeView()
     }()
     
-    lazy var muteAudioButton: UIButton = {
-        return viewFactory.makeMuteAudioButton()
+    lazy var localAudioView: UIView = {
+        return viewFactory.makeLocalAudioView()
     }()
     
     // MARK: - view layout
@@ -88,7 +88,7 @@ class RoomMainView: UIView {
         addSubview(videoSeatView)
         addSubview(topView)
         addSubview(bottomView)
-        addSubview(muteAudioButton)
+        addSubview(localAudioView)
         addSubview(raiseHandNoticeView)
     }
     
@@ -100,15 +100,14 @@ class RoomMainView: UIView {
             make.height.equalTo(40)
             make.width.equalTo(300)
         }
-        muteAudioButton.snp.makeConstraints { make in
+        localAudioView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(40)
-            make.bottom.equalToSuperview().offset(-40)
+            make.width.height.equalTo(40.scale375())
+            make.bottom.equalToSuperview().offset(-40.scale375Height())
         }
     }
     
     private func bindInteraction() {
-        muteAudioButton.transform = CGAffineTransform(translationX: 0, y: kScreenHeight)
         viewModel.viewResponder = self
         viewModel.applyConfigs()
         perform(#selector(hideToolBar),with: nil,afterDelay: firstDelayDisappearanceTime)
@@ -161,10 +160,6 @@ extension RoomMainView: RoomMainViewResponder {
         view.show(rootView: self)
     }
     
-    func updateMuteAudioButton(isSelected: Bool) {
-        muteAudioButton.isSelected = isSelected
-    }
-    
     func showAlert(title: String?, message: String?, sureTitle:String?, declineTitle: String?, sureBlock: (() -> ())?, declineBlock: (() -> ())?) {
         RoomRouter.presentAlert(title: title, message: message, sureTitle: sureTitle, declineTitle: declineTitle, sureBlock: sureBlock, declineBlock: declineBlock)
     }
@@ -178,7 +173,7 @@ extension RoomMainView: RoomMainViewResponder {
         bottomView.alpha = 1
         topView.isHidden = false
         bottomView.isHidden = false
-        hideMuteAudioButton()
+        viewModel.hideLocalAudioView()
     }
     
     @objc private func hideToolBar() {
@@ -186,19 +181,7 @@ extension RoomMainView: RoomMainViewResponder {
         bottomView.alpha = 0
         topView.isHidden = true
         bottomView.isHidden = true
-        showMuteAudioButton()
-    }
-    
-    private func showMuteAudioButton() {
-        UIView.animate(withDuration: 0.3) { [weak self] () in
-            guard let self = self else { return }
-            self.muteAudioButton.transform = .identity
-        } completion: { _ in
-        }
-    }
-    
-    private func hideMuteAudioButton() {
-        muteAudioButton.transform = CGAffineTransform(translationX: 0, y: kScreenHeight)
+        viewModel.showLocalAudioView()
     }
     
     func changeToolBarHiddenState() {

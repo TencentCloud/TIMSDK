@@ -213,11 +213,6 @@ extension TUIVideoSeatView: TUIVideoSeatViewResponder {
             }
         }
     }
-    
-    func deleteVideoSeatCell(item: VideoSeatItem) {
-        guard let cell = getVideoVisibleCell(item) else { return }
-        cell.removeFromSuperview()
-    }
 
     func updateSeatItem(_ item: VideoSeatItem) {
         if let seatItem = moveMiniscreen.seatItem, seatItem.userId == item.userId {
@@ -256,6 +251,9 @@ extension TUIVideoSeatView: TUIVideoSeatViewResponder {
         }
         if attendeeCollectionView.contentOffset.x > 0 {
             return
+        }
+        if let seatItem = moveMiniscreen.seatItem, seatItem.userId != item.userId, (getVideoVisibleCell(seatItem) == nil) {
+            viewModel.stopPlayVideo(item: seatItem)
         }
         moveMiniscreen.updateSize(size: videoSeatLayout.getMiniscreenFrame(item: item).size)
         moveMiniscreen.isHidden = false
@@ -327,7 +325,6 @@ extension TUIVideoSeatView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        debugPrint("**********,collectionView,numberOfItemsInSection:\(viewModel.listSeatItem.count)")
         return viewModel.listSeatItem.count
     }
     

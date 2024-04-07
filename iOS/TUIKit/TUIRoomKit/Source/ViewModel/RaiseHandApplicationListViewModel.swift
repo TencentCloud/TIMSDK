@@ -12,6 +12,7 @@ import TUIRoomEngine
 protocol RaiseHandApplicationListViewResponder: NSObject {
     func reloadApplyListView()
     func searchControllerChangeActive(isActive: Bool)
+    func makeToast(text: String)
 }
 
 class RaiseHandApplicationListViewModel: NSObject {
@@ -52,8 +53,10 @@ class RaiseHandApplicationListViewModel: NSObject {
             guard let self = self else { return }
             self.engineManager.deleteInviteSeatUser(userId)
             self.reloadApplyListView()
-        } onError: { code, message in
-            debugPrint("responseRemoteRequest:code:\(code),message:\(message)")
+        } onError: { [weak self] code, message in
+            guard let self = self else { return }
+            guard code == .allSeatOccupied else { return }
+            self.viewResponder?.makeToast(text: .onStageNumberReachedLimitText)
         }
     }
     
@@ -89,6 +92,12 @@ extension RaiseHandApplicationListViewModel: PopUpViewModelResponder {
     
     func searchControllerChangeActive(isActive: Bool) {
         viewResponder?.searchControllerChangeActive(isActive: isActive)
+    }
+}
+
+private extension String {
+    static var onStageNumberReachedLimitText: String {
+        localized("TUIRoom.on.stage.number.reached.limit")
     }
 }
 

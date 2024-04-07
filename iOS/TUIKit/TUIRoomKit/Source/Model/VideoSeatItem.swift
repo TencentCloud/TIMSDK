@@ -21,7 +21,7 @@ class VideoSeatItem: Equatable {
     
     private var itemType: VideoSeatItemType = .original
     private var videoStreamType: TUIVideoStreamType = .cameraStream
-    private var userInfo: UserEntity
+    var userInfo: UserEntity
     var audioVolume: Int = 0
     var isSelf: Bool {
         return userInfo.userId == EngineManager.createInstance().store.currentUser.userId

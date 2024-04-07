@@ -30,11 +30,21 @@ class RoomEventDispatcher: NSObject {
 extension RoomEventDispatcher: TUIRoomObserver {
     // MARK: - 房间内事件回调
     func onAllUserMicrophoneDisableChanged(roomId: String, isDisable: Bool) {
-        allUserMicrophoneDisableChanged(roomId: roomId, isDisable: isDisable)
+        roomInfo.isMicrophoneDisableForAllUser = isDisable
+        let param = [
+            "roomId" : roomId,
+            "isDisable" : isDisable,
+        ] as [String : Any]
+        EngineEventCenter.shared.notifyEngineEvent(event: .onAllUserMicrophoneDisableChanged, param: param)
     }
     
     func onAllUserCameraDisableChanged(roomId: String, isDisable: Bool) {
-        allUserCameraDisableChanged(roomId: roomId, isDisable: isDisable)
+        roomInfo.isCameraDisableForAllUser = isDisable
+        let param = [
+            "roomId" : roomId,
+            "isDisable" : isDisable,
+        ] as [String : Any]
+        EngineEventCenter.shared.notifyEngineEvent(event: .onAllUserCameraDisableChanged, param: param)
     }
     
     func onSendMessageForAllUserDisableChanged(roomId: String, isDisable: Bool) {
@@ -56,10 +66,6 @@ extension RoomEventDispatcher: TUIRoomObserver {
     
     func onRoomNameChanged(roomId: String, roomName: String) {
         roomInfo.name = roomName
-    }
-    
-    func onRoomSpeechModeChanged(roomId: String, speechMode mode: TUISpeechMode) {
-        roomInfo.speechMode = mode
     }
     
     // MARK: - 房间内用户事件回调
@@ -132,6 +138,7 @@ extension RoomEventDispatcher: TUIRoomObserver {
     }
     
     func OnSendMessageForUserDisableChanged(roomId: String, userId: String, isDisable muted: Bool) {
+        store.updateUserDisableSendingMessage(userId: userId, isDisable: muted)
         let param = [
             "roomId": roomId,
             "userId": userId,
@@ -147,7 +154,18 @@ extension RoomEventDispatcher: TUIRoomObserver {
     }
     
     func onRequestCancelled(requestId: String, userId: String) {
-        requestCancelled(requestId: requestId, userId: userId)
+        store.deleteTakeSeatRequest(requestId: requestId, userId: userId)
+    }
+    
+    func onRequestProcessed(requestId: String, userId: String) {
+        store.deleteTakeSeatRequest(requestId: requestId, userId: userId)
+    }
+    
+    func onKickedOffSeat(userId: String) {
+        let param = [
+            "userId": userId,
+        ] as [String : Any]
+        EngineEventCenter.shared.notifyEngineEvent(event: .onKickedOffSeat, param: param)
     }
 }
 
@@ -163,7 +181,7 @@ extension RoomEventDispatcher {
     private func remoteUserLeaveRoom(roomId: String, userInfo: TUIUserInfo) {
         engineManager.deleteUserItem(userInfo.userId)
         EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RenewUserList, param: [:])
-        if roomInfo.speechMode == .applySpeakAfterTakingSeat {
+        if roomInfo.isSeatEnabled {
             engineManager.deleteSeatItem(userInfo.userId)
             engineManager.deleteInviteSeatUser(userInfo.userId)
             EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RenewSeatList, param: [:])
@@ -197,11 +215,7 @@ extension RoomEventDispatcher {
         for seatInfo: TUISeatInfo in seatList {
             guard let userId = seatInfo.userId else { continue }
             guard let userInfo = store.attendeeList.first(where: { $0.userId == userId }) else { continue }
-            switch roomInfo.speechMode {
-            case .applySpeakAfterTakingSeat:
-                userInfo.isOnSeat = true
-            default: break
-            }
+            userInfo.isOnSeat = true
             engineManager.deleteInviteSeatUser(userId)
             engineManager.addSeatItem(userInfo)
         }
@@ -221,30 +235,6 @@ extension RoomEventDispatcher {
             engineManager.deleteSeatItem(userId)
         }
         EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RenewSeatList, param: [:])
-    }
-    
-    private func allUserMicrophoneDisableChanged(roomId: String, isDisable: Bool) {
-        roomInfo.isMicrophoneDisableForAllUser = isDisable
-        if currentUser.userId == roomInfo.ownerId {
-            return
-        }
-        if isDisable {
-            RoomRouter.makeToastInCenter(toast: .allMuteAudioText, duration: 1.5)
-        } else {
-            RoomRouter.makeToastInCenter(toast: .allUnMuteAudioText, duration: 1.5)
-        }
-    }
-    
-    private func allUserCameraDisableChanged(roomId: String, isDisable: Bool) {
-        roomInfo.isCameraDisableForAllUser = isDisable
-        if currentUser.userId == roomInfo.ownerId {
-            return
-        }
-        if isDisable {
-            RoomRouter.makeToastInCenter(toast: .allMuteVideoText, duration: 1.5)
-        } else {
-            RoomRouter.makeToastInCenter(toast: .allUnMuteVideoText, duration: 1.5)
-        }
     }
     
     private func getUserItem(_ userId: String) -> UserEntity? {
@@ -287,7 +277,12 @@ extension RoomEventDispatcher {
     private func userRoleChanged(userId: String, userRole: TUIRole) {
         let isSelfRoleChanged = userId == currentUser.userId
         let isRoomOwnerChanged = userRole == .roomOwner
+        if let userInfo = store.attendeeList.first(where: { $0.userId == userId }) {
+            userInfo.userRole = userRole
+            EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RenewUserList, param: ["userRole": userRole])
+        }
         if isSelfRoleChanged {
+            store.currentUser.userRole = userRole
             EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_CurrentUserRoleChanged, param: ["userRole": userRole])
         }
         if isRoomOwnerChanged {
@@ -295,39 +290,30 @@ extension RoomEventDispatcher {
                 EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RoomOwnerChanged, param: ["owner": userId])
             }
         }
-        //转成房主之后需要上麦
-        guard isSelfRoleChanged, isRoomOwnerChanged else { return }
-        guard roomInfo.speechMode == .applySpeakAfterTakingSeat, !currentUser.isOnSeat else { return }
-        EngineManager.createInstance().takeSeat { [weak self] _,_ in
-            guard let self = self else { return }
-            self.currentUser.isOnSeat = true
-            EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_UserOnSeatChanged, param: ["isOnSeat": true])
-        } onError: { _, _, code, message in
-            debugPrint("takeSeat,code:\(code),message:\(message)")
+        if checkAutoTakeSeatForOwner(userId: userId, userRole: userRole) {
+           let _ = engineManager.takeSeat()
+        }
+        if checkAutoSendingMessageForOwner(userId: userId, userRole: userRole) {
+            engineManager.disableSendingMessageByAdmin(userId: userId, isDisable: false)
         }
     }
     
-    private func requestCancelled(requestId: String, userId: String) {
-        var userId = userId
-        //如果是请求超时被取消，userId是房主，需要通过requestId找到用户的userId
-        store.inviteSeatMap.forEach { (key, value) in
-            if value == requestId {
-                userId = key
-            }
-        }
-        engineManager.deleteInviteSeatUser(userId)
-        EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RenewSeatList, param: [:])
+    private func checkAutoTakeSeatForOwner(userId: String, userRole: TUIRole) -> Bool {
+        let isSelfRoleChanged = userId == currentUser.userId
+        let isRoomOwnerChanged = userRole == .roomOwner
+        return isSelfRoleChanged && isRoomOwnerChanged && roomInfo.isSeatEnabled && !currentUser.isOnSeat
+    }
+    
+    private func checkAutoSendingMessageForOwner(userId: String, userRole: TUIRole) -> Bool {
+        let isSelfRoleChanged = userId == currentUser.userId
+        let isRoomOwnerChanged = userRole == .roomOwner
+        return isSelfRoleChanged && isRoomOwnerChanged && currentUser.disableSendingMessage
     }
     
     private func requestReceived(request: TUIRequest) {
         switch request.requestAction {
         case .takeSeat:
-            if roomInfo.speechMode == .applySpeakAfterTakingSeat {
-                //如果作为房主收到自己要上麦拿到请求，直接同意
-                if request.userId == currentUser.userId, roomInfo.ownerId == request.userId {
-                    engineManager.responseRemoteRequest(request.requestId, agree: true)
-                    return
-                }
+            if roomInfo.isSeatEnabled {
                 guard let userModel = store.attendeeList.first(where: {$0.userId == request.userId}) else { return }
                 guard store.inviteSeatMap[request.userId] == nil else { return }
                 engineManager.addInviteSeatUser(userItem: userModel, request: request)
@@ -350,19 +336,3 @@ extension RoomEventDispatcher {
         userModel.hasScreenStream = false
     }
 }
-
-private extension String {
-    static var allMuteAudioText: String {
-        localized("TUIRoom.all.mute.audio.prompt")
-    }
-    static var allMuteVideoText: String {
-        localized("TUIRoom.all.mute.video.prompt")
-    }
-    static var allUnMuteAudioText: String {
-        localized("TUIRoom.all.unmute.audio.prompt")
-    }
-    static var allUnMuteVideoText: String {
-        localized("TUIRoom.all.unmute.video.prompt")
-    }
-}
-

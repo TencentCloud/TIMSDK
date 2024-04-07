@@ -35,9 +35,8 @@ extension RoomMessageExtensionObserver: TUIExtensionProtocol {
             let info = TUIExtensionInfo()
             info.weight = 200
             info.text = .meetingText
-            if let image = UIImage(named: "room_quick_meeting", in: tuiRoomKitBundle(), compatibleWith: nil) {
-                info.icon = image
-            }
+            let defaultImage = UIImage(named: "room_quick_meeting", in: tuiRoomKitBundle(), compatibleWith: nil) ?? UIImage()
+            info.icon = TUICoreThemeConvert.getTUIDynamicImage(imageKey: "room_quick_meeting_image", defaultImage: defaultImage)
             info.onClicked = { [weak self] param in
                 guard let self = self else { return }
                 if let vc = param[TUICore_TUIChatExtension_InputViewMoreItem_PushVC] as? UINavigationController {

@@ -51,20 +51,22 @@ class RoomMessageManager {
                 return
             }
             self.isReadyToSendMessage = false
-            guard let roomId = RoomManager.shared.getRoomId() else { return }
-            let messageModel = RoomMessageModel()
-            messageModel.groupId = self.groupId
-            messageModel.roomId = roomId
-            messageModel.ownerName = TUILogin.getNickName() ?? ""
-            messageModel.owner = self.userId
-            let messageDic = messageModel.getDictFromMessageModel()
-            guard let jsonString = self.dicValueString(messageDic) else { return }
-            let jsonData = jsonString.data(using: String.Encoding.utf8)
-            let message = V2TIMManager.sharedInstance().createCustomMessage(jsonData)
-            message?.supportMessageExtension = true
-            let param = [TUICore_TUIChatService_SendMessageMethod_MsgKey: message]
-            TUICore.callService(TUICore_TUIChatService, method: TUICore_TUIChatService_SendMessageMethod, param: param as [AnyHashable : Any])
-            RoomManager.shared.roomId = roomId
+            FetchRoomId.getRoomId { [weak self] roomId in
+                guard let self = self else { return }
+                let messageModel = RoomMessageModel()
+                messageModel.groupId = self.groupId
+                messageModel.roomId = roomId
+                messageModel.ownerName = TUILogin.getNickName() ?? ""
+                messageModel.owner = self.userId
+                let messageDic = messageModel.getDictFromMessageModel()
+                guard let jsonString = self.dicValueString(messageDic) else { return }
+                let jsonData = jsonString.data(using: String.Encoding.utf8)
+                let message = V2TIMManager.sharedInstance().createCustomMessage(jsonData)
+                message?.supportMessageExtension = true
+                let param = [TUICore_TUIChatService_SendMessageMethod_MsgKey: message]
+                TUICore.callService(TUICore_TUIChatService, method: TUICore_TUIChatService_SendMessageMethod, param: param as [AnyHashable : Any])
+                RoomManager.shared.roomId = roomId
+            }
         }
     }
     

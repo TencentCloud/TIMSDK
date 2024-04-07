@@ -167,7 +167,7 @@ private extension String {
         localized("TUIRoom.toast.shareScreen.message")
     }
     static var toastCancelText: String {
-        localized("TUIRoom.toast.shareScreen.cancel")
+        localized("TUIRoom.cancel")
     }
     static var toastStopText: String {
         localized("TUIRoom.toast.shareScreen.stop")

@@ -103,9 +103,11 @@ extension VideoSeatCell {
         backgroundMaskView.isHidden = item.type == .share ? item.isHasVideoStream : item.hasVideoStream
         userInfoView.updateUserStatus(item)
         resetVolumeView()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self else { return }
             let width = min(self.mm_w / 2, 72)
             self.avatarImageView.layer.cornerRadius = width * 0.5
+            guard let _ = self.avatarImageView.superview else { return }
             self.avatarImageView.snp.remakeConstraints { make in
                 make.height.width.equalTo(width)
                 make.center.equalToSuperview()
