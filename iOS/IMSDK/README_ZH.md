@@ -28,6 +28,12 @@
      <td style="text-align:center">支持 Swift API 和 Mac catalyst</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.9.5666/ImSDK_Plus_Swift_7.9.5666.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
   </tr>
+
+  <tr >
+     <td style="text-align:center">Apple Vision Pro 版本</td>
+     <td style="text-align:center">支持 Swift API 和 visionOS</td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.9.5666/ImSDKForVision_Plus_7.9.5666.xcframework.zip">ImSDKForVision_Plus.xcframework</a></td>
+  </tr>
 </table>
 
 ## 下载 IM SDK 的插件
@@ -58,6 +64,7 @@ target 'App' do
     pod 'TXIMSDK_Plus_iOS'
     # pod 'TXIMSDK_Plus_iOS_XCFramework'
     # pod 'TXIMSDK_Plus_Swift_iOS_XCFramework'
+    # pod 'TXIMSDK_Plus_Swift_Vision_XCFramework'
 
     # 如果您需要添加 Quic 插件，请取消下一行的注释
     # 注意：
