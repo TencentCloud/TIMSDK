@@ -3,7 +3,7 @@
 //  TUIKitDemo
 //
 //  Created by kennethmiao on 2018/10/19.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 #import "SettingController_Minimalist.h"
 #import <TIMCommon/TIMCommonModel.h>
@@ -163,7 +163,7 @@ NSString *kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
 }
 
 - (void)onClickLogout {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TIMAppConfirmLogout) /*@"确定退出吗"*/
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TIMAppConfirmLogout) /*@""*/
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(TIMAppCancel)

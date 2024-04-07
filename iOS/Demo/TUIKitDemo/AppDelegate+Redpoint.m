@@ -23,10 +23,6 @@ NSInteger _markHideUnreadCount = 0;
 + (void)load
 {
     /**
-     * 未读数相关的处理
-     * - 1. hook AppDelegate 进入前后台的事件，从而设置 APP 的角标
-     * - 2. hook AppDelegate 中监听的 onTotalUnreadMessageCountChanged: 事件，从而设置设置 APP 角标并更新 _unReadCount
-     *
      * The Processing of unread count
      * - 1. Hooking the callback of entering foregroud and background in AppDelegate to set the application's badge number.
      * - 2. Hooking the event of onTotalUnreadMessageCountChanged: in AppDelegate to set the application's badge number and update the _unReadCount parameter.
@@ -62,7 +58,7 @@ NSInteger _markHideUnreadCount = 0;
                           usingBlock:onTotalUnreadMessageChangedBlock
                                error:nil];
     
-    // 监听未读数清空通知
+    //Listen for unread clearing notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(redpoint_clearUnreadMessage) name:@"redpoint_clearUnreadMessage" object:nil];
     
 }

@@ -15,6 +15,7 @@
 @property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) NSMutableArray *data;
+@property(nonatomic, strong) UIView *footerView;
 @end
 
 @implementation TUIAboutUsViewController
@@ -36,7 +37,9 @@
     self.navigationItem.title = @"";
     self.tableView.backgroundColor = TIMCommonDynamicColor(@"controller_bg_color", @"#F2F3F5");
     [self.tableView registerClass:[TUICommonTextCell class] forCellReuseIdentifier:@"textCell"];
+    self.tableView.tableFooterView = self.footerView;
 }
+
 - (void)applyData {
     // PRIVATEMARK
     if (self.data) {
@@ -45,8 +48,8 @@
     NSString *aboutUsUrl = @"https://cloud.tencent.com/document/product/269/59590";
     NSString *versionText = [V2TIMManager sharedInstance].getVersion;
     TUICommonTextCellData *versionData = [TUICommonTextCellData new];
-    versionData.key = TIMCommonLocalizableString(TUIKitAboutUsSDKVersion);  // "SDK版本";
-    versionData.value = versionText ? versionText : @"";                    // @"版本号"
+    versionData.key = TIMCommonLocalizableString(TUIKitAboutUsSDKVersion);
+    versionData.value = versionText ? versionText : @"";                    
     versionData.showAccessory = NO;
     versionData.ext = @{@"event_type" : @"0"};
     NSArray *keysArray = @[ TIMCommonLocalizableString(TUIKitAboutUsContactUs) ];
@@ -79,6 +82,20 @@
     }
     return _tableView;
 }
+
+- (UIView *)footerView {
+    if (!_footerView) {
+        _footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200)];
+        [self appendSubViewForFooterView:_footerView];
+    }
+    return _footerView;
+}
+
+- (void)appendSubViewForFooterView:(UIView *)footerView {
+    // PRIVATEMARK
+    //You can draw content here, such as adding the company's homepage and contact information to the footer view.
+}
+
 - (NSMutableArray *)data {
     if (!_data) {
         _data = [NSMutableArray arrayWithCapacity:3];

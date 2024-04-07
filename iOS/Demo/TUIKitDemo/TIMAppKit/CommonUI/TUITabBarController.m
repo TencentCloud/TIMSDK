@@ -3,7 +3,7 @@
 //  TUIKit
 //
 //  Created by kennethmiao on 2018/11/13.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 
 #import "TUITabBarController.h"
@@ -21,7 +21,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // 解决navigationtroller+tabbarcontroller，push是navigationbar变黑问题
+
     [UIApplication sharedApplication].keyWindow.backgroundColor = [UIColor whiteColor];
 
     self.tabBar.backgroundColor = self.backgroudColor;
@@ -59,7 +59,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    // 因为tabbar加高了
+    // tabbar
     // Cause of increaing tabbar height
     CGFloat height = TabBar_Height + 8;
     CGRect newFrame = CGRectMake(0, self.view.frame.size.height - height, self.view.frame.size.width, height);

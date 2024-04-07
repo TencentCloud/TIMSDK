@@ -3,12 +3,9 @@
 //  TUIKitDemo
 //
 //  Created by annidyfeng on 2019/3/25.
-//  Copyright © 2019年 kennethmiao. All rights reserved.
+//  Copyright © 2019 kennethmiao. All rights reserved.
 //
-/** 腾讯云IM Demo好友列表视图
- *  - 本视图控制器对应于 tabbar 上的“联系人”
- *  - 本文件实现了好友列表界面，使用户可以浏览自己的好友、群组并对其进行管理
- *  - 本类依赖于腾讯云 TUIKit 和 IMSDK
+/**
  *
  *  Tencent Cloud Chat Demo Friends List View
  *  - This viewcontroller corresponds to the "contact" item on the tabBar.

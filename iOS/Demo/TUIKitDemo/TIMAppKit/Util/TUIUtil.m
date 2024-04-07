@@ -3,13 +3,8 @@
 //  TCLVBIMDemo
 //
 //  Created by felixlin on 16/8/2.
-//  Copyright © 2016年 tencent. All rights reserved.
+//  Copyright © 2016 tencent. All rights reserved.
 //
-/** 腾讯云IM Demo数据处理单元
- *
- *  本类为Demo客户端提供数据处理服务，以便客户端更好的工作
- *
- */
 #define ENABLE_SHARE 1
 
 #import "TUIUtil.h"
@@ -27,7 +22,7 @@ static const NSString *tui_letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNO
 #define CHECK_STRING_NULL(x) (x == nil) ? @"" : x
 
 + (NSData *)dictionary2JsonData:(NSDictionary *)dict {
-    // 转成Json数据
+    // Json
     if ([NSJSONSerialization isValidJSONObject:dict]) {
         NSError *error = nil;
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
@@ -85,7 +80,7 @@ static const NSString *tui_letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNO
     return fileFullPath;
 }
 
-// 通过分别计算中文和其他字符来计算长度
+// 
 + (NSUInteger)getContentLength:(NSString *)content {
     size_t length = 0;
     for (int i = 0; i < [content length]; i++) {

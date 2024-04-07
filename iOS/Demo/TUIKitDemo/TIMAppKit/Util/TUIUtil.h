@@ -3,11 +3,9 @@
 //  TCLVBIMDemo
 //
 //  Created by felixlin on 16/8/2.
-//  Copyright © 2016年 tencent. All rights reserved.
+//  Copyright © 2016 tencent. All rights reserved.
 //
-/** 腾讯云IM Demo数据处理单元
- *  - 本类为Demo客户端提供数据处理服务，以便客户端更好的工作
- *
+/**
  *
  *  Tencent Cloud Chat Demo data processing unit
  *  - This class provides data processing services for the Demo client, so that the client can work better

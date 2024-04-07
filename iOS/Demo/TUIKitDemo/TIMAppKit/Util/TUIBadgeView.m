@@ -19,11 +19,9 @@
 
 @property(nonatomic, strong) UILabel *label;
 
-// 辅助圆，用来原地显示
 // Assist circle view for displaying in the origin position
 @property(nonatomic, strong) UIView *assistCircleView;
-
-// 初始位置
+ 
 // initial postion
 @property(nonatomic, assign) CGPoint initialCenterPosition;
 

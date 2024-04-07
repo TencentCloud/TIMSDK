@@ -3,7 +3,7 @@
 //  TUIKitDemo
 //
 //  Created by kennethmiao on 2018/10/10.
-//  Copyright © 2018年 Tencent. All rights reserved.
+//  Copyright © 2018 Tencent. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -33,6 +33,7 @@
 #import "TUICallingHistoryViewController.h"
 #import "TIMDefine.h"
 #import "UIView+TUILayout.h"
+#import "OfflinePushExtInfo.h"
 
 //Minimalist
 #import "ConversationController_Minimalist.h"
@@ -370,14 +371,12 @@ void uncaughtExceptionHandler(NSException*exception) {
 #pragma mark - TUILanguageSelectControllerDelegate
 - (void)onSelectLanguage:(TUILanguageSelectCellModel *)cellModel {
     /**
-     * 动态刷新语言的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新语言
      * The method of dynamically refreshing the language: Destroy the current interface, and recreate it and then jump to realize dynamic refreshing of the language
      */
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
     [NSUserDefaults.standardUserDefaults synchronize];
     
     /**
-     * 1. 重新创建登录控制器以及根导航控制器
      * 1. Recreate the login controller as well as the root navigation controller
      */
     UIViewController *loginVc = [self getLoginController];
@@ -392,7 +391,6 @@ void uncaughtExceptionHandler(NSException*exception) {
     }
     
     /**
-     * 2. 创建语言选择页面，并 push
      * 2. Create a language selection page and push
      */
     TUILanguageSelectController *languageVc = [[TUILanguageSelectController alloc] init];
@@ -400,7 +398,6 @@ void uncaughtExceptionHandler(NSException*exception) {
     [navVc pushViewController:languageVc animated:NO];
     
     /**
-     * 3. 切换根控制器
      * 3. Switch root controller
      */
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -408,7 +405,6 @@ void uncaughtExceptionHandler(NSException*exception) {
     });
     
     /**
-     * 4. 重新配置安全警告视图
      * 4. Recofig the security warning view in ChatVC
      */
     [self setupChatSecurityWarningView];
@@ -417,14 +413,13 @@ void uncaughtExceptionHandler(NSException*exception) {
 #pragma mark - ThemeSelectControllerDelegate
 - (void)onSelectTheme:(TUIThemeSelectCollectionViewCellModel *)cellModel {
     /**
-     * 动态刷新主题的方法: 销毁当前界面，并重新创建后跳转来实现动态刷新主题
+     * : ，
      * The method of dynamically refreshing the theme: Destroy the current interface, and recreate it and then jump to realize the dynamic refresh theme
      */
     [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"need_recover_login_page_info"];
     [NSUserDefaults.standardUserDefaults synchronize];
     
     /**
-     * 1. 重新创建登录控制器以及根导航控制器
      * 1. Recreate the login controller and root navigation controller
      */
     UIViewController *loginVc = [self getLoginController];
@@ -439,7 +434,6 @@ void uncaughtExceptionHandler(NSException*exception) {
     }
     
     /**
-     * 2. 创建主题选择控制器并 push
      * 2. Create a theme selection controller and push
      */
     TUIThemeSelectController *themeVc = [[TUIThemeSelectController alloc] init];
@@ -449,7 +443,6 @@ void uncaughtExceptionHandler(NSException*exception) {
     [navVc pushViewController:themeVc animated:NO];
     
     /**
-     * 3. 切换根控制器
      * 3. Switch root controller
      */
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -463,7 +456,6 @@ void uncaughtExceptionHandler(NSException*exception) {
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
             } else {
                 /**
-                 * 忽略系统的设置，强制修改成白天模式，并应用当前的主题
                  * Ignoring system settings, forced switch to light mode, and apply the current theme
                  */
                 UIApplication.sharedApplication.keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
@@ -673,7 +665,6 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     [self reloadCombineData];
     
     /**
-     * 1. 重新创建登录控制器以及根导航控制器
      * 1. Recreate the login controller and root navigation controller
      */
     UIViewController *loginVc = [self getLoginController];
@@ -692,7 +683,6 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     [navVc pushViewController:styleSelectVC animated:NO];
 
     /**
-     * 3. 切换根控制器
      * 3. Switch root controller
      */
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -703,7 +693,6 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
             [NSUserDefaults.standardUserDefaults synchronize];
         }
         /**
-         * 4. 重新配置安全警告视图
          * 4. Recofig the security warning view in ChatVC
          */
         [self setupChatSecurityWarningView];
@@ -822,7 +811,7 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
 }
 
 #pragma mark - TIMPush
-// TIMPush 相关配置
+// TIMPush 
 - (int)offlinePushCertificateID {
     return kAPNSBusiId;
 }
@@ -831,10 +820,28 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     return kTIMPushAppGorupKey;
 }
 
+
+// If you need to customize the parsing of received remote push, you need to implement 'onRemoteNotificationReceived' in the AppDelegate.m file and return YES
+/**
+ - (BOOL)onRemoteNotificationReceived:(NSString *)notice {
+     NSString *ext = notice;
+     OfflinePushExtInfo *info = [OfflinePushExtInfo createWithExtString:ext];
+     dispatch_async(dispatch_get_main_queue(), ^{
+         // custom operation such as navigate chatVC;
+         NSInteger chatType = info.entity.chatType;
+         NSString *sender = info.entity.sender;
+         NSString *userID = (chatType == 1) ? sender : nil;
+         NSString *groupID = (chatType != 1) ? sender : nil;
+         [self navigateToBuiltInChatViewController:userID groupID:groupID];
+     });
+     return YES ;
+ }
+ */
+
 - (void)navigateToBuiltInChatViewController:(NSString *)userID groupID:(NSString *)groupID {
     UITabBarController *tab = [self getMainController];
     if (![tab isKindOfClass: UITabBarController.class]) {
-        // 正在登录中
+        //Logging in
         return;
     }
     if (tab.selectedIndex != 0) {

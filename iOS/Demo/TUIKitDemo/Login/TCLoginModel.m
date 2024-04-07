@@ -3,7 +3,7 @@
 //  TCLVBIMDemo
 //
 //  Created by dackli on 16/8/3.
-//  Copyright © 2016年 tencent. All rights reserved.
+//  Copyright © 2016 tencent. All rights reserved.
 //
 
 #import "TCLoginModel.h"
@@ -101,7 +101,7 @@ static TCLoginModel *_sharedInstance = nil;
     };
 
     if ([self serviceHost] == nil) {
-        // 再尝试获取一次 serviceUrl
+        //Try to get serviceUrl again
         [self getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
             block();
         } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
@@ -418,9 +418,9 @@ static TCLoginModel *_sharedInstance = nil;
 #pragma mark - Getter
 - (NSDictionary *)smsVerficationCodeQuery {
     return @{
-        @"appId": safeValueForKey(self.captchaAppID), // 图片验证码的 appID
-        kKeyLoginInfoApaasTicket: safeValueForKey(self.ticket), // 图片验证码服务返回的 ticket
-        kKeyLoginInfoApaasRandStr: safeValueForKey(self.randStr), // 图片验证码服务返回的 randstr
+        @"appId": safeValueForKey(self.captchaAppID), // appID of image verification code
+        kKeyLoginInfoApaasTicket: safeValueForKey(self.ticket), // Ticket returned by the image verification code service
+        kKeyLoginInfoApaasRandStr: safeValueForKey(self.randStr), // randstr returned by the image verification code service
         kKeyLoginInfoPhone: safeValueForKey(self.phone), // phone
         kKeyLoginInfoApaasAppID: [self curApaasAppID] // 多租户
     };
@@ -428,17 +428,17 @@ static TCLoginModel *_sharedInstance = nil;
 
 - (NSDictionary *)loginByPhoneQuery {
     return @{
-        kKeyLoginInfoSessionID: safeValueForKey(self.sessionID), // 获取短信验证码返回的 sessionID
-        kKeyLoginInfoPhone: safeValueForKey(self.phone), // phone 和 email 二选一
-        @"code": safeValueForKey(self.smsCode), // 用户输入的短信验证码
-        kKeyLoginInfoApaasAppID: [self curApaasAppID] // 多租户
+        kKeyLoginInfoSessionID: safeValueForKey(self.sessionID), // Get the sessionID returned by the SMS verification code
+        kKeyLoginInfoPhone: safeValueForKey(self.phone), // Choose one of phone or email
+        @"code": safeValueForKey(self.smsCode), // SMS verification code entered by the user
+        kKeyLoginInfoApaasAppID: [self curApaasAppID] // multi-tenant
     };
 }
 
 - (NSDictionary *)loginByTokenQuery {
     return @{
-        kKeyLoginInfoUserID: safeValueForKey(self.userID), // 登录之后返回的 userID
-        kKeyLoginInfoToken: safeValueForKey(self.token), // 登录之后返回的 token
+        kKeyLoginInfoUserID: safeValueForKey(self.userID), // userID returned after login
+        kKeyLoginInfoToken: safeValueForKey(self.token), // The token returned after logging in
         kKeyLoginInfoApaasAppID: [self curApaasAppID],
         kKeyLoginInfoApaasUserID: safeValueForKey(self.apaasUserID)
     };
