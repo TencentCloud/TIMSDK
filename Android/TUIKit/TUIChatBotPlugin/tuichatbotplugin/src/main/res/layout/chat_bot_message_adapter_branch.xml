@@ -38,7 +38,7 @@
                     android:ellipsize="end"
                     android:textSize="14sp"
                     android:textColor="@color/white"
-                    tools:text="最多建议" />
+                    tools:text="Most suggestions" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/ll_refresh"
@@ -77,7 +77,7 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone"
-            tools:text="最多建议15个字"
+            tools:text="Maximum 15 characters"
             tools:visibility="gone"/>
         <View
             android:layout_width="match_parent"

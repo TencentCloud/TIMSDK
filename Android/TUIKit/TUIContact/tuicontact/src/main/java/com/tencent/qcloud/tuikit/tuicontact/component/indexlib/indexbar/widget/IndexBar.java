@@ -26,7 +26,7 @@ public class IndexBar extends View {
 
     public static String[] INDEX_STRING = {
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"};
-    // 是否需要根据实际的数据来生成索引数据源（例如 只有 A B C 三种tag，那么索引栏就 A B C 三项）
+    
     // Whether the index data source needs to be generated based on the actual data
     private boolean isNeedRealIndex;
 
@@ -39,14 +39,12 @@ public class IndexBar extends View {
 
     private Paint mPaint;
 
-    // 手指按下时的背景色
     // background color when finger is pressed
     private int mPressedBackground;
 
     private IIndexBarDataHelper mDataHelper;
 
-    // 以下边变量是外部set进来的  // The following side variables are imported from external set
-    private TextView mPressedShowTextView; // 用于特写显示正在被触摸的index值 // Used to close-up display the index value that is being touched
+    private TextView mPressedShowTextView;
     private boolean isSourceDatasAlreadySorted;
     private List<? extends BaseIndexPinyinBean> mSourceDatas;
     private CustomLinearLayoutManager mLayoutManager;
@@ -147,8 +145,8 @@ public class IndexBar extends View {
         int measureWidth = 0;
         int measureHeight = 0;
 
-        Rect indexBounds = new Rect(); // 存放每个绘制的index的Rect区域 // The Rect area that stores each drawn index
-        String index; // 每个要绘制的index内容 // Each index content to be drawn
+        Rect indexBounds = new Rect(); 
+        String index; 
         for (int i = 0; i < mIndexDatas.size(); i++) {
             index = mIndexDatas.get(i);
             mPaint.getTextBounds(index, 0, index.length(), indexBounds);
@@ -194,14 +192,14 @@ public class IndexBar extends View {
         String index;
         for (int i = 0; i < mIndexDatas.size(); i++) {
             index = mIndexDatas.get(i);
-            // 获得画笔的FontMetrics，用来计算baseLine。因为drawText的y坐标，代表的是绘制的文字的baseLine的位置
+            
             // Get the FontMetrics of the brush, used to calculate the baseLine. Because the y coordinate of drawText represents the position of the baseLine of
             // the drawn text
             Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-            // 计算出在每格index区域，竖直居中的baseLine值
+            
             // Calculate the baseLine value centered vertically in the index area of each grid
             int baseline = (int) ((mGapHeight - fontMetrics.bottom - fontMetrics.top) / 2);
-            // 调用drawText，居中显示绘制index
+            
             // Call drawText to center the drawing index
             canvas.drawText(index, mWidth / 2 - mPaint.measureText(index) / 2, t + mGapHeight * i + baseline, mPaint);
         }
@@ -233,10 +231,10 @@ public class IndexBar extends View {
     private void onTouchMove(MotionEvent event) {
 
         float y = event.getY();
-        // 通过计算判断落点在哪个区域：
+        
         // Determine which area the landing point is in by calculating:
         int pressI = (int) ((y - getPaddingTop()) / mGapHeight);
-        // 边界处理（在手指move时，有可能已经移出边界，防止越界）
+        
         // Boundary processing (when the finger moves, it may have moved out of the boundary to prevent crossing the boundary)
         if (pressI < 0) {
             pressI = 0;
@@ -270,8 +268,6 @@ public class IndexBar extends View {
     }
 
     /**
-     * 显示当前被按下的index的TextView
-     *
      * Displays the TextView of the currently pressed index
      *
      * @return
@@ -287,8 +283,6 @@ public class IndexBar extends View {
     }
 
     /**
-     * 一定要在设置数据源{@link #setSourceDatas(List)}之前调用
-     *
      * Be sure to call before setting the data source {@link #setSourceDatas(List)}
      *
      * @param needRealIndex
@@ -315,8 +309,6 @@ public class IndexBar extends View {
     }
 
     /**
-     * 初始化原始数据源，并取出索引数据源
-     *
      * Initialize the original data source and take out the index data source
      *
      * @return
@@ -339,12 +331,6 @@ public class IndexBar extends View {
     }
 
     /**
-     * 以下情况调用：
-     * 1 在数据源改变
-     * 2 控件size改变时
-     * 计算gapHeight
-     *
-     *
      * Called when:
      * 1 change in data source
      * 2 When the control size changes
@@ -372,8 +358,8 @@ public class IndexBar extends View {
     }
 
     public interface OnIndexPressedListener {
-        void onIndexPressed(int index, String text);//当某个Index被按下 // When an Index is pressed
+        void onIndexPressed(int index, String text);
 
-        void onMotionEventEnd();//当触摸事件结束（UP CANCEL） // When the touch event ends (UP CANCEL)
+        void onMotionEventEnd();
     }
 }

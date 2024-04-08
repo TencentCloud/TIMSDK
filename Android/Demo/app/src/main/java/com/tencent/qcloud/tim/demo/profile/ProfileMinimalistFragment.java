@@ -9,7 +9,8 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
-import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
@@ -53,13 +54,7 @@ public class ProfileMinimalistFragment extends BaseFragment {
                                 TUILogin.logout(new TUICallback() {
                                     @Override
                                     public void onSuccess() {
-                                        UserInfo.getInstance().cleanUserInfo();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putBoolean(TUIKitConstants.LOGOUT, true);
-                                        TUIUtils.startActivity("LoginForDevActivity", bundle);
-                                        if (getActivity() != null) {
-                                            getActivity().finish();
-                                        }
+                                        ProfileUtil.onLogoutSuccess(getActivity());
                                     }
 
                                     @Override

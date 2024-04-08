@@ -10,8 +10,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 
 public class UserModel {
     public String             userId;
-    public String             userName;
-    public String             userAvatar;
+
     public String             takeSeatRequestId;
     public long               enterRoomTime = 0L;
 
@@ -20,15 +19,17 @@ public class UserModel {
 
     public UserModel() {
         userId = TUILogin.getUserId();
-        userName = TUILogin.getNickName();
-        userAvatar = TUILogin.getFaceUrl();
     }
 
     public TUIRoomDefine.Role getRole() {
         return role;
     }
 
-    public void setRole(TUIRoomDefine.Role role) {
+    public void initRole(TUIRoomDefine.Role role) {
+        this.role = role;
+    }
+
+    public void changeRole(TUIRoomDefine.Role role) {
         if (this.role == TUIRoomDefine.Role.GENERAL_USER && role == TUIRoomDefine.Role.MANAGER) {
             RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_GENERAL_TO_MANAGER, null);
         } else if (this.role == TUIRoomDefine.Role.MANAGER && role == TUIRoomDefine.Role.GENERAL_USER) {

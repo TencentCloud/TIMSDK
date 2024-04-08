@@ -25,6 +25,7 @@ public class MessageReactionBeanCache {
                 for (TUIMessageBean messageBean : instance.cacheMap.keySet()) {
                     if (TextUtils.equals(messageBean.getId(), messageReactionBean.getMessageID())) {
                         instance.cacheMap.put(messageBean, messageReactionBean);
+                        messageBean.setHasReaction(messageReactionBean.getReactionCount() != 0);
                         TUIChatService.getInstance().refreshMessage(messageBean);
                     }
                 }

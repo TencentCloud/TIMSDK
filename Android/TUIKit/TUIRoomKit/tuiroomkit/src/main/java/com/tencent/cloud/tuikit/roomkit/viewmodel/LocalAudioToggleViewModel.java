@@ -19,10 +19,10 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator.LocalAudioToggleViewAction;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator.LocalAudioToggleViewResponder;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.Map;
 
@@ -159,12 +159,12 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
         RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
         Context context = TUILogin.getAppContext();
         if (store.roomInfo.isSeatEnabled && !store.userModel.isOnSeat()) {
-            ToastUtil.toastShortMessageCenter(context.getString(R.string.tuiroomkit_please_raise_hand));
+            RoomToast.toastShortMessageCenter(context.getString(R.string.tuiroomkit_please_raise_hand));
             return false;
         }
         if (store.roomInfo.isMicrophoneDisableForAllUser
                 && store.userModel.getRole() != TUIRoomDefine.Role.ROOM_OWNER) {
-            ToastUtil.toastShortMessageCenter(context.getString(R.string.tuiroomkit_can_not_open_mic));
+            RoomToast.toastShortMessageCenter(context.getString(R.string.tuiroomkit_can_not_open_mic));
             return false;
         }
         return true;

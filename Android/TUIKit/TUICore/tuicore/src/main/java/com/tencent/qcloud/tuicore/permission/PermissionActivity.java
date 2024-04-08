@@ -125,8 +125,6 @@ public class PermissionActivity extends Activity {
     }
 
     /**
-     * 启动应用程序的详细信息设置。
-     *
      * Launch the application's details settings.
      */
     private void launchAppDetailsSettings() {
@@ -146,11 +144,6 @@ public class PermissionActivity extends Activity {
         finish();
     }
 
-    /*
-     * 1、连续申请权限时，需要前一个权限申请完全结束；
-     * 2、APP 从异常中恢复时，有些 Activity 在 onCreate 时就会申请权限；同时对于异常恢复，所有 Activity 可能被干掉，从新走流程；
-     * 所以可能导致本次权限申请过早结束，此时须在 onDestroy 中返回结果。
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -190,7 +183,7 @@ public class PermissionActivity extends Activity {
     }
 
     /**
-     * 安全合规要求，申请权限时，必须显示申请权限的理由。
+     * ，，。
      *
      * Security compliance requires that when applying for permission, the reason for applying for permission must be
      * displayed.

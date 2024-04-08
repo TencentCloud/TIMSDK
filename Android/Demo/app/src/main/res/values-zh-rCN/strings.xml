@@ -3,7 +3,6 @@
 
     <string name="test_custom_message">查看详情>></string>
 
-    // 登录相关
     <string name="account">用户名</string>
     <string name="password">密码</string>
 
@@ -36,7 +35,6 @@
     <string name="expired_login_tip">账号已过期，请重新登录</string>
     <string name="failed_login_tip">登录失败</string>
 
-    // "我"相关
     <string name="profile">我</string>
     <string name="modify_user_icon">头像</string>
     <string name="modify_nick_name">昵称</string>
@@ -105,7 +103,6 @@
     <string name="create_private_group">创建讨论组</string>
 
 
-    // 主页Tab相关
     <string name="tab_contact_tab_text">通讯录</string>
     <string name="tab_conversation_tab_text">消息</string>
     <string name="demo_tab_overseas_conversation_tab_text">聊天</string>
@@ -188,7 +185,6 @@
 
     <string name="demo_choose_avatar">选择头像</string>
 
-    <!--  权限相关 start -->
     <string name="demo_permission_mic_reason_title">%s申请获取麦克风权限</string>
     <string name="demo_permission_mic_reason">为方便您发送语音消息，进行摄像和音视频通话、使用快速会议功能，请允许我们访问麦克风。</string>
     <string name="demo_permission_camera_reason_title">%s申请获取相机权限</string>
@@ -198,7 +194,6 @@
     <string name="demo_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像、音视频通话和快速会议功能</string>
     <string name="demo_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像、视频通话和快速会议功能</string>
     <string name="demo_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用保存照片和视频功能</string>
-    <!--  权限相关 end -->
 
     <string name="upgrade_sure">立即升级</string>
     <string name="demo_user_status_switch_title">显示在线状态</string>

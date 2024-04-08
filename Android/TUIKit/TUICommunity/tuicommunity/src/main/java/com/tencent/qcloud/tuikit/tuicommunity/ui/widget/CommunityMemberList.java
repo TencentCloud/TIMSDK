@@ -93,7 +93,7 @@ public class CommunityMemberList extends LinearLayout implements ICommunityMembe
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    // 判断滚动到底部
+                    
                     LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     if (layoutManager == null) {
                         return;

@@ -52,7 +52,7 @@
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textSize="24sp"
-                    tools:text="林" />
+                    tools:text="Lee" />
 
                 <TextView
                     android:id="@+id/self_account_tag"
@@ -97,7 +97,7 @@
                     android:layout_toEndOf="@id/self_signature_tag"
                     android:gravity="center_vertical"
                     android:textSize="12sp"
-                    tools:text="相信光" />
+                    tools:text="believe in light" />
 
             </RelativeLayout>
 

@@ -35,7 +35,7 @@
             android:layout_marginBottom="30dp"
             android:gravity="center"
             android:textSize="16sp"
-            tools:text="3条回复" />
+            tools:text="3 replies" />
 
         <View
             android:layout_weight="0.33"

@@ -88,7 +88,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
         FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), replyContent, false);
         String senderName = quoteMessageBean.getOriginMsgSender();
         senderNameTv.setText(senderName + ": ");
-
+        setOnTimeInLineTextClickListener(msg);
         performMsgAbstract(quoteMessageBean);
 
         msgArea.setOnLongClickListener(new View.OnLongClickListener() {

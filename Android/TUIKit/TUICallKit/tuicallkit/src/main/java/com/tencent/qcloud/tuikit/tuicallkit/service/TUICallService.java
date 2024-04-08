@@ -23,9 +23,7 @@ public class TUICallService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        // 获取服务通知
         Notification notification = createForegroundNotification();
-        //将服务置于启动状态 ,NOTIFICATION_ID指的是创建的通知的ID
         startForeground(NOTIFICATION_ID, notification);
     }
 

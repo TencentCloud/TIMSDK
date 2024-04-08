@@ -1,92 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.tencent.qcloud.tim.demo">
-
-    <application
-        android:name=".DemoApplication"
-        android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/demo_app_name"
-        android:supportsRtl="true"
-        android:theme="@style/DemoAppTheme">
-        <activity
-            android:name=".SplashActivity"
-            android:screenOrientation="portrait"
-            android:exported="true"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="com.tencent.qloud.splash" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".login.LoginForDevActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".login.ThemeSelectActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".login.StyleSelectActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".login.LanguageSelectActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".main.MainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:exported="true"
-            android:theme="@style/DemoAppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="com.tencent.qcloud"
-                    android:path="/detail"
-                    android:scheme="pushscheme" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".profile.SelfDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".profile.AboutIMActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".main.MainMinimalistActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:exported="true"
-            android:theme="@style/DemoAppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="com.tencent.qcloud"
-                    android:path="/detail"
-                    android:scheme="pushscheme" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".profile.SelfDetailMinamalistActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".profile.AboutIMMinamalistActivity"
-            android:screenOrientation="portrait" />
-
-
-    </application>
+<?xml version="1.0" encoding="UTF-8"?><manifest>
+  <application xmlns:android="http://schemas.android.com/apk/res/android" android:supportsRtl="true" android:label="@string/demo_app_name" android:name="com.tencent.qcloud.tim.demo.DemoApplication" android:theme="@style/DemoAppTheme" android:icon="@drawable/ic_launcher" android:allowBackup="false">
+    <activity android:screenOrientation="portrait" android:name="com.tencent.qcloud.tim.demo.SplashActivity" android:theme="@style/SplashTheme" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.MAIN"/>
+        <action android:name="com.tencent.qloud.splash"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity android:screenOrientation="portrait" android:launchMode="singleTask" android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"/>
+    <activity android:name="com.tencent.qcloud.tim.demo.login.LanguageSelectActivity" android:screenOrientation="portrait"/>
+    <activity android:name="com.tencent.qcloud.tim.demo.login.ThemeSelectActivity" android:screenOrientation="portrait"/>
+    <activity android:name="com.tencent.qcloud.tim.demo.login.StyleSelectActivity" android:screenOrientation="portrait"/>
+    <activity android:screenOrientation="portrait" android:launchMode="singleTask" android:name="com.tencent.qcloud.tim.demo.main.MainActivity" android:theme="@style/DemoAppTheme" android:exported="true" android:windowSoftInputMode="adjustResize|stateHidden">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="pushscheme" android:path="/detail" android:host="com.tencent.qcloud"/>
+      </intent-filter>
+    </activity>
+    <activity android:name="com.tencent.qcloud.tim.demo.profile.SelfDetailActivity" android:screenOrientation="portrait"/>
+    <activity android:name="com.tencent.qcloud.tim.demo.profile.AboutIMActivity" android:screenOrientation="portrait"/>
+    <activity android:screenOrientation="portrait" android:launchMode="singleTask" android:name="com.tencent.qcloud.tim.demo.main.MainMinimalistActivity" android:theme="@style/DemoAppTheme" android:exported="true" android:windowSoftInputMode="adjustResize|stateHidden">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="pushscheme" android:path="/detail" android:host="com.tencent.qcloud"/>
+      </intent-filter>
+    </activity>
+    <activity android:name="com.tencent.qcloud.tim.demo.profile.SelfDetailMinamalistActivity" android:screenOrientation="portrait"/>
+    <activity android:name="com.tencent.qcloud.tim.demo.profile.AboutIMMinamalistActivity" android:screenOrientation="portrait"/>
+  </application>
 </manifest>

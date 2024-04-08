@@ -31,10 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 聊天界面表情输入界面
- * 需要注意的是， TUIKit 里面的表情包都是有版权限制的，购买的 IM 服务不包括表情包的使用权，请在上线的时候替换成自己的表情包，否则会面临法律风险
- * 黄脸表情为腾讯云版权所有，如要使用需获得授权，请通过以下链接联系我们。
- *
  * Emoji input interface in the chat screen.
  * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace
  * them with your own emoticons when you go online, otherwise you will face legal risks.

@@ -32,8 +32,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     public static final int LAST_MSG_STATUS_LOCAL_REVOKED = V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED;
 
     /**
-     * 会话类型，自定义会话or普通会话
-     *
      * conversation type
      */
     private int type;
@@ -41,20 +39,14 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     private int atType = AT_TYPE_UNKNOWN;
 
     /**
-     * 消息未读数
-     *
      * unread message number
      */
     private int unRead;
     /**
-     * 会话ID
-     *
      * conversation ID
      */
     private String conversationId;
     /**
-     * 会话标识，C2C为对方用户ID，群聊为群组ID
-     *
      * ID, C2C is UserID, Group is group ID
      */
     private String id;
@@ -93,39 +85,33 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     private boolean isGroup;
     private boolean top;
     /**
-     * 是否为折叠会话 Is folded conversation or not
+     *  Is folded conversation or not
      */
     private boolean isMarkFold;
     /**
-     * 是否标记会话未读 Is marked conversation unread or not
+     *  Is marked conversation unread or not
      */
     private boolean isMarkUnread;
     /**
-     * 是否标记会话隐藏 Is marked conversation hidden or not
+     *  Is marked conversation hidden or not
      */
     private boolean isMarkHidden;
     /**
-     * 本地记录未读状态 Is marked conversation local-unread or not
+     *  Is marked conversation local-unread or not
      */
     private boolean isMarkLocalUnread;
 
     private boolean isMarkStar;
-    /**
-     * 最后一条消息时间
-     */
+
     private long lastMessageTime;
     private V2TIMMessage lastMessage;
 
     /**
-     * 会话界面显示的@提示消息
-     *
      * "@" message in group
      */
     private String atInfoText;
 
     /**
-     * 会话界面显示消息免打扰图标
-     *
      * the conversation item displays the icon of Do Not Disturb
      */
     private boolean showDisturbIcon;
@@ -134,8 +120,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     private String groupType;
 
     /**
-     * 会话排序键值
-     *
      * conversation sort key
      */
     private long orderKey;
@@ -230,9 +214,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         isMarkStar = markStar;
     }
 
-    /**
-     * 会话标记列表（从 6.5 版本开始支持）
-     */
     public List<Long> getMarkList() {
         if (conversation == null) {
             return null;
@@ -241,8 +222,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     }
 
     /**
-     * 获得最后一条消息的时间，单位是秒
-     *
      * Get the time of the last message, in seconds
      */
     public long getLastMessageTime() {
@@ -250,8 +229,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
     }
 
     /**
-     * 设置最后一条消息的时间，单位是秒
-     *
      * Set the time of the last message, in seconds
      * @param lastMessageTime
      */

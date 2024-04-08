@@ -17,6 +17,8 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationGroupBean;
@@ -36,7 +38,7 @@ import java.util.Map;
 @AutoService(TUIInitializer.class)
 @TUIInitializerDependency("TIMCommon")
 @TUIInitializerID("TUIConversation")
-public class TUIConversationService implements TUIInitializer, ITUIConversationService {
+public class TUIConversationService implements TUIInitializer, ITUIService, ITUINotification {
     public static final String TAG = TUIConversationService.class.getSimpleName();
     private static TUIConversationService instance;
 

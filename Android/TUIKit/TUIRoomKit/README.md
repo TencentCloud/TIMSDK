@@ -38,8 +38,8 @@ Android
 3. 配置 `GenerateTestUserSig.java` 文件中的相关参数：
 	<img src="https://main.qcloudimg.com/raw/f9b23b8632058a75b78d1f6fdcdca7da.png" width="900">
 
-	- SDKAPPID：默认为占位符（PLACEHOLDER），请设置为步第一步中记录下的 SDKAppID。
-	- SECRETKEY：默认为占位符（PLACEHOLDER），请设置为步第一步中记录下的密钥信息。
+	- SDKAppID：默认为占位符（PLACEHOLDER），请设置为步第一步中记录下的 SDKAppID。
+	- SDKSecretKey：默认为占位符（PLACEHOLDER），请设置为步第一步中记录下的密钥信息。
 
 ### 第三步：编译运行
 使用 Android Studio（3.5 以上的版本）打开源码目录 `TUIRoomKit/Android`，待Android Studio工程同步完成后，连接真机单击 **运行按钮** 即可开始体验本APP。

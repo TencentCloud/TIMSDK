@@ -238,7 +238,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
 
     public void load(String imageId) {
         if (multiImageData.size() == 0) {
-            // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
+            
             // The image id when the request is initiated is inconsistent with the current image id,
             // indicating that multiplexing has occurred, and the image should not be set at this time.
             if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
@@ -249,7 +249,7 @@ public class TeamHeadSynthesizer implements Synthesizer {
         }
 
         if (multiImageData.size() == 1) {
-            // 发起请求时的图片 id 和当前图片 id 不一致，说明发生了复用，此时不应该再设置图像
+            
             // The image id when the request is initiated is inconsistent with the current image id,
             // indicating that multiplexing has occurred, and the image should not be set at this time.
             if (imageId != null && !TextUtils.equals(imageId, currentImageId)) {
@@ -259,12 +259,12 @@ public class TeamHeadSynthesizer implements Synthesizer {
             return;
         }
 
-        // 异步加载图像前先清空内容，避免闪烁
+        
         // Clear the content before loading images asynchronously to avoid flickering
         clearImage();
 
-        // 初始化图片信息，由于是异步加载和合成头像，这里需要传给合成线程一个局部对象，只在异步加载线程中使用
-        // 这样在图片被复用时外部线程再次设置 url 就不会覆盖此局部对象
+        
+        
         // Initialize the image information. Since it is asynchronous loading and synthesizing the avatar,
         // a local object needs to be passed to the synthesis thread, which is only used in the asynchronous
         // loading thread, so that when the image is reused, the external thread will not overwrite the local

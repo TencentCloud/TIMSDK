@@ -118,7 +118,7 @@ public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
     }
 
     private void initPopMenuAction() {
-        // 设置长按conversation显示PopAction
+        
         List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.not_display));

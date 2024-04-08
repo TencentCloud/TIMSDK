@@ -61,6 +61,12 @@ public class SoundMessageHolder extends MessageContentHolder {
         msgContentFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (isMultiSelectMode) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(view, message);
+                    }
+                    return;
+                }
                 String soundPath = ChatFileDownloadPresenter.getSoundPath(message);
                 if (AudioPlayer.getInstance().isPlaying()) {
                     AudioPlayer.getInstance().stopPlay();

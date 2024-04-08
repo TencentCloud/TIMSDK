@@ -21,7 +21,7 @@
         android:textColor="#444444"
         android:visibility="gone"
         tools:visibility="visible"
-        tools:text="暂无群聊"/>
+        tools:text="No group"/>
 
     <com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.widget.IndexBar
         android:id="@+id/contact_indexBar"

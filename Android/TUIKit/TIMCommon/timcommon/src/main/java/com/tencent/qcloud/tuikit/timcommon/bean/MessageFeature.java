@@ -3,9 +3,6 @@ package com.tencent.qcloud.tuikit.timcommon.bean;
 import java.io.Serializable;
 
 /*
- *  通过消息携带功能宏，主要用于新老版本兼容，使用 cloudCustomData 字段。
- *  像对方输入中功能。
- *
  *  Carrying function macros through messages，Mainly used to be compatible with old and new versions，Use the cloudCustomData field.
  *  Such as Typing function.
  */

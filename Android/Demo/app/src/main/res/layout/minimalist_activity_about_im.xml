@@ -125,4 +125,47 @@
         android:layout_marginEnd="16dp"
         android:background="#1A000000"/>
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layoutDirection="ltr"
+        android:paddingBottom="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/icp_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:background="@drawable/common_item_pressed_effect_background"
+                android:textColor="#756F6F"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/company_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#756F6F"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/copyright_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#756F6F"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>

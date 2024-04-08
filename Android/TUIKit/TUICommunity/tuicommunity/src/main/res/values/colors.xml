@@ -10,11 +10,9 @@
 
     <color name="community_list_selected_color">#19006EFF</color>
     <color name="community_list_normal_color">#FFFFFFFF</color>
-    <!-- 积极钮色值 -->
     <color name="community_btn_positive">#00a4ff</color>
     <color name="community_btn_positive_hover">#006eff</color>
 
-    <!-- 消极按钮背景色值 -->
     <color name="community_btn_negative">#ffffff</color>
     <color name="community_btn_negative_hover">#cc3428</color>
 

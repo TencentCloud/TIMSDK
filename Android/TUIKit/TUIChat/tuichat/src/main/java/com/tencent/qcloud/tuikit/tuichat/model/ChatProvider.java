@@ -6,6 +6,7 @@ import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 import android.text.TextUtils;
 import android.util.Pair;
+
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
@@ -37,6 +38,9 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.push.OfflinePushExtInfo;
+import com.tencent.qcloud.tuicore.push.OfflinePushExtConfigInfo;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
@@ -48,8 +52,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.OfflineMessageContainerBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
@@ -60,6 +62,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -313,40 +316,48 @@ public class ChatProvider {
 
     private V2TIMOfflinePushInfo createOfflinePushInfo(TUIMessageBean message, ChatInfo chatInfo) {
         String description = FaceManager.emojiJudge(message.getExtra());
+
+        OfflinePushExtInfo offlinePushExtInfo = new OfflinePushExtInfo();
         String sender = message.getSender();
-        String chatName = chatInfo.getChatName();
-        OfflineMessageBean entity = new OfflineMessageBean();
-        entity.content = description;
-        entity.sender = sender;
-        entity.nickname = chatName;
-        entity.faceUrl = TUIConfig.getSelfFaceUrl();
-        OfflineMessageContainerBean containerBean = new OfflineMessageContainerBean();
-        containerBean.entity = entity;
+        offlinePushExtInfo.getBusinessInfo().setDesc(description);
+        offlinePushExtInfo.getBusinessInfo().setSenderId(sender);
+        offlinePushExtInfo.getBusinessInfo().setFaceUrl(TUIConfig.getSelfFaceUrl());
+        String senderNickName = chatInfo.getChatName();
 
         String groupID = "";
-        boolean isGroup = false;
         if (chatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
             groupID = chatInfo.getId();
-            isGroup = true;
-            entity.chatType = V2TIMConversation.V2TIM_GROUP;
-            entity.sender = groupID;
+            offlinePushExtInfo.getBusinessInfo().setChatType(V2TIMConversation.V2TIM_GROUP);
+            offlinePushExtInfo.getBusinessInfo().setSenderId(groupID);
+            if (TextUtils.isEmpty(senderNickName)) {
+                senderNickName = groupID;
+            }
+        } else {
+            String selfNickName = TUIConfig.getSelfNickName();
+            if (TextUtils.isEmpty(selfNickName)) {
+                selfNickName = TUILogin.getLoginUser();
+            }
+            senderNickName = selfNickName;
         }
+        offlinePushExtInfo.getBusinessInfo().setSenderNickName(senderNickName);
+        offlinePushExtInfo.getConfigInfo().setFCMPushType(OfflinePushExtConfigInfo.FCM_PUSH_TYPE_DATA);
+        offlinePushExtInfo.getConfigInfo().setFCMNotificationType(OfflinePushExtConfigInfo.FCM_NOTIFICATION_TYPE_TIMPUSH);
+
+        // setCustomData Example
+        /*ChatInfo info = new ChatInfo();
+        info.setChatName("eeeee");
+        info.setId("32323");
+        offlinePushExtInfo.getEntity().setCustomData(new Gson().toJson(info).getBytes());*/
 
         V2TIMOfflinePushInfo v2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
-        if (!TextUtils.isEmpty(chatName)) {
-            v2TIMOfflinePushInfo.setTitle(chatName);
-        } else {
-            String title = isGroup ? groupID : sender;
-            if (!TextUtils.isEmpty(title)) {
-                v2TIMOfflinePushInfo.setTitle(title);
-            }
-        }
+        v2TIMOfflinePushInfo.setTitle(senderNickName);
 
         if (!TextUtils.isEmpty(description)) {
             v2TIMOfflinePushInfo.setDesc(description);
         }
-        v2TIMOfflinePushInfo.setExt(new Gson().toJson(containerBean).getBytes());
-        // OPPO必须设置ChannelID才可以收到推送消息，这个channelID需要和控制台一致
+
+        v2TIMOfflinePushInfo.setExt(new Gson().toJson(offlinePushExtInfo).getBytes());
+
         // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
         v2TIMOfflinePushInfo.setAndroidOPPOChannelID("tuikit");
         if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {

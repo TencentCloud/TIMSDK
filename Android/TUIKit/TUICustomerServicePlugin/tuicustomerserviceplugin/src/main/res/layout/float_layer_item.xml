@@ -19,6 +19,6 @@
         android:background="@drawable/input_float_text_bg"
         android:textSize="14sp"
         android:textColor="#8f959e"
-        tools:text="常用语" />
+        tools:text="Commonly used expressions" />
 
 </LinearLayout>

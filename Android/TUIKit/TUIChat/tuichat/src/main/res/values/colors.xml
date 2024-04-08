@@ -5,7 +5,6 @@
     <color name="chat_bubble_other_color">#ECECEC</color>
     <color name="chat_bubble_self_color">#DCEAFD</color>
 
-    <!-- 线 -->
     <color name="chat_title_line_color">#E6E6E6</color>
     <color name="input_title_line_color">#D2D2D2</color>
 

@@ -41,7 +41,7 @@ class ObjectManager {
     }
 
     public Object createObject(String factoryName, String objectName, Map<String, Object> param) {
-        Log.i(TAG, "createObject : " + factoryName + " objectName : " + objectName);
+        Log.d(TAG, "createObject : " + factoryName + " objectName : " + objectName);
         if (TextUtils.isEmpty(factoryName)) {
             return null;
         }

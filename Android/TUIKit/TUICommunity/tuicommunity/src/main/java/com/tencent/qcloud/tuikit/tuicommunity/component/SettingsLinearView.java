@@ -140,9 +140,6 @@ public class SettingsLinearView extends LinearLayout {
         arrowView.setVisibility(isShowArrow ? VISIBLE : GONE);
     }
 
-    /**
-     * 获取内容
-     */
     public String getContent() {
         return contentText.getText().toString();
     }
@@ -157,9 +154,7 @@ public class SettingsLinearView extends LinearLayout {
     }
 
     /**
-     * 设置文字内容
-     *
-     * @param content 内容
+     * @param content
      */
     public void setContent(String content) {
         this.content = content;

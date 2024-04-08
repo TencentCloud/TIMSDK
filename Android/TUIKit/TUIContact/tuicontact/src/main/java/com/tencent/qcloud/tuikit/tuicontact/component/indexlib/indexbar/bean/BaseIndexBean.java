@@ -7,7 +7,7 @@ import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.suspension.ISuspe
 import java.io.Serializable;
 
 public abstract class BaseIndexBean implements ISuspensionInterface, Serializable {
-    private String baseIndexTag; // 所属的分类（名字的汉语拼音首字母） // The category to which it belongs (the first letter of the Chinese pinyin of the name)
+    private String baseIndexTag; 
 
     public String getBaseIndexTag() {
         return baseIndexTag;

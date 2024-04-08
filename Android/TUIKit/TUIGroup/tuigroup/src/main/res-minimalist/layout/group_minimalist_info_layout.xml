@@ -53,7 +53,7 @@
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    tools:text="群聊" />
+                    tools:text="group" />
 
                 <ImageView
                     android:id="@+id/edit_group_name"

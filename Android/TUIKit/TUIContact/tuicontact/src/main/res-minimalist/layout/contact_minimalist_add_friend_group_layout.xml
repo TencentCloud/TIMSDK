@@ -136,7 +136,7 @@
             android:textSize="16sp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            tools:text="林" />
+            tools:text="Lee" />
 
         <TextView
             android:id="@+id/friend_account_tag"
@@ -184,7 +184,7 @@
             android:gravity="center_vertical"
             android:textSize="12sp"
             android:textColor="#CC000000"
-            tools:text="相信光" />
+            tools:text="believe" />
 
     </RelativeLayout>
 
@@ -196,7 +196,7 @@
         android:gravity="center"
         android:textSize="13.44sp"
         android:textColor="#444444"
-        tools:text="我的 ID"/>
+        tools:text="Self ID"/>
 
 
     <include layout="@layout/contact_minimalist_not_found_layout"

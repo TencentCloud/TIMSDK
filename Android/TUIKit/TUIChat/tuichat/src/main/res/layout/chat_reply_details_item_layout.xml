@@ -47,7 +47,7 @@
         android:lineHeight="21.6sp"
         android:textColor="@color/black"
         android:textSize="15.36sp"
-        tools:text="吃饭" />
+        tools:text="Eat" />
 
     <!-- translation content area -->
     <com.tencent.qcloud.tuikit.timcommon.component.MaxWidthFrameLayout

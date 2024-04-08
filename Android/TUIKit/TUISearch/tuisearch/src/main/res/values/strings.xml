@@ -76,8 +76,8 @@
 
     <string name="search_i_know">I got it</string>
     <string name="search_no_more_reminders">No more reminders</string>
-    <string name="search_im_flagship">Ultimate Edition</string>
+    <string name="search_im_flagship">Premium Edition</string>
     <string name="search_buying_guidelines">price description</string>
-    <string name="search_im_flagship_edition_update_tip">%s function is the Tencent Cloud Chat Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
+    <string name="search_im_flagship_edition_update_tip">%s function is the Tencent Cloud Chat Premium Edition function, which can be used after purchasing the Premium Edition package. Please refer to the price description for details.</string>
 
 </resources>

@@ -19,7 +19,7 @@
     <dimen name="chat_message_bg_stoke_width">1dp</dimen>
     <dimen name="chat_item_padding_bottom">7dp</dimen>
     <dimen name="chat_message_text_size">15.55sp</dimen>
-    <dimen name="chat_input_editor_height">32.64dp</dimen>
+    <dimen name="chat_input_editor_min_height">40dp</dimen>
     <dimen name="chat_input_icon_size">26.88dp</dimen>
 
     <dimen name="chat_input_text_size">15.55sp</dimen>

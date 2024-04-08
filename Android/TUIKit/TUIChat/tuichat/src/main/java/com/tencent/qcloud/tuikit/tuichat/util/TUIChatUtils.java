@@ -137,7 +137,7 @@ public class TUIChatUtils {
     }
 
     public static boolean isTopicGroup(String groupID) {
-        // topicID 格式：@TGS#_xxxx@TOPIC#_xxxx
+        
         if (!isCommunityGroup(groupID)) {
             return false;
         }
@@ -145,7 +145,7 @@ public class TUIChatUtils {
     }
 
     public static String getGroupIDFromTopicID(String topicID) {
-        // topicID 格式：@TGS#_xxxx@TOPIC#_xxxx
+        
         int index = topicID.indexOf("@TOPIC#_");
         return topicID.substring(0, index);
     }

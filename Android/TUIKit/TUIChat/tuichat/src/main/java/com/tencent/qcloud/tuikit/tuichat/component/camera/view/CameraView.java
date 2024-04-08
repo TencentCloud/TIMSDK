@@ -35,13 +35,13 @@ import java.io.IOException;
 public class CameraView extends FrameLayout implements SurfaceHolder.Callback, ICameraView {
     private static final String TAG = CameraView.class.getSimpleName();
 
-    // 拍照浏览时候的类型
+    
     // camera mode
     public static final int TYPE_PICTURE = 0x001;
     public static final int TYPE_VIDEO = 0x002;
     public static final int TYPE_SHORT = 0x003;
     public static final int TYPE_DEFAULT = 0x004;
-    // 录制视频比特率
+    
     // Recording video bit rate
     public static final int MEDIA_QUALITY_HIGH = 20 * 100000;
     public static final int MEDIA_QUALITY_MIDDLE = 16 * 100000;
@@ -51,12 +51,12 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
     public static final int MEDIA_QUALITY_DESPAIR = 2 * 100000;
     public static final int MEDIA_QUALITY_SORRY = 1 * 80000;
 
-    // 闪关灯状态
+    
     // Flash status
     private static final int FLASH_TYPE_AUTO = 0x021;
     private static final int FLASH_TYPE_ON = 0x022;
     private static final int FLASH_TYPE_OFF = 0x023;
-    // Camera 状态机
+    
     // Camera state machine
     private CameraMachine machine;
     private int flashType = FLASH_TYPE_OFF;
@@ -75,10 +75,10 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
     private int layoutWidth;
     private float screenProp = 0f;
 
-    // 视频URL Video URL
+    
     private String videoUrl;
 
-    // 切换摄像头按钮的参数
+    
     // Switch camera button parameters
     private int iconSize = 0;
     private int iconMargin = 0;
@@ -87,7 +87,7 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
     private int iconRight = 0;
     private int duration = 0;
 
-    // 缩放梯度
+    
     // scale gradient
     private int zoomGradient = 0;
 
@@ -474,7 +474,7 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
         } else {
             mPictureShowView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
-        // 捕获的图片 captured picture
+        
         mPictureShowView.setImageBitmap(bitmap);
         mPictureShowView.setVisibility(VISIBLE);
         mCaptureLayout.startAlphaAnimation();

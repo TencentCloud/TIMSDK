@@ -2,8 +2,7 @@ package com.tencent.qcloud.tuikit.tuicustomerserviceplugin;
 
 public class TUICustomerServiceConstants {
     public static final long CUSTOMER_SERVICE_PLUGIN_ABILITY = 1L << 40;
-    public static final String CUSTOMER_SERVICE_STAFF_SHOPPING_MALL = "@im_agent#online_shopping_mall";
-    public static final String CUSTOMER_SERVICE_STAFF_ONLINE_DOCTOR = "@im_agent#online_doctor";
+    public static final String DEFAULT_CUSTOMER_SERVICE_ACCOUNT = "@default_customer_service_account";
     public static final String DESK_KIT_CONTENT = "content";
     public static final String DESK_KIT_HEADER = "header";
     public static final String DESK_KIT_ITEMS = "items";

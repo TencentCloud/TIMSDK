@@ -1,18 +1,6 @@
 package com.tencent.qcloud.tim.demo.utils;
 
 public class Constants {
-    public static final String USERINFO = "userInfo";
-    public static final String ACCOUNT = "account";
-    public static final String PWD = "password";
-    public static final String ROOM = "room";
-    public static final String AUTO_LOGIN = "auto_login";
-    public static final String LOGOUT = "logout";
-    public static final String ICON_URL = "icon_url";
-
-    public static final String CHAT_INFO = "chatInfo";
-    public static final String CALL_MODEL = "callModel";
-    public static final String IS_OFFLINE_PUSH_JUMP = "is_offline_push";
-
     public static final String DEMO_SETTING_SP_NAME = "TUIKIT_DEMO_SETTINGS";
     public static final String DEMO_SP_KEY_MESSAGE_READ_STATUS = "MessageReadStatus";
     public static final String DEMO_SP_KEY_USER_STATUS = "user_status";
@@ -35,4 +23,17 @@ public class Constants {
     public static final String DEMO_LANGUAGE_CHANGED_ACTION = "demoLanguageChangedAction";
 
     public static final String IM_MAIN_ITEM_SELECTED = "imMainItemSelected";
+
+    public static final String LOGOUT = "logout";
+    public static final String USERINFO = "userInfo";
+
+    public static class Selection {
+        public static final String TITLE = "title";
+        public static final String DEFAULT_SELECT_ITEM_INDEX = "default_select_item_index";
+        public static final String LIST = "list";
+    }
+
+    public static final String RECENT_CALLS_ENABLE_ACTION = "recent_calls_enable_action";
+    public static final String RECENT_CALLS_ENABLE = "recent_calls_enable";
+    public static final String MINIMALIST_RECENT_CALLS_ENABLE = "minimalist_recent_calls_enable";
 }

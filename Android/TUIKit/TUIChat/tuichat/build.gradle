@@ -38,7 +38,6 @@ android {
         targetCompatibility chatSourceJavaVersion
     }
 
-    // 主题资源文件夹
     sourceSets {
         main {
             res.srcDirs += "src/main/res-minimalistui"

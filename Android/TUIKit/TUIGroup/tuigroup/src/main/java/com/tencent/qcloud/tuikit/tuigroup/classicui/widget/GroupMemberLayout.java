@@ -21,8 +21,8 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberChangedCallback;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberChangedCallback;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.component.BottomSelectSheet;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayout {
-    // 取一个足够大的偏移保证能一次性滚动到最底部
+    
     // Take a large enough offset to scroll to the bottom at one time
     private static final int SCROLL_TO_END_OFFSET = -999999;
 

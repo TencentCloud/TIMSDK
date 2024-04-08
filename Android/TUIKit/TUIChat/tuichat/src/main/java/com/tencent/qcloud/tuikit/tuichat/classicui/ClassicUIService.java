@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -22,7 +24,6 @@ import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
-import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -34,6 +35,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.EmptyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -85,6 +87,7 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.Sou
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TextMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TipsMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.VideoMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.EmptyMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import java.util.ArrayList;
@@ -108,7 +111,7 @@ public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIServ
     }
 
     private final Map<Class<? extends TUIMessageBean>, Integer> messageViewTypeMap = new HashMap<>();
-    private final Map<Integer, Class<? extends MessageBaseHolder>> messageViewHolderMap = new HashMap<>();
+    private final Map<Integer, Class<? extends RecyclerView.ViewHolder>> messageViewHolderMap = new HashMap<>();
     private final Set<Integer> emptyViewGroupMessageSet = new HashSet<>();
     private final Map<Class<? extends TUIReplyQuoteBean>, Class<? extends TUIReplyQuoteView>> replyMessageViewMap = new HashMap<>();
     private int viewType = 0;
@@ -154,19 +157,20 @@ public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIServ
         addMessageType(CustomEvaluationMessageBean.class, CustomEvaluationMessageHolder.class);
         addMessageType(CustomOrderMessageBean.class, CustomOrderMessageHolder.class);
         addMessageType(MessageTypingBean.class, null);
+        addMessageType(EmptyMessageBean.class, EmptyMessageHolder.class, true);
     }
 
-    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends MessageBaseHolder> holderClazz) {
+    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends RecyclerView.ViewHolder> holderClazz) {
         addMessageType(beanClazz, holderClazz, false);
     }
 
     /**
-     * 注册自定义消息及其 ViewHolder
-     * @param beanClazz 自定义消息类型
-     * @param holderClazz 自定义消息的 ViewHolder 类型
-     * @param isNeedEmptyViewGroup 是否需要空的消息容器
+     *  register custom message and the ViewHolder
+     * @param beanClazz 
+     * @param holderClazz  custom message's ViewHolder
+     * @param isNeedEmptyViewGroup 
      */
-    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends MessageBaseHolder> holderClazz, boolean isNeedEmptyViewGroup) {
+    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends RecyclerView.ViewHolder> holderClazz, boolean isNeedEmptyViewGroup) {
         viewType++;
         if (isNeedEmptyViewGroup) {
             emptyViewGroupMessageSet.add(viewType);
@@ -198,7 +202,7 @@ public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIServ
         return replyMessageViewMap.get(replyQuoteBeanType);
     }
 
-    public Class<? extends MessageBaseHolder> getMessageViewHolderClass(int viewType) {
+    public Class<? extends RecyclerView.ViewHolder> getMessageViewHolderClass(int viewType) {
         return messageViewHolderMap.get(viewType);
     }
 
@@ -314,6 +318,8 @@ public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIServ
             boolean enableCustomHelloMessage = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_CUSTOM_HELLO_MESSAGE, false);
             boolean enablePollMessage = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_POLL, false);
             boolean enableGroupNoteMessage = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_GROUP_NOTE, false);
+            boolean enableTakePhoto = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_TAKE_PHOTO, true);
+            boolean enableRecordVideo = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_RECORD_VIDEO, true);
 
             if (chatType == TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE_GROUP) {
                 GroupInfo groupInfo = new GroupInfo();
@@ -325,6 +331,8 @@ public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIServ
                 groupInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
                 groupInfo.setEnableGroupNote(enableGroupNoteMessage);
                 groupInfo.setEnablePoll(enablePollMessage);
+                groupInfo.setEnableTakePhoto(enableTakePhoto);
+                groupInfo.setEnableRecordVideo(enableRecordVideo);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(TUIChatConstants.CHAT_INFO, groupInfo);
                 TUIGroupChatFragment tuiGroupChatFragment = new TUIGroupChatFragment();
@@ -339,6 +347,8 @@ public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIServ
                 chatInfo.setChatName(chatTitle);
                 chatInfo.setEnableAudioCall(enableAudioCall);
                 chatInfo.setEnableVideoCall(enableVideoCall);
+                chatInfo.setEnableTakePhoto(enableTakePhoto);
+                chatInfo.setEnableRecordVideo(enableRecordVideo);
                 chatInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(TUIChatConstants.CHAT_INFO, chatInfo);

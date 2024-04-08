@@ -15,7 +15,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 
 import java.util.ArrayList;
@@ -24,14 +24,14 @@ import java.util.List;
 public class GroupInfoAdapter extends BaseAdapter {
     private static final int ADD_TYPE = -100;
     private static final int DEL_TYPE = -101;
-    private static final int OWNER_PRIVATE_MAX_LIMIT = 8; // 讨论组,owner可以添加成员和删除成员，
-    private static final int OWNER_PUBLIC_MAX_LIMIT = 9; // 公开群,owner不可以添加成员，但是可以删除成员
-    private static final int OWNER_CHATROOM_MAX_LIMIT = 9; // 聊天室,owner不可以添加成员，但是可以删除成员
-    private static final int OWNER_COMMUNITY_MAX_LIMIT = 8; // 社群,owner可以添加成员和删除成员，
-    private static final int NORMAL_PRIVATE_MAX_LIMIT = 9; // 讨论组,普通人可以添加成员
-    private static final int NORMAL_PUBLIC_MAX_LIMIT = 10; // 公开群,普通人没有权限添加成员和删除成员
-    private static final int NORMAL_CHATROOM_MAX_LIMIT = 10; // 聊天室,普通人没有权限添加成员和删除成员
-    private static final int NORMAL_COMMUNITY_MAX_LIMIT = 9; // 社群,普通人可以添加成员
+    private static final int OWNER_PRIVATE_MAX_LIMIT = 8; 
+    private static final int OWNER_PUBLIC_MAX_LIMIT = 9; 
+    private static final int OWNER_CHATROOM_MAX_LIMIT = 9; 
+    private static final int OWNER_COMMUNITY_MAX_LIMIT = 8; 
+    private static final int NORMAL_PRIVATE_MAX_LIMIT = 9; 
+    private static final int NORMAL_PUBLIC_MAX_LIMIT = 10; 
+    private static final int NORMAL_CHATROOM_MAX_LIMIT = 10; 
+    private static final int NORMAL_COMMUNITY_MAX_LIMIT = 9; 
 
     private List<GroupMemberInfo> mGroupMembers = new ArrayList<>();
     private IGroupMemberListener mTailListener;

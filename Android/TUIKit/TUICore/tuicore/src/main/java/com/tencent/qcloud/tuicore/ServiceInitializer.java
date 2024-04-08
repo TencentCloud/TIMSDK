@@ -208,7 +208,7 @@ public class ServiceInitializer extends ContentProvider {
     private static class DependencyNode {
         TUIInitializer initializer;
         int priority;
-        // 依赖
+        
         Set<DependencyNode> dependencySet = new HashSet<>();
         Set<DependencyNode> beDependencySet = new HashSet<>();
 

@@ -48,7 +48,6 @@ public class AboutIMActivity extends BaseLightActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == aboutIMLv) {
-            String title = getResources().getString(R.string.about_im);
             startWebUrl(Constants.IM_ABOUT);
         }
     }

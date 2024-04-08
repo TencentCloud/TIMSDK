@@ -55,7 +55,7 @@ public class SplashActivity extends BaseLightActivity {
 
     private void login() {
         UserInfo userInfo = UserInfo.getInstance();
-        TUILogin.login(DemoApplication.instance(), AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), userInfo.getUserSig(), TUIUtils.getLoginConfig(), new TUICallback() {
+        TUILogin.login(this.getApplicationContext(), AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), userInfo.getUserSig(), TUIUtils.getLoginConfig(), new TUICallback() {
             @Override
             public void onError(final int code, final String desc) {
                 runOnUiThread(new Runnable() {

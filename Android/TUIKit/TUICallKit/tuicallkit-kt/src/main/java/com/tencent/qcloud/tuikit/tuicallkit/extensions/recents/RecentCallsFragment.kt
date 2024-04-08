@@ -40,6 +40,8 @@ class RecentCallsFragment : Fragment {
     private var chatViewStyle = RecentCalls.UI_STYLE_MINIMALIST
     private var type = TYPE_ALL
 
+    private var needCloseMultiMode = false
+
     constructor() {}
     constructor(style: String) {
         chatViewStyle = style
@@ -114,6 +116,7 @@ class RecentCallsFragment : Fragment {
             )
         }
         buttonEditDone.setOnClickListener { v: View? ->
+            needCloseMultiMode = true
             stopMultiSelect()
             updateTabViews(false)
         }
@@ -122,6 +125,7 @@ class RecentCallsFragment : Fragment {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 type = if (tab.position == 1) TYPE_MISS else TYPE_ALL
                 updateTabViews(false)
+                needCloseMultiMode = true
                 stopMultiSelect()
                 refreshData()
             }
@@ -231,10 +235,14 @@ class RecentCallsFragment : Fragment {
     private fun stopMultiSelect() {
         val adapter = recyclerRecent.adapter as RecentCallsListAdapter?
         if (adapter != null) {
-            adapter.setShowMultiSelectCheckBox(false)
+            if (needCloseMultiMode) {
+                adapter.setShowMultiSelectCheckBox(false)
+            }
             adapter.notifyDataSetChanged()
         }
-        recyclerRecent.disableRecyclerViewSlide(false)
+        if (needCloseMultiMode) {
+            recyclerRecent.disableRecyclerViewSlide(false)
+        }
         recyclerRecent.closeMenu()
     }
 
@@ -242,6 +250,7 @@ class RecentCallsFragment : Fragment {
         if (viewModel != null) {
             viewModel.deleteRecordCalls(selectItem)
         }
+        needCloseMultiMode = !listAdapter.isMultiSelectMode
         stopMultiSelect()
     }
 
@@ -275,6 +284,7 @@ class RecentCallsFragment : Fragment {
         textPositive?.setOnClickListener { v: View? ->
             clearRecentCalls()
             bottomSheetDialog?.dismiss()
+            needCloseMultiMode = true
             stopMultiSelect()
         }
         textCancel?.setOnClickListener { v: View? -> bottomSheetDialog?.dismiss() }

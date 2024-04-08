@@ -233,7 +233,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
         holder.photoView.setOnMatrixChangeListener(new MatrixChangeListener());
         holder.photoView.setOnPhotoTapListener(new PhotoTapListener());
         holder.photoView.setOnSingleFlingListener(new SingleFlingListener());
-        // 如果是原图就直接显示大图， 否则显示缩略图，点击查看原图按钮后下载原图显示
+        
         // If it is the original image, the original image will be displayed directly, otherwise, the large image will be displayed. Click the View Original
         // Image button to download the original image and display it.
 
@@ -245,7 +245,7 @@ public class ImageVideoScanAdapter extends RecyclerView.Adapter<ImageVideoScanAd
                     downloadOriginImageAndShow(imageMessageBean, holder);
                 }
             });
-            // 因为图片还没下载下来 ， 加载失败, 接收下载成功的广播来刷新显示
+            
             // Because the picture has not been downloaded yet, the loading fails, receive the broadcast of the successful download to refresh the display
             String originPath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN);
             if (ChatFileDownloadPresenter.isDownloading(originPath)) {

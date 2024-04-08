@@ -16,6 +16,7 @@
     <string name="tuicallkit_text_microphone">Mic</string>
     <string name="tuicallkit_text_hangup">Hang Up</string>
     <string name="tuicallkit_text_reject">Decline</string>
+    <string name="tuicallkit_text_line_busy">Line Busy</string>
     <string name="tuicallkit_text_speaker">Speaker</string>
     <string name="tuicallkit_text_dialing">Answer</string>
     <string name="tuicallkit_text_camera">Camera</string>
@@ -68,4 +69,6 @@
     <string name="tuicallkit_error_request_refused">The current status can not use this function</string>
     <string name="tuicallkit_error_request_repeated">The current status is waiting/accept, please do not call it repeatedly</string>
     <string name="tuicallkit_error_scene_not_support">The current scene does not support this function</string>
+    <string name="tuicallkit_join_group_call">Join</string>
+    <string name="tuicallkit_join_group_call_users">%s member(s) in %s</string>
 </resources>

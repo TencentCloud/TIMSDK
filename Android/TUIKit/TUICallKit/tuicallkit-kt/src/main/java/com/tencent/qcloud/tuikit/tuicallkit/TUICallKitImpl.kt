@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-
-import com.tencent.liteav.beauty.TXBeautyManager
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
@@ -18,17 +16,22 @@ import com.tencent.qcloud.tuikit.TUICommonDefine.Callback
 import com.tencent.qcloud.tuikit.TUICommonDefine.RoomId
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.CallParams
-import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine.Status
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.data.OfflinePushInfoConfig
+import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingKeepAliveFeature
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
+import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
+import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
 import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingview.IncomingFloatView
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingview.IncomingNotificationView
+
 
 class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUINotification {
     private val context: Context
@@ -43,7 +46,8 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
     }
 
     companion object {
-        private val TAG = "TUICallKitImpl"
+        private const val TAG = "TUICallKitImpl"
+        private const val TAG_VIEW = "IncomingView"
         private var instance: TUICallKitImpl? = null
         fun createInstance(context: Context): TUICallKitImpl {
             if (null == instance) {
@@ -96,7 +100,9 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
     }
 
     override fun groupCall(groupId: String, userIdList: List<String?>?, callMediaType: TUICallDefine.MediaType) {
-        TUILog.i(TAG, "TUICallKit groupCall{groupId:${groupId}, userIdList:${userIdList}, callMediaType:${callMediaType}")
+        TUILog.i(
+            TAG, "TUICallKit groupCall{groupId:${groupId}, userIdList:${userIdList}, callMediaType:${callMediaType}"
+        )
         val params = CallParams()
         params.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(context)
         params.timeout = Constants.SIGNALING_MAX_TIME
@@ -197,16 +203,9 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
             TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, this
         )
 
-        TUICore.registerEvent(
-            Constants.EVENT_TUICALLKIT_CHANGED,
-            Constants.EVENT_START_FEATURE, this
-        )
-
-        TUICore.registerEvent(
-            Constants.EVENT_TUICALLKIT_CHANGED,
-            Constants.EVENT_START_ACTIVITY, this
-        )
-
+        TUICore.registerEvent(Constants.EVENT_TUICALLKIT_CHANGED, Constants.EVENT_START_FEATURE, this)
+        TUICore.registerEvent(Constants.EVENT_TUICALLKIT_CHANGED, Constants.EVENT_START_ACTIVITY, this)
+        TUICore.registerEvent(Constants.EVENT_TUICALLKIT_CHANGED, Constants.EVENT_SHOW_INCOMING_VIEW, this)
     }
 
     override fun onNotifyEvent(key: String, subKey: String, param: Map<String?, Any>?) {
@@ -226,36 +225,136 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
                 callingBellFeature = CallingBellFeature(context)
                 callingKeepAliveFeature = CallingKeepAliveFeature(context)
             } else if (Constants.EVENT_START_ACTIVITY == subKey) {
-                mainHandler.post {
-                    val status = TUICallState.instance.selfUser.get().callStatus.get()
-                    TUILog.i(TAG, "onNotifyEvent EVENT_START_ACTIVITY, current status: $status")
-                    if (status == Status.None) {
-                        return@post
-                    }
-                    PermissionRequest.requestPermissions(context, TUICallState.instance.mediaType.get(), object :
-                        PermissionCallback() {
-                        override fun onGranted() {
-                            if (TUICallDefine.Status.None != TUICallState.instance.selfUser.get().callStatus.get()) {
-                                initAudioPlayDevice()
-                                TUILog.i(TAG, "onNotifyEvent requestPermissions onGranted")
-                                val intent = Intent(context, CallKitActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(intent)
-                            } else {
-                                TUICallState.instance.clear()
-                            }
-                        }
-
-                        override fun onDenied() {
-                            if (TUICallState.instance.selfUser.get().callRole.get() == TUICallDefine.Role.Called) {
-                                TUICallEngine.createInstance(context).reject(null)
-                            }
-                            TUICallState.instance.clear()
-                        }
-                    })
-                }
+                startFullScreenView()
+            } else if (Constants.EVENT_SHOW_INCOMING_VIEW == subKey) {
+                handleNewCall()
             }
         }
+    }
+
+    private fun handleNewCall() {
+        mainHandler.post {
+            if (TUICallState.instance.selfUser.get().callStatus.get() == TUICallDefine.Status.None) {
+                TUILog.w(TAG_VIEW, "handleNewCall, current status: None, ignore")
+                return@post
+            }
+
+            val hasFloatPermission = PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION).has()
+            val isAppInBackground: Boolean = !DeviceUtils.isAppRunningForeground(context)
+            val hasBgPermission = PermissionRequester.newInstance(PermissionRequester.BG_START_PERMISSION).has()
+            val hasNotificationPermission = PermissionRequest.isNotificationEnabled()
+
+            val innerNotification = isShowInnerNotification()
+
+            TUILog.i(
+                TAG_VIEW, "handleNewCall, isAppInBackground: $isAppInBackground, floatPermission: $hasFloatPermission" +
+                        ", backgroundStartPermission: $hasBgPermission, notificationPermission: $hasNotificationPermission , " +
+                        "showNotification: $innerNotification"
+            )
+            if (isAppInBackground) {
+                when {
+                    hasFloatPermission -> startSmallScreenView(IncomingFloatView(context))
+                    innerNotification && hasNotificationPermission -> startSmallScreenView(
+                        IncomingNotificationView(context)
+                    )
+
+                    hasBgPermission -> startFullScreenView()
+                    else -> {
+                        //do nothing, wait user click desktop icon
+                    }
+                }
+                return@post
+            }
+
+            when {
+                hasFloatPermission -> startSmallScreenView(IncomingFloatView(context))
+                hasNotificationPermission -> startSmallScreenView(IncomingNotificationView(context))
+                else -> startFullScreenView()
+            }
+        }
+    }
+
+    private fun isShowInnerNotification(): Boolean {
+        if (TUICore.getService(TUIConstants.TIMPush.SERVICE_NAME) == null) {
+            return true
+        }
+
+        val pushBrandId =
+            TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_GET_PUSH_BRAND_ID, null)
+
+        return pushBrandId == TUIConstants.DeviceInfo.BRAND_GOOGLE_ELSE
+    }
+
+    private fun startFullScreenView() {
+        TUILog.i(TAG_VIEW, "startFullScreenView")
+        mainHandler.post {
+            if (TUICallState.instance.selfUser.get().callStatus.get() == TUICallDefine.Status.None) {
+                TUILog.i(TAG_VIEW, "startFullScreenView, current status: None, ignore")
+                return@post
+            }
+            PermissionRequest.requestPermissions(context, TUICallState.instance.mediaType.get(), object :
+                PermissionCallback() {
+                override fun onGranted() {
+                    if (TUICallDefine.Status.None != TUICallState.instance.selfUser.get().callStatus.get()) {
+                        initAudioPlayDevice()
+                        TUILog.i(TAG_VIEW, "startFullScreenView requestPermissions onGranted")
+                        val intent = Intent(context, CallKitActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                    } else {
+                        TUICallState.instance.clear()
+                    }
+                }
+
+                override fun onDenied() {
+                    if (TUICallState.instance.selfUser.get().callRole.get() == TUICallDefine.Role.Called) {
+                        TUICallEngine.createInstance(context).reject(null)
+                    }
+                    TUICallState.instance.clear()
+                }
+            })
+        }
+    }
+
+    private fun startSmallScreenView(view: Any) {
+        var caller: User = TUICallState.instance.selfUser.get()
+        for (user in TUICallState.instance.remoteUserList.get()) {
+            if (user.callRole.get() == TUICallDefine.Role.Caller) {
+                caller = user
+                break
+            }
+        }
+
+        val list = ArrayList<String>()
+        caller.id?.let { list.add(it) }
+
+        UserInfoUtils.getUserListInfo(list, object : TUICommonDefine.ValueCallback<List<User>?> {
+            override fun onSuccess(data: List<User>?) {
+                if (data.isNullOrEmpty()) {
+                    return
+                }
+                if (TUICallState.instance.selfUser.get().callStatus.get() == TUICallDefine.Status.None) {
+                    TUILog.w(TAG_VIEW, "startSmallScreenView, current status: None, ignore")
+                    return
+                }
+                caller.avatar.set(data[0].avatar.get())
+                caller.nickname.set(data[0].nickname.get())
+
+                if (view is IncomingFloatView) {
+                    view.showIncomingView(caller)
+                } else if (view is IncomingNotificationView) {
+                    view.showNotification(caller)
+                }
+            }
+
+            override fun onError(errCode: Int, errMsg: String?) {
+                if (view is IncomingFloatView) {
+                    view.showIncomingView(caller)
+                } else if (view is IncomingNotificationView) {
+                    view.showNotification(caller)
+                }
+            }
+        })
     }
 
     private fun initCallEngine() {
@@ -265,35 +364,6 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
                 override fun onSuccess() {}
                 override fun onError(errCode: Int, errMsg: String) {}
             })
-        initCallVideoParams()
-        initCallBeautyParams()
-    }
-
-    private fun initCallVideoParams() {
-        val renderParams = TUICommonDefine.VideoRenderParams()
-        renderParams.fillMode = TUICommonDefine.VideoRenderParams.FillMode.Fill
-        renderParams.rotation = TUICommonDefine.VideoRenderParams.Rotation.Rotation_0
-        val user = TUILogin.getLoginUser()
-        TUICallEngine.createInstance(context)
-            .setVideoRenderParams(user, renderParams, object : TUICommonDefine.Callback {
-                override fun onSuccess() {}
-                override fun onError(errCode: Int, errMsg: String) {}
-            })
-
-        val encoderParams = TUICommonDefine.VideoEncoderParams()
-        encoderParams.resolution = TUICommonDefine.VideoEncoderParams.Resolution.Resolution_640_360
-        encoderParams.resolutionMode = TUICommonDefine.VideoEncoderParams.ResolutionMode.Portrait
-        TUICallEngine.createInstance(context).setVideoEncoderParams(encoderParams, object : TUICommonDefine.Callback {
-            override fun onSuccess() {}
-            override fun onError(errCode: Int, errMsg: String) {}
-        })
-    }
-
-    private fun initCallBeautyParams() {
-        val trtcCloud = TUICallEngine.createInstance(context).trtcCloudInstance
-        val txBeautyManager = trtcCloud.beautyManager
-        txBeautyManager.setBeautyStyle(TXBeautyManager.TXBeautyStyleNature)
-        txBeautyManager.setBeautyLevel(6f)
     }
 
     private fun initAudioPlayDevice() {

@@ -1,12 +1,22 @@
 package com.tencent.qcloud.tuikit.tuigroup.presenter;
 
+import android.os.Bundle;
 import android.text.TextUtils;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
+import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupMemberActivity;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.GroupEventListener;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.model.GroupInfoProvider;
@@ -384,5 +394,41 @@ public class GroupInfoPresenter {
 
     public void setGroupMemberRole(String groupId, String userId, IUIKitCallback<Void> callback) {
         provider.setGroupMemberRole(groupId, userId, callback);
+    }
+
+    public void getFriendList(TUIValueCallback<List<UserBean>> callback) {
+        provider.getFriendList(callback);
+    }
+
+    public void getGroupMembersInfo(String groupID, List<String> userIDs, TUIValueCallback<List<UserBean>> callback) {
+        provider.getGroupMembersInfo(groupID, userIDs, callback);
+    }
+
+    public void getFriendListInGroup(String groupID, TUIValueCallback<List<UserBean>> callback) {
+        getFriendList(new TUIValueCallback<List<UserBean>>() {
+            @Override
+            public void onSuccess(List<UserBean> userBeans) {
+                List<String> userIDs = new ArrayList<>();
+                for (UserBean userBean : userBeans) {
+                    userIDs.add(userBean.getUserId());
+                }
+                getGroupMembersInfo(groupID, userIDs, new TUIValueCallback<List<UserBean>>() {
+                    @Override
+                    public void onSuccess(List<UserBean> groupMembers) {
+                        TUIValueCallback.onSuccess(callback, groupMembers);
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMessage) {
+                        TUIValueCallback.onError(callback, errorCode, errorMessage);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIValueCallback.onError(callback, errorCode, errorMessage);
+            }
+        });
     }
 }

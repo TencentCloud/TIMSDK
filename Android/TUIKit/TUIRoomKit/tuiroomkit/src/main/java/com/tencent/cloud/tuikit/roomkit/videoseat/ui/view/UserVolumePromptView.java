@@ -18,14 +18,13 @@ import androidx.annotation.Nullable;
 import com.tencent.cloud.tuikit.roomkit.R;
 
 public class UserVolumePromptView extends View {
-    // 音量变化范围 [0, 100]， UI 上的变化效果映射为 [0, 20]，小 UI 无需太细的变动
     private static final int VOLUME_STEP         = 1;
     private static final int VOLUME_TOTAL_STEP   = 100 / VOLUME_STEP;
     private static final int VOLUME_SHOW_TIME_MS = 500;
 
     private Paint mPaint;
 
-    private int mVolume; // 范围 [0 ~ 10]，小 ui 无需太细的区分；
+    private int mVolume;
     private int mVolumeAreaLeft;
     private int mVolumeAreaTop;
     private int mVolumeAreaRight;
@@ -46,7 +45,6 @@ public class UserVolumePromptView extends View {
         super(context, attrs);
         setWillNotDraw(false);
 
-     //   setBackground(context.getResources().getDrawable(R.drawable.tuiroomkit_video_seat_mic_open));
         mPaint = new Paint();
         mPaint.setColor(0xFFA5FE33);
 
@@ -66,9 +64,9 @@ public class UserVolumePromptView extends View {
     }
 
     /**
-     * 更新音量的 ui 效果。
+     * Updated volume ui effect.
      *
-     * @param volume 当前 mic 的音量，范围 [0 ~ 100]
+     * @param volume The volume of the current mic, range [0 ~ 100]
      */
     public void updateVolumeEffect(int volume) {
         if (!isAttachedToWindow()) {
@@ -125,7 +123,6 @@ public class UserVolumePromptView extends View {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        // 这参数是根据背景图 UI 设计上的比例换算得出，保证 View 在不同宽高下的显示效果
         int width = right - left;
         int height = bottom - top;
         mVolumeAreaLeft = (width << 1) / 7 + mLineWidth;

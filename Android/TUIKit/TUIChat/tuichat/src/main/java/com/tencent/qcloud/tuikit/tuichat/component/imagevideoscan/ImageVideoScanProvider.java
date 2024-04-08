@@ -23,14 +23,14 @@ public class ImageVideoScanProvider {
         if (locateMessageInfo.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             return;
         }
-        // 1、先向后拉取 SCAN_MESSAGE_REQUEST_NUM 条, 新消息方向
+        
         // Pull back SCAN_MESSAGE_REQUEST_NUM numbers first, new message direction
         loadLocalMediaMessageList(
             chatId, isGroup, SCAN_MESSAGE_REQUEST_NUM, locateMessageInfo, TUIChatConstants.GET_MESSAGE_BACKWARD, new IUIKitCallback<List<TUIMessageBean>>() {
                 @Override
                 public void onSuccess(List<TUIMessageBean> firstData) {
                     firstData.add(0, locateMessageInfo);
-                    // 2、再向前拉取 SCAN_MESSAGE_REQUEST_NUM 条，旧消息方向
+                    
                     // pull forward SCAN_MESSAGE_REQUEST_NUM numbers, old message direction
                     loadLocalMediaMessageList(chatId, isGroup, SCAN_MESSAGE_REQUEST_NUM, locateMessageInfo, TUIChatConstants.GET_MESSAGE_FORWARD,
                         new IUIKitCallback<List<TUIMessageBean>>() {

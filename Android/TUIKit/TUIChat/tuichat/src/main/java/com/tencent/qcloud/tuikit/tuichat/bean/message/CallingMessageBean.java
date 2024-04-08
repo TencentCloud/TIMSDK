@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
+import android.text.TextUtils;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
@@ -8,6 +9,7 @@ public class CallingMessageBean extends TextMessageBean {
     private String text;
     private int callType; // 1：audio; 2:video
     private boolean isCaller;
+    private String sender;
     private boolean isShowUnreadPoint;
     public static final int ACTION_ID_AUDIO_CALL = 1;
     public static final int ACTION_ID_VIDEO_CALL = 2;
@@ -45,6 +47,10 @@ public class CallingMessageBean extends TextMessageBean {
         this.isCaller = isCaller;
     }
 
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
     public void setShowUnreadPoint(boolean show) {
         this.isShowUnreadPoint = show;
     }
@@ -61,5 +67,13 @@ public class CallingMessageBean extends TextMessageBean {
     @Override
     public boolean isSelf() {
         return isCaller;
+    }
+
+    @Override
+    public String getSender() {
+        if (!TextUtils.isEmpty(sender)) {
+            return this.sender;
+        }
+        return super.getSender();
     }
 }

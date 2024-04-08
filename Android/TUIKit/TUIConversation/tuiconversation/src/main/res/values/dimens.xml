@@ -3,7 +3,6 @@
 
     <dimen name="page_title_height">45dp</dimen>
     <dimen name="page_margin">10dp</dimen>
-    <!-- 列表头像 -->
     <dimen name="item_height">49.35dp</dimen>
     <dimen name="item_width">49.35dp</dimen>
 

@@ -81,7 +81,7 @@ public class ImageUtil {
                 hh = 480;
                 ww = 800;
             }
-            // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
+            
             // zoom ratio. Since it is a fixed scale scaling, only one data of height or width can be used for calculation.
             int be = 1;
             if (originalWidth > originalHeight && originalWidth > ww) {
@@ -131,7 +131,7 @@ public class ImageUtil {
     }
 
     /**
-     * 读取图片的旋转的角度
+     * 
      *
      * Read the rotation angle of the image
      */
@@ -160,7 +160,7 @@ public class ImageUtil {
     }
 
     /**
-     * 读取图片的旋转的角度
+     * 
      *
      * Read the rotation angle of the image
      */
@@ -189,11 +189,6 @@ public class ImageUtil {
     }
 
     /**
-     * 将图片按照某个角度进行旋转
-     *
-     * @param bm     需要旋转的图片
-     * @param degree 旋转角度
-     * @return 旋转后的图片
      *
      *
      * Rotate the image by an angle
@@ -267,7 +262,7 @@ public class ImageUtil {
         return size;
     }
 
-    // 图片文件先在本地做旋转，返回旋转之后的图片文件路径
+    
     // The image file is rotated locally, and the path of the image file after rotation is returned.
     public static String getImagePathAfterRotate(final String imagePath) {
         try {
@@ -292,11 +287,6 @@ public class ImageUtil {
     }
 
     /**
-     * 转换图片成圆形
-     *
-     * @param bitmap 传入Bitmap对象
-     * @return
-     *
      *
      * Convert image to circle
      *
@@ -382,11 +372,6 @@ public class ImageUtil {
     }
 
     /**
-     *  加载高分辨率图片需要做下适配
-     *
-     * @param imagePath 图片路径
-     * @return Bitmap 调整后的位图
-     *
      *
      * Loading high-resolution images requires adaptation
      *
@@ -431,11 +416,6 @@ public class ImageUtil {
     }
 
     /**
-     * 根据图片 UUID 和 类型得到图片文件路径
-     * @param uuid 图片 UUID
-     * @param imageType 图片类型 V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB , V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN ,
-     *                  V2TIMImageElem.V2TIM_IMAGE_TYPE_LARGE
-     * @return 图片文件路径
      *
      * Get the image file path based on the image UUID and type
      * @param uuid

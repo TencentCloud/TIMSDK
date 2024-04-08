@@ -100,7 +100,7 @@
             android:singleLine="true"
             android:textColor="#999999"
             android:textSize="12sp"
-            tools:text="消息内容"/>
+            tools:text="Message content"/>
     </RelativeLayout>
 
 </RelativeLayout>

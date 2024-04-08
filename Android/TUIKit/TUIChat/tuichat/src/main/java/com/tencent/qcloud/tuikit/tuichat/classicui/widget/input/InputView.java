@@ -79,7 +79,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 聊天界面，底部发送图片、拍照、摄像、文件面板
  *
  * Chat interface, send pictures, take pictures, video, file panels at the bottom
  */
@@ -94,7 +93,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private static final int STATE_ACTION_INPUT = 3;
 
     /**
-     * 语音/文字切换输入控件
      *
      * Voice/text switch input controls
      */
@@ -102,7 +100,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected boolean mAudioInputDisable;
 
     /**
-     * 表情按钮
      *
      * emoji button
      */
@@ -110,7 +107,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected boolean mEmojiInputDisable;
 
     /**
-     * 更多按钮
      *
      * more button
      */
@@ -119,21 +115,18 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected boolean mMoreInputDisable;
 
     /**
-     * 消息发送按钮
      *
      * message send button
      */
     protected TextView mSendTextButton;
 
     /**
-     * 语音长按按钮
      *
      * voice send button
      */
     protected Button mSendAudioButton;
 
     /**
-     * 文本输入框
      *
      * input text
      */
@@ -145,10 +138,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected ChatInfo mChatInfo;
     protected List<InputMoreActionUnit> mInputMoreActionList = new ArrayList<>();
     protected List<InputMoreActionUnit> mInputMoreCustomActionList = new ArrayList<>();
-    private boolean mSendPhotoDisable;
-    private boolean mCaptureDisable;
-    private boolean mVideoRecordDisable;
-    private boolean mSendFileDisable;
 
     private FaceFragment mFaceFragment;
     private ChatInputHandler mChatInputHandler;
@@ -467,7 +456,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 FaceUtil.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + displayInputString.length());
             }
-            // @ 之后要显示软键盘。Activity 没有 onResume 导致无法显示软键盘
+            
             // Afterwards @, the soft keyboard is to be displayed. Activity does not have onResume, so the soft keyboard cannot be displayed
             ThreadUtils.postOnUiThreadDelayed(new Runnable() {
                 @Override
@@ -941,7 +930,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         exitReply();
                     } else {
                         if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
-                            // 发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
+                            
                             //  When sending, get the ID list from the map by getting the nickname list that matches the @ in the input box.
                             List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                             if (atUserList.isEmpty()) {
@@ -1257,7 +1246,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected void assembleActions() {
         mInputMoreActionList.clear();
         InputMoreActionUnit actionUnit;
-        if (!mSendPhotoDisable) {
+        if (TUIChatConfigs.getGeneralConfig().isEnableAlbum() && getChatInfo().isEnableAlbum()) {
             actionUnit = new InputMoreActionUnit() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
@@ -1270,7 +1259,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        if (!mCaptureDisable) {
+        if (TUIChatConfigs.getGeneralConfig().isEnableTakePhoto() && getChatInfo().isEnableTakePhoto()) {
             actionUnit = new InputMoreActionUnit() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
@@ -1283,7 +1272,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        if (!mVideoRecordDisable) {
+        if (TUIChatConfigs.getGeneralConfig().isEnableRecordVideo() && getChatInfo().isEnableRecordVideo()) {
             actionUnit = new InputMoreActionUnit() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
@@ -1296,7 +1285,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        if (!mSendFileDisable) {
+        if (TUIChatConfigs.getGeneralConfig().isEnableFile() && getChatInfo().isEnableFile()) {
             actionUnit = new InputMoreActionUnit() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
@@ -1414,22 +1403,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     public void replaceMoreInput(OnClickListener listener) {
         mMoreInputEvent = listener;
-    }
-
-    public void disableSendPhotoAction(boolean disable) {
-        mSendPhotoDisable = disable;
-    }
-
-    public void disableCaptureAction(boolean disable) {
-        mCaptureDisable = disable;
-    }
-
-    public void disableVideoRecordAction(boolean disable) {
-        mVideoRecordDisable = disable;
-    }
-
-    public void disableSendFileAction(boolean disable) {
-        mSendFileDisable = disable;
     }
 
     public void addAction(InputMoreActionUnit action) {

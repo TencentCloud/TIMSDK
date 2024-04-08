@@ -24,7 +24,6 @@
 
     <string name="chat_message_detail">Message details</string>
 
-    <!-- 消息转发 -->
 
     <string name="titlebar_back">Back</string>
     <string name="forward_tip">please select message!</string>
@@ -48,7 +47,7 @@
     <string name="forward_oneByOne_limit_number_tip">Unable to forward the messages one by one because there are too many messages.</string>
 
     <string name="and_and"> </string>
-    <string name="be_friend">is your friend now.</string>
+    <string name="be_friend">is your contact now.</string>
 
     <string name="join_group_tip">You have been invited to the group: </string>
     <string name="joined_tip">You have joined the group: </string>
@@ -213,7 +212,7 @@
     <string name="chat_permission_mic_reason_title">%s applies for access to the microphone</string>
     <string name="chat_permission_mic_reason">In order for you to send voice messages, make video and audio and video calls, please allow us to access the microphone.</string>
     <string name="chat_permission_camera_reason_title">%s applies for camera permission</string>
-    <string name="chat_permission_camera_reason">In order for you to take photos or videos to send to friends, and to make video calls, please allow us to access the webcam.</string>
+    <string name="chat_permission_camera_reason">In order for you to take photos or videos to send to contacts, and to make video calls, please allow us to access the webcam.</string>
     <string name="chat_permission_storage_reason_title">%s applies for storage permission</string>
     <string name="chat_permission_storage_reason">In order for you to save photos and videos to your device, please allow us to write photos and videos to your device.</string>
     <string name="chat_permission_mic_dialog_alert">Allow microphone access in Settings->Apps->%s to use voice messages, video cameras, and audio and video calls as normal</string>
@@ -223,9 +222,9 @@
     <string name="chat_message_read_receipt">Message Read Receipt</string>
     <string name="chat_i_know">I got it</string>
     <string name="chat_no_more_reminders">No more reminders</string>
-    <string name="chat_im_flagship">Ultimate Edition</string>
+    <string name="chat_im_flagship">Premium Edition</string>
     <string name="chat_buying_guidelines">price description</string>
-    <string name="chat_im_flagship_edition_update_tip">%s feature is only available to the Ultimate edition, which can be used after purchasing the Ultimate Edition. See the price guidelines for details.</string>
+    <string name="chat_im_flagship_edition_update_tip">%s feature is only available to the Premium Edition, which can be used after purchasing the Premium Edition. See the price guidelines for details.</string>
 
     <string name="chat_reply_detail">Reply detail</string>
 

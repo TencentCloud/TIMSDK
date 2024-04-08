@@ -10,6 +10,8 @@ import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tuicore.push.OfflinePushExtBusinessInfo;
+import com.tencent.qcloud.tuicore.push.OfflinePushExtInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.Map;
@@ -20,7 +22,7 @@ public class OfflineMessageDispatcher {
     private static final String OEMMessageKey = "ext";
     private static final String XIAOMIMessageKey = "key_message";
 
-    public static OfflineMessageBean parseOfflineMessage(Intent intent) {
+    public static OfflinePushExtInfo parseOfflineMessage(Intent intent) {
         DemoLog.i(TAG, "intent: " + intent);
         if (intent == null) {
             return null;
@@ -38,15 +40,15 @@ public class OfflineMessageDispatcher {
             if (TextUtils.isEmpty(ext)) {
                 if (BrandUtil.isBrandXiaoMi()) {
                     ext = getXiaomiMessage(bundle);
-                    return getOfflineMessageBeanFromContainer(ext);
+                    return getOfflinePushExtInfo(ext);
                 } else if (BrandUtil.isBrandOppo()) {
                     ext = getOPPOMessage(bundle);
-                    return getOfflineMessageBean(ext);
+                    return getOPPOOfflinePushExtInfo(ext);
                 }
                 DemoLog.i(TAG, "ext is null");
                 return null;
             } else {
-                return getOfflineMessageBeanFromContainer(ext);
+                return getOfflinePushExtInfo(ext);
             }
         }
     }
@@ -83,41 +85,78 @@ public class OfflineMessageDispatcher {
         return null;
     }
 
-    public static OfflineMessageBean getOfflineMessageBeanFromContainer(String ext) {
+    public static OfflinePushExtInfo getOfflinePushExtInfo(String ext) {
         if (TextUtils.isEmpty(ext)) {
             return null;
         }
-        OfflineMessageContainerBean bean = null;
+        OfflinePushExtInfo offlinePushExtInfo = null;
         try {
-            bean = new Gson().fromJson(ext, OfflineMessageContainerBean.class);
+            offlinePushExtInfo = new Gson().fromJson(ext, OfflinePushExtInfo.class);
         } catch (Exception e) {
-            DemoLog.w(TAG, "getOfflineMessageBeanFromContainer: " + e.getMessage());
+            DemoLog.w(TAG, "getOfflinePushExtInfo: " + e.getMessage());
         }
-        if (bean == null) {
+        if (offlinePushExtInfo == null) {
             return null;
         }
-        return offlineMessageBeanValidCheck(bean.entity);
+
+        // getCustomData example
+        /*byte[] byteData = offlinePushExtInfo.getEntity().getCustomData();
+        String customString = "";
+        if (byteData != null && byteData.length > 0) {
+            try {
+                customString = new String(byteData, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                DemoLog.w(TAG, "getCustomData e: " + e);
+            }
+        }
+        DemoLog.e(TAG, "customString = " + customString);
+        ChatInfo chatInfo = null;
+        try{
+            chatInfo = new Gson().fromJson(customString, ChatInfo.class);
+        } catch (Exception e) {
+            DemoLog.w(TAG, "getCustomData fromJson e: " + e);
+        }*/
+
+        return OfflinePushExtInfoValidCheck(offlinePushExtInfo);
     }
 
-    private static OfflineMessageBean getOfflineMessageBean(String ext) {
+    private static OfflinePushExtInfo getOPPOOfflinePushExtInfo(String ext) {
         if (TextUtils.isEmpty(ext)) {
             return null;
         }
-        OfflineMessageBean bean = new Gson().fromJson(ext, OfflineMessageBean.class);
-        return offlineMessageBeanValidCheck(bean);
-    }
 
-    private static OfflineMessageBean offlineMessageBeanValidCheck(OfflineMessageBean bean) {
+        OfflinePushExtInfo offlinePushExtInfo = new OfflinePushExtInfo();
+        OfflinePushExtBusinessInfo bean = null;
+        try {
+            bean = new Gson().fromJson(ext, OfflinePushExtBusinessInfo.class);
+        } catch (Exception e) {
+            DemoLog.w(TAG, "getOPPOOfflinePushExtInfo: " + e.getMessage());
+        }
+
         if (bean == null) {
             return null;
-        } else if (bean.version != 1 || (bean.action != OfflineMessageBean.REDIRECT_ACTION_CHAT && bean.action != OfflineMessageBean.REDIRECT_ACTION_CALL)) {
+        }
+
+        offlinePushExtInfo.setBusinessInfo(bean);
+        return OfflinePushExtInfoValidCheck(offlinePushExtInfo);
+    }
+
+    private static OfflinePushExtInfo OfflinePushExtInfoValidCheck(OfflinePushExtInfo offlinePushExtInfo) {
+        if (offlinePushExtInfo == null || offlinePushExtInfo.getBusinessInfo() == null) {
+            return null;
+        }
+
+        int version = offlinePushExtInfo.getBusinessInfo().getVersion();
+        int action = offlinePushExtInfo.getBusinessInfo().getChatAction();
+        if (version != 1 || (action != OfflinePushExtInfo.REDIRECT_ACTION_CHAT && action != OfflinePushExtInfo.REDIRECT_ACTION_CALL)) {
             PackageManager packageManager = TIMAppService.getAppContext().getPackageManager();
             String label = String.valueOf(packageManager.getApplicationLabel(TIMAppService.getAppContext().getApplicationInfo()));
             ToastUtil.toastLongMessage(
-                TIMAppService.getAppContext().getString(R.string.you_app) + label + TIMAppService.getAppContext().getString(R.string.low_version));
-            DemoLog.e(TAG, "unknown version: " + bean.version + " or action: " + bean.action);
+                    TIMAppService.getAppContext().getString(R.string.you_app) + label + TIMAppService.getAppContext().getString(R.string.low_version));
+            DemoLog.e(TAG, "unknown version: " + version + " or action: " + action);
             return null;
         }
-        return bean;
+
+        return offlinePushExtInfo;
     }
 }

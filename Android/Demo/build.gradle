@@ -5,10 +5,8 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
-        // 配置HMS Core SDK的Maven仓地址。
         maven {url 'https://developer.huawei.com/repo/'}
         maven {url 'https://developer.hihonor.com/repo'}
-
     }
     dependencies {
         VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
@@ -39,7 +37,6 @@ allprojects {
     repositories {
         mavenCentral()
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
-        // 配置HMS Core SDK的Maven仓地址。
         maven {url 'https://developer.huawei.com/repo/'}
         maven {url 'https://developer.hihonor.com/repo'}
     }
@@ -61,11 +58,12 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 30
     versionCode = 1
-    versionName = "7.8.5484"
+    versionName = "7.9.5666"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"
 
+    liteavSdk = "com.tencent.liteav:LiteAVSDK_TRTC:11.7.0.13946"
 }
 
 task clean(type: Delete) {

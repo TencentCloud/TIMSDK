@@ -74,6 +74,11 @@
     <string name="TUIKitErrorSDKNetWaitInQueueTimeout">انتهت مهلة الطلب المنتظر للانضمام إلى قائمة الإرسال</string>
     <string name="TUIKitErrorSDKNetWaitSendTimeout">تم إدخال الطلب في قائمة الإرسال المعلقة، وقت الانتظار لدخول مخزن النظام للشبكة قد انتهى</string>
     <string name="TUIKitErrorSDKNetWaitAckTimeut">تم إدخال الطلب في مخزن النظام للشبكة، وقت الانتظار للحصول على رد من الخادم قد انتهى</string>
+    <string name="TUIKitErrorSDKWaitSendRemainingTimeout">لقد دخلت حزمة الطلب في قائمة الانتظار المراد إرسالها، وتم إرسال جزء من البيانات. تحدث مهلة أثناء انتظار إرسال الجزء المتبقي. قد يكون عرض النطاق الترددي للوصلة الصاعدة غير كاف. يرجى التحقق مما إذا كانت الشبكة سلسة. عندما حدث خطأ في رد الاتصال، وتم اكتشاف وجود اتصال بالإنترنت. خطأ داخلي</string>
+    <string name="TUIKitErrorSDKNetPKGSizeLimit">طول حزمة الطلب أكبر من الحد الأقصى، والحد الأقصى المدعوم هو 1 ميجابايت.</string>
+    <string name="TUIKitErrorSDKNetWaitSendTimeoutNoNetwork">طول حزمة الطلب أكبر من الحد الأقصى، والحد الأقصى المدعوم هو 1 ميجابايت. لقد دخلت حزمة الطلب في قائمة الانتظار ليتم إرسالها. انتهت مهلة المخزن المؤقت للشبكة الذي ينتظر الدخول إلى النظام. يوجد عدد كبير جدًا من حزم البيانات أو لا يمكن لمؤشر الترابط المرسل معالجتها. عند استدعاء رمز الخطأ مرة أخرى، تم اكتشاف وجود لا يوجد اتصال بالإنترنت.</string>
+    <string name="TUIKitErrorSDKNetWaitAckTimeoutNoNetwork">دخلت حزمة الطلب إلى المخزن المؤقت لشبكة النظام، وانتهت مهلة انتظار حزمة الإرجاع من الخادم، ربما لم تترك حزمة الطلب الجهاز الطرفي، وقد تجاهلها المسار الوسيط، وفقد الخادم عن طريق الخطأ الحزمة، أو تم تجاهل حزمة الإرجاع بواسطة طبقة شبكة النظام. لم يتم اكتشاف رمز خطأ عند معاودة الاتصال بالشبكة.</string>
+    <string name="TUIKitErrorSDKNetRemainingTimeoutNoNetwork">لقد دخلت حزمة الطلب في قائمة الانتظار ليتم إرسالها، وتم إرسال جزء من البيانات. تحدث مهلة أثناء انتظار إرسال الجزء المتبقي. قد يكون عرض النطاق الترددي للوصلة الصاعدة غير كاف. يرجى التحقق مما إذا كانت الشبكة سلسة. عند الاتصال مرة أخرى رمز الخطأ، تم الكشف عن عدم وجود اتصال بالإنترنت.</string>
     <string name="TUIKitErrorSDKSVRSSOConnectLimit">تم تجاوز الحد الأقصى لعدد اتصالات الخادم، تم رفض الخدمة من قبل الخادم.</string>
     <string name="TUIKitErrorSDKSVRSSOVCode">انتهت مهلة إرسال رمز التحقق.</string>
     <string name="TUIKitErrorSVRSSOD2Expired">انتهت صلاحية المفتاح. المفتاح هو تذكرة داخلية تم إنشاؤها بناءً على UserSig، وصلاحية المفتاح أقل من أو تساوي صلاحية UserSig. يرجى إعادة استدعاء واجهة تسجيل الدخول TIMManager.getInstance().login لإنشاء مفتاح جديد.</string>
@@ -170,6 +175,7 @@
     <string name="TUIKitErrorSVRFriendshipPendencyLimit">لقد وصلت إلى الحد الأقصى لعدد الطلبات المعلقة في النظام.</string>
     <string name="TUIKitErrorSVRFriendshipBlacklistLimit">لقد وصلت إلى الحد الأقصى لعدد الأشخاص المحظورين في النظام.</string>
     <string name="TUIKitErrorSVRFriendshipPeerFriendLimit">لقد وصل الشخص الآخر إلى الحد الأقصى لعدد أصدقائه في النظام.</string>
+    <string name="TUIKitErrorSVRFriendshipAlreadyFriends">بالفعل أصدقاء</string>
     <string name="TUIKitErrorSVRFriendshipInSelfBlacklist">الشخص الآخر موجود في القائمة السوداء الخاصة بك، ولا يسمح بإضافته كصديق.</string>
     <string name="TUIKitErrorSVRFriendshipAllowTypeDenyAny">طريقة التحقق من صداقة الشخص الآخر لا تسمح لأي شخص بإضافته كصديق.</string>
     <string name="TUIKitErrorSVRFriendshipInPeerBlackList">أنت موجود في القائمة السوداء الخاصة بالشخص الآخر، ولا يسمح لك بإضافته كصديق.</string>

@@ -10,7 +10,7 @@
         android:id="@+id/tuiroomKit_btn_dismiss"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/transparent"
+        android:background="@color/tuiroomkit_transparent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/tuiroomKit_guideline_chat"/>
 

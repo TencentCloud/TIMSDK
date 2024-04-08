@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
@@ -41,7 +40,6 @@ class VideoCallerWaitingView(context: Context) : BaseCallView(context) {
                 if (viewModel?.frontCamera?.get() == true) TUICommonDefine.Camera.Back else
                     TUICommonDefine.Camera.Front
             )
-            ToastUtil.toastShortMessage(context.getString(R.string.tuicallkit_toast_switch_camera))
         }
     }
 }

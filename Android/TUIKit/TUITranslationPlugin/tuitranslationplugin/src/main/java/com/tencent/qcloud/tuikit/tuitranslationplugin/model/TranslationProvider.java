@@ -31,26 +31,18 @@ public class TranslationProvider {
     private static final String TAG = "TranslationProvider";
 
     /**
-     * 消息翻译初始化状态
-     *
      * message translation unknown
      */
     public static final int MSG_TRANSLATE_STATUS_UNKNOWN = 0;
     /**
-     * 消息翻译隐藏状态
-     *
      * message translation hidden
      */
     public static final int MSG_TRANSLATE_STATUS_HIDDEN = 1;
     /**
-     * 消息翻译进行中状态
-     *
      * message translation loading
      */
     public static final int MSG_TRANSLATE_STATUS_LOADING = 2;
     /**
-     * 消息翻译展示状态
-     *
      * message translation shown
      */
     public static final int MSG_TRANSLATE_STATUS_SHOWN = 3;

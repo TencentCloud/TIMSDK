@@ -50,7 +50,7 @@
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textSize="@dimen/contact_profile_nick_name_text_size"
-                    tools:text="林" />
+                    tools:text="Lee" />
 
                 <TextView
                     android:id="@+id/friend_account_tag"
@@ -98,7 +98,7 @@
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textSize="@dimen/contact_profile_signature_text_size"
-                    tools:text="相信光" />
+                    tools:text="Believe" />
 
             </RelativeLayout>
 
@@ -123,7 +123,7 @@
                     android:id="@+id/friend_application_add_wording"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="你好啊" />
+                    tools:text="Hello" />
 
             </LinearLayout>
 
@@ -228,9 +228,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Button
+                <TextView
                     android:id="@+id/add_friend_send_btn"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
                     android:layout_marginTop="10dp"
@@ -238,13 +237,15 @@
                     android:text="@string/contact_add"
                     android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:gravity="center"
                     android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
-                <Button
+                <TextView
                     android:id="@+id/accept_friend_send_btn"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
                     android:layout_marginTop="10dp"
@@ -252,6 +253,9 @@
                     android:text="@string/accept"
                     android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:gravity="center"
                     android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible" />
@@ -266,9 +270,8 @@
 
                 </LinearLayout>
 
-                <Button
+                <TextView
                     android:id="@+id/agree_button"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
                     android:layout_marginTop="10dp"
@@ -276,13 +279,15 @@
                     android:text="@string/profile_chat"
                     android:textColor="?attr/core_primary_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:gravity="center"
                     android:textAllCaps="false"
                     android:visibility="gone"
                     tools:visibility="visible"/>
 
-                <Button
+                <TextView
                     android:id="@+id/btn_clear_chat_history"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
                     android:layout_marginTop="10dp"
@@ -290,13 +295,15 @@
                     android:text="@string/profile_clear_message"
                     android:textColor="?attr/core_error_tip_color"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:gravity="center"
                     android:visibility="gone"
                     android:textAllCaps="false"
                     tools:visibility="visible" />
 
-                <Button
+                <TextView
                     android:id="@+id/btn_delete"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
                     android:layout_marginTop="0.68dp"
@@ -306,11 +313,13 @@
                     android:textSize="@dimen/contact_profile_btn_text_size"
                     android:visibility="gone"
                     android:textAllCaps="false"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:gravity="center"
                     tools:visibility="visible" />
 
-                <Button
+                <TextView
                     android:id="@+id/refuse_friend_send_btn"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_profile_btn_height"
                     android:layout_marginTop="0.6dp"
@@ -319,6 +328,9 @@
                     android:textColor="?attr/core_error_tip_color"
                     android:textAllCaps="false"
                     android:textSize="@dimen/contact_profile_btn_text_size"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:gravity="center"
                     android:visibility="gone"
                     tools:visibility="visible" />
 

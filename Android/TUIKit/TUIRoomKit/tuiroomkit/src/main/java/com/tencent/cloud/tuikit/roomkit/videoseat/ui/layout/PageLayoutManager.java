@@ -113,7 +113,6 @@ public class PageLayoutManager extends RecyclerView.LayoutManager implements
         if (state.isPreLayout()) {
             return;
         }
-        // 页面状态回调
         setPageCount(getTotalPageCount());
         setPageIndex(getPageIndexByOffset());
     }

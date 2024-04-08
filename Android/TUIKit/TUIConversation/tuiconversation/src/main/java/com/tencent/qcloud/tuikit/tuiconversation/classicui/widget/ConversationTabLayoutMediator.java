@@ -203,10 +203,10 @@ public class ConversationTabLayoutMediator {
         @Override
         public void onPageScrollStateChanged(final int state) {
             if (state == SCROLL_STATE_DRAGGING) {
-                // 正在拖动（即为通过左右滑动进行的切换）
+                
                 smoothScroll = true;
             } else if (state == SCROLL_STATE_IDLE) {
-                // 空闲状态（即为通过点击tab进行的切换）
+                
                 smoothScroll = false;
             }
             previousScrollState = scrollState;

@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 联系人相关 -->
     <string name="new_friend">New Contacts</string>
     <string name="group">Group Chats</string>
     <string name="blacklist">Blocked List</string>
     <string name="contact_count">%d contact(s)</string>
     <string name="contact_title">Contacts</string>
     <string name="contact_add_friend_remark">Remark</string>
-    <string name="no_friend_apply">No friend request</string>
+    <string name="no_friend_apply">No contact request</string>
     <string name="at_all">All</string>
 
     <string name="success">Successful</string>
     <string name="contact_add_failed">Failed</string>
     <string name="contact_add_success">Successful</string>
-    <string name="have_be_friend">You\'re already friends.</string>
-    <string name="friend_limit">The number of your friends exceeds the limit.</string>
-    <string name="other_friend_limit">The number of the other user\'s friends exceeds the limit.</string>
+    <string name="have_be_friend">You two are already contacts of each other</string>
+    <string name="friend_limit">The number of your contacts exceeds the limit.</string>
+    <string name="other_friend_limit">The number of the other user\'s contacts exceeds the limit.</string>
     <string name="in_blacklist">You have blocked this user.</string>
-    <string name="forbid_add_friend">This user has disabled friend request.</string>
+    <string name="forbid_add_friend">This user has disabled contact request.</string>
     <string name="set_in_blacklist">You have been blocked.</string>
     <string name="wait_agree_friend">Request sent</string>
     <string name="send_request">Request sent</string>
@@ -30,7 +29,6 @@
     <string name="add_group_full_member">The number of group members has reached the limit</string>
     <string name="contact_search">Search</string>
 
-    // 新朋友
     <string name="request_agree">Accept</string>
     <string name="request_accepted">Accepted</string>
     <string name="request_waiting">Pending</string>
@@ -45,13 +43,12 @@
     <string name="contact_profile_title_edit">Edit</string>
 
 
-    <!-- 好友资料 -->
     <string name="profile_id">Account</string>
     <string name="profile_add_wording">Verification Message</string>
     <string name="profile_remark">Alias</string>
     <string name="profile_black">Block</string>
     <string name="profile_chat">Send Message</string>
-    <string name="profile_delete_friend">Delete Friend</string>
+    <string name="profile_delete_friend">Delete Contact</string>
     <string name="profile_voice_chat">Voice Call</string>
     <string name="profile_video_chat">Video Call</string>
     <string name="profile_clear_message">Clear Chat History</string>
@@ -61,7 +58,7 @@
     <string name="contact_no_status">No status</string>
     <string name="contact_account_tag">ID : </string>
     <string name="contact_group_type_tag">Group Type : </string>
-    <string name="contact_my_friend">My Friend</string>
+    <string name="contact_my_friend">My Contacts</string>
 
     <string name="contact_profile_message">`Message`</string>
     <string name="contact_profile_audio_call">Audio</string>
@@ -74,7 +71,6 @@
     <string name="clear_msg_tip">Are you sure you want to clear the chat history?</string>
     <string name="contact_delete_friend_tip">Are you sure you want to delete the contact?</string>
 
-    // 群信息相关
     <string name="tips_empty_group_member">Select members</string>
     <string name="tips_empty_group_type">Select a method to join the group</string>
 
@@ -121,9 +117,9 @@
     <string name="contact_community">Community</string>
     <string name="contact_i_know">I got it</string>
     <string name="contact_no_more_reminders">No more reminders</string>
-    <string name="contact_im_flagship">Ultimate Edition</string>
+    <string name="contact_im_flagship">Premium Edition</string>
     <string name="contact_buying_guidelines">price description</string>
-    <string name="contact_im_flagship_edition_update_tip">%s function is the IM Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
+    <string name="contact_im_flagship_edition_update_tip">%s function is the IM Premium Edition function, which can be used after purchasing the Premium Edition package. Please refer to the price description for details.</string>
 
     <string name="contact_no_new_friend_application">Friend request is empty</string>
     <string name="contact_no_group">Group chats is empty</string>

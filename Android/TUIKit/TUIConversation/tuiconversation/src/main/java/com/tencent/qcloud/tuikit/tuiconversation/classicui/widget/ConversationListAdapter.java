@@ -37,7 +37,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     protected List<ConversationInfo> mDataSource = new ArrayList<>();
     private OnConversationAdapterListener mOnConversationAdapterListener;
 
-    // 消息转发
     private final HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
     private boolean isShowMultiSelectCheckBox = false;
     private boolean isForwardFragment = false;
@@ -46,12 +45,11 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     private boolean mIsLoading = false;
 
-    // 长按高亮显示
     private boolean isClick = false;
     private int currentPosition = -1;
 
     private View searchView;
-    // 展示折叠样式
+    
     private boolean showFoldedStyle = true;
 
     private String conversationGroupName = ConversationUtils.getConversationAllGroupName();
@@ -116,12 +114,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         this.showFoldedStyle = showFoldedStyle;
     }
 
-    // 设置给定位置条目的选择状态
     public void setItemChecked(String conversationId, boolean isChecked) {
         mSelectedPositions.put(conversationId, isChecked);
     }
 
-    // 根据位置判断条目是否选中
     private boolean isItemChecked(String id) {
         if (mSelectedPositions.size() <= 0) {
             return false;
@@ -134,7 +130,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         }
     }
 
-    // 获得选中条目的结果
     public List<ConversationInfo> getSelectedItem() {
         if (mSelectedPositions.size() == 0) {
             return null;
@@ -197,11 +192,11 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConversationBaseHolder holder = null;
-        // 创建不同的 ViewHolder
+        
         View view;
-        // 根据ViewType来创建条目
+        
         if (viewType == ITEM_TYPE_HEADER_SEARCH) {
-            // 如果 searchView 不显示，添加一个隐藏的 view，防止 recyclerview 自动滑到最底部
+            
             if (searchView == null) {
                 searchView = new View(parent.getContext());
             }
@@ -285,7 +280,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         if (holder instanceof HeaderViewHolder) {
             return;
         }
-        // 设置点击和长按事件
+        
         if (mOnConversationAdapterListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -309,7 +304,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         }
     }
 
-    // 设置多选框的选中状态和点击事件
+    
     private void setCheckBoxStatus(final ConversationInfo conversationInfo, int position, ConversationBaseHolder baseHolder) {
         if (!(baseHolder instanceof ConversationCommonHolder) || ((ConversationCommonHolder) baseHolder).multiSelectCheckBox == null) {
             return;
@@ -331,10 +326,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 commonHolder.itemView.setEnabled(true);
                 commonHolder.multiSelectCheckBox.setEnabled(true);
                 commonHolder.itemView.setAlpha(1f);
-                // 设置条目状态
+                
                 commonHolder.multiSelectCheckBox.setChecked(isItemChecked(conversationId));
             }
-            // checkBox的监听
+            
             commonHolder.multiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -345,7 +340,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
                 }
             });
 
-            // 条目view的监听
+            
             baseHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -375,7 +370,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
 
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
-        // ViewHolder 被回收时要清空头像 view 并且停止异步加载头像
+        
         if (holder instanceof ConversationCommonHolder) {
             ((ConversationCommonHolder) holder).conversationIconView.clearImage();
         }
@@ -473,6 +468,13 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public void onItemInserted(int position) {
         int itemIndex = getItemIndexInAdapter(position);
         notifyItemInserted(itemIndex);
+    }
+
+    @Override
+    public void onItemMoved(int fromPosition, int toPosition) {
+        int fromIndex = getItemIndexInAdapter(fromPosition);
+        int toIndex = getItemIndexInAdapter(toPosition);
+        notifyItemMoved(fromIndex, toIndex);
     }
 
     @Override

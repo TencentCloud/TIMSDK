@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.gson.Gson;
+import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
@@ -22,41 +23,39 @@ import java.util.Map;
 public class OfflinePushAPIDemo {
     public static final String TAG = OfflinePushAPIDemo.class.getSimpleName();
     /**
-     *  手动注册离线推送服务, IM 账号登录成功时调用,调用该接口不需要再填充参数到组件的 PrivateConstants 里。
-     *
      *  Register offline push service, called when IM account login is successful.Calling this interface does not require filling parameters into the
      * component's PrivateConstants.
      *
-     *  @note  json格式如下：
+     *  @note  json：
      * {
      *    // huawei
-     *   "huaweiPushBussinessId": "",    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
-     *   "huaweiBadgeClassName": "", // 角标参数，默认为应用的 launcher 界面的类名 // Angular parameter, defaults to the class name of the application's
+     *   "huaweiPushBussinessId": "",    
+     *   "huaweiBadgeClassName": "", 
      * launcher interface
      *
      *   // xiaomi
-     *   "xiaomiPushBussinessId": "",// 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
-     *   "xiaomiPushAppId": "",// 小米开放平台分配的应用APPID  // APPID, Allocated by Xiaomi Open Platform
-     *   "xiaomiPushAppKey": "",// 小米开放平台分配的应用APPKEY // APPKEY, Allocated by Xiaomi Open Platform
+     *   "xiaomiPushBussinessId": "",
+     *   "xiaomiPushAppId": "",
+     *   "xiaomiPushAppKey": "",
      *
      *   // meizu
-     *   "meizuPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
-     *   "meizuPushAppId": "",// 魅族开放平台分配的应用APPID // APPID, Allocated by meizu Open Platform
-     *   "meizuPushAppKey": "",// 魅族开放平台分配的应用APPKEY // APPKEY, Allocated by meizu Open Platform
+     *   "meizuPushBussinessId": "", 
+     *   "meizuPushAppId": "",
+     *   "meizuPushAppKey": "",
      *
      *   // vivo
-     *   "vivoPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
+     *   "vivoPushBussinessId": "", 
      *
      *   // google
-     *   "fcmPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
+     *   "fcmPushBussinessId": "", 
      *
      *   // oppo
-     *   "oppoPushBussinessId": "", // 在腾讯云控制台上传第三方推送证书后分配的证书ID // The certificate ID assigned in the Tencent Cloud console
-     *   "oppoPushAppKey": "",// oppo开放平台分配的应用 AppKey // AppKey, Allocated by OPPO Open Platform
-     *   "oppoPushAppSecret": "",// oppo开放平台分配的应用 AppSecret // AppSecret, Allocated by OPPO Open Platform
+     *   "oppoPushBussinessId": "", 
+     *   "oppoPushAppKey": "",
+     *   "oppoPushAppSecret": "",
      *
      *   // honor
-     *   "honorPushBussinessId": "",    // 在腾讯云控制台上传第三方推送证书后分配的证书ID  // The certificate ID assigned in the Tencent Cloud console
+     *   "honorPushBussinessId": "",    
      *  }
      *
      */
@@ -70,44 +69,65 @@ public class OfflinePushAPIDemo {
         Log.d(TAG, "OfflinePush callback mode:" + callbackMode);
         if (callbackMode == OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_NOTIFY ||
                 callbackMode == OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_BROADCAST) {
-            huaweiBussinessId = "0";
-            xiaomiBussinessId = "0";
-            meizuBussinessId = "0";
-            vivoBussinessId = "0";
-            oppoBussinessId = "0";
-            fcmBussinessId = "0";
-            honorBussinessId = "0";
+            if (TextUtils.equals(AppConfig.DEMO_FLAVOR_VERSION, Constants.FLAVOR_INTERNATIONAL)) {
+                huaweiBussinessId = "";
+                xiaomiBussinessId = "";
+                meizuBussinessId = "";
+                vivoBussinessId = "";
+                oppoBussinessId = "";
+                fcmBussinessId = "";
+                honorBussinessId = "";
+            } else {
+                huaweiBussinessId = "";
+                xiaomiBussinessId = "";
+                meizuBussinessId = "";
+                vivoBussinessId = "";
+                oppoBussinessId = "";
+                fcmBussinessId = "";
+                honorBussinessId = "";
+            }
         } else {
-            huaweiBussinessId = "0";
-            xiaomiBussinessId = "0";
-            meizuBussinessId = "0";
-            vivoBussinessId = "0";
-            oppoBussinessId = "0";
-            fcmBussinessId = "0";
-            honorBussinessId = "0";
+            if (TextUtils.equals(AppConfig.DEMO_FLAVOR_VERSION, Constants.FLAVOR_INTERNATIONAL)) {
+                huaweiBussinessId = "";
+                xiaomiBussinessId = "";
+                meizuBussinessId = "";
+                vivoBussinessId = "";
+                oppoBussinessId = "";
+                fcmBussinessId = "";
+                honorBussinessId = "";
+            } else {
+                huaweiBussinessId = "";
+                xiaomiBussinessId = "";
+                meizuBussinessId = "";
+                vivoBussinessId = "";
+                oppoBussinessId = "";
+                fcmBussinessId = "";
+                honorBussinessId = "";
+            }
         }
 
-        offlinePushParamBean.setHuaweiPushBussinessId("");
-        offlinePushParamBean.setHuaweiBadgeClassName("");
+        offlinePushParamBean.setHuaweiPushBussinessId(huaweiBussinessId);
+        offlinePushParamBean.setHuaweiBadgeClassName("com.tencent.qcloud.tim.demo.SplashActivity");
 
-        offlinePushParamBean.setXiaomiPushBussinessId("");
+        offlinePushParamBean.setXiaomiPushBussinessId(xiaomiBussinessId);
         offlinePushParamBean.setXiaomiPushAppId("");
         offlinePushParamBean.setXiaomiPushAppKey("");
 
-        offlinePushParamBean.setMeizuPushBussinessId("");
+        offlinePushParamBean.setMeizuPushBussinessId(meizuBussinessId);
         offlinePushParamBean.setMeizuPushAppId("");
         offlinePushParamBean.setMeizuPushAppKey("");
 
-        offlinePushParamBean.setVivoPushBussinessId("");
+        offlinePushParamBean.setVivoPushBussinessId(vivoBussinessId);
 
-        offlinePushParamBean.setFcmPushBussinessId("");
-        offlinePushParamBean.setFcmPushChannelId("");
-        offlinePushParamBean.setFcmPushChannelSoundName("");
+        offlinePushParamBean.setFcmPushBussinessId(fcmBussinessId);
+        offlinePushParamBean.setFcmPushChannelId(OfflinePushInfoUtils.FCM_PUSH_CHANNEL_ID);
+        offlinePushParamBean.setFcmPushChannelSoundName(OfflinePushInfoUtils.PRIVATE_RING_NAME);
 
-        offlinePushParamBean.setOppoPushBussinessId("");
+        offlinePushParamBean.setOppoPushBussinessId(oppoBussinessId);
         offlinePushParamBean.setOppoPushAppKey("");
         offlinePushParamBean.setOppoPushAppSecret("");
-        offlinePushParamBean.setHonorPushBussinessId("");
+
+        offlinePushParamBean.setHonorPushBussinessId(honorBussinessId);
 
         String jsonStr = new Gson().toJson(offlinePushParamBean);
         if (TextUtils.isEmpty(jsonStr)) {
@@ -137,9 +157,7 @@ public class OfflinePushAPIDemo {
         }*/
     }
 
-    /*
-     * 当 IM 控制台设置点击后续动作为 "使用推送组件回调跳转"，推送成功后，通过 TUICore 注册 NotifyEvent，点击通知栏事件会通过 TUICore.onNotifyEvent 回调返回。
-     *
+    /**
      * When the IM console sets the click follow-up action to "use push component callback to jump"，After the push is successful, register NotifyEvent through
      * TUICore, and click the notification bar event will be returned through the TUICore.onNotifyEvent callback.
      */
@@ -160,18 +178,16 @@ public class OfflinePushAPIDemo {
         });
     }
 
-    /*
-     * 当 IM 控制台设置点击后续动作为 "使用推送组件回调跳转"，推送成功后，注册广播接收者，点击通知栏事件通过发送广播回调返回，IntentFilter 为
-     * TUIConstants.TIMPush.NOTIFICATION_BROADCAST_ACTION。
-     *
+    /**
      * When the IM console sets the click follow-up action to "use push component callback to jump"，After the push is successful, register the broadcast
-     * receiver, click the notification bar event to return by sending the broadcast callback. IntentFilter 为
+     * receiver, click the notification bar event to return by sending the broadcast callback. IntentFilter 
      * TUIConstants.TIMPush.NOTIFICATION_BROADCAST_ACTION.
      */
     public void registerNotificationReceiver(Context context, OfflinePushLocalReceiver localReceiver) {
         DemoLog.d(TAG, "registerNotificationReceiver ");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(TUIConstants.TIMPush.NOTIFICATION_BROADCAST_ACTION);
+        intentFilter.addAction(TUIConstants.TIMPush.BROADCAST_IM_LOGIN_AFTER_APP_WAKEUP);
         LocalBroadcastManager.getInstance(context).registerReceiver(localReceiver, intentFilter);
     }
 }

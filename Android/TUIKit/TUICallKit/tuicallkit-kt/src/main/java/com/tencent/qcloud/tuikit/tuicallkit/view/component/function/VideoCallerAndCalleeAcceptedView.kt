@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.motion.widget.MotionLayout
-import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.TUICommonDefine.Camera
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
@@ -163,7 +162,6 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
 
         imageSwitchCamera?.setOnClickListener() {
             viewModel.switchCamera(if (viewModel.frontCamera.get() == true) Camera.Back else Camera.Front)
-            ToastUtil.toastShortMessage(context.getString(R.string.tuicallkit_toast_switch_camera))
         }
 
         rootLayout?.addTransitionListener(object : MotionLayout.TransitionListener {

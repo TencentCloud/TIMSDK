@@ -251,8 +251,7 @@ public class ImageVideoScanPresenter {
         if (mAdapter != null && mCurrentPosition >= 0 && mCurrentPosition < mAdapter.getItemCount()) {
             TUIMessageBean messageBean = mAdapter.getDataSource().get(mCurrentPosition);
             if (messageBean instanceof ImageMessageBean) {
-                String imagePath = ChatFileDownloadPresenter.getImagePath((ImageMessageBean) messageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN);
-                saveImage(context, imagePath);
+                saveImage(context, (ImageMessageBean) messageBean);
             } else if (messageBean instanceof VideoMessageBean) {
                 String videoPath = ChatFileDownloadPresenter.getVideoPath((VideoMessageBean) messageBean);
                 if (com.tencent.qcloud.tuikit.timcommon.util.FileUtil.isFileExists(videoPath)) {
@@ -266,12 +265,20 @@ public class ImageVideoScanPresenter {
         }
     }
 
-    private void saveImage(Context context, String imagePath) {
+    private void saveImage(Context context, ImageMessageBean imageMessageBean) {
         ThreadUtils.execute(new Runnable() {
             @Override
             public void run() {
-                boolean success = FileUtil.saveImageToGallery(context, imagePath);
-                if (success) {
+                boolean isSuccess;
+                String imagePath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_ORIGIN);
+                if (!FileUtil.isFileExists(imagePath)) {
+                    imagePath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_LARGE);
+                }
+                if (!FileUtil.isFileExists(imagePath)) {
+                    imagePath = ChatFileDownloadPresenter.getImagePath(imageMessageBean, ImageMessageBean.IMAGE_TYPE_THUMB);
+                }
+                isSuccess = FileUtil.saveImageToGallery(context, imagePath);
+                if (isSuccess) {
                     ToastUtil.toastShortMessage(context.getString(R.string.save_success));
                 } else {
                     ToastUtil.toastShortMessage(context.getString(R.string.save_failed));

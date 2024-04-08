@@ -67,7 +67,7 @@ public class TUIContactFragment extends BaseFragment {
                     } else {
                         Intent intent = new Intent(TUIContactService.getAppContext(), FriendProfileActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(TUIContactConstants.ProfileType.CONTENT, contact);
+                        intent.putExtra(TUIConstants.TUIContact.USER_ID, contact.getId());
                         TUIContactService.getAppContext().startActivity(intent);
                     }
                 }

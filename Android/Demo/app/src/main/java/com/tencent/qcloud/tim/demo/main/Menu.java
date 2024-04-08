@@ -7,6 +7,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -74,6 +75,17 @@ public class Menu {
         mMenuWindow.setContentView(menuView);
         mMenuList = menuView.findViewById(R.id.menu_pop_list);
         mMenuList.setAdapter(mMenuAdapter);
+        int textSize = menuView.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_text_size);
+        Paint paint = new Paint();
+        paint.setTextSize(textSize);
+        float maxWidth = 0f;
+        for (PopMenuAction action : mActions) {
+            maxWidth = Math.max(paint.measureText(action.getActionName()), maxWidth);
+        }
+        ViewGroup.LayoutParams listLayoutParams = mMenuList.getLayoutParams();
+        int space = menuView.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_icon_margin);
+        listLayoutParams.width = (int) (maxWidth + space + menuView.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_icon_size));
+        mMenuList.setLayoutParams(listLayoutParams);
         mMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -84,21 +96,16 @@ public class Menu {
             }
         });
 
-        int paddingLeftRight = ScreenUtil.dip2px(15.0f);
-        int paddingTopBottom = ScreenUtil.dip2px(12.0f);
-
-        int itemWidth = mActivity.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_item_width);
-        int itemHeight = mActivity.getResources().getDimensionPixelSize(R.dimen.core_pop_menu_item_height);
-
-        mMenuWindow.getContentView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int indicatorHeight = mActivity.getResources().getDimensionPixelOffset(R.dimen.core_pop_menu_indicator_height);
+        menuView.setPaddingRelative(
+            menuView.getPaddingLeft(), menuView.getPaddingTop() - indicatorHeight, menuView.getPaddingRight(), menuView.getPaddingBottom() - indicatorHeight);
+        int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        menuView.measure(measureSpec, measureSpec);
+        int popWidth = menuView.getMeasuredWidth();
 
         int[] location = new int[2];
         mAttachView.getLocationOnScreen(location);
-        int rowCount = mActions.size();
-        int indicatorHeight = mActivity.getResources().getDimensionPixelOffset(R.dimen.core_pop_menu_indicator_height);
 
-        int popWidth = itemWidth + paddingLeftRight * 2 - SHADOW_WIDTH;
-        int popHeight = itemHeight * rowCount + paddingTopBottom * 2 - SHADOW_WIDTH;
         float anchorWidth = mAttachView.getWidth();
         float indicatorX = anchorWidth / 2 + indicatorHeight;
         int screenWidth = ScreenUtil.getScreenWidth(mActivity);
@@ -112,9 +119,8 @@ public class Menu {
         }
         float anchorHeight = mAttachView.getHeight();
         y = (int) (location[1] + anchorHeight) + Y_OFFSET;
-        popHeight = popHeight - indicatorHeight;
 
-        Drawable backgroundDrawable = getBackgroundDrawable(popWidth, popHeight, indicatorX, indicatorHeight, 16);
+        Drawable backgroundDrawable = getBackgroundDrawable(indicatorX, indicatorHeight, 16);
         menuView.setBackground(backgroundDrawable);
 
         mMenuWindow.setFocusable(true);
@@ -126,19 +132,24 @@ public class Menu {
     /**
      * Draw a popup background with small triangles
      */
-    public Drawable getBackgroundDrawable(final float widthPixel, final float heightPixel, float indicatorX, float indicatorHeight, float radius) {
+    public Drawable getBackgroundDrawable(float indicatorX, float indicatorHeight, float radius) {
         int borderWidth = SHADOW_WIDTH;
 
-        Path path = new Path();
         Drawable drawable = new Drawable() {
+            final Path path = new Path();
+            final Paint paint = new Paint();
+
             @Override
             public void draw(@NonNull Canvas canvas) {
-                Paint paint = new Paint();
+                Rect bounds = getBounds();
+                float widthPixel = bounds.width();
+                float heightPixel = bounds.height();
                 paint.setColor(Color.WHITE);
                 paint.setStyle(Paint.Style.FILL);
                 paint.setShadowLayer(borderWidth, 0, 0, 0xFFAAAAAA);
-                path.addRoundRect(new RectF(borderWidth, indicatorHeight + borderWidth, widthPixel - borderWidth, heightPixel + indicatorHeight - borderWidth),
-                    radius, radius, Path.Direction.CW);
+                path.reset();
+                path.addRoundRect(new RectF(borderWidth, indicatorHeight + borderWidth, widthPixel - borderWidth, heightPixel - borderWidth), radius, radius,
+                    Path.Direction.CW);
                 path.moveTo(indicatorX - indicatorHeight, indicatorHeight + borderWidth);
                 path.lineTo(indicatorX, borderWidth);
                 path.lineTo(indicatorX + indicatorHeight, indicatorHeight + borderWidth);

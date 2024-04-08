@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--文本消息内容-->
     <TextView
         android:id="@+id/text_quote_tv"
         android:layout_width="wrap_content"

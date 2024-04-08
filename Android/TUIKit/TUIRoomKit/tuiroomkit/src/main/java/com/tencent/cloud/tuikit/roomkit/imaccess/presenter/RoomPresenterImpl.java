@@ -23,6 +23,7 @@ import com.tencent.cloud.tuikit.roomkit.imaccess.utils.RoomSpUtil;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.model.utils.FetchRoomId;
+import com.tencent.cloud.tuikit.roomkit.view.page.RoomMainActivity;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.Map;
@@ -156,7 +157,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
             public void onSuccess() {
                 Log.d(TAG, "waitUntilGiveUpRoomOwner onSuccess thread name=" + Thread.currentThread().getName());
                 mGiveUpRoomManagerLatch.countDown();
-                RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomStore().userModel.setRole(
+                RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomStore().userModel.changeRole(
                         TUIRoomDefine.Role.GENERAL_USER);
             }
 
@@ -191,6 +192,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
                         }
                         mJoinRoomLatch = new CountDownLatch(1);
                         Log.d(TAG, "waitUntilCreateRoom start roomId=" + roomId);
+                        RoomEngineManager.sharedInstance().getRoomStore().setMainActivityClass(RoomMainActivity.class);
                         mRoomManager.enableAutoShowRoomMainUi(false);
                         boolean isOpenVideo = RoomSpUtil.getVideoSwitchFromSp();
                         boolean isOpenAudio = RoomSpUtil.getAudioSwitchFromSp();
@@ -362,9 +364,6 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         RoomEventCenter.getInstance().unsubscribeUIEvent(SEND_IM_MSG_COMPLETE, this);
     }
 
-    /**
-     * 场景：用户已经创建房间，此时用户再进入另一个房间，须要在旧房间中转让房主，然后退出房间，再进去新房间。
-     */
     private void makeUserRoomOwner(String userId, TUIRoomDefine.ActionCallback callback) {
         mRoomManager.changeUserRole(userId, TUIRoomDefine.Role.ROOM_OWNER, callback);
     }

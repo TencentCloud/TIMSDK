@@ -37,19 +37,17 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     protected List<ConversationInfo> mDataSource = new ArrayList<>();
     private OnConversationAdapterListener mOnConversationAdapterListener;
 
-    // 消息转发
     private final HashMap<String, Boolean> mSelectedPositions = new HashMap<>();
     private boolean isShowMultiSelectCheckBox = false;
     private boolean isForwardFragment = false;
 
     private boolean mIsLoading = false;
 
-    // 长按高亮显示
     private boolean isClick = false;
     private int currentPosition = -1;
 
     private View hideView;
-    // 展示折叠样式
+    
     private boolean showFoldedStyle = true;
 
     public ConversationListAdapter() {}
@@ -87,12 +85,10 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         this.showFoldedStyle = showFoldedStyle;
     }
 
-    // 设置给定位置条目的选择状态
     public void setItemChecked(String conversationId, boolean isChecked) {
         mSelectedPositions.put(conversationId, isChecked);
     }
 
-    // 根据位置判断条目是否选中
     private boolean isItemChecked(String id) {
         if (mSelectedPositions.size() <= 0) {
             return false;
@@ -105,7 +101,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         }
     }
 
-    // 获得选中条目的结果
     public List<ConversationInfo> getSelectedItem() {
         if (mSelectedPositions.size() == 0) {
             return null;
@@ -156,11 +151,11 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ConversationBaseHolder holder = null;
-        // 创建不同的 ViewHolder
+        
         View view;
-        // 根据ViewType来创建条目
+        
         if (viewType == ITEM_TYPE_HEADER_HIDE) {
-            // 如果 searchView 不显示，添加一个隐藏的 view，防止 recyclerview 自动滑到最底部
+            
             return new HeaderViewHolder(new View(parent.getContext()));
         } else if (viewType == ConversationInfo.TYPE_CUSTOM) {
             view = inflater.inflate(R.layout.conversation_custom_adapter, parent, false);
@@ -339,7 +334,7 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         if (holder instanceof HeaderViewHolder) {
             return;
         }
-        // 设置点击和长按事件
+        
         if (mOnConversationAdapterListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -363,7 +358,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         }
     }
 
-    // 设置多选框的选中状态和点击事件
     private void setCheckBoxStatus(final ConversationInfo conversationInfo, int position, ConversationBaseHolder baseHolder) {
         if (!(baseHolder instanceof ConversationCommonHolder) || ((ConversationCommonHolder) baseHolder).multiSelectCheckBox == null) {
             return;
@@ -377,9 +371,8 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         } else {
             commonHolder.multiSelectCheckBox.setVisibility(View.VISIBLE);
 
-            // 设置条目状态
             commonHolder.multiSelectCheckBox.setChecked(isItemChecked(conversationId));
-            // checkBox的监听
+            
             commonHolder.multiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -390,7 +383,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
                 }
             });
 
-            // 条目view的监听
             baseHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -420,7 +412,7 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
 
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
-        // ViewHolder 被回收时要清空头像 view 并且停止异步加载头像
+        
         if (holder instanceof ConversationCommonHolder) {
             ((ConversationCommonHolder) holder).conversationIconView.clearImage();
         }
@@ -501,6 +493,13 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     public void onItemChanged(int position) {
         int itemIndex = getItemIndexInAdapter(position);
         notifyItemChanged(itemIndex);
+    }
+
+    @Override
+    public void onItemMoved(int fromPosition, int toPosition) {
+        int fromIndex = getItemIndexInAdapter(fromPosition);
+        int toIndex = getItemIndexInAdapter(toPosition);
+        notifyItemMoved(fromIndex, toIndex);
     }
 
     @Override

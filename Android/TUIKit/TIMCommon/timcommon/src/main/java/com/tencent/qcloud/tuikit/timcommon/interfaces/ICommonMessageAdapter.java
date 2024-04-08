@@ -10,4 +10,6 @@ public interface ICommonMessageAdapter {
     TUIMessageBean getLastMessageBean();
 
     void onItemRefresh(TUIMessageBean messageBean);
+
+    UserFaceUrlCache getUserFaceUrlCache();
 }

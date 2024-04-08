@@ -21,11 +21,11 @@
         android:id="@+id/customer_service_member_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="11.52dp"
         android:layout_marginStart="11.52dp"
+        android:textAlignment="viewStart"
         android:gravity="start"
         android:layout_weight="1"
         android:textColor="@color/black"
         android:textSize="17.28sp"
-        tools:text="客服1"/>
+        tools:text="customer service1"/>
 </LinearLayout>

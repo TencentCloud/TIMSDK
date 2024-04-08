@@ -113,10 +113,6 @@ public class C2CChatPresenter extends ChatPresenter {
     }
 
     /**
-     * 拉取消息
-     * @param type 向前，向后或者前后同时拉取
-     * @param lastMessageInfo 拉取消息的起始点
-     *
      *
      * pull message
      * @param type Pull forward, backward, or both
@@ -130,7 +126,7 @@ public class C2CChatPresenter extends ChatPresenter {
         isLoading = true;
 
         String chatId = chatInfo.getId();
-        // 向前拉取更旧的消息
+        
         // Pull older messages forward
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
             provider.loadC2CMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
@@ -155,13 +151,13 @@ public class C2CChatPresenter extends ChatPresenter {
                 }
             });
         } else {
-            // 向后拉更新的消息 或者 前后同时拉消息
+            
             // Pull the updated message backward or pull the message forward and backward at the same time
             loadHistoryMessageList(chatId, false, type, MSG_PAGE_COUNT, lastMessageInfo, callback);
         }
     }
 
-    // 加载消息成功之后会调用此方法
+    
     // This method is called after the message is loaded successfully
     @Override
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
@@ -274,7 +270,7 @@ public class C2CChatPresenter extends ChatPresenter {
                 TUIChatUtils.callbackOnProgress(callBack, data);
             }
         });
-        // 消息先展示，通过状态来确认发送是否成功
+        
         TUIChatLog.i(TAG, "sendTypingStatusMessage msgID:" + msgId);
         message.setId(msgId);
         message.setStatus(TUIMessageBean.MSG_STATUS_SENDING);

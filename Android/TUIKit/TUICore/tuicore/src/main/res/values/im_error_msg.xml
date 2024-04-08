@@ -73,6 +73,11 @@
     <string name="TUIKitErrorSDKNetWaitInQueueTimeout">Timed out waiting for request packet to enter the to-be-sent queue.</string>
     <string name="TUIKitErrorSDKNetWaitSendTimeout">Request packet has entered the to-be-sent queue. Timed out waiting to enter the network buffer of the system.</string>
     <string name="TUIKitErrorSDKNetWaitAckTimeut">Request packet has entered the network buffer of the system. Timed out waiting for response from server.</string>
+    <string name="TUIKitErrorSDKWaitSendRemainingTimeout">The request packet has entered the queue to be sent, and part of the data has been sent. A timeout occurs while waiting for the remaining part to be sent. The uplink bandwidth may be insufficient. Please check whether the network is smooth. When the callback error occurs, it is detected that there is an Internet connection. Internal error</string>
+    <string name="TUIKitErrorSDKNetPKGSizeLimit">The request packet length is greater than the limit, the maximum supported is 1MB.</string>
+    <string name="TUIKitErrorSDKNetWaitSendTimeoutNoNetwork">The request packet length is greater than the limit, the maximum supported is 1MB. The request packet has entered the queue to be sent. The network buffer waiting to enter the system has timed out. There are too many data packets or the sending thread cannot process them. When the error code is called back, it is detected that there is no Internet connection.</string>
+    <string name="TUIKitErrorSDKNetWaitAckTimeoutNoNetwork">The request packet has entered the network buffer of the system, and the wait for the return packet from the server has timed out. The request packet may not have left the terminal device, the intermediate route has discarded it, the server has accidentally lost the packet, or the return packet has been discarded by the system network layer. There is no error code detected when calling back. networking.</string>
+    <string name="TUIKitErrorSDKNetRemainingTimeoutNoNetwork">The request packet has entered the queue to be sent, and part of the data has been sent. A timeout occurs while waiting for the remaining part to be sent. The uplink bandwidth may be insufficient. Please check whether the network is smooth. When calling back the error code, it is detected that there is no Internet connection.</string>
     <string name="TUIKitErrorSDKSVRSSOConnectLimit">The number of Server connections exceeds the limit. Service denied by the server.</string>
     <string name="TUIKitErrorSDKSVRSSOVCode">Sending verification code timeout.</string>
     <string name="TUIKitErrorSVRSSOD2Expired">Key expired. Key is an internal bill generated according to usersig. The validity period of the key is less than or equal to the validity period of usersig. Please call timmanager again getInstance(). The login interface generates a new key.</string>
@@ -169,6 +174,7 @@
     <string name="TUIKitErrorSVRFriendshipPendencyLimit">You have reached the limit of pending friend requests.</string>
     <string name="TUIKitErrorSVRFriendshipBlacklistLimit">The number of accounts in the blocked list exceeds the limit.</string>
     <string name="TUIKitErrorSVRFriendshipPeerFriendLimit">The number of the other user\'s friends exceeds the limit.</string>
+    <string name="TUIKitErrorSVRFriendshipAlreadyFriends">Already a friend relationship.</string>
     <string name="TUIKitErrorSVRFriendshipInSelfBlacklist">You have blocked the other user. Unable to send friend request.</string>
     <string name="TUIKitErrorSVRFriendshipAllowTypeDenyAny">The other user\'s friend request verification mode is \"Decline friend request from any user\".</string>
     <string name="TUIKitErrorSVRFriendshipInPeerBlackList">You are blocked by the other user. Unable to send friend request.</string>
@@ -203,8 +209,8 @@
     <string name="TUIkitErrorSVRMsgInvalidMsgLifeTime">The type of the MsgLifeTime field in the JSON request packet body is not Integer.</string>
     <string name="TUIKitErrorSVRMsgBodySizeLimit">The length of JSON data packet exceeds the limit. The message packet body shall not exceed 12 KB.</string>
     <string name="TUIKitErrorSVRmsgLongPollingCountLimit">Forced logout on the Web page during long polling (the number of online instances on the Web page exceeds the limit).</string>
-    <string name="TUIKitErrorUnsupporInterface">This feature is available only to the Ultimate edition. Please upgrade.</string>
-    <string name="TUIKitErrorUnsupporInterfaceSuffix"> feature is available only to the Ultimate edition. Please upgrade.</string>
+    <string name="TUIKitErrorUnsupporInterface">This feature is available only to the Premium Edition. Please upgrade.</string>
+    <string name="TUIKitErrorUnsupporInterfaceSuffix"> feature is available only to the Premium Edition. Please upgrade.</string>
 
     <string name="TUIKitErrorSVRGroupApiNameError">The API name in the request is incorrect.</string>
     <string name="TUIKitErrorSVRGroupAccountCountLimit">The number of accounts in the request packet body exceeds the limit.</string>

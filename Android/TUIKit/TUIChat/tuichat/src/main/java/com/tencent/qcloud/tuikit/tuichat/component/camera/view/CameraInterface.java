@@ -19,7 +19,6 @@ import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
@@ -28,7 +27,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ErrorListener
 import com.tencent.qcloud.tuikit.tuichat.util.AngleUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.DeviceUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,7 +132,6 @@ public class CameraInterface {
                     return;
                 }
                 if (zoom >= 0) {
-                    // 每移动50个像素缩放一个级别
                     // Zooms one level every 50 pixels you move
                     int scaleRate = (int) (zoom / 40);
                     if (scaleRate <= mParams.getMaxZoom() && scaleRate >= nowScaleRate && recordScaleRate != scaleRate) {
@@ -148,7 +145,7 @@ public class CameraInterface {
                 if (isRecording) {
                     return;
                 }
-                // 每移动50个像素缩放一个级别
+
                 // Zooms one level every 50 pixels you move
                 int scaleRate = (int) (zoom / 50);
                 if (scaleRate < mParams.getMaxZoom()) {
@@ -275,6 +272,9 @@ public class CameraInterface {
                 isPreviewing = true;
             } catch (Throwable e) {
                 TUIChatLog.i(TAG, "start preview exception " + e.getMessage());
+                if (this.errorListener != null) {
+                    this.errorListener.onError("preview exception");
+                }
             }
         }
     }
@@ -353,80 +353,79 @@ public class CameraInterface {
         if (isRecording) {
             return;
         }
+        try {
+            if (mediaRecorder == null) {
+                mediaRecorder = new MediaRecorder();
+            }
+            if (mCamera == null) {
+                safeOpenCamera(selectedCamera);
+            }
+            if (mParams == null) {
+                mParams = mCamera.getParameters();
+            }
+            List<String> focusModes = mParams.getSupportedFocusModes();
+            if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+            }
+            mCamera.setParameters(mParams);
+            mediaRecorder.reset();
+            if (DeviceUtil.isVivoX21()) {
+                safeOpenCamera(selectedCamera);
+            }
+            mCamera.unlock();
+            mediaRecorder.setCamera(mCamera);
+            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-        if (mediaRecorder == null) {
-            mediaRecorder = new MediaRecorder();
-        }
-        if (mCamera == null) {
-            safeOpenCamera(selectedCamera);
-        }
-        if (mParams == null) {
-            mParams = mCamera.getParameters();
-        }
-        List<String> focusModes = mParams.getSupportedFocusModes();
-        if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
-            mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-        }
-        mCamera.setParameters(mParams);
-        mediaRecorder.reset();
-        if (DeviceUtil.isVivoX21()) {
-            safeOpenCamera(selectedCamera);
-        }
-        mCamera.unlock();
-        mediaRecorder.setCamera(mCamera);
-        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            Camera.Size videoSize;
+            if (mParams.getSupportedVideoSizes() == null) {
+                videoSize = CameraUtil.getPreviewSize(mParams.getSupportedPreviewSizes(), 600, screenProp);
+            } else {
+                videoSize = CameraUtil.getPreviewSize(mParams.getSupportedVideoSizes(), 600, screenProp);
+            }
+            TUIChatLog.i(TAG, "setVideoSize    width = " + videoSize.width + "height = " + videoSize.height);
+            if (videoSize.width == videoSize.height) {
+                mediaRecorder.setVideoSize(previewWidth, previewHeight);
+            } else {
+                mediaRecorder.setVideoSize(videoSize.width, videoSize.height);
+            }
 
-        Camera.Size videoSize;
-        if (mParams.getSupportedVideoSizes() == null) {
-            videoSize = CameraUtil.getPreviewSize(mParams.getSupportedPreviewSizes(), 600, screenProp);
-        } else {
-            videoSize = CameraUtil.getPreviewSize(mParams.getSupportedVideoSizes(), 600, screenProp);
-        }
-        TUIChatLog.i(TAG, "setVideoSize    width = " + videoSize.width + "height = " + videoSize.height);
-        if (videoSize.width == videoSize.height) {
-            mediaRecorder.setVideoSize(previewWidth, previewHeight);
-        } else {
-            mediaRecorder.setVideoSize(videoSize.width, videoSize.height);
-        }
-
-        if (selectedCamera == cameraFrontPosition) {
-            if (cameraAngle == 270) {
-                if (nowAngle == 0) {
-                    mediaRecorder.setOrientationHint(180);
-                } else if (nowAngle == 270) {
-                    mediaRecorder.setOrientationHint(270);
+            if (selectedCamera == cameraFrontPosition) {
+                if (cameraAngle == 270) {
+                    if (nowAngle == 0) {
+                        mediaRecorder.setOrientationHint(180);
+                    } else if (nowAngle == 270) {
+                        mediaRecorder.setOrientationHint(270);
+                    } else {
+                        mediaRecorder.setOrientationHint(90);
+                    }
                 } else {
-                    mediaRecorder.setOrientationHint(90);
+                    if (nowAngle == 90) {
+                        mediaRecorder.setOrientationHint(270);
+                    } else if (nowAngle == 270) {
+                        mediaRecorder.setOrientationHint(90);
+                    } else {
+                        mediaRecorder.setOrientationHint(nowAngle);
+                    }
                 }
             } else {
-                if (nowAngle == 90) {
-                    mediaRecorder.setOrientationHint(270);
-                } else if (nowAngle == 270) {
-                    mediaRecorder.setOrientationHint(90);
-                } else {
-                    mediaRecorder.setOrientationHint(nowAngle);
-                }
+                mediaRecorder.setOrientationHint(nowAngle);
             }
-        } else {
-            mediaRecorder.setOrientationHint(nowAngle);
-        }
 
-        if (DeviceUtil.isHuaWeiOrHonor()) {
-            mediaRecorder.setVideoEncodingBitRate(CameraView.MEDIA_QUALITY_FUNNY);
-        } else {
-            mediaRecorder.setVideoEncodingBitRate(mediaQuality);
-        }
-        mediaRecorder.setPreviewDisplay(surface);
+            if (DeviceUtil.isHuaWeiOrHonor()) {
+                mediaRecorder.setVideoEncodingBitRate(CameraView.MEDIA_QUALITY_FUNNY);
+            } else {
+                mediaRecorder.setVideoEncodingBitRate(mediaQuality);
+            }
+            mediaRecorder.setPreviewDisplay(surface);
 
-        videoFileAbsPath = FileUtil.generateVideoFilePath();
-        mediaRecorder.setOutputFile(videoFileAbsPath);
-        try {
+            videoFileAbsPath = FileUtil.generateVideoFilePath();
+            mediaRecorder.setOutputFile(videoFileAbsPath);
             mediaRecorder.prepare();
             mediaRecorder.start();
             isRecording = true;
@@ -492,20 +491,20 @@ public class CameraInterface {
         if (mCamera == null) {
             return;
         }
-        final Camera.Parameters params = mCamera.getParameters();
-        Rect focusRect = calculateTapArea(x, y, 1f, context);
-        mCamera.cancelAutoFocus();
-        if (params.getMaxNumFocusAreas() > 0) {
-            List<Camera.Area> focusAreas = new ArrayList<>();
-            focusAreas.add(new Camera.Area(focusRect, 800));
-            params.setFocusAreas(focusAreas);
-        } else {
-            TUIChatLog.i(TAG, "focus areas not supported");
-            callback.focusSuccess();
-            return;
-        }
-        final String currentFocusMode = params.getFocusMode();
         try {
+            final Camera.Parameters params = mCamera.getParameters();
+            Rect focusRect = calculateTapArea(x, y, 1f, context);
+            mCamera.cancelAutoFocus();
+            if (params.getMaxNumFocusAreas() > 0) {
+                List<Camera.Area> focusAreas = new ArrayList<>();
+                focusAreas.add(new Camera.Area(focusRect, 800));
+                params.setFocusAreas(focusAreas);
+            } else {
+                TUIChatLog.i(TAG, "focus areas not supported");
+                callback.focusSuccess();
+                return;
+            }
+            final String currentFocusMode = params.getFocusMode();
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             mCamera.setParameters(params);
             mCamera.autoFocus(new Camera.AutoFocusCallback() {
@@ -552,7 +551,7 @@ public class CameraInterface {
 
     public interface StopRecordCallback {
         void recordResult(String path);
-        
+
         void recordFailed(String path);
     }
 

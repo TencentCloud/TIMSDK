@@ -59,6 +59,8 @@ public class ChatActivity extends AppCompatActivity {
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_ROOM, false);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_AUDIO_CALL, false);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_VIDEO_CALL, false);
+        map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_TAKE_PHOTO, false);
+        map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_RECORD_VIDEO, false);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_ID,
                 RoomEngineManager.sharedInstance().getRoomStore().roomInfo.roomId);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE,

@@ -11,12 +11,15 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.tencent.qcloud.tuicore.permission.PermissionCallback
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils.setScreenLockParams
+import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatWindowService
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.GroupCallView
@@ -54,7 +57,6 @@ class CallKitActivity : AppCompatActivity() {
         setContentView(R.layout.tuicallkit_activity_call_kit)
         initStatusBar()
         addObserver()
-        initView()
     }
 
     override fun onResume() {
@@ -70,6 +72,19 @@ class CallKitActivity : AppCompatActivity() {
         }
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
         notificationManager?.cancelAll()
+
+        PermissionRequest.requestPermissions(application, TUICallState.instance.mediaType.get(),
+            object : PermissionCallback() {
+                override fun onGranted() {
+                    initView()
+                }
+
+                override fun onDenied() {
+                    if (TUICallState.instance.selfUser.get().callRole.get() == TUICallDefine.Role.Called) {
+                        EngineManager.instance.reject(null)
+                    }
+                }
+            })
     }
 
     override fun onBackPressed() {}

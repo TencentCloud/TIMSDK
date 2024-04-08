@@ -41,11 +41,7 @@ public class ActionsPagerAdapter extends RecyclerView.Adapter<ActionsPagerAdapte
 
         GridView gridView = holder.gridView;
         holder.setActions(subBaseActions);
-        if (mInputMoreList.size() >= COLUMN_COUNT) {
-            gridView.setNumColumns(COLUMN_COUNT);
-        } else {
-            gridView.setNumColumns(mInputMoreList.size());
-        }
+        gridView.setNumColumns(COLUMN_COUNT);
         gridView.setSelector(R.color.transparent);
         gridView.setHorizontalSpacing(60);
         gridView.setVerticalSpacing(60);

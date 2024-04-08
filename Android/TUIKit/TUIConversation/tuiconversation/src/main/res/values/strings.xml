@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    // 云通信
     <string name="chat_top">Pin</string>
     <string name="chat_delete">Delete</string>
     <string name="quit_chat_top">Unpin</string>

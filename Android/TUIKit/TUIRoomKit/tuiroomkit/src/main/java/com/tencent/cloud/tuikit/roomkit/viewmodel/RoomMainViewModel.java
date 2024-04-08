@@ -2,8 +2,13 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.KICKED_OFF_SEAT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_GENERAL_TO_MANAGER;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_MANAGER_TO_GENERAL;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_TO_OWNER;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_EXIT_ROOM_VIEW;
@@ -28,7 +33,6 @@ import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
@@ -38,9 +42,9 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.view.page.RoomMainView;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.view.page.ConferenceMainView;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -50,17 +54,14 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         RoomEventCenter.RoomEngineEventResponder {
     private static final String TAG = "MeetingViewModel";
 
-    private static final int SEAT_INDEX   = -1;
-    private static final int REQ_TIME_OUT = 0;
-
-    private Context       mContext;
-    private RoomStore     mRoomStore;
-    private RoomMainView  mRoomMainView;
+    private Context            mContext;
+    private RoomStore          mRoomStore;
+    private ConferenceMainView mRoomMainView;
 
     private boolean mIsFirstPanelShowed  = false;
     private boolean mIsSecondPanelShowed = false;
 
-    public RoomMainViewModel(Context context, RoomMainView meetingView) {
+    public RoomMainViewModel(Context context, ConferenceMainView meetingView) {
         mContext = context;
         mRoomMainView = meetingView;
         mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
@@ -92,7 +93,12 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.subscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
         eventCenter.subscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
         eventCenter.subscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
+        eventCenter.subscribeEngine(REQUEST_RECEIVED, this);
+        eventCenter.subscribeEngine(LOCAL_USER_GENERAL_TO_MANAGER, this);
+        eventCenter.subscribeEngine(LOCAL_USER_MANAGER_TO_GENERAL, this);
+        eventCenter.subscribeEngine(LOCAL_USER_TO_OWNER, this);
 
+        eventCenter.subscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
         eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
@@ -132,7 +138,12 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.unsubscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
         eventCenter.unsubscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
         eventCenter.unsubscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
+        eventCenter.unsubscribeEngine(REQUEST_RECEIVED, this);
+        eventCenter.unsubscribeEngine(LOCAL_USER_GENERAL_TO_MANAGER, this);
+        eventCenter.unsubscribeEngine(LOCAL_USER_MANAGER_TO_GENERAL, this);
+        eventCenter.unsubscribeEngine(LOCAL_USER_TO_OWNER, this);
 
+        eventCenter.unsubscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
         eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
@@ -323,7 +334,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
                 onRoomDisMissed();
                 break;
             case KICKED_OUT_OF_ROOM:
-                mRoomMainView.showExitRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_kicked_by_master));
+                mRoomMainView.showLeavedRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_kicked_by_master));
                 break;
             case KICKED_OFF_LINE:
                 mRoomMainView.showKickedOffLineDialog();
@@ -355,26 +366,50 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
                 onKickedOffSeat();
                 break;
 
+            case LOCAL_USER_GENERAL_TO_MANAGER:
+                mRoomMainView.toastForGeneralToManager();
+                break;
+
+            case LOCAL_USER_MANAGER_TO_GENERAL:
+                mRoomMainView.toastForManagerToGeneral();
+                break;
+
+            case LOCAL_USER_TO_OWNER:
+                mRoomMainView.toastForToOwner();
+                break;
+
+            case REQUEST_RECEIVED:
+                mRoomMainView.showRequestDialog(params);
+                break;
+
+            case GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM:
+                mRoomMainView.showAlertUserLiveTips();
+                break;
+
             default:
                 break;
         }
     }
 
     private void onRoomDisMissed() {
-        if (isOwner()) {
-            showDestroyDialog();
-        } else {
-            mRoomMainView.showExitRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_room_room_destroyed));
+        if (isOwner() && showRTCubeAppLegalDialog()) {
+            RoomEngineManager.sharedInstance().release();
+            return;
         }
+        mRoomMainView.showLeavedRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_room_room_destroyed));
     }
 
-    private void showDestroyDialog() {
+    private boolean showRTCubeAppLegalDialog() {
+        boolean isShow = false;
         try {
             Class clz = Class.forName("com.tencent.liteav.privacy.util.RTCubeAppLegalUtils");
             Method method = clz.getDeclaredMethod("showRoomDestroyTips", Context.class);
-            method.invoke(null, this);
+            method.invoke(null, mContext);
+            isShow = true;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            return isShow;
         }
     }
 
@@ -411,7 +446,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     private void onKickedOffSeat() {
-        ToastUtil.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_tip_kicked_off_seat));
+        RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_tip_kicked_off_seat));
     }
 
     private void allUserCameraDisableChanged(Map<String, Object> params) {
@@ -422,7 +457,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         int stringResId = isDisable
                 ? R.string.tuiroomkit_mute_all_camera_toast
                 : R.string.tuiroomkit_toast_not_mute_all_video;
-        ToastUtil.toastShortMessageCenter(mContext.getString(stringResId));
+        RoomToast.toastShortMessageCenter(mContext.getString(stringResId));
     }
 
     private void allUserMicrophoneDisableChanged(Map<String, Object> params) {
@@ -431,7 +466,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         }
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
         int resId = isDisable ? R.string.tuiroomkit_mute_all_mic_toast : R.string.tuiroomkit_toast_not_mute_all_audio;
-        ToastUtil.toastShortMessageCenter(mContext.getString(resId));
+        RoomToast.toastShortMessageCenter(mContext.getString(resId));
     }
 
     private void sendMessageForAllUserDisableChanged(Map<String, Object> params) {

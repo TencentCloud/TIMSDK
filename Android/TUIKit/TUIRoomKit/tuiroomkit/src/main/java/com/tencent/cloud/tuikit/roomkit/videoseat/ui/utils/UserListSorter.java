@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * 排序的优先级：
- * 1、屏幕分享用户；(演讲者模式-屏幕分享)
- * 2、房间内有三人以上用户，有且仅有一个视频用户，视频用户；（演讲者模式-个人视频秀）
- * 3、房主；
- * 4、本人；
- * 5、比较 userName（中文用拼音）；
- * 6、userName 一样，比较 userId；
+ * Sort by priority:
+ * 1. Screen sharing users; (speaker mode-screen sharing)
+ * 2. There are more than three users in the room, and there is only one video user, video user; (speaker mode - personal video show)
+ * 3. Room owner;
+ * 4. Myself;
+ * 5. Compare userName (Pinyin for Chinese);
+ * 6. UserName is the same, compare userId;
  */
 public class UserListSorter {
     private UserSortComparator mUserSortComparator;
@@ -84,12 +84,12 @@ public class UserListSorter {
         }
 
         /**
-         * 排序的优先级：
-         * 1、屏幕分享用户；
-         * 2、房主；
-         * 3、本人；
-         * 4、比较 userName（中文用拼音）；
-         * 5、userName 一样，比较 userId；
+         * Sorting priority:
+         * 1. Screen sharing users;
+         * 2. Room owner;
+         * 3. Myself;
+         * 4. Compare userName (Pinyin for Chinese);
+         * 5. UserName is the same, compare userId;
          */
         @Override
         public int compare(UserEntity o1, UserEntity o2) {

@@ -4,7 +4,7 @@
     android:id="@+id/cl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FF55534F">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_horizontal_top"

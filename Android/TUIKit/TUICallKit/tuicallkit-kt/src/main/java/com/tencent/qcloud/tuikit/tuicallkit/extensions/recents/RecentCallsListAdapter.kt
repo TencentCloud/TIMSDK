@@ -69,6 +69,9 @@ class RecentCallsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     itemListener?.onItemDeleteClick(view, getItemViewType(curPos), record)
                 }
             }
+            holder.checkBoxSelectCall.setOnClickListener {
+                holder.itemView.scrollX = if (isRTL) -holder.layoutDelete.width else holder.layoutDelete.width
+            }
             viewHolder.layoutViews(context, getItem(position), position)
             setCheckBoxStatus(viewHolder)
         }
@@ -172,6 +175,13 @@ class RecentCallsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             false
         }
     }
+
+    private val isRTL: Boolean
+        private get() {
+            val configuration = context.resources.configuration
+            val layoutDirection = configuration.layoutDirection
+            return layoutDirection == View.LAYOUT_DIRECTION_RTL
+        }
 
     internal class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     companion object {

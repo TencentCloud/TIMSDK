@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMConversation;
-import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -19,7 +20,6 @@ import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
-import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -27,6 +27,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.EmptyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -66,6 +67,7 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.CustomEvaluationMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.CustomLinkMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.CustomOrderMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.EmptyMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.FaceMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.FileMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ImageMessageHolder;
@@ -98,7 +100,7 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
     }
 
     private final Map<Class<? extends TUIMessageBean>, Integer> messageViewTypeMap = new HashMap<>();
-    private final Map<Integer, Class<? extends MessageBaseHolder>> messageViewHolderMap = new HashMap<>();
+    private final Map<Integer, Class<? extends RecyclerView.ViewHolder>> messageViewHolderMap = new HashMap<>();
     private final Set<Integer> emptyViewGroupMessageSet = new HashSet<>();
     private final Map<Class<? extends TUIReplyQuoteBean>, Class<? extends TUIReplyQuoteView>> replyMessageViewMap = new HashMap<>();
     private int viewType = 0;
@@ -140,13 +142,14 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
         addMessageType(CustomEvaluationMessageBean.class, CustomEvaluationMessageHolder.class);
         addMessageType(CustomOrderMessageBean.class, CustomOrderMessageHolder.class);
         addMessageType(MessageTypingBean.class, null);
+        addMessageType(EmptyMessageBean.class, EmptyMessageHolder.class, true);
     }
 
-    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends MessageBaseHolder> holderClazz) {
+    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends RecyclerView.ViewHolder> holderClazz) {
         addMessageType(beanClazz, holderClazz, false);
     }
 
-    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends MessageBaseHolder> holderClazz, boolean isNeedEmptyViewGroup) {
+    public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends RecyclerView.ViewHolder> holderClazz, boolean isNeedEmptyViewGroup) {
         viewType++;
         if (isNeedEmptyViewGroup) {
             emptyViewGroupMessageSet.add(viewType);
@@ -178,7 +181,7 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
         return replyMessageViewMap.get(replyQuoteBeanType);
     }
 
-    public Class<? extends MessageBaseHolder> getMessageViewHolderClass(int viewType) {
+    public Class<? extends RecyclerView.ViewHolder> getMessageViewHolderClass(int viewType) {
         return messageViewHolderMap.get(viewType);
     }
 

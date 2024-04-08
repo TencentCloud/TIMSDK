@@ -24,7 +24,7 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberChangedCallback;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberChangedCallback;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 
 import java.util.ArrayList;

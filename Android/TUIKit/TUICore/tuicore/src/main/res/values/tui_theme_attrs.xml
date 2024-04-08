@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 颜色规范 start -->
     <attr name="core_light_bg_title_text_color" format="reference|color"/>
     <attr name="core_light_bg_primary_text_color" format="reference|color"/>
     <attr name="core_light_bg_secondary_text_color" format="reference|color"/>
@@ -23,5 +22,4 @@
     <attr name="core_btn_normal_color" format="reference|color"/>
     <attr name="core_btn_pressed_color" format="reference|color"/>
     <attr name="core_btn_disable_color" format="reference|color"/>
-    <!-- 颜色规范 end -->
 </resources>

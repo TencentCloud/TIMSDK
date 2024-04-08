@@ -39,16 +39,18 @@ public class MessageViewHolderFactory {
         if (holder == null) {
             holder = new TextMessageHolder(view);
         }
-        ((MessageBaseHolder) holder).setAdapter(adapter);
+        if (holder instanceof MessageBaseHolder) {
+            ((MessageBaseHolder) holder).setAdapter(adapter);
+        }
 
         return holder;
     }
 
     private static RecyclerView.ViewHolder getViewHolder(View view, int viewType) {
-        Class<? extends MessageBaseHolder> messageHolderClazz = ClassicUIService.getInstance().getMessageViewHolderClass(viewType);
+        Class<? extends RecyclerView.ViewHolder> messageHolderClazz = ClassicUIService.getInstance().getMessageViewHolderClass(viewType);
         ;
         if (messageHolderClazz != null) {
-            Constructor<? extends MessageBaseHolder> constructor;
+            Constructor<? extends RecyclerView.ViewHolder> constructor;
             try {
                 constructor = messageHolderClazz.getConstructor(View.class);
                 return constructor.newInstance(view);

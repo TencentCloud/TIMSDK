@@ -20,6 +20,8 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.BranchMessageBean;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.BranchMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.InvisibleMessageBean;
+import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.RichTextMessageBean;
+import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.RichTextMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.StreamTextMessageBean;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.StreamTextMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.page.ChatBotListActivity;
@@ -27,6 +29,8 @@ import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.page.ChatBotProfileA
 import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget.BranchHolder;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget.BranchReplyView;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget.InvisibleHolder;
+import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget.RichTextHolder;
+import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget.RichTextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget.StreamTextHolder;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget.StreamTextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.presenter.TUIChatBotPresenter;
@@ -92,6 +96,16 @@ public class TUIChatBotPluginService implements TUIInitializer, ITUINotification
         streamTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_VIEW_CLASS, StreamTextReplyQuoteView.class);
         TUICore.callService(TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME,
             TUIConstants.TUIChat.Method.RegisterCustomMessage.METHOD_NAME, streamTextParam);
+
+        Map<String, Object> richTextParam = new HashMap<>();
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BUSINESS_ID,
+                TUIConstants.TUIChatBotPlugin.CHAT_BOT_MESSAGE_KEY + TUIConstants.TUIChatBotPlugin.CHAT_BOT_BUSINESS_ID_SRC_RICH_TEXT);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BEAN_CLASS, RichTextMessageBean.class);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_VIEW_HOLDER_CLASS, RichTextHolder.class);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_BEAN_CLASS, RichTextMessageReplyQuoteBean.class);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_VIEW_CLASS, RichTextReplyQuoteView.class);
+        TUICore.callService(TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME,
+            TUIConstants.TUIChat.Method.RegisterCustomMessage.METHOD_NAME, richTextParam);
     }
 
     private void initExtension() {

@@ -19,15 +19,12 @@ public class IndexBarDataHelperImpl implements IIndexBarDataHelper {
             StringBuilder pySb = new StringBuilder();
             if (indexPinyinBean.isNeedToPinyin()) {
                 String target = indexPinyinBean.getTarget();
-                // 遍历target的每个char得到它的全拼音
+                
                 // Traverse each char of target to get its full pinyin
                 if (target == null) {
                     continue;
                 }
                 for (int i1 = 0; i1 < target.length(); i1++) {
-                    // 利用TinyPinyin将char转成拼音
-                    // 查看源码，方法内 如果char为汉字，则返回大写拼音
-                    // 如果c不是汉字，则返回String.valueOf(c)
                     //  Convert char to Pinyin using TinyPinyin
                     //  If char is Chinese characters, return uppercase pinyin. If c is not a Chinese character, return String.valueOf(c)
                     pySb.append(Pinyin.toPinyin(target.charAt(i1)).toUpperCase());

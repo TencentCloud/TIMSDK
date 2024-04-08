@@ -187,7 +187,6 @@ public class TUIKitDialog {
     }
 
     /**
-     * 设置dialog  宽度
      *
      * @param dialogWidth
      * @return

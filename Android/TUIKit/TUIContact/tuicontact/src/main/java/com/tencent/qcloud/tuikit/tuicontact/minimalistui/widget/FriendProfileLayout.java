@@ -200,7 +200,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             friendIDTv.setText(mId);
             loadUserProfile(mId);
         } else if (data instanceof ContactItemBean) {
-            setViewContentFromItemBean((ContactItemBean) data);
+            onDataSourceChanged((ContactItemBean) data);
         }
 
         if (!TextUtils.isEmpty(mNickname)) {

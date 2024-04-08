@@ -92,7 +92,10 @@ public class TUIEmojiPluginService implements TUIInitializer, ITUINotification, 
                             for (MessageReactionBean reactionBean : object) {
                                 if (TextUtils.equals(messageBean.getId(), reactionBean.getMessageID())) {
                                     MessageReactionBeanCache.putMessageReactionBean(messageBean, reactionBean);
-                                    TUIChatService.getInstance().refreshMessage(messageBean);
+                                    if (reactionBean.getReactionCount() != 0) {
+                                        messageBean.setHasReaction(true);
+                                        TUIChatService.getInstance().refreshMessage(messageBean);
+                                    }
                                 }
                             }
                         }

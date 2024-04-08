@@ -43,6 +43,7 @@ import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.Evalu
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.EvaluationReplyView;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.InputViewFloatLayerProxy;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.InvisibleHolder;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.config.TUICustomerServiceConfig;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.presenter.TUICustomerServicePresenter;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.util.TUICustomerServiceUtils;
 import java.util.Collections;
@@ -246,9 +247,7 @@ public class TUICustomerServicePluginService implements TUIInitializer, ITUINoti
             return Collections.singletonList(extensionInfo);
         } else if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID)) {
             Object userID = param.get(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.USER_ID);
-            if (userID instanceof String
-                && (TextUtils.equals((String) userID, TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_ONLINE_DOCTOR)
-                    || TextUtils.equals((String) userID, TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_SHOPPING_MALL))) {
+            if (userID instanceof String && TUICustomerServiceConfig.getInstance().getCustomerServiceAccounts().contains(userID)) {
                 TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
                 extensionInfo.setIcon(
                     TUIThemeManager.getAttrResId(getAppContext(), com.tencent.qcloud.tuikit.tuicontact.R.attr.contact_chat_extension_title_bar_more_menu));
@@ -268,8 +267,7 @@ public class TUICustomerServicePluginService implements TUIInitializer, ITUINoti
             Object userIDObj = param.get(TUIConstants.TUIChat.Extension.ChatUserIconClickedProcessor.USER_ID);
             if (userIDObj instanceof String) {
                 String userID = (String) userIDObj;
-                if (TextUtils.equals(userID, TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_SHOPPING_MALL)
-                    || TextUtils.equals(userID, TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_ONLINE_DOCTOR)) {
+                if (TUICustomerServiceConfig.getInstance().getCustomerServiceAccounts().contains(userID)) {
                     TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
                     extensionInfo.setIcon(
                         TUIThemeManager.getAttrResId(getAppContext(), com.tencent.qcloud.tuikit.tuicontact.R.attr.contact_chat_extension_title_bar_more_menu));
@@ -290,13 +288,12 @@ public class TUICustomerServicePluginService implements TUIInitializer, ITUINoti
             Object userIDObj = param.get(TUIConstants.TUIChat.CHAT_ID);
             if (userIDObj instanceof String) {
                 String userID = (String) userIDObj;
-                if (TextUtils.equals(userID, TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_SHOPPING_MALL)
-                    || TextUtils.equals(userID, TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_ONLINE_DOCTOR)) {
+                if (TUICustomerServiceConfig.getInstance().getCustomerServiceAccounts().contains(userID)) {
                     TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
                     Map<String, Object> extensionMap = new HashMap<>();
+                    extensionMap.put(TUIConstants.TUIChat.Extension.ChatView.MESSAGE_NEED_READ_RECEIPT, true);
                     extensionMap.put(TUIConstants.TUIChat.Extension.ChatView.ENABLE_VIDEO_CALL, false);
                     extensionMap.put(TUIConstants.TUIChat.Extension.ChatView.ENABLE_AUDIO_CALL, false);
-                    extensionMap.put(TUIConstants.TUIChat.Extension.ChatView.MESSAGE_NEED_READ_RECEIPT, false);
                     extensionMap.put(TUIConstants.TUIChat.Extension.ChatView.ENABLE_CUSTOM_HELLO_MESSAGE, false);
                     extensionInfo.setData(extensionMap);
 
@@ -342,12 +339,11 @@ public class TUICustomerServicePluginService implements TUIInitializer, ITUINoti
                 return false;
             }
 
-            if (!TextUtils.equals(chatInfo.getId(), TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_SHOPPING_MALL)
-                && !TextUtils.equals(chatInfo.getId(), TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_ONLINE_DOCTOR)) {
+            if (!TUICustomerServiceConfig.getInstance().getCustomerServiceAccounts().contains(chatInfo.getId())) {
                 return false;
             }
 
-            if (TextUtils.equals(chatInfo.getId(), TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_SHOPPING_MALL)) {
+            if (TUICustomerServiceConfig.getInstance().isOnlineShopping(chatInfo.getId())) {
                 InputViewFloatLayerProxy inputViewFloatLayerProxy = new InputViewFloatLayerProxy(chatInfo);
                 inputViewFloatLayerProxy.showFloatLayerContent(viewGroup);
                 return true;

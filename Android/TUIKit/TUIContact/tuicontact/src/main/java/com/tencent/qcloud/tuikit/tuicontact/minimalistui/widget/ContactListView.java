@@ -34,9 +34,7 @@ public class ContactListView extends LinearLayout implements IContactListView {
     private boolean isGroupList = false;
 
     private TextView notFoundTip;
-    /**
-     * 右侧边栏导航区域
-     */
+
     private IndexBar mIndexBar;
 
     private TextView mTvSideBarHint;

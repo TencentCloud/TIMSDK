@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/customer_service_title_color"
         android:textSize="16sp"
-        tools:text="您好"/>
+        tools:text="Hello"/>
 
     <com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.BranchListLayout
         android:id="@+id/branch_item_list"

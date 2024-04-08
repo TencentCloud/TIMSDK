@@ -3,7 +3,6 @@ package com.tencent.qcloud.tim.demo.config;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,14 +19,11 @@ import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.PermissionRequester;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,7 +54,7 @@ public class InitSetting {
 
     private void initDemoStyle() {
         final SharedPreferences sharedPreferences = mContext.getSharedPreferences("TUIKIT_DEMO_SETTINGS", mContext.MODE_PRIVATE);
-        AppConfig.DEMO_UI_STYLE = sharedPreferences.getInt("tuikit_demo_style", 0);
+        AppConfig.DEMO_UI_STYLE = sharedPreferences.getInt("tuikit_demo_style", AppConfig.DEMO_UI_STYLE_CLASSIC);
     }
 
     public void setPermissionRequestContent() {
@@ -176,7 +172,7 @@ public class InitSetting {
             buildInfoJson.put("buildModel", BrandUtil.getBuildModel());
             buildInfoJson.put("buildVersionRelease", BrandUtil.getBuildVersionRelease());
             buildInfoJson.put("buildVersionSDKInt", BrandUtil.getBuildVersionSDKInt());
-            // 工信部要求 app 在运行期间只能获取一次设备信息。因此 app 获取设备信息设置给 SDK 后，SDK 使用该值并且不再调用系统接口。
+            
             // The Ministry of Industry and Information Technology requires the app to obtain device information only once
             // during its operation. Therefore, after the app obtains the device information and sets it to the SDK, the SDK
             // uses this value and no longer calls the system interface.

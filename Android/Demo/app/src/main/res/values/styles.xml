@@ -4,7 +4,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <!--解决冷启动白屏问题-->
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

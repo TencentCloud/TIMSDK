@@ -10,25 +10,35 @@ import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.auto.service.AutoService;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.config.InitSetting;
 import com.tencent.qcloud.tim.demo.custom.CustomConfigHelper;
+import com.tencent.qcloud.tim.demo.login.LoginForDevActivity;
+import com.tencent.qcloud.tim.demo.main.MainActivity;
+import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
+import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.Map;
 
 @AutoService(TUIInitializer.class)
 @TUIInitializerDependency("TIMCommon")
 @TUIInitializerID("TIMAppService")
-public class TIMAppService implements TUIInitializer, ITUIService, ITUINotification {
+public class TIMAppService implements TUIInitializer, ITUIService {
     public static final String TAG = TIMAppService.class.getSimpleName();
     private static TIMAppService instance;
 
@@ -39,6 +49,7 @@ public class TIMAppService implements TUIInitializer, ITUIService, ITUINotificat
     public Context mContext;
 
     private BroadcastReceiver languageChangedReceiver;
+    private BroadcastReceiver themeChangedReceiver;
 
     private InitSetting initSetting;
 
@@ -50,39 +61,51 @@ public class TIMAppService implements TUIInitializer, ITUIService, ITUINotificat
         initSetting = new InitSetting(mContext);
         initSetting.init();
         initThemeAndLanguageChangedReceiver();
-        initService();
-    }
-
-    private void initService() {
-        TUICore.registerService(TUIConstants.TIMAppKit.SERVICE_NAME, this);
-
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
-        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS, this);
-        TUICore.registerEvent(TUIConstants.TIMAppKit.NOTIFY_RTCUBE_EVENT_KEY, TUIConstants.TIMAppKit.NOFITY_IMLOGIN_SUCCESS_SUB_KEY, this);
+        initLoginStatusListener();
     }
 
 
-    @Override
-    public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
-        Log.d(TAG, "onNotifyEvent key = " + key + "subKey = " + subKey);
-        if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key)) {
-            if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_KICKED_OFFLINE.equals(subKey) || TUIConstants.TUILogin.EVENT_SUB_KEY_USER_SIG_EXPIRED.equals(subKey)
-                || TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGOUT_SUCCESS.equals(subKey)) {
-                Log.d(TAG, "logout im");
-            } else if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS.equals(subKey)) {
-                Log.d(TAG, "login im ");
-            }
-        } else if (TUIConstants.TIMAppKit.NOTIFY_RTCUBE_EVENT_KEY.equals(key) && TUIConstants.TIMAppKit.NOFITY_IMLOGIN_SUCCESS_SUB_KEY.equals(subKey)) {
-            if (param != null) {
-                Intent intent = (Intent) param.get(TUIConstants.TIMAppKit.OFFLINE_PUSH_INTENT_DATA);
-                TUIUtils.handleOfflinePush(intent, null);
-            }
-            if (!TextUtils.isEmpty(TUIUtils.offlineData)) {
-                TUIUtils.handleOfflinePush(TUIUtils.offlineData, null);
-                TUIUtils.offlineData = null;
-            }
+    public void initLoginStatusListener() {
+        TUILogin.addLoginListener(loginStatusListener);
+    }
+
+    private final TUILoginListener loginStatusListener = new TUILoginListener() {
+        @Override
+        public void onKickedOffline() {
+            ToastUtil.toastLongMessage(getAppContext().getString(R.string.repeat_login_tip));
+            logout();
+        }
+
+        @Override
+        public void onUserSigExpired() {
+            ToastUtil.toastLongMessage(getAppContext().getString(R.string.expired_login_tip));
+            TUILogin.logout(new TUICallback() {
+                @Override
+                public void onSuccess() {
+                    logout();
+                }
+
+                @Override
+                public void onError(int errorCode, String errorMessage) {
+                    logout();
+                }
+            });
+        }
+    };
+
+    public void logout() {
+        DemoLog.i(TAG, "logout");
+        UserInfo.getInstance().cleanUserInfo();
+
+        Intent intent = new Intent(getAppContext(), LoginForDevActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("LOGOUT", true);
+        getAppContext().startActivity(intent);
+
+        if (AppConfig.DEMO_UI_STYLE == AppConfig.DEMO_UI_STYLE_CLASSIC) {
+            MainActivity.finishMainActivity();
+        } else {
+            MainMinimalistActivity.finishMainActivity();
         }
     }
 
@@ -94,9 +117,19 @@ public class TIMAppService implements TUIInitializer, ITUIService, ITUINotificat
             }
         };
 
+        themeChangedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                CustomConfigHelper.initConversationDefaultAvatar();
+            }
+        };
         IntentFilter languageFilter = new IntentFilter();
         languageFilter.addAction(Constants.DEMO_LANGUAGE_CHANGED_ACTION);
         LocalBroadcastManager.getInstance(mContext).registerReceiver(languageChangedReceiver, languageFilter);
+
+        IntentFilter themeFilter = new IntentFilter();
+        themeFilter.addAction(Constants.DEMO_THEME_CHANGED_ACTION);
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(themeChangedReceiver, themeFilter);
     }
 
     public void registerPushManually() {

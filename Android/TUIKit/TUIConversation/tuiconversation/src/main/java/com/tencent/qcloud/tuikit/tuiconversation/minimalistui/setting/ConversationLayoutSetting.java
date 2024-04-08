@@ -10,12 +10,12 @@ public class ConversationLayoutSetting {
 
         listLayout.setItemAvatarRadius(ScreenUtil.dip2px(49f));
 
-        // 动态插入，删除Item，包括自定义会话
+        
         //        final ConversationInfo customInfo = new ConversationInfo();
         //        customInfo.setType(ConversationInfo.TYPE_CUSTOM);
-        //        customInfo.setId("自定义会话");
+        
         //        customInfo.setGroup(false);
-        //        customInfo.setTitle("乔丹风行8代跑鞋 风随我动！");
+        
         //        customInfo.setIconUrl("https://img1.gtimg.com/ninja/2/2019/03/ninja155375585738456.jpg");
         //
         //

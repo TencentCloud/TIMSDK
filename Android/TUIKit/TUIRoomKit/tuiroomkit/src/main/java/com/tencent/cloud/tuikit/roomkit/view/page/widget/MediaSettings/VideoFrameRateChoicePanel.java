@@ -1,7 +1,5 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_LIST;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.view.View;

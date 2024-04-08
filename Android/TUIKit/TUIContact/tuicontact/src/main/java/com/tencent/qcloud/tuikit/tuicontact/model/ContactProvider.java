@@ -50,7 +50,7 @@ public class ContactProvider {
         ThreadUtils.execute(new Runnable() {
             @Override
             public void run() {
-                // 压测时数据量比较大，query耗时比较久，所以这里使用新线程来处理
+                
                 // The amount of data during the stress test is relatively large, and the query takes a long time, so a new thread is used here to process
                 V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
                     @Override

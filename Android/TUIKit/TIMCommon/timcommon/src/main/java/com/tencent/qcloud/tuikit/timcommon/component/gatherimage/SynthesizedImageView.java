@@ -13,7 +13,6 @@ import java.util.List;
 
 public class SynthesizedImageView extends ShadeImageView {
     /**
-     * 群聊头像合成器
      *
      * Group Chat Avatar Synthesizer
      */

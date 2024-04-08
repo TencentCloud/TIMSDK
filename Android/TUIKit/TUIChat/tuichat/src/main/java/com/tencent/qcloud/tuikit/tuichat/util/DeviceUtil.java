@@ -7,13 +7,13 @@ import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 public class DeviceUtil {
     private static String[] huaweiAndHonorDevice = {
-        "hwH60", // 荣耀6
-        "hwPE", // 荣耀6 plus
-        "hwH30", // 3c
-        "hwHol", // 3c畅玩版
-        "hwG750", // 3x
-        "hw7D", // x1
-        "hwChe2", // x1
+        "hwH60", 
+        "hwPE", 
+        "hwH30",
+        "hwHol", 
+        "hwG750",
+        "hw7D",
+        "hwChe2",
     };
 
     public static boolean isHuaWeiOrHonor() {

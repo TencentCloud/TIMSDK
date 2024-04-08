@@ -18,9 +18,6 @@ public class RoomEventCenter {
     private Map<RoomEngineEvent, List<RoomEngineEventResponder>> mEngineResponderMap;
     private Map<String, List<TUINotificationAdapter>>            mUIEventResponderMap;
 
-    /**
-     * 事件列表
-     */
     public enum RoomEngineEvent {
         ERROR,
         KICKED_OFF_LINE,
@@ -35,7 +32,6 @@ public class RoomEventCenter {
         SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED,
         ROOM_DISMISSED,
         KICKED_OUT_OF_ROOM,
-        ROOM_SPEECH_MODE_CHANGED,
         GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM,
         REMOTE_USER_ENTER_ROOM,
         REMOTE_USER_LEAVE_ROOM,
@@ -55,7 +51,6 @@ public class RoomEventCenter {
         REMOTE_USER_TAKE_SEAT,
         REMOTE_USER_LEAVE_SEAT,
         REQUEST_RECEIVED,
-        REQUEST_CANCELLED,
         RECEIVE_TEXT_MESSAGE,
         RECEIVE_CUSTOM_MESSAGE,
         KICKED_OFF_SEAT,
@@ -107,18 +102,13 @@ public class RoomEventCenter {
         public static final String SEND_IM_MSG_COMPLETE = "SEND_IM_MSG_COMPLETE";
 
         public static final String BAR_SHOW_TIME_RECOUNT = "BAR_SHOW_TIME_RECOUNT";
+        public static final String DISMISS_MAIN_ACTIVITY = "DISMISS_MAIN_ACTIVITY";
     }
 
-    /**
-     * engine事件统一回调
-     */
     public interface RoomEngineEventResponder {
         void onEngineEvent(RoomEngineEvent event, Map<String, Object> params);
     }
 
-    /**
-     * UI事件统一回调
-     */
     public interface RoomKitUIEventResponder {
         void onNotifyUIEvent(String key, Map<String, Object> params);
     }
@@ -136,9 +126,6 @@ public class RoomEventCenter {
         mUIEventResponderMap = new ConcurrentHashMap<>();
     }
 
-    /**
-     * 订阅engine事件
-     */
     public void subscribeEngine(RoomEngineEvent event, RoomEngineEventResponder observer) {
         if (event == null || observer == null) {
             return;
@@ -152,9 +139,6 @@ public class RoomEventCenter {
         }
     }
 
-    /**
-     * 取消订阅engine事件
-     */
     public void unsubscribeEngine(RoomEngineEvent event, RoomEngineEventResponder observer) {
         if (observer == null) {
             return;
@@ -166,9 +150,6 @@ public class RoomEventCenter {
         list.remove(observer);
     }
 
-    /**
-     * 订阅UI事件
-     */
     public void subscribeUIEvent(String event, RoomKitUIEventResponder responder) {
         if (TextUtils.isEmpty(event) || responder == null) {
             return;
@@ -184,16 +165,10 @@ public class RoomEventCenter {
         TUICore.registerEvent(RoomKitUIEvent.ROOM_KIT_EVENT, event, adapter);
     }
 
-    /**
-     * 发送UI事件
-     */
     public void notifyUIEvent(String event, Map<String, Object> params) {
         TUICore.notifyEvent(RoomKitUIEvent.ROOM_KIT_EVENT, event, params);
     }
 
-    /**
-     * 取消订阅UI事件
-     */
     public void unsubscribeUIEvent(String event, RoomKitUIEventResponder responder) {
         if (TextUtils.isEmpty(event) || responder == null) {
             return;
@@ -202,7 +177,6 @@ public class RoomEventCenter {
         if (list == null) {
             return;
         }
-        list.remove(responder);
         TUINotificationAdapter notificationAdapter = null;
         Iterator<TUINotificationAdapter> iterator = list.iterator();
         while (iterator.hasNext()) {
@@ -212,6 +186,7 @@ public class RoomEventCenter {
                 break;
             }
         }
+        list.remove(notificationAdapter);
         TUICore.unRegisterEvent(RoomKitUIEvent.ROOM_KIT_EVENT, event, notificationAdapter);
     }
 

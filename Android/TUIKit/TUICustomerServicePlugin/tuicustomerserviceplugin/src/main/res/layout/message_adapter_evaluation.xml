@@ -27,7 +27,7 @@
             android:layout_gravity="center_horizontal"
             android:textSize="12sp"
             android:textColor="@color/make_an_evaluation_color"
-            tools:text="请对此次服务做出评价"/>
+            tools:text="Please rate this service"/>
 
         <LinearLayout
             android:id="@+id/ll_star"
@@ -277,5 +277,5 @@
         android:layout_gravity="center_horizontal"
         android:textSize="12sp"
         android:textColor="@color/customer_service_tips_color"
-        tools:text="再见！"/>
+        tools:text="Bye"/>
 </LinearLayout>

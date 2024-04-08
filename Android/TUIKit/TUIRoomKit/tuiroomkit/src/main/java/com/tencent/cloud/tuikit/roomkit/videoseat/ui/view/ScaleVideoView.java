@@ -12,15 +12,15 @@ import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener {
     private static final int CLICK_ACTION_MAX_MOVE_DISTANCE = 10;
 
-    private static final float SCALE_MAX = 5.0f; //最大的缩放比例
+    private static final float SCALE_MAX = 5.0f;
     private static final float SCALE_MIN = 1.0f;
 
-    private float       mPressedPoint1X = 0;     // 第一根手指按下的点X坐标
-    private float       mPressedPoint2X = 0;     // 第二根手指按下的点X坐标
-    private float       mPressedPoint1Y = 0;     // 第一根手指按下的点Y坐标
-    private float       mPressedPoint2Y = 0;     // 第二根手指按下的点Y坐标
-    private double      mDistBeforeMove = 0;     // 俩手指移动前距离
-    private double      mDistAfterMove  = 0;     // 俩手指移动后距离
+    private float       mPressedPoint1X = 0;
+    private float       mPressedPoint2X = 0;
+    private float       mPressedPoint1Y = 0;
+    private float       mPressedPoint2Y = 0;
+    private double      mDistBeforeMove = 0;
+    private double      mDistAfterMove  = 0;
     private boolean     mEnableScale    = false;
 
     private OnClickListener mClickListener;
@@ -141,9 +141,6 @@ public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener
         return true;
     }
 
-    /**
-     * 触摸使用的移动事件
-     */
     private void setSelfPivot(float lessX, float lessY) {
         float setPivotX;
         float setPivotY;
@@ -173,9 +170,6 @@ public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener
         setPivot(setPivotX, setPivotY);
     }
 
-    /**
-     * 计算两个点的距离
-     */
     private double spacing(MotionEvent event) {
         if (event.getPointerCount() == 2) {
             float x = event.getX(0) - event.getX(1);
@@ -186,17 +180,11 @@ public class ScaleVideoView extends TUIVideoView implements View.OnTouchListener
         }
     }
 
-    /**
-     * 平移画面，当画面的宽或高大于屏幕宽高时，调用此方法进行平移
-     */
     private void setPivot(float x, float y) {
         setPivotX(x);
         setPivotY(y);
     }
 
-    /**
-     * 设置放大缩小
-     */
     private void setScale(float scale) {
         setScaleX(scale);
         setScaleY(scale);

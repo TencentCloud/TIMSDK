@@ -154,10 +154,6 @@ public class ConversationFoldPresenter {
         }
     }
 
-    /**
-     * 有新的会话
-     * @param conversationInfoList 新的会话列表
-     */
     public void onNewConversation(List<ConversationInfo> conversationInfoList) {
         TUIConversationLog.i(TAG, "onNewConversation conversations:" + conversationInfoList);
 
@@ -173,7 +169,7 @@ public class ConversationFoldPresenter {
             ConversationInfo update = iterator.next();
             for (int i = 0; i < loadedConversationInfoList.size(); i++) {
                 ConversationInfo cacheInfo = loadedConversationInfoList.get(i);
-                // 去重
+                
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
                     loadedConversationInfoList.set(i, update);
                     iterator.remove();
@@ -183,7 +179,6 @@ public class ConversationFoldPresenter {
             }
         }
 
-        // 对新增会话排序，避免插入 recyclerview 时错乱
         Collections.sort(processedInfoList);
         loadedConversationInfoList.addAll(processedInfoList);
         if (adapter != null) {
@@ -248,7 +243,7 @@ public class ConversationFoldPresenter {
             ConversationInfo update = changedInfoList.get(j);
             for (int i = 0; i < uiSourceInfoList.size(); i++) {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
-                // 单个会话刷新时找到老的会话数据，替换
+                
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
                     if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
@@ -356,22 +351,12 @@ public class ConversationFoldPresenter {
         }
     }
 
-    /**
-     * 删除会话，会将本地会话数据从imsdk中删除
-     *
-     * @param conversation 会话信息
-     */
     public void deleteConversation(ConversationInfo conversation) {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIConversation.CONVERSATION_ID, conversation.getConversationId());
         TUICore.callService(TUIConstants.TUIConversation.SERVICE_NAME, TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION, param);
     }
 
-    /**
-     * 隐藏会话
-     * hide conversation
-     * @param conversationInfo 会话信息 conversation info
-     */
     public void markConversationHidden(ConversationInfo conversationInfo, boolean isHidden) {
         if (conversationInfo == null || TextUtils.isEmpty(conversationInfo.getConversationId())) {
             TUIConversationLog.e(TAG, "markConversationHidden error: invalid conversationInfo");

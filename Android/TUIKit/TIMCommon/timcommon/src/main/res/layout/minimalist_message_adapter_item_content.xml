@@ -30,7 +30,8 @@
         android:layout_width="21.12dp"
         android:layout_height="21.12dp"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:layout_alignTop="@id/msg_content_ll"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="11.52dp"
         android:background="@drawable/chat_checkbox_selector"
         android:button="@null"
@@ -60,7 +61,6 @@
         app:default_image="?attr/core_default_user_icon"
         app:image_radius="20dp"
         tools:visibility="visible" />
-
 
     <LinearLayout
         android:id="@+id/msg_content_ll"

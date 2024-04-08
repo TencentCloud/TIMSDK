@@ -96,7 +96,7 @@ public class ConversationProvider {
     }
 
     public void getTotalUnreadMessageCount(IUIKitCallback<Long> callBack) {
-        // 更新消息未读总数
+        
         V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
             @Override
             public void onSuccess(Long count) {

@@ -1,7 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.model;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.KEY_ERROR;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_SCREEN_STATE_CHANGED;
@@ -14,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceObserver;
 import com.tencent.cloud.tuikit.roomkit.model.entity.AudioModel;
 import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
@@ -21,8 +21,8 @@ import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
 import com.tencent.cloud.tuikit.roomkit.model.entity.VideoModel;
 import com.tencent.qcloud.tuicore.TUILogin;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -40,6 +40,9 @@ public class RoomStore {
 
     public List<TakeSeatRequestEntity> takeSeatRequestList;
 
+    private WeakReference<ConferenceObserver> conferenceObserverRef;
+    private Class                             mainActivityClass;
+
     private boolean isInFloatWindow      = false;
     private boolean isAutoShowRoomMainUi = true;
 
@@ -52,6 +55,34 @@ public class RoomStore {
         allUserList = new CopyOnWriteArrayList<>();
         seatUserList = new CopyOnWriteArrayList<>();
         takeSeatRequestList = new CopyOnWriteArrayList<>();
+    }
+
+    public ConferenceObserver getConferenceObserver() {
+        if (conferenceObserverRef == null) {
+            Log.d(TAG, "getConferenceObserver conferenceObserverRef is null");
+            return null;
+        }
+        ConferenceObserver observer = conferenceObserverRef.get();
+        Log.d(TAG, "getConferenceObserver : " + observer);
+        return observer;
+    }
+
+    public void setConferenceObserver(ConferenceObserver conferenceObserver) {
+        Log.d(TAG, "setConferenceObserver : " + conferenceObserver);
+        if (conferenceObserver == null) {
+            return;
+        }
+        conferenceObserverRef = new WeakReference<>(conferenceObserver);
+    }
+
+    public Class getMainActivityClass() {
+        Log.d(TAG, "getMainActivityClass : " + mainActivityClass);
+        return mainActivityClass;
+    }
+
+    public void setMainActivityClass(Class mainActivityClass) {
+        Log.d(TAG, "setMainActivityClass : " + mainActivityClass);
+        this.mainActivityClass = mainActivityClass;
     }
 
     public void handleUserRoleChanged(String userId, TUIRoomDefine.Role role) {
@@ -97,6 +128,24 @@ public class RoomStore {
         map.put(RoomEventConstant.KEY_USER_POSITION, takeSeatRequestList.size() - 1);
         RoomEventCenter.getInstance()
                 .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_ADD, map);
+    }
+
+    public void removeTakeSeatRequestByUserId(String userId) {
+        int index = -1;
+        for (int i = 0; i < takeSeatRequestList.size(); i++) {
+            if (TextUtils.equals(userId, takeSeatRequestList.get(i).getUserId())) {
+                index = i;
+                takeSeatRequestList.remove(i);
+                break;
+            }
+        }
+        if (index == -1) {
+            return;
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put(RoomEventConstant.KEY_USER_POSITION, index);
+        RoomEventCenter.getInstance()
+                .notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_REMOVE, map);
     }
 
     public void removeTakeSeatRequest(String requestId) {
@@ -167,7 +216,7 @@ public class RoomStore {
             return;
         }
         if (TextUtils.equals(userInfo.userId, userModel.userId)) {
-            userModel.setRole(userInfo.userRole);
+            userModel.initRole(userInfo.userRole);
         }
         if (userInfo.hasScreenStream) {
             allUserList.add(0, UserEntity.toUserEntityForScreenStream(userInfo));
@@ -382,7 +431,7 @@ public class RoomStore {
         Map<String, Object> map = new HashMap<>();
         map.put(RoomEventConstant.KEY_SEAT_USER_POSITION, seatPosition);
         map.put(RoomEventConstant.KEY_USER_POSITION, userPosition);
-        map.put(KEY_ERROR, reason);
+        map.put(KEY_REASON, reason);
         RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, map);
     }
 

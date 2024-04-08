@@ -19,6 +19,16 @@ public final class TUIConstants {
         public static final String TYPE_COMMUNITY = "Community";
     }
 
+    public static final class DeviceInfo {
+        public static final int BRAND_XIAOMI = 2000;
+        public static final int BRAND_HUAWEI = 2001;
+        public static final int BRAND_GOOGLE_ELSE = 2002;
+        public static final int BRAND_MEIZU = 2003;
+        public static final int BRAND_OPPO = 2004;
+        public static final int BRAND_VIVO = 2005;
+        public static final int BRAND_HONOR = 2006;
+    }
+
     public static final class Service {
         public static final String TUI_CHAT = "TUIChatService";
         public static final String TUI_CONVERSATION = "TUIConversationService";
@@ -270,6 +280,15 @@ public final class TUIConstants {
                 public static final String CHAT_POP_MENU = "TUIChatExtensionPopMenu";
                 public static final String MESSAGE = "TUIChatExtensionPopMessage";
             }
+
+            public static final class ChatViewTopAreaExtension {
+                public static final String EXTENSION_ID = "TUIChatTopAreaExtension";
+                public static final String VIEW_TYPE = "TUIChatExtensionViewType";
+                public static final int VIEW_TYPE_CLASSIC = 0;
+                public static final int VIEW_TYPE_MINIMALIST = 1;
+                public static final String CHAT_ID = "TUIChatID";
+                public static final String IS_GROUP = "TUIChatIsGroup";
+            }
         }
 
         public static class Method {
@@ -303,6 +322,10 @@ public final class TUIConstants {
                 public static final String ENABLE_CUSTOM_HELLO_MESSAGE = "enableCustomHelloMessage";
                 public static final String ENABLE_POLL = "enablePoll";
                 public static final String ENABLE_GROUP_NOTE = "enableGroupNote";
+                public static final String ENABLE_ALBUM = "enableAlbum";
+                public static final String ENABLE_FILE = "enableFile";
+                public static final String ENABLE_RECORD_VIDEO = "enableRecordVideo";
+                public static final String ENABLE_TAKE_PHOTO = "enableTakePhoto";
             }
         }
 
@@ -394,6 +417,7 @@ public final class TUIConstants {
 
         public static final String FRIEND_ID_LIST = "friendIdList";
         public static final String FRIEND_ID = "friendId";
+        public static final String USER_ID = "userID";
         public static final String FRIEND_REMARK = "friendRemark";
 
         public static final String GROUP_TYPE_KEY = "type";
@@ -642,7 +666,6 @@ public final class TUIConstants {
         public static final String METHOD_SET_PUSH_BRAND_ID = "setTIMPushBrandId";
         public static final String METHOD_GET_PUSH_BRAND_ID = "getTIMPushBrandId";
         public static final String PUSH_BRAND_ID_KEY = "TIMPushBrandIdKey";
-
         public static final String METHOD_CONFIG_FCM_PRIVATE_RING = "configTIMPushFCMPrivateRing";
         public static final String CONFIG_FCM_CHANNEL_ID_KEY = "configTIMPushFCMChannelIdKey";
         public static final String CONFIG_FCM_PRIVATE_RING_NAME_KEY = "configTIMPushFCMPrivateRingNameKey";
@@ -652,7 +675,6 @@ public final class TUIConstants {
 
         public static final String METHOD_CHECK_PUSH_STATUS = "checkTIMPushStatus";
         public static final String CHECK_PUSH_STATUS_RESULT_LEY = "checkTIMPushStatusResultKey";
-
         public static final String METHOD_ENABLE_NOTIFICATION_LISTENER = "enableNotificationListener";
         public static final String ENABLE_NOTIFICATION_LISTENER_KEY = "enableNotificationListenerKey";
 
@@ -745,13 +767,13 @@ public final class TUIConstants {
 
             // ext
             public static final String ENTITY = "entity";
-            public static final String ACTION = "action"; // 保持和之前对齐。 1:chat; 2:call;
+            public static final String ACTION = "action"; 
 
             // report
-            public static final String PUSH_ID = "clickExt"; // 后台透传
-            private static final String PUSH_NOTIFY_MODE = "notifyMode"; //"0", 打开应用；"1"，打开网页；"2"，打开应用内指定界面
+            public static final String PUSH_ID = "clickExt"; 
+            private static final String PUSH_NOTIFY_MODE = "notifyMode"; 
             public static final String PUSH_EVENT_TIME_KEY = "pushEventTime";
-            public static final String PUSH_EVENT_TYPE_KEY = "pushEventType"; // 点击 0, 触达 1；
+            public static final String PUSH_EVENT_TYPE_KEY = "pushEventType"; 
         }
     }
 
@@ -909,6 +931,7 @@ public final class TUIConstants {
         public static final String CHAT_BOT_BUSINESS_ID_SRC_KEY = "src";
         public static final int CHAT_BOT_BUSINESS_ID_SRC_STREAM_TEXT = 2;
         public static final int CHAT_BOT_BUSINESS_ID_SRC_HELLO_REQUEST = 7;
+        public static final int CHAT_BOT_BUSINESS_ID_SRC_RICH_TEXT = 9;
         public static final int CHAT_BOT_BUSINESS_ID_SRC_RESPONSE = 15;
     }
 
@@ -955,12 +978,16 @@ public final class TUIConstants {
 
         public static final String METHOD_SHOW_SCREEN_SHARE_TIP = "methodShowScreenShareTip";
         public static final String METHOD_ANTO_FRAUD_REMINDER = "methodAntiFraudReminder";
-
         public static final String PARAM_DIALOG_CONTEXT = "paramDialogContext";
 
         public static final int RESULT_CANCEL = 0;
         public static final int RESULT_CONFIRM = 1;
         public static final int RESULT_CONTINUE = 2;
+
+        public static final String EVENT_ROOM_STATE_CHANGED = "eventRoomStateChanged";
+        public static final String EVENT_SUB_KEY_ROOM_STATE_START = "eventSubKeyRoomStateStart";
+        public static final String EVENT_SUB_KEY_ROOM_STATE_STOP = "eventSubKeyRoomStateStop";
+
     }
 
     // localBroadcast

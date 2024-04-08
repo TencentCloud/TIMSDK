@@ -21,12 +21,6 @@ public class OfflinePushConfigs {
     }
 
     /*
-     * Demo 集成了两种推送注册方式，获取应用正在使用的推送服务注册方式：
-     *
-     * REGISTER_PUSH_MODE_AUTO，组件自动监听账号登录成功后，注册推送服务，需要控制台下载推送数据并配置到工程中即可；
-     * REGISTER_PUSH_MODE_API，手动注册离线推送服务, IM 账号登录成功时调用，推送参数见接口说明;
-     *
-     *
      * Demo integrates two push registration methods to obtain the push service registration method that the application is using:
      *
      * REGISTER_PUSH_MODE_AUTO，After the component monitors the account login successfully, to register the push service automatically, you need to manually
@@ -42,13 +36,6 @@ public class OfflinePushConfigs {
     }
 
     /*
-     * Demo 集成了三种点击通知栏跳转界面方式，获取应用正在使用的跳转方式：
-     *
-     * CLICK_NOTIFICATION_CALLBACK_INTENT，按照规范在 IM 控制台配置跳转参数，点击通知栏跳转到配置界面，解析透传参数并进行界面重定向；
-     * CLICK_NOTIFICATION_CALLBACK_NOTIFY，IM 控制台配置跳转参数选择 "使用推送组件回调跳转"，点击通知栏事件注册回调接收即可；
-     * CLICK_NOTIFICATION_CALLBACK_BROADCAST，IM 控制台配置跳转参数选择 "使用推送组件回调跳转"，点击通知栏事件注册接收广播即可；
-     *
-     *
      * Demo integrates three ways to click the notification bar to jump to the interface to get the jumping method the application is using:
      *
      * CLICK_NOTIFICATION_CALLBACK_INTENT，Configure the jump parameters in the IM console according to the specifications, click the notification bar to jump

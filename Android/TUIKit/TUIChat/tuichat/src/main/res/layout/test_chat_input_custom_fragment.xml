@@ -7,12 +7,12 @@
         android:id="@+id/test_send_message_btn1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发送一条超链接消息"/>
+        android:text="Send a link message"/>
 
     <Button
         android:id="@+id/test_send_message_btn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发送一条视频文字混合消息"/>
+        android:text="Send a multi media message"/>
 
 </LinearLayout>

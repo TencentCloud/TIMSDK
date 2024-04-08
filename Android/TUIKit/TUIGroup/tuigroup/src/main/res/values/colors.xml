@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text_color_black">#000</color>
-    <!-- 积极钮色值 -->
     <color name="btn_positive">#00a4ff</color>
     <color name="btn_positive_hover">#006eff</color>
 
-    <!-- 消极按钮背景色值 -->
     <color name="btn_negative">#ffffff</color>
     <color name="btn_negative_hover">#cc3428</color>
 

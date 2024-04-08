@@ -14,19 +14,16 @@ import java.util.List;
 
 public class ImageMessageBean extends TUIMessageBean {
     /**
-     * ## 原图
      *
      * original image
      */
     public static final int IMAGE_TYPE_ORIGIN = V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN;
     /**
-     * ## 缩略图
      *
      * thumbnail
      */
     public static final int IMAGE_TYPE_THUMB = V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB;
     /**
-     * ## 大图
      *
      * big picture
      */

@@ -1,7 +1,9 @@
 package com.tencent.cloud.tuikit.roomkit.view.component;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 
 public class BaseDialogFragment extends DialogFragment {
+    private static final String TAG = "BaseDialogFragment";
 
     private View mRootView;
 
@@ -68,7 +72,12 @@ public class BaseDialogFragment extends DialogFragment {
         return this;
     }
 
-    public void showDialog(@NonNull FragmentManager manager, @Nullable String tag) {
+    public void showDialog(@NonNull Context context, @Nullable String tag) {
+        if (!(context instanceof FragmentActivity)) {
+            Log.e(TAG, "context is not instance of FragmentActivity");
+            return;
+        }
+        FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
         Fragment fragment = manager.findFragmentByTag(tag);
         if (fragment != null && fragment instanceof DialogFragment) {
             return;

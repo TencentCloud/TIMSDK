@@ -42,6 +42,8 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.OnEmptySpaceClickListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +68,7 @@ public class ChatPopMenu {
     private final List<ChatPopMenuAction> chatPopMenuActionList = new ArrayList<>();
 
     private final ChatPopMenu chatPopMenu;
-    private MessageRecyclerView.OnEmptySpaceClickListener mEmptySpaceClickListener;
+    private OnEmptySpaceClickListener mEmptySpaceClickListener;
 
     private FrameLayout reactFrameLayout;
     private View anchorView;
@@ -212,7 +214,7 @@ public class ChatPopMenu {
         menuAdapter.notifyDataSetChanged();
     }
 
-    public void setEmptySpaceClickListener(MessageRecyclerView.OnEmptySpaceClickListener mEmptySpaceClickListener) {
+    public void setEmptySpaceClickListener(OnEmptySpaceClickListener mEmptySpaceClickListener) {
         this.mEmptySpaceClickListener = mEmptySpaceClickListener;
     }
 
@@ -303,8 +305,8 @@ public class ChatPopMenu {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chatPopMenuAction.actionClickListener.onClick();
                     chatPopMenu.hide();
+                    chatPopMenuAction.actionClickListener.onClick();
 
                     if (mEmptySpaceClickListener != null) {
                         mEmptySpaceClickListener.onClick();

@@ -2,7 +2,6 @@
 <resources>
 
     <style name="TUIBaseLightTheme" parent="@style/TUIBaseTheme">
-        <!-- 颜色规范 start -->
         <item name="core_light_bg_title_text_color">@color/core_light_bg_title_text_color_light</item>
         <item name="core_light_bg_primary_text_color">@color/core_light_bg_primary_text_color_light</item>
         <item name="core_light_bg_secondary_text_color">@color/core_light_bg_secondary_text_color_light</item>
@@ -23,7 +22,6 @@
         <item name="core_btn_normal_color">@color/core_btn_normal_color_light</item>
         <item name="core_btn_pressed_color">@color/core_btn_pressed_color_light</item>
         <item name="core_btn_disable_color">@color/core_btn_disable_color_light</item>
-        <!-- 颜色规范 end -->
 
     </style>
 
