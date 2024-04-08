@@ -1,6 +1,39 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 7.9.5666 @2024.04.07 - Enhanced Version
+### SDK
+
+- New visionOS SDK, compatible with Apple Vision Pro
+- Group conversation supports message pinning
+- Add the function of receiving group @ reminder offline notifications during Do Not Disturb mode
+- Support setting friend remarks in the "Accept Friend Request" interface
+- Add handling of invitations to join groups
+- Upgrade vivo push package version in TIMPush
+- Fix OV device crash issue in TIMPush
+- Add OfflinePushExtInfo support for push through feature in TIMPush
+- Fix the issue of not receiving the notification of being kicked out due to network disconnection
+- Fix the issue of occasionally not receiving group messages when joining a live group immediately in the login callback
+- Fix the issue of still receiving session change callbacks after receiving the delete session callback
+- Fix the issue of occasional reset of local data in messages
+- Fix the issue of frequent triggering of onRecvMessageModified callback when fetching historical messages
+- Fix the issue of no return value and no support for optional values in some Swift interfaces
+- Fix the multi-endpoint login exception caused by iCloud sync between different types of devices with the same AppleID
+- Fix related issues of communities and topics
+- Fix the issue of failing to fetch historical messages on HarmonyOS platform
+- Upgrade libcurl in Windows platform to 8.4.0
+- Fix the issue of duplicate summary in merged forwarded messages in C++ interface
+- Fix the issue of unable to download large images in C++ interface
+- Fix the issue of incorrect group type in C++ interface
+- Fix the issue of unable to set message custom data in C++ interface
+- Fix the forwarding message failure in C++ interface
+
+### TUIKit & Demo
+
+- iOS components provide PrivacyInfo.xcprivacy privacy list file
+- TUIChatBot plugin supports markdown text display
+- TUIChat chat page header supports displaying call status
+
 ## 7.8.5505 @2024.03.01 - Enhanced Version
 ### SDK
 - Add PrivacyInfo.xcprivacy privacy file for iOS & Mac SDK
