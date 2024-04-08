@@ -34,17 +34,17 @@ target 'TUIKitDemo' do
   
   # 注意:插件需要跟随版本，需要和TUICore.spec中一致，正常情况下我们会帮您修改一致。
   # Note:TUIKit plugins need to follow the version.
-  pod 'TIMPush', '7.8.5483'
-  pod 'TUIPollPlugin', '7.8.5483'
-  pod 'TUIGroupNotePlugin', '7.8.5483'
-  pod 'TUITranslationPlugin', '7.8.5483'
-  pod 'TUIConversationGroupPlugin','7.8.5483'
-  pod 'TUIConversationMarkPlugin', '7.8.5483'
+  pod 'TIMPush', '7.9.5666'
+  pod 'TUIPollPlugin', '7.9.5666'
+  pod 'TUIGroupNotePlugin', '7.9.5666'
+  pod 'TUITranslationPlugin', '7.9.5666'
+  pod 'TUIConversationGroupPlugin','7.9.5666'
+  pod 'TUIConversationMarkPlugin', '7.9.5666'
   
   # 其他 Pod
   # Other Pod
   pod 'TUICallKit'
-  pod 'TUIRoomKit','>=1.5.1'
+  pod 'TUIRoomKit'
   pod 'MJRefresh'
   pod 'Masonry'
 end
@@ -52,7 +52,7 @@ end
 target 'pushservice' do
   use_frameworks!
   use_modular_headers!
-  pod 'TIMPush', '7.8.5483'
+  pod 'TIMPush', '7.9.5666'
 end
 
 
