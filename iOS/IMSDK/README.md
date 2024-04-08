@@ -31,7 +31,7 @@ English | [简体中文](./README_ZH.md)
 
   <tr >
      <td style="text-align:center">Apple Vision Pro Edition</td>
-     <td style="text-align:center">Support Swift API and visionOS</td>
+     <td style="text-align:center">Support visionOS and provide Swift API</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.9.5666/ImSDKForVision_Plus_7.9.5666.xcframework.zip">ImSDKForVision_Plus.xcframework</a></td>
   </tr>
 </table>
