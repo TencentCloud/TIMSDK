@@ -150,7 +150,6 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
             userData: String?
         ) {
             super.onCallReceived(callerId, calleeIdList, groupId, callMediaType, userData)
-            //收到通话邀请,停止录制
             stopRecordAudioMessage()
         }
     }
@@ -200,9 +199,8 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
         }
         TUILog.i(TAG, "stopRecordAudioMessage, stopLocalAudio")
         TRTCCloud.sharedInstance(mContext).stopLocalAudio()
-        //清空录制信息
+
         mAudioRecordInfo = null
-        //释放音频焦点
         abandonAudioFocus()
     }
 
@@ -230,7 +228,7 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
             mOnFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
                 when (focusChange) {
                     AudioManager.AUDIOFOCUS_GAIN -> {}
-                    AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->                             //其他应用占用焦点的时候,停止录制
+                    AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
                         stopRecordAudioMessage()
 
                     else -> {}

@@ -15,6 +15,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
+import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.GroupEventListener;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupUtils;
@@ -28,7 +29,7 @@ import java.util.Map;
 @AutoService(TUIInitializer.class)
 @TUIInitializerDependency({"TIMCommon"})
 @TUIInitializerID("TUIGroup")
-public class TUIGroupService implements TUIInitializer, ITUIGroupService {
+public class TUIGroupService implements TUIInitializer, ITUIService {
     public static final String TAG = TUIGroupService.class.getSimpleName();
     private static TUIGroupService instance;
 

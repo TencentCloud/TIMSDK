@@ -41,7 +41,8 @@ import com.tencent.qcloud.tim.demo.profile.ProfileFragment;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -92,8 +93,6 @@ public class MainActivity extends BaseLightActivity {
     private List<Fragment> fragments;
     private List<TabBean> tabBeanList;
 
-    private int count = 0;
-    private long lastClickTime = 0;
     private HashMap<String, V2TIMConversation> markUnreadMap = new HashMap<>();
     private TabBean selectedItem;
     private TabBean preSelectedItem;
@@ -133,14 +132,14 @@ public class MainActivity extends BaseLightActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
-                    boolean isEnableRecentCalls = intent.getBooleanExtra(TUIKitConstants.RECENT_CALLS_ENABLE, false);
+                    boolean isEnableRecentCalls = intent.getBooleanExtra(Constants.RECENT_CALLS_ENABLE, false);
                     onRecentCallsStatusChanged(isEnableRecentCalls);
                 }
             }
         };
 
         IntentFilter recentCallsFilter = new IntentFilter();
-        recentCallsFilter.addAction(TUIKitConstants.RECENT_CALLS_ENABLE_ACTION);
+        recentCallsFilter.addAction(Constants.RECENT_CALLS_ENABLE_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(recentCallsReceiver, recentCallsFilter);
     }
 
@@ -218,7 +217,7 @@ public class MainActivity extends BaseLightActivity {
         profileBean = new TabBean();
         profileBean.normalIcon = R.attr.demo_main_tab_profile_normal_bg;
         profileBean.selectedIcon = R.attr.demo_main_tab_profile_selected_bg;
-        profileBean.text = R.string.tab_profile_tab_text;
+        profileBean.text = R.string.minimalist_tab_settings_tab_text;
         profileBean.fragment = new ProfileFragment();
         tabBeanList.add(profileBean);
 
@@ -437,7 +436,7 @@ public class MainActivity extends BaseLightActivity {
     private void initTUIKitDemoUI() {
         if (TUIConfig.getTUIHostType() != TUIConfig.TUI_HOST_TYPE_RTCUBE) {
             mainTitleBar.getLeftGroup().setVisibility(View.GONE);
-            profileBean.text = R.string.tab_profile_tab_text;
+            profileBean.text = R.string.minimalist_tab_settings_tab_text;
             onTabBeanChanged(profileBean);
         } else {
             mainTitleBar.getLeftGroup().setVisibility(View.VISIBLE);
@@ -571,8 +570,8 @@ public class MainActivity extends BaseLightActivity {
     private void setProfileTitleBar() {
         mainTitleBar.getLeftGroup().setVisibility(View.GONE);
         mainTitleBar.getRightGroup().setVisibility(View.GONE);
-        mainTitleBar.setTitle(getResources().getString(R.string.profile), ITitleBarLayout.Position.MIDDLE);
-
+        mainTitleBar.setTitle(getResources().getString(R.string.minimalist_tab_settings_tab_text), ITitleBarLayout.Position.MIDDLE);
+        ProfileUtil.setTestEntry(mainTitleBar);
         initTUIKitDemoUI();
     }
 
@@ -660,7 +659,7 @@ public class MainActivity extends BaseLightActivity {
         }
 
         if (OfflinePushConfigs.getOfflinePushConfigs().getClickNotificationCallbackMode() == OfflinePushConfigs.CLICK_NOTIFICATION_CALLBACK_INTENT) {
-            if (AppConfig.DEMO_UI_STYLE == 1) {
+            if (AppConfig.DEMO_UI_STYLE == AppConfig.DEMO_UI_STYLE_MINIMALIST) {
                 Intent minimalistIntent = new Intent(this, MainMinimalistActivity.class);
                 minimalistIntent.putExtras(intent);
                 if (intent != null) {
@@ -697,7 +696,6 @@ public class MainActivity extends BaseLightActivity {
             });
         }
     }
-
 
     private void registerUnreadListener() {
         V2TIMManager.getFriendshipManager().addFriendListener(friendshipListener);

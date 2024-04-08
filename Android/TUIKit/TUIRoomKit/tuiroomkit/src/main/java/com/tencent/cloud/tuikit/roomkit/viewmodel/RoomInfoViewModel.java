@@ -14,14 +14,13 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.RoomInfoDialog;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponder {
-    //这个提供Web端RoomKit的体验链接，您可以按照自己的业务需求将房间的链接更改，我们会根据此链接为您生成房间二维码
     private static final String URL_ROOM_KIT_WEB = "https://web.sdk.qcloud.com/component/tuiroom/index.html";
     private static final String LABEL            = "Label";
 
@@ -46,7 +45,7 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
         ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData mClipData = ClipData.newPlainText(LABEL, content);
         cm.setPrimaryClip(mClipData);
-        ToastUtil.toastShortMessageCenter(msg);
+        RoomToast.toastShortMessageCenter(msg);
     }
 
     public void setMasterName() {

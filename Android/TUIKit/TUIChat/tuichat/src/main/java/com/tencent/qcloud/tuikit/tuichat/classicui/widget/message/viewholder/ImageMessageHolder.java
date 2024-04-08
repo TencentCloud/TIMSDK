@@ -185,7 +185,10 @@ public class ImageMessageHolder extends MessageContentHolder {
                 return true;
             }
         });
-
+        if (!msg.isHasReaction()) {
+            setMessageBubbleBackground(null);
+            setMessageBubbleZeroPadding();
+        }
     }
 
     private void loadImage(TUIMessageBean messageBean, String finalImagePath) {

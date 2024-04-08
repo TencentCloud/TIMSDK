@@ -198,7 +198,7 @@ public class MessageInfoUtil {
                 return null;
             }
         } else if (data.equals(MessageCustom.BUSINESS_ID_GROUP_CREATE)) {
-            // 兼容4.7版本以前的 tuikit
+            
             // Compatible with tuikit prior to version 4.7
             msgInfo.setMsgType(MessageInfo.MSG_TYPE_GROUP_CREATE);
             String message = TUISearchConstants.covert2HTMLString(getDisplayName(timMessage)) + context.getString(R.string.create_group);

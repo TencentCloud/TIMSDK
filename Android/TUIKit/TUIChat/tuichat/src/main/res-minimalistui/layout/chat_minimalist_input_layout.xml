@@ -54,13 +54,15 @@
 
         <ImageView
             android:id="@+id/reply_preview_bar_close_btn"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:padding="4dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/reply_close_btn" />
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/common_item_pressed_effect_background"
+            android:src="@drawable/reply_close_btn" />
 
 
     </RelativeLayout>
@@ -71,17 +73,20 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
+        android:paddingStart="8dp"
         android:paddingTop="7dp"
         android:paddingEnd="16dp"
         android:paddingBottom="7dp">
 
         <ImageView
             android:id="@+id/input_more_btn"
-            android:layout_width="21dp"
-            android:layout_height="21dp"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/common_item_pressed_effect_background"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/chat_minimalist_input_add_icon" />
+            android:src="@drawable/chat_minimalist_input_add_icon" />
 
         <ImageView
             android:id="@+id/voice_delete"
@@ -94,23 +99,22 @@
             android:id="@+id/text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@drawable/chat_minimalist_input_edittext_border"
             android:orientation="horizontal"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="4dp">
 
             <com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditText
                 android:id="@+id/input_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:minHeight="@dimen/chat_input_editor_min_height"
                 android:background="@null"
                 android:hint="@string/chat_input_edit_hint_text"
-                android:paddingTop="9.5dp"
-                android:paddingBottom="9.5dp"
                 android:textAlignment="viewStart"
                 android:textColor="@color/black_font_color"
                 android:textColorHint="#666666"
@@ -120,12 +124,13 @@
 
             <ImageView
                 android:id="@+id/input_face_btn"
-                android:layout_width="18.76dp"
-                android:layout_height="18.76dp"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="9.5dp"
-                android:background="@drawable/chat_minimalist_input_face_icon" />
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop"
+                android:padding="8dp"
+                android:background="@drawable/common_item_pressed_effect_background"
+                android:src="@drawable/chat_minimalist_input_face_icon" />
 
         </LinearLayout>
 
@@ -163,20 +168,26 @@
                 app:waveMode="left_right" />
         </FrameLayout>
 
-        <Button
+        <ImageView
             android:id="@+id/input_voice_btn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/chat_minimalist_input_voice_icon" />
+            android:layout_marginEnd="8dp"
+            android:padding="6dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/common_item_pressed_effect_background"
+            android:src="@drawable/chat_minimalist_input_voice_icon" />
 
         <ImageView
             android:id="@+id/input_image_btn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/chat_minimalist_input_camera_icon" />
+            android:padding="6dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/common_item_pressed_effect_background"
+            android:src="@drawable/chat_minimalist_input_camera_icon" />
 
     </LinearLayout>
 
@@ -206,9 +217,11 @@
 
         <ImageView
             android:id="@+id/quote_close_btn"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:padding="4dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/common_item_pressed_effect_background"
             android:src="@drawable/reply_close_btn" />
     </LinearLayout>
 

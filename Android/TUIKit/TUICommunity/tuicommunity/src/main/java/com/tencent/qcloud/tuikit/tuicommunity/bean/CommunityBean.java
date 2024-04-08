@@ -66,7 +66,6 @@ public class CommunityBean implements Comparable<CommunityBean>, Serializable {
     }
 
     /**
-     * 根据最新活动时间排序
      * Sort by latest event time
      */
     public long getSortTime() {

@@ -32,7 +32,7 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textSize="@dimen/contact_group_profile_group_name_size"
-            tools:text="群聊" />
+            tools:text="group" />
 
     </RelativeLayout>
 

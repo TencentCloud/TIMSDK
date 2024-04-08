@@ -38,8 +38,8 @@ Android
 3. Set parameters in `GenerateTestUserSig.java`:
 	<img src="https://main.qcloudimg.com/raw/f9b23b8632058a75b78d1f6fdcdca7da.png" width="900">
 
-	- SDKAPPID: A placeholder by default. Set it to the `SDKAppID` that you noted down in step 1.
-	- SECRETKEY: A placeholder by default. Set it to the key information that you noted down in step 1.
+	- SDKAppID: A placeholder by default. Set it to the `SDKAppID` that you noted down in step 1.
+	- SDKSecretKey: A placeholder by default. Set it to the key information that you noted down in step 1.
 
 ### Step 3. Compile and run the application
 You can open the source code directory `TUIRoomKit/Android` in Android Studio 3.5 or later, wait for the Android Studio project to be synced, connect to a real device, and click **Run** to try out the application.

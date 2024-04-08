@@ -136,18 +136,14 @@ public class RoomServiceInitializer extends ServiceInitializer implements ITUIEx
             if (obj != null && obj instanceof Boolean && ((boolean)obj)) {
                 return null;
             }
-            TUIRoomKit.createInstance();
             ChatInputMoreListener chatInputMoreListener =
                     (ChatInputMoreListener) param.get(TUIConstants.TUIChat.Extension.InputMore.INPUT_MORE_LISTENER);
             RoomMsgManager.setChatInputMoreListenerRef(new WeakReference<>(chatInputMoreListener));
 
             TUIExtensionInfo roomExtension = new TUIExtensionInfo();
-            // 参与排序的权重为 100
             roomExtension.setWeight(200);
-            // 扩展名称为 “快速会议”
             roomExtension.setText(getAppContext().getString(R.string.tuiroomkit_chat_access_room));
             roomExtension.setIcon(R.drawable.tuiroomkit_chat_access_room_icon);
-            // 设置扩展被点击事件
             roomExtension.setExtensionListener(new RoomClickListener());
             return Collections.singletonList(roomExtension);
         }

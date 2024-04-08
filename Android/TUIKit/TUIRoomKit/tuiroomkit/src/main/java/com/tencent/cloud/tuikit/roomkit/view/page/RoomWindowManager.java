@@ -17,6 +17,7 @@ import android.util.Log;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.utils.DrawOverlaysPermissionUtil;
+import com.tencent.cloud.tuikit.roomkit.utils.IntentUtils;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomFloatViewService;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -74,7 +75,13 @@ public class RoomWindowManager
     }
 
     public void showMainActivity() {
-        TUICore.startActivity("RoomMainActivity", null);
+        Class activity = RoomEngineManager.sharedInstance().getRoomStore().getMainActivityClass();
+        if (activity == null) {
+            Log.e(TAG, "showMainActivity activity is null");
+            return;
+        }
+        Intent intent = new Intent(mAppContext, activity);
+        IntentUtils.safeStartActivity(mAppContext, intent);
     }
 
     public void showFloatWindow() {

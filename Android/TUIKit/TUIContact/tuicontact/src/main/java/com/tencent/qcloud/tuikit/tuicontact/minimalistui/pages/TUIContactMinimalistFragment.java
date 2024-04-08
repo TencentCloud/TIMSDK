@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -64,7 +66,7 @@ public class TUIContactMinimalistFragment extends BaseFragment {
                 } else {
                     Intent intent = new Intent(TUIContactService.getAppContext(), FriendProfileMinimalistActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(TUIContactConstants.ProfileType.CONTENT, contact);
+                    intent.putExtra(TUIConstants.TUIContact.USER_ID, contact.getId());
                     TUIContactService.getAppContext().startActivity(intent);
                 }
             }

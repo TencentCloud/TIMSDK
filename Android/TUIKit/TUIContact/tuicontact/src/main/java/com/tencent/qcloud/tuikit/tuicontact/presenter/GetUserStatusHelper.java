@@ -13,7 +13,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * A get user status task queue which has a limit frequency mechanism
- * 具有接口调用限频机制的获取用户状态的任务队列
  */
 public class GetUserStatusHelper {
     private static final String TAG = "GetUserStatusHelper";

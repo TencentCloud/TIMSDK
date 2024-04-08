@@ -29,7 +29,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 获取群名称
      *
      * Get the group name
      *
@@ -40,7 +39,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置群名称
      *
      * Set the group name
      *
@@ -51,7 +49,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 获取群公告
      *
      * Get the group notice
      *
@@ -62,7 +59,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置群公告
      *
      * Set the group notice
      *
@@ -73,7 +69,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 获取加群验证方式
      *
      * Get the group joining approval type
      *
@@ -84,7 +79,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置加群验证方式
      *
      * Set the group joining approval type
      *
@@ -95,7 +89,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 获取群类型，Public/Private/ChatRoom
      *
      * Get the group type
      *
@@ -106,7 +99,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置群类型
      *
      * Set the group type
      *
@@ -117,7 +109,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 获取成员详细信息
      *
      * Get member details
      *
@@ -128,7 +119,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置成员详细信息
      *
      * Set member details
      *
@@ -139,7 +129,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 获取群成员数量
      *
      * @return
      */
@@ -151,7 +140,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置群成员数量
      *
      * Get the number of members that have joined the group
      *
@@ -162,7 +150,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 返回是否是群主
      *
      * Returns whether it is the owner of the group
      *
@@ -173,7 +160,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置是否是群主
      *
      * Set the owner of the group
      *
@@ -184,7 +170,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 获取消息接收选项
      *
      * Get the current user's message receiving option in the group. To modify the group message receiving option, please call the setReceiveMessageOpt API.
      *
@@ -195,10 +180,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 设置消息接收选项
-     * @param messageReceiveOption, true,免打扰； false，接收消息
-     *
-     *
      * Set the current user's message receiving option in the group.
      * @param messageReceiveOption, true,no message will be received； false，messages will be received.
      */

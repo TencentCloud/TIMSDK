@@ -11,7 +11,7 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
     private PagerSnapHelper mPagerSnapHelper;
     private OnViewPagerListener mOnViewPagerListener;
     private RecyclerView mRecyclerView;
-    private int mDrift; // 位移，用来判断移动方向 Displacement, used to determine the direction of movement
+    private int mDrift; 
     private boolean mIsLeftScroll = false;
 
     public ViewPagerLayoutManager(Context context, int orientation) {
@@ -37,10 +37,10 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     /**
-     * 滑动状态的改变
-     * 缓慢拖拽-> SCROLL_STATE_DRAGGING
-     * 快速滚动-> SCROLL_STATE_SETTLING
-     * 空闲状态-> SCROLL_STATE_IDLE
+     * 
+     * -> SCROLL_STATE_DRAGGING
+     * -> SCROLL_STATE_SETTLING
+     * -> SCROLL_STATE_IDLE
      * @param state
      *
      *
@@ -61,7 +61,6 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     /**
-     * 监听竖直方向的相对偏移量
      *
      * Monitor the relative offset in the vertical direction
      *
@@ -77,7 +76,6 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     /**
-     * 监听水平方向的相对偏移量
      *
      * Monitor the relative offset in the horizontal direction
      *

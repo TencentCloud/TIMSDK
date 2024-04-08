@@ -39,7 +39,7 @@ public class BottomSelectSheet {
         p.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         window.setAttributes(p);
         window.setGravity(Gravity.BOTTOM);
-        window.setWindowAnimations(R.style.BottomSelectSheet_Anim); // 添加动画
+        window.setWindowAnimations(R.style.BottomSelectSheet_Anim); 
 
         final ListView listView = view.findViewById(R.id.item_list);
         listAdapter = new ArrayAdapter<>(context, R.layout.bottom_sheet_item, R.id.sheet_item, selectList);

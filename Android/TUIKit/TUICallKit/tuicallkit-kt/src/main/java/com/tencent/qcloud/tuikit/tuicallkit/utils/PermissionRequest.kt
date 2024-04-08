@@ -1,8 +1,11 @@
 package com.tencent.qcloud.tuikit.tuicallkit.utils
 
 import android.Manifest
+import android.app.AppOpsManager
+import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
@@ -24,6 +27,12 @@ object PermissionRequest {
             reason.append(getCameraPermissionHint(context))
             permissionList.add(Manifest.permission.CAMERA)
         }
+
+        if (PermissionRequester.newInstance(*permissionList.toTypedArray()).has()) {
+            callback?.onGranted()
+            return
+        }
+
         val permissionCallback: PermissionCallback = object : PermissionCallback() {
             override fun onGranted() {
                 requestBluetoothPermission(context, object : PermissionCallback() {
@@ -50,13 +59,14 @@ object PermissionRequest {
     }
 
     fun requestCameraPermission(context: Context, callback: PermissionCallback?) {
+        if (PermissionRequester.newInstance(Manifest.permission.CAMERA).has()) {
+            callback?.onGranted()
+            return
+        }
+
         val permissionCallback: PermissionCallback = object : PermissionCallback() {
             override fun onGranted() {
-                requestBluetoothPermission(context, object : PermissionCallback() {
-                    override fun onGranted() {
-                        callback?.onGranted()
-                    }
-                })
+                callback?.onGranted()
             }
 
             override fun onDenied() {
@@ -86,6 +96,11 @@ object PermissionRequest {
             callback.onGranted()
             return
         }
+        if (PermissionRequester.newInstance(Manifest.permission.BLUETOOTH_CONNECT).has()) {
+            callback.onGranted()
+            return
+        }
+
         val title = context.getString(R.string.tuicallkit_permission_bluetooth)
         val reason = context.getString(R.string.tuicallkit_permission_bluetooth_reason)
         val applicationInfo = context.applicationInfo
@@ -139,5 +154,35 @@ object PermissionRequest {
         } else {
             context.getString(R.string.tuicallkit_permission_camera_reason)
         }
+    }
+
+    fun isNotificationEnabled(): Boolean {
+        val context = TUIConfig.getAppContext()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // For Android Oreo and above
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            return manager.areNotificationsEnabled()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // For versions prior to Android Oreo
+            var appOps: AppOpsManager? = null
+            appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+            val appInfo = context.applicationInfo
+            val packageName = context.applicationContext.packageName
+            val uid = appInfo.uid
+            try {
+                var appOpsClass: Class<*>? = null
+                appOpsClass = Class.forName(AppOpsManager::class.java.name)
+                val checkOpNoThrowMethod = appOpsClass.getMethod(
+                    "checkOpNoThrow", Integer.TYPE, Integer.TYPE, String::class.java
+                )
+                val opPostNotificationValue = appOpsClass.getDeclaredField("OP_POST_NOTIFICATION")
+                val value = opPostNotificationValue[Int::class.java] as Int
+                return checkOpNoThrowMethod.invoke(appOps, value, uid, packageName) as Int == AppOpsManager.MODE_ALLOWED
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return false
     }
 }

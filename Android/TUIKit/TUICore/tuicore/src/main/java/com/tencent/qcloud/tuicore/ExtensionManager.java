@@ -58,7 +58,7 @@ class ExtensionManager {
 
     @Deprecated
     public Map<String, Object> getExtensionInfo(String key, Map<String, Object> param) {
-        Log.i(TAG, "getExtensionInfo key : " + key);
+        Log.d(TAG, "getExtensionInfo key : " + key);
         if (TextUtils.isEmpty(key)) {
             return null;
         }
@@ -73,7 +73,7 @@ class ExtensionManager {
     }
 
     public List<TUIExtensionInfo> getExtensionList(String extensionID, Map<String, Object> param) {
-        Log.i(TAG, "getExtensionInfoList extensionID : " + extensionID);
+        Log.d(TAG, "getExtensionInfoList extensionID : " + extensionID);
         List<TUIExtensionInfo> extensionInfoList = new ArrayList<>();
         if (TextUtils.isEmpty(extensionID)) {
             return extensionInfoList;
@@ -92,7 +92,7 @@ class ExtensionManager {
     }
 
     public void raiseExtension(String extensionID, View parentView, Map<String, Object> param) {
-        Log.i(TAG, "raiseExtension extensionID : " + extensionID);
+        Log.d(TAG, "raiseExtension extensionID : " + extensionID);
         if (TextUtils.isEmpty(extensionID)) {
             return;
         }

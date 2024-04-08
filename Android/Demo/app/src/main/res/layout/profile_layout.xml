@@ -44,7 +44,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/demo_profile_nick_name_text_size"
-                    tools:text="林"/>
+                    tools:text="Lee"/>
 
                 <TextView
                     android:id="@+id/self_account_tag"
@@ -91,7 +91,7 @@
                     android:layout_alignTop="@id/self_signature_tag"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/demo_profile_signature_text_size"
-                    tools:text="相信光" />
+                    tools:text="believe in light" />
 
                 <ImageView
                     android:layout_width="wrap_content"

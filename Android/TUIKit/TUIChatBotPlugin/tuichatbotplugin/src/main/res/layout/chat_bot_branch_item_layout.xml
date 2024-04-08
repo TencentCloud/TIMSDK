@@ -41,7 +41,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                tools:text="内容" />
+                tools:text="Content" />
         </LinearLayout>
         <ImageView
             android:id="@+id/branch_item_arrow"

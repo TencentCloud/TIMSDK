@@ -19,47 +19,47 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.CaptureListen
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 public class CaptureButton extends View {
-    public static final int MIN_RECORD_TIME = 1500; // 最短录制时间  Minimum length of time to record video
+    public static final int MIN_RECORD_TIME = 1500; 
 
-    public static final int STATE_IDLE = 0x001; // 空闲状态 idle state
-    public static final int STATE_PRESS = 0x002; // 按下状态 pressed state
-    public static final int STATE_LONG_PRESS = 0x003; // 长按状态 long press state
-    public static final int STATE_RECORDING = 0x004; // 录制状态 recording status
-    public static final int STATE_BAN = 0x005; // 禁止状态 forbidden state
+    public static final int STATE_IDLE = 0x001; 
+    public static final int STATE_PRESS = 0x002; 
+    public static final int STATE_LONG_PRESS = 0x003; 
+    public static final int STATE_RECORDING = 0x004; 
+    public static final int STATE_BAN = 0x005; 
     private static final String TAG = CaptureButton.class.getSimpleName();
-    private int state; // 当前按钮状态 current button state
-    private int buttonState; // 按钮可执行的功能状态（拍照,录制,两者）The state of the function that the button can perform (photograph, record, both)
-    private int progressColor = 0xEE16AE16; // 进度条颜色 progress bar color
-    private int outsideColor = 0xEEDCDCDC; // 外圆背景色 Outer circle background color
-    private int insideColor = 0xFFFFFFFF; // 内圆背景色 Inner circle background color
+    private int state; 
+    private int buttonState; 
+    private int progressColor = 0xEE16AE16; 
+    private int outsideColor = 0xEEDCDCDC; 
+    private int insideColor = 0xFFFFFFFF; 
 
-    private float eventY; // Touch_Event_Down时候记录的Y值 Y value recorded when Touch_Event_Down
+    private float eventY; 
 
     private Paint mPaint;
 
-    private float strokeWidth; // 进度条宽度 progress bar width
-    private int outsideAddSize; // 长按外圆半径变大的Size Long press the Size whose outer circle radius becomes larger
-    private int insideReduceSize; // 长安内圆缩小的Size The size of the inner circle of Chang'an reduced
+    private float strokeWidth; 
+    private int outsideAddSize; 
+    private int insideReduceSize; 
 
-    // 中心坐标 Center coordinates
+    
     private float centerX;
     private float centerY;
 
-    private float buttonRadius; // 按钮半径 button radius
-    private float buttonOutsideRadius; // 外圆半径 Outer circle radius
-    private float buttonInsideRadius; // 内圆半径 Inner circle radius
-    private int buttonSize; // 按钮大小 button size
+    private float buttonRadius; 
+    private float buttonOutsideRadius; 
+    private float buttonInsideRadius; 
+    private int buttonSize; 
 
-    private float progress; // 录制视频的进度 Progress of recording video
-    private int duration; // 录制视频最大时间长度 Maximum length of time to record video
-    private int minDuration; // 最短录制时间限制 Minimum recording time limit
-    private int recordedTime; // 记录当前录制的时间 Record the current recording time
+    private float progress; 
+    private int duration; 
+    private int minDuration; 
+    private int recordedTime; 
 
     private RectF rectF;
 
-    private LongPressRunnable longPressRunnable; // 长按后处理的逻辑Runnable Logic of post-processing after long press
-    private CaptureListener captureListener; // 按钮回调接口 button callback interface
-    private RecordCountDownTimer timer; // 计时器 timer
+    private LongPressRunnable longPressRunnable; 
+    private CaptureListener captureListener; 
+    private RecordCountDownTimer timer; 
 
     public CaptureButton(Context context) {
         super(context);
@@ -123,7 +123,7 @@ public class CaptureButton extends View {
         mPaint.setColor(insideColor);
         canvas.drawCircle(centerX, centerY, buttonInsideRadius, mPaint);
 
-        // 如果状态为录制状态，则绘制录制进度条
+        
         // If the state is recording, draw a recording progress bar
         if (state == STATE_RECORDING) {
             mPaint.setColor(progressColor);
@@ -151,13 +151,13 @@ public class CaptureButton extends View {
             case MotionEvent.ACTION_MOVE:
                 if (captureListener != null && state == STATE_RECORDING
                     && (buttonState == CameraActivity.BUTTON_STATE_ONLY_RECORDER || buttonState == CameraActivity.BUTTON_STATE_BOTH)) {
-                    // 记录当前Y值与按下时候Y值的差值，调用缩放回调接口
+                    
                     // Record the difference between the current Y value and the Y value when pressed, and call the zoom callback interface
                     captureListener.recordZoom(eventY - event.getY());
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                // 根据当前按钮的状态进行相应的处理
+                
                 // Perform corresponding processing according to the current state of the button
                 handlerUnpressByState();
                 break;
@@ -271,44 +271,44 @@ public class CaptureButton extends View {
      * Call API                     *
      **************************************************/
 
-    // 设置最长录制时间
+    
     // Set the maximum recording time
     public void setDuration(int duration) {
         this.duration = duration;
-        timer = new RecordCountDownTimer(duration, duration / 360); // 录制定时器
+        timer = new RecordCountDownTimer(duration, duration / 360); 
     }
 
-    // 设置最短录制时间
+    
     // Set the minimum recording time
     public void setMinDuration(int duration) {
         this.minDuration = duration;
     }
 
-    // 设置回调接口
+    
     // Set callback interface
     public void setCaptureListener(CaptureListener captureListener) {
         this.captureListener = captureListener;
     }
 
-    // 设置按钮功能（拍照和录像）
+    
     // Set button functions (photo and video)
     public void setButtonFeature(int state) {
         this.buttonState = state;
     }
 
-    // 是否空闲状态
+    
     // Is it idle
     public boolean isIdle() {
         return state == STATE_IDLE;
     }
 
-    // 设置状态
+    
     // set state
     public void resetState() {
         state = STATE_IDLE;
     }
 
-    // 录制视频计时器
+    
     // record video timer
     private class RecordCountDownTimer extends CountDownTimer {
         RecordCountDownTimer(long millisInFuture, long countDownInterval) {
@@ -327,7 +327,7 @@ public class CaptureButton extends View {
         }
     }
 
-    // 长按线程
+    
     // long press thread
     private class LongPressRunnable implements Runnable {
         @Override

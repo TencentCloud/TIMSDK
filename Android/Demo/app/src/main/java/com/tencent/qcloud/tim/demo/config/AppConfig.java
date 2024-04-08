@@ -3,14 +3,13 @@ package com.tencent.qcloud.tim.demo.config;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 
 public class AppConfig {
-    // 0,else; 1,imdemo
-    public static int IS_IM_DEMO = 0;
+    public static final int DEMO_UI_STYLE_CLASSIC = 0;
+    public static final int DEMO_UI_STYLE_MINIMALIST = 1;
+
     // app flavor
     public static String DEMO_FLAVOR_VERSION = Constants.FLAVOR_LOCAL;
-    // app build version
-    public static String DEMO_VERSION_NAME = "7.8.5484";
-    // 0,classic; 1,minimalist
-    public static int DEMO_UI_STYLE = 1;
+
+    public static int DEMO_UI_STYLE = DEMO_UI_STYLE_CLASSIC;
     // long connection addr: china、india ...
     public static int DEMO_TEST_ENVIRONMENT = 0;
     // logined appid

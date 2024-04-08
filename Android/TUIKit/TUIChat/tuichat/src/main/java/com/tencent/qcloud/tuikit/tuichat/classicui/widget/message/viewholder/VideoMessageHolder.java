@@ -222,7 +222,10 @@ public class VideoMessageHolder extends MessageContentHolder {
                 }
             }
         });
-
+        if (!msg.isHasReaction()) {
+            setMessageBubbleBackground(null);
+            setMessageBubbleZeroPadding();
+        }
     }
 
     private void loadSnapshotImage(TUIMessageBean messageBean, String snapshotPath) {

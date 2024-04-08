@@ -4,13 +4,13 @@
     android:id="@+id/tuiroomkit_fl_chat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent">
+    android:background="@color/tuiroomkit_transparent">
 
     <Button
         android:id="@+id/tuiroomKit_btn_dismiss"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
+        android:background="@color/tuiroomkit_transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tuiroomKit_guideline_chat"/>
 

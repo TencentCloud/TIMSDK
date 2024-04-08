@@ -19,10 +19,18 @@
         android:background="@color/chat_title_line_color" />
 
     <FrameLayout
-        android:id="@+id/custom_layout"
+        android:id="@+id/chat_top_extension_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_line"
+        android:layout_marginTop="0dp"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/custom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_top_extension_layout"
         android:layout_marginTop="0dp"
         android:visibility="gone" />
 

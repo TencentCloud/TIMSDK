@@ -59,6 +59,7 @@ public class TUIThemeManager {
     private int currentThemeID = THEME_LIGHT;
     private String currentLanguage = "";
     private Locale defaultLocale = null;
+    private boolean enableLanguageSwitch = true;
 
     private TUIThemeManager() {
         languageMap.put(LANGUAGE_ZH_CN, Locale.SIMPLIFIED_CHINESE);
@@ -68,6 +69,10 @@ public class TUIThemeManager {
 
     public static void setTheme(Context context) {
         getInstance().setThemeInternal(context);
+    }
+
+    public static void setEnableLanguageSwitch(boolean enableLanguageSwitch) {
+        getInstance().enableLanguageSwitch = enableLanguageSwitch;
     }
 
     private void setThemeInternal(Context context) {
@@ -218,6 +223,9 @@ public class TUIThemeManager {
     }
 
     public void applyLanguage(Context context) {
+        if (!enableLanguageSwitch) {
+            return;
+        }
         if (context == null) {
             return;
         }

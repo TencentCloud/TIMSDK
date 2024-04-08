@@ -25,7 +25,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // 主题资源文件夹
     sourceSets {
         main {
             res.srcDirs += "src/main/res-light"
@@ -43,7 +42,7 @@ dependencies {
     plugin-build-End*/
 
     def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
-    api projects.contains("tuicore") ? project(':tuicore') : "com.tencent.liteav.tuikit:tuicore:7.8.5484"
+    api projects.contains("tuicore") ? project(':tuicore') : "com.tencent.liteav.tuikit:tuicore:7.9.5666"
     implementation 'com.google.code.gson:gson:2.9.1'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.github.bumptech.glide:glide:4.12.0'

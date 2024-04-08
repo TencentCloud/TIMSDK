@@ -164,7 +164,7 @@ public class GroupChatPresenter extends ChatPresenter {
         }
     }
 
-    // 加载消息成功之后会调用此方法
+    
     // This method is called after the message is loaded successfully
     @Override
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {

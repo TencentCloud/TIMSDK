@@ -25,7 +25,6 @@
 
     <string name="chat_message_detail">消息详情</string>
 
-    <!-- 消息转发 -->
 
     <string name="titlebar_back">返回</string>
     <string name="forward_tip">请选择要操作的消息！</string>
@@ -208,7 +207,6 @@
     <string name="back_to_atmessage_all">\@所有人</string>
     <string name="back_to_atmessage_me">有人@我</string>
 
-    <!--  权限相关 start -->
     <string name="chat_permission_mic_reason_title">%s申请获取麦克风权限</string>
     <string name="chat_permission_mic_reason">为方便您发送语音消息，进行摄像和音视频通话，请允许我们访问麦克风。</string>
     <string name="chat_permission_camera_reason_title">%s申请获取相机权限</string>
@@ -218,7 +216,6 @@
     <string name="chat_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像和音视频通话功能</string>
     <string name="chat_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像和视频通话功能</string>
     <string name="chat_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用保存照片和视频功能</string>
-    <!--  权限相关 end -->
 
     <string name="chat_message_read_receipt">消息已读回执</string>
     <string name="chat_i_know">我知道了</string>

@@ -108,7 +108,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        /*如果没有进行搜索操作或者搜索之后点击了删除按钮 我们会在MainActivity中把text置空并传递过来*/
         /*If there is no search operation or the delete button is clicked after the search, we will empty the text in MainActivity and pass it over.*/
 
         ContactViewHolder contactViewHolder = (ContactViewHolder) holder;

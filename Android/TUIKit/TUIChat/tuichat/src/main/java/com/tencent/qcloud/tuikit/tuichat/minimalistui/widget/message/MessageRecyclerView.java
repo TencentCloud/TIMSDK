@@ -52,6 +52,8 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.OnEmptySpaceClickListener;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.OnGestureScrollListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.IMessageLayout;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.ChatPopActivity;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.ChatPopDataHolder;
@@ -70,13 +72,14 @@ import java.util.Set;
 public class MessageRecyclerView extends RecyclerView implements IMessageRecyclerView, IMessageLayout {
     private static final String TAG = MessageRecyclerView.class.getSimpleName();
 
-    // 取一个足够大的偏移保证能一次性滚动到最底部
+    
     // Take a large enough offset to scroll to the bottom at one time
     private static final int SCROLL_TO_END_OFFSET = -999999;
 
     protected OnItemClickListener mOnItemClickListener;
     protected OnLoadMoreHandler mHandler;
     protected OnEmptySpaceClickListener mEmptySpaceClickListener;
+    protected OnGestureScrollListener onGestureScrollListener;
     protected MessageAdapter mAdapter;
     protected LinearLayoutManager linearLayoutManager;
     protected List<ChatPopActivity.ChatPopMenuAction> mPopActions = new ArrayList<>();
@@ -144,6 +147,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                     return true;
                 }
                 return false;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                if (onGestureScrollListener != null) {
+                    onGestureScrollListener.onScroll(e1, e2, distanceX, distanceY);
+                }
+                return super.onScroll(e1, e2, distanceX, distanceY);
             }
         };
 
@@ -498,6 +509,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         this.mEmptySpaceClickListener = mEmptySpaceClickListener;
     }
 
+    public void setOnGestureScrollListener(OnGestureScrollListener onGestureScrollListener) {
+        this.onGestureScrollListener = onGestureScrollListener;
+    }
+
     public void setPopActionClickListener(OnChatPopActionClickListener listener) {
         mOnPopActionClickListener = listener;
     }
@@ -613,7 +628,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
             @Override
             public void onMessageReadStatusClick(View view, TUIMessageBean messageBean) {
-                if (mOnItemClickListener != null) {
+                if (mOnItemClickListener != null && messageBean.isSelf()) {
                     mOnItemClickListener.onMessageReadStatusClick(view, messageBean);
                 }
             }
@@ -896,7 +911,4 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         void scrollMessageFinish();
     }
 
-    public interface OnEmptySpaceClickListener {
-        void onClick();
-    }
 }

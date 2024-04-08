@@ -3,26 +3,31 @@ package com.tencent.qcloud.tuikit.tuigroup.classicui.page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
-import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
+import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GroupMemberActivity extends BaseLightActivity {
+    private static final String TAG = "GroupMemberActivity";
     private GroupMemberLayout mMemberLayout;
     private String groupID;
     private GroupInfoPresenter presenter;
@@ -89,46 +94,68 @@ public class GroupMemberActivity extends BaseLightActivity {
             }
 
             @Override
-            public void forwardListMember(GroupInfo info) {}
-
-            @Override
             public void forwardAddMember(GroupInfo info) {
-                Bundle param = new Bundle();
-                param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, info.getId());
-                param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, true);
-                ArrayList<String> selectedList = new ArrayList<>();
-                for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
-                    selectedList.add(memberInfo.getAccount());
-                }
-                param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, selectedList);
-                TUICore.startActivity(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, 1);
+                presenter.getFriendListInGroup(info.getId(), new TUIValueCallback<List<UserBean>>() {
+                    @Override
+                    public void onSuccess(List<UserBean> userBeans) {
+                        addGroupMember(info.getId(), userBeans);
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMessage) {
+                        TUIGroupLog.e(TAG, "add group member error, errorCode: " + errorCode + ", errorMessage: " + errorMessage);
+                        addGroupMember(info.getId(), null);
+                    }
+                });
             }
 
             @Override
             public void forwardDeleteMember(GroupInfo info) {
-                Bundle param = new Bundle();
-                param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, info.getId());
-                param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FOR_CALL, true);
-                TUICore.startActivity(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, 2);
+                deleteGroupMember(info.getId());
             }
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 3) {
-            List<String> friends = (List<String>) data.getSerializableExtra(TUIGroupConstants.Selection.LIST);
-            if (requestCode == 1) {
-                inviteGroupMembers(friends);
-            } else if (requestCode == 2) {
-                deleteGroupMembers(friends);
+    private void deleteGroupMember(String groupID) {
+        Bundle param = new Bundle();
+        param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, groupID);
+        param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FOR_CALL, true);
+        TUICore.startActivityForResult(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result != null && result.getData() != null) {
+                    List<String> friends = (List<String>) result.getData().getSerializableExtra(TUIGroupConstants.Selection.LIST);
+                    deleteGroupMembers(friends);
+                }
             }
-        }
+        });
     }
 
+    private void addGroupMember(String groupID, List<UserBean> friendsInGroup) {
+        Bundle param = new Bundle();
+        param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, groupID);
+        param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, true);
+        ArrayList<String> selectedList = new ArrayList<>();
+        if (friendsInGroup != null) {
+            for (UserBean userBean : friendsInGroup) {
+                selectedList.add(userBean.getUserId());
+            }
+        }
+        param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, selectedList);
+        TUICore.startActivityForResult(GroupMemberActivity.this, "StartGroupMemberSelectActivity", param, new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result != null && result.getData() != null) {
+                    List<String> friends = (List<String>) result.getData().getSerializableExtra(TUIGroupConstants.Selection.LIST);
+                    inviteGroupMembers(friends);
+                }
+            }
+        });
+    }
+
+
     private void deleteGroupMembers(List<String> friends) {
-        if (friends != null && friends.size() > 0) {
+        if (friends != null && !friends.isEmpty()) {
             if (presenter != null) {
                 presenter.deleteGroupMembers(groupID, friends, new IUIKitCallback<List<String>>() {
                     @Override
@@ -144,7 +171,7 @@ public class GroupMemberActivity extends BaseLightActivity {
     }
 
     private void inviteGroupMembers(List<String> friends) {
-        if (friends != null && friends.size() > 0) {
+        if (friends != null && !friends.isEmpty()) {
             if (presenter != null) {
                 presenter.inviteGroupMembers(groupID, friends, new IUIKitCallback<Object>() {
                     @Override

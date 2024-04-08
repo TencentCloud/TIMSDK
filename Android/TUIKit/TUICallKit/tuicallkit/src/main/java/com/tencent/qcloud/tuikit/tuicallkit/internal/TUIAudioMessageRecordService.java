@@ -39,7 +39,7 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
     private AudioFocusRequest                       mFocusRequest;
     private AudioManager                            mAudioManager;
     private AudioManager.OnAudioFocusChangeListener mOnFocusChangeListener;
-    private TUIServiceCallback mAudioRecordValueCallback;
+    private TUIServiceCallback                      mAudioRecordValueCallback;
 
     public TUIAudioMessageRecordService(Context context) {
         mContext = context.getApplicationContext();
@@ -58,7 +58,6 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                 return false;
             }
 
-            //如果当前在通话中,不支持录音
             if (!TUICallDefine.Status.None.equals(TUICallingStatusManager.sharedInstance(mContext).getCallStatus())) {
                 TUILog.e(TAG, "startRecordAudioMessage failed, The current call status does not support recording");
                 notifyAudioMessageRecordEvent(TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START,
@@ -66,7 +65,6 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                 return false;
             }
 
-            //当前已经在录音中
             if (mAudioRecordInfo != null) {
                 TUILog.e(TAG, "startRecordAudioMessage failed, The recording is not over, It cannot be called again");
                 notifyAudioMessageRecordEvent(TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START,
@@ -74,11 +72,9 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                 return false;
             }
 
-            //获取麦克风权限
             PermissionRequest.requestPermissions(mContext, TUICallDefine.MediaType.Audio, new PermissionCallback() {
                 @Override
                 public void onGranted() {
-                    //获取音频焦点
                     initAudioFocusManager();
                     if (requestAudioFocus() != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                         TUILog.e(TAG, "startRecordAudioMessage failed, Failed to obtain audio focus");
@@ -99,7 +95,6 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                                 (String) param.get(TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE);
                     }
 
-                    //开启音频采集
                     TRTCCloud.sharedInstance(mContext).setListener(mTRTCCloudListener);
                     startRecordAudioMessage();
                 }
@@ -155,7 +150,6 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
         public void onCallReceived(String callerId, List<String> calleeIdList, String groupId,
                                    TUICallDefine.MediaType callMediaType, String userData) {
             super.onCallReceived(callerId, calleeIdList, groupId, callMediaType, userData);
-            //收到通话邀请,停止录制
             stopRecordAudioMessage();
         }
     };
@@ -198,9 +192,8 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
 
         TUILog.i(TAG, "stopRecordAudioMessage, stopLocalAudio");
         TRTCCloud.sharedInstance(mContext).stopLocalAudio();
-        //清空录制信息
+
         mAudioRecordInfo = null;
-        //释放音频焦点
         abandonAudioFocus();
     }
 
@@ -236,7 +229,6 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                         case AudioManager.AUDIOFOCUS_LOSS:
                         case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                            //其他应用占用焦点的时候,停止录制
                             stopRecordAudioMessage();
                             break;
                         default:
@@ -319,9 +311,9 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
     }
 
     class AudioRecordInfo {
-        public String path;       // 录制文件地址
-        public int    sdkAppId;   // 应用的 SDKAppID
-        public String signature;  // AI 降噪签名
+        public String path;       // record file path
+        public int    sdkAppId;
+        public String signature;  // AI noise reduction ability signature
 
         public AudioRecordInfo() {
         }

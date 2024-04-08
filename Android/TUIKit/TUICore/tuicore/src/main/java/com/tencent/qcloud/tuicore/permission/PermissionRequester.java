@@ -84,11 +84,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 生成 PermissionRequester 的实例，其中参数为具体需要申请的权限，可以传入一个或多个权限。
-     *
-     * @param permissions 需要申请的权限名称。
-     * @return PermissionRequester 的实例。
-     *
      * Generate an instance of PermissionRequester, where the parameters are the specific permissions that need to be
      * applied for, and one or more permissions can be passed in.
      *
@@ -100,11 +95,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 理由的标题：安全合规要求，请求权限时，须向用户解释为什么需要申请该权限；
-     *
-     * @param title 理由的标题；
-     * @return PermissionRequester 的实例。
-     *
      * The title of the reason: security compliance requirements, when requesting permission, you
      * must explain to the user why you need to apply for the permission;
      *
@@ -117,11 +107,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 理由的正文：安全合规要求，请求权限时，须向用户解释为什么需要申请该权限；
-     *
-     * @param description 理由的正文；
-     * @return PermissionRequester 的实例。
-     *
      * The text of the reason: security compliance requirements, when requesting permission,
      * explain to the user why the permission is required;
      *
@@ -134,11 +119,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 向用户说明到 Settings 后需要打开什么权限，以保证功能的正常运行；
-     *
-     * @param settingsTip 提示用户到设置中做什么；
-     * @return PermissionRequester 的实例。
-     *
      * Explain to the user what permissions need to be opened after entering the Settings to
      * ensure the normal operation of the function;
      *
@@ -151,11 +131,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 设置用于获取权限申请结果的回调。
-     *
-     * @param callback 权限申请的回调；
-     * @return PermissionRequester 的实例。
-     *
      * Set the callback used to get the permission application result.
      *
      * @param callback callback for permission application;
@@ -167,8 +142,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 开始请求权限。
-     *
      * Start requesting permission.
      */
     @SuppressLint("NewApi")
@@ -212,8 +185,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 不支持悬浮窗和后台拉起应用权限 与 麦克风\相机\蓝牙等其他权限一起进行检查
-     * <p>
      * Do not support check float permission(or background permission) with microphone(or camera\bluetooth) together
      */
     public boolean has() {
@@ -275,7 +246,7 @@ public class PermissionRequester {
         }
         Intent intent = new Intent(context, PermissionActivity.class);
         intent.putExtra(PERMISSION_REQUEST_KEY, request);
-        // 在Activity之外startActivity需要添加FLAG_ACTIVITY_NEW_TASK，否则会crash
+        
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -459,9 +430,6 @@ public class PermissionRequester {
     }
 
     /**
-     * 1. 大部分机型,悬浮窗和后台拉起应用是同一个权限;
-     * 2. 若小米手机关闭了miui优化,申请权限时会跳转原生界面(该界面无法开启后台拉起应用权限),需用户手动到系统应用管理中开启;
-     * <p>
      * 1. For most phone, floating permissions and background permission are the same.
      * 2. If the xiaomi phone has turned off MIUI optimization. When requesting float or background
      * pop-ups permission, it will start Settings.canDrawOverlays which cannot support open background pop-ups

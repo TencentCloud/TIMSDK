@@ -174,7 +174,6 @@ public class TUIConfig {
     }
 
     /**
-     * 获取群组会话否展示九宫格样式的头像，默认为 true
      * Gets whether to display the avatar in the nine-square grid style in the group conversation, the default is true
      */
     public static boolean isEnableGroupGridAvatar() {
@@ -182,7 +181,6 @@ public class TUIConfig {
     }
 
     /**
-     * 设置群组会话是否展示九宫格样式的头像
      * Set whether to display the avatar in the nine-square grid style in group conversations
      */
     public static void setEnableGroupGridAvatar(boolean enableGroupGridAvatar) {
@@ -190,8 +188,6 @@ public class TUIConfig {
     }
 
     /**
-     * 获取 c2c 会话的默认头像
-     *
      * Get the default avatar for c2c conversation
      *
      * @return
@@ -201,8 +197,6 @@ public class TUIConfig {
     }
 
     /**
-     * 设置 c2c 会话的默认头像
-     *
      *Set the default avatar for c2c conversation
      *
      * @return
@@ -212,8 +206,6 @@ public class TUIConfig {
     }
 
     /**
-     * 获取 group 会话的默认头像
-     *
      * Get the default avatar for group conversation
      *
      * @return
@@ -223,8 +215,6 @@ public class TUIConfig {
     }
 
     /**
-     * 设置 group 会话的默认头像
-     *
      *Set the default avatar for group conversation
      *
      * @return

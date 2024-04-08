@@ -221,7 +221,9 @@ class EngineManager private constructor(context: Context) {
     fun accept(callback: TUICommonDefine.Callback?) {
         TUICallEngine.createInstance(context).accept(object : TUICommonDefine.Callback {
             override fun onSuccess() {
-                TUICallState.instance.selfUser.get().callStatus.set(TUICallDefine.Status.Accept)
+                if (TUICallState.instance.selfUser.get().callStatus.get() != TUICallDefine.Status.Accept) {
+                    TUICallState.instance.selfUser.get().callStatus.set(TUICallDefine.Status.Accept)
+                }
                 callback?.onSuccess()
             }
 

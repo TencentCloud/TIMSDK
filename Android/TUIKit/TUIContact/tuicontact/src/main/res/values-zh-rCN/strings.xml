@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 联系人相关 -->
     <string name="new_friend">新的联系人</string>
     <string name="group">我的群聊</string>
     <string name="blacklist">黑名单</string>
@@ -29,7 +28,6 @@
     <string name="add_group_not_found">群组不存在</string>
     <string name="add_group_full_member">群已满员</string>
 
-    // 新朋友
     <string name="request_agree">同意</string>
     <string name="request_accepted">已接受</string>
     <string name="request_waiting">等待验证</string>
@@ -46,7 +44,6 @@
     <string name="contact_profile_title_edit">编辑</string>
     <string name="contact_add_more_info">详情</string>
 
-    <!-- 好友资料 -->
     <string name="profile_id">账号</string>
     <string name="profile_add_wording">验证消息</string>
     <string name="profile_remark">备注名</string>
@@ -73,7 +70,6 @@
 
     <string name="clear_msg_tip">确认清除聊天记录？</string>
     <string name="contact_delete_friend_tip">确认删除联系人？</string>
-    // 群信息相关
     <string name="tips_empty_group_member">请选择群成员</string>
     <string name="tips_empty_group_type">请选择加群方式</string>
 
@@ -84,7 +80,6 @@
 
     <string name="chat_to_top">置顶聊天</string>
 
-    // "+"menu相关
     <string name="add_friend">添加好友</string>
     <string name="add_group">添加群聊</string>
     <string name="start_conversation">发起会话</string>

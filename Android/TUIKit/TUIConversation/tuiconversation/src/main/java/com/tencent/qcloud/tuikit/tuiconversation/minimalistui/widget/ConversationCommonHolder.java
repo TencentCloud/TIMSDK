@@ -164,7 +164,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             param.put(TUIConstants.TUIChat.V2TIMMESSAGE, conversation.getLastMessage());
             String lastMsgDisplayString =
                 (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
-            // 获取要显示的字符
+            
             // Get the characters to display
             if (lastMsgDisplayString != null) {
                 messageText.setText(Html.fromHtml(lastMsgDisplayString));

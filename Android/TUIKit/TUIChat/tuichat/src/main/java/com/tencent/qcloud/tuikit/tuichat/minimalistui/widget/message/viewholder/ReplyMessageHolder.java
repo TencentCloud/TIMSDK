@@ -49,11 +49,11 @@ public class ReplyMessageHolder extends MessageContentHolder {
         String replyContent = replyContentBean.getExtra();
         String senderName = replyMessageBean.getOriginMsgSender();
         senderNameTv.setText(senderName + ":");
-
         performMsgAbstract(replyMessageBean, position);
         if (!TextUtils.isEmpty(replyContent)) {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), replyContent, false);
         }
+        setOnTimeInLineTextClickListener(msg);
     }
 
     @Override

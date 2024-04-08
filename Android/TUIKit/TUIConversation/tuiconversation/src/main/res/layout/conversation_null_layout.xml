@@ -17,7 +17,7 @@
         android:layout_marginTop="@dimen/page_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="暂无会话"
+        android:text="No message"
         android:textColor="@color/black">
     </TextView>
 

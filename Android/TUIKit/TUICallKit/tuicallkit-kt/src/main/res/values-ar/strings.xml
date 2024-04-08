@@ -16,6 +16,7 @@
     <string name="tuicallkit_text_microphone">ميكروفون</string>
     <string name="tuicallkit_text_hangup">إنهاء المكالمة</string>
     <string name="tuicallkit_text_reject">رفض</string>
+    <string name="tuicallkit_text_line_busy">الخط مشغول</string>
     <string name="tuicallkit_text_speaker">مكبر الصوت</string>
     <string name="tuicallkit_text_dialing">الرد</string>
     <string name="tuicallkit_text_camera">الكاميرا</string>
@@ -68,4 +69,6 @@
     <string name="tuicallkit_error_request_refused">الحالة الحالية لا تدعم نداء الدالة</string>
     <string name="tuicallkit_error_request_repeated">الطريقة الحالية تتم تنفيذها، يرجى عدم استدعاءها مرة أخرى</string>
     <string name="tuicallkit_error_scene_not_support">مشهد المكالمة الحالي لا يدعم هذه الوظيفة</string>
+    <string name="tuicallkit_join_group_call">انضمام</string>
+    <string name="tuicallkit_join_group_call_users">يرتاد %s أشخاص %s</string>
 </resources>

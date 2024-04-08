@@ -117,7 +117,7 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="林" />
+                tools:text="Lee" />
 
             <LinearLayout
                 android:layout_width="match_parent"

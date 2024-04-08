@@ -47,7 +47,7 @@ class TUICallService : Service() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationChannelId = "notification_channel_id_01"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelName = "TRTC Foreground Service Notification"
+            val channelName = "Call Foreground Service Notification"
             val notificationChannel = NotificationChannel(
                 notificationChannelId, channelName, NotificationManager.IMPORTANCE_LOW
             )

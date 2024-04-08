@@ -47,7 +47,6 @@
     <string name="banned">%s被禁言%s</string>
     <string name="cancle_banned">%s被取消禁言</string>
 
-    <!-- 搜索 -->
     <string name="search">搜索</string>
     <string name="cancle">取消</string>
 

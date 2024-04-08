@@ -22,18 +22,18 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.ReturnListene
 import com.tencent.qcloud.tuikit.tuichat.component.camera.listener.TypeListener;
 
 public class CaptureLayout extends FrameLayout {
-    private CaptureListener captureListener; // 拍照按钮监听 Camera button Lisenter
-    private TypeListener typeListener; // 拍照或录制后接结果按钮监听 Take a picture or record followed by the result button Lisenter
-    private ReturnListener returnListener; // 退出按钮监听 Exit button listener
-    private ClickListener leftClickListener; // 左边按钮监听 left button Lisenter
-    private ClickListener rightClickListener; // 右边按钮监听 Right button Lisenter
-    private CaptureButton btnCapture; // 拍照按钮 photo button
-    private View btnConfirm; // 确认按钮 Confirm button
-    private View btnCancel; // 取消按钮 cancel button
-    private ReturnButton btnReturn; // 返回按钮 back button
-    private ImageView backBtn; // 左边自定义按钮 left custom button
-    private ImageView selectPhotoBtn; // 右边自定义按钮 right custom button
-    private TextView txtTip; // 提示文本 prompt text
+    private CaptureListener captureListener; 
+    private TypeListener typeListener; 
+    private ReturnListener returnListener; 
+    private ClickListener leftClickListener; 
+    private ClickListener rightClickListener; 
+    private CaptureButton btnCapture; 
+    private View btnConfirm; 
+    private View btnCancel; 
+    private ReturnButton btnReturn; 
+    private ImageView backBtn; 
+    private ImageView selectPhotoBtn; 
+    private TextView txtTip; 
     private int layoutWidth;
     private int layoutHeight;
     private int buttonSize;
@@ -117,7 +117,7 @@ public class CaptureLayout extends FrameLayout {
 
     private void initView() {
         setWillNotDraw(false);
-        // 拍照按钮
+        
         LayoutInflater.from(getContext()).inflate(R.layout.chat_camera_capture_layout, this);
         btnCapture = findViewById(R.id.capture_btn);
         btnCancel = findViewById(R.id.cancel_btn);

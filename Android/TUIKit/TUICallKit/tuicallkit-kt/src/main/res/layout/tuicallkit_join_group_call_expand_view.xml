@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFEBF0F6">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:background="@drawable/tuicallkit_dialog_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_join_group_call_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/tuicallkit_ic_join_group_call"
+            app:layout_constraintBottom_toTopOf="@+id/cl_expand_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_user_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/tuicallkit_color_second"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_join_group_call_icon"
+            app:layout_constraintStart_toEndOf="@+id/img_join_group_call_icon"
+            app:layout_constraintTop_toTopOf="@+id/img_join_group_call_icon"
+            tools:hint="two people is in voice call" />
+
+        <ImageView
+            android:id="@+id/img_ic_expand"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_marginEnd="16dp"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_join_group_call_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/img_join_group_call_icon" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_expand_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/tuicallkit_join_group_expand_view"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_join_group_call_icon">
+
+            <HorizontalScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/ll_layout_avatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="horizontal" />
+
+            </HorizontalScrollView>
+
+            <View
+                android:id="@+id/view_separate"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#22707070"
+                app:layout_constraintTop_toBottomOf="@+id/scroll_view" />
+
+            <Button
+                android:id="@+id/btn_join_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/tuicallkit_color_transparent"
+                android:textAllCaps="false"
+                android:textColor="@color/tuicallkit_color_black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_separate" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

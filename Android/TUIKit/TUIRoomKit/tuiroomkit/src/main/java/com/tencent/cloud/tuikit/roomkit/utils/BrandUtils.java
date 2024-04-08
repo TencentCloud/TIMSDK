@@ -66,27 +66,18 @@ public class BrandUtils {
         return mOsVersion;
     }
 
-    /**
-     * 判断是否为小米设备
-     */
     public static boolean isBrandXiaoMi() {
         init();
         return "xiaomi".equalsIgnoreCase(mBrand)
                 || "xiaomi".equalsIgnoreCase(mManufacturer);
     }
 
-    /**
-     * 判断是否为华为设备
-     */
     public static boolean isBrandHuawei() {
         init();
         return "huawei".equalsIgnoreCase(mBrand)
                 || "huawei".equalsIgnoreCase(mManufacturer);
     }
 
-    /**
-     * 判断是否为魅族设备
-     */
     public static boolean isBrandMeizu() {
         init();
         return "meizu".equalsIgnoreCase(mBrand)
@@ -94,11 +85,6 @@ public class BrandUtils {
                 || "22c4185e".equalsIgnoreCase(mBrand);
     }
 
-    /**
-     * 判断是否是 oppo 设备, 包含子品牌
-     *
-     * @return
-     */
     public static boolean isBrandOppo() {
         init();
         return "oppo".equalsIgnoreCase(mBrand)
@@ -109,11 +95,6 @@ public class BrandUtils {
                 || "oneplus".equalsIgnoreCase(mManufacturer);
     }
 
-    /**
-     * 判断是否是vivo设备
-     *
-     * @return
-     */
     public static boolean isBrandVivo() {
         init();
         return "vivo".equalsIgnoreCase(mBrand)

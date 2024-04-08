@@ -54,7 +54,7 @@
         android:gravity="center"
         android:layout_marginRight="9.6dp"
         android:layout_gravity="center"
-        tools:text="同意"/>
+        tools:text="agree"/>
 
     <TextView
         android:id="@+id/reject"
@@ -66,7 +66,7 @@
         android:textSize="14sp"
         android:layout_gravity="center"
         android:gravity="center"
-        tools:text="拒绝"/>
+        tools:text="refuse"/>
 
     <TextView
         android:id="@+id/result_tv"

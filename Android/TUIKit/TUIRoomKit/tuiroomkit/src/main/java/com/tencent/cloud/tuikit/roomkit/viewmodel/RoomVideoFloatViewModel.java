@@ -119,7 +119,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     private void handleEventCameraStateChanged(Map<String, Object> params) {
-        if (params == null || mFloatUser == null) {
+        if (isScreenSharing()) {
             return;
         }
         int position = (int) params.get(KEY_USER_POSITION);
@@ -135,6 +135,10 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
         } else {
             stopVideoPlay(mFloatUser);
         }
+    }
+
+    private boolean isScreenSharing() {
+        return mFloatUser != null && mFloatUser.isHasVideoStream() && mFloatUser.getVideoStreamType() == SCREEN_STREAM;
     }
 
     private void handleEventScreenStateChanged(Map<String, Object> params) {

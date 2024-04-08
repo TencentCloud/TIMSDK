@@ -1,6 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
 import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_ADD;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_REMOVE;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT;
@@ -8,14 +9,21 @@ import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEv
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
+import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
 
 import java.util.ArrayList;
@@ -30,7 +38,10 @@ public class RaiseHandApplicationListViewModel
 
     private List<TakeSeatRequestEntity> mTakeSeatRequestList;
 
-    public RaiseHandApplicationListViewModel(RaiseHandApplicationListPanel view) {
+    private Context mContext;
+
+    public RaiseHandApplicationListViewModel(Context context, RaiseHandApplicationListPanel view) {
+        mContext = context;
         mApplyView = view;
 
         mTakeSeatRequestList = RoomEngineManager.sharedInstance().getRoomStore().takeSeatRequestList;
@@ -42,6 +53,7 @@ public class RaiseHandApplicationListViewModel
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
         eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
         eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
+        eventCenter.subscribeEngine(USER_ROLE_CHANGED, this);
 
         eventCenter.subscribeUIEvent(AGREE_TAKE_SEAT, this);
         eventCenter.subscribeUIEvent(DISAGREE_TAKE_SEAT, this);
@@ -56,6 +68,7 @@ public class RaiseHandApplicationListViewModel
         RoomEventCenter eventCenter = RoomEventCenter.getInstance();
         eventCenter.unsubscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
         eventCenter.unsubscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
+        eventCenter.unsubscribeEngine(USER_ROLE_CHANGED, this);
 
         eventCenter.unsubscribeUIEvent(AGREE_TAKE_SEAT, this);
         eventCenter.unsubscribeUIEvent(DISAGREE_TAKE_SEAT, this);
@@ -106,6 +119,10 @@ public class RaiseHandApplicationListViewModel
                 onRemoveTakeSeatRequest(params);
                 break;
 
+            case USER_ROLE_CHANGED:
+                onUserRoleChanged(params);
+                break;
+
             default:
                 break;
         }
@@ -131,6 +148,22 @@ public class RaiseHandApplicationListViewModel
             return;
         }
         mApplyView.notifyItemRemoved(position);
+    }
+
+    private void onUserRoleChanged(Map<String, Object> params) {
+        if (params == null) {
+            return;
+        }
+        int position = (int) params.get(KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
+            return;
+        }
+        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        UserEntity user = store.allUserList.get(position);
+        if (TextUtils.equals(user.getUserId(), store.userModel.userId)
+                && user.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
+            mApplyView.dismiss();
+        }
     }
 
     @Override
@@ -169,6 +202,20 @@ public class RaiseHandApplicationListViewModel
         }
 
         RoomEngineManager.sharedInstance()
-                .responseRemoteRequest(request.getRequest().requestAction, request.getRequest().requestId, agree, null);
+                .responseRemoteRequest(request.getRequest().requestAction, request.getRequest().requestId, agree,
+                        new TUIRoomDefine.ActionCallback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onError(TUICommonDefine.Error error, String message) {
+                                Log.e(TAG, "responseUserOnStage onError error=" + error + " message=" + message);
+                                if (error == TUICommonDefine.Error.ALL_SEAT_OCCUPIED) {
+                                    RoomToast.toastShortMessageCenter(
+                                            mContext.getString(R.string.tuiroomkit_all_seat_occupied));
+                                }
+                            }
+                        });
     }
 }

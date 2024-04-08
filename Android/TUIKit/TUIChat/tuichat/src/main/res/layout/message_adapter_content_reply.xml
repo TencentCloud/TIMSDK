@@ -9,7 +9,6 @@
     app:maxWidth="@dimen/reply_message_content_max_width"
     android:orientation="vertical">
 
-    <!--原始消息摘要-->
     <LinearLayout
         android:id="@+id/origin_msg_abs_layout"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
         android:background="?attr/chat_self_reply_quote_bg_color"
         android:orientation="horizontal">
 
-        <!--左边细线-->
         <View
             android:id="@+id/reply_line"
             android:layout_width="2dp"
@@ -32,7 +30,6 @@
             android:paddingBottom="@dimen/reply_abstract_padding_bottom"
             android:orientation="vertical">
 
-            <!--发送者昵称-->
             <TextView
                 android:id="@+id/sender_tv"
                 android:layout_width="wrap_content"
@@ -53,7 +50,6 @@
 
     </LinearLayout>
 
-    <!--回复内容-->
     <TextView
         android:id="@+id/reply_content_tv"
         android:ellipsize="end"

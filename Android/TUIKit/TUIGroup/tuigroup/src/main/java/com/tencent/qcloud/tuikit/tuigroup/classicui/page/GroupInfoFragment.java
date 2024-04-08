@@ -11,7 +11,9 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
@@ -22,7 +24,7 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.interfaces.IGroupMemberListener;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.widget.GroupInfoLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import com.tencent.qcloud.tuikit.tuigroup.util.TUIGroupLog;
@@ -31,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class GroupInfoFragment extends BaseFragment {
-    private static final int CHOOSE_AVATAR_REQUEST_CODE = 101;
+    private static final String TAG = "GroupInfoFragment";
 
     private View baseView;
     private GroupInfoLayout groupInfoLayout;
@@ -58,7 +60,7 @@ public class GroupInfoFragment extends BaseFragment {
         groupId = bundle.getString(TUIGroupConstants.Group.GROUP_ID);
         mChatBackgroundThumbnailUrl = bundle.getString(TUIConstants.TUIChat.CHAT_BACKGROUND_URI);
         groupInfoLayout = baseView.findViewById(R.id.group_info_layout);
-        // 新建 presenter 与 layout 互相绑定
+        
         groupInfoPresenter = new GroupInfoPresenter(groupInfoLayout);
         groupInfoPresenter.setGroupEventListener();
         groupInfoLayout.setGroupInfoPresenter(groupInfoPresenter);
@@ -183,19 +185,35 @@ public class GroupInfoFragment extends BaseFragment {
     }
 
     private void startAddMember(GroupInfo info) {
+        groupInfoPresenter.getFriendListInGroup(info.getId(), new TUIValueCallback<List<UserBean>>() {
+            @Override
+            public void onSuccess(List<UserBean> userBeans) {
+                addGroupMember(info.getId(), userBeans);
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIGroupLog.e(TAG, "add group member error, errorCode: " + errorCode + ", errorMessage: " + errorMessage);
+                addGroupMember(info.getId(), null);
+            }
+        });
+    }
+
+    private void addGroupMember(String groupID, List<UserBean> friendsInGroup) {
         Bundle param = new Bundle();
-        param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, info.getId());
+        param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, groupID);
         param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, true);
         ArrayList<String> selectedList = new ArrayList<>();
-        for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
-            selectedList.add(memberInfo.getAccount());
+        if (friendsInGroup != null) {
+            for (UserBean userBean : friendsInGroup) {
+                selectedList.add(userBean.getUserId());
+            }
         }
         param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, selectedList);
-
         TUICore.startActivityForResult(this, "StartGroupMemberSelectActivity", param, new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                if (result.getData() != null) {
+                if (result != null && result.getData() != null) {
                     List<String> friends = (List<String>) result.getData().getSerializableExtra(TUIGroupConstants.Selection.LIST);
                     inviteGroupMembers(friends);
                 }

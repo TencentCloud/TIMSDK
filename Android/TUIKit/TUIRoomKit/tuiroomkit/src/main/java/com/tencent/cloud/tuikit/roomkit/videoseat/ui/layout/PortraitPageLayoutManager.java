@@ -203,7 +203,6 @@ public class PortraitPageLayoutManager extends PageLayoutManager {
             scrap = recycler.getViewForPosition(i);
             measureChildWithMargins(scrap, widthUsed, heightUsed);
             addView(scrap);
-            // 最后一行需要水平居中，目前适合 2 列的情况，大于 2 列时须重新计算；
             if (i == (size - 1) && line == 0) {
                 layoutLeft = (pageWidth - itemWidth) >> 1;
             } else {
@@ -218,9 +217,6 @@ public class PortraitPageLayoutManager extends PageLayoutManager {
         }
     }
 
-    /**
-     * 数量 6 及以上的布局采用 6宫格 的布局。
-     */
     private void layoutWithSixGrid(RecyclerView.Recycler recycler, RecyclerView.State state) {
         mItemWidth = (getUsableWidth() - (mColumns + 1) * mMarginBetweenItem) / mColumns;
         mItemHeight = mItemWidth;

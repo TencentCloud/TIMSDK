@@ -14,8 +14,6 @@ import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
-import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.ContactStartChatUtils;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.FriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
@@ -25,7 +23,7 @@ import java.util.HashMap;
 public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity {
     private FriendProfilePresenter presenter;
     private FriendProfileLayout layout;
-    private String mChatId;
+    private String userID;
     private String mChatBackgroundThumbnailUrl;
 
     @Override
@@ -39,15 +37,18 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
         layout.setPresenter(presenter);
         presenter.setFriendProfileLayout(layout);
         Intent intent = getIntent();
-        mChatId = intent.getStringExtra(TUIConstants.TUIChat.CHAT_ID);
+        userID = intent.getStringExtra(TUIConstants.TUIContact.USER_ID);
+        if (TextUtils.isEmpty(userID)) {
+            userID = intent.getStringExtra(TUIConstants.TUIChat.CHAT_ID);
+        }
         mChatBackgroundThumbnailUrl = intent.getStringExtra(TUIConstants.TUIChat.CHAT_BACKGROUND_URI);
         String fromUser = intent.getStringExtra("fromUser");
         String fromUserNickName = intent.getStringExtra("fromUserNickName");
         String requestMsg = intent.getStringExtra("requestMsg");
         V2TIMGroupApplication application = (V2TIMGroupApplication) intent.getSerializableExtra("groupApplication");
 
-        if (!TextUtils.isEmpty(mChatId)) {
-            layout.initData(mChatId);
+        if (!TextUtils.isEmpty(userID)) {
+            layout.initData(userID);
         } else if (!TextUtils.isEmpty(fromUser)) {
             ContactGroupApplyInfo contactGroupApplyInfo = new ContactGroupApplyInfo();
             contactGroupApplyInfo.setFromUser(fromUser);
@@ -115,7 +116,7 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
             TUIContactLog.d("FriendProfileMinimalistActivity", "onActivityResult backgroundUri = " + backgroundUri);
             mChatBackgroundThumbnailUrl = thumbnailUri;
             HashMap<String, Object> param = new HashMap<>();
-            param.put(TUIConstants.TUIChat.CHAT_ID, mChatId);
+            param.put(TUIConstants.TUIChat.CHAT_ID, userID);
             String dataUri = thumbnailUri + "," + backgroundUri;
             param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
             TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);

@@ -15,27 +15,24 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * 支持左滑删除的RecyclerView
- */
 public class SlideRecyclerView extends RecyclerView {
     private static final String TAG                 = "SlideRecyclerView";
-    private static final int    INVALID_POSITION    = -1;  // 触摸到的点不在子View范围内
-    private static final int    INVALID_CHILD_WIDTH = -1;  // 子ItemView不含两个子View
-    private static final int    SNAP_VELOCITY       = 600; // 最小滑动速度
+    private static final int    INVALID_POSITION    = -1;
+    private static final int    INVALID_CHILD_WIDTH = -1;
+    private static final int    SNAP_VELOCITY       = 600;
 
-    private VelocityTracker mVelocityTracker;   // 速度追踪器
-    private ViewGroup       mFlingView;         // 触碰的子View
-    private Scroller        mScroller;          // 触碰动画
-    private Rect            mTouchFrame;        // 子View所在的矩形范围
-    private float           mLastX;             // 滑动过程中记录上次触碰点X
+    private VelocityTracker mVelocityTracker;
+    private ViewGroup       mFlingView;         // touch view
+    private Scroller        mScroller;
+    private Rect            mTouchFrame;        // the frame of the subview
+    private float           mLastX;
     private float           mFirstX;
-    private float           mFirstY;   // 首次触碰范围
+    private float           mFirstY;
 
-    private int     mTouchSlop;      // 认为是滑动的最小距离（一般由系统提供）
-    private boolean mIsSlide;        // 是否滑动子View
-    private int     mPosition;       // 触碰的view的位置
-    private int     mMenuViewWidth;  // 菜单按钮宽度
+    private int     mTouchSlop;      // the minimum slide distance of system
+    private boolean mIsSlide;
+    private int     mPosition;       // the touch view's position
+    private int     mMenuViewWidth;
     private boolean mDisableRecyclerViewSlide;
 
     public SlideRecyclerView(Context context) {
@@ -68,14 +65,14 @@ public class SlideRecyclerView extends RecyclerView {
                 }
                 mFirstX = mLastX = x;
                 mFirstY = y;
-                // 获取触碰点所在的position
+
                 mPosition = pointToPosition(x, y);
                 if (mPosition != INVALID_POSITION) {
                     View view = mFlingView;
-                    // 获取触碰点所在的view
+
                     mFlingView = (ViewGroup) getChildAt(mPosition - ((LinearLayoutManager) getLayoutManager())
                             .findFirstVisibleItemPosition());
-                    // 如果之前触碰的view已经打开，而当前碰到的view不是那个view则立即关闭之前的view
+                    // if touching view is not same as the open view, close the open view
                     if (view != null && mFlingView != view && view.getScrollX() != 0) {
                         view.scrollTo(0, 0);
                     }
@@ -89,13 +86,10 @@ public class SlideRecyclerView extends RecyclerView {
                 break;
             case MotionEvent.ACTION_MOVE:
                 mVelocityTracker.computeCurrentVelocity(1000);
-                // 此处有俩判断，满足其一则认为是侧滑：
-                // 1.如果x方向速度大于y方向速度，且大于最小速度限制；
-                // 2.如果x方向的侧滑距离大于y方向滑动距离，且x方向达到最小滑动距离；
+
                 float xVelocity = mVelocityTracker.getXVelocity();
                 float yVelocity = mVelocityTracker.getYVelocity();
 
-                //找到最上面第一个view，不处理滑动事件但是也不拦截后续事件
                 View topView = ((LinearLayoutManager) getLayoutManager()).findViewByPosition(0);
                 if (topView == mFlingView) {
                     mIsSlide = false;
@@ -124,17 +118,13 @@ public class SlideRecyclerView extends RecyclerView {
                 case MotionEvent.ACTION_DOWN:
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    // 随手指滑动
+
                     if (mMenuViewWidth != INVALID_CHILD_WIDTH) {
                         float dx = Math.abs(mFlingView.getScrollX() + (mLastX - x));
                         if (dx <= mMenuViewWidth && dx > 0) {
                             if (mMenuViewWidth != INVALID_CHILD_WIDTH) {
                                 int scrollX = mFlingView.getScrollX();
                                 mVelocityTracker.computeCurrentVelocity(1000);
-                                // 此处有两个原因决定是否打开菜单：
-                                // 1.菜单被拉出宽度大于菜单宽度一半；
-                                // 2.横向滑动速度大于最小滑动速度；
-                                // 注意:向左滑则速度为负值
 
                                 if (isRTL()) {
                                     openRightExtendView(scrollX);
@@ -158,7 +148,6 @@ public class SlideRecyclerView extends RecyclerView {
             }
             return true;
         } else {
-            // 防止RecyclerView正常滑动时，还有菜单未关闭
             closeMenu();
             releaseVelocity();
         }
@@ -166,9 +155,9 @@ public class SlideRecyclerView extends RecyclerView {
     }
 
     private void openRightExtendView(int scrollX) {
-        if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) { //向右滑的速度大于600,则打开
+        if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {
             startScroll(scrollX, scrollX - mMenuViewWidth);
-        } else if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) { //向左滑的速度达到最低速度,则关闭
+        } else if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {
             startScroll(scrollX, -scrollX);
         } else if (scrollX >= mMenuViewWidth / 2) {
             startScroll(scrollX, scrollX - mMenuViewWidth);
@@ -178,13 +167,13 @@ public class SlideRecyclerView extends RecyclerView {
     }
 
     private void openLeftExtendView(int scrollX) {
-        if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {    //向左侧滑达到侧滑最低速度，则打开
+        if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {
             startScroll(scrollX, mMenuViewWidth - scrollX);
-        } else if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {  //向右侧滑达到侧滑最低速度，则关闭
+        } else if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {
             startScroll(scrollX, -scrollX);
-        } else if (scrollX >= mMenuViewWidth / 2) { // 如果超过删除按钮一半，则打开
+        } else if (scrollX >= mMenuViewWidth / 2) {
             startScroll(scrollX, mMenuViewWidth - scrollX);
-        } else {    // 其他情况则关闭
+        } else {
             startScroll(scrollX, -scrollX);
         }
     }

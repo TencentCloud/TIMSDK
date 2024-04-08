@@ -61,9 +61,6 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         }
     }
 
-    /**
-     * 初始化相关UI元素
-     */
     private void init() {
         inflate(getContext(), R.layout.minimalistui_conversation_layout, this);
         mConversationList = findViewById(R.id.conversation_list);

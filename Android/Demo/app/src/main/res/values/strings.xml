@@ -3,8 +3,6 @@
 
     <string name="test_custom_message">View Details>></string>
 
-
-    // 登录相关
     <string name="account">Username</string>
     <string name="password">Password</string>
 
@@ -42,16 +40,15 @@
     <string name="expired_login_tip">Account expired. Log in again.</string>
     <string name="failed_login_tip">Login failed</string>
 
-    // "我"相关
     <string name="profile">Me</string>
     <string name="modify_user_icon">Profile Photo</string>
     <string name="modify_nick_name">Name</string>
     <string name="modify_signature">Status</string>
     <string name="modify_account">Account</string>
-    <string name="add_rule">Friend Request</string>
+    <string name="add_rule">Contact Request</string>
     <string name="translation_target_language">Translate message to</string>
-    <string name="allow_type_allow_any">Allow any user to add you as friend</string>
-    <string name="allow_type_deny_any">Decline friend request from any user</string>
+    <string name="allow_type_allow_any">Allow any user to add you as contact</string>
+    <string name="allow_type_deny_any">Decline contact request from any user</string>
     <string name="allow_type_need_confirm">Anyone upon Request</string>
     <string name="exit">Log Out</string>
     <string name="about_im">About Tencent Cloud Chat</string>
@@ -100,7 +97,6 @@
 
     <string name="demo_self_detail_modify_nickname_rule">Only letters, digits, underscores, and Chinese characters.</string>
 
-    // 主页Tab相关
     <string name="tab_contact_tab_text">Contacts</string>
     <string name="tab_conversation_tab_text">Message</string>
     <string name="demo_tab_overseas_conversation_tab_text">Chats</string>
@@ -198,7 +194,7 @@
     <string name="demo_permission_mic_reason_title">%s applies for access to the microphone</string>
     <string name="demo_permission_mic_reason">In order for you to send voice messages, make camera and audio and video calls, and use the quick meeting function, please allow us to access the microphone.</string>
     <string name="demo_permission_camera_reason_title">%s applies for camera permission</string>
-    <string name="demo_permission_camera_reason">In order for you to take photos or videos to send to friends, make video calls and use the quick meeting function, please allow us to access the camera.</string>
+    <string name="demo_permission_camera_reason">In order for you to take photos or videos to send to contacts, make video calls and use the quick meeting function, please allow us to access the camera.</string>
     <string name="demo_permission_storage_reason_title">%s applies for storage permission</string>
     <string name="demo_permission_storage_reason">In order for you to save photos and videos to your device, please allow us to write photos and videos to your device.</string>
     <string name="demo_permission_mic_dialog_alert">Allow microphone access in Settings->Apps->%s to use voice messages, camera, audio and video calls and quick meeting functions normally</string>
@@ -207,15 +203,15 @@
 
     <string name="upgrade_sure">Upgrade</string>
     <string name="demo_user_status_switch_title">Show online status</string>
-    <string name="demo_user_status_switch_on_text">After it is turned off, you will not be able to see friends\' online or offline status prompts in the conversation list and address book.</string>
-    <string name="demo_user_status_switch_off_text">After it is turned on, you will be able to see your friends\' online or offline status prompts in the conversation list and address book.</string>
+    <string name="demo_user_status_switch_on_text">After it is turned off, you will not be able to see contacts\' online or offline status prompts in the conversation list and address book.</string>
+    <string name="demo_user_status_switch_off_text">After it is turned on, you will be able to see your contacts\' online or offline status prompts in the conversation list and address book.</string>
     <string name="demo_user_status">Online Status</string>
     <string name="demo_i_know">I got it</string>
     <string name="demo_no_more_reminders">No more reminders</string>
-    <string name="demo_im_flagship">Ultimate Edition</string>
+    <string name="demo_im_flagship">Premium Edition</string>
     <string name="demo_buying_guidelines">price description</string>
-    <string name="demo_im_flagship_edition_update_tip">%s function is the Chat Ultimate Edition function, which can be used after purchasing the Ultimate Edition package. Please refer to the price description for details.</string>
-    <string name="demo_buying_tips">This is the feature of ultimate edition</string>
+    <string name="demo_im_flagship_edition_update_tip">%s function is the Chat Premium Edition function, which can be used after purchasing the Premium Edition package. Please refer to the price description for details.</string>
+    <string name="demo_buying_tips">This is the feature of Premium Edition</string>
 
     <string name="chat_security_warning">[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.</string>
     <string name="chat_security_warning_report">Report</string>
@@ -229,7 +225,7 @@
     <string name="demo_style_sub_title">Chat styles</string>
     <string name="demo_ui_title">Theme</string>
     <string name="demo_ui_sub_title">Chat themes</string>
-    <string name="im_about_detail">Welcome to Chat demo! You can try out various features such as sending text/emoji/rich media messages, checking message read status and friend relationship. You can also start one-to-one chats or group chats and manage groups with three no-replying bot friends equipped for you.</string>
+    <string name="im_about_detail">Welcome to Chat demo! You can try out various features such as sending text/emoji/rich media messages, checking message read status and contact relationship. You can also start one-to-one chats or group chats and manage groups with three no-replying bot contacts equipped for you.</string>
     <string name="im_about_title_time">1 minute</string>
     <string name="im_about_subtitle_time">Run a demo in 1 minute with a few lines of code changes</string>
     <string name="im_about_title_custom">10,000+</string>

@@ -15,7 +15,7 @@ public class InputMoreActionUnit {
     // 0, not need onActivityResult; 1, need onActivityResult
     private int actionType = 0;
 
-    // 数字越小优先级越高
+    
     // The lower the number, the higher the priority
     private int priority = 0;
 

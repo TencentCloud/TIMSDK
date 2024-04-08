@@ -75,7 +75,7 @@ public class TUIBaseChatFragment extends BaseFragment {
         TUIChatLog.i(TAG, "oncreate view " + this);
 
         baseView = inflater.inflate(R.layout.chat_fragment, container, false);
-        //        // TODO 通过api设置ChatLayout各种属性的样例
+        
         //        // Example of setting various properties of ChatLayout through api
         //        ChatLayoutSetting helper = new ChatLayoutSetting(getActivity());
         //        helper.setGroupId(mChatInfo.getId());

@@ -245,4 +245,13 @@ public class FileUtil {
         ApplicationInfo applicationInfo = context.getApplicationInfo();
         return String.valueOf(context.getPackageManager().getApplicationLabel(applicationInfo));
     }
+
+    public static boolean isFileExists(String path) {
+        try {
+            File file = new File(path);
+            return file.exists() && file.isFile();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

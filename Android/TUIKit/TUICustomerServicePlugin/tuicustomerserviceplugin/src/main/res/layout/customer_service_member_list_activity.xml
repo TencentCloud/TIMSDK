@@ -25,5 +25,5 @@
         android:visibility="gone"
         android:text="@string/contact_no_new_friend_application"
         tools:visibility="visible"
-        tools:text="暂无客服"/>
+        tools:text="No customer service"/>
 </LinearLayout>

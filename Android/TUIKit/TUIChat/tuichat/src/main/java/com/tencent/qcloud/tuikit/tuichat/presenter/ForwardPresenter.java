@@ -61,17 +61,9 @@ public class ForwardPresenter extends ChatPresenter {
                 provider.downloadMergerMessage(messageBean, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> mergeMessageData) {
-                        preProcessMessage(mergeMessageData, new IUIKitCallback<List<TUIMessageBean>>() {
-                            @Override
-                            public void onSuccess(List<TUIMessageBean> data) {
-                                onMergeMessageDownloaded(data);
-                            }
+                        onMergeMessageDownloaded(mergeMessageData);
 
-                            @Override
-                            public void onError(String module, int errCode, String errMsg) {
-                                onMergeMessageDownloaded(mergeMessageData);
-                            }
-                        });
+                        processMessageAsync(mergeMessageData);
                     }
 
                     @Override
@@ -94,7 +86,7 @@ public class ForwardPresenter extends ChatPresenter {
 
     @Override
     public void locateMessage(String originMsgID, IUIKitCallback<Void> callback) {
-        // 如果已经在列表中，直接跳转到对应位置
+        
         // If already in the list, jump directly to the corresponding position
         boolean isFind = false;
         for (TUIMessageBean loadedMessage : loadedData) {

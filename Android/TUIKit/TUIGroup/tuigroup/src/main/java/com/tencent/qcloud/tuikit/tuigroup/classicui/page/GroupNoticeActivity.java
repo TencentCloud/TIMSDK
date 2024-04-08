@@ -129,7 +129,7 @@ public class GroupNoticeActivity extends BaseLightActivity {
         return screenHeight - rect.bottom - getNavigateBarHeight() >= 0;
     }
 
-    // 兼容有导航键的情况
+    
     private int getNavigateBarHeight() {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);

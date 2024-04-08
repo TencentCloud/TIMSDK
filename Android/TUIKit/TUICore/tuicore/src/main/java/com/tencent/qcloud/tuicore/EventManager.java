@@ -76,7 +76,7 @@ class EventManager {
     }
 
     public void notifyEvent(String key, String subKey, Map<String, Object> param) {
-        Log.i(TAG, "notifyEvent : key : " + key + ", subKey : " + subKey);
+        Log.d(TAG, "notifyEvent : key : " + key + ", subKey : " + subKey);
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(subKey)) {
             return;
         }

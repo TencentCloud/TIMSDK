@@ -21,6 +21,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
 public abstract class BaseBottomDialog extends BottomSheetDialog {
     private static final String TAG = "BaseBottomDialog";
@@ -42,6 +43,21 @@ public abstract class BaseBottomDialog extends BottomSheetDialog {
         initRootView();
     }
 
+    public void setPortraitHeightPercentOfScreen(View view, float percentOfScreen) {
+        Configuration configuration = mContext.getResources().getConfiguration();
+        if (configuration.orientation != Configuration.ORIENTATION_PORTRAIT) {
+            return;
+        }
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams == null) {
+            return;
+        }
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        int screenHeight = ScreenUtil.getScreenHeight(mContext);
+        layoutParams.height = (int) (screenHeight * percentOfScreen);
+        view.setLayoutParams(layoutParams);
+    }
+
     private void initRootView() {
         setContentView(getLayoutId());
         bottomSheetView = findViewById(com.google.android.material.R.id.design_bottom_sheet);
@@ -55,14 +71,6 @@ public abstract class BaseBottomDialog extends BottomSheetDialog {
         mBehavior.setSkipCollapsed(true);
         mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         mBehavior.setPeekHeight(getContext().getResources().getDisplayMetrics().heightPixels);
-    }
-
-    protected void updateHeightToMatchParent() {
-        if (bottomSheetView != null) {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) bottomSheetView.getLayoutParams();
-            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            bottomSheetView.setLayoutParams(params);
-        }
     }
 
     protected abstract int getLayoutId();

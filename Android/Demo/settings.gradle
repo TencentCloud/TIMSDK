@@ -5,9 +5,7 @@ if (currentVersion == "7.0") {
         repositories {
             mavenCentral()
             maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
-            // 配置HMS Core SDK的Maven仓地址。
             maven {url 'https://developer.huawei.com/repo/'}
-            maven {url 'https://mirrors.tencent.com/repository/maven/SensitiveScan'}
             maven {url 'https://developer.hihonor.com/repo'}
         }
     }
@@ -18,9 +16,7 @@ if (currentVersion == "7.0") {
             gradlePluginPortal()
             mavenCentral()
             maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
-            // 配置HMS Core SDK的Maven仓地址。
             maven {url 'https://developer.huawei.com/repo/'}
-            maven {url 'https://mirrors.tencent.com/repository/maven/SensitiveScan'}
             maven {url 'https://developer.hihonor.com/repo'}
         }
     }
@@ -28,15 +24,14 @@ if (currentVersion == "7.0") {
         repositories {
             mavenCentral()
             maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
-            // 配置HMS Core SDK的Maven仓地址。
             maven {url 'https://developer.huawei.com/repo/'}
-            maven {url 'https://mirrors.tencent.com/repository/maven/SensitiveScan'}
             maven {url 'https://developer.hihonor.com/repo'}
         }
     }
 }
 
 include ':app'
+
 
 include ':tuicore'
 project(':tuicore').projectDir = new File(settingsDir, '../TUIKit/TUICore/tuicore')
@@ -62,23 +57,40 @@ project(':tuigroup').projectDir = new File(settingsDir, '../TUIKit/TUIGroup/tuig
 include ':tuicallkit-kt'
 project(':tuicallkit-kt').projectDir = new File(settingsDir, '../TUIKit/TUICallKit/tuicallkit-kt')
 
+
+// TIMpush begin
+//include ':tuiofflinepush'
+//project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
+
+
+
+
+
+
+
+
+
+// TIMPush end
+
 include ':tuicommunity'
 project(':tuicommunity').projectDir = new File(settingsDir, '../TUIKit/TUICommunity/tuicommunity')
+
+
+
 
 include ':tuitranslationplugin'
 project(':tuitranslationplugin').projectDir = new File(settingsDir, '../TUIKit/TUITranslationPlugin/tuitranslationplugin')
 
+
+
 include ':tuicustomerserviceplugin'
 project(':tuicustomerserviceplugin').projectDir = new File(settingsDir, '../TUIKit/TUICustomerServicePlugin/tuicustomerserviceplugin')
-
-include ':tuivoicetotextplugin'
-project(':tuivoicetotextplugin').projectDir = new File(settingsDir, '../TUIKit/TUIVoiceToTextPlugin/tuivoicetotextplugin')
 
 include ':tuiroomkit'
 project(':tuiroomkit').projectDir = new File(settingsDir, '../TUIKit/TUIRoomKit/tuiroomkit')
 
-//include ':tuiofflinepush'
-//project(':tuiofflinepush').projectDir = new File(settingsDir, '../TUIKit/TUIOfflinePush/tuiofflinepush')
+include ':tuivoicetotextplugin'
+project(':tuivoicetotextplugin').projectDir = new File(settingsDir, '../TUIKit/TUIVoiceToTextPlugin/tuivoicetotextplugin')
 
 include ':tuichatbotplugin'
 project(':tuichatbotplugin').projectDir = new File(settingsDir, '../TUIKit/TUIChatBotPlugin/tuichatbotplugin')

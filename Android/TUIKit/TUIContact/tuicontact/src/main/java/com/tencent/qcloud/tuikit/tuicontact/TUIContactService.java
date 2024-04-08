@@ -15,6 +15,8 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
@@ -29,7 +31,7 @@ import java.util.Map;
 @AutoService(TUIInitializer.class)
 @TUIInitializerDependency("TIMCommon")
 @TUIInitializerID("TUIContact")
-public class TUIContactService implements TUIInitializer, ITUIContactService {
+public class TUIContactService implements TUIInitializer, ITUIService, ITUINotification {
     public static final String TAG = TUIContactService.class.getSimpleName();
 
     private static TUIContactService instance;

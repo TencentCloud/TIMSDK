@@ -115,7 +115,6 @@ public class FileUtil {
     }
 
     /**
-     * 专为Android4.4以上设计的从Uri获取文件路径
      *
      * Get file path from Uri specially designed for Android4.4 and above
      */
@@ -158,7 +157,7 @@ public class FileUtil {
                     }
                 }
 
-                // 在某些android8+的手机上，无法获取路径，所以用拷贝的方式，获取新文件名，然后把文件发出去
+                
                 // On some android8+ mobile phones, the path cannot be obtained, so the new file name is obtained by copying, and then the file is sent out
                 return getPathByCopyFile(context, uri);
             }
@@ -191,7 +190,7 @@ public class FileUtil {
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
             String path = getDataColumn(context, uri, null, null);
             if (TextUtils.isEmpty(path) || Build.VERSION.SDK_INT >= 29) {
-                // 在某些华为android9+的手机上，无法获取路径，所以用拷贝的方式，获取新文件名，然后把文件发出去
+                
                 path = getPathByCopyFile(context, uri);
             }
             return path;
@@ -381,7 +380,6 @@ public class FileUtil {
     }
 
     /**
-     * 转换文件大小
      *
      * Convert file size to string
      *
@@ -408,7 +406,7 @@ public class FileUtil {
         return fileSizeString;
     }
 
-    // 修复 android.webkit.MimeTypeMap 的 getFileExtensionFromUrl 方法不支持中文的问题
+    
     // fix the problem that getFileExtensionFromUrl does not support Chinese
     public static String getFileExtensionFromUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
@@ -427,7 +425,7 @@ public class FileUtil {
 
             // if the filename contains special characters, we don't
             // consider it valid for our matching purposes:
-            // 去掉正则表达式判断以添加中文支持
+            
             //          if (!filename.isEmpty() && Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", filename))
             if (!filename.isEmpty()) {
                 int dotPos = filename.lastIndexOf('.');

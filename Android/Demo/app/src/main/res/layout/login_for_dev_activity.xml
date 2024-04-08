@@ -29,7 +29,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:text="@string/modify_style"
-            android:textColor="?attr/demo_login_theme_language_text_color"
+            android:textColor="@color/demo_login_theme_language_text_color_light"
             android:textSize="12sp" />
 
         <ImageView
@@ -37,7 +37,7 @@
             android:layout_width="9.6dp"
             android:layout_height="9.6dp"
             android:layout_marginTop="3dp"
-            android:background="?attr/demo_login_language_arrow" />
+            android:background="@drawable/demo_login_language_arrow_light" />
 
     </LinearLayout>
 
@@ -56,7 +56,7 @@
             android:id="@+id/demo_login_theme_icon"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:background="?attr/demo_login_theme_icon" />
+            android:background="@drawable/demo_login_theme_icon_light" />
 
         <TextView
             android:id="@+id/demo_login_theme_tv"
@@ -66,7 +66,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:text="@string/modify_theme"
-            android:textColor="?attr/demo_login_theme_language_text_color"
+            android:textColor="@color/demo_login_theme_language_text_color_light"
             android:textSize="12sp" />
 
         <ImageView
@@ -74,7 +74,7 @@
             android:layout_width="9.6dp"
             android:layout_height="9.6dp"
             android:layout_marginTop="3dp"
-            android:background="?attr/demo_login_language_arrow" />
+            android:background="@drawable/demo_login_language_arrow_light" />
 
     </LinearLayout>
 
@@ -92,7 +92,7 @@
             android:id="@+id/demo_login_language_icon"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:background="?attr/demo_login_language_icon" />
+            android:background="@drawable/demo_login_language_icon_light" />
 
         <TextView
             android:id="@+id/demo_login_language"
@@ -102,7 +102,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:text="@string/demo_language"
-            android:textColor="?attr/demo_login_theme_language_text_color"
+            android:textColor="@color/demo_login_theme_language_text_color_light"
             android:textSize="12sp" />
 
         <ImageView
@@ -110,7 +110,7 @@
             android:layout_width="9.6dp"
             android:layout_height="9.6dp"
             android:layout_marginTop="3dp"
-            android:background="?attr/demo_login_language_arrow" />
+            android:background="@drawable/demo_login_language_arrow_light" />
 
     </LinearLayout>
 

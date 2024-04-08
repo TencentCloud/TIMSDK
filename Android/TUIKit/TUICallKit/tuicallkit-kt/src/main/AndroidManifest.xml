@@ -24,6 +24,10 @@
     <!-- Support Android S(31) Bluetooth-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
+
     <application>
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity"
@@ -53,6 +57,16 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <receiver
+            android:name="com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingview.IncomingCallReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="accept_call_action" />
+                <action android:name="reject_call_action" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

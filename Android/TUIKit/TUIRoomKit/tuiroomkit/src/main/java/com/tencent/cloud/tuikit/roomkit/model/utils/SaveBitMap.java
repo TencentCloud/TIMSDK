@@ -1,6 +1,5 @@
 package com.tencent.cloud.tuikit.roomkit.model.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -9,7 +8,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
 
 public class SaveBitMap {
 
@@ -26,7 +25,7 @@ public class SaveBitMap {
 
     public void saveToAlbum(final Context context, final Bitmap bitmap) {
         if (bitmap == null) {
-            ToastUtil.toastShortMessage(context.getString(R.string.tuiroomkit_get_image_failed));
+            RoomToast.toastShortMessage(context.getString(R.string.tuiroomkit_get_image_failed));
             return;
         }
         if (mIsPrecessing) {
@@ -67,7 +66,7 @@ public class SaveBitMap {
                         if (mListener != null) {
                             mListener.onEnd();
                         }
-                        ToastUtil.toastShortMessage(mContext.getString(R.string.tuiroomkit_save_image_success));
+                        RoomToast.toastShortMessage(mContext.getString(R.string.tuiroomkit_save_image_success));
                     }
                 });
             } catch (Exception e) {
@@ -77,7 +76,7 @@ public class SaveBitMap {
                         if (mListener != null) {
                             mListener.onEnd();
                         }
-                        ToastUtil.toastShortMessage(mContext.getString(R.string.tuiroomkit_save_image_failed));
+                        RoomToast.toastShortMessage(mContext.getString(R.string.tuiroomkit_save_image_failed));
                     }
                 });
             }

@@ -7,7 +7,10 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -60,6 +63,23 @@ public class ChatModifyMessageHelper {
                 if (beModifiedMessage != null) {
                     task.messageBean = beModifiedMessage;
                 }
+                helper.provider.findMessage(Collections.singletonList(task.messageBean.getId()), new IUIKitCallback<List<TUIMessageBean>>() {
+                    @Override
+                    public void onSuccess(List<TUIMessageBean> data) {
+                        if (data != null && data.size() == 1) {
+                            task.messageBean = data.get(0);
+                        }
+                        modifyMessage();
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        modifyMessage();
+                    }
+                });
+            }
+
+            private void modifyMessage() {
                 TUIMessageBean messageBean = task.packageMessage(task.messageBean);
                 if (messageBean == null) {
                     helper.cache.remove(task.messageBean.getId());

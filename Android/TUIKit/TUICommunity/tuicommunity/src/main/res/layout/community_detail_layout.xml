@@ -32,7 +32,7 @@
             android:maxWidth="180dp"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            tools:text="IM官方社群" />
+            tools:text="IM official community" />
 
         <ImageView
             android:id="@+id/share_icon"

@@ -16,43 +16,36 @@ import java.util.List;
 
 public class TipsMessageBean extends TUIMessageBean {
     /**
-     * 群创建提示消息
      *
      * Create group
      */
     public static final int MSG_TYPE_GROUP_CREATE = 0x101;
     /**
-     * 群解散提示消息
      *
      * Dismiss a group
      */
     public static final int MSG_TYPE_GROUP_DELETE = 0x102;
     /**
-     * 群成员加入提示消息
      *
      * Proactively join a group (memberList joins a group; valid only for non-Work groups)
      */
     public static final int MSG_TYPE_GROUP_JOIN = 0x103;
     /**
-     * 群成员退群提示消息
      *
      * Quit a group
      */
     public static final int MSG_TYPE_GROUP_QUITE = 0x104;
     /**
-     * 群成员被踢出群提示消息
      *
      * Be kicked out of a group (opMember kicks memberList out of the group)
      */
     public static final int MSG_TYPE_GROUP_KICK = 0x105;
     /**
-     * 群名称修改提示消息
      *
      * Group name change prompt message
      */
     public static final int MSG_TYPE_GROUP_MODIFY_NAME = 0x106;
     /**
-     * 群通知更新提示消息
      *
      * Group notification update prompt message
      */

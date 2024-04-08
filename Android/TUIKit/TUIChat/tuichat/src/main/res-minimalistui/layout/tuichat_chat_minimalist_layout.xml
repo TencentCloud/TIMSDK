@@ -21,10 +21,18 @@
         android:background="#1F000000" />
 
     <FrameLayout
-        android:id="@+id/custom_layout"
+        android:id="@+id/chat_top_extension_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_line"
+        android:layout_marginTop="0dp"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/custom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_top_extension_layout"
         android:layout_marginTop="0dp"
         android:visibility="gone" />
 
@@ -133,14 +141,15 @@
         app:contentPaddingBottom="26dp"
         app:cardElevation="4dp"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <RelativeLayout
             android:orientation="horizontal"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:paddingStart="24dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="16dp"
             android:paddingEnd="24dp"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
@@ -148,22 +157,26 @@
 
             <ImageView
                 android:id="@+id/forward_image"
-                android:background="@drawable/chat_minimalist_forward_icon"
+                android:src="@drawable/chat_minimalist_forward_icon"
                 android:layout_alignParentStart="true"
                 android:layout_gravity="start"
                 android:scaleType="centerCrop"
-                android:layout_width="16dp"
-                android:layout_height="16dp"/>
+                android:padding="8dp"
+                android:background="@drawable/common_item_pressed_effect_background"
+                android:layout_width="32dp"
+                android:layout_height="32dp"/>
 
             <ImageView
                 android:id="@+id/delete_image"
-                android:background="@drawable/chat_minimalist_delete_icon"
+                android:src="@drawable/chat_minimalist_delete_icon"
+                android:background="@drawable/common_item_pressed_effect_background"
                 android:layout_toEndOf="@id/forward_image"
                 android:layout_gravity="start"
                 android:scaleType="centerCrop"
-                android:layout_marginStart="16dp"
-                android:layout_width="16dp"
-                android:layout_height="16dp"/>
+                android:layout_marginStart="8dp"
+                android:padding="8dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"/>
 
             <TextView
                 android:id="@+id/forward_select_text"
@@ -178,6 +191,8 @@
                 android:id="@+id/forward_cancel_btn"
                 android:textSize="14sp"
                 android:textColor="#FF147AFF"
+                android:padding="8dp"
+                android:background="@drawable/common_item_pressed_effect_background"
                 android:layout_alignParentEnd="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -217,6 +217,7 @@ public class TUILogin {
     }
 
     private void internalLogin(Context context, final int sdkAppId, final String userId, final String userSig, TUILoginConfig config, TUICallback callback) {
+        Log.i(TAG, "internalLogin");
         if (this.sdkAppId != 0 && sdkAppId != this.sdkAppId) {
             logout((TUICallback) null);
         }
@@ -248,6 +249,7 @@ public class TUILogin {
             this.userId = userId;
             this.userSig = userSig;
             if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
+                Log.i(TAG, "internalLogin already login");
                 hasLoginSuccess = true;
                 getUserInfo(userId);
                 TUICallback.onSuccess(callback);
@@ -258,6 +260,7 @@ public class TUILogin {
             V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
                 @Override
                 public void onSuccess() {
+                    Log.i(TAG, "internalLogin login onSuccess");
                     hasLoginSuccess = true;
                     getUserInfo(userId);
                     TUICallback.onSuccess(callback);
@@ -266,21 +269,25 @@ public class TUILogin {
 
                 @Override
                 public void onError(int code, String desc) {
+                    Log.i(TAG, "internalLogin login onError code=" + code + " desc=" + desc);
                     TUICallback.onError(callback, code, ErrorMessageConverter.convertIMError(code, desc));
                 }
             });
         } else {
+            Log.i(TAG, "internalLogin initSDK failed");
             TUICallback.onError(callback, -1, "init failed");
         }
     }
 
     private void internalLogout(TUICallback callback) {
+        Log.i(TAG, "internalLogout");
         // Notify unit event
         currentBusinessScene = TUIBusinessScene.NONE;
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_UNINIT, null);
         V2TIMManager.getInstance().logout(new V2TIMCallback() {
             @Override
             public void onSuccess() {
+                Log.i(TAG, "internalLogout onSuccess");
                 sdkAppId = 0;
                 userId = null;
                 userSig = null;
@@ -292,6 +299,7 @@ public class TUILogin {
 
             @Override
             public void onError(int code, String desc) {
+                Log.i(TAG, "internalLogout onError code=" + code + " desc=" + desc);
                 TUICallback.onError(callback, code, desc);
             }
         });

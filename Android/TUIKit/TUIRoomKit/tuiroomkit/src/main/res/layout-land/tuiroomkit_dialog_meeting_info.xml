@@ -43,7 +43,7 @@
             android:id="@+id/btn_qr_code"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@color/transparent"
+            android:background="@color/tuiroomkit_transparent"
             android:visibility="gone"
             android:src="@drawable/tuiroomkit_ic_qr_code" />
     </LinearLayout>
@@ -150,7 +150,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="6dp"
                 android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
+                android:background="@color/tuiroomkit_transparent"
                 android:src="@drawable/tuiroomkit_ic_copy_white" />
 
             <TextView
@@ -211,7 +211,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="6dp"
                 android:layout_gravity="center_vertical"
-                android:background="@color/transparent"
+                android:background="@color/tuiroomkit_transparent"
                 android:src="@drawable/tuiroomkit_ic_copy_white" />
 
             <TextView

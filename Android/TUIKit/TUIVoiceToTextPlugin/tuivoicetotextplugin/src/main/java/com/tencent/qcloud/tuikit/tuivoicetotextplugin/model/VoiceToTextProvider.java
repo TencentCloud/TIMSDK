@@ -19,26 +19,18 @@ public class VoiceToTextProvider {
     private static final String TAG = "VoiceToTextProvider";
 
     /**
-     * 消息转换初始化状态
-     *
      * message conversion unknown state
      */
     public static final int MSG_VOICE_TO_TEXT_STATUS_UNKNOWN = 0;
     /**
-     * 消息转换隐藏状态
-     *
      * message conversion hidden state
      */
     public static final int MSG_VOICE_TO_TEXT_STATUS_HIDDEN = 1;
     /**
-     * 消息转换进行中状态
-     *
      * message conversion loading state
      */
     public static final int MSG_VOICE_TO_TEXT_STATUS_LOADING = 2;
     /**
-     * 消息转换展示状态
-     *
      * message conversion shown state
      */
     public static final int MSG_VOICE_TO_TEXT_STATUS_SHOWN = 3;

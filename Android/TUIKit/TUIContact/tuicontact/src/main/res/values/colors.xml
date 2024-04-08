@@ -22,19 +22,15 @@
     <color name="black">#000000</color>
     <color name="dialog_line_bg">#c6c6c6</color>
 
-    <!-- 积极按钮文本色值 -->
     <color name="text_positive">#ffffff</color>
     <color name="text_positive_hover">#ffffff</color>
 
-    <!-- 积极钮色值 -->
     <color name="btn_positive">#00a4ff</color>
     <color name="btn_positive_hover">#006eff</color>
 
-    <!-- 消极按钮背景色值 -->
     <color name="btn_negative">#ffffff</color>
     <color name="btn_negative_hover">#cc3428</color>
 
-    <!-- 消极按钮文本色值 -->
     <color name="text_negative">#fb6155</color>
     <color name="text_negative_hover">#FFFFFF</color>
 

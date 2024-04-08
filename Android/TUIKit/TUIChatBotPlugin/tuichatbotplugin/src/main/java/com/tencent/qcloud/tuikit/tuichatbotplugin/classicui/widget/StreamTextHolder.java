@@ -2,25 +2,16 @@ package com.tencent.qcloud.tuikit.tuichatbotplugin.classicui.widget;
 
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TextMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichatbotplugin.bean.StreamTextMessageBean;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class StreamTextHolder extends TextMessageHolder {
     private Handler handler;
@@ -67,10 +58,10 @@ public class StreamTextHolder extends TextMessageHolder {
                     streamTextMessageBean.setExtra(displayedContent);
                     refreshUI(msg, position);
 
-                    // 是否能向上滚动，false 表示已经滚动到底部
+                    
                     MessageRecyclerView messageRecyclerView = (MessageRecyclerView)getRecyclerView();
                     boolean canScrolledToBottom = messageRecyclerView.canScrollVertically(1);
-                    // 已经滚动到了底部，且当前为最后一个显示，需要保持底部显示
+                    
                     if (!canScrolledToBottom && position == (messageRecyclerView.getAdapter().getItemCount() - 1)) {
                         ((MessageRecyclerView)getRecyclerView()).scrollToEnd();
                     }

@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicallkit.base;
 
 public class Constants {
-    //信令超时时长，默认 30s
     public static int SIGNALING_MAX_TIME = 30;
 
     public static final int MIN_AUDIO_VOLUME              = 10;

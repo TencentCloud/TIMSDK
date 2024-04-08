@@ -13,50 +13,38 @@ import java.io.Serializable;
 
 public abstract class TUIMessageBean implements Serializable {
     /**
-     * 消息正常状态
      *
      * message normal
      */
     public static final int MSG_STATUS_NORMAL = 0;
     /**
-     * 消息发送中状态
      *
      * message sending
      */
     public static final int MSG_STATUS_SENDING = V2TIMMessage.V2TIM_MSG_STATUS_SENDING;
     /**
-     * 消息发送成功状态
      *
      * message send success
      */
     public static final int MSG_STATUS_SEND_SUCCESS = V2TIMMessage.V2TIM_MSG_STATUS_SEND_SUCC;
     /**
-     * 消息发送失败状态
      *
      * message send failed
      */
     public static final int MSG_STATUS_SEND_FAIL = V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
     /**
-     * 消息撤回状态
      *
      * messaage revoked
      */
     public static final int MSG_STATUS_REVOKE = V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED;
 
     /**
-     * 消息来源未知
      */
     public static final int MSG_SOURCE_UNKNOWN = 0;
 
-    /**
-     * 后台主动 push 的消息
-     */
     public static final int MSG_SOURCE_ONLINE_PUSH = 1;
 
-    /**
-     * SDK 拉取的历史消息
-     */
     public static final int MSG_SOURCE_GET_HISTORY = 2;
 
     private V2TIMMessage v2TIMMessage;
@@ -74,6 +62,7 @@ public abstract class TUIMessageBean implements Serializable {
     private int messageSource = 0;
     private MessageReceiptInfo messageReceiptInfo;
     private MessageRepliesBean messageRepliesBean;
+    private boolean hasReaction = false;
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -183,7 +172,6 @@ public abstract class TUIMessageBean implements Serializable {
     }
 
     /**
-     * 获取要显示在会话列表的消息摘要
      *
      * Get a summary of messages to display in the conversation list
      * @return
@@ -408,6 +396,14 @@ public abstract class TUIMessageBean implements Serializable {
 
     public boolean customReloadWithNewMsg(V2TIMMessage v2TIMMessage) {
         return false;
+    }
+
+    public boolean isHasReaction() {
+        return hasReaction;
+    }
+
+    public void setHasReaction(boolean hasReaction) {
+        this.hasReaction = hasReaction;
     }
 
     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {

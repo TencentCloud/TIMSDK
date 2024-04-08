@@ -108,7 +108,7 @@ public class TUIFoldedConversationFragment extends BaseFragment {
     }
 
     private void initPopMenuAction() {
-        // 设置长按conversation显示PopAction
+        
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.not_display));
         action.setWeight(800);

@@ -78,6 +78,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
                 if (messageBean instanceof MergeMessageBean) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(TUIChatConstants.FORWARD_MERGE_MESSAGE_KEY, messageBean);
+                    bundle.putSerializable(TUIChatConstants.CHAT_INFO, chatInfo);
                     TUICore.startActivity("TUIForwardChatActivity", bundle);
                 }
             }

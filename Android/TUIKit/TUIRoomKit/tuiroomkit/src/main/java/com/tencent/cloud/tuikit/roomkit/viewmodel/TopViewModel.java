@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_CAMERA_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
 
 import android.content.Context;
 import android.os.Handler;
@@ -52,11 +53,13 @@ public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
     private void subscribeEngineEvent() {
         RoomEventCenter.getInstance().subscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
         RoomEventCenter.getInstance().subscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
+        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
     }
 
     public void unSubscribeEngineEvent() {
         RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
         RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
+        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
     }
 
     private void createTimeHandler() {
@@ -129,6 +132,10 @@ public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
         if (event == LOCAL_CAMERA_STATE_CHANGED) {
             mTopView.setSwitchCameraViewVisible(mRoomStore.videoModel.isCameraOpened());
             return;
+        }
+        if (event == LOCAL_USER_ENTER_ROOM) {
+            mTopView.setTitle(TextUtils.isEmpty(mRoomStore.roomInfo.name) ? mRoomStore.roomInfo.roomId :
+                    mRoomStore.roomInfo.name + mContext.getString(R.string.tuiroomkit_meeting_title));
         }
     }
 }

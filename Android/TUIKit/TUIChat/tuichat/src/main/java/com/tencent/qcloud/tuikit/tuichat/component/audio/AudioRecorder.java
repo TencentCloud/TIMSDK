@@ -141,14 +141,14 @@ public class AudioRecorder {
             return 0;
         }
         int duration = 0;
-        // 通过初始化播放器的方式来获取真实的音频长度
+        
         // Get the real audio length by initializing the player
         try {
             MediaPlayer mp = new MediaPlayer();
             mp.setDataSource(audioPath);
             mp.prepare();
             duration = mp.getDuration();
-            // 语音长度如果是59s多，因为外部会/1000取整，会一直显示59'，所以这里对长度进行处理，达到四舍五入的效果
+            
             // the length is processed to achieve the effect of rounding
             if (duration < MIN_RECORD_DURATION) {
                 duration = 0;

@@ -13,16 +13,10 @@ public class TUIContactConfig {
         return instance;
     }
 
-    /**
-     * 获取是否显示用户在线状态
-     */
     public boolean isShowUserStatus() {
         return isShowUserStatus;
     }
 
-    /**
-     * 设置是否显示用户在线状态
-     */
     public void setShowUserStatus(boolean showUserStatus) {
         isShowUserStatus = showUserStatus;
     }

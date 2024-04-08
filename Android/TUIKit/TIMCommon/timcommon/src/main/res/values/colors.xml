@@ -32,4 +32,6 @@
     <color name="timcommon_transparent">#00000000</color>
 
     <color name="timcommon_text_highlight_color">#80338BFF</color>
+
+    <color name="timcommon_item_pressed_color">#E4E5E9</color>
 </resources>

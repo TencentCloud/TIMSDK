@@ -28,10 +28,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
@@ -42,7 +40,6 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.util.BlurUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +52,7 @@ public class ChatPopActivity extends AppCompatActivity {
     private List<ChatPopMenuAction> chatPopMenuActionList;
 
     private boolean isShowFaces = true;
+    private ChatPopMenuAction clickedChatPopMenuAction = null;
 
     private ViewGroup popupView;
     private View actionArea;
@@ -263,6 +261,14 @@ public class ChatPopActivity extends AppCompatActivity {
         return chatPopMenuActionList.get(position);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (clickedChatPopMenuAction != null) {
+            clickedChatPopMenuAction.actionClickListener.onClick();
+        }
+    }
+
     class MenuActionAdapter extends RecyclerView.Adapter<MenuActionAdapter.MenuItemViewHolder> {
         private int page = 1;
 
@@ -288,7 +294,7 @@ public class ChatPopActivity extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chatPopMenuAction.actionClickListener.onClick();
+                    clickedChatPopMenuAction = chatPopMenuAction;
                     hide();
                 }
             });

@@ -24,6 +24,8 @@ import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.TransferMasterViewModel;
 
 public class TransferMasterPanel extends BaseBottomDialog implements View.OnClickListener {
+    private static final float PORTRAIT_HEIGHT_OF_SCREEN = 0.9f;
+
     private Context                 mContext;
     private Button                  mButtonConfirmLeave;
     private Toolbar                 mToolBar;
@@ -94,12 +96,13 @@ public class TransferMasterPanel extends BaseBottomDialog implements View.OnClic
                 return false;
             }
         });
+        View view = findViewById(R.id.tuiroomkit_cl_transfer_master);
+        setPortraitHeightPercentOfScreen(view, PORTRAIT_HEIGHT_OF_SCREEN);
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        updateHeightToMatchParent();
     }
 
     public void onNotifyUserEnter(int position) {

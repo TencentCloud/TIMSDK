@@ -1,9 +1,12 @@
 package com.tencent.qcloud.tuikit.tuigroup.model;
 
 import android.text.TextUtils;
+
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationOperationResult;
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMFriendInfoResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
 import com.tencent.imsdk.v2.V2TIMGroupApplicationResult;
 import com.tencent.imsdk.v2.V2TIMGroupInfo;
@@ -14,8 +17,11 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberOperationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
@@ -56,7 +62,7 @@ public class GroupInfoProvider {
                             groupInfo.setFolded(true);
                         }
 
-                        // 异步获取群成员
+                        
                         loadGroupMembers(groupInfo, filter, 0, callBack);
                     }
 
@@ -690,4 +696,55 @@ public class GroupInfoProvider {
             }
         });
     }
+
+    public void getFriendList(TUIValueCallback<List<UserBean>> callback) {
+        V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                List<UserBean> userBeans = new ArrayList<>();
+                for (V2TIMFriendInfo v2TIMFriendInfo : v2TIMFriendInfos) {
+                    UserBean reactUserBean = new UserBean();
+                    reactUserBean.setUserId(v2TIMFriendInfo.getUserID());
+                    reactUserBean.setFriendRemark(v2TIMFriendInfo.getFriendRemark());
+                    reactUserBean.setFaceUrl(v2TIMFriendInfo.getUserProfile().getFaceUrl());
+                    if (v2TIMFriendInfo.getUserProfile() != null) {
+                        reactUserBean.setNikeName(v2TIMFriendInfo.getUserProfile().getNickName());
+                    }
+                    userBeans.add(reactUserBean);
+                }
+                TUIValueCallback.onSuccess(callback, userBeans);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIValueCallback.onError(callback, code, desc);
+            }
+        });
+    }
+
+    public void getGroupMembersInfo(String groupID, List<String> userIDs, TUIValueCallback<List<UserBean>> callback) {
+        V2TIMManager.getGroupManager().getGroupMembersInfo(groupID, userIDs, new V2TIMValueCallback<List<V2TIMGroupMemberFullInfo>>() {
+            @Override
+            public void onSuccess(List<V2TIMGroupMemberFullInfo> v2TIMGroupMemberFullInfos) {
+                List<UserBean> userBeans = new ArrayList<>();
+                for (V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo : v2TIMGroupMemberFullInfos) {
+                    UserBean reactUserBean = new UserBean();
+                    reactUserBean.setUserId(v2TIMGroupMemberFullInfo.getUserID());
+                    reactUserBean.setFriendRemark(v2TIMGroupMemberFullInfo.getFriendRemark());
+                    reactUserBean.setFaceUrl(v2TIMGroupMemberFullInfo.getFaceUrl());
+                    if (v2TIMGroupMemberFullInfo.getNickName() != null) {
+                        reactUserBean.setNikeName(v2TIMGroupMemberFullInfo.getNickName());
+                    }
+                    userBeans.add(reactUserBean);
+                }
+                TUIValueCallback.onSuccess(callback, userBeans);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIValueCallback.onError(callback, code, desc);
+            }
+        });
+    }
+
 }

@@ -111,8 +111,6 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
     }
 
     /**
-     * 绘制Title区域背景和文字的方法
-     *
      * How to draw the background and text of the Title area
      *
      * @param c
@@ -123,7 +121,7 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
      * @param position
      */
     private void drawTitleArea(Canvas c, int left, int right, View child, RecyclerView.LayoutParams params,
-        int position) { // 最先调用，绘制在最下层 // Called first, drawn at the bottom layer
+        int position) { 
         mPaint.setColor(COLOR_TITLE_BG);
         c.drawRect(left, child.getTop() - params.topMargin - mTitleHeight, right, child.getTop() - params.topMargin, mPaint);
 
@@ -143,7 +141,7 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
         c.drawText(mDatas.get(position).getSuspensionTag(), x, y, mPaint);
     }
 
-    @Override public void onDrawOver(Canvas c, final RecyclerView parent, RecyclerView.State state) { // 最后调用 绘制在最上层 // Last call to draw on top
+    @Override public void onDrawOver(Canvas c, final RecyclerView parent, RecyclerView.State state) { 
         int pos = ((LinearLayoutManager) (parent.getLayoutManager())).findFirstVisibleItemPosition();
         pos -= getHeaderViewCount();
 
@@ -155,27 +153,22 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
         // View child = parent.getChildAt(pos);
         View child = parent.findViewHolderForLayoutPosition(pos + getHeaderViewCount()).itemView;
 
-        boolean flag = false; // 定义一个flag，Canvas是否位移过的标志 // Define a flag, whether the Canvas is shifted or not
+        boolean flag = false; 
         if ((pos + 1) < mDatas.size()) {
             if (null != tag && !tag.equals(mDatas.get(pos + 1).getSuspensionTag())) {
-                // 当前第一个可见的Item的tag，不等于其后一个item的tag，说明悬浮的View要切换了
+                
                 // The tag of the current first visible item is not equal to the tag of the next item, indicating that the floating View is about to be
                 // switched.
                 //                TUIKitLog.d(TAG, "onDrawOver() called with: c = [" + child.getTop());
                 if (child.getHeight() + child.getTop() < mTitleHeight) {
-                    // 当第一个可见的item在屏幕中还剩的高度小于title区域的高度时，我们也该开始做悬浮Title的“交换动画”
+                    
                     // When the remaining height of the first visible item on the screen is less than the height of the title area, we should also start to do
                     // the "swap animation" of the floating Title
                     c.save();
                     flag = true;
 
-                    // 一种头部折叠起来的视效，个人觉得也还不错~
-                    // 可与123行 c.drawRect 比较，只有bottom参数不一样，由于 child.getHeight() + child.getTop() <
-                    // mTitleHeight，所以绘制区域是在不断的减小，有种折叠起来的感觉 c.clipRect(parent.getPaddingLeft(), parent.getPaddingTop(),
                     // parent.getRight() - parent.getPaddingRight(), parent.getPaddingTop() + child.getHeight() + child.getTop());
 
-                    // 类似饿了么点餐时,商品列表的悬停头部切换“动画效果”
-                    // 上滑时，将canvas上移 （y为负数） ,所以后面canvas 画出来的Rect和Text都上移了，有种切换的“动画”感觉
                     //  Similar to Ele.me ordering, the hover head of the product list switches the "animation effect"
                     //  When sliding up, move the canvas up (y is a negative number), so the Rect and Text drawn by the canvas are moved up, and there is a kind
                     //  of "animation" feeling of switching

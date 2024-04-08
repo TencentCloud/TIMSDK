@@ -19,6 +19,8 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
+import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.bean.FaceGroup;
@@ -56,7 +58,7 @@ import java.util.Set;
 @AutoService(TUIInitializer.class)
 @TUIInitializerDependency("TIMCommon")
 @TUIInitializerID("TUIChat")
-public class TUIChatService implements TUIInitializer, ITUIChatService {
+public class TUIChatService implements TUIInitializer, ITUIService, ITUINotification {
     public static final String TAG = TUIChatService.class.getSimpleName();
     private static TUIChatService instance;
 
@@ -305,14 +307,14 @@ public class TUIChatService implements TUIInitializer, ITUIChatService {
 
     private void handleLoginStatusEvent(String subKey) {
         if (TextUtils.equals(subKey, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS)) {
-            // 设置音视频通话的悬浮窗是否开启
+            
             // Set whether to open the floating window for voice and video calls
             Map<String, Object> enableFloatWindowParam = new HashMap<>();
             enableFloatWindowParam.put(
                 TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, TUIChatConfigs.getConfigs().getGeneralConfig().isEnableFloatWindowForCall());
             TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, enableFloatWindowParam);
 
-            // 设置音视频通话开启多端登录功能
+            
             // Set Whether to enable multi-terminal login function for audio and video calls
             Map<String, Object> enableMultiDeviceParam = new HashMap<>();
             enableMultiDeviceParam.put(
@@ -592,7 +594,7 @@ public class TUIChatService implements TUIInitializer, ITUIChatService {
         connectListenerList.add(weakReference);
     }
 
-    // 初始化自定义消息类型
+    
     // Initialize custom message types
     private void initMessageType() {
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_HELLO, CustomLinkMessageBean.class);
@@ -602,10 +604,6 @@ public class TUIChatService implements TUIInitializer, ITUIChatService {
     }
 
     /**
-     * 注册自定义消息类型
-     * @param businessId 自定义消息唯一标识（注意不能重复）
-     * @param beanClass 消息 MessageBean 类型
-     * @param isDefault 是否是在 TUIChat 内部定义的
      *
      * Register a custom message type
      * @param businessId Custom message unique identifier（cannot be repeated）
@@ -623,9 +621,6 @@ public class TUIChatService implements TUIInitializer, ITUIChatService {
     }
 
     /**
-     * 注册自定义消息类型
-     * @param businessId 自定义消息唯一标识（注意不能重复）
-     * @param beanClass 消息 MessageBean 类型
      *
      * Register a custom message type
      * @param businessId Custom message unique identifier（cannot be repeated）

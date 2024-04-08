@@ -28,7 +28,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // 主题资源文件夹
     sourceSets {
         main {
             res.srcDirs += "src/main/res-minimalistui"
@@ -44,6 +43,14 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.google.code.gson:gson:2.9.1'
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'io.noties.markwon:html:4.6.2'
+    implementation 'io.noties.markwon:image:4.6.2'
+    implementation 'io.noties.markwon:image-glide:4.6.2'
+    implementation 'io.noties.markwon:inline-parser:4.6.2'
+    implementation 'io.noties.markwon:linkify:4.6.2'
+    implementation 'io.noties.markwon:ext-tables:4.6.2'
+
     annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
 
     api project(':tuichat')

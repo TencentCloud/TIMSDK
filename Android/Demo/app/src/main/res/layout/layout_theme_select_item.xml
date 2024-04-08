@@ -36,7 +36,7 @@
                 android:lineHeight="18.24sp"
                 android:textColor="@color/white"
                 android:textSize="12.48sp"
-                tools:text="轻快" />
+                tools:text="Minimalist" />
 
         </RelativeLayout>
     </FrameLayout>

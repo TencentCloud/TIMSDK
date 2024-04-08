@@ -19,13 +19,9 @@
 
 
     <declare-styleable name="SynthesizedImageView">
-        <!--合成图片的背景-->
         <attr name="synthesized_image_bg" format="color" />
-        <!--合成图片的默认图片-->
         <attr name="synthesized_default_image" format="reference" />
-        <!--合成图片的尺寸-->
         <attr name="synthesized_image_size" format="dimension" />
-        <!--多图片之间的空隙间隔-->
         <attr name="synthesized_image_gap" format="dimension" />
     </declare-styleable>
 

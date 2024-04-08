@@ -128,6 +128,14 @@ public class StyleSelectActivity extends BaseLightActivity {
         onResultReturnListener = null;
     }
 
+    @Override
+    protected void onDestroy() {
+        if (instance != null && instance.get() != null) {
+            instance.get().finish();
+        }
+        super.onDestroy();
+    }
+
     public static void finishActivity() {
         if (instance != null && instance.get() != null) {
             instance.get().finish();

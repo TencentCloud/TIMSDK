@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/demo_profile_bg"
+    android:orientation="vertical"
     tools:context=".profile.AboutIMActivity">
 
     <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
@@ -26,6 +26,7 @@
         app:canNav="true"
         app:isTop="true"
         app:name="@string/im_privacy" />
+
     <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
         android:id="@+id/about_user_agreement_lv"
         android:layout_width="match_parent"
@@ -33,6 +34,7 @@
         app:canNav="true"
         app:isTop="true"
         app:name="@string/im_user_agreement" />
+
     <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
         android:id="@+id/about_statement_lv"
         android:layout_width="match_parent"
@@ -72,5 +74,47 @@
         app:canNav="true"
         app:isTop="true"
         app:name="@string/demo_contact_us" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layoutDirection="ltr"
+        android:paddingBottom="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/icp_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:background="@drawable/common_item_pressed_effect_background"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:textColor="#756F6F"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/company_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#756F6F"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/copyright_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#756F6F"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

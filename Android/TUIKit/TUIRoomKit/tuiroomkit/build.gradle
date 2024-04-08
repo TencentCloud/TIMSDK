@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
     implementation "de.hdodenhof:circleimageview:3.1.0"
     implementation "com.github.bumptech.glide:glide:4.12.0"
@@ -48,14 +49,13 @@ dependencies {
     implementation 'androidx.core:core:1.0.2'
 
     implementation project(':timcommon')
-    implementation project(':tuichat')
 
-     api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "com.tencent.liteav.tuikit:tuiroomengine:2.0.3.5"
+    api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "com.tencent.liteav.tuikit:tuiroomengine:2.2.2.27"
     implementation rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_TRTC:11.6.0.13641"
     if (projects.contains("tuicore")) {
         api project(':tuicore')
     } else {
-        api "com.tencent.liteav.tuikit:tuicore:7.8.5484"
-        implementation rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:7.8.5484"
+        api "com.tencent.liteav.tuikit:tuicore:7.9.5666"
+        implementation rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:7.9.5666"
     }
 }

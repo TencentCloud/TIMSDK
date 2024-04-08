@@ -87,7 +87,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 聊天界面，底部发送图片、拍照、摄像、文件面板
  *
  * Chat interface, send pictures, take pictures, video, file panels at the bottom
  */
@@ -97,7 +96,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     protected ImageView faceKeyboardInputButton;
     protected ImageView inputMoreBtn;
-    protected Button voiceBtn;
+    protected ImageView voiceBtn;
     protected ImageView imageBtn;
     protected boolean mEmojiInputDisable;
     protected ImageView voiceDeleteImage;
@@ -106,7 +105,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected boolean mMoreInputDisable;
 
     /**
-     * 文本输入框
      *
      * input text
      */
@@ -124,7 +122,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected ChatInfo mChatInfo;
     protected List<InputMoreActionUnit> mInputMoreActionList = new ArrayList<>();
     protected List<InputMoreActionUnit> mInputMoreCustomActionList = new ArrayList<>();
-    private AlertDialog mPermissionDialog;
     private boolean mSendPhotoDisable;
     private boolean mCaptureDisable;
     private boolean mVideoRecordDisable;
@@ -327,7 +324,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                // 兼容华为P10，TUIKit 简约版使用"百度输入法华为版"时，点击回车发送。
+                
                 if (actionId == EditorInfo.IME_ACTION_SEND
                     || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
                         && event.getAction() == KeyEvent.ACTION_DOWN)) {
@@ -374,7 +371,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         exitReply();
                     } else {
                         if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
-                            // 发送时通过获取输入框匹配上@的昵称list，去从map中获取ID list。
+                            
                             //  When sending, get the ID list from the map by getting the nickname list that matches the @ in the input box.
                             List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                             if (atUserList.isEmpty()) {
@@ -458,7 +455,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 FaceUtil.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + displayInputString.length());
             }
-            // @ 之后要显示软键盘。Activity 没有 onResume 导致无法显示软键盘
+            
             // Afterwards @, the soft keyboard is to be displayed. Activity does not have onResume, so the soft keyboard cannot be displayed
             ThreadUtils.postOnUiThreadDelayed(new Runnable() {
                 @Override
@@ -1033,14 +1030,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     private void showSoftInputAndHideFace() {
         showSoftInputAndThen(this::hideFace);
-        faceKeyboardInputButton.setBackgroundResource(R.drawable.chat_minimalist_input_face_icon);
+        faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
     }
 
     private void hideSoftInputAndShowFace() {
         showFace();
         hideSoftInput();
         mTextInput.requestFocus();
-        faceKeyboardInputButton.setBackgroundResource(R.drawable.chat_input_keyboard);
+        faceKeyboardInputButton.setImageResource(R.drawable.chat_input_keyboard);
     }
 
     @Override
@@ -1099,7 +1096,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     public void hideSoftInput() {
         TUIChatLog.i(TAG, "hideSoftInput");
-        faceKeyboardInputButton.setBackgroundResource(R.drawable.chat_minimalist_input_face_icon);
+        faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
         Context context = getContext();
@@ -1177,7 +1174,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             });
         }
         hideSoftInput();
-        faceKeyboardInputButton.setBackgroundResource(R.drawable.chat_input_keyboard);
+        faceKeyboardInputButton.setImageResource(R.drawable.chat_input_keyboard);
         mTextInput.requestFocus();
         mInputMoreLayout.setVisibility(VISIBLE);
         fragmentManager.beginTransaction().replace(R.id.more_groups, faceFragment).commitAllowingStateLoss();
@@ -1201,7 +1198,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     private void hideFace() {
         mInputMoreLayout.setVisibility(GONE);
-        faceKeyboardInputButton.setBackgroundResource(R.drawable.chat_minimalist_input_face_icon);
+        faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
     }
 
     private void resetInput() {
@@ -1209,7 +1206,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreFragment.dismiss();
         }
         mInputMoreLayout.setVisibility(GONE);
-        faceKeyboardInputButton.setBackgroundResource(R.drawable.chat_minimalist_input_face_icon);
+        faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
         hideSoftInput();
     }
 

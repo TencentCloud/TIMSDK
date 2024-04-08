@@ -63,11 +63,6 @@ public class InputViewFloatLayerProxy {
             return;
         }
 
-        if (TextUtils.equals(chatInfo.getId(), TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_SHOPPING_MALL)
-            && TextUtils.equals(chatInfo.getId(), TUICustomerServiceConstants.CUSTOMER_SERVICE_STAFF_ONLINE_DOCTOR)) {
-            return;
-        }
-
         viewGroup.setVisibility(View.VISIBLE);
         LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.input_view_float_layer_content_view, viewGroup);
         rvFloatLayer = viewGroup.findViewById(R.id.rv_float_layer);

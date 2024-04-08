@@ -21,8 +21,8 @@ import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.Map;
 
@@ -109,7 +109,7 @@ public class InviteUserDialog extends BaseBottomDialog implements RoomEventCente
         ClipboardManager cm =  (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData mClipData = ClipData.newPlainText(LABEL, content);
         cm.setPrimaryClip(mClipData);
-        ToastUtil.toastShortMessageCenter(msg);
+        RoomToast.toastShortMessageCenter(msg);
     }
 
     @Override

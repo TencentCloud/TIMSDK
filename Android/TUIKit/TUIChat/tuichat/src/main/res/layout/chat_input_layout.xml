@@ -40,7 +40,7 @@
             android:textSize="@dimen/chat_input_text_size"
             android:textColor="@color/black"
             android:maxHeight="120dp"
-            android:minHeight="@dimen/chat_input_editor_height"
+            android:minHeight="@dimen/chat_input_editor_min_height"
             android:textCursorDrawable="@drawable/my_cursor"
             android:padding="5dp" />
 

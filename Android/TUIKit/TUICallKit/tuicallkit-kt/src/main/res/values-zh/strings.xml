@@ -16,6 +16,7 @@
     <string name="tuicallkit_text_microphone">麦克风</string>
     <string name="tuicallkit_text_hangup">挂断</string>
     <string name="tuicallkit_text_reject">拒接</string>
+    <string name="tuicallkit_text_line_busy">对方忙</string>
     <string name="tuicallkit_text_speaker">扬声器</string>
     <string name="tuicallkit_text_dialing">接听</string>
     <string name="tuicallkit_text_camera">摄像头</string>
@@ -68,4 +69,6 @@
     <string name="tuicallkit_error_request_refused">当前状态不支持调用</string>
     <string name="tuicallkit_error_request_repeated">当前方法正在执行中，请勿重复调用</string>
     <string name="tuicallkit_error_scene_not_support">当前通话场景，不支持该功能</string>
+    <string name="tuicallkit_join_group_call">加入</string>
+    <string name="tuicallkit_join_group_call_users">%s人正在%s</string>
 </resources>

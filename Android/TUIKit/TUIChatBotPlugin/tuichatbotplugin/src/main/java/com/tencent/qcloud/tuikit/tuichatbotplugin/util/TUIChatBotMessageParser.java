@@ -79,4 +79,23 @@ public class TUIChatBotMessageParser {
         return displayContent;
     }
 
+    public static String getRichText(V2TIMMessage v2TIMMessage) {
+        V2TIMCustomElem customElem = v2TIMMessage.getCustomElem();
+        if (customElem == null || customElem.getData() == null || customElem.getData().length == 0) {
+            TUIChatBotLog.e(TAG, "getRichText fail, customElem or data is empty");
+            return "";
+        }
+
+        String richTextContent = "";
+        String data = new String(customElem.getData());
+        try {
+            JSONObject richTextJson = new JSONObject(data);
+            richTextContent = richTextJson.getString(TUIChatBotConstants.CHAT_BOT_CONTENT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return richTextContent;
+    }
+
 }

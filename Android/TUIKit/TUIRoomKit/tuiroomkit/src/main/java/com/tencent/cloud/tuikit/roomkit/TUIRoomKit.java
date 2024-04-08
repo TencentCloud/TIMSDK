@@ -9,46 +9,52 @@ package com.tencent.cloud.tuikit.roomkit;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.model.TUIRoomKitImpl;
 
+@Deprecated
 public abstract class TUIRoomKit {
     /**
-     * 1.1 创建 TUIRoomKit 实例（单例模式）
+     * 1.1 Create TUIRoomKit instance (single case mode)
      */
+    @Deprecated
     public static TUIRoomKit createInstance() {
         return TUIRoomKitImpl.sharedInstance();
     }
 
     /**
-     * 1.2 销毁 TUIRoomKit 实例（单例模式）
+     * 1.2 Destroy TUIRoomKit instance (singleton mode)
      */
+    @Deprecated
     public static void destroyInstance() {
         TUIRoomKitImpl.destroyInstance();
     }
 
     /**
-     * 2.1 设置个人信息，包括用户名和头像
+     * 2.1 Set personal information, including username and avatar
      *
-     * @param userName 个人的用户名。
-     * @param avatarURL 个人的头像链接。
+     * @param userName  The individual's username.
+     * @param avatarURL Personal avatar link.
      */
+    @Deprecated
     public abstract void setSelfInfo(String userName, String avatarURL, TUIRoomDefine.ActionCallback callback);
 
     /**
-     * 3.1 创建房间
+     * 3.1 Create a room
      *
-     * @param roomInfo 创建房间的参数，包含房间号、房间名称等，其中 roomId 是必填项，其余可为默认值。
+     * @param roomInfo Parameters for creating a room, including room number, room name, etc., where roomId is required, and the rest can be default values.
      */
+    @Deprecated
     public abstract void createRoom(TUIRoomDefine.RoomInfo roomInfo, TUIRoomDefine.ActionCallback callback);
 
     /**
-     * 3.2 进入房间
+     * 3.2 Enter the room
      *
-     * @param roomId           进入房间的房间号。
-     * @param enableAudio      true 进房打开麦克风，并推送本地音频数据到远端，其他成员可以正常听到本地声音；
-     *                         false 进房只打开麦克风，不推送本地音频数据到远端，其他成员无法听到本地声音；
-     * @param enableVideo      true 进房打开摄像头，并推送本地视频数据到远端，其他成员可以正常看到本地画面；
-     *                         false 进房不打开摄像头，也不推送本地视频数据到远端，其他成员无法看到本地画面；
-     * @param isSoundOnSpeaker 是否使用扬声器播放声音，true 则使用扬声器，false 则使用听筒。
+     * @param roomId           The room number to enter the room.
+     * @param enableAudio      true Enter the room to turn on the microphone and push local audio data to the remote end. Other members can hear the local sound normally;
+     *                         false When entering the room, only the microphone is turned on and local audio data is not pushed to the remote end. Other members cannot hear the local sound;
+     * @param enableVideo      true Enter the room to turn on the camera and push local video data to the remote end. Other members can see the local picture normally;
+     *                         false When entering the room, the camera will not be turned on and local video data will not be pushed to the remote end. Other members will not be able to see the local video;
+     * @param isSoundOnSpeaker Whether to use the speaker to play sound, true to use the speaker, false to use the earpiece.
      */
+    @Deprecated
     public abstract void enterRoom(String roomId, boolean enableAudio, boolean enableVideo, boolean isSoundOnSpeaker,
                                    TUIRoomDefine.GetRoomInfoCallback callback);
 }

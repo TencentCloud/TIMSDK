@@ -134,10 +134,6 @@ public class TimeInLineTextLayout extends FrameLayout {
         // get last line's width
         Layout layout = textView.getLayout();
         if (layout != null) {
-            int start = layout.getLineStart(lineCount - 1);
-            int end = layout.getLineEnd(lineCount - 1);
-            float startX = layout.getPrimaryHorizontal(start);
-            float endX = layout.getSecondaryHorizontal(end);
             lastLineWidth = (int) layout.getLineWidth(lineCount - 1);
             int direction = layout.getParagraphDirection(lineCount - 1);
             lastLineRunRTL = direction == Layout.DIR_RIGHT_TO_LEFT;

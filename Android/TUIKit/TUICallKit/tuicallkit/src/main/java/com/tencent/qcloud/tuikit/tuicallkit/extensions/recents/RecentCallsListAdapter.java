@@ -68,7 +68,7 @@ public class RecentCallsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     mItemListener.onDetailViewClick(view, getItem(viewHolder.getBindingAdapterPosition()));
                 }
             });
-            //左滑删除按钮事件监听
+
             if (!viewHolder.mLayoutDelete.hasOnClickListeners()) {
                 viewHolder.mLayoutDelete.setOnClickListener(view -> {
                     int curPos = viewHolder.getBindingAdapterPosition();

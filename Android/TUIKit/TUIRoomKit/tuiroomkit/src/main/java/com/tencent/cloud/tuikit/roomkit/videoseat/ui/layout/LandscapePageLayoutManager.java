@@ -251,9 +251,6 @@ public class LandscapePageLayoutManager extends PageLayoutManager {
         }
     }
 
-    /**
-     * 数量 6 及以上的布局采用 6宫格 的布局。
-     */
     private void layoutWithSixGrid(RecyclerView.Recycler recycler, RecyclerView.State state) {
         mItemWidth = (getUsableHeight() - (mRows + 1) * mMarginBetweenItem) / mRows;
         mItemHeight = mItemWidth;

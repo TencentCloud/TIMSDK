@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -11,6 +12,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
@@ -24,6 +26,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.EmptyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -97,17 +100,18 @@ public class ChatMessageParser {
                     break;
             }
         }
-        if (message != null) {
-            message.setCommonAttribute(v2TIMMessage);
-            message.onProcessMessage(v2TIMMessage);
+        if (message == null) {
+            message = new EmptyMessageBean();
         }
+        message.setCommonAttribute(v2TIMMessage);
+        message.onProcessMessage(v2TIMMessage);
         return message;
     }
 
     private static TUIMessageBean parseCustomMessage(V2TIMMessage v2TIMMessage) {
         //********************************************************************************
         //********************************************************************************
-        //************************ 待 TUICallKit 按标准流程接入后删除************************
+        
         //********************************************************************************
         //********************************************************************************
         TUIMessageBean messageBean = parseCallingMessage(v2TIMMessage);
@@ -237,7 +241,7 @@ public class ChatMessageParser {
             return null;
         }
         String data = new String(customElem.getData());
-        TUIChatLog.e(TAG, " customElem data: " + data);
+        Log.d(TAG, " customElem data: " + data);
 
         Gson gson = new Gson();
         HashMap customJsonMap = null;
@@ -322,12 +326,11 @@ public class ChatMessageParser {
     }
 
     /**
-     * 把 IMSDK 的消息 bean 列表转化为 TUIKit 的消息bean列表
      *
      * Convert IMSDK's message bean list to TUIKit's message bean list
      *
-     * @param v2TIMMessageList IMSDK 的消息 bean 列表
-     * @return 转换后的 TUIKit bean 列表
+     * @param v2TIMMessageList IMSDK  bean 
+     * @return  TUIKit bean 
      */
     public static List<TUIMessageBean> parseMessageList(List<V2TIMMessage> v2TIMMessageList) {
         if (v2TIMMessageList == null) {
@@ -365,6 +368,11 @@ public class ChatMessageParser {
             callingMessageBean.setExtra(callModel.getContent());
             callingMessageBean.setCallType(callModel.getStreamMediaType());
             callingMessageBean.setCaller(callModel.getDirection() == CallModel.CALL_MESSAGE_DIRECTION_OUTGOING);
+            if (callingMessageBean.isSelf()) {
+                callingMessageBean.setSender(TUILogin.getLoginUser());
+            } else {
+                callingMessageBean.setSender(v2TIMMessage.getUserID());
+            }
             callingMessageBean.setShowUnreadPoint(callModel.isShowUnreadPoint());
             callingMessageBean.setUseMsgReceiverAvatar(callModel.isUseReceiverAvatar());
             message = callingMessageBean;
@@ -382,7 +390,7 @@ public class ChatMessageParser {
         Gson gson = new Gson();
 
         if (data.equals(MessageCustom.BUSINESS_ID_GROUP_CREATE)) {
-            // 兼容4.7版本以前的 tuikit
+            
             // Compatible with tuikit prior to version 4.7
             TipsMessageBean messageBean = new TipsMessageBean();
             messageBean.setCommonAttribute(v2TIMMessage);
@@ -393,7 +401,7 @@ public class ChatMessageParser {
             return messageBean;
         } else {
             if (isTyping(customElem.getData())) {
-                // 忽略正在输入，它不能作为真正的消息展示
+                
                 // Ignore being typed, it cannot be displayed as a real message
                 return null;
             }

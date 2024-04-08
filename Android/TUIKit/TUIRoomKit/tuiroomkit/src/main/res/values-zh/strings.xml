@@ -3,6 +3,7 @@
     <string name="tuiroomkit_role_owner">主持人</string>
     <string name="tuiroomkit_role_manager">管理员</string>
     <string name="tuiroomkit_copy_room_id_success">房间号复制成功</string>
+    <string name="tuiroomkit_tip_exit_first_title">请先退出当前会议，再进入其它会议</string>
     <string name="tuiroomkit_permission_camera_reason_title">%s申请获取相机权限</string>
     <string name="tuiroomkit_permission_camera_reason">需要访问您的相机权限，开启后用于视频互动、秀场直播、视频通话、多人视频通话、多人音视频房间等功能，在您使用美颜功能时，我们会对您实时拍摄的面部的像素信息进行实时智能识别，在识别过程中会实时收集您面部的像素信息，以为您提供更好的美颜效果。</string>
     <string name="tuiroomkit_permission_mic_reason_title">%s申请获取麦克风权限</string>
@@ -69,7 +70,7 @@
     <string name="tuiroomkit_item_request_open_microphone">请求开启语音</string>
     <string name="tuiroomkit_item_request_open_camera">请求开启视频</string>
     <string name="tuiroomkit_item_open_microphone">取消静音</string>
-    <string name="tuiroomkit_item_open_camera">开启视频</string>
+    <string name="tuiroomkit_item_open_camera">打开视频</string>
     <string name="tuiroomkit_item_chat">聊天</string>
     <string name="tuiroomkit_item_member">成员(%d)</string>
     <string name="tuiroomkit_item_invite">邀请</string>
@@ -134,9 +135,12 @@
     <string name="tuiroomkit_reject_invite">%s拒绝上台</string>
     <string name="tuiroomkit_raise_hand_tip">如果您想发言请先举手上麦</string>
     <string name="tuiroomkit_receive_invitation_title">%s邀请您上台发言</string>
+    <string name="tuiroomkit_invite_take_seat_time_out">对%s的上台邀请已超时</string>
+    <string name="tuiroomkit_invited_take_seat_time_out">上台失败，邀请已超时</string>
+    <string name="tuiroomkit_all_seat_occupied">当前上台人数已达上限</string>
     <string name="tuiroomkit_receive_invitation_content">您上台后可以打开摄像头和取消静音</string>
-    <string name="tuiroomkit_can_not_open_mic">主持人开启了全员静音，无法自行取消静音</string>
-    <string name="tuiroomkit_can_not_open_camera">主持人开启了全员禁画，无法开启视频</string>
+    <string name="tuiroomkit_can_not_open_mic">全员静音已启用，无法自行取消静音</string>
+    <string name="tuiroomkit_can_not_open_camera">全员禁画已启用，无法自行打开视频</string>
     <string name="tuiroomkit_mute_all_mic_toast">已开启全员静音</string>
     <string name="tuiroomkit_mute_all_camera_toast">已开启全体禁画</string>
     <string name="tuiroomkit_item_close_camera">关闭视频</string>

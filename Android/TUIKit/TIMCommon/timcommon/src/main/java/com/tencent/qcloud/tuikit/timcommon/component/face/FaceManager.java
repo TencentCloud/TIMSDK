@@ -135,7 +135,7 @@ public class FaceManager {
             return;
         }
         if (TextUtils.isEmpty(faceKey)) {
-            Glide.with(imageView.getContext()).load(android.R.drawable.ic_menu_report_image).centerInside().into(imageView);
+            Glide.with(TIMCommonService.getAppContext()).load(android.R.drawable.ic_menu_report_image).centerInside().into(imageView);
             return;
         }
         String faceUrl = "";
@@ -148,7 +148,7 @@ public class FaceManager {
             }
         }
         final ChatFace finalFace = face;
-        Glide.with(imageView.getContext())
+        Glide.with(TIMCommonService.getAppContext())
             .load(faceUrl)
             .centerInside()
             .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
@@ -174,7 +174,7 @@ public class FaceManager {
             return;
         }
         if (chatFace instanceof Emoji) {
-            Glide.with(imageView.getContext())
+            Glide.with(TIMCommonService.getAppContext())
                 .load(((Emoji) chatFace).getIcon())
                 .centerInside()
                 .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
@@ -206,7 +206,7 @@ public class FaceManager {
         }
         final ChatFace finalFace = face;
         if (isBitMap) {
-            Glide.with(imageView.getContext())
+            Glide.with(TIMCommonService.getAppContext())
                 .asBitmap()
                 .load(faceUrl)
                 .centerInside()
@@ -230,7 +230,7 @@ public class FaceManager {
                 })
                 .into(imageView);
         } else {
-            Glide.with(imageView.getContext())
+            Glide.with(TIMCommonService.getAppContext())
                 .load(faceUrl)
                 .centerInside()
                 .apply(new RequestOptions().error(android.R.drawable.ic_menu_report_image))
@@ -295,7 +295,7 @@ public class FaceManager {
                 }
             }
         }
-        // 如果没有发现表情图片，并且当前是输入状态，不再重设输入框
+        
         // If no emoticon picture is found, and it is currently in the input state, the input box will not be reset.
         if (!imageFound && typing) {
             return false;
@@ -333,7 +333,7 @@ public class FaceManager {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
         ArrayList<EmojiData> emojiDataArrayList = new ArrayList<>();
-        // 遍历找到匹配字符并存储
+        
         // Traverse to find matching characters and store
         int lastMentionIndex = -1;
         while (m.find()) {
@@ -359,7 +359,7 @@ public class FaceManager {
             emojiDataArrayList.add(emojiData);
         }
 
-        // 倒叙替换
+        
         // flashback replacement
         if (emojiDataArrayList.isEmpty()) {
             return text;

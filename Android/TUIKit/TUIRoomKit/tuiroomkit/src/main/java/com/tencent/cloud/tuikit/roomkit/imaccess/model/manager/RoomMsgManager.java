@@ -104,7 +104,6 @@ public class RoomMsgManager {
                 roomMsgData.setGroupId(data.getGroupId());
                 roomMsgData.setMessageId(data.getV2TIMMessage().getMsgID());
                 mSendMsgLatch.countDown();
-                // 这里直接返回，imsdk 状态还没更新，执行 login 会报错7009，所以需要 post 一下进行延时；
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {

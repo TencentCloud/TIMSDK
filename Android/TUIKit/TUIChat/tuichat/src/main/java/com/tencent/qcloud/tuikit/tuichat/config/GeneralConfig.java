@@ -35,6 +35,10 @@ public class GeneralConfig {
     private boolean enableRoomKit = true;
     private boolean enablePoll = true;
     private boolean enableGroupNote = true;
+    private boolean enableTakePhoto = true;
+    private boolean enableRecordVideo = true;
+    private boolean enableFile = true;
+    private boolean enableAlbum = true;
 
     private boolean enableFloatWindowForCall = true;
     private boolean enableMultiDeviceForCall = false;
@@ -46,7 +50,6 @@ public class GeneralConfig {
     private boolean enableSoundMessageSpeakerMode = true;
 
     /**
-     * 设置是否开启音视频通话悬浮窗，默认为开启
      * Set to enable the floating window for call, default value is true
      */
     public void setEnableFloatWindowForCall(boolean enableFloatWindowForCall) {
@@ -54,7 +57,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取是否开启音视频通话悬浮窗
      * Obtain whether to open the audio and video call floating window
      */
     public boolean isEnableFloatWindowForCall() {
@@ -62,7 +64,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置音视频通话开启多端登录功能，默认关闭
      * Set whether to enable multi-terminal login function for audio and video calls, default is false
      */
     public void setEnableMultiDeviceForCall(boolean enableMultiDeviceForCall) {
@@ -70,7 +71,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取音视频通话开启多端登录功能
      * Obtain audio and video calls and enable multi-terminal login function
      */
     public boolean isEnableMultiDeviceForCall() {
@@ -78,7 +78,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置聊天长按弹框是否展示emoji互动消息功能，默认展示
      *  Set in the chat interface, long press the pop-up box to display the emoji interactive message function or not, the default is true
      */
     public void setEnablePopMenuEmojiReactAction(boolean enablePopMenuEmojiReactAction) {
@@ -86,7 +85,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  获取聊天长按弹框是否展示emoji互动消息功能
      *  Get chat long press whether to display emoji interactive message function
      */
     public boolean isEnablePopMenuEmojiReactAction() {
@@ -94,7 +92,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置聊天长按弹框是否展示 消息回复功能入口，默认展示
      *  Set chat long press the pop-up box to display the message reply function entry or not, the default is true
      */
     public void setEnablePopMenuReplyAction(boolean enablePopMenuReplyAction) {
@@ -102,7 +99,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  获取聊天长按弹框是否展示 消息回复功能入口
      *  Obtain whether to display the message reply function entry in the chat long press pop-up box
      */
     public boolean isEnablePopMenuReplyAction() {
@@ -110,7 +106,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置聊天长按弹框是否展示 消息引用功能入口，默认展示
      *  Set chat long press the pop-up box to display the entry of the message reference function or not, the default is true
      */
     public void setEnablePopMenuReferenceAction(boolean enablePopMenuReferenceAction) {
@@ -118,7 +113,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  获取聊天长按弹框是否展示 消息引用功能入口
      *  Obtain whether the chat long press pop-up box displays the message reference function entry
      */
     public boolean isEnablePopMenuReferenceAction() {
@@ -126,7 +120,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置是否展示视频通话按钮，如果集成了 TUICallKit 组件，默认展示
      *  Set display the video call button or not, if the TUICallKit component is integrated, the default is true
      */
     public void setEnableVideoCall(boolean enableVideoCall) {
@@ -134,7 +127,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  获取是否展示视频通话按钮
      *  Get whether to display the video call button
      */
     public boolean isEnableVideoCall() {
@@ -142,7 +134,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置是否展示音频通话按钮，如果集成了 TUICallKit 组件，默认展示
      *  Whether to display the audio call button, if the TUICallKit component is integrated, the default is true
      */
     public void setEnableAudioCall(boolean enableAudioCall) {
@@ -150,7 +141,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  获取是否展示音频通话按钮
      *  Get whether to display the audio call button
      */
     public boolean isEnableAudioCall() {
@@ -158,7 +148,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置是否展示快速会议按钮，如果集成了 TUIRoomKit 组件，默认展示
      *  Set whether to display the quick meeting button, if the TUIRoomKit component is integrated, it will be displayed by default
      */
     public void setEnableRoomKit(boolean enableRoomKit) {
@@ -166,7 +155,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取是否展示快速会议按钮
      * Get whether to display the quick meeting button
      */
     public boolean isEnableRoomKit() {
@@ -174,7 +162,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置是否展示群接龙按钮，如果集成了 TUIGroupNotePlugin 插件，默认展示
      *  Set whether to display the group note button. If the TUIGroupNotePlugin is integrated, it is displayed by default.
      */
     public void setEnableGroupNote(boolean enableGroupNote) {
@@ -182,7 +169,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取是否展示群接龙按钮
      * Get whether to display the group note button
      */
     public boolean isEnableGroupNote() {
@@ -190,7 +176,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置是否展示群投票按钮，如果集成了 TUIPollPlugin 组件，默认展示
      *  Set whether to display the group voting button. If the TUIPollPlugin component is integrated, it is displayed by default.
      */
     public void setEnablePoll(boolean enablePoll) {
@@ -198,7 +183,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取是否展示群投票
      * Get whether to display the group voting button
      */
     public boolean isEnablePoll() {
@@ -206,7 +190,62 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取录音最大时长
+     *  Set whether to display the album button. it is displayed by default.
+     */
+    public void setEnableAlbum(boolean enableAlbum) {
+        this.enableAlbum = enableAlbum;
+    }
+
+    /**
+     * Get whether to display the album button
+     */
+    public boolean isEnableAlbum() {
+        return enableAlbum;
+    }
+
+    /**
+     *  Set whether to display the file button. it is displayed by default.
+     */
+    public void setEnableFile(boolean enableFile) {
+        this.enableFile = enableFile;
+    }
+
+    /**
+     * Get whether to display the file button
+     */
+    public boolean isEnableFile() {
+        return enableFile;
+    }
+
+    /**
+     *  Set whether to display the video recording button. it is displayed by default.
+     */
+    public void setEnableRecordVideo(boolean enableRecordVideo) {
+        this.enableRecordVideo = enableRecordVideo;
+    }
+
+    /**
+     * Get whether to display the video recording button
+     */
+    public boolean isEnableRecordVideo() {
+        return enableRecordVideo;
+    }
+
+    /**
+     *  Set whether to display the photo button. it is displayed by default.
+     */
+    public void setEnableTakePhoto(boolean enableTakePhoto) {
+        this.enableTakePhoto = enableTakePhoto;
+    }
+
+    /**
+     * Get whether to display the photo button
+     */
+    public boolean isEnableTakePhoto() {
+        return enableTakePhoto;
+    }
+
+    /**
      * Get the maximum duration of the recording
      */
     public int getAudioRecordMaxTime() {
@@ -214,7 +253,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置录音最大时长
      * Set the maximum recording time
      */
     public GeneralConfig setAudioRecordMaxTime(int audioRecordMaxTime) {
@@ -223,7 +261,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取录像最大时长
      * Get the maximum duration of the recording
      */
     public int getVideoRecordMaxTime() {
@@ -231,7 +268,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置摄像最大时长
      * Set the maximum recording time
      */
     public GeneralConfig setVideoRecordMaxTime(int videoRecordMaxTime) {
@@ -240,7 +276,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 对方已读的 view 是否展示
      * Whether the view read by the other party is displayed
      */
     public boolean isMsgNeedReadReceipt() {
@@ -248,7 +283,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置对方已读的 view 是否展示，默认不展示
      * Set whether the view read by the other party is displayed, not displayed by default
      *
      */
@@ -257,7 +291,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取消息是否不计入会话未读数
      * Get whether messages are not counted as conversation unread
      */
     public boolean isExcludedFromUnreadCount() {
@@ -265,7 +298,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置消息是否不计入会话未读数：默认为 false，表明需要计入会话未读数，设置为 true，表明不需要计入会话未读数
      * Set whether messages are not counted as conversation unread: false, need to be counted; true, do not need to be counted
      */
     public void setExcludedFromUnreadCount(boolean excludedFromUnreadCount) {
@@ -273,7 +305,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取消息是否不计入会话 lastMsg
      * Get whether the message does not count as the last message of the session
      */
     public boolean isExcludedFromLastMessage() {
@@ -281,7 +312,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置消息是否不计入会话 lastMsg：默认为 false，表明需要计入会话 lastMsg，设置为 true，表明不需要计入会话 lastMessage
      * Set whether the message does not count as the last message of the session: false, need to be counted; true, do not need to be counted
      */
     public void setExcludedFromLastMessage(boolean excludedFromLastMessage) {
@@ -289,7 +319,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取离线推送提示铃音是否为自定义铃音
      * Get whether the offline push notification ringtone is a custom ringtone
      */
     public boolean isEnableAndroidPrivateRing() {
@@ -297,7 +326,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置离线推送提示铃音是否为自定义铃音
      * Set whether the offline push notification ringtone is a custom ringtone
      */
     public void setEnableAndroidPrivateRing(boolean ring) {
@@ -305,7 +333,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置 "对方正在输入..." 功能是否打开
      * Set whether the "Typing..." function is enabled
      */
     public void setEnableTypingStatus(boolean enableTypingStatus) {
@@ -313,7 +340,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取 "对方正在输入..." 功能是否打开
      * Get whether the "Typing..." function is enabled
      */
     public boolean isEnableTypingStatus() {
@@ -321,7 +347,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  是否展示自定义欢迎消息按钮
      *  Whether to display a custom welcome message button
      */
     public boolean isEnableWelcomeCustomMessage() {
@@ -329,7 +354,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置是否展示自定义欢迎消息按钮，默认 true
      *  Display custom welcome message button, default true
      */
     public void setEnableWelcomeCustomMessage(boolean enableWelcomeCustomMessage) {
@@ -337,7 +361,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 消息可撤回时间，单位秒，默认 120 秒。如果想调整该配置，请同步修改 IM 控制台设置。
      * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings
      * synchronously.
      *
@@ -348,7 +371,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取消息可撤回时间，单位秒
      * Get the time interval for message recall, in seconds
      */
     public int getTimeIntervalForMessageRecall() {
@@ -356,7 +378,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置拍照和摄像功能是否使用系统自带相机
      * Whether to use the built-in camera of the system to take photos and video
      */
     public void setUseSystemCamera(boolean useSystemCamera) {
@@ -364,7 +385,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取拍照和摄像功能是否使用系统自带相机
      * Obtain whether to use the system's built-in camera for the camera and video functions
      */
     public boolean isUseSystemCamera() {
@@ -372,7 +392,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  设置聊天对话框是否展示 输入框 默认展示
      *  Whether the chat page displays "InputBar", the default is true
      */
     public void setEnableMainPageInputBar(boolean enableMainPageInputBar) {
@@ -380,7 +399,6 @@ public class GeneralConfig {
     }
 
     /**
-     *  获取聊天对话框是否展示 输入框
      *  Get whether to display the input box in the chat page
      */
     public boolean isEnableMainPageInputBar() {
@@ -388,7 +406,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 设置语音消息使用扬声器播放还是使用听筒播放，设置为 true 使用扬声器播放，false 则为听筒播放。默认使用扬声器播放。
      * Set whether to use the speaker to play the voice message or use the earpiece to play, set it to true to use the speaker to play,
      * false to use the earpiece to play. By default, the speaker is used for playback.
      */
@@ -398,7 +415,6 @@ public class GeneralConfig {
     }
 
     /**
-     * 获取语音消息是否使用扬声器播放。结果为 true 使用扬声器播放，结果为 false 则使用听筒播放。
      * Gets whether the voice message is played on the speaker. True to use the speaker, false to use the earpiece.
      */
     public boolean isEnableSoundMessageSpeakerMode() {

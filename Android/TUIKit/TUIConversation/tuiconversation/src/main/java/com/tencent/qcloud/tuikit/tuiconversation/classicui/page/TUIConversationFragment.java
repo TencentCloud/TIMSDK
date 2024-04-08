@@ -76,7 +76,7 @@ public class TUIConversationFragment extends BaseFragment {
     }
 
     private void initView() {
-        // 从布局文件中获取会话列表面板
+        
         mConversationLayout = mBaseView.findViewById(R.id.conversation_layout);
 
         presenter = new ConversationPresenter();
@@ -84,15 +84,13 @@ public class TUIConversationFragment extends BaseFragment {
         presenter.setShowType(ConversationPresenter.SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD);
         mConversationLayout.setPresenter(presenter);
 
-        // 会话列表面板的默认UI和交互初始化
         mConversationLayout.initDefault();
-        // 通过API设置ConversataonLayout各种属性的样例，开发者可以打开注释，体验效果
         //        ConversationLayoutSetting.customizeConversation(mConversationLayout);
 
         mConversationLayout.getConversationList().setOnConversationAdapterListener(new OnConversationAdapterListener() {
             @Override
             public void onItemClick(View view, int viewType, ConversationInfo conversationInfo) {
-                // 此处为demo的实现逻辑，更根据会话类型跳转到相关界面，开发者可根据自己的应用场景灵活实现
+                
                 if (conversationInfo.isMarkFold()) {
                     mConversationLayout.clearUnreadStatusOfFoldItem();
                     startFoldedConversationActivity();
@@ -136,7 +134,7 @@ public class TUIConversationFragment extends BaseFragment {
     }
 
     private void initPopMenuAction() {
-        // 设置长按conversation显示PopAction
+        
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.not_display));
         action.setWeight(800);
@@ -206,11 +204,6 @@ public class TUIConversationFragment extends BaseFragment {
         mConversationPopActions.add(action);
     }
 
-    /**
-     * 长按会话item弹框
-     * @param view 长按 view
-     * @param conversationInfo 会话数据对象
-     */
     private void showItemPopMenu(View view, final ConversationInfo conversationInfo) {
         initPopMenuAction();
 

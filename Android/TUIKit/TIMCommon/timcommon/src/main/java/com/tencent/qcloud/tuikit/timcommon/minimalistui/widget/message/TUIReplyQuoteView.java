@@ -21,8 +21,7 @@ public abstract class TUIReplyQuoteView extends FrameLayout {
     public abstract void onDrawReplyQuote(TUIReplyQuoteBean quoteBean);
 
     /**
-     * 原始消息发送者是否为自己 ， 用于不同 UI 展示
-     * 
+     *
      * Whether the original message sender is himself, used for different UI displays
      * 
      * @param isSelf

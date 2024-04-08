@@ -44,7 +44,7 @@ class ServiceManager {
     }
 
     public ITUIService getService(String serviceName) {
-        Log.i(TAG, "getService : " + serviceName);
+        Log.d(TAG, "getService : " + serviceName);
         if (TextUtils.isEmpty(serviceName)) {
             return null;
         }
@@ -52,7 +52,7 @@ class ServiceManager {
     }
 
     public Object callService(String serviceName, String method, Map<String, Object> param) {
-        Log.i(TAG, "callService : " + serviceName + " method : " + method);
+        Log.d(TAG, "callService : " + serviceName + " method : " + method);
         ITUIService service = serviceMap.get(serviceName);
         if (service != null) {
             return service.onCall(method, param);
@@ -63,7 +63,7 @@ class ServiceManager {
     }
 
     public Object callService(String serviceName, String method, Map<String, Object> param, TUIServiceCallback callback) {
-        Log.i(TAG, "callService : " + serviceName + " method : " + method);
+        Log.d(TAG, "callService : " + serviceName + " method : " + method);
         ITUIService service = serviceMap.get(serviceName);
         if (service != null) {
             return service.onCall(method, param, callback);

@@ -41,7 +41,7 @@
             android:textColor="@color/black_font_color"
             android:textFontWeight="500"
             android:textSize="14sp"
-            tools:text="数字生态大会.ppt" />
+            tools:text="View.ppt" />
     </LinearLayout>
 
     <TextView

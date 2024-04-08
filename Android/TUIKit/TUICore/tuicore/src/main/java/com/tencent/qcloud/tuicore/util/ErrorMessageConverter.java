@@ -12,11 +12,10 @@ public class ErrorMessageConverter {
     static {
         /////////////////////////////////////////////////////////////////////////////////
         //
-        //                      （一）IM SDK 的错误码
         //                           IM SDK error codes
         //
         /////////////////////////////////////////////////////////////////////////////////
-        // 通用错误码
+        
         // Common error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_IN_PROGESS, R.string.TUIKitErrorInProcess);
         ERROR_CODE_MAP.put(BaseConstants.ERR_INVALID_PARAMETERS, R.string.TUIKitErrorInvalidParameters);
@@ -36,16 +35,16 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_COMM_FILE_SIZE_EMPTY, R.string.TUIKitErrorEmptyFile);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_COMM_FILE_OPEN_FAILED, R.string.TUIKitErrorFileOpenFailed);
 
-        // 账号错误码
+        
         // Account error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NOT_LOGGED_IN, R.string.TUIKitErrorNotLogin);
         ERROR_CODE_MAP.put(BaseConstants.ERR_NO_PREVIOUS_LOGIN, R.string.TUIKitErrorNoPreviousLogin);
         ERROR_CODE_MAP.put(BaseConstants.ERR_USER_SIG_EXPIRED, R.string.TUIKitErrorUserSigExpired);
         ERROR_CODE_MAP.put(BaseConstants.ERR_LOGIN_KICKED_OFF_BY_OTHER, R.string.TUIKitErrorLoginKickedOffByOther);
         //        errorCodeMap.put(BaseConstants.ERR_LOGIN_IN_PROCESS:
-        //            return @"登录正在执行中";
+        
         //        errorCodeMap.put(BaseConstants.ERR_LOGOUT_IN_PROCESS:
-        //            return @"登出正在执行中";
+        
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_ACCOUNT_TLS_INIT_FAILED, R.string.TUIKitErrorTLSSDKInit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_ACCOUNT_TLS_NOT_INITIALIZED, R.string.TUIKitErrorTLSSDKUninit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_ACCOUNT_TLS_TRANSPKG_ERROR, R.string.TUIKitErrorTLSSDKTRANSPackageFormat);
@@ -53,7 +52,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_ACCOUNT_TLS_REQUEST_FAILED, R.string.TUIKitErrorTLSSDKRequest);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_ACCOUNT_TLS_REQUEST_TIMEOUT, R.string.TUIKitErrorTLSSDKRequestTimeout);
 
-        // 消息错误码
+        
         // Message error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_INVALID_CONVERSATION, R.string.TUIKitErrorInvalidConveration);
         ERROR_CODE_MAP.put(BaseConstants.ERR_FILE_TRANS_AUTH_FAILED, R.string.TUIKitErrorFileTransAuthFailed);
@@ -68,7 +67,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_MSG_BODY_SIZE_LIMIT, R.string.TUIKitSDKMsgBodySizeLimit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_MSG_KEY_REQ_DIFFER_RSP, R.string.TUIKitErrorSDKMsgKeyReqDifferRsp);
 
-        // 群组错误码
+        
         // Group error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_GROUP_INVALID_ID, R.string.TUIKitErrorSDKGroupInvalidID);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_GROUP_INVALID_NAME, R.string.TUIKitErrorSDKGroupInvalidName);
@@ -81,7 +80,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_GROUP_INVITE_SUPER_DENY, R.string.TUIKitErrorSDKGroupInviteSuperDeny);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_GROUP_INVITE_NO_MEMBER, R.string.TUIKitErrorSDKGroupInviteNoMember);
 
-        // 关系链错误码
+        
         // Relationship chain error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_FRIENDSHIP_INVALID_PROFILE_KEY, R.string.TUIKitErrorSDKFriendShipInvalidProfileKey);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_FRIENDSHIP_INVALID_ADD_REMARK, R.string.TUIKitErrorSDKFriendshipInvalidAddRemark);
@@ -89,7 +88,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_FRIENDSHIP_INVALID_ADD_SOURCE, R.string.TUIKitErrorSDKFriendshipInvalidAddSource);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_FRIENDSHIP_FRIEND_GROUP_EMPTY, R.string.TUIKitErrorSDKFriendshipFriendGroupEmpty);
 
-        // 网络错误码
+        
         // Network error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_ENCODE_FAILED, R.string.TUIKitErrorSDKNetEncodeFailed);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_DECODE_FAILED, R.string.TUIKitErrorSDKNetDecodeFailed);
@@ -111,15 +110,17 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_WAIT_INQUEUE_TIMEOUT, R.string.TUIKitErrorSDKNetWaitInQueueTimeout);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_WAIT_SEND_TIMEOUT, R.string.TUIKitErrorSDKNetWaitSendTimeout);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_WAIT_ACK_TIMEOUT, R.string.TUIKitErrorSDKNetWaitAckTimeut);
-
+        ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_WAIT_SEND_REMAINING_TIMEOUT, R.string.TUIKitErrorSDKWaitSendRemainingTimeout);
+        ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_PKG_SIZE_LIMIT, R.string.TUIKitErrorSDKNetPKGSizeLimit);
+        ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_WAIT_SEND_TIMEOUT_NO_NETWORK, R.string.TUIKitErrorSDKNetWaitSendTimeoutNoNetwork);
+        ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_WAIT_ACK_TIMEOUT_NO_NETWORK, R.string.TUIKitErrorSDKNetWaitAckTimeoutNoNetwork);
+        ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_NET_SEND_REMAINING_TIMEOUT_NO_NETWORK, R.string.TUIKitErrorSDKNetRemainingTimeoutNoNetwork);
         /////////////////////////////////////////////////////////////////////////////////
         //
-        //                      （二）服务端
         //                           Server error codes
         //
         /////////////////////////////////////////////////////////////////////////////////
 
-        // 网络接入层的错误码
         // Access layer error codes for network
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_SSO_CONNECT_LIMIT, R.string.TUIKitErrorSDKSVRSSOConnectLimit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_SSO_VCODE, R.string.TUIKitErrorSDKSVRSSOVCode);
@@ -146,7 +147,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_SSO_FREQ_LIMIT, R.string.TUIKitErrorSVRSSOFreqLimit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_SSO_OVERLOAD, R.string.TUIKitErrorSVRSSOOverload);
 
-        // 资源文件错误码
+        
         // Resource file error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_RES_NOT_FOUND, R.string.TUIKitErrorSVRResNotFound);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_RES_ACCESS_DENY, R.string.TUIKitErrorSVRResAccessDeny);
@@ -158,7 +159,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_RES_INVALID_FILE_MD5, R.string.TUIKitErrorSVRResInvalidFileMd5);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_RES_INVALID_PART_MD5, R.string.TUIKitErrorSVRResInvalidPartMd5);
 
-        // 后台公共错误码
+        
         // Common backend error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_COMM_INVALID_HTTP_URL, R.string.TUIKitErrorSVRCommonInvalidHttpUrl);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_COMM_REQ_JSON_PARSE_FAILED, R.string.TUIKitErrorSVRCommomReqJsonParseFailed);
@@ -182,7 +183,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_COMM_SENSITIVE_TEXT, R.string.TUIKitErrorSVRCommonSensitiveText);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_COMM_BODY_SIZE_LIMIT, R.string.TUIKitErrorSVRCommonBodySizeLimit);
 
-        // 账号错误码
+        
         // Account error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_ACCOUNT_USERSIG_EXPIRED, R.string.TUIKitErrorSVRAccountUserSigExpired);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_ACCOUNT_USERSIG_EMPTY, R.string.TUIKitErrorSVRAccountUserSigEmpty);
@@ -207,7 +208,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_ACCOUNT_INTERNAL_ERROR, R.string.TUIKitErrorSVRAccountInternalError);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_ACCOUNT_USER_STATUS_DISABLED, R.string.TUIKitErrorEnableUserStatusOnConsole);
 
-        // 资料错误码
+        
         // Profile error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_PROFILE_INVALID_PARAMETERS, R.string.TUIKitErrorSVRProfileInvalidParameters);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_PROFILE_ACCOUNT_MISS, R.string.TUIKitErrorSVRProfileAccountMiss);
@@ -222,7 +223,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_PROFILE_VALUE_ERROR, R.string.TUIKitErrorSVRProfileValueError);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_PROFILE_INVALID_VALUE_FORMAT, R.string.TUIKitErrorSVRProfileInvalidValueFormat);
 
-        // 关系链错误码
+        
         // Relationship chain error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS, R.string.TUIKitErrorSVRFriendshipInvalidParameters);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_INVALID_SDKAPPID, R.string.TUIKitErrorSVRFriendshipInvalidSdkAppid);
@@ -238,6 +239,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_PENDENCY_LIMIT, R.string.TUIKitErrorSVRFriendshipPendencyLimit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_BLACKLIST_LIMIT, R.string.TUIKitErrorSVRFriendshipBlacklistLimit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_PEER_FRIEND_LIMIT, R.string.TUIKitErrorSVRFriendshipPeerFriendLimit);
+        ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_ALREADY_FRIENDS, R.string.TUIKitErrorSVRFriendshipAlreadyFriends);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_IN_SELF_BLACKLIST, R.string.TUIKitErrorSVRFriendshipInSelfBlacklist);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_ALLOW_TYPE_DENY_ANY, R.string.TUIKitErrorSVRFriendshipAllowTypeDenyAny);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_IN_PEER_BLACKLIST, R.string.TUIKitErrorSVRFriendshipInPeerBlackList);
@@ -247,7 +249,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_DEL_FRIEND_SEC_RSTR, R.string.TUIKitErrorSVRFriendshipDelFriendSecRstr);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_FRIENDSHIP_ACCOUNT_NOT_FOUND_EX, R.string.TUIKirErrorSVRFriendAccountNotFoundEx);
 
-        // 最近联系人错误码
+        
         // Error codes for recent contacts
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_CONV_ACCOUNT_NOT_FOUND, R.string.TUIKirErrorSVRFriendAccountNotFoundEx);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_CONV_INVALID_PARAMETERS, R.string.TUIKitErrorSVRFriendshipInvalidParameters);
@@ -255,7 +257,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_CONV_INTERNAL_ERROR, R.string.TUIKitErrorSVRAccountInternalError);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_CONV_NET_TIMEOUT, R.string.TUIKitErrorSVRFriendshipNetTimeout);
 
-        // 消息错误码
+        
         // Message error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_MSG_PKG_PARSE_FAILED, R.string.TUIKitErrorSVRMsgPkgParseFailed);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_MSG_INTERNAL_AUTH_FAILED, R.string.TUIKitErrorSVRMsgInternalAuthFailed);
@@ -292,7 +294,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_MSG_LONGPOLLING_COUNT_LIMIT, R.string.TUIKitErrorSVRmsgLongPollingCountLimit);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT, R.string.TUIKitErrorUnsupporInterface);
 
-        // 群组错误码
+        
         // Group error codes
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_GROUP_INTERNAL_ERROR, R.string.TUIKitErrorSVRAccountInternalError);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_GROUP_API_NAME_ERROR, R.string.TUIKitErrorSVRGroupApiNameError);
@@ -329,7 +331,6 @@ public class ErrorMessageConverter {
 
         /////////////////////////////////////////////////////////////////////////////////
         //
-        //                      （三）V3版本错误码，待废弃
         //                           IM SDK V3 error codes,to be abandoned
         //
         /////////////////////////////////////////////////////////////////////////////////
@@ -342,17 +343,17 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_TLSSDK_NOT_INITIALIZED, R.string.TUIKitErrorTLSSDKNotInitialized);
         ERROR_CODE_MAP.put(BaseConstants.ERR_TLSSDK_USER_NOT_FOUND, R.string.TUIKitErrorTLSSDKUserNotFound);
         //        errorCodeMap.put(BaseConstants.ERR_BIND_FAIL_UNKNOWN:
-        //            return @"QALSDK未知原因BIND失败";
+        
         //        errorCodeMap.put(BaseConstants.ERR_BIND_FAIL_NO_SSOTICKET:
-        //            return @"缺少SSO票据";
+        
         //        errorCodeMap.put(BaseConstants.ERR_BIND_FAIL_REPEATD_BIND:
-        //            return @"重复BIND";
+        
         //        errorCodeMap.put(BaseConstants.ERR_BIND_FAIL_TINYID_NULL:
-        //            return @"tiny为空";
+        
         //        errorCodeMap.put(BaseConstants.ERR_BIND_FAIL_GUID_NULL:
-        //            return @"guid为空";
+        
         //        errorCodeMap.put(BaseConstants.ERR_BIND_FAIL_UNPACK_REGPACK_FAILED:
-        //            return @"解注册包失败";
+        
         ERROR_CODE_MAP.put(BaseConstants.ERR_BIND_FAIL_REG_TIMEOUT, R.string.TUIKitErrorBindFaildRegTimeout);
         ERROR_CODE_MAP.put(BaseConstants.ERR_BIND_FAIL_ISBINDING, R.string.TUIKitErrorBindFaildIsBinding);
         ERROR_CODE_MAP.put(BaseConstants.ERR_PACKET_FAIL_UNKNOWN, R.string.TUIKitErrorPacketFailUnknown);
@@ -404,9 +405,9 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_REQUEST_NO_NET_ONREQ, R.string.TUIKitErrorRequestNoNetOnReq);
         ERROR_CODE_MAP.put(BaseConstants.ERR_REQUEST_NO_NET_ONRSP, R.string.TUIKitErrorRequestNoNetOnRsp);
         //        errorCodeMap.put(BaseConstants.ERR_REQUEST_FAILED:
-        //            return @"QAL执行失败";
+        
         //        errorCodeMap.put(BaseConstants.ERR_REQUEST_INVALID_REQ:
-        //            return @"请求非法，toMsgService非法";
+        
         ERROR_CODE_MAP.put(BaseConstants.ERR_REQUEST_OVERLOADED, R.string.TUIKitErrorRequestOnverLoaded);
         ERROR_CODE_MAP.put(BaseConstants.ERR_REQUEST_KICK_OFF, R.string.TUIKitErrorReqKickOff);
         ERROR_CODE_MAP.put(BaseConstants.ERR_REQUEST_SERVICE_SUSPEND, R.string.TUIKitErrorReqServiceSuspend);

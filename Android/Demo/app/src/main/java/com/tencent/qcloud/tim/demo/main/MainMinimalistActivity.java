@@ -40,9 +40,8 @@ import com.tencent.qcloud.tim.demo.profile.ProfileMinimalistFragment;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
-import com.tencent.qcloud.tuikit.timcommon.BuildConfig;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -122,14 +121,14 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
-                    boolean enableRecentCalls = intent.getBooleanExtra(TUIKitConstants.MINIMALIST_RECENT_CALLS_ENABLE, true);
+                    boolean enableRecentCalls = intent.getBooleanExtra(Constants.MINIMALIST_RECENT_CALLS_ENABLE, true);
                     onRecentCallsStatusChanged(enableRecentCalls);
                 }
             }
         };
 
         IntentFilter recentCallsFilter = new IntentFilter();
-        recentCallsFilter.addAction(TUIKitConstants.RECENT_CALLS_ENABLE_ACTION);
+        recentCallsFilter.addAction(Constants.RECENT_CALLS_ENABLE_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(recentCallsReceiver, recentCallsFilter);
     }
 
@@ -459,7 +458,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             });
         }
     }
-
 
     private void registerUnreadListener() {
         V2TIMManager.getFriendshipManager().addFriendListener(friendshipListener);

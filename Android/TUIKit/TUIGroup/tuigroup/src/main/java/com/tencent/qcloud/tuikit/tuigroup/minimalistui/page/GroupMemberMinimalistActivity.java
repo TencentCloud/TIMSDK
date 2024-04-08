@@ -14,7 +14,7 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.minimalistui.interfaces.IGroupMemberListener;
+import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.minimalistui.widget.GroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.presenter.GroupInfoPresenter;
 import java.util.ArrayList;
@@ -88,29 +88,6 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
                 finish();
             }
 
-            @Override
-            public void forwardListMember(GroupInfo info) {}
-
-            @Override
-            public void forwardAddMember(GroupInfo info) {
-                Bundle param = new Bundle();
-                param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
-                param.putBoolean(TUIGroupConstants.Selection.SELECT_FRIENDS, true);
-                ArrayList<String> selectedList = new ArrayList<>();
-                for (GroupMemberInfo memberInfo : info.getMemberDetails()) {
-                    selectedList.add(memberInfo.getAccount());
-                }
-                param.putStringArrayList(TUIGroupConstants.Selection.SELECTED_LIST, selectedList);
-                TUICore.startActivity(GroupMemberMinimalistActivity.this, "StartGroupMemberSelectMinimalistActivity", param, 1);
-            }
-
-            @Override
-            public void forwardDeleteMember(GroupInfo info) {
-                Bundle param = new Bundle();
-                param.putString(TUIGroupConstants.Group.GROUP_ID, info.getId());
-                param.putBoolean(TUIGroupConstants.Selection.SELECT_FOR_CALL, true);
-                TUICore.startActivity(GroupMemberMinimalistActivity.this, "StartGroupMemberSelectMinimalistActivity", param, 2);
-            }
         });
 
         mMemberLayout.setOnGroupMemberClickListener(new GroupMemberLayout.OnGroupMemberClickListener() {

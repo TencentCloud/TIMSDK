@@ -387,6 +387,6 @@ public class UserManagementPanel extends BaseBottomDialog {
                         });
                     }
                 })
-                .showDialog(activity.getSupportFragmentManager(), "showTransferOwnerDialog");
+                .showDialog(activity, "showTransferOwnerDialog");
     }
 }

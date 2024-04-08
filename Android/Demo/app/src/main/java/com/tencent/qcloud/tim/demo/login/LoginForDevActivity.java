@@ -20,7 +20,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.tencent.qcloud.tim.demo.DemoApplication;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
@@ -38,11 +37,7 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 
 /**
- * Demo的登录Activity
- * 用户名可以是任意非空字符，但是前提需要按照下面文档修改代码里的 SDKAPPID 与 PRIVATEKEY
- * https://github.com/tencentyun/TIMSDK/tree/master/Android
- * 
- * 
+ *
  * Login Activity
  * The username can be any non-blank character, but the premise is to modify the SDKAPPID and PRIVATEKEY in the code according to the following documents:
  * https://github.com/tencentyun/TIMSDK/tree/master/Android
@@ -109,7 +104,7 @@ public class LoginForDevActivity extends BaseLightActivity {
         }
 
         mLoginView = findViewById(R.id.login_btn);
-        // 用户名可以是任意非空字符，但是前提需要按照下面文档修改代码里的 SDKAPPID 与 PRIVATEKEY
+        
         // https://github.com/tencentyun/TIMSDK/tree/master/Android
         mUserAccount = findViewById(R.id.login_user);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -121,7 +116,7 @@ public class LoginForDevActivity extends BaseLightActivity {
                 UserInfo.getInstance().setUserId(mUserAccount.getText().toString());
                 String userSig = GenerateTestUserSig.genTestUserSig(mUserAccount.getText().toString());
                 UserInfo.getInstance().setUserSig(userSig);
-                TUILogin.login(DemoApplication.instance(), AppConfig.DEMO_SDK_APPID, mUserAccount.getText().toString(), userSig, TUIUtils.getLoginConfig(), new TUICallback() {
+                TUILogin.login(LoginForDevActivity.this, AppConfig.DEMO_SDK_APPID, mUserAccount.getText().toString(), userSig, TUIUtils.getLoginConfig(), new TUICallback() {
                     @Override
                     public void onError(final int code, final String desc) {
                         runOnUiThread(new Runnable() {
@@ -138,7 +133,7 @@ public class LoginForDevActivity extends BaseLightActivity {
                         UserInfo.getInstance().setAutoLogin(true);
                         UserInfo.getInstance().setDebugLogin(true);
                         Intent intent;
-                        if (AppConfig.DEMO_UI_STYLE == 0) {
+                        if (AppConfig.DEMO_UI_STYLE == AppConfig.DEMO_UI_STYLE_CLASSIC) {
                             intent = new Intent(LoginForDevActivity.this, MainActivity.class);
                         } else {
                             intent = new Intent(LoginForDevActivity.this, MainMinimalistActivity.class);
@@ -200,7 +195,7 @@ public class LoginForDevActivity extends BaseLightActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (AppConfig.DEMO_UI_STYLE == 0) {
+        if (AppConfig.DEMO_UI_STYLE == AppConfig.DEMO_UI_STYLE_CLASSIC) {
             modifyTheme.setVisibility(View.VISIBLE);
             styleTv.setText(getString(R.string.style_classic));
         } else {

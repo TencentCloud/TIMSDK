@@ -15,56 +15,45 @@ public class CallModel implements Cloneable, Serializable {
     private static final String TAG = CallModel.class.getSimpleName();
 
     /**
-     * 系统错误
      *
      * system error
      */
     public static final int VIDEO_CALL_ACTION_ERROR = -1;
     /**
-     * 未知信令
      *
      * unknown signaling
      */
     public static final int VIDEO_CALL_ACTION_UNKNOWN = 0;
     /**
-     * 正在呼叫
      *
      * calling
      */
     public static final int VIDEO_CALL_ACTION_DIALING = 1;
     /**
-     * 发起人取消
      *
      * initiator cancellation
      */
     public static final int VIDEO_CALL_ACTION_SPONSOR_CANCEL = 2;
     /**
-     * 拒接电话
      *
      * reject the call
      */
     public static final int VIDEO_CALL_ACTION_REJECT = 3;
     /**
-     * 无人接听
      *
      * no one heard
      */
     public static final int VIDEO_CALL_ACTION_SPONSOR_TIMEOUT = 4;
     /**
-     * 挂断
      *
      * hang up
      */
     public static final int VIDEO_CALL_ACTION_HANGUP = 5;
     /**
-     * 电话占线
-     *
      * phone busy
      */
     public static final int VIDEO_CALL_ACTION_LINE_BUSY = 6;
     /**
-     * 接听电话
-     *
      * answer the phone
      */
     public static final int VIDEO_CALL_ACTION_ACCEPT = 7;
@@ -83,39 +72,26 @@ public class CallModel implements Cloneable, Serializable {
     @SerializedName("version") public int version = 0;
 
     /**
-     * 表示一次通话的唯一ID
-     *
      * call ID
      */
     @SerializedName("call_id") public String callId;
 
     /**
-     * TRTC的房间号
-     *
      * room ID
      */
     @SerializedName("room_id") public int roomId = 0;
 
     /**
-     * IM的群组id，在群组内发起通话时使用
-     *
      * group ID
      */
     @SerializedName("group_id") public String groupId = "";
 
     /**
-     * 信令动作
-     *
      * signaling action
      */
     @SerializedName("action") public int action = VIDEO_CALL_ACTION_UNKNOWN;
 
     /**
-     * 通话类型
-     * 0-未知
-     * 1-语音通话
-     * 2-视频通话
-     *
      * call type
      * 0-unkown
      * 1-audio call
@@ -124,8 +100,6 @@ public class CallModel implements Cloneable, Serializable {
     @SerializedName("call_type") public int callType = 0;
 
     /**
-     * 正在邀请的列表
-     *
      * Inviting list
      */
     @SerializedName("invited_list") public List<String> invitedList;

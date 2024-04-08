@@ -50,12 +50,6 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条自定义表情的消息
-     *
-     * @param groupId  自定义表情所在的表情组id
-     * @param faceName 表情的名称
-     * @return
-     *
      * Create a message with a custom emoji
      *
      * @param groupId  The expression group id where the custom expression is located
@@ -72,11 +66,10 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条图片消息
      *
      * Create a image message
      *
-     * @param imagePath 图片 path
+     * @param imagePath  path
      * @return
      */
     public static TUIMessageBean buildImageMessage(final String imagePath) {
@@ -97,15 +90,14 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条视频消息
      *
      * create a video message
      *
-     * @param imgPath   视频缩略图路径
-     * @param videoPath 视频路径
-     * @param width     视频的宽
-     * @param height    视频的高
-     * @param duration  视频的时长
+     * @param imgPath   
+     * @param videoPath 
+     * @param width     
+     * @param height    
+     * @param duration  
      * @return
      */
     public static TUIMessageBean buildVideoMessage(String imgPath, String videoPath, int width, int height, long duration) {
@@ -124,12 +116,11 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条音频消息
      *
      * create a audio message
      *
-     * @param recordPath 音频路径
-     * @param duration   音频的时长
+     * @param recordPath 
+     * @param duration   
      * @return
      */
     public static TUIMessageBean buildAudioMessage(String recordPath, int duration) {
@@ -142,11 +133,10 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条文件消息
      *
      * create a text message
      *
-     * @param fileUri 文件路径
+     * @param fileUri 
      * @return
      */
     public static TUIMessageBean buildFileMessage(Uri fileUri) {
@@ -168,11 +158,10 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条 onebyone 转发消息
      *
      * create a forward message
      *
-     * @param v2TIMMessage 要转发的消息
+     * @param v2TIMMessage 
      * @return
      */
     public static TUIMessageBean buildForwardMessage(V2TIMMessage v2TIMMessage) {
@@ -183,7 +172,6 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条 merge 转发消息
      *
      * create a merge message
      *
@@ -207,13 +195,11 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条自定义消息
-     *
      * create a custom message
      *
-     * @param data        自定义消息内容，可以是任何内容
-     * @param description 自定义消息描述内容，可以被搜索到
-     * @param extension   扩展内容
+     * @param data        ，
+     * @param description ，
+     * @param extension   
      * @return
      */
     public static TUIMessageBean buildCustomMessage(String data, String description, byte[] extension) {
@@ -228,11 +214,9 @@ public class ChatMessageBuilder {
     }
 
     /**
-     * 创建一条群消息自定义内容
-     *
      * create a custom message for group
      *
-     * @param customMessage 消息内容
+     * @param customMessage 
      * @return
      */
     public static V2TIMMessage buildGroupCustomMessage(String customMessage) {

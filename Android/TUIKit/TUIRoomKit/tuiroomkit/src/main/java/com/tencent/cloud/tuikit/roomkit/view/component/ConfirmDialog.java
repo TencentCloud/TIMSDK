@@ -99,7 +99,6 @@ public class ConfirmDialog extends Dialog {
         this.mNegativeClickListener = listener;
     }
 
-    //TODO 需要改为EventCent通知的方式
     public interface PositiveClickListener {
         void onClick();
     }

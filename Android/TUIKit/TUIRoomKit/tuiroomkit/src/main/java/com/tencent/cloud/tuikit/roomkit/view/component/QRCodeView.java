@@ -64,7 +64,6 @@ public class QRCodeView extends BaseBottomDialog implements View.OnClickListener
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        updateHeightToMatchParent();
     }
 
     @Override

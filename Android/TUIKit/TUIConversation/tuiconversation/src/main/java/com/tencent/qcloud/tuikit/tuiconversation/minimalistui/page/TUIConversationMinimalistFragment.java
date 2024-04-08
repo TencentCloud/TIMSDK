@@ -75,7 +75,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
     }
 
     private void initView() {
-        // 从布局文件中获取会话列表面板
+        
         mConversationLayout = mBaseView.findViewById(R.id.conversation_layout);
 
         presenter = new ConversationPresenter();
@@ -83,9 +83,8 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         presenter.setShowType(ConversationPresenter.SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD);
         mConversationLayout.setPresenter(presenter);
 
-        // 会话列表面板的默认UI和交互初始化
         mConversationLayout.initDefault();
-        // 通过API设置ConversataonLayout各种属性的样例，开发者可以打开注释，体验效果
+        
         //        ConversationLayoutSetting.customizeConversation(mConversationLayout);
         isShowReadButton = false;
         isShowReadAllButton = false;
@@ -230,7 +229,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
     }
 
     private void initPopMenuAction() {
-        // 设置长按conversation显示PopAction
+        
         List<PopMenuAction> conversationPopActions = new ArrayList<PopMenuAction>();
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.not_display));
@@ -279,11 +278,6 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         mConversationPopActions.add(action);
     }
 
-    /**
-     * 长按会话item弹框
-     * @param view 长按 view
-     * @param conversationInfo 会话数据对象
-     */
     private void showItemPopMenu(View view, final ConversationInfo conversationInfo) {
         initPopMenuAction();
 
@@ -444,7 +438,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         mBottomDialog.setCanceledOnTouchOutside(false);
         mBottomDialog.show();
         Window win = mBottomDialog.getWindow();
-        win.setGravity(Gravity.BOTTOM); // 这里控制弹出的位置
+        win.setGravity(Gravity.BOTTOM); 
         win.getDecorView().setPaddingRelative(0, 0, 0, 0);
         WindowManager.LayoutParams lp = win.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;

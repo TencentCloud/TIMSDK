@@ -20,7 +20,7 @@ public class CallModel implements Cloneable, Serializable {
     private static final String TAG = CallModel.class.getSimpleName();
 
     /**
-     * 通话协议类型
+     * 
      * The protocol type of calls
      */
     public static final int CALL_PROTOCOL_TYPE_UNKNOWN = 0;
@@ -35,7 +35,7 @@ public class CallModel implements Cloneable, Serializable {
     public static final int CALL_PROTOCOL_TYPE_SWITCH_TO_AUDIO_COMFIRM = 9;
 
     /**
-     * 通话流媒体类型
+     * 
      * The stream media type of calls
      */
     public static final int CALL_STREAM_MEDIA_TYPE_UNKNOWN = 0;
@@ -43,7 +43,7 @@ public class CallModel implements Cloneable, Serializable {
     public static final int CALL_STREAM_MEDIA_TYPE_VIDEO = 2;
 
     /**
-     * 通话的参与者样式
+     * 
      * The participant style of calls
      */
     public static final int CALL_PARTICIPANT_TYPE_UNKNOWN = 0;
@@ -51,7 +51,7 @@ public class CallModel implements Cloneable, Serializable {
     public static final int CALL_PARTICIPANT_TYPE_GROUP = 2;
 
     /**
-     * 通话人员的角色
+     * 
      * The role of participant
      */
     public static final int CALL_PARTICIPANT_ROLE_UNKNOWN = 0;
@@ -65,7 +65,6 @@ public class CallModel implements Cloneable, Serializable {
     public static final int CALL_MESSAGE_DIRECTION_OUTGOING = 1;
 
     /**
-     * 音视频通话消息的 UI 外观
      * The style of voice-video-call message in TUIChat
      */
     public static final int CHAT_CALLING_MESSAGE_APPEARANCE_DETAILS = 0;

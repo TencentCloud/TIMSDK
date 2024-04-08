@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuicore.util;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +12,14 @@ import com.tencent.qcloud.tuicore.ServiceInitializer;
 public class ToastUtil {
     private static final Handler handler = new Handler(Looper.getMainLooper());
     private static Toast toast;
+    private static boolean enableToast = true;
+
+    /**
+     * Whether to allow default pop-up prompts inside TUIKit
+     */
+    public static void setEnableToast(boolean enableToast) {
+        ToastUtil.enableToast = enableToast;
+    }
 
     public static void toastLongMessage(final String message) {
         toastMessage(message, true, Gravity.BOTTOM);
@@ -35,6 +42,9 @@ public class ToastUtil {
     }
 
     private static void toastMessage(final String message, boolean isLong, int gravity) {
+        if (!enableToast) {
+            return;
+        }
         handler.post(new Runnable() {
             @Override
             public void run() {

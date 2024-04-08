@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tuiroomkit_root_user_management_panel"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/tuiroomkit_user_management_panel_height">
+    android:layout_height="match_parent">
 
     <View
         android:id="@+id/tuiroomkit_panel_hide"

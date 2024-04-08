@@ -12,6 +12,8 @@ import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import com.tencent.liteav.audio.TXAudioEffectManager.AudioMusicParam
 import com.tencent.qcloud.tuicore.TUIConfig
+import com.tencent.qcloud.tuicore.TUIConstants
+import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.util.SPUtils
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
@@ -48,7 +50,7 @@ class CallingBellFeature(context: Context) {
                 }
 
                 TUICallDefine.Status.Waiting -> {
-                    if (DeviceUtils.isAppRunningForeground(TUIConfig.getAppContext())) {
+                    if (DeviceUtils.isAppRunningForeground(TUIConfig.getAppContext()) || isNeedPlayRing()) {
                         startRing()
                     }
                 }
@@ -58,6 +60,13 @@ class CallingBellFeature(context: Context) {
                 }
             }
         }
+    }
+
+    private fun isNeedPlayRing(): Boolean {
+        val pushBrandId =
+            TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_GET_PUSH_BRAND_ID, null)
+        return TUICore.getService(TUIConstants.TIMPush.SERVICE_NAME) != null
+                && pushBrandId == TUIConstants.DeviceInfo.BRAND_GOOGLE_ELSE
     }
 
     private fun startRing() {

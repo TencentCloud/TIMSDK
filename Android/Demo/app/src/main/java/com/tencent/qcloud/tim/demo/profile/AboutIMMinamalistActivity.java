@@ -1,11 +1,9 @@
 package com.tencent.qcloud.tim.demo.profile;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import androidx.appcompat.app.AlertDialog;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.utils.Constants;

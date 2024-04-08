@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 参与换肤的属性 -->
     <attr name="text_theme_color" format="reference|color"/>
     <attr name="title_refresh" format="reference"/>
 

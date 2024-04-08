@@ -78,7 +78,7 @@ public class TopicBean implements Serializable, ITopicBean {
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.V2TIMMESSAGE, lastMessage);
         String lastMsgDisplayString = (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
-        // 获取要显示的字符
+        
         // Get the characters to display
         if (lastMsgDisplayString != null) {
             lastMessageAbstract = Html.fromHtml(lastMsgDisplayString);

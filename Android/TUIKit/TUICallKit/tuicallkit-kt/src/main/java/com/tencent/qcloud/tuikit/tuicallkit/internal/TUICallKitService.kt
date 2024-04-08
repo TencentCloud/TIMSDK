@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCaller
 import com.tencent.qcloud.tuicore.TUIConstants
@@ -11,16 +13,17 @@ import com.tencent.qcloud.tuicore.TUIConstants.TUICalling.ObjectFactory.RecentCa
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification
+import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory
 import com.tencent.qcloud.tuicore.interfaces.ITUIService
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo
-import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit.Companion.createInstance
+import com.tencent.qcloud.tuikit.tuicallkit.extensions.joiningroupcall.JoinInGroupCallViewModel
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.recents.RecentCallsFragment
 import org.json.JSONException
 import org.json.JSONObject
@@ -28,12 +31,17 @@ import org.json.JSONObject
 class TUICallKitService private constructor(context: Context) : ITUINotification, ITUIService, ITUIExtension,
     ITUIObjectFactory {
     private var appContext: Context
+    private var joinInGroupCallViewModel: JoinInGroupCallViewModel? = null
 
     init {
         appContext = context
         TUICore.registerEvent(
             TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED,
             TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, this
+        )
+        TUICore.registerEvent(
+            TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_KEY,
+            TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_SUB_KEY, this
         )
 
         TUICore.registerService(TUIConstants.TUICalling.SERVICE_NAME, this)
@@ -47,8 +55,8 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, this)
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.MINIMALIST_EXTENSION_ID, this)
 
-
         TUICore.registerObjectFactory(TUIConstants.TUICalling.ObjectFactory.FACTORY_NAME, this)
+        TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatViewTopAreaExtension.EXTENSION_ID, this)
     }
 
     override fun onNotifyEvent(key: String?, subKey: String?, param: Map<String, Any>?) {
@@ -61,6 +69,22 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
             TUICallKit.createInstance(appContext)
             adaptiveComponentReport()
             setExcludeFromHistoryMessage()
+        }
+        if (TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_KEY == key
+            && TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_SUB_KEY == subKey
+        ) {
+            val data =
+                param?.get(TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_PUSH_MESSAGE_KEY) as Map<String, String>
+            Log.i(TAG, "onNotifyEvent: callOfflineData : $data")
+
+            val map = HashMap<String, Any?>()
+            map[TUIConstants.TIMPush.NOTIFICATION.PUSH_ID] = data[TUIConstants.TIMPush.NOTIFICATION.PUSH_ID]
+            map[TUIConstants.TIMPush.NOTIFICATION.PUSH_EVENT_TIME_KEY] = System.currentTimeMillis() / 1000
+            map[TUIConstants.TIMPush.NOTIFICATION.PUSH_EVENT_TYPE_KEY] = 0
+
+            TUICore.callService(
+                TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_REPORT_NOTIFICATION_CLICKED, map
+            )
         }
     }
 
@@ -110,30 +134,61 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         }
     }
 
+    override fun onRaiseExtension(extensionID: String?, parentView: View?, param: MutableMap<String, Any>?): Boolean {
+        if (extensionID != TUIConstants.TUIChat.Extension.ChatViewTopAreaExtension.EXTENSION_ID || param == null) {
+            return false
+        }
+
+        val isGroupChat = param[TUIConstants.TUIChat.Extension.ChatViewTopAreaExtension.IS_GROUP] as? Boolean
+        if (isGroupChat == null || !isGroupChat) {
+            return false
+        }
+
+        val groupId = param[TUIConstants.TUIChat.Extension.ChatViewTopAreaExtension.CHAT_ID] as? String
+        if (groupId.isNullOrEmpty()) {
+            return false
+        }
+
+        if (parentView !is ViewGroup) {
+            return false
+        }
+        parentView.removeAllViews()
+
+        Log.i(TAG, "JoinInGroupCall, groupId: $groupId")
+
+        val callViewModel = getJoinInGroupCallViewModel()
+        callViewModel.setParentView(parentView)
+        callViewModel.getGroupAttributes(groupId)
+        return true
+    }
+
+    private fun getJoinInGroupCallViewModel(): JoinInGroupCallViewModel {
+        if (joinInGroupCallViewModel == null) {
+            joinInGroupCallViewModel = JoinInGroupCallViewModel(appContext)
+        }
+        return joinInGroupCallViewModel as JoinInGroupCallViewModel
+    }
+
     override fun onGetExtension(extensionID: String?, param: Map<String?, Any?>?): List<TUIExtensionInfo?>? {
         if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID)) {
             return getClassicChatInputMoreExtension(param)
         } else if (TextUtils.equals(
-                extensionID,
-                TUIConstants.TUIGroup.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID
+                extensionID, TUIConstants.TUIGroup.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID
             )
         ) {
             return getMinimalistGroupProfileExtension(param)
         } else if (TextUtils.equals(
-                extensionID,
-                TUIConstants.TUIContact.Extension.FriendProfileItem.CLASSIC_EXTENSION_ID
+                extensionID, TUIConstants.TUIContact.Extension.FriendProfileItem.CLASSIC_EXTENSION_ID
             )
         ) {
             return getClassicFriendProfileExtension(param)
         } else if (TextUtils.equals(
-                extensionID,
-                TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID
+                extensionID, TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID
             )
         ) {
             return getMinimalistFriendProfileExtension(param)
         } else if (TextUtils.equals(
-                extensionID,
-                TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.MINIMALIST_EXTENSION_ID
+                extensionID, TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.MINIMALIST_EXTENSION_ID
             )
         ) {
             return getMinimalistChatNavigationMoreExtension(param)

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 颜色规范 start -->
     <color name="core_light_bg_title_text_color_serious">#FF000000</color>
     <color name="core_light_bg_primary_text_color_serious">#FF444444</color>
     <color name="core_light_bg_secondary_text_color_serious">#FF888888</color>
@@ -23,6 +22,5 @@
     <color name="core_btn_normal_color_serious">#FF0052FF</color>
     <color name="core_btn_pressed_color_serious">#FF0049E4</color>
     <color name="core_btn_disable_color_serious">#4D0052FF</color>
-    <!-- 颜色规范 end -->
 
 </resources>

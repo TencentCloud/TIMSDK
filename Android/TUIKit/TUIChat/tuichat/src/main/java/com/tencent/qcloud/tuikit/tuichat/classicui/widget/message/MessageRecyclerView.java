@@ -10,12 +10,10 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
@@ -45,11 +43,12 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.page.MessageReplyDetailActivi
 import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.OnEmptySpaceClickListener;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.OnGestureScrollListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,14 +60,15 @@ import java.util.Set;
 public class MessageRecyclerView extends RecyclerView implements IMessageRecyclerView, IMessageLayout {
     private static final String TAG = MessageRecyclerView.class.getSimpleName();
 
-    // 取一个足够大的偏移保证能一次性滚动到最底部
+    
     // Take a large enough offset to scroll to the bottom at one time
     private static final int SCROLL_TO_END_OFFSET = -999999;
     private static final int SOUND_PLAY_DELAYED = 500;
 
     protected OnItemClickListener mOnItemClickListener;
     protected MessageRecyclerView.OnLoadMoreHandler mHandler;
-    protected MessageRecyclerView.OnEmptySpaceClickListener mEmptySpaceClickListener;
+    protected OnEmptySpaceClickListener mEmptySpaceClickListener;
+    protected OnGestureScrollListener onGestureScrollListener;
     protected MessageAdapter mAdapter;
     protected LinearLayoutManager linearLayoutManager;
     protected List<ChatPopMenu.ChatPopMenuAction> mPopActions = new ArrayList<>();
@@ -150,6 +150,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 }
                 return false;
             }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                if (onGestureScrollListener != null) {
+                    onGestureScrollListener.onScroll(e1, e2, distanceX, distanceY);
+                }
+                return super.onScroll(e1, e2, distanceX, distanceY);
+            }
         };
 
         GestureDetector gestureDetector = new GestureDetector(getContext(), gestureListener);
@@ -181,12 +189,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         mChatPopMenu = new ChatPopMenu(getContext());
         mChatPopMenu.setMessageBean(messageInfo);
-        mChatPopMenu.setShowFaces(TUIChatConfigs.getConfigs().getGeneralConfig().isEnablePopMenuEmojiReactAction());
+        mChatPopMenu.setShowFaces(TUIChatConfigs.getGeneralConfig().isEnablePopMenuEmojiReactAction());
         mChatPopMenu.setChatPopMenuActionList(mPopActions);
 
         int[] location = new int[2];
         getLocationOnScreen(location);
-        mChatPopMenu.setEmptySpaceClickListener(new MessageRecyclerView.OnEmptySpaceClickListener() {
+        mChatPopMenu.setEmptySpaceClickListener(new OnEmptySpaceClickListener() {
             @Override
             public void onClick() {
                 if (mAdapter != null) {
@@ -451,12 +459,12 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         this.mHandler = mHandler;
     }
 
-    public OnEmptySpaceClickListener getEmptySpaceClickListener() {
-        return mEmptySpaceClickListener;
-    }
-
     public void setEmptySpaceClickListener(OnEmptySpaceClickListener mEmptySpaceClickListener) {
         this.mEmptySpaceClickListener = mEmptySpaceClickListener;
+    }
+
+    public void setOnGestureScrollListener(OnGestureScrollListener onGestureScrollListener) {
+        this.onGestureScrollListener = onGestureScrollListener;
     }
 
     public void setPopActionClickListener(OnChatPopActionClickListener listener) {
@@ -582,11 +590,8 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                     mOnItemClickListener.onTextSelected(view, position, messageInfo);
                 }
             }
-
         });
     }
-
-
 
     private void onSoundMessageClicked(SoundMessageBean messageBean) {
         soundPlayHandler.removeCallbacksAndMessages(null);
@@ -949,7 +954,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     }
 
     public interface OnLoadMoreHandler {
-
         void displayBackToNewMessage(boolean display, String messageId, int count);
 
         void loadMessageFinish();
@@ -957,7 +961,4 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         void scrollMessageFinish();
     }
 
-    public interface OnEmptySpaceClickListener {
-        void onClick();
-    }
 }

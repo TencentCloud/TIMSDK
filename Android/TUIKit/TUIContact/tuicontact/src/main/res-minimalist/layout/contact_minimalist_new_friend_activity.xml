@@ -27,6 +27,6 @@
         android:visibility="gone"
         android:text="@string/contact_no_new_friend_application"
         tools:visibility="visible"
-        tools:text="暂无群聊"/>
+        tools:text="No group"/>
 
 </LinearLayout>

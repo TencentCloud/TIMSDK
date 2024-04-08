@@ -29,9 +29,9 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 public class CameraActivity extends FragmentActivity {
     private static final String TAG = CameraActivity.class.getSimpleName();
 
-    public static final int BUTTON_STATE_ONLY_CAPTURE = 0x101; // 只能拍照
-    public static final int BUTTON_STATE_ONLY_RECORDER = 0x102; // 只能录像
-    public static final int BUTTON_STATE_BOTH = 0x103; // 两者都可以
+    public static final int BUTTON_STATE_ONLY_CAPTURE = 0x101; 
+    public static final int BUTTON_STATE_ONLY_RECORDER = 0x102; 
+    public static final int BUTTON_STATE_BOTH = 0x103; 
     private CameraView cameraView;
 
     @Override

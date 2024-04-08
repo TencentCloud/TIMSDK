@@ -23,7 +23,7 @@
             android:textSize="@dimen/core_popup_card_title_size"
             android:textColor="#000000"
             android:text="@string/product_card_input_info"
-            tool:text="弹窗标题"/>
+            tool:text="Title"/>
 
         <TextView
             android:id="@+id/tv_close"
@@ -60,7 +60,7 @@
             android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="@dimen/core_popup_card_edit_height"
-            tool:text="测试测试测试测试测试测试测试测试测试测试测试测试"/>
+            tool:text="TESTTESTTESTTESTTESTTESTTESTTESTTESTTEST"/>
     </LinearLayout>
 
     <LinearLayout

@@ -28,7 +28,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // 主题资源文件夹
     sourceSets {
         main {
             res.srcDirs += "src/main/res-minimalistui"

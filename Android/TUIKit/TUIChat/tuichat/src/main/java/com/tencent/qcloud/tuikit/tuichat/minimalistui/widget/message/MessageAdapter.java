@@ -4,10 +4,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
+import com.tencent.qcloud.tuikit.timcommon.interfaces.UserFaceUrlCache;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
@@ -22,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdapter, ICommonMessageAdapter {
     private static final String TAG = MessageAdapter.class.getSimpleName();
@@ -42,6 +46,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
 
     private ChatPresenter presenter;
     private BaseFragment fragment;
+    private UserFaceUrlCache faceUrlCache;
 
     public void setPresenter(ChatPresenter chatPresenter) {
         this.presenter = chatPresenter;
@@ -227,6 +232,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 public void onMessageClick(View view, TUIMessageBean messageInfo) {
                     changeCheckedStatus(messageBean);
                 }
+
+                @Override
+                public void onMessageReadStatusClick(View view, TUIMessageBean messageBean) {
+                    changeCheckedStatus(messageBean);
+                }
             });
 
             if (baseHolder.msgContentFrame != null) {
@@ -341,10 +351,10 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE) {
                 notifyDataSetChanged();
             } else if (type == IMessageRecyclerView.DATA_CHANGE_TYPE_ADD_FRONT) {
-                // 加载条目为数0，只更新动画
+                
                 // The number of loaded entries is 0, only the animation is updated
                 if (value != 0) {
-                    // 加载过程中有可能之前第一条与新加载的最后一条的时间间隔不超过5分钟，时间条目需去掉，所以这里的刷新要多一个条目
+                    
                     // During the loading process, it is possible that the time interval between the first item before
                     // and the last item newly loaded is not more than 5 minutes, and the time entry needs to be removed,
                     // so the refresh here needs one more entry
@@ -501,6 +511,30 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         }
 
         return new ArrayList<>(mDataSource.subList(first - 1, last - 1));
+    }
+
+    @Override
+    public UserFaceUrlCache getUserFaceUrlCache() {
+        if (faceUrlCache == null) {
+            faceUrlCache = new UserFaceUrlCache() {
+                final Map<String, String> map = new HashMap();
+
+                {
+                    map.put(TUILogin.getLoginUser(), TUILogin.getFaceUrl());
+                }
+
+                @Override
+                public String getCachedFaceUrl(String userID) {
+                    return map.get(userID);
+                }
+
+                @Override
+                public void pushFaceUrl(String userID, String faceUrl) {
+                    map.put(userID, faceUrl);
+                }
+            };
+        }
+        return faceUrlCache;
     }
 
     public interface OnCheckListChangedListener {

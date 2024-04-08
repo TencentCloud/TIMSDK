@@ -6,7 +6,6 @@ import android.text.TextUtils
 import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
-import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuicore.util.SPUtils
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.TUICommonDefine
@@ -20,7 +19,6 @@ import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
-import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
 
 class TUICallState {
@@ -127,14 +125,7 @@ class TUICallState {
             selfUser.get().callRole.set(TUICallDefine.Role.Called)
             selfUser.get().callStatus.set(TUICallDefine.Status.Waiting)
 
-            val hasBgPermission = PermissionRequester.newInstance(PermissionRequester.BG_START_PERMISSION).has()
-            val isAppInBackground: Boolean = !DeviceUtils.isAppRunningForeground(TUIConfig.getAppContext())
-
-            if (isAppInBackground && !hasBgPermission) {
-                TUILog.w(TAG, "App is in background")
-                return
-            }
-            TUICore.notifyEvent(Constants.EVENT_TUICALLKIT_CHANGED, Constants.EVENT_START_ACTIVITY, HashMap())
+            TUICore.notifyEvent(Constants.EVENT_TUICALLKIT_CHANGED, Constants.EVENT_SHOW_INCOMING_VIEW, HashMap())
         }
 
         override fun onCallCancelled(callerId: String?) {
@@ -157,7 +148,9 @@ class TUICallState {
                 EngineManager.instance.selectAudioPlaybackDevice(instance.audioPlayoutDevice.get())
             }
             roomId.set(room)
-            selfUser.get().callStatus.set(TUICallDefine.Status.Accept)
+            if (selfUser.get().callStatus.get() != TUICallDefine.Status.Accept) {
+                selfUser.get().callStatus.set(TUICallDefine.Status.Accept)
+            }
             instance.reverse1v1CallRenderView = true
             if (isMicrophoneMute.get()) {
                 EngineManager.instance.closeMicrophone()
@@ -237,7 +230,7 @@ class TUICallState {
             if (userId.isNullOrEmpty()) {
                 return
             }
-
+            ToastUtil.toastShortMessage(TUIConfig.getAppContext().getString(R.string.tuicallkit_text_line_busy))
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)

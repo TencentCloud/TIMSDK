@@ -12,15 +12,14 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserListPanel;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,8 @@ public class UserListViewModel
         implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
     private static final String TAG             = "UserListViewModel";
     private static final int    SEAT_INDEX      = -1;
-    private static final int    INVITE_TIME_OUT = 0;
+
+    private static final int TIME_OUT_60_S = 60;
 
     private final Context       mContext;
     private final RoomStore     mRoomStore;
@@ -159,7 +159,6 @@ public class UserListViewModel
             return;
         }
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
-        mUserListView.toastForAllVideoDisableState(isDisable);
         if (mRoomStore.userModel.getRole() != TUIRoomDefine.Role.GENERAL_USER) {
             mUserListView.updateMuteVideoView(isDisable);
         }
@@ -170,7 +169,6 @@ public class UserListViewModel
             return;
         }
         boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
-        mUserListView.toastForAllAudioDisableState(isDisable);
         if (mRoomStore.userModel.getRole() != TUIRoomDefine.Role.GENERAL_USER) {
             mUserListView.updateMuteAudioView(isDisable);
         }
@@ -285,17 +283,18 @@ public class UserListViewModel
         if (userEntity == null) {
             return;
         }
+
         RoomEngineManager.sharedInstance()
-                .takeUserOnSeatByAdmin(SEAT_INDEX, userId, INVITE_TIME_OUT, new TUIRoomDefine.RequestCallback() {
+                .takeUserOnSeatByAdmin(SEAT_INDEX, userId, TIME_OUT_60_S, new TUIRoomDefine.RequestCallback() {
                     @Override
                     public void onAccepted(String requestId, String userId) {
-                        ToastUtil.toastShortMessageCenter(
+                        RoomToast.toastShortMessageCenter(
                                 mContext.getString(R.string.tuiroomkit_accept_invite, userEntity.getUserName()));
                     }
 
                     @Override
                     public void onRejected(String requestId, String userId, String message) {
-                        ToastUtil.toastShortMessageCenter(
+                        RoomToast.toastShortMessageCenter(
                                 mContext.getString(R.string.tuiroomkit_reject_invite, userEntity.getUserName()));
                     }
 
@@ -306,7 +305,9 @@ public class UserListViewModel
 
                     @Override
                     public void onTimeout(String requestId, String userId) {
-                        Log.e(TAG, "takeUserOnSeatByAdmin onTimeout userId : " + userId);
+                        Log.w(TAG, "takeUserOnSeatByAdmin onTimeout userId : " + userId);
+                        RoomToast.toastShortMessageCenter(
+                                mContext.getString(R.string.tuiroomkit_invite_take_seat_time_out, userEntity.getUserName()));
                     }
 
                     @Override
@@ -314,7 +315,7 @@ public class UserListViewModel
                         Log.e(TAG, "takeUserOnSeatByAdmin onError userId:" + userId + ",code : " + code + ",message:"
                                 + message);
                         if (code == REQUEST_ID_REPEAT) {
-                            ToastUtil.toastShortMessageCenter(
+                            RoomToast.toastShortMessageCenter(
                                     mContext.getString(R.string.tuiroomkit_toast_request_repeated));
                         }
                     }

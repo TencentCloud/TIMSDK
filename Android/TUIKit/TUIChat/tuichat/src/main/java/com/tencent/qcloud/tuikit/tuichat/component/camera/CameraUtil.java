@@ -26,7 +26,6 @@ public class CameraUtil {
     private CameraUtil() {}
 
     /**
-     * 用于检测是否具有录音权限
      *
      * Used to detect whether there is recording permission
      *
@@ -192,7 +191,7 @@ public class CameraUtil {
         Camera mCamera = null;
         try {
             mCamera = Camera.open(cameraID);
-            // setParameters 是针对魅族MX5。MX5通过Camera.open()拿到的Camera对象不为null
+            
             // setParameters is for Meizu MX5. The Camera object obtained by MX5 through Camera.open() is not null
             Camera.Parameters mParameters = mCamera.getParameters();
             mCamera.setParameters(mParameters);

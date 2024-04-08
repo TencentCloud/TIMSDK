@@ -291,14 +291,14 @@ public class ConversationPresenter {
                 List<ConversationInfo> changedConversations = new ArrayList<>();
                 for (ConversationInfo conversationInfo : loadedConversationInfoList) {
                     if (!conversationInfo.isGroup()) {
-                         String userID = conversationInfo.getId();
-                         if (data.containsKey(userID)) {
-                             ConversationUserStatusBean statusBean = data.get(userID);
-                             if (statusBean != null) {
-                                 conversationInfo.setStatusType(statusBean.getStatusType());
-                                 changedConversations.add(conversationInfo);
-                             }
-                         }
+                        String userID = conversationInfo.getId();
+                        if (data.containsKey(userID)) {
+                            ConversationUserStatusBean statusBean = data.get(userID);
+                            if (statusBean != null) {
+                                conversationInfo.setStatusType(statusBean.getStatusType());
+                                changedConversations.add(conversationInfo);
+                            }
+                        }
                     }
                 }
                 TUIConversationLog.i(TAG, "on load user status success");
@@ -335,10 +335,6 @@ public class ConversationPresenter {
         return provider.isLoadFinished();
     }
 
-    /**
-     * 有新的会话
-     * @param conversationInfoList 新的会话列表
-     */
     public void onNewConversation(List<ConversationInfo> conversationInfoList, boolean showFoldItem) {
         TUIConversationLog.i(TAG, "onNewConversation conversations:" + conversationInfoList);
 
@@ -375,7 +371,7 @@ public class ConversationPresenter {
             ConversationInfo update = iterator.next();
             for (int i = 0; i < uiSourceInfoList.size(); i++) {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
-                // 去重
+                
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
                     if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
@@ -388,7 +384,6 @@ public class ConversationPresenter {
             }
         }
 
-        // 对新增会话排序，避免插入 recyclerview 时错乱
         Collections.sort(infos);
         uiSourceInfoList.addAll(infos);
         if (adapter != null) {
@@ -412,11 +407,6 @@ public class ConversationPresenter {
         loadAndSubscribeConversationUserStatus(conversationInfoList);
     }
 
-    /**
-     * 部分会话刷新（包括多终端已读上报同步）
-     *
-     * @param conversationInfoList 需要刷新的会话列表
-     */
     public void onConversationChanged(List<ConversationInfo> conversationInfoList) {
         TUIConversationLog.i(TAG, "onConversationChanged conversations:" + conversationInfoList);
 
@@ -451,7 +441,7 @@ public class ConversationPresenter {
             ConversationInfo update = changedInfoList.get(j);
             for (int i = 0; i < uiSourceInfoList.size(); i++) {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
-                // 单个会话刷新时找到老的会话数据，替换
+                
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
                     if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
@@ -493,10 +483,10 @@ public class ConversationPresenter {
 
     private ArrayList<ConversationInfo> processHiddenConversation(List<ConversationInfo> infoList) {
         ArrayList<ConversationInfo> changedInfoList = new ArrayList<>();
-        //  1.1 UI 已加载  ui had loaded data
-        //   1.1.1 隐藏状态，则从 UI 删除  hidden status, to delete it from ui data
-        //   1.1.2 非隐藏，则收集到更新列表  not hidden status, to collect it in changed list
-        //  1.2 UI 未加载，则收集到更新列表  ui not loaded, to collect it in changed list
+        //  1.1 ui had loaded data
+        //   1.1.1 hidden status, to delete it from ui data
+        //   1.1.2 not hidden status, to collect it in changed list
+        //  1.2 ui not loaded, to collect it in changed list
         for (ConversationInfo conversationInfo : infoList) {
             int uiIndex = -1;
             for (int i = 0; i < loadedConversationInfoList.size(); i++) {
@@ -555,14 +545,14 @@ public class ConversationPresenter {
     private ArrayList<ConversationInfo> processConversationListWithFold(List<ConversationInfo> conversationInfoList) {
         ArrayList<ConversationInfo> changedInfoList = new ArrayList<>();
         ArrayList<ConversationInfo> addInfoList = new ArrayList<>();
-        // 会话列表处理：折叠列表新增/折叠列表更新替换/折叠列表删除/UI加载列表新增/UI加载列表更新替换  process conversation list: add to fold list/update fold
+        // process conversation list: add to fold list/update fold
         // list/delete from fold list/add to ui list/update in ui list
-        // 1、存在于折叠列表  exist in fold list
-        //  1.1 是折叠的，替换折叠列表中的对应会话  is folded status, replace it from fold list
-        //  1.2 非折叠的，从折叠列表删除该会话，并收集到新增列表中 is not folded status, delete it from fold list, and collect it in added list
-        // 2、不存在于折叠列表  not exist in fold list
-        //  2.1 是折叠的，插入到折叠列表，并从 UI 上找到并删除  is folded status, insert to fold list, and delete it from ui list
-        //  2.2 非折叠的，UI 上已展示的则更新，否则插入  is not folded status, if in ui list then update it, if not, insert it to ui list
+        // 1、 exist in fold list
+        //  1.1  is folded status, replace it from fold list
+        //  1.2 is not folded status, delete it from fold list, and collect it in added list
+        // 2、 not exist in fold list
+        //  2.1  is folded status, insert to fold list, and delete it from ui list
+        //  2.2  is not folded status, if in ui list then update it, if not, insert it to ui list
         for (ConversationInfo conversationInfo : conversationInfoList) {
             if (ConversationUtils.isIgnored(conversationInfo)) {
                 continue;
@@ -576,18 +566,18 @@ public class ConversationPresenter {
                 }
             }
             if (foldIndex >= 0) {
-                // 1 之前存在于折叠列表  exist in fold list
+                // 1  exist in fold list
                 if (conversationInfo.isMarkFold()) {
-                    // 1.1 仍然是折叠的，替换  if is folded, then replace
+                    // 1.1  if is folded, then replace
                     foldConversationInfoList.set(foldIndex, conversationInfo);
                 } else {
-                    // 1.2 更新为非折叠，从折叠列表删除，并插入新增列表  if if not folded, delete it from folded list, and insert to added list
+                    // 1.2  if if not folded, delete it from folded list, and insert to added list
                     foldConversationInfoList.remove(foldIndex);
                     addInfoList.add(conversationInfo);
                 }
             } else {
-                // 2 之前不存在于折叠列表  not exist in fold list
-                // UI 上判断是否展示过  if ui list exist or not
+                // 2  not exist in fold list
+                //  if ui list exist or not
                 int uiIndex = -1;
                 for (int i = 0; i < loadedConversationInfoList.size(); i++) {
                     ConversationInfo loadedInfo = loadedConversationInfoList.get(i);
@@ -597,9 +587,9 @@ public class ConversationPresenter {
                     }
                 }
                 if (conversationInfo.isMarkFold()) {
-                    // 2.1 折叠会话，则添加到折叠列表  is folded status, insert to fold list
+                    // 2.1  is folded status, insert to fold list
                     foldConversationInfoList.add(conversationInfo);
-                    // UI 上找到该会话，并移除不去展示  if find it in ui list, delete it
+                    //  if find it in ui list, delete it
                     if (uiIndex >= 0) {
                         loadedConversationInfoList.remove(uiIndex);
                         if (adapter != null) {
@@ -607,7 +597,7 @@ public class ConversationPresenter {
                         }
                     }
                 } else {
-                    // 2.2 非折叠会话，UI 上已展示则更新，未展示则插入  is not folded status, if exist in ui list then update it, if not, insert it
+                    // 2.2  is not folded status, if exist in ui list then update it, if not, insert it
                     if (uiIndex >= 0) {
                         TUIConversationLog.i(TAG, "onConversationChanged conversationInfo " + conversationInfo);
                         changedInfoList.add(conversationInfo);
@@ -617,14 +607,14 @@ public class ConversationPresenter {
                 }
             }
         }
-        // 主界面显示的折叠会话信息与折叠会话列表的处理  process fold info item and fold list in main ui
-        // 1、折叠列表有会话  fold list size > 0
-        //  1.1 排序后取出第一个非隐藏会话，并与 UI 折叠会话比较  sort list, then compare the first which not mark hidden and fold this item in ui
-        //   1.1.1 与 UI 折叠会话是同一个会话，添加到待更新列表中，并更新 UI 折叠会话  is the same conversation, insert to changed list, and replace cache info
-        //   1.1.2 与 UI 折叠会话不是一个会话，从 UI 先删除折叠的会话，添加新的折叠会话到新增列表中，并更新 UI 折叠会话  is not the same conversation, delete
-        //   the fold item from ui first, then insert it to added list and update cache info 1.1.3 UI 的不存在，则插入到新增会话列表，并赋值给 UI 折叠会话 cache
-        //   info not exist, insert it to added list, and update cache info
-        // 2、折叠列表无会话，且 UI 会话存在，则从 UI 先删除折叠的会话，然后清空 UI 会话  fold list is empty, delete fold item from ui and clear cache info
+        //  process fold info item and fold list in main ui
+        // 1、 fold list size > 0
+        //  1.1  sort list, then compare the first which not mark hidden and fold this item in ui
+        //   1.1.1  is the same conversation, insert to changed list, and replace cache info
+        //   1.1.2  is not the same conversation, delete
+        //   the fold item from ui first, then insert it to added list and update cache info
+        //   1.1.3 info not exist, insert it to added list, and update cache info
+        // 2、 fold list is empty, delete fold item from ui and clear cache info
         if (!hideFoldItem) {
             ConversationInfo firstChangedFoldInfo = getFirstFoldInfo();
             if (foldConversationInfoList.size() > 0 && firstChangedFoldInfo != null) {
@@ -641,11 +631,21 @@ public class ConversationPresenter {
                             int uiIndex = loadedConversationInfoList.indexOf(mUIFoldConversation);
                             if (uiIndex != -1) {
                                 loadedConversationInfoList.remove(uiIndex);
-                                if (adapter != null) {
-                                    adapter.onItemRemoved(uiIndex);
+                                loadedConversationInfoList.add(firstChangedFoldInfo);
+                                Collections.sort(loadedConversationInfoList);
+                                int newIndex = loadedConversationInfoList.indexOf(firstChangedFoldInfo);
+                                if (uiIndex == newIndex) {
+                                    if (adapter != null) {
+                                        adapter.onItemChanged(newIndex);
+                                    }
+                                } else {
+                                    if (adapter != null) {
+                                        adapter.onItemMoved(uiIndex, newIndex);
+                                    }
                                 }
+                            } else {
+                                addInfoList.add(firstChangedFoldInfo);
                             }
-                            addInfoList.add(firstChangedFoldInfo);
                             mUIFoldConversation = firstChangedFoldInfo;
                             mUIFoldConversation.setMarkLocalUnread(isUnreadStatusOfFoldItem);
                         }
@@ -847,7 +847,7 @@ public class ConversationPresenter {
     }
 
     /**
-     * 更新会话未读计数
+     * 
      *
      * @param unreadTotal
      */
@@ -886,11 +886,6 @@ public class ConversationPresenter {
         });
     }
 
-    /**
-     * 将某个会话置顶
-     *
-     * @param conversation
-     */
     public void setConversationTop(final ConversationInfo conversation, final IUIKitCallback<Void> callBack) {
         TUIConversationLog.i(TAG,
             "setConversationTop"
@@ -913,12 +908,6 @@ public class ConversationPresenter {
         });
     }
 
-    /**
-     * 会话置顶操作
-     *
-     * @param id    会话ID
-     * @param isTop 是否置顶
-     */
     public void setConversationTop(String id, final boolean isTop, final IUIKitCallback<Void> callBack) {
         TUIConversationLog.i(TAG, "setConversationTop id:" + id + "|isTop:" + isTop);
         ConversationInfo conversation = null;
@@ -961,11 +950,6 @@ public class ConversationPresenter {
         return false;
     }
 
-    /**
-     * 删除会话，会将本地会话数据从imsdk中删除
-     *
-     * @param conversation 会话信息
-     */
     public void deleteConversation(ConversationInfo conversation) {
         TUIConversationLog.i(TAG, "deleteConversation conversation:" + conversation);
         if (conversation == null) {
@@ -1021,12 +1005,6 @@ public class ConversationPresenter {
         });
     }
 
-
-    /**
-     * 删除会话，只删除数据源中的会话信息
-     *
-     * @param id C2C：对方的 userID；Group：群 ID
-     */
     public void deleteConversation(String id, boolean isGroup) {
         ConversationInfo conversationInfo = null;
         for (int i = 0; i < loadedConversationInfoList.size(); i++) {
@@ -1052,11 +1030,6 @@ public class ConversationPresenter {
         deleteConversation(conversationInfo);
     }
 
-    /**
-     * 清空会话
-     *
-     * @param conversation 会话信息
-     */
     public void clearConversationMessage(ConversationInfo conversation) {
         if (conversation == null || TextUtils.isEmpty(conversation.getConversationId())) {
             TUIConversationLog.e(TAG, "clearConversationMessage error: invalid conversation");
@@ -1082,11 +1055,6 @@ public class ConversationPresenter {
         });
     }
 
-    /**
-     * 隐藏会话
-     * hide conversation
-     * @param conversationInfo 会话信息 conversation info
-     */
     public void markConversationHidden(ConversationInfo conversationInfo, boolean isHidden) {
         if (conversationInfo == null || TextUtils.isEmpty(conversationInfo.getConversationId())) {
             TUIConversationLog.e(TAG, "markConversationHidden error: invalid conversationInfo");
@@ -1249,9 +1217,6 @@ public class ConversationPresenter {
         });
     }
 
-    /**
-     * 会话会话列界面，在数据源更新的地方调用
-     */
     public void updateAdapter() {
         if (adapter != null) {
             adapter.onViewNeedRefresh();

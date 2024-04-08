@@ -30,7 +30,8 @@ import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.TUIKitConstants;
+import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -177,14 +178,14 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         showRecentCalls.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME).put(TUIKitConstants.RECENT_CALLS_ENABLE, isChecked, true);
+                SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME).put(Constants.RECENT_CALLS_ENABLE, isChecked, true);
                 Intent intent = new Intent();
-                intent.setAction(TUIKitConstants.RECENT_CALLS_ENABLE_ACTION);
-                intent.putExtra(TUIKitConstants.RECENT_CALLS_ENABLE, isChecked);
+                intent.setAction(Constants.RECENT_CALLS_ENABLE_ACTION);
+                intent.putExtra(Constants.RECENT_CALLS_ENABLE, isChecked);
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
             }
         });
-        boolean isEnableRecentCalls = SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME).getBoolean(TUIKitConstants.RECENT_CALLS_ENABLE, false);
+        boolean isEnableRecentCalls = SPUtils.getInstance(Constants.DEMO_SETTING_SP_NAME).getBoolean(Constants.RECENT_CALLS_ENABLE, false);
         showRecentCalls.setChecked(isEnableRecentCalls);
 
         changeStyleView = selectStyleView.findViewById(R.id.select_style);
@@ -303,7 +304,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
                 changeThemeView.setContent("");
             }
 
-            if (AppConfig.DEMO_UI_STYLE == 1) {
+            if (AppConfig.DEMO_UI_STYLE == AppConfig.DEMO_UI_STYLE_MINIMALIST) {
                 changeStyleView.setContent(getResources().getString(R.string.style_minimalist));
             } else {
                 changeStyleView.setContent(getResources().getString(R.string.style_classic));
@@ -335,8 +336,9 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
     }
 
     private void initMessageReadStatus() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE );
-        boolean messageReadStatus = sharedPreferences.getBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS, false);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.DEMO_SETTING_SP_NAME, Context.MODE_PRIVATE);
+        boolean messageReadStatus = sharedPreferences.getBoolean(Constants.DEMO_SP_KEY_MESSAGE_READ_STATUS,
+                ProfileUtil.DEFAULT_IS_OPEN_MESSAGE_READ_RECEIPT);
         setMessageReadStatus(messageReadStatus, false);
         messageReadStatusSwitch.setChecked(messageReadStatus);
     }
@@ -410,9 +412,9 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         }
         if (v.getId() == R.id.modify_allow_type) {
             Bundle bundle = new Bundle();
-            bundle.putString(TUIKitConstants.Selection.TITLE, getResources().getString(R.string.add_rule));
-            bundle.putStringArrayList(TUIKitConstants.Selection.LIST, joinTypeTextList);
-            bundle.putInt(TUIKitConstants.Selection.DEFAULT_SELECT_ITEM_INDEX, mJoinTypeIndex);
+            bundle.putString(Constants.Selection.TITLE, getResources().getString(R.string.add_rule));
+            bundle.putStringArrayList(Constants.Selection.LIST, joinTypeTextList);
+            bundle.putInt(Constants.Selection.DEFAULT_SELECT_ITEM_INDEX, mJoinTypeIndex);
             SelectionActivity.startListSelection(getContext(), bundle, new SelectionActivity.OnResultReturnListener() {
                 @Override
                 public void onReturn(Object text) {

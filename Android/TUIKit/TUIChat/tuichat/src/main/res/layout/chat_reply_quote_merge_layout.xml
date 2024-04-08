@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--合并转发消息-->
     <LinearLayout
         android:id="@+id/merge_msg_layout"
         android:layout_width="wrap_content"
