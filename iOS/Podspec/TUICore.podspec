@@ -30,7 +30,8 @@ Pod::Spec.new do |spec|
   spec.subspec 'Base' do |ss|
       ss.source_files = '**/TUICore/*.{h,m,mm,c}'
       ss.resource = [
-          '**/TUICore/Resources/*.bundle'
+          '**/TUICore/Resources/*.bundle',
+          '**/TUICore/Resources/PrivacyInfo.xcprivacy'
       ]
   end
 

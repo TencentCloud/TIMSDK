@@ -52,7 +52,8 @@ Pod::Spec.new do |spec|
       header.dependency "TUISearch/UI_Classic/Service"
     end
     uiClassic.resource = [
-      '**/TUISearch/Resources/*.bundle'
+      '**/TUISearch/Resources/*.bundle',
+      '**/TUISearch/Resources/PrivacyInfo.xcprivacy'
     ]
   end
 
@@ -76,7 +77,8 @@ Pod::Spec.new do |spec|
       header.dependency "TUISearch/UI_Minimalist/Service"
     end
     uiMinimalist.resource = [
-      '**/TUISearch/Resources/*.bundle'
+      '**/TUISearch/Resources/*.bundle',
+      '**/TUISearch/Resources/PrivacyInfo.xcprivacy'
     ]
   end
 

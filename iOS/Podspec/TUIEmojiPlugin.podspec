@@ -33,7 +33,8 @@ Pod::Spec.new do |spec|
     'GENERATE_INFOPLIST_FILE' => 'YES'
   }
    spec.resource = [
-    '**/TUIEmojiPlugin/Resources/*.bundle','**/TUIEmojiPlugin/Resources/PrivacyInfo.xcprivacy'
+    '**/TUIEmojiPlugin/Resources/*.bundle',
+    '**/TUIEmojiPlugin/Resources/PrivacyInfo.xcprivacy'
   ]
 end
 

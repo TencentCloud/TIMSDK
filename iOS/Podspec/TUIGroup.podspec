@@ -64,7 +64,8 @@ Pod::Spec.new do |spec|
       header.dependency "TUIGroup/UI_Classic/Service"
     end
     uiClassic.resource = [
-      '**/TUIGroup/Resources/*.bundle'
+      '**/TUIGroup/Resources/*.bundle',
+      '**/TUIGroup/Resources/PrivacyInfo.xcprivacy'
     ]
   end
 
@@ -96,7 +97,8 @@ Pod::Spec.new do |spec|
       header.dependency "TUIGroup/UI_Minimalist/Service"
     end
     uiMinimalist.resource = [
-      '**/TUIGroup/Resources/*.bundle'
+      '**/TUIGroup/Resources/*.bundle',
+      '**/TUIGroup/Resources/PrivacyInfo.xcprivacy'
     ]
   end
 

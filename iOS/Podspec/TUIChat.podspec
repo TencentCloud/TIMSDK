@@ -127,7 +127,8 @@ Pod::Spec.new do |spec|
       header.dependency "TUIChat/UI_Classic/Service"
     end
     uiClassic.resource = [
-      '**/TUIChat/Resources/*.bundle'
+      '**/TUIChat/Resources/*.bundle',
+      '**/TUIChat/Resources/PrivacyInfo.xcprivacy'
     ]
   end
 
@@ -167,7 +168,8 @@ Pod::Spec.new do |spec|
       header.dependency "TUIChat/UI_Minimalist/Service"
     end
     uiMinimalist.resource = [
-      '**/TUIChat/Resources/*.bundle'
+      '**/TUIChat/Resources/*.bundle',
+      '**/TUIChat/Resources/PrivacyInfo.xcprivacy'
     ]
   end
 

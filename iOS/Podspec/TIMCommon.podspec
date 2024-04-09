@@ -41,7 +41,8 @@ Pod::Spec.new do |spec|
        uiClassic.source_files = '**/TIMCommon/UI_Classic/*.{h,m,mm}'
        uiClassic.dependency "TIMCommon/BaseCell"
        uiClassic.resource = [
-          '**/TIMCommon/Resources/*.bundle'
+          '**/TIMCommon/Resources/*.bundle',
+          '**/TIMCommon/Resources/PrivacyInfo.xcprivacy'
        ]
   end
 
@@ -49,7 +50,8 @@ Pod::Spec.new do |spec|
        uiMinimalist.source_files = '**/TIMCommon/UI_Minimalist/*.{h,m,mm}'
        uiMinimalist.dependency "TIMCommon/BaseCell"
        uiMinimalist.resource = [
-        '**/TIMCommon/Resources/*.bundle'
+        '**/TIMCommon/Resources/*.bundle',
+        '**/TIMCommon/Resources/PrivacyInfo.xcprivacy'
        ]
   end
   
