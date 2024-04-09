@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (TUICustomerServicePluginPrivateConfig *)sharedInstance;
 
 @property (nonatomic, assign) BOOL canEvaluate;
-@property (nonatomic, copy, readonly) NSArray *customerServiceAccounts;
+@property (nonatomic, copy) NSArray *customerServiceAccounts;
 
 - (BOOL)isCustomerServiceAccount:(NSString *)userID;
 - (BOOL)isOnlineShopping:(NSString *)userID;

@@ -16,13 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (TUITranslationConfig *)defaultConfig;
 
 /**
- * 翻译目标语言码
  * Translation target language code.
  */
 @property(nonatomic, copy) NSString *targetLanguageCode;
 
 /**
- * 翻译目标语言名称。
  * Translation target language name.
  */
 @property(nonatomic, copy, readonly) NSString *targetLanguageName;

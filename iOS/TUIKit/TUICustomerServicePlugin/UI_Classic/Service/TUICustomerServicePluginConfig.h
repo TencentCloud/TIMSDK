@@ -44,6 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<TUICustomerServicePluginConfigDataSource> delegate;
 
 /**
+ * Set up customer service account list
+ */
+@property (nonatomic, copy) NSArray *customerServiceAccounts;
+
+/**
  * 客服插件在消息列表底部的菜单浮层的数据源。
  * The data source of the customer service plugin in the floating layer of the menu at the bottom of the message list.
  */

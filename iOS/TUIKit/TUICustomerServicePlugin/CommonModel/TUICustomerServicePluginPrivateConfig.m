@@ -10,8 +10,7 @@
 
 static const long long kTUICustomerServiceCommercialAbility = 1LL << 40;
 static BOOL gEnableCustomerService = NO;
-static NSString *gOnlineShopping = @"@im_agent#online_shopping_mall";
-static NSString *gOnlineDoctor = @"@im_agent#online_doctor";
+static NSString *gDefaultCustomerServiceAccount = @"@default_customer_service_account";
 
 @implementation TUICustomerServicePluginPrivateConfig
 
@@ -20,6 +19,7 @@ static NSString *gOnlineDoctor = @"@im_agent#online_doctor";
     static TUICustomerServicePluginPrivateConfig * g_sharedInstance = nil;
     dispatch_once(&onceToken, ^{
         g_sharedInstance = [[TUICustomerServicePluginPrivateConfig alloc] init];
+        g_sharedInstance.customerServiceAccounts = @[gDefaultCustomerServiceAccount];
         [self checkCommercialAbility];
     });
     return g_sharedInstance;
@@ -34,7 +34,7 @@ static NSString *gOnlineDoctor = @"@im_agent#online_doctor";
 }
 
 - (BOOL)isOnlineShopping:(NSString *)userID {
-    return [userID isEqualToString:gOnlineShopping];
+    return [userID containsString:@"#online_shopping_mall"];
 }
 
 + (BOOL)isCustomerServiceSupported {
@@ -50,12 +50,6 @@ static NSString *gOnlineDoctor = @"@im_agent#online_doctor";
                                fail:^(int code, NSString *desc) {
         gEnableCustomerService = NO;
     }];
-}
-
-#pragma mark - Getter
-// Developer can modify these userIDs by their account configs on console.
-- (NSArray *)customerServiceAccounts {
-    return @[gOnlineShopping, gOnlineDoctor]; // default
 }
 
 @end

@@ -90,12 +90,6 @@
         _itemsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [_itemsTableView registerClass:[TUICustomerServicePluginBranchItemCell class] forCellReuseIdentifier:@"item_cell"];
         [self.container addSubview:_itemsTableView];
-        // _itemsTableView responds to click events first
-        for (UIGestureRecognizer *gesture in self.container.gestureRecognizers) {
-            if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
-                [self.container removeGestureRecognizer:gesture];
-            }
-        }
     }
     return self;
 }

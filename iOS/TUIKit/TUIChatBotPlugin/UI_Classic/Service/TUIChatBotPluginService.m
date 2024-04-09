@@ -71,6 +71,13 @@
                            TMessageCell_Data_Name : @"TUIChatBotPluginStreamTextCellData"
                          }
     ];
+    [TUICore callService:TUICore_TUIChatService
+                  method:TUICore_TUIChatService_AppendCustomMessageMethod
+                   param:@{BussinessID : GetChatBotBussinessID(BussinessID_Src_ChatBot_Rich_Text),
+                           TMessageCell_Name : @"TUIChatBotPluginRichTextCell",
+                           TMessageCell_Data_Name : @"TUIChatBotPluginRichTextCellData"
+                         }
+    ];
 }
 
 #pragma mark - TUINotificationProtocol

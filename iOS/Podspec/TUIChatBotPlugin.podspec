@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChatBotPlugin'
-  spec.version      = '7.8.5483'
+  spec.version      = '7.9.5666'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,16 +16,16 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.8.5483/ios/TUIChatBotPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.9.5666/ios/TUIChatBotPlugin.zip'}
 
   spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIChatBotPlugin/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TUICore','7.8.5483'
-    commonModel.dependency 'TIMCommon','7.8.5483'
-    commonModel.dependency 'TUIChat','7.8.5483'
-    commonModel.dependency 'TUIContact','7.8.5483'
+    commonModel.dependency 'TUICore'
+    commonModel.dependency 'TIMCommon', '~> 7.9.5666'
+    commonModel.dependency 'TUIChat', '~> 7.9.5666'
+    commonModel.dependency 'TUIContact','~> 7.9.5666'
   end
 
   spec.subspec 'UI_Classic' do |commonUI|
@@ -46,7 +46,8 @@ Pod::Spec.new do |spec|
       service.dependency "TUIChatBotPlugin/UI_Classic/UI"
     end
     commonUI.resource = [
-      '**/TUIChatBotPlugin/Resources/*.bundle'
+      '**/TUIChatBotPlugin/Resources/*.bundle',
+      '**/TUIChatBotPlugin/Resources/PrivacyInfo.xcprivacy'
     ]
   end
 

@@ -11,6 +11,7 @@
 #import "TUICustomerServicePluginMenuView.h"
 #import "TUICustomerServicePluginDataProvider.h"
 #import "TUICustomerServicePluginExtensionObserver.h"
+#import "TUICustomerServicePluginPrivateConfig.h"
 #import "TUICustomerServicePluginProductInfo.h"
 
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -28,6 +29,10 @@
 }
 
 #pragma mark - Public
+- (void)setCustomerServiceAccounts:(NSArray *)customerServiceAccounts {
+    [TUICustomerServicePluginPrivateConfig sharedInstance].customerServiceAccounts = customerServiceAccounts;
+}
+
 - (NSArray *)menuItems {
     if (self.delegate && [self.delegate respondsToSelector:@selector(pluginConfig:shouldUpdateOldMenuItems:)]) {
         return [self.delegate pluginConfig:self shouldUpdateOldMenuItems:[self defaultMenuItems]];

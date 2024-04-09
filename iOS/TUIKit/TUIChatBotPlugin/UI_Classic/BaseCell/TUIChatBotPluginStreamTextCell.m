@@ -32,13 +32,17 @@
                 [self stopTimer:data.timer];
                 [self notifyCellSizeChanged];
             } else {
+                UIColor *textColor = self.class.incommingTextColor;
                 UIFont *textFont = self.class.incommingTextFont;
                 if (data.direction == MsgDirectionIncoming) {
+                    textColor = self.class.incommingTextColor;
                     textFont = self.class.incommingTextFont;
                 } else {
+                    textColor = self.class.outgoingTextColor;
                     textFont = self.class.outgoingTextFont;
                 }
                 self.textView.attributedText = [data getContentAttributedString:textFont];
+                self.textView.textColor = textColor;
                 [self updateCellConstraints];
             }
         });

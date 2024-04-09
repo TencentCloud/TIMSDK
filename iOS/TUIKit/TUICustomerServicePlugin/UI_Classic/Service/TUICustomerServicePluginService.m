@@ -158,7 +158,7 @@
             return nil;
         }
         TUIExtensionInfo *extensionInfo = [[TUIExtensionInfo alloc] init];
-        extensionInfo.data = @{TUICore_TUIChatExtension_GetChatConversationModelParams_MsgNeedReadReceipt : @(NO),
+        extensionInfo.data = @{TUICore_TUIChatExtension_GetChatConversationModelParams_MsgNeedReadReceipt : @(YES),
                                TUICore_TUIChatExtension_GetChatConversationModelParams_EnableVideoCall : @(NO),
                                TUICore_TUIChatExtension_GetChatConversationModelParams_EnableAudioCall : @(NO),
                                TUICore_TUIChatExtension_GetChatConversationModelParams_EnableWelcomeCustomMessage : @(NO)};
