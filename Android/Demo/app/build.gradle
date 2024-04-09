@@ -120,49 +120,49 @@ dependencies {
     if (projects.contains("timpush")) {
         api project(':timpush')
     } else {
-        api 'com.tencent.timpush:timpush:7.9.5666'
+        api 'com.tencent.timpush:timpush:7.9.5668'
     }
 
     if (projects.contains("fcmpush")) {
         api project(':fcmpush')
     } else {
-        api 'com.tencent.timpush:fcm:7.9.5666'
+        api 'com.tencent.timpush:fcm:7.9.5668'
     }
 
     if (projects.contains("xiaomipush")) {
         api project(':xiaomipush')
     } else {
-        api 'com.tencent.timpush:xiaomi:7.9.5666'
+        api 'com.tencent.timpush:xiaomi:7.9.5668'
     }
 
     if (projects.contains("meizupush")) {
         api project(':meizupush')
     } else {
-        api 'com.tencent.timpush:meizu:7.9.5666'
+        api 'com.tencent.timpush:meizu:7.9.5668'
     }
 
     if (projects.contains("oppopush")) {
         api project(':oppopush')
     } else {
-        api 'com.tencent.timpush:oppo:7.9.5666'
+        api 'com.tencent.timpush:oppo:7.9.5668'
     }
 
     if (projects.contains("vivopush")) {
         api project(':vivopush')
     } else {
-        api 'com.tencent.timpush:vivo:7.9.5666'
+        api 'com.tencent.timpush:vivo:7.9.5668'
     }
 
     if (projects.contains("huaweipush")) {
         api project(':huaweipush')
     } else {
-        api 'com.tencent.timpush:huawei:7.9.5666'
+        api 'com.tencent.timpush:huawei:7.9.5668'
     }
 
     if (projects.contains("honorpush")) {
         api project(':honorpush')
     } else {
-        api 'com.tencent.timpush:honor:7.9.5666'
+        api 'com.tencent.timpush:honor:7.9.5668'
     }
 
     api project(':tuiroomkit')
