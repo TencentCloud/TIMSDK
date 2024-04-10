@@ -21,6 +21,9 @@ Pod::Spec.new do |spec|
   spec.source_files = '**/ImSDK_Plus.framework/Headers/*.h', '**/ImSDK_Plus.framework/cpluscplus/include/*.h'
   spec.public_header_files = '**/ImSDK_Plus.framework/Headers/*.h', '**/ImSDK_Plus.framework/cpluscplus/include/*.h'
   spec.vendored_frameworks = '**/ImSDK_Plus.framework'
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/ImSDK_Plus.framework/PrivacyInfo.xcprivacy'
+  }
   spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TXIMSDK_Plus_iOS/ImSDK_Plus.framework/Headers/, ${PODS_ROOT}/TXIMSDK_Plus_iOS/ImSDK_Plus.framework/cpluscplus/include/'}
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
