@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TIMPush'
-  spec.version      = '7.9.5666'
+  spec.version      = '7.9.5668'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.9.5666/ios/TIMPush_7.9.5666.framework.zip?time=1'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.9.5668/ios/TIMPush_7.9.5668.framework.zip?time=1'}
 
   #spec.dependency 'TXIMSDK_Plus_iOS'
   #spec.library = 'c++', 'resolv', 'sqlite3'
@@ -30,7 +30,8 @@ Pod::Spec.new do |spec|
   spec.user_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
   }
-  spec.resource = [
-  '**/TIMPush.framework/PrivacyInfo.xcprivacy'
-  ]
+
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TIMPush.framework/PrivacyInfo.xcprivacy'
+  }
 end

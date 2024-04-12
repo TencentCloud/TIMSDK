@@ -62,10 +62,7 @@ Pod::Spec.new do |spec|
       header.source_files = '**/TUIConversation/UI_Classic/Header/*.{h,m,mm}'
       header.dependency "TUIConversation/UI_Classic/Service"
     end
-    uiClassic.resource = [
-      '**/TUIConversation/Resources/*.bundle',
-      '**/TUIConversation/Resources/PrivacyInfo.xcprivacy'
-    ]
+    uiClassic.resource = ['**/TUIConversation/Resources/*.bundle']
   end
 
   spec.subspec 'UI_Minimalist' do |uiMinimalist|
@@ -95,10 +92,7 @@ Pod::Spec.new do |spec|
       header.source_files = '**/TUIConversation/UI_Minimalist/Header/*.{h,m,mm}'
       header.dependency "TUIConversation/UI_Minimalist/Service"
     end
-    uiMinimalist.resource = [
-      '**/TUIConversation/Resources/*.bundle',
-      '**/TUIConversation/Resources/PrivacyInfo.xcprivacy'
-    ]
+    uiMinimalist.resource = ['**/TUIConversation/Resources/*.bundle']
   end
 
   spec.subspec 'ALL' do |all|
@@ -111,7 +105,10 @@ Pod::Spec.new do |spec|
   }
   spec.user_target_xcconfig = {
    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-}
+  }
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TUIConversation/Resources/PrivacyInfo.xcprivacy'
+  }
 end
 
 # pod trunk push TUIConversation.podspec --use-libraries --allow-warnings
