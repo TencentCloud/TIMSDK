@@ -1,6 +1,6 @@
 English | [简体中文](./README_ZH.md)
 
-# TIM SDK 7.9.5666 (Android)
+# TIM SDK 7.9.5680 (Android)
 
 ## Download IM SDK
 
@@ -30,7 +30,7 @@ English | [简体中文](./README_ZH.md)
   <tr >
      <td style="text-align:center">Quic Plugin</td>
      <td style="text-align:center">Providing axp-quic multiplex transmission protocol to enhance network performance</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.9.5666/timquic-plugin-7.9.5666.aar">timquic-plugin.aar</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/7.9.5680/timquic-plugin-7.9.5680.aar">timquic-plugin.aar</a></td>
   </tr>
 </table>
 
