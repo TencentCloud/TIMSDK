@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_QuicPlugin'
-  spec.version      = '7.9.5666'
+  spec.version      = '7.9.5680'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.9.5666/TIMQuicPlugin_7.9.5666.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.9.5680/TIMQuicPlugin_7.9.5680.framework.zip'}
   spec.preserve_paths = '**/TIMQuicPlugin.framework'
   spec.vendored_frameworks = '**/TIMQuicPlugin.framework'
   spec.pod_target_xcconfig = {
