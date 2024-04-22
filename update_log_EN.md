@@ -1,6 +1,15 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 7.9.5680 @2024.04.19 - Enhanced Version
+### SDK
+- Fix the issue of the pinned message list returning in the wrong order
+- Fix the issue of incorrect parsing of the Tips type of pinned messages
+- Fix the issue of log writing failure on some Android phones
+- Fix the occasional incomplete retrieval of group roaming messages from old to new
+- Fix the occasional inability to retrieve local messages when pulling historical messages from topics
+- Fix the issue where sessions deleted from the conversation group are reactivated after logging in again
+
 ## 7.9.5666 @2024.04.07 - Enhanced Version
 ### SDK
 
