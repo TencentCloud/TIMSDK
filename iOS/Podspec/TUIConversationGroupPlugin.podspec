@@ -24,9 +24,10 @@ Pod::Spec.new do |spec|
     spec.user_target_xcconfig = { 
       'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
     } 
-    spec.resource = [
-      '**/TUIConversationGroupPlugin.framework/PrivacyInfo.xcprivacy'
-    ]
+    spec.resource_bundle = {
+      "#{spec.module_name}_Privacy" => '**/TUIConversationGroupPlugin.framework/PrivacyInfo.xcprivacy'
+    }
+
 end
 
 # pod trunk push TUIConversationGroupPlugin.podspec --use-libraries --allow-warnings

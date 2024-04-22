@@ -29,10 +29,7 @@ Pod::Spec.new do |spec|
   
   spec.subspec 'Base' do |ss|
       ss.source_files = '**/TUICore/*.{h,m,mm,c}'
-      ss.resource = [
-          '**/TUICore/Resources/*.bundle',
-          '**/TUICore/Resources/PrivacyInfo.xcprivacy'
-      ]
+      ss.resource = ['**/TUICore/Resources/*.bundle']
   end
 
   spec.pod_target_xcconfig = {
@@ -44,6 +41,9 @@ Pod::Spec.new do |spec|
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
     'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) ENABLE_SCENARIO_SDK',
     'DEFINES_MODULE' => 'YES'
+  }
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TUICore/Resources/PrivacyInfo.xcprivacy'
   }
 end
 

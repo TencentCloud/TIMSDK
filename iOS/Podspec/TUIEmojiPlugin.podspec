@@ -32,10 +32,11 @@ Pod::Spec.new do |spec|
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
     'GENERATE_INFOPLIST_FILE' => 'YES'
   }
-   spec.resource = [
-    '**/TUIEmojiPlugin/Resources/*.bundle',
-    '**/TUIEmojiPlugin/Resources/PrivacyInfo.xcprivacy'
-  ]
+  
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TUIEmojiPlugin/Resources/PrivacyInfo.xcprivacy'
+  }
+  
 end
 
 # pod trunk push TUIEmojiPlugin.podspec --use-libraries --allow-warnings

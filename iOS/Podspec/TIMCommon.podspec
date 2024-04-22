@@ -40,19 +40,13 @@ Pod::Spec.new do |spec|
   spec.subspec 'UI_Classic' do |uiClassic|
        uiClassic.source_files = '**/TIMCommon/UI_Classic/*.{h,m,mm}'
        uiClassic.dependency "TIMCommon/BaseCell"
-       uiClassic.resource = [
-          '**/TIMCommon/Resources/*.bundle',
-          '**/TIMCommon/Resources/PrivacyInfo.xcprivacy'
-       ]
+       uiClassic.resource = ['**/TIMCommon/Resources/*.bundle']
   end
 
   spec.subspec 'UI_Minimalist' do |uiMinimalist|
        uiMinimalist.source_files = '**/TIMCommon/UI_Minimalist/*.{h,m,mm}'
        uiMinimalist.dependency "TIMCommon/BaseCell"
-       uiMinimalist.resource = [
-        '**/TIMCommon/Resources/*.bundle',
-        '**/TIMCommon/Resources/PrivacyInfo.xcprivacy'
-       ]
+       uiMinimalist.resource = ['**/TIMCommon/Resources/*.bundle']
   end
   
   spec.pod_target_xcconfig = {
@@ -62,6 +56,9 @@ Pod::Spec.new do |spec|
   spec.user_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
     'DEFINES_MODULE' => 'YES'
+  }
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TIMCommon/Resources/PrivacyInfo.xcprivacy'
   }
 end
 

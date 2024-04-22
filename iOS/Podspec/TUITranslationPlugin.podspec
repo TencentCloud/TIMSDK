@@ -38,19 +38,18 @@ Pod::Spec.new do |spec|
       service.source_files = '**/TUITranslationPlugin/UI/Service/*.{h,m,mm}'
       service.dependency "TUITranslationPlugin/UI/UI"
     end
-    commonUI.resource = [
-      '**/TUITranslationPlugin/Resources/*.bundle',
-      '**/TUITranslationPlugin/Resources/PrivacyInfo.xcprivacy'
-    ]
+    commonUI.resource = ['**/TUITranslationPlugin/Resources/*.bundle']
   end
+
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TUITranslationPlugin/Resources/PrivacyInfo.xcprivacy'
+  }
 
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
   }
   spec.user_target_xcconfig = { 
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
   }
 end
 

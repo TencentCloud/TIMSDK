@@ -22,7 +22,8 @@ Pod::Spec.new do |spec|
 
   spec.source = { :git => 'https://git.woa.com/lynxzhang/tui-components.git', :tag => spec.version}
   spec.source_files = '**/*.{h,m,mm,c}'
-  spec.resource = [
-  'Resources/*.bundle','Resources/PrivacyInfo.xcprivacy'
-  ]
+  spec.resource = ['Resources/*.bundle']
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TUICustomerServicePlugin/Resources/PrivacyInfo.xcprivacy'
+  }
 end

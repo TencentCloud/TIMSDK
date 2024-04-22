@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@tencentcloud/imsdk": "file:./imsdk-ohos-7.9.5666.har"
+    "@tencentcloud/imsdk": "file:./imsdk-ohos-7.9.5680.har"
   },
   "devDependencies": {
     "pako": "^2.1.0",

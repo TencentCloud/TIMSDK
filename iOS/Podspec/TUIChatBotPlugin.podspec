@@ -45,11 +45,12 @@ Pod::Spec.new do |spec|
       service.source_files = '**/TUIChatBotPlugin/UI_Classic/Service/*.{h,m,mm}'
       service.dependency "TUIChatBotPlugin/UI_Classic/UI"
     end
-    commonUI.resource = [
-      '**/TUIChatBotPlugin/Resources/*.bundle',
-      '**/TUIChatBotPlugin/Resources/PrivacyInfo.xcprivacy'
-    ]
+    commonUI.resource = ['**/TUIChatBotPlugin/Resources/*.bundle']
   end
+
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/TUIChatBotPlugin/Resources/PrivacyInfo.xcprivacy'
+  }
 
   spec.subspec 'ALL' do |all|
     all.dependency "TUIChatBotPlugin/UI_Classic"
@@ -57,11 +58,9 @@ Pod::Spec.new do |spec|
 
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
   }
   spec.user_target_xcconfig = { 
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-    'GENERATE_INFOPLIST_FILE' => 'YES'
   }
 end
 
