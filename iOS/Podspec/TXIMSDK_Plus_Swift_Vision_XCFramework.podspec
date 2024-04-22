@@ -16,8 +16,11 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.9.5666/ImSDKForVision_Plus_7.9.5666.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.9.5666/ImSDKForVision_Plus_7.9.5666.xcframework.zip?rand=1'}
   spec.vendored_frameworks = '**/ImSDKForVision_Plus.xcframework'
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/ImSDKForVision_Plus.xcframework/xros-arm64/ImSDKForVision_Plus.framework/PrivacyInfo.xcprivacy'
+  }
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
   }
