@@ -18,6 +18,9 @@ Pod::Spec.new do |spec|
 
   spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/7.9.5666/ImSDK_Plus_Swift_7.9.5666.xcframework.zip'}
   spec.vendored_frameworks = '**/ImSDK_Plus_Swift.xcframework'
+  spec.resource_bundle = {
+    "#{spec.module_name}_Privacy" => '**/ImSDK_Plus_Swift.xcframework/ios-arm64_armv7/ImSDK_Plus_Swift.framework/PrivacyInfo.xcprivacy'
+  }
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
   }
