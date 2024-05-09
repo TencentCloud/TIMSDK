@@ -133,15 +133,50 @@ import { getEnumKeys, getEnumMap } from "../tools/GetEnum";
 @Observed
 class Result {
   interfaceResult = "";
-  sdkResult = ""
+  sdkCallback = ""
   simpleMessageReceive = ""
   groupCallback = ""
-  conversationCallback = ""
 }
 
 let result = new Result();
 
 export default result;
+
+export function writeResult(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.interfaceResult = "\n" + currentResult;
+}
+
+export function onSDKCallback(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.sdkCallback = "\n" + currentResult;
+}
+
+export function onGroupCallback(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.groupCallback = "\n" + currentResult;
+}
+
+export function onSimpleMessageReceive(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.simpleMessageReceive = "\n" + currentResult;
+}
 
 @Entry
 @Component
@@ -172,21 +207,18 @@ export struct BaseManagerTestPage {
           Column({ space: 5 }) {
             DemoButton("清空", () => {
               this.result.interfaceResult = "";
-              this.result.sdkResult = "";
+              this.result.sdkCallback = "";
               this.result.simpleMessageReceive = "";
               this.result.groupCallback = "";
-              this.result.conversationCallback = "";
             })
             DemoTitle("接口调用结果：")
             DemoText({ name: this.result.interfaceResult })
             DemoTitle("SDK状态回调：")
-            DemoText({ name: this.result.sdkResult })
+            DemoText({ name: this.result.sdkCallback })
             DemoTitle("简单消息接收：")
             DemoText({ name: this.result.simpleMessageReceive })
             DemoTitle("群组回调：")
             DemoText({ name: this.result.groupCallback })
-            DemoTitle("会话回调：")
-            DemoText({ name: this.result.conversationCallback })
           }.alignItems(HorizontalAlign.Start)
         }
         .width('100%')
@@ -220,7 +252,7 @@ export struct BaseManagerTestPage {
           }.DemoRowStyle()
 
           Row({ space: 10 }) {
-            DemoButton("login", () : void => BaseTestInterfaces.login(this.userID))
+            DemoButton("login", (): void => BaseTestInterfaces.login(this.userID))
             DemoButton("logout", BaseTestInterfaces.logout)
             DemoButton("getLoginUser", BaseTestInterfaces.getLoginUser)
             DemoButton("getLoginStatus", BaseTestInterfaces.getLoginStatus)
@@ -244,8 +276,8 @@ export struct BaseManagerTestPage {
           }.DemoRowStyle()
 
           Row({ space: 10 }) {
-            DemoButton("sendC2CTextMessage", () : void => BaseTestInterfaces.sendC2CTextMessage(this.toUserID, this.msgContent))
-            DemoButton("sendC2CCustomMessage", () : void => BaseTestInterfaces.sendC2CCustomMessage(this.toUserID))
+            DemoButton("sendC2CTextMessage", (): void => BaseTestInterfaces.sendC2CTextMessage(this.toUserID, this.msgContent))
+            DemoButton("sendC2CCustomMessage", (): void => BaseTestInterfaces.sendC2CCustomMessage(this.toUserID))
           }.DemoRowStyle()
 
           Row({ space: 10 }) {
@@ -263,8 +295,8 @@ export struct BaseManagerTestPage {
           }
 
           Row({ space: 10 }) {
-            DemoButton("sendGroupTextMessage", () : void => BaseTestInterfaces.sendGroupTextMessage(this.toGroupID, this.msgContent, this.priority))
-            DemoButton("sendGroupCustomMessage", () : void => BaseTestInterfaces.sendGroupCustomMessage(this.toGroupID, this.msgContent, this.priority))
+            DemoButton("sendGroupTextMessage", (): void => BaseTestInterfaces.sendGroupTextMessage(this.toGroupID, this.msgContent, this.priority))
+            DemoButton("sendGroupCustomMessage", (): void => BaseTestInterfaces.sendGroupCustomMessage(this.toGroupID, this.msgContent, this.priority))
           }
 
           Row({ space: 10 }) {
@@ -294,10 +326,10 @@ export struct BaseManagerTestPage {
           }
 
           Row({ space: 10 }) {
-            DemoButton("createGroup", () : void => BaseTestInterfaces.createGroup(this.groupType, this.groupName, this.groupID));
-            DemoButton("joinGroup", () : void => BaseTestInterfaces.joinGroup(this.groupID));
-            DemoButton("quitGroup", () : void => BaseTestInterfaces.quitGroup(this.groupID));
-            DemoButton("dismissGroup", () : void => BaseTestInterfaces.dismissGroup(this.groupID));
+            DemoButton("createGroup", (): void => BaseTestInterfaces.createGroup(this.groupType, this.groupName, this.groupID));
+            DemoButton("joinGroup", (): void => BaseTestInterfaces.joinGroup(this.groupID));
+            DemoButton("quitGroup", (): void => BaseTestInterfaces.quitGroup(this.groupID));
+            DemoButton("dismissGroup", (): void => BaseTestInterfaces.dismissGroup(this.groupID));
           }
 
           Row({ space: 10 }) {
@@ -307,7 +339,7 @@ export struct BaseManagerTestPage {
             TextInput({ placeholder: "userID2" })
               .onChange((value) => this.userID2 = value)
               .demoTextInputStyle()
-            DemoButton("getUsersInfo", () : void => BaseTestInterfaces.getUsersInfo(this.userID1, this.userID2));
+            DemoButton("getUsersInfo", (): void => BaseTestInterfaces.getUsersInfo(this.userID1, this.userID2));
           }
 
           Row({ space: 10 }) {
@@ -332,7 +364,7 @@ export struct BaseManagerTestPage {
           }
 
           Row() {
-            DemoButton("setSelfInfo", () : void => BaseTestInterfaces.setSelfInfo(this.selfNickName, this.allowType))
+            DemoButton("setSelfInfo", (): void => BaseTestInterfaces.setSelfInfo(this.selfNickName, this.allowType))
           }
 
           Row({ space: 10 }) {
@@ -342,14 +374,14 @@ export struct BaseManagerTestPage {
             TextInput({ placeholder: "userID4" })
               .onChange((value) => this.userID4 = value)
               .demoTextInputStyle()
-            DemoButton("getUserStatus", () : void => BaseTestInterfaces.getUserStatus(this.userID3, this.userID4));
+            DemoButton("getUserStatus", (): void => BaseTestInterfaces.getUserStatus(this.userID3, this.userID4));
           }
 
           Row() {
             TextInput({ placeholder: 'customStatus' })
               .onChange((value: string) => this.customStatus = value)
               .demoTextInputStyle()
-            DemoButton("setSelfStatus", () : void => BaseTestInterfaces.setSelfStatus(this.customStatus));
+            DemoButton("setSelfStatus", (): void => BaseTestInterfaces.setSelfStatus(this.customStatus));
           }
 
           Row({ space: 10 }) {
@@ -362,8 +394,8 @@ export struct BaseManagerTestPage {
           }
 
           Row({ space: 10 }) {
-            DemoButton("subscribeUserStatus", () : void => BaseTestInterfaces.subscribeUserStatus(this.userID5, this.userID6));
-            DemoButton("unsubscribeUserStatus", () : void => BaseTestInterfaces.unsubscribeUserStatus(this.userID5, this.userID6));
+            DemoButton("subscribeUserStatus", (): void => BaseTestInterfaces.subscribeUserStatus(this.userID5, this.userID6));
+            DemoButton("unsubscribeUserStatus", (): void => BaseTestInterfaces.unsubscribeUserStatus(this.userID5, this.userID6));
           }
 
         }.alignItems(HorizontalAlign.Start)
@@ -386,11 +418,11 @@ export struct BaseManagerTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
 
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 

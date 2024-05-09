@@ -32,6 +32,24 @@ let result = new Result();
 
 export default result;
 
+export function writeResult(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.result = "\n" + currentResult;
+}
+
+export function onCallback(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.callbackResult = "\n" + currentResult;
+}
+
 class FriendTestInfo {
   userID1 = "";
   userID2 = "";
@@ -218,6 +236,30 @@ export struct FriendshipManagerTestPage {
           }.DemoRowStyle()
 
           DemoButton("renameFriendGroup", FriendshipTestInterfaces.renameFriendGroup)
+
+          Row({ space: 4 }) {
+            TextInput({ placeholder: 'userID1' })
+              .onChange((value: string) => {
+                info.userID1 = value;
+              }).demoTextInputStyle()
+            TextInput({ placeholder: 'userID2' })
+              .onChange((value: string) => {
+                info.userID2 = value;
+              }).demoTextInputStyle()
+          }.DemoRowStyle()
+
+          Row({ space: 4 }) {
+            DemoButton("followUser", FriendshipTestInterfaces.followUser)
+            DemoButton("unfollowUser", FriendshipTestInterfaces.unfollowUser)
+            DemoButton("getMyFollowingList", FriendshipTestInterfaces.getMyFollowingList)
+            DemoButton("getMyFollowersList", FriendshipTestInterfaces.getMyFollowersList)
+          }.DemoRowStyle()
+
+          Row({ space: 4 }) {
+            DemoButton("getMutualFollowersList", FriendshipTestInterfaces.getMutualFollowersList)
+            DemoButton("getUserFollowInfo", FriendshipTestInterfaces.getUserFollowInfo)
+            DemoButton("checkFollowType", FriendshipTestInterfaces.checkFollowType)
+          }.DemoRowStyle()
         }
         .alignItems(HorizontalAlign.Start)
         .align(Alignment.TopStart)
@@ -238,11 +280,10 @@ export struct FriendshipManagerTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
-
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 

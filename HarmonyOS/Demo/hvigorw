@@ -10,8 +10,9 @@
 #    Add /usr/local/nodejs/bin to the PATH environment variable
 # ----------------------------------------------------------------------------
 
-HVIGOR_APP_HOME="`pwd -P`"
+HVIGOR_APP_HOME="$(pwd -P)"
 HVIGOR_WRAPPER_SCRIPT=${HVIGOR_APP_HOME}/hvigor/hvigor-wrapper.js
+#NODE_OPTS="--max-old-space-size=4096"
 
 fail() {
   echo "$*"
@@ -36,7 +37,7 @@ if [ -n "${NODE_HOME}" ]; then
   set_executable_node
 else
   EXECUTABLE_NODE="node"
-  command -v ${EXECUTABLE_NODE} &> /dev/null || fail "ERROR: NODE_HOME not set and 'node' command not found"
+  command -v ${EXECUTABLE_NODE} &>/dev/null || fail "ERROR: NODE_HOME not set and 'node' command not found"
 fi
 
 # Check hvigor wrapper script
@@ -44,6 +45,10 @@ if [ ! -r "$HVIGOR_WRAPPER_SCRIPT" ]; then
   fail "ERROR: Couldn't find hvigor/hvigor-wrapper.js in ${HVIGOR_APP_HOME}"
 fi
 
+if [ -z "${NODE_OPTS}" ]; then
+  NODE_OPTS="--"
+fi
+
 # start hvigor-wrapper script
-exec "${EXECUTABLE_NODE}" \
+exec "${EXECUTABLE_NODE}" "${NODE_OPTS}" \
   "${HVIGOR_WRAPPER_SCRIPT}" "$@"

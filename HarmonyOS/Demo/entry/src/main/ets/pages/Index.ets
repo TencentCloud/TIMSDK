@@ -5,9 +5,10 @@ import { MessageManagerTestPage } from './MessageManagerTestPage';
 import { ConversationManagerTestPage } from './ConversationManagerTestPage';
 import { GroupManagerTestPage } from './GroupManagerTestPage';
 import { FriendshipManagerTestPage } from './FriendshipManagerTestPage';
-import {SignalingTestPage} from './SignalingTestPage';
+import { SignalingTestPage } from './SignalingTestPage';
 import { SearchTestPage } from './SearchTestPage';
 import { MessageFetchTestPage } from './MessageFetchTestPage';
+import { CommunityManagerTestPage } from './CommunityManagerTestPage';
 
 @Entry
 @Component
@@ -46,6 +47,10 @@ struct Index {
         TabContent() {
           SignalingTestPage()
         }.tabBar('信令')
+
+        TabContent() {
+          CommunityManagerTestPage()
+        }.tabBar('社群')
 
       }
       .scrollable(true)

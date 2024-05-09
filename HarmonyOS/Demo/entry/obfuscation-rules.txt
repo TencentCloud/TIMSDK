@@ -6,10 +6,10 @@
 
 # Obfuscation options:
 # -disable-obfuscation: disable all obfuscations
-# -enable-property-obfuscation: obfuscate the property names
-# -enable-toplevel-obfuscation: obfuscate the names in the global scope
-# -compact: remove unnecessary blank spaces and all line feeds
-# -remove-log: remove all console.* statements
+-enable-property-obfuscation: obfuscate the property names
+-enable-toplevel-obfuscation: obfuscate the names in the global scope
+-compact: remove unnecessary blank spaces and all line feeds
+-remove-log: remove all console.* statements
 # -print-namecache: print the name cache that contains the mapping from the old names to new names
 # -apply-namecache: reuse the given cache file
 

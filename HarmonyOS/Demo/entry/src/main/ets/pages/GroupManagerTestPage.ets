@@ -1,8 +1,7 @@
 // Copyright (c) 2023 Tencent. All rights reserved.
 import { V2TIMGroupAddOpt, V2TIMGroupMemberRole } from '@tencentcloud/imsdk';
 import { groupInfo, GroupTestInterfaces } from '../interfaces/GroupTestInterfaces';
-
-import { getEnumKeys, getEnumMap } from "../tools/GetEnum";
+import { getEnumKeys, getEnumMap} from '../tools/GetEnum'
 
 @Observed
 class Result {
@@ -14,13 +13,22 @@ let result = new Result();
 
 export { result };
 
-export function log(...args: ESObject[]) {
+export function writeResult(...args: ESObject[]) {
   let resultList = new Array<string>();
   args.forEach((value: ESObject) => {
     resultList.push(JSON.stringify(value));
   });
   let currentResult = resultList.join(" ");
-  result.result = "\n \n" + currentResult;
+  result.result = "\n" + currentResult;
+}
+
+export function onCallback(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.callbackResult = "\n" + currentResult;
 }
 
 @Entry
@@ -204,11 +212,11 @@ export struct GroupManagerTestPage {
 
           Row({ space: 4 }) {
             DemoLabel("filter")
-            Select(getEnumKeys("groupAddOpt"))
+            Select(getEnumKeys("V2TIMGroupMemberRole"))
               .font({ size: 12 })
               .selected(0)
               .onSelect((index: number, value: string) => {
-                groupInfo.groupAddOpt = getEnumMap("groupAddOpt").get(value) as V2TIMGroupAddOpt;
+                groupInfo.groupAddOpt = getEnumMap("V2TIMGroupMemberRole").get(value) as V2TIMGroupAddOpt;
               })
           }.DemoRowStyle()
 
@@ -301,11 +309,11 @@ export struct GroupManagerTestPage {
 
           Row({ space: 4 }) {
             DemoLabel("role")
-            Select(getEnumKeys("groupAddOpt"))
+            Select(getEnumKeys("V2TIMGroupMemberRole"))
               .font({ size: 12 })
               .selected(0)
               .onSelect((index: number, value: string) => {
-                groupInfo.groupAddOpt = getEnumMap("groupAddOpt").get(value) as V2TIMGroupAddOpt;
+                groupInfo.groupAddOpt = getEnumMap("V2TIMGroupMemberRole").get(value) as V2TIMGroupAddOpt;
               })
           }.DemoRowStyle()
 
@@ -395,6 +403,12 @@ export struct GroupManagerTestPage {
             DemoButton("getTopicInfoList", GroupTestInterfaces.getTopicInfoList)
           }.DemoRowStyle()
 
+          Row({ space: 4 }) {
+            DemoButton("pinGroupMessage", GroupTestInterfaces.pinGroupMessage)
+            DemoButton("unpinGroupMessage", GroupTestInterfaces.unpinGroupMessage)
+            DemoButton("getPinnedGroupMessageList", GroupTestInterfaces.getPinedGroupMessageList)
+          }.DemoRowStyle()
+
         }
         .align(Alignment.TopStart)
         .alignItems(HorizontalAlign.Start)
@@ -417,11 +431,11 @@ export struct GroupManagerTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
 
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 
@@ -445,3 +459,23 @@ interface DemoTextInterface {
   .width('100%')
   .justifyContent(FlexAlign.Start)
 }
+
+
+// function getEnumKeys(enumName: any) {
+//   const keys = Object.keys(enumName).filter(key => Number.isNaN(Number(key)));
+//   let result = new Array<{ value: string }>();
+//   for (const key of keys) {
+//     result.push({ value: key });
+//   }
+//   return result;
+// }
+//
+// function getEnumMap(enumName: any) {
+//   const list = Object.keys(enumName);
+//   const size = list.length / 2;
+//   let result = new Map<string, number>();
+//   for (let i = 0; i < size; ++i) {
+//     result.set(list[i + size], Number(list[i]));
+//   }
+//   return result;
+// }

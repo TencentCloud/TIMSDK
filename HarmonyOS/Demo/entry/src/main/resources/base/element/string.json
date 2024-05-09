@@ -5,11 +5,11 @@
       "value": "module description"
     },
     {
-      "name": "EntryAbility_desc",
+      "name": "ImdemoAbility_desc",
       "value": "description"
     },
     {
-      "name": "EntryAbility_label",
+      "name": "ImdemoAbility_label",
       "value": "label"
     }
   ]

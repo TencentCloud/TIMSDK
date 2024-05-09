@@ -26,7 +26,7 @@ import buffer from '@ohos.buffer';
 
 import { MessageTestInterfaces } from '../interfaces/MessageTestInterfaces';
 
-import { getEnumKeys, getEnumMap } from "../tools/GetEnum";
+import { getEnumKeys, getEnumMap } from '../tools/GetEnum';
 
 @Observed
 class Result {
@@ -41,13 +41,13 @@ let result = new Result();
 
 export default result;
 
-export function onResult(...args: ESObject[]) {
+export function writeResult(...args: ESObject[]) {
   let resultList = new Array<string>();
   args.forEach((value: ESObject) => {
     resultList.push(JSON.stringify(value));
   });
   let currentResult = resultList.join(" ");
-  result.result = "\n \n" + currentResult;
+  result.result = "\n" + currentResult;
 }
 
 export function onCallback(...args: ESObject[]) {
@@ -56,7 +56,7 @@ export function onCallback(...args: ESObject[]) {
     resultList.push(JSON.stringify(value));
   });
   let currentResult = resultList.join(" ");
-  result.callbackResult = "\n \n" + currentResult;
+  result.callbackResult = "\n" + currentResult;
 }
 
 @Observed
@@ -71,7 +71,7 @@ class Info {
   needReadReceipt = true;
   onlineUserOnly = false;
   priority = V2TIMMessagePriority.V2TIM_PRIORITY_DEFAULT;
-  offlinePushInfo: undefined | V2TIMOfflinePushInfo = undefined;
+  offlinePushInfo: null | V2TIMOfflinePushInfo = null;
   excludeLastMessage = false;
   excludeUnreadCount = false;
   excludeSecurityCheck = false;
@@ -373,12 +373,12 @@ export struct MessageManagerTestPage {
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("setC2CReceiveMessageOpt", () : void => MessageTestInterfaces.setC2CReceiveMessageOpt());
-            DemoButton("setGroupReceiveMessageOpt", () : void => MessageTestInterfaces.setGroupReceiveMessageOpt());
+            DemoButton("setC2CReceiveMessageOpt", (): void => MessageTestInterfaces.setC2CReceiveMessageOpt());
+            DemoButton("setGroupReceiveMessageOpt", (): void => MessageTestInterfaces.setGroupReceiveMessageOpt());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("getC2CReceiveMessageOpt", () : void => MessageTestInterfaces.getC2CReceiveMessageOpt());
+            DemoButton("getC2CReceiveMessageOpt", (): void => MessageTestInterfaces.getC2CReceiveMessageOpt());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
@@ -430,18 +430,18 @@ export struct MessageManagerTestPage {
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("setAllReceiveMessageOpt", () : void => MessageTestInterfaces.setAllReceiveMessageOpt());
-            DemoButton("setAllReceiveMessageOpt2", () : void => MessageTestInterfaces.setAllReceiveMessageOpt2());
+            DemoButton("setAllReceiveMessageOpt", (): void => MessageTestInterfaces.setAllReceiveMessageOpt());
+            DemoButton("setAllReceiveMessageOpt2", (): void => MessageTestInterfaces.setAllReceiveMessageOpt2());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("getAllReceiveMessageOpt", () : void => MessageTestInterfaces.getAllReceiveMessageOpt());
+            DemoButton("getAllReceiveMessageOpt", (): void => MessageTestInterfaces.getAllReceiveMessageOpt());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("revokeMessage", () : void => MessageTestInterfaces.revokeMessage());
-            DemoButton("modifyMessage", () : void => MessageTestInterfaces.modifyMessage());
-            DemoButton("deleteMessage", () : void => MessageTestInterfaces.modifyMessage());
+            DemoButton("revokeMessage", (): void => MessageTestInterfaces.revokeMessage());
+            DemoButton("modifyMessage", (): void => MessageTestInterfaces.modifyMessage());
+            DemoButton("deleteMessage", (): void => MessageTestInterfaces.modifyMessage());
           }.DemoRowStyle()
 
           Column({ space: 4 }) {
@@ -462,10 +462,18 @@ export struct MessageManagerTestPage {
             }.DemoRowStyle()
 
             Row({ space: 4 }) {
-              DemoButton("clearC2CHistoryMessage", () : void => MessageTestInterfaces.clearC2CHistoryMessage());
-              DemoButton("clearGroupHistoryMessage", () : void => MessageTestInterfaces.clearGroupHistoryMessage());
+              DemoButton("clearC2CHistoryMessage", (): void => MessageTestInterfaces.clearC2CHistoryMessage());
+              DemoButton("clearGroupHistoryMessage", (): void => MessageTestInterfaces.clearGroupHistoryMessage());
             }.DemoRowStyle()
 
+            // Row({ space: 4 }) {
+            //   DemoButton("markC2CMessageAsRead", (): void => MessageTestInterfaces.markC2CMessageAsRead());
+            //   DemoButton("markC2CMessageAsRead", (): void => MessageTestInterfaces.markC2CMessageAsRead());
+            // }.DemoRowStyle()
+            //
+            // Row({ space: 4 }) {
+            //   DemoButton("markAllMessageAsRead", (): void => MessageTestInterfaces.markAllMessageAsRead());
+            // }.DemoRowStyle()
           }.alignItems(HorizontalAlign.Start)
           .align(Alignment.TopStart)
           .border({ color: Color.Green, style: BorderStyle.Dashed, width: 1, radius: 4 })
@@ -495,8 +503,8 @@ export struct MessageManagerTestPage {
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("insertGroupMsgToLocal", () : void => MessageTestInterfaces.insertGroupMessageToLocalStorage());
-            DemoButton("insertC2CMsgToLocal", () : void => MessageTestInterfaces.insertC2CMessageToLocalStorage());
+            DemoButton("insertGroupMsgToLocal", (): void => MessageTestInterfaces.insertGroupMessageToLocalStorage());
+            DemoButton("insertC2CMsgToLocal", (): void => MessageTestInterfaces.insertC2CMessageToLocalStorage());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
@@ -514,11 +522,11 @@ export struct MessageManagerTestPage {
               .demoTextInputStyle()
           }.DemoRowStyle()
 
-          DemoButton("findMessages", () : void => MessageTestInterfaces.findMessages());
+          DemoButton("findMessages", (): void => MessageTestInterfaces.findMessages());
 
           Row({ space: 4 }) {
-            DemoButton("sendMessageReadReceipts", () : void => MessageTestInterfaces.sendMessageReadReceipts());
-            DemoButton("getMessageReadReceipts", () : void => MessageTestInterfaces.getMessageReadReceipts());
+            DemoButton("sendMessageReadReceipts", (): void => MessageTestInterfaces.sendMessageReadReceipts());
+            DemoButton("getMessageReadReceipts", (): void => MessageTestInterfaces.getMessageReadReceipts());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
@@ -531,25 +539,25 @@ export struct MessageManagerTestPage {
               .height(12)
           }.DemoRowStyle()
 
-          DemoButton("getGroupMessageReadMemberList", () : void => MessageTestInterfaces.getGroupMessageReadMemberList());
+          DemoButton("getGroupMessageReadMemberList", (): void => MessageTestInterfaces.getGroupMessageReadMemberList());
 
           Row({ space: 4 }) {
-            DemoButton("setMessageExtensions", () : void => MessageTestInterfaces.setMessageExtensions());
-            DemoButton("getMessageExtensions", () : void => MessageTestInterfaces.getMessageExtensions());
+            DemoButton("setMessageExtensions", (): void => MessageTestInterfaces.setMessageExtensions());
+            DemoButton("getMessageExtensions", (): void => MessageTestInterfaces.getMessageExtensions());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("deleteMessageExtensions", () : void => MessageTestInterfaces.deleteMessageExtensions());
+            DemoButton("deleteMessageExtensions", (): void => MessageTestInterfaces.deleteMessageExtensions());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("addMessageReaction", () : void => MessageTestInterfaces.addMessageReaction());
-            DemoButton("removeMessageReaction", () : void => MessageTestInterfaces.removeMessageReaction());
+            DemoButton("addMessageReaction", (): void => MessageTestInterfaces.addMessageReaction());
+            DemoButton("removeMessageReaction", (): void => MessageTestInterfaces.removeMessageReaction());
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("getMessageReactions", () : void => MessageTestInterfaces.getMessageReactions());
-            DemoButton("getMessageReactionUserList", () : void => MessageTestInterfaces.getMessageReactionUserList());
+            DemoButton("getMessageReactions", (): void => MessageTestInterfaces.getMessageReactions());
+            DemoButton("getMessageReactionUserList", (): void => MessageTestInterfaces.getMessageReactionUserList());
           }.DemoRowStyle()
 
           // translate
@@ -580,10 +588,24 @@ export struct MessageManagerTestPage {
                 .demoTextInputStyle()
             }.DemoRowStyle()
 
-            DemoButton("translateText", () : void => MessageTestInterfaces.translateText())
+            DemoButton("translateText", (): void => MessageTestInterfaces.translateText())
 
           }.align(Alignment.TopStart)
           .alignItems(HorizontalAlign.Start)
+
+          Row({ space: 4 }) {
+            Column() {
+              DemoButton("getLocalCustomData", MessageTestInterfaces.getLocalCustomData);
+              DemoButton("setLocalCustomData", MessageTestInterfaces.setLocalCustomData);
+            }
+            Column() {
+              DemoButton("getLocalCustomInt", MessageTestInterfaces.getLocalCustomInt);
+              DemoButton("setLocalCustomInt", MessageTestInterfaces.setLocalCustomInt);
+            }
+          }.DemoRowStyle()
+
+          DemoButton("pick_and_upload", MessageTestInterfaces.pick_and_upload);
+
         }.alignItems(HorizontalAlign.Start)
         .align(Alignment.TopStart)
       }
@@ -594,6 +616,26 @@ export struct MessageManagerTestPage {
   }
 }
 
+// function getEnumKeys(enumName: any) {
+//   const keys = Object.keys(enumName).filter(key => Number.isNaN(Number(key)));
+//   let result = new Array<{ value: string }>();
+//   for (const key of keys) {
+//     result.push({ value: key });
+//   }
+//   return result;
+// }
+//
+// function getEnumMap(enumName: any) {
+//   const list = Object.keys(enumName);
+//   const size = list.length / 2;
+//   let result = new Map<string, number>();
+//   for (let i = 0; i < size; ++i) {
+//     result.set(list[i + size], Number(list[i]));
+//   }
+//   return result;
+// }
+
+
 @Builder function DemoButton(name: string, onclickEvent?: (event?: ClickEvent) => void) {
   Button({ stateEffect: true, type: ButtonType.Normal }) {
     Text(name).fontSize(12).fontColor(Color.White)
@@ -603,11 +645,11 @@ export struct MessageManagerTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
 
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 

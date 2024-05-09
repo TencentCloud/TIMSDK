@@ -1,7 +1,29 @@
-import { V2TIMGroupType, V2TIMCommunityManager, V2TIMCreateGroupInfo, V2TIMCreateGroupMemberInfo, V2TIMManager, V2TIMGroupInfo, V2TIMGroupInfoResult, V2TIMGroupSearchParam, V2TIMGroupAddOpt, V2TIMSetGroupInfoParam, V2TIMGroupMemberInfoResult, V2TIMGroupMemberFullInfo, V2TIMGroupMemberSearchParam, V2TIMSetGroupMemberInfo, V2TIMGroupMemberOperationResult, V2TIMGroupMemberRole, V2TIMGroupApplicationResult, V2TIMGroupApplication, V2TIMTopicInfo, V2TIMTopicOperationResult, V2TIMTopicInfoResult } from "@tencentcloud/imsdk";
-import Prompt from "@system.prompt";
+import {
+  V2TIMGroupType,
+  V2TIMCreateGroupInfo,
+  V2TIMCreateGroupMemberInfo,
+  V2TIMManager,
+  V2TIMGroupInfo,
+  V2TIMGroupInfoResult,
+  V2TIMGroupSearchParam,
+  V2TIMGroupAddOpt,
+  V2TIMSetGroupInfoParam,
+  V2TIMGroupMemberInfoResult,
+  V2TIMGroupMemberFullInfo,
+  V2TIMGroupMemberSearchParam,
+  V2TIMSetGroupMemberInfo,
+  V2TIMGroupMemberOperationResult,
+  V2TIMGroupMemberRole,
+  V2TIMGroupApplicationResult,
+  V2TIMGroupApplication,
+  V2TIMTopicInfo,
+  V2TIMTopicOperationResult,
+  V2TIMTopicInfoResult,
+  V2TIMMessage
+} from '@tencentcloud/imsdk';
+import Prompt from '@system.prompt';
 
-import { writeResult } from "../pages/SearchTestPage";
+import { writeResult } from "../pages/GroupManagerTestPage"
 
 @Observed
 export class GroupInfos {
@@ -89,47 +111,46 @@ export class GroupTestInterfaces {
       introduction: groupInfo.introduction,
       faceURL: groupInfo.faceURL,
     };
-    const memberList: V2TIMCreateGroupMemberInfo[] = [{ userID: groupInfo.userID1 }, { userID: groupInfo.userID2 }];
-    V2TIMManager.getGroupManager()
-      .createGroup(info, memberList)
+    const memberList: V2TIMCreateGroupMemberInfo[] = [
+      { userID: groupInfo.userID1, },
+      { userID: groupInfo.userID2 },
+    ];
+    V2TIMManager.getGroupManager().createGroup(info, memberList)
       .then((groupID: string) => {
-        writeResult("createGroup succeeded", groupID);
+        writeResult('createGroup succeeded', groupID);
       })
       .catch((error: Error) => {
-        writeResult("createGroup failed", error);
+        writeResult('createGroup failed', error);
       });
   }
 
   static getJoinedGroups() {
-    V2TIMManager.getGroupManager()
-      .getJoinedGroupList()
+    V2TIMManager.getGroupManager().getJoinedGroupList()
       .then((info_list: V2TIMGroupInfo[]) => {
-        writeResult("getJoinedGroupList succeeded", info_list);
+        writeResult('getJoinedGroupList succeeded', info_list);
       })
       .catch((error: Error) => {
-        writeResult("getJoinedGroupList failed", error);
+        writeResult('getJoinedGroupList failed', error);
       });
   }
 
   static getJoinedCommunityList() {
-    V2TIMManager.getCommunityManager()
-      .getJoinedCommunityList()
+    V2TIMManager.getCommunityManager().getJoinedCommunityList()
       .then((info_list: V2TIMGroupInfo[]) => {
-        writeResult("getJoinedCommunityList succeeded", info_list);
+        writeResult('getJoinedCommunityList succeeded', info_list);
       })
       .catch((error: Error) => {
-        writeResult("getJoinedCommunityList failed", error);
+        writeResult('getJoinedCommunityList failed', error);
       });
   }
 
   static getGroupsInfo() {
-    V2TIMManager.getGroupManager()
-      .getGroupsInfo([groupInfo.groupID2, groupInfo.groupID3])
+    V2TIMManager.getGroupManager().getGroupsInfo([groupInfo.groupID2, groupInfo.groupID3])
       .then((resultList: V2TIMGroupInfoResult[]) => {
-        writeResult("getGroupsInfo succeeded", resultList);
+        writeResult('getGroupsInfo succeeded', resultList);
       })
       .catch((error: Error) => {
-        writeResult("getGroupsInfo failed", error);
+        writeResult('getGroupsInfo failed', error);
       });
   }
 
@@ -140,129 +161,119 @@ export class GroupTestInterfaces {
       groupAddOpt: groupInfo.groupAddOpt,
       groupApproveOpt: groupInfo.groupApproveOpt,
     };
-    V2TIMManager.getGroupManager()
-      .setGroupInfo(info)
+    V2TIMManager.getGroupManager().setGroupInfo(info)
       .then(() => {
-        writeResult("setGroupInfo succeeded");
+        writeResult('setGroupInfo succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setGroupInfo failed", error);
+        writeResult('setGroupInfo failed', error);
       });
   }
 
   static initGroupAttributes() {
     let attributes = new Map<string, string>([
-      ["counter1", "1"],
-      ["counter2", "2"],
-      ["counter3", "3"],
+      ['counter1', "1"],
+      ['counter2', "2"],
+      ['counter3', "3"]
     ]);
 
-    V2TIMManager.getGroupManager()
-      .initGroupAttributes(groupInfo.groupID5, attributes)
+    V2TIMManager.getGroupManager().initGroupAttributes(groupInfo.groupID5, attributes)
       .then(() => {
-        writeResult("initGroupAttributes succeeded");
+        writeResult('initGroupAttributes succeeded');
       })
       .catch((error: Error) => {
-        writeResult("initGroupAttributes failed", error);
+        writeResult('initGroupAttributes failed', error);
       });
   }
 
   static setGroupAttributes() {
     let attributes = new Map<string, string>([
-      ["counter1", "333"],
-      ["counter2", "2222"],
-      ["counter3", "3333"],
+      ['counter1', "333"],
+      ['counter2', "2222"],
+      ['counter3', "3333"]
     ]);
 
-    V2TIMManager.getGroupManager()
-      .setGroupAttributes(groupInfo.groupID5, attributes)
+    V2TIMManager.getGroupManager().setGroupAttributes(groupInfo.groupID5, attributes)
       .then(() => {
-        writeResult("setGroupAttributes succeeded");
+        writeResult('setGroupAttributes succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setGroupAttributes failed", error);
+        writeResult('setGroupAttributes failed', error);
       });
   }
 
   static deleteGroupAttributes() {
-    V2TIMManager.getGroupManager()
-      .deleteGroupAttributes(groupInfo.groupID5, ["counter1", "counter2"])
+    V2TIMManager.getGroupManager().deleteGroupAttributes(groupInfo.groupID5, ["counter1", "counter2"])
       .then(() => {
-        writeResult("deleteGroupAttributes succeeded");
+        writeResult('deleteGroupAttributes succeeded');
       })
       .catch((error: Error) => {
-        writeResult("deleteGroupAttributes failed", error);
+        writeResult('deleteGroupAttributes failed', error);
       });
   }
 
   static getGroupAttributes() {
-    V2TIMManager.getGroupManager()
-      .getGroupAttributes(groupInfo.groupID5, ["counter1", "counter2"])
+    V2TIMManager.getGroupManager().getGroupAttributes(groupInfo.groupID5, ["counter1", "counter2"])
       .then((resultMap: Map<string, string>) => {
-        writeResult("getGroupAttributes succeeded", resultMap);
+        writeResult('getGroupAttributes succeeded', resultMap);
       })
       .catch((error: Error) => {
-        writeResult("getGroupAttributes failed", error);
+        writeResult('getGroupAttributes failed', error);
       });
   }
 
   static getGroupOnlineMemberCount() {
-    V2TIMManager.getGroupManager()
-      .getGroupOnlineMemberCount(groupInfo.groupID5)
+    V2TIMManager.getGroupManager().getGroupOnlineMemberCount(groupInfo.groupID5)
       .then((result: Number) => {
-        writeResult("getGroupOnlineMemberCount succeeded", result);
+        writeResult('getGroupOnlineMemberCount succeeded', result);
       })
       .catch((error: Error) => {
-        writeResult("getGroupOnlineMemberCount failed", error);
+        writeResult('getGroupOnlineMemberCount failed', error);
       });
   }
 
   static setGroupCounters() {
     let counters = new Map<string, number>([
-      ["counter1", 0],
-      ["counter2", 0],
-      ["counter3", 0],
+      ['counter1', 0],
+      ['counter2', 0],
+      ['counter3', 0]
     ]);
-    V2TIMManager.getGroupManager()
-      .setGroupCounters(groupInfo.groupID5, counters)
+    V2TIMManager.getGroupManager().setGroupCounters(groupInfo.groupID5, counters)
       .then((resultMap: Map<string, number>) => {
-        writeResult("setGroupCounters succeeded", resultMap);
+        writeResult('setGroupCounters succeeded', resultMap);
       })
       .catch((error: Error) => {
-        writeResult("setGroupCounters failed", error);
+        writeResult('setGroupCounters failed', error);
       });
   }
 
   static getGroupCounters() {
-    V2TIMManager.getGroupManager()
-      .getGroupCounters(groupInfo.groupID5, ["counter1", "counter2"])
+    V2TIMManager.getGroupManager().getGroupCounters(groupInfo.groupID5, ["counter1", "counter2"])
       .then((resultMap: Map<string, number>) => {
-        writeResult("getGroupCounters succeeded", resultMap);
+        writeResult('getGroupCounters succeeded', resultMap);
       })
       .catch((error: Error) => {
-        writeResult("getGroupCounters failed", error);
+        writeResult('getGroupCounters failed', error);
       });
   }
 
   static increaseGroupCounter() {
-    V2TIMManager.getGroupManager()
-      .increaseGroupCounter(groupInfo.groupID5, "counter1", 2)
+    V2TIMManager.getGroupManager().increaseGroupCounter(groupInfo.groupID5, "counter1", 2)
       .then((resultMap: Map<string, number>) => {
-        writeResult("increaseGroupCounter succeeded", resultMap);
+        writeResult('increaseGroupCounter succeeded', resultMap);
       })
       .catch((error: Error) => {
-        writeResult("increaseGroupCounter failed", error);
+        writeResult('increaseGroupCounter failed', error);
       });
   }
 
   static decreaseGroupCounter() {
-    V2TIMManager.getGroupManager()
-      .decreaseGroupCounter(groupInfo.groupID5, "counter1", 1)
+    V2TIMManager.getGroupManager().decreaseGroupCounter(groupInfo.groupID5, "counter1", 1)
       .then((resultMap: Map<string, number>) => {
-        writeResult("decreaseGroupCounter succeeded", resultMap);
+        writeResult('decreaseGroupCounter succeeded', resultMap);
       })
       .catch((error: Error) => {
-        writeResult("decreaseGroupCounter failed", error);
+        writeResult('decreaseGroupCounter failed', error);
       });
   }
 
@@ -270,32 +281,30 @@ export class GroupTestInterfaces {
     V2TIMManager.getGroupManager()
       .getGroupMemberList(groupInfo.groupID6, groupInfo.getGroupMemberListFilter, groupInfo.nextSeq)
       .then((result: V2TIMGroupMemberInfoResult) => {
-        writeResult("getGroupMemberList succeeded", result);
+        writeResult('getGroupMemberList succeeded', result);
       })
       .catch((error: Error) => {
-        writeResult("getGroupMemberList failed", error);
+        writeResult('getGroupMemberList failed', error);
       });
   }
 
   static inviteUserToGroup() {
-    V2TIMManager.getGroupManager()
-      .inviteUserToGroup(groupInfo.groupID7, [groupInfo.userID7, groupInfo.userID8])
+    V2TIMManager.getGroupManager().inviteUserToGroup(groupInfo.groupID7, [groupInfo.userID7, groupInfo.userID8])
       .then((resultList: V2TIMGroupMemberOperationResult[]) => {
-        writeResult("inviteUserToGroup succeeded", resultList);
+        writeResult('inviteUserToGroup succeeded', resultList);
       })
       .catch((error: Error) => {
-        writeResult("inviteUserToGroup failed", error);
+        writeResult('inviteUserToGroup failed', error);
       });
   }
 
   static getGroupMembersInfo() {
-    V2TIMManager.getGroupManager()
-      .getGroupMembersInfo(groupInfo.groupID7, [groupInfo.userID7, groupInfo.userID8])
+    V2TIMManager.getGroupManager().getGroupMembersInfo(groupInfo.groupID7, [groupInfo.userID7, groupInfo.userID8])
       .then((info_list: V2TIMGroupMemberFullInfo[]) => {
-        writeResult("getGroupMembersInfo succeeded", info_list);
+        writeResult('getGroupMembersInfo succeeded', info_list);
       })
       .catch((error: Error) => {
-        writeResult("getGroupMembersInfo failed", error);
+        writeResult('getGroupMembersInfo failed', error);
       });
   }
 
@@ -303,10 +312,10 @@ export class GroupTestInterfaces {
     V2TIMManager.getGroupManager()
       .kickGroupMember(groupInfo.groupID7, [groupInfo.userID7, groupInfo.userID8], { reason: "踢人原因 111" })
       .then((resultList: V2TIMGroupMemberOperationResult[]) => {
-        writeResult("kickGroupMember succeeded", resultList);
+        writeResult('kickGroupMember succeeded', resultList);
       })
       .catch((error: Error) => {
-        writeResult("kickGroupMember failed", error);
+        writeResult('kickGroupMember failed', error);
       });
   }
 
@@ -315,35 +324,32 @@ export class GroupTestInterfaces {
       userID: groupInfo.userID9,
       nameCard: groupInfo.nameCard,
     };
-    V2TIMManager.getGroupManager()
-      .setGroupMemberInfo(groupInfo.groupID9, info)
+    V2TIMManager.getGroupManager().setGroupMemberInfo(groupInfo.groupID9, info)
       .then(() => {
-        writeResult("setGroupMemberInfo succeeded");
+        writeResult('setGroupMemberInfo succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setGroupMemberInfo failed", error);
+        writeResult('setGroupMemberInfo failed', error);
       });
   }
 
   static muteGroupMember() {
-    V2TIMManager.getGroupManager()
-      .muteGroupMember(groupInfo.groupID10, groupInfo.userID10, groupInfo.seconds)
+    V2TIMManager.getGroupManager().muteGroupMember(groupInfo.groupID10, groupInfo.userID10, groupInfo.seconds)
       .then(() => {
-        writeResult("muteGroupMember succeeded");
+        writeResult('muteGroupMember succeeded');
       })
       .catch((error: Error) => {
-        writeResult("muteGroupMember failed", error);
+        writeResult('muteGroupMember failed', error);
       });
   }
 
   static setGroupMemberRole() {
-    V2TIMManager.getGroupManager()
-      .setGroupMemberRole(groupInfo.groupID11, groupInfo.userID11, groupInfo.role)
+    V2TIMManager.getGroupManager().setGroupMemberRole(groupInfo.groupID11, groupInfo.userID11, groupInfo.role)
       .then(() => {
-        writeResult("setGroupMemberRole succeeded");
+        writeResult('setGroupMemberRole succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setGroupMemberRole failed", error);
+        writeResult('setGroupMemberRole failed', error);
       });
   }
 
@@ -351,46 +357,43 @@ export class GroupTestInterfaces {
     V2TIMManager.getGroupManager()
       .markGroupMemberList(groupInfo.groupID12, [groupInfo.userID12, groupInfo.userID13], groupInfo.markType, groupInfo.enableMark)
       .then(() => {
-        writeResult("markGroupMemberList succeeded");
+        writeResult('markGroupMemberList succeeded');
       })
       .catch((error: Error) => {
-        writeResult("markGroupMemberList failed", error);
+        writeResult('markGroupMemberList failed', error);
       });
   }
 
   static transferGroupOwner() {
-    V2TIMManager.getGroupManager()
-      .transferGroupOwner(groupInfo.groupID14, groupInfo.userID14)
+    V2TIMManager.getGroupManager().transferGroupOwner(groupInfo.groupID14, groupInfo.userID14)
       .then(() => {
-        writeResult("transferGroupOwner succeeded");
+        writeResult('transferGroupOwner succeeded');
       })
       .catch((error: Error) => {
-        writeResult("transferGroupOwner failed", error);
+        writeResult('transferGroupOwner failed', error);
       });
   }
 
   static getGroupApplicationList() {
-    V2TIMManager.getGroupManager()
-      .getGroupApplicationList()
+    V2TIMManager.getGroupManager().getGroupApplicationList()
       .then((result: V2TIMGroupApplicationResult) => {
-        writeResult("getGroupApplicationList succeeded", result);
+        writeResult('getGroupApplicationList succeeded', result);
         if (result.applicationList) {
           groupInfo.groupApplication = result.applicationList;
         }
       })
       .catch((error: Error) => {
-        writeResult("getGroupApplicationList failed", error);
+        writeResult('getGroupApplicationList failed', error);
       });
   }
 
   static setGroupApplicationRead() {
-    V2TIMManager.getGroupManager()
-      .setGroupApplicationRead()
+    V2TIMManager.getGroupManager().setGroupApplicationRead()
       .then(() => {
-        writeResult("setGroupApplicationRead succeeded");
+        writeResult('setGroupApplicationRead succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setGroupApplicationRead failed", error);
+        writeResult('setGroupApplicationRead failed', error);
       });
   }
 
@@ -399,13 +402,12 @@ export class GroupTestInterfaces {
       Prompt.showToast({ message: "请先获取加群申请" });
     }
     let application = groupInfo.groupApplication[0];
-    V2TIMManager.getGroupManager()
-      .acceptGroupApplication(application, "同意 111")
+    V2TIMManager.getGroupManager().acceptGroupApplication(application, "同意 111")
       .then(() => {
-        writeResult("setGroupApplicationRead succeeded");
+        writeResult('setGroupApplicationRead succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setGroupApplicationRead failed", error);
+        writeResult('setGroupApplicationRead failed', error);
       });
   }
 
@@ -414,13 +416,12 @@ export class GroupTestInterfaces {
       Prompt.showToast({ message: "请先获取加群申请" });
     }
     let application = groupInfo.groupApplication[0];
-    V2TIMManager.getGroupManager()
-      .refuseGroupApplication(application, "拒绝 111")
+    V2TIMManager.getGroupManager().refuseGroupApplication(application, "拒绝 111")
       .then(() => {
-        writeResult("setGroupApplicationRead succeeded");
+        writeResult('setGroupApplicationRead succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setGroupApplicationRead failed", error);
+        writeResult('setGroupApplicationRead failed', error);
       });
   }
 
@@ -430,26 +431,24 @@ export class GroupTestInterfaces {
     topicInfo.topicID = `@TGS#_@TGS#cQORJIIM62C4@TOPIC#_${topicSuffix}`;
     topicInfo.topicName = "32145";
     topicInfo.topicFaceURL = "32145";
-    V2TIMManager.getCommunityManager()
-      .createTopicInCommunity(groupInfo.communityGroupID, topicInfo)
+    V2TIMManager.getCommunityManager().createTopicInCommunity(groupInfo.communityGroupID, topicInfo)
       .then((result: string) => {
-        writeResult("createTopicInCommunity succeeded", result);
+        writeResult('createTopicInCommunity succeeded', result);
       })
       .catch((error: Error) => {
-        writeResult("createTopicInCommunity failed", error);
+        writeResult('createTopicInCommunity failed', error);
       });
   }
 
   static deleteTopicFromCommunity() {
     const topicSuffix = "TOPIC_111";
     let topicID = `@TGS#_@TGS#cQORJIIM62C4@TOPIC#_${topicSuffix}`;
-    V2TIMManager.getCommunityManager()
-      .deleteTopicFromCommunity(groupInfo.communityGroupID, [topicID])
+    V2TIMManager.getCommunityManager().deleteTopicFromCommunity(groupInfo.communityGroupID, [topicID])
       .then((resultList: V2TIMTopicOperationResult[]) => {
-        writeResult("deleteTopicFromCommunity succeeded", resultList);
+        writeResult('deleteTopicFromCommunity succeeded', resultList);
       })
       .catch((error: Error) => {
-        writeResult("deleteTopicFromCommunity failed", error);
+        writeResult('deleteTopicFromCommunity failed', error);
       });
   }
 
@@ -459,26 +458,61 @@ export class GroupTestInterfaces {
     topicInfo.topicID = `@TGS#_@TGS#cQORJIIM62C4@TOPIC#_${topicSuffix}`;
     topicInfo.topicName = "321111";
     topicInfo.topicFaceURL = "321111";
-    V2TIMManager.getCommunityManager()
-      .setTopicInfo(topicInfo)
+    V2TIMManager.getCommunityManager().setTopicInfo(topicInfo)
       .then(() => {
-        writeResult("setTopicInfo succeeded");
+        writeResult('setTopicInfo succeeded');
       })
       .catch((error: Error) => {
-        writeResult("setTopicInfo failed", error);
+        writeResult('setTopicInfo failed', error);
       });
   }
 
   static getTopicInfoList() {
     const topicSuffix = "TOPIC_111";
     let topicID = `@TGS#_@TGS#cQORJIIM62C4@TOPIC#_${topicSuffix}`;
-    V2TIMManager.getCommunityManager()
-      .getTopicInfoList(groupInfo.communityGroupID, [topicID])
+    V2TIMManager.getCommunityManager().getTopicInfoList(groupInfo.communityGroupID, [topicID])
       .then((resultList: V2TIMTopicInfoResult[]) => {
-        writeResult("getTopicInfoList succeeded", resultList);
+        writeResult('getTopicInfoList succeeded', resultList);
       })
       .catch((error: Error) => {
-        writeResult("getTopicInfoList failed", error);
+        writeResult('getTopicInfoList failed', error);
+      });
+  }
+
+  static pinGroupMessage() {
+    const testgroup = "three";
+    let message = V2TIMManager.getMessageManager().createTextMessage("text");
+    message.seq = 10;
+    V2TIMManager.getMessageManager().pinGroupMessage(testgroup, message, true)
+      .then(() => {
+        writeResult('pinGroupMessage succeeded');
+      })
+      .catch((error: Error) => {
+        writeResult('pinGroupMessage failed', error);
+      });
+  }
+
+  static unpinGroupMessage() {
+    const testgroup = "three";
+    let message = V2TIMManager.getMessageManager().createTextMessage("text");
+    message.seq = 10;
+    V2TIMManager.getMessageManager().pinGroupMessage(testgroup, message, false)
+      .then(() => {
+        writeResult('unpinGroupMessage succeeded');
+      })
+      .catch((error: Error) => {
+        writeResult('unpinGroupMessage failed', error);
+      });
+  }
+
+  static getPinedGroupMessageList() {
+    const testgroup = "three";
+    V2TIMManager.getMessageManager().getPinnedGroupMessageList(testgroup)
+      .then((messageList: V2TIMMessage[]) => {
+        writeResult('getPinedGroupMessageList succeeded', messageList[0].seq);
+      })
+      .catch((error: Error) => {
+        writeResult('getPinedGroupMessageList failed', error);
       });
   }
 }

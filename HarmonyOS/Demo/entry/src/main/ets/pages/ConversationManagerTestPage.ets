@@ -4,26 +4,36 @@ import {
   V2TIMConversationType,
 } from '@tencentcloud/imsdk'
 
-import { ConversationTestInterfaces } from '../interfaces/ConversationTestInterfaces';
-
 import { getEnumKeys, getEnumMap } from "../tools/GetEnum";
+
+import { ConversationTestInterfaces } from '../interfaces/ConversationTestInterfaces';
 
 @Observed
 class Result {
   result = ""
+  callbackResult = ""
 }
 
 let result = new Result();
 
 export default result;
 
-export function log(...args: ESObject[]) {
+export function writeResult(...args: ESObject[]) {
   let resultList = new Array<string>();
   args.forEach((value: ESObject) => {
     resultList.push(JSON.stringify(value));
   });
   let currentResult = resultList.join(" ");
-  result.result = "\n \n" + currentResult;
+  result.result = "\n" + currentResult;
+}
+
+export function onCallback(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.callbackResult = "\n" + currentResult;
 }
 
 @Entry
@@ -80,11 +90,12 @@ export struct ConversationManagerTestPage {
       Column() {
         DemoButton("清空", () => {
           this.result.result = "";
+          this.result.callbackResult = "";
         })
         DemoTitle("接口调用结果：")
-        Scroll() {
-          DemoText({ name: this.result.result !})
-        }
+        DemoText({ name: this.result.result })
+        DemoTitle("回调结果：")
+        DemoText({ name: this.result.callbackResult })
       }.width('100%')
       .height('35%')
       .alignItems(HorizontalAlign.Start)
@@ -407,7 +418,7 @@ export struct ConversationManagerTestPage {
           }.demoRowStyle()
 
           Row() {
-            DemoButton("getConversationGroupList", () : void => ConversationTestInterfaces.getConversationGroupList());
+            DemoButton("getConversationGroupList", (): void => ConversationTestInterfaces.getConversationGroupList());
           }.demoRowStyle()
 
           Row({ space: 4 }) {
@@ -423,7 +434,7 @@ export struct ConversationManagerTestPage {
           }.demoRowStyle()
 
           Row() {
-            DemoButton("renameConversationGroup", () : void => ConversationTestInterfaces.renameConversationGroup(this.oldGroupName, this.newGroupName));
+            DemoButton("renameConversationGroup", (): void => ConversationTestInterfaces.renameConversationGroup(this.oldGroupName, this.newGroupName));
           }.demoRowStyle()
 
 
@@ -460,6 +471,9 @@ export struct ConversationManagerTestPage {
             })
           }.demoRowStyle()
 
+          Row({ space: 4 }) {
+            DemoButton("testConversationGroupList", ConversationTestInterfaces.testConversationGroupList)
+          }.demoRowStyle()
         }
       }
       .height('65%')
@@ -501,11 +515,11 @@ export struct ConversationManagerTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
 
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 

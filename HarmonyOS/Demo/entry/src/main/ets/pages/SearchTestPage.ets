@@ -1,12 +1,16 @@
 import { V2TIMKeywordListMatchType } from '@tencentcloud/imsdk';
 import { searchInfo, SearchTestInterfaces } from '../interfaces/SearchTestInterfaces';
+import ArrayList from '@ohos.util.ArrayList';
 
 @Observed
 class Result {
   result = "";
+  callbackResult = "";
 }
 
 let result = new Result();
+
+export { result };
 
 export function writeResult(...args: ESObject[]) {
   let resultList = new Array<string>();
@@ -14,7 +18,16 @@ export function writeResult(...args: ESObject[]) {
     resultList.push(JSON.stringify(value));
   });
   let currentResult = resultList.join(" ");
-  result.result = "\n \n" + currentResult;
+  result.result = "\n" + currentResult;
+}
+
+export function onCallback(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.callbackResult = "\n" + currentResult;
 }
 
 @Entry
@@ -170,11 +183,11 @@ export struct SearchTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
 
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 

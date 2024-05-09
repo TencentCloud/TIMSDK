@@ -1,7 +1,7 @@
 import { V2TIMManager, V2TIMMessage, V2TIMMessageGetType, V2TIMMessageListGetOption } from '@tencentcloud/imsdk';
 import Prompt from '@system.prompt';
 import promptAction from '@ohos.promptAction';
-
+import { getEnumKeys, getEnumMap } from '../tools/GetEnum'
 @Observed
 class GetInfo {
   userID = "xlm";
@@ -56,6 +56,10 @@ class MessageListDataSource implements IDataSource {
 
 let getInfo = new GetInfo();
 
+interface Item {
+  msgID: string;
+}
+
 @Entry
 @Component
 export struct MessageFetchTestPage {
@@ -102,7 +106,7 @@ export struct MessageFetchTestPage {
 
         Row({ space: 4 }) {
           DemoLabel("lastMsg")
-          DemoText({ name: this.lastMessage?.msgID! })
+          DemoText({ name: this.lastMessage?.msgID ?? "" })
         }.DemoRowStyle()
 
         Row({ space: 4 }) {
@@ -111,19 +115,12 @@ export struct MessageFetchTestPage {
         }.DemoRowStyle()
 
         Row({ space: 4 }) {
-          DemoButton("拉取更旧", () => {
-            this.getHistoryMessage(false)
-          })
-          DemoButton("拉取更新", () => {
-            this.getHistoryMessage(true)
-          })
-          DemoButton("重置", () => {
-            this.messageData.onDataChanged([]);
-            this.lastSeq = 0;
-            this.lastMessage = null;
-          })
+          DemoButton("拉取更旧", (): void => { this.getHistoryMessage(false) })
+          DemoButton("拉取更新", (): void => { this.getHistoryMessage(true) })
+          DemoButton("重置", (): void => { this.messageData.onDataChanged([]); this.lastSeq = 0; this.lastMessage = null; })
         }.DemoRowStyle()
-      }.height('35%')
+
+      }.height('45%')
       .alignItems(HorizontalAlign.Start)
       .align(Alignment.TopStart)
 
@@ -170,7 +167,7 @@ export struct MessageFetchTestPage {
                 }
               }).catch()
             })
-          }, (item: V2TIMMessage, index: number) => item.msgID)
+          }, (item: Item) => item.msgID)
         }.listDirection(Axis.Vertical)
         .width('100%')
         .height('100%')
@@ -207,6 +204,7 @@ export struct MessageFetchTestPage {
   }
 }
 
+
 @Builder function DemoButton(name: string, onclickEvent?: (event?: ClickEvent) => void) {
   Button({ stateEffect: true, type: ButtonType.Normal }) {
     Text(name).fontSize(12).fontColor(Color.White)
@@ -216,11 +214,11 @@ export struct MessageFetchTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
 
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 

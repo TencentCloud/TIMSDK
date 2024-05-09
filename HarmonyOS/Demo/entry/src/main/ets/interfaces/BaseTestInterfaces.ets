@@ -1,8 +1,30 @@
-import { SDKAPPID, genTestUserSig } from "../tools/GenerateTestUserSig";
-import TestResult from "../pages/BaseManagerTestPage";
-import buffer from "@ohos.buffer";
-import { V2TIMManager, V2TIMSDKConfig, V2TIMLogLevel, V2TIMLoginStatus, V2TIMMessage, V2TIMMessagePriority, V2TIMGroupType, V2TIMUserFullInfo, V2TIMFriendAllowType, V2TIMSetSelfInfoParam, V2TIMUserStatus, V2TIMSetSelfStatusParam, V2TIMUserInfo, V2TIMSimpleMsgListener, V2TIMSDKListener, V2TIMGroupMemberInfo, V2TIMGroupMemberChangeInfo, V2TIMGroupListener, V2TIMGroupChangeInfo } from "@tencentcloud/imsdk";
-import Prompt from "@system.prompt";
+import { SDKAPPID, genTestUserSig } from '../tools/GenerateTestUserSig';
+import TestResult from '../pages/BaseManagerTestPage';
+import buffer from '@ohos.buffer';
+import { onGroupCallback, onSimpleMessageReceive, writeResult, onSDKCallback } from  "../pages/BaseManagerTestPage"
+
+import {
+  V2TIMManager,
+  V2TIMSDKConfig,
+  V2TIMLogLevel,
+  V2TIMLoginStatus,
+  V2TIMMessage,
+  V2TIMMessagePriority,
+  V2TIMGroupType,
+  V2TIMUserFullInfo,
+  V2TIMFriendAllowType,
+  V2TIMSetSelfInfoParam,
+  V2TIMUserStatus,
+  V2TIMSetSelfStatusParam,
+  V2TIMUserInfo,
+  V2TIMSimpleMsgListener,
+  V2TIMSDKListener,
+  V2TIMGroupMemberInfo,
+  V2TIMGroupMemberChangeInfo,
+  V2TIMGroupListener,
+  V2TIMGroupChangeInfo,
+} from '@tencentcloud/imsdk';
+import Prompt from '@system.prompt';
 
 export class BaseTestInterfaces {
   static addSDKListener() {
@@ -20,10 +42,11 @@ export class BaseTestInterfaces {
       logLevel: V2TIMLogLevel.V2TIM_LOG_DEBUG,
       logListener: (logLevel: V2TIMLogLevel, logContent: string) => {
         // Test.log('logListener', logLevel, logContent);
-      },
+      }
     };
     V2TIMManager.getInstance().initSDK(SDKAPPID, sdkConfig);
     Prompt.showToast({ message: "initSDK" });
+
   }
 
   static unInitSDK() {
@@ -33,45 +56,43 @@ export class BaseTestInterfaces {
 
   static getVersion() {
     const result = V2TIMManager.getInstance().getVersion();
-    TestResult.interfaceResult = `getVersion ${result}`;
+    writeResult('getVersion succeeded', result);
   }
 
   static getServerTime() {
     const result = V2TIMManager.getInstance().getServerTime();
-    TestResult.interfaceResult = `getServerTime ${result}`;
+    writeResult('getServerTime succeeded', result);
   }
 
   static login(userID: string) {
     const userSig = genTestUserSig(userID);
-    V2TIMManager.getInstance()
-      .login(userID, userSig)
+    V2TIMManager.getInstance().login(userID, userSig)
       .then(() => {
-        TestResult.interfaceResult = "login succeeded";
+        writeResult('login succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = "login failed " + error;
+        writeResult('login failed', error);
       });
   }
 
   static logout() {
-    V2TIMManager.getInstance()
-      .logout()
+    V2TIMManager.getInstance().logout()
       .then(() => {
-        TestResult.interfaceResult = "logout succeeded";
+        writeResult('logout succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = "logout failed " + error;
+        writeResult('logout failed', error);
       });
   }
 
   static getLoginUser() {
     const result = V2TIMManager.getInstance().getLoginUser();
-    TestResult.interfaceResult = "getLoginUser " + result;
+    writeResult('getLoginUser succeeded', result);
   }
 
   static getLoginStatus() {
     const result = V2TIMManager.getInstance().getLoginStatus();
-    TestResult.interfaceResult = "getLoginStatus " + V2TIMLoginStatus[result];
+    writeResult('getLoginUser succeeded', result);
   }
 
   static addSimpleMsgListener() {
@@ -88,10 +109,10 @@ export class BaseTestInterfaces {
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        TestResult.interfaceResult = `sendC2CTextMessage success,\n ${message.msgID} `;
+        writeResult('sendC2CTextMessage succeeded', message);
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `sendC2CTextMessage failed,\n ${msgID} \n ${error}}`;
+        writeResult('sendC2CTextMessage failed', error);
       });
   }
 
@@ -102,10 +123,10 @@ export class BaseTestInterfaces {
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        TestResult.interfaceResult = `sendC2CCustomMessage success,\n ${message.msgID} `;
+        writeResult('sendC2CCustomMessage succeeded', message);
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `sendC2CCustomMessage failed,\n ${msgID} \n ${error}}`;
+        writeResult('sendC2CCustomMessage failed', error);
       });
   }
 
@@ -115,24 +136,25 @@ export class BaseTestInterfaces {
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        TestResult.interfaceResult = `sendGroupTextMessage success,\n ${message.msgID} `;
+        writeResult('sendGroupTextMessage succeeded', message);
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `sendGroupTextMessage failed,\n ${msgID} \n ${error}}`;
+        writeResult('sendGroupTextMessage failed', error);
       });
   }
 
   static sendGroupCustomMessage(toGroupID: string, text = "customMsg", priority = V2TIMMessagePriority.V2TIM_PRIORITY_DEFAULT) {
     const customData = buffer.from(text).buffer;
-    const result = V2TIMManager.getInstance().sendGroupCustomMessage(customData, toGroupID, priority);
+    const result = V2TIMManager.getInstance()
+      .sendGroupCustomMessage(customData, toGroupID, priority);
     const msgID = result.msgID;
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        TestResult.interfaceResult = `sendGroupCustomMessage success,\n ${message.msgID} `;
+        writeResult('sendGroupCustomMessage succeeded', message);
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `sendGroupCustomMessage failed,\n ${msgID} \n ${error}}`;
+        writeResult('sendGroupCustomMessage failed', error);
       });
   }
 
@@ -145,57 +167,52 @@ export class BaseTestInterfaces {
   }
 
   static createGroup(groupType: V2TIMGroupType, groupName: string, groupID: string) {
-    V2TIMManager.getInstance()
-      .createGroup(groupType, groupName, groupID)
+    V2TIMManager.getInstance().createGroup(groupType, groupName, groupID)
       .then((groupID: string) => {
-        TestResult.interfaceResult = `createGroup succeeded  ${groupID}`;
+        writeResult('createGroup succeeded', groupID);
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `createGroup failed  ${error}`;
+        writeResult('createGroup failed', error);
       });
   }
 
   static joinGroup(groupID: string) {
-    V2TIMManager.getInstance()
-      .joinGroup(groupID)
+    V2TIMManager.getInstance().joinGroup(groupID)
       .then(() => {
-        TestResult.interfaceResult = "joinGroup succeeded";
+        writeResult('joinGroup succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `joinGroup failed ${error}`;
+        writeResult('joinGroup failed', error);
       });
   }
 
   static quitGroup(groupID: string) {
-    V2TIMManager.getInstance()
-      .quitGroup(groupID)
+    V2TIMManager.getInstance().quitGroup(groupID)
       .then(() => {
-        TestResult.interfaceResult = "quitGroup succeeded";
+        writeResult('quitGroup succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `quitGroup failed ${error}`;
+        writeResult('quitGroup failed', error);
       });
   }
 
   static dismissGroup(groupID: string) {
-    V2TIMManager.getInstance()
-      .dismissGroup(groupID)
+    V2TIMManager.getInstance().dismissGroup(groupID)
       .then(() => {
-        TestResult.interfaceResult = "dismissGroup succeeded";
+        writeResult('dismissGroup succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `dismissGroup failed ${error}`;
+        writeResult('dismissGroup failed', error);
       });
   }
 
   static getUsersInfo(userID1: string, userID2: string) {
-    V2TIMManager.getInstance()
-      .getUsersInfo([userID1, userID2])
+    V2TIMManager.getInstance().getUsersInfo([userID1, userID2])
       .then((userFullInfoList: V2TIMUserFullInfo[]) => {
-        TestResult.interfaceResult = `getUsersInfo succeeded ${userFullInfoList}`;
+        writeResult('getUsersInfo succeeded', userFullInfoList);
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `getUsersInfo failed ${error}`;
+        writeResult('getUsersInfo failed', error);
       });
   }
 
@@ -204,24 +221,22 @@ export class BaseTestInterfaces {
       nickName: nickName,
       allowType: allowType,
     };
-    V2TIMManager.getInstance()
-      .setSelfInfo(info)
+    V2TIMManager.getInstance().setSelfInfo(info)
       .then(() => {
-        TestResult.interfaceResult = `setSelfInfo succeeded`;
+        writeResult('setSelfInfo succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `setSelfInfo failed ${error}`;
+        writeResult('setSelfInfo failed', error);
       });
   }
 
   static getUserStatus(userID3: string, userID4: string) {
-    V2TIMManager.getInstance()
-      .getUserStatus([userID3, userID4])
+    V2TIMManager.getInstance().getUserStatus([userID3, userID4])
       .then((userStatusList: V2TIMUserStatus[]) => {
-        TestResult.interfaceResult = `getUserStatus succeeded ${userStatusList}`;
+        writeResult('getUserStatus succeeded', userStatusList);
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `getUserStatus failed ${error}`;
+        writeResult('getUserStatus failed', error);
       });
   }
 
@@ -229,108 +244,139 @@ export class BaseTestInterfaces {
     const status: V2TIMSetSelfStatusParam = {
       customStatus: selfStatus,
     };
-    V2TIMManager.getInstance()
-      .setSelfStatus(status)
+    V2TIMManager.getInstance().setSelfStatus(status)
       .then(() => {
-        TestResult.interfaceResult = "setSelfStatus succeeded";
+        writeResult('setSelfStatus succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `setSelfStatus failed ${error}`;
+        writeResult('setSelfStatus failed', error);
       });
   }
 
   static subscribeUserStatus(userID5: string, userID6: string) {
-    V2TIMManager.getInstance()
-      .subscribeUserStatus([userID5, userID6])
+    V2TIMManager.getInstance().subscribeUserStatus([userID5, userID6])
       .then(() => {
-        TestResult.interfaceResult = "subscribeUserStatus succeeded";
+        writeResult('subscribeUserStatus succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `subscribeUserStatus failed ${error}`;
+        writeResult('subscribeUserStatus failed', error);
       });
   }
 
   static unsubscribeUserStatus(userID5: string, userID6: string) {
-    V2TIMManager.getInstance()
-      .unsubscribeUserStatus([userID5, userID6])
+    V2TIMManager.getInstance().unsubscribeUserStatus([userID5, userID6])
       .then(() => {
-        TestResult.interfaceResult = "unsubscribeUserStatus succeeded";
+        writeResult('unsubscribeUserStatus succeeded');
       })
       .catch((error: Error) => {
-        TestResult.interfaceResult = `unsubscribeUserStatus failed ${error}`;
+        writeResult('unsubscribeUserStatus failed', error);
       });
   }
+
+  // static getEnumKeys(enumName: ESObject) {
+  //   const keys = Object.keys(enumName).filter(key => Number.isNaN(Number(key)));
+  //   let result = new Array<string>();
+  //   for (const key of keys) {
+  //     result.push({ value: key });
+  //   }
+  //   return result;
+  // }
+  //
+  // static getEnumMap(enumName: any) {
+  //   const list = Object.keys(enumName);
+  //   const size = list.length / 2;
+  //   let result = new Map<string, number>();
+  //   for (let i = 0; i < size; ++i) {
+  //     result.set(list[i + size], Number(list[i]));
+  //   }
+  //   return result;
+  // }
 }
 
 const sdkListener: V2TIMSDKListener = {
-  onConnecting: () => (TestResult.sdkResult = "onConnecting"),
-  onConnectSuccess: () => (TestResult.sdkResult = "onConnectSuccess"),
-  onConnectFailed: (code: number, message: string) => (TestResult.sdkResult = `onConnectSuccess ${code} ${message}`),
-  onKickedOffline: () => (TestResult.sdkResult = "onKickedOffline"),
-  onUserSigExpired: () => (TestResult.sdkResult = "onUserSigExpired"),
-  onSelfInfoUpdated: (info: V2TIMUserFullInfo) => (TestResult.sdkResult = `onSelfInfoUpdated ${info}`),
-  onUserStatusChanged: (userStatusList: V2TIMUserStatus[]) => (TestResult.sdkResult = `onSelfInfoUpdated ${userStatusList}`),
+  onConnecting: () => {
+    onSDKCallback('onConnecting');
+  },
+  onConnectSuccess: () => {
+    onSDKCallback('onConnectSuccess');
+  },
+  onConnectFailed: (code: number, message: string) => {
+    onSDKCallback('onConnectFailed', code, message);
+  },
+  onKickedOffline: () => {
+    onSDKCallback('onKickedOffline');
+  },
+  onUserSigExpired: () => {
+    onSDKCallback('onUserSigExpired');
+  },
+  onSelfInfoUpdated: (info: V2TIMUserFullInfo) => {
+    onSDKCallback('onSelfInfoUpdated', info);
+  },
+  onUserStatusChanged: (userStatusList: V2TIMUserStatus[]) => {
+    onSDKCallback('onUserStatusChanged', userStatusList);
+  },
 };
 
 const simpleMsgListener: V2TIMSimpleMsgListener = {
   onRecvC2CTextMessage: (msgID: string, sender: V2TIMUserInfo, text: string) => {
-    TestResult.simpleMessageReceive = `onRecvC2CTextMessage ${msgID}  ${sender}  ${text}`;
+    onSimpleMessageReceive('onRecvC2CTextMessage', msgID, sender, text);
   },
   onRecvC2CCustomMessage: (msgID: string, sender: V2TIMUserInfo, customData: ArrayBuffer) => {
-    TestResult.simpleMessageReceive = `onRecvC2CCustomMessage ${msgID}  ${sender}  ${buffer.from(customData).toString()}`;
+    onSimpleMessageReceive('onRecvC2CCustomMessage', msgID, sender, customData);
   },
   onRecvGroupTextMessage: (msgID: string, groupID: string, sender: V2TIMGroupMemberInfo, text: string) => {
-    TestResult.simpleMessageReceive = `onRecvGroupTextMessage ${msgID} ${groupID} ${sender}  ${text}`;
+    onSimpleMessageReceive('onRecvGroupTextMessage', msgID, groupID, sender, text);
   },
   onRecvGroupCustomMessage: (msgID: string, groupID: string, sender: V2TIMGroupMemberInfo, customData: ArrayBuffer) => {
-    TestResult.simpleMessageReceive = `onRecvGroupCustomMessage ${msgID} ${groupID} ${sender}  ${buffer.from(customData).toString()}`;
+    onSimpleMessageReceive('onRecvGroupCustomMessage', msgID, groupID, sender, customData);
   },
 };
 
 export const groupListener: V2TIMGroupListener = {
   onMemberEnter: (groupID: string, memberList: V2TIMGroupMemberInfo[]) => {
-    TestResult.groupCallback = `onMemberEnter ${groupID} ${memberList}`;
+    onGroupCallback('onMemberEnter', groupID, memberList);
   },
   onMemberLeave: (groupID: string, member: V2TIMGroupMemberInfo) => {
-    TestResult.groupCallback = `onMemberLeave ${groupID}  ${member}`;
+    onGroupCallback('onMemberLeave', groupID, member);
   },
   onMemberInvited: (groupID: string, opUser: V2TIMGroupMemberInfo, memberList: V2TIMGroupMemberInfo[]) => {
-    TestResult.groupCallback = `onMemberInvited ${groupID} ${opUser} ${memberList}`;
+    onGroupCallback('onMemberInvited', groupID, opUser, memberList);
   },
   onMemberKicked: (groupID: string, opUser: V2TIMGroupMemberInfo, memberList: V2TIMGroupMemberInfo[]) => {
-    TestResult.groupCallback = `onMemberKicked ${groupID} ${opUser} ${memberList}`;
+    onGroupCallback('onMemberKicked', groupID, opUser, memberList);
   },
   onMemberInfoChanged: (groupID: string, v2TIMGroupMemberChangeInfoList: V2TIMGroupMemberChangeInfo[]) => {
-    TestResult.groupCallback = `onMemberInfoChanged ${groupID} ${v2TIMGroupMemberChangeInfoList}`;
+    onGroupCallback('onMemberInfoChanged', groupID, v2TIMGroupMemberChangeInfoList);
   },
   onGroupCreated: (groupID: string) => {
-    TestResult.groupCallback = `onGroupCreated' ${groupID}`;
+    onGroupCallback('onGroupCreated', groupID);
   },
   onGroupDismissed: (groupID: string, opUser: V2TIMGroupMemberInfo) => {
-    TestResult.groupCallback = `onGroupDismissed ${groupID} ${opUser}`;
+    onGroupCallback('onGroupDismissed', groupID, opUser);
   },
   onGroupRecycled: (groupID: string, opUser: V2TIMGroupMemberInfo) => {
-    TestResult.groupCallback = `onGroupRecycled ${groupID} ${opUser}`;
+    onGroupCallback('onGroupRecycled', groupID, opUser);
   },
   onGroupInfoChanged: (groupID: string, changeInfos: V2TIMGroupChangeInfo[]) => {
-    TestResult.groupCallback = `onGroupInfoChanged ${groupID} ${changeInfos}`;
+    onGroupCallback('onGroupInfoChanged', groupID, changeInfos);
   },
   onReceiveJoinApplication: (groupID: string, member: V2TIMGroupMemberInfo, opReason: string) => {
-    TestResult.groupCallback = `onReceiveJoinApplication ${groupID} ${member} ${opReason}`;
+    onGroupCallback('onReceiveJoinApplication', groupID, member, opReason);
   },
   onApplicationProcessed: (groupID: string, opUser: V2TIMGroupMemberInfo, isAgreeJoin: boolean, opReason: string) => {
-    TestResult.groupCallback = `onApplicationProcessed ${groupID} ${opUser} ${isAgreeJoin} ${opReason}`;
+    onGroupCallback('onApplicationProcessed', groupID, opUser, isAgreeJoin, opReason);
   },
   onGrantAdministrator: (groupID: string, opUser: V2TIMGroupMemberInfo, memberList: V2TIMGroupMemberInfo[]) => {
-    TestResult.groupCallback = `onGrantAdministrator ${groupID} ${opUser} ${memberList}`;
+    onGroupCallback('onGrantAdministrator', groupID, opUser, memberList);
   },
   onRevokeAdministrator: (groupID: string, opUser: V2TIMGroupMemberInfo, memberList: V2TIMGroupMemberInfo[]) => {
-    TestResult.groupCallback = `onRevokeAdministrator ${groupID} ${opUser} ${memberList}`;
+    onGroupCallback('onRevokeAdministrator', groupID, opUser, memberList);
   },
   onQuitFromGroup: (groupID: string) => {
-    TestResult.groupCallback = `onQuitFromGroup ${groupID}`;
+    onGroupCallback('onQuitFromGroup', groupID);
   },
   onReceiveRESTCustomData: (groupID: string, customData: ArrayBuffer) => {
-    TestResult.groupCallback = `onReceiveRESTCustomData ${groupID} ${customData}`;
+    onGroupCallback('onReceiveRESTCustomData', groupID, customData);
   },
 };
+

@@ -1,16 +1,12 @@
 {
-  "name": "entry",
-  "version": "1.0.0",
-  "description": "Please describe the basic information.",
-  "main": "",
-  "author": "",
-  "license": "",
-  "dependencies": {
-    "@tencentcloud/imsdk": "file:./imsdk-ohos-7.9.5680.har"
+  devDependencies: {
+    pako: "^2.1.0",
+    "@ohos/crypto-js": "^2.0.1",
   },
-  "devDependencies": {
-    "pako": "^2.1.0",
-    "@ohos/crypto-js": "^2.0.1"
-  }
+  name: "entry",
+  description: "Demo for Tencent IM SDK",
+  version: "7.7.5294",
+  dependencies: {
+    "@tencentcloud/imsdk": "file:./imsdk-ohos-7.9.5683.har",
+  },
 }
-

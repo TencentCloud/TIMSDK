@@ -5,10 +5,30 @@ import { SignalingTestInterfaces } from '../interfaces/SignalingTestInterfaces';
 class Result {
   result = "";
   inviteID = "";
-  callBackResult = "";
+  callbackResult = "";
 }
 
 let result = new Result();
+
+export { result };
+
+export function writeResult(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.result = "\n" + currentResult;
+}
+
+export function onCallback(...args: ESObject[]) {
+  let resultList = new Array<string>();
+  args.forEach((value: ESObject) => {
+    resultList.push(JSON.stringify(value));
+  });
+  let currentResult = resultList.join(" ");
+  result.callbackResult = "\n" + currentResult;
+}
 
 export default result;
 let offlinePushInfo: V2TIMOfflinePushInfo = new V2TIMOfflinePushInfo();
@@ -44,14 +64,14 @@ export struct SignalingTestPage {
           DemoButton("清空", () => {
             this.result.result = "";
             this.result.inviteID = "";
-            this.result.callBackResult = "";
+            this.result.callbackResult = "";
           })
           DemoTitle("接口调用结果：")
           DemoText({ name: this.result.result })
           DemoTitle("inviteID：")
           DemoText({ name: this.result.inviteID })
           DemoTitle("回调结果：")
-          DemoText({ name: this.result.callBackResult })
+          DemoText({ name: this.result.callbackResult })
         }.align(Alignment.TopStart)
         .alignItems(HorizontalAlign.Start)
 
@@ -185,11 +205,11 @@ export struct SignalingTestPage {
   .onClick(onclickEvent)
 }
 
-interface DemoTextInterface {
+interface DemoTextParam {
   name: string;
 }
 
-@Builder function DemoText(param: DemoTextInterface) {
+@Builder function DemoText(param: DemoTextParam) {
   Text(param.name).fontSize(11).fontWeight(FontWeight.Bold)
 }
 
