@@ -1,6 +1,6 @@
 English | [简体中文](./README_ZH.md)
 
-# TIM SDK 7.9.5680 (Android)
+# TIM SDK 8.0.5895 (Android)
 
 ## Download IM SDK
 
