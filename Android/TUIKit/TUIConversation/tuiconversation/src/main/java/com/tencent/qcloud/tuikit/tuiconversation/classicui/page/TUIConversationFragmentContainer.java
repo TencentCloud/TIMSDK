@@ -173,10 +173,6 @@ public class TUIConversationFragmentContainer extends BaseFragment {
 
         mViewPager.setOffscreenPageLimit(3);
         
-        // mViewPager.setOffscreenPageLimit(ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT);
-        //((RecyclerView)mViewPager.getChildAt(0)).getLayoutManager().setItemPrefetchEnabled(false);
-        
-        //((RecyclerView)mViewPager.getChildAt(0)).setItemViewCacheSize(0);
         adapter = new FragmentStateAdapter(getChildFragmentManager(), getLifecycle()) {
             @NonNull
             @Override
@@ -314,7 +310,7 @@ public class TUIConversationFragmentContainer extends BaseFragment {
 
             @Override
             public void notifyGroupUnreadMessageCountChanged(String groupName, long totalUnreadCount) {
-                TUIConversationLog.d(TAG, "notifyGroupUnreadMessageCountChanged");
+                TUIConversationLog.d(TAG, "notifyGroupUnreadMessageCountChanged groupName =" + groupName + "count =" + totalUnreadCount);
                 ListIterator<ConversationGroupBean> iterator = mConversationGroupBeans.listIterator();
                 int index = 0;
                 while (iterator.hasNext()) {

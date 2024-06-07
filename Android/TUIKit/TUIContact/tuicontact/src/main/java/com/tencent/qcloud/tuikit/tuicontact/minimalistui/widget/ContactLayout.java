@@ -144,6 +144,10 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
         mContactListView.loadDataSource(ContactListView.DataSource.CONTACT_LIST);
     }
 
+    public void reloadData() {
+        mContactListView.loadDataSource(ContactListView.DataSource.CONTACT_LIST);
+    }
+
     @Override
     public ContactListView getContactListView() {
         return mContactListView;

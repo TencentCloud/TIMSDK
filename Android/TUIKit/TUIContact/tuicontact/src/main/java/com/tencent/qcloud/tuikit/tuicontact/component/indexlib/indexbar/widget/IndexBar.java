@@ -68,29 +68,6 @@ public class IndexBar extends View {
         return mHeaderViewCount;
     }
 
-    public IndexBar setHeaderViewCount(int headerViewCount) {
-        mHeaderViewCount = headerViewCount;
-        return this;
-    }
-
-    public boolean isSourceDatasAlreadySorted() {
-        return isSourceDatasAlreadySorted;
-    }
-
-    public IndexBar setSourceDatasAlreadySorted(boolean sourceDatasAlreadySorted) {
-        isSourceDatasAlreadySorted = sourceDatasAlreadySorted;
-        return this;
-    }
-
-    public IIndexBarDataHelper getDataHelper() {
-        return mDataHelper;
-    }
-
-    public IndexBar setDataHelper(IIndexBarDataHelper dataHelper) {
-        mDataHelper = dataHelper;
-        return this;
-    }
-
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics());
         mPressedBackground = Color.BLACK;
@@ -339,8 +316,6 @@ public class IndexBar extends View {
     private void computeGapHeight() {
         mGapHeight = (mHeight - getPaddingTop() - getPaddingBottom()) / mIndexDatas.size();
     }
-
-    private void sortData() {}
 
     private int getPosByTag(String tag) {
         if (null == mSourceDatas || mSourceDatas.isEmpty()) {

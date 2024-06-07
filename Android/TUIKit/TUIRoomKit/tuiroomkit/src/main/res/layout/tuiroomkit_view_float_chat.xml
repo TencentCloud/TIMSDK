@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
+
+    <FrameLayout
+        android:id="@+id/tuiroomkit_barrage_display_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginStart="16dp"
+        android:background="#00000000"/>
+
+    <FrameLayout
+        android:id="@+id/tuiroomkit_barrage_button_container"
+        android:layout_width="110dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_below="@+id/tuiroomkit_barrage_display_view_container"
+        android:background="#00000000"/>
+
+</RelativeLayout>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="conversation_minimalist_chat">聊天</string>
+    <string name="conversation_minimalist_chat_disconnected">聊天(未连接)</string>
+    <string name="conversation_minimalist_chat_connecting">连接中...</string>
+    <string name="conversation_minimalist_chat_loading">收取中...</string>
     <string name="conversation_minimalist_search">搜索</string>
     <string name="conversation_minimalist_done">完成</string>
     <string name="has_all_read">全部已读</string>

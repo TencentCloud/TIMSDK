@@ -13,6 +13,7 @@ import com.google.gson.JsonSyntaxException;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
@@ -22,6 +23,8 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
+import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -138,6 +141,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             messageStatusLayout.setVisibility(View.GONE);
             messageFailed.setVisibility(View.GONE);
             messageSending.setVisibility(View.GONE);
+            atAllTv.setVisibility(View.GONE);
+            atMeTv.setVisibility(View.GONE);
+            draftTv.setVisibility(View.GONE);
+            riskTv.setVisibility(View.GONE);
         }
 
         if (!conversation.isGroup() && TUIConversationConfig.getInstance().isShowUserStatus()) {
@@ -182,14 +189,10 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             if (TUIConversationUtils.hasRiskContent(conversation.getLastMessage())) {
                 riskTv.setVisibility(View.VISIBLE);
             } else {
-                HashMap<String, Object> param = new HashMap<>();
-                param.put(TUIConstants.TUIChat.V2TIMMESSAGE, conversation.getLastMessage());
-                String lastMsgDisplayString =
-                    (String) TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_GET_DISPLAY_STRING, param);
-                
-                // Get the characters to display
-                if (lastMsgDisplayString != null) {
-                    messageText.setText(Html.fromHtml(lastMsgDisplayString));
+                TUIMessageBean lasTUIMessageBean = conversation.getLastTUIMessageBean();
+                if (lasTUIMessageBean != null) {
+                    String displayString = ConversationPresenter.getMessageDisplayString(lasTUIMessageBean);
+                    messageText.setText(Html.fromHtml(displayString));
                     messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
                 }
                 if (conversation.getLastMessage() != null) {
@@ -220,7 +223,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
                     if (messageText.getText() != null) {
                         String text = messageText.getText().toString();
-                        messageText.setText("[" + conversation.getUnRead() + rootView.getContext().getString(R.string.message_num) + "] " + text);
+                        messageText.setText("[" + conversation.getUnRead() + " " + rootView.getContext().getString(R.string.message_num) + "] " + text);
                     }
                 }
             }

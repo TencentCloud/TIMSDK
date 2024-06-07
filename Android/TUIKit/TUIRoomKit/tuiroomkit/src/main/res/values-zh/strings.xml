@@ -45,6 +45,15 @@
     <string name="tuiroomkit_mute_video_by_master">您已被关闭摄像头</string>
     <string name="tuiroomkit_un_mute_video_by_master">主持人解禁了你的摄像头</string>
     <string name="tuiroomkit_title_collection_volume">采集音量</string>
+    <string name="tuiroomkit_title_quality_check">质量检测</string>
+    <string name="tuiroomkit_title_network">网络</string>
+    <string name="tuiroomkit_title_network_delay">延迟</string>
+    <string name="tuiroomkit_title_packet_loss_rate">丢包率</string>
+    <string name="tuiroomkit_title_trtc_statistics_audio">音频</string>
+    <string name="tuiroomkit_title_trtc_statistics_video">视频</string>
+    <string name="tuiroomkit_title_bitrate">码率</string>
+    <string name="tuiroomkit_title_resolution">分辨率</string>
+    <string name="tuiroomkit_title_frame_rate">帧率</string>
     <string name="tuiroomkit_title_play_volume">播放音量</string>
     <string name="tuiroomkit_title_volume_reminder">音量提示</string>
     <string name="tuiroomkit_title_audio_recording">音频录制</string>
@@ -52,10 +61,8 @@
     <string name="tuiroomkit_toast_recording_file_path_copied">录音文件路径已复制: %s</string>
     <string name="tuiroomkit_title_video">视频设置</string>
     <string name="tuiroomkit_title_audio">音频设置</string>
+    <string name="tuiroomkit_title_other_setting">其他设置</string>
     <string name="tuiroomkit_title_sharing">共享屏幕</string>
-    <string name="tuiroomkit_title_bitrate">码率</string>
-    <string name="tuiroomkit_title_resolution">分辨率</string>
-    <string name="tuiroomkit_title_frame_rate">帧率</string>
     <string name="tuiroomkit_title_local_mirror">本地镜像</string>
     <string name="tuiroomkit_title_enable">开启</string>
     <string name="tuiroomkit_title_disable">关闭</string>
@@ -73,6 +80,7 @@
     <string name="tuiroomkit_item_open_camera">打开视频</string>
     <string name="tuiroomkit_item_chat">聊天</string>
     <string name="tuiroomkit_item_member">成员(%d)</string>
+    <string name="tuiroomkit_item_stage_control">上台管理</string>
     <string name="tuiroomkit_item_invite">邀请</string>
     <string name="tuiroomkit_item_record">录制</string>
     <string name="tuiroomkit_item_float">悬浮窗</string>
@@ -85,10 +93,11 @@
     <string name="tuiroomkit_room_raise_hand">举手发言房间</string>
     <string name="tuiroomkit_logout">退出登录</string>
     <string name="tuiroomkit_kiecked_off_line">您已在其它地方登录</string>
+    <string name="tuiroomkit_dialog_logout_title">您已退出登录</string>
     <string name="tuiroomkit_cancel">取消</string>
     <string name="tuiroomkit_microphone">麦克风</string>
     <string name="tuiroomkit_camera">摄像头</string>
-    <string name="tuiroomkit_meeting_title">的快速会议</string>
+    <string name="tuiroomkit_meeting_title">%s的快速会议</string>
     <string name="tuiroomkit_meeting_invite_title">邀请成员</string>
     <string name="tuiroomkit_meeting_info_copy">复制</string>
     <string name="tuiroomkit_master">房主</string>
@@ -107,9 +116,9 @@
     <string name="tuiroomkit_tips_start_storage">请先打开存储权限</string>
     <string name="tuiroomkit_hint_search_member">搜索参会成员</string>
     <string name="tuiroomkit_me">&#160;(我)</string>
-    <string name="tuiroomkit_forward_master_to">转让房主</string>
+    <string name="tuiroomkit_forward_master_to">转交房主</string>
     <string name="tuiroomkit_manager_add">设为管理员</string>
-    <string name="tuiroomkit_manager_remove">取消管理员</string>
+    <string name="tuiroomkit_manager_remove">撤销管理员</string>
     <string name="tuiroomkit_mute_user">禁言</string>
     <string name="tuiroomkit_kick_out_of_room">踢出房间</string>
     <string name="tuiroomkit_settings">设置</string>
@@ -118,14 +127,20 @@
     <string name="tuiroomkit_switch_layout">切换布局</string>
     <string name="tuiroomkit_layout_grid">宫格布局</string>
     <string name="tuiroomkit_layout_speaker">演讲者布局</string>
-    <string name="tuiroomkit_raise_hand_applies">上台管理</string>
+    <string name="tuiroomkit_raise_hand_applies">成员上台申请</string>
+    <string name="tuiroomkit_user_list_on_seat">已上台(%s)</string>
+    <string name="tuiroomkit_user_list_off_seat">未上台(%s)</string>
     <string name="tuiroomkit_invite_to_stage">邀请上台</string>
     <string name="tuiroomkit_kick_off_stage">请下台</string>
-    <string name="tuiroomkit_agree_on_stage">同意上台</string>
-    <string name="tuiroomkit_refuse_on_stage">拒绝上台</string>
+    <string name="tuiroomkit_agree_on_stage">同意</string>
+    <string name="tuiroomkit_refuse_on_stage">拒绝</string>
     <string name="tuiroomkit_agree_to_all">全部同意</string>
+    <string name="tuiroomkit_reject_all">全部拒绝</string>
+    <string name="tuiroomkit_no_member_apply">暂无成员申请</string>
     <string name="tuiroomkit_invite_member_to_stage">邀请成员上台</string>
     <string name="tuiroomkit_raise_hand">申请上台</string>
+    <string name="tuiroomkit_raise_hand_notification">%s正在申请上台</string>
+    <string name="tuiroomkit_multi_raise_hand_notification">%s等%d人正在申请上台</string>
     <string name="tuiroomkit_leave_stage">下台</string>
     <string name="tuiroomkit_tip_kicked_off_seat">您已被请下台</string>
     <string name="tuiroomkit_dialog_off_seat_title">确定要下台吗</string>
@@ -137,14 +152,16 @@
     <string name="tuiroomkit_receive_invitation_title">%s邀请您上台发言</string>
     <string name="tuiroomkit_invite_take_seat_time_out">对%s的上台邀请已超时</string>
     <string name="tuiroomkit_invited_take_seat_time_out">上台失败，邀请已超时</string>
-    <string name="tuiroomkit_all_seat_occupied">当前上台人数已达上限</string>
+    <string name="tuiroomkit_apply_take_seat_time_out">上台请求已超时</string>
+    <string name="tuiroomkit_stage_full_of_admin">台上人数已满</string>
+    <string name="tuiroomkit_stage_full_of_general">台上人数已满，请联系主持人</string>
     <string name="tuiroomkit_receive_invitation_content">您上台后可以打开摄像头和取消静音</string>
     <string name="tuiroomkit_can_not_open_mic">全员静音已启用，无法自行取消静音</string>
     <string name="tuiroomkit_can_not_open_camera">全员禁画已启用，无法自行打开视频</string>
     <string name="tuiroomkit_mute_all_mic_toast">已开启全员静音</string>
     <string name="tuiroomkit_mute_all_camera_toast">已开启全体禁画</string>
     <string name="tuiroomkit_item_close_camera">关闭视频</string>
-    <string name="tuiroomkit_un_mute_user">取消禁言</string>
+    <string name="tuiroomkit_un_mute_user">解除禁言</string>
     <string name="tuiroomkit_please_raise_hand">举手发言房间，请先举手申请上麦</string>
     <string name="tuiroomkit_have_become_master">您已成为主持人</string>
     <string name="tuiroomkit_have_become_manager">您已成为管理员</string>
@@ -155,6 +172,7 @@
     <string name="tuiroomkit_request_open_camera">%s邀请您开启视频画面</string>
     <string name="tuiroomkit_agree">同意</string>
     <string name="tuiroomkit_refuse">拒绝</string>
+    <string name="tuiroomkit_check">查看</string>
     <string name="tuiroomkit_leave_room_tips">如果您不想结束房间，请在离开房间前指定新的主持人</string>
     <string name="tuiroomkit_leave_room">离开房间</string>
     <string name="tuiroomkit_finish_room">结束房间</string>
@@ -168,8 +186,8 @@
     <string name="tuiroomkit_toast_off_stage_by_self">您已主动下台，如需发言请再次举手申请</string>
     <string name="tuiroomkit_toast_take_seat_success">上台成功</string>
     <string name="tuiroomkit_toast_take_seat_rejected">上台申请被拒绝</string>
-    <string name="tuiroomkit_toast_raised_hand">您已举手，请等待主持人操作</string>
-    <string name="tuiroomkit_toast_hands_down">您已将手放下</string>
+    <string name="tuiroomkit_toast_raised_hand">申请已发出，请等待主持人/管理员操作</string>
+    <string name="tuiroomkit_toast_hands_down">已取消上台申请</string>
     <string name="tuiroomkit_toast_invite_audience_to_stage">已向观众发出上台邀请</string>
     <string name="tuiroomkit_room_msg_display_suffix">的快速会议</string>
     <string name="tuiroomkit_chat_access_room">快速会议</string>
@@ -202,4 +220,14 @@
     <string name="tuiroomkit_video_resolution_sd">标清</string>
     <string name="tuiroomkit_video_resolution_hd">高清</string>
     <string name="tuiroomkit_video_resolution_uhd">超清</string>
+
+    <string name="tuiroomkit_toast_conference_id_not_exist">不存在该会议，请重新加入</string>
+    <string name="tuiroomkit_toast_conference_id_invalid">当前会议号无效，请检查输入</string>
+    <string name="tuiroomkit_toast_conference_id_occupied">已存在该会议，请使用其它会议号</string>
+    <string name="tuiroomkit_toast_conference_name_invalid">当前会议名称无效，请检查输入</string>
+
+    <string name="tuiroomkit_float_chat_warning_not_empty">输入不能为空</string>
+    <string name="tuiroomkit_float_chat_btn_send">发送</string>
+    <string name="tuiroomkit_float_chat_hint">说点什么~</string>
+    <string name="tuiroomkit_float_chat_enable">开启聊天弹幕</string>
 </resources>

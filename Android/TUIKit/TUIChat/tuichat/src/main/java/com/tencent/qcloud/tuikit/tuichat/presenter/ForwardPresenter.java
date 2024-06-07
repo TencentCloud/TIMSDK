@@ -110,6 +110,7 @@ public class ForwardPresenter extends ChatPresenter {
         }
     }
 
+    @Override
     public void updateMessageInfo(TUIMessageBean messageInfo, int dataChangeType) {
         for (int i = 0; i < loadedData.size(); i++) {
             if (loadedData.get(i) == null) {
@@ -121,5 +122,20 @@ public class ForwardPresenter extends ChatPresenter {
                 return;
             }
         }
+    }
+
+    @Override
+    public List<TUIMessageBean> getLoadedMessageList() {
+        return loadedData;
+    }
+
+    @Override
+    public TUIMessageBean getLoadedMessage(String msgID) {
+        for (TUIMessageBean message : loadedData) {
+            if (message.getId().equals(msgID)) {
+                return message;
+            }
+        }
+        return null;
     }
 }

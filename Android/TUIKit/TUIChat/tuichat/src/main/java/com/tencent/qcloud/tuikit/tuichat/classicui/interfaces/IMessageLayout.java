@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.interfaces;
 
-import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.IMessageProperties;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.popmenu.ChatPopMenu;

@@ -2,31 +2,31 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_SCREEN_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_VOICE_VOLUME_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_SCREEN_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_VOICE_VOLUME_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomVideoFloatView;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.List;
 import java.util.Map;
 
-public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventResponder {
+public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngineEventResponder {
     private static final String TAG = "RoomVideoFloatViewModel";
 
     private static final int VOLUME_CAN_HEARD_MIN_LIMIT = 10;
@@ -54,7 +54,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM:
                 initUserInfo();
@@ -90,7 +90,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
         if (params == null || mFloatUser == null) {
             return;
         }
-        Map<String, Integer> map = (Map<String, Integer>) params.get(RoomEventConstant.KEY_VOLUME_MAP);
+        Map<String, Integer> map = (Map<String, Integer>) params.get(ConferenceEventConstant.KEY_VOLUME_MAP);
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             if (!TextUtils.equals(entry.getKey(), mFloatUser.getUserId())) {
                 continue;
@@ -111,7 +111,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        UserEntity micUser = RoomEngineManager.sharedInstance().getRoomStore().allUserList.get(position);
+        UserEntity micUser = ConferenceController.sharedInstance().getConferenceState().allUserList.get(position);
         if (!TextUtils.equals(micUser.getUserId(), mFloatUser.getUserId())) {
             return;
         }
@@ -126,7 +126,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        UserEntity cameraUser = RoomEngineManager.sharedInstance().getRoomStore().allUserList.get(position);
+        UserEntity cameraUser = ConferenceController.sharedInstance().getConferenceState().allUserList.get(position);
         if (!TextUtils.equals(cameraUser.getUserId(), mFloatUser.getUserId())) {
             return;
         }
@@ -149,7 +149,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        UserEntity screenUser = RoomEngineManager.sharedInstance().getRoomStore().allUserList.get(position);
+        UserEntity screenUser = ConferenceController.sharedInstance().getConferenceState().allUserList.get(position);
         if (screenUser.isHasVideoStream()) {
             if (mFloatUser.isHasVideoStream()) {
                 stopVideoPlay(mFloatUser);
@@ -171,8 +171,12 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
         if (params == null || mFloatUser == null) {
             return;
         }
-        TUIRoomDefine.Role role = (TUIRoomDefine.Role) params.get(RoomEventConstant.KEY_ROLE);
-        if (role != TUIRoomDefine.Role.ROOM_OWNER) {
+        int position = (int) params.get(ConferenceEventConstant.KEY_USER_POSITION);
+        if (position == USER_NOT_FOUND) {
+            return;
+        }
+        UserEntity user = ConferenceController.sharedInstance().getConferenceState().allUserList.get(position);
+        if (user.getRole() != TUIRoomDefine.Role.ROOM_OWNER) {
             return;
         }
         if (mFloatUser.isHasVideoStream() && mFloatUser.getVideoStreamType() == SCREEN_STREAM) {
@@ -181,7 +185,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
         if (mFloatUser.isHasVideoStream() && mFloatUser.getVideoStreamType() != SCREEN_STREAM) {
             stopVideoPlay(mFloatUser);
         }
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
+        String userId = user.getUserId();
         mFloatUser = findUser(userId, CAMERA_STREAM);
         if (mFloatUser.isHasVideoStream()) {
             startVideoPlay(mFloatUser);
@@ -205,38 +209,38 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     private void registerNotification() {
-        RoomEventCenter roomEventCenter = RoomEventCenter.getInstance();
-        roomEventCenter.subscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
-        roomEventCenter.subscribeEngine(USER_ROLE_CHANGED, this);
-        roomEventCenter.subscribeEngine(USER_CAMERA_STATE_CHANGED, this);
-        roomEventCenter.subscribeEngine(USER_SCREEN_STATE_CHANGED, this);
-        roomEventCenter.subscribeEngine(USER_MIC_STATE_CHANGED, this);
-        roomEventCenter.subscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
+        eventCenter.subscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
+        eventCenter.subscribeEngine(USER_ROLE_CHANGED, this);
+        eventCenter.subscribeEngine(USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(USER_SCREEN_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(USER_MIC_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
     }
 
     private void unRegisterNotification() {
-        RoomEventCenter roomEventCenter = RoomEventCenter.getInstance();
-        roomEventCenter.unsubscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
-        roomEventCenter.unsubscribeEngine(USER_ROLE_CHANGED, this);
-        roomEventCenter.unsubscribeEngine(USER_CAMERA_STATE_CHANGED, this);
-        roomEventCenter.unsubscribeEngine(USER_SCREEN_STATE_CHANGED, this);
-        roomEventCenter.unsubscribeEngine(USER_MIC_STATE_CHANGED, this);
-        roomEventCenter.unsubscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
+        eventCenter.unsubscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
+        eventCenter.unsubscribeEngine(USER_ROLE_CHANGED, this);
+        eventCenter.unsubscribeEngine(USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(USER_SCREEN_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(USER_MIC_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
     }
 
     private void startVideoPlay(UserEntity userInfo) {
         if (TextUtils.equals(userInfo.getUserId(), TUILogin.getUserId())) {
             Log.d(TAG, "setLocalVideoView userId=" + userInfo.getUserId());
-            RoomEngineManager.sharedInstance().setLocalVideoView(CAMERA_STREAM, mVideoView);
+            ConferenceController.sharedInstance().setLocalVideoView(CAMERA_STREAM, mVideoView);
             mRoomVideoFloatView.onNotifyVideoPlayStateChanged(true);
             return;
         }
 
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .setRemoteVideoView(userInfo.getUserId(), userInfo.getVideoStreamType(), mVideoView);
         Log.d(TAG, "startPlayRemoteVideo userId=" + userInfo.getUserId() + " videoStreamType="
                 + userInfo.getVideoStreamType());
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .startPlayRemoteVideo(userInfo.getUserId(), userInfo.getVideoStreamType(), null);
         mRoomVideoFloatView.onNotifyVideoPlayStateChanged(true);
     }
@@ -244,16 +248,16 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
     private void stopVideoPlay(UserEntity userInfo) {
         mRoomVideoFloatView.onNotifyVideoPlayStateChanged(false);
         if (TextUtils.equals(userInfo.getUserId(), TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance().setLocalVideoView(CAMERA_STREAM, null);
+            ConferenceController.sharedInstance().setLocalVideoView(CAMERA_STREAM, null);
             return;
         }
         Log.d(TAG, "stopPlayRemoteVideo userId=" + userInfo.getUserId() + " videoStreamType="
                 + userInfo.getVideoStreamType());
-        RoomEngineManager.sharedInstance().stopPlayRemoteVideo(userInfo.getUserId(), userInfo.getVideoStreamType());
+        ConferenceController.sharedInstance().stopPlayRemoteVideo(userInfo.getUserId(), userInfo.getVideoStreamType());
     }
 
     private UserEntity findUserForFloatVideo() {
-        List<UserEntity> allUserList = RoomEngineManager.sharedInstance().getRoomStore().allUserList;
+        List<UserEntity> allUserList = ConferenceController.sharedInstance().getConferenceState().allUserList;
         if (allUserList.isEmpty()) {
             Log.e(TAG, "findUserForFloatVideo allUserList is empty");
             return null;
@@ -264,7 +268,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
                     TUILogin.getUserId(), item.getUserId())) {
                 return item;
             }
-            if (TextUtils.equals(item.getUserId(), RoomEngineManager.sharedInstance().getRoomStore().roomInfo.ownerId)
+            if (TextUtils.equals(item.getUserId(), ConferenceController.sharedInstance().getConferenceState().roomInfo.ownerId)
                     && item.getVideoStreamType() != SCREEN_STREAM) {
                 roomOwner = item;
             }
@@ -277,7 +281,7 @@ public class RoomVideoFloatViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     public UserEntity findUser(String userId, TUIRoomDefine.VideoStreamType type) {
-        List<UserEntity> allUserList = RoomEngineManager.sharedInstance().getRoomStore().allUserList;
+        List<UserEntity> allUserList = ConferenceController.sharedInstance().getConferenceState().allUserList;
         for (UserEntity item : allUserList) {
             if (TextUtils.equals(userId, item.getUserId()) && item.getVideoStreamType() == type) {
                 return item;

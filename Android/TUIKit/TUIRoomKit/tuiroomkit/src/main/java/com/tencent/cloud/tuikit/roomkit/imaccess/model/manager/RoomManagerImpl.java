@@ -12,7 +12,7 @@ import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.IRoomManager;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.InviteToJoinRoomActivity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
 
@@ -25,7 +25,7 @@ public class RoomManagerImpl implements IRoomManager {
 
     @Override
     public void enableAutoShowRoomMainUi(boolean enable) {
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).enableAutoShowRoomMainUi(enable);
+        ConferenceController.sharedInstance(TUILogin.getAppContext()).enableAutoShowRoomMainUi(enable);
     }
 
     @Override
@@ -51,17 +51,17 @@ public class RoomManagerImpl implements IRoomManager {
 
     @Override
     public void exitRoom() {
-        RoomEngineManager.sharedInstance().exitRoom(null);
+        ConferenceController.sharedInstance().exitRoom(null);
     }
 
     @Override
     public void destroyRoom() {
-        RoomEngineManager.sharedInstance().destroyRoom(null);
+        ConferenceController.sharedInstance().destroyRoom(null);
     }
 
     @Override
     public void changeUserRole(String userId, TUIRoomDefine.Role role, TUIRoomDefine.ActionCallback callback) {
-        RoomEngineManager.sharedInstance().changeUserRole(userId, role, callback);
+        ConferenceController.sharedInstance().changeUserRole(userId, role, callback);
     }
 
     @Override

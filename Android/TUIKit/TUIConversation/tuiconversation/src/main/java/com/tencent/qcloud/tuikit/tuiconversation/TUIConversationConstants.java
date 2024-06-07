@@ -3,8 +3,6 @@ package com.tencent.qcloud.tuikit.tuiconversation;
 public class TUIConversationConstants {
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
     public static final int FORWARD_SELECT_ACTIVTY_CODE = 101;
-    public static final int FORWARD_SELECT_MEMBERS_CODE = 102;
-    public static final int FORWARD_CREATE_GROUP_CODE = 103;
     public static final String FORWARD_CREATE_NEW_CHAT = "forward_create_new_chat";
 
     public static final String EVENT_CONVERSATION_GROUP_CHANGE_KEY = "conversationGroupChangeKey";
@@ -24,21 +22,6 @@ public class TUIConversationConstants {
 
     public static final String CONVERSATION_ALL_GROUP_UNREAD_CHANGE_BY_DIFF = "conversationAllGroupUnreadChangeByDiff";
     public static final String CONVERSATION_ALL_GROUP_UNREAD_DIFF = "conversationAllGroupUnreadDiff";
-
-    public static String covert2HTMLString(String original) {
-        return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
-    }
-
-    /**
-     * 1: Just a text message with a link
-     * 2: The video calling version supported by iOS is no longer compatible
-     * 3: unreleased version
-     * 4: Android/iOS/Web interoperable version for video call
-     */
-    public static final int JSON_VERSION_UNKNOWN = 0;
-    public static final int JSON_VERSION_1 = 1;
-    public static final int JSON_VERSION_4 = 4;
-    public static int version = JSON_VERSION_4;
 
     public static class GroupType {
         public static final String TYPE = "type";

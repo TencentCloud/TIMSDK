@@ -147,6 +147,7 @@
     <string name="group_name_edit_null_tips">اسم المجموعة لا يمكن أن يكون فارغًا!</string>
     <string name="group_name_edit_exceed_tips">يجب أن يكون اسم المجموعة أقل من 30 بايت!</string>
     <string name="group_id_edit_format_tips">لا يمكن أن يكون بادئة معرف المجموعة @TGS# !</string>
+    <string name="community_id_edit_format_tips">يجب أن يكون معرف المجتمع مسبوقًا بـ @TGS#_!</string>
     <string name="group_id_edit_exceed_tips">يجب أن يكون معرف المجموعة أقل من 48 بايت!</string>
     <string name="group_type_content_title">يرجى الرجوع إلى دليل المنتج</string>
     <string name="group_type_content_url">دليل المنتج</string>

@@ -2,7 +2,6 @@ package com.tencent.cloud.tuikit.roomkit.videoseat.ui.view;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,11 +18,9 @@ import androidx.constraintlayout.utils.widget.ImageFilterView;
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.videoseat.ui.utils.ImageLoader;
+import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel.UserEntity;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserDisplayView extends FrameLayout {
     public static final int MARGIN_PX = ScreenUtil.dip2px(5);

@@ -22,16 +22,11 @@ public class CommunityConstants {
 
     public static final String COMMUNITY_BEAN = "communityBean";
     public static final String COMMUNITY_ID = "communityID";
-    public static final String SELECT_FRIENDS = "select_friends";
-    public static final String SELECT_FOR_CALL = "isSelectForCall";
     public static final String IS_SELECT_MODE = "isSelectMode";
 
-    public static final String CONTENT = "content";
-    public static final String TYPE = "type";
     public static final String TITLE = "title";
     public static final String LIST = "list";
     public static final String LIMIT = "limit";
-    public static final String FILTER = "filter";
 
     public static final String COMMUNITY_EXPERIENCE_SP_KEY = "communityExperience";
     public static final String COMMUNITY_COLLAPSE_SP_KEY = "communityCollapse";

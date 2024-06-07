@@ -96,9 +96,9 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
     }
 
     private void initView() {
-        mEdtSearch = (EditText) findViewById(R.id.edt_search);
-        mImgvDelete = (ImageView) findViewById(R.id.imgv_delete);
-        searchBackButton = (ImageView) findViewById(R.id.search_back_icon);
+        mEdtSearch = findViewById(R.id.edt_search);
+        mImgvDelete = findViewById(R.id.imgv_delete);
+        searchBackButton = findViewById(R.id.search_back_icon);
         searchBackButton.setVisibility(View.VISIBLE);
         searchBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,10 +106,10 @@ public class SearchMoreMsgListMinimalistActivity extends BaseMinimalistLightActi
                 onBackPressed();
             }
         });
-        mMessageRcSearch = (PageRecycleView) findViewById(R.id.message_rc_search);
-        mCancleView = (TextView) findViewById(R.id.cancel_button);
+        mMessageRcSearch = findViewById(R.id.message_rc_search);
+        mCancleView = findViewById(R.id.cancel_button);
         mMessageRcSearch.setLayoutManager(new LinearLayoutManager(this));
-        mMessageLayout = (RelativeLayout) findViewById(R.id.message_layout);
+        mMessageLayout = findViewById(R.id.message_layout);
         notFoundArea = findViewById(R.id.not_found_area);
     }
 

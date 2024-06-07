@@ -11,7 +11,6 @@ public class ChatInfo implements Serializable {
     public static final int TYPE_GROUP = V2TIMConversation.V2TIM_GROUP;
     public static final int TYPE_INVALID = V2TIMConversation.CONVERSATION_TYPE_INVALID;
 
-    private static List<V2TIMGroupAtInfo> atInfoList;
 
     private String chatName;
     private int type = V2TIMConversation.V2TIM_C2C;
@@ -116,7 +115,4 @@ public class ChatInfo implements Serializable {
         isFolded = folded;
     }
 
-    public List<V2TIMGroupAtInfo> getAtInfoList() {
-        return atInfoList;
-    }
 }

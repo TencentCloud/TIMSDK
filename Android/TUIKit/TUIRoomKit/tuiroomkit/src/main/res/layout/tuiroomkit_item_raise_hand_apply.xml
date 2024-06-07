@@ -4,65 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_apply_item_root"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10dp">
+    android:layout_height="60dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_head"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/tuiroomkit_head"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/tv_user_name"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_agree_apply"
         app:layout_constraintStart_toEndOf="@+id/img_head"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_disagree_apply"
+        app:layout_constraintTop_toTopOf="@+id/img_head" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="18dp"
+        android:text="@string/tuiroomkit_raise_hand"
+        android:textColor="#8F9AB2"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+        app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
 
     <Button
         android:id="@+id/btn_agree_apply"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:layout_width="48dp"
+        android:layout_height="28dp"
+        android:background="@drawable/tuiroomkit_bg_seat_apply_agree"
         android:text="@string/tuiroomkit_agree_on_stage"
+        android:textSize="14sp"
         android:textColor="@color/tuiroomkit_color_white"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
-        app:layout_constraintEnd_toStartOf="@id/btn_disagree_apply"
-        app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/btn_disagree_apply"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="48dp"
+        android:layout_height="28dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/tuiroomkit_bg_bottom_item_red"
+        android:background="@drawable/tuiroomkit_bg_seat_apply_reject"
         android:text="@string/tuiroomkit_refuse_on_stage"
+        android:textSize="14sp"
         android:textColor="@color/tuiroomkit_color_white"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_agree_apply"
-        app:layout_constraintEnd_toEndOf="@id/cl_apply_item_root"
-        app:layout_constraintTop_toTopOf="@+id/btn_agree_apply" />
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toStartOf="@id/btn_agree_apply"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <View
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/tuiroomkit_bg_main_light_black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintStart_toStartOf="@id/tv_user_name" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

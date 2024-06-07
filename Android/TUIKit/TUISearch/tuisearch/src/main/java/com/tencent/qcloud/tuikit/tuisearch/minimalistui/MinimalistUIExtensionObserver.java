@@ -58,21 +58,6 @@ public class MinimalistUIExtensionObserver implements TUIInitializer, ITUIExtens
         return null;
     }
 
-    private <T> T getOrDefault(Map map, Object key, T defaultValue) {
-        if (map == null || map.isEmpty()) {
-            return defaultValue;
-        }
-        Object object = map.get(key);
-        try {
-            if (object != null) {
-                return (T) object;
-            }
-        } catch (ClassCastException e) {
-            return defaultValue;
-        }
-        return defaultValue;
-    }
-
     public static Context getAppContext() {
         return ServiceInitializer.getAppContext();
     }

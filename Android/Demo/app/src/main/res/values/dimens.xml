@@ -37,5 +37,6 @@
 
     <dimen name="demo_tab_bottom_item_width">80dp</dimen>
 
+    <dimen name="demo_chat_security_warning_padding">8dp</dimen>
 
 </resources>

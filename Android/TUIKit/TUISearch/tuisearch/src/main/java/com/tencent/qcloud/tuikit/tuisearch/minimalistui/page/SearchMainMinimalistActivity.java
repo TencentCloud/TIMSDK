@@ -102,23 +102,23 @@ public class SearchMainMinimalistActivity extends BaseMinimalistLightActivity {
     }
 
     private void initView() {
-        mEdtSearch = (EditText) findViewById(R.id.edt_search);
-        mImgvDelete = (ImageView) findViewById(R.id.imgv_delete);
-        mFriendRcSearch = (RecyclerView) findViewById(R.id.friend_rc_search);
-        mGroupRcSearch = (RecyclerView) findViewById(R.id.group_rc_search);
-        mConversationRcSearch = (PageRecycleView) findViewById(R.id.conversation_rc_search);
-        mCancleView = (TextView) findViewById(R.id.cancel_button);
+        mEdtSearch =  findViewById(R.id.edt_search);
+        mImgvDelete = findViewById(R.id.imgv_delete);
+        mFriendRcSearch = findViewById(R.id.friend_rc_search);
+        mGroupRcSearch = findViewById(R.id.group_rc_search);
+        mConversationRcSearch = findViewById(R.id.conversation_rc_search);
+        mCancleView = findViewById(R.id.cancel_button);
         mFriendRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mGroupRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mConversationRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mFriendRcSearch.setNestedScrollingEnabled(false);
         mGroupRcSearch.setNestedScrollingEnabled(false);
         mConversationRcSearch.setNestedScrollingEnabled(false);
-        mContactLayout = (RelativeLayout) findViewById(R.id.contact_layout);
+        mContactLayout = findViewById(R.id.contact_layout);
         mMoreContactButton = findViewById(R.id.more_contact_button);
-        mGroupLayout = (RelativeLayout) findViewById(R.id.group_layout);
+        mGroupLayout = findViewById(R.id.group_layout);
         mMoreGroupButton = findViewById(R.id.more_group_button);
-        mConversationLayout = (RelativeLayout) findViewById(R.id.conversation_layout);
+        mConversationLayout = findViewById(R.id.conversation_layout);
         mMoreConversationButton = findViewById(R.id.more_conversation_button);
         notFoundArea = findViewById(R.id.not_found_area);
 

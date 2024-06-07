@@ -38,6 +38,7 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.highlight.HighlightPresenter;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
@@ -61,6 +62,7 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageAdapter
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioRecorder;
+import com.tencent.qcloud.tuikit.tuichat.component.pinned.GroupPinnedView;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.OnEmptySpaceClickListener;
@@ -129,6 +131,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     };
 
     protected FrameLayout topExtensionLayout;
+    protected GroupPinnedView groupPinnedView;
     protected FrameLayout mCustomView;
     protected NoticeLayout mGroupApplyLayout;
     protected View mRecordingGroup;
@@ -193,6 +196,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
         mCustomView.setVisibility(GONE);
         topExtensionLayout = findViewById(R.id.chat_top_extension_layout);
         topExtensionLayout.setVisibility(GONE);
+
+        groupPinnedView = findViewById(R.id.group_pinned_message_view);
 
         flInputFloatLayout = findViewById(R.id.fl_input_float);
 
@@ -436,6 +441,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             }
         });
 
+        loadPinnedMessage();
         loadMessages(
             chatInfo.getLocateMessage(), chatInfo.getLocateMessage() == null ? TUIChatConstants.GET_MESSAGE_FORWARD : TUIChatConstants.GET_MESSAGE_TWO_WAY);
         setTotalUnread();
@@ -667,6 +673,14 @@ public class ChatView extends LinearLayout implements IChatLayout {
         }
     }
 
+    public void loadPinnedMessage() {
+        if (presenter instanceof GroupChatPresenter) {
+            groupPinnedView.setGroupChatPresenter((GroupChatPresenter) presenter);
+            ((GroupChatPresenter) presenter).setGroupPinnedView(groupPinnedView);
+            ((GroupChatPresenter) presenter).loadPinnedMessage(getChatInfo().getId());
+        }
+    }
+
     public void loadMessages(TUIMessageBean lastMessage, int type) {
         if (presenter != null) {
             presenter.loadMessage(type, lastMessage);
@@ -832,7 +846,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
             public void scrollMessageFinish() {
                 if (mClickLastMessageShow && mMessageRecyclerView != null) {
                     mClickLastMessageShow = false;
-                    mMessageRecyclerView.setHighShowPosition(-1);
                 }
             }
         });
@@ -1455,6 +1468,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
             int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
             sendMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
+            presenter.markMessageAsRead(mChatInfo);
         }
     }
 

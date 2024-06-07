@@ -7,4 +7,6 @@ public interface IGroupMemberLayout extends ILayout {
     void onGroupInfoChanged(GroupInfo dataSource);
 
     void onGroupInfoModified(Object value, int type);
+
+    void onGroupMemberListChanged(GroupInfo dataSource);
 }

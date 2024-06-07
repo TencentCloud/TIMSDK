@@ -11,6 +11,7 @@ import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -128,7 +129,13 @@ public class ConversationIconView extends RelativeLayout {
                     }
 
                     @Override
-                    public void onError(String module, int errCode, String errMsg) {}
+                    public void onError(String module, int errCode, String errMsg) {
+                        if (mIconView instanceof SynthesizedImageView) {
+                            ((SynthesizedImageView) (mIconView)).defaultImage(TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), info.getGroupType()));
+                        }
+
+                        setIconUrls(null, info.getConversationId());
+                    }
                 });
             }
         });

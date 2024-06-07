@@ -206,25 +206,15 @@ public class ChatMessageBuilder {
         V2TIMMessage v2TIMMessage = V2TIMManager.getMessageManager().createCustomMessage(data.getBytes(), description, extension);
         v2TIMMessage.setSupportMessageExtension(true);
 
-        TUIMessageBean message = ChatMessageParser.parseMessage(v2TIMMessage);
+        TUIMessageBean message = ChatMessageParser.parsePresentMessage(v2TIMMessage);
         if (message != null && message.getExtra() == null) {
             message.setExtra(TUIChatService.getAppContext().getString(R.string.custom_msg));
         }
         return message;
     }
 
-    /**
-     * create a custom message for group
-     *
-     * @param customMessage 
-     * @return
-     */
-    public static V2TIMMessage buildGroupCustomMessage(String customMessage) {
-        return V2TIMManager.getMessageManager().createCustomMessage(customMessage.getBytes());
-    }
-
     public static TUIMessageBean buildMessage(V2TIMMessage message) {
-        return ChatMessageParser.parseMessage(message);
+        return ChatMessageParser.parsePresentMessage(message);
     }
 
     public static TUIMessageBean buildAtReplyMessage(String content, List<String> atList, ReplyPreviewBean previewBean) {
@@ -251,6 +241,7 @@ public class ChatMessageBuilder {
         } else {
             replyMessageBean = new ReplyMessageBean(previewBean);
         }
+        replyMessageBean.setAbstractEnable(true);
         replyMessageBean.setCommonAttribute(v2TIMMessage);
         replyMessageBean.onProcessMessage(v2TIMMessage);
         return replyMessageBean;
@@ -280,4 +271,5 @@ public class ChatMessageBuilder {
 
         return previewBean;
     }
+
 }

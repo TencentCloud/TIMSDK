@@ -176,6 +176,7 @@
             android:layout_marginEnd="8dp"
             android:padding="6dp"
             android:scaleType="centerCrop"
+            android:clickable="true"
             android:background="@drawable/common_item_pressed_effect_background"
             android:src="@drawable/chat_minimalist_input_voice_icon" />
 

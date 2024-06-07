@@ -248,9 +248,6 @@ public class ChatReactDialogFragment extends DialogFragment {
         public void onBindViewHolder(@NonNull ReactUserViewHolder holder, int position) {
             UserBean reactUserBean = messageReactionUserBean.getUserBeanList().get(position);
             GlideEngine.loadImage(holder.userFace, reactUserBean.getFaceUrl());
-//            if (pair.second != null) {
-//                GlideEngine.loadImage(holder.emojiIcon, FaceManager.getEmoji(pair.second));
-//            }
             holder.userName.setText(reactUserBean.getDisplayString());
             if (TextUtils.equals(reactUserBean.getUserId(), TUILogin.getLoginUser())) {
                 holder.tips.setText(getResources().getString(R.string.chat_tap_to_remove));

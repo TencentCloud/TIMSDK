@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuigroup.classicui;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-
 import com.google.auto.service.AutoService;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -17,6 +16,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
+import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupInfoActivity;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +35,10 @@ public class ClassicUIExtensionObserver implements TUIInitializer, ITUIExtension
     public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
         if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID)) {
             Object groupID = param.get(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.GROUP_ID);
-            if (groupID instanceof String) {
+            Object groupTypeObj = param.get(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.GROUP_TYPE);
+            String groupType = groupTypeObj == null ? "" : groupTypeObj.toString();
+            if (groupID instanceof String && !TextUtils.equals(GroupInfo.GROUP_TYPE_AVCHATROOM, groupType)
+                && !TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_ROOM)) {
                 TUIExtensionInfo extensionInfo = new TUIExtensionInfo();
                 extensionInfo.setIcon(TUIThemeManager.getAttrResId(getAppContext(), R.attr.group_chat_extension_title_bar_more_menu));
                 extensionInfo.setExtensionListener(new TUIExtensionEventListener() {

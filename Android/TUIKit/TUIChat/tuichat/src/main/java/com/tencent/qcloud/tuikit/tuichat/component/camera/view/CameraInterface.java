@@ -145,7 +145,6 @@ public class CameraInterface {
                 if (isRecording) {
                     return;
                 }
-
                 // Zooms one level every 50 pixels you move
                 int scaleRate = (int) (zoom / 50);
                 if (scaleRate < mParams.getMaxZoom()) {

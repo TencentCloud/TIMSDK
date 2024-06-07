@@ -54,6 +54,12 @@ public class TUIGroupService implements TUIInitializer, ITUIService {
 
     private void initIMListener() {
         V2TIMManager.getInstance().addGroupListener(new V2TIMGroupListener() {
+
+            @Override
+            public void onAllGroupMembersMuted(String groupID, boolean isMute) {
+                super.onAllGroupMembersMuted(groupID, isMute);
+            }
+
             @Override
             public void onMemberEnter(String groupID, List<V2TIMGroupMemberInfo> memberList) {
                 HashMap<String, Object> param = new HashMap<>();

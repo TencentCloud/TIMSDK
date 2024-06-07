@@ -1,8 +1,8 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -17,21 +17,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 
 import java.util.Map;
 
-public class InviteUserDialog extends BaseBottomDialog implements RoomEventCenter.RoomKitUIEventResponder {
+public class InviteUserDialog extends BaseBottomDialog implements ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String URL_ROOM_KIT_WEB = "https://web.sdk.qcloud.com/component/tuiroom/index.html";
     private static final String LABEL            = "Label";
 
     private Context         mContext;
-    private RoomStore       mRoomStore;
+    private ConferenceState mRoomStore;
     private TextView        mTextRoomId;
     private TextView        mTextroomLink;
     private LinearLayout    mButtonCopyRoomId;
@@ -40,15 +40,15 @@ public class InviteUserDialog extends BaseBottomDialog implements RoomEventCente
 
     public InviteUserDialog(@NonNull Context context) {
         super(context);
-        RoomEventCenter.getInstance().subscribeUIEvent(CONFIGURATION_CHANGE, this);
+        ConferenceEventCenter.getInstance().subscribeUIEvent(CONFIGURATION_CHANGE, this);
     }
 
     @Override
     public void dismiss() {
         super.dismiss();
-        RoomEventCenter.getInstance().unsubscribeUIEvent(CONFIGURATION_CHANGE, this);
-        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL, null);
-        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL_SECOND, null);
+        ConferenceEventCenter.getInstance().unsubscribeUIEvent(CONFIGURATION_CHANGE, this);
+        ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL, null);
+        ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL_SECOND, null);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class InviteUserDialog extends BaseBottomDialog implements RoomEventCente
     @Override
     protected void initView() {
         mContext = getContext();
-        mRoomStore = RoomEngineManager.sharedInstance(mContext).getRoomStore();
+        mRoomStore = ConferenceController.sharedInstance(mContext).getConferenceState();
         mTextRoomId = findViewById(R.id.invite_room_id);
         mRootCopyRoomLink = findViewById(R.id.tuiroomkit_root_room_link);
         mTextroomLink = findViewById(R.id.invite_room_link);
@@ -118,7 +118,7 @@ public class InviteUserDialog extends BaseBottomDialog implements RoomEventCente
             if (params == null || !isShowing()) {
                 return;
             }
-            Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
+            Configuration configuration = (Configuration) params.get(ConferenceEventConstant.KEY_CONFIGURATION);
             changeConfiguration(configuration);
         }
     }

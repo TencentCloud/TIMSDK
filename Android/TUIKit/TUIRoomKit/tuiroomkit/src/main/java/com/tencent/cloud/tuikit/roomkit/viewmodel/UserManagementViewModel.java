@@ -1,33 +1,31 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_SEND_MESSAGE_ABILITY_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_SEND_MESSAGE_ABILITY_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserManagementPanel;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventResponder,
-        RoomEventCenter.RoomKitUIEventResponder {
+public class UserManagementViewModel implements ConferenceEventCenter.RoomEngineEventResponder,
+        ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "UserManagementViewModel";
 
     public static final String ACTION_MEDIA_CONTROL = "ACTION_MEDIA_CONTROL";
@@ -41,8 +39,8 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
     private static final int INVITE_TIME_OUT = 0;
     private static final int REQ_TIME_OUT    = 15;
 
-    private Context            mContext;
-    private RoomStore          mRoomStore;
+    private Context             mContext;
+    private ConferenceState     mConferenceState;
     private UserEntity          mUser;
     private UserManagementPanel mUserManagementView;
 
@@ -50,21 +48,21 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         mContext = context;
         mUser = user;
         mUserManagementView = view;
-        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
+        mConferenceState = ConferenceController.sharedInstance().getConferenceState();
         subscribeEvent();
         Log.d(TAG, "UserManagementViewModel new : " + this);
     }
 
     private void subscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
         eventCenter.subscribeEngine(USER_SEND_MESSAGE_ABILITY_CHANGED, this);
         eventCenter.subscribeEngine(REMOTE_USER_TAKE_SEAT, this);
         eventCenter.subscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
         eventCenter.subscribeEngine(USER_ROLE_CHANGED, this);
 
-        eventCenter.subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        eventCenter.subscribeUIEvent(ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     public void destroy() {
@@ -73,25 +71,25 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     private void unSubscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(USER_SEND_MESSAGE_ABILITY_CHANGED, this);
         eventCenter.unsubscribeEngine(REMOTE_USER_TAKE_SEAT, this);
         eventCenter.unsubscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
         eventCenter.unsubscribeEngine(USER_ROLE_CHANGED, this);
 
-        eventCenter.unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        eventCenter.unsubscribeUIEvent(ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     public boolean checkPermission(String action) {
         if (TextUtils.equals(ACTION_MEDIA_CONTROL, action)) {
-            return !mRoomStore.roomInfo.isSeatEnabled || mUser.isOnSeat();
+            return !mConferenceState.roomInfo.isSeatEnabled || mUser.isOnSeat();
         }
         if (TextUtils.equals(ACTION_KICK_OUT_ROOM, action)) {
-            return mRoomStore.userModel.getRole() == TUIRoomDefine.Role.ROOM_OWNER;
+            return mConferenceState.userModel.getRole() == TUIRoomDefine.Role.ROOM_OWNER;
         }
-        TUIRoomDefine.Role localUserRole = RoomEngineManager.sharedInstance().getRoomStore().userModel.getRole();
+        TUIRoomDefine.Role localUserRole = ConferenceController.sharedInstance().getConferenceState().userModel.getRole();
         TUIRoomDefine.Role userRole = mUser.getRole();
         if (localUserRole == TUIRoomDefine.Role.ROOM_OWNER) {
             return true;
@@ -127,18 +125,18 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
 
     private void onMuteUserAudio(String userId) {
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance().disableLocalAudio();
+            ConferenceController.sharedInstance().disableLocalAudio();
             return;
         }
-        RoomEngineManager.sharedInstance().closeRemoteDeviceByAdmin(userId, TUIRoomDefine.MediaDevice.MICROPHONE, null);
+        ConferenceController.sharedInstance().closeRemoteDeviceByAdmin(userId, TUIRoomDefine.MediaDevice.MICROPHONE, null);
     }
 
     private void onUnMuteUserAudio(String userId) {
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance().enableLocalAudio();
+            ConferenceController.sharedInstance().enableLocalAudio();
             return;
         }
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .openRemoteDeviceByAdmin(userId, TUIRoomDefine.MediaDevice.MICROPHONE, REQ_TIME_OUT, null);
     }
 
@@ -153,17 +151,17 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
 
     private void onMuteUserVideo(String userId) {
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance().closeLocalCamera();
+            ConferenceController.sharedInstance().closeLocalCamera();
         }
-        RoomEngineManager.sharedInstance().closeRemoteDeviceByAdmin(userId, TUIRoomDefine.MediaDevice.CAMERA, null);
+        ConferenceController.sharedInstance().closeRemoteDeviceByAdmin(userId, TUIRoomDefine.MediaDevice.CAMERA, null);
     }
 
     private void onUnMuteUserVideo(String userId) {
         if (TextUtils.equals(userId, TUILogin.getUserId())) {
-            RoomEngineManager.sharedInstance().openLocalCamera(null);
+            ConferenceController.sharedInstance().openLocalCamera(null);
             return;
         }
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .openRemoteDeviceByAdmin(userId, TUIRoomDefine.MediaDevice.CAMERA, REQ_TIME_OUT, null);
     }
 
@@ -171,7 +169,7 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (mUser == null) {
             return;
         }
-        RoomEngineManager.sharedInstance().changeUserRole(mUser.getUserId(), TUIRoomDefine.Role.ROOM_OWNER, callback);
+        ConferenceController.sharedInstance().changeUserRole(mUser.getUserId(), TUIRoomDefine.Role.ROOM_OWNER, callback);
     }
 
     public void switchManagerRole(TUIRoomDefine.ActionCallback callback) {
@@ -181,14 +179,14 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         TUIRoomDefine.Role role = mUser.getRole() == TUIRoomDefine.Role.MANAGER ? TUIRoomDefine.Role.GENERAL_USER :
                 TUIRoomDefine.Role.MANAGER;
 
-        RoomEngineManager.sharedInstance().changeUserRole(mUser.getUserId(), role, callback);
+        ConferenceController.sharedInstance().changeUserRole(mUser.getUserId(), role, callback);
     }
 
     public void switchSendingMessageAbility() {
         if (mUser == null) {
             return;
         }
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .disableSendingMessageByAdmin(mUser.getUserId(), mUser.isEnableSendingMessage(), null);
     }
 
@@ -196,7 +194,7 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (TextUtils.isEmpty(userId)) {
             return;
         }
-        RoomEngineManager.sharedInstance().kickRemoteUserOutOfRoom(userId, null);
+        ConferenceController.sharedInstance().kickRemoteUserOutOfRoom(userId, null);
     }
 
     public void kickOffStage() {
@@ -206,7 +204,7 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (!isSeatEnable() || !mUser.isOnSeat()) {
             return;
         }
-        RoomEngineManager.sharedInstance().kickUserOffSeatByAdmin(SEAT_INDEX, mUser.getUserId(), null);
+        ConferenceController.sharedInstance().kickUserOffSeatByAdmin(SEAT_INDEX, mUser.getUserId(), null);
     }
 
     public void inviteToStage() {
@@ -218,12 +216,12 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         }
         Map<String, Object> params = new HashMap<>();
         params.put("userId", mUser.getUserId());
-        RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, params);
+        ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.INVITE_TAKE_SEAT, params);
     }
 
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case USER_ROLE_CHANGED:
                 onUserRoleChanged(params);
@@ -259,9 +257,9 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        UserEntity changeUser = mRoomStore.allUserList.get(position);
+        UserEntity changeUser = mConferenceState.allUserList.get(position);
         if (!TextUtils.equals(mUser.getUserId(), changeUser.getUserId()) && !TextUtils.equals(
-                mRoomStore.userModel.userId, changeUser.getUserId())) {
+                mConferenceState.userModel.userId, changeUser.getUserId())) {
             return;
         }
         if (!hasAbilityToManageUser(mUser)) {
@@ -279,10 +277,10 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        if (!TextUtils.equals(mUser.getUserId(), mRoomStore.allUserList.get(position).getUserId())) {
+        if (!TextUtils.equals(mUser.getUserId(), mConferenceState.allUserList.get(position).getUserId())) {
             return;
         }
-        mUserManagementView.updateCameraState(mRoomStore.allUserList.get(position).isHasVideoStream());
+        mUserManagementView.updateCameraState(mConferenceState.allUserList.get(position).isHasVideoStream());
     }
 
     private void onUserMicStateChanged(Map<String, Object> params) {
@@ -293,10 +291,10 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        if (!TextUtils.equals(mUser.getUserId(), mRoomStore.allUserList.get(position).getUserId())) {
+        if (!TextUtils.equals(mUser.getUserId(), mConferenceState.allUserList.get(position).getUserId())) {
             return;
         }
-        mUserManagementView.updateMicState(mRoomStore.allUserList.get(position).isHasAudioStream());
+        mUserManagementView.updateMicState(mConferenceState.allUserList.get(position).isHasAudioStream());
     }
 
     private void onUserMuteStateChanged(Map<String, Object> params) {
@@ -307,10 +305,10 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        if (!TextUtils.equals(mUser.getUserId(), mRoomStore.allUserList.get(position).getUserId())) {
+        if (!TextUtils.equals(mUser.getUserId(), mConferenceState.allUserList.get(position).getUserId())) {
             return;
         }
-        mUserManagementView.updateMessageEnableState(mRoomStore.allUserList.get(position).isEnableSendingMessage());
+        mUserManagementView.updateMessageEnableState(mConferenceState.allUserList.get(position).isEnableSendingMessage());
     }
 
     private void onRemoteUserSeatStateChanged(Map<String, Object> params, boolean isOnSeat) {
@@ -321,32 +319,32 @@ public class UserManagementViewModel implements RoomEventCenter.RoomEngineEventR
         if (position == USER_NOT_FOUND) {
             return;
         }
-        if (TextUtils.equals(mRoomStore.allUserList.get(position).getUserId(), mUser.getUserId())) {
+        if (TextUtils.equals(mConferenceState.allUserList.get(position).getUserId(), mUser.getUserId())) {
             mUserManagementView.changeConfiguration(null);
         }
     }
 
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
-        if (RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key)
+        if (ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key)
                 && params != null && mUserManagementView.isShowing()) {
-            Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
+            Configuration configuration = (Configuration) params.get(ConferenceEventConstant.KEY_CONFIGURATION);
             mUserManagementView.changeConfiguration(configuration);
         }
     }
 
     private boolean isSeatEnable() {
-        return mRoomStore.roomInfo.isSeatEnabled;
+        return mConferenceState.roomInfo.isSeatEnabled;
     }
 
     private boolean hasAbilityToManageUser(UserEntity user) {
-        if (mRoomStore.userModel.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
+        if (mConferenceState.userModel.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
             return true;
         }
-        if (mRoomStore.userModel.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
-            return TextUtils.equals(mRoomStore.userModel.userId, user.getUserId());
+        if (mConferenceState.userModel.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
+            return TextUtils.equals(mConferenceState.userModel.userId, user.getUserId());
         }
-        if (TextUtils.equals(mRoomStore.userModel.userId, user.getUserId())) {
+        if (TextUtils.equals(mConferenceState.userModel.userId, user.getUserId())) {
             return true;
         }
         return user.getRole() == TUIRoomDefine.Role.GENERAL_USER;

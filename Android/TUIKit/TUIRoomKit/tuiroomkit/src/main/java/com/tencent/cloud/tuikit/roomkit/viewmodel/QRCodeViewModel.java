@@ -9,9 +9,8 @@ import android.os.Build;
 import android.widget.Toast;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
-import com.tencent.cloud.tuikit.roomkit.model.utils.SaveBitMap;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
+import com.tencent.cloud.tuikit.roomkit.common.utils.SaveBitMap;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
 import com.tencent.qcloud.tuicore.util.TUIBuild;

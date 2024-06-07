@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="contact_line_controller_color">#F0F9F9F9</color>
-    
+    <color name="contact_minimalist_profile_item_bg_color">#F0F9F9F9</color>
+    <color name="contact_minimalist_profile_item_warning_text_color">#FFFF584C</color>
 </resources>

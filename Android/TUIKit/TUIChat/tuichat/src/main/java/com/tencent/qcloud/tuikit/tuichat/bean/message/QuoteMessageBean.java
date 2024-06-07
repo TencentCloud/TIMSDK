@@ -24,6 +24,8 @@ public class QuoteMessageBean extends TUIMessageBean {
     private final int originMsgType;
     private final int version;
 
+    private boolean abstractEnable = false;
+
     private TUIReplyQuoteBean replyQuoteBean;
 
     public QuoteMessageBean(ReplyPreviewBean replyPreviewBean) {
@@ -46,7 +48,7 @@ public class QuoteMessageBean extends TUIMessageBean {
 
     @Override
     public void onProcessMessage(V2TIMMessage v2TIMMessage) {
-        contentMessageBean = ChatMessageParser.parseMessage(v2TIMMessage, true);
+        contentMessageBean = ChatMessageParser.parseMessageIgnoreReply(v2TIMMessage);
         generateReplyQuoteBean();
         setExtra(contentMessageBean.getExtra());
     }
@@ -119,6 +121,14 @@ public class QuoteMessageBean extends TUIMessageBean {
 
     public TUIReplyQuoteBean getReplyQuoteBean() {
         return replyQuoteBean;
+    }
+
+    public void setAbstractEnable(boolean abstractEnable) {
+        this.abstractEnable = abstractEnable;
+    }
+
+    public boolean isAbstractEnable() {
+        return abstractEnable;
     }
 
     @Override

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/item_button"
+        android:background="@drawable/contact_profile_btn_shape"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="?attr/core_error_tip_color"
+        android:textSize="16sp"
+        android:layout_marginTop="6dp"
+        android:text=""/>
+</FrameLayout>

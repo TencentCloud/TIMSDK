@@ -24,6 +24,7 @@ import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TUIReplyQ
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingTipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
@@ -138,6 +139,7 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
         addMessageType(ReplyMessageBean.class, ReplyMessageHolder.class);
         addMessageType(QuoteMessageBean.class, QuoteMessageHolder.class);
         addMessageType(CallingMessageBean.class, CallingMessageHolder.class);
+        addMessageType(CallingTipsMessageBean.class, TipsMessageHolder.class, true);
         addMessageType(CustomLinkMessageBean.class, CustomLinkMessageHolder.class);
         addMessageType(CustomEvaluationMessageBean.class, CustomEvaluationMessageHolder.class);
         addMessageType(CustomOrderMessageBean.class, CustomOrderMessageHolder.class);

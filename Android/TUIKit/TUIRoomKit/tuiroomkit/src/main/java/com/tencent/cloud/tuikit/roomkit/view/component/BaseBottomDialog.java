@@ -1,10 +1,11 @@
 package com.tencent.cloud.tuikit.roomkit.view.component;
 
 
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MAIN_ACTIVITY;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,15 +16,15 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
 
-public abstract class BaseBottomDialog extends BottomSheetDialog {
+import java.util.Map;
+
+public abstract class BaseBottomDialog extends BottomSheetDialog implements ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "BaseBottomDialog";
 
     private View                      bottomSheetView;
@@ -34,6 +35,13 @@ public abstract class BaseBottomDialog extends BottomSheetDialog {
     public BaseBottomDialog(@NonNull Context context) {
         super(context);
         mContext = context;
+        ConferenceEventCenter.getInstance().subscribeUIEvent(DISMISS_MAIN_ACTIVITY, this);
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        ConferenceEventCenter.getInstance().unsubscribeUIEvent(DISMISS_MAIN_ACTIVITY, this);
     }
 
     @Override
@@ -128,5 +136,13 @@ public abstract class BaseBottomDialog extends BottomSheetDialog {
                 : R.drawable.tuiroomkit_bg_bottom_dialog_black_portrait;
         getWindow().findViewById(com.google.android.material.R.id.design_bottom_sheet)
                 .setBackgroundResource(resId);
+    }
+
+    @Override
+    public void onNotifyUIEvent(String key, Map<String, Object> params) {
+        if (key != DISMISS_MAIN_ACTIVITY) {
+            return;
+        }
+        dismiss();
     }
 }

@@ -1,7 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.model.manager;
 
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.MSG_MAX_SHOW_MEMBER_COUNT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SEND_IM_MSG_COMPLETE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SEND_IM_MSG_COMPLETE;
 
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -12,7 +12,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomMessageBean;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.imsdk.v2.V2TIMCompleteCallback;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -107,7 +107,7 @@ public class RoomMsgManager {
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        RoomEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
+                        ConferenceEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
                     }
                 });
             }
@@ -119,7 +119,7 @@ public class RoomMsgManager {
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        RoomEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
+                        ConferenceEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
                     }
                 });
             }
@@ -131,7 +131,7 @@ public class RoomMsgManager {
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        RoomEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
+                        ConferenceEventCenter.getInstance().notifyUIEvent(SEND_IM_MSG_COMPLETE, null);
                     }
                 });
             }

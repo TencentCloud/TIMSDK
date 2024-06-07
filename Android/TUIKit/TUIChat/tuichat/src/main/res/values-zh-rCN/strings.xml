@@ -108,6 +108,11 @@
     <string name="group_add_opt_join_disable">禁止加群</string>
     <string name="group_add_opt_invite_disable">禁止邀请</string>
 
+    <string name="modify_topic_name_is">%s把话题名称修改为%s</string>
+    <string name="modify_topic_notice">%s把话题公告修改为%s</string>
+    <string name="modify_topic_introduction">%s把话题简介修改为%s</string>
+    <string name="modify_topic_avatar">%s修改了话题头像</string>
+
 
     <string name="typing">对方正在输入...</string>
     <string name="titlebar_mutiselect">多选</string>
@@ -276,5 +281,16 @@
 
     <string name="chat_recent_use">最近使用</string>
     <string name="chat_all_emojis">所有表情</string>
+
+    <string name="chat_group_pin_message">置顶</string>
+    <string name="chat_group_unpin_message">取消置顶</string>
+    <string name="chat_group_message_pinned">%s置顶了一条消息</string>
+    <string name="chat_group_message_unpinned">%s移除了一条置顶消息</string>
+    <string name="chat_unpinned_button_text">移除</string>
+    <string name="chat_message_is_pinned">这条消息已经被置顶了</string>
+    <string name="chat_message_is_unpinned">这条消息已经被取消置顶了</string>
+
+    <string name="chat_quote_origin_message_revoked">引用内容已撤回</string>
+    <string name="chat_reply_origin_message_revoked">回复内容已撤回</string>
 
 </resources>

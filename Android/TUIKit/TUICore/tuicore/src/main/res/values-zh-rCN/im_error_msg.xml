@@ -49,6 +49,7 @@
     <string name="TUIKitErrorSDKGroupJoinPrivateGroupDeny">不允许申请加入 Private 群组</string>
     <string name="TUIKitErrorSDKGroupInviteSuperDeny">不允许邀请角色为群主的成员</string>
     <string name="TUIKitErrorSDKGroupInviteNoMember">不允许邀请0个成员</string>
+    <string name="TUIKitErrorSDKGroupPinnedMessageCountLimit">置顶消息数量超过上限</string>
     <string name="TUIKitErrorSDKFriendShipInvalidProfileKey">资料字段非法</string>
     <string name="TUIKitErrorSDKFriendshipInvalidAddRemark">备注字段非法，最大96字节</string>
     <string name="TUIKitErrorSDKFriendshipInvalidAddWording">请求添加好友的请求说明字段非法，最大120字节</string>

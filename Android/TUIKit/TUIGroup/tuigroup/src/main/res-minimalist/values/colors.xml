@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="group_minimalist_profile_item_bg_color">#F0F9F9F9</color>
+    <color name="group_minimalist_profile_item_warning_text_color">#FFFF584C</color>
+</resources>

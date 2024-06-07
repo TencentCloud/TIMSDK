@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_above="@+id/bottom_layout"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginStart="4dp"
         android:background="@drawable/tuivideoseat_bg_anchor_info"
         android:paddingEnd="8dp">

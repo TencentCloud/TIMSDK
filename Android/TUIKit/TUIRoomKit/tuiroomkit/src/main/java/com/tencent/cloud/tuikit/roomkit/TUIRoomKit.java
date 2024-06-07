@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2021 Tencent. All rights reserved.
  * Module:   TUIRoomKit
- * Function: 多人音视频主功能接口
+ * Function: Multi-person audio and video main function interface.
  */
 
 package com.tencent.cloud.tuikit.roomkit;
@@ -9,6 +9,9 @@ package com.tencent.cloud.tuikit.roomkit;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.model.TUIRoomKitImpl;
 
+/**
+ * @deprecated Please use ConferenceMainFragment for conference UI integration.
+ */
 @Deprecated
 public abstract class TUIRoomKit {
     /**

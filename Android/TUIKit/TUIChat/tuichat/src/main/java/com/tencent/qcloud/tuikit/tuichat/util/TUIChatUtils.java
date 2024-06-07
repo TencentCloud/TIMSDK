@@ -33,13 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TUIChatUtils {
-    public static final String SPLIT_TEXT = "split_result";
-    public static final String SPLIT_TEXT_FOR_TRANSLATION = "split_translation";
-    public static final String SPLIT_TEXT_INDEX_FOR_TRANSLATION = "split_translation_index";
-
-    public static final String REACTION_ALERT_TIME = "ReactionPackageAlertTime";
-    public static final String EMOJI_ALERT_TIME = "BuildInEmojiAlertTime";
-    private static final long MESSAGE_REACTION_ABILITY = 0x01L << 48;
 
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
@@ -82,50 +75,6 @@ public class TUIChatUtils {
 
     public static boolean isGroupChat(int chatType) {
         return chatType == V2TIMConversation.V2TIM_GROUP;
-    }
-
-    public static String generateOriginImagePath(final TUIMessageBean msg) {
-        if (msg == null) {
-            return null;
-        }
-        V2TIMMessage v2TIMMessage = msg.getV2TIMMessage();
-        if (v2TIMMessage == null) {
-            return null;
-        }
-        V2TIMImageElem v2TIMImageElem = v2TIMMessage.getImageElem();
-        if (v2TIMImageElem == null) {
-            return null;
-        }
-
-        for (V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
-            if (image.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN) {
-                String uuid = image.getUUID();
-                return ImageUtil.generateImagePath(uuid, V2TIMImageElem.V2TIM_IMAGE_TYPE_ORIGIN);
-            }
-        }
-        return null;
-    }
-
-    public static String generateThumbImagePath(final TUIMessageBean msg) {
-        if (msg == null) {
-            return null;
-        }
-        V2TIMMessage v2TIMMessage = msg.getV2TIMMessage();
-        if (v2TIMMessage == null) {
-            return null;
-        }
-        V2TIMImageElem v2TIMImageElem = v2TIMMessage.getImageElem();
-        if (v2TIMImageElem == null) {
-            return null;
-        }
-
-        for (V2TIMImageElem.V2TIMImage image : v2TIMImageElem.getImageList()) {
-            if (image.getType() == V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB) {
-                String uuid = image.getUUID();
-                return ImageUtil.generateImagePath(uuid, V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB);
-            }
-        }
-        return null;
     }
 
     public static boolean isCommunityGroup(String groupID) {

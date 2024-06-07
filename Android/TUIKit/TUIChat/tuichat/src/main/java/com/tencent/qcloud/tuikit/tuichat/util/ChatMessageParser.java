@@ -25,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingTipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.EmptyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
@@ -48,15 +49,29 @@ import java.util.Map;
 public class ChatMessageParser {
     private static final String TAG = ChatMessageParser.class.getSimpleName();
 
+    public static TUIMessageBean parsePresentMessage(V2TIMMessage v2TIMMessage) {
+        if (v2TIMMessage == null) {
+            return null;
+        }
+        if (v2TIMMessage.getStatus() == V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED) {
+            return null;
+        }
+        return parseMessage(v2TIMMessage);
+    }
+
+    public static TUIMessageBean parseMessageIgnoreReply(V2TIMMessage v2TIMMessage) {
+        return parseMessage(v2TIMMessage, true);
+    }
+
     public static TUIMessageBean parseMessage(V2TIMMessage v2TIMMessage) {
         return parseMessage(v2TIMMessage, false);
     }
 
-    public static TUIMessageBean parseMessage(V2TIMMessage v2TIMMessage, boolean isIgnoreReply) {
+    private static TUIMessageBean parseMessage(V2TIMMessage v2TIMMessage, boolean isIgnoreReply) {
         if (v2TIMMessage == null) {
             return null;
         }
-        if (v2TIMMessage.getStatus() == V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED || v2TIMMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_NONE) {
+        if (v2TIMMessage.getElemType() == V2TIMMessage.V2TIM_ELEM_TYPE_NONE) {
             return null;
         }
         TUIMessageBean message = null;
@@ -332,6 +347,21 @@ public class ChatMessageParser {
      * @param v2TIMMessageList IMSDK  bean 
      * @return  TUIKit bean 
      */
+    public static List<TUIMessageBean> parsePresentMessageList(List<V2TIMMessage> v2TIMMessageList) {
+        if (v2TIMMessageList == null) {
+            return null;
+        }
+        List<TUIMessageBean> messageList = new ArrayList<>();
+        for (int i = 0; i < v2TIMMessageList.size(); i++) {
+            V2TIMMessage timMessage = v2TIMMessageList.get(i);
+            TUIMessageBean message = parsePresentMessage(timMessage);
+            if (message != null) {
+                messageList.add(message);
+            }
+        }
+        return messageList;
+    }
+
     public static List<TUIMessageBean> parseMessageList(List<V2TIMMessage> v2TIMMessageList) {
         if (v2TIMMessageList == null) {
             return null;
@@ -356,16 +386,12 @@ public class ChatMessageParser {
         TUIMessageBean message;
         boolean isGroup = (callModel.getParticipantType() == CallModel.CALL_PARTICIPANT_TYPE_GROUP);
         if (isGroup) {
-            TipsMessageBean tipsMessageBean = new TipsMessageBean();
-            tipsMessageBean.setCommonAttribute(v2TIMMessage);
-            tipsMessageBean.setText(callModel.getContent());
-            tipsMessageBean.setExtra(callModel.getContent());
-            message = tipsMessageBean;
+            CallingTipsMessageBean callingTipsMessageBean = new CallingTipsMessageBean();
+            callingTipsMessageBean.setCallModel(callModel);
+            message = callingTipsMessageBean;
         } else {
             CallingMessageBean callingMessageBean = new CallingMessageBean();
-            callingMessageBean.setCommonAttribute(v2TIMMessage);
-            callingMessageBean.setText(callModel.getContent());
-            callingMessageBean.setExtra(callModel.getContent());
+            callingMessageBean.setCallModel(callModel);
             callingMessageBean.setCallType(callModel.getStreamMediaType());
             callingMessageBean.setCaller(callModel.getDirection() == CallModel.CALL_MESSAGE_DIRECTION_OUTGOING);
             if (callingMessageBean.isSelf()) {
@@ -454,7 +480,7 @@ public class ChatMessageParser {
         if (v2TIMMessage == null) {
             return null;
         }
-        TUIMessageBean messageBean = parseMessage(v2TIMMessage);
+        TUIMessageBean messageBean = parsePresentMessage(v2TIMMessage);
         if (messageBean == null) {
             return null;
         }

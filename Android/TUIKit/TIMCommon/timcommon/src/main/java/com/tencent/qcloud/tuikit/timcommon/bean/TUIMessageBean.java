@@ -10,6 +10,11 @@ import com.tencent.qcloud.tuikit.timcommon.util.MessageBuilder;
 import com.tencent.qcloud.tuikit.timcommon.util.MessageParser;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class TUIMessageBean implements Serializable {
     /**
@@ -63,6 +68,7 @@ public abstract class TUIMessageBean implements Serializable {
     private MessageReceiptInfo messageReceiptInfo;
     private MessageRepliesBean messageRepliesBean;
     private boolean hasReaction = false;
+    private Map<String, UserBean> userBeanMap = new LinkedHashMap<>();
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -87,7 +93,6 @@ public abstract class TUIMessageBean implements Serializable {
     public void setEnableForward(boolean enableForward) {
         isEnableForward = enableForward;
     }
-
 
     public MessageRepliesBean getMessageRepliesBean() {
         return messageRepliesBean;
@@ -404,6 +409,43 @@ public abstract class TUIMessageBean implements Serializable {
 
     public void setHasReaction(boolean hasReaction) {
         this.hasReaction = hasReaction;
+    }
+
+    public boolean isRevoked() {
+        return getStatus() == TUIMessageBean.MSG_STATUS_REVOKE;
+    }
+
+    public void setUserBean(String userID, UserBean userBean) {
+        userBeanMap.put(userID, userBean);
+        List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
+        if (replyBeanList != null && !replyBeanList.isEmpty()) {
+            for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
+                if (userBean != null) {
+                    replyBean.setSenderFaceUrl(userBean.getFaceUrl());
+                    replyBean.setSenderShowName(userBean.getDisplayString());
+                }
+            }
+        }
+    }
+
+    public UserBean getUserBean(String userID) {
+        return userBeanMap.get(userID);
+    }
+
+    public Set<String> getAdditionalUserIDList() {
+        Set<String> userIdSet = new HashSet<>();
+        MessageRepliesBean messageRepliesBean = getMessageRepliesBean();
+        if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
+            List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
+            for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
+                userIdSet.add(replyBean.getMessageSender());
+            }
+        }
+        return userIdSet;
+    }
+
+    public boolean needAsyncGetDisplayString() {
+        return false;
     }
 
     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {

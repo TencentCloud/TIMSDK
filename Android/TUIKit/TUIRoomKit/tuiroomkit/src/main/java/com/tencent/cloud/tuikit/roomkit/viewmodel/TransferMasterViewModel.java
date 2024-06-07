@@ -1,10 +1,10 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.REMOTE_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 
 import android.content.res.Configuration;
 import android.text.TextUtils;
@@ -12,27 +12,27 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel.TransferMasterPanel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventResponder,
-        RoomEventCenter.RoomKitUIEventResponder {
+public class TransferMasterViewModel implements ConferenceEventCenter.RoomEngineEventResponder,
+        ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "TransferMasterViewModel";
 
-    private RoomStore           mRoomStore;
+    private ConferenceState     mConferenceState;
     private TransferMasterPanel mTransferMasterView;
 
     public TransferMasterViewModel(TransferMasterPanel transferMasterView) {
         mTransferMasterView = transferMasterView;
-        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
+        mConferenceState = ConferenceController.sharedInstance().getConferenceState();
         subscribeEvent();
     }
 
@@ -41,28 +41,28 @@ public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     private void subscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.subscribeEngine(REMOTE_USER_ENTER_ROOM, this);
         eventCenter.subscribeEngine(REMOTE_USER_LEAVE_ROOM, this);
         eventCenter.subscribeUIEvent(CONFIGURATION_CHANGE, this);
     }
 
     private void unSubscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.unsubscribeEngine(REMOTE_USER_ENTER_ROOM, this);
         eventCenter.unsubscribeEngine(REMOTE_USER_LEAVE_ROOM, this);
         eventCenter.unsubscribeUIEvent(CONFIGURATION_CHANGE, this);
     }
 
-    public void transferMaster(String userId) {
+    public void transferMasterAndExit(String userId, TUIRoomDefine.ActionCallback callback) {
         if (TextUtils.isEmpty(userId)) {
             return;
         }
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .changeUserRole(userId, TUIRoomDefine.Role.ROOM_OWNER, new TUIRoomDefine.ActionCallback() {
                     @Override
                     public void onSuccess() {
-                        RoomEngineManager.sharedInstance().exitRoom(null);
+                        ConferenceController.sharedInstance().exitRoom(callback);
                     }
 
                     @Override
@@ -78,7 +78,7 @@ public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventR
         }
 
         List<UserEntity> searchList = new ArrayList<>();
-        for (UserEntity item : mRoomStore.allUserList) {
+        for (UserEntity item : mConferenceState.allUserList) {
             if (item.getUserName().contains(keyWords) || item.getUserId().contains(keyWords)) {
                 searchList.add(item);
             }
@@ -87,7 +87,7 @@ public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventR
     }
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case REMOTE_USER_ENTER_ROOM:
                 handleRemoteUserEnterRoom(params);
@@ -122,7 +122,7 @@ public class TransferMasterViewModel implements RoomEventCenter.RoomEngineEventR
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
         if (CONFIGURATION_CHANGE.equals(key)
                 && params != null && mTransferMasterView.isShowing()) {
-            Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
+            Configuration configuration = (Configuration) params.get(ConferenceEventConstant.KEY_CONFIGURATION);
             mTransferMasterView.changeConfiguration(configuration);
         }
     }

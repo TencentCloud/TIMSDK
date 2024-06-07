@@ -104,16 +104,4 @@ public class TUIGroupUtils {
             ToastUtil.toastLongMessage(toastString);
         }
     }
-
-    public static void startGroupChatActivity(GroupInfo groupInfo) {
-        if (groupInfo == null || TextUtils.isEmpty(groupInfo.getId())) {
-            return;
-        }
-        Bundle param = new Bundle();
-        param.putInt(TUIConstants.TUIChat.CHAT_TYPE, V2TIMConversation.V2TIM_GROUP);
-        param.putString(TUIConstants.TUIChat.CHAT_ID, groupInfo.getId());
-        param.putString(TUIConstants.TUIChat.CHAT_NAME, groupInfo.getGroupName());
-        param.putString(TUIConstants.TUIChat.FACE_URL, groupInfo.getFaceUrl());
-        TUICore.startActivity("TUIGroupChatMinimalistActivity", param);
-    }
 }

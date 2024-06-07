@@ -13,4 +13,8 @@
         <attr name="backgroundStateClose" format="reference" />
         <attr name="boardLineWidth" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="NotificationView">
+        <attr name="durationMS" format="integer" />
+    </declare-styleable>
 </resources>

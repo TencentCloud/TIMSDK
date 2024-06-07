@@ -26,9 +26,12 @@ import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityDetailView;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunityGroupList;
 import com.tencent.qcloud.tuikit.tuicommunity.ui.widget.CommunitySelfView;
 import com.tencent.qcloud.tuikit.tuicommunity.utils.CommunityConstants;
+import com.tencent.qcloud.tuikit.tuicommunity.utils.TUICommunityLog;
+
 import java.util.List;
 
 public class TUICommunityFragment extends Fragment implements ICommunityFragment {
+    private static final String TAG = TUICommunityFragment.class.getSimpleName();
     private View baseView;
     private ViewPager2 communityContentViewPager;
     private CommunityFragmentAdapter communityFragmentAdapter;
@@ -158,9 +161,15 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("can't load self face icon");
+                TUICommunityLog.i(TAG, "getSelfFaceUrl error:" + errCode + ", errMsg:" + errMsg);
             }
         });
+    }
+
+    public void reloadData() {
+        if (presenter != null) {
+            presenter.loadJoinedCommunityList();
+        }
     }
 
     private void switchCommunity(int index) {

@@ -106,33 +106,49 @@ public class MergeMessageHolder extends MessageContentHolder {
         }
         final String splitStr = "\u202C:";
         for (int i = 0; i < abstractList.size(); i++) {
-            String absString = abstractList.get(i);
-            String sender = absString.split(":")[0];
-            String content = absString.split(":")[1];
-            if (absString.contains(splitStr)) {
-                sender = absString.split(splitStr)[0];
-                content = absString.split(splitStr)[1];
-            }
-
             TextView senderTv;
             TextView contentTv;
+            TextView splitTv;
             if (i == 0) {
                 senderTv = firstLine.findViewById(R.id.sender_name_tv);
                 contentTv = firstLine.findViewById(R.id.content_tv);
+                splitTv = firstLine.findViewById(R.id.split_tv);
                 firstLine.setVisibility(View.VISIBLE);
             } else if (i == 1) {
                 senderTv = secondLine.findViewById(R.id.sender_name_tv);
                 contentTv = secondLine.findViewById(R.id.content_tv);
+                splitTv = secondLine.findViewById(R.id.split_tv);
                 secondLine.setVisibility(View.VISIBLE);
             } else if (i == 2) {
                 senderTv = thirdLine.findViewById(R.id.sender_name_tv);
                 contentTv = thirdLine.findViewById(R.id.content_tv);
+                splitTv = thirdLine.findViewById(R.id.split_tv);
                 thirdLine.setVisibility(View.VISIBLE);
             } else {
                 return;
             }
-            senderTv.setText(sender);
-            contentTv.setText(FaceManager.emojiJudge(content));
+            String absString = abstractList.get(i);
+            if (absString.contains(splitStr)) {
+                String sender = "";
+                String content = "";
+                if (absString.contains(splitStr)) {
+                    String[] strings = absString.split(splitStr);
+                    if (strings.length >= 1) {
+                        sender = strings[0];
+                    }
+                    if (strings.length >= 2) {
+                        content = strings[1];
+                    }
+                }
+                senderTv.setVisibility(View.VISIBLE);
+                senderTv.setText(sender);
+                splitTv.setVisibility(View.VISIBLE);
+                contentTv.setText(FaceManager.emojiJudge(content));
+            } else {
+                senderTv.setVisibility(View.GONE);
+                contentTv.setText(FaceManager.emojiJudge(absString));
+                splitTv.setVisibility(View.GONE);
+            }
         }
     }
 

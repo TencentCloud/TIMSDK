@@ -232,6 +232,7 @@ public final class TUIConstants {
                 public static final String GROUP_ID = "ChatGroupID";
                 public static final String TOPIC_ID = "ChatTopicID";
                 public static final String CONTEXT = "ChatContext";
+                public static final String GROUP_TYPE = "ChatGroupType";
             }
 
             // Message content at bottom
@@ -304,6 +305,15 @@ public final class TUIConstants {
                 public static final String MESSAGE_REPLY_VIEW_CLASS = "ChatMessageReplyViewClass";
                 public static final String IS_NEED_EMPTY_VIEW_GROUP = "ChatMessageIsNeedEmptyViewGroup";
             }
+
+            // Get message display string
+            public static class GetMessagesDisplayString {
+                public static final String METHOD_NAME = "GetLastMsgDisplayString";
+                public static final String MESSAGE_MAP = "messageMap";
+                public static final String DISPLAY_STRING_MAP = "displayStringMap";
+                public static final String CONVERSATION_ID = "conversationID";
+                public static final String MESSAGE = "message";
+            }
         }
 
         public static class ObjectFactory {
@@ -340,6 +350,13 @@ public final class TUIConstants {
                 public static final String KEY = "ChatMessageStatusEvent";
                 public static final String SUB_KEY_PROCESS_MESSAGE = "ChatMessageStatusEventSubKeyProcessMessage";
                 public static final String MESSAGE_LIST = "ChatMessageStatusEventMessageList";
+            }
+
+            public static class MessageDisplayString {
+                public static final String KEY = "ChatMessageDisplayString";
+                public static final String SUB_KEY_PROCESS_MESSAGE = "ChatMessageDisplayStringUpdate";
+                public static final String CONVERSATION_ID = "ChatMessageDisplayConversationID";
+                public static final String MESSAGE_BEAN = "ChatMessageDisplayStringMessageBean";
             }
         }
     }
@@ -439,6 +456,10 @@ public final class TUIConstants {
                 public static final String USER_ID = "ContactFriendProfileUserID";
             }
 
+            public static class FriendProfileWarningButton {
+                public static final String EXTENSION_ID = "ContactFriendProfileWarningButtonExtensionID";
+            }
+
             public static class ContactItem {
                 public static final String CLASSIC_EXTENSION_ID = "ContactItemClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ContactItemMinimalistID";
@@ -470,6 +491,8 @@ public final class TUIConstants {
         public static final String METHOD_NAME_RECEIVEAPNSCALLED = "receiveAPNSCalled";
         public static final String METHOD_NAME_ENABLE_FLOAT_WINDOW = "methodEnableFloatWindow";
         public static final String METHOD_NAME_ENABLE_MULTI_DEVICE = "methodEnableMultiDeviceAbility";
+        public static final String METHOD_NAME_ENABLE_INCOMING_BANNER = "methodEnableIncomingBanner";
+        public static final String METHOD_NAME_ENABLE_VIRTUAL_BACKGROUND = "methodEnableVirtualBackground";
 
         public static final String PARAM_NAME_TYPE = "type";
         public static final String PARAM_NAME_USERIDS = "userIDs";
@@ -477,6 +500,8 @@ public final class TUIConstants {
         public static final String PARAM_NAME_CALLMODEL = "call_model_data";
         public static final String PARAM_NAME_ENABLE_FLOAT_WINDOW = "enableFloatWindow";
         public static final String PARAM_NAME_ENABLE_MULTI_DEVICE = "enableMultiDeviceAbility";
+        public static final String PARAM_NAME_ENABLE_INCOMING_BANNER = "enableIncomingBanner";
+        public static final String PARAM_NAME_ENABLE_VIRTUAL_BACKGROUND = "enableVirtualBackground";
 
         public static final String METHOD_START_CALL = "startCall";
 
@@ -613,6 +638,10 @@ public final class TUIConstants {
                 public static final String GROUP_ID = "GroupProfileGroupID";
                 public static final String CONTEXT = "GroupProfileContext";
             }
+
+            public static class GroupProfileWarningButton {
+                public static final String EXTENSION_ID = "GroupProfileWarningButtonExtensionID";
+            }
         }
 
         public static class Event {
@@ -701,6 +730,11 @@ public final class TUIConstants {
         public static final String BROADCAST_IM_LOGIN_AFTER_APP_WAKEUP = "com.tencent.TIMPush.BROADCAST_IM_LOGIN_AFTER_APP_WAKEUP";
         public static final String METHOD_REPORT_NOTIFICATION_RECIEVED = "reportNotificationRecieved";
         public static final String METHOD_REPORT_NOTIFICATION_CLICKED = "reportNotificationClicked";
+        public static final String PUSH_DETECTION_TIMEOUT_KEY = "pushDetectionTimeoutKey";
+        public static final String METHOD_DISABLE_RETRY_REGISTER_FCM = "disableRetryRegisterFCMChannel";
+        public static final String METHOD_DISABLE_RETRY_REGISTER_FCM_KEY = "disableRetryRegisterFCMChannelKey";
+        public static final String METHOD_CREATE_NOTIFICATION_CHANNELS = "createNotificationChannels";
+        public static final String CREATE_NOTIFICATION_CHANNELS_KEY = "createNotificationChannelsKey";
 
 
         public static class XiaoMi {
@@ -708,6 +742,12 @@ public final class TUIConstants {
             public static final String METHOD_REGISTER_XIAOMI_PUSH = "registerTIMXiaoMiPush";
             public static final String XIAOMI_APPID = "xiaoMiAppId";
             public static final String XIAOMI_APPKEY = "xiaomiAppKey";
+            public static final String METHOD_SET_XIAOMI_PUSH_REGION = "setXiaoMiPushRegion";
+            public static final String XIAOMI_PUSH_REGION_KEY = "xiaoMiPushRegionKey";
+            public static final int XIAOMI_REGION_EUROPE = 0;
+            public static final int XIAOMI_REGION_RUSSIA = 1;
+            public static final int XIAOMI_REGION_INDIA = 2;
+            public static final int XIAOMI_REGION_ELSE = 3;
         }
 
         public static class HuaWei {
@@ -757,6 +797,7 @@ public final class TUIConstants {
             public static final String CHANNEL_ID = "IMChannelID";
             public static final String CHANNEL_NAME = "IMChannelName";
             public static final String SOUND = "IMSound";
+            public static final String MESSAGE_ID = "IMMsgID";
 
             // fcm & im
             public static final String SMALL_ICON = "IMSmallIcon";
@@ -767,13 +808,13 @@ public final class TUIConstants {
 
             // ext
             public static final String ENTITY = "entity";
-            public static final String ACTION = "action"; 
+            public static final String ACTION = "action";
 
             // report
-            public static final String PUSH_ID = "clickExt"; 
-            private static final String PUSH_NOTIFY_MODE = "notifyMode"; 
+            public static final String PUSH_ID = "clickExt";
+            private static final String PUSH_NOTIFY_MODE = "notifyMode";
             public static final String PUSH_EVENT_TIME_KEY = "pushEventTime";
-            public static final String PUSH_EVENT_TYPE_KEY = "pushEventType"; 
+            public static final String PUSH_EVENT_TYPE_KEY = "pushEventType";
         }
     }
 

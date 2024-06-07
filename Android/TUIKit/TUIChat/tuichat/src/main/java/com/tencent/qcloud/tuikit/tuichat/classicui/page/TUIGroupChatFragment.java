@@ -5,22 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
+
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
-import com.tencent.qcloud.tuikit.tuichat.interfaces.ChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +124,18 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
             }
         });
 
-        setTitleBarExtension();
+        presenter.getGroupType(groupInfo.getId(), new TUIValueCallback<String>() {
+            @Override
+            public void onSuccess(String type) {
+                groupInfo.setGroupType(type);
+                setTitleBarExtension();
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                setTitleBarExtension();
+            }
+        });
     }
 
     private void setTitleBarExtension() {
@@ -133,6 +145,7 @@ public class TUIGroupChatFragment extends TUIBaseChatFragment {
         } else {
             param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.GROUP_ID, groupInfo.getId());
         }
+        param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.GROUP_TYPE, groupInfo.getGroupType());
         List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, param);
         if (!extensionInfoList.isEmpty()) {
             TUIExtensionInfo extensionInfo = extensionInfoList.get(0);

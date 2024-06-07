@@ -17,7 +17,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragment {
     private static final String TAG = TUIGroupChatMinimalistFragment.class.getSimpleName();

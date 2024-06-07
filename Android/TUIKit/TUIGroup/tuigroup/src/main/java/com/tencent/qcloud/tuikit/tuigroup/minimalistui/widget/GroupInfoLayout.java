@@ -87,6 +87,7 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     private MinimalistLineControllerView mDissolveBtn;
     private MinimalistLineControllerView mClearMsgBtn;
     private MinimalistLineControllerView mChangeOwnerBtn;
+    private ViewGroup warningExtensionListView;
     private RecyclerView memberList;
 
     private OnButtonClickListener mListener;
@@ -176,24 +177,6 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mNickView.setCanNav(true);
         
         mTopSwitchView = findViewById(R.id.chat_to_top_switch);
-        mTopSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
-                if (mGroupInfo == null) {
-                    return;
-                }
-                mPresenter.setTopConversation(mGroupInfo.getId(), isChecked, new IUIKitCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void data) {}
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
-                        buttonView.setChecked(false);
-                    }
-                });
-            }
-        });
         
         mMsgRevOptionSwitchView = findViewById(R.id.msg_rev_option);
         
@@ -218,6 +201,8 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mChatBackground = findViewById(R.id.chat_background);
         mChatBackground.setOnClickListener(this);
         mChatBackground.setCanNav(true);
+
+        warningExtensionListView = findViewById(R.id.warning_extension_list);
 
         int linearViewBgColor = 0xF0F9F9F9;
         mMsgRevOptionSwitchView.setBackgroundColor(linearViewBgColor);
@@ -288,6 +273,26 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         Collections.sort(extensionInfoList);
         profileItemAdapter.setExtensionInfoList(extensionInfoList);
         profileItemAdapter.notifyDataSetChanged();
+
+        List<TUIExtensionInfo> warningExtensionList = TUICore.getExtensionList(TUIConstants.TUIGroup.Extension.GroupProfileWarningButton.EXTENSION_ID, null);
+        Collections.sort(warningExtensionList);
+        warningExtensionListView.removeAllViews();
+        for (TUIExtensionInfo extensionInfo : warningExtensionList) {
+            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.group_minimalist_profile_warning_item_layout, null);
+            MinimalistLineControllerView itemButton = itemView.findViewById(R.id.item_button);
+            itemButton.setName(extensionInfo.getText());
+            itemButton.setNameColor(getResources().getColor(R.color.group_minimalist_profile_item_warning_text_color));
+            itemButton.setBackgroundColor(getResources().getColor(R.color.group_minimalist_profile_item_bg_color));
+            itemButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (extensionInfo.getExtensionListener() != null) {
+                        extensionInfo.getExtensionListener().onClicked(null);
+                    }
+                }
+            });
+            warningExtensionListView.addView(itemView);
+        }
     }
 
     public void setGroupInfoPresenter(GroupInfoPresenter presenter) {
@@ -543,8 +548,28 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         mJoinTypeView.setContent(mJoinTypes.get(info.getJoinType()));
         mInviteTypeView.setContent(mInviteTypes.get(info.getInviteType()));
         mNickView.setContent(mPresenter.getNickName());
-        mTopSwitchView.setChecked(mGroupInfo.isTopChat());
 
+        mTopSwitchView.setCheckListener(null);
+        mTopSwitchView.setChecked(mGroupInfo.isTopChat());
+        mTopSwitchView.setCheckListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
+                if (mGroupInfo == null) {
+                    return;
+                }
+                mPresenter.setTopConversation(mGroupInfo.getId(), isChecked, new IUIKitCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void data) {}
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        ToastUtil.toastShortMessage(module + ", Error code = " + errCode + ", desc = " + errMsg);
+                        buttonView.setChecked(false);
+                    }
+                });
+            }
+        });
+        mFoldGroupChatSwitchView.setCheckListener(null);
         if (GroupInfo.GROUP_TYPE_MEETING.equals(info.getGroupType())) {
             mMsgRevOptionSwitchView.setVisibility(GONE);
             mLayoutFold.setVisibility(GONE);
@@ -660,6 +685,21 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
         initView();
     }
 
+    private void setGroupMemberListInfo(GroupInfo info) {
+        mMemberView.setName(getResources().getString(R.string.group_members) + String.format("（%s）", info.getMemberCount() + ""));
+        mMemberAdapter.setDataSource(info);
+        mMemberAdapter.setOnGroupMemberClickListener(new GroupMemberLayout.OnGroupMemberClickListener() {
+            @Override
+            public void onClick(GroupMemberInfo groupMemberInfo) {
+                Bundle params = new Bundle();
+                params.putString(TUIConstants.TUIChat.CHAT_ID, groupMemberInfo.getAccount());
+                TUICore.startActivity("FriendProfileMinimalistActivity", params);
+            }
+        });
+        memberList.setLayoutManager(new LinearLayoutManager(getContext()));
+        memberList.setAdapter(mMemberAdapter);
+    }
+
     private String convertGroupText(String groupType) {
         String groupText = "";
         if (TextUtils.isEmpty(groupType)) {
@@ -733,6 +773,11 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     @Override
     public void onGroupInfoChanged(GroupInfo dataSource) {
         setGroupInfo(dataSource);
+    }
+
+    @Override
+    public void onGroupMemberListChanged(GroupInfo info) {
+        setGroupMemberListInfo(info);
     }
 
     @Override

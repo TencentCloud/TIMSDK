@@ -1,6 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
 
 import android.content.Context;
 import android.view.View;
@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.TopViewModel;
 import com.tencent.qcloud.tuicore.util.DateTimeUtil;
 
@@ -104,8 +104,8 @@ public class TopView extends FrameLayout implements View.OnClickListener {
         } else if (v.getId() == R.id.btn_report) {
             mViewModel.report();
         } else if (v.getId() == R.id.btn_exit_room) {
-            RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, null);
+            ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, null);
         }
-        RoomEventCenter.getInstance().notifyUIEvent(BAR_SHOW_TIME_RECOUNT, null);
+        ConferenceEventCenter.getInstance().notifyUIEvent(BAR_SHOW_TIME_RECOUNT, null);
     }
 }

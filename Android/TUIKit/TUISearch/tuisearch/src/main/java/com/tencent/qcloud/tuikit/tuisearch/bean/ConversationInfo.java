@@ -6,11 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConversationInfo implements Serializable, Comparable<ConversationInfo> {
-    public static final int TYPE_COMMON = 1;
-    public static final int TYPE_CUSTOM = 2;
 
-    public static final int TYPE_FORWAR_SELECT = 3;
-    public static final int TYPE_RECENT_LABEL = 4;
     /**
      * conversation type
      */

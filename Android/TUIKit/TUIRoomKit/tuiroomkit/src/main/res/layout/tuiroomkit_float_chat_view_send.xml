@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="36dp"
+    android:background="@drawable/tuiroomkit_float_chat_bottom_btn_background"
+    android:id="@+id/root_barrage_view">
+
+    <RelativeLayout
+        android:id="@+id/rl_emoticons"
+        android:layout_width="@dimen/tuiroomkit_radio_button_bounds_horizon"
+        android:layout_height="@dimen/tuiroomkit_radio_button_bounds_horizon"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/tuiroomkit_float_chat_ic_emoticons" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginStart="6dp"
+        android:text="@string/tuiroomkit_float_chat_hint"
+        android:textColor="@color/tuiroomkit_color_text_light_grey"
+        android:textSize="12sp"
+        android:gravity="center_vertical"
+        android:layout_toEndOf="@+id/rl_emoticons"/>
+
+</RelativeLayout>

@@ -9,7 +9,7 @@ import android.widget.Switch;
 import androidx.annotation.Nullable;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.imaccess.utils.RoomSpUtil;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomSpUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;

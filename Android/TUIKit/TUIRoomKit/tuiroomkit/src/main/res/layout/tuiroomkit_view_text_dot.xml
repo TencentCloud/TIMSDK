@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tuiroomkit_tv_red_dot"
+    android:layout_width="18dp"
+    android:layout_height="18dp"
+    android:background="@drawable/tuiroomkit_bg_bottom_item_dot"
+    android:gravity="center"
+    android:textColor="@android:color/white"
+    android:textSize="12sp"
+    android:visibility="visible" />

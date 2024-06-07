@@ -83,6 +83,16 @@
             android:layout_marginTop="6dp"
             android:text="@string/add_friend"/>
 
+        <LinearLayout
+            android:id="@+id/stranger_warning_extension_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_friend_btn"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="6dp"
+            android:orientation="vertical"
+            android:visibility="visible" />
+
     </RelativeLayout>
 
     <ScrollView
@@ -225,6 +235,13 @@
                 app:name="@string/profile_delete_friend"
                 tools:visibility="visible" />
 
+            <LinearLayout
+                android:id="@+id/warning_extension_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:visibility="visible" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

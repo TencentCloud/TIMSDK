@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.model.utils.CommonUtils;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.QRCodeViewModel;
 
 public class QRCodeView extends BaseBottomDialog implements View.OnClickListener {
@@ -53,9 +53,8 @@ public class QRCodeView extends BaseBottomDialog implements View.OnClickListener
         mButtonSave.setOnClickListener(this);
         mButtonCopyRoomId.setOnClickListener(this);
 
-        mTextRoomName.setText(RoomEngineManager.sharedInstance().getRoomStore().roomInfo.name
-                + getContext().getString(R.string.tuiroomkit_meeting_title));
-        mTextRoomId.setText(RoomEngineManager.sharedInstance().getRoomStore().roomInfo.roomId);
+        mTextRoomName.setText(ConferenceController.sharedInstance().getConferenceState().roomInfo.name);
+        mTextRoomId.setText(ConferenceController.sharedInstance().getConferenceState().roomInfo.roomId);
 
         mBitmap = CommonUtils.createQRCodeBitmap(mRoomURL, QRCODE_WIDTH, QRCODE_HEIGHT);
         mImageQRCode.setImageBitmap(mBitmap);

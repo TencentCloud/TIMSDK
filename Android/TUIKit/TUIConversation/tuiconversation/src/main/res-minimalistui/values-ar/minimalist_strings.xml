@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="conversation_minimalist_chat">الدردشة</string>
+    <string name="conversation_minimalist_chat_disconnected">فصل</string>
+    <string name="conversation_minimalist_chat_connecting">ربط...</string>
+    <string name="conversation_minimalist_chat_loading">جمع...</string>
     <string name="conversation_minimalist_search">البحث</string>
     <string name="conversation_minimalist_done">تم</string>
     <string name="has_all_read">تمت القراءة بالكامل</string>

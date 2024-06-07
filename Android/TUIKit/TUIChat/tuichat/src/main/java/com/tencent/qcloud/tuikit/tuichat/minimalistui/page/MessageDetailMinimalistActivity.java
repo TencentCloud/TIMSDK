@@ -29,7 +29,7 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.GroupMessageReadMembersInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageDetailListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;

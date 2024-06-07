@@ -151,6 +151,10 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         return isMultiSelected;
     }
 
+    public void setTitle(String title) {
+        titleView.setText(title);
+    }
+
     private void conversationMutiSelectStart() {
         ConversationListAdapter adapter = mConversationList.getAdapter();
         if (adapter != null) {
@@ -237,7 +241,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     @Override
     public void markConversationUnread(ConversationInfo conversationInfo, boolean markUnread) {
         if (presenter != null) {
-            presenter.markConversationUnread(conversationInfo, markUnread);
+            presenter.markConversationUnreadAndCleanUnreadCount(conversationInfo, markUnread);
         }
     }
 

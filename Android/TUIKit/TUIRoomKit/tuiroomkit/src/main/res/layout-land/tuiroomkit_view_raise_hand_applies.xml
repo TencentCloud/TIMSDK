@@ -1,103 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tuiroomkit_cl_raise_hand_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginTop="28dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <View
+        android:id="@+id/tuiroomkit_panel_hide"
+        android:layout_width="3dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="12dp"
+        android:layout_gravity="center"
+        android:background="@drawable/tuiroomkit_bottom_dialog_hide_land"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/tuiroomkit_ic_back">
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <TextView
-            android:id="@+id/main_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:singleLine="true"
-            android:text="@string/tuiroomkit_raise_hand_applies"
-            android:textColor="@color/tuiroomkit_color_text_light_grey"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </androidx.appcompat.widget.Toolbar>
-
-    <EditText
-        android:id="@+id/et_search"
+    <TextView
+        android:id="@+id/tuiroomkit_tv_title"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/tuiroomkit_bg_bottom_item_black"
-        android:drawablePadding="8dp"
-        android:gravity="center_vertical"
-        android:hint="@string/tuiroomkit_hint_search_member"
-        android:imeOptions="actionSearch"
-        android:paddingStart="12dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="4dp"
-        android:paddingBottom="10dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
         android:singleLine="true"
+        android:text="@string/tuiroomkit_raise_hand_applies"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
-        android:textColorHint="@color/tuiroomkit_color_text_hint_search"
-        android:textSize="14sp"
-        app:drawableLeftCompat="@drawable/tuiroomkit_ic_search"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/tuiroomkit_panel_hide"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_apply_list"
+        android:id="@+id/tuiroomkit_rv_seat_apply_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_tv_title"
+        app:layout_constraintEnd_toEndOf="@+id/tuiroomkit_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_tv_title"
+        app:layout_constraintBottom_toTopOf="@+id/tuiroomkit_tv_reject_all" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tuiroomkit_cl_no_seat_requests"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_agree_all"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_search" />
+        app:layout_constraintTop_toTopOf="@+id/tuiroomkit_rv_seat_apply_list"
+        app:layout_constraintBottom_toBottomOf="@+id/tuiroomkit_rv_seat_apply_list">
+
+        <ImageView
+            android:id="@+id/tuiroomkit_iv_no_seat_requests"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/tuiroomkit_ic_no_seat_requests"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tuiroomkit_tv_no_seat_requests"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/tuiroomkit_tv_no_seat_requests"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_no_member_apply"
+            android:textSize="16sp"
+            android:textColor="#B2BBD1"
+            app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_iv_no_seat_requests"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/tv_agree_all"
+        android:id="@+id/tuiroomkit_tv_reject_all"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="11dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="22dp"
-        android:background="@drawable/tuiroomkit_bg_bottom_item_black"
+        android:background="@drawable/tuiroomkit_bg_reject_all"
         android:gravity="center"
-        android:paddingLeft="38dp"
-        android:paddingTop="14dp"
-        android:paddingRight="38dp"
-        android:paddingBottom="14dp"
-        android:text="@string/tuiroomkit_agree_to_all"
-        android:textColor="@color/tuiroomkit_color_text_light_grey"
+        android:text="@string/tuiroomkit_reject_all"
+        android:textColor="#B2BBD1"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_invite_member_to_stage"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_tv_agree_all"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_rv_seat_apply_list" />
 
     <TextView
-        android:id="@+id/tv_invite_member_to_stage"
+        android:id="@+id/tuiroomkit_tv_agree_all"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/tuiroomkit_bg_bottom_item_black"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/tuiroomkit_bg_agree_all"
         android:gravity="center"
-        android:paddingLeft="38dp"
-        android:paddingRight="38dp"
-        android:text="@string/tuiroomkit_invite_member_to_stage"
-        android:textColor="@color/tuiroomkit_color_text_light_grey"
+        android:text="@string/tuiroomkit_agree_to_all"
+        android:textColor="@android:color/white"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tuiroomkit_rv_seat_apply_list"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_agree_all"
-        app:layout_constraintTop_toTopOf="@+id/tv_agree_all" />
+        app:layout_constraintStart_toEndOf="@+id/tuiroomkit_tv_reject_all"
+        app:layout_constraintTop_toTopOf="@+id/tuiroomkit_tv_reject_all" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

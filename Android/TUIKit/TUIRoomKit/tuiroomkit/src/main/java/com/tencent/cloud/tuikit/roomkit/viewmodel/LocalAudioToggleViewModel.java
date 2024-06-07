@@ -1,12 +1,12 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_VOICE_VOLUME_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.REMOTE_USER_LEAVE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.REMOTE_USER_TAKE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_VOICE_VOLUME_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -14,19 +14,19 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator.LocalAudioToggleViewAction;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator.LocalAudioToggleViewResponder;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.Map;
 
-public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, RoomEventCenter.RoomEngineEventResponder {
+public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, ConferenceEventCenter.RoomEngineEventResponder {
     private static final String TAG = "LocalAudioToggleVM";
 
     private LocalAudioToggleViewResponder mViewResponder;
@@ -48,10 +48,10 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
         if (!isAllowToOperateAudio()) {
             return;
         }
-        if (RoomEngineManager.sharedInstance().getRoomStore().audioModel.isMicOpen()) {
-            RoomEngineManager.sharedInstance().unMuteLocalAudio(null);
+        if (ConferenceController.sharedInstance().getConferenceState().audioModel.isMicOpen()) {
+            ConferenceController.sharedInstance().unMuteLocalAudio(null);
         } else {
-            RoomEngineManager.sharedInstance().openLocalMicrophone(null);
+            ConferenceController.sharedInstance().openLocalMicrophone(null);
         }
     }
 
@@ -60,13 +60,13 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
         if (!isAllowToOperateAudio()) {
             return;
         }
-        if (RoomEngineManager.sharedInstance().getRoomStore().audioModel.isMicOpen()) {
-            RoomEngineManager.sharedInstance().muteLocalAudio();
+        if (ConferenceController.sharedInstance().getConferenceState().audioModel.isMicOpen()) {
+            ConferenceController.sharedInstance().muteLocalAudio();
         }
     }
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case LOCAL_AUDIO_STATE_CHANGED:
                 updateLocalAudioState();
@@ -89,7 +89,7 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
     }
 
     private void updateLocalAudioState() {
-        if (RoomEngineManager.sharedInstance().getRoomStore().audioModel.isHasAudioStream()) {
+        if (ConferenceController.sharedInstance().getConferenceState().audioModel.isHasAudioStream()) {
             mViewResponder.onLocalAudioEnabled();
         } else {
             mViewResponder.onLocalAudioDisabled();
@@ -97,13 +97,13 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
     }
 
     private void handleLocalAudioVolumeChanged(Map<String, Object> params) {
-        if (!RoomEngineManager.sharedInstance().getRoomStore().audioModel.isHasAudioStream()) {
+        if (!ConferenceController.sharedInstance().getConferenceState().audioModel.isHasAudioStream()) {
             return;
         }
         if (params == null) {
             return;
         }
-        Map<String, Integer> map = (Map<String, Integer>) params.get(RoomEventConstant.KEY_VOLUME_MAP);
+        Map<String, Integer> map = (Map<String, Integer>) params.get(ConferenceEventConstant.KEY_VOLUME_MAP);
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             if (!TextUtils.equals(entry.getKey(), TUILogin.getUserId())) {
                 continue;
@@ -122,7 +122,7 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
         if (position == USER_NOT_FOUND) {
             return;
         }
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         UserEntity user = store.allUserList.get(position);
         if (!TextUtils.equals(user.getUserId(), store.userModel.userId)) {
             return;
@@ -131,7 +131,7 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
     }
 
     private void updateLocalAudioVisibility() {
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         if (!store.roomInfo.isSeatEnabled) {
             return;
         }
@@ -140,23 +140,23 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Ro
     }
 
     private void subscribeEvent() {
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_AUDIO_STATE_CHANGED, this);
-        RoomEventCenter.getInstance().subscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
-        RoomEventCenter.getInstance().subscribeEngine(USER_ROLE_CHANGED, this);
-        RoomEventCenter.getInstance().subscribeEngine(REMOTE_USER_TAKE_SEAT, this);
-        RoomEventCenter.getInstance().subscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_AUDIO_STATE_CHANGED, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(USER_ROLE_CHANGED, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(REMOTE_USER_TAKE_SEAT, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
     }
 
     private void unSubscribeEvent() {
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_AUDIO_STATE_CHANGED, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(USER_ROLE_CHANGED, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(REMOTE_USER_TAKE_SEAT, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_AUDIO_STATE_CHANGED, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(USER_ROLE_CHANGED, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(REMOTE_USER_TAKE_SEAT, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
     }
 
     private boolean isAllowToOperateAudio() {
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         Context context = TUILogin.getAppContext();
         if (store.roomInfo.isSeatEnabled && !store.userModel.isOnSeat()) {
             RoomToast.toastShortMessageCenter(context.getString(R.string.tuiroomkit_please_raise_hand));

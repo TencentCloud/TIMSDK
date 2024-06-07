@@ -211,6 +211,7 @@ public class FileMessageHolder extends MessageContentHolder {
 
     @Override
     public void onRecycled() {
+        super.onRecycled();
         ProgressPresenter.unregisterProgressListener(msgId, progressListener);
         progressListener = null;
     }

@@ -10,35 +10,35 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.RoomInfoDialog;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponder {
+public class RoomInfoViewModel implements ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String URL_ROOM_KIT_WEB = "https://web.sdk.qcloud.com/component/tuiroom/index.html";
     private static final String LABEL            = "Label";
 
-    private Context       mContext;
-    private RoomStore     mRoomStore;
-    private TUIRoomEngine  mRoomEngine;
-    private RoomInfoDialog mRoomInfoView;
+    private Context         mContext;
+    private ConferenceState mConferenceState;
+    private TUIRoomEngine   mRoomEngine;
+    private RoomInfoDialog  mRoomInfoView;
 
     public RoomInfoViewModel(Context context, RoomInfoDialog view) {
         mContext = context;
         mRoomInfoView = view;
-        mRoomStore = RoomEngineManager.sharedInstance(context).getRoomStore();
-        mRoomEngine = RoomEngineManager.sharedInstance(context).getRoomEngine();
-        RoomEventCenter.getInstance().subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        mConferenceState = ConferenceController.sharedInstance(context).getConferenceState();
+        mRoomEngine = ConferenceController.sharedInstance(context).getRoomEngine();
+        ConferenceEventCenter.getInstance().subscribeUIEvent(ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     public void destroy() {
-        RoomEventCenter.getInstance().unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        ConferenceEventCenter.getInstance().unsubscribeUIEvent(ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     public void copyContentToClipboard(String content, String msg) {
@@ -49,7 +49,7 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     public void setMasterName() {
-        String ownerId = RoomEngineManager.sharedInstance().getRoomStore().roomInfo.ownerId;
+        String ownerId = ConferenceController.sharedInstance().getConferenceState().roomInfo.ownerId;
         mRoomEngine.getUserInfo(ownerId, new TUIRoomDefine.GetUserInfoCallback() {
             @Override
             public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
@@ -66,7 +66,7 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
     public String getRoomType() {
         String roomType;
-        if (mRoomStore.roomInfo.isSeatEnabled) {
+        if (mConferenceState.roomInfo.isSeatEnabled) {
             roomType = mContext.getString(R.string.tuiroomkit_room_raise_hand);
         } else {
             roomType = mContext.getString(R.string.tuiroomkit_room_free_speech);
@@ -78,9 +78,9 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
         String packageName = mContext.getPackageName();
         if (TextUtils.equals(packageName, "com.tencent.liteav.tuiroom")) {
             return "https://web.sdk.qcloud.com/trtc/webrtc/test/tuiroom-inner/index.html#/room?roomId="
-                    + mRoomStore.roomInfo.roomId;
+                    + mConferenceState.roomInfo.roomId;
         } else if (TextUtils.equals(packageName, "com.tencent.trtc")) {
-            return "https://web.sdk.qcloud.com/component/tuiroom/index.html#/room?roomId=" + mRoomStore.roomInfo.roomId;
+            return "https://web.sdk.qcloud.com/component/tuiroom/index.html#/room?roomId=" + mConferenceState.roomInfo.roomId;
         } else {
             return null;
         }
@@ -94,15 +94,15 @@ public class RoomInfoViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
     public void showQRCodeView() {
         Map<String, Object> params = new HashMap<>();
-        params.put(RoomEventConstant.KEY_ROOM_URL, getRoomURL());
-        RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW, params);
+        params.put(ConferenceEventConstant.KEY_ROOM_URL, getRoomURL());
+        ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW, params);
     }
 
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
-        if (RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key)
+        if (ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key)
                 && params != null && mRoomInfoView.isShowing()) {
-            Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
+            Configuration configuration = (Configuration) params.get(ConferenceEventConstant.KEY_CONFIGURATION);
             mRoomInfoView.changeConfiguration(configuration);
         }
     }

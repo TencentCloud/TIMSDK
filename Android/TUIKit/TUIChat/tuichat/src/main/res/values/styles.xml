@@ -20,8 +20,8 @@
         <item name="android:maxHeight">25dp</item>
     </style>
 
-    <style name="BeginnerGuidePopupAnimation">
-        <item name="android:windowEnterAnimation">@anim/beginner_guide_in_anim</item>
-        <item name="android:windowExitAnimation">@anim/beginner_guide_out_anim</item>
+    <style name="GroupPinnedListAnimation">
+        <item name="android:windowEnterAnimation">@anim/pull_list_pop_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/pull_list_pop_out_anim</item>
     </style>
 </resources>

@@ -49,6 +49,8 @@
     <string name="TUIKitErrorSDKGroupJoinPrivateGroupDeny">لا يسمح بالانضمام إلى مجموعة خاصة</string>
     <string name="TUIKitErrorSDKGroupInviteSuperDeny">لا يسمح بدعوة أعضاء يحملون دور مالك المجموعة</string>
     <string name="TUIKitErrorSDKGroupInviteNoMember">غير مسموح بدعوة 0 أعضاء</string>
+    <string name="TUIKitErrorSDKGroupPinnedMessageCountLimit">الرسائل المثبتة فوق الحد</string>
+
     <string name="TUIKitErrorSDKFriendShipInvalidProfileKey">مفتاح الملف الشخصي غير صالح</string>
     <string name="TUIKitErrorSDKFriendshipInvalidAddRemark">حقل الملاحظات غير صالح، يصل طول حقل الملاحظات إلى 96 بايتًا</string>
     <string name="TUIKitErrorSDKFriendshipInvalidAddWording">حقل شرح طلب الصداقة غير صالح، يصل طول حقل شرح طلب الصداقة إلى 120 بايتًا</string>

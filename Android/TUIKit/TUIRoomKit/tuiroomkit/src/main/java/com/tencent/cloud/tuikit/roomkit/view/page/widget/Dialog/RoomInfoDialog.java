@@ -1,6 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomInfoViewModel;
 
@@ -39,7 +39,7 @@ public class RoomInfoDialog extends BaseBottomDialog {
     @Override
     public void dismiss() {
         super.dismiss();
-        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_MEETING_INFO, null);
+        ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MEETING_INFO, null);
         mViewModel.destroy();
     }
 
@@ -60,9 +60,8 @@ public class RoomInfoDialog extends BaseBottomDialog {
         mButtonCopyRoomLink = findViewById(R.id.btn_copy_room_link);
         mButtonQRCode = findViewById(R.id.btn_qr_code);
 
-        TUIRoomDefine.RoomInfo roomInfo = RoomEngineManager.sharedInstance().getRoomStore().roomInfo;
-        mTextName.setText(TextUtils.isEmpty(roomInfo.name) ? roomInfo.roomId :
-                roomInfo.name + getContext().getString(R.string.tuiroomkit_meeting_title));
+        TUIRoomDefine.RoomInfo roomInfo = ConferenceController.sharedInstance().getConferenceState().roomInfo;
+        mTextName.setText(roomInfo.name);
         mViewModel.setMasterName();
         mTextRoomType.setText(mViewModel.getRoomType());
         mTextRoomId.setText(roomInfo.roomId);

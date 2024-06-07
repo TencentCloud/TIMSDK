@@ -11,5 +11,4 @@ public interface IMessageAdapter {
 
     void onViewNeedRefresh(int type, TUIMessageBean locateMessage);
 
-    void onScrollToEnd();
 }

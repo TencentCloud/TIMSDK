@@ -6,11 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConversationInfo implements Serializable, Comparable<ConversationInfo> {
-    public static final int TYPE_COMMON = 1;
-    public static final int TYPE_CUSTOM = 2;
-
-    public static final int TYPE_FORWAR_SELECT = 3;
-    public static final int TYPE_RECENT_LABEL = 4;
     /**
      * conversation type
      */
@@ -35,10 +30,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public List<Object> getIconUrlList() {
         return iconUrlList;
-    }
-
-    public void setIconUrlList(List<Object> iconUrlList) {
-        this.iconUrlList = iconUrlList;
     }
 
     private String title;
@@ -66,14 +57,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public ConversationInfo() {}
 
-    public String getConversationId() {
-        return conversationId;
-    }
-
-    public void setConversationId(String conversationId) {
-        this.conversationId = conversationId;
-    }
-
     public String getId() {
         return id;
     }
@@ -88,14 +71,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getUnRead() {
-        return unRead;
-    }
-
-    public void setUnRead(int unRead) {
-        this.unRead = unRead;
     }
 
     public boolean isGroup() {
@@ -114,22 +89,6 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.top = top;
     }
 
-    /**
-     * Get the time of the last message, in seconds
-     */
-    public long getLastMessageTime() {
-        return lastMessageTime;
-    }
-
-    /**
-     * Set the time to the last message, in seconds
-     *
-     * @param lastMessageTime
-     */
-    public void setLastMessageTime(long lastMessageTime) {
-        this.lastMessageTime = lastMessageTime;
-    }
-
     public int getType() {
         return type;
     }
@@ -138,44 +97,8 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
         this.type = type;
     }
 
-    public void setAtInfoText(String atInfoText) {
-        this.atInfoText = atInfoText;
-    }
-
-    public String getAtInfoText() {
-        return atInfoText;
-    }
-
-    public boolean isShowDisturbIcon() {
-        return showDisturbIcon;
-    }
-
-    public void setShowDisturbIcon(boolean showDisturbIcon) {
-        this.showDisturbIcon = showDisturbIcon;
-    }
-
     public String getGroupType() {
         return groupType;
-    }
-
-    public void setGroupType(String groupType) {
-        this.groupType = groupType;
-    }
-
-    public String getIconPath() {
-        return iconPath;
-    }
-
-    public void setIconPath(String iconPath) {
-        this.iconPath = iconPath;
-    }
-
-    public void setOrderKey(long orderKey) {
-        this.orderKey = orderKey;
-    }
-
-    public long getOrderKey() {
-        return orderKey;
     }
 
     @Override

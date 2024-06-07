@@ -39,9 +39,11 @@ public class GeneralConfig {
     private boolean enableRecordVideo = true;
     private boolean enableFile = true;
     private boolean enableAlbum = true;
+    private boolean enableGroupChatPinMessage = true;
 
     private boolean enableFloatWindowForCall = true;
     private boolean enableMultiDeviceForCall = false;
+    private boolean enableIncomingBanner = true;
 
     private int timeIntervalForMessageRecall = DEFAULT_MESSAGE_RECALL_TIME_INTERVAL;
 
@@ -75,6 +77,20 @@ public class GeneralConfig {
      */
     public boolean isEnableMultiDeviceForCall() {
         return enableMultiDeviceForCall;
+    }
+
+    /**
+     * Set whether to enable incoming banner when user received audio and video calls, default is false
+     */
+    public void setEnableIncomingBanner(boolean enableIncomingBanner) {
+        this.enableIncomingBanner = enableIncomingBanner;
+    }
+
+    /**
+     * Obtain whether to enable the audio and video calls incoming banner
+     */
+    public boolean isEnableIncomingBanner() {
+        return enableIncomingBanner;
     }
 
     /**
@@ -419,6 +435,14 @@ public class GeneralConfig {
      */
     public boolean isEnableSoundMessageSpeakerMode() {
         return SPUtils.getInstance(TUIChatConstants.CHAT_SETTINGS_SP_NAME)
-                .getBoolean(TUIChatConstants.CHAT_SP_KEY_SPEAKER_MODE_ON, enableSoundMessageSpeakerMode);
-        }
+            .getBoolean(TUIChatConstants.CHAT_SP_KEY_SPEAKER_MODE_ON, enableSoundMessageSpeakerMode);
+    }
+
+    public void setEnableGroupChatPinMessage(boolean enableGroupChatPinMessage) {
+        this.enableGroupChatPinMessage = enableGroupChatPinMessage;
+    }
+
+    public boolean isEnableGroupChatPinMessage() {
+        return enableGroupChatPinMessage;
+    }
 }

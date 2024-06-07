@@ -12,6 +12,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.List;
 
 public class TipsMessageBean extends TUIMessageBean {
@@ -119,68 +120,8 @@ public class TipsMessageBean extends TUIMessageBean {
             setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
             tipsMessage = TUIChatService.getAppContext().getString(R.string.cancle_group_manager, targetUser);
         }
-        if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE) {
-            List<V2TIMGroupChangeInfo> modifyList = groupTipElem.getGroupChangeInfoList();
-            for (int i = 0; i < modifyList.size(); i++) {
-                V2TIMGroupChangeInfo modifyInfo = modifyList.get(i);
-                int modifyType = modifyInfo.getType();
-                if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NAME) {
-                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NAME);
-                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_name_is, operationUser, "\"" + modifyInfo.getValue() + "\"");
-                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION) {
-                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_notice, operationUser, "\"" + modifyInfo.getValue() + "\"");
-                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER) {
-                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                    if (!TextUtils.isEmpty(targetUser)) {
-                        tipsMessage = TUIChatService.getAppContext().getString(R.string.move_owner, operationUser, "\"" + targetUser + "\"");
-                    } else {
-                        tipsMessage = TUIChatService.getAppContext().getString(R.string.move_owner, operationUser, "\""
-                                + TUIChatConstants.covert2HTMLString(modifyInfo.getValue()) + "\"");
-                    }
-                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_FACE_URL) {
-                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_avatar, operationUser);
-                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION) {
-                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_introduction, operationUser, "\"" + modifyInfo.getValue() + "\"");
-                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL) {
-                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                    boolean isShutUpAll = modifyInfo.getBoolValue();
-                    if (isShutUpAll) {
-                        tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_shut_up_all, operationUser);
-                    } else {
-                        tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_cancel_shut_up_all, operationUser);
-                    }
-                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT) {
-                    setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
-                    int addOpt = modifyInfo.getIntValue();
-                    String addOptStr;
-                    if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_FORBID) {
-                        addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_join_disable) + "\"";
-                    } else if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_AUTH) {
-                        addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_admin_approve) + "\"";
-                    } else {
-                        addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_auto_approval) + "\"";
-                    }
-                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_add_opt, operationUser, addOptStr);
-                } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_APPROVE_OPT) {
-                    int addOpt = modifyInfo.getIntValue();
-                    String addOptStr;
-                    if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_FORBID) {
-                        addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_invite_disable) + "\"";
-                    } else if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_AUTH) {
-                        addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_admin_approve) + "\"";
-                    } else {
-                        addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_auto_approval) + "\"";
-                    }
-                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_invite_opt, operationUser, addOptStr);
-                }
-
-                if (i < modifyList.size() - 1) {
-                    tipsMessage = tipsMessage + "、";
-                }
-            }
+        if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_GROUP_INFO_CHANGE || tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_TOPIC_INFO_CHANGE) {
+            tipsMessage = getGroupInfoChangeTips(groupTipElem, operationUser, targetUser);
         }
         if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_MEMBER_INFO_CHANGE) {
             List<V2TIMGroupMemberChangeInfo> modifyList = groupTipElem.getMemberChangeInfoList();
@@ -194,8 +135,98 @@ public class TipsMessageBean extends TUIMessageBean {
                 }
             }
         }
+        if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_PINNED_MESSAGE_ADDED) {
+            tipsMessage = TUIChatService.getAppContext().getString(R.string.chat_group_message_pinned, operationUser);
+        }
+        if (tipsType == V2TIMGroupTipsElem.V2TIM_GROUP_TIPS_TYPE_PINNED_MESSAGE_DELETED) {
+            tipsMessage = TUIChatService.getAppContext().getString(R.string.chat_group_message_unpinned, operationUser);
+        }
         text = tipsMessage;
         setExtra(tipsMessage);
+    }
+
+    private String getGroupInfoChangeTips(V2TIMGroupTipsElem groupTipElem, String operationUser, String targetUser) {
+        String tipsMessage = "";
+        List<V2TIMGroupChangeInfo> modifyList = groupTipElem.getGroupChangeInfoList();
+        String groupID = groupTipElem.getGroupID();
+        for (int i = 0; i < modifyList.size(); i++) {
+            V2TIMGroupChangeInfo modifyInfo = modifyList.get(i);
+            int modifyType = modifyInfo.getType();
+            if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NAME) {
+                setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NAME);
+                if (TUIChatUtils.isTopicGroup(groupID)) {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_topic_name_is, operationUser, "\"" + modifyInfo.getValue() + "\"");
+                } else {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_name_is, operationUser, "\"" + modifyInfo.getValue() + "\"");
+                }
+            } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_NOTIFICATION) {
+                setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                if (TUIChatUtils.isTopicGroup(groupID)) {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_topic_notice, operationUser, "\"" + modifyInfo.getValue() + "\"");
+                } else {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_notice, operationUser, "\"" + modifyInfo.getValue() + "\"");
+                }
+            } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER) {
+                setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                if (!TextUtils.isEmpty(targetUser)) {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.move_owner, operationUser, "\"" + targetUser + "\"");
+                } else {
+                    tipsMessage = TUIChatService.getAppContext().getString(
+                        R.string.move_owner, operationUser, "\"" + TUIChatConstants.covert2HTMLString(modifyInfo.getValue()) + "\"");
+                }
+            } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_FACE_URL) {
+                setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                if (TUIChatUtils.isTopicGroup(groupID)) {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_topic_avatar, operationUser);
+                } else {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_avatar, operationUser);
+                }
+            } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_INTRODUCTION) {
+                setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                if (TUIChatUtils.isTopicGroup(groupID)) {
+                    tipsMessage =
+                        TUIChatService.getAppContext().getString(R.string.modify_topic_introduction, operationUser, "\"" + modifyInfo.getValue() + "\"");
+                } else {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_introduction, operationUser, "\"" + modifyInfo.getValue() + "\"");
+                }
+            } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_SHUT_UP_ALL) {
+                setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                boolean isShutUpAll = modifyInfo.getBoolValue();
+                if (isShutUpAll) {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_shut_up_all, operationUser);
+                } else {
+                    tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_cancel_shut_up_all, operationUser);
+                }
+            } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_ADD_OPT) {
+                setTipType(TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE);
+                int addOpt = modifyInfo.getIntValue();
+                String addOptStr;
+                if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_FORBID) {
+                    addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_join_disable) + "\"";
+                } else if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_AUTH) {
+                    addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_admin_approve) + "\"";
+                } else {
+                    addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_auto_approval) + "\"";
+                }
+                tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_add_opt, operationUser, addOptStr);
+            } else if (modifyType == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_GROUP_APPROVE_OPT) {
+                int addOpt = modifyInfo.getIntValue();
+                String addOptStr;
+                if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_FORBID) {
+                    addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_invite_disable) + "\"";
+                } else if (addOpt == V2TIMGroupInfo.V2TIM_GROUP_ADD_AUTH) {
+                    addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_admin_approve) + "\"";
+                } else {
+                    addOptStr = "\"" + TUIChatService.getAppContext().getString(R.string.group_add_opt_auto_approval) + "\"";
+                }
+                tipsMessage = TUIChatService.getAppContext().getString(R.string.modify_group_invite_opt, operationUser, addOptStr);
+            }
+
+            if (i < modifyList.size() - 1) {
+                tipsMessage = tipsMessage + "、";
+            }
+        }
+        return tipsMessage;
     }
 
     public void setText(String text) {

@@ -42,7 +42,7 @@
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <service
-            android:name="com.tencent.cloud.tuikit.roomkit.service.KeepAliveService"
+            android:name="com.tencent.cloud.tuikit.roomkit.common.KeepAliveService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
@@ -51,7 +51,7 @@
             android:enabled="true"
             android:exported="false" />
         <provider
-            android:name="com.tencent.cloud.tuikit.roomkit.service.RoomServiceInitializer"
+            android:name="com.tencent.cloud.tuikit.roomkit.model.ConferenceServiceInitializer"
             android:authorities="${applicationId}.TUIRoom.Init"
             android:enabled="true"
             android:exported="false" />

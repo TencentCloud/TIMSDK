@@ -192,10 +192,14 @@ public class CommunityProvider {
 
     public void getSelfFaceUrl(IUIKitCallback<String> callback) {
         List<String> userIDList = new ArrayList<>();
-        userIDList.add(V2TIMManager.getInstance().getLoginUser());
+        userIDList.add(TUILogin.getLoginUser());
         V2TIMManager.getInstance().getUsersInfo(userIDList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
             public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                if (v2TIMUserFullInfos == null || v2TIMUserFullInfos.size() == 0) {
+                    return;
+                }
+
                 V2TIMUserFullInfo info = v2TIMUserFullInfos.get(0);
                 CommunityUtil.callbackOnSuccess(callback, info.getFaceUrl());
             }

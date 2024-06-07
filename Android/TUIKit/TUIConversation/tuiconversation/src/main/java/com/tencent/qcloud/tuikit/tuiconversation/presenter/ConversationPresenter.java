@@ -1,17 +1,24 @@
 package com.tencent.qcloud.tuikit.tuiconversation.presenter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Pair;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListFilter;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -39,6 +46,7 @@ public class ConversationPresenter {
     protected int showType = SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD;
 
     protected static final int GET_CONVERSATION_COUNT = 100;
+    protected static final int REFRESH_UNREAD_COUNT_DELAY = 200;
 
     protected ConversationEventListener conversationEventListener;
 
@@ -106,7 +114,8 @@ public class ConversationPresenter {
 
             @Override
             public void updateTotalUnreadMessageCount(long count) {
-                ConversationPresenter.this.updateTotalUnreadMessageCount(count);
+                TUIConversationLog.i(TAG, "updateTotalUnreadMessageCount: " + count);
+                ThreadUtils.postOnUiThreadDelayed(() -> ConversationPresenter.this.updateTotalUnreadMessageCount(count), REFRESH_UNREAD_COUNT_DELAY);
             }
 
             @Override
@@ -153,6 +162,11 @@ public class ConversationPresenter {
             @Override
             public void onConversationDeleted(List<String> conversationIDList) {
                 ConversationPresenter.this.onConversationDeleted(conversationIDList);
+            }
+
+            @Override
+            public void onConversationLastMessageBeanChanged(String conversationID, TUIMessageBean messageBean) {
+                ConversationPresenter.this.onConversationLastMessageBeanChanged(conversationID, messageBean);
             }
         };
         TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
@@ -201,6 +215,7 @@ public class ConversationPresenter {
         provider.getTotalUnreadMessageCount(new IUIKitCallback<Long>() {
             @Override
             public void onSuccess(Long data) {
+                TUIConversationLog.d(TAG, "getTotalUnreadMessageCount: " + data);
                 int sdkUnreadCount = data.intValue();
                 updateTotalUnreadMessageCount(sdkUnreadCount);
             }
@@ -269,8 +284,15 @@ public class ConversationPresenter {
         boolean isChanged = false;
         for (ConversationInfo conversationInfo : conversationList) {
             if (conversationInfo.isMarkUnread() || conversationInfo.isMarkHidden()) {
+                ConversationInfo cached = markUnreadAndHiddenMap.get(conversationInfo.getConversationId());
                 markUnreadAndHiddenMap.put(conversationInfo.getConversationId(), conversationInfo);
-                isChanged = true;
+                if (cached == null) {
+                    isChanged = true;
+                } else {
+                    if (cached.isMarkUnread() != conversationInfo.isMarkUnread() || cached.isMarkHidden() != conversationInfo.isMarkHidden()) {
+                        isChanged = true;
+                    }
+                }
             } else {
                 ConversationInfo cacheConversation = markUnreadAndHiddenMap.get(conversationInfo.getConversationId());
                 if (cacheConversation != null) {
@@ -337,7 +359,7 @@ public class ConversationPresenter {
 
     public void onNewConversation(List<ConversationInfo> conversationInfoList, boolean showFoldItem) {
         TUIConversationLog.i(TAG, "onNewConversation conversations:" + conversationInfoList);
-
+        getLastMessageBean(conversationInfoList);
         ArrayList<ConversationInfo> infos = new ArrayList<>();
         for (ConversationInfo conversationInfo : conversationInfoList) {
             if (!ConversationUtils.isIgnored(conversationInfo) && !conversationInfo.isMarkHidden()) {
@@ -371,7 +393,7 @@ public class ConversationPresenter {
             ConversationInfo update = iterator.next();
             for (int i = 0; i < uiSourceInfoList.size(); i++) {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
-                
+
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
                     if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
@@ -409,6 +431,7 @@ public class ConversationPresenter {
 
     public void onConversationChanged(List<ConversationInfo> conversationInfoList) {
         TUIConversationLog.i(TAG, "onConversationChanged conversations:" + conversationInfoList);
+        getLastMessageBean(conversationInfoList);
 
         List<ConversationInfo> uiSourceInfoList;
         ArrayList<ConversationInfo> infoList;
@@ -433,7 +456,7 @@ public class ConversationPresenter {
         refreshChangedInfo(uiSourceInfoList, changedInfoList);
     }
 
-    private void refreshChangedInfo(List<ConversationInfo> uiSourceInfoList, ArrayList<ConversationInfo> changedInfoList) {
+    private void refreshChangedInfo(List<ConversationInfo> uiSourceInfoList, List<ConversationInfo> changedInfoList) {
         Collections.sort(changedInfoList);
 
         HashMap<ConversationInfo, Integer> indexMap = new HashMap<>();
@@ -441,7 +464,7 @@ public class ConversationPresenter {
             ConversationInfo update = changedInfoList.get(j);
             for (int i = 0; i < uiSourceInfoList.size(); i++) {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
-                
+
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
                     if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
@@ -688,22 +711,25 @@ public class ConversationPresenter {
         }
 
         boolean existInFoldList = false;
+        ConversationInfo foldedConversation = null;
         for (ConversationInfo conversationInfo : foldConversationInfoList) {
             if (TextUtils.equals(conversationID, conversationInfo.getConversationId())) {
                 existInFoldList = true;
+                foldedConversation = conversationInfo;
                 break;
             }
         }
 
         if (existInFoldList) {
-            if (!isUnreadStatusOfFoldItem) {
-                setUnreadStatusOfFoldItem(true);
+            if (hideFoldItem) {
+                showFoldItem(foldedConversation);
             }
+            setUnreadStatusOfFoldItem(true);
         }
 
         if (cacheInfo != null) {
             if (cacheInfo.isMarkUnread()) {
-                markConversationUnread(cacheInfo, false);
+                markConversationRead(cacheInfo.getConversationId(), null);
             }
         } else {
             provider.getConversation(conversationID, new IUIKitCallback<ConversationInfo>() {
@@ -713,7 +739,7 @@ public class ConversationPresenter {
                         markConversationHidden(conversationInfo, false);
                     }
                     if (conversationInfo.isMarkUnread()) {
-                        markConversationUnread(conversationInfo, false);
+                        markConversationUnreadAndCleanUnreadCount(conversationInfo, false);
                     }
                 }
 
@@ -736,6 +762,12 @@ public class ConversationPresenter {
         if (needHide) {
             hideFoldItemFromUI();
         }
+    }
+
+    public void showFoldItem(ConversationInfo conversationInfo) {
+        hideFoldItem(false);
+        mUIFoldConversation = conversationInfo;
+        onNewConversation(Collections.singletonList(conversationInfo), true);
     }
 
     private void hideFoldItemFromUI() {
@@ -798,25 +830,6 @@ public class ConversationPresenter {
         return conversationInfos;
     }
 
-    protected int getMarkUnreadConversationNumber() {
-        int number = 0;
-
-        Iterator<Map.Entry<String, ConversationInfo>> iterator = markUnreadAndHiddenMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, ConversationInfo> entry = iterator.next();
-            ConversationInfo conversationInfo = entry.getValue();
-            if (conversationInfo.isShowDisturbIcon()) {
-                continue;
-            }
-
-            if (conversationInfo.isMarkUnread()) {
-                number++;
-            }
-        }
-
-        return number;
-    }
-
     protected void updateTotalUnreadMessageCount(long sdkUnreadCount) {
         int markUnreadCount = 0;
         int markHiddenCount = 0;
@@ -847,7 +860,7 @@ public class ConversationPresenter {
     }
 
     /**
-     * 
+     *
      *
      * @param unreadTotal
      */
@@ -1076,7 +1089,7 @@ public class ConversationPresenter {
         });
     }
 
-    public void markConversationUnread(ConversationInfo conversationInfo, boolean markUnread) {
+    public void markConversationUnreadAndCleanUnreadCount(ConversationInfo conversationInfo, boolean markUnread) {
         if (conversationInfo == null || TextUtils.isEmpty(conversationInfo.getConversationId())) {
             TUIConversationLog.e(TAG, "markConversationUnread error: invalid conversationInfo");
             return;
@@ -1095,6 +1108,18 @@ public class ConversationPresenter {
                     TAG, "markConversationRead error, conversationID:" + conversationInfo.getConversationId() + ", code:" + errCode + "|msg:" + errMsg);
             }
         });
+    }
+
+    public void markConversationUnread(String conversationID, TUICallback callback) {
+        provider.markConversationUnread(conversationID, callback);
+    }
+
+    public void markConversationRead(String conversationID, TUICallback callback) {
+        provider.markConversationRead(conversationID, callback);
+    }
+
+    public void cleanConversationUnreadCount(String conversationID, TUICallback callback) {
+        provider.cleanConversationUnreadCount(conversationID, callback);
     }
 
     public void clearFoldMarkAndDeleteConversation(String conversationId) {
@@ -1141,8 +1166,8 @@ public class ConversationPresenter {
                     title = remark;
                 }
                 info.setTitle(title);
-                adapter.onDataSourceChanged(loadedConversationInfoList);
                 if (adapter != null) {
+                    adapter.onDataSourceChanged(loadedConversationInfoList);
                     adapter.onItemChanged(i);
                 }
                 break;
@@ -1199,8 +1224,8 @@ public class ConversationPresenter {
             int position = dataSourceMap.get(userid).first;
             if (bean != null && bean.getStatusType() != timUserStatus.getStatusType()) {
                 bean.setStatusType(timUserStatus.getStatusType());
-                adapter.onDataSourceChanged(loadedConversationInfoList);
                 if (adapter != null) {
+                    adapter.onDataSourceChanged(loadedConversationInfoList);
                     adapter.onItemChanged(position);
                 }
             }
@@ -1224,6 +1249,8 @@ public class ConversationPresenter {
     }
 
     public void onConversationDeleted(List<String> conversationIdList) {
+        TUIConversationLog.i(TAG, "onConversationDeleted conversations:" + conversationIdList);
+
         if (conversationIdList == null || conversationIdList.isEmpty()) {
             return;
         }
@@ -1288,5 +1315,91 @@ public class ConversationPresenter {
                 break;
             }
         }
+    }
+
+    private void getLastMessageBean(List<ConversationInfo> conversationInfoList) {
+        if (conversationInfoList == null || conversationInfoList.isEmpty()) {
+            return;
+        }
+
+        HashMap<String, Object> param = new HashMap<>();
+        Map<String, V2TIMMessage> v2TIMMessageMap = new HashMap<>();
+        for (ConversationInfo conversationInfo : conversationInfoList) {
+            if (conversationInfo.getLastMessage() != null && conversationInfo.getLastTUIMessageBean() == null) {
+                v2TIMMessageMap.put(conversationInfo.getConversationId(), conversationInfo.getLastMessage());
+            }
+        }
+        param.put(TUIConstants.TUIChat.Method.GetMessagesDisplayString.MESSAGE_MAP, v2TIMMessageMap);
+        TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.Method.GetMessagesDisplayString.METHOD_NAME, param);
+    }
+
+    protected void onConversationLastMessageBeanChanged(String conversationID, TUIMessageBean messageBean) {
+        ConversationInfo changedInfo = null;
+        for (ConversationInfo conversationInfo : loadedConversationInfoList) {
+            if (TextUtils.equals(conversationInfo.getConversationId(), conversationID)) {
+                if (conversationInfo.getLastMessage() != null) {
+                    String msgID = conversationInfo.getLastMessage().getMsgID();
+                    if (TextUtils.equals(msgID, messageBean.getId())) {
+                        conversationInfo.setLastTUIMessageBean(messageBean);
+                        changedInfo = conversationInfo;
+                        break;
+                    }
+                }
+            }
+        }
+        if (changedInfo == null) {
+            return;
+        }
+        if (adapter != null) {
+            adapter.onConversationChanged(Collections.singletonList(changedInfo));
+        }
+        refreshChangedInfo(loadedConversationInfoList, Collections.singletonList(changedInfo));
+    }
+
+    public static String getMessageDisplayString(TUIMessageBean messageBean) {
+        if (messageBean == null) {
+            return "";
+        }
+        String displayString;
+        if (messageBean.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+            displayString = getRevokeMessageDisplayString(messageBean);
+        } else {
+            displayString = messageBean.onGetDisplayString();
+        }
+        displayString = FaceUtil.emojiJudge(displayString);
+        return displayString;
+    }
+
+    public static String getRevokeMessageDisplayString(TUIMessageBean msg) {
+        Context context = TUIConversationService.getAppContext();
+        if (context == null) {
+            return "";
+        }
+        String showString;
+        String revoker = msg.getSender();
+        String messageSender = msg.getSender();
+        UserBean revokerBean = msg.getRevoker();
+        if (revokerBean != null && !TextUtils.isEmpty(revokerBean.getUserId())) {
+            revoker = revokerBean.getUserId();
+        }
+        if (TextUtils.equals(revoker, messageSender)) {
+            if (msg.isSelf()) {
+                showString = context.getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.revoke_tips_you);
+            } else {
+                if (!msg.isGroup()) {
+                    showString = context.getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.revoke_tips_other);
+                } else {
+                    String operatorName = msg.getUserDisplayName();
+                    showString = operatorName + context.getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.revoke_tips);
+                }
+            }
+        } else {
+            String operatorName = revoker;
+            if (revokerBean != null) {
+                operatorName = revokerBean.getDisplayString();
+            }
+            showString = operatorName + context.getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.revoke_tips);
+        }
+        return showString;
     }
 }

@@ -78,14 +78,6 @@ public class MessageInfo implements Serializable {
         this.id = id;
     }
 
-    public long getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(long uniqueId) {
-        this.uniqueId = uniqueId;
-    }
-
     /**
      * Get message sender ID
      *
@@ -185,24 +177,6 @@ public class MessageInfo implements Serializable {
     }
 
     /**
-     * Get whether the message has been read
-     *
-     * @return
-     */
-    public boolean isRead() {
-        return read;
-    }
-
-    /**
-     * Set whether the message has been read
-     *
-     * @param read
-     */
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    /**
      * Get whether the message is a group message
      *
      * @return
@@ -221,28 +195,6 @@ public class MessageInfo implements Serializable {
     }
 
     /**
-     * Get the data source of the multimedia message
-     *
-     * @return
-     */
-    public String getDataUri() {
-        return dataUri;
-    }
-
-    /**
-     * Get the data source of the multimedia message
-     *
-     * @return
-     */
-    public Uri getDataUriObj() {
-        if (!TextUtils.isEmpty(dataUri)) {
-            return Uri.parse(dataUri);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Set the data source of the multimedia message
      *
      * @param dataUri
@@ -254,67 +206,12 @@ public class MessageInfo implements Serializable {
     }
 
     /**
-     * Set the data source of the multimedia message
-     *
-     * @param dataUri
-     */
-    public void setDataUri(String dataUri) {
-        this.dataUri = dataUri;
-    }
-
-    /**
-     * Get the save path of multimedia messages
-     *
-     * @return
-     */
-    public String getDataPath() {
-        return dataPath;
-    }
-
-    /**
      * Set the save path of multimedia messages
      *
      * @param dataPath
      */
     public void setDataPath(String dataPath) {
         this.dataPath = dataPath;
-    }
-
-    public int getCustomInt() {
-        if (timMessage == null) {
-            return 0;
-        }
-        return timMessage.getLocalCustomInt();
-    }
-
-    public void setCustomInt(int value) {
-        if (timMessage == null) {
-            return;
-        }
-        timMessage.setLocalCustomInt(value);
-    }
-
-    public boolean checkEquals(String msgID) {
-        if (TextUtils.isEmpty(msgID)) {
-            return false;
-        }
-        return timMessage.getMsgID().equals(msgID);
-    }
-
-    public boolean remove() {
-        if (timMessage == null) {
-            return false;
-        }
-        V2TIMManager.getMessageManager().deleteMessageFromLocalStorage(timMessage, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                TUISearchLog.e(TAG, "deleteMessageFromLocalStorage error code = " + code + ", desc = " + desc);
-            }
-
-            @Override
-            public void onSuccess() {}
-        });
-        return true;
     }
 
     public V2TIMMessage getTimMessage() {

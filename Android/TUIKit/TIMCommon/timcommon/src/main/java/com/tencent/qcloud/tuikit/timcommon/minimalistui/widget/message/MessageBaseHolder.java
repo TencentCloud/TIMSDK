@@ -17,6 +17,8 @@ import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.MessageProperties;
+import com.tencent.qcloud.tuikit.timcommon.component.highlight.HighlightPresenter;
+import com.tencent.qcloud.tuikit.timcommon.interfaces.HighlightListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import java.util.Calendar;
@@ -41,6 +43,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     protected boolean floatMode = false;
 
     protected boolean isShowStart = true;
+    private HighlightListener highlightListener;
 
     public MessageBaseHolder(View itemView) {
         super(itemView);
@@ -81,6 +84,7 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void layoutViews(final TUIMessageBean msg, final int position) {
+        registerHighlightListener(msg.getId());
         if (properties.getChatTimeBubble() != null) {
             chatTimeText.setBackground(properties.getChatTimeBubble());
         }
@@ -107,6 +111,26 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    private void registerHighlightListener(String msgID) {
+        highlightListener = new HighlightListener() {
+            @Override
+            public void onHighlightStart() {}
+
+            @Override
+            public void onHighlightEnd() {
+                clearHighLightBackground();
+            }
+
+            @Override
+            public void onHighlightUpdate(int color) {
+                setHighLightBackground(color);
+            }
+        };
+        HighlightPresenter.registerHighlightListener(msgID, highlightListener);
+    }
+
+    public void onRecycled() {}
+
     public static String getTimeFormatText(Date date) {
         if (date == null) {
             return "";
@@ -125,7 +149,8 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         dayCalendar.set(Calendar.SECOND, 0);
         dayCalendar.set(Calendar.MILLISECOND, 0);
         Calendar weekCalendar = Calendar.getInstance();
-        weekCalendar.set(Calendar.DAY_OF_WEEK, 1);
+        weekCalendar.setFirstDayOfWeek(Calendar.SUNDAY);
+        weekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         weekCalendar.set(Calendar.HOUR_OF_DAY, 0);
         weekCalendar.set(Calendar.MINUTE, 0);
         weekCalendar.set(Calendar.SECOND, 0);
@@ -156,71 +181,36 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         this.floatMode = floatMode;
     }
 
-    public void stopHighLight() {
-        if (highLightAnimator != null) {
-            highLightAnimator.cancel();
-        }
-        clearHighLightBackground();
-    }
-
     protected boolean isShowAvatar(TUIMessageBean messageBean) {
         return false;
     }
 
     public void setMessageBubbleZeroPadding() {
+        if (msgArea == null) {
+            return;
+        }
         msgArea.setPaddingRelative(0, 0, 0, 0);
     }
 
     public void setMessageBubbleBackground(int resID) {
+        if (msgArea == null) {
+            return;
+        }
         msgArea.setBackgroundResource(resID);
     }
 
     public void setMessageBubbleBackground(Drawable drawable) {
+        if (msgArea == null) {
+            return;
+        }
         msgArea.setBackground(drawable);
     }
 
     public Drawable getMessageBubbleBackground() {
-        return msgArea.getBackground();
-    }
-    
-    public void startHighLight() {
-        int highLightColorDark = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_dark_color);
-        int highLightColorLight = itemView.getResources().getColor(R.color.chat_message_bubble_high_light_light_color);
-
-        if (highLightAnimator == null) {
-            highLightAnimator = new ValueAnimator();
-            highLightAnimator.setIntValues(highLightColorDark, highLightColorLight);
-            highLightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    Integer color = (Integer) animation.getAnimatedValue();
-                    setHighLightBackground(color);
-                }
-            });
-            highLightAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {}
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    clearHighLightBackground();
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    clearHighLightBackground();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {}
-            });
-            ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-            highLightAnimator.setEvaluator(argbEvaluator);
-            highLightAnimator.setRepeatCount(3);
-            highLightAnimator.setDuration(250);
-            highLightAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        if (msgArea == null) {
+            return null;
         }
-        highLightAnimator.start();
+        return msgArea.getBackground();
     }
 
     public void setHighLightBackground(int color) {

@@ -34,6 +34,7 @@ public class FriendApplicationBean implements Serializable {
     public static final int ERR_SUCC = BaseConstants.ERR_SUCC;
     public static final int ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS = BaseConstants.ERR_SVR_FRIENDSHIP_INVALID_PARAMETERS;
     public static final int ERR_SVR_FRIENDSHIP_COUNT_LIMIT = BaseConstants.ERR_SVR_FRIENDSHIP_COUNT_LIMIT;
+    public static final int ERR_SVR_FRIENDSHIP_ALREADY_FRIENDS = BaseConstants.ERR_SVR_FRIENDSHIP_ALREADY_FRIENDS;
     public static final int ERR_SVR_FRIENDSHIP_PEER_FRIEND_LIMIT = BaseConstants.ERR_SVR_FRIENDSHIP_PEER_FRIEND_LIMIT;
     public static final int ERR_SVR_FRIENDSHIP_IN_SELF_BLACKLIST = BaseConstants.ERR_SVR_FRIENDSHIP_IN_SELF_BLACKLIST;
     public static final int ERR_SVR_FRIENDSHIP_ALLOW_TYPE_DENY_ANY = BaseConstants.ERR_SVR_FRIENDSHIP_ALLOW_TYPE_DENY_ANY;

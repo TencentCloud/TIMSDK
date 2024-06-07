@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -11,12 +13,19 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.ImageHeaderParser;
+import com.bumptech.glide.load.ImageHeaderParserUtils;
+import com.bumptech.glide.load.engine.bitmap_recycle.ArrayPool;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class FileUtil {
     private static final String TAG = FileUtil.class.getSimpleName();
@@ -29,12 +38,52 @@ public class FileUtil {
         }
     }
 
-    public static boolean saveImageToGallery(Context context, String videoPath) {
+    public static boolean saveImageToGallery(Context context, String imagePath) {
+        String processedImagePath = detectImageTypeAndGetNewPath(imagePath);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return saveImageToGalleryByMediaStore(context, videoPath);
+            return saveImageToGalleryByMediaStore(context, processedImagePath);
         } else {
-            return saveImageToGalleryByFile(context, videoPath);
+            return saveImageToGalleryByFile(context, processedImagePath);
         }
+    }
+
+    private static String detectImageTypeAndGetNewPath(String imagePath) {
+        String mimeType = getMimeType(imagePath);
+        String processedImagePath = imagePath;
+        if (TextUtils.isEmpty(mimeType) || !mimeType.startsWith("image")) {
+            File file = new File(imagePath);
+            FileInputStream fileInputStream = null;
+            try {
+                fileInputStream = new FileInputStream(file);
+                List<ImageHeaderParser> parsers = Glide.get(TUIChatService.getAppContext()).getRegistry().getImageHeaderParsers();
+                ArrayPool arrayPool = Glide.get(TUIChatService.getAppContext()).getArrayPool();
+                ImageHeaderParser.ImageType imageType = ImageHeaderParserUtils.getType(parsers, fileInputStream, arrayPool);
+                if (imageType == ImageHeaderParser.ImageType.UNKNOWN) {
+                    // Not one of the following image formats : GIF/JPEG/RAW/PNG/WEBP
+                } else if (imageType == ImageHeaderParser.ImageType.GIF) {
+                    processedImagePath = imagePath + ".gif";
+                    File processedImageFile = new File(processedImagePath);
+                    FileUtil.saveFileFromPath(processedImageFile, imagePath);
+                } else {
+                    Bitmap bitmap = Glide.with(TUIChatService.getAppContext()).asBitmap().load(imagePath).submit().get();
+                    processedImagePath = imagePath + ".png";
+                    File processedImageFile = new File(processedImagePath);
+                    ImageUtil.storeBitmap(processedImageFile, bitmap);
+                }
+            } catch (Exception e) {
+                TUIChatLog.e(TAG, e.getMessage());
+                return imagePath;
+            } finally {
+                try {
+                    if (fileInputStream != null) {
+                        fileInputStream.close();
+                    }
+                } catch (IOException e) {
+                    TUIChatLog.e(TAG, e.getMessage());
+                }
+            }
+        }
+        return processedImagePath;
     }
 
     public static boolean saveVideoToGalleryByMediaStore(Context context, String videoPath) {
@@ -157,9 +206,6 @@ public class FileUtil {
         }
         String imageName = getFileName(imagePath);
         String outputPath = imageDirPath + imageName;
-        if (!outputPath.endsWith(".jpg")) {
-            outputPath += ".jpg";
-        }
         File outputFile = new File(outputPath);
         if (outputFile.exists()) {
             outputFile.delete();
@@ -242,8 +288,21 @@ public class FileUtil {
     }
 
     private static String getAppName(Context context) {
-        ApplicationInfo applicationInfo = context.getApplicationInfo();
-        return String.valueOf(context.getPackageManager().getApplicationLabel(applicationInfo));
+        String appName = "";
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            ApplicationInfo applicationInfo =
+                    packageManager.getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            packageManager.getApplicationLabel(applicationInfo);
+            CharSequence labelCharSequence = applicationInfo.loadLabel(packageManager);
+            if (!TextUtils.isEmpty(labelCharSequence)) {
+                appName = labelCharSequence.toString();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            TUIChatLog.e(TAG, "getAppName exception:" + e.getMessage());
+        }
+
+        return appName;
     }
 
     public static boolean isFileExists(String path) {

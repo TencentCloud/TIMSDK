@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.ConferenceMainViewModel;
 
 public class ConferenceMainFragment extends Fragment {
@@ -112,7 +111,6 @@ public class ConferenceMainFragment extends Fragment {
         release();
     }
 
-
     private void keepScreenOn(boolean keep) {
         Window window = getActivity().getWindow();
         if (keep) {
@@ -149,7 +147,7 @@ public class ConferenceMainFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 Log.e(TAG, "handleOnBackPressed");
-                RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, null);
+                ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW, null);
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(mBackPressedCallback);

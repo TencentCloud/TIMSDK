@@ -1,15 +1,17 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_ADD;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_REMOVE;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ALL_SEAT_OCCUPIED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_ADD;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_TAKE_SEAT_REQUEST_REMOVE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,21 +19,21 @@ import android.util.Log;
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RaiseHandApplicationListViewModel
-        implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
+        implements ConferenceEventCenter.RoomEngineEventResponder, ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "ApplyListViewModel";
 
     private final RaiseHandApplicationListPanel mApplyView;
@@ -44,13 +46,13 @@ public class RaiseHandApplicationListViewModel
         mContext = context;
         mApplyView = view;
 
-        mTakeSeatRequestList = RoomEngineManager.sharedInstance().getRoomStore().takeSeatRequestList;
+        mTakeSeatRequestList = ConferenceController.sharedInstance().getConferenceState().takeSeatRequestList;
 
         subscribeEvent();
     }
 
     private void subscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
         eventCenter.subscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
         eventCenter.subscribeEngine(USER_ROLE_CHANGED, this);
@@ -65,7 +67,7 @@ public class RaiseHandApplicationListViewModel
     }
 
     private void unSubscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.unsubscribeEngine(USER_TAKE_SEAT_REQUEST_ADD, this);
         eventCenter.unsubscribeEngine(USER_TAKE_SEAT_REQUEST_REMOVE, this);
         eventCenter.unsubscribeEngine(USER_ROLE_CHANGED, this);
@@ -79,37 +81,41 @@ public class RaiseHandApplicationListViewModel
         return mTakeSeatRequestList;
     }
 
-    public List<TakeSeatRequestEntity> searchUserByKeyWords(String keyWords) {
-        if (TextUtils.isEmpty(keyWords)) {
-            return new ArrayList<>();
-        }
-
-        List<TakeSeatRequestEntity> searchList = new ArrayList<>();
+    public void agreeAllUserOnStage() {
+        final AtomicInteger counter = new AtomicInteger(0);
         for (TakeSeatRequestEntity item : mTakeSeatRequestList) {
-            if (item.getUserName().contains(keyWords) || item.getUserId().contains(keyWords)) {
-                searchList.add(item);
-            }
+            TUIRoomDefine.Request request = item.getRequest();
+            ConferenceController.sharedInstance()
+                    .responseRemoteRequest(request.requestAction, request.requestId, true, new TUIRoomDefine.ActionCallback() {
+                        @Override
+                        public void onSuccess() {
+                        }
+
+                        @Override
+                        public void onError(TUICommonDefine.Error error, String message) {
+                            if (error == ALL_SEAT_OCCUPIED && counter.get() == 0) {
+                                counter.incrementAndGet();
+                                RoomToast.toastShortMessageCenter(
+                                        mContext.getString(R.string.tuiroomkit_stage_full_of_admin));
+                            }
+                        }
+                    });
         }
-        return searchList;
     }
 
-    public void agreeAllUserOnStage() {
+    public void rejectAllUserOnStage() {
         for (TakeSeatRequestEntity item : mTakeSeatRequestList) {
             TUIRoomDefine.Request request = item.getRequest();
             if (request == null) {
                 continue;
             }
-            RoomEngineManager.sharedInstance()
-                    .responseRemoteRequest(request.requestAction, request.requestId, true, null);
+            ConferenceController.sharedInstance()
+                    .responseRemoteRequest(request.requestAction, request.requestId, false, null);
         }
     }
 
-    public void inviteMemberOnstage() {
-        RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST, null);
-    }
-
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case USER_TAKE_SEAT_REQUEST_ADD:
                 onAddTakeSeatRequest(params);
@@ -158,7 +164,7 @@ public class RaiseHandApplicationListViewModel
         if (position == USER_NOT_FOUND) {
             return;
         }
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         UserEntity user = store.allUserList.get(position);
         if (TextUtils.equals(user.getUserId(), store.userModel.userId)
                 && user.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
@@ -179,7 +185,7 @@ public class RaiseHandApplicationListViewModel
                 if (!mApplyView.isShowing()) {
                     break;
                 }
-                Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
+                Configuration configuration = (Configuration) params.get(ConferenceEventConstant.KEY_CONFIGURATION);
                 mApplyView.changeConfiguration(configuration);
                 break;
             default:
@@ -191,17 +197,17 @@ public class RaiseHandApplicationListViewModel
         if (params == null) {
             return;
         }
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
+        String userId = (String) params.get(ConferenceEventConstant.KEY_USER_ID);
         if (TextUtils.isEmpty(userId)) {
             return;
         }
         TakeSeatRequestEntity request =
-                RoomEngineManager.sharedInstance().getRoomStore().getTakeSeatRequestEntity(userId);
+                ConferenceController.sharedInstance().getConferenceState().getTakeSeatRequestEntity(userId);
         if (request == null) {
             return;
         }
 
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .responseRemoteRequest(request.getRequest().requestAction, request.getRequest().requestId, agree,
                         new TUIRoomDefine.ActionCallback() {
                             @Override
@@ -211,9 +217,9 @@ public class RaiseHandApplicationListViewModel
                             @Override
                             public void onError(TUICommonDefine.Error error, String message) {
                                 Log.e(TAG, "responseUserOnStage onError error=" + error + " message=" + message);
-                                if (error == TUICommonDefine.Error.ALL_SEAT_OCCUPIED) {
+                                if (error == ALL_SEAT_OCCUPIED) {
                                     RoomToast.toastShortMessageCenter(
-                                            mContext.getString(R.string.tuiroomkit_all_seat_occupied));
+                                            mContext.getString(R.string.tuiroomkit_stage_full_of_admin));
                                 }
                             }
                         });

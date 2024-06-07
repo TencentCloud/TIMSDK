@@ -4,7 +4,7 @@ import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.Self
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.JOINING_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.LEAVING_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.SelfRoomStatus.NO_IN_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SEND_IM_MSG_COMPLETE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SEND_IM_MSG_COMPLETE;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,11 +18,11 @@ import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomManagerImpl;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomMsgUserEntity;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.observer.RoomObserver;
-import com.tencent.cloud.tuikit.roomkit.imaccess.utils.BusinessSceneUtil;
-import com.tencent.cloud.tuikit.roomkit.imaccess.utils.RoomSpUtil;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.model.utils.FetchRoomId;
+import com.tencent.cloud.tuikit.roomkit.common.utils.BusinessSceneUtil;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomSpUtil;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.FetchRoomId;
 import com.tencent.cloud.tuikit.roomkit.view.page.RoomMainActivity;
 import com.tencent.qcloud.tuicore.TUILogin;
 
@@ -31,7 +31,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, RoomEventCenter.RoomKitUIEventResponder {
+public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "RoomPresenterImpl";
 
     private static RoomPresenterImpl sRoomPresenter;
@@ -58,7 +58,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         mSelfInfo.userId = TUILogin.getUserId();
         mSelfInfo.userName = TUILogin.getNickName();
         mSelfInfo.avatarUrl = TUILogin.getFaceUrl();
-        RoomEventCenter.getInstance().subscribeUIEvent(SEND_IM_MSG_COMPLETE, this);
+        ConferenceEventCenter.getInstance().subscribeUIEvent(SEND_IM_MSG_COMPLETE, this);
     }
 
     public static final RoomPresenterImpl getInstance() {
@@ -157,7 +157,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
             public void onSuccess() {
                 Log.d(TAG, "waitUntilGiveUpRoomOwner onSuccess thread name=" + Thread.currentThread().getName());
                 mGiveUpRoomManagerLatch.countDown();
-                RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomStore().userModel.changeRole(
+                ConferenceController.sharedInstance(TUILogin.getAppContext()).getConferenceState().userModel.changeRole(
                         TUIRoomDefine.Role.GENERAL_USER);
             }
 
@@ -192,7 +192,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
                         }
                         mJoinRoomLatch = new CountDownLatch(1);
                         Log.d(TAG, "waitUntilCreateRoom start roomId=" + roomId);
-                        RoomEngineManager.sharedInstance().getRoomStore().setMainActivityClass(RoomMainActivity.class);
+                        ConferenceController.sharedInstance().getConferenceState().setMainActivityClass(RoomMainActivity.class);
                         mRoomManager.enableAutoShowRoomMainUi(false);
                         boolean isOpenVideo = RoomSpUtil.getVideoSwitchFromSp();
                         boolean isOpenAudio = RoomSpUtil.getAudioSwitchFromSp();
@@ -253,7 +253,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         }
         if (isInRoom(roomMsgData)) {
             Log.d(TAG, "processEnterRoom raiseActivity");
-            RoomEngineManager.sharedInstance(TUILogin.getAppContext()).exitFloatWindow();
+            ConferenceController.sharedInstance(TUILogin.getAppContext()).exitFloatWindow();
             return;
         }
         mIsProcess.set(true);
@@ -313,7 +313,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
             destroyInstance();
             return;
         }
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).enterFloatWindow();
+        ConferenceController.sharedInstance(TUILogin.getAppContext()).enterFloatWindow();
     }
 
     @Override
@@ -361,7 +361,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, R
         sRoomPresenter = null;
         mRoomTaskStoreHouse.destroyRoomTaskStoreHouse();
         BusinessSceneUtil.setChatAccessRoom(false);
-        RoomEventCenter.getInstance().unsubscribeUIEvent(SEND_IM_MSG_COMPLETE, this);
+        ConferenceEventCenter.getInstance().unsubscribeUIEvent(SEND_IM_MSG_COMPLETE, this);
     }
 
     private void makeUserRoomOwner(String userId, TUIRoomDefine.ActionCallback callback) {

@@ -32,8 +32,8 @@
     <dimen name="reply_text_size">15.55sp</dimen>
     <dimen name="reply_origin_text_size">12.07sp</dimen>
 
-    <dimen name="reply_message_content_max_width">175dp</dimen>
-    <dimen name="reply_message_content_min_width">100dp</dimen>
+    <dimen name="reply_message_content_max_width">185dp</dimen>
+    <dimen name="reply_message_content_min_width">120dp</dimen>
     <dimen name="reply_message_image_size">50dp</dimen>
 
     <dimen name="reply_abstract_padding_bottom">4.39dp</dimen>
@@ -65,4 +65,6 @@
     <dimen name="chat_input_emoji_top_space">12dp</dimen>
     <dimen name="chat_input_emoji_left_space">10dp</dimen>
     <dimen name="chat_face_detail_layout_size">160dp</dimen>
+
+    <dimen name="chat_pinned_list_max_height">270dp</dimen>
 </resources>

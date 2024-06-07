@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuiconversation.interfaces;
 
 import com.tencent.imsdk.v2.V2TIMUserStatus;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 
@@ -40,4 +41,5 @@ public interface ConversationEventListener {
 
     void onConversationDeleted(List<String> conversationIDList);
 
+    void onConversationLastMessageBeanChanged(String conversationID, TUIMessageBean messageBean);
 }

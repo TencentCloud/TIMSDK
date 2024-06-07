@@ -41,7 +41,6 @@ import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
 public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implements IAddMoreActivity {
     private BottomSheetDialog dialog;
 
-    private TextView idLabel;
     private View detailArea;
 
     private ShadeImageView faceImgView;
@@ -97,7 +96,6 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
             }
         });
 
-        idLabel = view.findViewById(R.id.id_label);
         detailArea = view.findViewById(R.id.friend_detail_area);
 
         remarksArea = view.findViewById(R.id.remark_area);
@@ -213,6 +211,6 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
 
     @Override
     public void finish() {
-        dialog.dismiss();
+        dismiss();
     }
 }

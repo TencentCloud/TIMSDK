@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:clickable="false"
-            android:text="@string/tuiroomkit_invite_to_stage"
+            android:text="@string/tuiroomkit_invite_member_to_stage"
             android:textColor="@color/tuiroomkit_color_hint"
             android:textSize="14sp" />
 

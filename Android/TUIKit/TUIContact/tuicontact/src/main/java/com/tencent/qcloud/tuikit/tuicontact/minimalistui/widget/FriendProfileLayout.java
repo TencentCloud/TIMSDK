@@ -58,6 +58,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private TextView strangerName;
     private TextView strangerUserID;
     private View addFriendBtn;
+    private ViewGroup strangerWarningExtensionListView;
 
     private View friendArea;
     private ShadeImageView mHeadImageView;
@@ -73,6 +74,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
     private RecyclerView profileItemListView;
     private ProfileItemAdapter profileItemAdapter;
+    private ViewGroup warningExtensionListView;
+
     private ContactItemBean mContactInfo;
     private FriendApplicationBean friendApplicationBean;
     private OnButtonClickListener mListener;
@@ -156,7 +159,8 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             }
         });
         profileItemListView.setAdapter(profileItemAdapter);
-
+        warningExtensionListView = findViewById(R.id.warning_extension_list);
+        strangerWarningExtensionListView = findViewById(R.id.stranger_warning_extension_list);
         strangerArea.setVisibility(GONE);
         friendArea.setVisibility(GONE);
     }
@@ -168,6 +172,42 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         Collections.sort(extensionInfoList);
         profileItemAdapter.setExtensionInfoList(extensionInfoList);
         profileItemAdapter.notifyDataSetChanged();
+
+        List<TUIExtensionInfo> warningExtensionList = TUICore.getExtensionList(TUIConstants.TUIContact.Extension.FriendProfileWarningButton.EXTENSION_ID, null);
+        Collections.sort(warningExtensionList);
+        strangerWarningExtensionListView.removeAllViews();
+        for (TUIExtensionInfo extensionInfo : warningExtensionList) {
+            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.contact_minimalist_stranger_profile_warning_item_layout, null);
+            TextView itemButton = itemView.findViewById(R.id.item_button);
+            itemButton.setText(extensionInfo.getText());
+            itemButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (extensionInfo.getExtensionListener() != null) {
+                        extensionInfo.getExtensionListener().onClicked(null);
+                    }
+                }
+            });
+            strangerWarningExtensionListView.addView(itemView);
+        }
+
+        warningExtensionListView.removeAllViews();
+        for (TUIExtensionInfo extensionInfo : warningExtensionList) {
+            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.contact_minimalist_profile_warning_item_layout, null);
+            MinimalistLineControllerView itemButton = itemView.findViewById(R.id.item_button);
+            itemButton.setName(extensionInfo.getText());
+            itemButton.setNameColor(getResources().getColor(R.color.contact_minimalist_profile_item_warning_text_color));
+            itemButton.setBackgroundColor(getResources().getColor(R.color.contact_minimalist_profile_item_bg_color));
+            itemButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (extensionInfo.getExtensionListener() != null) {
+                        extensionInfo.getExtensionListener().onClicked(null);
+                    }
+                }
+            });
+            warningExtensionListView.addView(itemView);
+        }
     }
 
     private void initEvent() {
@@ -282,7 +322,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
     @Override
     public void onDataSourceChanged(ContactItemBean bean) {
-        if (bean.isFriend()) {
+        if (bean.isFriend() || bean.isBlackList()) {
             strangerArea.setVisibility(GONE);
             friendArea.setVisibility(VISIBLE);
             setViewContentFromItemBean(bean);

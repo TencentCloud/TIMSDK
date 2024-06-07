@@ -311,14 +311,21 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     private void loadAvatar(TUIMessageBean msg) {
         if (msg.isUseMsgReceiverAvatar() && mAdapter != null) {
             String cachedFaceUrl = mAdapter.getUserFaceUrlCache().getCachedFaceUrl(msg.getSender());
-            if (TextUtils.isEmpty(cachedFaceUrl)) {
+            if (cachedFaceUrl == null) {
                 List<String> idList = new ArrayList<>();
                 idList.add(msg.getSender());
                 V2TIMManager.getInstance().getUsersInfo(idList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
                     @Override
                     public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                        if (v2TIMUserFullInfos == null || v2TIMUserFullInfos.isEmpty()) {
+                            return;
+                        }
                         V2TIMUserFullInfo userInfo = v2TIMUserFullInfos.get(0);
-                        mAdapter.getUserFaceUrlCache().pushFaceUrl(userInfo.getUserID(), userInfo.getFaceUrl());
+                        String faceUrl = userInfo.getFaceUrl();
+                        if (TextUtils.isEmpty(userInfo.getFaceUrl())) {
+                            faceUrl = "";
+                        }
+                        mAdapter.getUserFaceUrlCache().pushFaceUrl(userInfo.getUserID(), faceUrl);
                         mAdapter.onItemRefresh(msg);
                     }
 
@@ -630,7 +637,9 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     public abstract void layoutVariableViews(final TUIMessageBean msg, final int position);
 
-    public void onRecycled() {}
+    public void onRecycled() {
+        super.onRecycled();
+    }
 
     public void setNeedShowBottom(boolean needShowBottom) {
         isNeedShowBottom = needShowBottom;

@@ -2,8 +2,8 @@ package com.tencent.cloud.tuikit.roomkit.imaccess.view;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.imaccess.presenter.RoomPresenter;
-import com.tencent.cloud.tuikit.roomkit.imaccess.utils.BusinessSceneUtil;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.common.utils.BusinessSceneUtil;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 

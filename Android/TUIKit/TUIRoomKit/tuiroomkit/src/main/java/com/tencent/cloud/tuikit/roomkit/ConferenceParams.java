@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ConferenceParams implements Serializable {
     private static final long serialVersionUID = 10001L;
 
-    private boolean isMuteMicrophone = true;
+    private boolean isMuteMicrophone = false;
     private boolean isOpenCamera     = false;
     private boolean isSoundOnSpeaker = true;
 
