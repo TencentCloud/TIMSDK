@@ -635,10 +635,10 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     BOOL read = (cellData.isMarkAsUnread || cellData.unreadCount > 0);
     markAsReadAction.backgroundColor = read ? RGB(37, 104, 240) : RGB(102, 102, 102);
     NSString *markAsReadImageName = read ? @"icon_conversation_swipe_read" : @"icon_conversation_swipe_unread";
-    if ([language containsString:@"zh-"]) {
+    if ([language tui_containsString:@"zh-"]) {
         markAsReadImageName = [markAsReadImageName stringByAppendingString:@"_zh"];
     }
-    else if ([language containsString:@"ar"]) {
+    else if ([language tui_containsString:@"ar"]) {
         markAsReadImageName = [markAsReadImageName stringByAppendingString:@"_ar"];
     }
     markAsReadAction.image =
@@ -668,10 +668,10 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
                           }];
     moreAction.backgroundColor = RGB(0, 0, 0);
     NSString *moreImageName =  @"icon_conversation_swipe_more";
-    if ([language containsString:@"zh-"]) {
+    if ([language tui_containsString:@"zh-"]) {
         moreImageName = [moreImageName stringByAppendingString:@"_zh"];
     }
-    else if ([language containsString:@"ar"]) {
+    else if ([language tui_containsString:@"ar"]) {
         moreImageName = [moreImageName stringByAppendingString:@"_ar"];
     }
     moreAction.image = TUIDynamicImage(@"", TUIThemeModuleConversation_Minimalist, [UIImage imageNamed:TUIConversationImagePath_Minimalist(moreImageName)]);

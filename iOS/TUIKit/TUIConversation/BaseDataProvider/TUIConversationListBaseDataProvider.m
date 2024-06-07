@@ -30,6 +30,10 @@
  */
 @property(nonatomic, strong) TUIConversationCellData *conversationFoldListData;
 
+/**
+ *  Deleting conversation list
+ */
+@property(nonatomic, strong) NSMutableArray *deletingConversationList;
 @end
 
 @implementation TUIConversationListBaseDataProvider
@@ -40,6 +44,7 @@
         self.pageSize = kPageSize;
         self.lastPage = NO;
         self.filter = [[V2TIMConversationListFilter alloc] init];
+        self.deletingConversationList = [NSMutableArray array];
 
         [[V2TIMManager sharedInstance] addConversationListener:self];
         [[V2TIMManager sharedInstance] addGroupListener:self];
@@ -259,7 +264,10 @@
     [self updateMarkUnreadCount];
 
     [self updateMarkFold:markFoldDataList];
+  
+    [self asnycGetLastMessageDisplay:duplicateDataList addedDataList:addedDataList];
 }
+
 - (void)updateMardHide:(NSMutableArray *) markHideDataList {
     if (markHideDataList.count) {
         [self sortDataList:markHideDataList];
@@ -281,6 +289,7 @@
         }
     }
 }
+
 - (void)updateMarkUnreadCount {
     __block NSInteger markUnreadCount = 0;
     [self.markUnreadMap enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull key, TUIConversationCellData *_Nonnull obj, BOOL *_Nonnull stop) {
@@ -312,6 +321,7 @@
                         TUIKitNotification_onConversationMarkUnreadCountChanged_MarkUnreadMap : self.markUnreadMap,
                     }];
 }
+
 - (void)updateMarkFold:(NSMutableArray *) markFoldDataList {
     if (markFoldDataList.count) {
         [self sortDataList:markFoldDataList];
@@ -333,6 +343,10 @@
             [self handleHideConversation:item];
         }
     }
+}
+
+- (void)asnycGetLastMessageDisplay:(NSArray<TUIConversationCellData *> *)duplicateDataList addedDataList:(NSArray<TUIConversationCellData *> *)addedDataList {
+  // override by subclass
 }
 
 - (void)handleInsertConversationList:(NSArray<TUIConversationCellData *> *)conversationList {
@@ -410,13 +424,21 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(deleteConversationAtIndexPaths:)]) {
             [self.delegate deleteConversationAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:0] ]];
         }
-        @weakify(self);
-        [[V2TIMManager sharedInstance] deleteConversation:conversation.conversationID
-                                                     succ:^{
-                                                       @strongify(self);
-                                                       [self updateMarkUnreadCount];
-                                                     }
-                                                     fail:nil];
+
+        [self.deletingConversationList addObject:conversation.conversationID];
+        @weakify(self)
+        [[V2TIMManager sharedInstance] deleteConversation:conversation.conversationID succ:^{
+            @strongify(self)
+            [self.deletingConversationList removeObject:conversation.conversationID];
+            if ([self.markUnreadMap objectForKey:conversation.conversationID]) {
+               [self.markUnreadMap removeObjectForKey:conversation.conversationID];
+            }
+            [self updateMarkUnreadCount];
+        } fail:^(int code, NSString *desc) {
+            @strongify(self)
+            NSLog(@"deleteConversation failed, conversationID:%@ code:%d desc:%@", conversation.conversationID, code, desc);
+            [self.deletingConversationList removeObject:conversation.conversationID];
+        }];
     }
 }
 
@@ -661,20 +683,36 @@
                 if (self.delegate && [self.delegate respondsToSelector:@selector(deleteConversationAtIndexPaths:)]) {
                     [self.delegate deleteConversationAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:0] ]];
                 }
-            
+                if ([self.markUnreadMap objectForKey:item.conversationID]) {
+                   [self.markUnreadMap removeObjectForKey:item.conversationID];
+                }
+                [self updateMarkUnreadCount];
             }
         }
     }
 }
 
 #pragma mark - V2TIMGroupListener
+- (NSString *)getGroupName:(TUIConversationCellData *)cellData {
+    NSString *formatString = cellData.groupID;
+    if (cellData.title.length > 0) {
+        return cellData.title;
+    }
+    else if (cellData.groupID.length > 0) {
+        return cellData.groupID;
+    }
+    return @"";
+}
+
 - (void)onGroupDismissed:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser {
     TUIConversationCellData *data = [self cellDataOfGroupID:groupID];
     if (data == nil) {
         [self dealFoldcellDataOfGroupID:groupID];
         return;
     }
-    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupDismssTipsFormat), data.groupID]];
+    
+    NSString *groupName = [self getGroupName:data];
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupDismssTipsFormat), groupName]];
     [self handleRemoveConversation:data];
 }
 
@@ -684,7 +722,9 @@
         [self dealFoldcellDataOfGroupID:groupID];
         return;
     }
-    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupRecycledTipsFormat), data.groupID]];
+    NSString *groupName = [self getGroupName:data];
+
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupRecycledTipsFormat), groupName]];
     [self handleRemoveConversation:data];
 }
 
@@ -706,7 +746,8 @@
         return;
     }
 
-    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupKickOffTipsFormat), data.groupID]];
+    NSString *groupName = [self getGroupName:data];
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupKickOffTipsFormat), groupName]];
     [self handleRemoveConversation:data];
 }
 
@@ -716,7 +757,8 @@
         [self dealFoldcellDataOfGroupID:groupID];
         return;
     }
-    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupDropoutTipsFormat), data.groupID]];
+    NSString *groupName = [self getGroupName:data];
+    [TUITool makeToast:[NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupDropoutTipsFormat), groupName]];
     [self handleRemoveConversation:data];
 }
 
@@ -893,6 +935,7 @@
         data.isMarkAsHide = [TUIConversationCellData isMarkedByHideType:conversation.markList];
         data.isMarkAsFolded = [TUIConversationCellData isMarkedByFoldType:conversation.markList];
         data.lastMessage = conversation.lastMessage;
+        data.innerConversation = conversation;
         data.conversationGroupList = conversation.conversationGroupList;
         data.conversationMarkList = conversation.markList;
         return data;
@@ -1018,7 +1061,8 @@
 }
 
 - (BOOL)filteConversation:(V2TIMConversation *)conversation {
-    if (conversation.conversationID.length == 0) {
+    if (conversation.conversationID.length == 0 ||
+        [self.deletingConversationList containsObject:conversation.conversationID]) {
         return YES;
     }
 

@@ -77,8 +77,8 @@ char tui_pinyinFirstLetter(unsigned short hanzi);
 /**
  * Determines whether a string contains the given string, ignoring case
  */
-- (BOOL)containsString:(NSString *)str;
-- (BOOL)containsString:(NSString *)str Options:(NSStringCompareOptions)compareOptions;
+- (BOOL)tui_containsString:(NSString *)str;
+- (BOOL)tui_containsString:(NSString *)str Options:(NSStringCompareOptions)compareOptions;
 
 /**
  * Determines whether a string equals with the given string, ignoring case

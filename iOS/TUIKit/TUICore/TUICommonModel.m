@@ -575,7 +575,7 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
     UIImage *image = [_faceCache objectForKey:path];
     if (!image) {
         // gif extion
-        if ([path containsString:@".gif"]) {
+        if ([path tui_containsString:@".gif"]) {
             image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:path]];
         }
         else {

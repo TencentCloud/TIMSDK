@@ -40,7 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TUIBaseMessageController_Minimalist : UITableViewController
 
++ (void)asyncGetDisplayString:(NSArray<V2TIMMessage *> *)messageList callback:(void(^)(NSDictionary<NSString *, NSString *> *))callback;
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message;
+
+@property(nonatomic, copy) void (^groupRoleChanged)(V2TIMGroupMemberRole role);
+
+@property(nonatomic, copy) void (^pinGroupMessageChanged)(NSArray *groupPinList);
 
 @property(nonatomic, weak) id<TUIBaseMessageControllerDelegate_Minimalist> delegate;
 
@@ -94,6 +99,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)reloadCellOfMessage:(NSString *)messageID;
 - (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID;
 - (void)scrollCellToBottomOfMessage:(NSString *)messageID;
+
+- (void)loadGroupInfo;
+- (BOOL)isCurrentUserRoleSuperAdminInGroup;
+- (BOOL)isCurrentMessagePin:(NSString *)msgID;
+- (void)unPinGroupMessage:(V2TIMMessage *)innerMessage;
 
 @end
 

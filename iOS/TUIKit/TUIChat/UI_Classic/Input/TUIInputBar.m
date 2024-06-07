@@ -412,7 +412,7 @@
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if ([text containsString:@"["] && [text containsString:@"]"]) {
+    if ([text tui_containsString:@"["] && [text tui_containsString:@"]"]) {
         NSRange selectedRange = textView.selectedRange;
         if (selectedRange.length > 0) {
             [textView.textStorage deleteCharactersInRange:selectedRange];
@@ -643,17 +643,18 @@
 }
 
 - (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
-    float maxDuration = 59;
-    NSInteger seconds = maxDuration - time;
+    float realMaxDuration = 59.7;
+    float uiMaxDuration = 59;
+    NSInteger seconds = uiMaxDuration - time;
     self.recordView.timeLabel.text = [[NSString alloc] initWithFormat:@"%ld\"", (long)seconds + 1];
-    if (time >= 55 && time <= maxDuration) {
-        NSInteger seconds = maxDuration - time;
+    if (time >= 55 && time <= uiMaxDuration) {
+        NSInteger seconds = uiMaxDuration - time;
         /**
          * The long type is cast here to eliminate compiler warnings.
          * Here +1 is to round up and optimize the time logic.
          */
         self.recordView.title.text = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitInputWillFinishRecordInSeconds), (long)seconds + 1];
-    } else if (time > maxDuration) {
+    } else if (time > realMaxDuration) {
         [self.recorder stop];
         NSString *path = self.recorder.recordedFilePath;
         [self.recordView setStatus:Record_Status_TooLong];

@@ -357,6 +357,13 @@
             deletebutton.cbuttonSelector = @selector(didDeleteGroup:);
             [buttonArray addObject:deletebutton];
         }
+        
+        TUIButtonCellData *reportButton = [[TUIButtonCellData alloc] init];
+        reportButton.title = TIMCommonLocalizableString(TUIKitGroupProfileReport);
+        reportButton.style = ButtonRedText;
+        reportButton.cbuttonSelector = @selector(didReportGroup:);
+        [buttonArray addObject:reportButton];
+
 
         TUIButtonCellData *lastCellData = [buttonArray lastObject];
         lastCellData.hideSeparatorLine = YES;
@@ -468,6 +475,10 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectGroupNotice)]) {
         [self.delegate didSelectGroupNotice];
     }
+}
+- (void)didReportGroup:(TUIButtonCell *)cell {
+    NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
+    [TUITool openLinkWithURL:url];
 }
 
 - (NSMutableArray *)getShowMembers:(NSMutableArray *)members {

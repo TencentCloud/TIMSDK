@@ -223,6 +223,17 @@ typedef NSDictionary *TUIChatCallingJsonData;
     }
 }
 
+- (NSArray<NSString *> *)participantIDList {
+  NSMutableArray *arrayM = [NSMutableArray array];
+  if (self.signalingInfo.inviter) {
+    [arrayM addObject:self.signalingInfo.inviter];
+  }
+  if (self.signalingInfo.inviteeList.count > 0) {
+    [arrayM addObjectsFromArray:self.signalingInfo.inviteeList];
+  }
+  return [NSArray arrayWithArray:arrayM];
+}
+
 #pragma mark - Details style
 - (NSString *)contentForDetailsAppearance {
     TUICallProtocolType protocolType = self.protocolType;
@@ -262,9 +273,9 @@ typedef NSDictionary *TUIChatCallingJsonData;
         NSMutableString *mutableContent = [NSMutableString string];
         if (isGroup) {
             for (NSString *invitee in self.signalingInfo.inviteeList) {
-                [mutableContent appendString:@"\""];
+                [mutableContent appendString:@"\"{"];
                 [mutableContent appendString:invitee];
-                [mutableContent appendString:@"\"、"];
+                [mutableContent appendString:@"}\"、"];
             }
             if (mutableContent.length > 0) {
                 [mutableContent replaceCharactersInRange:NSMakeRange(mutableContent.length - 1, 1) withString:@" "];
@@ -350,9 +361,9 @@ typedef NSDictionary *TUIChatCallingJsonData;
             NSMutableString *mutableContent = [NSMutableString string];
             if (participantType == TUICallParticipantTypeGroup) {
                 for (NSString *invitee in self.signalingInfo.inviteeList) {
-                    [mutableContent appendString:@"\""];
+                    [mutableContent appendString:@"\"{"];
                     [mutableContent appendString:invitee];
-                    [mutableContent appendString:@"\"、"];
+                    [mutableContent appendString:@"}\"、"];
                 }
                 [mutableContent replaceCharactersInRange:NSMakeRange(mutableContent.length - 1, 1) withString:@" "];
             }

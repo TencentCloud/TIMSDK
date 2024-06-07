@@ -231,11 +231,9 @@
         self.retryView.frame = self.indicator.frame;
         self.readReceiptLabel.hidden = YES;
     } else {
-        if (self.messageData.showAvatar) {
-            cellLayout.avatarSize = CGSizeMake(40, 40);
-        } else {
+        if (!self.messageData.showAvatar) {
             cellLayout.avatarSize = CGSizeZero;
-        }
+        } 
         [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
           make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-cellLayout.avatarInsets.right);
           make.top.mas_equalTo(cellLayout.avatarInsets.top);

@@ -39,7 +39,7 @@
 
 @end
 
-@interface TUIChatPopMenu () <UIGestureRecognizerDelegate>
+@interface TUIChatPopMenu () <UIGestureRecognizerDelegate,V2TIMAdvancedMsgListener>
 
 /**
  * emojiRecent view and emoji secondary page view
@@ -103,6 +103,7 @@
 
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(hideWithAnimation) name:UIKeyboardWillChangeFrameNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
+        [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
     }
     return self;
 }
@@ -487,6 +488,13 @@
         _actionCallback = [NSMutableDictionary dictionary];
     }
     return _actionCallback;
+}
+
+// MARK: V2TIMAdvancedMsgListener
+- (void)onRecvMessageRevoked:(NSString *)msgID operateUser:(V2TIMUserFullInfo *)operateUser reason:(NSString *)reason {
+    if ([msgID isEqualToString:self.targetCellData.msgID]) {
+        [self hideWithAnimation];
+    }
 }
 
 // MARK: ThemeChanged

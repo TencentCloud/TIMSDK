@@ -114,4 +114,8 @@
  */
 + (UIView *)customTopView;
 
++ (UIView *)groupPinTopView;
+
++ (UIView *)topAreaBottomView;
+
 @end

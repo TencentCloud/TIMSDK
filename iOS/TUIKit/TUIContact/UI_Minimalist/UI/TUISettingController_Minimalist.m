@@ -71,6 +71,9 @@ static NSString *const kKeyViews = @"views";  // Used to pass custom views from 
 
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
     NSString *loginUser = [[V2TIMManager sharedInstance] getLoginUser];
+    if (!loginUser) {
+        loginUser = self.lastLoginUser;
+    }
     if (loginUser.length > 0) {
         @weakify(self);
         [[V2TIMManager sharedInstance] getUsersInfo:@[ loginUser ]

@@ -9,6 +9,7 @@
 #import "TUIContactController.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
+#import <TUICore/TUILogin.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIBlackListController.h"
 #import "TUIContactActionCell.h"
@@ -60,7 +61,8 @@
     [self setupNavigator];
     [self setupViews];
 
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLoginSucceeded) name:TUILoginSuccessNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged) name:@"FriendInfoChangedNotification" object:nil];
 }
 
 - (void)addExtensionsToList:(NSMutableArray *)list {
@@ -89,7 +91,11 @@
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
-- (void)onFriendInfoChanged:(NSNotification *)notice {
+- (void)onLoginSucceeded {
+    [self.viewModel loadContacts];
+}
+
+- (void)onFriendInfoChanged {
     [self.viewModel loadContacts];
 }
 

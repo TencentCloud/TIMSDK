@@ -43,7 +43,8 @@
                                               UITableViewDataSource,
                                               TUIMessageBaseDataProviderDataSource,
                                               TUIMessageCellDelegate,
-                                              TUINotificationProtocol>
+                                              TUINotificationProtocol,
+                                              V2TIMAdvancedMsgListener>
 
 @property(nonatomic, strong) TUIMessageCellData *cellData;
 @property(nonatomic, strong) TUIMessageDataProvider *msgDataProvider;
@@ -78,6 +79,8 @@
 
     [self setupInputViewController];
 
+    [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
+
     [TUICore registerEvent:TUICore_TUIPluginNotify
                     subKey:TUICore_TUIPluginNotify_DidChangePluginViewSubKey
                     object:self];
@@ -88,6 +91,7 @@
     [self applyData];
 
     [self updateTableViewConstraint];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -156,7 +160,11 @@
                                          if (strongSelf.uiMsgs.count != 0) {
                                              [strongSelf.tableView reloadData];
                                              [strongSelf.tableView layoutIfNeeded];
-                                             [strongSelf scrollToBottom:YES];
+                                             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 
+                                                                          (int64_t)(0.1 * NSEC_PER_SEC)),
+                                                            dispatch_get_main_queue(), ^{
+                                                 [strongSelf scrollToBottom:NO];
+                                             });
                                          }
                                        });
                                    }
@@ -165,7 +173,7 @@
 }
 
 - (void)updateTableViewConstraint {
-    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? CGRectGetMaxY(self.inputController.inputBar.frame):0;
+    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
     CGFloat height = textViewHeight + Bottom_SafeHeight;
     CGRect msgFrame = self.tableView.frame;
     msgFrame.size.height = self.view.frame.size.height - height;
@@ -567,6 +575,33 @@
     }
 }
 
+#pragma mark - V2TIMAdvancedMsgListener
+
+- (void)onRecvNewMessage:(V2TIMMessage *)msg {
+    V2TIMMessage *imMsg = msg;
+    if (imMsg == nil || ![imMsg isKindOfClass:V2TIMMessage.class]) {
+        return;
+    }
+    if ([imMsg.msgID isEqualToString:self.cellData.msgID] ) {
+        TUIMessageCellData *cellData = [TUIMessageDataProvider getCellData:imMsg];
+        self.cellData.messageModifyReplies = cellData.messageModifyReplies;
+        [self applyData];
+    }
+
+}
+- (void)onRecvMessageModified:(V2TIMMessage *)msg {
+    V2TIMMessage *imMsg = msg;
+    if (imMsg == nil || ![imMsg isKindOfClass:V2TIMMessage.class]) {
+        return;
+    }
+    if ([imMsg.msgID isEqualToString:self.cellData.msgID] ) {
+        TUIMessageCellData *cellData = [TUIMessageDataProvider getCellData:imMsg];
+        self.cellData.messageModifyReplies = cellData.messageModifyReplies;
+        [self applyData];
+    }
+
+}
+
 #pragma mark - dataProviderDataChange
 - (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider {
 }
@@ -578,14 +613,7 @@
 }
 
 - (void)dataProviderDataSourceDidChange:(TUIMessageDataProvider *)dataProvider {
-    for (TUIMessageCellData *cellData in dataProvider.uiMsgs) {
-        if ([cellData.innerMessage.msgID isEqual:self.cellData.msgID]) {
-            self.cellData.messageModifyReplies = cellData.messageModifyReplies;
-            break;
-        }
-    }
-
-    [self applyData];
+    
 }
 
 - (void)dataProvider:(TUIMessageBaseDataProvider *)dataProvider onRemoveHeightCache:(TUIMessageCellData *)cellData {

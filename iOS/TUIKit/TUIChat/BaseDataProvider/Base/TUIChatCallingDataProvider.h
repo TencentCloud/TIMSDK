@@ -114,6 +114,9 @@ typedef NS_ENUM(NSInteger, TUICallMessageDirection) {
  */
 @property(nonatomic, assign, readonly) BOOL isUseReceiverAvatar;
 
+
+@property(nonatomic, strong, readonly) NSArray<NSString *> *participantIDList;
+
 @end
 
 /**

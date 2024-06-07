@@ -53,6 +53,16 @@
     return [TUIBaseMessageController_Minimalist getDisplayString:message];
 }
 
+- (void)asyncGetDisplayString:(NSArray<V2TIMMessage *> *)messageList callback:(TUICallServiceResultCallback)resultCallback {
+  if (resultCallback == nil) {
+    return;
+  }
+
+  [TUIBaseMessageController_Minimalist asyncGetDisplayString:messageList callback:^(NSDictionary<NSString *,NSString *> * result) {
+    resultCallback(0, @"", result);
+  }];
+}
+
 #pragma mark - TUIServiceProtocol
 - (id)onCall:(NSString *)method param:(nullable NSDictionary *)param {
     if ([method isEqualToString:TUICore_TUIChatService_GetDisplayStringMethod]) {
@@ -80,6 +90,15 @@
     }
 
     return nil;
+}
+
+- (id)onCall:(NSString *)method param:(NSDictionary *)param resultCallback:(TUICallServiceResultCallback)resultCallback {
+  if ([method isEqualToString:TUICore_TUIChatService_AsyncGetDisplayStringMethod]) {
+    NSArray *messageList = param[TUICore_TUIChatService_AsyncGetDisplayStringMethod_MsgListKey];
+    [self asyncGetDisplayString:messageList callback:resultCallback];
+    return nil;
+  }
+  return nil;
 }
 
 @end

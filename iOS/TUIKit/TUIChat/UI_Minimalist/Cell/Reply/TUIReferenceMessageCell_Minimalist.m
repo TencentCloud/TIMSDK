@@ -142,8 +142,11 @@
     self.currentOriginView = [self getCustomOriginView:referenceData.originCellData];
     [self hiddenAllCustomOriginViews:YES];
     self.currentOriginView.hidden = NO;
+    referenceData.quoteData.supportForReply = NO;
     [self.currentOriginView fillWithData:referenceData.quoteData];
     
+    BOOL hasOriginMsgRevoke = (referenceData.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED);
+
     if (referenceData.direction == MsgDirectionIncoming) {
         self.textView.textColor = TUIChatDynamicColor(@"chat_reference_message_content_recv_text_color", @"#000000");
         self.senderLabel.textColor = TUIChatDynamicColor(@"chat_reference_message_quoteView_recv_text_color", @"#888888");
@@ -180,12 +183,27 @@
         make.width.mas_equalTo(referenceData.senderSize.width);
         make.height.mas_equalTo(referenceData.senderSize.height);
     }];
+    
+    if (hasOriginMsgRevoke) {
+        self.senderLabel.hidden = YES;
+    }
+    else {
+        self.senderLabel.hidden = NO;
+    }
 
     [self.currentOriginView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.mas_equalTo(self.senderLabel.mas_trailing).mas_offset(4);
-        make.top.mas_equalTo(self.senderLabel.mas_top).mas_offset(1);
-        make.trailing.mas_lessThanOrEqualTo(self.quoteView.mas_trailing);
-        make.height.mas_equalTo(self.referenceData.quotePlaceholderSize);
+        if (hasOriginMsgRevoke) {
+            make.leading.mas_equalTo(self.quoteView).mas_offset(6);
+            make.top.mas_equalTo(self.quoteView).mas_offset(8);
+            make.trailing.mas_lessThanOrEqualTo(self.quoteView.mas_trailing);
+            make.height.mas_equalTo(self.referenceData.quotePlaceholderSize.height);
+        }
+        else {
+            make.leading.mas_equalTo(self.senderLabel.mas_trailing).mas_offset(4);
+            make.top.mas_equalTo(self.senderLabel.mas_top).mas_offset(1);
+            make.trailing.mas_lessThanOrEqualTo(self.quoteView.mas_trailing);
+            make.height.mas_equalTo(self.referenceData.quotePlaceholderSize.height);
+        }
     }];
     
     [self.quoteLineView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -214,7 +232,7 @@
     if (view == nil) {
         Class class = [originCellData getReplyQuoteViewClass];
         NSString *clsStr = NSStringFromClass(class);
-        if (![clsStr containsString:@"_Minimalist"]) {
+        if (![clsStr tui_containsString:@"_Minimalist"]) {
             clsStr = [clsStr stringByAppendingString:@"_Minimalist"];
             class =  NSClassFromString(clsStr);
         }
@@ -400,7 +418,10 @@
     
     CGFloat cellHeight = [super getHeight:referenceCellData withWidth:width];
     cellHeight += referenceCellData.quoteSize.height + referenceCellData.bottomContainerSize.height;
-    cellHeight += kScale375(12);
+    if (referenceCellData.bottomContainerSize.height > 0) {
+        cellHeight += kScale375(6);
+    }
+    cellHeight += kScale375(6);
     return cellHeight;
 }
 
@@ -413,12 +434,25 @@
     CGFloat quoteMaxWidth = kReplyQuoteViewMaxWidth;
     CGFloat quotePlaceHolderMarginWidth = 12;
 
+    CGRect messageRevokeRect = CGRectZero;
+    BOOL hasOriginMsgRevoke = (referenceCellData.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED);
+
+    
     // Calculate the size of label which displays the sender's displayname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}];
     CGRect senderRect = [[NSString stringWithFormat:@"%@:",referenceCellData.sender] boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                             attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}
                                                                context:nil];
+    
+    if (hasOriginMsgRevoke) {
+        NSString *msgRevokeStr = TIMCommonLocalizableString(TUIKitReferenceOriginMessageRevoke);
+        messageRevokeRect = [msgRevokeStr boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
+                                                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                                attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}
+                                                                   context:nil];
+    }
+
     // Calculate the size of customize quote placeholder view
     CGSize placeholderSize = [referenceCellData quotePlaceholderSizeWithType:referenceCellData.originMsgType data:referenceCellData.quoteData];
 
@@ -459,13 +493,21 @@
         size.height = MAX(size.height, TUIBubbleMessageCell_Minimalist.outgoingBubble.size.height);
     }
 
+    
     quoteWidth = senderRect.size.width;
     quoteWidth += placeholderSize.width;
     quoteWidth += (quotePlaceHolderMarginWidth * 2);
 
+
     quoteHeight = MAX(senderRect.size.height, placeholderSize.height);
     quoteHeight += (8 + 8);
 
+    if (hasOriginMsgRevoke) {
+        quoteWidth = messageRevokeRect.size.width;
+        quoteHeight =  MAX(senderRect.size.height, placeholderSize.height);
+        quoteHeight += (8 + 8);
+    }
+    
     referenceCellData.senderSize = CGSizeMake(CGFLOAT_CEIL(senderRect.size.width)+3, senderRect.size.height);
     referenceCellData.quotePlaceholderSize = CGSizeMake(CGFLOAT_CEIL(placeholderSize.width), placeholderSize.height);
     //    self.replyContentSize = CGSizeMake(replyContentRect.size.width, replyContentRect.size.height);

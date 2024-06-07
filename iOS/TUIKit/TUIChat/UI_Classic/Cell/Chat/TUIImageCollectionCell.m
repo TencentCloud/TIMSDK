@@ -419,8 +419,5 @@
     }
     self.scrollView.containerView.frame = CGRectMake(0, 0,MIN(Screen_Width,self.imageView.image.size.width), self.imageView.image.size.height);
     [self.scrollView pictureZoomWithScale:scale];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.scrollView setZoomScale:scale animated:NO];
-    });
 }
 @end

@@ -145,6 +145,7 @@ class TUICallRecordCallsCell: UITableViewCell {
     }
     
     func configViewModel(_ viewModel: TUICallRecordCallsCellViewModel) {
+        // 获得cell对应的viewModel实例后再对viewModel进行监听
         self.viewModel = viewModel
         registerObserve()
         
@@ -162,6 +163,7 @@ class TUICallRecordCallsCell: UITableViewCell {
         }
     }
     
+    // IM获得faceURL、titleLabelStr为异步，结局时序问题
     func registerObserve() {
         viewModel.faceURL.addObserver(faceURLObserver) { [weak self] _, _ in
             guard let self = self else { return }

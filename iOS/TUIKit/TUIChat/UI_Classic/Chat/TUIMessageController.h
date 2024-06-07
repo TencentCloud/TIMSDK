@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) V2TIMMessage *C2CIncomingLastMsg;
 
+- (void)locateAssignMessage:(V2TIMMessage *)message matchKeyWord:(NSString *)keyword;
+- (void)findMessages:(NSArray<NSString *> *)msgIDs callback:(void (^)(BOOL success, NSString *desc, NSArray<V2TIMMessage *> *messages))callback;
 @end
 
 NS_ASSUME_NONNULL_END

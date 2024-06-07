@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '7.9.5666'
+  spec.version      = '8.0.5895'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,21 +17,15 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.9.5666/ios/TUIChat.zip?time=11'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.0.5895/ios/TUIChat.zip?time=11'}
 
   spec.default_subspec = 'ALL'
 
-  spec.subspec 'VoiceConvert' do |voiceConvert|
-    voiceConvert.vendored_libraries = '**/TUIChat/VoiceConvert/*.a'
-    voiceConvert.source_files = '**/TUIChat/VoiceConvert/*.{h,m,mm}'
-  end
-
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIChat/CommonModel/*.{h,m,mm}'
-    commonModel.dependency 'TXIMSDK_Plus_iOS'
+    commonModel.dependency 'TXIMSDK_Plus_iOS_XCFramework'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon','~> 7.9.5666'
-    commonModel.dependency "TUIChat/VoiceConvert"
+    commonModel.dependency 'TIMCommon','~> 8.0.5895'
     commonModel.dependency 'ReactiveObjC'
     commonModel.dependency 'SDWebImage'
     commonModel.dependency 'Masonry'
@@ -172,12 +166,6 @@ Pod::Spec.new do |spec|
     all.dependency "TUIChat/UI_Minimalist"
   end
 
-  spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
-  spec.user_target_xcconfig = { 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
   spec.resource_bundle = {
     "#{spec.module_name}_Privacy" => '**/TUIChat/Resources/PrivacyInfo.xcprivacy'
   }

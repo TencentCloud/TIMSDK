@@ -16,17 +16,11 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     
     let mediaTypeObserver = Observer()
     
-    let callWindow: UIWindow = {
-        let callWindow = UIWindow()
-        callWindow.windowLevel = .alert - 1
-        return callWindow
-    }()
-    
+    let callWindow = UIWindow()
     let floatWindow: UIWindow = {
-        let floatWindow = UIWindow()
-        floatWindow.windowLevel = .alert - 1
-        floatWindow.layer.masksToBounds = true
-        return floatWindow
+        let view = UIWindow()
+        view.layer.masksToBounds = true
+        return view
     }()
     
     override init() {
@@ -38,38 +32,16 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
         TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
     }
     
-    func showCallWindow(_ isIncomingCall: Bool = true) {
-        if isIncomingCall && TUICallState.instance.selfUser.value.callRole.value == .called {
-            showIncomingFloatView()
-        } else {
-            showCallView()
-        }
+    func showCallWindow() {
+        closeFloatWindow()
+        callWindow.rootViewController =  CallKitNavigationController(rootViewController: CallKitViewController())
+        callWindow.isHidden = false
+        callWindow.t_makeKeyAndVisible()
     }
     
     func closeCallWindow() {
         callWindow.rootViewController = UIViewController()
         callWindow.isHidden = true
-    }
-    
-    func showIncomingFloatView() {
-        let viewController = UIViewController()
-        viewController.view.addSubview(IncomingFloatView(frame: CGRect.zero))
-        callWindow.rootViewController = viewController
-        callWindow.isHidden = false
-        callWindow.backgroundColor = UIColor.clear
-        callWindow.frame = CGRect(x: 8.scaleWidth(),
-                                  y: StatusBar_Height + 10,
-                                  width: Screen_Width - 16.scaleWidth(),
-                                  height: 92.scaleWidth())
-        callWindow.t_makeKeyAndVisible()
-    }
-    
-    func showCallView() {
-        closeFloatWindow()
-        callWindow.rootViewController = CallKitNavigationController(rootViewController: CallKitViewController())
-        callWindow.isHidden = false
-        callWindow.frame = CGRect(x: 0, y: 0, width: Screen_Width, height: Screen_Height)
-        callWindow.t_makeKeyAndVisible()
     }
     
     func showFloatWindow() {
@@ -132,7 +104,7 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     
     // MARK: FloatingWindowViewDelegate
     func tapGestureAction(tapGesture: UITapGestureRecognizer) {
-        showCallWindow(false)
+        showCallWindow()
     }
     
     func panGestureAction(panGesture: UIPanGestureRecognizer) {

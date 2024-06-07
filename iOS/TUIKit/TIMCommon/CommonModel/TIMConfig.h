@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL enableMessageBubble;
 
++ (BOOL)isClassicEntrance;
 @end
 
 NS_ASSUME_NONNULL_END

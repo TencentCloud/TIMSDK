@@ -135,6 +135,9 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
  */
 - (void)preProcessMessage:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;
 
+- (NSArray<NSString *> *)getUserIDListForAdditionalUserInfo:(NSArray<TUIMessageCellData *> *)uiMsgs;
+- (void)requestForAdditionalUserInfo:(NSArray<TUIMessageCellData *> *)uiMsgs callback:(void (^)(void))callback;
+
 /**
  * Send read receipts for latest messages
  */
@@ -157,6 +160,24 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 - (void)processQuoteMessage:(NSArray<TUIMessageCellData *> *)uiMsgs;  // subclass override required
 
 + (void)updateUIMsgStatus:(TUIMessageCellData *)cellData uiMsgs:(NSArray *)uiMsgs;
+
+- (void)getPinMessageList;
+
+- (void)getSelfInfoInGroup:(dispatch_block_t)callback;
+
+- (void)pinGroupMessage:(NSString *)groupID
+                message:(V2TIMMessage *)message
+               isPinned:(BOOL)isPinned
+                   succ:(V2TIMSucc)succ
+                   fail:(V2TIMFail)fail;
+
+- (BOOL)isCurrentUserRoleSuperAdminInGroup;
+
+- (BOOL)isCurrentMessagePin:(NSString *)msgID;
+
+@property(nonatomic, copy) void (^groupRoleChanged)(V2TIMGroupMemberRole role);
+@property(nonatomic, copy) void (^pinGroupMessageChanged)(NSArray *);
+
 @end
 
 @interface TUIMessageBaseDataProvider (IMSDK)

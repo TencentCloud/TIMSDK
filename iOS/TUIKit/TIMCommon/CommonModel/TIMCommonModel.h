@@ -344,6 +344,8 @@ typedef enum : NSUInteger {
 
 @property(nonatomic, strong) NSMutableArray *faces;
 
+@property(nonatomic, strong) NSDictionary *facesMap;
+
 /**
  *  The flag of indicating whether to display the delete button
  *  When set to YES, FaceView will display a "delete" icon in the lower right corner of the emoticon view. Clicking the icon can delete the entered emoticon

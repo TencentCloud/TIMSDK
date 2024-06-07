@@ -16,7 +16,7 @@
 #import "UIColor+TUIHexColor.h"
 #import "UIView+TUILayout.h"
 #import "UIView+TUIToast.h"
-
+#import "NSString+TUIUtil.h"
 @import ImSDK_Plus;
 
 #define tui_weakify(object) \
@@ -702,6 +702,9 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 #define TUICore_TUIChatService_GetDisplayStringMethod @"TUICore_TUIChatService_GetDisplayStringMethod"
 #define TUICore_TUIChatService_GetDisplayStringMethod_MsgKey @"msg"
+
+#define TUICore_TUIChatService_AsyncGetDisplayStringMethod @"TUICore_TUIChatService_AsyncGetDisplayStringMethod"
+#define TUICore_TUIChatService_AsyncGetDisplayStringMethod_MsgListKey @"TUICore_TUIChatService_AsyncGetDisplayStringMethod_MsgListKey"
 
 #define TUICore_TUIChatService_SendMessageMethod @"TUICore_TUIChatService_SendMessageMethod"
 #define TUICore_TUIChatService_SendMessageMethod_MsgKey @"TUICore_TUIChatService_SendMessageMethod_MsgKey"

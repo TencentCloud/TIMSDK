@@ -10,11 +10,12 @@ import UIKit
 import SnapKit
 import TUICore
 
-public class TUICallRecordCallsViewController: UIViewController {
+class TUICallRecordCallsViewController: UIViewController {
     
     private let viewModel = TUICallRecordCallsViewModel()
     private let dataSourceObserver = Observer()
     
+    // 头部导航容器视图
     private lazy var containerView: UIView = {
         let view = UIView()
         if viewModel.recordCallsUIStyle == .classic {
@@ -27,6 +28,7 @@ public class TUICallRecordCallsViewController: UIViewController {
         return view
     }()
     
+    // 开始编辑按钮
     private lazy var editButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(TUICallKitCommon.getBundleImage(name: "ic_calls_edit"), for: .normal)
@@ -35,6 +37,7 @@ public class TUICallRecordCallsViewController: UIViewController {
         return button
     }()
     
+    // 清除所有记录按钮
     private lazy var clearButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle(TUICallKitLocalize(key: "TUICallKit.Recents.clear"), for: .normal)
@@ -48,6 +51,7 @@ public class TUICallRecordCallsViewController: UIViewController {
         return button
     }()
     
+    // 编辑完成按钮
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle(TUICallKitLocalize(key: "TUICallKit.Recents.done"), for: .normal)
@@ -60,6 +64,7 @@ public class TUICallRecordCallsViewController: UIViewController {
         return button
     }()
     
+    // 分段控制视图
     private lazy var segmentedControl: UISegmentedControl = {
         let items = [TUICallKitLocalize(key: "TUICallKit.Recents.all"), TUICallKitLocalize(key: "TUICallKit.Recents.missed")]
         let control = UISegmentedControl(items: items as [Any])
@@ -67,6 +72,7 @@ public class TUICallRecordCallsViewController: UIViewController {
         return control
     }()
     
+    // 无最近通话提示文本
     private lazy var notRecordCallsLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.textColor = UIColor.gray
@@ -76,6 +82,7 @@ public class TUICallRecordCallsViewController: UIViewController {
         return label
     }()
     
+    // 列表表头视图
     private lazy var tableHeaderView: UIView = {
         let tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 80))
         let label = UILabel()
@@ -92,6 +99,7 @@ public class TUICallRecordCallsViewController: UIViewController {
         return tableHeaderView
     }()
     
+    // 通话记录列表
     private lazy var recordCallsList: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.tableHeaderView = tableHeaderView
@@ -133,17 +141,17 @@ public class TUICallRecordCallsViewController: UIViewController {
     }
     
     // 页面出现的时候注册刷行UI的数据回调，页面消失关闭，防止页面UI刷新在非主线程中运行
-    public override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         registerObserve()
         viewModel.queryRecentCalls()
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         unregisterObserve()
     }
     
     // MARK: UI Specification Processing
-    public override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         constructViewHierarchy()
         activateConstraints()
@@ -254,17 +262,16 @@ public class TUICallRecordCallsViewController: UIViewController {
 }
 
 extension TUICallRecordCallsViewController: UITableViewDataSource, UITableViewDelegate {
-    
-    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
     
     @available(iOS 11.0, *)
-    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteRowAction = UIContextualAction(style: .normal,
                                                  title: TUICallKitLocalize(key: "TUICallKit.Recents.delete"))
         { [weak self] action, sourceView, completionHandler in
@@ -278,15 +285,15 @@ extension TUICallRecordCallsViewController: UITableViewDataSource, UITableViewDe
         return config
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64.0
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.dataSource.value.count
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(TUICallRecordCallsCell.self),
                                                        for: indexPath) as? TUICallRecordCallsCell else { return UITableViewCell() }
         cell.moreBtnClickedHandler =  { [weak self] in
@@ -298,8 +305,7 @@ extension TUICallRecordCallsViewController: UITableViewDataSource, UITableViewDe
         return cell
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.repeatCall(indexPath)
     }
-    
 }

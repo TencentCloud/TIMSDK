@@ -252,8 +252,8 @@
                                                                             TUISecondConfirmBtnInfo *confirmBtnInfo = [[TUISecondConfirmBtnInfo alloc] init];
                                                                             confirmBtnInfo.tile = TIMCommonLocalizableString(Delete);
                                                                             confirmBtnInfo.click = ^{
-                                                                              self.editing = NO;
                                                                               [self.dataProvider removeConversation:cellData];
+                                                                              self.editing = NO;
                                                                             };
                                                                             [TUISecondConfirm show:TIMCommonLocalizableString(TUIKitConversationTipsDelete)
                                                                                      cancelBtnInfo:cancelBtnInfo
@@ -359,8 +359,8 @@
                             TUISecondConfirmBtnInfo *confirmBtnInfo = [[TUISecondConfirmBtnInfo alloc] init];
                             confirmBtnInfo.tile = TIMCommonLocalizableString(Delete);
                             confirmBtnInfo.click = ^{
-                              self.editing = NO;
                               [self.dataProvider removeConversation:cellData];
+                              self.editing = NO;
                             };
                             [TUISecondConfirm show:TIMCommonLocalizableString(TUIKitConversationTipsDelete)
                                      cancelBtnInfo:cancelBtnInfo

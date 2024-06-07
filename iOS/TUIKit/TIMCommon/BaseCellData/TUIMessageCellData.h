@@ -12,6 +12,7 @@
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TIMDefine.h>
 #import "TUIMessageCellLayout.h"
+@class TUIRelationUserModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -208,13 +209,6 @@ typedef NS_ENUM(NSUInteger, TMsgSource) {
 
 @property(nonatomic, assign) CGSize messageContainerAppendSize;
 
-/**
- *  ()
- * Information about friends who participate in message editing (reply) in the current conversation
- */
-
-@property(nonatomic, strong) NSDictionary *messageModifyUserInfos;
-
 /// Size for bottom container.
 @property(nonatomic, assign) CGSize bottomContainerSize;
 
@@ -244,6 +238,14 @@ typedef NS_ENUM(NSUInteger, TMsgSource) {
 - (instancetype)init NS_UNAVAILABLE;
 
 @property(nonatomic, assign) CGSize msgStatusSize;
+
+/**
+ * TUIChat supports batch retrieval of user information except for the message sender's nickname.
+ * You can override the requestForAdditionalUserInfo method in your custom TUIMessageCellData to return the user IDs which you want to retrieve, and directly use the additionalUserInfoResult property in your custom TUIMessageCell to render the UI as needed.
+ * After TUIChat retrieves the information, it will assign it to the additionalUserInfoResult property and asynchronously refresh your cell.
+ */
+- (NSArray<NSString *> *)requestForAdditionalUserInfo;
+@property(nonatomic, strong) NSDictionary<NSString *, TUIRelationUserModel *> *additionalUserInfoResult;
 
 @end
 

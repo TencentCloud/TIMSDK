@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) TUIMessageCellData *originCellData;
 
+@property(nonatomic, assign) BOOL supportForReply;
+
 @end
 
 NS_ASSUME_NONNULL_END

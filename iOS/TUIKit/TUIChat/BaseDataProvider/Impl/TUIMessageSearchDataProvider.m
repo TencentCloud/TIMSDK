@@ -151,6 +151,9 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
 
         NSArray *msgs = results.reverseObjectEnumerator.allObjects;
         NSMutableArray *uiMsgs = [self transUIMsgFromIMMsg:msgs];
+        if (uiMsgs.count == 0) {
+            return;
+        }
         [self getGroupMessageReceipts:msgs
             uiMsgs:uiMsgs
             succ:^{
@@ -224,6 +227,12 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
           }
 
           NSMutableArray<TUIMessageCellData *> *uiMsgs = [self transUIMsgFromIMMsg:msgs];
+          if (uiMsgs.count == 0) {
+              if (self.loadMsgSucceedBlock) {
+                  self.loadMsgSucceedBlock(self.isOlderNoMoreMsg, self.isNewerNoMoreMsg, self.isFirstLoad, uiMsgs);
+              }
+              return;
+          }
           [self getGroupMessageReceipts:msgs
               uiMsgs:uiMsgs
               succ:^{

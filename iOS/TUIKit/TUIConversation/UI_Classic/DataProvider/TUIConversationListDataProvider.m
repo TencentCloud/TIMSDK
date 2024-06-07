@@ -7,17 +7,76 @@
 //
 
 #import "TUIConversationListDataProvider.h"
+#import <TIMCommon/NSString+TUIEmoji.h>
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
 #import "TUIConversationCellData.h"
-#import <TIMCommon/NSString+TUIEmoji.h>
 
 @implementation TUIConversationListDataProvider
 - (Class)getConversationCellClass {
     return [TUIConversationCellData class];
 }
 
+- (void)asnycGetLastMessageDisplay:(NSArray<TUIConversationCellData *> *)duplicateDataList addedDataList:(NSArray<TUIConversationCellData *> *)addedDataList {
+    NSMutableArray *allConversationList = [NSMutableArray array];
+    [allConversationList addObjectsFromArray:duplicateDataList];
+    [allConversationList addObjectsFromArray:addedDataList];
+
+    NSMutableArray *messageList = [NSMutableArray array];
+    for (TUIConversationCellData *cellData in allConversationList) {
+        if (cellData.lastMessage && cellData.lastMessage.msgID) {
+            [messageList addObject:cellData.lastMessage];
+        }
+    }
+
+    if (messageList.count == 0) {
+        return;
+    }
+
+    __weak typeof(self) weakSelf = self;
+    NSDictionary *param = @{TUICore_TUIChatService_AsyncGetDisplayStringMethod_MsgListKey : messageList};
+    [TUICore callService:TUICore_TUIChatService
+                  method:TUICore_TUIChatService_AsyncGetDisplayStringMethod
+                   param:param
+          resultCallback:^(NSInteger errorCode, NSString *_Nonnull errorMessage, NSDictionary *_Nonnull param) {
+            if (0 != errorCode) {
+                return;
+            }
+
+            // cache
+            NSMutableDictionary *dictM = [NSMutableDictionary dictionaryWithDictionary:weakSelf.lastMessageDisplayMap];
+            [param enumerateKeysAndObjectsUsingBlock:^(NSString *msgID, NSString *displayString, BOOL *_Nonnull stop) {
+              [dictM setObject:displayString forKey:msgID];
+            }];
+            weakSelf.lastMessageDisplayMap = [NSDictionary dictionaryWithDictionary:dictM];
+
+            // Refresh if needed
+            NSMutableArray *needRefreshConvList = [NSMutableArray array];
+            for (TUIConversationCellData *cellData in allConversationList) {
+                if (cellData.lastMessage && cellData.lastMessage.msgID && [param.allKeys containsObject:cellData.lastMessage.msgID]) {
+                    cellData.subTitle = [self getLastDisplayString:cellData.innerConversation];
+                    cellData.foldSubTitle = [self getLastDisplayStringForFoldList:cellData.innerConversation];
+                    [needRefreshConvList addObject:cellData];
+                }
+            }
+            NSMutableDictionary<NSString *, NSNumber *> *conversationMap = [NSMutableDictionary dictionary];
+            for (TUIConversationCellData *item in weakSelf.conversationList) {
+                if (item.conversationID) {
+                    [conversationMap setObject:@([weakSelf.conversationList indexOfObject:item]) forKey:item.conversationID];
+                }
+            }
+            [weakSelf handleUpdateConversationList:needRefreshConvList positions:conversationMap];
+          }];
+}
+
 - (NSString *)getDisplayStringFromService:(V2TIMMessage *)msg {
+    // from cache
+    NSString *displayString = [self.lastMessageDisplayMap objectForKey:msg.msgID];
+    if (displayString.length > 0) {
+        return displayString;
+    }
+
+    // from TUIChat
     NSDictionary *param = @{TUICore_TUIChatService_GetDisplayStringMethod_MsgKey : msg};
     return [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_GetDisplayStringMethod param:param];
 }
@@ -40,7 +99,7 @@
         NSAttributedString *draft = [[NSAttributedString alloc] initWithString:TIMCommonLocalizableString(TUIKitMessageTypeDraftFormat)
                                                                     attributes:@{NSForegroundColorAttributeName : RGB(250, 81, 81)}];
         [attributeString appendAttributedString:draft];
-        
+
         NSString *draftContentStr = [self getDraftContent:conv];
         draftContentStr = [draftContentStr getLocalizableStringWithFaceContent];
         NSAttributedString *draftContent = [[NSAttributedString alloc] initWithString:draftContentStr
@@ -64,8 +123,7 @@
          * If there is no external customization, get the lastMsg display information through the message module
          */
         if (lastMsgStr.length == 0 && conv.lastMessage) {
-            NSDictionary *param = @{TUICore_TUIChatService_GetDisplayStringMethod_MsgKey : conv.lastMessage};
-            lastMsgStr = [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_GetDisplayStringMethod param:param];
+            lastMsgStr = [self getDisplayStringFromService:conv.lastMessage];
         }
 
         /**
@@ -75,12 +133,10 @@
             return nil;
         }
 
-        if(hasRiskContent && !isRevoked) {
-            [attributeString appendAttributedString:
-             [[NSAttributedString alloc]initWithString:lastMsgStr
-                                            attributes:@{NSForegroundColorAttributeName : RGB(233, 68, 68)}]];
-        }
-        else {
+        if (hasRiskContent && !isRevoked) {
+            [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr
+                                                                                    attributes:@{NSForegroundColorAttributeName : RGB(233, 68, 68)}]];
+        } else {
             [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
         }
     }
@@ -101,9 +157,8 @@
      * If the status of the lastMsg of the conversation is sending or failed, display the sending status of the message (the draft box does not need to display
      * the sending status)
      */
-    if (!conv.draftText && (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status
-                            || V2TIM_MSG_STATUS_SEND_FAIL == conv.lastMessage.status
-                            || hasRiskContent) && !isRevoked) {
+    if (!conv.draftText && (V2TIM_MSG_STATUS_SENDING == conv.lastMessage.status || V2TIM_MSG_STATUS_SEND_FAIL == conv.lastMessage.status || hasRiskContent) &&
+        !isRevoked) {
         UIFont *textFont = [UIFont systemFontOfSize:14];
         NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@" " attributes:@{NSFontAttributeName : textFont}];
         NSTextAttachment *attchment = [[NSTextAttachment alloc] init];

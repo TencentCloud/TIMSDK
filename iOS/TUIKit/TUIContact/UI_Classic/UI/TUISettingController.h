@@ -33,6 +33,7 @@
 @end
 
 @interface TUISettingController : UITableViewController
+@property(nonatomic, strong) NSString *lastLoginUser;
 @property(nonatomic, weak) id<TUISettingControllerDelegate> delegate;
 
 @property(nonatomic, assign) BOOL showPersonalCell;

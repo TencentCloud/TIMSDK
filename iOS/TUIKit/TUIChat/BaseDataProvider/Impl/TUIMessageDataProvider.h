@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable TUIMessageCellData *)getCellData:(V2TIMMessage *)message;
 
 #pragma mark - Last message parser
++ (void)asyncGetDisplayString:(NSArray<V2TIMMessage *> *)messageList callback:(void(^)(NSDictionary<NSString *, NSString *> *))callback;
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message;
 
 #pragma mark - Data source operate

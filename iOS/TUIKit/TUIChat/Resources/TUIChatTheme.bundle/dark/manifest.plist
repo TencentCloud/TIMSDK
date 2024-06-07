@@ -122,6 +122,20 @@
 	<string>#2d2d2d</string>
 	<key>chat_pop_menu_text_color</key>
 	<string>#D9D9D9</string>
+	<key>chat_pop_group_pin_left_color</key>
+	<string>#6395DA</string>
+	<key>chat_pop_group_pin_title_color</key>
+	<string>#CCCCCC</string>
+	<key>chat_pop_group_pin_subtitle_color</key>
+	<string>#D9D9D9</string>
+	<key>chat_pop_group_pin_line_color</key>
+	<string>#505050</string>
+	<key>chat_pop_group_pin_back_color</key>
+	<string>#181818</string>
+	<key>chat_pop_group_pin_up_arrow_img</key>
+	<string>chat_up_arrow_icon.png</string>
+	<key>chat_pop_group_pin_down_arrow_img</key>
+	<string>chat_down_arrow_icon.png</string>
 	<key>chat_more_group_live_img</key>
 	<string>chat_more_group_live.png</string>
 	<key>chat_icon_copy_img</key>
@@ -142,6 +156,10 @@
 	<string>icon_reference</string>
 	<key>chat_icon_translate_img</key>
 	<string>icon_translate</string>
+	<key>chat_icon_group_pin_img</key>
+	<string>icon_pin</string>
+	<key>chat_icon_group_unpin_img</key>
+	<string>icon_unpin</string>
 	<key>chat_icon_convert_voice_to_text_img</key>
 	<string>icon_convert_voice_to_text</string>
 	<key>chat_icon_hide_img</key>

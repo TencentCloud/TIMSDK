@@ -7,11 +7,12 @@
 //
 
 #import "TUISearchGroupDataProvider.h"
+#import "NSString+TUIUtil.h"
 
 static BOOL match(NSArray *keywords, NSString *text) {
     BOOL isMatch = NO;
     for (NSString *keyword in keywords) {
-        if ([text.lowercaseString containsString:keyword]) {
+        if ([text.lowercaseString tui_containsString:keyword]) {
             isMatch |= YES;
             break;
         }
@@ -199,29 +200,32 @@ static BOOL match(NSArray *keywords, NSString *text) {
                   NSMutableArray *arrayM = [NSMutableArray array];
                   for (V2TIMGroupMemberFullInfo *memberInfo in members) {
                       TUISearchGroupMemberMatchResult *memberMatchResult = [[TUISearchGroupMemberMatchResult alloc] init];
-                      if (match(keywords, memberInfo.userID)) {
-                          memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldUserID;
-                          memberMatchResult.memberMatchValue = memberInfo.userID;
-                          [arrayM addObject:memberMatchResult];
-                          continue;
-                      }
-                      if (match(keywords, memberInfo.nickName)) {
-                          memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldNickName;
-                          memberMatchResult.memberMatchValue = memberInfo.nickName;
-                          [arrayM addObject:memberMatchResult];
-                          continue;
-                      }
-                      if (match(keywords, memberInfo.friendRemark)) {
-                          memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldRemark;
-                          memberMatchResult.memberMatchValue = memberInfo.friendRemark;
-                          [arrayM addObject:memberMatchResult];
-                          continue;
-                      }
                       if (match(keywords, memberInfo.nameCard)) {
-                          memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldNameCard;
-                          memberMatchResult.memberMatchValue = memberInfo.nameCard;
-                          [arrayM addObject:memberMatchResult];
-                          continue;
+                        memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldNameCard;
+                        memberMatchResult.memberMatchValue = memberInfo.nameCard;
+                        [arrayM addObject:memberMatchResult];
+                        continue;
+                      }
+                      
+                      if (match(keywords, memberInfo.friendRemark)) {
+                        memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldRemark;
+                        memberMatchResult.memberMatchValue = memberInfo.friendRemark;
+                        [arrayM addObject:memberMatchResult];
+                        continue;
+                      }
+                      
+                      if (match(keywords, memberInfo.nickName)) {
+                        memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldNickName;
+                        memberMatchResult.memberMatchValue = memberInfo.nickName;
+                        [arrayM addObject:memberMatchResult];
+                        continue;
+                      }
+                      
+                      if (match(keywords, memberInfo.userID)) {
+                        memberMatchResult.memberMatchField = TUISearchGroupMemberMatchFieldUserID;
+                        memberMatchResult.memberMatchValue = memberInfo.userID;
+                        [arrayM addObject:memberMatchResult];
+                        continue;
                       }
                   }
                   result.matchMembers = arrayM;

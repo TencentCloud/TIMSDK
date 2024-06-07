@@ -47,6 +47,8 @@
 
 static UIView *gCustomTopView;
 static UIView *gTopExentsionView;
+static UIView *gGroupPinTopView;
+static CGRect gCustomTopViewRect;
 
 @interface TUIBaseChatViewController_Minimalist () <TUIBaseMessageControllerDelegate_Minimalist,
                                                     TUIInputControllerDelegate_Minimalist,
@@ -143,30 +145,61 @@ static UIView *gTopExentsionView;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self configTopViewsViewWillAppear];
+}
+
+- (void)configTopViewsViewWillAppear {
     if (gCustomTopView.superview != self.view) {
+        if (CGRectEqualToRect(gCustomTopView.frame, CGRectZero)) {
+            gCustomTopView.frame = CGRectMake(0, CGRectGetMaxY(gTopExentsionView.frame), gCustomTopViewRect.size.width, gCustomTopViewRect.size.height);
+        }
         [self.view addSubview:gCustomTopView];
     }
     if (gTopExentsionView.superview != self.view) {
         [self.view addSubview:gTopExentsionView];
     }
-
+    if (gGroupPinTopView.superview != self.view && self.conversationData.groupID.length > 0){
+        [self.view addSubview:gGroupPinTopView];
+    }
+    
+    [self reloadTopViewsAndMessagePage];
 }
+
 - (void)setupTopViews {
     if (gTopExentsionView) {
         [gTopExentsionView removeFromSuperview];
     }
-    gTopExentsionView = [[UIView alloc] init];
+    else {
+        gTopExentsionView = [[UIView alloc] init];
+        gTopExentsionView.clipsToBounds = YES;
+    }
+    if (gGroupPinTopView) {
+        [gGroupPinTopView removeFromSuperview];
+    }
+    else {
+        gGroupPinTopView = [[UIView alloc] init];
+        gGroupPinTopView.clipsToBounds = YES;
+    }
+    
     if (gTopExentsionView) {
         [self setupTopExentsionView];
     }
     if (gCustomTopView) {
         [self setupCustomTopView];
-        gCustomTopView.frame = CGRectMake(0, CGRectGetMaxY(gTopExentsionView.frame), gCustomTopView.frame.size.width, gCustomTopView.frame.size.height);
+        gCustomTopView.frame = CGRectMake(0, CGRectGetMaxY(gTopExentsionView.frame), gCustomTopViewRect.size.width, gCustomTopViewRect.size.height);
+    }
+    if (gGroupPinTopView && self.conversationData.groupID.length > 0) {
+        [self setupGroupPinTopView];
+        gGroupPinTopView.frame = CGRectMake(0, CGRectGetMaxY(gCustomTopView.frame), gGroupPinTopView.frame.size.width, gGroupPinTopView.frame.size.height);;
     }
 }
 
 - (void)reloadTopViewsAndMessagePage {
     gCustomTopView.frame = CGRectMake(0, CGRectGetMaxY(gTopExentsionView.frame), gCustomTopView.frame.size.width, gCustomTopView.frame.size.height);
+    if (gGroupPinTopView) {
+        gGroupPinTopView.frame = CGRectMake(0, CGRectGetMaxY(gCustomTopView.frame), gGroupPinTopView.frame.size.width, gGroupPinTopView.frame.size.height);;
+    }
     CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
     _messageController.view.frame = CGRectMake(0, [self topMarginByCustomView], self.view.frame.size.width,
                                                self.view.frame.size.height - textViewHeight - Bottom_SafeHeight - [self topMarginByCustomView]);
@@ -414,6 +447,14 @@ static UIView *gTopExentsionView;
 
 }
 
+- (void)setupGroupPinTopView {
+    if (gGroupPinTopView.superview != self.view) {
+        [self.view addSubview:gGroupPinTopView];
+    }
+    gGroupPinTopView.backgroundColor = [UIColor clearColor];
+    gGroupPinTopView.frame = CGRectMake(0, 0, self.view.frame.size.width, 0);
+    
+}
 - (void)setupCustomTopView {
     if (gCustomTopView.superview != self.view) {
         [self.view addSubview:gCustomTopView];
@@ -603,10 +644,29 @@ static UIView *gTopExentsionView;
 
 + (void)setCustomTopView:(UIView *)view {
     gCustomTopView = view;
+    gCustomTopViewRect = view.frame;
+    gCustomTopView.clipsToBounds = YES;
 }
 
 + (UIView *)customTopView {
     return gCustomTopView;
+}
+
++ (UIView *)groupPinTopView {
+    return gGroupPinTopView;
+}
+
++ (UIView *)topAreaBottomView {
+    if (gGroupPinTopView) {
+        return gGroupPinTopView;
+    }
+    if (gCustomTopView) {
+        return gCustomTopView;
+    }
+    if (gTopExentsionView) {
+        return gTopExentsionView;
+    }
+    return nil;
 }
 
 #pragma mark - Getters & Setters
@@ -619,11 +679,14 @@ static UIView *gTopExentsionView;
 }
 
 - (CGFloat)topMarginByCustomView {
-    CGFloat gCutomTopViewH = gCustomTopView ? gCustomTopView.mm_h : 0 ;
-    CGFloat gTopExtsionH = gTopExentsionView ? gTopExentsionView.mm_h : 0;
-    CGFloat height = gCutomTopViewH + gTopExtsionH;
+    CGFloat gCutomTopViewH = gCustomTopView && gCustomTopView.superview ? gCustomTopView.mm_h : 0 ;
+    CGFloat gTopExtsionH = gTopExentsionView && gTopExentsionView.superview ? gTopExentsionView.mm_h : 0;
+    CGFloat gGroupPinTopViewH = gGroupPinTopView && gGroupPinTopView.superview ? gGroupPinTopView.mm_h : 0;
+
+    CGFloat height = gCutomTopViewH + gTopExtsionH + gGroupPinTopViewH;
     return height;
 }
+
 
 #pragma mark - Event Response
 

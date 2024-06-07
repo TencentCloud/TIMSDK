@@ -14,6 +14,7 @@ enum UserUpdate {
     case delete(Int)
     case insert(User, Int)
     case move(Int, Int)
+    case reload(Int)
 }
 
 class User {
@@ -31,6 +32,7 @@ class User {
     let playoutVolume: Observable<Float> = Observable(0)
     
     var index: Int = -1
+    var lastUpdate = Date()
     
     static func convertUserFromImFullInfo(user: V2TIMGroupMemberFullInfo) -> User {
         let dstUser = User()
@@ -89,6 +91,12 @@ class User {
         }
         
         return user.id.value
+    }
+    
+    var isUpdated: Bool? {
+        didSet {
+            lastUpdate = Date()
+        }
     }
     
 }

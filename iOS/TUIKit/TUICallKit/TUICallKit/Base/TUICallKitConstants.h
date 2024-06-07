@@ -10,9 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Signaling timeout duration, default 30s
+// 信令超时时长，默认 30s
 static const int TUI_CALLKIT_SIGNALING_MAX_TIME = 30;
-// Default avatar
+// 默认头像
 static NSString * const TUI_CALL_DEFAULT_AVATAR = @"https://imgcache.qq.com/qcloud/public/static//avatar1_100.20191230.png";
 
 @interface TUICallKitConstants : NSObject

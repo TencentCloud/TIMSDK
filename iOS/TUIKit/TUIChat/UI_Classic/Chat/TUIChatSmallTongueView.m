@@ -114,11 +114,11 @@
     if (tongue.type == TUIChatSmallTongueType_SomeoneAt) {
         NSString *atMeStr = TIMCommonLocalizableString(TUIKitConversationTipsAtMe);
         NSString *atAllStr = TIMCommonLocalizableString(TUIKitConversationTipsAtAll);
-        if ([tongue.atTipsStr containsString:atMeStr]) {
+        if ([tongue.atTipsStr tui_containsString:atMeStr]) {
             atMeStr = [atMeStr stringByReplacingOccurrencesOfString:@"[" withString:@""];
             atMeStr = [atMeStr stringByReplacingOccurrencesOfString:@"]" withString:@""];
             [titleCacheFormat setObject:atMeStr forKey:@(TUIChatSmallTongueType_SomeoneAt)];
-        } else if ([tongue.atTipsStr containsString:atAllStr]) {
+        } else if ([tongue.atTipsStr tui_containsString:atAllStr]) {
             atAllStr = [atAllStr stringByReplacingOccurrencesOfString:@"[" withString:@""];
             atAllStr = [atAllStr stringByReplacingOccurrencesOfString:@"]" withString:@""];
             [titleCacheFormat setObject:atAllStr forKey:@(TUIChatSmallTongueType_SomeoneAt)];

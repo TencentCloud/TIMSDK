@@ -32,6 +32,7 @@
 @end
 
 @interface TUISettingController_Minimalist : UITableViewController
+@property(nonatomic, strong) NSString *lastLoginUser;
 @property(nonatomic, weak) id<TUISettingControllerDelegate_Minimalist> delegate;
 
 @property(nonatomic, assign) BOOL showPersonalCell;

@@ -11,6 +11,7 @@
 #import <TUICore/TUIThemeManager.h>
 #import "TUISearchGroupDataProvider.h"
 #import "TUISearchResultCellModel.h"
+#import <TUICore/NSString+TUIUtil.h>
 
 TUISearchParamKey TUISearchChatHistoryParamKeyConversationId = @"TUISearchChatHistoryParamKeyConversationId";
 TUISearchParamKey TUISearchChatHistoryParamKeyCount = @"TUISearchChatHistoryParamKeyCount";
@@ -141,19 +142,21 @@ typedef void (^TUISearchResultCallback)(BOOL succ, NSString *__nullable errMsg, 
           NSMutableArray *arrayM = [NSMutableArray array];
           for (V2TIMFriendInfoResult *result in infoList) {
               TUISearchResultCellModel *cellModel = [[TUISearchResultCellModel alloc] init];
-              NSString *title = result.friendInfo.userFullInfo.nickName;
+              NSString *title = result.friendInfo.friendRemark;
               if (title.length == 0) {
-                  title = result.friendInfo.friendRemark;
+                  title = result.friendInfo.userFullInfo.nickName;
               }
               if (title.length == 0) {
                   title = result.friendInfo.userID;
               }
 
               NSString *why = @"";
-              if ([result.friendInfo.userID.lowercaseString containsString:keyword.lowercaseString]) {
-                  why = result.friendInfo.userID;
-              } else if ([result.friendInfo.friendRemark.lowercaseString containsString:keyword.lowercaseString]) {
+              if ([result.friendInfo.friendRemark.lowercaseString containsString:keyword.lowercaseString]) {
                   why = result.friendInfo.friendRemark;
+              } else if ([result.friendInfo.userFullInfo.nickName.lowercaseString containsString:keyword.lowercaseString]) {
+                  why = result.friendInfo.userFullInfo.nickName;
+              } else if ([result.friendInfo.userID.lowercaseString containsString:keyword.lowercaseString]) {
+                  why = result.friendInfo.userID;
               }
               if (why.length) {
                   if ([why isEqualToString:title]) {
@@ -379,7 +382,7 @@ typedef void (^TUISearchResultCallback)(BOOL succ, NSString *__nullable errMsg, 
         return nil;
     }
 
-    if (key == nil || key.length == 0 || ![text.lowercaseString containsString:key.lowercaseString]) {
+    if (key == nil || key.length == 0 || ![text.lowercaseString tui_containsString:key.lowercaseString]) {
         NSAttributedString *attributeString = [[NSAttributedString alloc] initWithString:text
                                                                               attributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
         return attributeString;
@@ -409,21 +412,21 @@ typedef void (^TUISearchResultCallback)(BOOL succ, NSString *__nullable errMsg, 
         return @"";
     }
 
-    if ((msg.elemType == V2TIM_ELEM_TYPE_TEXT) && [msg.textElem.text containsString:key]) {
+    if ((msg.elemType == V2TIM_ELEM_TYPE_TEXT) && [msg.textElem.text tui_containsString:key]) {
         return msg.textElem.text;
-    } else if ((msg.elemType == V2TIM_ELEM_TYPE_IMAGE) && [msg.imageElem.path containsString:key]) {
+    } else if ((msg.elemType == V2TIM_ELEM_TYPE_IMAGE) && [msg.imageElem.path tui_containsString:key]) {
         return msg.imageElem.path;
-    } else if ((msg.elemType == V2TIM_ELEM_TYPE_SOUND) && [msg.soundElem.path containsString:key]) {
+    } else if ((msg.elemType == V2TIM_ELEM_TYPE_SOUND) && [msg.soundElem.path tui_containsString:key]) {
         return msg.soundElem.path;
     } else if (msg.elemType == V2TIM_ELEM_TYPE_VIDEO) {
-        if ([msg.videoElem.videoPath containsString:key]) {
+        if ([msg.videoElem.videoPath tui_containsString:key]) {
             return msg.videoElem.videoPath;
-        } else if ([msg.videoElem.snapshotPath containsString:key]) {
+        } else if ([msg.videoElem.snapshotPath tui_containsString:key]) {
             return msg.videoElem.snapshotPath;
         } else {
             return @"";
         }
-    } else if ((msg.elemType == V2TIM_ELEM_TYPE_FILE) && [msg.fileElem.path containsString:key]) {
+    } else if ((msg.elemType == V2TIM_ELEM_TYPE_FILE) && [msg.fileElem.path tui_containsString:key]) {
         return msg.fileElem.path;
     } else if (msg.elemType == V2TIM_ELEM_TYPE_MERGER) {
         NSArray *abM = msg.mergerElem.abstractList;
@@ -432,9 +435,9 @@ typedef void (^TUISearchResultCallback)(BOOL succ, NSString *__nullable errMsg, 
             abs = [abs stringByAppendingString:ab];
             abs = [abs stringByAppendingString:@","];
         }
-        if ([msg.mergerElem.title containsString:key]) {
+        if ([msg.mergerElem.title tui_containsString:key]) {
             return msg.mergerElem.title;
-        } else if ([abs containsString:key]) {
+        } else if ([abs tui_containsString:key]) {
             return abs;
         } else {
             return @"";

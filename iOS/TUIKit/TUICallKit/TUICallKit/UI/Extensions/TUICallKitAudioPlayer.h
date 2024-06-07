@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 typedef enum : NSUInteger {
-    CallingAudioTypeHangup,
-    CallingAudioTypeCalled,
-    CallingAudioTypeDial,
+    CallingAudioTypeHangup,     // 挂断
+    CallingAudioTypeCalled,     // 被动呼叫
+    CallingAudioTypeDial,       // 主动呼叫
 } CallingAudioType;
 
 extern BOOL playAudioWithFilePath(NSString *filePath);

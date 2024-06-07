@@ -140,7 +140,7 @@
         return nil;
     }
 
-    if (key == nil || key.length == 0 || ![text.lowercaseString containsString:key.lowercaseString]) {
+    if (key == nil || key.length == 0 || ![text.lowercaseString tui_containsString:key.lowercaseString]) {
         NSAttributedString *attributeString = [[NSAttributedString alloc] initWithString:text
                                                                               attributes:@{NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
         return attributeString;

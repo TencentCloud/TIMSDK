@@ -198,6 +198,7 @@
 "TUIKitGroupProfileMessageDoNotDisturb" = "消息免打扰";
 "TUIKitGroupProfileStickyOnTop" = "置顶聊天";
 "TUIKitGroupProfileDeleteAndExit" = "删除并退出";
+"TUIKitGroupProfileReport" = "举报";
 "TUIKitGroupProfileDissolve" = "解散该群";
 "TUIKitGroupProfileJoinDisable" = "禁止加群";
 "TUIKitGroupProfileInviteDisable" = "禁止邀请";
@@ -223,6 +224,8 @@
 "TUIKitGroupKickOffTipsFormat" = "您已被踢出 %@ 群";
 "TUIKitGroupDropoutTipsFormat" = "您已退出 %@ 群";
 
+"TUIKitGroupMessagePinRemove" = "移除";
+
 "TUIKitMessageTipsNormalRecallMessage" = "有一条消息被撤回";
 "TUIKitMessageTipsYouRecallMessage" = "您撤回了一条消息";
 "TUIKitMessageTipsReEditMessage" = "重新编辑";
@@ -246,6 +249,9 @@
 "TUIKitMessageTipsUnmute" = "被解除禁言";
 "TUIKitMessageTipsRecallRiskContent" = "违规消息被撤回";
 "TUIKitMessageDisplayRiskContent" = "[违规消息]";
+"TUIKitMessageTipsGroupPinMessage" = "\"%@\"置顶了一条消息";
+"TUIKitMessageTipsGroupUnPinMessage" = "\"%@\"移除了一条置顶消息";
+
 
 
 "TUIKitSignalingFinishGroupChat" = "结束群聊";
@@ -498,10 +504,19 @@
 "TUIKitReference" = "引用";
 "TUIKitNotSupportThisMessage" = "[暂时不支持该消息展示]";
 
+"TUIKitRepliesOriginMessageRevoke" = "回复内容已撤回";
+"TUIKitReferenceOriginMessageRevoke" = "引用内容已撤回";
+
 "TUIKitAudioPlaybackStyleLoudspeaker" = "扬声器";
 "TUIKitAudioPlaybackStyleHandset" = "听筒";
 "TUIKitAudioPlaybackStyleChange2Loudspeaker" = "切换至扬声器播放";
 "TUIKitAudioPlaybackStyleChange2Handset" = "切换至听筒播放";
+
+"TUIKitGroupMessagePin" = "置顶";
+"TUIKitGroupMessageUnPin" = "取消置顶";
+"TUIKitGroupMessagePinOverLimit" = "置顶消息超过数量上限";
+"TUIKitGroupMessagePinRepeatedly" = "这条消息已经被置顶了";
+"TUIKitGroupMessageUnPinRepeatedly" = "这条消息已经被取消置顶了";
 
 "TUIKitTranslate" = "翻译";
 "TUIKitTranslateDefaultTips" = "由腾讯云 IM 提供翻译支持";
@@ -752,6 +767,8 @@
 "TIMAppChatDisconnectTitle" = "聊天(未连接)";
 "TIMAppChatSecurityWarning" = "【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。";
 "TIMAppChatSecurityWarningReport" = "点此举报";
+"TIMAppChatSecurityWarningGot" = "我知道了";
+
 "TIMAppTencentCloudIM" = "即时通信";
 "TIMAppWelcomeToChat" = "欢迎使用本 APP 体验即时通信 IM 产品服务";
 "TIMAppWelcomeToChatDetails" = "欢迎使用本 APP 体验即时通信 IM 产品服务，如发送文字/表情/富媒体消息、消息回复、表情回应、消息阅读状态、好友关系链等功能。同时，我们为您默认提供了3个不会回复的机器人好友，您可直接发起单聊、群聊会话，体验群管理等功能。";
@@ -783,6 +800,8 @@
 "TUIKitImageViewOrigin" = "查看原图";
 "TUIGroupCreateTipsMessage" = "创建群组";
 "TUICommunityCreateTipsMessage" = "创建社群";
+"TUICommunityCreateTipsMessageRuleError" = "社群 ID，必须以 @TGS#_ 开头";
+"TUIGroupCreateTipsMessageRuleError" = "非社群，不能以 @TGS#_ 开头";
 
 //languageID
 "zh-Hans" = "简体中文";

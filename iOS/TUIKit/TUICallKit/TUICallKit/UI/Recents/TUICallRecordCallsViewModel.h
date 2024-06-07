@@ -9,14 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+/// 通话结果
 typedef NS_ENUM(NSUInteger, TUICallRecordCallsType) {
     TUICallRecordCallsTypeAll,
     TUICallRecordCallsTypeMissed,
 };
 
+/// UI 风格类型
 typedef NS_ENUM(NSUInteger, TUICallKitRecordCallsUIStyle) {
-    TUICallKitRecordCallsUIStyleClassic, 
-    TUICallKitRecordCallsUIStyleMinimalist, 
+    TUICallKitRecordCallsUIStyleClassic, // 经典风格
+    TUICallKitRecordCallsUIStyleMinimalist, // 简约风格
 };
 
 @class TUICallRecordCallsCellViewModel;

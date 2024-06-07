@@ -41,6 +41,7 @@
         _sameToNextMsgSender = NO;
         _showAvatar = YES;
         _cellLayout = [self cellLayout:direction];
+        _additionalUserInfoResult = @{};
     }
     return self;
 }
@@ -75,6 +76,14 @@
     } else {
         return CGSizeMake(38, 14);
     }
+}
+
+- (NSDictionary *)messageModifyUserInfos {
+  return self.additionalUserInfoResult;
+}
+
+- (NSArray<NSString *> *)requestForAdditionalUserInfo {
+  return @[];
 }
 
 @end

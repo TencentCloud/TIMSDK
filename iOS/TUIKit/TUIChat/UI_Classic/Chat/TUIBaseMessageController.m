@@ -68,6 +68,10 @@
     [TUIMessageDataProvider setDataSourceClass:self];
 }
 
++ (void)asyncGetDisplayString:(NSArray<V2TIMMessage *> *)messageList callback:(void(^)(NSDictionary<NSString *, NSString *> *))callback {
+  [TUIMessageDataProvider asyncGetDisplayString:messageList callback:callback];
+}
+
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message {
     return [TUIMessageDataProvider getDisplayString:message];
 }
@@ -133,9 +137,11 @@
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
-    self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+    self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     self.tableView.tableHeaderView = self.indicatorView;
-    
+    if (!self.indicatorView.isAnimating) {
+        [self.indicatorView startAnimating];
+    }
     [self.messageCellConfig bindTableView:self.tableView];
 }
 
@@ -182,6 +188,7 @@
         self.messageDataProvider.dataSource = self;
     }
     [self loadMessage];
+    [self loadGroupInfo];
 }
 
 - (void)loadMessage {
@@ -221,6 +228,25 @@
     }];
 }
 
+- (void)loadGroupInfo {
+    if (self.conversationData.groupID.length > 0) {
+        [self.messageDataProvider getPinMessageList];
+        [self.messageDataProvider getSelfInfoInGroup:^{
+            
+        }];
+        __weak typeof(self) weakSelf = self;
+        self.messageDataProvider.groupRoleChanged = ^(V2TIMGroupMemberRole role) {
+            if (weakSelf.groupRoleChanged) {
+                weakSelf.groupRoleChanged(role);
+            }
+        };
+        self.messageDataProvider.pinGroupMessageChanged = ^(NSArray * _Nonnull groupPinList) {
+            if (weakSelf.pinGroupMessageChanged) {
+                weakSelf.pinGroupMessageChanged(groupPinList);
+            }
+        };
+    }
+}
 - (void)clearUImsg {
     [self.messageDataProvider clearUIMsgList];
     [self.tableView reloadData];
@@ -335,7 +361,7 @@
             TUICore_TUIChatNotify_SendMessageSubKey_Desc : @"",
             TUICore_TUIChatNotify_SendMessageSubKey_Message : cellData.innerMessage
         };
-        [TUICore notifyEvent:TUICore_TUIChatNotify subKey:TUICore_TUIChatNotify_SendMessageSubKey object:self param:nil];
+        [TUICore notifyEvent:TUICore_TUIChatNotify subKey:TUICore_TUIChatNotify_SendMessageSubKey object:self param:param];
     }
                               FailBlock:^(int code, NSString *desc) {
         @strongify(self);
@@ -385,12 +411,17 @@
 - (void)reloadUIMessage:(TUIMessageCellData *)msg {
     // innerMessage maybe changed, reload it
     NSInteger index = [self.messageDataProvider.uiMsgs indexOfObject:msg];
-    TUIMessageCellData *newData = [self.messageDataProvider transUIMsgFromIMMsg:@[ msg.innerMessage ]].lastObject;
-    __weak typeof(self) weakSelf = self;
-    [self.messageDataProvider preProcessMessage:@[ newData ]
+    NSMutableArray *newUIMsgs = [self.messageDataProvider transUIMsgFromIMMsg:@[ msg.innerMessage ]];
+    if (newUIMsgs.count == 0) {
+        return;
+    }
+    TUIMessageCellData *newUIMsg = newUIMsgs.firstObject;
+    @weakify(self)
+    [self.messageDataProvider preProcessMessage:@[ newUIMsg ]
                                        callback:^{
-        [weakSelf.messageDataProvider replaceUIMsg:newData atIndex:index];
-        [weakSelf.tableView reloadData];
+        @strongify(self)
+        [self.messageDataProvider replaceUIMsg:newUIMsg atIndex:index];
+        [self.tableView reloadData];
     }];
 }
 
@@ -983,6 +1014,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIChatPopMenuAction *quoteAction = [self setupQuoteAction:cell];
     TUIChatPopMenuAction *referenceAction = [self setupReferenceAction:cell];
     TUIChatPopMenuAction *audioPlaybackStyleAction = [self setupAudioPlaybackStyleAction:cell];
+    TUIChatPopMenuAction *groupPinAction = [self setupGroupPinAction:cell];
     
     TUIMessageCellData *data = cell.messageData;
     V2TIMMessage *imMsg = data.innerMessage;
@@ -1010,6 +1042,11 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
     if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && [TUIChatConfig defaultConfig].enablePopMenuReferenceAction) {
         [menu addAction:referenceAction];
+    }
+    BOOL isGroup = (data.innerMessage.groupID.length > 0);
+    if (isGroup && [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup] && 
+        (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) ) {
+        [menu addAction:groupPinAction];
     }
 }
 
@@ -1067,9 +1104,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIChatPopMenuAction *forwardAction = [self setupForwardAction:cell];
     TUIChatPopMenuAction *quoteAction = [self setupQuoteAction:cell];
     TUIChatPopMenuAction *referenceAction = [self setupReferenceAction:cell];
+    TUIChatPopMenuAction *groupPinAction = [self setupGroupPinAction:cell];
     
     TUIMessageCellData *data = cell.messageData;
-
+    BOOL isGroup = (data.innerMessage.groupID.length > 0);
     //Chat common Action special operator
     @weakify(self);
     @weakify(cell);
@@ -1097,6 +1135,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
           if ([TUIChatConfig defaultConfig].enablePopMenuReferenceAction) {
               [menu addAction:referenceAction];
           }
+          if (isGroup && [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup]) {
+              [menu addAction:groupPinAction];
+          }
+          
       } else {
           [menu addAction:copyAction];
           if ([self canForward:data]) {
@@ -1257,6 +1299,22 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }];
     return audioPlaybackStyleAction;
 }
+- (TUIChatPopMenuAction *)setupGroupPinAction:(TUIMessageCell *)cell {
+    @weakify(self);
+    BOOL isPinned = [self.messageDataProvider isCurrentMessagePin:self.menuUIMsg.innerMessage.msgID];
+    TUIChatPopMenuAction *groupPinAction = nil;
+    UIImage* img =
+    isPinned ? TUIChatBundleThemeImage(@"chat_icon_group_unpin_img", @"icon_unpin") : TUIChatBundleThemeImage(@"chat_icon_group_pin_img", @"icon_pin");
+    groupPinAction = [[TUIChatPopMenuAction alloc] initWithTitle:isPinned?
+                      TIMCommonLocalizableString(TUIKitGroupMessageUnPin) : TIMCommonLocalizableString(TUIKitGroupMessagePin)
+                                                            image:img
+                                                           weight:2900
+                                                         callback:^{
+                                                           @strongify(self);
+                                                           [self onGroupPin:nil currentStatus:isPinned];
+                                                         }];
+    return groupPinAction;
+}
 - (BOOL)canForward:(TUIMessageCellData *)data {
     return ![TUIMessageCellConfig isPluginCustomMessageCellData:data];
 }
@@ -1276,6 +1334,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (void)onRetryMessage:(TUIMessageCell *)cell {
+    BOOL hasRiskContent = cell.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        return;
+    }
     _reSendUIMsg = cell.messageData;
     __weak typeof(self) weakSelf = self;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitTipsConfirmResendMessage)
@@ -1481,6 +1543,30 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         [_delegate messageController:self onReferenceMessage:self.menuUIMsg];
     }
 }
+
+- (void)onGroupPin:(id)sender currentStatus:(BOOL)currentStatus {
+    NSString *groupId =  self.conversationData.groupID;
+    BOOL isPinned = currentStatus;
+    BOOL pinOrUnpin = !isPinned;
+    
+    [self.messageDataProvider pinGroupMessage:groupId message:self.menuUIMsg.innerMessage isPinned:pinOrUnpin succ:^{
+
+    } fail:^(int code, NSString *desc) {
+        if (code == 10070) {
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupMessagePinOverLimit)];
+        }
+        else if (code == 10004) {
+            if (pinOrUnpin) {
+                [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupMessagePinRepeatedly)];
+            }
+            else {
+                [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupMessageUnPinRepeatedly)];
+            }
+        }
+    }];
+}
+
+
 
 - (BOOL)supportCheckBox:(TUIMessageCellData *)data {
     if ([data isKindOfClass:TUISystemMessageCellData.class]) {
@@ -1689,6 +1775,26 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (void)didCloseMediaMessage:(TUIMessageCell *)cell {
+}
+
+- (BOOL)isCurrentUserRoleSuperAdminInGroup {
+    return [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup];
+}
+
+- (BOOL)isCurrentMessagePin:(NSString *)msgID {
+    return [self.messageDataProvider isCurrentMessagePin:msgID];
+}
+
+- (void)unPinGroupMessage:(V2TIMMessage *)innerMessage {
+    NSString *groupId =  self.conversationData.groupID;
+    BOOL isPinned = [self.messageDataProvider isCurrentMessagePin:innerMessage.msgID];
+    BOOL pinOrUnpin = !isPinned;
+
+    [self.messageDataProvider pinGroupMessage:groupId message:innerMessage isPinned:pinOrUnpin succ:^{
+        
+    } fail:^(int code, NSString *desc) {
+        
+    }];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

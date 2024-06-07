@@ -450,7 +450,7 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
 
     dispatch_async(queue, ^{
       // The path ends with gif:
-      if ([path containsString:@".gif"]) {
+      if ([path tui_containsString:@".gif"]) {
           UIImage *image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:path]];
           callback(path, image);
           return;
@@ -829,7 +829,7 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
     NSString *englishPurchase = @"https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
     NSString *language = [TUIGlobalization tk_localizableLanguageKey];
     NSURL *url = [NSURL URLWithString:chinesePurchase];
-    if (![language containsString:@"zh-"]) {
+    if (![language tui_containsString:@"zh-"]) {
         url = [NSURL URLWithString:englishPurchase];
     }
     [TUITool openLinkWithURL:url];

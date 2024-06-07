@@ -86,7 +86,7 @@
 
 - (CGSize)quotePlaceholderSizeWithType:(V2TIMElemType)type data:(TUIReplyQuoteViewData *)data {
     if (data == nil) {
-        return CGSizeMake(60, 60);
+        return CGSizeMake(20, 20);
     }
 
     return [data contentSize:kReplyQuoteViewMaxWidth - 12];
@@ -95,9 +95,8 @@
 - (TUIReplyQuoteViewData *)getQuoteData:(TUIMessageCellData *)originCellData {
     TUIReplyQuoteViewData *quoteData = nil;
     Class class = [originCellData getReplyQuoteViewDataClass];
-
     BOOL hasRiskContent = originCellData.innerMessage.hasRiskContent;
-    if (hasRiskContent){
+    if (hasRiskContent && [TIMConfig isClassicEntrance]){
         // Return text reply data in default
         TUITextReplyQuoteViewData *myData = [[TUITextReplyQuoteViewData alloc] init];
         myData.text = [TUIReplyPreviewData displayAbstract:self.originMsgType abstract:self.msgAbstract withFileName:NO isRisk:hasRiskContent];

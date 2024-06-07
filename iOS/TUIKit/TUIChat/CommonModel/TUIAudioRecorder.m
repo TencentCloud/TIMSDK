@@ -113,7 +113,7 @@
 
     if (self.isUsingCallKitRecorder) {
         /// To ensure the callkit recorder's recording time is enough for 60 seconds.
-        self.currentRecordTime += 0.1958;
+        self.currentRecordTime += 0.2;
         if (self.delegate && [self.delegate respondsToSelector:@selector(audioRecorder:didRecordTimeChanged:)]) {
             [self.delegate audioRecorder:self didRecordTimeChanged:self.currentRecordTime];
         }

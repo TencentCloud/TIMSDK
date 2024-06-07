@@ -51,6 +51,8 @@ typedef NS_ENUM(NSInteger, TUISystemMessageType) {
  */
 @property(nonatomic, assign) TUISystemMessageType type;
 
+@property(nonatomic, strong) NSArray<NSString *> *replacedUserIDList;
+
 @end
 
 NS_ASSUME_NONNULL_END

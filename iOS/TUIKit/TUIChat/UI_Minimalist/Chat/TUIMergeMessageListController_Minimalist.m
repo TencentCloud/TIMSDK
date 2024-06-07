@@ -339,31 +339,45 @@
         originMsgID = cellData.originMsgID;
         msgAbstract = cellData.msgAbstract;
     }
+    
+    TUIMessageCellData *originMemoryMessageData = nil;
+    for (TUIMessageCellData *uiMsg in self.uiMsgs) {
+        if ([uiMsg.innerMessage.msgID isEqualToString:originMsgID]) {
+            originMemoryMessageData = uiMsg;
+            break;
+        }
+    }
+    
+    if (originMemoryMessageData && [cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
+        [self onJumpToRepliesDetailPage:originMemoryMessageData];
+    }
+    else {
+        [(TUIMessageSearchDataProvider *)self.msgDataProvider
+            findMessages:@[ originMsgID ?: @"" ]
+                callback:^(BOOL success, NSString *_Nonnull desc, NSArray<V2TIMMessage *> *_Nonnull msgs) {
+                  if (!success) {
+                      [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+                      return;
+                  }
+                  V2TIMMessage *message = msgs.firstObject;
+                  if (message == nil) {
+                      [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+                      return;
+                  }
 
-    [(TUIMessageSearchDataProvider *)self.msgDataProvider
-        findMessages:@[ originMsgID ?: @"" ]
-            callback:^(BOOL success, NSString *_Nonnull desc, NSArray<V2TIMMessage *> *_Nonnull msgs) {
-              if (!success) {
-                  [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
-                  return;
-              }
-              V2TIMMessage *message = msgs.firstObject;
-              if (message == nil) {
-                  [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
-                  return;
-              }
+                  if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
+                      [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+                      return;
+                  }
 
-              if (message.status == V2TIM_MSG_STATUS_HAS_DELETED || message.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) {
-                  [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
-                  return;
-              }
+                  if ([cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
+                      [self jumpDetailPageByMessage:message];
+                  } else if ([cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
+                      [self scrollToLocateMessage:message];
+                  }
+                }];
 
-              if ([cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
-                  [self jumpDetailPageByMessage:message];
-              } else if ([cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
-                  [self scrollToLocateMessage:message];
-              }
-            }];
+    }
 }
 
 - (void)jumpDetailPageByMessage:(V2TIMMessage *)message {

@@ -495,7 +495,10 @@
     [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
-
+- (void)didReportGroup:(TUIButtonCell *)cell {
+    NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
+    [TUITool openLinkWithURL:url];
+}
 - (UIViewController *)findConversationListViewController {
     UIViewController *vc = self.navigationController.viewControllers[0];
     for (UIViewController *vc in self.navigationController.viewControllers) {

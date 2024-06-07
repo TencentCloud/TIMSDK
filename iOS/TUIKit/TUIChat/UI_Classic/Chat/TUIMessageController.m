@@ -183,6 +183,7 @@
         [[self messageSearchDataProvider] removeAllSearchData];
         [self loadMessages:YES];
     }
+    [self loadGroupInfo];
 }
 
 #pragma mark - Private Methods
@@ -435,6 +436,9 @@
 
 - (void)jumpDetailPageByMessage:(V2TIMMessage *)message {
     NSMutableArray *uiMsgs = [self.messageDataProvider transUIMsgFromIMMsg:@[ message ]];
+    if (uiMsgs.count == 0) {
+        return;
+    }
     [self.messageDataProvider preProcessMessage:uiMsgs
                                        callback:^{
                                          for (TUIMessageCellData *cellData in uiMsgs) {
@@ -470,6 +474,12 @@
     provider.isNewerNoMoreMsg = NO;
     provider.isOlderNoMoreMsg = NO;
     [self loadAndScrollToLocateMessages:NO isHighlight:YES];
+}
+- (void)findMessages:(NSArray<NSString *> *)msgIDs callback:(void (^)(BOOL success, NSString *desc, NSArray<V2TIMMessage *> *messages))callback {
+    TUIMessageSearchDataProvider *provider = (TUIMessageSearchDataProvider *)self.messageDataProvider;
+    if (provider) {
+        [provider findMessages:msgIDs callback:callback];
+    }
 }
 
 #pragma mark - TUIMessageBaseDataProviderDataSource
@@ -527,6 +537,17 @@
                       [[TUIChatModifyMessageHelper defaultHelper] modifyMessage:message revokeMsgID:revokeMsgID];
                   }
                 }];
+    }
+    /*
+     The message whose reference is withdrawn should not expose the original message content, so it is necessary to traverse all reference messages and reply messages and replace the original message content with "TIMCommonLocalizableString(TUIKitRepliesOriginMessageRevoke)"
+     */
+    for (TUIMessageCellData * cellData in self.messageDataProvider.uiMsgs) {
+        if ([cellData isKindOfClass:TUIReplyMessageCellData.class]) {
+            TUIReplyMessageCellData *replyMessageData = (TUIReplyMessageCellData *)cellData;
+            if ([replyMessageData.originMessage.msgID isEqualToString:uiMsg.msgID]) {
+                [self.messageDataProvider processQuoteMessage:@[replyMessageData]];
+            }
+        }
     }
 }
 

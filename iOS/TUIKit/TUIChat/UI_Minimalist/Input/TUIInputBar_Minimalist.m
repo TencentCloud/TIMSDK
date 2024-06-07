@@ -420,7 +420,7 @@
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if ([text containsString:@"["] && [text containsString:@"]"]) {
+    if ([text tui_containsString:@"["] && [text tui_containsString:@"]"]) {
         NSRange selectedRange = textView.selectedRange;
         if (selectedRange.length > 0) {
             [textView.textStorage deleteCharactersInRange:selectedRange];
@@ -631,7 +631,7 @@
 }
 
 - (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
-    float maxDuration = 59;
+    float maxDuration = 59.7;
     NSInteger seconds = maxDuration - time;
     _recordTimeLabel.text = [NSString stringWithFormat:@"%d:%.2d", (int)time / 60, (int)time % 60 + 1];
 

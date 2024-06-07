@@ -15,7 +15,7 @@
 #import <TIMCommon/TUIEmojiMeditorProtocol.h>
 #import "TUIReactContextEmojiDetailController.h"
 #import "TUIMessageCellData+Reaction.h"
-#define kTIMRecentDefaultEmojiSize CGSizeMake(30, 30)
+#define kTIMRecentDefaultEmojiSize CGSizeMake(25, 25)
 
 @interface TUIReactPopContextRecentView ()
 @property(nonatomic, strong) NSMutableArray *sectionIndexInGroup;

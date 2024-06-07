@@ -66,6 +66,8 @@ static NSString *gGroup_conversationFoldListMockID = @"group_conversationFoldLis
 
 @property(nonatomic, strong) NSMutableDictionary<NSString *, TUIConversationCellData *> *markFoldMap;
 
+@property(nonatomic, strong) NSDictionary<NSString *, NSString *> *lastMessageDisplayMap;
+
 - (void)loadNexPageConversations;
 - (void)addConversationList:(NSArray<TUIConversationCellData *> *)conversationList;
 - (void)removeConversation:(TUIConversationCellData *)conversation;
@@ -87,8 +89,10 @@ static NSString *gGroup_conversationFoldListMockID = @"group_conversationFoldLis
 
 // subclass override
 - (Class)getConversationCellClass;
+- (void)asnycGetLastMessageDisplay:(NSArray<TUIConversationCellData *> *)duplicateDataList addedDataList:(NSArray<TUIConversationCellData *> *)addedDataList;
 - (NSString *)getDisplayStringFromService:(V2TIMMessage *)msg;
 - (NSMutableAttributedString *)getLastDisplayString:(V2TIMConversation *)conversation;
+- (NSMutableAttributedString *)getLastDisplayStringForFoldList:(V2TIMConversation *)conversation;
 - (TUIConversationCellData *)cellDataForConversation:(V2TIMConversation *)conversation;
 - (BOOL)filteConversation:(V2TIMConversation *)conversation;
 - (void)sortDataList:(NSMutableArray<TUIConversationCellData *> *)dataList;

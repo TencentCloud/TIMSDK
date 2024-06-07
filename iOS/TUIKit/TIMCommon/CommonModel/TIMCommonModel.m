@@ -1194,6 +1194,19 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 @implementation TUIFaceGroup
+
+- (NSDictionary *)facesMap {
+    if (!_facesMap || (_facesMap.count != _faces.count )) {
+        NSMutableDictionary *faceDic = [NSMutableDictionary dictionaryWithCapacity:3];
+        if (_faces.count > 0) {
+            for (TUIFaceCellData *data in _faces) {
+                [faceDic setObject:data.path forKey:data.name];
+            }
+        }
+        _facesMap = [NSDictionary dictionaryWithDictionary:faceDic];
+    }
+    return _facesMap;
+}
 @end
 
 @implementation TUIEmojiTextAttachment

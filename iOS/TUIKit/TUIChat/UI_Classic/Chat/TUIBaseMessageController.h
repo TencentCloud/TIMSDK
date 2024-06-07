@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface TUIBaseMessageController : UITableViewController
 
++ (void)asyncGetDisplayString:(NSArray<V2TIMMessage *> *)messageList callback:(void(^)(NSDictionary<NSString *, NSString *> *))callback;
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message;
 
 @property(nonatomic, weak) id<TUIBaseMessageControllerDelegate> delegate;
@@ -52,6 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
  * Whether a read receipt is required to send a message, the default is NO
  */
 @property(nonatomic) BOOL isMsgNeedReadReceipt;
+
+@property(nonatomic, copy) void (^groupRoleChanged)(V2TIMGroupMemberRole role);
+
+@property(nonatomic, copy) void (^pinGroupMessageChanged)(NSArray *groupPinList);
+
 
 - (void)sendMessage:(V2TIMMessage *)msg;
 
@@ -92,6 +98,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID;
 - (void)scrollCellToBottomOfMessage:(NSString *)messageID;
 
+- (void)loadGroupInfo;
+- (BOOL)isCurrentUserRoleSuperAdminInGroup;
+- (BOOL)isCurrentMessagePin:(NSString *)msgID;
+- (void)unPinGroupMessage:(V2TIMMessage *)innerMessage;
 @end
 
 NS_ASSUME_NONNULL_END

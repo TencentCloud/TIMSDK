@@ -43,7 +43,16 @@
         return;
     }
     TUITextReplyQuoteViewData *myData = (TUITextReplyQuoteViewData *)data;
-    self.textLabel.attributedText = [myData.text getFormatEmojiStringWithFont:self.textLabel.font emojiLocations:nil];
+    if (data.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED ) {
+        NSString* revokeStr = data.supportForReply ?
+        TIMCommonLocalizableString(TUIKitRepliesOriginMessageRevoke) :
+        TIMCommonLocalizableString(TUIKitReferenceOriginMessageRevoke);
+        self.textLabel.attributedText = [revokeStr getFormatEmojiStringWithFont:self.textLabel.font emojiLocations:nil];
+    }
+    else {
+        self.textLabel.attributedText = [myData.text getFormatEmojiStringWithFont:self.textLabel.font emojiLocations:nil];
+    }
+
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
 

@@ -107,7 +107,7 @@
 "ProfileSignature" = "التوقيع الشخصي";
 "ProfileGender" = "الجنس";
 "ProfileEditName" = "تعديل الاسم";
-"ProfileEditNameDesc" = "يسمح فقط بالأحرف الصينية والحروف والأرقام والشرطة السفلية";
+"ProfileEditNameDesc" = "الصينية فقط والحروف والأرقام والشرطات السفلية";
 "ProfileEditSignture" = "تعديل التوقيع الشخصي";
 "ProfileEditGender" = "تعديل الجنس";
 "ProfileEditAlia" = "تعديل الملاحظة";
@@ -199,6 +199,7 @@
 "TUIKitGroupProfileStickyOnTop" = "تثبيت في الأعلى";
 "TUIKitGroupProfileDeleteAndExit" = "حذف والخروج";
 "TUIKitGroupProfileDissolve" = "حل المجموعة";
+"TUIKitGroupProfileReport" = "تقرير";
 "TUIKitGroupProfileJoinDisable" = "تعطيل الانضمام";
 "TUIKitGroupProfileInviteDisable" = "تعطيل الدعوة";
 "TUIKitGroupProfileAdminApprove" = "موافقة المشرف";
@@ -222,6 +223,7 @@
 "TUIKitGroupRecycledTipsFormat" = "تم إعادة تدوير مجموعة %@";
 "TUIKitGroupKickOffTipsFormat" = "تم طردك من مجموعة %@";
 "TUIKitGroupDropoutTipsFormat" = "لقد قمت بالخروج من مجموعة %@";
+"TUIKitGroupMessagePinRemove" = "يزيل";
 
 "TUIKitMessageTipsNormalRecallMessage" = "تم سحب رسالة";
 "TUIKitMessageTipsYouRecallMessage" = "لقد قمت بسحب رسالة";
@@ -244,9 +246,10 @@
 "TUIKitMessageTipsUnsupportCustomMessage" = "[رسالة مخصصة غير مدعومة]";
 "TUIKitMessageTipsRecallRiskContent" = "تم سحب رسالة المخالفة";
 "TUIKitMessageDisplayRiskContent" = "[رسالة المخالفة]";
-
 "TUIKitMessageTipsMute" = "تم حظر الصوت";
 "TUIKitMessageTipsUnmute" = "تم إلغاء حظر الصوت";
+"TUIKitMessageTipsGroupPinMessage" = "\"%@\"ثبتت رسالة";
+"TUIKitMessageTipsGroupUnPinMessage" = "\"%@\"تم إلغاء تثبيت رسالة";
 
 "TUIKitSignalingFinishGroupChat" = "إنهاء المحادثة الجماعية";
 "TUIKitSignalingFinishConversationAndTimeFormat" = "مدة المكالمة";
@@ -495,10 +498,19 @@
 "TUIKitReference" = "المرجع";
 "TUIKitNotSupportThisMessage" = "[لا يتم دعم عرض هذه الرسالة مؤقتًا]";
 
+"TUIKitReferenceOriginMessageRevoke" = "تم إبطال المحتوى المقتبس";
+"TUIKitRepliesOriginMessageRevoke" = "تم إبطال محتوى الرد";
+
 "TUIKitAudioPlaybackStyleLoudspeaker" = "مكبر الصوت";
 "TUIKitAudioPlaybackStyleHandset" = "سماعة الهاتف";
 "TUIKitAudioPlaybackStyleChange2Loudspeaker" = "التبديل إلى تشغيل الصوت عبر مكبر الصوت";
 "TUIKitAudioPlaybackStyleChange2Handset" = "التبديل إلى تشغيل الصوت عبر سماعة الهاتف";
+
+"TUIKitGroupMessagePin" = "دبوس الى أعلى الصفحة";
+"TUIKitGroupMessageUnPin" = "إزالة التثبيت";
+"TUIKitGroupMessagePinOverLimit" = "الرسائل المثبتة فوق الحد";
+"TUIKitGroupMessagePinRepeatedly" = "لقد تم تثبيت هذه الرسالة";
+"TUIKitGroupMessageUnPinRepeatedly" = "تم إلغاء تثبيت هذه الرسالة";
 
 "TUIKitTranslate" = "ترجمة";
 "TUIKitTranslateDefaultTips" = "تقدم خدمة الترجمة بواسطة Tencent Cloud IM";
@@ -747,6 +759,7 @@
 "TIMAppChatDisconnectTitle" = "الدردشة (غير متصل)";
 "TIMAppChatSecurityWarning" = "【تحذير أمان】تستخدم هذه التطبيقات فقط لتجربة وظائف منتج تينسنت كلاود للاتصال الفوري. يجب عدم استخدامها للتفاوض التجاري والتوسع. يرجى عدم الوثوق بمعلومات تتعلق بالمدفوعات والفوز بجوائز وغيرها من المعلومات المتعلقة بالمال. يرجى عدم الاتصال بأرقام الهواتف الغريبة بسهولة وتوخي الحذر لتجنب الوقوع في الاحتيال.";
 "TIMAppChatSecurityWarningReport" = "النقر هنا للإبلاغ";
+"TIMAppChatSecurityWarningGot" = "يستلم";
 "TIMAppTencentCloudIM" = "الاتصال الفوري";
 "TIMAppWelcomeToChat" = "مرحبًا بك في استخدام هذا التطبيق لتجربة خدمة الاتصال الفوري من تينسنت كلاود IM";
 
@@ -777,6 +790,8 @@
 "TUIKitImageViewOrigin" = "عرض الصورة الأصلية";
 "TUIGroupCreateTipsMessage" = "إنشاء مجموعة";
 "TUICommunityCreateTipsMessage" = "إنشاء مجتمع";
+"TUICommunityCreateTipsMessageRuleError" = "معرف المجتمع، يجب أن يبدأ بـ @TGS#_";
+"TUIGroupCreateTipsMessageRuleError" = "خارج المجتمع، لا يمكن أن يبدأ بـ @TGS#_";
 
 "zh-Hans" = "الصينية المبسطة";
 "en"      = "إنجليزي";

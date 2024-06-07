@@ -76,6 +76,10 @@ typedef NSNumber * HeightNumber;
     [TUIMessageDataProvider setDataSourceClass:self];
 }
 
++ (void)asyncGetDisplayString:(NSArray<V2TIMMessage *> *)messageList callback:(void(^)(NSDictionary<NSString *, NSString *> *))callback {
+  [TUIMessageDataProvider asyncGetDisplayString:messageList callback:callback];
+}
+
 + (nullable NSString *)getDisplayString:(V2TIMMessage *)message {
     return [TUIMessageDataProvider getDisplayString:message];
 }
@@ -133,9 +137,11 @@ typedef NSNumber * HeightNumber;
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundColor = TUIChatDynamicColor(@"chat_controller_bg_color", @"#FFFFFF");
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, TMessageController_Header_Height)];
-    self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+    self.indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     self.tableView.tableHeaderView = self.indicatorView;
-
+    if (!self.indicatorView.isAnimating) {
+        [self.indicatorView startAnimating];
+    }
     [self.messageCellConfig bindTableView:self.tableView];
 }
 
@@ -172,6 +178,7 @@ typedef NSNumber * HeightNumber;
         self.messageDataProvider.mergeAdjacentMsgsFromTheSameSender = YES;
     }
     [self loadMessage];
+    [self loadGroupInfo];
 }
 
 - (void)loadMessage {
@@ -212,6 +219,25 @@ typedef NSNumber * HeightNumber;
         }];
 }
 
+- (void)loadGroupInfo {
+    if (self.conversationData.groupID.length > 0) {
+        [self.messageDataProvider getPinMessageList];
+        [self.messageDataProvider getSelfInfoInGroup:^{
+            
+        }];
+        __weak typeof(self) weakSelf = self;
+        self.messageDataProvider.groupRoleChanged = ^(V2TIMGroupMemberRole role) {
+            if (weakSelf.groupRoleChanged) {
+                weakSelf.groupRoleChanged(role);
+            }
+        };
+        self.messageDataProvider.pinGroupMessageChanged = ^(NSArray * _Nonnull groupPinList) {
+            if (weakSelf.pinGroupMessageChanged) {
+                weakSelf.pinGroupMessageChanged(groupPinList);
+            }
+        };
+    }
+}
 - (void)clearUImsg {
     [self.messageDataProvider clearUIMsgList];
     [self.tableView reloadData];
@@ -360,13 +386,18 @@ typedef NSNumber * HeightNumber;
 - (void)reloadUIMessage:(TUIMessageCellData *)msg {
     // innerMessage maybe changed, reload it
     NSInteger index = [self.messageDataProvider.uiMsgs indexOfObject:msg];
-    TUIMessageCellData *newData = [self.messageDataProvider transUIMsgFromIMMsg:@[ msg.innerMessage ]].lastObject;
-    __weak typeof(self) weakSelf = self;
-    [self.messageDataProvider preProcessMessage:@[ newData ]
+    NSMutableArray *newUIMsgs = [self.messageDataProvider transUIMsgFromIMMsg:@[ msg.innerMessage ]];
+    if (newUIMsgs.count == 0) {
+        return;
+    }
+    TUIMessageCellData *newUIMsg = newUIMsgs.firstObject;
+    @weakify(self)
+    [self.messageDataProvider preProcessMessage:@[ newUIMsg ]
                                        callback:^{
-                                         [weakSelf.messageDataProvider replaceUIMsg:newData atIndex:index];
-                                         [weakSelf.tableView reloadData];
-                                       }];
+        @strongify(self)
+        [self.messageDataProvider replaceUIMsg:newUIMsg atIndex:index];
+        [self.tableView reloadData];
+    }];
 }
 
 - (void)changeMsg:(TUIMessageCellData *)msg status:(TMsgStatus)status {
@@ -913,7 +944,8 @@ static NSMutableArray *reloadMsgIndexs = nil;
     TUIChatPopContextExtionItem *deleteItem = [self setupDeleteAction:alertController targetCell:cell];
 
     TUIChatPopContextExtionItem *audioPlaybackStyleItem = [self setupAudioPlaybackStyleAction:alertController targetCell:cell];
-
+    
+    TUIChatPopContextExtionItem *groupPinItem = [self setupGroupPinAction:alertController targetCell:cell];
     if (isChatNoramlMessageOrCustomMessage) {
         if (imMsg.soundElem) {
             [items addObject:audioPlaybackStyleItem];
@@ -944,6 +976,11 @@ static NSMutableArray *reloadMsgIndexs = nil;
         }
         [items addObject:deleteItem];
 
+        BOOL isGroup = (data.innerMessage.groupID.length > 0);
+        if (isGroup && [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup] 
+            && (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)) {
+            [items addObject:groupPinItem];
+        }
     } else {
         // common
         // multiSelect（multiSelectItem） reference（referenceItem） reply（replyItem） delete(deleteItem) revocation(revocationItem)
@@ -1629,5 +1666,67 @@ static NSMutableArray *reloadMsgIndexs = nil;
                                                     }];
         }];
     return styleActionItem;
+}
+- (BOOL)isCurrentUserRoleSuperAdminInGroup {
+    return [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup];
+}
+
+- (BOOL)isCurrentMessagePin:(NSString *)msgID {
+    return [self.messageDataProvider isCurrentMessagePin:msgID];
+}
+- (void)unPinGroupMessage:(V2TIMMessage *)innerMessage {
+    NSString *groupId =  self.conversationData.groupID;
+    BOOL isPinned = [self.messageDataProvider isCurrentMessagePin:innerMessage.msgID];
+    BOOL pinOrUnpin = !isPinned;
+
+    [self.messageDataProvider pinGroupMessage:groupId message:innerMessage isPinned:pinOrUnpin succ:^{
+        
+    } fail:^(int code, NSString *desc) {
+        
+    }];
+}
+- (TUIChatPopContextExtionItem *)setupGroupPinAction:(TUIChatPopContextController *)alertController targetCell:(TUIMessageCell *)cell {
+    @weakify(self);
+    @weakify(cell);
+    @weakify(alertController);
+    BOOL isPinned = [self.messageDataProvider isCurrentMessagePin:self.menuUIMsg.innerMessage.msgID];
+    UIImage* img = isPinned ? [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_unpin")] :
+    [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_extion_pin")];
+    TUIChatPopContextExtionItem *groupPinAction =
+        [[TUIChatPopContextExtionItem alloc] initWithTitle:isPinned?
+         TIMCommonLocalizableString(TUIKitGroupMessageUnPin) : TIMCommonLocalizableString(TUIKitGroupMessagePin)
+                                                  markIcon:img
+                                                    weight:900
+                                         withActionHandler:^(TUIChatPopContextExtionItem *action) {
+                                           @strongify(alertController);
+                                           [alertController blurDismissViewControllerAnimated:NO
+                                                                                   completion:^(BOOL finished) {
+                                                                                     @strongify(self);
+                                                                                    [self onGroupPin:nil
+                                                                                       currentStatus:isPinned];
+                                                                                   }];
+                                         }];
+    return groupPinAction;
+}
+- (void)onGroupPin:(id)sender currentStatus:(BOOL)currentStatus {
+    NSString *groupId =  self.conversationData.groupID;
+    BOOL isPinned = currentStatus;
+    BOOL pinOrUnpin = !isPinned;
+    
+    [self.messageDataProvider pinGroupMessage:groupId message:self.menuUIMsg.innerMessage isPinned:pinOrUnpin succ:^{
+
+    } fail:^(int code, NSString *desc) {
+        if (code == 10070) {
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupMessagePinOverLimit)];
+        }
+        else if (code == 10004) {
+            if (pinOrUnpin) {
+                [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupMessagePinRepeatedly)];
+            }
+            else {
+                [TUITool makeToast:TIMCommonLocalizableString(TUIKitGroupMessageUnPinRepeatedly)];
+            }
+        }
+    }];
 }
 @end

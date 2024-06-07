@@ -38,7 +38,6 @@
     @weakify(self);
     V2TIMConversationListFilter *filter = [[V2TIMConversationListFilter alloc] init];
     filter.type = V2TIM_GROUP;
-    filter.conversationGroup = nil;
     filter.markType = V2TIM_CONVERSATION_MARK_TYPE_FOLD;
 
     [V2TIMManager.sharedInstance getConversationListByFilter:filter

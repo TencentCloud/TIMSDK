@@ -11,12 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIRelationUserModel : NSObject
-@property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *userID;
-@property(nonatomic, copy) NSString *friendRemark;
-@property(nonatomic, copy) NSString *nameCard;
 @property(nonatomic, copy) NSString *nickName;
 @property(nonatomic, copy) NSString *faceURL;
+@property(nonatomic, copy) NSString *friendRemark;
+@property(nonatomic, copy) NSString *nameCard;
 
 - (NSString *)getDisplayName;
 

@@ -332,6 +332,12 @@
             [buttonArray addObject:deletebutton];
         }
 
+        TUIGroupButtonCellData_Minimalist *reportButton = [[TUIGroupButtonCellData_Minimalist alloc] init];
+        reportButton.title = TIMCommonLocalizableString(TUIKitGroupProfileReport);
+        reportButton.style = ButtonRedText;
+        reportButton.cbuttonSelector = @selector(didReportGroup:);
+        [buttonArray addObject:reportButton];
+
         TUIGroupButtonCellData_Minimalist *lastCellData = [buttonArray lastObject];
         lastCellData.hideSeparatorLine = YES;
         [dataList addObject:buttonArray];
@@ -450,6 +456,11 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectGroupNotice)]) {
         [self.delegate didSelectGroupNotice];
     }
+}
+
+- (void)didReportGroup:(TUIButtonCell *)cell {
+    NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
+    [TUITool openLinkWithURL:url];
 }
 
 - (NSMutableArray *)getShowMembers:(NSMutableArray *)members {

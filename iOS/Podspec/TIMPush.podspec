@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TIMPush'
-  spec.version      = '7.9.5668'
+  spec.version      = '8.0.5895'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,23 +15,15 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.9.5668/ios/TIMPush_7.9.5668.framework.zip?time=1'}
-
-  #spec.dependency 'TXIMSDK_Plus_iOS'
-  #spec.library = 'c++', 'resolv', 'sqlite3'
-  spec.preserve_paths = 'TIMPush.framework'
-  spec.public_header_files = 'Framework/TIMPush.framework/Headers/*.h'
-  spec.source_files = '**/TIMPush.framework/Headers/*.h'
-  spec.vendored_frameworks = '**/TIMPush.framework'
-  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/TIMPush/Framework/TIMPush.framework/Headers/'}
-  spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
-  spec.user_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
-
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuiplugin/8.0.5895/ios/TIMPush_8.0.5895.xcframework.zip'}
+  
+  spec.vendored_frameworks = 'TIMPush.xcframework'
   spec.resource_bundle = {
-    "#{spec.module_name}_Privacy" => '**/TIMPush.framework/PrivacyInfo.xcprivacy'
+        "#{spec.module_name}_Privacy" => '**/TIMPush.xcframework/ios-arm64/TIMPush.framework/PrivacyInfo.xcprivacy'
   }
+
+  spec.public_header_files = '**/TIMPush.xcframework/ios-arm64/TIMPush.framework/Headers/*.h'
+  spec.source_files = '**/TIMPush.xcframework/ios-arm64/TIMPush.framework/Headers/*.h'
+  spec.xcconfig = { 'HEADER_SEARCH_PATHS' => '**/TIMPush.xcframework/ios-arm64/TIMPush.framework/Headers/*.h'}
+
 end

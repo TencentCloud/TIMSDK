@@ -543,10 +543,6 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
-        if ([self.createGroupInfo.groupType isEqualToString:@"Community"]) {
-            self.groupIDTextField.text = @"";
-            return 1;
-        }
         return 2;
     }
     return 1;
@@ -692,16 +688,9 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     // Check for total length
     if (textField == self.groupIDTextField) {
         NSUInteger lengthOfString = string.length;
-        for (NSInteger loopIndex = 0; loopIndex < lengthOfString; loopIndex++) {
-            unichar character = [string characterAtIndex:loopIndex];
-            if (character < 48) return NO;  // 48 unichar for 0
-            if (character > 57 && character < 65) return NO;
-            if (character > 90 && character < 97) return NO;
-            if (character > 122) return NO;
-        }
         // Check for total length
         NSUInteger proposedNewLength = textField.text.length - range.length + string.length;
-        if (proposedNewLength > 10) {
+        if (proposedNewLength > 16) {
             return NO;
         }
         return YES;
@@ -767,6 +756,25 @@ static NSString *const reuseIdentifier = @"TUISelectAvatarCollectionCell";
     if (!self.createContactArray) {
         return;
     }
+
+    BOOL isCommunity = [info.groupType isEqualToString:@"Community"];
+    BOOL hasTGSPrefix = [info.groupID hasPrefix:@"@TGS#_"];
+    
+    
+    if (self.groupIDTextField.text.length > 0 ) {
+        if (isCommunity && !hasTGSPrefix) {
+            NSString *toastMsg = TIMCommonLocalizableString(TUICommunityCreateTipsMessageRuleError);
+            [TUITool makeToast:toastMsg duration:3.0 idposition:TUICSToastPositionBottom];
+            return;
+        }
+        
+        if (!isCommunity && hasTGSPrefix) {
+            NSString *toastMsg = TIMCommonLocalizableString(TUIGroupCreateTipsMessageRuleError);
+            [TUITool makeToast:toastMsg duration:3.0 idposition:TUICSToastPositionBottom];
+            return;
+        }
+    }
+    
 
     NSMutableArray *members = [NSMutableArray array];
     for (TUICommonContactSelectCellData *item in self.createContactArray) {

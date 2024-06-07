@@ -106,7 +106,7 @@
 "ProfileSignature" = "Status";
 "ProfileGender" = "Gender";
 "ProfileEditName" = "Name";
-"ProfileEditNameDesc" = "Only letters, digits, underscores, and Chinese characters.";
+"ProfileEditNameDesc" = "Only Chinese characters, letters, numbers and underscores are allowed";
 "ProfileEditSignture" = "Status";
 "ProfileEditGender" = "Gender";
 "ProfileEditAlia" = "Alias";
@@ -194,6 +194,7 @@
 "TUIKitGroupProfileStickyOnTop" = "Pin";
 "TUIKitGroupProfileDeleteAndExit" = "Delete and Leave";
 "TUIKitGroupProfileDissolve" = "Disband Group";
+"TUIKitGroupProfileReport" = "Report";
 "TUIKitGroupProfileJoinDisable" = "Prohibited from Joining";
 "TUIKitGroupProfileInviteDisable" = "Prohibited from inviting";
 "TUIKitGroupProfileAdminApprove" = "Admin Approval";
@@ -217,6 +218,7 @@
 "TUIKitGroupRecycledTipsFormat" = "%@ group has been reclaimed.";
 "TUIKitGroupKickOffTipsFormat" = "You were removed from the group %@.";
 "TUIKitGroupDropoutTipsFormat" = "You have left the group %@.";
+"TUIKitGroupMessagePinRemove" = "Remove";
 
 "TUIKitMessageTipsNormalRecallMessage" = "A message is recalled";
 "TUIKitMessageTipsYouRecallMessage" = "You recalled a message.";
@@ -241,6 +243,8 @@
 "TUIKitMessageTipsUnmute" = "unblocked";
 "TUIKitMessageTipsRecallRiskContent" = "The violation message was withdrawn";
 "TUIKitMessageDisplayRiskContent" = "[Violation message]";
+"TUIKitMessageTipsGroupPinMessage" = "\"%@\"pinned a message";
+"TUIKitMessageTipsGroupUnPinMessage" = "\"%@\"unpinned a message";
 
 "TUIKitSignalingFinishGroupChat" = "End Group Chat";
 "TUIKitSignalingFinishConversationAndTimeFormat" = "Duration";
@@ -497,13 +501,22 @@
 
 "TUIKitRepliesDetailTitle" = "Reply Details";
 "TUIKitRepliesNum" = " replies";
-"TUIKitReference" = "reference";
+"TUIKitReference" = "quote";
 "TUIKitNotSupportThisMessage" = "[This message display is not currently supported]";
+
+"TUIKitReferenceOriginMessageRevoke" = "Quoted content has been revoked";
+"TUIKitRepliesOriginMessageRevoke" = "Reply content has been revoked";
 
 "TUIKitAudioPlaybackStyleLoudspeaker" = "Loudspeaker";
 "TUIKitAudioPlaybackStyleHandset" = "Handset";
 "TUIKitAudioPlaybackStyleChange2Loudspeaker" = "Switch To Loudspeaker";
 "TUIKitAudioPlaybackStyleChange2Handset" = "Switch To Handset";
+
+"TUIKitGroupMessagePin" = "Pin";
+"TUIKitGroupMessageUnPin" = "UnPin";
+"TUIKitGroupMessagePinOverLimit" = "pinned messages over limit";
+"TUIKitGroupMessagePinRepeatedly" = "The message is already pinned.";
+"TUIKitGroupMessageUnPinRepeatedly" = "This message has already been unpinned.";
 
 "TUIKitTranslate" = "Translate";
 "TUIKitTranslateDefaultTips" = "Translated by IM";
@@ -743,7 +756,7 @@
 //----timApp---
 "TIMAppMainTitle" = "TencentCloud·IM";
 "TIMAppMainConnectingTitle" = "Connecting…";
-"TIMAppMainDisconnectTitle" = "TencentCloud·IM (not connected)";
+"TIMAppMainDisconnectTitle" = "Disconnected";
 "TIMAppTabBarItemMessageText" = "Message";
 "TIMAppTabBarItemContactText" = "Contacts";
 "TIMAppTabBarItemMeText"      = "Settings";
@@ -752,9 +765,10 @@
 "TIMAppTabBarItemSettingText_mini" = "Settings";
 "TIMAppTabBarItemCallsRecordText_mini" = "Calls";
 "TIMAppChat" = "Chat";
-"TIMAppChatDisconnectTitle" = "Chat(not connected)";
+"TIMAppChatDisconnectTitle" = "Disconnected";
 "TIMAppChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
 "TIMAppChatSecurityWarningReport" = "Report";
+"TIMAppChatSecurityWarningGot" = "Got it";
 "TIMAppTencentCloudIM" = "TencentCloudIM";
 "TIMAppWelcomeToChat" = " Welcome to Chat demo!";
 "TIMAppWelcomeToChatDetails" = "Welcome to Chat demo! You can try out various features such as sending text/emoji/rich media messages, checking message read status and friend relationship. You can also start one-to-one chats or group chats and manage groups with three no-replying bot friends equipped for you.";
@@ -786,6 +800,9 @@
 "TUIKitImageViewOrigin" = "Original image";
 "TUIGroupCreateTipsMessage" = "Create Group";
 "TUICommunityCreateTipsMessage" = "Create Community";
+"TUICommunityCreateTipsMessageRuleError" = "Custom group ID of \"Community\" must be prefixed with @TGS#_.";
+"TUIGroupCreateTipsMessageRuleError" = "Non-community, cannot start with @TGS#_";
+
 "zh-Hans" = "Simple Chinese";
 "en"      = "English";
 "ar"      = "Arabic";

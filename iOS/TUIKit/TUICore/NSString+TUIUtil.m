@@ -327,11 +327,11 @@ char tui_pinyinFirstLetter(unsigned short hanzi) {
            ([self rangeOfString:str options:(compareOptions | NSBackwardsSearch)].location == ([self length] - [str length]));
 }
 
-- (BOOL)containsString:(NSString *)str {
-    return [self containsString:str Options:NSCaseInsensitiveSearch];
+- (BOOL)tui_containsString:(NSString *)str {
+    return [self tui_containsString:str Options:NSCaseInsensitiveSearch];
 }
 
-- (BOOL)containsString:(NSString *)str Options:(NSStringCompareOptions)compareOptions {
+- (BOOL)tui_containsString:(NSString *)str Options:(NSStringCompareOptions)compareOptions {
     return (str != nil) && ([str length] > 0) && ([self length] >= [str length]) && ([self rangeOfString:str options:compareOptions].location != NSNotFound);
 }
 

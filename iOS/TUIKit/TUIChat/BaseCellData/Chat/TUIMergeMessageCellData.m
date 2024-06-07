@@ -83,7 +83,7 @@
         }
         NSString *str = ab;
         NSString * splitStr = @":";
-        if ([str containsString:@"\u202C:"]) {
+        if ([str tui_containsString:@"\u202C:"]) {
             splitStr = @"\u202C:";
         }
         NSArray<NSString *> *result =  [str componentsSeparatedByString:splitStr];

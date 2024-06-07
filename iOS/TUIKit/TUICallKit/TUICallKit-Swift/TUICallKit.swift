@@ -12,19 +12,20 @@ import TUICallEngine
 public class TUICallKit: NSObject {
     
     /**
-     * Create a TUICallKit instance
+     * Create a TUICallKit instance 
      */
     @objc
     public static func createInstance() -> TUICallKit {
         return TUICallKitImpl.instance
     }
-    
+
     /**
      * Set user profile
      *
      * @param nickname User name, which can contain up to 500 bytes
      * @param avatar   User profile photo URL, which can contain up to 500 bytes
      * For example: https://liteav.sdk.qcloud.com/app/res/picture/voiceroom/avatar/user_avatar1.png
+     *
      */
     @objc
     public func setSelfInfo(nickname: String, avatar: String, succ:@escaping TUICallSucc, fail: @escaping TUICallFail) {
@@ -41,7 +42,7 @@ public class TUICallKit: NSObject {
     public func call(userId: String, callMediaType: TUICallMediaType) {
         return TUICallKitImpl.instance.call(userId: userId, callMediaType: callMediaType)
     }
-    
+
     /**
      * Make a call
      *
@@ -54,7 +55,7 @@ public class TUICallKit: NSObject {
                      succ: @escaping TUICallSucc, fail: @escaping TUICallFail) {
         return TUICallKitImpl.instance.call(userId: userId, callMediaType: callMediaType, params: params, succ: succ, fail: fail)
     }
-    
+
     /**
      * Make a group call
      *

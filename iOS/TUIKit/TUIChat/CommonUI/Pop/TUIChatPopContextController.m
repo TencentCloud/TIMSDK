@@ -11,7 +11,7 @@
 #import "UIImage+ImageEffects.h"
 #import <TUICore/TUICore.h>
 
-@interface TUIChatPopContextController ()
+@interface TUIChatPopContextController ()<V2TIMAdvancedMsgListener>
 @property(nonatomic, strong) UIView *recentView;
 @property(nonatomic, strong) UIView *alertContainerView;
 @property(nonatomic, strong) TUIMessageCell *alertView;
@@ -40,6 +40,7 @@
 
     _backgroundColor = [UIColor clearColor];
     _backgoundTapDismissEnable = YES;
+    [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
 }
 
 - (void)viewDidLoad {
@@ -440,6 +441,21 @@
 
 - (void)singleTap:(UITapGestureRecognizer *)sender {
     [self dismissViewControllerAnimated:NO];
+}
+
+// MARK: V2TIMAdvancedMsgListener
+- (void)onRecvMessageRevoked:(NSString *)msgID operateUser:(V2TIMUserFullInfo *)operateUser reason:(NSString *)reason {
+    
+    if ([msgID isEqualToString:self.alertViewCellData.msgID]) {
+        UIViewController *controller = self;
+        while(controller.presentingViewController != nil){
+            controller = controller.presentingViewController;
+        }
+        [controller dismissViewControllerAnimated:YES completion:^{
+            [self blurDismissViewControllerAnimated:NO completion:nil];
+        }];
+    }
+
 }
 
 

@@ -13,7 +13,6 @@
 #import "TUIDefine.h"
 #import "TUICallEngineHeader.h"
 #import "TUICallingUserModel.h"
-#import "TUICallingUserManager.h"
 
 static CGFloat const kCallingSingleSmallVideoViewWidth = 100.0f;
 
@@ -77,8 +76,6 @@ StatusBar_Height + 40, kCallingSingleSmallVideoViewWidth, kCallingSingleSmallVid
 - (void)updateUserInfo:(CallingUserModel *)userModel {
     if ([self.remoteUser.userId isEqualToString:userModel.userId]) {
         [self.remotePreView configViewWithUserModel:userModel];
-    } else {
-        [self.localPreView configViewWithUserModel:userModel];
     }
 }
 

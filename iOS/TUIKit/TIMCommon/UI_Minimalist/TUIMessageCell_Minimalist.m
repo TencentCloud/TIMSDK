@@ -154,11 +154,9 @@
         self.retryView.frame = self.indicator.frame;
         self.readReceiptLabel.hidden = YES;
     } else {
-        if (self.messageData.showAvatar) {
-            cellLayout.avatarSize = CGSizeMake(40, 40);
-        } else {
+        if (!self.messageData.showAvatar) {
             cellLayout.avatarSize = CGSizeZero;
-        }
+        } 
         [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
           make.trailing.mas_equalTo(self.contentView.mas_trailing).mas_offset(-cellLayout.avatarInsets.right);
           make.top.mas_equalTo(cellLayout.avatarInsets.top);
@@ -202,7 +200,6 @@
         }];
     }
     
-    CGSize contentSize = [self.class getContentSize:self.messageData];
 
     if (self.messageData.showMessageModifyReplies && _replyAvatarImageViews.count > 0)  {
         CGFloat lineViewW = 17;
@@ -339,7 +336,7 @@
         for (NSDictionary *senderMap in self.messageData.messageModifyReplies) {
             NSString *sender = senderMap[@"messageSender"];
 
-            TUIRelationUserModel *userModel = self.messageData.messageModifyUserInfos[sender];
+            TUIRelationUserModel *userModel = self.messageData.additionalUserInfoResult[sender];
             NSURL *headUrl = [NSURL URLWithString:userModel.faceURL];
 
             NSString *existSender = existSenderMap[@"messageSender"];

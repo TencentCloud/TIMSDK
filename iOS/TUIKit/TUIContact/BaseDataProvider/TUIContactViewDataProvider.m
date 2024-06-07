@@ -219,7 +219,6 @@
 
 - (void)onConnectFailed:(int)code err:(NSString *)err {
     NSLog(@"%s", __func__);
-    [self asyncUpdateOnlineStatus];
 }
 
 - (void)onConnectSuccess {

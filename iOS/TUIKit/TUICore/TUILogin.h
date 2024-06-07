@@ -47,6 +47,16 @@ typedef NS_ENUM(NSInteger, TUIBusinessScene) {
 };
 
 /**
+ * Notification for init im sdk succeed
+ */
+FOUNDATION_EXTERN NSString *const TUIInitSdkSuccessNotification;
+
+/**
+ * Notification for init im sdk failed
+ */
+FOUNDATION_EXTERN NSString *const TUIInitSdkFailNotification;
+
+/**
  * Notification for log-in succeed
  */
 FOUNDATION_EXTERN NSString *const TUILoginSuccessNotification;

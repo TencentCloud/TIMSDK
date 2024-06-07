@@ -725,7 +725,7 @@
                               NSArray *arrayM = [NSFileManager.defaultManager subpathsAtPath:TUIKit_File_Path];
                               for (NSString *sub in arrayM) {
                                   if ([sub.pathExtension isEqualToString:fileName.pathExtension] &&
-                                      [sub.stringByDeletingPathExtension containsString:fileName.stringByDeletingPathExtension]) {
+                                      [sub.stringByDeletingPathExtension tui_containsString:fileName.stringByDeletingPathExtension]) {
                                       i++;
                                   }
                               }

@@ -167,6 +167,7 @@ typedef NS_ENUM(NSInteger, TUIConversationOnlineStatus) {
 @property(nonatomic, strong) NSMutableAttributedString *foldSubTitle;
 
 @property(nonatomic, strong) V2TIMMessage *lastMessage;
+@property(nonatomic, strong) V2TIMConversation *innerConversation;
 
 + (BOOL)isMarkedByHideType:(NSArray *)markList;
 
