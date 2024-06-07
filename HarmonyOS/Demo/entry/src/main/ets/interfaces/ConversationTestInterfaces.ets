@@ -1,4 +1,4 @@
-import TestResult from '../pages/ConversationManagerTestPage';
+import TestResult from "../pages/ConversationManagerTestPage";
 import {
   V2TIMConversationListener,
   V2TIMConversation,
@@ -9,11 +9,11 @@ import {
   V2TIMConversationOperationResult,
   V2TIMConversationMarkType,
   V2TIMConversationManager,
-} from '@tencentcloud/imsdk';
-import Prompt from '@system.prompt';
-import buffer from '@ohos.buffer';
+} from "@tencentcloud/imsdk";
+import Prompt from "@system.prompt";
+import buffer from "@ohos.buffer";
 
-import { writeResult, onCallback } from "../pages/ConversationManagerTestPage"
+import { writeResult, onCallback } from "../pages/ConversationManagerTestPage";
 
 export class ConversationTestInterfaces {
   static addConversationListener() {
@@ -27,77 +27,90 @@ export class ConversationTestInterfaces {
   }
 
   static getConversationListByFilter(nextSeq: number, count: number) {
-    V2TIMManager.getConversationManager().getConversationListByFilter(nextSeq, count)
+    V2TIMManager.getConversationManager()
+      .getConversationListByFilter(nextSeq, count)
       .then((result: V2TIMConversationResult) => {
-        writeResult('getConversationListByFilter succeeded', result);
+        writeResult("getConversationListByFilter succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getConversationListByFilter failed', error);
+        writeResult("getConversationListByFilter failed", error);
       });
   }
 
   static getConversation(conversationID: string) {
-    V2TIMManager.getConversationManager().getConversation(conversationID)
+    V2TIMManager.getConversationManager()
+      .getConversation(conversationID)
       .then((conversation: V2TIMConversation) => {
-        writeResult('getConversation succeeded', conversation);
+        writeResult("getConversation succeeded", conversation);
       })
       .catch((error: Error) => {
-        writeResult('getConversation failed', error);
+        writeResult("getConversation failed", error);
       });
   }
 
   static setConversationDraft(conversationID: string, draftText: string) {
-    V2TIMManager.getConversationManager().setConversationDraft(conversationID, draftText)
+    V2TIMManager.getConversationManager()
+      .setConversationDraft(conversationID, draftText)
       .then(() => {
-        writeResult('setConversationDraft succeeded');
+        writeResult("setConversationDraft succeeded");
       })
       .catch((error: Error) => {
-        writeResult('setConversationDraft failed', error);
+        writeResult("setConversationDraft failed", error);
       });
   }
 
   static deleteConversation(conversationID: string) {
-    V2TIMManager.getConversationManager().deleteConversation(conversationID)
+    V2TIMManager.getConversationManager()
+      .deleteConversation(conversationID)
       .then(() => {
-        writeResult('deleteConversation succeeded');
+        writeResult("deleteConversation succeeded");
       })
       .catch((error: Error) => {
-        writeResult('deleteConversation failed', error);
+        writeResult("deleteConversation failed", error);
       });
   }
 
   static getConversationList(...conversationIDList: string[]) {
-    V2TIMManager.getConversationManager().getConversations(conversationIDList)
+    V2TIMManager.getConversationManager()
+      .getConversations(conversationIDList)
       .then((conversationList: V2TIMConversation[]) => {
-        writeResult('getConversationList succeeded', conversationList);
+        writeResult("getConversationList succeeded", conversationList);
       })
       .catch((error: Error) => {
-        writeResult('getConversationList failed', error);
+        writeResult("getConversationList failed", error);
       });
   }
 
   static deleteConversationList(conversationIDList: string[], clearMessage: boolean) {
-    V2TIMManager.getConversationManager().deleteConversationList(conversationIDList, clearMessage)
+    V2TIMManager.getConversationManager()
+      .deleteConversationList(conversationIDList, clearMessage)
       .then(() => {
-        writeResult('deleteConversationList succeeded');
+        writeResult("deleteConversationList succeeded");
       })
       .catch((error: Error) => {
-        writeResult('deleteConversationList failed', error);
+        writeResult("deleteConversationList failed", error);
       });
   }
 
-  static getConversationListByFilter2(nextSeq: number, count: number, type: V2TIMConversationType, conversationType: string, markType: number) {
+  static getConversationListByFilter2(
+    nextSeq: number,
+    count: number,
+    type: V2TIMConversationType,
+    conversationType: string,
+    markType: number
+  ) {
     const info: V2TIMConversationListFilter = {
       type: type,
       conversationGroup: conversationType,
       markType: markType,
     };
-    V2TIMManager.getConversationManager().getConversationListByFilter(nextSeq, count, info)
+    V2TIMManager.getConversationManager()
+      .getConversationListByFilter(nextSeq, count, info)
       .then((result: V2TIMConversationResult) => {
-        writeResult('getConversationListByFilter2 succeeded', result);
+        writeResult("getConversationListByFilter2 succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getConversationListByFilter2 failed', error);
+        writeResult("getConversationListByFilter2 failed", error);
       });
   }
 
@@ -106,20 +119,21 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .setConversationCustomData(conversations, customData)
       .then((resultList: V2TIMConversationOperationResult[]) => {
-        writeResult('setConversationCustomData succeeded', resultList);
+        writeResult("setConversationCustomData succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('setConversationCustomData failed', error);
+        writeResult("setConversationCustomData failed", error);
       });
   }
 
   static pinConversation(conversationID: string, isPinned: boolean) {
-    V2TIMManager.getConversationManager().pinConversation(conversationID, isPinned)
+    V2TIMManager.getConversationManager()
+      .pinConversation(conversationID, isPinned)
       .then(() => {
-        writeResult('pinConversation succeeded');
+        writeResult("pinConversation succeeded");
       })
       .catch((error: Error) => {
-        writeResult('pinConversation failed', error);
+        writeResult("pinConversation failed", error);
       });
   }
 
@@ -127,20 +141,21 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .markConversation(conversationIDs, markType, enableMark)
       .then((resultList: V2TIMConversationOperationResult[]) => {
-        writeResult('markConversation succeeded', resultList);
+        writeResult("markConversation succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('markConversation failed', error);
+        writeResult("markConversation failed", error);
       });
   }
 
   static getTotalUnreadMessageCount() {
-    V2TIMManager.getConversationManager().getTotalUnreadMessageCount()
+    V2TIMManager.getConversationManager()
+      .getTotalUnreadMessageCount()
       .then((count: number) => {
-        writeResult('getTotalUnreadMessageCount succeeded', count);
+        writeResult("getTotalUnreadMessageCount succeeded", count);
       })
       .catch((error: Error) => {
-        writeResult('getTotalUnreadMessageCount failed', error);
+        writeResult("getTotalUnreadMessageCount failed", error);
       });
   }
 
@@ -150,12 +165,13 @@ export class ConversationTestInterfaces {
       conversationGroup: conversationGroup,
       markType: markType,
     };
-    V2TIMManager.getConversationManager().getUnreadMessageCountByFilter(info)
+    V2TIMManager.getConversationManager()
+      .getUnreadMessageCountByFilter(info)
       .then((count: number) => {
-        writeResult('getUnreadMessageCountByFilter succeeded', count);
+        writeResult("getUnreadMessageCountByFilter succeeded", count);
       })
       .catch((error: Error) => {
-        writeResult('getUnreadMessageCountByFilter failed', error);
+        writeResult("getUnreadMessageCountByFilter failed", error);
       });
   }
 
@@ -167,10 +183,13 @@ export class ConversationTestInterfaces {
     };
     V2TIMManager.getConversationManager().subscribeUnreadMessageCountByFilter(info);
     Prompt.showToast({ message: "subscribeUnreadMessageCountByFilter" });
-
   }
 
-  static unsubscribeUnreadMessageCountByFilter(conversationGroup: string, markType: number, type: V2TIMConversationType) {
+  static unsubscribeUnreadMessageCountByFilter(
+    conversationGroup: string,
+    markType: number,
+    type: V2TIMConversationType
+  ) {
     const info: V2TIMConversationListFilter = {
       type: type,
       conversationGroup: conversationGroup,
@@ -184,13 +203,13 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .cleanConversationUnreadMessageCount(conversationID, {
         cleanTimestamp: cleanTimestamp,
-        cleanSequence: cleanSequence
+        cleanSequence: cleanSequence,
       })
       .then(() => {
-        writeResult('cleanConversationUnreadMessageCount succeeded');
+        writeResult("cleanConversationUnreadMessageCount succeeded");
       })
       .catch((error: Error) => {
-        writeResult('cleanConversationUnreadMessageCount failed', error);
+        writeResult("cleanConversationUnreadMessageCount failed", error);
       });
   }
 
@@ -198,40 +217,43 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .createConversationGroup(groupName, [conversationID1, conversationID2])
       .then((resultList: V2TIMConversationOperationResult[]) => {
-        writeResult('createConversationGroup succeeded', resultList);
+        writeResult("createConversationGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('createConversationGroup failed', error);
+        writeResult("createConversationGroup failed", error);
       });
   }
 
   static getConversationGroupList() {
-    V2TIMManager.getConversationManager().getConversationGroupList()
+    V2TIMManager.getConversationManager()
+      .getConversationGroupList()
       .then((resultList: string[]) => {
-        writeResult('getConversationGroupList succeeded', resultList);
+        writeResult("getConversationGroupList succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('getConversationGroupList failed', error);
+        writeResult("getConversationGroupList failed", error);
       });
   }
 
   static deleteConversationGroup(groupName: string) {
-    V2TIMManager.getConversationManager().deleteConversationGroup(groupName)
+    V2TIMManager.getConversationManager()
+      .deleteConversationGroup(groupName)
       .then(() => {
-        writeResult('deleteConversationGroup succeeded');
+        writeResult("deleteConversationGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult('deleteConversationGroup failed', error);
+        writeResult("deleteConversationGroup failed", error);
       });
   }
 
   static renameConversationGroup(oldName: string, newName: string) {
-    V2TIMManager.getConversationManager().renameConversationGroup(oldName, newName)
+    V2TIMManager.getConversationManager()
+      .renameConversationGroup(oldName, newName)
       .then(() => {
-        writeResult('renameConversationGroup succeeded');
+        writeResult("renameConversationGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult('renameConversationGroup failed', error);
+        writeResult("renameConversationGroup failed", error);
       });
   }
 
@@ -239,10 +261,10 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .addConversationsToGroup(groupName, [conversationID1, conversationID2])
       .then((resultList: V2TIMConversationOperationResult[]) => {
-        writeResult('addConversationsToGroup succeeded', resultList);
+        writeResult("addConversationsToGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('addConversationsToGroup failed', error);
+        writeResult("addConversationsToGroup failed", error);
       });
   }
 
@@ -250,17 +272,17 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .deleteConversationsFromGroup(groupName, [conversationID1, conversationID2])
       .then((resultList: V2TIMConversationOperationResult[]) => {
-        writeResult('deleteConversationsFromGroup succeeded', resultList);
+        writeResult("deleteConversationsFromGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('deleteConversationsFromGroup failed', error);
+        writeResult("deleteConversationsFromGroup failed", error);
       });
   }
 
   static async testConversationGroupList() {
     try {
-      await V2TIMManager.getConversationManager().createConversationGroup("testConversationGroupList", [ "c2c_haha" ]);
-      await V2TIMManager.getConversationManager().createConversationGroup("testConversationGroupList2", [ "c2c_haha" ]);
+      await V2TIMManager.getConversationManager().createConversationGroup("testConversationGroupList", ["c2c_haha"]);
+      await V2TIMManager.getConversationManager().createConversationGroup("testConversationGroupList2", ["c2c_haha"]);
       const conversation = await V2TIMManager.getConversationManager().getConversation("c2c_haha");
       writeResult(conversation.conversationGroupList);
     } catch (error) {
@@ -269,27 +291,26 @@ export class ConversationTestInterfaces {
   }
 }
 
-
 const conversationListener: V2TIMConversationListener = {
   onSyncServerStart: () => {
-    onCallback('onSyncServerStart');
+    onCallback("onSyncServerStart");
   },
   onSyncServerFinish: () => {
-    onCallback('onSyncServerFinish');
+    onCallback("onSyncServerFinish");
   },
   onSyncServerFailed: () => {
-    onCallback('onSyncServerFailed');
+    onCallback("onSyncServerFailed");
   },
   onNewConversation: (conversationList: V2TIMConversation[]) => {
-    onCallback('onNewConversation', conversationList);
+    onCallback("onNewConversation", conversationList);
   },
   onConversationChanged: (conversationList: V2TIMConversation[]) => {
-    onCallback('onConversationChanged', conversationList);
+    onCallback("onConversationChanged", conversationList);
   },
   onConversationDeleted: (conversationIDList: string[]) => {
-    onCallback('onConversationDeleted', conversationIDList);
+    onCallback("onConversationDeleted", conversationIDList);
   },
   onTotalUnreadMessageCountChanged: (totalUnreadCount: number) => {
-    onCallback('onTotalUnreadMessageCountChanged', totalUnreadCount);
+    onCallback("onTotalUnreadMessageCountChanged", totalUnreadCount);
   },
 };

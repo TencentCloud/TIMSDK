@@ -159,7 +159,7 @@ export struct SignalingTestPage {
 
         Row({ space: 4 }) {
           DemoButton("邀请个人", () => {
-            SignalingTestInterfaces.invite(this.userID1, this.data, this.onlineUserOnly, this.offlinePush ? offlinePushInfo : null, this.timeout);
+            SignalingTestInterfaces.invite(this.userID1, this.data, this.onlineUserOnly, offlinePushInfo, this.timeout);
           })
           DemoButton("邀请群", () => {
             SignalingTestInterfaces.inviteInGroup(this.groupID, [this.userID1, this.userID2], this.data, this.onlineUserOnly, this.timeout);

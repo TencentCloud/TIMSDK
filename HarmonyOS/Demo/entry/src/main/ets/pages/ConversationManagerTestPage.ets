@@ -229,7 +229,7 @@ export struct ConversationManagerTestPage {
 
           Row({ space: 10 }) {
             DemoButton("getConversationList", () => {
-              ConversationTestInterfaces.getConversationListByFilter2(this.nextSeq2, this.count2, this.type, this.conversationType, this.markType);
+              ConversationTestInterfaces.getConversationListByFilter2(this.nextSeq2, this.count2, this.type!, this.conversationType!, this.markType);
             })
           }.demoRowStyle()
 
@@ -337,19 +337,19 @@ export struct ConversationManagerTestPage {
 
           Row() {
             DemoButton("getUnreadMessageCountByFilter", () => {
-              ConversationTestInterfaces.getUnreadMessageCountByFilter(this.conversationGroup, this.markType3, this.type2);
+              ConversationTestInterfaces.getUnreadMessageCountByFilter(this.conversationGroup, this.markType3, this.type2!);
             })
           }.demoRowStyle()
 
           Row() {
             DemoButton("subscribeUnreadMessageCountByFilter", () => {
-              ConversationTestInterfaces.subscribeUnreadMessageCountByFilter(this.conversationGroup, this.markType3, this.type2);
+              ConversationTestInterfaces.subscribeUnreadMessageCountByFilter(this.conversationGroup, this.markType3, this.type2!);
             })
           }.demoRowStyle()
 
           Row() {
             DemoButton("unsubscribeUnreadMessageCountByFilter", () => {
-              ConversationTestInterfaces.unsubscribeUnreadMessageCountByFilter(this.conversationGroup, this.markType3, this.type2);
+              ConversationTestInterfaces.unsubscribeUnreadMessageCountByFilter(this.conversationGroup, this.markType3, this.type2!);
             })
           }.demoRowStyle()
 

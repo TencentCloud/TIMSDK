@@ -302,21 +302,13 @@ export struct MessageManagerTestPage {
             DemoButton("sendCustom", () => {
               MessageTestInterfaces.createCustomMessageAndSend()
             })
-            DemoButton("sendImage", () => {
-              MessageTestInterfaces.createImageMessageAndSend()
-            })
+            DemoButton("sendImage", MessageTestInterfaces.createImageMessageAndSend)
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
-            DemoButton("sendSound", () => {
-              MessageTestInterfaces.createSoundMessageAndSend()
-            })
-            DemoButton("sendVideo", () => {
-              MessageTestInterfaces.createVideoMessageAndSend()
-            })
-            DemoButton("sendFile", () => {
-              MessageTestInterfaces.createFileMessageAndSend()
-            })
+            DemoButton("sendSound", MessageTestInterfaces.createSoundMessageAndSend)
+            DemoButton("sendVideo", MessageTestInterfaces.createVideoMessageAndSend)
+            DemoButton("sendFile", MessageTestInterfaces.createFileMessageAndSend)
             DemoButton("sendLocation", () => {
               MessageTestInterfaces.createLocationMessageAndSend()
             })
@@ -603,8 +595,6 @@ export struct MessageManagerTestPage {
               DemoButton("setLocalCustomInt", MessageTestInterfaces.setLocalCustomInt);
             }
           }.DemoRowStyle()
-
-          DemoButton("pick_and_upload", MessageTestInterfaces.pick_and_upload);
 
         }.alignItems(HorizontalAlign.Start)
         .align(Alignment.TopStart)

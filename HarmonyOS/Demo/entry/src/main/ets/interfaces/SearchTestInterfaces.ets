@@ -1,4 +1,4 @@
-import { writeResult } from '../pages/SearchTestPage';
+import { writeResult } from "../pages/SearchTestPage";
 import {
   V2TIMFriendSearchParam,
   V2TIMManager,
@@ -8,10 +8,10 @@ import {
   V2TIMGroupMemberSearchParam,
   V2TIMGroupMemberFullInfo,
   V2TIMMessageSearchResult,
-  V2TIMMessageSearchParam,V2TIMKeywordListMatchType,
+  V2TIMMessageSearchParam,
+  V2TIMKeywordListMatchType,
   V2TIMMessageSearchResultItem,
-
-} from '@tencentcloud/imsdk';
+} from "@tencentcloud/imsdk";
 
 @Observed
 export class SearchInfo {
@@ -38,14 +38,14 @@ export class SearchInfo {
   // search local message
   keyword7 = "";
   keyword8 = "";
-  keywordsMatchType=V2TIMKeywordListMatchType.V2TIM_KEYWORD_LIST_MATCH_TYPE_OR;
-  senderID1="";
-  senderID2="";
-  conversationID="";
-  searchTimeStart=0;
-  searchTimePeriod=0;
-  pageIndex=0;
-  pageSize=10;
+  keywordsMatchType = V2TIMKeywordListMatchType.V2TIM_KEYWORD_LIST_MATCH_TYPE_OR;
+  senderID1 = "";
+  senderID2 = "";
+  conversationID = "";
+  searchTimeStart = 0;
+  searchTimePeriod = 0;
+  pageIndex = 0;
+  pageSize = 10;
 }
 
 export let searchInfo = new SearchInfo();
@@ -58,12 +58,13 @@ export class SearchTestInterfaces {
       isSearchNickName: searchInfo.isSearchNickName,
       isSearchRemark: searchInfo.isSearchRemark,
     };
-    V2TIMManager.getFriendshipManager().searchFriends(searchParam)
+    V2TIMManager.getFriendshipManager()
+      .searchFriends(searchParam)
       .then((result: V2TIMFriendInfoResult[]) => {
-        writeResult('searchFriends succeeded', result);
+        writeResult("searchFriends succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('searchFriends failed', error);
+        writeResult("searchFriends failed", error);
       });
   }
 
@@ -72,13 +73,14 @@ export class SearchTestInterfaces {
       keywordList: [searchInfo.keyword3, searchInfo.keyword4],
       isSearchGroupID: searchInfo.isSearchGroupID,
       isSearchGroupName: searchInfo.isSearchGroupName,
-    }
-    V2TIMManager.getGroupManager().searchGroups(searchParam)
+    };
+    V2TIMManager.getGroupManager()
+      .searchGroups(searchParam)
       .then((resultList: V2TIMGroupInfo[]) => {
-        writeResult('searchGroups succeeded', resultList);
+        writeResult("searchGroups succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('searchGroups failed', error);
+        writeResult("searchGroups failed", error);
       });
   }
 
@@ -90,30 +92,31 @@ export class SearchTestInterfaces {
       isSearchMemberNickName: searchInfo.isSearchMemberNickName,
       isSearchMemberRemark: searchInfo.isSearchMemberRemark,
       isSearchMemberNameCard: searchInfo.isSearchMemberNameCard,
-    }
-    V2TIMManager.getGroupManager().searchGroupMembers(searchParam)
+    };
+    V2TIMManager.getGroupManager()
+      .searchGroupMembers(searchParam)
       .then((resultMap: Map<string, V2TIMGroupMemberFullInfo[]>) => {
-        writeResult('searchGroupMembers succeeded', resultMap);
+        writeResult("searchGroupMembers succeeded", resultMap);
       })
       .catch((error: Error) => {
-        writeResult('searchGroupMembers failed', error);
+        writeResult("searchGroupMembers failed", error);
       });
   }
 
   static searchLocalMessages() {
     let searchParam: V2TIMMessageSearchParam = {
-      keywordList:[searchInfo.keyword7, searchInfo.keyword8],
-      keywordListMatchType:searchInfo.keywordsMatchType,
-      senderUserIDList:[],
-      messageTypeList:[],
-      conversationID:searchInfo.conversationID,
-      searchTimePosition:searchInfo.searchTimeStart,
-      searchTimePeriod:searchInfo.searchTimePeriod,
-      pageIndex:searchInfo.pageIndex,
-      pageSize:searchInfo.pageSize,
+      keywordList: [searchInfo.keyword7, searchInfo.keyword8],
+      keywordListMatchType: searchInfo.keywordsMatchType,
+      senderUserIDList: [],
+      messageTypeList: [],
+      conversationID: searchInfo.conversationID,
+      searchTimePosition: searchInfo.searchTimeStart,
+      searchTimePeriod: searchInfo.searchTimePeriod,
+      pageIndex: searchInfo.pageIndex,
+      pageSize: searchInfo.pageSize,
       searchCount: 20,
       searchCursor: "",
-    }
+    };
 
     if (searchInfo.senderID1.length > 0) {
       searchParam.senderUserIDList.push(searchInfo.senderID1);
@@ -123,24 +126,25 @@ export class SearchTestInterfaces {
       searchParam.senderUserIDList.push(searchInfo.senderID2);
     }
 
-    V2TIMManager.getMessageManager().searchLocalMessages(searchParam)
+    V2TIMManager.getMessageManager()
+      .searchLocalMessages(searchParam)
       .then((result: V2TIMMessageSearchResult) => {
         let resultDescription = "";
-      resultDescription += 'searchLocalMessages succeeded, total count:' + result.totalCount;
-        resultDescription += ', search cursor:' + result.searchCursor;
+        resultDescription += "searchLocalMessages succeeded, total count:" + result.totalCount;
+        resultDescription += ", search cursor:" + result.searchCursor;
         result.messageSearchResultItems.forEach((value: V2TIMMessageSearchResultItem) => {
-          resultDescription += ',   ResultItem, convID:' + value.conversationID;
-          resultDescription += ', messageCount:' + value.messageCount;
+          resultDescription += ",   ResultItem, convID:" + value.conversationID;
+          resultDescription += ", messageCount:" + value.messageCount;
           if (value.messageList.length > 0) {
             let message = value.messageList[0];
             resultDescription += ", messageID:" + message.msgID;
           }
         });
 
-        writeResult('searchLocalMessages succeeded, ', resultDescription);
+        writeResult("searchLocalMessages succeeded, ", resultDescription);
       })
       .catch((error: Error) => {
-        writeResult('searchLocalMessages failed', error);
+        writeResult("searchLocalMessages failed", error);
       });
   }
 }

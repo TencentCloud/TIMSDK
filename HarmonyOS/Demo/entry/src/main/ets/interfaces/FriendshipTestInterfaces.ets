@@ -17,11 +17,11 @@ import {
   V2TIMFollowOperationResult,
   V2TIMUserInfoResult,
   V2TIMFollowInfo,
-} from '@tencentcloud/imsdk';
-import Prompt from '@system.prompt';
-import TestResult, { info } from "../pages/FriendshipManagerTestPage"
+} from "@tencentcloud/imsdk";
+import Prompt from "@system.prompt";
+import TestResult, { info } from "../pages/FriendshipManagerTestPage";
 
-import { onCallback, writeResult } from "../pages/FriendshipManagerTestPage"
+import { onCallback, writeResult } from "../pages/FriendshipManagerTestPage";
 
 export class FriendshipTestInterfaces {
   static friendApplicationList: V2TIMFriendApplication[] = [];
@@ -34,44 +34,43 @@ export class FriendshipTestInterfaces {
   static removeFriendListener() {
     V2TIMManager.getFriendshipManager().removeFriendListener(friendshipListener);
     Prompt.showToast({ message: "removeFriendListener" });
-
   }
 
   static getFriendList() {
-    V2TIMManager.getFriendshipManager().getFriendList()
+    V2TIMManager.getFriendshipManager()
+      .getFriendList()
       .then((info: V2TIMFriendInfo[]) => {
-        writeResult('getFriendList succeeded', info);
+        writeResult("getFriendList succeeded", info);
       })
       .catch((error: Error) => {
-        writeResult('getFriendList failed', error);
+        writeResult("getFriendList failed", error);
       });
-
   }
 
   static getFriendsInfo() {
-    V2TIMManager.getFriendshipManager().getFriendsInfo([info.userID1, info.userID2])
+    V2TIMManager.getFriendshipManager()
+      .getFriendsInfo([info.userID1, info.userID2])
       .then((info: V2TIMFriendInfoResult[]) => {
-        writeResult('getFriendsInfo succeeded', info);
+        writeResult("getFriendsInfo succeeded", info);
       })
       .catch((error: Error) => {
-        writeResult('getFriendsInfo failed', error);
+        writeResult("getFriendsInfo failed", error);
       });
-
   }
 
   static setFriendInfo() {
     let param: V2TIMSetFriendInfoParam = {
       userID: info.userID3,
       friendRemark: info.friendRemark,
-    }
-    V2TIMManager.getFriendshipManager().setFriendInfo(param)
+    };
+    V2TIMManager.getFriendshipManager()
+      .setFriendInfo(param)
       .then(() => {
-        writeResult('setFriendInfo succeeded');
+        writeResult("setFriendInfo succeeded");
       })
       .catch((error: Error) => {
-        writeResult('setFriendInfo failed', error);
+        writeResult("setFriendInfo failed", error);
       });
-
   }
 
   static addFriend() {
@@ -81,47 +80,49 @@ export class FriendshipTestInterfaces {
       addWording: info.addWording,
       addType: V2TIMFriendType.V2TIM_FRIEND_TYPE_BOTH,
     };
-    V2TIMManager.getFriendshipManager().addFriend(application)
+    V2TIMManager.getFriendshipManager()
+      .addFriend(application)
       .then((result: V2TIMFriendOperationResult) => {
-        writeResult('addFriend succeeded', result);
+        writeResult("addFriend succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('addFriend failed', error);
+        writeResult("addFriend failed", error);
       });
-
   }
 
   static deleteFromFriendList() {
     const deleteType = V2TIMFriendType.V2TIM_FRIEND_TYPE_BOTH;
-    V2TIMManager.getFriendshipManager().deleteFromFriendList([info.userID4], deleteType)
+    V2TIMManager.getFriendshipManager()
+      .deleteFromFriendList([info.userID4], deleteType)
       .then((result: V2TIMFriendOperationResult[]) => {
-        writeResult('deleteFromFriendList succeeded', result);
+        writeResult("deleteFromFriendList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('deleteFromFriendList failed', error);
+        writeResult("deleteFromFriendList failed", error);
       });
-
   }
 
   static checkFriend() {
     const checkType = V2TIMFriendType.V2TIM_FRIEND_TYPE_BOTH;
-    V2TIMManager.getFriendshipManager().checkFriend([info.userID4], checkType)
+    V2TIMManager.getFriendshipManager()
+      .checkFriend([info.userID4], checkType)
       .then((result: V2TIMFriendOperationResult[]) => {
-        writeResult('checkFriend succeeded', result);
+        writeResult("checkFriend succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('checkFriend failed', error);
+        writeResult("checkFriend failed", error);
       });
   }
 
   static getFriendApplicationList() {
-    V2TIMManager.getFriendshipManager().getFriendApplicationList()
+    V2TIMManager.getFriendshipManager()
+      .getFriendApplicationList()
       .then((result: V2TIMFriendApplicationResult) => {
         FriendshipTestInterfaces.friendApplicationList = result.applicationList;
-        writeResult('getFriendApplicationList succeeded', result);
+        writeResult("getFriendApplicationList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getFriendApplicationList failed', error);
+        writeResult("getFriendApplicationList failed", error);
       });
   }
 
@@ -137,10 +138,10 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .acceptFriendApplication(FriendshipTestInterfaces.friendApplicationList[0], acceptType, remark)
       .then((result: V2TIMFriendOperationResult) => {
-        writeResult('acceptFriendApplication succeeded', result);
+        writeResult("acceptFriendApplication succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('acceptFriendApplication failed', error);
+        writeResult("acceptFriendApplication failed", error);
       });
   }
 
@@ -152,10 +153,10 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .refuseFriendApplication(FriendshipTestInterfaces.friendApplicationList[0])
       .then((result: V2TIMFriendOperationResult) => {
-        writeResult('refuseFriendApplication succeeded', result);
+        writeResult("refuseFriendApplication succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('refuseFriendApplication failed', error);
+        writeResult("refuseFriendApplication failed", error);
       });
   }
 
@@ -167,10 +168,10 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .deleteFriendApplication(FriendshipTestInterfaces.friendApplicationList[0])
       .then(() => {
-        writeResult('deleteFriendApplication succeeded');
+        writeResult("deleteFriendApplication succeeded");
       })
       .catch((error: Error) => {
-        writeResult('deleteFriendApplication failed', error);
+        writeResult("deleteFriendApplication failed", error);
       });
   }
 
@@ -178,50 +179,54 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .setFriendApplicationRead()
       .then(() => {
-        writeResult('setFriendApplicationRead succeeded');
+        writeResult("setFriendApplicationRead succeeded");
       })
       .catch((error: Error) => {
-        writeResult('setFriendApplicationRead failed', error);
+        writeResult("setFriendApplicationRead failed", error);
       });
   }
 
   static getBlackList() {
-    V2TIMManager.getFriendshipManager().getBlackList()
+    V2TIMManager.getFriendshipManager()
+      .getBlackList()
       .then((result: V2TIMFriendInfo[]) => {
-        writeResult('getBlackList succeeded', result);
+        writeResult("getBlackList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getBlackList failed', error);
+        writeResult("getBlackList failed", error);
       });
   }
 
   static addToBlackList() {
-    V2TIMManager.getFriendshipManager().addToBlackList([info.userID5, info.userID6])
+    V2TIMManager.getFriendshipManager()
+      .addToBlackList([info.userID5, info.userID6])
       .then((result: V2TIMFriendOperationResult[]) => {
-        writeResult('addToBlackList succeeded', result);
+        writeResult("addToBlackList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('addToBlackList failed', error);
+        writeResult("addToBlackList failed", error);
       });
   }
 
   static deleteFromBlackList() {
-    V2TIMManager.getFriendshipManager().deleteFromBlackList([info.userID5, info.userID6])
+    V2TIMManager.getFriendshipManager()
+      .deleteFromBlackList([info.userID5, info.userID6])
       .then((result: V2TIMFriendOperationResult[]) => {
-        writeResult('deleteFromBlackList succeeded', result);
+        writeResult("deleteFromBlackList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('deleteFromBlackList failed', error);
+        writeResult("deleteFromBlackList failed", error);
       });
   }
 
   static createFriendGroup() {
-    V2TIMManager.getFriendshipManager().createFriendGroup(info.friendGroup, [info.userID7, info.userID8])
+    V2TIMManager.getFriendshipManager()
+      .createFriendGroup(info.friendGroup, [info.userID7, info.userID8])
       .then((result: V2TIMFriendOperationResult[]) => {
-        writeResult('createFriendGroup succeeded', result);
+        writeResult("createFriendGroup succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('createFriendGroup failed', error);
+        writeResult("createFriendGroup failed", error);
       });
   }
 
@@ -229,10 +234,10 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .addFriendsToFriendGroup(info.friendGroup, [info.userID7, info.userID8])
       .then((result: V2TIMFriendOperationResult[]) => {
-        writeResult('addFriendsToFriendGroup succeeded', result);
+        writeResult("addFriendsToFriendGroup succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('addFriendsToFriendGroup failed', error);
+        writeResult("addFriendsToFriendGroup failed", error);
       });
   }
 
@@ -240,10 +245,10 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .deleteFriendsFromFriendGroup(info.friendGroup, [info.userID7, info.userID8])
       .then((result: V2TIMFriendOperationResult[]) => {
-        writeResult('deleteFriendsFromFriendGroup succeeded', result);
+        writeResult("deleteFriendsFromFriendGroup succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('deleteFriendsFromFriendGroup failed', error);
+        writeResult("deleteFriendsFromFriendGroup failed", error);
       });
   }
 
@@ -251,10 +256,10 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .getFriendGroups([info.friendGroup2, info.friendGroup3])
       .then((result: V2TIMFriendGroup[]) => {
-        writeResult('getFriendGroups succeeded', result);
+        writeResult("getFriendGroups succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getFriendGroups failed', error);
+        writeResult("getFriendGroups failed", error);
       });
   }
 
@@ -262,134 +267,155 @@ export class FriendshipTestInterfaces {
     V2TIMManager.getFriendshipManager()
       .deleteFriendGroup([info.friendGroup2, info.friendGroup3])
       .then(() => {
-        writeResult('deleteFriendGroup succeeded');
+        writeResult("deleteFriendGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult('deleteFriendGroup failed', error);
+        writeResult("deleteFriendGroup failed", error);
       });
   }
 
   static renameFriendGroup() {
-    V2TIMManager.getFriendshipManager().renameFriendGroup(info.oldFriendGroupName, info.newFriendGroupName)
+    V2TIMManager.getFriendshipManager()
+      .renameFriendGroup(info.oldFriendGroupName, info.newFriendGroupName)
       .then(() => {
-        writeResult('renameFriendGroup succeeded');
+        writeResult("renameFriendGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult('renameFriendGroup failed', error);
+        writeResult("renameFriendGroup failed", error);
       });
   }
 
   static followUser() {
-    V2TIMManager.getFriendshipManager().followUser([info.userID1, info.userID2])
+    V2TIMManager.getFriendshipManager()
+      .followUser([info.userID1, info.userID2])
       .then((resultList: V2TIMFollowOperationResult[]) => {
-        writeResult('followUser succeeded', resultList);
+        writeResult("followUser succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('followUser failed', error);
+        writeResult("followUser failed", error);
       });
   }
 
   static unfollowUser() {
-    V2TIMManager.getFriendshipManager().unfollowUser([info.userID1, info.userID2])
+    V2TIMManager.getFriendshipManager()
+      .unfollowUser([info.userID1, info.userID2])
       .then((resultList: V2TIMFollowOperationResult[]) => {
-        writeResult('unfollowUser succeeded', resultList);
+        writeResult("unfollowUser succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('unfollowUser failed', error);
+        writeResult("unfollowUser failed", error);
       });
   }
 
   static getMyFollowingList() {
-    V2TIMManager.getFriendshipManager().getMyFollowingList("")
+    V2TIMManager.getFriendshipManager()
+      .getMyFollowingList("")
       .then((result: V2TIMUserInfoResult) => {
-        writeResult('getMyFollowingList succeeded', result);
+        writeResult("getMyFollowingList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getMyFollowingList failed', error);
+        writeResult("getMyFollowingList failed", error);
       });
   }
 
   static getMyFollowersList() {
-    V2TIMManager.getFriendshipManager().getMyFollowersList("")
+    V2TIMManager.getFriendshipManager()
+      .getMyFollowersList("")
       .then((result: V2TIMUserInfoResult) => {
-        writeResult('getMyFollowersList succeeded', result);
+        writeResult("getMyFollowersList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getMyFollowersList failed', error);
+        writeResult("getMyFollowersList failed", error);
       });
   }
 
   static getMutualFollowersList() {
-    V2TIMManager.getFriendshipManager().getMutualFollowersList("")
+    V2TIMManager.getFriendshipManager()
+      .getMutualFollowersList("")
       .then((result: V2TIMUserInfoResult) => {
-        writeResult('getMutualFollowersList succeeded', result);
+        writeResult("getMutualFollowersList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult('getMutualFollowersList failed', error);
+        writeResult("getMutualFollowersList failed", error);
       });
   }
 
   static getUserFollowInfo() {
-    V2TIMManager.getFriendshipManager().getUserFollowInfo([info.userID1, info.userID2])
+    V2TIMManager.getFriendshipManager()
+      .getUserFollowInfo([info.userID1, info.userID2])
       .then((resultList: V2TIMFollowInfo[]) => {
-        writeResult('getUserFollowInfo succeeded', resultList);
+        writeResult("getUserFollowInfo succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('getUserFollowInfo failed', error);
+        writeResult("getUserFollowInfo failed", error);
       });
   }
 
   static checkFollowType() {
-    V2TIMManager.getFriendshipManager().checkFollowType([info.userID1, info.userID2])
+    V2TIMManager.getFriendshipManager()
+      .checkFollowType([info.userID1, info.userID2])
       .then((resultList: V2TIMFollowTypeCheckResult[]) => {
-        writeResult('checkFollowType succeeded', resultList);
+        writeResult("checkFollowType succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult('checkFollowType failed', error);
+        writeResult("checkFollowType failed", error);
       });
   }
-
 }
-
 
 const friendshipListener: V2TIMFriendshipListener = {
   onFriendApplicationListAdded: (applicationList: V2TIMFriendApplication[]) => {
-    onCallback('onFriendApplicationListAdded', applicationList);
+    onCallback("onFriendApplicationListAdded", applicationList);
   },
   onFriendApplicationListDeleted: (userIDList: string[]) => {
-    onCallback('onFriendApplicationListDeleted', userIDList);
+    onCallback("onFriendApplicationListDeleted", userIDList);
   },
   onFriendApplicationListRead: () => {
-    onCallback('onFriendApplicationListRead');
+    onCallback("onFriendApplicationListRead");
   },
   onFriendListAdded: (userIDList: V2TIMFriendInfo[]) => {
-    onCallback('onFriendListAdded', userIDList);
+    onCallback("onFriendListAdded", userIDList);
   },
   onFriendListDeleted: (userIDList: string[]) => {
-    onCallback('onFriendListDeleted', userIDList);
+    onCallback("onFriendListDeleted", userIDList);
   },
   onFriendInfoChanged: (infoList: V2TIMFriendInfo[]) => {
-    onCallback('onFriendInfoChanged', infoList);
+    onCallback("onFriendInfoChanged", infoList);
+  },
+  onFriendGroupCreated: (groupName: string, friendInfoList: V2TIMFriendInfo[]) => {
+    onCallback("onFriendGroupCreated", groupName, friendInfoList);
+  },
+  onFriendGroupDeleted: (groupNameList: string[]) => {
+    onCallback("onFriendGroupDeleted", groupNameList);
+  },
+  onFriendGroupNameChanged: (oldGroupName: string, newGroupName: string) => {
+    onCallback("onFriendGroupNameChanged", oldGroupName, newGroupName);
+  },
+  onFriendsAddedToGroup: (groupName: string, friendInfoList: V2TIMFriendInfo[]) => {
+    onCallback("onFriendsAddedToGroup", groupName, friendInfoList);
+  },
+  onFriendsDeletedFromGroup: (groupName: string, friendIDList: string[]) => {
+    onCallback("onFriendsDeletedFromGroup", groupName, friendIDList);
   },
   onOfficialAccountSubscribed: (officialAccountInfo: V2TIMOfficialAccountInfo) => {
-    onCallback('onOfficialAccountSubscribed', officialAccountInfo);
+    onCallback("onOfficialAccountSubscribed", officialAccountInfo);
   },
   onOfficialAccountUnsubscribed: (officialAccountID: string) => {
-    onCallback('onOfficialAccountUnsubscribed', officialAccountID);
+    onCallback("onOfficialAccountUnsubscribed", officialAccountID);
   },
   onOfficialAccountDeleted: (officialAccountID: string) => {
-    onCallback('onOfficialAccountDeleted', officialAccountID);
+    onCallback("onOfficialAccountDeleted", officialAccountID);
   },
   onOfficialAccountInfoChanged: (officialAccountInfo: V2TIMOfficialAccountInfo) => {
-    onCallback('onOfficialAccountInfoChanged', officialAccountInfo);
+    onCallback("onOfficialAccountInfoChanged", officialAccountInfo);
   },
   onMyFollowingListChanged: (userInfoList: V2TIMUserFullInfo[], isAdd: boolean) => {
-    onCallback('onMyFollowingListChanged', userInfoList, isAdd);
+    onCallback("onMyFollowingListChanged", userInfoList, isAdd);
   },
   onMyFollowersListChanged: (userInfoList: V2TIMUserFullInfo[], isAdd: boolean) => {
-    onCallback('onMyFollowersListChanged', userInfoList, isAdd);
+    onCallback("onMyFollowersListChanged", userInfoList, isAdd);
   },
   OnMutualFollowersListChanged: (userInfoList: V2TIMUserFullInfo[], isAdd: boolean) => {
-    onCallback('OnMutualFollowersListChanged', userInfoList, isAdd);
-  }
+    onCallback("OnMutualFollowersListChanged", userInfoList, isAdd);
+  },
 };
