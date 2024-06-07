@@ -49,7 +49,6 @@
 		938345EA2A8A0EBA0072977E /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 938345D02A8A0EBA0072977E /* SettingController.m */; };
 		938345EB2A8A0EBA0072977E /* ConversationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 938345D22A8A0EBA0072977E /* ConversationController.m */; };
 		938345FA2A8A135D0072977E /* TUIStartPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 938345F92A8A135D0072977E /* TUIStartPageViewController.m */; };
-		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
 		CE48482027019FC800F53B16 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48481F27019FC800F53B16 /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -175,7 +174,6 @@
 		938345F82A8A135D0072977E /* TUIStartPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUIStartPageViewController.h; sourceTree = "<group>"; };
 		938345F92A8A135D0072977E /* TUIStartPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUIStartPageViewController.m; sourceTree = "<group>"; };
 		CB6D5FC6689E7035C0A2D6CE /* Pods_TUIKitDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TUIKitDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE0BDFA8221D53C60083E1B0 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
 		CE2D5CCC248E1B4E000E53E7 /* TUIKitDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TUIKitDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		CE48481D27019FC800F53B16 /* publishToGit */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = publishToGit; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE48481F27019FC800F53B16 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -202,7 +200,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,7 +456,6 @@
 			isa = PBXGroup;
 			children = (
 				480C761722DCA3C3007495EC /* ImSDK.framework */,
-				CE0BDFA8221D53C60083E1B0 /* Bugly.framework */,
 				CB6D5FC6689E7035C0A2D6CE /* Pods_TUIKitDemo.framework */,
 			);
 			name = Frameworks;
