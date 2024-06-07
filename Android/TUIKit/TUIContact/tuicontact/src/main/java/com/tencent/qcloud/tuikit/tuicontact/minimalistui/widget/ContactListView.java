@@ -135,9 +135,9 @@ public class ContactListView extends LinearLayout implements IContactListView {
     }
 
     @Override
-    public void onFriendApplicationChanged() {
-        if (dataSourceType == DataSource.CONTACT_LIST) {
-            mAdapter.notifyItemChanged(0);
+    public void onDataChanged(ContactItemBean contactItemBean) {
+        if (mAdapter != null) {
+            mAdapter.onDataChanged(contactItemBean);
         }
     }
 

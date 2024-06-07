@@ -107,7 +107,7 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
                                 presenter.getGroupMembers(mGroupInfo, new IUIKitCallback<GroupInfo>() {
                                     @Override
                                     public void onSuccess(GroupInfo data) {
-                                        onGroupInfoChanged(data);
+                                        onGroupMemberListChanged(data);
                                         mAdapter.notifyDataSetChanged();
                                     }
 
@@ -197,7 +197,13 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
         mAdapter.memberChanged(groupMemberInfo);
     }
 
-    public void onGroupInfoChanged(GroupInfo groupInfo) {
+    public void onGroupInfoChanged(GroupInfo groupInfo) {}
+
+    @Override
+    public void onGroupInfoModified(Object value, int type) {}
+
+    @Override
+    public void onGroupMemberListChanged(GroupInfo groupInfo) {
         mGroupInfo = groupInfo;
         presenter.setGroupInfo(groupInfo);
         mAdapter.setDataSource(groupInfo);
@@ -209,9 +215,6 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
             }
         }
     }
-
-    @Override
-    public void onGroupInfoModified(Object value, int type) {}
 
     private void buildPopMenu(GroupMemberInfo groupMemberInfo) {
         if (mGroupInfo == null) {

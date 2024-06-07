@@ -127,13 +127,6 @@ public class ContactListView extends LinearLayout implements IContactListView {
         mDecoration.setDatas(mData);
     }
 
-    @Override
-    public void onFriendApplicationChanged() {
-        if (dataSourceType == DataSource.CONTACT_LIST) {
-            mAdapter.notifyItemChanged(0);
-        }
-    }
-
     public void setSingleSelectMode(boolean mode) {
         mAdapter.setSingleSelectMode(mode);
     }
@@ -162,8 +155,21 @@ public class ContactListView extends LinearLayout implements IContactListView {
         }
     }
 
+    public void reloadContactList() {
+        if (presenter != null) {
+            presenter.reloadContactList();
+        }
+    }
+
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    @Override
+    public void onDataChanged(ContactItemBean contactItemBean) {
+        if (mAdapter != null) {
+            mAdapter.onDataChanged(contactItemBean);
+        }
     }
 
     public interface OnSelectChangedListener {

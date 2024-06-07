@@ -89,25 +89,4 @@ public class ChatInfo implements Serializable {
         this.groupType = groupType;
     }
 
-    /**
-     * Is it a pinned conversation
-     *
-     * @return
-     */
-    public boolean isTopChat() {
-        return isTopChat;
-    }
-
-    /**
-     * Set as a pinned conversation
-     *
-     * @param topChat
-     */
-    public void setTopChat(boolean topChat) {
-        isTopChat = topChat;
-    }
-
-    public List<V2TIMGroupAtInfo> getAtInfoList() {
-        return atInfoList;
-    }
 }

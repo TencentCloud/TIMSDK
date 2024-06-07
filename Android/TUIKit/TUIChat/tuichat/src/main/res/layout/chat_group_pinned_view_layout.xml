@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#FAFAFA">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/chat_group_pinned_item_view_layout"/>
+
+    <ImageView
+        android:id="@+id/more_items_button"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/chat_more_item_button"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</LinearLayout>

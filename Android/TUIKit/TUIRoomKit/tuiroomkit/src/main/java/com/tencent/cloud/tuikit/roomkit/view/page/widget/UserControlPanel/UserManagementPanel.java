@@ -1,6 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_MANAGEMENT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_USER_MANAGEMENT;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,9 +18,8 @@ import com.bumptech.glide.RequestManager;
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseDialogFragment;
 import com.tencent.cloud.tuikit.roomkit.view.component.ConfirmDialog;
@@ -59,7 +58,7 @@ public class UserManagementPanel extends BaseBottomDialog {
     @Override
     public void dismiss() {
         super.dismiss();
-        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_USER_MANAGEMENT, null);
+        ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_USER_MANAGEMENT, null);
         mViewModel.destroy();
     }
 

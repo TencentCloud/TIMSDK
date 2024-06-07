@@ -48,6 +48,8 @@
     <string name="TUIKitErrorSDKGroupJoinPrivateGroupDeny">Request to join private groups is not allowed.</string>
     <string name="TUIKitErrorSDKGroupInviteSuperDeny">Group owners cannot be invited.</string>
     <string name="TUIKitErrorSDKGroupInviteNoMember">The number of members to be invited cannot be 0.</string>
+    <string name="TUIKitErrorSDKGroupPinnedMessageCountLimit">Pinned messages over limit.</string>
+
     <string name="TUIKitErrorSDKFriendShipInvalidProfileKey">Invalid data field</string>
     <string name="TUIKitErrorSDKFriendshipInvalidAddRemark">The remark field exceeds the limit of 96 bytes.</string>
     <string name="TUIKitErrorSDKFriendshipInvalidAddWording">The description field in the friend request is invalid, which should not exceed 120 bytes.</string>

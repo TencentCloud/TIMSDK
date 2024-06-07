@@ -118,7 +118,6 @@ public class GroupMemberMinimalistActivity extends BaseMinimalistLightActivity {
                     presenter.setGroupMemberRole(groupID, groupMemberInfo.getAccount(), new IUIKitCallback<Void>() {
                         @Override
                         public void onSuccess(Void data) {
-                            ToastUtil.toastLongMessage(getString(com.tencent.qcloud.tuikit.timcommon.R.string.setting_success));
                             GroupMemberMinimalistActivity.this.onAdminRoleChanged(groupMemberInfo);
                         }
 

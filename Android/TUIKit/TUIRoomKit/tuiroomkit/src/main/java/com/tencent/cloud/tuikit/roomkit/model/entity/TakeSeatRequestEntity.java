@@ -1,13 +1,19 @@
 package com.tencent.cloud.tuikit.roomkit.model.entity;
 
+import android.os.SystemClock;
+
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 
 public class TakeSeatRequestEntity {
+    public final long receiveTimeMS = SystemClock.elapsedRealtime();
+
     private String userId;
     private String userName;
     private String avatarUrl;
 
     private TUIRoomDefine.Request request;
+
+    private boolean isChecked = false;
 
     public TakeSeatRequestEntity(String userId, String userName, String avatarUrl, TUIRoomDefine.Request request) {
         this.userId = userId;
@@ -46,5 +52,13 @@ public class TakeSeatRequestEntity {
 
     public void setRequest(TUIRoomDefine.Request request) {
         this.request = request;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

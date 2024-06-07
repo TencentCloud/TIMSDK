@@ -34,6 +34,7 @@ public class TUIThemeManager {
     private static final String SP_THEME_AND_LANGUAGE_NAME = "TUIThemeAndLanguage";
     private static final String SP_KEY_LANGUAGE = "language";
     private static final String SP_KEY_THEME = "theme";
+    private static final String SP_KEY_ENABLE_CHANGE_LANGUAGE = "enable_change_language";
 
     public static final int THEME_LIGHT = 0; // default
     public static final int THEME_LIVELY = 1;
@@ -59,7 +60,7 @@ public class TUIThemeManager {
     private int currentThemeID = THEME_LIGHT;
     private String currentLanguage = "";
     private Locale defaultLocale = null;
-    private boolean enableLanguageSwitch = true;
+    private boolean enableLanguageSwitch = false;
 
     private TUIThemeManager() {
         languageMap.put(LANGUAGE_ZH_CN, Locale.SIMPLIFIED_CHINESE);
@@ -73,6 +74,8 @@ public class TUIThemeManager {
 
     public static void setEnableLanguageSwitch(boolean enableLanguageSwitch) {
         getInstance().enableLanguageSwitch = enableLanguageSwitch;
+        SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
+        spUtils.put(SP_KEY_ENABLE_CHANGE_LANGUAGE, enableLanguageSwitch);
     }
 
     private void setThemeInternal(Context context) {
@@ -83,13 +86,15 @@ public class TUIThemeManager {
         Context appContext = context.getApplicationContext();
         if (!isInit) {
             isInit = true;
+            SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
+            enableLanguageSwitch = spUtils.getBoolean(SP_KEY_ENABLE_CHANGE_LANGUAGE, false);
+
             if (appContext instanceof Application) {
                 ((Application) appContext).registerActivityLifecycleCallbacks(new ThemeAndLanguageCallback());
             }
 
             notifySetLanguageEvent();
             Locale defaultLocale = getLocale(appContext);
-            SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
             currentLanguage = spUtils.getString(SP_KEY_LANGUAGE, defaultLocale.getLanguage());
             currentThemeID = spUtils.getInt(SP_KEY_THEME, THEME_LIGHT);
 
@@ -212,6 +217,7 @@ public class TUIThemeManager {
         if (TextUtils.equals(language, currentLanguage)) {
             return;
         }
+        setEnableLanguageSwitch(true);
         currentLanguage = language;
         SPUtils spUtils = SPUtils.getInstance(SP_THEME_AND_LANGUAGE_NAME);
         spUtils.put(SP_KEY_LANGUAGE, language, true);

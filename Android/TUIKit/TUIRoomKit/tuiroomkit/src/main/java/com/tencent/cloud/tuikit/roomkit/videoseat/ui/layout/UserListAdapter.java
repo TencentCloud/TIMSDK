@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.videoseat.ui.utils.ImageLoader;
+import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.RoundRelativeLayout;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserVolumePromptView;
 import com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel.UserEntity;

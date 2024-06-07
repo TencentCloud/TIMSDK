@@ -26,8 +26,4 @@
 
     </style>
 
-    <style name="BeginnerGuidePopupAnimation">
-        <item name="android:windowEnterAnimation">@anim/beginner_guide_in_anim</item>
-        <item name="android:windowExitAnimation">@anim/beginner_guide_out_anim</item>
-    </style>
 </resources>

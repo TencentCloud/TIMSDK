@@ -118,25 +118,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         return selectList;
     }
 
-    public void setSelectConversations(List<ConversationInfo> dataSource) {
-        if (dataSource == null || dataSource.size() == 0) {
-            mSelectedPositions.clear();
-            notifyDataSetChanged();
-            return;
-        }
-
-        mSelectedPositions.clear();
-        for (int i = 0; i < dataSource.size(); i++) {
-            for (int j = 0; j < mDataSource.size(); j++) {
-                if (TextUtils.equals(dataSource.get(i).getConversationId(), mDataSource.get(j).getConversationId())) {
-                    setItemChecked(mDataSource.get(j).getConversationId(), true);
-                    notifyDataSetChanged();
-                    break;
-                }
-            }
-        }
-    }
-
     public void setOnConversationAdapterListener(OnConversationAdapterListener listener) {
         this.mOnConversationAdapterListener = listener;
     }

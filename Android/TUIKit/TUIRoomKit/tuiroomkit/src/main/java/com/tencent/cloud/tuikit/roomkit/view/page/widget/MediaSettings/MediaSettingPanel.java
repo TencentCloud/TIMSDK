@@ -1,12 +1,13 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.ENABLE_FLOAT_CHAT;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,15 +15,22 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.SettingViewModel;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MediaSettingPanel extends BaseBottomDialog {
 
     private ConstraintLayout mClVideoResolution;
     private TextView         mTvVideoResolution;
+
+    private ConstraintLayout mClQualityCheck;
+    private SwitchCompat     mSwitchEnableFloatChat;
 
     private ConstraintLayout mClVideoFps;
     private TextView         mTvVideoFps;
@@ -47,7 +55,7 @@ public class MediaSettingPanel extends BaseBottomDialog {
     @Override
     public void dismiss() {
         super.dismiss();
-        RoomEventCenter.getInstance().notifyUIEvent(DISMISS_MEDIA_SETTING_PANEL, null);
+        ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MEDIA_SETTING_PANEL, null);
         mViewModel.destroy();
     }
 
@@ -82,6 +90,7 @@ public class MediaSettingPanel extends BaseBottomDialog {
         initAudioCaptureVolumeView();
         initAudioPlayVolumeView();
         initAudioVolumeEvaluationView();
+        initQualityInfoView();
 
         mViewModel.updateViewInitState();
     }
@@ -97,6 +106,26 @@ public class MediaSettingPanel extends BaseBottomDialog {
             }
         });
     }
+
+    private void initQualityInfoView() {
+        mClQualityCheck = findViewById(R.id.tuiroomkit_quality_check);
+        mSwitchEnableFloatChat = findViewById(R.id.tuiroomkit_enable_float_chat);
+        mClQualityCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                QualityInfoPanel qualityInfoPanel = new QualityInfoPanel(mContext);
+                qualityInfoPanel.show();
+            }
+        });
+        mSwitchEnableFloatChat.setChecked(ConferenceController.sharedInstance().getConferenceState().getEnableFloatChat());
+        mSwitchEnableFloatChat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mViewModel.enableFloatChat(isChecked);
+            }
+        });
+    }
+
 
     private void initVideoFpsView() {
         mClVideoFps = findViewById(R.id.tuiroomkit_settings_video_fps);
@@ -161,7 +190,7 @@ public class MediaSettingPanel extends BaseBottomDialog {
     private void initAudioVolumeEvaluationView() {
         mSwitchAudioVolumeEvaluation = findViewById(R.id.tuiroomkit_switch_audio_volume_evaluation);
         mSwitchAudioVolumeEvaluation.setChecked(
-                RoomEngineManager.sharedInstance().getRoomStore().audioModel.isEnableVolumeEvaluation());
+                ConferenceController.sharedInstance().getConferenceState().audioModel.isEnableVolumeEvaluation());
         mSwitchAudioVolumeEvaluation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

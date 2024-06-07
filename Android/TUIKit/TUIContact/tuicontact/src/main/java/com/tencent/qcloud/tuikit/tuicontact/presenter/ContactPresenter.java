@@ -46,9 +46,31 @@ public class ContactPresenter {
 
     private boolean isSelectForCall = false;
 
+    public ContactItemBean newContacts;
+    public ContactItemBean groupChats;
+    public ContactItemBean blackList;
+
     public ContactPresenter() {
+        initDefaultContactItemBean();
         provider = new ContactProvider();
         provider.setNextSeq(0);
+    }
+
+    private void initDefaultContactItemBean() {
+        newContacts = new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.new_friend))
+                .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER)
+                .setTop(true);
+        newContacts.setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP);
+
+        groupChats = new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.group))
+                .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER)
+                .setTop(true);
+        groupChats.setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP);
+
+        blackList = new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.blacklist))
+                .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER)
+                .setTop(true);
+        blackList.setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP);
     }
 
     public void setContactListView(IContactListView contactListView) {
@@ -83,16 +105,17 @@ public class ContactPresenter {
 
             @Override
             public void onFriendApplicationListAdded(List<FriendApplicationBean> applicationList) {
-                if (contactListView != null) {
-                    contactListView.onFriendApplicationChanged();
-                }
+                ContactPresenter.this.getFriendApplicationUnReadCount();
             }
 
             @Override
             public void onFriendApplicationListDeleted(List<String> userIDList) {
-                if (contactListView != null) {
-                    contactListView.onFriendApplicationChanged();
-                }
+                ContactPresenter.this.getFriendApplicationUnReadCount();
+            }
+
+            @Override
+            public void onFriendApplicationListRead() {
+                ContactPresenter.this.getFriendApplicationUnReadCount();
             }
 
             @Override
@@ -139,7 +162,7 @@ public class ContactPresenter {
             public void onError(String module, int errCode, String errMsg) {
                 TUIContactLog.e(TAG,
                     "load data source error , loadType = " + dataSourceType + "  "
-                        + "errCode = " + errCode + "  errMsg = " + errMsg);
+                        + "errCode = " + errCode + " errMsg = " + errMsg);
                 onDataLoaded(new ArrayList<>(), dataSourceType);
             }
         };
@@ -156,24 +179,20 @@ public class ContactPresenter {
                 provider.loadGroupListData(callback);
                 break;
             case IContactListView.DataSource.CONTACT_LIST:
-                dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.new_friend))
-                                   .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER)
-                                   .setTop(true)
-                                   .setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.group))
-                                   .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER)
-                                   .setTop(true)
-                                   .setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
-                dataSource.add((ContactItemBean) new ContactItemBean(TUIContactService.getAppContext().getResources().getString(R.string.blacklist))
-                                   .setItemBeanType(ContactItemBean.ITEM_BEAN_TYPE_CONTROLLER)
-                                   .setTop(true)
-                                   .setBaseIndexTag(ContactItemBean.INDEX_STRING_TOP));
+                dataSource.add(newContacts);
+                dataSource.add(groupChats);
+                dataSource.add(blackList);
                 dataSource.addAll(getExtensionControllerMoreList());
                 provider.loadFriendListDataAsync(callback);
+                getFriendApplicationUnReadCount();
                 break;
             default:
                 break;
         }
+    }
+
+    public void reloadContactList() {
+        loadDataSource(IContactListView.DataSource.CONTACT_LIST);
     }
 
     private List<ContactItemBean> getExtensionControllerMoreList() {
@@ -182,8 +201,7 @@ public class ContactPresenter {
             return contactItemBeanList;
         }
 
-        List<TUIExtensionInfo> extensionInfoList =
-            TUICore.getExtensionList(TUIConstants.TUIContact.Extension.ContactItem.CLASSIC_EXTENSION_ID, null);
+        List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIContact.Extension.ContactItem.CLASSIC_EXTENSION_ID, null);
         for (TUIExtensionInfo extensionInfo : extensionInfoList) {
             if (extensionInfo != null) {
                 String name = extensionInfo.getText();
@@ -236,6 +254,19 @@ public class ContactPresenter {
     }
 
     private void onDataLoaded(List<ContactItemBean> loadedData, int dataSourceType) {
+        Iterator<ContactItemBean> iterator = loadedData.iterator();
+        while (iterator.hasNext()) {
+            ContactItemBean loadedBean = iterator.next();
+            for (int i = 0; i < dataSource.size(); i++) {
+                ContactItemBean cacheBean = dataSource.get(i);
+                if (cacheBean.getId().equals(loadedBean.getId())) {
+                    dataSource.set(i, loadedBean);
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+
         dataSource.addAll(loadedData);
         notifyDataSourceChanged();
         if (dataSourceType != IContactListView.DataSource.GROUP_LIST) {
@@ -322,30 +353,6 @@ public class ContactPresenter {
         loadContactUserStatus(addUserList);
     }
 
-    public void getFriendApplicationUnreadCount(IUIKitCallback<Integer> callback) {
-        provider.getFriendApplicationListUnreadCount(callback);
-    }
-
-    public void loadFriendApplicationList(IUIKitCallback<Integer> callback) {
-        provider.loadFriendApplicationList(new IUIKitCallback<List<FriendApplicationBean>>() {
-            @Override
-            public void onSuccess(List<FriendApplicationBean> data) {
-                int size = 0;
-                for (FriendApplicationBean friendApplicationBean : data) {
-                    if (friendApplicationBean.getAddType() == FriendApplicationBean.FRIEND_APPLICATION_COME_IN) {
-                        size++;
-                    }
-                }
-                ContactUtils.callbackOnSuccess(callback, size);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
     public void createGroupChat(GroupInfo groupInfo, IUIKitCallback<String> callback) {
         provider.createGroupChat(groupInfo, new IUIKitCallback<String>() {
             @Override
@@ -419,7 +426,30 @@ public class ContactPresenter {
         loadDataSource(IContactListView.DataSource.CONTACT_LIST);
     }
 
+    public void getFriendApplicationUnReadCount() {
+        provider.getFriendApplicationListUnreadCount(new IUIKitCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer data) {
+                if (newContacts.getUnreadCount() != data) {
+                    newContacts.setUnreadCount(data);
+                    notifyDataChanged(newContacts);
+                }
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIContactLog.e(TAG, "getFriendApplicationUnreadCount failed, errCode = " + errCode + ",des = " + errMsg);
+            }
+        });
+    }
+
     public void sendGroupTipsMessage(String groupId, String messageData, IUIKitCallback<String> callback) {
         provider.sendGroupTipsMessage(groupId, messageData, callback);
+    }
+
+    private void notifyDataChanged(ContactItemBean contactItemBean) {
+        if (contactListView != null) {
+            contactListView.onDataChanged(contactItemBean);
+        }
     }
 }

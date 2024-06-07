@@ -9,7 +9,6 @@ public class TUISearchConstants {
     public static final int CONTACT_TYPE = 2;
     public static final int GROUP_TYPE = 3;
 
-    public static final String CHAT_INFO = "chatInfo";
     public static final int JSON_VERSION_4 = 4;
     public static int version = JSON_VERSION_4;
 

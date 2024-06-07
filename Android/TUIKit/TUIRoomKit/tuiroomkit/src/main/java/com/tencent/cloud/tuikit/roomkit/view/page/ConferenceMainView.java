@@ -1,7 +1,8 @@
 package com.tencent.cloud.tuikit.roomkit.view.page;
 
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ALL_SEAT_OCCUPIED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MAIN_ACTIVITY;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MAIN_ACTIVITY;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.START_LOGIN;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,10 +11,12 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -26,12 +29,13 @@ import android.widget.Toast;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.FeatureSwitch;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.TUIVideoSeatView;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseDialogFragment;
 import com.tencent.cloud.tuikit.roomkit.view.component.ConfirmDialog;
@@ -41,12 +45,14 @@ import com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar.Bot
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.ExitRoomDialog;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.InviteUserDialog;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.RoomInfoDialog;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.FloatChatView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator.LocalAudioToggleView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings.MediaSettingPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.TopView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel.TransferMasterPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserListPanel;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.WaterMark.TextWaterMarkView;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomMainViewModel;
 
 import java.lang.reflect.Method;
@@ -55,16 +61,20 @@ import java.util.Map;
 public class ConferenceMainView extends RelativeLayout {
     private static final String TAG = "ConferenceMainView";
 
+    private static final int CLICK_ACTION_MAX_MOVE_DISTANCE = 8;
+
     private static final int ROOM_BARS_DISMISS_DELAY_MS   = 3 * 1000;
     private static final int ROOM_BARS_FIRST_SHOW_TIME_MS = 6 * 1000;
 
     private Context           mContext;
     private View              mFloatingWindow;
     private TUIVideoSeatView  mVideoSeatView;
+    private FloatChatView     mFloatChatView;
     private Button            mBtnStopScreenShare;
     private FrameLayout       mLayoutTopView;
     private FrameLayout       mLayoutVideoSeat;
     private FrameLayout       mLayoutLocalAudio;
+    private FrameLayout       mLayoutFloatChatView;
     private View              mLayoutScreenCaptureGroup;
     private FrameLayout       mLayoutBottomView;
     private BottomLayout      mBottomLayout;
@@ -75,6 +85,11 @@ public class ConferenceMainView extends RelativeLayout {
     private boolean mIsBarsFirstShow      = true;
     private boolean mIsBarsShowed         = true;
     private boolean mIsBottomViewExpanded = false;
+
+    private OnClickListener mStopCaptureListener;
+    private boolean         mIsClickAction;
+    private float           mTouchDownPointX;
+    private float           mTouchDownPointY;
 
     public ConferenceMainView(Context context) {
         this(context,null);
@@ -111,8 +126,8 @@ public class ConferenceMainView extends RelativeLayout {
         if (params == null) {
             return;
         }
-        TUIRoomDefine.Request request = (TUIRoomDefine.Request) params.get(RoomEventConstant.KEY_REQUEST);
-        TUIRoomDefine.Role role = (TUIRoomDefine.Role) params.get(RoomEventConstant.KEY_ROLE);
+        TUIRoomDefine.Request request = (TUIRoomDefine.Request) params.get(ConferenceEventConstant.KEY_REQUEST);
+        TUIRoomDefine.Role role = (TUIRoomDefine.Role) params.get(ConferenceEventConstant.KEY_ROLE);
         String userRole = mContext.getString(role == TUIRoomDefine.Role.ROOM_OWNER ? R.string.tuiroomkit_role_owner :
                 R.string.tuiroomkit_role_manager);
         switch (request.requestAction) {
@@ -141,13 +156,13 @@ public class ConferenceMainView extends RelativeLayout {
                 .setNegativeListener(new BaseDialogFragment.ClickListener() {
                     @Override
                     public void onClick() {
-                        RoomEngineManager.sharedInstance()
+                        ConferenceController.sharedInstance()
                                 .responseRemoteRequest(request.requestAction, request.requestId, false, null);
                     }
                 }).setPositiveListener(new BaseDialogFragment.ClickListener() {
                     @Override
                     public void onClick() {
-                        RoomEngineManager.sharedInstance()
+                        ConferenceController.sharedInstance()
                                 .responseRemoteRequest(request.requestAction, request.requestId, true, null);
                     }
                 }).showDialog(mContext, "REQUEST_TO_OPEN_REMOTE_CAMERA");
@@ -160,13 +175,13 @@ public class ConferenceMainView extends RelativeLayout {
                 .setNegativeListener(new BaseDialogFragment.ClickListener() {
                     @Override
                     public void onClick() {
-                        RoomEngineManager.sharedInstance()
+                        ConferenceController.sharedInstance()
                                 .responseRemoteRequest(request.requestAction, request.requestId, false, null);
                     }
                 }).setPositiveListener(new BaseDialogFragment.ClickListener() {
                     @Override
                     public void onClick() {
-                        RoomEngineManager.sharedInstance()
+                        ConferenceController.sharedInstance()
                                 .responseRemoteRequest(request.requestAction, request.requestId, true, null);
                     }
                 }).showDialog(mContext, "REQUEST_TO_OPEN_REMOTE_MICROPHONE");
@@ -180,13 +195,13 @@ public class ConferenceMainView extends RelativeLayout {
                 .setNegativeListener(new BaseDialogFragment.ClickListener() {
                     @Override
                     public void onClick() {
-                        RoomEngineManager.sharedInstance()
+                        ConferenceController.sharedInstance()
                                 .responseRemoteRequest(request.requestAction, request.requestId, false, null);
                     }
                 }).setPositiveListener(new BaseDialogFragment.ClickListener() {
                     @Override
                     public void onClick() {
-                        RoomEngineManager.sharedInstance()
+                        ConferenceController.sharedInstance()
                                 .responseRemoteRequest(request.requestAction, request.requestId, true,
                                         new TUIRoomDefine.ActionCallback() {
                                             @Override
@@ -200,7 +215,7 @@ public class ConferenceMainView extends RelativeLayout {
                                                         + " message=" + message);
                                                 if (ALL_SEAT_OCCUPIED == error) {
                                                     RoomToast.toastShortMessageCenter(
-                                                            mContext.getString(R.string.tuiroomkit_all_seat_occupied));
+                                                            mContext.getString(R.string.tuiroomkit_stage_full_of_general));
                                                 } else {
                                                     RoomToast.toastShortMessageCenter(mContext.getString(
                                                             R.string.tuiroomkit_invited_take_seat_time_out));
@@ -217,6 +232,8 @@ public class ConferenceMainView extends RelativeLayout {
         mViewModel = new RoomMainViewModel(mContext, this);
         mVideoSeatView = new TUIVideoSeatView(mContext);
         mVideoSeatView.setViewClickListener(this::onClick);
+        mFloatChatView = new FloatChatView(mContext, mViewModel.getRoomId());
+        mFloatChatView.setViewClickListener(this::onClick);
         initView();
     }
 
@@ -229,22 +246,26 @@ public class ConferenceMainView extends RelativeLayout {
         mLayoutTopView = findViewById(R.id.tuiroomit_top_view_container);
         mLayoutTopView.addView(new TopView(mContext));
 
+        mLayoutFloatChatView = findViewById(R.id.tuiroomkit_float_chat_view_container);
+        ViewParent floatChatViewParent = mFloatChatView.getParent();
+        if (floatChatViewParent != null && floatChatViewParent instanceof ViewGroup) {
+            ((ViewGroup) floatChatViewParent).removeView(mFloatChatView);
+        }
+        mFloatChatView.isShow(mViewModel.isFloatChatEnable());
+        mLayoutFloatChatView.addView(mFloatChatView);
+
         mLayoutVideoSeat = findViewById(R.id.tuiroomkit_video_seat_container);
         ViewParent parent = mVideoSeatView.getParent();
         if (parent != null && parent instanceof ViewGroup) {
             ((ViewGroup) parent).removeView(mVideoSeatView);
         }
         mLayoutVideoSeat.addView(mVideoSeatView);
-
-        mLayoutScreenCaptureGroup = findViewById(R.id.tuiroomkit_group_screen_capture);
-        mLayoutScreenCaptureGroup.setOnClickListener(this::onClick);
-        mBtnStopScreenShare = findViewById(R.id.tuiroomkit_btn_stop_screen_capture);
-        mBtnStopScreenShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewModel.stopScreenCapture();
-            }
-        });
+        if (FeatureSwitch.SWITCH_TEXT_WATER_MARK) {
+            TextWaterMarkView textWaterMarkView = new TextWaterMarkView(mContext);
+            textWaterMarkView.setText(mViewModel.getWaterMakText());
+            mLayoutVideoSeat.addView(textWaterMarkView);
+        }
+        initScreenCaptureView();
 
         mBottomLayout = new BottomLayout(mContext);
         mBottomLayout.setExpandStateListener(this::onExpandStateChanged);
@@ -259,13 +280,20 @@ public class ConferenceMainView extends RelativeLayout {
         mLayoutLocalAudio = findViewById(R.id.tuiroomit_local_audio_container);
         mLayoutLocalAudio.addView(new LocalAudioToggleView(mContext));
 
-        if (RoomEngineManager.sharedInstance().getRoomStore().videoModel.isScreenSharing()) {
+        if (ConferenceController.sharedInstance().getConferenceState().videoModel.isScreenSharing()) {
             onScreenShareStarted();
         }
         showRoomBars();
         if (mIsBottomViewExpanded) {
             mBottomLayout.expandView();
         }
+    }
+
+    private void initScreenCaptureView() {
+        mLayoutScreenCaptureGroup = findViewById(R.id.tuiroomkit_group_screen_capture);
+        mLayoutScreenCaptureGroup.setOnClickListener(this::onClick);
+        mBtnStopScreenShare = findViewById(R.id.tuiroomkit_btn_stop_screen_capture);
+        mStopCaptureListener = v -> mViewModel.stopScreenCapture();
     }
 
     public void stopScreenShare() {
@@ -288,6 +316,7 @@ public class ConferenceMainView extends RelativeLayout {
         initView();
         mViewModel.notifyConfigChange(newConfig);
         mViewModel.setCameraResolutionMode(newConfig);
+        ConferenceController.sharedInstance().getViewController().updateScreenOrientation(newConfig);
     }
 
     public void showMediaSettingsPanel() {
@@ -346,9 +375,8 @@ public class ConferenceMainView extends RelativeLayout {
         confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
             @Override
             public void onClick() {
-                RoomEngineManager.sharedInstance().release();
                 confirmDialog.dismiss();
-                RoomEventCenter.getInstance().notifyUIEvent(DISMISS_MAIN_ACTIVITY, null);
+                ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MAIN_ACTIVITY, null);
             }
         });
         confirmDialog.show();
@@ -362,11 +390,27 @@ public class ConferenceMainView extends RelativeLayout {
         confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
             @Override
             public void onClick() {
-                RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.KICKED_OFF_LINE, null);
                 confirmDialog.dismiss();
+                ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MAIN_ACTIVITY, null);
+                ConferenceEventCenter.getInstance().notifyUIEvent(START_LOGIN, null);
             }
         });
         confirmDialog.show();
+    }
+
+    public void showLogoutDialog() {
+        BaseDialogFragment.build()
+                .setTitle(mContext.getString(R.string.tuiroomkit_dialog_logout_title))
+                .hideNegativeView()
+                .setPositiveName(mContext.getString(R.string.tuiroomkit_confirm))
+                .setPositiveListener(new BaseDialogFragment.ClickListener() {
+                    @Override
+                    public void onClick() {
+                        ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MAIN_ACTIVITY, null);
+                        ConferenceEventCenter.getInstance().notifyUIEvent(START_LOGIN, null);
+                    }
+                })
+                .showDialog(mContext, "showLogoutDialog");
     }
 
     public void showSingleConfirmDialog(String message) {
@@ -387,6 +431,17 @@ public class ConferenceMainView extends RelativeLayout {
         confirmDialog.show();
     }
 
+    public void isShowFloatChat(boolean enable) {
+        mFloatChatView.isShow(enable);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        Configuration curConfig = mContext.getResources().getConfiguration();
+        ConferenceController.sharedInstance().getViewController().updateScreenOrientation(curConfig);
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -394,6 +449,9 @@ public class ConferenceMainView extends RelativeLayout {
         mViewModel.destroy();
         if (mVideoSeatView != null) {
             mVideoSeatView.destroy();
+        }
+        if (mFloatChatView != null) {
+            mFloatChatView.destroy();
         }
     }
 
@@ -518,8 +576,62 @@ public class ConferenceMainView extends RelativeLayout {
             return;
         }
         Activity activity = (Activity) context;
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         store.setMainActivityClass(activity.getClass());
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        performClickEventFromTouch(ev);
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private void performClickEventFromTouch(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mTouchDownPointX = event.getX();
+                mTouchDownPointY = event.getY();
+                mIsClickAction = true;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                float xDistance = Math.abs(event.getX() - mTouchDownPointX);
+                float yDistance = Math.abs(event.getY() - mTouchDownPointY);
+                if (xDistance >= CLICK_ACTION_MAX_MOVE_DISTANCE || yDistance >= CLICK_ACTION_MAX_MOVE_DISTANCE) {
+                    mIsClickAction = false;
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+                if (mIsClickAction) {
+                    clickStopCaptureBtn(event);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void clickStopCaptureBtn(MotionEvent event) {
+        if (!canReceivePointerEvents(mLayoutScreenCaptureGroup) || !canReceivePointerEvents(mBtnStopScreenShare)
+                || !isEventInsideView(mBtnStopScreenShare, event.getX(), event.getY())) {
+            return;
+        }
+        mStopCaptureListener.onClick(mBtnStopScreenShare);
+    }
+
+    private boolean canReceivePointerEvents(View view) {
+        return view.getVisibility() == VISIBLE || view.getAnimation() != null;
+    }
+
+    private boolean isEventInsideView(View view, float x, float y) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        int viewX = location[0];
+        int viewY = location[1];
+        int viewWidth = view.getWidth();
+        int viewHeight = view.getHeight();
+        return x >= viewX && x <= (viewX + viewWidth) && y >= viewY && y <= (viewY + viewHeight);
+    }
 }

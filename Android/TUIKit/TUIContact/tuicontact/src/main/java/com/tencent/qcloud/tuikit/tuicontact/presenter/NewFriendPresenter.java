@@ -1,7 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicontact.presenter;
 
 import android.text.TextUtils;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
@@ -85,7 +84,7 @@ public class NewFriendPresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
+                TUIContactLog.e(TAG, "load friend application list error, errCode = " + errCode + " errMsg = " + errMsg);
             }
         });
     }
@@ -124,7 +123,7 @@ public class NewFriendPresenter {
         });
     }
 
-    public void setFriendApplicationListAllRead(IUIKitCallback<Void> callback) {
-        provider.setGroupApplicationRead(callback);
+    public void setFriendApplicationRead(IUIKitCallback<Void> callback) {
+        provider.setFriendApplicationRead(callback);
     }
 }

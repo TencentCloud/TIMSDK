@@ -107,7 +107,7 @@ public class ConversationUtils {
             info.setId(conversation.getUserID());
         }
 
-        info.setShowDisturbIcon(conversation.getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
+        info.setShowDisturbIcon(conversation.getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
         info.setConversationId(conversation.getConversationID());
         info.setGroup(isGroup);
         if (!V2TIMManager.GROUP_TYPE_AVCHATROOM.equals(conversation.getGroupType())) {

@@ -429,24 +429,24 @@ public class SearchMainActivity extends BaseLightActivity {
     }
 
     private void initView() {
-        mEdtSearch = (EditText) findViewById(R.id.edt_search);
-        mImgvDelete = (ImageView) findViewById(R.id.imgv_delete);
-        mFriendRcSearch = (RecyclerView) findViewById(R.id.friend_rc_search);
-        mGroupRcSearch = (RecyclerView) findViewById(R.id.group_rc_search);
-        mConversationRcSearch = (PageRecycleView) findViewById(R.id.conversation_rc_search);
-        mCancleView = (TextView) findViewById(R.id.cancel_button);
+        mEdtSearch = findViewById(R.id.edt_search);
+        mImgvDelete = findViewById(R.id.imgv_delete);
+        mFriendRcSearch = findViewById(R.id.friend_rc_search);
+        mGroupRcSearch = findViewById(R.id.group_rc_search);
+        mConversationRcSearch = findViewById(R.id.conversation_rc_search);
+        mCancleView = findViewById(R.id.cancel_button);
         mFriendRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mGroupRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mConversationRcSearch.setLayoutManager(new LinearLayoutManager(this));
         mFriendRcSearch.setNestedScrollingEnabled(false);
         mGroupRcSearch.setNestedScrollingEnabled(false);
         mConversationRcSearch.setNestedScrollingEnabled(false);
-        mContactLayout = (RelativeLayout) findViewById(R.id.contact_layout);
-        mMoreContactLayout = (RelativeLayout) findViewById(R.id.more_contact_layout);
-        mGroupLayout = (RelativeLayout) findViewById(R.id.group_layout);
-        mMoreGroupLayout = (RelativeLayout) findViewById(R.id.more_group_layout);
-        mConversationLayout = (RelativeLayout) findViewById(R.id.conversation_layout);
-        mMoreConversationLayout = (RelativeLayout) findViewById(R.id.more_conversation_layout);
+        mContactLayout = findViewById(R.id.contact_layout);
+        mMoreContactLayout = findViewById(R.id.more_contact_layout);
+        mGroupLayout = findViewById(R.id.group_layout);
+        mMoreGroupLayout = findViewById(R.id.more_group_layout);
+        mConversationLayout = findViewById(R.id.conversation_layout);
+        mMoreConversationLayout = findViewById(R.id.more_conversation_layout);
     }
 
     @Override

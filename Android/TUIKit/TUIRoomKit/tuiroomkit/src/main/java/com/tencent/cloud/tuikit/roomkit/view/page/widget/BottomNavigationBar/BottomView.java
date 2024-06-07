@@ -3,13 +3,11 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.StateListDrawable;
-import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -17,7 +15,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomItemData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomSelectItemData;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.component.ConfirmDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.BottomViewModel;
 
@@ -29,7 +27,7 @@ public class BottomView extends LinearLayout {
     public static int MAINVIEW = 0;
     public static int EXTENSIONVIEW = 4;
     public static int TALK_FREEDOM = 5;
-    public static int TALK_SEAT_MODE = 6;
+
     private Context                                        mContext;
     private BottomViewModel                                mViewModel;
     private List<BottomItemData>                           mDataList;
@@ -105,34 +103,13 @@ public class BottomView extends LinearLayout {
     }
 
     public void addItem(final BottomItemData itemData) {
-        if (itemData == null) {
-            return;
-        }
         View layout = View.inflate(mContext, R.layout.tuiroomkit_bottom_button, null);
-        final AppCompatImageButton button = layout.findViewById(R.id.image_button);
-        final TextView textItemName = layout.findViewById(R.id.tv_item_name);
-        if (TextUtils.isEmpty(itemData.getName())) {
-            textItemName.setVisibility(GONE);
-        } else {
-            textItemName.setText(itemData.getName());
-        }
+        addSeatRequestCountViewIfNeeded(layout, itemData);
+        TextView textItemName = layout.findViewById(R.id.tuiroomkit_tv_bottom_item_name);
+        textItemName.setText(itemData.getName());
         layout.setBackgroundResource(itemData.getBackground());
 
-        int width = itemData.getWidth() == 0 ? getResources()
-                .getDimensionPixelSize(R.dimen.tuiroomkit_bottom_item_icon_width) : itemData.getWidth();
-        int height = itemData.getHeight() == 0 ? getResources()
-                .getDimensionPixelSize(R.dimen.tuiroomkit_bottom_item_icon_height) : itemData.getHeight();
-        if (itemData.getView() != null) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
-            params.bottomMargin = 15;
-            params.addRule(RelativeLayout.CENTER_IN_PARENT);
-            params.addRule(RelativeLayout.ABOVE, R.id.tv_item_name);
-            ((ViewGroup) layout).removeView(button);
-            ((ViewGroup) layout).addView(itemData.getView(), params);
-            addView(layout);
-            updateItemsPosition();
-            return;
-        }
+        AppCompatImageButton button = layout.findViewById(R.id.tuiroomkit_btn_bottom_item_icon);
         button.setScaleType(ImageView.ScaleType.FIT_XY);
         StateListDrawable stateListDrawable = createStateListDrawable(itemData);
         button.setBackground(stateListDrawable);
@@ -219,7 +196,7 @@ public class BottomView extends LinearLayout {
         confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
             @Override
             public void onClick() {
-                RoomEngineManager.sharedInstance().stopScreenCapture();
+                ConferenceController.sharedInstance().stopScreenCapture();
                 confirmDialog.dismiss();
             }
         });
@@ -305,5 +282,14 @@ public class BottomView extends LinearLayout {
         if (textView != null) {
             textView.setAlpha(enable ? 1.0f : 0.5f);
         }
+    }
+
+    private void addSeatRequestCountViewIfNeeded(View layout, BottomItemData itemData) {
+        if (itemData.getType() != BottomItemData.Type.APPLY) {
+            return;
+        }
+        FrameLayout seatRequestCountContainer = layout.findViewById(R.id.tuiroomkit_fl_notice_container);
+        seatRequestCountContainer.removeAllViews();
+        seatRequestCountContainer.addView(new SeatRequestCountView(mContext));
     }
 }

@@ -13,8 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.RoundRelativeLayout;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -62,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_TAKE_PHOTO, false);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_RECORD_VIDEO, false);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_ID,
-                RoomEngineManager.sharedInstance().getRoomStore().roomInfo.roomId);
+                ConferenceController.sharedInstance().getConferenceState().roomInfo.roomId);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE,
                 TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE_GROUP);
         map.put(TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TITLE, getString(R.string.tuiroomkit_item_chat));

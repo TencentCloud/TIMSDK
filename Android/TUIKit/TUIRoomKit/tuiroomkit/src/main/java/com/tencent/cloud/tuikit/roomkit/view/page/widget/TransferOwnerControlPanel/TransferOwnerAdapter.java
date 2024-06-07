@@ -15,9 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.ImageLoader;
-import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 
 import java.util.List;
 
@@ -100,7 +99,7 @@ public class TransferOwnerAdapter extends RecyclerView.Adapter<TransferOwnerAdap
 
         private boolean hideItemIfNeeded(UserEntity user) {
             if (user.getVideoStreamType() == SCREEN_STREAM || TextUtils.equals(user.getUserId(),
-                    RoomEngineManager.sharedInstance().getRoomStore().userModel.userId)) {
+                    ConferenceController.sharedInstance().getConferenceState().userModel.userId)) {
                 rootView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
                 return true;
             }

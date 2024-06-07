@@ -4,11 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.text.TextUtils;
-import android.util.Log;
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.google.auto.service.AutoService;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.config.AppConfig;
@@ -19,21 +15,15 @@ import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerDependency;
 import com.tencent.qcloud.tuicore.annotations.TUIInitializerID;
-import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuicore.interfaces.TUILoginListener;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-
-import java.util.Map;
 
 @AutoService(TUIInitializer.class)
 @TUIInitializerDependency("TIMCommon")
@@ -63,7 +53,6 @@ public class TIMAppService implements TUIInitializer, ITUIService {
         initThemeAndLanguageChangedReceiver();
         initLoginStatusListener();
     }
-
 
     public void initLoginStatusListener() {
         TUILogin.addLoginListener(loginStatusListener);
@@ -146,6 +135,11 @@ public class TIMAppService implements TUIInitializer, ITUIService {
         }
 
         initSetting.initBeforeLogin(sdkappid);
+    }
+
+    public void startLoginActivity() {
+        Intent intent = new Intent(mContext, LoginForDevActivity.class);
+        mContext.startActivity(intent);
     }
 
     public static Context getAppContext() {

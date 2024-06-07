@@ -15,7 +15,6 @@ public class GroupInfo extends ChatInfo {
     private String groupName;
     private String notice;
     private List<GroupMemberInfo> memberDetails = new ArrayList<>();
-    private int joinType;
     private String owner;
     private boolean messageReceiveOption;
     private String faceUrl;
@@ -51,24 +50,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * Get the group verification method
-     *
-     * @return
-     */
-    public int getJoinType() {
-        return joinType;
-    }
-
-    /**
-     * Set the group verification method
-     *
-     * @param joinType
-     */
-    public void setJoinType(int joinType) {
-        this.joinType = joinType;
-    }
-
-    /**
      * Get the group type, Public/Private/ChatRoom
      *
      * @return
@@ -84,24 +65,6 @@ public class GroupInfo extends ChatInfo {
      */
     public void setGroupType(String groupType) {
         this.groupType = groupType;
-    }
-
-    /**
-     * Get member details
-     *
-     * @return
-     */
-    public List<GroupMemberInfo> getMemberDetails() {
-        return memberDetails;
-    }
-
-    /**
-     * Set member details
-     *
-     * @param memberDetails
-     */
-    public void setMemberDetails(List<GroupMemberInfo> memberDetails) {
-        this.memberDetails = memberDetails;
     }
 
     /**
@@ -141,23 +104,6 @@ public class GroupInfo extends ChatInfo {
      */
     public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    /**
-     * Get the current user's message receiving option in the group. To modify the group message receiving option, please call the setReceiveMessageOpt API.
-     *
-     * @return
-     */
-    public boolean getMessageReceiveOption() {
-        return messageReceiveOption;
-    }
-
-    /**
-     * Set the current user's message receiving option in the group.
-     * @param messageReceiveOption, true,no message will be received； false，messages will be received.
-     */
-    public void setMessageReceiveOption(boolean messageReceiveOption) {
-        this.messageReceiveOption = messageReceiveOption;
     }
 
     public String getFaceUrl() {

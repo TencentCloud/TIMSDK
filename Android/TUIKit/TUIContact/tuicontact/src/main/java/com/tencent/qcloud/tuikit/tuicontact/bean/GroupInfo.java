@@ -40,18 +40,6 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 
-     *
-     * Get group announcements
-     *
-     * @return
-     */
-    public String getNotice() {
-        return notice;
-    }
-
-    /**
-     * 
-     *
      * Set group announcements
      *
      * @param signature
@@ -128,21 +116,6 @@ public class GroupInfo extends ChatInfo {
 
     /**
      * 
-     *
-     * Get the number of members that have joined the group
-     *
-     * @return
-     */
-    public int getMemberCount() {
-        if (memberDetails != null) {
-            return memberDetails.size();
-        }
-        return memberCount;
-    }
-
-    /**
-     * 
-     *
      * Set the number of members that have joined the group
      *
      * @param memberCount
@@ -152,43 +125,6 @@ public class GroupInfo extends ChatInfo {
     }
 
     /**
-     * 
-     *
-     * Returns whether it is the owner of the group
-     *
-     * @return
-     */
-    public boolean isOwner() {
-        return V2TIMManager.getInstance().getLoginUser().equals(owner);
-    }
-
-    /**
-     * 
-     *
-     * Set whether it is the owner of the group
-     *
-     * @param owner
-     */
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    /**
-     * 
-     *
-     * Get the current user's message receiving option in the group. To modify the group message receiving option, please call the setReceiveMessageOpt API.
-     *
-     * @return
-     */
-    public boolean getMessageReceiveOption() {
-        return messageReceiveOption;
-    }
-
-    /**
-     * 
-     * @param messageReceiveOption, true,； false，
-     *
-     *
      * Set the current user's message receiving option in the group.
      * @param messageReceiveOption, true,no message will be received； false，messages will be received.
      */
@@ -216,30 +152,4 @@ public class GroupInfo extends ChatInfo {
         this.iconUrlList = iconUrlList;
     }
 
-    public List<Object> getIconUrlList() {
-        return iconUrlList;
-    }
-
-    /**
-     * SDKTUIKitbean
-     *
-     * @param infoResult
-     * @return
-     */
-    public GroupInfo covertTIMGroupDetailInfo(V2TIMGroupInfoResult infoResult) {
-        if (infoResult.getResultCode() != 0) {
-            return this;
-        }
-        setChatName(infoResult.getGroupInfo().getGroupName());
-        setGroupName(infoResult.getGroupInfo().getGroupName());
-        setId(infoResult.getGroupInfo().getGroupID());
-        setNotice(infoResult.getGroupInfo().getNotification());
-        setMemberCount(infoResult.getGroupInfo().getMemberCount());
-        setGroupType(infoResult.getGroupInfo().getGroupType());
-        setOwner(infoResult.getGroupInfo().getOwner());
-        setJoinType(infoResult.getGroupInfo().getGroupAddOpt());
-        setMessageReceiveOption(infoResult.getGroupInfo().getRecvOpt() == V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE ? true : false);
-        setCommunitySupportTopic(infoResult.getGroupInfo().isSupportTopic());
-        return this;
-    }
 }

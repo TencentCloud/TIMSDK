@@ -6,10 +6,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.qcloud.tuicore.TUIConfig;
@@ -55,7 +53,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,10 +66,14 @@ import java.util.concurrent.CountDownLatch;
 
 public abstract class ChatPresenter {
     private static final String TAG = ChatPresenter.class.getSimpleName();
+
     // Time interval for forwarding Group messages one by one
     private static final int FORWARD_GROUP_INTERVAL = 90;
+
     // Time interval for forwarding C2C messages one by one
     private static final int FORWARD_C2C_INTERVAL = 50;
+    private static final int FORWARD_MSG_ABSTRACT_LENGTH = 98;
+
     // Message read reporting interval
     private static final int READ_REPORT_INTERVAL = 1000;
 
@@ -89,8 +90,6 @@ public abstract class ChatPresenter {
 
     protected ChatNotifyHandler chatNotifyHandler;
 
-    private long lastReadReportTime = 0L;
-    private boolean canReadReport = true;
     private final MessageReadReportHandler readReportHandler = new MessageReadReportHandler();
 
     // Whether the current chat interface is displayed, used to determine whether the received message is set to read
@@ -162,16 +161,16 @@ public abstract class ChatPresenter {
 
     public void clearMessage() {
         loadedMessageInfoList.clear();
-        messageListAdapter.onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+        updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
     }
 
     public void scrollToNewestMessage() {
         if (!isHaveMoreNewMessage) {
-            messageListAdapter.onScrollToEnd();
+            messageRecyclerView.scrollToEnd();
             return;
         }
         loadedMessageInfoList.clear();
-        messageListAdapter.onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+        updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
         isHaveMoreOldMessage = true;
         loadMessage(TUIChatConstants.GET_MESSAGE_FORWARD, null);
     }
@@ -222,10 +221,6 @@ public abstract class ChatPresenter {
         // If it is already in the list, jump directly to the corresponding position, otherwise clear and reload
         for (TUIMessageBean loadedMessage : loadedMessageInfoList) {
             if (TextUtils.equals(originMsgId, loadedMessage.getId())) {
-                if (loadedMessage.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-                    TUIChatUtils.callbackOnError(callback, -1, "origin msg is revoked");
-                    return;
-                }
                 updateAdapter(IMessageRecyclerView.SCROLL_TO_POSITION, loadedMessage);
                 return;
             }
@@ -520,11 +515,38 @@ public abstract class ChatPresenter {
                     latch.countDown();
                     return;
                 }
+                List<TUIMessageBean> originMessageBeans = new ArrayList<>();
+                Iterator<String> iterator = msgIdList.iterator();
+                List<TUIMessageBean> loadedData = getLoadedMessageList();
+                while (iterator.hasNext()) {
+                    String msgID = iterator.next();
+                    for (TUIMessageBean messageBean : loadedData) {
+                        if (TextUtils.equals(messageBean.getId(), msgID)) {
+                            originMessageBeans.add(messageBean);
+                            iterator.remove();
+                            break;
+                        }
+                    }
+                }
                 findMessage(msgIdList, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> originData) {
-                        for (int i = 0; i < originData.size(); i++) {
-                            TUIMessageBean originMessageBean = originData.get(i);
+                        setQuoteMessageAbstractEnable();
+                        originMessageBeans.addAll(originData);
+                        setOriginMessageBean();
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        setQuoteMessageAbstractEnable();
+                        setOriginMessageBean();
+                        latch.countDown();
+                    }
+
+                    private void setOriginMessageBean() {
+                        for (int i = 0; i < originMessageBeans.size(); i++) {
+                            TUIMessageBean originMessageBean = originMessageBeans.get(i);
                             if (originMessageBean == null) {
                                 continue;
                             }
@@ -534,34 +556,44 @@ public abstract class ChatPresenter {
                                 }
                             }
                         }
-                        latch.countDown();
                     }
 
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        latch.countDown();
+                    private void setQuoteMessageAbstractEnable() {
+                        for (QuoteMessageBean quoteMessageBean : quoteMessageList) {
+                            quoteMessageBean.setAbstractEnable(true);
+                        }
                     }
                 });
             }
         };
         ThreadUtils.execute(findMessageRunnable);
 
-        Runnable parseReplyUserNameRunnable = new Runnable() {
+        Runnable requestForAdditionalUserBean = new Runnable() {
             @Override
             public void run() {
-                Set<String> userIdSet = getReplyUserNames(data);
-                if (userIdSet.isEmpty()) {
+                Map<TUIMessageBean, Set<String>> requestAdditionalUserBeanMap = new HashMap<>();
+                Set<String> allUserIdSet = new HashSet<>();
+                for (TUIMessageBean messageBean : data) {
+                    Set<String> userIdSet = messageBean.getAdditionalUserIDList();
+                    if (!userIdSet.isEmpty()) {
+                        requestAdditionalUserBeanMap.put(messageBean, userIdSet);
+                        allUserIdSet.addAll(userIdSet);
+                        updateSet.add(messageBean);
+                    }
+                }
+                if (allUserIdSet.isEmpty()) {
                     latch.countDown();
                     return;
                 }
-                getUserBean(userIdSet, new IUIKitCallback<Map<String, UserBean>>() {
+                getUserBean(allUserIdSet, new IUIKitCallback<Map<String, UserBean>>() {
                     @Override
                     public void onSuccess(Map<String, UserBean> userBeanMap) {
-                        for (TUIMessageBean messageBean : data) {
-                            MessageRepliesBean repliesBean = messageBean.getMessageRepliesBean();
-                            if (repliesBean != null) {
-                                updateSet.add(messageBean);
-                                setMessageReplyBean(repliesBean, userBeanMap);
+                        for (Map.Entry<TUIMessageBean, Set<String>> entry : requestAdditionalUserBeanMap.entrySet()) {
+                            Set<String> userIDSet = entry.getValue();
+                            TUIMessageBean messageBean = entry.getKey();
+                            for (String userID : userIDSet) {
+                                UserBean userBean = userBeanMap.get(userID);
+                                messageBean.setUserBean(userID, userBean);
                             }
                         }
                         latch.countDown();
@@ -574,7 +606,7 @@ public abstract class ChatPresenter {
                 });
             }
         };
-        ThreadUtils.execute(parseReplyUserNameRunnable);
+        ThreadUtils.execute(requestForAdditionalUserBean);
 
         Runnable mergeRunnable = new Runnable() {
             @Override
@@ -588,7 +620,7 @@ public abstract class ChatPresenter {
                     @Override
                     public void run() {
                         for (TUIMessageBean messageBean : updateSet) {
-                            TUIChatService.getInstance().refreshMessage(messageBean);
+                            updateMessageInfo(messageBean, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
                         }
                     }
                 };
@@ -598,42 +630,17 @@ public abstract class ChatPresenter {
         ThreadUtils.execute(mergeRunnable);
     }
 
-    public void setMessageReplyBean(MessageRepliesBean repliesBean, Map<String, UserBean> map) {
-        List<MessageRepliesBean.ReplyBean> replyBeanList = repliesBean.getReplies();
-        if (replyBeanList != null && replyBeanList.size() > 0) {
-            for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
-                UserBean userBean = map.get(replyBean.getMessageSender());
-                if (userBean != null) {
-                    replyBean.setSenderFaceUrl(userBean.getFaceUrl());
-                    replyBean.setSenderShowName(userBean.getDisplayString());
-                }
-            }
-        }
-    }
-
-    public Set<String> getReplyUserNames(List<TUIMessageBean> messageBeans) {
-        Set<String> userIdSet = new HashSet<>();
-        for (TUIMessageBean messageBean : messageBeans) {
-            MessageRepliesBean messageRepliesBean = messageBean.getMessageRepliesBean();
-            if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
-                List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
-                for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
-                    userIdSet.add(replyBean.getMessageSender());
-                }
-            }
-        }
-        return userIdSet;
-    }
-
     protected void addMessageInfo(TUIMessageBean messageInfo) {
-        if (messageInfo == null) {
-            return;
-        }
-        if (checkExist(messageInfo)) {
-            return;
-        }
-        loadedMessageInfoList.add(messageInfo);
-        updateAdapter(IMessageRecyclerView.DATA_CHANGE_NEW_MESSAGE, 1);
+        ThreadUtils.runOnUiThread(() -> {
+            if (messageInfo == null) {
+                return;
+            }
+            if (checkExist(messageInfo)) {
+                return;
+            }
+            loadedMessageInfoList.add(messageInfo);
+            updateAdapter(IMessageRecyclerView.DATA_CHANGE_NEW_MESSAGE, 1);
+        });
     }
 
     protected void onRecvNewMessage(TUIMessageBean msg) {
@@ -840,6 +847,7 @@ public abstract class ChatPresenter {
                 TUIChatUtils.callbackOnProgress(callBack, data);
             }
         });
+
         // The message is displayed first, and the status is used to confirm whether the sending is successful
         TUIChatLog.i(TAG, "sendMessage msgID:" + msgId);
         message.setId(msgId);
@@ -918,9 +926,11 @@ public abstract class ChatPresenter {
             TUIChatLog.w(TAG, "handleInvoke unSafetyCall");
             return;
         }
+        processQuoteReplyRevoke(msgId);
         TUIChatLog.i(TAG, "handleInvoke msgID = " + msgId);
         for (int i = 0; i < loadedMessageInfoList.size(); i++) {
             TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
+
             // A message containing multiple elements, when withdrawn, will withdraw all elements,
             // so the following judgment cannot return even if the conditions are met
             if (messageInfo.getId().equals(msgId)) {
@@ -971,6 +981,34 @@ public abstract class ChatPresenter {
         }
     }
 
+    private void processQuoteReplyRevoke(String messageID) {
+        List<QuoteMessageBean> quoteMessages = new ArrayList<>();
+        for (TUIMessageBean messageBean : loadedMessageInfoList) {
+            if (messageBean instanceof QuoteMessageBean) {
+                if (TextUtils.equals(((QuoteMessageBean) messageBean).getOriginMsgId(), messageID)) {
+                    quoteMessages.add((QuoteMessageBean) messageBean);
+                }
+            }
+        }
+        if (quoteMessages.isEmpty()) {
+            return;
+        }
+        findMessage(messageID, new IUIKitCallback<TUIMessageBean>() {
+            @Override
+            public void onSuccess(TUIMessageBean data) {
+                for (QuoteMessageBean quoteMessageBean : quoteMessages) {
+                    quoteMessageBean.setOriginMessageBean(data);
+                    updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, quoteMessageBean);
+                }
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatLog.e(TAG, "errorCode " + errCode + ", errMsg " + errMsg);
+            }
+        });
+    }
+
     protected boolean safetyCall() {
         if (getChatInfo() == null) {
             return false;
@@ -997,8 +1035,6 @@ public abstract class ChatPresenter {
             @Override
             public void run() {
                 readReport(chatId, isGroup);
-                lastReadReportTime = System.currentTimeMillis();
-                canReadReport = true;
             }
         }, READ_REPORT_INTERVAL);
     }
@@ -1094,47 +1130,6 @@ public abstract class ChatPresenter {
         return failed;
     }
 
-    public List<TUIMessageBean> getSelectPositionMessage(final List<Integer> positions) {
-        if (!safetyCall() || positions == null || positions.isEmpty()) {
-            TUIChatLog.w(TAG, "getSelectPositionMessage unSafetyCall");
-            return null;
-        }
-
-        List<TUIMessageBean> msgs = new ArrayList<>();
-        for (int i = 0; i < positions.size(); i++) {
-            if (positions.get(i) < loadedMessageInfoList.size()) {
-                msgs.add(loadedMessageInfoList.get(positions.get(i)));
-            } else {
-                TUIChatLog.d(TAG, "mCurrentProvider not include SelectPosition ");
-            }
-        }
-        return msgs;
-    }
-
-    public List<TUIMessageBean> getSelectPositionMessageById(final List<String> msgIds) {
-        if (!safetyCall() || msgIds == null || msgIds.isEmpty()) {
-            TUIChatLog.w(TAG, "getSelectPositionMessageById unSafetyCall");
-            return null;
-        }
-
-        List<TUIMessageBean> messageInfos = loadedMessageInfoList;
-        if (messageInfos == null || messageInfos.size() <= 0) {
-            return null;
-        }
-
-        final List<TUIMessageBean> msgSelectedMsgInfos = new ArrayList<>();
-        for (int i = 0; i < msgIds.size(); i++) {
-            for (int j = 0; j < messageInfos.size(); j++) {
-                if (msgIds.get(i).equals(messageInfos.get(j).getId())) {
-                    msgSelectedMsgInfos.add(messageInfos.get(j));
-                    break;
-                }
-            }
-        }
-
-        return msgSelectedMsgInfos;
-    }
-
     public void revokeMessage(final TUIMessageBean message) {
         if (!safetyCall()) {
             TUIChatLog.w(TAG, "revokeMessage unSafetyCall");
@@ -1163,41 +1158,6 @@ public abstract class ChatPresenter {
                 }
             }
         });
-    }
-
-    public boolean updateMessageRevoked(String msgId) {
-        for (int i = 0; i < loadedMessageInfoList.size(); i++) {
-            TUIMessageBean messageInfo = loadedMessageInfoList.get(i);
-            // A message containing multiple elements, when withdrawn, will withdraw all elements,
-            // so the following judgment cannot return even if the conditions are met
-            if (messageInfo.getId().equals(msgId)) {
-                messageInfo.setStatus(TUIMessageBean.MSG_STATUS_REVOKE);
-                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, i);
-            }
-        }
-        return false;
-    }
-
-    public List<TUIMessageBean> forwardTextMessageForSelected(List<TUIMessageBean> msgInfos) {
-        // Selecting text forwarding can only be a message operation
-        if (msgInfos != null && msgInfos.size() > 1) {
-            return msgInfos;
-        }
-
-        List<TUIMessageBean> forwardMsgInfos = new ArrayList<>();
-        TUIMessageBean messageBean = msgInfos.get(0);
-        if (messageBean instanceof TextMessageBean) {
-            TextMessageBean textMessageBean = (TextMessageBean) messageBean;
-            if (textMessageBean.getText().equals(textMessageBean.getSelectText())) {
-                return msgInfos;
-            } else {
-                TUIMessageBean selectedMessageBean = ChatMessageBuilder.buildTextMessage(textMessageBean.getSelectText());
-                forwardMsgInfos.add(selectedMessageBean);
-                return forwardMsgInfos;
-            }
-        } else {
-            return msgInfos;
-        }
     }
 
     public void forwardMessage(List<TUIMessageBean> msgInfos, boolean isGroup, String id, String offlineTitle, int forwardMode, boolean selfConversation,
@@ -1290,6 +1250,7 @@ public abstract class ChatPresenter {
         OfflinePushInfo offlinePushInfo = new OfflinePushInfo();
         offlinePushInfo.setExtension(new Gson().toJson(containerBean).getBytes());
         offlinePushInfo.setDescription(offlineTitle);
+
         // OPPO must set a ChannelID to receive push messages. This channelID needs to be the same as the console.
         offlinePushInfo.setAndroidOPPOChannelID("tuikit");
         if (TUIChatConfigs.getConfigs().getGeneralConfig().isEnableAndroidPrivateRing()) {
@@ -1346,7 +1307,7 @@ public abstract class ChatPresenter {
         List<String> abstractList = new ArrayList<>();
         for (int j = 0; j < msgInfos.size() && j < 3; j++) {
             TUIMessageBean messageBean = msgInfos.get(j);
-            String userid = ChatMessageParser.getDisplayName(messageBean.getV2TIMMessage());
+            String userName = ChatMessageParser.getDisplayName(messageBean.getV2TIMMessage());
             String messageAbstract = messageBean.getExtra();
             if (messageBean instanceof FaceMessageBean) {
                 messageAbstract = context.getString(R.string.custom_emoji);
@@ -1361,7 +1322,8 @@ public abstract class ChatPresenter {
             } else if (messageBean instanceof MergeMessageBean) {
                 messageAbstract = context.getString(R.string.forward_extra);
             }
-            abstractList.add(String.format(Locale.US, "%1$s\u202C:%2$s", userid, messageAbstract));
+            messageAbstract = alignEmojiString(userName, messageAbstract);
+            abstractList.add(String.format(Locale.US, "%1$s\u202C:%2$s", userName, messageAbstract));
         }
 
         // createMergerMessage
@@ -1379,6 +1341,33 @@ public abstract class ChatPresenter {
         OfflinePushInfo offlinePushInfo = getOfflinePushInfo(msgInfo, isGroup, id, offlineTitle);
 
         forwardMessageInternal(msgInfo, isGroup, id, offlinePushInfo, callBack);
+    }
+
+    private String alignEmojiString(String userName, String text) {
+        List<String> textList = FaceManager.splitEmojiText(text);
+        StringBuilder sb = new StringBuilder();
+        int length = userName.length();
+        for (String textItem : textList) {
+            boolean isFaceChar = FaceManager.isFaceChar(textItem);
+            if (isFaceChar) {
+                if (length + textItem.length() < FORWARD_MSG_ABSTRACT_LENGTH) {
+                    sb.append(textItem);
+                    length += textItem.length();
+                } else {
+                    sb.append("...");
+                    break;
+                }
+            } else {
+                if (length + textItem.length() < FORWARD_MSG_ABSTRACT_LENGTH) {
+                    sb.append(textItem);
+                    length += textItem.length();
+                } else {
+                    sb.append(textItem);
+                    break;
+                }
+            }
+        }
+        return sb.toString();
     }
 
     public void forwardMessageInternal(
@@ -1447,6 +1436,7 @@ public abstract class ChatPresenter {
                 ProgressPresenter.updateProgress(message.getId(), (Integer) data);
             }
         });
+
         // The message is displayed first, and the status is used to confirm whether the sending is successful
         TUIChatLog.i(TAG, "sendMessage msgID:" + msgId);
         message.setId(msgId);
@@ -1587,20 +1577,14 @@ public abstract class ChatPresenter {
             @Override
             public void onSuccess(List<MessageReceiptInfo> data) {
                 messageBean.setMessageReceiptInfo(data.get(0));
-                refreshData(messageBean);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                refreshData(messageBean);
+                updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
             }
         });
-    }
-
-    private void refreshData(TUIMessageBean messageBean) {
-        if (messageListAdapter != null) {
-            messageListAdapter.onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
-        }
     }
 
     public void modifyRootMessageToRemoveReplyInfo(ReplyMessageBean replyMessageBean, IUIKitCallback<Void> callback) {
@@ -1690,20 +1674,6 @@ public abstract class ChatPresenter {
         ChatModifyMessageHelper.enqueueTask(task);
     }
 
-    public void modifyMessage(TUIMessageBean messageBean) {
-        provider.modifyMessage(messageBean, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                onRecvMessageModified(data);
-            }
-
-            @Override
-            public void onError(int errCode, String errMsg, TUIMessageBean data) {
-                ToastUtil.toastShortMessage("modify failed code=" + errCode + " msg=" + errMsg);
-            }
-        });
-    }
-
     public void getChatName(String chatID, IUIKitCallback<String> callback) {}
 
     public void getChatFaceUrl(String chatID, IUIKitCallback<List<Object>> callback) {}
@@ -1757,6 +1727,19 @@ public abstract class ChatPresenter {
         provider.loadUserStatus(userIDs, callback);
     }
 
+    public List<TUIMessageBean> getLoadedMessageList() {
+        return loadedMessageInfoList;
+    }
+
+    public TUIMessageBean getLoadedMessage(String msgID) {
+        for (TUIMessageBean message : loadedMessageInfoList) {
+            if (message.getId().equals(msgID)) {
+                return message;
+            }
+        }
+        return null;
+    }
+
     static class MessageReadReportHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -1768,9 +1751,7 @@ public abstract class ChatPresenter {
         void onTyping(int status);
     }
 
-
     public interface ChatNotifyHandler {
-
         default void onGroupForceExit() {}
 
         default void onGroupNameChanged(String newName) {}

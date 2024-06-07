@@ -395,8 +395,10 @@ public class TUILogin {
                 notifyUserInfoChanged(info);
             }
         });
+
+        boolean initResult = V2TIMManager.getInstance().initSDK(context, sdkAppId, config);
         TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, null);
-        return V2TIMManager.getInstance().initSDK(context, sdkAppId, config);
+        return initResult;
     }
 
     @Deprecated
@@ -473,7 +475,16 @@ public class TUILogin {
     }
 
     public static String getLoginUser() {
-        return V2TIMManager.getInstance().getLoginUser();
+        if (!TextUtils.isEmpty(V2TIMManager.getInstance().getLoginUser())) {
+            return V2TIMManager.getInstance().getLoginUser();
+        } else {
+            return getInstance().userId;
+        }
+    }
+
+    public static void setLoginUser(int sdkAppId, String userId) {
+        getInstance().sdkAppId = sdkAppId;
+        getInstance().userId = userId;
     }
 
     public static class TUIBusinessScene {

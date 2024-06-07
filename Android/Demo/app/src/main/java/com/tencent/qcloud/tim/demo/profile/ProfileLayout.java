@@ -30,11 +30,11 @@ import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
-import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
@@ -244,7 +244,7 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
             }
         });
 
-        String selfUserID = V2TIMManager.getInstance().getLoginUser();
+        String selfUserID = TUILogin.getLoginUser();
 
         accountView.setText(selfUserID);
         List<String> selfIdList = new ArrayList<>();
@@ -252,6 +252,10 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         V2TIMManager.getInstance().getUsersInfo(selfIdList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
             public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
+                if (v2TIMUserFullInfos == null || v2TIMUserFullInfos.size() == 0) {
+                    return;
+                }
+
                 setUserInfo(v2TIMUserFullInfos.get(0));
             }
 

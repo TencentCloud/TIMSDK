@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_outside_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/tuiroomkit_bg_bottom_dialog"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_input_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/tuiroomkit_bg_bottom_dialog"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:scaleType="centerCrop">
+
+            <ImageView
+                android:id="@+id/rl_emoticons"
+                android:layout_width="@dimen/tuiroomkit_bottom_item_icon_width"
+                android:layout_height="@dimen/tuiroomkit_bottom_item_icon_width"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/tuiroomkit_float_chat_ic_emoticons"
+                app:layout_constraintBottom_toBottomOf="@id/et_input_message"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_input_message" />
+
+            <com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.EmojiEditText
+                android:id="@+id/et_input_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="60dp"
+                android:minHeight="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:layout_toEndOf="@+id/rl_emoticons"
+                android:background="@drawable/tuiroomkit_float_chat_bottom_btn_background"
+                android:hint="@string/tuiroomkit_float_chat_hint"
+                android:imeOptions="actionSend"
+                android:inputType="text|textMultiLine"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/tuiroomkit_color_text_light_grey"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_send_barrage"
+                app:layout_constraintStart_toEndOf="@+id/rl_emoticons"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_send_barrage"
+                android:layout_width="60dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/tuiroomkit_float_chat_btn_send"
+                android:gravity="center"
+                android:text="@string/tuiroomkit_float_chat_btn_send"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/et_input_message"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_input_message" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_bottom_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal">
+        </FrameLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -46,7 +46,7 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
     private void initView() {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mAdapter = new MyAdapter(mDatas);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
+        mRecyclerView = findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         titleBarLayout = findViewById(R.id.create_group_bar);
@@ -152,10 +152,10 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
             public ViewHolder(View itemView) {
                 super(itemView);
                 rootView = itemView;
-                itemLayout = (RelativeLayout) itemView.findViewById(R.id.item_layout);
-                imageView = (ImageView) itemView.findViewById(R.id.group_type_icon);
-                textView = (TextView) itemView.findViewById(R.id.group_type_text);
-                subTextView = (TextView) itemView.findViewById(R.id.group_type_content);
+                itemLayout = itemView.findViewById(R.id.item_layout);
+                imageView = itemView.findViewById(R.id.group_type_icon);
+                textView = itemView.findViewById(R.id.group_type_text);
+                subTextView = itemView.findViewById(R.id.group_type_content);
             }
         }
     }

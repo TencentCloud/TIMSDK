@@ -1,11 +1,12 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_DESTROY_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_EXIT_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MAIN_ACTIVITY;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.ENTER_FLOAT_WINDOW;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_DESTROY_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_EXIT_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MAIN_ACTIVITY;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.ENTER_FLOAT_WINDOW;
 
 import android.app.Activity;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -15,15 +16,18 @@ import com.tencent.cloud.tuikit.roomkit.ConferenceError;
 import com.tencent.cloud.tuikit.roomkit.ConferenceMainFragment;
 import com.tencent.cloud.tuikit.roomkit.ConferenceObserver;
 import com.tencent.cloud.tuikit.roomkit.ConferenceParams;
-import com.tencent.cloud.tuikit.roomkit.ConferenceSession;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceSession;
+import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
+import com.tencent.qcloud.tuicore.ServiceInitializer;
 
 import java.util.Map;
 
 public class ConferenceMainViewModel
-        implements RoomEventCenter.RoomEngineEventResponder, RoomEventCenter.RoomKitUIEventResponder {
+        implements ConferenceEventCenter.RoomEngineEventResponder, ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "ConferenceMainViewModel";
 
     private final ConferenceMainFragment mFragment;
@@ -47,7 +51,7 @@ public class ConferenceMainViewModel
         TUIRoomDefine.ActionCallback callback = new TUIRoomDefine.ActionCallback() {
             @Override
             public void onSuccess() {
-                ConferenceObserver observer = RoomEngineManager.sharedInstance().getRoomStore().getConferenceObserver();
+                ConferenceObserver observer = ConferenceController.sharedInstance().getConferenceState().getConferenceObserver();
                 if (observer != null) {
                     Log.i(TAG, "onConferenceStarted onSuccess conferenceId=" + id);
                     observer.onConferenceStarted(id, ConferenceError.SUCCESS);
@@ -56,16 +60,17 @@ public class ConferenceMainViewModel
 
             @Override
             public void onError(TUICommonDefine.Error error, String message) {
-                ConferenceObserver observer = RoomEngineManager.sharedInstance().getRoomStore().getConferenceObserver();
+                ConferenceError err = transferError(error);
+                RoomToast.toastLongMessageCenter(getMessageForError(err));
+                ConferenceObserver observer = ConferenceController.sharedInstance().getConferenceState().getConferenceObserver();
                 if (observer != null) {
-                    ConferenceError err = transferError(error);
                     Log.i(TAG, "onConferenceStarted onError conferenceId=" + id + " error=" + err);
                     observer.onConferenceStarted(id, err);
                 }
             }
         };
         if (TextUtils.isEmpty(id) && !TextUtils.isEmpty(
-                RoomEngineManager.sharedInstance().getRoomStore().roomInfo.roomId)) {
+                ConferenceController.sharedInstance().getConferenceState().roomInfo.roomId)) {
             callback.onSuccess();
             return;
         }
@@ -86,7 +91,7 @@ public class ConferenceMainViewModel
         TUIRoomDefine.ActionCallback callback = new TUIRoomDefine.ActionCallback() {
             @Override
             public void onSuccess() {
-                ConferenceObserver observer = RoomEngineManager.sharedInstance().getRoomStore().getConferenceObserver();
+                ConferenceObserver observer = ConferenceController.sharedInstance().getConferenceState().getConferenceObserver();
                 if (observer != null) {
                     Log.i(TAG, "onConferenceJoined onSuccess conferenceId=" + id);
                     observer.onConferenceJoined(id, ConferenceError.SUCCESS);
@@ -95,16 +100,17 @@ public class ConferenceMainViewModel
 
             @Override
             public void onError(TUICommonDefine.Error error, String message) {
-                ConferenceObserver observer = RoomEngineManager.sharedInstance().getRoomStore().getConferenceObserver();
+                ConferenceError err = transferError(error);
+                RoomToast.toastLongMessageCenter(getMessageForError(err));
+                ConferenceObserver observer = ConferenceController.sharedInstance().getConferenceState().getConferenceObserver();
                 if (observer != null) {
-                    ConferenceError err = transferError(error);
                     Log.i(TAG, "onConferenceJoined onError conferenceId=" + id + " error=" + err);
                     observer.onConferenceJoined(id, err);
                 }
             }
         };
         if (TextUtils.isEmpty(id) && !TextUtils.isEmpty(
-                RoomEngineManager.sharedInstance().getRoomStore().roomInfo.roomId)) {
+                ConferenceController.sharedInstance().getConferenceState().roomInfo.roomId)) {
             callback.onSuccess();
             return;
         }
@@ -117,12 +123,12 @@ public class ConferenceMainViewModel
     }
 
     public void cacheCurrentActivity(Activity activity) {
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         store.setMainActivityClass(activity.getClass());
     }
 
     public void cacheConferenceObserver(ConferenceObserver observer) {
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         store.setConferenceObserver(observer);
     }
 
@@ -135,7 +141,7 @@ public class ConferenceMainViewModel
     }
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         Log.d(TAG, "onEngineEvent event=" + event);
         if (event != LOCAL_USER_EXIT_ROOM && event != LOCAL_USER_DESTROY_ROOM) {
             return;
@@ -144,7 +150,7 @@ public class ConferenceMainViewModel
     }
 
     private void subscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.subscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
         eventCenter.subscribeEngine(LOCAL_USER_EXIT_ROOM, this);
 
@@ -153,7 +159,7 @@ public class ConferenceMainViewModel
     }
 
     private void unSubscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.unsubscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
         eventCenter.unsubscribeEngine(LOCAL_USER_EXIT_ROOM, this);
 
@@ -178,5 +184,22 @@ public class ConferenceMainViewModel
             return ConferenceError.CONFERENCE_NAME_INVALID;
         }
         return ConferenceError.FAILED;
+    }
+
+    private String getMessageForError(ConferenceError error) {
+        Context context = ServiceInitializer.getAppContext();
+        if (error == ConferenceError.CONFERENCE_ID_NOT_EXIST) {
+            return context.getString(R.string.tuiroomkit_toast_conference_id_not_exist);
+        }
+        if (error == ConferenceError.CONFERENCE_ID_INVALID) {
+            return context.getString(R.string.tuiroomkit_toast_conference_id_invalid);
+        }
+        if (error == ConferenceError.CONFERENCE_ID_OCCUPIED) {
+            return context.getString(R.string.tuiroomkit_toast_conference_id_occupied);
+        }
+        if (error == ConferenceError.CONFERENCE_NAME_INVALID) {
+            return context.getString(R.string.tuiroomkit_toast_conference_name_invalid);
+        }
+        return null;
     }
 }

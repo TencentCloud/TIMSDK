@@ -19,42 +19,49 @@
         android:background="@color/chat_title_line_color" />
 
     <FrameLayout
-        android:id="@+id/chat_top_extension_layout"
+        android:id="@+id/custom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view_line"
+        android:layout_below="@id/view_line"
         android:layout_marginTop="0dp"
         android:visibility="gone" />
 
     <FrameLayout
-        android:id="@+id/custom_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/chat_top_extension_layout"
-        android:layout_marginTop="0dp"
-        android:visibility="gone" />
-
-    <com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout
-        android:id="@+id/chat_group_apply_layout"
+        android:id="@+id/chat_top_extension_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/custom_layout"
+        android:layout_marginTop="0dp"
         android:visibility="gone" />
 
     <com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout
         android:id="@+id/chat_notice_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/chat_group_apply_layout"
+        android:layout_below="@+id/chat_top_extension_layout"
         android:layout_marginTop="1dp"
         android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout
+        android:id="@+id/chat_group_apply_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chat_notice_layout"
+        android:visibility="gone" />
+
+    <com.tencent.qcloud.tuikit.tuichat.component.pinned.GroupPinnedView
+        android:id="@+id/group_pinned_message_view"
+        android:layout_below="@id/chat_group_apply_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView
         android:id="@+id/chat_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/fl_input_float"
-        android:layout_below="@+id/chat_notice_layout"
+        android:layout_below="@id/group_pinned_message_view"
         android:baselineAligned="false"
         android:clickable="false"
         android:descendantFocusability="blocksDescendants" />

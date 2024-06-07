@@ -259,12 +259,12 @@ public class SearchMoreMsgListActivity extends BaseLightActivity {
     }
 
     private void initView() {
-        mEdtSearch = (EditText) findViewById(R.id.edt_search);
-        mImgvDelete = (ImageView) findViewById(R.id.imgv_delete);
-        mMessageRcSearch = (PageRecycleView) findViewById(R.id.message_rc_search);
-        mCancleView = (TextView) findViewById(R.id.cancel_button);
+        mEdtSearch = findViewById(R.id.edt_search);
+        mImgvDelete = findViewById(R.id.imgv_delete);
+        mMessageRcSearch = findViewById(R.id.message_rc_search);
+        mCancleView = findViewById(R.id.cancel_button);
         mMessageRcSearch.setLayoutManager(new LinearLayoutManager(this));
-        mMessageLayout = (RelativeLayout) findViewById(R.id.message_layout);
+        mMessageLayout = findViewById(R.id.message_layout);
     }
 
     @Override

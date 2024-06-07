@@ -36,6 +36,7 @@ public class ContactItemBean extends BaseIndexPinyinBean implements Comparable<C
     private int avatarResID;
     private int weight;
     private TUIExtensionEventListener extensionListener;
+    private int unreadCount;
 
     public ContactItemBean() {}
 
@@ -258,5 +259,13 @@ public class ContactItemBean extends BaseIndexPinyinBean implements Comparable<C
     @Override
     public int compareTo(ContactItemBean contactItemBean) {
         return contactItemBean.getWeight() - this.weight;
+    }
+
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
+    }
+
+    public int getUnreadCount() {
+        return unreadCount;
     }
 }

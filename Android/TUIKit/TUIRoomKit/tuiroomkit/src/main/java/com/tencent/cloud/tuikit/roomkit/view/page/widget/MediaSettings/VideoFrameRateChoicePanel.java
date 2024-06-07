@@ -7,14 +7,14 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 
 import java.util.Map;
 
-public class VideoFrameRateChoicePanel extends BaseBottomDialog implements RoomEventCenter.RoomKitUIEventResponder {
+public class VideoFrameRateChoicePanel extends BaseBottomDialog implements ConferenceEventCenter.RoomKitUIEventResponder {
     private int[] mFrameRateList = {15, 20};
 
     private int[] mLayoutFrameRateList = {R.id.tuiroomkit_video_frame_rate_15, R.id.tuiroomkit_video_frame_rate_20};
@@ -24,13 +24,13 @@ public class VideoFrameRateChoicePanel extends BaseBottomDialog implements RoomE
 
     public VideoFrameRateChoicePanel(@NonNull Context context) {
         super(context);
-        RoomEventCenter.getInstance().subscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        ConferenceEventCenter.getInstance().subscribeUIEvent(ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     @Override
     public void dismiss() {
         super.dismiss();
-        RoomEventCenter.getInstance().unsubscribeUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
+        ConferenceEventCenter.getInstance().unsubscribeUIEvent(ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, this);
     }
 
     @Override
@@ -45,15 +45,15 @@ public class VideoFrameRateChoicePanel extends BaseBottomDialog implements RoomE
             findViewById(mLayoutFrameRateList[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (frameRate != RoomEngineManager.sharedInstance().getRoomStore().videoModel.getFps()) {
-                        RoomEngineManager.sharedInstance().setVideoFps(frameRate);
+                    if (frameRate != ConferenceController.sharedInstance().getConferenceState().videoModel.getFps()) {
+                        ConferenceController.sharedInstance().setVideoFps(frameRate);
                     }
                     dismiss();
                 }
             });
         }
 
-        int curFrameRate = RoomEngineManager.sharedInstance().getRoomStore().videoModel.getFps();
+        int curFrameRate = ConferenceController.sharedInstance().getConferenceState().videoModel.getFps();
         for (int i = 0; i < mFrameRateList.length; i++) {
             if (curFrameRate == mFrameRateList[i]) {
                 findViewById(mViewFrameRateCheckedList[i]).setVisibility(View.VISIBLE);
@@ -64,8 +64,8 @@ public class VideoFrameRateChoicePanel extends BaseBottomDialog implements RoomE
 
     @Override
     public void onNotifyUIEvent(String key, Map<String, Object> params) {
-        if (RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key) && params != null) {
-            Configuration configuration = (Configuration) params.get(RoomEventConstant.KEY_CONFIGURATION);
+        if (ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE.equals(key) && params != null) {
+            Configuration configuration = (Configuration) params.get(ConferenceEventConstant.KEY_CONFIGURATION);
             changeConfiguration(configuration);
         }
     }

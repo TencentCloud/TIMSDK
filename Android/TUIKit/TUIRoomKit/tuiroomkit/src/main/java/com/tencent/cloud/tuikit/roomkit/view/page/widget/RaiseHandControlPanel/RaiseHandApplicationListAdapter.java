@@ -11,10 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
-import com.tencent.cloud.tuikit.roomkit.utils.ImageLoader;
+import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,16 +53,16 @@ public class RaiseHandApplicationListAdapter extends RecyclerView.Adapter<RaiseH
             @Override
             public void onClick(View v) {
                 Map<String, Object> params = new HashMap<>();
-                params.put(RoomEventConstant.KEY_USER_ID, request.getUserId());
-                RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT, params);
+                params.put(ConferenceEventConstant.KEY_USER_ID, request.getUserId());
+                ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.AGREE_TAKE_SEAT, params);
             }
         });
         holder.btnDisagree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> params = new HashMap<>();
-                params.put(RoomEventConstant.KEY_USER_ID, request.getUserId());
-                RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT, params);
+                params.put(ConferenceEventConstant.KEY_USER_ID, request.getUserId());
+                ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.DISAGREE_TAKE_SEAT, params);
             }
         });
     }

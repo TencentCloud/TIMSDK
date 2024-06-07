@@ -107,6 +107,9 @@
 
 
     <string name="conversation_title">Tencent Cloud Chat</string>
+    <string name="conversation_title_disconnected">Disconnected</string>
+    <string name="conversation_title_connecting">Connecting...</string>
+    <string name="conversation_title_loading">Loading...</string>
     <string name="contact_title">Contacts</string>
     <string name="add_friend">Add Contact</string>
     <string name="add_group">Add Group</string>
@@ -215,6 +218,7 @@
 
     <string name="chat_security_warning">[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.</string>
     <string name="chat_security_warning_report">Report</string>
+    <string name="chat_security_warning_click_to_report">Report</string>
 
 
     <string name="change_theme">Change Theme</string>

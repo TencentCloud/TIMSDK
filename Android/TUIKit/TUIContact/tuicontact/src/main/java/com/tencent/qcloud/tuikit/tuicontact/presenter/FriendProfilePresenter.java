@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
@@ -17,6 +18,8 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IFriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.model.ContactProvider;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
+import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +67,7 @@ public class FriendProfilePresenter {
     public void getUsersInfo(String id, ContactItemBean bean) {
         ArrayList<String> list = new ArrayList<>();
         list.add(id);
-        provider.getUserInfo(list, new IUIKitCallback<List<ContactItemBean>>() {
+        provider.getUserInfo(list, new TUIValueCallback<List<ContactItemBean>>() {
             @Override
             public void onSuccess(List<ContactItemBean> data) {
                 if (data == null || data.size() != 1) {
@@ -98,7 +101,7 @@ public class FriendProfilePresenter {
                 ThreadUtils.execute(new Runnable() {
                     @Override
                     public void run() {
-                        isFriend(id, bean, new IUIKitCallback<Boolean>() {
+                        isFriend(id, bean, new TUIValueCallback<Boolean>() {
                             @Override
                             public void onSuccess(Boolean data) {
                                 bean.setFriend(data);
@@ -106,7 +109,7 @@ public class FriendProfilePresenter {
                             }
 
                             @Override
-                            public void onError(String module, int errCode, String errMsg) {
+                            public void onError(int errCode, String errMsg) {
                                 latch.countDown();
                             }
                         });
@@ -134,7 +137,7 @@ public class FriendProfilePresenter {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
+            public void onError(int errCode, String errMsg) {
                 ToastUtil.toastShortMessage("getUsersInfo error , code = " + errCode + ", desc = " + errMsg);
             }
         });
@@ -149,13 +152,13 @@ public class FriendProfilePresenter {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("getBlackList error , code = " + errCode + ", desc = " + errMsg);
+                TUIContactLog.e(TAG, "isInBlackList err code = " + errCode + ", desc = " + errMsg);
                 ContactUtils.callbackOnError(callback, errCode, errMsg);
             }
         });
     }
 
-    public void isFriend(String id, ContactItemBean bean, IUIKitCallback<Boolean> callback) {
+    public void isFriend(String id, ContactItemBean bean, TUIValueCallback<Boolean> callback) {
         provider.isFriend(id, bean, callback);
     }
 
@@ -276,6 +279,9 @@ public class FriendProfilePresenter {
                         break;
                     case FriendApplicationBean.ERR_SVR_FRIENDSHIP_ALLOW_TYPE_NEED_CONFIRM:
                         result = TUIContactService.getAppContext().getString(R.string.wait_agree_friend);
+                        break;
+                    case FriendApplicationBean.ERR_SVR_FRIENDSHIP_ALREADY_FRIENDS:
+                        result = TUIContactService.getAppContext().getString(R.string.have_be_friend);
                         break;
                     default:
                         result = TUIContactService.getAppContext().getString(R.string.other_friend_limit);

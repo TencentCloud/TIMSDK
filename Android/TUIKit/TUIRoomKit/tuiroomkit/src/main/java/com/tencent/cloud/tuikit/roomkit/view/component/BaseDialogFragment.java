@@ -30,6 +30,8 @@ public class BaseDialogFragment extends DialogFragment {
     private String mNegativeName;
     private String mPositiveName;
 
+    private boolean mIsHideNegativeView;
+
     private ClickListener mNegativeListener;
     private ClickListener mPositiveListener;
 
@@ -72,6 +74,11 @@ public class BaseDialogFragment extends DialogFragment {
         return this;
     }
 
+    public BaseDialogFragment hideNegativeView() {
+        mIsHideNegativeView = true;
+        return this;
+    }
+
     public void showDialog(@NonNull Context context, @Nullable String tag) {
         if (!(context instanceof FragmentActivity)) {
             Log.e(TAG, "context is not instance of FragmentActivity");
@@ -109,19 +116,23 @@ public class BaseDialogFragment extends DialogFragment {
         }
 
         Button btnNegative = mRootView.findViewById(R.id.tuiroomkit_btn_dialog_negative);
-        if (!TextUtils.isEmpty(mNegativeName)) {
-            btnNegative.setText(mNegativeName);
-        }
-        btnNegative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnNegative.setClickable(false);
-                if (mNegativeListener != null) {
-                    mNegativeListener.onClick();
-                }
-                dismissAllowingStateLoss();
+        if (mIsHideNegativeView) {
+            btnNegative.setVisibility(View.GONE);
+        } else {
+            if (!TextUtils.isEmpty(mNegativeName)) {
+                btnNegative.setText(mNegativeName);
             }
-        });
+            btnNegative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnNegative.setClickable(false);
+                    if (mNegativeListener != null) {
+                        mNegativeListener.onClick();
+                    }
+                    dismissAllowingStateLoss();
+                }
+            });
+        }
 
         Button btnPositive = mRootView.findViewById(R.id.tuiroomkit_btn_dialog_positive);
         if (!TextUtils.isEmpty(mPositiveName)) {

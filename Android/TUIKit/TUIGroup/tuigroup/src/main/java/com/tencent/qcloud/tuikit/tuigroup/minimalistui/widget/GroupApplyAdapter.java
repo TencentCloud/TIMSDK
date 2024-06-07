@@ -33,16 +33,6 @@ public class GroupApplyAdapter extends BaseAdapter {
         return mGroupMembers.size();
     }
 
-    public int getUnHandledSize() {
-        int total = 0;
-        for (GroupApplyInfo i : mGroupMembers) {
-            if (i.getStatus() == GroupApplyInfo.UNHANDLED) {
-                total++;
-            }
-        }
-        return total;
-    }
-
     @Override
     public GroupApplyInfo getItem(int i) {
         return mGroupMembers.get(i);

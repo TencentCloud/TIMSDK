@@ -93,6 +93,9 @@
     <string name="demo_self_detail_modify_nickname_rule">يسمح فقط بالأحرف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>
 
     <string name="conversation_title">تنسنت يون كلاود Chat</string>
+    <string name="conversation_title_disconnected">فصل</string>
+    <string name="conversation_title_connecting">ربط...</string>
+    <string name="conversation_title_loading">جمع...</string>
     <string name="contact_title">دليل الهاتف</string>
     <string name="add_friend">إضافة صديق</string>
     <string name="add_group">إضافة مجموعة</string>
@@ -209,6 +212,7 @@
 
     <string name="chat_security_warning">【تحذير أمني】يتم استخدام هذا التطبيق فقط لتجربة منتجات Tencent Cloud Chat ولا يمكن استخدامه للتفاوض التجاري والتوسع. يرجى عدم الوثوق بالرسائل التي تتعلق بالمدفوعات أو الفوز بجوائز وعدم الاتصال بأرقام الهواتف الغريبة بسهولة، وتجنب الوقوع في الخداع.</string>
     <string name="chat_security_warning_report">الإبلاغ عن ذلك هنا</string>
+    <string name="chat_security_warning_click_to_report">الإبلاغ عن ذلك هنا</string>
 
 
     <string name="change_theme">تغيير الجلد</string>

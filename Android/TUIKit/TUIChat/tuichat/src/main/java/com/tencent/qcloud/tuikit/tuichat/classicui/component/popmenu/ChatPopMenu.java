@@ -35,13 +35,16 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.bean.Emoji;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.OnEmptySpaceClickListener;
 
 import java.util.ArrayList;
@@ -80,6 +83,8 @@ public class ChatPopMenu {
 
     private boolean isShowFaces = false;
 
+    private C2CChatEventListener chatEventListener;
+
     public ChatPopMenu(Context context) {
         chatPopMenu = this;
         this.context = context;
@@ -102,6 +107,16 @@ public class ChatPopMenu {
         popupWindow.setTouchable(true);
         popupWindow.setAnimationStyle(R.style.ChatPopMenuAnimation);
         popupWindow.setOutsideTouchable(true);
+
+        chatEventListener = new C2CChatEventListener() {
+            @Override
+            public void onRecvMessageRevoked(String msgID, UserBean userBean, String reason) {
+                if (messageBean != null && TextUtils.equals(msgID, messageBean.getId())) {
+                    hide();
+                }
+            }
+        };
+        TUIChatService.getInstance().addC2CChatEventListener(chatEventListener);
     }
 
     public void setMessageBean(TUIMessageBean messageBean) {

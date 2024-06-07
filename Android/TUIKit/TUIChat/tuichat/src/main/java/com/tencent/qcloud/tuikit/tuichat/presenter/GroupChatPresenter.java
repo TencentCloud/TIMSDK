@@ -3,10 +3,15 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 import android.util.Pair;
 import com.tencent.qcloud.tuicore.TUIConfig;
+import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
+import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -15,6 +20,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.IGroupPinnedView;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.ArrayList;
@@ -25,10 +31,12 @@ public class GroupChatPresenter extends ChatPresenter {
     private static final String TAG = GroupChatPresenter.class.getSimpleName();
 
     private GroupInfo groupInfo;
-    private List<GroupApplyInfo> currentApplies = new ArrayList<>();
     private List<GroupMemberInfo> currentGroupMembers = new ArrayList<>();
 
     private GroupChatEventListener groupChatEventListener;
+    private final List<TUIMessageBean> pinnedMessageList = new ArrayList<>();
+    private IGroupPinnedView groupPinnedView;
+    private int selfRoleInGroup = 0;
 
     public GroupChatPresenter() {
         super();
@@ -112,6 +120,57 @@ public class GroupChatPresenter extends ChatPresenter {
             public void onMessageChanged(TUIMessageBean messageBean, int dataChangeType) {
                 updateMessageInfo(messageBean, dataChangeType);
             }
+
+            @Override
+            public void onGroupMessagePinned(String groupID, TUIMessageBean messageBean, UserBean opUser) {
+                if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
+                    GroupChatPresenter.this.onGroupMessagePinned(messageBean, opUser);
+                }
+            }
+
+            @Override
+            public void onGroupMessageUnPinned(String groupID, String messageID, UserBean opUser) {
+                if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
+                    GroupChatPresenter.this.onGroupMessageUnPinned(messageID, opUser);
+                }
+            }
+
+            @Override
+            public void onGrantGroupAdmin(String groupID, List<String> newAdminUserIDList) {
+                if (groupInfo != null) {
+                    if (TextUtils.equals(groupID, groupInfo.getId()) && newAdminUserIDList.contains(TUILogin.getLoginUser())) {
+                        selfRoleInGroup = GroupMemberInfo.ROLE_ADMIN;
+                        onPinnedListChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onRevokeGroupAdmin(String groupID, List<String> oldAdminUserIDList) {
+                if (groupInfo != null) {
+                    if (TextUtils.equals(groupID, groupInfo.getId()) && oldAdminUserIDList.contains(TUILogin.getLoginUser())) {
+                        selfRoleInGroup = GroupMemberInfo.ROLE_MEMBER;
+                        onPinnedListChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onGrantGroupOwner(String groupID, String groupOwner) {
+                if (groupInfo != null) {
+                    if (TextUtils.equals(groupID, groupInfo.getId())) {
+                        if (TextUtils.equals(groupOwner, TUILogin.getLoginUser())) {
+                            selfRoleInGroup = GroupMemberInfo.ROLE_OWNER;
+                            onPinnedListChanged();
+                        } else {
+                            if (selfRoleInGroup == GroupMemberInfo.ROLE_OWNER) {
+                                selfRoleInGroup = GroupMemberInfo.ROLE_MEMBER;
+                                onPinnedListChanged();
+                            }
+                        }
+                    }
+                }
+            }
         };
         TUIChatService.getInstance().addGroupChatEventListener(groupChatEventListener);
         initMessageSender();
@@ -164,7 +223,6 @@ public class GroupChatPresenter extends ChatPresenter {
         }
     }
 
-    
     // This method is called after the message is loaded successfully
     @Override
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
@@ -294,6 +352,10 @@ public class GroupChatPresenter extends ChatPresenter {
         this.groupInfo = groupInfo;
     }
 
+    public void setGroupPinnedView(IGroupPinnedView groupPinnedView) {
+        this.groupPinnedView = groupPinnedView;
+    }
+
     @Override
     public void getChatName(String chatID, IUIKitCallback<String> callback) {
         if (!TextUtils.isEmpty(chatID)) {
@@ -309,6 +371,10 @@ public class GroupChatPresenter extends ChatPresenter {
                 }
             });
         }
+    }
+
+    public void getGroupType(String groupID, TUIValueCallback<String> callback) {
+        provider.getGroupType(groupID, callback);
     }
 
     @Override
@@ -339,6 +405,134 @@ public class GroupChatPresenter extends ChatPresenter {
                     TUIChatUtils.callbackOnError(callback, errCode, errMsg);
                 }
             });
+        }
+    }
+
+    public void pinnedMessage(TUIMessageBean messageBean, TUICallback callback) {
+        if (groupInfo == null) {
+            return;
+        }
+        String groupID = groupInfo.getId();
+        TUIChatLog.i(TAG, "pinnedMessage groupID:" + groupID);
+        provider.pinGroupMessage(groupID, messageBean, true, new TUICallback() {
+            @Override
+            public void onSuccess() {
+                onGroupMessagePinned(messageBean, null);
+                TUICallback.onSuccess(callback);
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIChatLog.e(TAG, "pinnedMessage failed, code:" + errorCode + ", msg:" + errorMessage);
+                String errorString = ErrorMessageConverter.convertIMError(errorCode, errorMessage);
+                if (errorCode == 10004) {
+                    errorString = TUIChatService.getAppContext().getString(R.string.chat_message_is_pinned);
+                }
+                TUICallback.onError(callback, errorCode, errorString);
+            }
+        });
+    }
+
+    public void unpinnedMessage(TUIMessageBean messageBean, TUICallback callback) {
+        if (groupInfo == null) {
+            return;
+        }
+        String groupID = groupInfo.getId();
+        TUIChatLog.i(TAG, "unpinnedMessage groupID:" + groupID);
+        provider.pinGroupMessage(groupID, messageBean, false, new TUICallback() {
+            @Override
+            public void onSuccess() {
+                onGroupMessageUnPinned(messageBean.getId(), null);
+                TUICallback.onSuccess(callback);
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIChatLog.e(TAG, "unpinnedMessage failed, code:" + errorCode + ", msg:" + errorMessage);
+                String errorString = ErrorMessageConverter.convertIMError(errorCode, errorMessage);
+                if (errorCode == 10004) {
+                    errorString = TUIChatService.getAppContext().getString(R.string.chat_message_is_unpinned);
+                }
+                TUICallback.onError(callback, errorCode, errorString);
+            }
+        });
+    }
+
+    public void loadPinnedMessage(String groupID) {
+        TUIChatLog.i(TAG, "loadPinnedMessage groupID:" + groupID);
+        provider.getGroupMembersInfo(groupID, Collections.singletonList(TUILogin.getLoginUser()), new IUIKitCallback<List<GroupMemberInfo>>() {
+            @Override
+            public void onSuccess(List<GroupMemberInfo> data) {
+                if (data != null && !data.isEmpty()) {
+                    selfRoleInGroup = data.get(0).getRole();
+                }
+                onPinnedListChanged();
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIChatLog.e(TAG, "get self role failed. code:" + errCode + ", msg:" + errMsg);
+            }
+        });
+        provider.getGroupPinnedMessageList(groupID, new TUIValueCallback<List<TUIMessageBean>>() {
+            @Override
+            public void onSuccess(List<TUIMessageBean> messageBeans) {
+                if (messageBeans != null) {
+                    Collections.reverse(messageBeans);
+                    pinnedMessageList.addAll(messageBeans);
+                }
+                onPinnedListChanged();
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIChatLog.e(TAG, "loadPinnedMessage failed. code:" + errorCode + ", msg:" + errorMessage);
+            }
+        });
+    }
+
+    public void onGroupMessagePinned(TUIMessageBean messageBean, UserBean opUser) {
+        boolean find = false;
+        for (TUIMessageBean pinnedMessage : pinnedMessageList) {
+            if (TextUtils.equals(pinnedMessage.getId(), messageBean.getId())) {
+                int index = pinnedMessageList.indexOf(pinnedMessage);
+                pinnedMessageList.set(index, messageBean);
+                find = true;
+                break;
+            }
+        }
+        if (!find) {
+            pinnedMessageList.add(0, messageBean);
+        }
+        onPinnedListChanged();
+    }
+
+    public void onGroupMessageUnPinned(String messageID, UserBean opUser) {
+        for (TUIMessageBean pinnedMessage : pinnedMessageList) {
+            if (TextUtils.equals(pinnedMessage.getId(), messageID)) {
+                pinnedMessageList.remove(pinnedMessage);
+                break;
+            }
+        }
+        onPinnedListChanged();
+    }
+
+    public boolean isMessagePinned(String messageID) {
+        for (TUIMessageBean pinnedMessage : pinnedMessageList) {
+            if (TextUtils.equals(pinnedMessage.getId(), messageID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canPinnedMessage() {
+        return selfRoleInGroup == GroupMemberInfo.ROLE_ADMIN || selfRoleInGroup == GroupMemberInfo.ROLE_OWNER;
+    }
+
+    private void onPinnedListChanged() {
+        if (groupPinnedView != null) {
+            groupPinnedView.onPinnedListChanged(pinnedMessageList);
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_CAMERA_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_CAMERA_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
 
 import android.content.Context;
 import android.os.Handler;
@@ -12,35 +12,34 @@ import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.RTCubeUtils;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RTCubeUtils;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.TopView;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
-    private Context       mContext;
-    private TopView       mTopView;
-    private RoomStore     mRoomStore;
-    private Runnable      mTimeRunnable;
-    private Handler       mTimeHandler;
-    private Handler       mMainHandler;
-    private HandlerThread mTimeHandlerThread;
+public class TopViewModel implements ConferenceEventCenter.RoomEngineEventResponder {
+    private Context         mContext;
+    private TopView         mTopView;
+    private ConferenceState mConferenceState;
+    private Runnable        mTimeRunnable;
+    private Handler         mTimeHandler;
+    private Handler         mMainHandler;
+    private HandlerThread   mTimeHandlerThread;
 
     public TopViewModel(Context context, TopView topView) {
         mContext = context;
         mTopView = topView;
-        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
-        boolean isGeneralUser = TUIRoomDefine.Role.GENERAL_USER.equals(mRoomStore.userModel.getRole());
+        mConferenceState = ConferenceController.sharedInstance().getConferenceState();
+        boolean isGeneralUser = TUIRoomDefine.Role.GENERAL_USER.equals(mConferenceState.userModel.getRole());
         mTopView.showReportView(isGeneralUser && RTCubeUtils.isRTCubeApp(context));
-        mTopView.setTitle(TextUtils.isEmpty(mRoomStore.roomInfo.name) ? mRoomStore.roomInfo.roomId
-                : mRoomStore.roomInfo.name + mContext.getString(R.string.tuiroomkit_meeting_title));
-        mTopView.setHeadsetImg(mRoomStore.audioModel.isSoundOnSpeaker());
+        mTopView.setTitle(mConferenceState.roomInfo.name);
+        mTopView.setHeadsetImg(mConferenceState.audioModel.isSoundOnSpeaker());
         mTopView.setSwitchCameraViewVisible(
-                RoomEngineManager.sharedInstance().getRoomStore().videoModel.isCameraOpened());
+                ConferenceController.sharedInstance().getConferenceState().videoModel.isCameraOpened());
         mMainHandler = new Handler(Looper.getMainLooper());
         createTimeHandler();
         subscribeEngineEvent();
@@ -51,15 +50,15 @@ public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
     }
 
     private void subscribeEngineEvent() {
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
     }
 
     public void unSubscribeEngineEvent() {
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
     }
 
     private void createTimeHandler() {
@@ -75,7 +74,7 @@ public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
         mTimeRunnable = new Runnable() {
             @Override
             public void run() {
-                int time = (int) (System.currentTimeMillis() - mRoomStore.userModel.enterRoomTime) / 1000;
+                int time = (int) (System.currentTimeMillis() - mConferenceState.userModel.enterRoomTime) / 1000;
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -99,43 +98,42 @@ public class TopViewModel implements RoomEventCenter.RoomEngineEventResponder {
     }
 
     public void switchAudioRoute() {
-        RoomEngineManager.sharedInstance().setAudioRoute(!mRoomStore.audioModel.isSoundOnSpeaker());
+        ConferenceController.sharedInstance().setAudioRoute(!mConferenceState.audioModel.isSoundOnSpeaker());
     }
 
     public void switchCamera() {
-        RoomEngineManager.sharedInstance().switchCamera();
+        ConferenceController.sharedInstance().switchCamera();
     }
 
     public void report() {
-        if (mRoomStore.roomInfo == null) {
+        if (mConferenceState.roomInfo == null) {
             return;
         }
         try {
             Class clz = Class.forName("com.tencent.liteav.demo.report.ReportDialog");
             Method method = clz.getDeclaredMethod("showReportDialog", Context.class, String.class, String.class);
-            method.invoke(null, mContext, String.valueOf(mRoomStore.roomInfo.roomId), mRoomStore.roomInfo.ownerId);
+            method.invoke(null, mContext, String.valueOf(mConferenceState.roomInfo.roomId), mConferenceState.roomInfo.ownerId);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void showMeetingInfo() {
-        RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO, null);
+        ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO, null);
     }
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         if (event == LOCAL_AUDIO_ROUTE_CHANGED) {
-            mTopView.setHeadsetImg(mRoomStore.audioModel.isSoundOnSpeaker());
+            mTopView.setHeadsetImg(mConferenceState.audioModel.isSoundOnSpeaker());
             return;
         }
         if (event == LOCAL_CAMERA_STATE_CHANGED) {
-            mTopView.setSwitchCameraViewVisible(mRoomStore.videoModel.isCameraOpened());
+            mTopView.setSwitchCameraViewVisible(mConferenceState.videoModel.isCameraOpened());
             return;
         }
         if (event == LOCAL_USER_ENTER_ROOM) {
-            mTopView.setTitle(TextUtils.isEmpty(mRoomStore.roomInfo.name) ? mRoomStore.roomInfo.roomId :
-                    mRoomStore.roomInfo.name + mContext.getString(R.string.tuiroomkit_meeting_title));
+            mTopView.setTitle(mConferenceState.roomInfo.name);
         }
     }
 }

@@ -79,6 +79,7 @@ public class ErrorMessageConverter {
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_GROUP_JOIN_PRIVATE_GROUP_DENY, R.string.TUIKitErrorSDKGroupJoinPrivateGroupDeny);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_GROUP_INVITE_SUPER_DENY, R.string.TUIKitErrorSDKGroupInviteSuperDeny);
         ERROR_CODE_MAP.put(BaseConstants.ERR_SDK_GROUP_INVITE_NO_MEMBER, R.string.TUIKitErrorSDKGroupInviteNoMember);
+        ERROR_CODE_MAP.put(BaseConstants.ERR_SVR_GROUP_PINNED_MESSAGE_COUNT_LIMIT, R.string.TUIKitErrorSDKGroupPinnedMessageCountLimit);
 
         
         // Relationship chain error codes

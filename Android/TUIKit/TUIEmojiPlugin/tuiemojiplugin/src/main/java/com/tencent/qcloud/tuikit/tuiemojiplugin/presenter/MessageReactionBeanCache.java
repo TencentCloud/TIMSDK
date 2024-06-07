@@ -38,19 +38,13 @@ public class MessageReactionBeanCache {
         if (messageBean == null || messageReactionBean == null) {
             return;
         }
-
-        instance.cacheMap.put(messageBean, messageReactionBean);
-    }
-
-    public static void putMessageReactionBean(String messageID, MessageReactionBean messageReactionBean) {
-        if (TextUtils.isEmpty(messageID) || messageReactionBean == null) {
-            return;
-        }
-        for (TUIMessageBean messageBean : instance.cacheMap.keySet()) {
-            if (TextUtils.equals(messageBean.getId(), messageID)) {
-                instance.cacheMap.put(messageBean, messageReactionBean);
+        for (TUIMessageBean cached : instance.cacheMap.keySet()) {
+            if (TextUtils.equals(messageBean.getId(), cached.getId())) {
+                instance.cacheMap.remove(cached);
+                break;
             }
         }
+        instance.cacheMap.put(messageBean, messageReactionBean);
     }
 
     public static MessageReactionBean getMessageReactionBean(TUIMessageBean messageBean) {

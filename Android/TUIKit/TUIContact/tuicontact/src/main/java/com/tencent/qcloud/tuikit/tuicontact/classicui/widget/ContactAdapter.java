@@ -91,29 +91,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         });
         holder.unreadText.setVisibility(View.GONE);
         holder.userStatusView.setVisibility(View.GONE);
-        if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.new_friend), contactBean.getId())) {
+        if (presenter.newContacts == contactBean) {
             holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_new_friend_icon));
-
-            presenter.getFriendApplicationUnreadCount(new IUIKitCallback<Integer>() {
-                @Override
-                public void onSuccess(Integer data) {
-                    if (data == 0) {
-                        holder.unreadText.setVisibility(View.GONE);
-                    } else {
-                        holder.unreadText.setVisibility(View.VISIBLE);
-                        holder.unreadText.setText("" + data);
-                    }
-                }
-
-                @Override
-                public void onError(String module, int errCode, String errMsg) {
-                    ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
-                }
-            });
-
-        } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.group), contactBean.getId())) {
+            holder.unreadText.setText(contactBean.getUnreadCount() + "");
+            if (contactBean.getUnreadCount() > 0) {
+                holder.unreadText.setVisibility(View.VISIBLE);
+            } else {
+                holder.unreadText.setVisibility(View.GONE);
+            }
+        } else if (presenter.groupChats == contactBean) {
             holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_group_list_icon));
-        } else if (TextUtils.equals(TUIContactService.getAppContext().getResources().getString(R.string.blacklist), contactBean.getId())) {
+        } else if (presenter.blackList == contactBean) {
             holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_black_list_icon));
         } else {
             if (contactBean.isTop() && contactBean.getExtensionListener() != null) {
@@ -179,6 +167,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public void setDataSource(List<ContactItemBean> datas) {
         this.mData = datas;
         notifyDataSetChanged();
+    }
+
+    public void onDataChanged(ContactItemBean data) {
+        int index = mData.indexOf(data);
+        if (index != -1) {
+            notifyItemChanged(index);
+        }
     }
 
     public void setSingleSelectMode(boolean mode) {

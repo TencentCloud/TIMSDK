@@ -1,6 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.KEY_ROOM_RAISE_HAND_TIP_SHOWED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.KEY_ROOM_RAISE_HAND_TIP_SHOWED;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -22,7 +22,7 @@ import androidx.annotation.NonNull;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 
 public class BottomLayout extends LinearLayout {
@@ -86,9 +86,9 @@ public class BottomLayout extends LinearLayout {
     }
 
     private boolean shouldShowRaiseHandTip() {
-        boolean shouldShow = RoomEngineManager.sharedInstance().getRoomStore().roomInfo.isSeatEnabled
+        boolean shouldShow = ConferenceController.sharedInstance().getConferenceState().roomInfo.isSeatEnabled
                 && !TUIRoomDefine.Role.ROOM_OWNER.equals(
-                RoomEngineManager.sharedInstance().getRoomStore().userModel.getRole());
+                ConferenceController.sharedInstance().getConferenceState().userModel.getRole());
         boolean isShowedBefore = SPUtils.getInstance().getBoolean(KEY_ROOM_RAISE_HAND_TIP_SHOWED, false);
         return shouldShow && !isShowedBefore;
     }

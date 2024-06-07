@@ -23,6 +23,7 @@ public class TUIC2CChatActivity extends TUIBaseChatActivity {
             TUIChatLog.e(TAG, "init C2C chat failed , chatInfo = " + chatInfo);
             ToastUtil.toastShortMessage("init c2c chat failed.");
         }
+
         chatFragment = new TUIC2CChatFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(TUIChatConstants.CHAT_INFO, chatInfo);
@@ -35,7 +36,10 @@ public class TUIC2CChatActivity extends TUIBaseChatActivity {
 
     @Override
     protected void onDestroy() {
-        presenter.removeC2CChatEventListener();
+        if (presenter != null) {
+            presenter.removeC2CChatEventListener();
+        }
+
         super.onDestroy();
     }
 }

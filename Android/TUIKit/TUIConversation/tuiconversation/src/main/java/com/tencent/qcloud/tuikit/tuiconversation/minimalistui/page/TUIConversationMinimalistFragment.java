@@ -59,6 +59,7 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
 
     private ConversationPresenter presenter;
     private ConversationListAdapter mAdapter;
+    private String title;
 
     @Nullable
     @Override
@@ -84,6 +85,9 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
         mConversationLayout.setPresenter(presenter);
 
         mConversationLayout.initDefault();
+        if (!TextUtils.isEmpty(title)) {
+            mConversationLayout.setTitle(title);
+        }
         
         //        ConversationLayoutSetting.customizeConversation(mConversationLayout);
         isShowReadButton = false;
@@ -208,6 +212,15 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
             mConversationLayout.getConversationList().getAdapter().setClick(false);
             mConversationLayout.getConversationList().getAdapter().notifyItemChanged(
                 mConversationLayout.getConversationList().getAdapter().getCurrentPosition());
+        }
+    }
+
+    public void setConversationTitle(String title) {
+        if (!TextUtils.isEmpty(title)) {
+            this.title = title;
+            if (mConversationLayout != null) {
+                mConversationLayout.setTitle(title);
+            }
         }
     }
 

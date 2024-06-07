@@ -2,6 +2,7 @@ package com.tencent.qcloud.tim.demo.bean;
 
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
+import com.tencent.imsdk.BaseConstants;
 import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import java.io.Serializable;
@@ -21,6 +22,7 @@ public class UserInfo implements Serializable {
     private String avatar;
     private boolean autoLogin;
     private boolean debugLogin = false;
+    private int lastLoginCode = BaseConstants.ERR_SUCC;
 
     public synchronized static UserInfo getInstance() {
         if (sUserInfo == null) {
@@ -132,6 +134,15 @@ public class UserInfo implements Serializable {
         return debugLogin;
     }
 
+    public int getLastLoginCode() {
+        return lastLoginCode;
+    }
+
+    public void setLastLoginCode(int lastLoginCode) {
+        this.lastLoginCode = lastLoginCode;
+        setUserInfo(this);
+    }
+
     public void cleanUserInfo() {
         sdkAppId = 0;
         zone = "";
@@ -141,6 +152,7 @@ public class UserInfo implements Serializable {
         name = "";
         avatar = "";
         autoLogin = false;
+        lastLoginCode = BaseConstants.ERR_SUCC;
         setUserInfo(this);
     }
 }

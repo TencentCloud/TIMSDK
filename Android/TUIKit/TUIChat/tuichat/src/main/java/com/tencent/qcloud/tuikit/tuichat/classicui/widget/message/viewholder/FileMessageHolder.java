@@ -67,9 +67,49 @@ public class FileMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(final TUIMessageBean msg, final int position) {
         msgId = msg.getId();
+        FileMessageBean message = (FileMessageBean) msg;
+        final String path = ChatFileDownloadPresenter.getFilePath(message);
+        boolean isFileExists = FileUtil.isFileExists(path);
+        fileNameText.setText(message.getFileName());
+        String size = FileUtil.formatFileSize(message.getFileSize());
+        final String fileName = message.getFileName();
+        fileSizeText.setText(size);
+        if (isFileExists) {
+            String selfPath = ChatFileDownloadProvider.getFileSelfPath(message);
+            // send from current device
+            if (FileUtil.isFileExists(selfPath)) {
+                if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS) {
+                    fileStatusText.setText(R.string.sended);
+                } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
+                    fileStatusText.setText(R.string.sending);
+                } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+                    fileStatusText.setText(R.string.send_failed);
+                } else {
+                    fileStatusText.setText(R.string.sended);
+                }
+            } else {
+                fileStatusText.setText(R.string.downloaded);
+            }
+        } else {
+            if (ChatFileDownloadPresenter.isDownloading(path)) {
+                fileStatusText.setText(R.string.downloading);
+            } else {
+                fileStatusText.setText(R.string.un_download);
+            }
+        }
+
+        if (hasRiskContent) {
+            if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+                setRiskContent(itemView.getResources().getString(R.string.chat_risk_send_message_failed_alert));
+            } else {
+                setRiskContent(itemView.getResources().getString(R.string.chat_risk_image_message_alert));
+            }
+            msgContentFrame.setOnClickListener(null);
+            return;
+        }
+
         if (isForwardMode || isReplyDetailMode) {
             setMessageBubbleBackground(R.drawable.chat_bubble_other_cavity_bg);
-            statusImage.setVisibility(View.GONE);
         } else {
             if (msg.isSelf()) {
                 if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
@@ -95,13 +135,7 @@ public class FileMessageHolder extends MessageContentHolder {
         };
 
         sendingProgress.setVisibility(View.GONE);
-        FileMessageBean message = (FileMessageBean) msg;
-        final String path = ChatFileDownloadPresenter.getFilePath(message);
-        boolean isFileExists = FileUtil.isFileExists(path);
-        fileNameText.setText(message.getFileName());
-        String size = FileUtil.formatFileSize(message.getFileSize());
-        final String fileName = message.getFileName();
-        fileSizeText.setText(size);
+
         if (!isMultiSelectMode) {
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,30 +154,6 @@ public class FileMessageHolder extends MessageContentHolder {
                     }
                 }
             });
-        }
-
-        if (isFileExists) {
-            String selfPath = ChatFileDownloadProvider.getFileSelfPath(message);
-            // send from current device
-            if (FileUtil.isFileExists(selfPath)) {
-                if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_SUCCESS) {
-                    fileStatusText.setText(R.string.sended);
-                } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
-                    fileStatusText.setText(R.string.sending);
-                } else if (message.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-                    fileStatusText.setText(R.string.send_failed);
-                } else {
-                    fileStatusText.setText(R.string.sended);
-                }
-            } else {
-                fileStatusText.setText(R.string.downloaded);
-            }
-        } else {
-            if (ChatFileDownloadPresenter.isDownloading(path)) {
-                fileStatusText.setText(R.string.downloading);
-            } else {
-                fileStatusText.setText(R.string.un_download);
-            }
         }
 
         if (!isFileExists) {

@@ -71,8 +71,7 @@ public class DataStoreUtil {
                                              },
                                              new Consumer<Throwable>() {
                                                  @Override
-                                                 public void accept(Throwable throwable) throws Throwable {
-                                                     TUIChatLog.e(TAG, "dataStore throwable = " + throwable);
+                                                 public void accept(Throwable throwable) {
                                                      callback.onFail();
                                                      if (disponseHandler.disposable != null && !disponseHandler.disposable.isDisposed()) {
                                                          disponseHandler.disposable.dispose();

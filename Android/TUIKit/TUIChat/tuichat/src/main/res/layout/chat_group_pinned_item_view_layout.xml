@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="62dp"
+    android:background="#FAFAFA"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingEnd="16dp">
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="match_parent"
+        android:background="#D9D9D9" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:paddingStart="8dp"
+        android:background="#F0F9F9F9"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/message_sender_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="14.7sp" />
+
+        <TextView
+            android:id="@+id/message_abstract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginTop="8dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/clear_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:padding="5dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/chat_pinned_message_delete_button"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

@@ -1,34 +1,38 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.USER_NOT_FOUND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.KICKED_OFF_SEAT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_GENERAL_TO_MANAGER;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_MANAGER_TO_GENERAL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_TO_OWNER;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.REQUEST_RECEIVED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_EXIT_ROOM_VIEW;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_OWNER_EXIT_ROOM_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_QRCODE_VIEW;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.DISMISS_USER_LIST;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_APPLY_LIST;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL_SECOND;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_MEDIA_SETTING_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_OWNER_EXIT_ROOM_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomKitUIEvent.SHOW_USER_LIST;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant.KEY_USER_POSITION;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.KICKED_OFF_SEAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_GENERAL_TO_MANAGER;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_MANAGER_TO_GENERAL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_TO_OWNER;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.REQUEST_RECEIVED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_EXIT_ROOM_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_OWNER_EXIT_ROOM_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_QRCODE_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_USER_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.ENABLE_FLOAT_CHAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_APPLY_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_MEDIA_SETTING_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_MEETING_INFO;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_OWNER_EXIT_ROOM_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_USER_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_ENABLE_FLOAT_CHAT;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
+import static com.tencent.qcloud.tuicore.TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED;
+import static com.tencent.qcloud.tuicore.TUIConstants.TUILogin.EVENT_SUB_KEY_START_UNINIT;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -36,26 +40,30 @@ import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserModel;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
-import com.tencent.cloud.tuikit.roomkit.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.ConferenceMainView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.store.FloatChatStore;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponder,
-        RoomEventCenter.RoomEngineEventResponder {
+public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventResponder,
+        ConferenceEventCenter.RoomEngineEventResponder, ITUINotification {
     private static final String TAG = "MeetingViewModel";
 
     private Context            mContext;
-    private RoomStore          mRoomStore;
+    private ConferenceState    mConferenceState;
     private ConferenceMainView mRoomMainView;
 
     private boolean mIsFirstPanelShowed  = false;
@@ -64,7 +72,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     public RoomMainViewModel(Context context, ConferenceMainView meetingView) {
         mContext = context;
         mRoomMainView = meetingView;
-        mRoomStore = RoomEngineManager.sharedInstance().getRoomStore();
+        mConferenceState = ConferenceController.sharedInstance().getConferenceState();
         subscribeEvent();
     }
 
@@ -73,7 +81,9 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     private void subscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        TUICore.registerEvent(EVENT_IMSDK_INIT_STATE_CHANGED, EVENT_SUB_KEY_START_UNINIT, this);
+
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.subscribeUIEvent(SHOW_MEETING_INFO, this);
         eventCenter.subscribeUIEvent(DISMISS_MEETING_INFO, this);
         eventCenter.subscribeUIEvent(SHOW_USER_LIST, this);
@@ -93,22 +103,23 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.subscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
         eventCenter.subscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
         eventCenter.subscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
+        eventCenter.subscribeUIEvent(ENABLE_FLOAT_CHAT, this);
         eventCenter.subscribeEngine(REQUEST_RECEIVED, this);
         eventCenter.subscribeEngine(LOCAL_USER_GENERAL_TO_MANAGER, this);
         eventCenter.subscribeEngine(LOCAL_USER_MANAGER_TO_GENERAL, this);
         eventCenter.subscribeEngine(LOCAL_USER_TO_OWNER, this);
 
         eventCenter.subscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_SCREEN_CAPTURE_STOPPED, this);
-        eventCenter.subscribeEngine(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_SCREEN_CAPTURE_STOPPED, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
         eventCenter.subscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
         eventCenter.subscribeEngine(KICKED_OFF_SEAT, this);
     }
@@ -118,7 +129,9 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     private void unSubscribeEvent() {
-        RoomEventCenter eventCenter = RoomEventCenter.getInstance();
+        TUICore.unRegisterEvent(EVENT_IMSDK_INIT_STATE_CHANGED, EVENT_SUB_KEY_START_UNINIT, this);
+
+        ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
         eventCenter.unsubscribeUIEvent(SHOW_MEETING_INFO, this);
         eventCenter.unsubscribeUIEvent(DISMISS_MEETING_INFO, this);
         eventCenter.unsubscribeUIEvent(SHOW_USER_LIST, this);
@@ -138,46 +151,63 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         eventCenter.unsubscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
         eventCenter.unsubscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
         eventCenter.unsubscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
+        eventCenter.unsubscribeUIEvent(ENABLE_FLOAT_CHAT, this);
         eventCenter.unsubscribeEngine(REQUEST_RECEIVED, this);
         eventCenter.unsubscribeEngine(LOCAL_USER_GENERAL_TO_MANAGER, this);
         eventCenter.unsubscribeEngine(LOCAL_USER_MANAGER_TO_GENERAL, this);
         eventCenter.unsubscribeEngine(LOCAL_USER_TO_OWNER, this);
 
         eventCenter.unsubscribeEngine(GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_SCREEN_CAPTURE_STOPPED, this);
-        eventCenter.unsubscribeEngine(RoomEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.ROOM_DISMISSED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.KICKED_OFF_LINE, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.ALL_USER_CAMERA_DISABLE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.ALL_USER_MICROPHONE_DISABLE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_SCREEN_CAPTURE_STOPPED, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
         eventCenter.unsubscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(KICKED_OFF_SEAT, this);
     }
 
     public boolean isOwner() {
-        return TUIRoomDefine.Role.ROOM_OWNER.equals(mRoomStore.userModel.getRole());
+        return TUIRoomDefine.Role.ROOM_OWNER.equals(mConferenceState.userModel.getRole());
     }
 
     public void responseRequest(TUIRoomDefine.RequestAction requestAction, String requestId, boolean agree) {
-        RoomEngineManager.sharedInstance().responseRemoteRequest(requestAction, requestId, agree, null);
+        ConferenceController.sharedInstance().responseRemoteRequest(requestAction, requestId, agree, null);
     }
 
     public void setCameraResolutionMode(Configuration configuration) {
-        RoomEngineManager.sharedInstance().setCameraResolutionMode(configuration.orientation == ORIENTATION_PORTRAIT);
+        ConferenceController.sharedInstance().setCameraResolutionMode(configuration.orientation == ORIENTATION_PORTRAIT);
+    }
+
+    public String getWaterMakText() {
+        return TUILogin.getUserId() + "(" + TUILogin.getNickName() + ")";
     }
 
     public UserModel getUserModel() {
-        return mRoomStore.userModel;
+        return mConferenceState.userModel;
+    }
+
+    public String getRoomId() {
+        return mConferenceState.roomInfo.roomId;
+    }
+
+    public boolean isFloatChatEnable() {
+        return mConferenceState.getEnableFloatChat();
+    }
+
+    public UserState getUserState() {
+        return ConferenceController.sharedInstance().getUserState();
     }
 
     public void notifyConfigChange(Configuration configuration) {
         Map<String, Object> params = new HashMap<>();
-        params.put(RoomEventConstant.KEY_CONFIGURATION, configuration);
-        RoomEventCenter.getInstance().notifyUIEvent(RoomEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, params);
+        params.put(ConferenceEventConstant.KEY_CONFIGURATION, configuration);
+        ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE, params);
     }
 
     private void onCameraMuted(boolean muted) {
@@ -199,6 +229,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         handleEventOfApplyList(key);
         handleEventOfInvite(key);
         handleEventOfInviteSecond(key);
+        handleEventOfEnableFloatChat(key, params);
     }
 
     private void handleEventOfShowTimeRecount(String key) {
@@ -319,8 +350,15 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         }
     }
 
+    public void handleEventOfEnableFloatChat(String key, Map<String, Object> params) {
+        if (TextUtils.equals(key, ENABLE_FLOAT_CHAT) && params != null) {
+            boolean enableFloatChat = (Boolean) params.get(KEY_ENABLE_FLOAT_CHAT);
+            mRoomMainView.isShowFloatChat(enableFloatChat);
+        }
+    }
+
     private void onScreenShareStateChanged() {
-        if (RoomEngineManager.sharedInstance().getRoomStore().videoModel.isScreenSharing()) {
+        if (ConferenceController.sharedInstance().getConferenceState().videoModel.isScreenSharing()) {
             mRoomMainView.onScreenShareStarted();
         } else {
             mRoomMainView.onScreenShareStopped();
@@ -328,7 +366,15 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+        if (TextUtils.equals(key, EVENT_IMSDK_INIT_STATE_CHANGED) && TextUtils.equals(subKey,
+                EVENT_SUB_KEY_START_UNINIT)) {
+            mRoomMainView.showLogoutDialog();
+        }
+    }
+
+    @Override
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
             case ROOM_DISMISSED:
                 onRoomDisMissed();
@@ -393,7 +439,6 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
 
     private void onRoomDisMissed() {
         if (isOwner() && showRTCubeAppLegalDialog()) {
-            RoomEngineManager.sharedInstance().release();
             return;
         }
         mRoomMainView.showLeavedRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_room_room_destroyed));
@@ -414,15 +459,15 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     private void onUserCameraStateChanged(Map<String, Object> params) {
-        if (params == null || !mRoomStore.userModel.isOnSeat()) {
+        if (params == null || !mConferenceState.userModel.isOnSeat()) {
             return;
         }
         int position = (int) params.get(KEY_USER_POSITION);
         if (position == USER_NOT_FOUND) {
             return;
         }
-        UserEntity cameraUser = mRoomStore.allUserList.get(position);
-        TUIRoomDefine.ChangeReason changeReason = (TUIRoomDefine.ChangeReason) params.get(RoomEventConstant.KEY_REASON);
+        UserEntity cameraUser = mConferenceState.allUserList.get(position);
+        TUIRoomDefine.ChangeReason changeReason = (TUIRoomDefine.ChangeReason) params.get(ConferenceEventConstant.KEY_REASON);
         if (TextUtils.equals(cameraUser.getUserId(), TUILogin.getUserId())
                 && TUIRoomDefine.ChangeReason.BY_ADMIN == changeReason) {
             onCameraMuted(!cameraUser.isHasVideoStream());
@@ -430,15 +475,15 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
     }
 
     private void onUserMicStateChanged(Map<String, Object> params) {
-        if (params == null || !mRoomStore.userModel.isOnSeat()) {
+        if (params == null || !mConferenceState.userModel.isOnSeat()) {
             return;
         }
         int position = (int) params.get(KEY_USER_POSITION);
         if (position == USER_NOT_FOUND) {
             return;
         }
-        UserEntity micUser = mRoomStore.allUserList.get(position);
-        TUIRoomDefine.ChangeReason changeReason = (TUIRoomDefine.ChangeReason) params.get(RoomEventConstant.KEY_REASON);
+        UserEntity micUser = mConferenceState.allUserList.get(position);
+        TUIRoomDefine.ChangeReason changeReason = (TUIRoomDefine.ChangeReason) params.get(ConferenceEventConstant.KEY_REASON);
         if (TextUtils.equals(micUser.getUserId(), TUILogin.getUserId())
                 && TUIRoomDefine.ChangeReason.BY_ADMIN == changeReason) {
             onMicrophoneMuted(!micUser.isHasAudioStream());
@@ -453,7 +498,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         if (params == null) {
             return;
         }
-        boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
+        boolean isDisable = (Boolean) params.get(ConferenceEventConstant.KEY_IS_DISABLE);
         int stringResId = isDisable
                 ? R.string.tuiroomkit_mute_all_camera_toast
                 : R.string.tuiroomkit_toast_not_mute_all_video;
@@ -464,7 +509,7 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
         if (params == null) {
             return;
         }
-        boolean isDisable = (Boolean) params.get(RoomEventConstant.KEY_IS_DISABLE);
+        boolean isDisable = (Boolean) params.get(ConferenceEventConstant.KEY_IS_DISABLE);
         int resId = isDisable ? R.string.tuiroomkit_mute_all_mic_toast : R.string.tuiroomkit_toast_not_mute_all_audio;
         RoomToast.toastShortMessageCenter(mContext.getString(resId));
     }
@@ -474,8 +519,8 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
             return;
         }
 
-        mRoomStore.roomInfo.isMessageDisableForAllUser = (boolean) params
-                .get(RoomEventConstant.KEY_IS_DISABLE);
+        mConferenceState.roomInfo.isMessageDisableForAllUser = (boolean) params
+                .get(ConferenceEventConstant.KEY_IS_DISABLE);
     }
 
     private void onUserRoleChange(Map<String, Object> params) {
@@ -483,12 +528,12 @@ public class RoomMainViewModel implements RoomEventCenter.RoomKitUIEventResponde
             return;
         }
 
-        String userId = (String) params.get(RoomEventConstant.KEY_USER_ID);
-        if (TextUtils.isEmpty(userId) || !mRoomStore.userModel.userId.equals(userId)) {
+        String userId = (String) params.get(ConferenceEventConstant.KEY_USER_ID);
+        if (TextUtils.isEmpty(userId) || !mConferenceState.userModel.userId.equals(userId)) {
             return;
         }
 
-        TUIRoomDefine.Role role = (TUIRoomDefine.Role) params.get(RoomEventConstant.KEY_ROLE);
+        TUIRoomDefine.Role role = (TUIRoomDefine.Role) params.get(ConferenceEventConstant.KEY_ROLE);
         if (role == null) {
             return;
         }

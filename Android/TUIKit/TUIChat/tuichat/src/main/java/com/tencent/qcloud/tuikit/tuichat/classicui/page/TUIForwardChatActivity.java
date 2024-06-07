@@ -38,7 +38,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forward_chat_layout);
-        mFowardChatMessageRecyclerView = (MessageRecyclerView) findViewById(R.id.chat_message_layout);
+        mFowardChatMessageRecyclerView = findViewById(R.id.chat_message_layout);
         mFowardChatMessageRecyclerView.setLayoutManager(new CustomLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mForwardChatAdapter = new MessageAdapter();
         mForwardChatAdapter.setForwardMode(true);
@@ -51,7 +51,7 @@ public class TUIForwardChatActivity extends BaseLightActivity {
         mFowardChatMessageRecyclerView.setAdapter(mForwardChatAdapter);
         mFowardChatMessageRecyclerView.setPresenter(presenter);
 
-        mTitleBar = (TitleBarLayout) findViewById(R.id.chat_title_bar);
+        mTitleBar = findViewById(R.id.chat_title_bar);
         mTitleBar.setOnLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

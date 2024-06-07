@@ -1,11 +1,11 @@
 package com.tencent.cloud.tuikit.roomkit.imaccess.model.observer;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.Role.ROOM_OWNER;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomConstant.KEY_ERROR;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_CREATE_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_DESTROY_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_EXIT_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.KEY_ERROR;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_CREATE_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_DESTROY_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_EXIT_ROOM;
 
 import android.util.Log;
 
@@ -15,14 +15,14 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
 import com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.IRoomCallback;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomMsgManager;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.util.List;
 import java.util.Map;
 
-public class RoomObserver extends TUIRoomObserver implements RoomEventCenter.RoomEngineEventResponder {
+public class RoomObserver extends TUIRoomObserver implements ConferenceEventCenter.RoomEngineEventResponder {
     private static final String TAG = "RoomObserver";
     private RoomMsgManager mRoomMsgManager;
     private IRoomCallback  mRoomCallback;
@@ -56,19 +56,19 @@ public class RoomObserver extends TUIRoomObserver implements RoomEventCenter.Roo
     }
 
     public void registerObserver() {
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomEngine().addObserver(this);
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_CREATE_ROOM, this);
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_EXIT_ROOM, this);
-        RoomEventCenter.getInstance().subscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
+        ConferenceController.sharedInstance(TUILogin.getAppContext()).getRoomEngine().addObserver(this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_USER_CREATE_ROOM, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_USER_EXIT_ROOM, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
     }
 
     public void unregisterObserver() {
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomEngine().removeObserver(this);
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_CREATE_ROOM, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_EXIT_ROOM, this);
-        RoomEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
+        ConferenceController.sharedInstance(TUILogin.getAppContext()).getRoomEngine().removeObserver(this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_CREATE_ROOM, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_EXIT_ROOM, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_DESTROY_ROOM, this);
     }
 
     public boolean isRoomOwner() {
@@ -98,7 +98,7 @@ public class RoomObserver extends TUIRoomObserver implements RoomEventCenter.Roo
     private void getUserList() {
         Log.d(TAG, "getUserList");
         mRoomMsgData.getUserList().clear();
-        RoomEngineManager.sharedInstance(TUILogin.getAppContext()).getRoomEngine()
+        ConferenceController.sharedInstance(TUILogin.getAppContext()).getRoomEngine()
                 .getUserList(mNextSequence, new TUIRoomDefine.GetUserListCallback() {
                     @Override
                     public void onSuccess(TUIRoomDefine.UserListResult userListResult) {
@@ -192,7 +192,7 @@ public class RoomObserver extends TUIRoomObserver implements RoomEventCenter.Roo
     }
 
     @Override
-    public void onEngineEvent(RoomEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+    public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         Log.d(TAG, "onEngineEvent event=" + event);
         switch (event) {
             case LOCAL_USER_CREATE_ROOM:

@@ -1,18 +1,18 @@
 package com.tencent.cloud.tuikit.roomkit.model.entity;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_PLAY_VOLUME_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_PLAY_VOLUME_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED;
 
-import com.tencent.cloud.tuikit.roomkit.model.RoomConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 
 public class AudioModel {
-    private int     captureVolume          = RoomConstant.DEFAULT_AUDIO_CAPTURE_VOLUME;
-    private int     playVolume             = RoomConstant.DEFAULT_AUDIO_PLAY_VOLUME;
-    private boolean enableVolumeEvaluation = RoomConstant.DEFAULT_AUDIO_VOLUME_EVALUATION;
+    private int     captureVolume          = ConferenceConstant.DEFAULT_AUDIO_CAPTURE_VOLUME;
+    private int     playVolume             = ConferenceConstant.DEFAULT_AUDIO_PLAY_VOLUME;
+    private boolean enableVolumeEvaluation = ConferenceConstant.DEFAULT_AUDIO_VOLUME_EVALUATION;
 
     private boolean hasAudioStream   = false;
     private boolean isMicOpen        = false;
@@ -24,7 +24,7 @@ public class AudioModel {
 
     public void setCaptureVolume(int captureVolume) {
         this.captureVolume = captureVolume;
-        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED, null);
+        ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED, null);
     }
 
     public int getPlayVolume() {
@@ -33,7 +33,7 @@ public class AudioModel {
 
     public void setPlayVolume(int playVolume) {
         this.playVolume = playVolume;
-        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_PLAY_VOLUME_CHANGED, null);
+        ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_PLAY_VOLUME_CHANGED, null);
     }
 
     public boolean isEnableVolumeEvaluation() {
@@ -42,7 +42,7 @@ public class AudioModel {
 
     public void setEnableVolumeEvaluation(boolean enableVolumeEvaluation) {
         this.enableVolumeEvaluation = enableVolumeEvaluation;
-        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED, null);
+        ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED, null);
     }
 
     public boolean isHasAudioStream() {
@@ -51,7 +51,7 @@ public class AudioModel {
 
     public void setHasAudioStream(boolean hasAudioStream) {
         this.hasAudioStream = hasAudioStream;
-        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_STATE_CHANGED, null);
+        ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_STATE_CHANGED, null);
     }
 
     public boolean isMicOpen() {
@@ -68,6 +68,6 @@ public class AudioModel {
 
     public void setSoundOnSpeaker(boolean soundOnSpeaker) {
         isSoundOnSpeaker = soundOnSpeaker;
-        RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_ROUTE_CHANGED, null);
+        ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_ROUTE_CHANGED, null);
     }
 }

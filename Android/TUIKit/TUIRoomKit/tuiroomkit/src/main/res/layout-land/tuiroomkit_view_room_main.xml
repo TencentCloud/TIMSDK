@@ -91,6 +91,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandNotificationView
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:durationMS="5000"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_video_seat_container"
+        app:layout_constraintEnd_toEndOf="@+id/tuiroomkit_video_seat_container"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomit_top_view_container" />
+
+    <FrameLayout
+        android:id="@+id/tuiroomkit_float_chat_view_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="@id/tuiroomkit_video_seat_container"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <FrameLayout
         android:id="@+id/tuiroomkit_bottom_view_container"
         android:layout_width="0dp"

@@ -11,16 +11,13 @@ public class ChatInfo implements Serializable {
     public static final int TYPE_GROUP = V2TIMConversation.V2TIM_GROUP;
     public static final int TYPE_INVALID = V2TIMConversation.CONVERSATION_TYPE_INVALID;
 
-    private static List<V2TIMGroupAtInfo> atInfoList;
-
     private String chatName;
     private int type = V2TIMConversation.V2TIM_C2C;
     private String id;
     private String groupType;
-    private boolean isTopChat;
     private MessageInfo locateMessage;
-
     private DraftInfo draft;
+    private boolean isTopChat;
 
     public ChatInfo() {}
 
@@ -101,33 +98,12 @@ public class ChatInfo implements Serializable {
         return isTopChat;
     }
 
-    /**
-     * Set whether the conversation is sticky
-     *
-     * @param topChat
-     */
-    public void setTopChat(boolean topChat) {
-        isTopChat = topChat;
-    }
-
-    public List<V2TIMGroupAtInfo> getAtInfoList() {
-        return atInfoList;
-    }
-
-    public void setAtInfoList(List<V2TIMGroupAtInfo> atInfoList) {
-        this.atInfoList = atInfoList;
-    }
-
     public void setLocateMessage(MessageInfo locateMessage) {
         this.locateMessage = locateMessage;
     }
 
     public MessageInfo getLocateMessage() {
         return locateMessage;
-    }
-
-    public void setDraft(DraftInfo draft) {
-        this.draft = draft;
     }
 
     public DraftInfo getDraft() {

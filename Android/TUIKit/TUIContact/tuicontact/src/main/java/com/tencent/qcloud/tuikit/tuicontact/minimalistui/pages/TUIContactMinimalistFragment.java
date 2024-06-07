@@ -73,6 +73,12 @@ public class TUIContactMinimalistFragment extends BaseFragment {
         });
     }
 
+    public void reloadData() {
+        if (mContactLayout != null) {
+            mContactLayout.reloadData();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();

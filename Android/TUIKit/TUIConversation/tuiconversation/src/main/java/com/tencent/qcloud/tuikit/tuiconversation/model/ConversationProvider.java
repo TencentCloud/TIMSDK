@@ -13,10 +13,11 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
-import com.tencent.qcloud.tuikit.tuiconversation.BuildConfig;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.tuiconversation.BuildConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationUserStatusBean;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
@@ -24,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -96,7 +98,6 @@ public class ConversationProvider {
     }
 
     public void getTotalUnreadMessageCount(IUIKitCallback<Long> callBack) {
-        
         V2TIMManager.getConversationManager().getTotalUnreadMessageCount(new V2TIMValueCallback<Long>() {
             @Override
             public void onSuccess(Long count) {
@@ -172,6 +173,71 @@ public class ConversationProvider {
                 public void onError(int code, String desc) {
                     TUIConversationLog.e(TAG, "markConversationHidden error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
                     TUIConversationUtils.callbackOnError(callback, TAG, code, desc);
+                }
+            });
+    }
+
+    public void markConversationRead(String conversationID, TUICallback callback) {
+        V2TIMManager.getConversationManager().markConversation(Collections.singletonList(conversationID),
+                V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD, false, new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+                    @Override
+                    public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                        if (v2TIMConversationOperationResults.isEmpty()) {
+                            return;
+                        }
+                        V2TIMConversationOperationResult result = v2TIMConversationOperationResults.get(0);
+                        if (result.getResultCode() == BaseConstants.ERR_SUCC) {
+                            TUICallback.onSuccess(callback);
+                        } else {
+                            TUICallback.onError(callback, result.getResultCode(), result.getResultInfo());
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIConversationLog.e(TAG, "markConversationRead error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                        TUICallback.onError(callback, code, desc);
+                    }
+                });
+    }
+
+    public void cleanConversationUnreadCount(String conversationID, TUICallback callback) {
+        V2TIMManager.getConversationManager().cleanConversationUnreadMessageCount(conversationID, 0, 0, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                TUICallback.onSuccess(callback);
+                TUIConversationLog.i(TAG, "cleanConversationUnreadCount success");
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUICallback.onError(callback, code, desc);
+                TUIConversationLog.e(
+                        TAG, "cleanConversationUnreadCount error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+            }
+        });
+    }
+
+    public void markConversationUnread(String conversationID, TUICallback callback) {
+        V2TIMManager.getConversationManager().markConversation(Collections.singletonList(conversationID),
+            V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_UNREAD, true, new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
+                @Override
+                public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
+                    if (v2TIMConversationOperationResults.isEmpty()) {
+                        return;
+                    }
+                    V2TIMConversationOperationResult result = v2TIMConversationOperationResults.get(0);
+                    if (result.getResultCode() == BaseConstants.ERR_SUCC) {
+                        TUICallback.onSuccess(callback);
+                    } else {
+                        TUICallback.onError(callback, result.getResultCode(), result.getResultInfo());
+                    }
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIConversationLog.e(TAG, "markConversationUnread error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
+                    TUICallback.onError(callback, code, desc);
                 }
             });
     }

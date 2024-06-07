@@ -302,6 +302,14 @@
                 app:name="@string/exit_group"
                 tools:visibility="visible" />
 
+            <LinearLayout
+                android:id="@+id/warning_extension_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:visibility="visible" />
+
         </LinearLayout>
 
 

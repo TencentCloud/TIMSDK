@@ -138,7 +138,7 @@ public class ImageVideoScanProvider {
                     timMessages.add(timMessage);
                 }
 
-                List<TUIMessageBean> messageInfoList = ChatMessageParser.parseMessageList(timMessages);
+                List<TUIMessageBean> messageInfoList = ChatMessageParser.parsePresentMessageList(timMessages);
                 TUIChatUtils.callbackOnSuccess(callBack, messageInfoList);
             }
         });

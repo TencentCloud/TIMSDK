@@ -25,33 +25,33 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="10dp"
-        android:layout_toLeftOf="@id/img_audio"
+        android:layout_toLeftOf="@id/tuiroomkit_img_mic_state"
         android:layout_toRightOf="@id/img_head"
         android:layout_weight="1"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/img_audio"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_mic_state"
         app:layout_constraintStart_toEndOf="@+id/img_head"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/img_audio"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.MicIconView
+        android:id="@+id/tuiroomkit_img_mic_state"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
-        android:layout_toLeftOf="@id/img_video"
+        android:layout_toLeftOf="@id/tuiroomkit_img_camera_state"
         android:background="@android:color/transparent"
         android:clickable="false"
         android:scaleType="fitXY"
         android:src="@drawable/tuiroomkit_ic_member_list_audio"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/img_video"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_camera_state"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/img_video"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.CameraIconView
+        android:id="@+id/tuiroomkit_img_camera_state"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="30dp"
@@ -64,10 +64,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/tv_invite_to_stage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.InviteSeatButton
+        android:id="@+id/tuiroomkit_btn_invite_seat"
+        android:layout_width="72dp"
+        android:layout_height="36dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
@@ -75,10 +75,11 @@
         android:paddingTop="3dp"
         android:paddingRight="7dp"
         android:paddingBottom="3dp"
+        android:gravity="center"
         android:text="@string/tuiroomkit_invite_to_stage"
         android:textColor="@color/tuiroomkit_color_white"
         android:textSize="12sp"
-
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

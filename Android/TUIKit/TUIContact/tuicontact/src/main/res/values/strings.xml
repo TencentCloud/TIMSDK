@@ -145,6 +145,7 @@
     <string name="group_name_edit_null_tips">Group name cannot be empty!</string>
     <string name="group_name_edit_exceed_tips">Group name up to 30 bytes!</string>
     <string name="group_id_edit_format_tips">Group ID prefix cannot be @TGS# !</string>
+    <string name="community_id_edit_format_tips">Community ID prefix must be @TGS#_ !</string>
     <string name="group_id_edit_exceed_tips">Group ID up to 48 bytes!</string>
     <string name="group_type_content_title">See details product documentation</string>
     <string name="group_type_content_url">product documentation</string>

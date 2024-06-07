@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuichat.interfaces;
 
+import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
+import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
@@ -33,4 +35,14 @@ public abstract class GroupChatEventListener {
     public void addMessage(TUIMessageBean messageBean, String chatId) {}
 
     public void onMessageChanged(TUIMessageBean messageBean, int dataChangeType) {}
+
+    public void onGroupMessagePinned(String groupID, TUIMessageBean messageBean, UserBean opUser) {}
+
+    public void onGroupMessageUnPinned(String groupID, String messageID, UserBean opUser) {}
+
+    public void onGrantGroupAdmin(String groupID, List<String> newAdminUserIDList) {}
+
+    public void onRevokeGroupAdmin(String groupID, List<String> oldAdminUserIDList) {}
+
+    public void onGrantGroupOwner(String groupID, String groupOwner) {}
 }

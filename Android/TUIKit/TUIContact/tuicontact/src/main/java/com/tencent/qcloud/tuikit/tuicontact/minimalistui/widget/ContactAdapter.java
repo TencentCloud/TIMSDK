@@ -118,24 +118,14 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             String newFriendString = TUIContactService.getAppContext().getResources().getString(R.string.new_friend);
             String myGroupString = TUIContactService.getAppContext().getResources().getString(R.string.group);
             String blokeListString = TUIContactService.getAppContext().getResources().getString(R.string.blacklist);
-            if (TextUtils.equals(newFriendString, contactBean.getId())) {
+            if (presenter.newContacts == contactBean) {
                 controllerViewHolder.controllerName.setText(newFriendString);
-                presenter.getFriendApplicationUnreadCount(new IUIKitCallback<Integer>() {
-                    @Override
-                    public void onSuccess(Integer data) {
-                        if (data == 0) {
-                            controllerViewHolder.unreadText.setVisibility(View.GONE);
-                        } else {
-                            controllerViewHolder.unreadText.setVisibility(View.VISIBLE);
-                            controllerViewHolder.unreadText.setText("" + data);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        ToastUtil.toastShortMessage("Error code = " + errCode + ", desc = " + errMsg);
-                    }
-                });
+                controllerViewHolder.unreadText.setText(contactBean.getUnreadCount() + "");
+                if (contactBean.getUnreadCount() > 0) {
+                    controllerViewHolder.unreadText.setVisibility(View.VISIBLE);
+                } else {
+                    controllerViewHolder.unreadText.setVisibility(View.GONE);
+                }
             } else if (TextUtils.equals(myGroupString, contactBean.getId())) {
                 controllerViewHolder.controllerName.setText(myGroupString);
                 controllerViewHolder.unreadText.setVisibility(View.GONE);
@@ -230,6 +220,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setDataSourceType(int dataSourceType) {
         this.dataSourceType = dataSourceType;
+    }
+
+    public void onDataChanged(ContactItemBean data) {
+        int index = mData.indexOf(data);
+        if (index != -1) {
+            notifyItemChanged(index);
+        }
     }
 
     public static class ContactItemViewHolder extends RecyclerView.ViewHolder {

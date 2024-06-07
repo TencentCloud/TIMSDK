@@ -20,8 +20,7 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.imaccess.extensions.RoomBellFeature;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.InviteJoinData;
 import com.tencent.cloud.tuikit.roomkit.imaccess.presenter.RoomPresenter;
-import com.tencent.cloud.tuikit.roomkit.imaccess.utils.BusinessSceneUtil;
-import com.tencent.cloud.tuikit.roomkit.utils.ImageLoader;
+import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 public class InvitedToJoinRoomActivity extends AppCompatActivity {

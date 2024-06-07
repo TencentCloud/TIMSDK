@@ -103,16 +103,63 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_user_list"
+    <LinearLayout
+        android:id="@+id/tuiroomkit_ll_seat_tab"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:background="@drawable/tuiroomkit_bg_user_list_panel_view"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/ll_search">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/tuiroomkit_btn_user_on_seat"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="2dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/tuiroomkit_bg_user_list_tab_selected"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:text="@string/tuiroomkit_user_list_on_seat"
+            android:textSize="14sp"
+            app:round="6dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/tuiroomkit_btn_user_off_seat"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:layout_gravity="end|center_vertical"
+            android:background="@drawable/tuiroomkit_bg_user_list_tab_selected"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:text="@string/tuiroomkit_user_list_off_seat"
+            android:textSize="14sp"
+            app:round="6dp"/>
+    </LinearLayout>
+
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandNotificationView
+        android:id="@+id/tuiroomkit_apply_seat_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
+        android:paddingTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_ll_seat_tab"/>
+
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserRecyclerView
+        android:id="@+id/tuiroomkit_rv_user_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/ll_search"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_apply_seat_notification"
         app:layout_constraintBottom_toTopOf="@+id/btn_mute_audio_all"/>
 
     <TextView

@@ -279,7 +279,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     case MotionEvent.ACTION_DOWN:
                         mStartRecordX = motionEvent.getX();
                         inputMachine.execute(InputAction.AUDIO_CLICKED);
-                        startAudioRecord();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         readyToCancel = motionEvent.getX() - mStartRecordX < -100;

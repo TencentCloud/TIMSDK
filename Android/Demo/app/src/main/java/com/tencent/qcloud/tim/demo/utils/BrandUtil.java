@@ -12,20 +12,6 @@ public class BrandUtil {
     }
 
     /**
-     * huawei device
-     */
-    public static boolean isBrandHuawei() {
-        return "huawei".equalsIgnoreCase(getBuildBrand()) || "huawei".equalsIgnoreCase(getBuildManufacturer()) || "honor".equalsIgnoreCase(getBuildBrand());
-    }
-
-    /**
-     * meizu device
-     */
-    public static boolean isBrandMeizu() {
-        return "meizu".equalsIgnoreCase(getBuildBrand()) || "meizu".equalsIgnoreCase(getBuildManufacturer()) || "22c4185e".equalsIgnoreCase(getBuildBrand());
-    }
-
-    /**
      * oppo device
      *
      * @return
@@ -44,24 +30,6 @@ public class BrandUtil {
     public static boolean isSamsungS9Series() {
         return "samsung".equalsIgnoreCase(getBuildBrand())
             && (!TextUtils.isEmpty(getBuildModel()) && (getBuildModel().startsWith("SM-G965") || getBuildModel().startsWith("SM-G960")));
-    }
-
-    /**
-     * vivo device
-     *
-     * @return
-     */
-    public static boolean isBrandVivo() {
-        return "vivo".equalsIgnoreCase(getBuildBrand()) || "vivo".equalsIgnoreCase(getBuildManufacturer());
-    }
-
-    /**
-     * honor device
-     *
-     * @return
-     */
-    public static boolean isBrandHonor() {
-        return "honor".equalsIgnoreCase(getBuildBrand()) && "honor".equalsIgnoreCase(getBuildManufacturer());
     }
 
     public static String getBuildBrand() {

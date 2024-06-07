@@ -48,11 +48,6 @@ public abstract class TUIBaseChatMinimalistActivity extends BaseMinimalistLightA
     private void chat(Intent intent) {
         Bundle bundle = intent.getExtras();
         TUIChatLog.i(TAG, "bundle: " + bundle + " intent: " + intent);
-        if (!TUILogin.isUserLogined()) {
-            ToastUtil.toastShortMessage(getString(R.string.chat_tips_not_login));
-            finish();
-            return;
-        }
 
         ChatInfo chatInfo = getChatInfo(intent);
         TUIChatLog.i(TAG, "start chatActivity chatInfo: " + chatInfo);

@@ -10,7 +10,7 @@ import android.util.Log;
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.TUIRoomKit;
-import com.tencent.cloud.tuikit.roomkit.model.manager.RoomEngineManager;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.RoomMainActivity;
 import com.tencent.qcloud.tuicore.TUILogin;
 
@@ -43,7 +43,7 @@ public class TUIRoomKitImpl extends TUIRoomKit {
     @Override
     public void setSelfInfo(String userName, String avatarURL, TUIRoomDefine.ActionCallback callback) {
         Log.i(TAG, "set self info userName=" + userName + " avatarURL=" + avatarURL);
-        RoomEngineManager.sharedInstance().setSelfInfo(userName, avatarURL, callback);
+        ConferenceController.sharedInstance().setSelfInfo(userName, avatarURL, callback);
     }
 
 
@@ -56,7 +56,7 @@ public class TUIRoomKitImpl extends TUIRoomKit {
             }
             return;
         }
-        RoomEngineManager.sharedInstance().createRoom(roomInfo, callback);
+        ConferenceController.sharedInstance().createRoom(roomInfo, callback);
     }
 
     @Override
@@ -70,11 +70,11 @@ public class TUIRoomKitImpl extends TUIRoomKit {
             }
             return;
         }
-        RoomEngineManager.sharedInstance()
+        ConferenceController.sharedInstance()
                 .enterRoom(roomId, enableAudio, enableVideo, isSoundOnSpeaker, new TUIRoomDefine.GetRoomInfoCallback() {
             @Override
             public void onSuccess(TUIRoomDefine.RoomInfo roomInfo) {
-                if (RoomEngineManager.sharedInstance().getRoomStore().isAutoShowRoomMainUi()) {
+                if (ConferenceController.sharedInstance().getConferenceState().isAutoShowRoomMainUi()) {
                     goRoomMainActivity();
                 }
                 if (callback != null) {

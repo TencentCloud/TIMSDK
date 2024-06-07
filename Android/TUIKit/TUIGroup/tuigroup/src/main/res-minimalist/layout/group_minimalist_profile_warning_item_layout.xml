@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
+        android:id="@+id/item_button"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#F0F9F9F9"
+        app:isSwitch="false"
+        app:name=" "
+        tools:visibility="visible" />
+</FrameLayout>

@@ -57,7 +57,6 @@ public class QuoteMessageHolder extends TextMessageHolder {
     public QuoteMessageHolder(View itemView) {
         super(itemView);
         quoteContentFrameLayout = itemView.findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.quote_content_fl);
-        quoteContentFrameLayout.setVisibility(View.VISIBLE);
         LayoutInflater.from(itemView.getContext()).inflate(R.layout.minimalist_quote_message_content_layout, quoteContentFrameLayout);
         senderNameTv = quoteContentFrameLayout.findViewById(R.id.sender_name_tv);
 
@@ -87,9 +86,22 @@ public class QuoteMessageHolder extends TextMessageHolder {
         String replyContent = replyContentBean.getExtra();
         FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), replyContent, false);
         String senderName = quoteMessageBean.getOriginMsgSender();
+        TUIMessageBean originMessage = quoteMessageBean.getOriginMessageBean();
+        if (originMessage != null) {
+            if (originMessage.isRevoked()) {
+                senderNameTv.setVisibility(View.GONE);
+            } else {
+                senderNameTv.setVisibility(View.VISIBLE);
+            }
+        }
         senderNameTv.setText(senderName + ": ");
         setOnTimeInLineTextClickListener(msg);
-        performMsgAbstract(quoteMessageBean);
+        if (quoteMessageBean.isAbstractEnable()) {
+            performMsgAbstract(quoteMessageBean);
+            quoteContentFrameLayout.setVisibility(View.VISIBLE);
+        } else {
+            quoteContentFrameLayout.setVisibility(View.GONE);
+        }
 
         msgArea.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -124,7 +136,11 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
         TUIReplyQuoteBean replyQuoteBean = quoteMessageBean.getReplyQuoteBean();
         if (originMessage != null) {
-            performQuote(replyQuoteBean, quoteMessageBean);
+            if (originMessage.isRevoked()) {
+                performTextMessage(itemView.getResources().getString(R.string.chat_quote_origin_message_revoked));
+            } else {
+                performQuote(replyQuoteBean, quoteMessageBean);
+            }
         } else {
             performNotFound(replyQuoteBean, quoteMessageBean);
         }

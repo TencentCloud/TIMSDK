@@ -119,6 +119,22 @@ public class TUICommunityService implements TUIInitializer, ITUINotification, IT
             }
 
             @Override
+            public void onMemberInvited(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                if (CommunityUtil.isCommunityGroup(groupID)) {
+                    String selfID = V2TIMManager.getInstance().getLoginUser();
+                    for (V2TIMGroupMemberInfo memberInfo : memberList) {
+                        if (TextUtils.equals(memberInfo.getUserID(), selfID)) {
+                            List<CommunityEventListener> listeners = getCommunityEventListenerList();
+                            for (CommunityEventListener communityEventListener : listeners) {
+                                communityEventListener.onJoinedCommunity(groupID);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
             public void onGroupCreated(String groupID) {
                 if (CommunityUtil.isCommunityGroup(groupID)) {
                     List<CommunityEventListener> listeners = getCommunityEventListenerList();

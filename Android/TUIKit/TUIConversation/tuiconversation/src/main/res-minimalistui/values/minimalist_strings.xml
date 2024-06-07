@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="conversation_minimalist_chat">Chat</string>
+    <string name="conversation_minimalist_chat_disconnected">Disconnected</string>
+    <string name="conversation_minimalist_chat_connecting">Connecting...</string>
+    <string name="conversation_minimalist_chat_loading">Loading...</string>
     <string name="conversation_minimalist_search">Search</string>
     <string name="conversation_minimalist_done">Done</string>
     <string name="has_all_read">Read All</string>

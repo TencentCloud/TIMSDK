@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,11 +35,13 @@ import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.login.LoginWrapper;
 import com.tencent.qcloud.tim.demo.profile.ProfileMinimalistFragment;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
-import com.tencent.qcloud.tim.demo.utils.DemoLog;
 import com.tencent.qcloud.tim.demo.utils.Constants;
+import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.demo.utils.SystemUtil;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -51,6 +52,8 @@ import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.tuicommunity.ui.page.TUICommunityFragment;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.pages.TUIContactFragment;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.TUIContactMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
 import java.lang.ref.WeakReference;
@@ -65,6 +68,11 @@ import java.util.Map;
 
 public class MainMinimalistActivity extends BaseMinimalistLightActivity {
     private static final String TAG = MainMinimalistActivity.class.getSimpleName();
+
+    private static final int STATUS_CONNECTED = 0;
+    private static final int STATUS_CONNECTING = 1;
+    private static final int STATUS_LOADING = 2;
+    private static final int STATUS_DISCONNECTED = 3;
 
     private ViewPager2 mainViewPager;
     private List<Fragment> fragments;
@@ -89,6 +97,8 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
 
     private TabBean selectedItem;
     private TabBean preSelectedItem;
+    private LoginWrapper.AppLoginListener appLoginListener;
+    private int status = STATUS_CONNECTED;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +109,78 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         initView();
         initUnreadCountReceiver();
         initRecentCallsReceiver();
+        initAppLoginListener();
+    }
+
+    private void initAppLoginListener() {
+        if (appLoginListener == null) {
+            appLoginListener = new LoginWrapper.AppLoginListener() {
+                @Override
+                public void onConnecting() {
+                    DemoLog.i(TAG, "onConnecting");
+                    status = STATUS_CONNECTING;
+                    if (selectedItem == conversationBean) {
+                        setConversationTitleConnecting();
+                    }
+                }
+
+                @Override
+                public void onConnectSuccess() {
+                    DemoLog.i(TAG, "onConnectSuccess, do nothing");
+                }
+
+                @Override
+                public void onConnectFailed(int code, String error) {
+                    DemoLog.i(TAG, "onConnectFailed, code:" + code + ", message:" + error);
+                    status = STATUS_DISCONNECTED;
+                    if (selectedItem == conversationBean) {
+                        setConversationTitleDisconnected();
+                    }
+                }
+
+                @Override
+                public void onUserSigExpired() {
+                    DemoLog.i(TAG, "onUserSigExpired");
+                    finishMainActivity();
+                }
+
+                @Override
+                public void onSyncServerStart() {
+                    DemoLog.i(TAG, "onSyncServerStart");
+                    status = STATUS_LOADING;
+                    if (selectedItem == conversationBean) {
+                        setConversationTitleLoading();
+                    }
+                }
+
+                @Override
+                public void onSyncServerFinish() {
+                    DemoLog.i(TAG, "onSyncServerFinish");
+                    status = STATUS_CONNECTED;
+                    if (selectedItem == conversationBean) {
+                        setConversationTitleConnected();
+                    }
+
+                    reloadTabData();
+                }
+
+                @Override
+                public void onSyncServerFailed() {
+                    DemoLog.i(TAG, "onSyncServerFailed");
+                    status = STATUS_CONNECTED;
+                    if (selectedItem == conversationBean) {
+                        setConversationTitleConnected();
+                    }
+                }
+            };
+        }
+
+        LoginWrapper.getInstance().addAppLoginObserver(appLoginListener);
+    }
+
+    private void reloadTabData() {
+        DemoLog.i(TAG, "reloadTabData");
+        ((TUIContactMinimalistFragment)contactsBean.fragment).reloadData();
     }
 
     private void initUnreadCountReceiver() {
@@ -219,6 +301,42 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
                 }
             }
         };
+
+        if (SystemUtil.isNetworkConnected(this)) {
+            status = STATUS_CONNECTED;
+            setConversationTitleConnected();
+        } else {
+            status = STATUS_DISCONNECTED;
+            setConversationTitleDisconnected();
+        }
+    }
+
+    private void setConversationTitleDisconnected() {
+        if (conversationBean.fragment != null) {
+            ((TUIConversationMinimalistFragment) conversationBean.fragment)
+                .setConversationTitle(getResources().getString(com.tencent.qcloud.tuikit.tuiconversation.R.string.conversation_minimalist_chat_disconnected));
+        }
+    }
+
+    private void setConversationTitleConnecting() {
+        if (conversationBean.fragment != null) {
+            ((TUIConversationMinimalistFragment) conversationBean.fragment)
+                .setConversationTitle(getResources().getString(com.tencent.qcloud.tuikit.tuiconversation.R.string.conversation_minimalist_chat_connecting));
+        }
+    }
+
+    private void setConversationTitleLoading() {
+        if (conversationBean.fragment != null) {
+            ((TUIConversationMinimalistFragment) conversationBean.fragment)
+                .setConversationTitle(getResources().getString(com.tencent.qcloud.tuikit.tuiconversation.R.string.conversation_minimalist_chat_loading));
+        }
+    }
+
+    private void setConversationTitleConnected() {
+        if (conversationBean.fragment != null) {
+            ((TUIConversationMinimalistFragment) conversationBean.fragment)
+                .setConversationTitle(getResources().getString(com.tencent.qcloud.tuikit.tuiconversation.R.string.conversation_minimalist_chat));
+        }
     }
 
     private void onRecentCallsStatusChanged(boolean isEnable) {
@@ -257,8 +375,8 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
             @Override
             public void onError(int code, String desc) {
                 DemoLog.i(TAG, "cleanConversationUnreadMessageCount error:" + code + ", desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                ToastUtil.toastShortMessage(String.format(Locale.US, MainMinimalistActivity.this.getString(
-                    R.string.mark_all_message_as_read_err_format), code, ErrorMessageConverter.convertIMError(code, desc)));
+                ToastUtil.toastShortMessage(String.format(Locale.US, MainMinimalistActivity.this.getString(R.string.mark_all_message_as_read_err_format), code,
+                    ErrorMessageConverter.convertIMError(code, desc)));
             }
         });
 
@@ -346,6 +464,22 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         }
         tabAdapter.notifyItemChanged(position);
         mainViewPager.setCurrentItem(position, false);
+        if (tabBean == conversationBean) {
+            switch (status) {
+                case STATUS_CONNECTING:
+                    setConversationTitleConnecting();
+                    break;
+                case STATUS_LOADING:
+                    setConversationTitleLoading();
+                    break;
+                case STATUS_DISCONNECTED:
+                    setConversationTitleDisconnected();
+                    break;
+                default:
+                    setConversationTitleConnected();
+                    break;
+            }
+        }
         preSelectedItem = selectedItem;
         selectedItem = tabBean;
         int prePosition = tabBeanList.indexOf(preSelectedItem);
@@ -508,6 +642,10 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
         if (recentCallsReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(recentCallsReceiver);
             recentCallsReceiver = null;
+        }
+
+        if (appLoginListener != null) {
+            LoginWrapper.getInstance().removeLoginObserver(appLoginListener);
         }
     }
 

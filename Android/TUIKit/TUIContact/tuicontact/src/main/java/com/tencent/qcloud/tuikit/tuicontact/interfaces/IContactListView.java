@@ -16,5 +16,5 @@ public interface IContactListView {
 
     void onDataSourceChanged(List<ContactItemBean> contactItemBeanList);
 
-    void onFriendApplicationChanged();
+    void onDataChanged(ContactItemBean contactItemBean);
 }

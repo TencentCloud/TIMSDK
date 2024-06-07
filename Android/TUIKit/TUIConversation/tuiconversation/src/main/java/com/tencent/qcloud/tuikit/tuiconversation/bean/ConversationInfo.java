@@ -5,6 +5,8 @@ import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupAtInfo;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
+import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +107,8 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
 
     private long lastMessageTime;
     private V2TIMMessage lastMessage;
+
+    private TUIMessageBean lastTUIMessageBean;
 
     /**
      * "@" message in group
@@ -339,6 +343,14 @@ public class ConversationInfo implements Serializable, Comparable<ConversationIn
             }
         }
         return LAST_MSG_STATUS_UNKNOWN;
+    }
+
+    public TUIMessageBean getLastTUIMessageBean() {
+        return lastTUIMessageBean;
+    }
+
+    public void setLastTUIMessageBean(TUIMessageBean lastTUIMessageBean) {
+        this.lastTUIMessageBean = lastTUIMessageBean;
     }
 
     @Override

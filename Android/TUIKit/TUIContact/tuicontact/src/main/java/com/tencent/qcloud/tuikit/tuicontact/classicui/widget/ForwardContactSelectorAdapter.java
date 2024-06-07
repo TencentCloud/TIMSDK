@@ -24,8 +24,7 @@ public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        mRecycleView = (RecyclerView) recyclerView;
-        // mRecycleView.setItemViewCacheSize(5);
+        mRecycleView = recyclerView;
     }
 
     @Override
@@ -65,7 +64,7 @@ public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<Recycler
 
         public ContactViewHolder(View itemView) {
             super(itemView);
-            userIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
+            userIconView = itemView.findViewById(R.id.ivAvatar);
         }
     }
 }

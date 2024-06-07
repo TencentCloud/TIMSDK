@@ -6,18 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
-
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuicontact.R;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactLayout;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +70,12 @@ public class TUIContactFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    public void reloadData() {
+        if (mContactLayout != null) {
+            mContactLayout.reloadData();
+        }
     }
 
     @Override

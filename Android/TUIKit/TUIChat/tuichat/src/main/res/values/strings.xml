@@ -112,6 +112,11 @@
     <string name="group_add_opt_join_disable">Prohibited from Joining</string>
     <string name="group_add_opt_invite_disable">Prohibited from Inviting</string>
 
+    <string name="modify_topic_name_is">%s changed the topic name to %s</string>
+    <string name="modify_topic_notice">%s changed the topic notice to %s</string>
+    <string name="modify_topic_introduction">%s changed the group introduction to %s</string>
+    <string name="modify_topic_avatar">%s changed the group avatar</string>
+
     <string name="typing">Typing...</string>
     <string name="titlebar_mutiselect">Select</string>
     <string name="audio_permission_error">Need audio permission</string>
@@ -278,5 +283,16 @@
 
     <string name="chat_recent_use">Recent Use</string>
     <string name="chat_all_emojis">All Emojis</string>
+
+    <string name="chat_group_pin_message">Pin</string>
+    <string name="chat_group_unpin_message">Unpin</string>
+    <string name="chat_group_message_pinned">%s pinned a message</string>
+    <string name="chat_group_message_unpinned">%s removed a pinned message</string>
+    <string name="chat_unpinned_button_text">Remove</string>
+    <string name="chat_message_is_pinned">The message is already pinned.</string>
+    <string name="chat_message_is_unpinned">This message has already been unpinned.</string>
+
+    <string name="chat_quote_origin_message_revoked">Quoted content has been revoked</string>
+    <string name="chat_reply_origin_message_revoked">Reply content has been revoked</string>
 
 </resources>

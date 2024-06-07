@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -37,6 +36,7 @@ import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
@@ -256,7 +256,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
             }
         });
 
-        String selfUserID = V2TIMManager.getInstance().getLoginUser();
+        String selfUserID = TUILogin.getLoginUser();
 
         accountView.setText(selfUserID);
         List<String> selfIdList = new ArrayList<>();

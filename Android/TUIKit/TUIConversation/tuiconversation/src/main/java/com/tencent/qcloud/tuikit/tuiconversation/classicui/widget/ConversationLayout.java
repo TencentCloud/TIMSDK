@@ -94,7 +94,7 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
     @Override
     public void markConversationUnread(ConversationInfo conversationInfo, boolean markUnread) {
         if (presenter != null) {
-            presenter.markConversationUnread(conversationInfo, markUnread);
+            presenter.markConversationUnreadAndCleanUnreadCount(conversationInfo, markUnread);
         }
     }
 

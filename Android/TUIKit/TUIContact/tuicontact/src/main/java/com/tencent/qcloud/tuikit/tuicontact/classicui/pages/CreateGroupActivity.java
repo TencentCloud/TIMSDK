@@ -272,11 +272,20 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
             popupInputCard.setOnPositive(new PopupInputCard.OnClickListener() {
                 @Override
                 public void onClick(String result) {
-                    if (!TextUtils.isEmpty(result) && result.startsWith("@TGS#")) {
-                        ToastUtil.toastLongMessage(getResources().getString(R.string.group_id_edit_format_tips));
-                        groupIdLv.setContent("");
-                        groupId = "";
-                        return;
+                    if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_COMMUNITY)) {
+                        if (!TextUtils.isEmpty(result) && result.startsWith("@TGS#_") == false) {
+                            ToastUtil.toastLongMessage(getResources().getString(R.string.community_id_edit_format_tips));
+                            groupIdLv.setContent("");
+                            groupId = "";
+                            return;
+                        }
+                    } else {
+                        if (!TextUtils.isEmpty(result) && result.startsWith("@TGS#")) {
+                            ToastUtil.toastLongMessage(getResources().getString(R.string.group_id_edit_format_tips));
+                            groupIdLv.setContent("");
+                            groupId = "";
+                            return;
+                        }
                     }
 
                     groupIdLv.setContent(result);
@@ -444,13 +453,6 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
                 groupType = type;
                 groupTypeLv.setContent(type);
                 initGroupTypeContentView();
-                if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_COMMUNITY)) {
-                    groupIdLv.setOnClickListener(null);
-                    groupIdLv.setClickable(false);
-                } else {
-                    groupIdLv.setClickable(true);
-                    groupIdLv.setOnClickListener(this);
-                }
             }
         }
     }

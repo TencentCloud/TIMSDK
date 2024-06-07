@@ -93,6 +93,9 @@
     <string name="demo_self_detail_modify_nickname_rule">仅限中文、字母、数字和下划线</string>
 
     <string name="conversation_title">腾讯云·IM</string>
+    <string name="conversation_title_disconnected">腾讯云·IM(未连接)</string>
+    <string name="conversation_title_connecting">连接中...</string>
+    <string name="conversation_title_loading">收取中...</string>
     <string name="contact_title">通讯录</string>
     <string name="add_friend">添加好友</string>
     <string name="add_group">添加群聊</string>
@@ -208,7 +211,8 @@
     <string name="demo_buying_tips">该功能为旗舰版功能</string>
 
     <string name="chat_security_warning">【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。</string>
-    <string name="chat_security_warning_report">点此举报</string>
+    <string name="chat_security_warning_click_to_report">点此举报</string>
+    <string name="chat_security_warning_report">举报</string>
 
 
     <string name="change_theme">更换皮肤</string>

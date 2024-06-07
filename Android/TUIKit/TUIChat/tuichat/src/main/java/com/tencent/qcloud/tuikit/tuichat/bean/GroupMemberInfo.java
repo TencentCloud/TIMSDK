@@ -8,6 +8,10 @@ import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import java.io.Serializable;
 
 public class GroupMemberInfo implements Serializable {
+    public static final int ROLE_MEMBER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_MEMBER;
+    public static final int ROLE_ADMIN = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_ADMIN;
+    public static final int ROLE_OWNER = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_ROLE_OWNER;
+
     private String iconUrl;
     private String account;
     private String signature;
@@ -21,6 +25,7 @@ public class GroupMemberInfo implements Serializable {
     private long joinTime;
     private long tinyId;
     private int memberType;
+    private int role;
 
     public String getIconUrl() {
         return iconUrl;
@@ -126,6 +131,14 @@ public class GroupMemberInfo implements Serializable {
         this.friendRemark = friendRemark;
     }
 
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
     public String getDisplayName() {
         String displayName;
 
@@ -146,6 +159,7 @@ public class GroupMemberInfo implements Serializable {
             V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = (V2TIMGroupMemberFullInfo) info;
             setJoinTime(v2TIMGroupMemberFullInfo.getJoinTime());
             setMemberType(v2TIMGroupMemberFullInfo.getRole());
+            setRole(v2TIMGroupMemberFullInfo.getRole());
         }
         setAccount(info.getUserID());
         setNameCard(info.getNameCard());

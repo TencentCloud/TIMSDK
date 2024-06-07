@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,13 +18,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
+import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IAddMoreActivity;
@@ -124,22 +128,29 @@ public class AddMoreMinimalistDialogFragment extends DialogFragment implements I
                     return;
                 }
 
-                presenter.getUserInfo(id, new IUIKitCallback<ContactItemBean>() {
+                presenter.getUserInfo(id, new TUIValueCallback<ContactItemBean>() {
                     @Override
                     public void onSuccess(ContactItemBean data) {
                         setFriendDetail(data.getAvatarUrl(), data.getId(), data.getNickName());
                         detailArea.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                AddMoreDetailMinimalistDialogFragment detailDialog = new AddMoreDetailMinimalistDialogFragment();
-                                detailDialog.setData(data);
-                                detailDialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), "AddMoreDetail");
+                                if (data.isFriend()) {
+                                    Intent intent = new Intent(TUIContactService.getAppContext(), FriendProfileMinimalistActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra(TUIConstants.TUIContact.USER_ID, data.getId());
+                                    startActivity(intent);
+                                } else {
+                                    AddMoreDetailMinimalistDialogFragment detailDialog = new AddMoreDetailMinimalistDialogFragment();
+                                    detailDialog.setData(data);
+                                    detailDialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), "AddMoreDetail");
+                                }
                             }
                         });
                     }
 
                     @Override
-                    public void onError(String module, int errCode, String errMsg) {
+                    public void onError(int errCode, String errMsg) {
                         setNotFound();
                     }
                 });
@@ -216,6 +227,6 @@ public class AddMoreMinimalistDialogFragment extends DialogFragment implements I
 
     @Override
     public void finish() {
-        dialog.dismiss();
+        dismiss();
     }
 }

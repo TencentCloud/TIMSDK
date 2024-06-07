@@ -7,13 +7,6 @@ public class TUIChatConstants {
     public static final int ERR_SVR_COMM_SENSITIVE_TEXT = BaseConstants.ERR_SVR_COMM_SENSITIVE_TEXT;
     public static final int ERR_LOCAL_COMM_SENSITIVE_TEXT = BaseConstants.ERR_SDK_BLOCKED_BY_SENSITIVE_WORD;
 
-    public static final String CAMERA_IMAGE_PATH = "camera_image_path";
-    public static final String IMAGE_WIDTH = "image_width";
-    public static final String IMAGE_HEIGHT = "image_height";
-    public static final String VIDEO_TIME = "video_time";
-    public static final String CAMERA_VIDEO_PATH = "camera_video_path";
-    public static final String IMAGE_PREVIEW_PATH = "image_preview_path";
-    public static final String IS_ORIGIN_IMAGE = "is_origin_image";
     public static final String CAMERA_TYPE = "camera_type";
 
     public static final String BUSINESS_ID_CUSTOM_HELLO = "text_link";
@@ -21,12 +14,7 @@ public class TUIChatConstants {
     public static final String BUSINESS_ID_CUSTOM_ORDER = "order";
     public static final String BUSINESS_ID_CUSTOM_TYPING = "user_typing_status";
     public static final String BUSINESS_ID_QUICK_TAP = "quick_tap";
-
-    public static final int PLUGIN_NORMAL_MESSAGE = 1;
-    public static final int PLUGIN_TIPS_MESSAGE = 2;
-
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
-    public static final int FORWARD_SELECT_ACTIVTY_CODE = 101;
     public static final String FORWARD_MERGE_MESSAGE_KEY = "forward_merge_message_key";
 
     public static final int GET_MESSAGE_FORWARD = 0;
@@ -35,7 +23,6 @@ public class TUIChatConstants {
     public static final int GET_MESSAGE_LOCATE = 3;
 
     public static final String CHAT_INFO = "chatInfo";
-    public static final String INPUT_VIEW = "inputView";
 
     public static final String MESSAGE_BEAN = "messageBean";
     public static final String DATA_CHANGE_TYPE = "dataChangeType";
@@ -63,10 +50,6 @@ public class TUIChatConstants {
     public static final String EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING = "eventSubKeyOfflineMessagePrivteRing";
     public static final String OFFLINE_MESSAGE_PRIVATE_RING = "offlineMessagePrivateRing";
 
-    public static final int ERR_SDK_INTERFACE_NOT_SUPPORT = BaseConstants.ERR_SDK_INTERFACE_NOT_SUPPORT;
-    public static final String BUYING_GUIDELINES_EN = "https://intl.cloud.tencent.com/document/product/1047/36021?lang=en&pg=#changing-configuration";
-    public static final String BUYING_GUIDELINES = "https://cloud.tencent.com/document/product/269/32458";
-
     /**
      *
      * 1: Just a text message with a link
@@ -88,14 +71,9 @@ public class TUIChatConstants {
 
     public static final class Group {
         public static final String GROUP_ID = "group_id";
-        public static final String GROUP_INFO = "groupInfo";
-        public static final String MEMBER_APPLY = "apply";
     }
 
     public static class Selection {
-        public static final String SELECT_ALL = "select_all";
-        public static final String LIMIT = "limit";
-        public static final String TITLE = "title";
 
         public static final String USER_ID_SELECT = "user_id_select";
         public static final String USER_NAMECARD_SELECT = "user_namecard_select";

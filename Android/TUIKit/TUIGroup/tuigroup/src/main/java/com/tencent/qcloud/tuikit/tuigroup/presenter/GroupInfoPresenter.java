@@ -1,13 +1,9 @@
 package com.tencent.qcloud.tuikit.tuigroup.presenter;
 
-import android.os.Bundle;
 import android.text.TextUtils;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.imsdk.v2.V2TIMConversation;
+import com.tencent.imsdk.v2.V2TIMManager;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
@@ -16,7 +12,6 @@ import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupMemberActivity;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.GroupEventListener;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuigroup.model.GroupInfoProvider;
@@ -70,12 +65,48 @@ public class GroupInfoPresenter {
             public void onSuccess(GroupInfo data) {
                 groupInfo = data;
                 layout.onGroupInfoChanged(data);
+
+                String conversationId = TUIGroupUtils.getConversationIdByUserId(groupId, true);
+                V2TIMManager.getConversationManager().getConversation(conversationId, new V2TIMValueCallback<V2TIMConversation>() {
+                    @Override
+                    public void onSuccess(V2TIMConversation v2TIMConversation) {
+                        boolean isTop = v2TIMConversation.isPinned();
+                        groupInfo.setTopChat(isTop);
+
+                        List<Long> markList = v2TIMConversation.getMarkList();
+                        if (markList.contains(V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD)) {
+                            groupInfo.setFolded(true);
+                        }
+
+                        layout.onGroupInfoChanged(groupInfo);
+                        loadGroupMemberList(groupInfo, filter);
+                    }
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        loadGroupMemberList(groupInfo, filter);
+                    }
+                });
             }
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUIGroupLog.e("loadGroupInfo", errCode + ":" + errMsg);
                 ToastUtil.toastLongMessage(errMsg);
+            }
+        });
+    }
+
+    private void loadGroupMemberList(GroupInfo groupInfo, int filter) {
+        provider.loadGroupMembers(groupInfo, filter, 0, new IUIKitCallback<GroupInfo>() {
+            @Override
+            public void onSuccess(GroupInfo data) {
+                layout.onGroupMemberListChanged(data);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                TUIGroupLog.e("loadGroupMembers", errCode + ":" + errMsg);
             }
         });
     }
@@ -97,7 +128,7 @@ public class GroupInfoPresenter {
             @Override
             public void onSuccess(GroupInfo data) {
                 if (layout != null) {
-                    layout.onGroupInfoChanged(data);
+                    layout.onGroupMemberListChanged(data);
                 }
                 TUIGroupUtils.callbackOnSuccess(callBack, data);
             }
@@ -248,7 +279,7 @@ public class GroupInfoPresenter {
             public void onSuccess(Object data) {
                 TUIGroupUtils.callbackOnSuccess(callback, data);
                 if (layout != null) {
-                    layout.onGroupInfoChanged(groupInfo);
+                    layout.onGroupMemberListChanged(groupInfo);
                 }
             }
 
@@ -265,6 +296,7 @@ public class GroupInfoPresenter {
             public void onSuccess(GroupInfo data) {
                 groupInfo = data;
                 inviteGroupMembers(addMembers, callback);
+                loadGroupMemberList(groupInfo, GroupInfo.GROUP_MEMBER_FILTER_ALL);
             }
 
             @Override

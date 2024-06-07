@@ -48,7 +48,8 @@ public class DateTimeUtil {
         dayStartCalendar.set(Calendar.SECOND, 0);
         dayStartCalendar.set(Calendar.MILLISECOND, 0);
         Calendar weekStartCalendar = Calendar.getInstance();
-        weekStartCalendar.set(Calendar.DAY_OF_WEEK, 1);
+        weekStartCalendar.setFirstDayOfWeek(Calendar.SUNDAY);
+        weekStartCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         weekStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
         weekStartCalendar.set(Calendar.MINUTE, 0);
         weekStartCalendar.set(Calendar.SECOND, 0);

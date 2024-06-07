@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -31,11 +32,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ImageMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
@@ -66,6 +70,7 @@ public class ChatPopActivity extends AppCompatActivity {
     private ScrollView scrollMessageContainer;
     private View moreBtn;
     TUIMessageBean messageBean;
+    private C2CChatEventListener chatEventListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +111,16 @@ public class ChatPopActivity extends AppCompatActivity {
         messageArea = findViewById(R.id.message_frame);
         setLocation();
         init();
+
+        chatEventListener = new C2CChatEventListener() {
+            @Override
+            public void onRecvMessageRevoked(String msgID, UserBean userBean, String reason) {
+                if (messageBean != null && TextUtils.equals(msgID, messageBean.getId())) {
+                    hide();
+                }
+            }
+        };
+        TUIChatService.getInstance().addC2CChatEventListener(chatEventListener);
     }
 
     private void setLocation() {
@@ -242,6 +257,9 @@ public class ChatPopActivity extends AppCompatActivity {
     }
 
     public void hide() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
         onBackPressed();
     }
 

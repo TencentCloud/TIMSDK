@@ -4,10 +4,11 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.ConferenceObserver;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventConstant;
-import com.tencent.cloud.tuikit.roomkit.model.RoomStore;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.trtc.TRTCCloudListener;
+import com.tencent.trtc.TRTCStatistics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +22,10 @@ public class TRTCObserver extends TRTCCloudListener {
         if (reason != 2) {
             return;
         }
-        RoomStore store = RoomEngineManager.sharedInstance().getRoomStore();
+        ConferenceState store = ConferenceController.sharedInstance().getConferenceState();
         Map<String, Object> map = new HashMap<>();
-        map.put(RoomEventConstant.KEY_ROOM_ID, store.roomInfo.roomId);
-        RoomEventCenter.getInstance().notifyEngineEvent(RoomEventCenter.RoomEngineEvent.ROOM_DISMISSED, map);
+        map.put(ConferenceEventConstant.KEY_ROOM_ID, store.roomInfo.roomId);
+        ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.ROOM_DISMISSED, map);
 
         ConferenceObserver observer = store.getConferenceObserver();
         if (observer != null) {
@@ -48,4 +49,12 @@ public class TRTCObserver extends TRTCCloudListener {
     public void onConnectionRecovery() {
         Log.d(TAG, "onConnectionRecovery");
     }
+
+    @Override
+    public void onStatistics(TRTCStatistics statistics) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(ConferenceEventConstant.KEY_ON_STATISTICS, statistics);
+        ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.ON_STATISTICS, map);
+    }
+
 }

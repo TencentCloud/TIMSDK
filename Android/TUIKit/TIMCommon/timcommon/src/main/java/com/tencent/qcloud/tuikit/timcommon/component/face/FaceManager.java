@@ -80,7 +80,7 @@ public class FaceManager {
      * @param groupID must >= 1
      * @param faceGroup the faceGroup be added
      */
-    public static <T extends ChatFace> void addFaceGroup(int groupID, FaceGroup<T> faceGroup) {
+    public static synchronized <T extends ChatFace> void addFaceGroup(int groupID, FaceGroup<T> faceGroup) {
         faceGroup.setGroupID(groupID);
         getInstance().faceGroupMap.put(groupID, faceGroup);
         if (faceGroup.isEmojiGroup()) {
@@ -99,6 +99,7 @@ public class FaceManager {
         String realPath = "file:///android_asset/" + assetFilePath;
         Bitmap bitmap = loadBitmap(realPath, size, size);
         if (bitmap == null) {
+            TIMCommonLog.e(TAG, "load bitmap failed : " + realPath);
             return null;
         }
         Emoji emoji = new Emoji();
@@ -375,6 +376,52 @@ public class FaceManager {
             }
         }
         return sb.toString();
+    }
+
+    public static List<String> splitEmojiText(String text) {
+        String regex = "\\[(\\S+?)\\]";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(text);
+        ArrayList<EmojiData> emojiDataList = new ArrayList<>();
+        int lastMentionIndex = -1;
+        while (m.find()) {
+            String emojiKey = m.group();
+            int start;
+            if (lastMentionIndex != -1) {
+                start = text.indexOf(emojiKey, lastMentionIndex);
+            } else {
+                start = text.indexOf(emojiKey);
+            }
+            int end = start + emojiKey.length();
+            lastMentionIndex = end;
+
+            Emoji emoji = getEmojiMap().get(emojiKey);
+            if (emoji == null) {
+                continue;
+            }
+            EmojiData emojiData = new EmojiData();
+            emojiData.setStart(start);
+            emojiData.setEnd(end);
+            emojiDataList.add(emojiData);
+        }
+        List<String> stringList = new ArrayList<>();
+        int offset = 0;
+        for (EmojiData emojiData : emojiDataList) {
+            int start = emojiData.getStart() - offset;
+            int end = emojiData.getEnd() - offset;
+            String startStr = text.substring(0, start);
+            String middleStr = text.substring(start, end);
+            text = text.substring(end);
+            if (!TextUtils.isEmpty(startStr)) {
+                stringList.add(startStr);
+            }
+            stringList.add(middleStr);
+            offset += startStr.length() + middleStr.length();
+        }
+        if (!TextUtils.isEmpty(text)) {
+            stringList.add(text);
+        }
+        return stringList;
     }
 
     public static List<String> findEmojiKeyListFromText(String text) {

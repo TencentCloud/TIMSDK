@@ -52,7 +52,7 @@ public class NewFriendActivity extends BaseLightActivity implements INewFriendAc
         mTitleBar.getRightIcon().setVisibility(View.GONE);
         presenter = new NewFriendPresenter();
         presenter.setFriendActivity(this);
-        presenter.setFriendApplicationListAllRead(new IUIKitCallback<Void>() {
+        presenter.setFriendApplicationRead(new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {}
 

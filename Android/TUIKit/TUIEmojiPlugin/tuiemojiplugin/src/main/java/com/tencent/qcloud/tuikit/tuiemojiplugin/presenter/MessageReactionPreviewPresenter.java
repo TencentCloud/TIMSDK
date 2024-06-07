@@ -51,9 +51,4 @@ public class MessageReactionPreviewPresenter {
         }
     }
 
-
-    public void getMessageReactions(List<TUIMessageBean> messageBeans, int countPerReaction, TUIValueCallback<List<MessageReactionBean>> callback) {
-        provider.getMessageReactions(messageBeans, countPerReaction, callback);
-    }
-
 }

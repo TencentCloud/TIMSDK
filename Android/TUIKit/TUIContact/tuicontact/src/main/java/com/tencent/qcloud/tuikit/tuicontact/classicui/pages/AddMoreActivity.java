@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
@@ -112,7 +113,7 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
                     return;
                 }
 
-                presenter.getUserInfo(id, new IUIKitCallback<ContactItemBean>() {
+                presenter.getUserInfo(id, new TUIValueCallback<ContactItemBean>() {
                     @Override
                     public void onSuccess(ContactItemBean data) {
                         setFriendDetail(data.getAvatarUrl(), data.getId(), data.getNickName());
@@ -128,7 +129,7 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
                     }
 
                     @Override
-                    public void onError(String module, int errCode, String errMsg) {
+                    public void onError(int errCode, String errMsg) {
                         setNotFound(false);
                     }
                 });

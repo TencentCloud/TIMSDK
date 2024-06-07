@@ -1,11 +1,11 @@
 package com.tencent.cloud.tuikit.roomkit.model.entity;
 
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_GENERAL_TO_MANAGER;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_MANAGER_TO_GENERAL;
-import static com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter.RoomEngineEvent.LOCAL_USER_TO_OWNER;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_GENERAL_TO_MANAGER;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_MANAGER_TO_GENERAL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_TO_OWNER;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.model.RoomEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 public class UserModel {
@@ -31,11 +31,11 @@ public class UserModel {
 
     public void changeRole(TUIRoomDefine.Role role) {
         if (this.role == TUIRoomDefine.Role.GENERAL_USER && role == TUIRoomDefine.Role.MANAGER) {
-            RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_GENERAL_TO_MANAGER, null);
+            ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_GENERAL_TO_MANAGER, null);
         } else if (this.role == TUIRoomDefine.Role.MANAGER && role == TUIRoomDefine.Role.GENERAL_USER) {
-            RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_MANAGER_TO_GENERAL, null);
+            ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_MANAGER_TO_GENERAL, null);
         } else if (this.role != TUIRoomDefine.Role.ROOM_OWNER && role == TUIRoomDefine.Role.ROOM_OWNER) {
-            RoomEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_TO_OWNER, null);
+            ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_TO_OWNER, null);
         }
         this.role = role;
     }

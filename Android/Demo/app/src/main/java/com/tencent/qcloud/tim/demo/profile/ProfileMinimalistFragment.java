@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tim.demo.R;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;

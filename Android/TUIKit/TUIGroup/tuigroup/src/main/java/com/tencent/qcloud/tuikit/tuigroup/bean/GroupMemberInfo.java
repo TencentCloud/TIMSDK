@@ -36,30 +36,6 @@ public class GroupMemberInfo implements Serializable {
         this.account = account;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
     public void setNameCard(String nameCard) {
         this.nameCard = nameCard;
     }
@@ -78,30 +54,6 @@ public class GroupMemberInfo implements Serializable {
 
     public void setFriendRemark(String friendRemark) {
         this.friendRemark = friendRemark;
-    }
-
-    public String getFriendRemark() {
-        return friendRemark;
-    }
-
-    public boolean isTopChat() {
-        return isTopChat;
-    }
-
-    public void setTopChat(boolean topChat) {
-        isTopChat = topChat;
-    }
-
-    public boolean isFriend() {
-        return isFriend;
-    }
-
-    public void setFriend(boolean friend) {
-        isFriend = friend;
-    }
-
-    public long getJoinTime() {
-        return joinTime;
     }
 
     public void setJoinTime(long joinTime) {
