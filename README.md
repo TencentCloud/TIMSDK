@@ -154,12 +154,25 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 7.9.5680 @2024.04.19
+## Latest Enhanced Version 8.0.5895 @2024.06.07
 ### SDK
+- Added support for offline push settings with a large icon on the right side.
+- Pinned messages now support returning information about the operator.
+- Added support for returning group pinned messages that were deleted by oneself.
+- Added support for preserving conversation grouping information when deleting conversations.
+- Added system notifications for when conversation grouping information is eliminated by the backend.
+- Local message search now supports searching all single or group chat messages.
+- Completed system notifications for friend group changes.
+- The entry tips message and callback in a regular group can distinguish between active joining and being invited into the group.
+- Improved database query throughput and speed.
+- Optimized read receipt performance by merging duplicate requests.
+- Optimized the time range for group signaling synchronization after login.
+- Fixed an issue with pulling messages after inserting local messages in a topic.
 
-- Fix the issue of the pinned message list returning in the wrong order
-- Fix the issue of incorrect parsing of the Tips type of pinned messages
-- Fix the issue of log writing failure on some Android phones
-- Fix the occasional incomplete retrieval of group roaming messages from old to new
-- Fix the occasional inability to retrieve local messages when pulling historical messages from topics
-- Fix the issue where sessions deleted from the conversation group are reactivated after logging in again
+### TUIKit & Demo
+- TUIKit now supports message pinning.
+- TUIKit supports asynchronous striking of file messages.
+- TUIKit allows for entering the main interface to view local data without logging in after a network disconnection.
+- TUIKit no longer exposes the original message content when referencing and replying to a retracted message.
+- TUIKit replaces libopencore with AAC+M4A.
+- TUIChat Android supports saving images without extensions to the gallery.
