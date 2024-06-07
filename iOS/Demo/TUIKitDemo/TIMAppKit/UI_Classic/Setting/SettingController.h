@@ -18,6 +18,7 @@ extern NSString* kEnableOnlineStatus;
 extern NSString* kEnableCallsRecord;
 
 @interface SettingController : UIViewController
+@property(nonatomic, strong) NSString *lastLoginUser;
 @property(nonatomic, copy) void (^changeStyle)(void);
 @property(nonatomic, copy) void (^changeTheme)(void);
 @property(nonatomic, copy) void (^confirmLogout)(void);

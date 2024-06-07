@@ -14,6 +14,8 @@
 
 @interface ConversationController_Minimalist () <TUIConversationListControllerListener, V2TIMSDKListener, TUIPopViewDelegate, V2TIMSDKListener>
 @property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) NSString *titleViewTitle;
+
 @property(nonatomic, strong) UIBarButtonItem *moreItem;
 @property(nonatomic, strong) UIBarButtonItem *editItem;
 @property(nonatomic, strong) UIBarButtonItem *doneItem;
@@ -25,6 +27,7 @@
     self = [super init];
     if (self) {
         self.leftSpaceWidth = kScale390(13);
+        [[V2TIMManager sharedInstance] addIMSDKListener:self];
     }
     return self;
 }
@@ -37,8 +40,6 @@
     self.conv.delegate = self;
     [self addChildViewController:self.conv];
     [self.view addSubview:self.conv.view];
-
-    [[V2TIMManager sharedInstance] addIMSDKListener:self];
 }
 
 - (UIColor *)navBackColor {
@@ -81,7 +82,7 @@
     _titleView = [[TUINaviBarIndicatorView alloc] init];
     _titleView.label.font = [UIFont boldSystemFontOfSize:34];
     _titleView.maxLabelLength = Screen_Width;
-    [_titleView setTitle:TIMCommonLocalizableString(TIMAppTabBarItemMessageText_mini)];
+    [_titleView setTitle:(self.titleViewTitle.length > 0 ? self.titleViewTitle : TIMCommonLocalizableString(TIMAppChat))];
     _titleView.label.textColor = TUIDynamicColor(@"nav_title_text_color", TUIThemeModuleDemo_Minimalist, @"#000000");
 
     UIBarButtonItem *leftTitleItem = [[UIBarButtonItem alloc] initWithCustomView:_titleView];
@@ -225,17 +226,20 @@
 
 #pragma mark - V2TIMSDKListener
 - (void)onConnecting {
-    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppMainConnectingTitle)];
+    self.titleViewTitle = TIMCommonLocalizableString(TIMAppMainConnectingTitle);
+    [self.titleView setTitle:self.titleViewTitle];
     [self.titleView startAnimating];
 }
 
 - (void)onConnectSuccess {
-    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppChat)];
+    self.titleViewTitle = TIMCommonLocalizableString(TIMAppChat);
+    [self.titleView setTitle:self.titleViewTitle];
     [self.titleView stopAnimating];
 }
 
 - (void)onConnectFailed:(int)code err:(NSString *)err {
-    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppChatDisconnectTitle)];
+    self.titleViewTitle = TIMCommonLocalizableString(TIMAppChatDisconnectTitle);
+    [self.titleView setTitle:self.titleViewTitle];
     [self.titleView stopAnimating];
 }
 

@@ -80,6 +80,7 @@ NSString *kEnableCallsRecord_mini = @"TUIKitDemo_EnableCallsRecord_mini";
     [self.parentViewController.view addGestureRecognizer:tap];
 
     self.setting = [[TUISettingController_Minimalist alloc] init];
+    self.setting.lastLoginUser = self.lastLoginUser;
     self.setting.delegate = self;
     self.setting.aboutIMCellText = TIMCommonLocalizableString(TIMAppMeAbout);
     self.setting.showPersonalCell = self.showPersonalCell;

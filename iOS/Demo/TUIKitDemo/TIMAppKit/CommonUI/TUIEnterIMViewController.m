@@ -8,6 +8,7 @@
 
 #import "TUIEnterIMViewController.h"
 #import <TUICore/TUIThemeManager.h>
+#import <TUICore/TUICore.h>
 #import <objc/runtime.h>
 #import "ContactsController.h"
 #import "ContactsController_Minimalist.h"
@@ -41,7 +42,6 @@ NSString *kHaveViewedIMIntroduction = @"TUIKitDemo_HaveViewedIMIntroduction";
 @property(nonatomic, strong) ContactsController_Minimalist *contactsVC_Mini;
 @property(nonatomic, strong) SettingController_Minimalist *settingVC_Mini;
 @property(nonatomic, strong) TUICallingHistoryViewController *callingVC;
-@property(nonatomic, weak) TUITabBarItem *callingRecordItem;
 @property(nonatomic, strong) UILabel *themeLabel;
 @property(nonatomic, strong) UILabel *themeSubLabel;
 @property(nonatomic, assign) NSUInteger unReadCount;
@@ -238,13 +238,20 @@ static BOOL g_hasAddedCustomFace = NO;
 - (void)setupChatSecurityWarningView {
     NSString *tips = TIMCommonLocalizableString(TIMAppChatSecurityWarning);
     NSString *buttonTitle = TIMCommonLocalizableString(TIMAppChatSecurityWarningReport);
-    TUIWarningView *tipsView = [[TUIWarningView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, 0)
+    NSString *gotButtonTitle = TIMCommonLocalizableString(TIMAppChatSecurityWarningGot);
+
+    __block TUIWarningView *tipsView = [[TUIWarningView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, 0)
                                                                 tips:tips
                                                          buttonTitle:buttonTitle
                                                         buttonAction:^{
                                                           NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
                                                           [TUITool openLinkWithURL:url];
-                                                        }];
+    }
+                                                      gotButtonTitle:gotButtonTitle gotButtonAction:^{
+        tipsView.frame = CGRectZero;;
+        [tipsView removeFromSuperview];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TUICore_TUIChatExtension_ChatViewTopArea_ChangedNotification object:nil];
+    }];
     if ([TUIStyleSelectViewController isClassicEntrance]) {
         [TUIBaseChatViewController setCustomTopView:tipsView];
     } else {
@@ -647,7 +654,6 @@ static UIWindow *gImWindow = nil;
     TUITabBarItem *callsItem = [self getCallsRecordTabBarItem:NO];
     if (callsItem) {
         [items addObject:callsItem];
-        self.callingRecordItem = callsItem;
     }
 
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
@@ -676,7 +682,8 @@ static UIWindow *gImWindow = nil;
     setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"myself_normal")]);
     SettingController *setVC = [[SettingController alloc] init];
     setVC.showPersonalCell = NO;
-    setVC.showSelectStyleCell = YES;
+    NSString *appName = [TUICore callService:@"TUICore_ConfigureService" method:@"TUICore_ConfigureService_getAppName" param:nil];
+    setVC.showSelectStyleCell = [appName isEqualToString:@"RTCube"];
     setVC.showChangeThemeCell = YES;
     setVC.showAboutIMCell = NO;
     setVC.showLoginOutCell = NO;
@@ -748,7 +755,6 @@ static UIWindow *gImWindow = nil;
     TUITabBarItem *callsItem = [self getCallsRecordTabBarItem:YES];
     if (callsItem) {
         [items addObject:callsItem];
-        self.callingRecordItem = callsItem;
     }
 
     TUITabBarItem *contactItem = [[TUITabBarItem alloc] init];
@@ -777,7 +783,8 @@ static UIWindow *gImWindow = nil;
     setItem.normalImage = TUIDemoDynamicImage(@"tab_me_normal_img", [UIImage imageNamed:TUIDemoImagePath(@"myself_normal")]);
     self.settingVC_Mini = [[SettingController_Minimalist alloc] init];
     self.settingVC_Mini.showPersonalCell = NO;
-    self.settingVC_Mini.showSelectStyleCell = YES;
+    NSString *appName = [TUICore callService:@"TUICore_ConfigureService" method:@"TUICore_ConfigureService_getAppName" param:nil];
+    self.settingVC_Mini.showSelectStyleCell = [appName isEqualToString:@"RTCube"];
     self.settingVC_Mini.showChangeThemeCell = YES;
     self.settingVC_Mini.showAboutIMCell = NO;
     self.settingVC_Mini.showLoginOutCell = NO;
@@ -952,24 +959,24 @@ static UIWindow *gImWindow = nil;
     if (![value isKindOfClass:NSNumber.class] || ![tabVC isKindOfClass:TUITabBarController.class]) {
         return;
     }
+
     NSMutableArray *items = tabVC.tabBarItems;
+    NSMutableArray *callItems = [NSMutableArray array];
+    for (TUITabBarItem *item in items) {
+        if ([item.identity isEqualToString:@"callItem"]) {
+            [callItems addObject:item];
+        }
+    }
+    [items removeObjectsInArray:callItems];
+
     BOOL isOn = value.boolValue;
     if (isOn) {
-        if (self.callingRecordItem) {
-            [items removeObject:self.callingRecordItem];
-        }
         TUITabBarItem *item = [self getCallsRecordTabBarItem:isMinimalist];
         if (item) {
             [items insertObject:item atIndex:1];
-            self.callingRecordItem = item;
         }
-        tabVC.tabBarItems = items;
-    } else {
-        if (self.callingRecordItem) {
-            [items removeObject:self.callingRecordItem];
-        }
-        tabVC.tabBarItems = items;
     }
+    tabVC.tabBarItems = items;
 
     [tabVC layoutBadgeViewIfNeeded];
     [self setupStyleWindow];
@@ -1002,6 +1009,7 @@ static UIWindow *gImWindow = nil;
         callsItem.selectedImage = selected;
         callsItem.normalImage = normal;
         callsItem.controller = [[TUINavigationController alloc] initWithRootViewController:self.callingVC];
+        callsItem.identity = @"callItem";
         return callsItem;
     }
     return nil;

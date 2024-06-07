@@ -20,6 +20,7 @@ extern NSString *kEnableOnlineStatus_mini;
 extern NSString *kEnableCallsRecord_mini;
 
 @interface SettingController_Minimalist : UIViewController
+@property(nonatomic, strong) NSString *lastLoginUser;
 @property(nonatomic, strong) TUISettingController_Minimalist *setting;
 @property(nonatomic, strong) NSMutableArray<UIBarButtonItem *> *showLeftBarButtonItems;
 @property(nonatomic, copy) void (^changeStyle)(void);

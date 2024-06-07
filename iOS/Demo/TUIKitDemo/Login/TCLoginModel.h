@@ -68,6 +68,11 @@ typedef void (^TCFail)(NSInteger errorCode, NSString *errorMsg);
 - (void)saveLoginedInfoWithUserID:(NSString *)userID
                           userSig:(NSString *)userSig;
 
+// load user's login info
+- (void)loadLastLoginInfo;
+
+// load user's login info
+- (void)loadIsDirectlyLogin;
 @end
 
 

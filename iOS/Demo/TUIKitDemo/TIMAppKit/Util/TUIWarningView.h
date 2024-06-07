@@ -11,7 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIWarningView : UIView
 
-- (instancetype)initWithFrame:(CGRect)frame tips:(NSString *)tips buttonTitle:(NSString *)buttonTitle buttonAction:(void (^)(void))action;
+- (instancetype)initWithFrame:(CGRect)frame tips:(NSString *)tips
+                  buttonTitle:(NSString *)buttonTitle buttonAction:(void (^)(void))action
+                  gotButtonTitle:(NSString *)gotButtonTitle gotButtonAction:(void (^)(void))gotButtonAction;
 
 @end
 

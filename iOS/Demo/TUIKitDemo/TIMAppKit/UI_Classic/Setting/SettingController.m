@@ -65,6 +65,7 @@ NSString *kEnableCallsRecord = @"TUIKitDemo_EnableCallsRecord";
     [self.parentViewController.view addGestureRecognizer:tap];
 
     TUISettingController *vc = [[TUISettingController alloc] init];
+    vc.lastLoginUser = self.lastLoginUser;
     vc.delegate = self;
     vc.aboutIMCellText = TIMCommonLocalizableString(TIMAppMeAbout);
     vc.showPersonalCell = self.showPersonalCell;

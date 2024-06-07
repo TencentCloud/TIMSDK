@@ -50,6 +50,7 @@
 
 "ChatSecurityWarning" = "【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。";
 "ChatSecurityWarningReport" = "点此举报";
+"ChatSecurityWarningGot" = "我知道了";
 
 "MeAbout" = "关于腾讯云·IM";
 "MeDevelop" = "开发调试";

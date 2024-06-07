@@ -14,10 +14,20 @@
 
 @interface ConversationController () <V2TIMSDKListener, TUIPopViewDelegate, V2TIMSDKListener>
 @property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
+@property(nonatomic, strong) NSString *titleViewTitle;
+
 @property(nonatomic, strong) TUIConversationListController *conv;
 @end
 
 @implementation ConversationController
+- (instancetype) init {
+    self = [super init];
+    if (self) {
+        [[V2TIMManager sharedInstance] addIMSDKListener:self];
+    }
+    return self;
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (self.viewWillAppear) {
@@ -39,8 +49,6 @@
     self.conv = [[TUIConversationListController alloc] init];
     [self addChildViewController:self.conv];
     [self.view addSubview:self.conv.view];
-
-    [[V2TIMManager sharedInstance] addIMSDKListener:self];
 }
 
 - (void)setupNavigation {
@@ -54,7 +62,7 @@
     self.navigationItem.rightBarButtonItem = moreItem;
 
     _titleView = [[TUINaviBarIndicatorView alloc] init];
-    [_titleView setTitle:TIMCommonLocalizableString(TIMAppMainTitle)];
+    [_titleView setTitle:(self.titleViewTitle.length > 0 ? self.titleViewTitle : TIMCommonLocalizableString(TIMAppMainTitle))];
     self.navigationItem.titleView = _titleView;
     self.navigationItem.title = @"";
 }
@@ -132,17 +140,20 @@
 
 #pragma mark - V2TIMSDKListener
 - (void)onConnecting {
-    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppMainConnectingTitle)];
+    self.titleViewTitle = TIMCommonLocalizableString(TIMAppMainConnectingTitle);
+    [self.titleView setTitle:self.titleViewTitle];
     [self.titleView startAnimating];
 }
 
 - (void)onConnectSuccess {
-    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppMainTitle)];
+    self.titleViewTitle = TIMCommonLocalizableString(TIMAppMainTitle);
+    [self.titleView setTitle:self.titleViewTitle];
     [self.titleView stopAnimating];
 }
 
 - (void)onConnectFailed:(int)code err:(NSString *)err {
-    [self.titleView setTitle:TIMCommonLocalizableString(TIMAppMainDisconnectTitle)];
+    self.titleViewTitle = TIMCommonLocalizableString(TIMAppMainDisconnectTitle);
+    [self.titleView setTitle:self.titleViewTitle];
     [self.titleView stopAnimating];
 }
 

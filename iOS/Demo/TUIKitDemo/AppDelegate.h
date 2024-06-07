@@ -30,6 +30,8 @@ static AppDelegate *app = nil;
 - (UIViewController *)getLoginController;
 - (UITabBarController *)getMainController;
 
+- (void)applyPrivateBasicInfo;
+- (void)preloadMainVCBeforeLogin:(NSString *)userID;
 - (void)loginSDK:(NSString *)userID userSig:(NSString *)sig succ:(TSucc)succ fail:(TFail)fail;
 
 @end
