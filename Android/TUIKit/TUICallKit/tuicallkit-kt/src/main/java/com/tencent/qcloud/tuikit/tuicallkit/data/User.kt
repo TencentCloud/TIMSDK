@@ -2,18 +2,19 @@ package com.tencent.qcloud.tuikit.tuicallkit.data
 
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
-import java.util.*
+import java.util.Objects
 
 class User {
-    public var id: String? = null
-    public var avatar: LiveData<String> = LiveData()
-    public var nickname: LiveData<String> = LiveData()
+    var id: String? = null
+    var avatar: LiveData<String> = LiveData()
+    var nickname: LiveData<String> = LiveData()
 
-    public var callRole = LiveData<TUICallDefine.Role>()
-    public var callStatus: LiveData<TUICallDefine.Status> = LiveData()
-    public var audioAvailable: LiveData<Boolean> = LiveData()
-    public var videoAvailable: LiveData<Boolean> = LiveData()
-    public var playoutVolume: LiveData<Int> = LiveData()
+    var callRole = LiveData<TUICallDefine.Role>()
+    var callStatus: LiveData<TUICallDefine.Status> = LiveData()
+    var audioAvailable: LiveData<Boolean> = LiveData()
+    var videoAvailable: LiveData<Boolean> = LiveData()
+    var playoutVolume: LiveData<Int> = LiveData()
+    var networkQualityReminder: LiveData<Boolean> = LiveData()
 
     init {
         avatar.set("")
@@ -23,6 +24,7 @@ class User {
         audioAvailable.set(false)
         videoAvailable.set(false)
         playoutVolume.set(0)
+        networkQualityReminder.set(false)
     }
 
     fun clear() {
@@ -33,6 +35,7 @@ class User {
         audioAvailable.set(false)
         videoAvailable.set(false)
         playoutVolume.set(0)
+        networkQualityReminder.set(false)
 
         avatar.removeAll()
         nickname.removeAll()
@@ -41,6 +44,7 @@ class User {
         audioAvailable.removeAll()
         videoAvailable.removeAll()
         playoutVolume.removeAll()
+        networkQualityReminder.removeAll()
     }
 
     override fun equals(o: Any?): Boolean {
@@ -68,6 +72,7 @@ class User {
                 + ", audioAvailable=" + audioAvailable.get()
                 + ", videoAvailable=" + videoAvailable.get()
                 + ", playoutVolume=" + playoutVolume.get()
+                + ", networkQualityReminder=" + networkQualityReminder.get()
                 + '}')
     }
 }

@@ -2,7 +2,14 @@ package com.tencent.qcloud.tuikit.tuicallkit.utils
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.widget.ImageView
@@ -49,15 +56,15 @@ object ImageLoader {
         Glide.with(context!!.applicationContext).asGif().load(resourceId).into(imageView!!)
     }
 
-    fun loadBlurImage(context: Context?, imageView: ImageView?, url: Any?) {
+    fun loadBlurImage(context: Context?, imageView: ImageView?, url: Any?, radius: Float = 80f) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             loadImage(context, imageView, url, R.drawable.tuicallkit_ic_avatar)
-            val radius = 80f
             imageView?.setRenderEffect(RenderEffect.createBlurEffect(radius, radius, Shader.TileMode.MIRROR))
         } else {
             Glide.with(context!!.applicationContext).load(url).error(R.drawable.tuicallkit_ic_avatar)
                 .apply(RequestOptions.bitmapTransform(BlurTransformation(context))).into(imageView!!)
         }
+        imageView?.setColorFilter(Color.parseColor("#8022262E"))
     }
 
     @JvmStatic

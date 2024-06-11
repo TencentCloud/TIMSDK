@@ -16,9 +16,10 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
-import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils.setScreenLockParams
+import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatWindowService
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
@@ -52,7 +53,11 @@ class CallKitActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TUILog.i(TAG, "onCreate")
-        setScreenLockParams(window)
+        DeviceUtils.setScreenLockParams(window)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
         activity = this
         setContentView(R.layout.tuicallkit_activity_call_kit)
         initStatusBar()
@@ -77,6 +82,7 @@ class CallKitActivity : AppCompatActivity() {
             object : PermissionCallback() {
                 override fun onGranted() {
                     initView()
+                    startActivityByAction()
                 }
 
                 override fun onDenied() {
@@ -85,6 +91,22 @@ class CallKitActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+
+    private fun startActivityByAction() {
+        if (intent.action == Constants.ACCEPT_CALL_ACTION) {
+            TUILog.i(TAG, "IncomingView -> startActivityByAction")
+            EngineManager.instance.accept(null)
+            if (TUICallState.instance.mediaType.get() == TUICallDefine.MediaType.Video) {
+                val videoView = VideoViewFactory.instance.createVideoView(
+                    TUICallState.instance.selfUser.get(), application
+                )
+
+                EngineManager.instance.openCamera(
+                    TUICallState.instance.isFrontCamera.get(), videoView?.getVideoView(), null
+                )
+            }
+        }
     }
 
     override fun onBackPressed() {}

@@ -6,16 +6,16 @@ import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
 
 class VideoViewFactory {
-    public var videoEntityList = HashMap<String, UserVideoEntity?>()
+    var videoEntityList = HashMap<String, UserVideoEntity?>()
 
     companion object {
-        const val TAG = "VideoViewFactory"
+        const val TAG = "TUICall-VideoViewFactory"
         var instance: VideoViewFactory = VideoViewFactory()
     }
 
     fun createVideoView(user: User?, context: Context): VideoView? {
         if (null == user || TextUtils.isEmpty(user.id)) {
-            TUILog.e(TAG, "createVideoView user:${user}" )
+            TUILog.e(TAG, "createVideoView failed, user is invalid: $user")
             return null
         }
         var videoView = findVideoView(user.id)
@@ -31,7 +31,7 @@ class VideoViewFactory {
     }
 
     fun clear() {
-        if ( videoEntityList.isNotEmpty()) {
+        if (videoEntityList.isNotEmpty()) {
             for (userId in videoEntityList.keys) {
                 var entity = videoEntityList.get(userId)
                 entity?.videoView?.clear()
@@ -46,16 +46,6 @@ class VideoViewFactory {
         }
         if (videoEntityList.contains(userId)) {
             return videoEntityList[userId]?.videoView
-        }
-        return null
-    }
-
-    fun findVideoUser(userId: String?): User? {
-        if (TextUtils.isEmpty(userId)) {
-            return null
-        }
-        if (videoEntityList.contains(userId)) {
-            return videoEntityList[userId]?.user
         }
         return null
     }

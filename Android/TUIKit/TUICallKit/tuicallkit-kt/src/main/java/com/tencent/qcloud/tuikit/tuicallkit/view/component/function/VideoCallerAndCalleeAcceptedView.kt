@@ -6,11 +6,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.tencent.qcloud.tuikit.TUICommonDefine
-import com.tencent.qcloud.tuikit.TUICommonDefine.Camera
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function.VideoCallerAndCalleeAcceptedViewModel
 
@@ -22,6 +20,7 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
     private var imageHangup: ImageView? = null
     private var imageSwitchCamera: ImageView? = null
     private var imageExpandView: ImageView? = null
+    private var imageBlurBackground: ImageView? = null
     private var textMute: TextView? = null
     private var textAudioDevice: TextView? = null
     private var textCamera: TextView? = null
@@ -35,6 +34,19 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
         } else {
             context.getString(R.string.tuicallkit_toast_disable_camera)
         }
+
+        if (it && viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            refreshButton(R.id.iv_function_switch_camera, VISIBLE)
+            refreshButton(R.id.img_blur_background, if (viewModel.isShowVirtualBackgroundButton) VISIBLE else GONE)
+        } else {
+            refreshButton(R.id.iv_function_switch_camera, GONE)
+            refreshButton(R.id.img_blur_background, GONE)
+        }
+    }
+
+    private fun refreshButton(resId: Int, enable: Int) {
+        rootLayout?.getConstraintSet(R.id.start)?.getConstraint(resId)?.propertySet?.visibility = enable
+        rootLayout?.getConstraintSet(R.id.end)?.getConstraint(resId)?.propertySet?.visibility = enable
     }
 
     private var isMicMuteObserver = Observer<Boolean> {
@@ -86,6 +98,7 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
         imageHangup = findViewById(R.id.iv_hang_up)
         textCamera = findViewById(R.id.tv_video_camera)
         imageSwitchCamera = findViewById(R.id.iv_function_switch_camera)
+        imageBlurBackground = findViewById(R.id.img_blur_background)
         imageExpandView = findViewById(R.id.iv_expanded)
         imageExpandView?.visibility = INVISIBLE
 
@@ -105,10 +118,12 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
             context.getString(R.string.tuicallkit_toast_use_earpiece)
         }
 
-        if (viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+        if (viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL && viewModel.isCameraOpen.get()) {
             imageSwitchCamera?.visibility = VISIBLE
+            imageBlurBackground?.visibility = if (viewModel.isShowVirtualBackgroundButton) VISIBLE else GONE
         } else {
             imageSwitchCamera?.visibility = GONE
+            imageBlurBackground?.visibility = GONE
         }
 
         if (!viewModel.isBottomViewExpanded.get() && viewModel.showLargerViewUserId.get() != null) {
@@ -150,8 +165,8 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
         imageOpenCamera?.setOnClickListener {
             if (viewModel.isCameraOpen.get() == true) {
                 viewModel.closeCamera()
-            } else if (VideoViewFactory.instance.videoEntityList.size > 0) {
-                viewModel.openCamera(viewModel.frontCamera.get())
+            } else {
+                viewModel.openCamera()
             }
         }
         imageHangup?.setOnClickListener { viewModel.hangup() }
@@ -160,8 +175,12 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
             viewModel.updateView()
         }
 
+        imageBlurBackground?.setOnClickListener {
+            viewModel.setBlurBackground()
+        }
+
         imageSwitchCamera?.setOnClickListener() {
-            viewModel.switchCamera(if (viewModel.frontCamera.get() == true) Camera.Back else Camera.Front)
+            viewModel.switchCamera()
         }
 
         rootLayout?.addTransitionListener(object : MotionLayout.TransitionListener {

@@ -71,4 +71,6 @@
     <string name="tuicallkit_error_scene_not_support">現在の通話シーンでは、この機能はサポートしていません</string>
     <string name="tuicallkit_join_group_call">参加</string>
     <string name="tuicallkit_join_group_call_users">%s人が%sをしています</string>
+
+    <string name="tuicallkit_blur_background">背景をぼかす</string>
 </resources>

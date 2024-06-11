@@ -63,7 +63,7 @@ ext {
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"
 
-    liteavSdk = "com.tencent.liteav:LiteAVSDK_TRTC:11.7.0.13946"
+    liteavSdk = "com.tencent.liteav:LiteAVSDK_TRTC:11.8.0.14176"
 }
 
 task clean(type: Delete) {

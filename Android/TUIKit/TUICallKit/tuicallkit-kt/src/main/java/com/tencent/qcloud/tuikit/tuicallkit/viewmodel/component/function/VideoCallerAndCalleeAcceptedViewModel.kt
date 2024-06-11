@@ -12,14 +12,10 @@ class VideoCallerAndCalleeAcceptedViewModel {
     var isMicMute = LiveData<Boolean>()
     var isSpeaker = LiveData<Boolean>()
     var isCameraOpen = LiveData<Boolean>()
-    var frontCamera = LiveData<Boolean>()
     var isBottomViewExpanded = LiveData<Boolean>()
     var showLargerViewUserId = LiveData<String>()
     var scene = LiveData<TUICallDefine.Scene>()
-
-    private var isFrontCameraObserver = Observer<TUICommonDefine.Camera> {
-        frontCamera.set(it == TUICommonDefine.Camera.Front)
-    }
+    var isShowVirtualBackgroundButton = false
 
     private var audioPlayoutDeviceObserver = Observer<TUICommonDefine.AudioPlaybackDevice> {
         isSpeaker.set(it == TUICommonDefine.AudioPlaybackDevice.Speakerphone)
@@ -29,22 +25,20 @@ class VideoCallerAndCalleeAcceptedViewModel {
         isMicMute = TUICallState.instance.isMicrophoneMute
         isSpeaker.set(TUICallState.instance.audioPlayoutDevice.get() == TUICommonDefine.AudioPlaybackDevice.Speakerphone)
         isCameraOpen = TUICallState.instance.isCameraOpen
-        frontCamera.set(TUICallState.instance.isFrontCamera.get() == TUICommonDefine.Camera.Front)
 
         isBottomViewExpanded = TUICallState.instance.isBottomViewExpand
         showLargerViewUserId = TUICallState.instance.showLargeViewUserId
         scene = TUICallState.instance.scene
+        isShowVirtualBackgroundButton = TUICallState.instance.showVirtualBackgroundButton
 
         addObserver()
     }
 
     private fun addObserver() {
-        TUICallState.instance.isFrontCamera.observe(isFrontCameraObserver)
         TUICallState.instance.audioPlayoutDevice?.observe(audioPlayoutDeviceObserver)
     }
 
     public fun removeObserver() {
-        TUICallState.instance.isFrontCamera.removeObserver(isFrontCameraObserver)
         TUICallState.instance.audioPlayoutDevice?.removeObserver(audioPlayoutDeviceObserver)
     }
 
@@ -56,14 +50,9 @@ class VideoCallerAndCalleeAcceptedViewModel {
         EngineManager.instance.closeCamera()
     }
 
-    fun openCamera(frontCamera: Boolean?) {
-        var camera: TUICommonDefine.Camera = if (frontCamera!!) {
-            TUICommonDefine.Camera.Front
-        } else {
-            TUICommonDefine.Camera.Back
-        }
-        val videoView =
-            VideoViewFactory.instance.videoEntityList.get(TUICallState.instance.selfUser.get().id)?.videoView
+    fun openCamera() {
+        var camera: TUICommonDefine.Camera = TUICallState.instance.isFrontCamera.get()
+        val videoView = VideoViewFactory.instance.findVideoView(TUICallState.instance.selfUser.get().id)
         EngineManager.instance.openCamera(camera, videoView?.getVideoView(), object :
             TUICommonDefine.Callback {
             override fun onSuccess() {}
@@ -83,7 +72,11 @@ class VideoCallerAndCalleeAcceptedViewModel {
         }
     }
 
-    fun switchCamera(camera: TUICommonDefine.Camera) {
+    fun switchCamera() {
+        var camera = TUICommonDefine.Camera.Back
+        if (TUICallState.instance.isFrontCamera.get() == TUICommonDefine.Camera.Back) {
+            camera = TUICommonDefine.Camera.Front
+        }
         EngineManager.instance.switchCamera(camera)
     }
 
@@ -113,5 +106,9 @@ class VideoCallerAndCalleeAcceptedViewModel {
             override fun onError(errCode: Int, errMsg: String?) {}
 
         })
+    }
+
+    fun setBlurBackground() {
+        EngineManager.instance.setBlurBackground(!TUICallState.instance.enableBlurBackground.get())
     }
 }

@@ -1,28 +1,19 @@
 package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.single
 
-import com.tencent.qcloud.tuicore.ServiceInitializer
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
-import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class VideoCallUserInfoViewModel {
-    public var avatar = LiveData<String>()
-    public var nickname = LiveData<String>()
-    public var callTag: String? = ""
-    public var mediaType = LiveData<TUICallDefine.MediaType>()
-    public var callStatus = LiveData<TUICallDefine.Status>()
+    var avatar = LiveData<String>()
+    var nickname = LiveData<String>()
+    var mediaType = LiveData<TUICallDefine.MediaType>()
+    var callStatus = LiveData<TUICallDefine.Status>()
 
     init {
         var userModel = TUICallState.instance.remoteUserList.get().first()
         avatar = userModel.avatar
         nickname = userModel.nickname
-        callTag = if (TUICallDefine.Role.Caller == TUICallState.instance.selfUser.get().callRole.get()) {
-            ServiceInitializer.getAppContext().getString(R.string.tuicallkit_waiting_accept)
-        } else {
-            ServiceInitializer.getAppContext().getString(R.string.tuicallkit_invite_video_call)
-        }
-
         mediaType = TUICallState.instance.mediaType
         callStatus = TUICallState.instance.selfUser.get().callStatus
     }

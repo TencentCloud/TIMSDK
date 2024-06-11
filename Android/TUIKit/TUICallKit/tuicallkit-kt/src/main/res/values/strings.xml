@@ -72,4 +72,6 @@
     <string name="tuicallkit_join_group_call">Join</string>
     <string name="tuicallkit_join_group_call_users">%s member(s) in %s</string>
 
+    <string name="tuicallkit_blur_background">Blur Background</string>
+
 </resources>

@@ -1,60 +1,20 @@
 package com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.single
 
-import com.tencent.qcloud.tuicore.ServiceInitializer
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
-import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class AudioCallUserInfoViewModel {
-    public var avatar = LiveData<String>()
-    public var nickname = LiveData<String>()
-    public var callTag = LiveData<String>()
-    public var mediaType = LiveData<TUICallDefine.MediaType>()
-    public var callStatus = LiveData<TUICallDefine.Status>()
-    public var callRole = LiveData<TUICallDefine.Role>()
-
-    private var callStatusObserver = Observer<TUICallDefine.Status> {
-        if (TUICallDefine.Status.Waiting == it) {
-            callTag.set(
-                if (TUICallDefine.Role.Caller == TUICallState.instance.selfUser.get().callRole.get()) {
-                    ServiceInitializer.getAppContext().getString(R.string.tuicallkit_waiting_accept)
-                } else {
-                    ServiceInitializer.getAppContext().getString(R.string.tuicallkit_invite_audio_call)
-                }
-            )
-        } else if (TUICallDefine.Status.Accept == it) {
-            callTag.set("")
-        }
-    }
+    var avatar = LiveData<String>()
+    var nickname = LiveData<String>()
+    var mediaType = LiveData<TUICallDefine.MediaType>()
+    var callRole = LiveData<TUICallDefine.Role>()
 
     init {
         var userModel = TUICallState.instance.remoteUserList.get().first()
         avatar = userModel.avatar
         nickname = userModel.nickname
-
-        callTag.set(
-            if (TUICallDefine.Role.Caller == TUICallState.instance.selfUser.get().callRole.get()) {
-                ServiceInitializer.getAppContext().getString(R.string.tuicallkit_waiting_accept)
-            } else {
-                ServiceInitializer.getAppContext().getString(R.string.tuicallkit_invite_audio_call)
-            }
-        )
-        if (TUICallDefine.Status.Accept == TUICallState.instance.selfUser.get().callStatus.get()) {
-            callTag.set("")
-        }
         mediaType = TUICallState.instance.mediaType
-        callStatus = TUICallState.instance.selfUser.get().callStatus
         callRole = TUICallState.instance.selfUser.get().callRole
-        addObserver()
-    }
-
-    private fun addObserver() {
-        TUICallState.instance.selfUser.get().callStatus.observe(callStatusObserver)
-    }
-
-    public fun removeObserver() {
-        TUICallState.instance.selfUser.get().callStatus.removeObserver(callStatusObserver)
     }
 }

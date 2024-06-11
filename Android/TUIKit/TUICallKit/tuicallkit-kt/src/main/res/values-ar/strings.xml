@@ -71,4 +71,6 @@
     <string name="tuicallkit_error_scene_not_support">مشهد المكالمة الحالي لا يدعم هذه الوظيفة</string>
     <string name="tuicallkit_join_group_call">انضمام</string>
     <string name="tuicallkit_join_group_call_users">يرتاد %s أشخاص %s</string>
+
+    <string name="tuicallkit_blur_background">الخلفية الغائمة</string>
 </resources>

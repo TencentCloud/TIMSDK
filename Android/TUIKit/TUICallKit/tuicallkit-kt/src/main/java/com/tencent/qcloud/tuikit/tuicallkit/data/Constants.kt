@@ -13,4 +13,15 @@ object Constants {
 
     const val ACCEPT_CALL_ACTION = "accept_call_action"
     const val REJECT_CALL_ACTION = "reject_call_action"
+
+    const val KEY_VIRTUAL_BACKGROUND = "enablevirtualbackground"
+
+    enum class NetworkQualityHint {
+        None,
+        Local,
+        Remote
+    }
+
+    const val CALL_CHANNEL_ID = "CallChannelId"
+    const val NOTIFICATION_CHANNEL_ID = "notificationChannelId"
 }

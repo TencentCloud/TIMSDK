@@ -63,7 +63,6 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="accept_call_action" />
                 <action android:name="reject_call_action" />
             </intent-filter>
         </receiver>

@@ -45,6 +45,9 @@ If you would like to run the sample app, you can do so by following the steps be
 3. On the primary device, specify the user ID of the `callee` and initiate a call.
 4. If all steps are followed correctly, an incoming call invitation will appear on the device of the `callee`.
 
+## Implementing Offline Push Notifications (Optional)
+TUICallKit supports integrating with TIMPush plugin. For details, see: [Android Offline Push Notification](https://www.tencentcloud.com/document/product/647/50999)
+
 ## Reference
 - If you want to learn more about the product features, you can click on the following [link](https://trtc.io/products/call).
 

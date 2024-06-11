@@ -22,7 +22,6 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit
-import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit.Companion.createInstance
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.joiningroupcall.JoinInGroupCallViewModel
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.recents.RecentCallsFragment
 import org.json.JSONException
@@ -417,7 +416,7 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, method)) {
             val enableFloatWindow = param[TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW] as Boolean
             Log.i(TAG, "onCall, enableFloatWindow: $enableFloatWindow")
-            createInstance(appContext).enableFloatWindow(enableFloatWindow)
+            TUICallKit.createInstance(appContext).enableFloatWindow(enableFloatWindow)
             return null
         }
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_MULTI_DEVICE, method)) {
@@ -428,6 +427,16 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
                     override fun onSuccess() {}
                     override fun onError(errCode: Int, errMsg: String) {}
                 })
+            return null
+        }
+        if (param != null && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_INCOMING_BANNER, method)) {
+            val enable = param[TUIConstants.TUICalling.PARAM_NAME_ENABLE_INCOMING_BANNER] as Boolean
+            TUICallKit.createInstance(appContext).enableIncomingBanner(enable)
+            return null
+        }
+        if (param != null && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_VIRTUAL_BACKGROUND, method)) {
+            val enable = param[TUIConstants.TUICalling.PARAM_NAME_ENABLE_VIRTUAL_BACKGROUND] as Boolean
+            TUICallKit.createInstance(appContext).enableVirtualBackground(enable)
             return null
         }
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_CALL, method)) {
@@ -442,9 +451,9 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
                 mediaType = TUICallDefine.MediaType.Video
             }
             if (!TextUtils.isEmpty(groupID)) {
-                createInstance(appContext).groupCall(groupID!!, userIdList, mediaType)
+                TUICallKit.createInstance(appContext).groupCall(groupID!!, userIdList, mediaType)
             } else if (userIdList?.size == 1) {
-                createInstance(appContext).call(userIdList[0]!!, mediaType)
+                TUICallKit.createInstance(appContext).call(userIdList[0]!!, mediaType)
             } else {
                 Log.e(TAG, "onCall ignored, groupId is empty and userList is not 1, cannot start call or groupCall")
             }

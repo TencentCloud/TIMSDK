@@ -14,7 +14,7 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUISearch download](https://im.sdk.qcloud.com/download/tuikit/8.0.5895/android/TUISearch.zip)
 
-[Latest TUICallKit download](https://im.sdk.qcloud.com/download/tuikit/7.9.5666/android/TUICallKit.zip)
+[Latest TUICallKit download](https://im.sdk.qcloud.com/download/tuikit/8.0.5895/android/TUICallKit.zip)
 
 [Latest TUIOfflinePush download](https://im.sdk.qcloud.com/download/tuikit/7.7.5282/android/TUIOfflinePush.zip)
 

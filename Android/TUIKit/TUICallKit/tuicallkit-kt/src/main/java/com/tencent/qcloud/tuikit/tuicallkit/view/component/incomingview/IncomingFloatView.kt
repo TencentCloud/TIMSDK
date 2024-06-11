@@ -64,8 +64,6 @@ class IncomingFloatView(context: Context) {
 
     fun cancelIncomingView() {
         TUILog.i(TAG, "cancelIncomingView")
-        caller?.clear()
-        caller = null
         if (layoutView.isAttachedToWindow) {
             windowManager?.removeView(layoutView)
         }

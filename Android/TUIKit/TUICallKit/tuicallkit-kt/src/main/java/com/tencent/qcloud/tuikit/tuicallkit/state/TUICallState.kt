@@ -10,6 +10,7 @@ import com.tencent.qcloud.tuicore.util.SPUtils
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.TUICommonDefine.AudioPlaybackDevice
+import com.tencent.qcloud.tuikit.TUICommonDefine.NetworkQuality
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallObserver
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
@@ -38,10 +39,14 @@ class TUICallState {
 
     public var enableMuteMode = false
     public var enableFloatWindow = false
+    public var enableIncomingBanner = false
+    public var showVirtualBackgroundButton = false
+    public var enableBlurBackground = LiveData<Boolean>()
     public var reverse1v1CallRenderView = false
     public var isShowFullScreen = LiveData<Boolean>()
     public var isBottomViewExpand = LiveData<Boolean>()
     public var showLargeViewUserId = LiveData<String>()
+    public var networkQualityReminder = LiveData<Constants.NetworkQualityHint>()
 
     private var timeHandler: Handler? = null
     private var timeHandlerThread: HandlerThread? = null
@@ -64,6 +69,8 @@ class TUICallState {
         isShowFullScreen.set(false)
         isBottomViewExpand.set(true)
         showLargeViewUserId.set(null)
+        enableBlurBackground.set(false)
+        networkQualityReminder.set(Constants.NetworkQualityHint.None)
     }
 
     val mTUICallObserver: TUICallObserver = object : TUICallObserver() {
@@ -298,7 +305,37 @@ class TUICallState {
         }
 
         override fun onUserNetworkQualityChanged(networkQualityList: List<TUICommonDefine.NetworkQualityInfo?>?) {
+            if (networkQualityList.isNullOrEmpty()) {
+                return
+            }
+            val iterator = networkQualityList.iterator()
+            if (scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+                while (iterator.hasNext()) {
+                    val info = iterator.next()
+                    val user = findUser(info?.userId)
+                    user?.networkQualityReminder?.set(isBadNetwork(info?.quality))
+                }
+            } else if (scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+                var localQuality: NetworkQuality? = NetworkQuality.Unknown
+                var remoteQuality: NetworkQuality? = NetworkQuality.Unknown
 
+                while (iterator.hasNext()) {
+                    val info = iterator.next()
+                    if (selfUser.get().id == info?.userId) {
+                        localQuality = info?.quality
+                    } else {
+                        remoteQuality = info?.quality
+                    }
+                }
+
+                if (isBadNetwork(localQuality)) {
+                    networkQualityReminder.set(Constants.NetworkQualityHint.Local)
+                } else if (isBadNetwork(remoteQuality)) {
+                    networkQualityReminder.set(Constants.NetworkQualityHint.Remote)
+                } else {
+                    networkQualityReminder.set(Constants.NetworkQualityHint.None)
+                }
+            }
         }
 
         override fun onKickedOffline() {
@@ -312,12 +349,18 @@ class TUICallState {
         }
     }
 
+    private fun isBadNetwork(quality: NetworkQuality?): Boolean {
+        return quality == NetworkQuality.Bad || quality == NetworkQuality.Vbad || quality == NetworkQuality.Down
+    }
+
     fun clear() {
         TUILog.i(TAG, "clear")
         reverse1v1CallRenderView = false
         isShowFullScreen.set(false)
         isBottomViewExpand.set(true)
         showLargeViewUserId.set(null)
+        enableBlurBackground.set(false)
+        networkQualityReminder.set(Constants.NetworkQualityHint.None)
         selfUser.get().callStatus.set(TUICallDefine.Status.None)
         selfUser.get().clear()
         selfUser.set(User())
@@ -349,6 +392,8 @@ class TUICallState {
         isShowFullScreen.removeAll()
         isBottomViewExpand.removeAll()
         showLargeViewUserId.removeAll()
+        enableBlurBackground.removeAll()
+        networkQualityReminder.removeAll()
     }
 
     private fun resetCall() {
@@ -421,6 +466,9 @@ class TUICallState {
         if (user == null) {
             user = User()
             user.id = userId
+        }
+        if (selfUser.get().callStatus.get() != TUICallDefine.Status.Accept) {
+            selfUser.get().callStatus.set(TUICallDefine.Status.Accept)
         }
         user.callStatus.set(TUICallDefine.Status.Accept)
         if (!remoteUserList.get().contains(user) && !userId.equals(selfUser.get().id)) {

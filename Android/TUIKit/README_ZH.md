@@ -14,7 +14,7 @@
 
 [最新 TUISearch 下载](https://im.sdk.qcloud.com/download/tuikit/8.0.5895/android/TUISearch.zip)
 
-[最新 TUICallKit 下载](https://im.sdk.qcloud.com/download/tuikit/7.9.5666/android/TUICallKit.zip)
+[最新 TUICallKit 下载](https://im.sdk.qcloud.com/download/tuikit/8.0.5895/android/TUICallKit.zip)
 
 [最新 TUIOfflinePush 下载](https://im.sdk.qcloud.com/download/tuikit/7.7.5282/android/TUIOfflinePush.zip)
 

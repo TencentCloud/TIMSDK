@@ -91,4 +91,15 @@ abstract class TUICallKit {
      * Enable the floating window
      */
     open fun enableFloatWindow(enable: Boolean) {}
+
+    /**
+     * Enable Virtual Background
+     */
+    open fun enableVirtualBackground(enable: Boolean) {}
+
+    /**
+     * Enable callee show banner view when received an new invitation
+     * default: false
+     */
+    open fun enableIncomingBanner(enable: Boolean) {}
 }

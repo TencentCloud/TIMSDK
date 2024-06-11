@@ -81,13 +81,11 @@ class JoinInGroupCallViewModel(context: Context) {
         }
 
         val userList = parseUserList(extraMap)
-        if (userList.isEmpty() || userList.contains(TUILogin.getLoginUser())) {
+        if (userList.isEmpty() || userList.contains(TUILogin.getLoginUser()) || userList.size <= 1) {
             TUILog.w(TAG, "userList: $userList, loginUser:${TUILogin.getLoginUser()}")
             removeCallView()
             return
         }
-        val groupId = extraMap[KEY_GROUP_ID] as? String
-        val roomId = parseRoomId(extraMap)
 
         val mediaType = if (extraMap[KEY_CALL_MEDIA_TYPE] == VALUE_MEDIA_TYPE_VIDEO) {
             TUICallDefine.MediaType.Video
@@ -95,9 +93,9 @@ class JoinInGroupCallViewModel(context: Context) {
             TUICallDefine.MediaType.Audio
         }
 
-        if (callView == null) {
-            callView = JoinInGroupCallView(appContext)
-        }
+        callView = JoinInGroupCallView(appContext)
+
+        val roomId = parseRoomId(extraMap)
         TUILog.i(TAG, "groupId: $groupId, roomId:$roomId, mediaType: $mediaType, userList: $userList")
         callView?.updateView(groupId, roomId, mediaType, userList)
         showCallView()

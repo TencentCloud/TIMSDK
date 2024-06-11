@@ -1,32 +1,33 @@
 package com.tencent.qcloud.tuikit.tuicallkit.utils
 
 import android.app.ActivityManager
+import android.app.KeyguardManager
 import android.content.Context
-import android.os.PowerManager
+import android.os.Build
 import android.text.TextUtils
 import android.view.Window
 import android.view.WindowManager
+import com.tencent.qcloud.tuicore.util.TUIBuild
 
 object DeviceUtils {
     fun setScreenLockParams(window: Window?) {
         if (null == window) {
             return
         }
-        val powerManager = window.context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val isScreenOn = powerManager.isScreenOn
-        if (isScreenOn) {
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-            )
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                    or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+        )
+    }
+
+    fun isScreenLocked(context: Context): Boolean {
+        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+        return if (TUIBuild.getVersionInt() >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            keyguardManager.isDeviceLocked()
         } else {
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                        or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
+            keyguardManager.inKeyguardRestrictedInputMode()
         }
     }
 

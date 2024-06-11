@@ -1,8 +1,6 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingview
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -29,10 +27,9 @@ import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
 
-class IncomingNotificationView constructor(context: Context) {
+class IncomingNotificationView(context: Context) {
     private val TAG = "IncomingViewNotification"
 
-    private val channelID = "CallChannelId"
     private val notificationId = 9909
 
     private val context: Context
@@ -60,7 +57,6 @@ class IncomingNotificationView constructor(context: Context) {
     fun showNotification(user: User) {
         TUILog.i(TAG, "showNotification, user: $user")
         addObserver()
-        createChannel()
         notification = createNotification()
 
         if (user.nickname.get().isNullOrEmpty()) {
@@ -110,25 +106,8 @@ class IncomingNotificationView constructor(context: Context) {
         removeObserver()
     }
 
-    private fun createChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelName = "CallChannel"
-            val groupID = "CallGroupId"
-            val groupName = "CallGroup"
-
-            val channelGroup = NotificationChannelGroup(groupID, groupName)
-            notificationManager.createNotificationChannelGroup(channelGroup)
-            val channel = NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH)
-            channel.group = groupID
-            channel.enableLights(true)
-            channel.setShowBadge(true)
-            channel.setSound(null, null)
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
     private fun createNotification(): Notification {
-        val builder = NotificationCompat.Builder(context, channelID)
+        val builder = NotificationCompat.Builder(context, Constants.CALL_CHANNEL_ID)
             .setOngoing(true)
             .setWhen(System.currentTimeMillis())
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -139,12 +118,13 @@ class IncomingNotificationView constructor(context: Context) {
             builder.priority = NotificationCompat.PRIORITY_MAX
         }
 
-        builder.setChannelId(channelID)
+        builder.setChannelId(Constants.CALL_CHANNEL_ID)
         builder.setTimeoutAfter(Constants.SIGNALING_MAX_TIME * 1000L)
         builder.setSmallIcon(R.drawable.tuicallkit_ic_avatar)
         builder.setSound(null)
 
         builder.setContentIntent(getPendingIntent())
+        builder.setFullScreenIntent(getPendingIntent(), true)
 
         remoteViews = RemoteViews(context.packageName, R.layout.tuicallkit_incoming_notification_view)
         remoteViews?.setOnClickPendingIntent(R.id.btn_decline, getDeclineIntent())
@@ -168,8 +148,9 @@ class IncomingNotificationView constructor(context: Context) {
     }
 
     private fun getAcceptIntent(): PendingIntent {
-        val intent = Intent(context, IncomingCallReceiver::class.java)
+        val intent = Intent(context, CallKitActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.action = Constants.ACCEPT_CALL_ACTION
-        return PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getActivity(context, 2, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 }

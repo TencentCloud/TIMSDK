@@ -13,7 +13,6 @@
         android:layout_height="100dp"
         android:src="@drawable/tuicallkit_ic_avatar"
         app:corner_radius="6dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,16 +28,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_user_avatar" />
-
-    <TextView
-        android:id="@+id/tv_video_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/tuicallkit_color_white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

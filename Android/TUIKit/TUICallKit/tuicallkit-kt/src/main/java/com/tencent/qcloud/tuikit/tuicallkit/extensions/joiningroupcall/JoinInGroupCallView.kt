@@ -34,7 +34,7 @@ class JoinInGroupCallView(context: Context) : FrameLayout(context) {
     private var isViewExpand: Boolean = false
 
     init {
-        appContext = context
+        appContext = context.applicationContext
         initView()
     }
 
@@ -74,6 +74,7 @@ class JoinInGroupCallView(context: Context) : FrameLayout(context) {
         }
 
         imageIconExpand?.setBackgroundResource(R.drawable.tuicallkit_ic_join_group_expand)
+        layoutExpand?.visibility = LinearLayout.GONE
         imageIconExpand?.setOnClickListener {
             displayExpandView()
         }

@@ -1,6 +1,9 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.*
 import android.widget.RelativeLayout
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
@@ -11,6 +14,10 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.videolayout.SingleCallVideoLayoutViewModel
 
 class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
+    private val MESSAGE_VIDEO_AVAIABLE_UPDATE = 2
+    private val UPDATE_INTERVAL: Long = 200
+    private val UPDATE_COUNT = 3
+    private var retryCount = 0
 
     private var layoutRenderBig: RelativeLayout? = null
     private var layoutRenderSmall: RelativeLayout? = null
@@ -18,10 +25,35 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
     private var videoViewBig: VideoView? = null
     private var viewModel: SingleCallVideoLayoutViewModel = SingleCallVideoLayoutViewModel()
 
+    private val mainHandler: Handler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+
+            val remoteUserVideoAvailable = viewModel.remoteUser.videoAvailable.get()
+            if (retryCount <= UPDATE_COUNT && !remoteUserVideoAvailable) {
+                sendEmptyMessageDelayed(MESSAGE_VIDEO_AVAIABLE_UPDATE, UPDATE_INTERVAL)
+                retryCount++
+            } else if (remoteUserVideoAvailable) {
+                retryCount = 0
+            } else {
+                videoViewSmall?.setImageAvatarVisibility(true)
+                retryCount = 0
+            }
+        }
+    }
+
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.Accept) {
             initSmallRenderView()
             videoViewSmall?.setImageAvatarVisibility(false)
+            switchRenderLayout()
+
+            mainHandler.sendEmptyMessageDelayed(MESSAGE_VIDEO_AVAIABLE_UPDATE, UPDATE_INTERVAL)
+        }
+    }
+
+    private var blurBackgroundObserver = Observer<Boolean> {
+        if (it == true && viewModel.currentReverseRenderView) {
             switchRenderLayout()
         }
     }
@@ -31,19 +63,18 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
         addObserver()
     }
 
-
     override fun clear() {
         removeObserver()
     }
 
     private fun addObserver() {
-        viewModel.selfUser.callStatus.observe(callStatusObserver)
         viewModel.remoteUser.callStatus.observe(callStatusObserver)
+        viewModel.enableBlurBackground.observe(blurBackgroundObserver)
     }
 
     private fun removeObserver() {
-        viewModel.selfUser.callStatus.removeObserver(callStatusObserver)
         viewModel.remoteUser.callStatus.removeObserver(callStatusObserver)
+        viewModel.enableBlurBackground.removeObserver(blurBackgroundObserver)
     }
 
     private fun initView() {
@@ -96,11 +127,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
                 layoutRenderSmall?.removeAllViews()
             }
             layoutRenderSmall?.addView(videoViewSmall)
-            EngineManager.instance.startRemoteView(
-                viewModel.remoteUser.id,
-                videoViewSmall?.getVideoView(),
-                null
-            )
+            EngineManager.instance.startRemoteView(viewModel.remoteUser.id, videoViewSmall?.getVideoView(), null)
         }
     }
 
@@ -113,11 +140,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
         layoutRenderBig?.addView(videoViewBig)
         if (!viewModel.isCameraOpen.get() && TUICallDefine.Status.Accept != viewModel.selfUser.callStatus.get()) {
             viewModel.selfUser.videoAvailable.set(true)
-            EngineManager.instance.openCamera(
-                viewModel.isFrontCamera.get(),
-                videoViewBig?.getVideoView(),
-                null
-            )
+            EngineManager.instance.openCamera(viewModel.isFrontCamera.get(), videoViewBig?.getVideoView(), null)
         }
     }
 

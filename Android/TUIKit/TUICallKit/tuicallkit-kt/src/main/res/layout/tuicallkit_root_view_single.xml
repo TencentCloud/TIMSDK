@@ -37,23 +37,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/tv_single_call_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/rl_single_function"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_caller_accept_hint"
+    <FrameLayout
+        android:id="@+id/fl_call_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="@string/tuicallkit_accept_single"
-        android:textSize="14sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/rl_single_function"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

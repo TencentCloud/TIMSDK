@@ -95,4 +95,17 @@ public abstract class TUICallKit {
      */
     public void enableFloatWindow(boolean enable) {
     }
+
+    /**
+     * Enable Virtual Background
+     */
+    public void enableVirtualBackground(boolean enable) {
+    }
+
+    /**
+     * Enable callee show banner view when received an new invitation
+     * default: false
+     */
+    public void enableIncomingBanner(boolean enable) {
+    }
 }

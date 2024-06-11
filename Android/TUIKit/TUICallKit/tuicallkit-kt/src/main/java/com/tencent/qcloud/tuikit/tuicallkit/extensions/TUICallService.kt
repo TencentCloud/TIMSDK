@@ -1,14 +1,13 @@
 package com.tencent.qcloud.tuikit.tuicallkit.extensions
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.utils.DeviceUtils
 
 /**
@@ -44,17 +43,7 @@ class TUICallService : Service() {
     }
 
     private fun createForegroundNotification(): Notification {
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val notificationChannelId = "notification_channel_id_01"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelName = "Call Foreground Service Notification"
-            val notificationChannel = NotificationChannel(
-                notificationChannelId, channelName, NotificationManager.IMPORTANCE_LOW
-            )
-            notificationChannel.description = "Channel description"
-            notificationManager?.createNotificationChannel(notificationChannel)
-        }
-        val builder = NotificationCompat.Builder(this, notificationChannelId)
+        val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
         return builder.build()
     }
 

@@ -31,6 +31,8 @@
             android:id="@+id/tv_float_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/tuicallkit_color_white"
             android:textSize="18sp"
             tools:hint="inviter" />
@@ -40,6 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/tuicallkit_color_white"
             android:textSize="12sp"
             tools:hint="description" />

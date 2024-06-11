@@ -15,7 +15,6 @@ import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.single.
 class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
     private var imageAvatar: ImageView? = null
     private var textUserName: TextView? = null
-    private var textInviteHint: TextView? = null
     private var mViewModel: VideoCallUserInfoViewModel = VideoCallUserInfoViewModel()
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
@@ -59,10 +58,8 @@ class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
         LayoutInflater.from(context).inflate(R.layout.tuicallkit_user_info_video, this)
         imageAvatar = findViewById(R.id.iv_user_avatar)
         textUserName = findViewById(R.id.tv_user_name)
-        textInviteHint = findViewById(R.id.tv_video_tag)
         ImageLoader.loadImage(context, imageAvatar, mViewModel.avatar.get(), R.drawable.tuicallkit_ic_avatar)
         textUserName!!.text = mViewModel.nickname.get()
-        textInviteHint!!.text = mViewModel.callTag
 
         if (mViewModel.callStatus.get() == TUICallDefine.Status.Accept
             || mViewModel.mediaType.get() == TUICallDefine.MediaType.Audio

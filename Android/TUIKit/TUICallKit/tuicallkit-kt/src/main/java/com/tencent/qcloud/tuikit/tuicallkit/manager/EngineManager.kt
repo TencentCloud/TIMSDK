@@ -26,6 +26,8 @@ import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest.requestPermissions
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.Collections
 
 class EngineManager private constructor(context: Context) {
@@ -39,6 +41,8 @@ class EngineManager private constructor(context: Context) {
     companion object {
         const val TAG = "EngineManager"
         var instance: EngineManager = EngineManager(TUIConfig.getAppContext())
+        private const val BLUR_LEVEL_HIGH = 3
+        private const val BLUR_LEVEL_CLOSE = 0
     }
 
     fun call(
@@ -346,6 +350,21 @@ class EngineManager private constructor(context: Context) {
         SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLKIT).put(CallingBellFeature.PROFILE_MUTE_MODE, enable)
     }
 
+    fun setBlurBackground(enable: Boolean) {
+        val level = if (enable) BLUR_LEVEL_HIGH else BLUR_LEVEL_CLOSE
+        TUICallState.instance.enableBlurBackground.set(enable)
+
+        TUICallEngine.createInstance(context).setBlurBackground(level, object : TUICommonDefine.Callback {
+            override fun onSuccess() {
+            }
+
+            override fun onError(errCode: Int, errMsg: String?) {
+                TUILog.e(TAG, "setBlurBackground failed, errCode: $errCode, errMsg: $errMsg")
+                TUICallState.instance.enableBlurBackground.set(false)
+            }
+        })
+    }
+
     fun inviteUser(userIdList: List<String?>?) {
         val params = CallParams()
         params.offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(context)
@@ -403,5 +422,28 @@ class EngineManager private constructor(context: Context) {
         }
 
         return ErrorMessageConverter.convertIMError(errorCode, msg)
+    }
+
+    fun reportOnlineLog(data: Map<String, Any>) {
+        try {
+            val map: JSONObject = JSONObject(data)
+            map.put("version", TUICallDefine.VERSION)
+            map.put("platform", "android")
+            map.put("framework", "native")
+            map.put("sdk_app_id", TUILogin.getSdkAppId())
+
+            val params = JSONObject()
+            params.put("level", 1)
+            params.put("msg", map.toString())
+            params.put("more_msg", "TUICallKit")
+
+            val jsonObject = JSONObject()
+            jsonObject.put("api", "reportOnlineLog")
+            jsonObject.put("params", params)
+
+            TUICallEngine.createInstance(context).trtcCloudInstance.callExperimentalAPI(jsonObject.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
     }
 }

@@ -11,8 +11,10 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
         android:scaleType="centerCrop"
         android:src="@drawable/tuicallkit_ic_avatar" />
 
@@ -27,6 +29,8 @@
             android:id="@+id/tv_incoming_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
             android:textSize="18sp"
             tools:hint="inviter" />
@@ -51,6 +55,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.Compat.Notification.Line2"
                 android:textSize="12sp"
                 tools:hint="description" />
@@ -63,7 +69,7 @@
         android:layout_height="36dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="12dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/tuicallkit_bg_hangup" />
 
     <ImageView
@@ -71,6 +77,6 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/tuicallkit_bg_dialing" />
 </LinearLayout>
