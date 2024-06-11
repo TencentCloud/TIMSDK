@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIVoiceToTextPlugin'
-  spec.version      = '7.9.5666'
+  spec.version      = '8.0.5895'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,13 +16,13 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.9.5666/ios/TUIVoiceToTextPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.0.5895/ios/TUIVoiceToTextPlugin.zip'}
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIVoiceToTextPlugin/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon', '~> 7.9.5666'
-    commonModel.dependency 'TUIChat', '~> 7.9.5666'
+    commonModel.dependency 'TIMCommon', '~> 8.0.5895'
+    commonModel.dependency 'TUIChat', '~> 8.0.5895'
   end
 
   spec.subspec 'UI' do |commonUI|
@@ -43,13 +43,6 @@ Pod::Spec.new do |spec|
 
   spec.resource_bundle = {
     "#{spec.module_name}_Privacy" => '**/TUIVoiceToTextPlugin/Resources/PrivacyInfo.xcprivacy'
-  }
-
-  spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-  }
-  spec.user_target_xcconfig = { 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
   }
 end
 

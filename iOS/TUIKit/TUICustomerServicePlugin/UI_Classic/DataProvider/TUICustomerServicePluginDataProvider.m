@@ -24,7 +24,7 @@
 }
 
 + (void)sendCustomMessage:(NSData *)data {
-    V2TIMMessage *message = [[V2TIMManager sharedInstance] createCustomMessage:data];
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createCustomMessage:[self supplyCustomerServiceID:data]];
     if (message == nil) {
         return;
     }
@@ -35,7 +35,7 @@
 }
 
 + (void)sendCustomMessageWithoutUpdateUI:(NSData *)data {
-    V2TIMMessage *message = [[V2TIMManager sharedInstance] createCustomMessage:data];
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createCustomMessage:[self supplyCustomerServiceID:data]];
     if (message == nil) {
         return;
     }
@@ -43,6 +43,16 @@
     [TUICore callService:TUICore_TUIChatService
                   method:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI
                    param:param];
+}
+
++ (NSData *)supplyCustomerServiceID:(NSData *)data {
+    NSDictionary *dic = [TUITool jsonData2Dictionary:data];
+    if (!dic || 0 == dic.allKeys.count || [dic objectForKey:BussinessID_CustomerService]) {
+        return data;
+    }
+    NSMutableDictionary *param = [NSMutableDictionary dictionaryWithDictionary:dic];
+    [param setObject:@(0) forKey:BussinessID_CustomerService];
+    return [TUITool dictionary2JsonData:param];
 }
 
 @end

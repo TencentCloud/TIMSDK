@@ -34,7 +34,7 @@ static NSString *gDefaultCustomerServiceAccount = @"@default_customer_service_ac
 }
 
 - (BOOL)isOnlineShopping:(NSString *)userID {
-    return [userID containsString:@"#online_shopping_mall"];
+    return [userID tui_containsString:@"#online_shopping_mall"];
 }
 
 + (BOOL)isCustomerServiceSupported {

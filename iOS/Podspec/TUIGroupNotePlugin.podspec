@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIGroupNotePlugin'
-  spec.version      = '7.9.5666'
+  spec.version      = '8.0.5895'
   spec.platform     = :ios 
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -12,20 +12,13 @@ Pod::Spec.new do |spec|
   spec.documentation_url = 'https://cloud.tencent.com/document/product/269/9147'
   spec.authors      = 'tencent video cloud'
   spec.summary      = 'TUIGroupNotePlugin'
-  
   spec.requires_arc = true
-
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/7.9.5666/ios/TUIGroupNotePlugin_7.9.5666.framework.zip'}
-  spec.preserve_paths = 'TUIGroupNotePlugin.framework'
-  spec.vendored_frameworks = 'TUIGroupNotePlugin.framework'
-  spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
-  spec.user_target_xcconfig = { 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  } 
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/8.0.5895/ios/TUIGroupNotePlugin_8.0.5895.xcframework.zip'}
+  
+  spec.vendored_frameworks = 'TUIGroupNotePlugin.xcframework'
+  
   spec.resource_bundle = {
-    "#{spec.module_name}_Privacy" => '**/TUIGroupNotePlugin.framework/PrivacyInfo.xcprivacy'
+    "#{spec.module_name}_Privacy" => '**/TUIGroupNotePlugin.xcframework/ios-arm64/TUIGroupNotePlugin.framework/PrivacyInfo.xcprivacy'
   }
 end
 

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChatBotPlugin'
-  spec.version      = '7.9.5666'
+  spec.version      = '8.0.5895'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,16 +16,16 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/7.9.5666/ios/TUIChatBotPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.0.5895/ios/TUIChatBotPlugin.zip'}
 
   spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIChatBotPlugin/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon', '~> 7.9.5666'
-    commonModel.dependency 'TUIChat', '~> 7.9.5666'
-    commonModel.dependency 'TUIContact','~> 7.9.5666'
+    commonModel.dependency 'TIMCommon', '~> 8.0.5895'
+    commonModel.dependency 'TUIChat/UI_Classic', '~> 8.0.5895'
+    commonModel.dependency 'TUIContact/UI_Classic','~> 8.0.5895'
   end
 
   spec.subspec 'UI_Classic' do |commonUI|
@@ -56,12 +56,6 @@ Pod::Spec.new do |spec|
     all.dependency "TUIChatBotPlugin/UI_Classic"
   end
 
-  spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-  }
-  spec.user_target_xcconfig = { 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
-  }
 end
 
 # pod trunk push TUIChatBotPlugin.podspec --use-libraries --allow-warnings

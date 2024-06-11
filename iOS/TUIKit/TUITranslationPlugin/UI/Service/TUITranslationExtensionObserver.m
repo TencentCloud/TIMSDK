@@ -133,12 +133,14 @@ static id gShareInstance = nil;
         }
 
         TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
-        info.weight = 2000;
         info.text = TIMCommonLocalizableString(TUIKitTranslate);
         if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID]) {
             info.icon = TUIChatBundleThemeImage(@"chat_icon_translate_img", @"icon_translate");
+            info.weight = 2000;
         } else if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_MinimalistExtensionID]) {
             info.icon = [UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_translate")];
+            info.weight = 800;
+
         }
         info.onClicked = ^(NSDictionary *_Nonnull action) {
             TUIMessageCellData *cellData = cell.messageData;
