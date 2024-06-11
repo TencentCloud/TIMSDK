@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_iOS_XCFramework'
   spec.version      = '8.0.5895'
-  spec.platform     = :ios 
+  spec.platform     = :ios
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE
@@ -21,10 +21,4 @@ Pod::Spec.new do |spec|
   spec.resource_bundle = {
     "#{spec.module_name}_Privacy" => '**/ImSDK_Plus.xcframework/ios-arm64_armv7/ImSDK_Plus.framework/PrivacyInfo.xcprivacy'
   }
-  spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
-  spec.user_target_xcconfig = { 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' 
-  } 
 end
