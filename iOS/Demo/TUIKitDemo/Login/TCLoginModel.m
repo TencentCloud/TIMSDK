@@ -397,6 +397,7 @@ static TCLoginModel *_sharedInstance = nil;
 }
 
 - (void)loadLastLoginInfo {
+    self.SDKAppID = [[[NSUserDefaults standardUserDefaults] objectForKey:kKeySavedLoginInfoAppID] unsignedIntValue];
     self.userID = [[NSUserDefaults standardUserDefaults] objectForKey:kKeySavedLoginInfoUserID];
     self.token = [[NSUserDefaults standardUserDefaults] objectForKey:kKeySavedLoginInfoToken];
     self.userSig = [[NSUserDefaults standardUserDefaults] objectForKey:kKeySavedLoginInfoUserSig];
