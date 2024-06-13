@@ -55,7 +55,11 @@
     // set data
     [super fillWithData:data];
     self.faceData = data;
-    _face.image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
+    UIImage *image = [[TUIImageCache sharedInstance] getFaceFromCache:data.path];
+    if (!image) {
+        image = [UIImage imageWithContentsOfFile:TUIChatFaceImagePath(@"ic_unknown_image")];
+    }
+    _face.image = image;
   
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
@@ -72,6 +76,9 @@
     TUIFaceMessageCellData *faceCellData = (TUIFaceMessageCellData *)data;
     
     UIImage *image = [[TUIImageCache sharedInstance] getFaceFromCache:faceCellData.path];
+    if (!image) {
+        image = [UIImage imageWithContentsOfFile:TUIChatFaceImagePath(@"ic_unknown_image")];
+    }
     CGFloat imageHeight = image.size.height;
     CGFloat imageWidth = image.size.width;
     if (imageHeight > TFaceMessageCell_Image_Height_Max) {

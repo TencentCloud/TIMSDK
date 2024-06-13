@@ -212,7 +212,7 @@
     
     UIView *lastView =  self.contentRowView1;
     int count = self.relayData.abstractSendDetailList.count;
-    if (count == 3) {
+    if (count >= 3) {
         lastView = self.contentRowView3;
     }
     else if (count == 2){
@@ -257,7 +257,7 @@
             self.contentRowView2.hidden = NO;
             self.contentRowView3.hidden = YES;
             break;
-        case 3:
+        default:
             
             [self.contentRowView1 fillWithData:self.relayData.abstractSendDetailList[0][@"sender"] detailContent:self.relayData.abstractSendDetailList[0][@"detail"]];
             [self.contentRowView2 fillWithData:self.relayData.abstractSendDetailList[1][@"sender"] detailContent:self.relayData.abstractSendDetailList[1][@"detail"]];
@@ -265,8 +265,6 @@
             self.contentRowView1.hidden = NO;
             self.contentRowView2.hidden = NO;
             self.contentRowView3.hidden = NO;
-            break;
-        default:
             break;
     }
     // tell constraints they need updating
