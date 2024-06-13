@@ -230,37 +230,7 @@ void uncaughtExceptionHandler(NSException*exception) {
 }
 
 - (void)tryAutoLogin {
-    [[TCLoginModel sharedInstance] getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
-        [self autoLoginIfNeeded];
-    } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[TCLoginModel sharedInstance] getAccessAddressWithSucceedBlock:^(NSDictionary *data) {
-                [self autoLoginIfNeeded];
-            } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
-                // Automatic login failed, set to network error, wait for the network to reconnect and login again
-                self.lastLoginResultCode = ERR_SDK_NET_CONN_TIMEOUT;
-                NSLog(@"%@", [NSString stringWithFormat:@"get access address failed, errorCode:%ld errorMsg:%@", (long)errorCode, errorMsg]);
-            }];
-        });
-    }];
-}
-
-- (void)autoLoginIfNeeded {
-    @weakify(self)
-    [[TCLoginModel sharedInstance] autoLoginWithSucceedBlock:^(NSDictionary *data) {
-        @strongify(self)
-        NSString *userSig = data[@"sdkUserSig"];
-        NSString *userID = data[@"userId"];
-        if (userID.length != 0 && userSig.length != 0) {
-            [self loginSDK:userID userSig:userSig succ:nil fail:nil];
-        } else {
-            NSLog(@"auto login returned userid or userSig is invalid");
-        }
-    } failBlock:^(NSInteger errorCode, NSString *errorMsg) {
-        // Automatic login failed, set to network error, wait for the network to reconnect and login again
-        self.lastLoginResultCode = ERR_SDK_NET_CONN_TIMEOUT;
-        NSLog(@"%@", [NSString stringWithFormat:@"auto login failed, errorCode:%ld errorMsg:%@", (long)errorCode, errorMsg]);
-    }];
+    [self loginSDK:[TCLoginModel sharedInstance].userID userSig:[TCLoginModel sharedInstance].userSig succ:nil fail:nil];
 }
 
 - (void)onLogoutSucc {
