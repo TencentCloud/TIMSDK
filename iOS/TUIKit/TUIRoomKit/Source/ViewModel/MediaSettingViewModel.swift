@@ -2,21 +2,22 @@
 //  MediaSettingViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/16.
+//  Created by janejntang on 2023/1/16.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
 import Foundation
-import TUIRoomEngine
-#if TXLiteAVSDK_TRTC
-import TXLiteAVSDK_TRTC
-#elseif TXLiteAVSDK_Professional
-import TXLiteAVSDK_Professional
+import RTCRoomEngine
+#if canImport(TXLiteAVSDK_TRTC)
+    import TXLiteAVSDK_TRTC
+#elseif canImport(TXLiteAVSDK_Professional)
+    import TXLiteAVSDK_Professional
 #endif
 
 protocol MediaSettingViewEventResponder: AnyObject {
     func showResolutionAlert()
     func showFrameRateAlert()
+    func showQualityView()
     func updateStackView(item: ListCellItemData)
     func makeToast(text: String)
 }
@@ -24,9 +25,13 @@ protocol MediaSettingViewEventResponder: AnyObject {
 class MediaSettingViewModel {
     private(set) var videoItems: [ListCellItemData] = []
     private(set) var audioItems: [ListCellItemData] = []
+    private(set) var otherItems: [ListCellItemData] = []
     weak var viewResponder: MediaSettingViewEventResponder? = nil
     var engineManager: EngineManager {
         EngineManager.createInstance()
+    }
+    var store: RoomStore {
+        engineManager.store
     }
     var videoSetting: VideoModel {
         engineManager.store.videoSetting
@@ -37,12 +42,13 @@ class MediaSettingViewModel {
     let resolutionNameItems: [String] = [.smoothResolutionText, .standardResolutionText, .highResolutionText, .superResolutionText]
     private let resolutionItems: [TUIVideoQuality] = [.quality360P, .quality540P, .quality720P, .quality1080P]
     private let bitrateArray = [550, 850, 1_200, 2_000]
-    let topItems: [String] = [.videoText, .audioText]
+    let topItems: [String] = [.videoText, .audioText, .otherText]
     let frameRateArray = ["15", "20"]
     
     init() {
         createVideoItem()
         createAudioItem()
+        createOtherItem()
     }
     
     private func createVideoItem() {
@@ -101,7 +107,6 @@ class MediaSettingViewModel {
         captureVolumeItem.maximumValue = 100
         captureVolumeItem.sliderStep = 1
         captureVolumeItem.sliderDefault = Float(audioSetting.captureVolume)
-        captureVolumeItem.type = .captureVolumeType
         captureVolumeItem.hasDownLineView = true
         captureVolumeItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISlider else { return }
@@ -117,7 +122,6 @@ class MediaSettingViewModel {
         playingVolumeItem.maximumValue = 100
         playingVolumeItem.sliderStep = 1
         playingVolumeItem.sliderDefault = Float(audioSetting.playVolume)
-        playingVolumeItem.type = .playingVolumeType
         playingVolumeItem.hasDownLineView = true
         playingVolumeItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISlider else { return }
@@ -129,7 +133,6 @@ class MediaSettingViewModel {
         volumePromptItem.titleText = .volumePromptText
         volumePromptItem.hasSwitch = true
         volumePromptItem.isSwitchOn = audioSetting.volumePrompt
-        volumePromptItem.type = .volumePromptType
         volumePromptItem.action = { [weak self] sender in
             guard let self = self, let view = sender as? UISwitch else { return }
             self.volumePromptAction(sender: view)
@@ -141,20 +144,43 @@ class MediaSettingViewModel {
         viewResponder?.showResolutionAlert()
     }
     
-    private func updateVideoBitrateEncoderParam() {
-        guard let bitrate = getBitrate(videoQuality: videoSetting.videoQuality) else { return }
-        videoSetting.videoBitrate = bitrate
-        let param = TRTCVideoEncParam()
-        param.videoBitrate = Int32(videoSetting.videoBitrate)
-        param.enableAdjustRes = true
-        engineManager.setVideoEncoderParam(param)
+    private func createOtherItem() {
+        let qualityItem = ListCellItemData()
+        qualityItem.titleText = .qualityInspectionText
+        qualityItem.hasOverAllAction = true
+        qualityItem.hasRightButton = true
+        let buttonData = ButtonItemData()
+        buttonData.orientation = .right
+        buttonData.normalIcon = "room_right_arrow1"
+        buttonData.resourceBundle = tuiRoomKitBundle()
+        buttonData.titleFont = UIFont.systemFont(ofSize: 16, weight: .regular)
+        buttonData.titleColor = UIColor(0xD1D9EC)
+        buttonData.size = CGSize(width: 80, height: 30)
+        buttonData.isEnabled = false
+        qualityItem.buttonData = buttonData
+        qualityItem.action = { [weak self] sender in
+            guard let self = self else { return }
+            self.showQualityAction()
+        }
+        otherItems.append(qualityItem)
+        
+        let floatChatItem = ListCellItemData()
+        floatChatItem.titleText = .floatChatText
+        floatChatItem.hasSwitch = true
+        floatChatItem.isSwitchOn = store.shouldShowFloatChatView
+        floatChatItem.action = { [weak self] sender in
+            guard let self = self, let view = sender as? UISwitch else { return }
+            self.floatChatShowAction(shouldShow: view.isOn)
+        }
+        otherItems.append(floatChatItem)
     }
     
-    private func updateVideoFpsEncoderParam() {
-        let param = TRTCVideoEncParam()
-        param.videoFps = Int32(videoSetting.videoFps)
-        param.enableAdjustRes = true
-        engineManager.setVideoEncoderParam(param)
+    private func showQualityAction() {
+        viewResponder?.showQualityView()
+    }
+    
+    private func floatChatShowAction(shouldShow: Bool) {
+        store.updateFloatChatShowState(shouldShow: shouldShow)
     }
     
     private func frameRateAction() {
@@ -177,11 +203,9 @@ class MediaSettingViewModel {
         guard let videoItem = videoItems.first(where: { $0.type == .resolutionType }) else { return }
         guard let quality = resolutionItems[safe: index] else { return }
         guard let resolutionName = getResolutionName(videoQuality: quality) else { return }
-        videoSetting.videoQuality = quality
         videoItem.buttonData?.normalTitle = resolutionName
         viewResponder?.updateStackView(item: videoItem)
-        engineManager.updateVideoQuality(quality: videoSetting.videoQuality)
-        updateVideoBitrateEncoderParam()
+        engineManager.setVideoEncoder(videoQuality: quality, bitrate: getBitrate(videoQuality: quality))
     }
     
     func changeFrameRateAction(index: Int) {
@@ -189,8 +213,7 @@ class MediaSettingViewModel {
         guard let frameRate = frameRateArray[safe: index] else { return }
         videoItem.buttonData?.normalTitle = frameRate
         viewResponder?.updateStackView(item: videoItem)
-        videoSetting.videoFps = Int(frameRate) ?? videoSetting.videoFps
-        updateVideoFpsEncoderParam()
+        engineManager.setVideoEncoder(fps: Int(frameRate))
     }
     
     func getCurrentResolutionIndex() -> Int {
@@ -223,48 +246,57 @@ class MediaSettingViewModel {
 
 private extension String {
     static var videoText: String {
-        localized("TUIRoom.video.settings")
+        localized("Video settings")
     }
     static var audioText: String {
-        localized("TUIRoom.audio.settings")
+        localized("Audio settings")
+    }
+    static var otherText: String {
+        localized("Other settings")
     }
     static var versionLowToastText: String {
-        localized("TUIRoom.version.too.low")
+        localized("Your system version is below 12.0. Please update.")
     }
     static var resolutionText: String {
-        localized("TUIRoom.resolution")
+        localized("Resolution")
     }
     static var frameRateText: String {
-        localized("TUIRoom.frame.rate")
+        localized("Frame Rate")
     }
     static var bitrateText: String {
-        localized("TUIRoom.bitrate")
+        localized("Bitrate")
     }
     static var localMirrorText: String {
-        localized("TUIRoom.local.mirror")
+        localized("Local Mirror")
     }
     static var captureVolumeText: String {
-        localized("TUIRoom.capture.volume")
+        localized("Capture Volume")
     }
     static var playVolumeText: String {
-        localized("TUIRoom.play.volume")
+        localized("Playback Volume")
     }
     static var volumePromptText: String {
-        localized("TUIRoom.volume.prompt")
+        localized("Volume Reminder")
     }
     static var audioRecordingText: String {
-        localized("TUIRoom.audio.recording")
+        localized("Audio Recording")
     }
     static var smoothResolutionText: String {
-        localized("TUIRoom.smooth.resolution")
+        localized("Smooth resolution")
     }
     static var standardResolutionText: String {
-        localized("TUIRoom.standard.resolution")
+        localized("Standard resolution")
     }
     static var highResolutionText: String {
-        localized("TUIRoom.high.resolution")
+        localized("High resolution")
     }
     static var superResolutionText: String {
-        localized("TUIRoom.super.resolution")
+        localized("Super resolution")
+    }
+    static var qualityInspectionText: String {
+        localized("Quality Inspection")
+    }
+    static var floatChatText: String {
+        localized("Open Floating Chat")
     }
 }

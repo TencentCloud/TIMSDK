@@ -45,9 +45,9 @@ private var height: CGFloat {
 
 extension CGFloat {
     
-    /// 375设计图中的尺寸
+    /// Dimensions in 375 design drawings
     ///
-    /// - Returns: 最终结果缩放结果
+    /// - Returns: Final result scaling result
     public func scale375(exceptPad: Bool = true) -> CGFloat {
         if UIDevice.current.userInterfaceIdiom == .pad {
             return exceptPad ? self * 1.5 : self * (width / 375.00)
@@ -57,24 +57,20 @@ extension CGFloat {
     
     public func scale375Height(exceptPad: Bool = true) -> CGFloat {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            // TODO 此处的pad高度系数需要调研
             return exceptPad ? self * 1.5 : self * (height / 812.00)
         }
         return self * (height / 812.00)
     }
     
-    /// iPad比例适配
+    /// iPad proportion adaptation
     ///
-    /// - Returns: 最终结果
+    /// - Returns: Final Results
     public func fitPad() -> CGFloat {
         return UIDevice.current.userInterfaceIdiom == .pad ? self * 1.5 : self
     }
 }
 
 extension Int {
-    /// 375设计图中的尺寸
-    ///
-    /// - Returns: 最终结果
     public func scale375(exceptPad: Bool = true) -> CGFloat {
         if UIDevice.current.userInterfaceIdiom == .pad {
             return exceptPad ? CGFloat(self) * 1.5 : CGFloat(self) * (width / 375.00)
@@ -84,15 +80,11 @@ extension Int {
     
     public func scale375Height(exceptPad: Bool = true) -> CGFloat {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            // TODO 此处的pad高度系数需要调研
             return exceptPad ? CGFloat(self) * 1.5 : CGFloat(self) * (height / 812.00)
         }
         return CGFloat(self) * (height / 812.00)
     }
     
-    /// iPad比例适配
-    ///
-    /// - Returns: 最终结果
     public func fitPad() -> CGFloat {
         return UIDevice.current.userInterfaceIdiom == .pad ? CGFloat(self) * 1.5 : CGFloat(self)
     }

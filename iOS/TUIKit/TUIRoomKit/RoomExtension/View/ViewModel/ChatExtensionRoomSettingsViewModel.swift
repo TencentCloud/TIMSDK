@@ -2,7 +2,7 @@
 //  ChatExtensionRoomSettingsViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/6/26.
+//  Created by janejntang on 2023/6/26.
 //
 
 import Foundation
@@ -39,9 +39,9 @@ class ChatExtensionRoomSettingsViewModel {
 }
 private extension String {
     static var cameraSetText: String {
-        localized("TUIRoom.camera.set")
+        localized("Join the meeting and start the camera")
     }
     static var micSeatText: String {
-        localized("TUIRoom.mic.set")
+        localized("Join the conference and turn on the mic")
     }
 }

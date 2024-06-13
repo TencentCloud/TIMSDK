@@ -2,7 +2,7 @@
 //  ChatExtensionRoomSettingsViewController.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/6/26.
+//  Created by janejntang on 2023/6/26.
 //
 
 import Foundation
@@ -37,6 +37,6 @@ class ChatExtensionRoomSettingsViewController: UIViewController {
 }
 private extension String {
     static var roomDeviceSetText: String {
-        localized("TUIRoom.device.set")
+        localized("Meeting Settings")
     }
 }

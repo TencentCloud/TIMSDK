@@ -2,7 +2,7 @@
 //  ChatExtensionRoomSettingsItemView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/6/27.
+//  Created by janejntang on 2023/6/27.
 //
 
 import Foundation

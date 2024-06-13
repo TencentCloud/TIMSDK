@@ -2,7 +2,7 @@
 //  FetchRoomId.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2024/1/29.
+//  Created by janejntang on 2024/1/29.
 //
 
 import Foundation
@@ -18,7 +18,6 @@ class FetchRoomId {
         }
     }
     
-    //获取随机数roomId，numberOfDigits为位数
     class func getRandomRoomId(numberOfDigits: Int) -> String {
         var numberOfDigit = numberOfDigits > 0 ? numberOfDigits : 1
         numberOfDigit = numberOfDigit < 10 ? numberOfDigit : 9

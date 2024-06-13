@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 
 class ExitRoomView: UIView {
     private let viewModel: ExitRoomViewModel
@@ -210,15 +210,15 @@ extension ExitRoomView: ExitRoomViewModelResponder {
 
 private extension String {
     static var leaveRoomTipText: String {
-        localized("TUIRoom.leave.room.tip" )
+        localized("Are you sure you want to leave the conference" )
     }
     static var appointOwnerText: String {
-        localized("TUIRoom.appoint.owner" )
+        localized("If you do not want to end the conference, please appoint a new moderator before leaving the conference." )
     }
     static var leaveRoomText: String {
-        localized("TUIRoom.leave.room")
+        localized("Leave Conference")
     }
     static var exitRoomText: String {
-        localized("TUIRoom.dismiss.room")
+        localized("End Conference")
     }
 }

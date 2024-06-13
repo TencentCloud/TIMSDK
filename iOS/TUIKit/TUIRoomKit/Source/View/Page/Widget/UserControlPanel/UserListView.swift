@@ -2,7 +2,7 @@
 //  UserListView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/4.
+//  Created by janejntang on 2023/1/4.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -10,9 +10,8 @@ import Foundation
 
 class UserListView: UIView {
     let viewModel: UserListViewModel
-    private var isSearching: Bool = false
     
-    let attendeeCountLabel: UILabel = {
+    let memberLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(0xD5E0F2)
         label.font = UIFont(name: "PingFangSC-Regular", size: 16)
@@ -23,9 +22,18 @@ class UserListView: UIView {
         let searchBar = UISearchBar()
         searchBar.placeholder = .searchMemberText
         searchBar.setBackgroundImage(UIColor(0x17181F).trans2Image(), for: .top, barMetrics: .default)
-        searchBar.searchTextField.textColor = UIColor(0xB2BBD1)
-        searchBar.searchTextField.tintColor = UIColor(0xB2BBD1).withAlphaComponent(0.3)
-        searchBar.searchTextField.layer.cornerRadius = 6
+        if #available(iOS 13, *) {
+            searchBar.searchTextField.textColor = UIColor(0xB2BBD1)
+            searchBar.searchTextField.tintColor = UIColor(0xB2BBD1).withAlphaComponent(0.3)
+            searchBar.searchTextField.layer.cornerRadius = 6
+        } else {
+            if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+                textField.textColor = UIColor(0xB2BBD1)
+                textField.tintColor = UIColor(0xB2BBD1).withAlphaComponent(0.3)
+                textField.layer.cornerRadius = 6
+            }
+        }
+
         return searchBar
     }()
     
@@ -47,6 +55,35 @@ class UserListView: UIView {
         button.layer.borderColor = UIColor(0x4791FF).cgColor
         button.layer.borderWidth = 1.scale375()
         button.layer.cornerRadius = 6
+        return button
+    }()
+    
+    let listStateView: UIView = {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = UIColor(0x4F586B).withAlphaComponent(0.3)
+        view.layer.cornerRadius = 6
+        return view
+    }()
+    
+    let onStageButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitleColor(UIColor(0xD5E0F2), for: .normal)
+        button.setBackgroundImage(UIColor(0xD5E0F2).withAlphaComponent(0.3).trans2Image(), for: .selected)
+        button.setBackgroundImage(UIColor.clear.trans2Image(), for: .normal)
+        button.layer.cornerRadius = 6
+        button.clipsToBounds = true
+        button.isSelected = true
+        return button
+    }()
+    
+    let offStageButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitleColor(UIColor(0xD5E0F2), for: .normal)
+        button.setBackgroundImage(UIColor(0xD5E0F2).withAlphaComponent(0.3).trans2Image(), for: .selected)
+        button.setBackgroundImage(UIColor.clear.trans2Image(), for: .normal)
+        button.layer.cornerRadius = 6
+        button.clipsToBounds = true
+        button.isSelected = false
         return button
     }()
     
@@ -94,7 +131,7 @@ class UserListView: UIView {
         return button
     }()
     
-    let bottomView: UIView = {
+    let bottomControlView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(0x17181F)
         return view
@@ -108,6 +145,14 @@ class UserListView: UIView {
         tableView.backgroundColor = UIColor(0x17181F)
         tableView.register(UserListCell.self, forCellReuseIdentifier: "UserListCell")
         return tableView
+    }()
+    
+    lazy var raiseHandNotificationView: RaiseHandApplicationNotificationView = {
+        let viewModel = RaiseHandApplicationNotificationViewModel()
+        viewModel.delayDisappearanceTime = 0
+        let applicationNotificationView = RaiseHandApplicationNotificationView(viewModel: viewModel)
+        applicationNotificationView.delegate = self.viewModel
+        return applicationNotificationView
     }()
     
     init(viewModel: UserListViewModel) {
@@ -131,46 +176,75 @@ class UserListView: UIView {
     }
     
     func constructViewHierarchy() {
-        addSubview(attendeeCountLabel)
+        addSubview(memberLabel)
         addSubview(searchBar)
         addSubview(inviteButton)
+        addSubview(listStateView)
+        listStateView.addSubview(onStageButton)
+        listStateView.addSubview(offStageButton)
+        addSubview(raiseHandNotificationView)
         addSubview(userListTableView)
-        addSubview(bottomView)
-        bottomView.addSubview(muteAllAudioButton)
-        bottomView.addSubview(muteAllVideoButton)
-        bottomView.addSubview(moreFunctionButton)
+        addSubview(bottomControlView)
+        bottomControlView.addSubview(muteAllAudioButton)
+        bottomControlView.addSubview(muteAllVideoButton)
+        bottomControlView.addSubview(moreFunctionButton)
         addSubview(searchControl)
     }
     
     func activateConstraints() {
-        attendeeCountLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(35.scale375())
+        memberLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10.scale375Height())
             make.leading.equalToSuperview().offset(16.scale375())
             make.trailing.equalToSuperview().offset(-16.scale375())
-            make.height.equalTo(24.scale375())
+            make.height.equalTo(24.scale375Height())
         }
         searchBar.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(77.scale375())
+            make.top.equalTo(memberLabel.snp.bottom).offset(18.scale375Height())
             make.leading.equalToSuperview().offset(16.scale375())
             make.width.equalTo(263.scale375())
-            make.height.equalTo(36.scale375())
+            make.height.equalTo(36.scale375Height())
+        }
+        if #available(iOS 13.0, *) {
+            searchBar.searchTextField.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        } else {
+            if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
+                searchField.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+            }
         }
         inviteButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(77.scale375())
-            make.leading.equalToSuperview().offset(291.scale375())
+            make.top.height.equalTo(searchBar)
+            make.leading.equalTo(searchBar.snp.trailing).offset(12.scale375())
             make.trailing.equalToSuperview().offset(-16.scale375())
-            make.height.equalTo(36.scale375())
         }
-        bottomView.snp.makeConstraints { make in
+        listStateView.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom).offset(15.scale375Height())
+            make.leading.equalTo(searchBar)
+            make.trailing.equalTo(inviteButton)
+            make.height.equalTo(36.scale375Height())
+        }
+        onStageButton.snp.makeConstraints { make in
+            make.leading.top.height.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.5)
+        }
+        offStageButton.snp.makeConstraints { make in
+            make.trailing.top.height.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.5)
+        }
+        bottomControlView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(84.scale375Height())
         }
-        userListTableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16.scale375())
-            make.trailing.equalToSuperview().offset(-16.scale375())
-            make.top.equalToSuperview().offset(127.scale375())
-            make.bottom.equalTo(bottomView.snp.top)
+        raiseHandNotificationView.snp.makeConstraints { make in
+            make.top.equalTo(listStateView.snp.bottom).offset(10.scale375Height())
+            make.leading.equalToSuperview().offset(8.scale375())
+            make.trailing.equalToSuperview().offset(-8.scale375())
+            make.height.equalTo(40.scale375Height())
         }
+        setupUserListTableView()
         muteAllAudioButton.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10.scale375Height())
             make.leading.equalToSuperview().offset(16.scale375())
@@ -194,10 +268,20 @@ class UserListView: UIView {
         }
     }
     
+    private func setupUserListTableView() {
+        guard userListTableView.superview != nil else { return }
+        userListTableView.snp.remakeConstraints { make in
+            let aboveView = viewModel.isShownNotificationView ? raiseHandNotificationView : viewModel.isShownListStateView ? listStateView : searchBar
+            make.top.equalTo(aboveView.snp.bottom).offset(15.scale375Height())
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.bottom.equalTo(bottomControlView.snp.top)
+        }
+    }
+    
     func bindInteraction() {
         viewModel.viewResponder = self
         setupViewState()
-        attendeeCountLabel.text = .memberText + "（\(viewModel.attendeeList.count)）"
         searchBar.delegate = self
         inviteButton.addTarget(self, action: #selector(inviteMemberAction), for: .touchUpInside)
         muteAllAudioButton.addTarget(self, action: #selector(muteAllAudioAction), for: .touchUpInside)
@@ -205,20 +289,29 @@ class UserListView: UIView {
         moreFunctionButton.addTarget(self, action: #selector(moreFunctionAction), for: .touchUpInside)
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideSearchControl(sender:)))
         searchControl.addGestureRecognizer(tap)
+        onStageButton.addTarget(self, action: #selector(selectOnStageAction(sender:)), for: .touchUpInside)
+        offStageButton.addTarget(self, action: #selector(selectOffStageAction(sender:)), for: .touchUpInside)
     }
     
     func setupViewState() {
-        let currentUser = viewModel.engineManager.store.currentUser
-        let roomInfo = viewModel.engineManager.store.roomInfo
-        muteAllAudioButton.isHidden = currentUser.userRole == .generalUser
+        memberLabel.text = String(format: .memberText, viewModel.allUserCount)
+        let roomInfo = viewModel.roomInfo
         muteAllAudioButton.isSelected = roomInfo.isMicrophoneDisableForAllUser
-        muteAllVideoButton.isHidden = currentUser.userRole == .generalUser
         muteAllVideoButton.isSelected = roomInfo.isCameraDisableForAllUser
-        moreFunctionButton.isHidden = currentUser.userRole == .generalUser
+        bottomControlView.isHidden = !viewModel.isShownBottomControlView
+        listStateView.isHidden = !viewModel.isShownListStateView
+        setupListStateView(onStage: viewModel.onStageCount, offStage: viewModel.offStageCount)
+    }
+    
+    private func setupListStateView(onStage: Int, offStage: Int) {
+        guard viewModel.isShownListStateView else { return }
+        let seatedListText: String = localizedReplace(.onStageNumberText, replace: String(onStage))
+        onStageButton.setTitle(seatedListText, for: .normal)
+        let offSeatListText: String = localizedReplace(.notOnStageNumberText, replace: String(offStage))
+        offStageButton.setTitle(offSeatListText, for: .normal)
     }
     
     @objc func inviteMemberAction(sender: UIButton) {
-        RoomRouter.shared.dismissPopupViewController(viewType: .userListViewType,animated: false)
         RoomRouter.shared.presentPopUpViewController(viewType: .inviteViewType, height: 186)
     }
     
@@ -231,13 +324,30 @@ class UserListView: UIView {
     }
     
     @objc func moreFunctionAction(sender: UIButton) {
-        RoomRouter.shared.dismissPopupViewController(viewType: .userListViewType,animated: false)
         RoomRouter.shared.presentPopUpViewController(viewType: .inviteViewType, height: 186)
     }
     
     @objc func hideSearchControl(sender: UIView) {
-        searchBar.searchTextField.resignFirstResponder()
+        if #available(iOS 13, *) {
+            searchBar.searchTextField.resignFirstResponder()
+        } else {
+            searchBar.resignFirstResponder()
+        }
         searchControl.isHidden = true
+    }
+    
+    @objc func selectOnStageAction(sender: UIButton) {
+        guard sender.isSelected != true else { return }
+        sender.isSelected = true
+        offStageButton.isSelected = false
+        viewModel.changeListState(isOnStage: true)
+    }
+    
+    @objc func selectOffStageAction(sender: UIButton) {
+        guard sender.isSelected != true else { return }
+        sender.isSelected = true
+        onStageButton.isSelected = false
+        viewModel.changeListState(isOnStage: false)
     }
     
     deinit {
@@ -248,18 +358,10 @@ class UserListView: UIView {
 extension UserListView: UISearchBarDelegate {
     func searchBar(_ searchBar:UISearchBar,textDidChange searchText:String){
         let searchContentText = searchText.trimmingCharacters(in: .whitespaces)
-        if searchContentText.count == 0 {
-            viewModel.attendeeList = viewModel.engineManager.store.attendeeList
-            userListTableView.reloadData()
-            isSearching = false
-        } else {
-            let searchArray = viewModel.engineManager.store.attendeeList.filter({ model -> Bool in
-                return (model.userName.contains(searchContentText))
-            })
-            viewModel.attendeeList = searchArray
-            userListTableView.reloadData()
-            isSearching = true
-        }
+        viewModel.searchText = searchContentText
+        viewModel.isSearching = searchContentText.count != 0
+        viewModel.updateAttendeeList()
+        userListTableView.reloadData()
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -294,6 +396,18 @@ extension UserListView: UITableViewDelegate {
 }
 
 extension UserListView: UserListViewResponder {
+    func updateUserListTableView() {
+        setupUserListTableView()
+    }
+    
+    func updateMemberLabel(count: Int) {
+        memberLabel.text = String(format: .memberText, viewModel.allUserCount)
+    }
+    
+    func updateListStateView(onStage: Int, offStage: Int) {
+        setupListStateView(onStage: onStage, offStage: offStage)
+    }
+    
     func updateMuteAllAudioButtonState(isSelect: Bool) {
         muteAllAudioButton.isSelected = isSelect
     }
@@ -302,10 +416,8 @@ extension UserListView: UserListViewResponder {
         muteAllVideoButton.isSelected = isSelect
     }
     
-    func updateButtonHiddenState(isHidden: Bool) {
-        muteAllAudioButton.isHidden = isHidden
-        muteAllVideoButton.isHidden = isHidden
-        moreFunctionButton.isHidden = isHidden
+    func updateBottomControlView(isHidden: Bool) {
+        bottomControlView.isHidden = isHidden
     }
     
     func updateUserManagerViewDisplayStatus(isHidden: Bool) {
@@ -319,8 +431,6 @@ extension UserListView: UserListViewResponder {
     }
     
     func reloadUserListView() {
-        attendeeCountLabel.text = .memberText + "（\(viewModel.attendeeList.count)）"
-        guard !isSearching else { return }
         userListTableView.reloadData()
     }
     
@@ -329,250 +439,35 @@ extension UserListView: UserListViewResponder {
     }
 }
 
-class UserListCell: UITableViewCell {
-    var attendeeModel: UserEntity
-    var viewModel: UserListViewModel
-    
-    let avatarImageView: UIImageView = {
-        let img = UIImageView()
-        img.layer.cornerRadius = 20
-        img.layer.masksToBounds = true
-        return img
-    }()
-    
-    let userLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(0xD5E0F2)
-        label.backgroundColor = UIColor.clear
-        label.textAlignment = isRTL ? .right : .left
-        label.textAlignment = .left
-        label.font = UIFont(name: "PingFangSC-Regular", size: 16)
-        label.numberOfLines = 1
-        return label
-    }()
-    
-    let roleImageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
-    
-    let roleLabel: UILabel = {
-        let label = UILabel ()
-        label.font = UIFont(name: "PingFangSC-Regular", size: 12)
-        label.backgroundColor = UIColor.clear
-        label.textColor = UIColor(0x4791FF)
-        return label
-    }()
-    
-    let muteAudioButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "room_unMute_audio", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .normal)
-        button.setImage(UIImage(named: "room_mute_audio_red", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .selected)
-        return button
-    }()
-    
-    let muteVideoButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setImage(UIImage(named: "room_unMute_video", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .normal)
-        button.setImage(UIImage(named: "room_mute_video_red", in: tuiRoomKitBundle(), compatibleWith: nil)?.checkOverturn(), for: .selected)
-        return button
-    }()
-    
-    let inviteStageButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.backgroundColor = UIColor(0x0565FA)
-        button.layer.cornerRadius = 6
-        button.setTitle(.inviteSeatText, for: .normal)
-        button.setTitleColor(UIColor(0xFFFFFF), for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        button.isHidden = true
-        return button
-    }()
-    
-    let downLineView : UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(0x4F586B,alpha: 0.3)
-        return view
-    }()
-    
-    init(attendeeModel: UserEntity ,viewModel: UserListViewModel) {
-        self.attendeeModel = attendeeModel
-        self.viewModel = viewModel
-        super.init(style: .default, reuseIdentifier: "UserListCell")
-    }
-    
-    private var isViewReady: Bool = false
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        guard !isViewReady else { return }
-        isViewReady = true
-        constructViewHierarchy()
-        activateConstraints()
-        bindInteraction()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func constructViewHierarchy() {
-        contentView.addSubview(avatarImageView)
-        contentView.addSubview(userLabel)
-        contentView.addSubview(roleImageView)
-        contentView.addSubview(roleLabel)
-        contentView.addSubview(muteAudioButton)
-        contentView.addSubview(muteVideoButton)
-        contentView.addSubview(inviteStageButton)
-        contentView.addSubview(downLineView)
-    }
-    
-    func activateConstraints() {
-        avatarImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(40)
-            make.leading.equalToSuperview()
-            make.centerY.equalToSuperview()
-        }
-        muteVideoButton.snp.makeConstraints { make in
-            make.width.height.equalTo(20.scale375())
-            make.trailing.equalToSuperview()
-            make.centerY.equalTo(self.avatarImageView)
-        }
-        muteAudioButton.snp.makeConstraints { make in
-            make.width.height.equalTo(20.scale375())
-            make.trailing.equalTo(self.muteVideoButton.snp.leading).offset(-20.scale375())
-            make.centerY.equalTo(self.avatarImageView)
-        }
-        inviteStageButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview()
-            make.centerY.equalTo(self.avatarImageView)
-            make.width.equalTo(60.scale375())
-            make.height.equalTo(30.scale375Height())
-        }
-        userLabel.snp.makeConstraints { make in
-            if attendeeModel.userRole == .generalUser {
-                make.centerY.equalToSuperview()
-            } else {
-                make.top.equalToSuperview().offset(10.scale375Height())
-            }
-            make.leading.equalTo(avatarImageView.snp.trailing).offset(12.scale375())
-            make.width.equalTo(150.scale375())
-            make.height.equalTo(22.scale375())
-        }
-        roleImageView.snp.makeConstraints { make in
-            make.top.equalTo(userLabel.snp.bottom).offset(2.scale375Height())
-            make.leading.equalTo(avatarImageView.snp.trailing).offset(12.scale375())
-            make.width.height.equalTo(14.scale375())
-        }
-        roleLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(roleImageView)
-            make.leading.equalTo(roleImageView.snp.trailing).offset(2.scale375())
-            make.trailing.equalTo(81.scale375())
-            make.height.equalTo(16.scale375())
-        }
-        downLineView.snp.makeConstraints { make in
-            make.leading.equalTo(userLabel)
-            make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(1.scale375())
-        }
-    }
-    
-    func bindInteraction() {
-        backgroundColor = UIColor(0x17181F)
-        setupViewState(item: attendeeModel)
-        inviteStageButton.addTarget(self, action: #selector(inviteStageAction(sender:)), for: .touchUpInside)
-        muteAudioButton.addTarget(self, action: #selector(showUserManageAction(sender:)), for: .touchUpInside)
-        muteVideoButton.addTarget(self, action: #selector(showUserManageAction(sender:)), for: .touchUpInside)
-    }
-    
-    func setupViewState(item: UserEntity) {
-        let placeholder = UIImage(named: "room_default_user", in: tuiRoomKitBundle(), compatibleWith: nil)
-        if let url = URL(string: item.avatarUrl) {
-            avatarImageView.sd_setImage(with: url, placeholderImage: placeholder)
-        } else {
-            avatarImageView.image = placeholder
-        }
-        if item.userId == viewModel.currentUser.userId {
-            userLabel.text = item.userName + "（" + .meText + "）"
-        } else {
-            userLabel.text = item.userName
-        }
-        switch item.userRole {
-        case .roomOwner:
-            roleImageView.image = UIImage(named: "room_role_owner", in: tuiRoomKitBundle(), compatibleWith: nil)
-            roleLabel.text = .ownerText
-        case .administrator:
-            roleImageView.image = UIImage(named: "room_role_administrator", in: tuiRoomKitBundle(), compatibleWith: nil)
-            roleLabel.text = .administratorText
-        default: break
-        }
-        roleImageView.isHidden = item.userRole == .generalUser
-        roleLabel.isHidden = item.userRole == .generalUser
-        muteAudioButton.isSelected = !item.hasAudioStream
-        muteVideoButton.isSelected = !item.hasVideoStream
-        //判断是否显示邀请上台的按钮(房主在举手发言房间中可以邀请其他没有上台的用户)
-        guard viewModel.roomInfo.isSeatEnabled else { return }
-        muteAudioButton.isHidden = !attendeeModel.isOnSeat
-        muteVideoButton.isHidden = !attendeeModel.isOnSeat
-        if viewModel.checkSelfInviteAbility(invitee: attendeeModel) {
-            inviteStageButton.isHidden = attendeeModel.isOnSeat
-        } else {
-            inviteStageButton.isHidden = true
-        }
-    }
-    
-    @objc func inviteStageAction(sender: UIButton) {
-        viewModel.userId = attendeeModel.userId
-        viewModel.inviteSeatAction(sender: sender)
-    }
-    
-    @objc func showUserManageAction(sender: UIButton) {
-        viewModel.showUserManageViewAction(userId: attendeeModel.userId, userName: attendeeModel.userName)
-    }
-    
-    deinit {
-        debugPrint("deinit \(self)")
-    }
-}
-
 private extension String {
     static var inviteText: String {
-        localized("TUIRoom.invite")
+        localized("Invite")
     }
     static var allMuteAudioText: String {
-        localized("TUIRoom.all.mute")
+        localized("Mute All")
     }
     static var allMuteVideoText: String {
-        localized("TUIRoom.all.mute.video")
+        localized("Stop all video")
     }
     static var allUnMuteAudioText: String {
-        localized("TUIRoom.all.unmute")
+        localized("Unmute all")
     }
     static var allUnMuteVideoText: String {
-        localized("TUIRoom.all.unmute.video")
+        localized("Enable all video")
     }
     static var moreText: String {
-        localized("TUIRoom.more")
+        localized("More")
     }
     static var memberText: String {
-        localized("TUIRoom.conference.member")
+        localized("Participants(%lld)")
     }
     static var searchMemberText: String {
-        localized("TUIRoom.search.meeting.member")
+        localized("Search for participants")
     }
-    static var inviteSeatText: String {
-        localized("TUIRoom.invite.seat")
+    static var onStageNumberText: String {
+        localized("On stage(xx)")
     }
-    static var meText: String {
-        localized("TUIRoom.me")
-    }
-    static var ownerText: String {
-        localized("TUIRoom.role.owner")
-    }
-    static var administratorText: String {
-        localized("TUIRoom.role.administrator")
-    }
-    static var videoConferenceTitle: String {
-        localized("TUIRoom.video.conference.title")
+    static var notOnStageNumberText: String {
+        localized("Not on stage(xx)")
     }
 }

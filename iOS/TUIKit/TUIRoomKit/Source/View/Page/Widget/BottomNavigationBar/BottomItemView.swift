@@ -35,6 +35,25 @@ class BottomItemView: UIView {
         return view
     }()
     
+    let noticeView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(0xED414D)
+        view.layer.borderWidth = 3
+        view.layer.borderColor = UIColor(0x2A2D38).cgColor
+        view.layer.cornerRadius = 12
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    let noticeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(0xFFFFFF)
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        label.backgroundColor = .clear
+        return label
+    }()
+    
     // MARK: - initialized function
     init(itemData: ButtonItemData) {
         self.itemData = itemData
@@ -61,6 +80,8 @@ class BottomItemView: UIView {
         addSubview(button)
         button.addSubview(imageView)
         button.addSubview(label)
+        button.addSubview(noticeView)
+        noticeView.addSubview(noticeLabel)
     }
     
     func activateConstraints() {
@@ -85,6 +106,16 @@ class BottomItemView: UIView {
             make.width.equalToSuperview()
             make.height.equalTo(14)
         }
+        noticeLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(button).offset(-7)
+            make.top.equalToSuperview().offset(4)
+            make.width.height.greaterThanOrEqualTo(16)
+        }
+        noticeView.snp.makeConstraints { make in
+            make.leading.top.equalTo(noticeLabel).offset(-4)
+            make.trailing.bottom.equalTo(noticeLabel).offset(4)
+            make.width.lessThanOrEqualTo(button)
+        }
     }
     
     func bindInteraction() {
@@ -99,6 +130,8 @@ class BottomItemView: UIView {
         imageView.image = item.isSelect ? itemData.selectedImage : itemData.normalImage
         label.text = item.isSelect ? itemData.selectedTitle : itemData.normalTitle
         button.alpha = item.alpha
+        noticeView.isHidden = !item.hasNotice
+        noticeLabel.text = item.noticeText
     }
     
     @objc

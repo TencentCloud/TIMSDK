@@ -2,22 +2,14 @@
 //  VideoChoicePanel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/17.
+//  Created by janejntang on 2023/1/17.
 //  Copyright © 2023 Tencent. All rights reserved.
-//  视频的分辨率或者帧率的选择面板
+//  Video resolution or frame rate selection panel
 //
 
 import Foundation
-#if TXLiteAVSDK_TRTC
-import TXLiteAVSDK_TRTC
-#elseif TXLiteAVSDK_Professional
-import TXLiteAVSDK_Professional
-#endif
-
-
 
 // MARK: Resolution
-
 class VideoChoicePanel: AlertContentView {
     var dataSource: [String] = []
     var selectIndex = 3
@@ -161,7 +153,7 @@ class ResolutionTableViewCell: UITableViewCell {
 class AlertContentView: UIView {
     let space: Int = 16
     let landscapeHight: CGFloat = min(kScreenWidth, kScreenHeight)
-    let portraitHight: CGFloat = 718
+    let portraitHight: CGFloat = 718.scale375Height()
     private var currentLandscape: Bool = isLandscape
     let bgView: UIView = {
         let view = UIView(frame: .zero)
@@ -188,6 +180,7 @@ class AlertContentView: UIView {
         let label = UILabel(frame: .zero)
         label.textColor = UIColor(0xD1D9EC)
         label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
         label.font = UIFont(name: "PingFangSC-Medium", size: 16)
         return label
     }()
@@ -283,7 +276,6 @@ class AlertContentView: UIView {
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(space.scale375Height())
             make.centerX.equalToSuperview()
-            make.width.equalTo(64.scale375())
         }
     }
 

@@ -2,7 +2,7 @@
 //  RaiseHandNoticeView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/4/7.
+//  Created by janejntang on 2023/4/7.
 //
 
 import Foundation
@@ -81,6 +81,6 @@ class RaiseHandNoticeView: UIView {
 
 private extension String {
     static var raiseHandNotice: String {
-        localized("TUIRoom.raiseHand.notice")
+        localized("Raise your hand to speak")
     }
 }

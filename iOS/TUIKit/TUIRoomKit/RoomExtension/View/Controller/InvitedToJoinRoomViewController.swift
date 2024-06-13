@@ -2,13 +2,12 @@
 //  InvitedToJoinRoomViewController.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/5/25.
+//  Created by janejntang on 2023/5/25.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
 import Foundation
 
-//收到邀请页面
 class InvitedToJoinRoomViewController: UIViewController {
     let roomView: InvitedToJoinRoomView
     let viewModel: InvitedToJoinRoomViewModel

@@ -2,7 +2,7 @@
 //  PopUpViewController.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/12.
+//  Created by janejntang on 2023/1/12.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -135,7 +135,6 @@ class PopUpView: UIView {
             rootView = UserListView(viewModel: model)
         case .raiseHandApplicationListViewType:
             let model = RaiseHandApplicationListViewModel()
-            viewModel.viewResponder = model
             rootView = RaiseHandApplicationListView(viewModel: model)
         case .transferMasterViewType:
             let model = TransferMasterViewModel()
@@ -153,7 +152,7 @@ class PopUpView: UIView {
     }
     
     @objc func dropDownPopUpViewAction(sender: UIView) {
-        RoomRouter.shared.dismissPopupViewController(viewType: viewModel.viewType, animated: true)
+        RoomRouter.shared.dismissPopupViewController()
     }
     
     override func layoutSubviews() {
@@ -167,14 +166,14 @@ class PopUpView: UIView {
     func setupViewOrientation(isLandscape: Bool) {
         let width = min(kScreenHeight, kScreenWidth)
         let height = max(kScreenHeight, kScreenWidth)
-        if isLandscape { //横屏
+        if isLandscape {
             backgroundView.snp.remakeConstraints { make in
                 make.width.equalTo(width + arrowViewHeight)
                 make.top.equalToSuperview()
                 make.height.equalToSuperview()
                 make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing)
             }
-        } else { //竖屏
+        } else {
             let currentHeight = min(viewModel.height + arrowViewHeight, height - arrowViewHeight)
             backgroundView.snp.remakeConstraints { make in
                 make.width.bottom.equalToSuperview()

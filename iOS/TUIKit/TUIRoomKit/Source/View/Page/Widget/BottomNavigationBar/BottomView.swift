@@ -12,7 +12,7 @@ class BottomView: UIView {
     // MARK: - store property
     let viewModel: BottomViewModel
     private var viewArray: [BottomItemView] = []
-    var isUnfold: Bool = false //是否展开
+    var isUnfold: Bool = false
     let unfoldHeight = Float(130.scale375Height())
     let packUpHeight = Float(68.scale375Height())
 
@@ -198,52 +198,48 @@ extension BottomView: BottomViewModelResponder {
 
 private extension String {
     static var leaveRoomTitle: String {
-        localized("TUIRoom.sure.leave.room")
+        localized("Are you sure you want to leave the conference?")
     }
 
     static var destroyRoomTitle: String {
-        localized("TUIRoom.sure.destroy.room")
+        localized("Are you sure you want to end the conference?")
     }
 
     static var destroyRoomCancelTitle: String {
-        localized("TUIRoom.wait")
+        localized("Wait")
     }
 
     static var logoutOkText: String {
-        localized("TUIRoom.ok")
+        localized("OK")
     }
 
     static var dismissMeetingTitle: String {
-        localized("TUIRoom.dismiss.meeting.Title")
+        localized("If you don't want to end the conference")
     }
 
     static var appointNewHostText: String {
-        localized("TUIRoom.appoint.new.host")
+        localized("Please appoint a new host before leaving the conference")
     }
 
     static var leaveMeetingText: String {
-        localized("TUIRoom.leave.meeting")
+        localized("Leave conference")
     }
 
     static var dismissMeetingText: String {
-        localized("TUIRoom.dismiss.meeting")
+        localized("End conference")
     }
 
     static var cancelText: String {
-        localized("TUIRoom.cancel")
-    }
-    
-    static var memberText: String {
-        localized("TUIRoom.conference.member")
+        localized("Cancel")
     }
 
     static var toastTitleText: String {
-        localized("TUIRoom.toast.shareScreen.title")
+        localized("Share Screen")
     }
     static var toastMessageText: String {
-        localized("TUIRoom.toast.shareScreen.message")
+        localized("Stop TUIRoom screen sharing screen live?")
     }
     static var toastStopText: String {
-        localized("TUIRoom.toast.shareScreen.stop")
+        localized("Stop")
     }
 }

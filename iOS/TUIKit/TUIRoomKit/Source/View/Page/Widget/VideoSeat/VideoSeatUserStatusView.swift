@@ -84,15 +84,15 @@ extension VideoSeatUserStatusView {
         } else {
             userNameLabel.text = item.userId
         }
-        if item.userInfo.userRole == .roomOwner {
+        if item.userRole == .roomOwner {
             homeOwnerImageView.image = UIImage(named: "room_homeowner", in: tuiRoomKitBundle(), compatibleWith: nil)
-        } else if item.userInfo.userRole == .administrator {
+        } else if item.userRole == .administrator {
             homeOwnerImageView.image = UIImage(named: "room_administrator", in: tuiRoomKitBundle(), compatibleWith: nil)
         }
-        isShownHomeOwnerImageView = item.userInfo.userRole != .generalUser
+        isShownHomeOwnerImageView = item.userRole != .generalUser
         homeOwnerImageView.isHidden = !isShownHomeOwnerImageView
         updateOwnerImageConstraints()
-        updateUserVolume(hasAudio: item.hasAudioStream, volume: item.audioVolume)
+        updateUserVolume(hasAudio: item.hasAudioStream, volume: item.userVoiceVolume)
     }
 
     func updateUserVolume(hasAudio: Bool, volume: Int) {

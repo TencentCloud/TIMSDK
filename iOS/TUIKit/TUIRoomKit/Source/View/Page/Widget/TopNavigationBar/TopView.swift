@@ -2,7 +2,7 @@
 //  TopView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2022/12/30.
+//  Created by janejntang on 2022/12/30.
 //  Copyright © 2022 Tencent. All rights reserved.
 //
 
@@ -40,8 +40,7 @@ class TopView: UIView {
         let label = UILabel()
         label.textColor = UIColor(0xD5E0F2)
         label.font = UIFont(name: "PingFangSC-Medium", size: 16)
-        label.textAlignment = isRTL ? .left : .right
-        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = isRTL ? .right : .left
         label.lineBreakMode = .byTruncatingTail
         return label
     }()
@@ -141,7 +140,7 @@ class TopView: UIView {
             make.top.equalToSuperview().offset(44.scale375Height())
         }
         meetingTitleView.snp.makeConstraints { make in
-            make.width.equalTo(129.scale375())
+            make.width.equalTo(200.scale375())
             make.height.equalTo(44.scale375Height())
             make.centerX.centerY.equalToSuperview()
         }
@@ -151,10 +150,10 @@ class TopView: UIView {
             make.trailing.equalTo(meetingTitleView.snp.leading).offset(-16.scale375())
         }
         meetingNameLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
+            make.centerX.equalToSuperview().offset(-9.scale375())
             make.top.equalToSuperview()
             make.height.equalTo(24.scale375())
-            make.width.equalTo(111.scale375())
+            make.width.lessThanOrEqualTo(182.scale375())
         }
         dropDownButton.snp.makeConstraints { make in
             make.leading.equalTo(meetingNameLabel.snp.trailing).offset(2.scale375())
@@ -188,11 +187,7 @@ class TopView: UIView {
     func bindInteraction() {
         let dropTap = UITapGestureRecognizer(target: self, action: #selector(dropDownAction(sender:)))
         let exitTap = UITapGestureRecognizer(target: self, action: #selector(exitAction(sender:)))
-        var namelabel = viewModel.engineManager.store.roomInfo.name + .quickMeetingText
-        if namelabel.count > 10 {
-            namelabel = namelabel.prefix(9) + "..."
-        }
-        meetingNameLabel.text = namelabel
+        meetingNameLabel.text = viewModel.engineManager.store.roomInfo.name
         meetingTitleView.addGestureRecognizer(dropTap)
         exitView.addGestureRecognizer(exitTap)
         viewModel.viewResponder = self
@@ -200,7 +195,7 @@ class TopView: UIView {
     }
     
     func updateRootViewOrientation(isLandscape: Bool) {
-        if isLandscape { //横屏时，会议时间放在会议名称的右边
+        if isLandscape {
             contentView.snp.updateConstraints() { make in
                 make.top.equalToSuperview()
             }
@@ -209,10 +204,10 @@ class TopView: UIView {
                 make.leading.equalTo(dropDownButton.snp.trailing).offset(15)
             }
             meetingTitleView.snp.updateConstraints { make in
-                make.width.equalTo(150.scale375())
+                make.width.equalTo(300.scale375())
                 make.height.equalTo(24.scale375Height())
             }
-        } else { //竖屏时，会议时间放在会议名称的下边
+        } else {
             contentView.snp.updateConstraints() { make in
                 make.top.equalToSuperview().offset(44.scale375Height())
             }
@@ -221,7 +216,7 @@ class TopView: UIView {
                 make.centerX.equalToSuperview()
             }
             meetingTitleView.snp.updateConstraints { make in
-                make.width.equalTo(129.scale375())
+                make.width.equalTo(200.scale375())
                 make.height.equalTo(44.scale375Height())
             }
         }
@@ -271,31 +266,28 @@ extension TopView: TopViewModelResponder {
 
 private extension String {
     static var leaveRoomTitle: String {
-        localized("TUIRoom.sure.leave.room")
+        localized("Are you sure you want to leave the conference?")
     }
     static var destroyRoomTitle: String {
-        localized("TUIRoom.sure.destroy.room")
+        localized("Are you sure you want to end the conference?")
     }
     static var dismissMeetingTitle: String {
-        localized("TUIRoom.dismiss.meeting.Title")
+        localized("If you don't want to end the conference")
     }
     static var appointNewHostText: String {
-        localized("TUIRoom.appoint.new.host")
+        localized("Please appoint a new host before leaving the conference")
     }
     static var leaveMeetingText: String {
-        localized("TUIRoom.leave.meeting")
+        localized("Leave conference")
     }
     static var dismissMeetingText: String {
-        localized("TUIRoom.dismiss.meeting")
+        localized("End conference")
     }
     static var cancelText: String {
-        localized("TUIRoom.cancel")
+        localized("Cancel")
     }
     static var exitText: String {
-        localized("TUIRoom.exit")
-    }
-    static var quickMeetingText: String {
-        localized("TUIRoom.video.conference")
+        localized("exit")
     }
 }
 

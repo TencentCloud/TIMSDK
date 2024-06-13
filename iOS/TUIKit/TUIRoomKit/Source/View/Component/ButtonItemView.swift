@@ -2,7 +2,7 @@
 //  ButtonItemView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/10.
+//  Created by janejntang on 2023/1/10.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 

@@ -2,8 +2,8 @@
 //  BusinessSceneUtil.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/3.
-//  判断当前场景以及设置当前场景
+//  Created by janejntang on 2023/7/3.
+//  Determine the current scene and set the current scene
 
 import Foundation
 import TUICore

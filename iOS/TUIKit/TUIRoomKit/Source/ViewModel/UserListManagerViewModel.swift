@@ -2,12 +2,12 @@
 //  UserListManagerViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/2/10.
+//  Created by janejntang on 2023/2/10.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 
 protocol UserListManagerViewEventResponder: AnyObject {
     func makeToast(text: String)
@@ -93,7 +93,6 @@ class UserListManagerViewModel: NSObject {
         }
     }
     
-    //禁音其他用户
     private lazy var muteAudioItem: ButtonItemData = {
         let item = ButtonItemData()
         item.normalTitle = .muteText
@@ -111,7 +110,6 @@ class UserListManagerViewModel: NSObject {
         return item
     }()
     
-    //禁画其他用户
     private lazy var muteVideoItem: ButtonItemData = {
         let item = ButtonItemData()
         item.normalTitle = .closeVideoText
@@ -129,7 +127,6 @@ class UserListManagerViewModel: NSObject {
         return item
     }()
     
-    //邀请上台
     private lazy var inviteSeatItem: ButtonItemData = {
         let item = ButtonItemData()
         item.normalTitle = .inviteSeatText
@@ -137,7 +134,6 @@ class UserListManagerViewModel: NSObject {
         item.selectedTitle = .stepDownSeatText
         item.selectedIcon = "room_step_down_seat"
         item.resourceBundle = tuiRoomKitBundle()
-        item.buttonType = .inviteSeatItemType
         item.isSelect = selectUserInfo?.isOnSeat ?? false
         item.hasLineView = true
         item.action = { [weak self] sender in
@@ -147,13 +143,11 @@ class UserListManagerViewModel: NSObject {
         return item
     }()
     
-    //转交主持人
     private lazy var changeHostItem: ButtonItemData = {
         let item = ButtonItemData()
         item.normalTitle = .changeHostText
         item.normalIcon = "room_change_host"
         item.resourceBundle = tuiRoomKitBundle()
-        item.buttonType = .changeHostItemType
         item.hasLineView = true
         item.action = { [weak self] sender in
             guard let self = self, let button = sender as? UIButton else { return }
@@ -162,7 +156,6 @@ class UserListManagerViewModel: NSObject {
         return item
     }()
     
-    //禁言
     private lazy var muteMessageItem: ButtonItemData = {
         let item = ButtonItemData()
         item.normalTitle = .muteMessageText
@@ -170,7 +163,6 @@ class UserListManagerViewModel: NSObject {
         item.selectedTitle = .unMuteMessageText
         item.selectedIcon = "room_unMute_message"
         item.resourceBundle = tuiRoomKitBundle()
-        item.buttonType = .muteMessageItemType
         item.isSelect = selectUserInfo?.disableSendingMessage ?? false
         item.hasLineView = true
         item.action = { [weak self] sender in
@@ -180,13 +172,11 @@ class UserListManagerViewModel: NSObject {
         return item
     }()
     
-    //踢出房间
     private lazy var kickOutItem: ButtonItemData = {
         let item = ButtonItemData()
         item.normalTitle = .kickOutRoomText
         item.normalIcon = "room_kickOut_room"
         item.resourceBundle = tuiRoomKitBundle()
-        item.buttonType = .kickOutItemType
         item.hasLineView = true
         item.action = { [weak self] sender in
             guard let self = self, let button = sender as? UIButton else { return }
@@ -195,7 +185,6 @@ class UserListManagerViewModel: NSObject {
         return item
     }()
     
-    //设置管理员
     private lazy var setAdministratorItem: ButtonItemData = {
         let item = ButtonItemData()
         item.normalTitle = .setAsAdministratorText
@@ -203,7 +192,6 @@ class UserListManagerViewModel: NSObject {
         item.normalIcon = "room_set_administrator"
         item.selectedIcon = "room_undo_administrator"
         item.resourceBundle = tuiRoomKitBundle()
-        item.buttonType = .setAdministratorItemType
         item.isSelect = selectUserInfo?.userRole == .administrator
         item.hasLineView = true
         item.action = {  [weak self] sender in
@@ -354,6 +342,11 @@ extension UserListManagerViewModel {
         guard let userInfo = selectUserInfo else { return }
         sender.isSelected = !sender.isSelected
         if sender.isSelected {
+            guard engineManager.store.seatList.count < roomInfo.maxSeatCount else {
+                RoomRouter.makeToastInCenter(toast: .theStageIsFullText, duration: 0.5)
+                viewResponder?.dismissView()
+                return
+            }
             engineManager.takeUserOnSeatByAdmin(userId: selectUserId, timeout: timeoutNumber) { _,_ in
                 let text: String = localizedReplace(.onStageText, replace: userInfo.userName)
                 RoomRouter.makeToastInCenter(toast: text, duration: 0.5)
@@ -410,7 +403,6 @@ extension UserListManagerViewModel {
     private func setAdministratorAction(sender: UIButton) {
         guard let userInfo = selectUserInfo else { return }
         let role: TUIRole = userInfo.userRole == .administrator ? .generalUser : .administrator
-        //设置或者撤销管理员
         engineManager.changeUserRole(userId: selectUserId, role: role) {  [weak self] in
             guard let self = self else { return }
             let setAdministratorText = localizedReplace(.setUpAdministratorText, replace: userInfo.userName)
@@ -484,105 +476,108 @@ extension UserListManagerViewModel: RoomEngineEventResponder {
 
 private extension String {
     static var muteAudioErrorToastText: String {
-        localized("TUIRoom.mute.audio.error.toast")
+        localized("Failed to mute.")
     }
     static var muteAudioRejectToastText: String {
-        localized("TUIRoom.mute.audio.reject.toast")
+        localized(" rejected to the microphone access request.")
     }
     static var muteVideoErrorToastText: String {
-        localized("TUIRoom.mute.video.error.toast")
+        localized("Failed to disable video.")
     }
     static var muteVideoRejectToastText: String {
-        localized("TUIRoom.mute.video.reject.toast")
+        localized(" rejected to the camera access request.")
     }
     static var muteText: String {
-        localized("TUIRoom.mute")
+        localized("Mute")
     }
     static var requestOpenVideoText: String {
-        localized("TUIRoom.request.open.video")
+        localized("Ask to start video")
     }
     static var requestOpenAudioText: String {
-        localized("TUIRoom.request.open.audio")
+        localized("Ask to unmute")
     }
     static var closeVideoText: String {
-        localized("TUIRoom.close.video")
+        localized("Stop video")
     }
     static var changeHostText: String {
-        localized("TUIRoom.change.host")
+        localized("Make host")
     }
     static var muteMessageText: String {
-        localized("TUIRoom.mute.message")
+        localized("Disable chat")
     }
     static var unMuteMessageText: String {
-        localized("TUIRoom.unmute.message")
+        localized("Enable chat")
     }
     static var kickOutRoomText: String {
-        localized("TUIRoom.kick")
+        localized("Remove")
     }
     static var stepDownSeatText: String {
-        localized("TUIRoom.step.down.seat")
+        localized("Leave the stage")
     }
     static var inviteSeatText: String {
-        localized("TUIRoom.invite.seat")
+        localized("Invite to stage")
     }
     static var invitedTakeSeatText: String {
-        localized("TUIRoom.invited.take.seat")
+        localized("The audience has been invited to the stage")
     }
     static var refusedTakeSeatInvitationText: String {
-        localized("TUIRoom.refused.take.seat.invitation")
+        localized("xx refused to go on stage")
     }
     static var takeSeatInvitationTimeoutText: String {
-        localized("TUIRoom.take.seat.invitation.timeout")
+        localized("The invitation to xx to go on stage has timed out")
     }
     static var openVideoInvitationTimeoutText: String {
-        localized("TUIRoom.open.video.invitation.timeout")
+        localized("The invitation to start the video has timed out")
     }
     static var openAudioInvitationTimeoutText: String {
-        localized("TUIRoom.open.audio.invitation.timeout")
+        localized("The invitation to start the audio has timed out")
     }
     static var invitedOpenAudioText: String {
-        localized("TUIRoom.invited.open.audio")
+        localized("The audience has been invited to open the audio")
     }
     static var invitedOpenVideoText: String {
-        localized("TUIRoom.invited.open.video")
+        localized("The audience has been invited to open the video")
     }
     static var kickOutText: String {
-        localized("TUIRoom.sure.kick.out")
+        localized("Do you want to move xx out of the conference?")
     }
     static var setAsAdministratorText: String {
-        localized("TUIRoom.set.as.administrator")
+        localized("Set as administrator")
     }
     static var undoAdministratorText: String {
-        localized("TUIRoom.undo.administrator")
+        localized("Undo administrator")
     }
     static var haveTransferredMasterText: String {
-        localized("TUIRoom.have.transferred.master")
+        localized("The host has been transferred to xx")
     }
     static var setUpAdministratorText: String {
-        localized("TUIRoom.have.set.up.administrator")
+        localized("xx has been set as conference admin")
     }
     static var removedAdministratorText: String {
-        localized("TUIRoom.have.removed.administrator")
+        localized("The conference admin status of xx has been withdrawn")
     }
     static var alertOkText: String {
-        localized("TUIRoom.ok")
+        localized("OK")
     }
     static var cancelText: String {
-        localized("TUIRoom.cancel")
+        localized("Cancel")
     }
     static var transferHostTitle: String {
-        localized("TUIRoom.transfer.host.title")
+        localized("Transfer the host to xx")
     }
     static var transferHostMessage: String {
-        localized("TUIRoom.transfer.host.message")
+        localized("After transfer the host, you will become a general user")
     }
     static var transferHostsureText: String {
-        localized("TUIRoom.transfer.host.sure")
+        localized("Confirm transfer")
     }
     static var receivedSameRequestText: String {
-        localized("TUIRoom.member.already.received.same.request")
+        localized("This member has already received the same request, please try again later")
     }
     static var onStageText: String {
-        localized("TUIRoom.on.stage")
+        localized("xx is on stage")
+    }
+    static var theStageIsFullText: String {
+        localized("The stage is full")
     }
 }

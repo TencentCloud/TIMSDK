@@ -23,11 +23,3 @@ let gUserListControllerKey = NSObject.getUserListControllerKey()
 // {roomEngine:roomEngineObj,currentUserInfo:currentUserInfoObj}
 let gExtensionControllerKey = NSObject.getExtensionControllerKey()
 // {roomEngine:roomEngineObj,currentUserInfo:currentUserInfoObj}
-
-extension NSObject {
-    @objc class func tuiRoomKitSwiftLoad() {
-//        TUICore.registerExtension(gRoomInfoKey, object: EngineManager.shared())
-//        TUICore.registerExtension(gRoomEngineKey, object: EngineManager.shared())
-//        TUICore.registerExtension(gLocalUserInfoKey, object: EngineManager.shared())
-    }
-}

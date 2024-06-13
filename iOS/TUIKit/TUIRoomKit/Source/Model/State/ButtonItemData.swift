@@ -2,7 +2,7 @@
 //  ButtonItemData.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/10.
+//  Created by janejntang on 2023/1/10.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -10,27 +10,15 @@ import Foundation
 
 class ButtonItemData {
     enum ButtonType {
-        case memberItemType
         case muteAudioItemType
         case muteVideoItemType
         case raiseHandItemType
         case leaveSeatItemType
         case shareScreenItemType
-        case chatItemType
         case moreItemType
-        case inviteItemType
-        case inviteSeatItemType
-        case floatWindowItemType
-        case setupItemType
-        case changeHostItemType
-        case muteMessageItemType
-        case kickOutItemType
-        case normal
-        case advancedSettingItemType
-        case switchMicItemType
         case switchCamaraItemType
-        case setAdministratorItemType
         case raiseHandApplyItemType
+        case normal
     }
     enum Orientation {
         case left
@@ -63,9 +51,12 @@ class ButtonItemData {
         return UIImage(named: disabledIcon, in: resourceBundle, compatibleWith: nil)?.checkOverturn()
     }
     
+    var hasNotice: Bool = false
+    var noticeText: String = ""
+    
     var cornerRadius: CGFloat?
     var hasLineView: Bool = false
-    var orientation: Orientation = .left //文字和按钮的相对位置，默认是图案在左，文字在右，为left
+    var orientation: Orientation = .left
     var imageSize: CGSize?
     var size: CGSize?
     var backgroundColor: UIColor?

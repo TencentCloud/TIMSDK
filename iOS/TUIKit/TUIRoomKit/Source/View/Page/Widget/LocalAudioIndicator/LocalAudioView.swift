@@ -2,7 +2,7 @@
 //  LocalAudioView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2024/1/5.
+//  Created by janejntang on 2024/1/5.
 //
 
 import Foundation

@@ -2,13 +2,13 @@
 //  RoomVideoFloatView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/11.
-//  悬浮窗
+//  Created by janejntang on 2023/7/11.
 //
 
 import Foundation
 
 class RoomVideoFloatView: UIView {
+    @Injected private var store: FloatChatStoreProvider
     private var isDraging: Bool = false
     private let viewModel: RoomVideoFloatViewModel
     private let space: CGFloat = 10
@@ -126,7 +126,6 @@ class RoomVideoFloatView: UIView {
     
     @objc func didPan(panGesture: UIPanGestureRecognizer) {
         guard let viewSuperview = superview else { return }
-        // 移动状态
         let moveState = panGesture.state
         let viewCenter = center
         switch moveState {
@@ -138,7 +137,6 @@ class RoomVideoFloatView: UIView {
         case .ended:
             let point = panGesture.translation(in: viewSuperview)
             let newPoint = CGPoint(x: viewCenter.x + point.x, y: viewCenter.y + point.y)
-            // 自动吸边动画
             UIView.animate(withDuration: 0.2) {
                 self.center = self.adsorption(centerPoint: newPoint)
             }
@@ -146,7 +144,6 @@ class RoomVideoFloatView: UIView {
             break
         default: break
         }
-        // 重置 panGesture
         panGesture.setTranslation(.zero, in: viewSuperview)
     }
     
@@ -179,7 +176,6 @@ class RoomVideoFloatView: UIView {
         let frame = self.frame
         let point = CGPoint(x: centerPoint.x - frame.width / 2, y: centerPoint.y - frame.height / 2)
         var newPoint = point
-        // 吸边
         if centerPoint.x < (viewSuperview.frame.width / 2) {
             newPoint.x = limitMargin
         } else {

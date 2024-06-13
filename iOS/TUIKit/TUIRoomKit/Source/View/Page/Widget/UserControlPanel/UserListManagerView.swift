@@ -2,7 +2,7 @@
 //  UserListManagerView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/5.
+//  Created by janejntang on 2023/1/5.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -276,7 +276,7 @@ extension UserListManagerView: UserListManagerViewEventResponder {
 
 private extension String {
     static var meText: String {
-        localized("TUIRoom.me")
+        localized("Me")
     }
 }
 

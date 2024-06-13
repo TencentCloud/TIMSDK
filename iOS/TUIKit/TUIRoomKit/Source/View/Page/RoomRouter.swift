@@ -2,24 +2,30 @@
 //  RoomRouter.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2022/9/30.
+//  Created by janejntang on 2022/9/30.
 //  Copyright © 2022 Tencent. All rights reserved.
 //
 
 import Foundation
 import TUICore
-import TUIRoomEngine
+import RTCRoomEngine
 
-// 视图路由上下文
+// View routing context
 class RouteContext {
-    var rootNavigation: RoomKitNavigationController? // 当前根视图控制器
-    typealias WeakArray<T> = [() -> T?]
-    var presentControllerMap: [PopUpViewType:WeakArray<UIViewController>] = [:] //当前模态弹出的页面
-    let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
+    var rootNavigation: UINavigationController?
+    typealias Weak<T> = () -> T?
+    var alterControllers: [Weak<UIViewController>] = []
+    var popUpViewController: Weak<PopUpViewController>?
+    var appearance: AnyObject?
     let navigationDelegate = RoomRouter.RoomNavigationDelegate()
     var chatWindow : UIWindow?
     var currentLandscape: Bool = isLandscape
-    init() {}
+    weak var rootViewController: UIViewController?
+    init() {
+        if #available(iOS 13, *) {
+            appearance = UINavigationBarAppearance()
+        }
+    }
 }
 
 class RoomRouter: NSObject {
@@ -34,7 +40,7 @@ class RoomRouter: NSObject {
         
     }
     
-    var navController: RoomKitNavigationController? {
+    var navController: UINavigationController? {
         return context.rootNavigation
     }
     
@@ -42,6 +48,7 @@ class RoomRouter: NSObject {
         EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_ShowRoomMainView, responder: self)
         EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_ShowRoomVideoFloatView, responder: self)
         EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_HiddenChatWindow, responder: self)
+        EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_DismissConferenceViewController, responder: self)
         NotificationCenter.default.addObserver(self, selector: #selector(handleDeviceOrientationChange), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
@@ -49,6 +56,7 @@ class RoomRouter: NSObject {
         EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_ShowRoomMainView, responder: self)
         EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_ShowRoomVideoFloatView, responder: self)
         EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_HiddenChatWindow, responder: self)
+        EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_DismissConferenceViewController, responder: self)
         NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
@@ -58,18 +66,17 @@ class RoomRouter: NSObject {
     
     func pushToChatController(user: UserEntity, roomInfo: TUIRoomInfo) {
         guard let chatVC = makeChatController(user: user, roomInfo: roomInfo) else { return }
-        let appearance = context.appearance
-        appearance.backgroundColor = UIColor.white
         let nav = !isLandscape ? navController : UINavigationController(rootViewController: chatVC)
-        nav?.navigationBar.standardAppearance = appearance
-        nav?.navigationBar.scrollEdgeAppearance = appearance
-        nav?.navigationBar.tintColor = UIColor.black
         if !isLandscape {
-            push(viewController: chatVC)
+            push(viewController: chatVC, animated: false)
         } else {
-            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+            if #available(iOS 13, *) {
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+                context.chatWindow = UIWindow(windowScene: windowScene)
+            } else {
+                context.chatWindow = UIWindow(frame: UIScreen.main.bounds)
+            }
             let chatWidth = min(kScreenWidth, kScreenHeight)
-            context.chatWindow = UIWindow(windowScene: windowScene)
             context.chatWindow?.frame = CGRect(x: kScreenWidth - chatWidth - kDeviceSafeBottomHeight, y: 0, width: chatWidth, height: chatWidth)
             context.chatWindow?.rootViewController = nav
             context.chatWindow?.windowLevel = UIWindow.Level.statusBar + 1
@@ -100,85 +107,70 @@ class RoomRouter: NSObject {
             TUICore_TUIChatObjectFactory_ChatViewController_Enable_Poll  : String(0),
             TUICore_TUIChatObjectFactory_ChatViewController_Enable_GroupNote  : String(0),
             TUICore_TUIChatObjectFactory_ChatViewController_Enable_WelcomeCustomMessage :String(0),
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_TakePhoto :String(0),
+            TUICore_TUIChatObjectFactory_ChatViewController_Enable_RecordVideo :String(0),
         ]
         return TUICore.createObject(TUICore_TUIChatObjectFactory, key: TUICore_TUIChatObjectFactory_ChatViewController_Classic,
                                     param: param) as? UIViewController
     }
     
-    func pushMainViewController(roomId: String) {
-        let vc = makeMainViewController(roomId: roomId)
+    func pushMainViewController() {
+        let vc = makeMainViewController()
         push(viewController: vc)
     }
     
     func presentPopUpViewController(viewType: PopUpViewType, height: CGFloat, backgroundColor: UIColor = UIColor(0x1B1E26)) {
+        if let observer = context.popUpViewController, let vc = observer() {
+            vc.dismiss(animated: false)
+        }
         let vc = makePopUpViewController(viewType: viewType, height: height, backgroundColor: backgroundColor)
         let weakObserver = { [weak vc] in return vc }
-        if var observerArray = context.presentControllerMap[viewType] {
-            observerArray.append(weakObserver)
-            context.presentControllerMap[viewType] = observerArray
-        } else {
-            context.presentControllerMap[viewType] = [weakObserver]
-        }
+        context.popUpViewController = weakObserver
         present(viewController: vc)
     }
     
-    func dismissPopupViewController(viewType: PopUpViewType, animated: Bool = true, completion: (() -> Void)? = nil) {
-        guard var observerArray = context.presentControllerMap[viewType] else { return }
-        guard observerArray.count > 0 else {
-            context.presentControllerMap.removeValue(forKey: viewType)
+    func dismissPopupViewController(completion: (() -> Void)? = nil) {
+        guard let observer = context.popUpViewController, let vc = observer() else {
+            completion?()
             return
         }
-        guard let observer = observerArray.last, let vc = observer() else { return }
-        vc.dismiss(animated: animated, completion: completion)
-        observerArray.removeLast()
-        if observerArray.count == 0 {
-            context.presentControllerMap.removeValue(forKey: viewType)
-        }
-    }
-    
-    //删除所有进房后的popupViewController
-    func dismissAllRoomPopupViewController() {
-        for viewType in context.presentControllerMap.keys {
-            if viewType == .navigationControllerType { continue }
-            guard let observerArray = context.presentControllerMap[viewType] else { continue }
-            guard observerArray.count > 0 else {
-                context.presentControllerMap.removeValue(forKey: viewType)
-                continue
-            }
-            observerArray.forEach { observer in
-                if let vc = observer() as? PopUpViewController {
-                    vc.viewModel.searchControllerActiveChange()
-                }
-                observer()?.dismiss(animated: true)
-            }
-            context.presentControllerMap.removeValue(forKey: viewType)
-        }
+        vc.viewModel.changeSearchControllerActive()
+        vc.dismiss(animated: true, completion: completion)
+        context.popUpViewController = nil
     }
     
     func pop(animated: Bool = true) {
         guard let viewControllerArray = navController?.viewControllers else { return }
         if viewControllerArray.count <= 1 {
+            viewControllerArray.first?.dismiss(animated: true)
             navController?.dismiss(animated: true)
             context.rootNavigation = nil
-            context.presentControllerMap.removeValue(forKey: .navigationControllerType)
         } else {
-            navController?.popViewController(animated: animated)
+            if let vc = viewControllerArray.last, vc is ConferenceMainViewController {                
+                navController?.popViewController(animated: animated)
+                context.rootNavigation = nil
+            } else {
+                navController?.popViewController(animated: animated)
+            }
         }
     }
     
     func popToRoomEntranceViewController() {
-        guard let navController = navController else { return }
-        var controllerArray = navController.viewControllers
-        controllerArray.reverse()
-        for vc in controllerArray {
-            if vc is PopUpViewController {
-                vc.dismiss(animated: true)
-            } else {
-                pop()
+        if let navController = navController {
+            var controllerArray = navController.viewControllers
+            controllerArray.reverse()
+            for vc in controllerArray {
+                if vc is PopUpViewController {
+                    vc.dismiss(animated: true)
+                } else {
+                    pop()
+                }
+                if vc is ConferenceMainViewController {
+                    break
+                }
             }
-            if vc is RoomMainViewController {
-                break
-            }
+        } else if let vc = context.rootViewController {
+            vc.dismiss(animated: true)
         }
     }
     
@@ -198,7 +190,37 @@ class RoomRouter: NSObject {
         }
         alertVC.addAction(sureAction)
         shared.getCurrentWindowViewController()?.present(alertVC, animated: true)
+        let weakObserver = { [weak alertVC] in return alertVC }
+        shared.context.alterControllers.append(weakObserver)
     }
+    
+    func dismissAllAlertController(complete: @escaping (()->())) {
+        guard context.alterControllers.count > 0 else {
+            complete()
+            return
+        }
+        dismissAlertController(index: context.alterControllers.count - 1) { [weak self] in
+            guard let self = self else { return }
+            self.context.alterControllers = []
+            complete()
+        }
+    }
+    
+    private func dismissAlertController(index: Int, complete: @escaping (()->())) {
+        if index < 0 {
+            complete()
+            return
+        }
+        if let observer = context.alterControllers[safe: index], let vc = observer() {
+            vc.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                self.dismissAlertController(index: index - 1, complete: complete)
+            }
+        } else {
+            dismissAlertController(index: index-1, complete: complete)
+        }
+    }
+     
     
     class func makeToast(toast: String) {
         shared.getCurrentWindowViewController()?.view.makeToast(toast)
@@ -209,14 +231,32 @@ class RoomRouter: NSObject {
         windowView.makeToast(toast,duration: duration,position:TUICSToastPositionCenter)
     }
     
+    class func makeToastInWindow(toast: String, duration:TimeInterval) {
+        guard let window = RoomRouter.getCurrentWindow() else {return}
+        window.makeToast(toast,duration: duration,position:TUICSToastPositionCenter)
+    }
+    
     class func getCurrentWindow() -> UIWindow? {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            if let keyWindow = windowScene.windows.first {
-                return keyWindow
-            }
+        var windows: [UIWindow]
+        if #available(iOS 13.0, *), let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            windows = windowScene.windows
+        } else {
+            windows = UIApplication.shared.windows
         }
-        return UIApplication.shared.windows.first(where: { $0.windowLevel == .normal && $0.isHidden == false &&
-            CGRectEqualToRect($0.bounds , UIScreen.main.bounds )})
+        if let keyWindow = windows.first(where: { $0.isKeyWindow }) {
+            return keyWindow
+        } else {
+            return windows.last(where: { $0.windowLevel == .normal && $0.isHidden == false &&
+                CGRectEqualToRect($0.bounds , UIScreen.main.bounds) })
+        }
+    }
+    
+    func initializeNavigationController(rootViewController: UIViewController) {
+        guard context.rootNavigation == nil else { return }
+        if let nav = rootViewController.navigationController {
+            context.rootNavigation = nav
+        }
+        context.rootViewController = rootViewController
     }
     
     @objc func handleDeviceOrientationChange() {
@@ -233,7 +273,7 @@ class RoomRouter: NSObject {
 
 extension RoomRouter {
     
-    private func push(viewController: UIViewController, animated: Bool = true) {
+    func push(viewController: UIViewController, animated: Bool = true) {
         guard let navController = navController else {
             createRootNavigationAndPresent(controller: viewController)
             return
@@ -241,10 +281,17 @@ extension RoomRouter {
         navController.pushViewController(viewController, animated: animated)
     }
     
-    private func present(viewController: UIViewController, style: UIModalPresentationStyle = .automatic, animated: Bool = true) {
-        viewController.modalPresentationStyle = style
-        guard let navController = navController else { return }
-        navController.present(viewController, animated: animated)
+    private func present(viewController: UIViewController, animated: Bool = true) {
+        if #available(iOS 13.0, *) {
+            viewController.modalPresentationStyle = .automatic
+        } else {
+            viewController.modalPresentationStyle = .overFullScreen
+        }
+        if let navController = navController {
+            navController.present(viewController, animated: animated)
+        } else if let vc = context.rootViewController {
+            vc.present(viewController, animated: true)
+        }
     }
     
     private func createRootNavigationAndPresent(controller: UIViewController) {
@@ -253,18 +300,18 @@ extension RoomRouter {
         context.rootNavigation = navigationController
         if #available(iOS 13.0, *) {
             setupNavigationBarAppearance()
-            navigationController.navigationBar.standardAppearance = context.appearance
-            navigationController.navigationBar.scrollEdgeAppearance = context.appearance
+            if let appearance = context.appearance as? UINavigationBarAppearance {
+                navigationController.navigationBar.standardAppearance = appearance
+                navigationController.navigationBar.scrollEdgeAppearance = appearance
+            }
+        } else {
+            navigationController.navigationBar.barTintColor = UIColor(0x1B1E26)
+            navigationController.navigationBar.shadowImage = UIImage()
+            navigationController.navigationBar.barStyle = .default
         }
         navigationController.delegate = context.navigationDelegate
         let weakObserver = { [weak navigationController] in
             return navigationController
-        }
-        if var observerArray = context.presentControllerMap[.navigationControllerType] {
-            observerArray.append(weakObserver)
-            context.presentControllerMap[.navigationControllerType] = observerArray
-        } else {
-            context.presentControllerMap[.navigationControllerType] = [weakObserver]
         }
         guard let controller = getCurrentWindowViewController() else { return }
         controller.present(navigationController, animated: true)
@@ -272,7 +319,9 @@ extension RoomRouter {
     
     @available(iOS 13.0, *)
     private func setupNavigationBarAppearance() {
-        let barAppearance = context.appearance
+        guard let barAppearance = context.appearance as? UINavigationBarAppearance else {
+            return
+        }
         barAppearance.configureWithDefaultBackground()
         barAppearance.shadowColor = nil
         barAppearance.backgroundEffect = nil
@@ -304,12 +353,12 @@ extension RoomRouter {
         return viewController
     }
     
-    private func makeMainViewController(roomId: String) -> UIViewController {
-        let controller = RoomMainViewController(roomMainViewModelFactory: self)
+    private func makeMainViewController() -> UIViewController {
+        let controller = ConferenceMainViewController()
         return controller
     }
     
-    private func makePopUpViewController(viewType: PopUpViewType, height: CGFloat, backgroundColor: UIColor) -> UIViewController {
+    private func makePopUpViewController(viewType: PopUpViewType, height: CGFloat, backgroundColor: UIColor) -> PopUpViewController {
         let controller = PopUpViewController(popUpViewModelFactory: self, viewType: viewType, height: height, backgroundColor: backgroundColor)
         return controller
     }
@@ -325,20 +374,19 @@ extension RoomRouter {
 
 extension RoomRouter.RoomNavigationDelegate: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        if viewController is RoomMainViewController {
-            let appearance = RoomRouter.shared.context.appearance
-            appearance.backgroundColor = UIColor(0x1B1E26)
-            navigationController.navigationBar.standardAppearance = appearance
-            navigationController.navigationBar.scrollEdgeAppearance = appearance
-            navigationController.navigationBar.tintColor = UIColor.white
+        if viewController is ConferenceMainViewController {
+            if #available(iOS 13.0, *) {
+                if let appearance = RoomRouter.shared.context.appearance as? UINavigationBarAppearance {
+                    appearance.backgroundColor = UIColor(0x1B1E26)
+                    navigationController.navigationBar.standardAppearance = appearance
+                    navigationController.navigationBar.scrollEdgeAppearance = appearance
+                    navigationController.navigationBar.tintColor = UIColor.white
+                }
+            } else {
+                navigationController.navigationBar.tintColor = UIColor.white
+                navigationController.navigationBar.backgroundColor = UIColor(0x1B1E26)
+            }
         }
-    }
-}
-
-extension RoomRouter: RoomMainViewModelFactory {
-    func makeRoomMainViewModel() -> RoomMainViewModel {
-        let model = RoomMainViewModel()
-        return model
     }
 }
 
@@ -354,14 +402,22 @@ extension RoomRouter: RoomKitUIEventResponder {
     func onNotifyUIEvent(key: EngineEventCenter.RoomUIEvent, Object: Any?, info: [AnyHashable : Any]?) {
         switch key {
         case .TUIRoomKitService_ShowRoomVideoFloatView:
-            dismissAllRoomPopupViewController()
+            dismissPopupViewController()
             popToRoomEntranceViewController()
             RoomVideoFloatView.show()
         case .TUIRoomKitService_ShowRoomMainView:
             RoomVideoFloatView.dismiss()
-            self.pushMainViewController(roomId: EngineManager.createInstance().store.roomInfo.roomId)
+            self.pushMainViewController()
         case .TUIRoomKitService_HiddenChatWindow:
             destroyChatWindow()
+        case .TUIRoomKitService_DismissConferenceViewController:
+            dismissAllAlertController() { [weak self] in
+                guard let self = self else { return }
+                self.dismissPopupViewController() { [weak self] in
+                    guard let self = self else { return }
+                    self.popToRoomEntranceViewController()
+                }
+            }
         default: break
         }
     }
@@ -369,6 +425,6 @@ extension RoomRouter: RoomKitUIEventResponder {
 
 private extension String {
     static var chatText: String {
-        localized("TUIRoom.chat")
+        localized("Chat")
     }
 }

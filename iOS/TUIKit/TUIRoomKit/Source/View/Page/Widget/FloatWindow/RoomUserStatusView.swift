@@ -2,7 +2,7 @@
 //  RoomUserStatusView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/24.
+//  Created by janejntang on 2023/7/24.
 //
 
 import Foundation

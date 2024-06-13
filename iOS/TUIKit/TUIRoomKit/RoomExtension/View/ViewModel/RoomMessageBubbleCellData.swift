@@ -2,14 +2,14 @@
 //  RoomMsgViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/5/8.
+//  Created by janejntang on 2023/5/8.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
 import Foundation
 import TIMCommon
 import TUICore
-import TUIRoomEngine
+import RTCRoomEngine
 
 @objc(RoomMessageBubbleCellData)
 class RoomMessageBubbleCellData: TUIBubbleMessageCellData {
@@ -20,10 +20,6 @@ class RoomMessageBubbleCellData: TUIBubbleMessageCellData {
     override class func getCellData(_ message: V2TIMMessage) -> TUIMessageCellData {
         let messageModel = RoomMessageModel()
         messageModel.updateMessage(message: message)
-        if messageModel.messageId.count > 0, messageModel.roomState == .creating, messageModel.roomId == RoomManager.shared.roomId {
-            RoomManager.shared.roomObserver.messageModel.updateMessage(message: message)
-            createRoom(roomId: messageModel.roomId)
-        }
         if messageModel.roomId == RoomManager.shared.roomId, messageModel.roomState != .destroyed {
             RoomManager.shared.roomObserver.messageModel.updateMessage(message: message)
         }
@@ -51,19 +47,13 @@ class RoomMessageBubbleCellData: TUIBubbleMessageCellData {
         return businessID
     }
     
-    private class func createRoom(roomId: String) {
-        let roomInfo = TUIRoomInfo()
-        roomInfo.roomId = roomId
-        roomInfo.name = TUILogin.getNickName() ?? (TUILogin.getUserID() ?? "") + .quickMeetingText
-        RoomManager.shared.createRoom(roomInfo: roomInfo)
-    }
-    
     deinit {
         debugPrint("deinit \(self)")
     }
 }
+
 private extension String {
     static var quickMeetingText: String {
-        localized("TUIRoom.video.conference")
+        localized("'s quick meeting")
     }
 }

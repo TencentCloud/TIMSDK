@@ -2,7 +2,7 @@
 //  RoomCommon.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/6/26.
+//  Created by janejntang on 2023/6/26.
 //
 
 import Foundation
@@ -14,9 +14,11 @@ var isRTL: Bool {
 }
 
 var isLandscape: Bool {
-    guard let orientationIsLandscape = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation.isLandscape as? Bool
-    else { return false }
-    return orientationIsLandscape
+    if #available(iOS 13, *) {
+        return UIApplication.shared.windows.first?.windowScene?.interfaceOrientation.isLandscape == true
+    } else {
+        return UIApplication.shared.statusBarOrientation.isLandscape
+    }
 }
 
 class RoomCommon {
@@ -106,21 +108,21 @@ class RoomCommon {
 
 private extension String {
     static var microphonePermissionTitle: String {
-        localized("TUIRoom.fail.microphone.permission.Title")
+        localized("No access to microphone")
     }
     static var microphonePermissionTipsText: String {
-        localized("TUIRoom.fail.microphone.permission.Tips")
+        localized("Unable to use audio function, click \"Authorize Now\" to open the microphone permission.")
     }
     static var cameraPermissionTitle: String {
-        localized("TUIRoom.fail.camera.permission.Title")
+        localized("No access to camera")
     }
     static var cameraPermissionTipsText: String {
-        localized("TUIRoom.fail.camera.permission.Tips")
+        localized("Unable to use the video function, click \"Authorize Now\" to open the camera permission.")
     }
     static var permissionLaterText: String {
-        localized("TUIRoom.fail.permission.Later")
+        localized("Later")
     }
     static var permissionEnableText: String {
-        localized("TUIRoom.fail.permission.Enable")
+        localized("Authorize Now")
     }
 }

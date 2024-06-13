@@ -2,11 +2,10 @@
 //  RoomObserver.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/3.
-//  监听TUIRoomEngine，并且处理回调
+//  Created by janejntang on 2023/7/3.
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 import TUICore
 
 @objc public protocol RoomObserverListener {
@@ -86,11 +85,9 @@ class RoomObserver: NSObject {
     
     func exitedRoom() {
         RoomVideoFloatView.dismiss()
-        userList = userList.filter { userDic in
-            if let userId = userDic["userId"] as? String, userId != userId {
-                return true
-            }
-            return false
+        userList = userList.filter { [weak self] userDic in
+            guard let self = self, let userId = userDic["userId"] as? String else { return false }
+            return userId != self.userId
         }
         if messageModel.owner == userId {
             let prefixUserList = Array(userList.prefix(5))
@@ -187,7 +184,7 @@ extension RoomObserver: RoomKitUIEventResponder {
         case .TUIRoomKitService_ExitedRoom:
             self.exitedRoom()
         case .TUIRoomKitService_RoomOwnerChanged:
-            guard let userId = info?["userId"] as? String else { return }
+            guard let userId = info?["owner"] as? String else { return }
             messageManager.resendRoomMessage(message: messageModel, dic: ["owner": userId])
         default: break
         }

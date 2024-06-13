@@ -2,7 +2,7 @@
 //  UIImage+RTL.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/8/31.
+//  Created by janejntang on 2023/8/31.
 //
 
 import Foundation

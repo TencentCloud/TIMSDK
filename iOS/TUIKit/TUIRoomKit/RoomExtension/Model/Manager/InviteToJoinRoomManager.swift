@@ -2,11 +2,11 @@
 //  InviteToJoinRoomManager.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/3.
-//  可以选择邀请成员，并且发送邀请。
+//  Created by janejntang on 2023/7/3.
+//  You can choose to invite members and send invitations.
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 import TUICore
 
 class InviteToJoinRoomManager {
@@ -44,7 +44,7 @@ class InviteToJoinRoomManager {
     class func inviteToJoinRoom(inviteJoinModel: InviteJoinModel, invitedList: [String]) {
         guard invitedList.count > 0 else { return }
         let dataDict = inviteJoinModel.getDicFromInviteJoinModel(inviteJoinModel: inviteJoinModel)
-        let dataString = dicValueString(dataDict)
+        guard let dataString = dataDict.convertToString() else { return }
         let pushInfo = V2TIMOfflinePushInfo()
         invitedList.forEach { userId in
             V2TIMManager.sharedInstance().invite(userId,
@@ -82,13 +82,5 @@ class InviteToJoinRoomManager {
         }
         let viewController = findCurrentController(from: rootController)
         return viewController
-    }
-    
-    //字典转成字符串
-    class private func dicValueString(_ dic:[String : Any]) -> String?{
-        let dicData = try? JSONSerialization.data(withJSONObject: dic, options: [])
-        guard let data = dicData else { return nil }
-        let str = String(data: data, encoding: String.Encoding.utf8)
-        return str
     }
 }

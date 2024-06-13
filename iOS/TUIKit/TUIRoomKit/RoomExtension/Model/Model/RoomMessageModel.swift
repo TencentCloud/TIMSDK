@@ -2,19 +2,18 @@
 //  RoomMessageModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/5/10.
+//  Created by janejntang on 2023/5/10.
 //
 
 import Foundation
 import TUICore
-import TUIRoomEngine
 
 class RoomMessageModel {
     enum RoomState: String {
-        case creating//房间正在创建
-        case created //房间创建成功
-        case destroying //房间正在销毁
-        case destroyed //房间已经被销毁
+        case creating
+        case created
+        case destroying
+        case destroyed
     }
     private var message: V2TIMMessage?
     var version: Int = 1
@@ -22,9 +21,9 @@ class RoomMessageModel {
     var groupId: String = ""
     var messageId: String = ""
     var roomId: String = ""
-    var owner: String = "" //房主的id
-    var ownerName: String = ""//房主的昵称
-    var roomState: RoomState = .creating //房间状态
+    var owner: String = ""
+    var ownerName: String = ""
+    var roomState: RoomState = .creating
     var memberCount: Int = 0
     var userList: [[String:Any]] = []
     init() {}
@@ -46,13 +45,14 @@ class RoomMessageModel {
         }
         self.userList = dict["userList"] as? [[String:Any]] ?? []
         self.memberCount = dict["memberCount"] as? Int ?? userList.count
-        //需要把messageId赋值进customElem中
         dict["messageId"] = self.messageId
         setMessageCustomElemData(dict: dict, message: message)
     }
     
     private func getMessageCustomElemDic(message: V2TIMMessage) -> [String: Any]? {
-        guard let dataString = String(data: message.customElem.data, encoding: String.Encoding.utf8) else { return nil }
+        guard let customElem = message.customElem else { return nil}
+        guard let customData = customElem.data else { return nil}
+        guard let dataString = String(data: customData, encoding: String.Encoding.utf8) else { return nil }
         guard let data = dataString.data(using: String.Encoding.utf8) else { return nil }
         guard let dict = try? JSONSerialization.jsonObject(with: data,
                                                            options: .mutableContainers) as? [String : Any] else { return nil }
@@ -60,7 +60,7 @@ class RoomMessageModel {
     }
     
     private func setMessageCustomElemData(dict: [String: Any], message: V2TIMMessage) {
-        guard let jsonString = dicValueString(dict) else { return }
+        guard let jsonString = dict.convertToString() else { return }
         let jsonData = jsonString.data(using: String.Encoding.utf8)
         message.customElem.data = jsonData
     }
@@ -82,14 +82,6 @@ class RoomMessageModel {
     
     func getMessage() -> V2TIMMessage? {
         return message
-    }
-    
-    //字典转成字符串
-    private func dicValueString(_ dic:[String : Any]) -> String?{
-        let dicData = try? JSONSerialization.data(withJSONObject: dic, options: [])
-        guard let data = dicData else { return nil }
-        let str = String(data: data, encoding: String.Encoding.utf8)
-        return str
     }
     
     deinit {

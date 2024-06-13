@@ -2,12 +2,12 @@
 //  RoomMessageViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/5/10.
+//  Created by janejntang on 2023/5/10.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 import TUICore
 import TIMCommon
 
@@ -50,7 +50,6 @@ class RoomMessageViewModel: NSObject {
     }
     
     func enterRoomAction() {
-        //首先判断现在是否已经进行TUICallKit的视频通话或者音频通话
         guard BusinessSceneUtil.canJoinRoom() else { return }
         if roomManager.isEnteredOtherRoom(roomId: message.roomId) {
             roomManager.exitOrDestroyPreviousRoom { [weak self] in

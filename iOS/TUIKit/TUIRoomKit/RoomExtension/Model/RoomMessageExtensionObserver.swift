@@ -2,7 +2,7 @@
 //  RoomMessageExtensionObserver.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/6/2.
+//  Created by janejntang on 2023/6/2.
 //
 
 import Foundation
@@ -76,10 +76,10 @@ extension RoomMessageExtensionObserver: TUIExtensionProtocol {
 
 private extension String {
     static var meetingText: String {
-        localized("TUIRoom.quick.meeting")
+        localized("Quick meeting")
     }
     static var roomDeviceSetText: String {
-        localized("TUIRoom.device.set")
+        localized("Meeting Settings")
     }
 }
 

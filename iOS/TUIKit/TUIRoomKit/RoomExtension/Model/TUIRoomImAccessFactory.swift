@@ -2,7 +2,7 @@
 //  TUIRoomImAccessFactory.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/5/10.
+//  Created by janejntang on 2023/5/10.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 

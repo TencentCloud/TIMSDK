@@ -6,96 +6,33 @@
 //  Copyright © 2023 Tencent. All rights reserved.
 
 import Foundation
-import TUIRoomEngine
-
-// VideoSeatItem类型
-enum VideoSeatItemType {
-    case original // 原始
-    case share // original -> share
-}
+import RTCRoomEngine
 
 class VideoSeatItem: Equatable {
     static func == (lhs: VideoSeatItem, rhs: VideoSeatItem) -> Bool {
-        return (lhs.userId == rhs.userId) && (lhs.type == rhs.type)
+        let lhsType = lhs.videoStreamType == .screenStream
+        let rhsType = rhs.videoStreamType == .screenStream
+        return (lhs.userId == rhs.userId) && (lhsType == rhsType)
     }
-    
-    private var itemType: VideoSeatItemType = .original
-    private var videoStreamType: TUIVideoStreamType = .cameraStream
-    var userInfo: UserEntity
-    var audioVolume: Int = 0
-    var isSelf: Bool {
-        return userInfo.userId == EngineManager.createInstance().store.currentUser.userId
-    }
-    
-    var streamType: TUIVideoStreamType {
-        return videoStreamType
-    }
-    
-    var type: VideoSeatItemType {
-        return itemType
-    }
-    
-    var userId: String {
-        return userInfo.userId
-    }
-    
-    var userName: String {
-        return userInfo.userName
-    }
-    
-    var avatarUrl: String {
-        return userInfo.avatarUrl
-    }
-    
-    var hasAudioStream: Bool {
-        set {
-            userInfo.hasAudioStream = newValue
-        }
-        get {
-            return userInfo.hasAudioStream
-        }
-    }
-    
-    var hasVideoStream: Bool {
-        set {
-            userInfo.hasVideoStream = newValue
-        }
-        get {
-            return userInfo.hasVideoStream
-        }
-    }
-    
-    var hasScreenStream: Bool {
-        set {
-            userInfo.hasScreenStream = newValue
-        }
-        get {
-            return userInfo.hasScreenStream
-        }
-    }
-    
+    var userId: String = ""
+    var userName: String = ""
+    var avatarUrl: String = ""
+    var userRole: TUIRole = .generalUser
+    var userVoiceVolume: Int = 0
+    var hasAudioStream: Bool = false
+    var hasVideoStream: Bool = false
+    var videoStreamType: TUIVideoStreamType = .cameraStream
+    var isOnSeat: Bool = false
+    var disableSendingMessage: Bool = false
     var isHasVideoStream: Bool {
-        return hasVideoStream || hasScreenStream
+        return hasVideoStream || videoStreamType == .screenStream
     }
-    
-    init(userInfo: UserEntity) {
-        self.userInfo = userInfo
-    }
-    
-    func updateUserInfo(_ userInfo: UserEntity) {
-        self.userInfo = userInfo
-    }
-    
-    func cloneShare() -> VideoSeatItem {
-        let item = VideoSeatItem(userInfo: userInfo)
-        item.videoStreamType = .screenStream
-        item.itemType = .share
-        return item
-    }
-    
-    func updateStreamType(streamType: TUIVideoStreamType) {
-        if videoStreamType != .screenStream {
-            videoStreamType = streamType
-        }
+    func update(userInfo: UserEntity) {
+        userId = userInfo.userId
+        userName = userInfo.userName
+        avatarUrl = userInfo.avatarUrl
+        userRole = userInfo.userRole
+        hasAudioStream = userInfo.hasAudioStream
+        hasVideoStream = userInfo.hasVideoStream
     }
 }

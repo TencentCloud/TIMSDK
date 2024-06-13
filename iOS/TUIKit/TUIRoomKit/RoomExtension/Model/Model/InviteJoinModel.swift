@@ -2,12 +2,12 @@
 //  InviteJoinModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/3.
-//  邀请其他人进入房间的信令Model
+//  Created by janejntang on 2023/7/3.
+//  Signaling Model for inviting others into the room
 
 import Foundation
 import TUICore
-import TUIRoomEngine
+import RTCRoomEngine
 
 class InviteJoinModel {
     private var message: RoomMessageModel

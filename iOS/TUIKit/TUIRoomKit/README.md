@@ -55,8 +55,8 @@ TUIRoomKit 是基于腾讯云 [即时通信 IM](https://cloud.tencent.com/docume
 1. 使用Xcode(12.0及以上)打开源码工程`DemoApp.xcworkspace`。
 2. 工程内找到 `iOS/Example/Debug/GenerateTestUserSig.swift` 文件。
 3. 设置 `GenerateTestUserSig.swift` 文件中的相关参数：
-<ul style="margin:0"><li/>SDKAPPID：默认为0，请设置为实际的 SDKAppID。
-<li/>SECRETKEY：默认为空字符串，请设置为实际的密钥信息。</ul>
+<ul style="margin:0"><li/>SDKAppID：默认为0，请设置为实际的 SDKAppID。
+<li/>SDKSecretKey：默认为空字符串，请设置为实际的密钥信息。</ul>
 
 ![](https://qcloudimg.tencent-cloud.cn/raw/1c4eb799c7e06aa2da54ece87ccf993e.png)
 

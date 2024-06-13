@@ -2,17 +2,12 @@
 //  TopViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2022/12/30.
+//  Created by janejntang on 2022/12/30.
 //  Copyright © 2022 Tencent. All rights reserved.
 //
 
 import Foundation
-import TUIRoomEngine
-#if TXLiteAVSDK_TRTC
-import TXLiteAVSDK_TRTC
-#elseif TXLiteAVSDK_Professional
-import TXLiteAVSDK_Professional
-#endif
+import RTCRoomEngine
 
 protocol TopViewModelResponder: AnyObject {
     func updateTimerLabel(text: String)
@@ -53,7 +48,6 @@ class TopViewModel: NSObject {
         micItem.selectedIcon = "room_speakerphone"
         micItem.backgroundColor = UIColor(0xA3AEC7)
         micItem.resourceBundle = tuiRoomKitBundle()
-        micItem.buttonType = .switchMicItemType
         micItem.isSelect = engineManager.store.audioSetting.isSoundOnSpeaker
         micItem.action = { [weak self] sender in
             guard let self = self, let button = sender as? UIButton else { return }
@@ -78,9 +72,9 @@ class TopViewModel: NSObject {
     
     private func initialStatus() {
         if engineManager.store.audioSetting.isSoundOnSpeaker {
-            engineManager.setAudioRoute(route: .modeSpeakerphone)
+            engineManager.setAudioRoute(isSoundOnSpeaker: true)
         } else {
-            engineManager.setAudioRoute(route: .modeEarpiece)
+            engineManager.setAudioRoute(isSoundOnSpeaker: false)
         }
     }
     
@@ -96,9 +90,9 @@ class TopViewModel: NSObject {
         EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_SetToolBarDelayHidden, param: ["isDelay": true])
         sender.isSelected = !sender.isSelected
         if sender.isSelected {
-            engineManager.setAudioRoute(route: .modeSpeakerphone)
+            engineManager.setAudioRoute(isSoundOnSpeaker: true)
         } else {
-            engineManager.setAudioRoute(route: .modeEarpiece)
+            engineManager.setAudioRoute(isSoundOnSpeaker: false)
         }
     }
     

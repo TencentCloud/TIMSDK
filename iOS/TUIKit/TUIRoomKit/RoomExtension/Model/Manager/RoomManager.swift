@@ -2,11 +2,11 @@
 //  RoomManager.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/3.
-//  管理房间，包括房间的创建、进入、退出、销毁和转换房主的操作
+//  Created by janejntang on 2023/7/3.
+//  Manage rooms, including room creation, entry, exit, destruction and conversion operations of the host
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 import TUICore
 
 class RoomManager {
@@ -28,7 +28,6 @@ class RoomManager {
         debugPrint("deinit \(self)")
     }
     
-    //判断是否已经进入其他房间
     func isEnteredOtherRoom(roomId: String) -> Bool {
         return roomInfo.roomId != roomId && roomInfo.roomId != ""
     }
@@ -36,27 +35,27 @@ class RoomManager {
     func createRoom(roomInfo: TUIRoomInfo) {
         roomId = roomInfo.roomId
         roomObserver.registerObserver()
-        engineManager.store.isShowRoomMainViewAutomatically = false
-        TUIRoomKit.createInstance().createRoom(roomInfo: roomInfo) { [weak self] in
+        engineManager.createRoom(roomInfo: roomInfo) { [weak self] in
             guard let self = self else { return }
             self.roomObserver.createdRoom()
-            self.enterRoom(roomId: roomInfo.roomId)
-        } onError: { code, message in
-            RoomCommon.getCurrentWindowViewController()?.view.makeToast(message)
-            debugPrint("createRoom:code:\(code),message:\(message)")
+            self.enterRoom(roomId: roomInfo.roomId, isShownConferenceViewController: false)
+        } onError: { _, message in
+            RoomRouter.makeToast(toast: message)
         }
     }
     
-    func enterRoom(roomId: String) {
+    func enterRoom(roomId: String, isShownConferenceViewController: Bool = true) {
         roomObserver.registerObserver()
         engineManager.store.isImAccess = true
-        engineManager.enterRoom(roomId: roomId, enableAudio: engineManager.store.isOpenMicrophone, enableVideo:
-                                    engineManager.store.isOpenCamera, isSoundOnSpeaker: true) { [weak self] in
+        self.roomId = roomId
+        engineManager.enterRoom(roomId: roomId, enableAudio: engineManager.store.isOpenMicrophone, enableVideo: engineManager.store.isOpenCamera, isSoundOnSpeaker: true) { [weak self] in
             guard let self = self else { return }
             self.roomObserver.enteredRoom()
-        } onError: { code, message in
-            RoomCommon.getCurrentWindowViewController()?.view.makeToast(message)
-            debugPrint("enterRoom:code:\(code),message:\(message)")
+            guard isShownConferenceViewController else { return }
+            let vc = ConferenceMainViewController()
+            RoomRouter.shared.push(viewController: vc)
+        } onError: { _, message in
+            RoomRouter.makeToast(toast: message)
         }
     }
     
@@ -106,11 +105,9 @@ class RoomManager {
         }
     }
     
-    //退出之前进入的房间
     func exitOrDestroyPreviousRoom(onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
         if roomInfo.ownerId == userId {
             if let userModel = engineManager.store.attendeeList.first(where: { $0.userId != userId }) {
-                //如果之前创建的房间还没有被销毁，且有其他用户在房间内，在发送快速会议之前要转移房主
                 changeUserRole(userId: userModel.userId, role: .roomOwner) { [weak self] in
                     guard let self = self else { return }
                     self.exitRoom(onSuccess: onSuccess, onError: onError)
@@ -119,11 +116,9 @@ class RoomManager {
                     self.destroyRoom(onSuccess: onSuccess, onError: onError)
                 }
             } else {
-                //之前创建过房间且没有销毁，房间没有其他人，在发送快速会议前要销毁房间
                 destroyRoom(onSuccess: onSuccess, onError: onError)
             }
         } else {
-            //之前加入过房间，在快速会议前要先退出房间
             exitRoom(onSuccess: onSuccess, onError: onError)
         }
     }

@@ -26,7 +26,7 @@ target 'TUIKitDemo' do
   pod 'TUIChatBotPlugin', '8.0.5895'
   pod 'TUIEmojiPlugin', '8.0.5895'
   pod 'TUICallKit','>= 2.4.0.970'
-  pod 'TUIRoomKit','>= 2.4.0'
+  pod 'TUIRoomKit','>= 2.4.1'
   pod 'MJRefresh'
   pod 'Masonry'
 

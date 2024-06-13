@@ -2,26 +2,37 @@
 //  RaiseHandApplicationListViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/13.
+//  Created by janejntang on 2023/1/13.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 
 protocol RaiseHandApplicationListViewResponder: NSObject {
     func reloadApplyListView()
-    func searchControllerChangeActive(isActive: Bool)
     func makeToast(text: String)
+    func updatePlaceholderViewState(isShown: Bool)
+    func updateApplyButtonState(isEnabled: Bool)
 }
 
 class RaiseHandApplicationListViewModel: NSObject {
     weak var viewResponder: RaiseHandApplicationListViewResponder? = nil
-    let engineManager: EngineManager = EngineManager.createInstance()
-    var roomInfo: TUIRoomInfo {
-        EngineManager.createInstance().store.roomInfo
+    var engineManager: EngineManager {
+        EngineManager.createInstance()
     }
-    var inviteSeatList: [UserEntity] = []
+    var roomInfo: TUIRoomInfo {
+        engineManager.store.roomInfo
+    }
+    var inviteSeatList: [RequestEntity] = []
+    
+    var isPlaceholderViewShown: Bool {
+        return inviteSeatList.isEmpty
+    }
+    
+    var isApplyButtonEnabled: Bool {
+        return !inviteSeatList.isEmpty
+    }
     
     override init() {
         super.init()
@@ -29,29 +40,25 @@ class RaiseHandApplicationListViewModel: NSObject {
         EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_RenewSeatList, responder: self)
     }
     
-    func allAgreeStageAction(sender: UIButton, view: RaiseHandApplicationListView) {
-        for userInfo in engineManager.store.inviteSeatList {
-            guard let requestId = engineManager.store.inviteSeatMap[userInfo.userId] else { continue }
-            engineManager.responseRemoteRequest(requestId, agree: true) { [weak self] in
+    func respondAllRequest(isAgree: Bool) {
+        var isShownStageFullToast = false
+        for requestEntity in engineManager.store.inviteSeatList {
+            engineManager.responseRemoteRequest(requestEntity.requestId, agree: isAgree) { [weak self] in
                 guard let self = self else { return }
-                self.engineManager.deleteInviteSeatUser(userInfo.userId)
-                self.reloadApplyListView()
-            } onError: { _, _ in
-                debugPrint("")
+                self.engineManager.store.deleteTakeSeatRequest(requestId: requestEntity.requestId)
+            } onError: { [weak self] code, message in
+                guard let self = self else { return }
+                guard code == .allSeatOccupied, !isShownStageFullToast else { return }
+                self.viewResponder?.makeToast(text: .onStageNumberReachedLimitText)
+                isShownStageFullToast = true
             }
         }
     }
     
-    func inviteMemberAction(sender: UIButton, view: RaiseHandApplicationListView) {
-        RoomRouter.shared.dismissPopupViewController(viewType: .raiseHandApplicationListViewType)
-        RoomRouter.shared.presentPopUpViewController(viewType: .userListViewType, height: 720.scale375Height())
-    }
-    
-    func agreeStageAction(sender: UIButton, isAgree: Bool, userId: String) {
-        guard let requestId = engineManager.store.inviteSeatMap[userId] else { return }
-        engineManager.responseRemoteRequest(requestId, agree: isAgree) { [weak self] in
+    func respondRequest(isAgree: Bool, request: RequestEntity) {
+        engineManager.responseRemoteRequest(request.requestId, agree: isAgree) { [weak self] in
             guard let self = self else { return }
-            self.engineManager.deleteInviteSeatUser(userId)
+            self.engineManager.store.deleteTakeSeatRequest(requestId: request.requestId)
             self.reloadApplyListView()
         } onError: { [weak self] code, message in
             guard let self = self else { return }
@@ -62,11 +69,9 @@ class RaiseHandApplicationListViewModel: NSObject {
     
     func reloadApplyListView() {
         inviteSeatList = engineManager.store.inviteSeatList
+        viewResponder?.updatePlaceholderViewState(isShown: isPlaceholderViewShown)
+        viewResponder?.updateApplyButtonState(isEnabled: isApplyButtonEnabled)
         viewResponder?.reloadApplyListView()
-    }
-    
-    func backAction() {
-        RoomRouter.shared.dismissPopupViewController(viewType: .raiseHandApplicationListViewType)
     }
     
     deinit {
@@ -83,21 +88,9 @@ extension RaiseHandApplicationListViewModel: RoomKitUIEventResponder {
     }
 }
 
-extension RaiseHandApplicationListViewModel: PopUpViewModelResponder {
-    func updateViewOrientation(isLandscape: Bool) {
-        viewResponder?.searchControllerChangeActive(isActive: false)
-        inviteSeatList = engineManager.store.inviteSeatList
-        viewResponder?.reloadApplyListView()
-    }
-    
-    func searchControllerChangeActive(isActive: Bool) {
-        viewResponder?.searchControllerChangeActive(isActive: isActive)
-    }
-}
-
 private extension String {
     static var onStageNumberReachedLimitText: String {
-        localized("TUIRoom.on.stage.number.reached.limit")
+        localized("The stage is full")
     }
 }
 

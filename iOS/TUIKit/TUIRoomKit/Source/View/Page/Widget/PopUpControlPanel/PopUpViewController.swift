@@ -2,7 +2,7 @@
 //  PopUpViewController.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/12.
+//  Created by janejntang on 2023/1/12.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -15,10 +15,10 @@ protocol PopUpViewModelFactory {
 
 class PopUpViewController: UIViewController {
     let viewModel: PopUpViewModel
-    var duration = 0.5 //弹出动画持续时间
-    var alertTransitionStyle: AlertTransitionAnimator.AlertTransitionStyle = .present //动画弹出或者消失
-    var alertTransitionPosition: AlertTransitionAnimator.AlertTransitionPosition = .bottom //动画的弹出位置
-    var transitionAnimator: AlertTransitionAnimator? //转场控制器
+    var duration = 0.5
+    var alertTransitionStyle: AlertTransitionAnimator.AlertTransitionStyle = .present
+    var alertTransitionPosition: AlertTransitionAnimator.AlertTransitionPosition = .bottom
+    var transitionAnimator: AlertTransitionAnimator?
     override var shouldAutorotate: Bool {
         return true
     }
@@ -30,9 +30,9 @@ class PopUpViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .custom
         transitioningDelegate = self
-        if isLandscape { //横屏从右弹出
+        if isLandscape {
             self.alertTransitionPosition = .right
-        } else { //竖屏从下弹出
+        } else {
             self.alertTransitionPosition = .bottom
         }
     }

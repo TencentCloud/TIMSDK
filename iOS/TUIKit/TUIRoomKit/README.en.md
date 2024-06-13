@@ -37,8 +37,8 @@ TUIRoomKit
 1. Open the demo project `DemoApp.xcworkspace` with Xcode 12.0 or later.
 2. Find the `iOS/Example/Debug/GenerateTestUserSig.swift` file in the project.
 3. Set the following parameters in `GenerateTestUserSig.swift`:
-<ul style="margin:0"><li/>SDKAPPID: `0` by default. Set it to the actual `SDKAppID`.
-<li/>SECRETKEY: Left empty by default. Set it to the actual key.</ul>
+<ul style="margin:0"><li/>SDKAppID: `0` by default. Set it to the actual `SDKAppID`.
+<li/>SDKSecretKey: Left empty by default. Set it to the actual key.</ul>
 
 ![](https://qcloudimg.tencent-cloud.cn/raw/1c4eb799c7e06aa2da54ece87ccf993e.png)
 

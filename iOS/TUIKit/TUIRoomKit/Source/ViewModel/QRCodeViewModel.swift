@@ -2,7 +2,7 @@
 //  QRCodeViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/11.
+//  Created by janejntang on 2023/1/11.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -28,17 +28,17 @@ class QRCodeViewModel {
     }
     
     func backAction() {
-        RoomRouter.shared.dismissPopupViewController(viewType: .QRCodeViewType)
+        RoomRouter.shared.dismissPopupViewController()
     }
     
     func createQRCodeImageView(url: String, imageView: UIImageView) {
         if url.count == 0 { return }
         guard let filter = CIFilter(name: "CIQRCodeGenerator") else {return}
         filter.setDefaults()
-        // 设置滤镜输入数据
+        // Set filter input data
         let data = url.data(using: String.Encoding.utf8)
         filter.setValue(data, forKey: "inputMessage")
-        // 设置二维码的纠错率
+        // Set the error correction rate of QR code
         filter.setValue("M", forKey: "inputCorrectionLevel")
         guard var image = filter.outputImage else { return }
         let transform = CGAffineTransform(scaleX: 20, y: 20)
@@ -49,7 +49,6 @@ class QRCodeViewModel {
         imageView.image = resultImage
     }
     
-    // 使图片放大也可以清晰
     private func getClearImage(sourceImage: UIImage, center: UIImage) -> UIImage? {
         let size = sourceImage.size
         UIGraphicsBeginImageContext(size)

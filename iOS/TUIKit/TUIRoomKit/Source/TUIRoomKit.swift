@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 
+@available(*, deprecated, message: "Use ConferenceMainViewController instead.")
 @objcMembers public class TUIRoomKit: NSObject {
     typealias Weak<T> = () -> T?
     private static var _shared: TUIRoomKit?
@@ -40,7 +41,11 @@ import TUIRoomEngine
     public func enterRoom(roomId: String, enableAudio: Bool, enableVideo: Bool, isSoundOnSpeaker: Bool,
                           onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
         EngineManager.createInstance().enterRoom(roomId: roomId, enableAudio: enableAudio, enableVideo: enableVideo,
-                                                 isSoundOnSpeaker: isSoundOnSpeaker, onSuccess: onSuccess, onError: onError)
+                                                 isSoundOnSpeaker: isSoundOnSpeaker) {
+            RoomRouter.shared.pushMainViewController()
+        } onError: { code, message in
+            onError(code, message)
+        }
     }
     
     deinit {

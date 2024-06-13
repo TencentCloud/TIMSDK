@@ -2,14 +2,13 @@
 //  RoomaInviteViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/5/24.
+//  Created by janejntang on 2023/5/24.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
 import Foundation
 import TUICore
 import AVFAudio
-import TUIRoomEngine
 
 class InvitedToJoinRoomViewModel: NSObject, AVAudioPlayerDelegate {
     let inviteUserName: String

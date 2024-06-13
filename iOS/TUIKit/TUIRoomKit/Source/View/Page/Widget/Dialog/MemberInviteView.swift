@@ -2,13 +2,10 @@
 //  MemberInviteView.swift
 //  TUIRoomKit
 //
-//  Created by 于西巍 on 2023/8/21.
-//  邀请页面
+//  Created by krabyu on 2023/8/21.
 //
 
 import Foundation
-
-import TUIRoomEngine
 
 class MemberInviteView: UIView {
     let viewModel: MemberInviteViewModel
@@ -119,12 +116,12 @@ extension MemberInviteView: MemberInviteResponder {
 
 private extension String {
     static var copyRoomIdSuccess: String {
-        localized("TUIRoom.copy.roomId.success")
+        localized("Conference ID copied.")
     }
     static var copyRoomLinkSuccess: String {
-        localized("TUIRoom.copy.roomLink.success")
+        localized("Conference Link copied.")
     }
     static var inviteMemberText: String {
-        localized("TUIRoom.inviteMember")
+        localized("Invite member")
     }
 }

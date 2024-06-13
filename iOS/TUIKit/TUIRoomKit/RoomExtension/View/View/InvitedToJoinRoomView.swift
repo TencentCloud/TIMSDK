@@ -2,7 +2,7 @@
 //  RoomaInviteView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/5/24.
+//  Created by janejntang on 2023/5/24.
 //
 
 import Foundation
@@ -167,12 +167,12 @@ class InvitedToJoinRoomView: UIView {
 
 private extension String {
     static var inviteMeetingText: String {
-        localized("TUIRoom.invite.meeting")
+        localized("Invite you to a meeting")
     }
     static var declineText: String {
-        localized("TUIRoom.decline")
+        localized("Decline")
     }
     static var agreeText: String {
-        localized("TUIRoom.agree")
+        localized("Agree")
     }
 }

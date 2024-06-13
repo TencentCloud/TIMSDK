@@ -2,7 +2,7 @@
 //  TUICoreThemeConvert.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2024/1/29.
+//  Created by janejntang on 2024/1/29.
 //
 
 import Foundation

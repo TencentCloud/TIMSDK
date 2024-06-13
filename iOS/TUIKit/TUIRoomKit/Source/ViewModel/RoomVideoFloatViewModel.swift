@@ -2,11 +2,11 @@
 //  RoomVideoFloatViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/11.
+//  Created by janejntang on 2023/7/11.
 //
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 
 protocol RoomVideoFloatViewResponder: NSObject {
     func updateUserStatus(user: UserEntity)
@@ -16,8 +16,8 @@ protocol RoomVideoFloatViewResponder: NSObject {
 }
 
 class RoomVideoFloatViewModel: NSObject {
-    var userId: String = "" // 现在悬浮窗显示的成员
-    var streamType: TUIVideoStreamType = .cameraStream // 现在悬浮窗显示的流
+    var userId: String = ""
+    var streamType: TUIVideoStreamType = .cameraStream
     weak var renderView: UIView?
     weak var viewResponder: RoomVideoFloatViewResponder?
     var engineManager: EngineManager {
@@ -33,6 +33,7 @@ class RoomVideoFloatViewModel: NSObject {
     override init() {
         super.init()
         subscribeEngine()
+        subLogoutNotification()
     }
     
     private func subscribeEngine() {
@@ -41,6 +42,7 @@ class RoomVideoFloatViewModel: NSObject {
         EngineEventCenter.shared.subscribeEngine(event: .onKickedOutOfRoom, observer: self)
         EngineEventCenter.shared.subscribeEngine(event: .onUserAudioStateChanged, observer: self)
         EngineEventCenter.shared.subscribeEngine(event: .onUserVoiceVolumeChanged, observer: self)
+        EngineEventCenter.shared.subscribeEngine(event: .onKickedOffLine, observer: self)
         EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_RoomOwnerChanged, responder: self)
     }
     
@@ -50,7 +52,18 @@ class RoomVideoFloatViewModel: NSObject {
         EngineEventCenter.shared.unsubscribeEngine(event: .onKickedOutOfRoom, observer: self)
         EngineEventCenter.shared.unsubscribeEngine(event: .onUserAudioStateChanged, observer: self)
         EngineEventCenter.shared.unsubscribeEngine(event: .onUserVoiceVolumeChanged, observer: self)
+        EngineEventCenter.shared.unsubscribeEngine(event: .onKickedOffLine, observer: self)
         EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_RoomOwnerChanged, responder: self)
+    }
+    
+    private func subLogoutNotification() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(dismissFloatViewForLogout),
+                                               name: NSNotification.Name.TUILogoutSuccess, object: nil)
+    }
+    
+    private func unsubLogoutNotification() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.TUILogoutSuccess, object: nil)
     }
     
     func showRoomMainView() {
@@ -61,9 +74,9 @@ class RoomVideoFloatViewModel: NSObject {
     
     func showFloatWindowViewVideo(renderView: UIView?) {
         self.renderView = renderView
-        if let userModel = getScreenUserModel() { //如果有人正在进行屏幕共享，优先显示屏幕共享
+        if let userModel = getScreenUserModel() { //If someone is screen sharing, show the screen share first
             showScreenStream(userModel: userModel)
-        } else { //没有屏幕共享就显示房主
+        } else { //Show host without screen sharing
             showOwnerCameraStream()
         }
     }
@@ -72,9 +85,14 @@ class RoomVideoFloatViewModel: NSObject {
         return engineManager.store.attendeeList.first(where: { $0.userId == userId })
     }
     
+    @objc private func dismissFloatViewForLogout() {
+        RoomVideoFloatView.dismiss()
+    }
+    
     deinit {
         engineManager.stopPlayRemoteVideo(userId: userId, streamType: streamType)
         unsubscribeEngine()
+        unsubLogoutNotification()
         debugPrint("deinit \(self)")
     }
 }
@@ -154,7 +172,7 @@ extension RoomVideoFloatViewModel: RoomEngineEventResponder {
                 }
                 return
             }
-            guard getScreenUserModel() == nil else { return } //如果有人在进行屏幕共享，不显示房主画面
+            guard getScreenUserModel() == nil else { return } //If someone is screen sharing, don't show the host screen
             guard userId == roomInfo.ownerId else { return }
             if hasVideo {
                 startPlayVideo(userId: userId, streamType: streamType)
@@ -174,6 +192,8 @@ extension RoomVideoFloatViewModel: RoomEngineEventResponder {
             guard let volumeNumber = param?[self.userId] as? NSNumber else { return }
             guard let userModel = getUserEntity(userId: self.userId) else { return }
             viewResponder?.updateUserAudioVolume(hasAudio: userModel.hasAudioStream, volume: volumeNumber.intValue)
+        case .onKickedOffLine:
+            RoomVideoFloatView.dismiss()
         default: break
         }
     }
@@ -183,7 +203,7 @@ extension RoomVideoFloatViewModel: RoomKitUIEventResponder {
     func onNotifyUIEvent(key: EngineEventCenter.RoomUIEvent, Object: Any?, info: [AnyHashable : Any]?) {
         switch key {
         case .TUIRoomKitService_RoomOwnerChanged:
-            guard getScreenUserModel() == nil else { return } //如果有人正在进行屏幕共享，不显示房主画面
+            guard getScreenUserModel() == nil else { return } //If someone is screen sharing, don't show the host screen
             stopPlayVideo(userId: self.userId, streamType: .cameraStream)
             showOwnerCameraStream()
         default: break

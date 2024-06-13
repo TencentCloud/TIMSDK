@@ -19,4 +19,13 @@ extension String {
         }
         return output
     }
+    
+    func convertToDic() -> [String : Any]?{
+        guard let data = self.data(using: String.Encoding.utf8) else { return nil }
+        if let dict = try? JSONSerialization.jsonObject(with: data,
+                                                        options: .mutableContainers) as? [String : Any] {
+            return dict
+        }
+        return nil
+    }
 }

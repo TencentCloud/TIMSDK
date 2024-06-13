@@ -2,7 +2,7 @@ PODS:
   - Masonry (1.1.0)
   - MJRefresh (3.7.9)
   - ReactiveObjC (3.1.1)
-  - RTCRoomEngine/TRTC (2.4.0):
+  - RTCRoomEngine/TRTC (2.4.1):
     - TXIMSDK_Plus_iOS_XCFramework (>= 8.0.5895)
     - TXLiteAVSDK_TRTC (>= 11.7.15304)
   - SDWebImage (5.19.2):
@@ -365,12 +365,12 @@ PODS:
     - TUIGroup/UI_Minimalist/DataProvider
   - TUIGroupNotePlugin (8.0.5895)
   - TUIPollPlugin (8.0.5895)
-  - TUIRoomKit (2.4.0):
+  - TUIRoomKit (2.4.1):
     - SnapKit
     - TIMCommon
     - TUICore
-    - TUIRoomKit/TRTC (= 2.4.0)
-  - TUIRoomKit/TRTC (2.4.0):
+    - TUIRoomKit/TRTC (= 2.4.1)
+  - TUIRoomKit/TRTC (2.4.1):
     - RTCRoomEngine/TRTC (~> 2.4.0)
     - SnapKit
     - TIMCommon
@@ -472,7 +472,7 @@ DEPENDENCIES:
   - TUIGroup (= 8.0.5895)
   - TUIGroupNotePlugin (= 8.0.5895)
   - TUIPollPlugin (= 8.0.5895)
-  - TUIRoomKit (>= 2.4.0)
+  - TUIRoomKit (>= 2.4.1)
   - TUISearch (= 8.0.5895)
   - TUITranslationPlugin (= 8.0.5895)
   - TUIVoiceToTextPlugin (= 8.0.5895)
@@ -512,7 +512,7 @@ SPEC CHECKSUMS:
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
-  RTCRoomEngine: b872246c1e97c2c82d65c80483f804b8e2559623
+  RTCRoomEngine: af1b1bc6767fabe788946de8f935fb9d53a1df7b
   SDWebImage: dfe95b2466a9823cf9f0c6d01217c06550d7b29a
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   TIMCommon: 8c796df3f6f36945770ad6fe36210ed2c6dd860f
@@ -531,13 +531,13 @@ SPEC CHECKSUMS:
   TUIGroup: 7aa567567e662fd8fc336129f768e4dfa709ec74
   TUIGroupNotePlugin: 7b4d243cece5ad6cffeb99fce20ae35e78a381d1
   TUIPollPlugin: 07a5ea40487da095db0217bb5b31269fe5534afb
-  TUIRoomKit: 3e09dc252592b5fdfe8f10cf9786fa348909d230
+  TUIRoomKit: b785365167fe113117c7814e8838654ffe48464f
   TUISearch: eed08074db89ecd031c7dd15f5079c1f316dec6f
   TUITranslationPlugin: 80d1c1d04d3c2ff1bd4ca026e190884bad277fd6
   TUIVoiceToTextPlugin: 1d06c797efc986d360dc6672259506b29f6f4a30
   TXIMSDK_Plus_iOS_XCFramework: 7e8d00fef4638e2395e83a8be821082a2d255d4a
   TXLiteAVSDK_TRTC: f822e40651690da11aa6bc15c4ceb351897a275c
 
-PODFILE CHECKSUM: fa5b610c1014dbaefeb6b65f02c0825e53af7c87
+PODFILE CHECKSUM: e21c72407615d0668f8bfafedcc4f55aaa97ac19
 
 COCOAPODS: 1.15.2

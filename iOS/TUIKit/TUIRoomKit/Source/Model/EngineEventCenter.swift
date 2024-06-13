@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import TUIRoomEngine
 import TUICore
 
 protocol RoomKitUIEventResponder: NSObject {
@@ -36,7 +35,6 @@ class TUINotificationAdapter:NSObject ,TUINotificationProtocol {
     }
 }
 
-/// 负责RoomEngine回调事件分发与通知
 class EngineEventCenter: NSObject {
     
     // Weak Ref
@@ -66,6 +64,8 @@ class EngineEventCenter: NSObject {
         case onAllUserCameraDisableChanged
         case onAllUserMicrophoneDisableChanged
         case onKickedOffSeat
+        case onStatistics
+        case onDeletedTakeSeatRequest
     }
     
     enum RoomUIEvent: String {
@@ -83,15 +83,15 @@ class EngineEventCenter: NSObject {
         case TUIRoomKitService_CurrentUserRoleChanged
         case TUIRoomKitService_CurrentUserMuteMessage
         case TUIRoomKitService_RoomOwnerChanged
-        case TUIRoomKitService_ChangeToolBarHiddenState //更改工具栏显示或者隐藏状态
-        case TUIRoomKitService_SetToolBarDelayHidden //设定工具栏是否3秒之后隐藏（参数：isDelay）
-        case TUIRoomKitService_HiddenChatWindow //隐藏聊天窗口
-        case TUIRoomKitService_ShowExitRoomView //显示离开房间页面
-        case TUIRoomKitService_RenewVideoSeatView //更新视频页面
+        case TUIRoomKitService_ChangeToolBarHiddenState
+        case TUIRoomKitService_SetToolBarDelayHidden
+        case TUIRoomKitService_HiddenChatWindow
+        case TUIRoomKitService_ShowExitRoomView
+        case TUIRoomKitService_RenewVideoSeatView
+        case TUIRoomKitService_DismissConferenceViewController
+        case TUIRoomKitService_ShowFloatChatView
     }
     
-    /// 注册UI响应相关监听事件
-    /// - Parameter key: UI响应对应Key
     func subscribeUIEvent(key: RoomUIEvent, responder: RoomKitUIEventResponder) {
         let observer = TUINotificationAdapter(responder: responder)
         if var observerArray = uiEventObserverMap[key] {
@@ -105,14 +105,10 @@ class EngineEventCenter: NSObject {
         }
     }
     
-    
-    /// 移除UI响应相关事件监听
-    /// - Parameter key: UI响应对应Key
     func unsubscribeUIEvent(key: RoomUIEvent, responder: RoomKitUIEventResponder) {
         guard var observerArray = uiEventObserverMap[key] else { return }
         observerArray = observerArray.filter({ observer in
             guard let responderValue = observer.responder else {
-                //如果responder已经被销毁，需要通知TUICore并且删除本地存储
                 DispatchQueue.main.async {
                     TUICore.unRegisterEvent(RoomUIEvent.TUIRoomKitService.rawValue, subKey: key.rawValue, object: observer)
                 }

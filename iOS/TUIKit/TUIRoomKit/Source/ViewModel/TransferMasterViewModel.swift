@@ -2,7 +2,7 @@
 //  TransferMasterViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/2/20.
+//  Created by janejntang on 2023/2/20.
 //
 
 import Foundation
@@ -30,18 +30,12 @@ class TransferMasterViewModel: NSObject {
         EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_RenewUserList, responder: self)
     }
     
-    func backAction() {
-        RoomRouter.shared.dismissPopupViewController(viewType: .transferMasterViewType)
-    }
-    
     func appointMasterAction(sender: UIButton) {
         guard userId != "" else { return }
         engineManager.changeUserRole(userId: userId, role: .roomOwner) { [weak self] in
             guard let self = self else { return }
-            self.engineManager.exitRoom { [weak self] in
-                guard let self = self else { return }
-                self.roomRouter.dismissAllRoomPopupViewController()
-                self.roomRouter.popToRoomEntranceViewController()
+            self.engineManager.exitRoom {
+                EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_DismissConferenceViewController, param: [:])
             } onError: { [weak self] code, message in
                 guard let self = self else { return }
                 self.viewResponder?.makeToast(message: message)

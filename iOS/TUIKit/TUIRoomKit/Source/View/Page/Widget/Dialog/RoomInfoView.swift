@@ -2,7 +2,7 @@
 //  IntroduceRoomView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/3.
+//  Created by janejntang on 2023/1/3.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -119,7 +119,7 @@ class RoomInfoView: UIView {
     }
     
     func setupViewState(item: RoomInfoViewModel) {
-        nameLabel.text = EngineManager.createInstance().store.roomInfo.name + .quickMeetingText
+        nameLabel.text = EngineManager.createInstance().store.roomInfo.name
     }
     
     @objc func codeAction(sender: UIButton) {
@@ -140,13 +140,10 @@ extension RoomInfoView: RoomInfoResponder {
 
 private extension String {
     static var copyRoomIdSuccess: String {
-        localized("TUIRoom.copy.roomId.success")
+        localized("Conference ID copied.")
     }
     static var copyRoomLinkSuccess: String {
-        localized("TUIRoom.copy.roomLink.success")
-    }
-    static var quickMeetingText: String {
-        localized("TUIRoom.video.conference")
+        localized("Conference Link copied.")
     }
 }
 

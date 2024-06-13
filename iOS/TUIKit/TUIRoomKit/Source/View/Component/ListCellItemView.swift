@@ -2,7 +2,7 @@
 //  ListCellItemView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/6.
+//  Created by janejntang on 2023/1/6.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -160,27 +160,22 @@ class ListCellItemView: UIView {
     }
     
     func setupViewState(item: ListCellItemData) {
-        //UILabel配置
         titleLabel.isHidden = item.titleText.isEmpty
         titleLabel.text = item.titleText
         messageLabel.isHidden = item.messageText.isEmpty
         messageLabel.text = item.messageText
-        //UISwitch配置
         rightSwitch.isHidden = !item.hasSwitch
         rightSwitch.isOn = item.isSwitchOn
-        //TUIButton配置
         rightButton.isHidden = !item.hasRightButton
         if let buttonData = item.buttonData {
             rightButton.setupViewState(item: buttonData)
         }
-        //UISlider配置
         slider.isHidden = !item.hasSlider
         sliderLabel.isHidden = !item.hasSliderLabel
         slider.minimumValue = item.minimumValue / item.sliderStep
         slider.maximumValue = item.maximumValue / item.sliderStep
         slider.value = item.sliderDefault / item.sliderStep
         sliderLabel.text = String(Int(slider.value) * Int(item.sliderStep)) + item.sliderUnit
-        //下划线配置
         downLineView.isHidden = !itemData.hasDownLineView
     }
     

@@ -2,7 +2,7 @@
 //  VideoSeatLayout.swift
 //  TUIVideoSeat
 //
-//  Created by 唐佳宁 on 2023/3/16.
+//  Created by janejntang on 2023/3/16.
 //
 
 import Foundation
@@ -26,19 +26,16 @@ class VideoSeatLayout: UICollectionViewFlowLayout {
         return collectionViewHeight > collectionViewWidth
     }
 
-    // 一行最多展示cell数
     private var kVideoSeatCellNumberOfOneRow: CGFloat {
         return isPortrait ? 2 : 3
     }
 
-    // 一页最多展示cell数
     private var kMaxShowCellCount: Int {
         return 6
     }
 
     private let itemDiffSpace: CGFloat = 5.0
 
-    // item 宽高
     private var itemWidthHeight: CGFloat {
         let minimumDistance = min(collectionViewHeight, collectionViewWidth)
         let availableSpace = minimumDistance - (kVideoSeatCellNumberOfOneRow + 1) * itemDiffSpace
@@ -50,7 +47,7 @@ class VideoSeatLayout: UICollectionViewFlowLayout {
     }
 
     private let viewModel: TUIVideoSeatViewModel
-    // 保存所有item
+    
     fileprivate var layoutAttributeArray: [UICollectionViewLayoutAttributes] = []
 
     init(viewModel: TUIVideoSeatViewModel) {
@@ -77,7 +74,6 @@ class VideoSeatLayout: UICollectionViewFlowLayout {
 
     weak var delegate: VideoSeatLayoutDelegate?
 
-    // Miniscreen布局信息
     func getMiniscreenFrame(item: VideoSeatItem?) -> CGRect {
         var height = isPortrait ? 180.0 : 100.0
         var width = isPortrait ? 100.0 : 180.0
@@ -92,7 +88,6 @@ class VideoSeatLayout: UICollectionViewFlowLayout {
 // MARK: - layout
 
 extension VideoSeatLayout {
-    // 计算cell的位置和大小，并进行存储
     private func calculateEachCellFrame() {
         guard let collectionViewWidth: CGFloat = collectionView?.bounds.width else { return }
         guard viewModel.listSeatItem.count > 0 else { return }
@@ -104,9 +99,12 @@ extension VideoSeatLayout {
             let cell = getFullScreenAttributes(indexPath: indexPath)
             layoutAttributeArray.append(cell)
         } else if viewModel.videoSeatViewType == .largeSmallWindowType {
-            let indexPath = IndexPath(item: 0, section: section)
-            let cell = getFullScreenAttributes(indexPath: indexPath)
-            layoutAttributeArray.append(cell)
+            let largeIndexPath = IndexPath(item: 0, section: section)
+            let largeCell = getFullScreenAttributes(indexPath: largeIndexPath)
+            layoutAttributeArray.append(largeCell)
+            let smallIndexPath = IndexPath(item: 1, section: section)
+            let smallCell = getSmallAttributes(indexPath: smallIndexPath)
+            layoutAttributeArray.append(smallCell)
         } else if viewModel.videoSeatViewType == .pureAudioType || viewModel.videoSeatViewType == .equallyDividedType {
             guard let itemCount = collectionView?.numberOfItems(inSection: section) else { return }
             let isMultipage = itemCount >= kMaxShowCellCount
@@ -124,12 +122,10 @@ extension VideoSeatLayout {
         } else if viewModel.videoSeatViewType == .speechType {
             guard let itemCount = collectionView?.numberOfItems(inSection: section) else { return }
             let isMultipage = (itemCount - 1) >= kMaxShowCellCount
-            // 其它页：2,3,4.... 均分
             for i in 0 ... itemCount {
                 let indexPath = IndexPath(item: i, section: section)
                 var cell: UICollectionViewLayoutAttributes
                 if i == 0 {
-                    // 演讲者大窗
                     cell = getFullScreenAttributes(indexPath: indexPath)
                 } else if isMultipage {
                     cell = getMultipageEquallyDividedAttributes(indexPath: indexPath, item: i - 1,
@@ -147,7 +143,7 @@ extension VideoSeatLayout {
         delegate?.updateNumberOfPages(numberOfPages: prePageCount)
     }
 
-    // 全屏cell布局信息
+    // Full screen cell layout information
     private func getFullScreenAttributes(indexPath: IndexPath) ->
         UICollectionViewLayoutAttributes {
         let cell = UICollectionViewLayoutAttributes(forCellWith: indexPath)
@@ -155,35 +151,36 @@ extension VideoSeatLayout {
         return cell
     }
 
-    // 获取等分居中布局
+    private func getSmallAttributes(indexPath: IndexPath) -> UICollectionViewLayoutAttributes {
+        let cell = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+        cell.frame = getMiniscreenFrame(item: nil)
+        return cell
+    }
+
     private func getEquallyDividedAttributes(indexPath: IndexPath, item: Int, itemCount: Int, leftDiff: CGFloat) ->
         UICollectionViewLayoutAttributes {
-        // 为何不直接用indexPath.item,因为演讲者模式，第一页只有2个数据填充页面
-        // page:1,2,3 row:1,2,3, item:1,2,3
-        // column:0,1,2,3
-
         /*-----------------item&page&currentPageItemCount&cell-----------------**/
         let item = item + 1
-        let page = Int(ceil(CGFloat(item) / CGFloat(kMaxShowCellCount))) // cell在第几页上
-        let currentPageItemCount = min(itemCount, page * kMaxShowCellCount) - (page - 1) * kMaxShowCellCount // 当前页item个数
+        let page = Int(ceil(CGFloat(item) / CGFloat(kMaxShowCellCount)))
+        let currentPageItemCount = min(itemCount, page * kMaxShowCellCount) - (page - 1) * kMaxShowCellCount // Number of items on the current page
         let cell = UICollectionViewLayoutAttributes(forCellWith: indexPath)
 
         /*-----------------currentPageAllRow&beginCellY&beginCellLeft-----------------**/
-        let currentPageAllRow = Int(ceil(CGFloat(currentPageItemCount) / CGFloat(kVideoSeatCellNumberOfOneRow))) // 计算本页总行数
+        let currentPageAllRow = Int(ceil(CGFloat(currentPageItemCount) / CGFloat(kVideoSeatCellNumberOfOneRow))) // Calculate the total number of rows on this page
         let itemAllHeight = (itemWidthHeight + itemDiffSpace) * CGFloat(currentPageAllRow) - itemDiffSpace
         let itemAllWidth = (itemWidthHeight + itemDiffSpace) * kVideoSeatCellNumberOfOneRow - itemDiffSpace
-        let beginCellY = (collectionViewHeight - itemAllHeight) * 0.5 // 计算beginCellTop
-        let beginCellX = (collectionViewWidth - itemAllWidth) * 0.5 // 计算beginCellTop
-        let beginCellLeft = CGFloat(page - 1) * collectionViewWidth // 计算beginCellLeft
+        let beginCellY = (collectionViewHeight - itemAllHeight) * 0.5 // Calculate beginCellTop
+        let beginCellX = (collectionViewWidth - itemAllWidth) * 0.5 // Calculate beginCellTop
+        let beginCellLeft = CGFloat(page - 1) * collectionViewWidth // Calculate beginCellLeft
 
         /*-----------------itemIndex&column&row-----------------**/
-        let itemIndex = item - (page - 1) * kMaxShowCellCount // 本页的第几个
-        let column = (itemIndex - 1) % Int(kVideoSeatCellNumberOfOneRow) // cell当前页上的第几列 从0开始
-        let row = Int(ceil(CGFloat(itemIndex) / CGFloat(kVideoSeatCellNumberOfOneRow))) // cell当前页上的第几行
+        let itemIndex = item - (page - 1) * kMaxShowCellCount // What is the number on this page?
+        let column = (itemIndex - 1) % Int(kVideoSeatCellNumberOfOneRow) // Which column of cell is on the current page starting from 0?
+        let row = Int(ceil(CGFloat(itemIndex) / CGFloat(kVideoSeatCellNumberOfOneRow))) // What is the row of cell on the current page?
         let itemY = beginCellY + (itemWidthHeight + itemDiffSpace) * CGFloat(row - 1)
         var itemX = 0.0
         if currentPageAllRow == row {
-            // 最后一行居中调整
+            // Adjust the center of the last row
             let lastRowItemCount = currentPageItemCount - (row - 1) * Int(kVideoSeatCellNumberOfOneRow)
             let lastRowBeginCellLeft = (collectionViewWidth - (itemWidthHeight + itemDiffSpace) * CGFloat(lastRowItemCount) - itemDiffSpace) * 0.5
             itemX = lastRowBeginCellLeft + beginCellLeft + (itemWidthHeight + itemDiffSpace) * CGFloat(column)
@@ -194,30 +191,20 @@ extension VideoSeatLayout {
         return cell
     }
 
-    // 获取等分固定布局
     private func getMultipageEquallyDividedAttributes(indexPath: IndexPath, item: Int, itemCount: Int, leftDiff: CGFloat) ->
         UICollectionViewLayoutAttributes {
-        // 为何不直接用indexPath.item,因为演讲者模式，第一页只有2个数据填充页面
-        // page:1,2,3 row:1,2,3, item:1,2,3
-        // column:0,1,2,3
-
-        /*-----------------item&page&cell-----------------**/
         let item = item + 1
-        let page = Int(ceil(CGFloat(item) / CGFloat(kMaxShowCellCount))) // cell在第几页上
+        let page = Int(ceil(CGFloat(item) / CGFloat(kMaxShowCellCount)))
         let cell = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-
-        /*-----------------currentPageAllRow&beginCellY&beginCellLeft-----------------**/
-        let currentPageAllRow = kMaxShowCellCount / Int(kVideoSeatCellNumberOfOneRow) // 计算本页总行数
+        let currentPageAllRow = kMaxShowCellCount / Int(kVideoSeatCellNumberOfOneRow)
         let itemAllHeight = (itemWidthHeight + itemDiffSpace) * CGFloat(currentPageAllRow) - itemDiffSpace
         let itemAllWidth = (itemWidthHeight + itemDiffSpace) * kVideoSeatCellNumberOfOneRow - itemDiffSpace
-        let beginCellY = (collectionViewHeight - itemAllHeight) * 0.5 // 计算beginCellTop
-        let beginCellX = (collectionViewWidth - itemAllWidth) * 0.5 // 计算beginCellTop
-        let beginCellLeft = CGFloat(page - 1) * collectionViewWidth // 计算beginCellLeft
-
-        /*-----------------itemIndex&column&row-----------------**/
-        let itemIndex = item - (page - 1) * kMaxShowCellCount // 本页的第几个
-        let column = (itemIndex - 1) % Int(kVideoSeatCellNumberOfOneRow) // cell当前页上的第几列 从0开始
-        let row = Int(ceil(CGFloat(itemIndex) / CGFloat(kVideoSeatCellNumberOfOneRow))) // cell当前页上的第几行
+        let beginCellY = (collectionViewHeight - itemAllHeight) * 0.5
+        let beginCellX = (collectionViewWidth - itemAllWidth) * 0.5
+        let beginCellLeft = CGFloat(page - 1) * collectionViewWidth
+        let itemIndex = item - (page - 1) * kMaxShowCellCount
+        let column = (itemIndex - 1) % Int(kVideoSeatCellNumberOfOneRow)
+        let row = Int(ceil(CGFloat(itemIndex) / CGFloat(kVideoSeatCellNumberOfOneRow)))
         let itemY = beginCellY + (itemWidthHeight + itemDiffSpace) * CGFloat(row - 1)
         let itemX = beginCellX + beginCellLeft + (itemWidthHeight + itemDiffSpace) * CGFloat(column)
         cell.frame = CGRect(x: leftDiff + itemX, y: itemY, width: itemWidthHeight, height: itemWidthHeight)

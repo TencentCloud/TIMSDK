@@ -2,7 +2,7 @@
 //  PopUpViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/1/12.
+//  Created by janejntang on 2023/1/12.
 //  Copyright © 2023 Tencent. All rights reserved.
 //
 
@@ -10,15 +10,14 @@ import Foundation
 import TUICore
 
 enum PopUpViewType {
-    case roomInfoViewType //房间详情页面
-    case moreViewType //更多功能页面
-    case mediaSettingViewType //设置页面
-    case userListViewType //用户列表页面
-    case raiseHandApplicationListViewType //举手发言列表页面
-    case transferMasterViewType //转换房主页面
-    case QRCodeViewType // 二维码页面
-    case chatViewType //聊天页面
-    case navigationControllerType
+    case roomInfoViewType
+    case moreViewType
+    case mediaSettingViewType
+    case userListViewType
+    case raiseHandApplicationListViewType
+    case transferMasterViewType
+    case QRCodeViewType
+    case chatViewType
     case inviteViewType
 }
 
@@ -39,11 +38,11 @@ class PopUpViewModel {
     }
     
     func panelControlAction() {
-        searchControllerActiveChange()
-        RoomRouter.shared.dismissPopupViewController(viewType: viewType)
+        changeSearchControllerActive()
+        RoomRouter.shared.dismissPopupViewController()
     }
     
-    func searchControllerActiveChange() {
+    func changeSearchControllerActive() {
         viewResponder?.searchControllerChangeActive(isActive: false)
     }
     

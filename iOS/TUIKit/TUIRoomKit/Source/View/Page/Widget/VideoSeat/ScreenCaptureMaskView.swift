@@ -2,8 +2,8 @@
 //  ScreenCaptureMaskView.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2023/7/17.
-//  开启屏幕共享的蒙层View
+//  Created by janejntang on 2023/7/17.
+//  Turn on masked View for screen sharing
 //
 
 import Foundation
@@ -15,7 +15,7 @@ enum ScreenCaptureMaskViewFrameType {
 
 class ScreenCaptureMaskView: UIView {
     private var dotsTimer: Timer = Timer()
-    var viewModel: TUIVideoSeatViewModel?
+    weak var responder: TUIVideoSeatViewResponder?
     let frameType: ScreenCaptureMaskViewFrameType
     
     let contentView: UIView = {
@@ -124,7 +124,7 @@ class ScreenCaptureMaskView: UIView {
     @objc func stopScreenCaptureAction(sender: UIButton) {
         RoomRouter.presentAlert(title: .toastTitleText, message: .toastMessageText, sureTitle: .toastStopText, declineTitle: .toastCancelText, sureBlock: { [weak self] in
             guard let self = self else { return }
-            self.viewModel?.stopScreenCapture()
+            self.responder?.stopScreenCapture()
         }, declineBlock: nil)
     }
     
@@ -155,21 +155,21 @@ class ScreenCaptureMaskView: UIView {
 
 private extension String {
     static var sharingScreenText: String {
-        localized("TUIRoom.sharing.screen")
+        localized("You are sharing your screen")
     }
     static var shareOffText: String {
-        localized("TUIRoom.share.off")
+        localized("Stop")
     }
     static var toastTitleText: String {
-        localized("TUIRoom.toast.shareScreen.title")
+        localized("Share Screen")
     }
     static var toastMessageText: String {
-        localized("TUIRoom.toast.shareScreen.message")
+        localized("Stop TUIRoom screen sharing screen live?")
     }
     static var toastCancelText: String {
-        localized("TUIRoom.cancel")
+        localized("Cancel")
     }
     static var toastStopText: String {
-        localized("TUIRoom.toast.shareScreen.stop")
+        localized("Stop")
     }
 }

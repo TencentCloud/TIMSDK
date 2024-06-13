@@ -2,11 +2,11 @@
 //  LocalAudioViewModel.swift
 //  TUIRoomKit
 //
-//  Created by 唐佳宁 on 2024/1/5.
+//  Created by janejntang on 2024/1/5.
 //
 
 import Foundation
-import TUIRoomEngine
+import RTCRoomEngine
 
 protocol LocalAudioViewModelResponder: AnyObject {
     func updateMuteAudioButton(isSelected: Bool)
@@ -65,12 +65,12 @@ class LocalAudioViewModel: NSObject {
             engineManager.muteLocalAudio()
             return
         }
-        //如果房主全体静音，房间成员不可打开麦克风
+        //If all hosts are muted, room members cannot turn on their microphones
         if self.roomInfo.isMicrophoneDisableForAllUser && self.currentUser.userId != roomInfo.ownerId {
             viewResponder?.makeToast(text: .muteAudioRoomReasonText)
             return
         }
-        //如果是举手发言房间，并且没有上麦，不可打开麦克风
+        //If you are speaking in a room with your hand raised and you are not on the microphone, you cannot turn on the microphone.
         if roomInfo.isSeatEnabled, !currentUser.isOnSeat {
             viewResponder?.makeToast(text: .muteSeatReasonText)
             return
@@ -81,7 +81,6 @@ class LocalAudioViewModel: NSObject {
     }
     
     func checkMuteAudioHiddenState() -> Bool {
-        //举手发言房间，没有上麦的普通观众不显示麦克风
         return roomInfo.isSeatEnabled && currentUser.userRole == .generalUser &&
         !currentUser.isOnSeat
     }
@@ -109,10 +108,10 @@ extension LocalAudioViewModel: RoomKitUIEventResponder {
 
 private extension String {
     static var muteAudioRoomReasonText: String {
-        localized("TUIRoom.mute.audio.room.reason")
+        localized("All on mute audio, unable to turn on microphone")
     }
     static var muteSeatReasonText: String {
-        localized("TUIRoom.mute.seat.reason")
+        localized("Can be turned on after taking the stage")
     }
 }
 
