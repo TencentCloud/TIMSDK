@@ -2,6 +2,10 @@ English | [简体中文](./README_ZH.md)
 
 This document introduces how to quickly run through the IM demo.
 
+>In respect for the copyright of the emoji design, the Chat Demo/TUIKit project does not include the cutouts of large emoji elements. Please replace them with your own designed or copyrighted emoji packs before the official launch for commercial use. The default small yellow face emoji pack is copyrighted by Tencent Cloud and can be authorized for a fee. If you wish to obtain authorization, please [submit a ticket](https://console.tencentcloud.com/workorder/category?level1_id=29&level2_id=40&source=14&data_title=Chat&step=1) to contact us.
+>
+> <img src="https://qcloudimg.tencent-cloud.cn/image/document/6438e8feb7bba909511e0d798dfaf91d.png" width="300px" />
+
 ## Step 1. Create an App
 1. Log in to the [IM console](https://intl.cloud.tencent.com/login).
 > If you already have an app, record its SDKAppID and [configure the app](#step2).
