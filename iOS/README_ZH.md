@@ -2,6 +2,11 @@
 
 本文介绍如何快速跑通即时通信 IM 的体验 Demo。
 
+
+>为尊重表情设计版权，IM Demo/TUIKit 工程中不包含大表情元素切图，正式上线商用前请您替换为自己设计或拥有版权的其他表情包。下图所示默认的小黄脸表情包版权归腾讯云所有，可有偿授权使用，如需获得授权可 [提交工单](https://console.cloud.tencent.com/workorder/category) 联系我们。
+>
+> <img src="https://qcloudimg.tencent-cloud.cn/image/document/6438e8feb7bba909511e0d798dfaf91d.png" width="300px" />
+
 ## 步骤1：创建应用
 1. 登录即时通信 IM [控制台](https://console.cloud.tencent.com/avc)。
 > 如果您已有应用，请记录其 SDKAppID 并 [配置应用](#step2)。
