@@ -2,6 +2,7 @@
 
 import {
   V2TIMConversationType,
+  V2TIMConversation,
 } from '@tencentcloud/imsdk'
 
 import { getEnumKeys, getEnumMap } from "../tools/GetEnum";
@@ -34,6 +35,25 @@ export function onCallback(...args: ESObject[]) {
   });
   let currentResult = resultList.join(" ");
   result.callbackResult = "\n" + currentResult;
+}
+
+export function stringifyV2TIMConversation(conversation: V2TIMConversation[]): string {
+  let result = "";
+  for (let i = 0; i < conversation.length; i++) {
+    const con = conversation[i];
+    result += "{";
+    result += `"type": ${con.type},`;
+    result += `"conversationID": "${con.conversationID}",`;
+    result += `"userID": "${con.userID}",`;
+    result += `"groupID": "${con.groupID}",`;
+    result += `"groupType": "${con.groupType}",`;
+    result += `"orderKey": ${con.orderKey},`;
+    result += "}";
+    if (i !== conversation.length - 1) {
+      result += " ";
+    }
+  }
+  return result;
 }
 
 @Entry

@@ -13,7 +13,7 @@ import {
 import Prompt from "@system.prompt";
 import buffer from "@ohos.buffer";
 
-import { writeResult, onCallback } from "../pages/ConversationManagerTestPage";
+import { writeResult, onCallback, stringifyV2TIMConversation } from "../pages/ConversationManagerTestPage";
 
 export class ConversationTestInterfaces {
   static addConversationListener() {
@@ -30,7 +30,7 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .getConversationListByFilter(nextSeq, count)
       .then((result: V2TIMConversationResult) => {
-        writeResult("getConversationListByFilter succeeded", result);
+        writeResult("getConversationListByFilter succeeded", result.nextSeq, result.isFinished, stringifyV2TIMConversation(result.conversationList));
       })
       .catch((error: Error) => {
         writeResult("getConversationListByFilter failed", error);
@@ -41,7 +41,7 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .getConversation(conversationID)
       .then((conversation: V2TIMConversation) => {
-        writeResult("getConversation succeeded", conversation);
+        writeResult("getConversation succeeded", stringifyV2TIMConversation([conversation]));
       })
       .catch((error: Error) => {
         writeResult("getConversation failed", error);
@@ -74,7 +74,7 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .getConversations(conversationIDList)
       .then((conversationList: V2TIMConversation[]) => {
-        writeResult("getConversationList succeeded", conversationList);
+        writeResult("getConversationList succeeded", stringifyV2TIMConversation(conversationList));
       })
       .catch((error: Error) => {
         writeResult("getConversationList failed", error);
@@ -107,7 +107,7 @@ export class ConversationTestInterfaces {
     V2TIMManager.getConversationManager()
       .getConversationListByFilter(nextSeq, count, info)
       .then((result: V2TIMConversationResult) => {
-        writeResult("getConversationListByFilter2 succeeded", result);
+        writeResult("getConversationListByFilter2 succeeded", result.nextSeq, result.nextSeq, stringifyV2TIMConversation(result.conversationList));
       })
       .catch((error: Error) => {
         writeResult("getConversationListByFilter2 failed", error);
@@ -302,10 +302,10 @@ const conversationListener: V2TIMConversationListener = {
     onCallback("onSyncServerFailed");
   },
   onNewConversation: (conversationList: V2TIMConversation[]) => {
-    onCallback("onNewConversation", conversationList);
+    onCallback("onNewConversation", stringifyV2TIMConversation(conversationList));
   },
   onConversationChanged: (conversationList: V2TIMConversation[]) => {
-    onCallback("onConversationChanged", conversationList);
+    onCallback("onConversationChanged", stringifyV2TIMConversation(conversationList));
   },
   onConversationDeleted: (conversationIDList: string[]) => {
     onCallback("onConversationDeleted", conversationIDList);
