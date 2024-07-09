@@ -9,9 +9,9 @@ import {
   V2TIMGroupInfo,
   V2TIMTopicOperationResult,
   V2TIMTopicInfoResult,
-  CreatePermissionGroupInCommunityParam,
+  V2TIMCreatePermissionGroupInCommunityParam,
   V2TIMPermissionGroupOperationResult,
-  ModifyPermissionGroupInfoInCommunityParam,
+  V2TIMModifyPermissionGroupInfoInCommunityParam,
   V2TIMPermissionGroupInfoResult,
   V2TIMPermissionGroupMemberOperationResult,
   V2TIMPermissionGroupMemberInfoResult,
@@ -148,7 +148,7 @@ export class CommunityTestInterfaces {
   }
 
   static createPermissionGroupInCommunity() {
-    const info: CreatePermissionGroupInCommunityParam = {
+    const info: V2TIMCreatePermissionGroupInCommunityParam = {
       groupID: communityInfo.communityGroupID,
       permissionGroupID: communityInfo.permissionGroupID,
       permissionGroupName: communityInfo.permissionGroupName,
@@ -180,7 +180,7 @@ export class CommunityTestInterfaces {
   }
 
   static modifyPermissionGroupInfoInCommunity() {
-    const info: ModifyPermissionGroupInfoInCommunityParam = {
+    const info: V2TIMModifyPermissionGroupInfoInCommunityParam = {
       groupID: communityInfo.communityGroupID,
       permissionGroupID: communityInfo.permissionGroupID,
       permissionGroupName: communityInfo.permissionGroupName,
