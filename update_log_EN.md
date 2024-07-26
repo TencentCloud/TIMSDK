@@ -2,6 +2,29 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 8.1.6103 @2024.07.26 - Enhanced Version
+### SDK
+- Long connection supports HTTP protocol, enhancing network penetration capabilities.
+- Topic message reception options now support setting whether to follow the community.
+- Topics add a new message reception option to only receive @ messages.
+- Read receipts for private chat messages now include the read time.
+- Support disabling cloud callbacks before and after message sending.
+- Fixed an issue where the conversation list did not update in real-time when group - avatars or names were changed.
+- Fixed an issue where pulling the grouped conversation list was abnormal when logging in without a network connection.
+- Optimized Android HTTPS security issues.
+- Optimized rich media file download authentication.
+- Enhanced database performance for Android.
+
+### TUIKit & Demo
+- TPush standalone push product launched with a smaller package size.
+- Push adds a login-free push feature.
+- Push introduces a new intelligent detection strategy for available channels.
+- Push adds a push registration timeout protection mechanism.
+- TUIChat optimizes the UI display of pinned messages and security prompts.
+- TUIChat international version UI supports "User is typing" status.
+- Optimized the UI experience for message sending and receiving, reducing lag issues.
+
+
 ## 8.0.5895 @2024.06.07 - Enhanced Version
 ### SDK
 - Added support for offline push settings with a large icon on the right side.
