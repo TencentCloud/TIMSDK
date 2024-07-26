@@ -1,10 +1,10 @@
 [English](./README.md) | 简体中文
 
-# TIM SDK 8.0.5895（Mac）
+# TIM SDK 8.1.6103（Mac）
 
 ## 下载 IM SDK
 
-[下载 ImSDKForMac_Plus.framework 版本](https://im.sdk.qcloud.com/download/plus/8.0.5895/ImSDKForMac_Plus_8.0.5895.framework.zip)
+[下载 ImSDKForMac_Plus.framework 版本](https://im.sdk.qcloud.com/download/plus/8.1.6103/ImSDKForMac_Plus_8.1.6103.framework.zip)
 
 说明：SDK 同时支持 Objective-C、C 和 C++ 三种类型的 API；强烈建议您选定一种类型的 API 之后，不要与其它类型的 API 混合使用。
 

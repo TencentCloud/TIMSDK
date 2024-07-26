@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_AdvancedEncryptionPlugin'
-  spec.version      = '8.0.5895'
+  spec.version      = '8.1.6103'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.0.5895/TIMAdvancedEncryptionPlugin_8.0.5895.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.1.6103/TIMAdvancedEncryptionPlugin_8.1.6103.framework.zip'}
   spec.preserve_paths = '**/TIMAdvancedEncryptionPlugin.framework'
   spec.vendored_frameworks = '**/TIMAdvancedEncryptionPlugin.framework'
   spec.pod_target_xcconfig = {
