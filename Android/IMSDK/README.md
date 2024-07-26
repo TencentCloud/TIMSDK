@@ -1,6 +1,6 @@
 English | [简体中文](./README_ZH.md)
 
-# TIM SDK 8.0.5895 (Android)
+# TIM SDK 8.1.6103 (Android)
 
 ## Download IM SDK
 
@@ -14,7 +14,7 @@ English | [简体中文](./README_ZH.md)
   <tr >
      <td style="text-align:center">Java Edition</td>
      <td style="text-align:center">Support Java API</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.0.5895/imsdk-plus-8.0.5895.aar">imsdk-plus.aar</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.1.6103/imsdk-plus-8.1.6103.aar">imsdk-plus.aar</a></td>
   </tr>
 </table>
 
@@ -30,7 +30,7 @@ English | [简体中文](./README_ZH.md)
   <tr >
      <td style="text-align:center">Quic Plugin</td>
      <td style="text-align:center">Providing axp-quic multiplex transmission protocol to enhance network performance</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.0.5895/timquic-plugin-8.0.5895.aar">timquic-plugin.aar</a></td>
+     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.1.6103/timquic-plugin-8.1.6103.aar">timquic-plugin.aar</a></td>
   </tr>
 </table>
 
@@ -48,4 +48,4 @@ dependencies {
 
 If you need more detailed integration guidance, please [refer to the complete integration documentation](https://www.tencentcloud.com/document/product/1047/34306).
 
-In addition, we also provide SDKs for the C and C++ API, which you can download from here，[Download C API Edition](https://im.sdk.qcloud.com/download/plus/8.0.5895/cross_platform/ImSDK_Android_C_8.0.5895.zip)、[Download  C++ API Edition](https://im.sdk.qcloud.com/download/plus/8.0.5895/cross_platform/ImSDK_Android_CPP_8.0.5895.zip)。
+In addition, we also provide SDKs for the C and C++ API, which you can download from here，[Download C API Edition](https://im.sdk.qcloud.com/download/plus/8.1.6103/cross_platform/ImSDK_Android_C_8.1.6103.zip)、[Download  C++ API Edition](https://im.sdk.qcloud.com/download/plus/8.1.6103/cross_platform/ImSDK_Android_CPP_8.1.6103.zip)。
