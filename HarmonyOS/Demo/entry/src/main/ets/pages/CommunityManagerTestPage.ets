@@ -115,6 +115,11 @@ export struct CommunityManagerTestPage {
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
+            DemoButton("enableTopicInheritMsgFlag", CommunityTestInterfaces.enableTopicInheritMsgFlag)
+            DemoButton("disableTopicInheritMsgFlag", CommunityTestInterfaces.disableTopicInheritMsgFlag)
+          }.DemoRowStyle()
+
+          Row({ space: 4 }) {
             TextInput({ placeholder: communityInfo.communityGroupID })
               .onChange((v) => {
                 communityInfo.communityGroupID = v;

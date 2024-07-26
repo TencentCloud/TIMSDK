@@ -867,7 +867,7 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
         break;
       case V2TIMElemType.V2TIM_ELEM_TYPE_LOCATION:
         {
-          let location_elem = message.LocationElem;
+          let location_elem = message.locationElem;
           onCallback(location_elem?.desc, location_elem?.longitude, location_elem?.latitude);
         }
         break;

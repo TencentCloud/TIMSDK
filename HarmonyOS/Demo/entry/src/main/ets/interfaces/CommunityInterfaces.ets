@@ -140,10 +140,50 @@ export class CommunityTestInterfaces {
     V2TIMManager.getCommunityManager()
       .getTopicInfoList(communityInfo.communityGroupID, [topicID])
       .then((resultList: V2TIMTopicInfoResult[]) => {
-        writeResult("getTopicInfoList succeeded", resultList);
+        let logMessage = "getTopicInfoList succeeded" + "  ";
+
+        if (resultList.length > 0) {
+          resultList.forEach((infoResult: V2TIMTopicInfoResult) => {
+            logMessage += "topicID:" + infoResult.topicInfo.topicID;
+            logMessage += ", recvOpt:" + infoResult.topicInfo.recvOpt;
+            logMessage += ", inheritMsgFlag:" + infoResult.topicInfo.isInheritMessageReceiveOptionFromCommunity();
+            logMessage += "|";
+          });
+        }
+        writeResult(logMessage);
       })
       .catch((error: Error) => {
         writeResult("getTopicInfoList failed", error);
+      });
+  }
+
+  static enableTopicInheritMsgFlag() {
+    let topicID = '@TGS#_@TGS#cIIYRJIM62C6@TOPIC#_@TOPIC#cKIYRJIM62CD';
+
+    let topicInfo = new V2TIMTopicInfo();
+    topicInfo.topicID = topicID;
+    topicInfo.
+    setInheritMessageReceiveOptionFromCommunity(true).
+      then(() => {
+        writeResult("enableTopicInheritMsgFlag succeeded");
+      })
+      .catch((error: Error) => {
+        writeResult("enableTopicInheritMsgFlag failed", error);
+      });
+  }
+
+  static disableTopicInheritMsgFlag() {
+    let topicID = '@TGS#_@TGS#cIIYRJIM62C6@TOPIC#_@TOPIC#cKIYRJIM62CD';
+
+    let topicInfo = new V2TIMTopicInfo();
+    topicInfo.topicID = topicID;
+    topicInfo.
+    setInheritMessageReceiveOptionFromCommunity(false).
+    then(() => {
+      writeResult("disableTopicInheritMsgFlag succeeded");
+    })
+      .catch((error: Error) => {
+        writeResult("disableTopicInheritMsgFlag failed", error);
       });
   }
 
