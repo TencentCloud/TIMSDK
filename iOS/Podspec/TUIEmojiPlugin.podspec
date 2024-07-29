@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIEmojiPlugin'
-  spec.version      = '8.0.5895'
+  spec.version      = '8.1.6103'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -14,14 +14,14 @@ Pod::Spec.new do |spec|
   spec.summary      = 'TUIEmojiPlugin'
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.0.5895/ios/TUIEmojiPlugin.zip?time=4'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.1.6103/ios/TUIEmojiPlugin.zip?time=4'}
   spec.default_subspec = 'CommonModel'
 
   spec.subspec 'CommonModel' do |ss|
     ss.source_files = '**/TUIEmojiPlugin/CommonModel/*.{h,m,mm}'
     ss.dependency 'TUICore'
-    ss.dependency 'TIMCommon','~>8.0.5895'
-    ss.dependency 'TUIChat','~>8.0.5895'
+    ss.dependency 'TIMCommon','~>8.1.6103'
+    ss.dependency 'TUIChat','~>8.1.6103'
   end
   
   spec.resource_bundle = {
