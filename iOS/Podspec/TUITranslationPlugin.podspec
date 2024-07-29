@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUITranslationPlugin'
-  spec.version      = '8.0.5895'
+  spec.version      = '8.1.6103'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,13 +16,13 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.0.5895/ios/TUITranslationPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.1.6103/ios/TUITranslationPlugin.zip'}
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUITranslationPlugin/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon', '~> 8.0.5895'
-    commonModel.dependency 'TUIChat', '~> 8.0.5895'
+    commonModel.dependency 'TIMCommon', '~> 8.1.6103'
+    commonModel.dependency 'TUIChat', '~> 8.1.6103'
   end
 
   spec.subspec 'UI' do |commonUI|

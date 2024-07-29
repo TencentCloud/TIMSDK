@@ -26,7 +26,7 @@
                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                     attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:16] }
                                        context:nil];
-    return CGSizeMake(TUICustomerServicePluginBranchCellWidth, rect.size.height);
+    return CGSizeMake(ceilf(rect.size.width), ceilf(rect.size.height));
 }
 
 + (CGSize)calcBranchCellSizeOfTableView:(NSArray *)items {
