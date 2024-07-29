@@ -9,7 +9,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
@@ -23,8 +23,12 @@ import java.util.Map;
 public class TUIC2CChatFragment extends TUIBaseChatFragment {
     private static final String TAG = TUIC2CChatFragment.class.getSimpleName();
 
-    private ChatInfo chatInfo;
-    private C2CChatPresenter presenter;
+    private final C2CChatPresenter presenter;
+
+    public TUIC2CChatFragment() {
+        presenter = new C2CChatPresenter();
+        presenter.initListener();
+    }
 
     @Nullable
     @Override
@@ -32,12 +36,7 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
         TUIChatLog.i(TAG, "oncreate view " + this);
 
         baseView = super.onCreateView(inflater, container, savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle == null) {
-            return baseView;
-        }
-        chatInfo = (ChatInfo) bundle.getSerializable(TUIChatConstants.CHAT_INFO);
-        if (chatInfo == null) {
+        if (!(chatInfo instanceof C2CChatInfo)) {
             return baseView;
         }
 
@@ -53,7 +52,7 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
         setTitleBarExtension();
 
         chatView.setPresenter(presenter);
-        presenter.setChatInfo(chatInfo);
+        presenter.setChatInfo((C2CChatInfo) chatInfo);
         presenter.setTypingListener(chatView.mTypingListener);
         chatView.setChatInfo(chatInfo);
     }
@@ -88,17 +87,17 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
         }
     }
 
-    public void setPresenter(C2CChatPresenter presenter) {
-        this.presenter = presenter;
-    }
-
     @Override
     public C2CChatPresenter getPresenter() {
         return presenter;
     }
 
     @Override
-    public ChatInfo getChatInfo() {
-        return chatInfo;
+    public C2CChatInfo getChatInfo() {
+        return (C2CChatInfo) chatInfo;
+    }
+
+    public void setChatInfo(C2CChatInfo c2CChatInfo) {
+        this.chatInfo = c2CChatInfo;
     }
 }

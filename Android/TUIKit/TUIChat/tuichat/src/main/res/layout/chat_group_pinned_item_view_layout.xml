@@ -19,7 +19,7 @@
         android:layout_weight="1"
         android:gravity="start"
         android:paddingStart="8dp"
-        android:background="#F0F9F9F9"
+        android:background="#F9F9F9"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:orientation="vertical">

@@ -28,6 +28,8 @@ public class TUILoginConfig {
     // Log callback
     private TUILogListener tuiLogListener;
 
+    private boolean initLocalStorageOnly = false;
+
     /**
      * Configuration class constructor
      */
@@ -60,5 +62,13 @@ public class TUILoginConfig {
      */
     public void setLogListener(TUILogListener logListener) {
         this.tuiLogListener = logListener;
+    }
+
+    public boolean isInitLocalStorageOnly() {
+        return initLocalStorageOnly;
+    }
+
+    public void setInitLocalStorageOnly(boolean initLocalStorageOnly) {
+        this.initLocalStorageOnly = initLocalStorageOnly;
     }
 }

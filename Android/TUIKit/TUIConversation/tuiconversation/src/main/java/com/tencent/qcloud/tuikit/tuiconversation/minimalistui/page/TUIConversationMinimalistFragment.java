@@ -137,15 +137,6 @@ public class TUIConversationMinimalistFragment extends BaseFragment {
                 if (conversationInfo == null) {
                     return;
                 }
-
-                if (!TextUtils.isEmpty(popWindowConversationId) && popWindowConversationId.equals(conversationInfo.getConversationId())) {
-                    if (mConversationPopWindow != null) {
-                        mConversationPopWindow.dismiss();
-                    }
-                    if (mAdapter != null) {
-                        mAdapter.closeAllSwipeItems();
-                    }
-                }
             }
 
             @Override

@@ -113,12 +113,6 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         return mForwardDataSource;
     }
 
-    public void resetSelectableText() {
-        if (selectableTextHelper != null) {
-            selectableTextHelper.reset();
-        }
-    }
-
     @Override
     public void layoutViews(final T msg, final int position) {
         hasRiskContent = msg.hasRiskContent();
@@ -599,16 +593,18 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     protected void setSelectableTextHelper(TUIMessageBean msg, TextView textView, int position) {
         if (selectableTextHelper != null) {
             selectableTextHelper.destroy();
+            selectableTextHelper.setTextView(textView);
+        } else {
+            selectableTextHelper = new SelectTextHelper.Builder(textView)
+                                       .setCursorHandleColor(TIMCommonService.getAppContext().getResources().getColor(R.color.font_blue))
+                                       .setCursorHandleSizeInDp(18)
+                                       .setSelectedColor(TIMCommonService.getAppContext().getResources().getColor(R.color.test_blue))
+                                       .setSelectAll(true)
+                                       .setScrollShow(false)
+                                       .setSelectedAllNoPop(true)
+                                       .setMagnifierShow(false)
+                                       .build();
         }
-        selectableTextHelper = new SelectTextHelper.Builder(textView)
-                                   .setCursorHandleColor(TIMCommonService.getAppContext().getResources().getColor(R.color.font_blue))
-                                   .setCursorHandleSizeInDp(18)
-                                   .setSelectedColor(TIMCommonService.getAppContext().getResources().getColor(R.color.test_blue))
-                                   .setSelectAll(true)
-                                   .setScrollShow(false)
-                                   .setSelectedAllNoPop(true)
-                                   .setMagnifierShow(false)
-                                   .build();
 
         selectableTextHelper.setSelectListener(new SelectTextHelper.OnSelectListener() {
             @Override
@@ -624,6 +620,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
                     selectedText = content.toString();
                     msg.setSelectText(selectedText);
                     TIMCommonLog.d("TextMessageHolder", "onTextSelected selectedText = " + selectedText);
+                    SelectTextHelper.setSelected(selectableTextHelper);
                     if (onItemClickListener != null) {
                         onItemClickListener.onTextSelected(msgArea, position, msg);
                     }

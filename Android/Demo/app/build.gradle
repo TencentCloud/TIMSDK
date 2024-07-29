@@ -69,7 +69,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     implementation fileTree(include: ['*.jar', '*.aar'], dir: '../libs')
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     // bugly sdk
     implementation 'com.tencent.bugly:crashreport:latest.release'
@@ -80,49 +80,49 @@ dependencies {
     if (projects.contains("timpush")) {
         api project(':timpush')
     } else {
-        api 'com.tencent.timpush:timpush:7.9.5666'
+        api 'com.tencent.timpush:timpush:8.1.6103'
     }
 
     if (projects.contains("fcmpush")) {
         api project(':fcmpush')
     } else {
-        api 'com.tencent.timpush:fcm:7.9.5666'
+        api 'com.tencent.timpush:fcm:8.1.6103'
     }
 
     if (projects.contains("xiaomipush")) {
         api project(':xiaomipush')
     } else {
-        api 'com.tencent.timpush:xiaomi:7.9.5666'
+        api 'com.tencent.timpush:xiaomi:8.1.6103'
     }
 
     if (projects.contains("meizupush")) {
         api project(':meizupush')
     } else {
-        api 'com.tencent.timpush:meizu:7.9.5666'
+        api 'com.tencent.timpush:meizu:8.1.6103'
     }
 
     if (projects.contains("oppopush")) {
         api project(':oppopush')
     } else {
-        api 'com.tencent.timpush:oppo:7.9.5666'
+        api 'com.tencent.timpush:oppo:8.1.6103'
     }
 
     if (projects.contains("vivopush")) {
         api project(':vivopush')
     } else {
-        api 'com.tencent.timpush:vivo:7.9.5666'
+        api 'com.tencent.timpush:vivo:8.1.6103'
     }
 
     if (projects.contains("huaweipush")) {
         api project(':huaweipush')
     } else {
-        api 'com.tencent.timpush:huawei:7.9.5666'
+        api 'com.tencent.timpush:huawei:8.1.6103'
     }
 
     if (projects.contains("honorpush")) {
         api project(':honorpush')
     } else {
-        api 'com.tencent.timpush:honor:7.9.5666'
+        api 'com.tencent.timpush:honor:8.1.6103'
     }
     // Will be added to the open source code START
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
@@ -144,25 +144,25 @@ dependencies {
     if (projects.contains("tuigroupnoteplugin")) {
         api project(':tuigroupnoteplugin')
     } else {
-        api "com.tencent.imsdk:tuigroupnote-plugin:8.0.5895"
+        api "com.tencent.imsdk:tuigroupnote-plugin:8.1.6103"
     }
 
     if (projects.contains("tuipollplugin")) {
         api project(':tuipollplugin')
     } else {
-        api "com.tencent.imsdk:tuipoll-plugin:8.0.5895"
+        api "com.tencent.imsdk:tuipoll-plugin:8.1.6103"
     }
 
     if (projects.contains("tuiconversationmarkplugin")) {
         api project(':tuiconversationmarkplugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationmark-plugin:8.0.5895"
+        api "com.tencent.imsdk:tuiconversationmark-plugin:8.1.6103"
     }
 
     if (projects.contains("tuiconversationgroupplugin")) {
         api project(':tuiconversationgroupplugin')
     } else {
-        api "com.tencent.imsdk:tuiconversationgroup-plugin:8.0.5895"
+        api "com.tencent.imsdk:tuiconversationgroup-plugin:8.1.6103"
     }
 
     api project(':tuiroomkit')

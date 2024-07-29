@@ -35,6 +35,7 @@ import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.SelectTextHelper;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
@@ -98,7 +99,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     public ChatPresenter.TypingListener mTypingListener = new ChatPresenter.TypingListener() {
         @Override
         public void onTyping(int status) {
-            if (!TUIChatConfigs.getConfigs().getGeneralConfig().isEnableTypingStatus()) {
+            if (!TUIChatConfigs.getGeneralConfig().isEnableTypingStatus()) {
                 return;
             }
 
@@ -214,7 +215,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
         mTitleBar.getMiddleTitle().setEllipsize(TextUtils.TruncateAt.END);
         lastTypingTime = 0;
-        isSupportTyping = false;
     }
 
     public void displayBackToLastMessages() {
@@ -359,9 +359,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            if (mAdapter != null) {
-                mAdapter.resetSelectableText();
-            }
+            SelectTextHelper.resetSelected();
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -413,7 +411,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                mAdapter.resetSelectableText();
+                SelectTextHelper.resetSelected();
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (scrollDirection == -1) {
                         if (!mMessageRecyclerView.canScrollVertically(-1)) {
@@ -1438,6 +1436,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         getTitleBar().getMiddleTitle().removeCallbacks(mTypingRunnable);
         AudioRecorder.cancelRecord();
         AudioPlayer.getInstance().stopPlay();
+        presenter.markMessageAsRead(mChatInfo, false);
     }
 
     @Override
@@ -1468,7 +1467,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
             int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
             int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
             sendMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
-            presenter.markMessageAsRead(mChatInfo);
+            if (presenter != null) {
+                presenter.markMessageAsRead(mChatInfo);
+            }
         }
     }
 

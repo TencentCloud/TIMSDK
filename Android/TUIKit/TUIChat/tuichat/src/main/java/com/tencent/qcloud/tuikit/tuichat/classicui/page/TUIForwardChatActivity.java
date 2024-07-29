@@ -13,13 +13,13 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ForwardPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 public class TUIForwardChatActivity extends BaseLightActivity {
     private static final String TAG = TUIForwardChatActivity.class.getSimpleName();

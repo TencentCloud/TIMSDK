@@ -58,7 +58,7 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 33
     versionCode = 1
-    versionName = "8.0.5895"
+    versionName = "8.1.6103"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"

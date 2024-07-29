@@ -64,7 +64,7 @@
         android:layout_below="@id/group_pinned_message_view"
         android:baselineAligned="false"
         android:clickable="false"
-        android:descendantFocusability="blocksDescendants" />
+        android:descendantFocusability="afterDescendants" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
@@ -177,9 +177,9 @@
         android:background="#E6E9EB"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:paddingStart="38.4dp"
+        android:paddingStart="16dp"
         android:paddingTop="15.36dp"
-        android:paddingEnd="38.4dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="46.08dp"
         android:visibility="gone"
         tools:visibility="visible">
@@ -190,7 +190,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp">
 
             <ImageView
                 android:layout_width="38.4dp"
@@ -202,6 +204,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5.76dp"
                 android:text="@string/forward_mode_onebyone"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:textColor="#444444"
                 android:textSize="11.52sp" />
 
@@ -214,7 +218,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp">
+
 
             <ImageView
                 android:layout_width="38.4dp"
@@ -226,6 +233,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5.76dp"
                 android:text="@string/forward_mode_merge"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:textColor="#444444"
                 android:textSize="11.52sp" />
 
@@ -238,7 +247,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.33"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp">
 
             <ImageView
                 android:layout_width="38.4dp"
@@ -250,6 +261,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5.76dp"
                 android:text="@string/delete_button"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:textColor="#444444"
                 android:textSize="11.52sp" />
         </LinearLayout>

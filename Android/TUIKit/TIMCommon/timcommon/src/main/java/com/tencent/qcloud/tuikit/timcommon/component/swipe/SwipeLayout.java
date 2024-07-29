@@ -1300,7 +1300,7 @@ public class SwipeLayout extends FrameLayout {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             if (isTouchOnSurface(e)) {
-                if (mClickToClose) {
+                if (mClickToClose && getOpenStatus() != Status.Close) {
                     close();
                 } else {
                     if (mDoubleClickListener != null) {

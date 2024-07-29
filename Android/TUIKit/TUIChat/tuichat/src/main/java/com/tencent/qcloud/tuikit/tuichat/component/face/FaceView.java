@@ -31,12 +31,12 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Emoji input interface in the chat screen.
- * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace
- * them with your own emoticons when you go online, otherwise you will face legal risks.
- * The yellow face emoji is copyrighted by Tencent Cloud. To use it, authorization is required. Please contact us through the following link.
+ * In respect for the copyright of the emoji design, the Chat Demo/TUIKit project does not include the cutouts of large emoji elements. Please replace them
+ * with your own designed or copyrighted emoji packs before the official launch for commercial use. The default small yellow face emoji pack is copyrighted by
+ * Tencent Cloud and can be authorized for a fee. If you wish to obtain authorization, please submit a ticket to contact us.
  *
- * https://cloud.tencent.com/document/product/269/59590
+ * submit a ticket url：https://console.cloud.tencent.com/workorder/category?level1_id=29&level2_id=40&source=14&data_title=%E5%8D%B3%E6%97%B6%E9%80%9A%E4%BF%A1%20IM&step=1 (China mainland)
+ * submit a ticket url：https://console.tencentcloud.com/workorder/category?level1_id=29&level2_id=40&source=14&data_title=Chat&step=1 (Other regions)
  */
 public class FaceView extends FrameLayout {
     private static final String TAG = "FaceView";
@@ -209,7 +209,7 @@ public class FaceView extends FrameLayout {
         void onFaceLongClick(ChatFace face);
 
         default void onDeleteClicked() {}
-        
+
         default void onSendClicked() {}
     }
 }

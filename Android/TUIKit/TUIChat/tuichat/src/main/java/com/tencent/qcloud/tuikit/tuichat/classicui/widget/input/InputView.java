@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -226,7 +225,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         init();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     protected void init() {
         mAudioInputSwitchButton.setOnClickListener(this);
         mEmojiInputButton.setOnClickListener(this);
@@ -930,7 +928,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         exitReply();
                     } else {
                         if (TUIChatUtils.isGroupChat(mChatLayout.getChatInfo().getType()) && !mTextInput.getMentionIdList().isEmpty()) {
-                            
                             //  When sending, get the ID list from the map by getting the nickname list that matches the @ in the input box.
                             List<String> atUserList = new ArrayList<>(mTextInput.getMentionIdList());
                             if (atUserList.isEmpty()) {
@@ -952,11 +949,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     public void showSoftInput() {
         TUIChatLog.i(TAG, "showSoftInput");
         mCurrentState = STATE_SOFT_INPUT;
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         mTextInput.requestFocus();
-        if (!isSoftInputShown()) {
-            imm.toggleSoftInput(0, 0);
-        }
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mTextInput, 0);
         ThreadUtils.postOnUiThreadDelayed(new Runnable() {
             @Override
             public void run() {
@@ -987,9 +982,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     public void hideSoftInput() {
         TUIChatLog.i(TAG, "hideSoftInput");
+        mTextInput.clearFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
-        mTextInput.clearFocus();
         Context context = getContext();
         if (context instanceof Activity) {
             Window window = ((Activity) context).getWindow();
@@ -1007,28 +1002,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
         mSendAudioButton.setVisibility(GONE);
         mTextInput.setVisibility(VISIBLE);
-    }
-
-    private boolean isSoftInputShown() {
-        View decorView = ((Activity) getContext()).getWindow().getDecorView();
-        int screenHeight = decorView.getHeight();
-        Rect rect = new Rect();
-        decorView.getWindowVisibleDisplayFrame(rect);
-        return screenHeight - rect.bottom - getNavigateBarHeight() >= 0;
-    }
-
-    private int getNavigateBarHeight() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-        int usableHeight = metrics.heightPixels;
-        windowManager.getDefaultDisplay().getRealMetrics(metrics);
-        int realHeight = metrics.heightPixels;
-        if (realHeight > usableHeight) {
-            return realHeight - usableHeight;
-        } else {
-            return 0;
-        }
     }
 
     public void disableShowCustomFace(boolean disable) {

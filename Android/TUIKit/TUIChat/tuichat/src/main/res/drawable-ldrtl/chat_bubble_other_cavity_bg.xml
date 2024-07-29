@@ -10,6 +10,9 @@
         android:radius="10.96dp"
         android:topRightRadius="2.19dp" />
 
+    <solid
+        android:color="@color/white"/>
+
     <padding
         android:bottom="5.4dp"
         android:top="5.4dp"

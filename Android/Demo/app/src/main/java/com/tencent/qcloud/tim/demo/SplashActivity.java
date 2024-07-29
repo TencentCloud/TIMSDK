@@ -16,8 +16,10 @@ import com.tencent.qcloud.tim.demo.main.MainActivity;
 import com.tencent.qcloud.tim.demo.main.MainMinimalistActivity;
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
+import com.tencent.qcloud.tuicore.interfaces.TUILoginConfig;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 
@@ -27,6 +29,10 @@ public class SplashActivity extends BaseLightActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!isTaskRoot() && getIntent() != null && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(getIntent().getAction())) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_splash);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -47,15 +53,16 @@ public class SplashActivity extends BaseLightActivity {
             AppConfig.DEMO_SDK_APPID = GenerateTestUserSig.SDKAPPID;
             // Set network error codes for automatic login later in debug mode
             userInfo.setLastLoginCode(BaseConstants.ERR_SDK_NET_CONN_TIMEOUT);
-            initUserLocalData();
+            initUserLocalData(userInfo);
         } else {
-            startLogin();
+            startLoginActivity();
         }
     }
 
-    private void initUserLocalData() {
-        UserInfo userInfo = UserInfo.getInstance();
-        LoginWrapper.getInstance().initUserLocalData(this, AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), new TUICallback() {
+    private void initUserLocalData(UserInfo userInfo) {
+        TUILoginConfig tuiLoginConfig = TUIUtils.getLoginConfig();
+        tuiLoginConfig.setInitLocalStorageOnly(true);
+        LoginWrapper.getInstance().loginIMSDK(this, AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), userInfo.getUserSig(), tuiLoginConfig, new TUICallback() {
             @Override
             public void onSuccess() {
                 TIMAppService.getInstance().registerPushManually();
@@ -64,18 +71,14 @@ public class SplashActivity extends BaseLightActivity {
 
             @Override
             public void onError(final int errorCode, final String errorMessage) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + errorCode + ", errInfo = " + errorMessage);
-                        startLogin();
-                    }
-                });
+                ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + errorCode + ", errInfo = " + errorMessage);
+                startLoginActivity();
                 DemoLog.i(TAG, "imLogin errorCode = " + errorCode + ", errorInfo = " + errorMessage);
             }
         });
     }
 
-    private void startLogin() {
+    private void startLoginActivity() {
         Intent intent = new Intent(SplashActivity.this, LoginForDevActivity.class);
         intent.putExtras(getIntent());
         startActivity(intent);

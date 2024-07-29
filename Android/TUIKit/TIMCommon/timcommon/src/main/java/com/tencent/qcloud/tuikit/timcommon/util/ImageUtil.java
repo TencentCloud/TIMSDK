@@ -248,6 +248,20 @@ public class ImageUtil {
         return output;
     }
 
+    public static Bitmap zoomImg(Bitmap bm, int targetWidth, int targetHeight) {
+        int srcWidth = bm.getWidth();
+        int srcHeight = bm.getHeight();
+        float widthScale = targetWidth * 1.0f / srcWidth;
+        float heightScale = targetHeight * 1.0f / srcHeight;
+        Matrix matrix = new Matrix();
+        matrix.postScale(widthScale, heightScale, 0, 0);
+        Bitmap bmpRet = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bmpRet);
+        Paint paint = new Paint();
+        canvas.drawBitmap(bm, matrix, paint);
+        return bmpRet;
+    }
+
     /**
      *
      * Get the image file path based on the image UUID and type

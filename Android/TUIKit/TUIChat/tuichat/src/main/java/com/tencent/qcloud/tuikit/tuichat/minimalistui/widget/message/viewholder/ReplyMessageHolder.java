@@ -53,6 +53,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
             } else {
                 senderNameTv.setVisibility(View.VISIBLE);
             }
+            senderName = originMessage.getUserDisplayName();
         }
         senderNameTv.setText(senderName + ":");
         if (replyMessageBean.isAbstractEnable()) {

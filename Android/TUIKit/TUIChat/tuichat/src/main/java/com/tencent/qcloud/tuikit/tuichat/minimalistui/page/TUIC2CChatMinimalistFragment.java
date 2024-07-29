@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
@@ -17,21 +17,20 @@ import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment {
     private static final String TAG = TUIC2CChatMinimalistFragment.class.getSimpleName();
 
-    private ChatInfo chatInfo;
-    private C2CChatPresenter presenter;
-    
+    private final C2CChatPresenter presenter;
+
+    public TUIC2CChatMinimalistFragment() {
+        presenter = new C2CChatPresenter();
+        presenter.initListener();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         TUIChatLog.i(TAG, "oncreate view " + this);
 
         baseView = super.onCreateView(inflater, container, savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle == null) {
-            return baseView;
-        }
-        chatInfo = (ChatInfo) bundle.getSerializable(TUIChatConstants.CHAT_INFO);
-        if (chatInfo == null) {
+        if (!(chatInfo instanceof C2CChatInfo)) {
             return baseView;
         }
 
@@ -46,7 +45,8 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
 
         setTitleBarClickAction();
         chatView.setPresenter(presenter);
-        presenter.setChatInfo(chatInfo);
+        presenter.setTypingListener(chatView.typingListener);
+        presenter.setChatInfo((C2CChatInfo) chatInfo);
         chatView.setChatInfo(chatInfo);
     }
 
@@ -62,10 +62,6 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
         });
     }
 
-    public void setPresenter(C2CChatPresenter presenter) {
-        this.presenter = presenter;
-    }
-
     @Override
     public C2CChatPresenter getPresenter() {
         return presenter;
@@ -74,5 +70,9 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
     @Override
     public ChatInfo getChatInfo() {
         return chatInfo;
+    }
+
+    public void setChatInfo(C2CChatInfo chatInfo) {
+        this.chatInfo = chatInfo;
     }
 }

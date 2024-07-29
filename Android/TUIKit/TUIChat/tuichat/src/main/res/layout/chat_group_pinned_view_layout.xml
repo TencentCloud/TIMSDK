@@ -21,4 +21,9 @@
         android:src="@drawable/chat_more_item_button"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#DDDDDD"/>
 </LinearLayout>

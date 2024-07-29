@@ -58,7 +58,7 @@ public final class TUIConstants {
     public static final class TUICore {
         public static final String LANGUAGE_EVENT = "TUIThemeManager";
         public static final String LANGUAGE_EVENT_SUB_KEY = "onInitLanguage";
-        public static final String LANGUAGE_CHANGED_EVENT_SUB_KEY = "onInitLanguage";
+        public static final String LANGUAGE_CHANGED_EVENT_SUB_KEY = "onLanguageChanged";
     }
 
     public static final class TUILogin {
@@ -313,6 +313,12 @@ public final class TUIConstants {
                 public static final String DISPLAY_STRING_MAP = "displayStringMap";
                 public static final String CONVERSATION_ID = "conversationID";
                 public static final String MESSAGE = "message";
+            }
+
+            // Get message display string
+            public static class GetTUIMessageBean {
+                public static final String METHOD_NAME = "GetTUIMessageBean";
+                public static final String V2TIM_MESSAGE = "v2TIMMessage";
             }
         }
 
@@ -685,7 +691,7 @@ public final class TUIConstants {
 
         public static final String METHOD_REGISTER_PUSH = "registerTIMPush";
         public static final String METHOD_REGISTER_PUSH_WITH_JSON = "registerTIMPushWithJsonParam";
-        public static final String REGISTER_PUSH_WITH_JSON_KEY = "registerTIMPushWithJsonParamKey";
+        public static final String REGISTER_PUSH_WITH_JSON_KEY = "registerTIMPushwithJsonParamkey";
         public static final String METHOD_UNREGISTER_PUSH = "unRegiterTIMPush";
         public static final String METHOD_GET_PUSH_TOKEN = "getPushToken";
         public static final String METHOD_SET_PUSH_TOKEN = "setPushToken";
@@ -704,12 +710,9 @@ public final class TUIConstants {
 
         public static final String METHOD_CHECK_PUSH_STATUS = "checkTIMPushStatus";
         public static final String CHECK_PUSH_STATUS_RESULT_LEY = "checkTIMPushStatusResultKey";
-        public static final String METHOD_ENABLE_NOTIFICATION_LISTENER = "enableNotificationListener";
-        public static final String ENABLE_NOTIFICATION_LISTENER_KEY = "enableNotificationListenerKey";
 
         public static final String METHOD_DISABLE_AUTO_REGISTER_PUSH = "disableAutoRegisterPush";
         public static final String DISABLE_AUTO_REGISTER_PUSH_KEY = "disableAutoRegisterPushKey";
-
         public static final String EVENT_NOTIFY = "TIMPushNotifyEvent";
         public static final String EVENT_NOTIFY_NOTIFICATION = "TIMPushNotifyEvent";
         public static final String NOTIFICATION_INTENT_KEY = "TIMPushNotifyIntentKey";
@@ -730,11 +733,17 @@ public final class TUIConstants {
         public static final String BROADCAST_IM_LOGIN_AFTER_APP_WAKEUP = "com.tencent.TIMPush.BROADCAST_IM_LOGIN_AFTER_APP_WAKEUP";
         public static final String METHOD_REPORT_NOTIFICATION_RECIEVED = "reportNotificationRecieved";
         public static final String METHOD_REPORT_NOTIFICATION_CLICKED = "reportNotificationClicked";
-        public static final String PUSH_DETECTION_TIMEOUT_KEY = "pushDetectionTimeoutKey";
-        public static final String METHOD_DISABLE_RETRY_REGISTER_FCM = "disableRetryRegisterFCMChannel";
-        public static final String METHOD_DISABLE_RETRY_REGISTER_FCM_KEY = "disableRetryRegisterFCMChannelKey";
-        public static final String METHOD_CREATE_NOTIFICATION_CHANNELS = "createNotificationChannels";
-        public static final String CREATE_NOTIFICATION_CHANNELS_KEY = "createNotificationChannelsKey";
+        public static final String METHOD_SET_CUSTOM_CONFIG_JSON = "setCustomConfigJson";
+        public static final String SET_CUSTOM_CONFIG_JSON_KEY = "setCustomConfigJsonKey";
+        public static final String METHOD_REGISTER_TPUSH = "registerTPush";
+        public static final String METHOD_SET_REGISTRATION_ID = "setRegistrationID";
+        public static final String METHOD_GET_REGISTRATION_ID = "getRegistrationID";
+        public static final String PARAM_SDK_APPID_KEY = "paramSdkAppId";
+        public static final String PARAM_REGISTRATION_ID_KEY = "paramRegistrationID";
+        public static final String PARAM_APP_SECRET_KEY = "paramAppSecret";
+        public static final String METHOD_SET_CUSTOM_CONFIG_FILE = "setCustomConfigFile";
+        public static final String SET_CUSTOM_CONFIG_FILE_KEY = "setCustomConfigFileKey";
+        public static final String METHOD_SET_CUSTOM_FCM_RING = "setCustomFCMRing";
 
 
         public static class XiaoMi {

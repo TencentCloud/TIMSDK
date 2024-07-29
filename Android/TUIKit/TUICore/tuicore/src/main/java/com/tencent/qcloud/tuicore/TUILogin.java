@@ -130,7 +130,6 @@ public class TUILogin {
         getInstance().internalLogin(context, sdkAppId, userId, userSig, config, callback);
     }
 
-
     /**
      * User Login
      *
@@ -254,6 +253,24 @@ public class TUILogin {
                 getUserInfo(userId);
                 TUICallback.onSuccess(callback);
                 TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
+                return;
+            }
+
+            if (config != null && config.isInitLocalStorageOnly()) {
+                V2TIMManager.getInstance().callExperimentalAPI("initLocalStorage", userId, new V2TIMValueCallback<Object>() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        getUserInfo(userId);
+                        TUICallback.onSuccess(callback);
+                    }
+
+                    @Override
+                    public void onError(int code, String desc) {
+                        Log.e(TAG, "initLocalStorage error:" + code + ", desc:" + desc);
+                        TUICallback.onError(callback, code, ErrorMessageConverter.convertIMError(code, desc));
+                    }
+                });
+
                 return;
             }
 
@@ -480,11 +497,6 @@ public class TUILogin {
         } else {
             return getInstance().userId;
         }
-    }
-
-    public static void setLoginUser(int sdkAppId, String userId) {
-        getInstance().sdkAppId = sdkAppId;
-        getInstance().userId = userId;
     }
 
     public static class TUIBusinessScene {

@@ -631,7 +631,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 if (messageBean instanceof ReplyMessageBean) {
                     showRootMessageReplyDetail(((ReplyMessageBean) messageBean).getMsgRootId());
                 } else if (messageBean instanceof QuoteMessageBean) {
-                    locateOriginMessage(((QuoteMessageBean) messageBean).getOriginMsgId());
+                    presenter.locateQuoteOriginMessage((QuoteMessageBean) messageBean);
                 }
             }
 
@@ -664,36 +664,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
             }
 
             @Override
-            public void onTextSelected(View view, int position, TUIMessageBean messageBean) {
-                if (TUIChatUtils.chatEventOnMessageLongClicked(view, messageBean)) {
-                    return;
-                }
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onTextSelected(view, position, messageBean);
-                }
-            }
-
-            @Override
             public void onMessageReadStatusClick(View view, TUIMessageBean messageBean) {
                 if (mOnItemClickListener != null && messageBean.isSelf()) {
                     mOnItemClickListener.onMessageReadStatusClick(view, messageBean);
                 }
-            }
-        });
-    }
-
-    private void locateOriginMessage(String originMsgId) {
-        if (TextUtils.isEmpty(originMsgId)) {
-            ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
-            return;
-        }
-        presenter.locateMessage(originMsgId, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {}
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
             }
         });
     }

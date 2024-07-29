@@ -8,6 +8,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -311,13 +312,13 @@ public class CallModel implements Cloneable, Serializable {
             }
         }
         if (callerID == null) {
-            callerID = V2TIMManager.getInstance().getLoginUser();
+            callerID = TUILogin.getLoginUser();
         }
         return callerID;
     }
 
     private int parseParticipantRole() {
-        if (TextUtils.equals(caller, V2TIMManager.getInstance().getLoginUser())) {
+        if (TextUtils.equals(caller, TUILogin.getLoginUser())) {
             return CALL_PARTICIPANT_ROLE_CALLER;
         } else {
             return CALL_PARTICIPANT_ROLE_CALLEE;

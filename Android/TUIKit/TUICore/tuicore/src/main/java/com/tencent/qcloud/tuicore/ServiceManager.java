@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuicore;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -69,6 +70,9 @@ class ServiceManager {
             return service.onCall(method, param, callback);
         } else {
             Log.w(TAG, "can't find service : " + serviceName);
+            if (callback != null) {
+                callback.onServiceCallback(-1, "can't find service : " + serviceName, new Bundle());
+            }
             return null;
         }
     }

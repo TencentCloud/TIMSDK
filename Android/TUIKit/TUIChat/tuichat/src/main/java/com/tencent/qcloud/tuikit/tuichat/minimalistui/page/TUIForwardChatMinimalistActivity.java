@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLi
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageAdapter;

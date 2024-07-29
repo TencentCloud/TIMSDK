@@ -19,9 +19,8 @@ public class ChatInfo implements Serializable {
     // other's face url
     protected String faceUrl;
     private List<Object> iconUrlList = new ArrayList<>();
-    private int type = V2TIMConversation.V2TIM_C2C;
+    private int type;
     private String id;
-    private String groupType;
     private boolean isTopChat;
     private TUIMessageBean locateMessage;
     boolean enableAudioCall = true;
@@ -36,9 +35,6 @@ public class ChatInfo implements Serializable {
     private boolean enableAlbum = true;
     boolean needReadReceipt = true;
     private DraftInfo draft;
-
-
-    public ChatInfo() {}
 
     /**
      *
@@ -106,22 +102,6 @@ public class ChatInfo implements Serializable {
      */
     public void setId(String id) {
         this.id = id;
-    }
-
-    /**
-     *
-     * get group type
-     */
-    public String getGroupType() {
-        return groupType;
-    }
-
-    /**
-     *
-     * set group type
-     */
-    public void setGroupType(String groupType) {
-        this.groupType = groupType;
     }
 
     /**
