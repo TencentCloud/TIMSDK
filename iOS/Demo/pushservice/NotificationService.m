@@ -7,8 +7,12 @@
 //
 
 #import "NotificationService.h"
-#import <TIMPush/TIMPush.h>
 #import "TCConstants.h"
+#if __has_include(<TIMPush/TIMPushManager.h>)
+    #import <TIMPush/TIMPushManager.h>
+#elif __has_include(<TPush/TIMPushManager.h>)
+    #import <TPush/TIMPushManager.h>
+#endif
 @interface NotificationService ()
 
 @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
@@ -27,7 +31,7 @@
     NSString * appGroupID = kTIMPushAppGorupKey;
     
     __weak typeof(self) weakSelf = self;
-    [TIMPush onReceiveNotificationRequest:request inAppGroupID:appGroupID callback:^(UNNotificationContent *content) {
+    [TIMPushManager onReceiveNotificationRequest:request inAppGroupID:appGroupID callback:^(UNNotificationContent *content) {
         weakSelf.bestAttemptContent = [content mutableCopy];
         // Modify the notification content here...
         // self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
