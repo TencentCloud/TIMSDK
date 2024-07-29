@@ -137,24 +137,17 @@ public class OfflinePushAPIDemo {
 
         DemoLog.d(TAG, "registerPush json = " + jsonStr);
         Map<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TIMPush.REGISTER_PUSH_WITH_JSON_KEY, jsonStr);
-        TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_REGISTER_PUSH_WITH_JSON, param, new TUIServiceCallback() {
+        param.put(TUIConstants.TIMPush.SET_CUSTOM_CONFIG_JSON_KEY, jsonStr);
+        TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_SET_CUSTOM_CONFIG_JSON, param);
+
+        Map<String, Object> registerParam = new HashMap<>();
+        param.put(TUIConstants.TIMPush.CONTEXT, context);
+        TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_REGISTER_PUSH, registerParam, new TUIServiceCallback() {
             @Override
             public void onServiceCallback(int errorCode, String errorMessage, Bundle bundle) {
                 DemoLog.d(TAG, "registerPush errorCode = " + errorCode + ", errorMessage = " + errorMessage);
             }
         });
-
-        /*try {
-            Class clz = Class.forName("com.tencent.qcloud.tim.push.TIMPushService");
-            Method methodIntance = clz.getDeclaredMethod("getInstance", new Class[0]);
-            Object intance = methodIntance.invoke(null, new Object[] {});
-            Method methodRegister = clz.getDeclaredMethod("registerPush", String.class, Context.class);
-            methodRegister.setAccessible(true);
-            methodRegister.invoke(intance, jsonStr, context);
-        } catch (Exception e) {
-            DemoLog.e(TAG, "registerPush exception = " + e);
-        }*/
     }
 
     /**

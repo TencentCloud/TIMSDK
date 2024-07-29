@@ -8,8 +8,9 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
@@ -46,12 +47,12 @@ public class ReplyPresenter {
 
     public void setChatInfo(ChatInfo chatInfo) {
         this.chatInfo = chatInfo;
-        if (chatInfo.getType() == ChatInfo.TYPE_C2C) {
+        if (chatInfo instanceof C2CChatInfo) {
             chatPresenter = new C2CChatPresenter();
-            ((C2CChatPresenter) chatPresenter).setChatInfo(chatInfo);
+            ((C2CChatPresenter) chatPresenter).setChatInfo((C2CChatInfo) chatInfo);
         } else {
             chatPresenter = new GroupChatPresenter();
-            ((GroupChatPresenter) chatPresenter).setGroupInfo((GroupInfo) chatInfo);
+            ((GroupChatPresenter) chatPresenter).setGroupInfo((GroupChatInfo) chatInfo);
         }
     }
 

@@ -11,7 +11,7 @@
 
         <ImageView
             android:id="@+id/sound_msg_icon_iv"
-            android:src="@drawable/voice_msg_playing_3"
+            android:src="@drawable/chat_voice_msg_playing_3"
             android:layout_width="@dimen/reply_icon_size"
             android:layout_height="@dimen/reply_icon_size"
             android:layout_marginRight="@dimen/reply_msg_padding"

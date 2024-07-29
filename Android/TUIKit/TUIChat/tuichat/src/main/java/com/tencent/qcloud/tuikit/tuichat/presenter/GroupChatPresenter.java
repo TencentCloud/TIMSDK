@@ -14,9 +14,10 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
@@ -30,7 +31,7 @@ import java.util.List;
 public class GroupChatPresenter extends ChatPresenter {
     private static final String TAG = GroupChatPresenter.class.getSimpleName();
 
-    private GroupInfo groupInfo;
+    private GroupChatInfo groupChatInfo;
     private List<GroupMemberInfo> currentGroupMembers = new ArrayList<>();
 
     private GroupChatEventListener groupChatEventListener;
@@ -57,7 +58,7 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void clearGroupMessage(String chatId) {
-                if (TextUtils.equals(chatId, groupInfo.getId())) {
+                if (TextUtils.equals(chatId, groupChatInfo.getId())) {
                     GroupChatPresenter.this.clearMessage();
                 }
             }
@@ -74,7 +75,7 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void onRecvNewMessage(TUIMessageBean message) {
-                if (groupInfo == null || !TextUtils.equals(message.getGroupId(), groupInfo.getId())) {
+                if (groupChatInfo == null || !TextUtils.equals(message.getGroupId(), groupChatInfo.getId())) {
                     TUIChatLog.i(TAG, "receive a new message , not belong to current chat.");
                 } else {
                     GroupChatPresenter.this.onRecvNewMessage(message);
@@ -88,7 +89,7 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void onGroupNameChanged(String groupId, String newName) {
-                if (groupInfo == null || !TextUtils.equals(groupId, groupInfo.getId())) {
+                if (groupChatInfo == null || !TextUtils.equals(groupId, groupChatInfo.getId())) {
                     return;
                 }
                 GroupChatPresenter.this.onGroupNameChanged(newName);
@@ -96,7 +97,7 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void onGroupFaceUrlChanged(String groupId, String faceUrl) {
-                if (groupInfo == null || !TextUtils.equals(groupId, groupInfo.getId())) {
+                if (groupChatInfo == null || !TextUtils.equals(groupId, groupChatInfo.getId())) {
                     return;
                 }
                 GroupChatPresenter.this.onGroupFaceUrlChanged(faceUrl);
@@ -104,14 +105,14 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void onRecvMessageModified(TUIMessageBean messageBean) {
-                if (groupInfo != null && TextUtils.equals(messageBean.getGroupId(), groupInfo.getId())) {
+                if (groupChatInfo != null && TextUtils.equals(messageBean.getGroupId(), groupChatInfo.getId())) {
                     GroupChatPresenter.this.onRecvMessageModified(messageBean);
                 }
             }
 
             @Override
             public void addMessage(TUIMessageBean messageBean, String chatId) {
-                if (TextUtils.equals(chatId, groupInfo.getId())) {
+                if (TextUtils.equals(chatId, groupChatInfo.getId())) {
                     addMessageInfo(messageBean);
                 }
             }
@@ -123,22 +124,22 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void onGroupMessagePinned(String groupID, TUIMessageBean messageBean, UserBean opUser) {
-                if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
+                if (groupChatInfo != null && TextUtils.equals(groupID, groupChatInfo.getId())) {
                     GroupChatPresenter.this.onGroupMessagePinned(messageBean, opUser);
                 }
             }
 
             @Override
             public void onGroupMessageUnPinned(String groupID, String messageID, UserBean opUser) {
-                if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
+                if (groupChatInfo != null && TextUtils.equals(groupID, groupChatInfo.getId())) {
                     GroupChatPresenter.this.onGroupMessageUnPinned(messageID, opUser);
                 }
             }
 
             @Override
             public void onGrantGroupAdmin(String groupID, List<String> newAdminUserIDList) {
-                if (groupInfo != null) {
-                    if (TextUtils.equals(groupID, groupInfo.getId()) && newAdminUserIDList.contains(TUILogin.getLoginUser())) {
+                if (groupChatInfo != null) {
+                    if (TextUtils.equals(groupID, groupChatInfo.getId()) && newAdminUserIDList.contains(TUILogin.getLoginUser())) {
                         selfRoleInGroup = GroupMemberInfo.ROLE_ADMIN;
                         onPinnedListChanged();
                     }
@@ -147,8 +148,8 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void onRevokeGroupAdmin(String groupID, List<String> oldAdminUserIDList) {
-                if (groupInfo != null) {
-                    if (TextUtils.equals(groupID, groupInfo.getId()) && oldAdminUserIDList.contains(TUILogin.getLoginUser())) {
+                if (groupChatInfo != null) {
+                    if (TextUtils.equals(groupID, groupChatInfo.getId()) && oldAdminUserIDList.contains(TUILogin.getLoginUser())) {
                         selfRoleInGroup = GroupMemberInfo.ROLE_MEMBER;
                         onPinnedListChanged();
                     }
@@ -157,8 +158,8 @@ public class GroupChatPresenter extends ChatPresenter {
 
             @Override
             public void onGrantGroupOwner(String groupID, String groupOwner) {
-                if (groupInfo != null) {
-                    if (TextUtils.equals(groupID, groupInfo.getId())) {
+                if (groupChatInfo != null) {
+                    if (TextUtils.equals(groupID, groupChatInfo.getId())) {
                         if (TextUtils.equals(groupOwner, TUILogin.getLoginUser())) {
                             selfRoleInGroup = GroupMemberInfo.ROLE_OWNER;
                             onPinnedListChanged();
@@ -177,10 +178,10 @@ public class GroupChatPresenter extends ChatPresenter {
     }
 
     public void onReadReport(List<MessageReceiptInfo> receiptList) {
-        if (groupInfo != null) {
+        if (groupChatInfo != null) {
             List<MessageReceiptInfo> processReceipts = new ArrayList<>();
             for (MessageReceiptInfo messageReceiptInfo : receiptList) {
-                if (!TextUtils.equals(messageReceiptInfo.getGroupID(), groupInfo.getId())) {
+                if (!TextUtils.equals(messageReceiptInfo.getGroupID(), groupChatInfo.getId())) {
                     continue;
                 }
                 processReceipts.add(messageReceiptInfo);
@@ -191,11 +192,11 @@ public class GroupChatPresenter extends ChatPresenter {
 
     @Override
     public void loadMessage(int type, TUIMessageBean lastMessageInfo, IUIKitCallback<List<TUIMessageBean>> callback) {
-        if (groupInfo == null || isLoading) {
+        if (groupChatInfo == null || isLoading) {
             return;
         }
         isLoading = true;
-        String chatId = groupInfo.getId();
+        String chatId = groupChatInfo.getId();
         if (type == TUIChatConstants.GET_MESSAGE_FORWARD) {
             provider.loadGroupMessage(chatId, MSG_PAGE_COUNT, lastMessageInfo, new IUIKitCallback<Pair<List<TUIMessageBean>, Integer>>() {
                 @Override
@@ -226,7 +227,7 @@ public class GroupChatPresenter extends ChatPresenter {
     // This method is called after the message is loaded successfully
     @Override
     protected void onMessageLoadCompleted(List<TUIMessageBean> data, int getType) {
-        groupReadReport(groupInfo.getId());
+        groupReadReport(groupChatInfo.getId());
         getMessageReadReceipt(data, getType);
     }
 
@@ -245,7 +246,6 @@ public class GroupChatPresenter extends ChatPresenter {
                 @Override
                 public void onSuccess(List<GroupMemberInfo> data) {
                     currentGroupMembers.addAll(data);
-                    groupInfo.setMemberDetails(currentGroupMembers);
                 }
 
                 @Override
@@ -266,7 +266,6 @@ public class GroupChatPresenter extends ChatPresenter {
                             }
                         }
                     }
-                    groupInfo.setMemberDetails(currentGroupMembers);
                 }
 
                 @Override
@@ -278,13 +277,13 @@ public class GroupChatPresenter extends ChatPresenter {
                 @Override
                 public void onSuccess(Pair<Integer, String> data) {
                     if (data.first == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NAME) {
-                        groupInfo.setGroupName(data.second);
+                        groupChatInfo.setGroupName(data.second);
                         if (chatNotifyHandler != null) {
                             chatNotifyHandler.onGroupNameChanged(data.second);
                         }
                     }
                     if (data.first == TipsMessageBean.MSG_TYPE_GROUP_MODIFY_NOTICE) {
-                        groupInfo.setNotice(data.second);
+                        groupChatInfo.setNotice(data.second);
                     }
                 }
 
@@ -298,9 +297,9 @@ public class GroupChatPresenter extends ChatPresenter {
 
     protected void assembleGroupMessage(TUIMessageBean message) {
         message.setGroup(true);
-        String groupType = groupInfo.getGroupType();
-        if (TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_AVCHATROOM) || TextUtils.equals(groupType, GroupInfo.GROUP_TYPE_COMMUNITY)
-            || (TUIChatUtils.isCommunityGroup(groupInfo.getId()))) {
+        String groupType = groupChatInfo.getGroupType();
+        if (TextUtils.equals(groupType, GroupChatInfo.GROUP_TYPE_AVCHATROOM) || TextUtils.equals(groupType, GroupChatInfo.GROUP_TYPE_COMMUNITY)
+            || (TUIChatUtils.isCommunityGroup(groupChatInfo.getId()))) {
             message.setNeedReadReceipt(false);
         }
     }
@@ -310,7 +309,7 @@ public class GroupChatPresenter extends ChatPresenter {
     }
 
     public void onGroupForceExit(String groupId) {
-        if (chatNotifyHandler != null && TextUtils.equals(groupId, groupInfo.getId())) {
+        if (chatNotifyHandler != null && TextUtils.equals(groupId, groupChatInfo.getId())) {
             chatNotifyHandler.onGroupForceExit();
         }
     }
@@ -345,11 +344,11 @@ public class GroupChatPresenter extends ChatPresenter {
 
     @Override
     public ChatInfo getChatInfo() {
-        return groupInfo;
+        return groupChatInfo;
     }
 
-    public void setGroupInfo(GroupInfo groupInfo) {
-        this.groupInfo = groupInfo;
+    public void setGroupInfo(GroupChatInfo groupChatInfo) {
+        this.groupChatInfo = groupChatInfo;
     }
 
     public void setGroupPinnedView(IGroupPinnedView groupPinnedView) {
@@ -409,10 +408,10 @@ public class GroupChatPresenter extends ChatPresenter {
     }
 
     public void pinnedMessage(TUIMessageBean messageBean, TUICallback callback) {
-        if (groupInfo == null) {
+        if (groupChatInfo == null) {
             return;
         }
-        String groupID = groupInfo.getId();
+        String groupID = groupChatInfo.getId();
         TUIChatLog.i(TAG, "pinnedMessage groupID:" + groupID);
         provider.pinGroupMessage(groupID, messageBean, true, new TUICallback() {
             @Override
@@ -434,10 +433,10 @@ public class GroupChatPresenter extends ChatPresenter {
     }
 
     public void unpinnedMessage(TUIMessageBean messageBean, TUICallback callback) {
-        if (groupInfo == null) {
+        if (groupChatInfo == null) {
             return;
         }
-        String groupID = groupInfo.getId();
+        String groupID = groupChatInfo.getId();
         TUIChatLog.i(TAG, "unpinnedMessage groupID:" + groupID);
         provider.pinGroupMessage(groupID, messageBean, false, new TUICallback() {
             @Override

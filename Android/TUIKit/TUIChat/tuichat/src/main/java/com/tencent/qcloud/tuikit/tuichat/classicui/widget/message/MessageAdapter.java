@@ -244,21 +244,6 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
     }
 
-    public void resetSelectableText() {
-        int index = mRecycleView.getSelectedPosition();
-        if (index < 0) {
-            return;
-        }
-        RecyclerView.ViewHolder holder = mRecycleView.findViewHolderForAdapterPosition(index);
-        if (holder != null) {
-            if (holder instanceof MessageContentHolder) {
-                ((MessageContentHolder) holder).resetSelectableText();
-            }
-        } else {
-            TUIChatLog.d(TAG, "holder == null");
-        }
-    }
-
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);

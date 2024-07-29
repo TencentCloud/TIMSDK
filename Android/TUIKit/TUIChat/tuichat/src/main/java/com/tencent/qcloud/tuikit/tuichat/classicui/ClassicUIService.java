@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.classicui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -27,10 +26,9 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingTipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
@@ -89,8 +87,7 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.Tex
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TipsMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.VideoMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.EmptyMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -324,41 +321,31 @@ public class ClassicUIService implements TUIInitializer, ITUIExtension, ITUIServ
             boolean enableRecordVideo = getOrDefault(param, TUIConstants.TUIChat.ObjectFactory.ChatFragment.ENABLE_RECORD_VIDEO, true);
 
             if (chatType == TUIConstants.TUIChat.ObjectFactory.ChatFragment.CHAT_TYPE_GROUP) {
-                GroupInfo groupInfo = new GroupInfo();
-                groupInfo.setId(chatID);
-                groupInfo.setChatName(chatTitle);
-                groupInfo.setEnableRoom(enableRoom);
-                groupInfo.setEnableAudioCall(enableAudioCall);
-                groupInfo.setEnableVideoCall(enableVideoCall);
-                groupInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
-                groupInfo.setEnableGroupNote(enableGroupNoteMessage);
-                groupInfo.setEnablePoll(enablePollMessage);
-                groupInfo.setEnableTakePhoto(enableTakePhoto);
-                groupInfo.setEnableRecordVideo(enableRecordVideo);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TUIChatConstants.CHAT_INFO, groupInfo);
+                GroupChatInfo groupChatInfo = new GroupChatInfo();
+                groupChatInfo.setId(chatID);
+                groupChatInfo.setChatName(chatTitle);
+                groupChatInfo.setEnableRoom(enableRoom);
+                groupChatInfo.setEnableAudioCall(enableAudioCall);
+                groupChatInfo.setEnableVideoCall(enableVideoCall);
+                groupChatInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
+                groupChatInfo.setEnableGroupNote(enableGroupNoteMessage);
+                groupChatInfo.setEnablePoll(enablePollMessage);
+                groupChatInfo.setEnableTakePhoto(enableTakePhoto);
+                groupChatInfo.setEnableRecordVideo(enableRecordVideo);
                 TUIGroupChatFragment tuiGroupChatFragment = new TUIGroupChatFragment();
-                tuiGroupChatFragment.setArguments(bundle);
-                GroupChatPresenter presenter = new GroupChatPresenter();
-                presenter.initListener();
-                tuiGroupChatFragment.setPresenter(presenter);
+                tuiGroupChatFragment.setChatInfo(groupChatInfo);
                 return tuiGroupChatFragment;
             } else {
-                ChatInfo chatInfo = new ChatInfo();
-                chatInfo.setId(chatID);
-                chatInfo.setChatName(chatTitle);
-                chatInfo.setEnableAudioCall(enableAudioCall);
-                chatInfo.setEnableVideoCall(enableVideoCall);
-                chatInfo.setEnableTakePhoto(enableTakePhoto);
-                chatInfo.setEnableRecordVideo(enableRecordVideo);
-                chatInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TUIChatConstants.CHAT_INFO, chatInfo);
+                C2CChatInfo c2CChatInfo = new C2CChatInfo();
+                c2CChatInfo.setId(chatID);
+                c2CChatInfo.setChatName(chatTitle);
+                c2CChatInfo.setEnableAudioCall(enableAudioCall);
+                c2CChatInfo.setEnableVideoCall(enableVideoCall);
+                c2CChatInfo.setEnableTakePhoto(enableTakePhoto);
+                c2CChatInfo.setEnableRecordVideo(enableRecordVideo);
+                c2CChatInfo.setEnableCustomHelloMessage(enableCustomHelloMessage);
                 TUIC2CChatFragment tuic2CChatFragment = new TUIC2CChatFragment();
-                tuic2CChatFragment.setArguments(bundle);
-                C2CChatPresenter presenter = new C2CChatPresenter();
-                presenter.initListener();
-                tuic2CChatFragment.setPresenter(presenter);
+                tuic2CChatFragment.setChatInfo(c2CChatInfo);
                 return tuic2CChatFragment;
             }
         }

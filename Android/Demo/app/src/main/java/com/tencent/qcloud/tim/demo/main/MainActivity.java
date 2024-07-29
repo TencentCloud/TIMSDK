@@ -741,31 +741,7 @@ public class MainActivity extends BaseLightActivity {
         DemoLog.i(TAG, "onResume");
         super.onResume();
         registerUnreadListener();
-        setCurrentItemTab();
         handleOfflinePush();
-    }
-
-    private void setCurrentItemTab() {
-        if (TUIConfig.getTUIHostType() == TUIConfig.TUI_HOST_TYPE_RTCUBE) {
-            Intent intent = getIntent();
-            if (intent != null) {
-                String tabName = intent.getStringExtra(TUIConstants.TIMAppKit.IM_DEMO_ITEM_TYPE_KEY);
-                if (TextUtils.isEmpty(tabName)) {
-                    tabName = TUIConstants.TIMAppKit.IM_DEMO_ITEM_TYPE_CHAT;
-                }
-                if (TextUtils.equals(tabName, TUIConstants.TIMAppKit.IM_DEMO_ITEM_TYPE_CHAT)) {
-                    setTabSelected(conversationBean);
-                } else if (TextUtils.equals(tabName, TUIConstants.TIMAppKit.IM_DEMO_ITEM_TYPE_COMMUNITY)) {
-                    setTabSelected(communityBean);
-                } else if (TextUtils.equals(tabName, TUIConstants.TIMAppKit.IM_DEMO_ITEM_TYPE_CONTACT)) {
-                    setTabSelected(contactsBean);
-                } else if (TextUtils.equals(tabName, TUIConstants.TIMAppKit.IM_DEMO_ITEM_TYPE_RECENT_CALLS)) {
-                    setTabSelected(recentCallsBean);
-                } else if (TextUtils.equals(tabName, TUIConstants.TIMAppKit.IM_DEMO_ITEM_TYPE_PROFILE)) {
-                    setTabSelected(profileBean);
-                }
-            }
-        }
     }
 
     private void handleOfflinePush() {

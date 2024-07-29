@@ -93,6 +93,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
             } else {
                 senderNameTv.setVisibility(View.VISIBLE);
             }
+            senderName = originMessage.getUserDisplayName();
         }
         senderNameTv.setText(senderName + ": ");
         setOnTimeInLineTextClickListener(msg);

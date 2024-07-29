@@ -455,14 +455,26 @@ public class ConversationFoldPresenter {
             return;
         }
 
-        HashMap<String, Object> param = new HashMap<>();
-        Map<String, V2TIMMessage> v2TIMMessageMap = new HashMap<>();
+        Map<String, TUIMessageBean> messageBeanMap = new HashMap<>();
         for (ConversationInfo conversationInfo : conversationInfoList) {
             if (conversationInfo.getLastMessage() != null && conversationInfo.getLastTUIMessageBean() == null) {
-                v2TIMMessageMap.put(conversationInfo.getConversationId(), conversationInfo.getLastMessage());
+                HashMap<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIChat.Method.GetTUIMessageBean.V2TIM_MESSAGE, conversationInfo.getLastMessage());
+                Object messageBeanObj = TUICore.callService(
+                        TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.Method.GetTUIMessageBean.METHOD_NAME, param);
+                if (messageBeanObj instanceof TUIMessageBean) {
+                    TUIMessageBean messageBean = (TUIMessageBean) messageBeanObj;
+                    if (messageBean.needAsyncGetDisplayString()) {
+                        messageBeanMap.put(conversationInfo.getConversationId(), messageBean);
+                        continue;
+                    }
+                    conversationInfo.setLastTUIMessageBean(messageBean);
+                }
             }
         }
-        param.put(TUIConstants.TUIChat.Method.GetMessagesDisplayString.MESSAGE_MAP, v2TIMMessageMap);
+
+        HashMap<String, Object> param = new HashMap<>();
+        param.put(TUIConstants.TUIChat.Method.GetMessagesDisplayString.MESSAGE_MAP, messageBeanMap);
         TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.Method.GetMessagesDisplayString.METHOD_NAME, param);
     }
 
@@ -483,9 +495,12 @@ public class ConversationFoldPresenter {
         if (changedInfo == null) {
             return;
         }
+
+        List<ConversationInfo> changedInfoList = new ArrayList<>();
+        changedInfoList.add(changedInfo);
         if (adapter != null) {
-            adapter.onConversationChanged(Collections.singletonList(changedInfo));
+            adapter.onConversationChanged(changedInfoList);
         }
-        refreshChangedInfo(loadedConversationInfoList, Collections.singletonList(changedInfo));
+        refreshChangedInfo(loadedConversationInfoList, changedInfoList);
     }
 }

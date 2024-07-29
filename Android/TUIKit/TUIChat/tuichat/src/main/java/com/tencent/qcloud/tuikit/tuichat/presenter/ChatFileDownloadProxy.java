@@ -98,6 +98,10 @@ public class ChatFileDownloadProxy {
 
                     @Override
                     public void onProgress(long current, long total) {
+                        if (total <= 0) {
+                            current = 0;
+                            total = 1;
+                        }
                         callbackOnProgress(taskID, current, total);
                     }
                 });

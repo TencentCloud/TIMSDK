@@ -4,6 +4,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,10 +15,14 @@ import androidx.core.content.res.ResourcesCompat;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 
 public class SoundMessageHolder extends MessageContentHolder {
+    private static final int SOUND_VIEW_MAX_WIDTH = 220;
+
     private TextView audioTimeText;
     private ImageView audioPlayImage;
     private LinearLayout audioContentView;
@@ -41,7 +47,7 @@ public class SoundMessageHolder extends MessageContentHolder {
             setRiskContent(itemView.getResources().getString(R.string.chat_risk_sound_message_alert));
         }
         if (message.isSelf()) {
-            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
+            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.chat_voice_msg_playing_3, null);
             playingDrawable.setAutoMirrored(true);
             audioPlayImage.setImageDrawable(playingDrawable);
             audioPlayImage.setRotation(180f);
@@ -49,7 +55,7 @@ public class SoundMessageHolder extends MessageContentHolder {
             audioContentView.addView(audioPlayImage);
             unreadAudioText.setVisibility(View.GONE);
         } else {
-            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
+            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.chat_voice_msg_playing_3, null);
             playingDrawable.setAutoMirrored(true);
             audioPlayImage.setImageDrawable(playingDrawable);
             audioPlayImage.setRotation(0f);
@@ -109,12 +115,44 @@ public class SoundMessageHolder extends MessageContentHolder {
             if (animationDrawable != null) {
                 animationDrawable.stop();
             }
-            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.voice_msg_playing_3, null);
+            Drawable playingDrawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.chat_voice_msg_playing_3, null);
             playingDrawable.setAutoMirrored(true);
             audioPlayImage.setImageDrawable(playingDrawable);
             if (message.isSelf()) {
                 audioPlayImage.setRotation(180f);
             }
+        }
+        setSoundViewWidth(duration);
+    }
+
+    @Override
+    protected void setGravity(boolean isStart) {
+        int gravity = isStart ? Gravity.START : Gravity.END;
+        super.setGravity(isStart);
+        ViewGroup.LayoutParams layoutParams = audioContentView.getLayoutParams();
+        if (layoutParams instanceof FrameLayout.LayoutParams) {
+            ((FrameLayout.LayoutParams) layoutParams).gravity = gravity;
+        } else if (layoutParams instanceof LinearLayout.LayoutParams) {
+            ((LinearLayout.LayoutParams) layoutParams).gravity = gravity;
+        }
+        audioContentView.setLayoutParams(layoutParams);
+    }
+
+    private void setSoundViewWidth(int duration) {
+        if (msgContentFrame == null) {
+            return;
+        }
+
+        ViewGroup.LayoutParams params = msgContentFrame.getLayoutParams();
+        if (params != null) {
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            msgContentFrame.setLayoutParams(params);
+            msgContentFrame.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int minWidth = msgContentFrame.getMeasuredWidth();
+            int maxWidth = ScreenUtil.dip2px(SOUND_VIEW_MAX_WIDTH);
+            int audioMaxTime = TUIChatConfigs.getGeneralConfig().getAudioRecordMaxTime();
+            params.width = minWidth + ((maxWidth - minWidth) / audioMaxTime) * duration;
+            msgContentFrame.setLayoutParams(params);
         }
     }
 }

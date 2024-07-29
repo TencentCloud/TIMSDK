@@ -9,6 +9,7 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+
     <activity android:screenOrientation="portrait" android:launchMode="singleTask" android:name="com.tencent.qcloud.tim.demo.login.LoginForDevActivity"/>
     <activity android:name="com.tencent.qcloud.tim.demo.login.LanguageSelectActivity" android:screenOrientation="portrait"/>
     <activity android:name="com.tencent.qcloud.tim.demo.login.ThemeSelectActivity" android:screenOrientation="portrait"/>

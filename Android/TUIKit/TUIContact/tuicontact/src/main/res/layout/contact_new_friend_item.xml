@@ -29,6 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="17.28sp" />
 
         <TextView
@@ -44,11 +46,12 @@
 
     <TextView
         android:id="@+id/agree"
-        android:layout_width="51.84dp"
+        android:layout_width="55dp"
         android:layout_height="28.8dp"
         android:background="@drawable/agree_btn_bg"
         android:textColor="@color/white"
-        android:textSize="15.36sp"
+        android:textSize="14sp"
+        android:maxLines="1"
         android:gravity="center"
         android:layout_marginEnd="9.6dp"
         android:layout_gravity="center"
@@ -56,11 +59,12 @@
 
     <TextView
         android:id="@+id/reject"
-        android:layout_width="51.84dp"
+        android:layout_width="55dp"
         android:layout_height="28.8dp"
         android:background="@drawable/reject_btn_bg"
         android:textColor="?attr/core_primary_color"
-        android:textSize="15.36sp"
+        android:textSize="14sp"
+        android:maxLines="1"
         android:layout_marginEnd="15.36dp"
         android:layout_gravity="center"
         android:gravity="center"
@@ -68,11 +72,12 @@
 
     <TextView
         android:id="@+id/result_tv"
-        android:textSize="15.36sp"
+        android:textSize="14sp"
         android:text="@string/accepted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15.36dp"
+        android:autoSizeMaxTextSize="14sp"
         android:visibility="gone"/>
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.highlight.HighlightPresenter;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -27,7 +28,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
@@ -121,6 +122,8 @@ public abstract class ChatPresenter {
         AIDenoiseSignatureManager.getInstance().updateSignature();
     }
 
+    public abstract void initListener();
+
     protected void initMessageSender() {
         baseMessageSender = new IBaseMessageSender() {
             @Override
@@ -150,6 +153,7 @@ public abstract class ChatPresenter {
             @Override
             public void onSuccess(TUIMessageBean lastMessage) {
                 locateMessage(lastMessage.getId(), callback);
+                HighlightPresenter.stopHighlight(lastMessage.getId());
             }
 
             @Override
@@ -213,6 +217,32 @@ public abstract class ChatPresenter {
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 TUIChatUtils.callbackOnError(callback, errCode, errMsg);
+            }
+        });
+    }
+
+    public void locateQuoteOriginMessage(QuoteMessageBean quoteMessageBean) {
+        if (quoteMessageBean.getOriginMessageBean() != null) {
+            if (quoteMessageBean.getOriginMessageBean().getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
+                ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.locate_origin_msg_failed_tip));
+                return;
+            }
+        }
+        locateOriginMessage(quoteMessageBean.getOriginMsgId());
+    }
+
+    public void locateOriginMessage(String originMsgId) {
+        if (TextUtils.isEmpty(originMsgId)) {
+            ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.locate_origin_msg_failed_tip));
+            return;
+        }
+        locateMessage(originMsgId, new IUIKitCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {}
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.locate_origin_msg_failed_tip));
             }
         });
     }
@@ -1016,14 +1046,24 @@ public abstract class ChatPresenter {
         return true;
     }
 
+
     public void markMessageAsRead(ChatInfo chatInfo) {
+        markMessageAsRead(chatInfo, true);
+    }
+
+    public void markMessageAsRead(ChatInfo chatInfo, boolean isDelay) {
         if (chatInfo == null) {
             TUIChatLog.i(TAG, "markMessageAsRead() chatInfo is null");
             return;
         }
         boolean isGroup = chatInfo.getType() != ChatInfo.TYPE_C2C;
         String chatId = chatInfo.getId();
-        limitReadReport(chatId, isGroup);
+        if (isDelay) {
+            limitReadReport(chatId, isGroup);
+        } else {
+            readReportHandler.removeCallbacksAndMessages(null);
+            readReport(chatId, isGroup);
+        }
     }
 
     /**
@@ -1443,6 +1483,7 @@ public abstract class ChatPresenter {
         message.setStatus(TUIMessageBean.MSG_STATUS_SENDING);
     }
 
+
     class LoadApplyListRunnable implements Runnable {
         private static final int TRY_DELAY = 500;
         private IUIKitCallback<List<GroupApplyInfo>> callback;
@@ -1452,7 +1493,7 @@ public abstract class ChatPresenter {
             provider.loadApplyInfo(new IUIKitCallback<List<GroupApplyInfo>>() {
                 @Override
                 public void onSuccess(List<GroupApplyInfo> data) {
-                    if (!(getChatInfo() instanceof GroupInfo)) {
+                    if (!(getChatInfo() instanceof GroupChatInfo)) {
                         return;
                     }
                     String groupId = getChatInfo().getId();
@@ -1684,7 +1725,7 @@ public abstract class ChatPresenter {
             userBeanHashMap.put(id, null);
         }
         ChatInfo chatInfo = getChatInfo();
-        if (chatInfo instanceof GroupInfo) {
+        if (chatInfo instanceof GroupChatInfo) {
             provider.getGroupMembersInfo(chatInfo.getId(), new ArrayList<>(userIds), new IUIKitCallback<List<GroupMemberInfo>>() {
                 @Override
                 public void onSuccess(List<GroupMemberInfo> data) {

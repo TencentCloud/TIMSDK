@@ -53,6 +53,7 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
@@ -94,7 +95,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
     // Limit the number of messages forwarded one by one
     private static final int FORWARD_MSG_NUM_LIMIT = 30;
-    protected static final int CALL_MEMBER_LIMIT = 8;
 
     protected MessageAdapter mAdapter;
     private ForwardSelectActivityListener mForwardSelectActivityListener;
@@ -138,6 +138,41 @@ public class ChatView extends LinearLayout implements IChatLayout {
     private OnClickListener onAvatarClickListener;
     private ChatPresenter presenter;
     private int scrollDirection = 0;
+    private UserStatusBean userStatusBean;
+    private Runnable typingRunnable = null;
+    public ChatPresenter.TypingListener typingListener = new ChatPresenter.TypingListener() {
+        @Override
+        public void onTyping(int status) {
+            if (!TUIChatConfigs.getGeneralConfig().isEnableTypingStatus()) {
+                return;
+            }
+
+            if (mChatInfo == null) {
+                return;
+            }
+
+            TUIChatLog.d(TAG, "mTypingListener status= " + status);
+            if (status == 1) {
+                chatDescription.setText(R.string.typing);
+
+                if (typingRunnable == null) {
+                    typingRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            setUserStatusDesc();
+                        }
+                    };
+                }
+                chatDescription.removeCallbacks(typingRunnable);
+                chatDescription.postDelayed(typingRunnable, TUIChatConstants.TYPING_PARSE_MESSAGE_INTERVAL * 1000);
+            } else if (status == 0) {
+                chatDescription.removeCallbacks(typingRunnable);
+                setUserStatusDesc();
+            } else {
+                TUIChatLog.e(TAG, "parseTypingMessage error status =" + status);
+            }
+        }
+    };
 
     public ChatView(Context context) {
         super(context);
@@ -201,7 +236,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
         userNameArea = findViewById(R.id.user_name_area);
 
         lastTypingTime = 0;
-        isSupportTyping = false;
     }
 
     public void displayBackToLastMessages() {
@@ -448,12 +482,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
             presenter.loadUserStatus(Collections.singletonList(mChatInfo.getId()), new IUIKitCallback<Map<String, UserStatusBean>>() {
                 @Override
                 public void onSuccess(Map<String, UserStatusBean> data) {
-                    UserStatusBean statusBean = data.get(mChatInfo.getId());
-                    if (statusBean == null || statusBean.getOnlineStatus() != UserStatusBean.STATUS_ONLINE) {
-                        chatDescription.setText(R.string.chat_user_status_offline);
-                    } else {
-                        chatDescription.setText(R.string.chat_user_status_online);
-                    }
+                    userStatusBean = data.get(mChatInfo.getId());
+                    setUserStatusDesc();
                 }
 
                 @Override
@@ -484,6 +514,14 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 }
             }
         });
+    }
+
+    private void setUserStatusDesc() {
+        if (userStatusBean == null || userStatusBean.getOnlineStatus() != UserStatusBean.STATUS_ONLINE) {
+            chatDescription.setText(R.string.chat_user_status_offline);
+        } else {
+            chatDescription.setText(R.string.chat_user_status_online);
+        }
     }
 
     private void loadChatName() {
@@ -540,8 +578,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
     private void loadFace(String faceUrl) {
         int resID = com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light;
-        if (mChatInfo.getType() == V2TIMConversation.V2TIM_GROUP) {
-            resID = TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), mChatInfo.getGroupType());
+        if (mChatInfo instanceof GroupChatInfo) {
+            resID = TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), ((GroupChatInfo) mChatInfo).getGroupType());
         }
 
         Glide.with(this).load(faceUrl).apply(new RequestOptions().error(resID).placeholder(resID)).into(chatAvatar);
@@ -1427,7 +1465,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     public void exitChat() {
         AudioRecorder.cancelRecord();
         AudioPlayer.getInstance().stopPlay();
-        presenter.markMessageAsRead(mChatInfo);
+        presenter.markMessageAsRead(mChatInfo, false);
     }
 
     @Override
@@ -1457,6 +1495,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
             int firstVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
             int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
             sendMsgReadReceipt(firstVisiblePosition, lastVisiblePosition);
+            if (presenter != null) {
+                presenter.markMessageAsRead(mChatInfo);
+            }
         }
     }
 

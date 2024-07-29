@@ -332,7 +332,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
             aboutIM.setVisibility(GONE);
             logoutButton.setVisibility(GONE);
             changeThemeView.setVisibility(GONE);
-            changeStyleView.setVisibility(VISIBLE);
+            changeStyleView.setVisibility(GONE);
 
             int theme = TUIThemeManager.getInstance().getCurrentTheme();
             if (theme == TUIThemeManager.THEME_LIGHT) {

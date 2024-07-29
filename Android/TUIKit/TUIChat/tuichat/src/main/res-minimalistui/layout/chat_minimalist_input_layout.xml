@@ -119,6 +119,8 @@
                 android:textColor="@color/black_font_color"
                 android:textColorHint="#666666"
                 android:textCursorDrawable="@drawable/my_cursor"
+                android:focusableInTouchMode="true"
+                android:focusable="true"
                 android:textFontWeight="400"
                 android:textSize="14sp" />
 

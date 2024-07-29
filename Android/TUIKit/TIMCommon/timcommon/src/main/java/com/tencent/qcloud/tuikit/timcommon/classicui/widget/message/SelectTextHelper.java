@@ -25,6 +25,8 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
+
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,6 +70,30 @@ public class SelectTextHelper {
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener;
     private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
     private View.OnTouchListener mRootTouchListener;
+
+    private static WeakReference<SelectTextHelper> selectedReference;
+
+    public static void setSelected(SelectTextHelper selected) {
+        SelectTextHelper oldSelected = getSelected();
+        if (oldSelected != null && selected != oldSelected) {
+            oldSelected.reset();
+        }
+        selectedReference = new WeakReference<>(selected);
+    }
+
+    public static void resetSelected() {
+        SelectTextHelper selectTextHelper = getSelected();
+        if (selectTextHelper != null) {
+            selectTextHelper.reset();
+        }
+    }
+
+    private static SelectTextHelper getSelected() {
+        if (selectedReference != null) {
+            return selectedReference.get();
+        }
+        return null;
+    }
 
     public interface OnSelectListener {
         void onClick(View v); 
@@ -219,9 +245,10 @@ public class SelectTextHelper {
         showAllView();
     }
 
-    /**
-     * public end
-     */
+    public void setTextView(TextView textView) {
+        this.mTextView = textView;
+        init();
+    }
 
     private void init() {
         mTextView.setText(mTextView.getText(), TextView.BufferType.SPANNABLE);
@@ -779,36 +806,7 @@ public class SelectTextHelper {
         return offset > 0 && layout.getLineForOffset(offset) == layout.getLineForOffset(offset - 1) + 1;
     }
 
-    public static int getDisplayWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
-    }
-
-    public static int getDisplayHeight() {
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
-    }
-
     public static int dp2px(float dpValue) {
         return (int) (dpValue * Resources.getSystem().getDisplayMetrics().density + 0.5f);
-    }
-
-    public static void setWidthHeight(View v, int w, int h) {
-        ViewGroup.LayoutParams params = v.getLayoutParams();
-        params.width = w;
-        params.height = h;
-        v.setLayoutParams(params);
-    }
-
-    private static int STATUS_HEIGHT = 0;
-
-    public static int getStatusHeight() {
-        if (0 != STATUS_HEIGHT) {
-            return STATUS_HEIGHT;
-        }
-        int resid = Resources.getSystem().getIdentifier("status_bar_height", "dimen", "android");
-        if (resid > 0) {
-            STATUS_HEIGHT = Resources.getSystem().getDimensionPixelSize(resid);
-            return STATUS_HEIGHT;
-        }
-        return -1;
     }
 }

@@ -98,12 +98,12 @@
     <string name="demo_self_detail_modify_nickname_rule">Only letters, digits, underscores, and Chinese characters.</string>
 
     <string name="tab_contact_tab_text">Contacts</string>
-    <string name="tab_conversation_tab_text">Message</string>
+    <string name="tab_conversation_tab_text">Messages</string>
     <string name="demo_tab_overseas_conversation_tab_text">Chats</string>
     <string name="tab_profile_tab_text">Me</string>
     <string name="minimalist_tab_settings_tab_text">Settings</string>
     <string name="minimalist_tab_contacts_tab_text">Contacts</string>
-    <string name="tab_community_tab_text">Community</string>
+    <string name="tab_community_tab_text">Communities</string>
 
 
     <string name="conversation_title">Tencent Cloud Chat</string>
@@ -216,7 +216,7 @@
     <string name="demo_im_flagship_edition_update_tip">%s function is the Chat Premium Edition function, which can be used after purchasing the Premium Edition package. Please refer to the price description for details.</string>
     <string name="demo_buying_tips">This is the feature of Premium Edition</string>
 
-    <string name="chat_security_warning">[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.</string>
+    <string name="chat_security_warning">Do not easily believe in remittance, winning prizes, and other information. Be cautious when dealing with unknown phone calls to avoid being deceived. Please report any suspicious situations in a timely manner.</string>
     <string name="chat_security_warning_report">Report</string>
     <string name="chat_security_warning_click_to_report">Report</string>
 

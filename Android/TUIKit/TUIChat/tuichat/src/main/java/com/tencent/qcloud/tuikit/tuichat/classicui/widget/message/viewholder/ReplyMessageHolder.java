@@ -70,6 +70,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
             } else {
                 senderNameTv.setVisibility(View.VISIBLE);
             }
+            senderName = originMessage.getUserDisplayName();
         }
         senderNameTv.setText(senderName + ":");
         FaceManager.handlerEmojiText(replyContentTv, replyContent, false);

@@ -2,12 +2,10 @@ package com.tencent.qcloud.tim.demo.login;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.TIMAppService;
 import com.tencent.qcloud.tim.demo.bean.UserInfo;
 import com.tencent.qcloud.tim.demo.config.AppConfig;
@@ -133,7 +131,7 @@ public class LoginWrapper {
         });
     }
 
-    public void loginIMSDK(Context context, int sdkAppID, String userID, String userSig, TUILoginConfig config, TUICallback tuiCallback) {
+    public void loginIMSDK(Context context, int sdkAppID, String userID, String userSig, final TUILoginConfig config, TUICallback tuiCallback) {
         TUILogin.login(context, sdkAppID, userID, userSig, config, new TUICallback() {
             @Override
             public void onError(final int code, final String desc) {
@@ -145,34 +143,12 @@ public class LoginWrapper {
 
             @Override
             public void onSuccess() {
-                UserInfo.getInstance().setLastLoginCode(BaseConstants.ERR_SUCC);
+                if (config == null || false == config.isInitLocalStorageOnly()) {
+                    UserInfo.getInstance().setLastLoginCode(BaseConstants.ERR_SUCC);
+                }
+
                 if (tuiCallback != null) {
                     tuiCallback.onSuccess();
-                }
-            }
-        });
-    }
-
-    public void initUserLocalData(Context context, int sdkAppID, String userID, TUICallback tuiCallback) {
-        if (!TUILogin.init(context, sdkAppID, null, null)) {
-            Log.e(TAG, "initSDK failed");
-            return;
-        }
-
-        TUILogin.setLoginUser(AppConfig.DEMO_SDK_APPID, userID);
-        V2TIMManager.getInstance().callExperimentalAPI("initLocalStorage", userID, new V2TIMValueCallback<Object>() {
-            @Override
-            public void onSuccess(Object o) {
-                if (tuiCallback != null) {
-                    tuiCallback.onSuccess();
-                }
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                DemoLog.e(TAG, "initLocalStorage error:" + code + ", desc:" + desc);
-                if (tuiCallback != null) {
-                    tuiCallback.onError(code, desc);
                 }
             }
         });
@@ -182,31 +158,33 @@ public class LoginWrapper {
         int loginStatus = V2TIMManager.getInstance().getLoginStatus();
         int lastLoginCode = UserInfo.getInstance().getLastLoginCode();
         UserInfo userInfo = UserInfo.getInstance();
-        if (loginStatus == V2TIMManager.V2TIM_STATUS_LOGOUT && !TextUtils.isEmpty(userInfo.getUserId()) && userInfo.isAutoLogin()
-            && (lastLoginCode >= BaseConstants.ERR_SDK_NET_ENCODE_FAILED && lastLoginCode <= BaseConstants.ERR_SDK_NET_SEND_REMAINING_TIMEOUT_NO_NETWORK)) {
-            DemoLog.i(TAG, "onConnectSuccess, login IMSDK");
-            loginIMSDK(TIMAppService.getAppContext(), AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), userInfo.getUserSig(), TUIUtils.getLoginConfig(),
-                new TUICallback() {
-                    @Override
-                    public void onSuccess() {
-                        // do nothing
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String errorMessage) {
-                        UserInfo.getInstance().setLastLoginCode(errorCode);
-                        if ((lastLoginCode < BaseConstants.ERR_SDK_NET_ENCODE_FAILED
-                                && lastLoginCode > BaseConstants.ERR_SDK_NET_SEND_REMAINING_TIMEOUT_NO_NETWORK)) {
-                            if (AppConfig.DEMO_UI_STYLE == AppConfig.DEMO_UI_STYLE_CLASSIC) {
-                                MainActivity.finishMainActivity();
-                            } else {
-                                MainMinimalistActivity.finishMainActivity();
-                            }
-
-                            TIMAppService.getInstance().startLoginActivity();
+        if (loginStatus == V2TIMManager.V2TIM_STATUS_LOGOUT && !TextUtils.isEmpty(userInfo.getUserId()) && userInfo.isAutoLogin()) {
+            if (lastLoginCode >= BaseConstants.ERR_SDK_NET_ENCODE_FAILED && lastLoginCode <= BaseConstants.ERR_SDK_NET_SEND_REMAINING_TIMEOUT_NO_NETWORK) {
+                DemoLog.i(TAG, "onConnectSuccess, login IMSDK");
+                loginIMSDK(TIMAppService.getAppContext(), AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), userInfo.getUserSig(), TUIUtils.getLoginConfig(),
+                    new TUICallback() {
+                        @Override
+                        public void onSuccess() {
+                            // do nothing
                         }
-                    }
-                });
+
+                        @Override
+                        public void onError(int errorCode, String errorMessage) {
+                            UserInfo.getInstance().setLastLoginCode(errorCode);
+                            DemoLog.e(TAG, "tryToAutoLogin error:" + errorCode);
+                            if (errorCode < BaseConstants.ERR_SDK_NET_ENCODE_FAILED
+                                || errorCode > BaseConstants.ERR_SDK_NET_SEND_REMAINING_TIMEOUT_NO_NETWORK) {
+                                if (AppConfig.DEMO_UI_STYLE == AppConfig.DEMO_UI_STYLE_CLASSIC) {
+                                    MainActivity.finishMainActivity();
+                                } else {
+                                    MainMinimalistActivity.finishMainActivity();
+                                }
+
+                                TIMAppService.getInstance().startLoginActivity();
+                            }
+                        }
+                    });
+            }
         }
     }
 

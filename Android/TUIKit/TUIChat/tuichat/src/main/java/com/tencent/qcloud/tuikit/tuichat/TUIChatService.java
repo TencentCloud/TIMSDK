@@ -33,8 +33,8 @@ import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
-import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
@@ -195,6 +195,8 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
             }
         } else if (TextUtils.equals(TUIConstants.TUIChat.Method.GetMessagesDisplayString.METHOD_NAME, method)) {
             getMessagesDisplayString(param);
+        } else if (TextUtils.equals(TUIConstants.TUIChat.Method.GetTUIMessageBean.METHOD_NAME, method)) {
+            return getTUIMessagesBean(param);
         }
         return null;
     }
@@ -233,7 +235,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
             paramRing.put(TUIConstants.TIMPush.CONFIG_FCM_CHANNEL_ID_KEY, OfflinePushInfoUtils.FCM_PUSH_CHANNEL_ID);
             paramRing.put(TUIConstants.TIMPush.CONFIG_FCM_PRIVATE_RING_NAME_KEY, OfflinePushInfoUtils.PRIVATE_RING_NAME);
             paramRing.put(TUIConstants.TIMPush.CONFIG_ENABLE_FCM_PRIVATE_RING_KEY, isPrivateRing);
-            TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_CONFIG_FCM_PRIVATE_RING, paramRing);
+            TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_SET_CUSTOM_FCM_RING, paramRing);
         }
     }
 
@@ -818,22 +820,20 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         return instance.appContext;
     }
 
-    private void getMessagesDisplayString(Map<String, Object> param) {
-        Map<String, V2TIMMessage> v2TIMMessageMap = (Map<String, V2TIMMessage>) param.get(TUIConstants.TUIChat.Method.GetMessagesDisplayString.MESSAGE_MAP);
-        Map<String, TUIMessageBean> conversationMessageBeanMap = new HashMap<>();
-        for (Map.Entry<String, V2TIMMessage> entry : v2TIMMessageMap.entrySet()) {
-            TUIMessageBean messageBean = ChatMessageParser.parsePresentMessage(entry.getValue());
-            if (messageBean != null) {
-                conversationMessageBeanMap.put(entry.getKey(), messageBean);
-            }
+    private TUIMessageBean getTUIMessagesBean(Map<String, Object> param) {
+        Object v2TIMMessageObj = param.get(TUIConstants.TUIChat.Method.GetTUIMessageBean.V2TIM_MESSAGE);
+        if (v2TIMMessageObj instanceof V2TIMMessage) {
+            return ChatMessageParser.parsePresentMessage((V2TIMMessage) v2TIMMessageObj);
         }
+        return null;
+    }
+
+    private void getMessagesDisplayString(Map<String, Object> param) {
+        Map<String, TUIMessageBean> conversationMessageBeanMap =
+                (Map<String, TUIMessageBean>) param.get(TUIConstants.TUIChat.Method.GetMessagesDisplayString.MESSAGE_MAP);
         for (Map.Entry<String, TUIMessageBean> entry : conversationMessageBeanMap.entrySet()) {
             String conversationID = entry.getKey();
             TUIMessageBean tuiMessageBean = entry.getValue();
-            if (!tuiMessageBean.needAsyncGetDisplayString()) {
-                notifyMessageDisplayStringUpdated(conversationID, tuiMessageBean);
-                continue;
-            }
             Set<String> userIDSet = tuiMessageBean.getAdditionalUserIDList();
             if (userIDSet.isEmpty()) {
                 notifyMessageDisplayStringUpdated(conversationID, tuiMessageBean);
@@ -842,14 +842,14 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
             ChatPresenter chatPresenter;
             if (conversationID.startsWith(TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX)) {
                 chatPresenter = new C2CChatPresenter();
-                ChatInfo chatInfo = new ChatInfo();
-                chatInfo.setId(conversationID.substring(TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX.length()));
-                ((C2CChatPresenter) chatPresenter).setChatInfo(chatInfo);
+                C2CChatInfo c2CChatInfo = new C2CChatInfo();
+                c2CChatInfo.setId(conversationID.substring(TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX.length()));
+                ((C2CChatPresenter) chatPresenter).setChatInfo(c2CChatInfo);
             } else {
                 chatPresenter = new GroupChatPresenter();
-                GroupInfo groupInfo = new GroupInfo();
-                groupInfo.setId(conversationID.substring(TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX.length()));
-                ((GroupChatPresenter) chatPresenter).setGroupInfo(groupInfo);
+                GroupChatInfo groupChatInfo = new GroupChatInfo();
+                groupChatInfo.setId(conversationID.substring(TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX.length()));
+                ((GroupChatPresenter) chatPresenter).setGroupInfo(groupChatInfo);
             }
 
             chatPresenter.getUserBean(userIDSet, new IUIKitCallback<Map<String, UserBean>>() {

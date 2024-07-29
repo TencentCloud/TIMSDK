@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tim.demo;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,8 @@ import android.content.pm.ApplicationInfo;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
+
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DemoApplication extends Application {
+public class DemoApplication extends MultiDexApplication {
     private static final String TAG = DemoApplication.class.getSimpleName();
 
     @Override
@@ -38,8 +38,6 @@ public class DemoApplication extends Application {
         super.onCreate();
 
         if (isMainProcess()) {
-            MultiDex.install(this);
-
             initBugly();
             initIMDemoAppInfo();
             setPermissionRequestContent();

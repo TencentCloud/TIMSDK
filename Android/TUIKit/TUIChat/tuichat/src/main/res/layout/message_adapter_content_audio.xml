@@ -19,13 +19,13 @@
 
     <ImageView
         android:id="@+id/audio_play_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/voice_msg_playing_3" />
+        android:src="@drawable/chat_voice_msg_playing_3" />
 
 </LinearLayout>
 

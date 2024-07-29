@@ -64,7 +64,8 @@ public class CallingTipsMessageBean extends TipsMessageBean {
     @Override
     public boolean needAsyncGetDisplayString() {
         if (callModel != null) {
-            return callModel.getParticipantIDs() != null && !callModel.getParticipantIDs().isEmpty();
+            return callModel.getProtocolType() == CallModel.CALL_PROTOCOL_TYPE_TIMEOUT
+                    && callModel.getParticipantIDs() != null && !callModel.getParticipantIDs().isEmpty();
         }
         return false;
     }

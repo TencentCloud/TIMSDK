@@ -1060,10 +1060,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     public void showSoftInputAndThen(Callback callback) {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (!isSoftInputShown()) {
-            imm.toggleSoftInput(0, 0);
-        }
         mTextInput.requestFocus();
+        imm.showSoftInput(mTextInput, 0);
         postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1096,6 +1094,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     public void hideSoftInput() {
         TUIChatLog.i(TAG, "hideSoftInput");
         faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
+        mTextInput.clearFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
         Context context = getContext();
@@ -1109,28 +1108,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     public void onEmptyClick() {
         inputMachine.execute(InputAction.EMPTY_CLICKED);
-    }
-
-    private boolean isSoftInputShown() {
-        View decorView = ((Activity) getContext()).getWindow().getDecorView();
-        int screenHeight = decorView.getHeight();
-        Rect rect = new Rect();
-        decorView.getWindowVisibleDisplayFrame(rect);
-        return screenHeight - rect.bottom - getNavigateBarHeight() >= 0;
-    }
-
-    private int getNavigateBarHeight() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-        int usableHeight = metrics.heightPixels;
-        windowManager.getDefaultDisplay().getRealMetrics(metrics);
-        int realHeight = metrics.heightPixels;
-        if (realHeight > usableHeight) {
-            return realHeight - usableHeight;
-        } else {
-            return 0;
-        }
     }
 
     public void disableShowCustomFace(boolean disable) {
