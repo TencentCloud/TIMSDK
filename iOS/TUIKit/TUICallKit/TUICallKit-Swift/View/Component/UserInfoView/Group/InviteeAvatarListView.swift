@@ -12,8 +12,8 @@ private let kSpacing = 5.scaleWidth()
 
 class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    let viewModel = InviteeAvatarListViewModel()
     let remoteUserListObserver = Observer()
+    let dataSource: Observable<[User]> = Observable(Array())
     
     lazy var describeLabel: UILabel = {
         let describeLabel = UILabel()
@@ -39,6 +39,9 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        var dataList = TUICallState.instance.remoteUserList.value
+        dataList.append(TUICallState.instance.selfUser.value)
+        dataSource.value = removeCallUser(remoteUserList: dataList)
         registerObserveState()
     }
     
@@ -47,7 +50,12 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
     }
     
     deinit {
-        viewModel.dataSource.removeObserver(remoteUserListObserver)
+        TUICallState.instance.remoteUserList.removeObserver(remoteUserListObserver)
+    }
+    
+    func removeCallUser(remoteUserList: [User]) -> [User] {
+        let userList = remoteUserList.filter { $0.callRole.value != .call }
+        return userList
     }
     
     // MARK: UI Specification Processing
@@ -91,8 +99,12 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
     }
     
     func remoteUserChanged() {
-        viewModel.dataSource.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
+            var dataList = newValue
+            dataList.append(TUICallState.instance.selfUser.value)
+            self.dataSource.value = self.removeCallUser(remoteUserList: dataList)
+            
             self.updateDescribeLabel()
             self.calleeCollectionView.reloadData()
             self.calleeCollectionView.layoutIfNeeded()
@@ -100,7 +112,7 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
     }
     
     func updateDescribeLabel() {
-        let count = viewModel.dataSource.value.count
+        let count = dataSource.value.count
         
         if count >= 1 {
             describeLabel.isHidden = false
@@ -114,12 +126,12 @@ class InviteeAvatarListView: UIView, UICollectionViewDelegate, UICollectionViewD
 extension InviteeAvatarListView {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.dataSource.value.count
+        return dataSource.value.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InviteeAvatarCell", for: indexPath) as! InviteeAvatarCell
-        cell.initCell(user: viewModel.dataSource.value[indexPath.row])
+        cell.initCell(user: dataSource.value[indexPath.row])
         return cell
     }
     

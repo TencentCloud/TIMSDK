@@ -10,8 +10,6 @@ import TUICallEngine
 
 class AudioAndVideoCalleeWaitingView: UIView {
     
-    let viewModel = AudioAndVideoCalleeWaitingViewModel()
-    
     lazy var acceptBtn: BaseControlButton = {
         weak var weakSelf = self
         let acceptBtn = BaseControlButton.create(frame: CGRect.zero,
@@ -58,23 +56,23 @@ class AudioAndVideoCalleeWaitingView: UIView {
     func activateConstraints() {
         rejectBtn.snp.makeConstraints { make in
             make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? 80.scaleWidth() : -80.scaleWidth())
-            make.bottom.equalTo(self)
+            make.top.bottom.equalTo(self)
             make.size.equalTo(kControlBtnSize)
         }
         acceptBtn.snp.makeConstraints { make in
             make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? -80.scaleWidth() : 80.scaleWidth())
-            make.bottom.equalTo(self)
+            make.top.bottom.equalTo(self)
             make.size.equalTo(kControlBtnSize)
         }
     }
     
     // MARK: Event Action
     func rejectTouchEvent(sender: UIButton) {
-        viewModel.reject()
+        CallEngineManager.instance.reject()
     }
     
     func acceptTouchEvent(sender: UIButton) {
-        viewModel.accept()
+        CallEngineManager.instance.accept()
     }
     
 }

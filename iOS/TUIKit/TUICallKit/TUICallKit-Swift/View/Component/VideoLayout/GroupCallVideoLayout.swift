@@ -9,9 +9,11 @@ import Foundation
 
 class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    let viewModel = GroupCallVideoLayoutViewModel()
     let selfCallStatusObserver = Observer()
     let isCameraOpenObserver = Observer()
+    let selfUser = TUICallState.instance.selfUser.value
+    
+    var allUserList = [User]()
     
     lazy var calleeCollectionView = {
         let flowLayout = GroupCallVideoFlowLayout()
@@ -27,6 +29,7 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.clear
+        processUserList(remoteUserList: TUICallState.instance.remoteUserList.value)
         registerObserveState()
     }
     
@@ -35,8 +38,8 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     }
     
     deinit {
-        viewModel.isCameraOpen.removeObserver(isCameraOpenObserver)
-        viewModel.remoteUserList.removeObserver(selfCallStatusObserver)
+        TUICallState.instance.isCameraOpen.removeObserver(isCameraOpenObserver)
+        TUICallState.instance.remoteUserList.removeObserver(selfCallStatusObserver)
         
         showLargeViewIndex = -1
         
@@ -73,6 +76,11 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
         }
     }
     
+    // MARK: Set TUICallState showLargeViewUserId
+    func setShowLargeViewUserId(userId: String) {
+        TUICallState.instance.showLargeViewUserId.value = userId
+    }
+    
     // MARK: Register TUICallState Observer && Update UI
     func registerObserveState() {
         remoteUserChanged()
@@ -80,14 +88,26 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     }
     
     func remoteUserChanged() {
-        viewModel.remoteUserList.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.remoteUserList.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
+            self.processUserList(remoteUserList: newValue)
             self.calleeCollectionView.reloadData()
         })
     }
     
+    func processUserList(remoteUserList: [User]) {
+        allUserList.removeAll()
+        selfUser.index = 0
+        allUserList.append(selfUser)
+        
+        for (index, value) in remoteUserList.enumerated() {
+            value.index = index + 1
+            allUserList.append(value)
+        }
+    }
+    
     func isCameraOpenChanged() {
-        viewModel.isCameraOpen.addObserver(isCameraOpenObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.isCameraOpen.addObserver(isCameraOpenObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             if newValue {
                 self.showMySelfAsLargeView()
@@ -97,10 +117,10 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     
     func showMySelfAsLargeView() {
         var row = -1
-        for (index, element) in viewModel.allUserList.enumerated() where element.id.value == viewModel.selfUser.value.id.value {
+        for (index, element) in allUserList.enumerated() where element.id.value == selfUser.id.value {
             row = index
         }
-        if row >= 0 && viewModel.selfUser.value.id.value != TUICallState.instance.showLargeViewUserId.value {
+        if row >= 0 && selfUser.id.value != TUICallState.instance.showLargeViewUserId.value {
             let indexPath = IndexPath(row: row, section: 0)
             performUpdates(indexPath: indexPath)
         }
@@ -108,10 +128,10 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
     
     func showHistoryLargeView() {
         var row = -1
-        for (index, element) in viewModel.allUserList.enumerated() where element.id.value == TUICallState.instance.showLargeViewUserId.value {
+        for (index, element) in allUserList.enumerated() where element.id.value == TUICallState.instance.showLargeViewUserId.value {
             row = index
         }
-        if row >= 0 && row < viewModel.allUserList.count {
+        if row >= 0 && row < allUserList.count {
             let indexPath = IndexPath(row: row, section: 0)
             performUpdates(indexPath: indexPath)
         }
@@ -122,13 +142,13 @@ class GroupCallVideoLayout: UIView, UICollectionViewDelegate, UICollectionViewDa
 extension GroupCallVideoLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.allUserList.count
+        return allUserList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GroupCallVideoCell_\(indexPath.row)",
                                                       for: indexPath) as! GroupCallVideoCell
-        cell.initCell(user: viewModel.allUserList[indexPath.row])
+        cell.initCell(user: allUserList[indexPath.row])
         return cell
     }
     
@@ -137,7 +157,7 @@ extension GroupCallVideoLayout {
     }
     
     func performUpdates(indexPath: IndexPath) {
-        let count = viewModel.allUserList.count
+        let count = allUserList.count
         let remoteUpdates = getRemoteUpdates(indexPath: indexPath)
         
         var firstBigFlag = false
@@ -145,26 +165,15 @@ extension GroupCallVideoLayout {
             firstBigFlag = true
         }
         
-        // Perform any cell reloads without animation because there is no movement.
-        UIView.performWithoutAnimation {
-            calleeCollectionView.performBatchUpdates({
-                for update in remoteUpdates {
-                    if case let .reload(index) = update {
-                        viewModel.allUserList[index].isUpdated = true
-                        calleeCollectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
-                    }
-                }
-            })
-        }
-        
         showLargeViewIndex = (showLargeViewIndex == indexPath.row) ? -1 : indexPath.row
         if firstBigFlag {
             showLargeViewIndex = 0
         }
         
-        viewModel.setShowLargeViewUserId(userId: (showLargeViewIndex >= 0) ? viewModel.allUserList[indexPath.row].id.value : " ")
+        setShowLargeViewUserId(userId: (showLargeViewIndex >= 0) ? allUserList[indexPath.row].id.value : " ")
         
         // Animate all other update types together.
+        calleeCollectionView.cancelInteractiveMovement()
         calleeCollectionView.performBatchUpdates({
             var deletes = [Int]()
             var inserts = [(user:User, index:Int)]()
@@ -183,14 +192,12 @@ extension GroupCallVideoLayout {
                     calleeCollectionView.moveItem(at: IndexPath(item: fromIndex, section: 0),
                                                   to: IndexPath(item: toIndex, section: 0))
                     deletes.append(fromIndex)
-                    inserts.append((viewModel.allUserList[fromIndex], toIndex))
-                    
-                default: break
+                    inserts.append((allUserList[fromIndex], toIndex))
                 }
             }
             
             for deletedIndex in deletes.sorted().reversed() {
-                viewModel.allUserList.remove(at: deletedIndex)
+                allUserList.remove(at: deletedIndex)
             }
             
             let sortedInserts = inserts.sorted(by: { (userA, userB) -> Bool in
@@ -198,13 +205,18 @@ extension GroupCallVideoLayout {
             })
             
             for insertion in sortedInserts {
-                viewModel.allUserList.insert(insertion.user, at: insertion.index)
+                if insertion.index >= allUserList.startIndex && insertion.index <= allUserList.endIndex {
+                    allUserList.insert(insertion.user, at: insertion.index)
+                }
             }
-        })
+        }) { [weak self] _ in
+            guard let self = self else { return }
+            self.calleeCollectionView.endInteractiveMovement()
+        }
     }
     
     func getRemoteUpdates(indexPath: IndexPath) -> [UserUpdate] {
-        let count = viewModel.allUserList.count
+        let count = allUserList.count
         
         if count < 2 || count > 4 || indexPath.row >= count {
             return [UserUpdate]()
@@ -212,18 +224,18 @@ extension GroupCallVideoLayout {
         
         if indexPath.row == showLargeViewIndex {
             return [
-                UserUpdate.move(0, viewModel.allUserList[indexPath.row].index)
+                UserUpdate.move(0, allUserList[indexPath.row].index)
             ]
         }
         
-        if count == 2 || viewModel.allUserList[0].index == 0 {
+        if count == 2 || allUserList[0].index == 0 {
             return [
                 UserUpdate.move(indexPath.row, 0)
             ]
         }
         
         return [
-            UserUpdate.move(0, viewModel.allUserList[0].index),
+            UserUpdate.move(0, allUserList[0].index),
             UserUpdate.move(indexPath.row, 0)
         ]
     }

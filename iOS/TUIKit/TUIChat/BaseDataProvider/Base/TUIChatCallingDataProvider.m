@@ -9,6 +9,7 @@
 #import "TUIChatCallingDataProvider.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
+#import <TUICore/TUILogin.h>
 #import "TUIMessageBaseDataProvider.h"
 
 typedef NSString *TUIChatMessageID;
@@ -168,13 +169,13 @@ typedef NSDictionary *TUIChatCallingJsonData;
         }
     }
     if (callerID == nil) {
-        callerID = V2TIMManager.sharedInstance.getLoginUser;
+        callerID = TUILogin.getUserID;
     }
     return callerID;
 }
 
 - (TUICallParticipantRole)participantRole {
-    if ([self.caller isEqualToString:V2TIMManager.sharedInstance.getLoginUser]) {
+    if ([self.caller isEqualToString:TUILogin.getUserID]) {
         return TUICallParticipantRoleCaller;
     } else {
         return TUICallParticipantRoleCallee;

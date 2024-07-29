@@ -38,10 +38,21 @@
 #import "TUIVideoReplyQuoteViewData.h"
 #import "TUIVoiceReplyQuoteViewData.h"
 
-#define kReplyQuoteViewMaxWidth 175
-#define kReplyQuoteViewMarginWidth 35
-
 @implementation TUIReplyMessageCellData
+{
+    NSString *_sender;
+}
+
+- (void)setSender:(NSString *)sender {
+    _sender = sender;
+}
+
+- (NSString *__nullable)sender {
+    if (self.originMessage) {
+        return self.originMessage.nameCard ? : (self.originMessage.friendRemark ? : (self.originMessage.nickName ? : self.originMessage.sender));
+    }
+    return _sender;
+}
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     if (message.cloudCustomData == nil) {
@@ -89,7 +100,7 @@
         return CGSizeMake(20, 20);
     }
 
-    return [data contentSize:kReplyQuoteViewMaxWidth - 12];
+    return [data contentSize:TReplyQuoteView_Max_Width - 12];
 }
 
 - (TUIReplyQuoteViewData *)getQuoteData:(TUIMessageCellData *)originCellData {

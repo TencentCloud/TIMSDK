@@ -10,7 +10,6 @@ import TUICore
 
 class InviteUserButton: UIView {
     
-    let viewModel = InviteUserButtonViewModel()
     let mediaTypeObserver = Observer()
     
     let inviteUserButton: InviteUserCustomButton = {
@@ -30,7 +29,7 @@ class InviteUserButton: UIView {
     }
     
     deinit {
-        viewModel.mediaType.removeObserver(mediaTypeObserver)
+        TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
     }
     
     // MARK: UI Specification Processing
@@ -61,7 +60,9 @@ class InviteUserButton: UIView {
     
     // MARK:  Action Event
     @objc func clickButton(sender: UIButton) {
-        viewModel.inviteUser()
+        let selectGroupMemberVC = SelectGroupMemberViewController()
+        selectGroupMemberVC.modalPresentationStyle = .fullScreen
+        UIWindow.getKeyWindow()?.rootViewController?.present(selectGroupMemberVC, animated: false)
     }
     
     // MARK: Register TUICallState Observer && Update UI
@@ -76,6 +77,20 @@ class InviteUserButton: UIView {
         if let image = TUICallKitCommon.getBundleImage(name: "icon_add_user") {
             inviteUserButton.setBackgroundImage(image, for: .normal)
         }
+    }
+    
+    func tui_valueCallback(param: [AnyHashable: Any]) {
+        guard let selectUserList = param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList] as? [TUIUserModel] else { return }
+        if selectUserList.count > 0 {
+            return
+        }
+        
+        var userIds: [String] = []
+        for user in selectUserList {
+            userIds.append(user.userId)
+        }
+        
+        CallEngineManager.instance.inviteUser(userIds: userIds)
     }
 }
 

@@ -15,7 +15,6 @@ class SingleCallView: UIView {
     
     weak var delegate: SingleCallViewDelegate?
     
-    let viewModel = SingleCallViewModel()
     let selfCallStatusObserver = Observer()
     let mediaTypeObserver = Observer()
     let isShowFullScreenObserver = Observer()
@@ -36,7 +35,7 @@ class SingleCallView: UIView {
     let maskedView = {
         let maskedView = UIView(frame: CGRect.zero)
         maskedView.backgroundColor =  UIColor.t_colorWithHexString(color: "#22262E", alpha: 0.85)
-        return maskedView;
+        return maskedView
     }()
     
     let audioFunctionView = {
@@ -82,9 +81,9 @@ class SingleCallView: UIView {
     }
     
     deinit {
-        viewModel.selfCallStatus.removeObserver(selfCallStatusObserver)
-        viewModel.mediaType.removeObserver(mediaTypeObserver)
-        viewModel.isShowFullScreen.removeObserver(isShowFullScreenObserver)
+        TUICallState.instance.selfUser.value.callStatus.removeObserver(selfCallStatusObserver)
+        TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
+        TUICallState.instance.isShowFullScreen.removeObserver(isShowFullScreenObserver)
         
         for view in subviews {
             view.removeFromSuperview()
@@ -92,6 +91,7 @@ class SingleCallView: UIView {
     }
     
     // MARK: UI Specification Processing
+    
     override func didMoveToWindow() {
         super.didMoveToWindow()
         if isViewReady { return }
@@ -134,7 +134,7 @@ class SingleCallView: UIView {
             make.height.equalTo(100.scaleWidth() + 10.scaleHeight() + 30)
         }
         callStatusTipView.snp.makeConstraints { make in
-            make.top.equalTo(userInfoView.snp.bottom).offset(180.scaleHeight())
+            make.top.equalTo(userInfoView.snp.bottom).offset((TUICallState.instance.showVirtualBackgroundButton ? 120 : 180).scaleHeight())
             make.centerX.equalTo(self)
             make.width.equalTo(self)
             make.height.equalTo(20)
@@ -154,13 +154,11 @@ class SingleCallView: UIView {
         videoInviteFunctionView.snp.makeConstraints({ make in
             make.centerX.equalTo(self)
             make.bottom.equalTo(self.snp.bottom).offset(functionViewBottomOffset)
-            make.height.equalTo(baseControlHeight)
             make.width.equalTo(self.snp.width)
         })
         inviteeWaitFunctionView.snp.makeConstraints({ make in
             make.centerX.equalTo(self)
             make.bottom.equalTo(self.snp.bottom).offset(functionViewBottomOffset)
-            make.height.equalTo(baseControlHeight)
             make.width.equalTo(self.snp.width)
         })
         floatingWindowBtn.snp.makeConstraints { make in
@@ -176,20 +174,21 @@ class SingleCallView: UIView {
     }
     
     // MARK: View Create & Manage
+    
     func createView() {
         cleanView()
         handleFloatingWindowBtn()
         
-        if viewModel.selfCallStatus.value == .waiting {
+        if TUICallState.instance.selfUser.value.callStatus.value == .waiting {
             createWaitingView()
-        } else if viewModel.selfCallStatus.value == .accept {
+        } else if TUICallState.instance.selfUser.value.callStatus.value == .accept {
             createAcceptView()
         }
     }
     
     func handleFloatingWindowBtn() {
-        if viewModel.enableFloatWindow {
-            floatingWindowBtn.isHidden = viewModel.isShowFullScreen.value
+        if TUICallState.instance.enableFloatWindow {
+            floatingWindowBtn.isHidden = TUICallState.instance.isShowFullScreen.value
         } else {
             floatingWindowBtn.isHidden = true
         }
@@ -211,7 +210,7 @@ class SingleCallView: UIView {
     func createAudioWaitingView() {
         userInfoView.isHidden = false
         callStatusTipView.isHidden = false
-        if viewModel.selfCallRole.value == .call {
+        if TUICallState.instance.selfUser.value.callRole.value == .call {
             audioFunctionView.isHidden = false
         } else {
             inviteeWaitFunctionView.isHidden = false
@@ -222,7 +221,7 @@ class SingleCallView: UIView {
         renderBackgroundView.isHidden = false
         userInfoView.isHidden = false
         callStatusTipView.isHidden = false
-        if viewModel.selfCallRole.value == .call {
+        if TUICallState.instance.selfUser.value.callRole.value == .call {
             videoInviteFunctionView.isHidden = false
         } else {
             inviteeWaitFunctionView.isHidden = false
@@ -230,7 +229,7 @@ class SingleCallView: UIView {
     }
     
     func createAcceptView() {
-        switch viewModel.mediaType.value {
+        switch TUICallState.instance.mediaType.value {
         case .audio:
             createAudioAcceptView()
         case .video:
@@ -245,12 +244,8 @@ class SingleCallView: UIView {
     }
     
     func createCallStatusTipView() {
-        if viewModel.selfCallRole.value == .call {
+        if TUICallState.instance.selfUser.value.callRole.value == .call {
             callStatusTipView.isHidden = false
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.callStatusTipView.isHidden = true
-            }
         }
     }
     
@@ -278,6 +273,7 @@ class SingleCallView: UIView {
     }
     
     // MARK: Register TUICallState Observer && Update UI
+    
     func registerObserveState() {
         callStatusChanged()
         mediaTypeChanged()
@@ -285,27 +281,27 @@ class SingleCallView: UIView {
     }
     
     func callStatusChanged() {
-        viewModel.selfCallStatus.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.selfUser.value.callStatus.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.createView()
         })
     }
     
     func mediaTypeChanged() {
-        viewModel.mediaType.addObserver(mediaTypeObserver) { [weak self] newValue, _  in
+        TUICallState.instance.mediaType.addObserver(mediaTypeObserver) { [weak self] newValue, _  in
             guard let self = self else { return }
             self.createView()
         }
     }
     
     func isShowFullScreenChanged() {
-        viewModel.isShowFullScreen.addObserver(isShowFullScreenObserver) { [weak self] newValue, _  in
+        TUICallState.instance.isShowFullScreen.addObserver(isShowFullScreenObserver) { [weak self] newValue, _  in
             guard let self = self else { return }
             self.videoFunctionView.isHidden = newValue
             self.timerView.isHidden = newValue
             self.delegate?.handleStatusBarHidden(isHidden: newValue)
             
-            if self.viewModel.enableFloatWindow {
+            if TUICallState.instance.enableFloatWindow {
                 self.floatingWindowBtn.isHidden = newValue
             }
         }

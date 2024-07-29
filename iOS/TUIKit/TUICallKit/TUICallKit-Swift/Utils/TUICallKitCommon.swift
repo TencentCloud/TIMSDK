@@ -31,14 +31,6 @@ public class TUICallKitCommon: NSObject {
         return UIImage(named: name, in: self.getTUICallKitBundle(), compatibleWith: nil)
     }
     
-    static func getKeyWindow() -> UIWindow? {
-        if #available(iOS 13.0, *) {
-            return UIApplication.shared.windows.filter({ $0.isKeyWindow }).last
-        } else {
-            return UIApplication.shared.keyWindow
-        }
-    }
-    
     @objc
     public static func checkAuthorizationStatusIsDenied(mediaType: TUICallMediaType) -> Bool {
         let statusAudio: AVAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .audio)
@@ -88,12 +80,17 @@ public class TUICallKitCommon: NSObject {
             let app = UIApplication.shared
             guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
             if app.canOpenURL(url) {
-                app.openURL(url)
+                if #available(iOS 10.0, *) {
+                    app.open(url)
+                } else {
+                    app.openURL(url)
+                }
             }
         }))
         
         DispatchQueue.main.async {
-            UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true)
+            UIWindow.getKeyWindow()?.rootViewController?.present(alertController, animated: true)
         }
     }
+    
 }

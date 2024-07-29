@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUICallingGroupCell : UICollectionViewCell
 
 @property (nonatomic, strong) CallingUserModel *model;
-/// 视频渲染视图
+
 @property (nonatomic, weak) TUIVideoView *renderView;
 
 @end

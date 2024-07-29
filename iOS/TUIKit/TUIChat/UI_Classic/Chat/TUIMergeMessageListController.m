@@ -140,37 +140,34 @@
         V2TIMMessage *msg = msgs[k];
         if ([self.delegate respondsToSelector:@selector(messageController:onNewMessage:)]) {
             TUIMessageCellData *data = [self.delegate messageController:nil onNewMessage:msg];
-            TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
-            if ([data isKindOfClass:TUITextMessageCellData.class] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
-                layout = TUIMessageCellLayout.incommingTextMessageLayout;
-            } else if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
-                layout = TUIMessageCellLayout.incommingVoiceMessageLayout;
-            }
-            data.cellLayout = layout;
             if (data) {
-                data.direction = MsgDirectionIncoming;
-                data.showName = YES;
-                data.name = data.identifier;
-                if (msg.nameCard.length > 0) {
-                    data.name = msg.nameCard;
-                } else if (msg.nickName.length > 0) {
-                    data.name = msg.nickName;
+                TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
+                if ([data isKindOfClass:TUITextMessageCellData.class] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
+                    layout = TUIMessageCellLayout.incommingTextMessageLayout;
+                } else if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
+                    layout = TUIMessageCellLayout.incommingVoiceMessageLayout;
                 }
-                data.avatarUrl = [NSURL URLWithString:msg.faceURL];
+                data.cellLayout = layout;
+                data.direction = MsgDirectionIncoming;
+                data.innerMessage = msg;
+                data.showName = YES;
                 [uiMsgs addObject:data];
                 continue;
             }
         }
-        TUIMessageCellData *data = [TUIMessageDataProvider getCellData:msg];
-        TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
 
+        TUIMessageCellData *data = [TUIMessageDataProvider getCellData:msg];
+        if (!data) {
+            continue;
+        }
+        TUIMessageCellLayout *layout = TUIMessageCellLayout.incommingMessageLayout;
         if ([data isKindOfClass:TUITextMessageCellData.class]) {
             layout = TUIMessageCellLayout.incommingTextMessageLayout;
         } else if ([data isKindOfClass:TUIReplyMessageCellData.class] || [data isKindOfClass:TUIReferenceMessageCellData.class]) {
             layout = TUIMessageCellLayout.incommingTextMessageLayout;
             TUIReferenceMessageCellData *textData = (TUIReferenceMessageCellData *)data;
             textData.textColor = TUIChatDynamicColor(@"chat_text_message_receive_text_color", @"#000000");
-
+            textData.showRevokedOriginMessage = YES;
         } else if ([data isKindOfClass:TUIVoiceMessageCellData.class]) {
             TUIVoiceMessageCellData *voiceData = (TUIVoiceMessageCellData *)data;
             voiceData.cellLayout = [TUIMessageCellLayout incommingVoiceMessageLayout];
@@ -185,20 +182,9 @@
         }
         data.cellLayout = layout;
         data.direction = MsgDirectionIncoming;
+        data.innerMessage = msg;
         data.showName = YES;
-        if (data) {
-            data.innerMessage = msg;
-            data.msgID = msg.msgID;
-            data.identifier = msg.sender;
-            data.name = data.identifier;
-            if (msg.nameCard.length > 0) {
-                data.name = msg.nameCard;
-            } else if (msg.nickName.length > 0) {
-                data.name = msg.nickName;
-            }
-            data.avatarUrl = [NSURL URLWithString:msg.faceURL];
-            [uiMsgs addObject:data];
-        }
+        [uiMsgs addObject:data];
     }
     return uiMsgs;
 }
@@ -273,10 +259,10 @@
         [self showFileMessage:(TUIFileMessageCell *)cell];
     }
     if ([cell isKindOfClass:[TUIMergeMessageCell class]]) {
-        TUIMergeMessageListController *relayVc = [[TUIMergeMessageListController alloc] init];
-        relayVc.mergerElem = [(TUIMergeMessageCell *)cell relayData].mergerElem;
-        relayVc.delegate = self.delegate;
-        [self.navigationController pushViewController:relayVc animated:YES];
+        TUIMergeMessageListController *mergeVc = [[TUIMergeMessageListController alloc] init];
+        mergeVc.mergerElem = [(TUIMergeMessageCell *)cell mergeData].mergerElem;
+        mergeVc.delegate = self.delegate;
+        [self.navigationController pushViewController:mergeVc animated:YES];
     }
     if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];

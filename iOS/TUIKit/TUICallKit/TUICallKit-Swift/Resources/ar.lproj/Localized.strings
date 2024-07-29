@@ -13,7 +13,10 @@
 "TUICallKit.Group.inviteToGroupCall" = "يدعوك إلى مكالمة";
 "TUICallKit.Group.waitAccept" = "منتظر";
 "TUICallKit.determine" = "تأكيد ";
+"TUICallKit.lineBusy" = "الخط مشغول";
 
+"TUICallKit.switchCamera" = "يُحوّل";
+"TUICallKit.blurBackground" = "الخلفية الغائمة";
 "TUICallKit.hangup" = "إنهاء المكالمة";
 "TUICallKit.decline" = "رفض";
 "TUICallKit.switchToAudio" = "التبديل إلى المكالمة الصوتية";
@@ -63,3 +66,11 @@
 "TUICallKit.earpiece" = "سماعة الأذن";
 "TUICallKit.cameraOn" = "تشغيل الكاميرا";
 "TUICallKit.cameraOff" = "إيقاف الكاميرا";
+
+"TUICallKit.JoinGroupView.title" = "يرتاد %d أشخاص %@";
+"TUICallKit.JoinGroupView.join" = "الانضمام";
+"TUICallKit.JoinGroupView.audioCall" = "مكالمة صوتية";
+"TUICallKit.JoinGroupView.videoCall" = "مكالمة فيديو";
+
+"TUICallKit.OtherParty.NetworkLowQuality" = "شبكة الطرف الآخر ضعيفة";
+"TUICallKit.Self.NetworkLowQuality" = "شبكتك ضعيفة في المكالمة";

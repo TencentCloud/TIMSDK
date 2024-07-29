@@ -111,7 +111,7 @@
     NSAttributedString * senderStr = [[NSAttributedString alloc] initWithString:self.abstractName.text];
     CGRect senderRect = [senderStr boundingRectWithSize:CGSizeMake(70, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                 context:nil];
-    self.abstractNameLimitedWidth = MIN(ceil(senderRect.size.width), 70);
+    self.abstractNameLimitedWidth = MIN(ceil(senderRect.size.width) + 2, 70);
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
 
@@ -193,25 +193,25 @@
         make.leading.mas_equalTo(self.relayTitleLabel);
         make.top.mas_equalTo(self.relayTitleLabel.mas_bottom).mas_offset(3);
         make.trailing.mas_equalTo(self.container);
-        make.height.mas_equalTo(self.relayData.abstractRow1Size.height);
+        make.height.mas_equalTo(self.mergeData.abstractRow1Size.height);
     }];
 
     [self.contentRowView2 mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.relayTitleLabel);
         make.top.mas_equalTo(self.contentRowView1.mas_bottom).mas_offset(3);
         make.trailing.mas_equalTo(self.container);
-        make.height.mas_equalTo(self.relayData.abstractRow2Size.height);
+        make.height.mas_equalTo(self.mergeData.abstractRow2Size.height);
     }];
 
     [self.contentRowView3 mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.relayTitleLabel);
         make.top.mas_equalTo(self.contentRowView2.mas_bottom).mas_offset(3);
         make.trailing.mas_equalTo(self.container);
-        make.height.mas_equalTo(self.relayData.abstractRow3Size.height);
+        make.height.mas_equalTo(self.mergeData.abstractRow3Size.height);
     }];
     
     UIView *lastView =  self.contentRowView1;
-    int count = self.relayData.abstractSendDetailList.count;
+    int count = self.mergeData.abstractSendDetailList.count;
     if (count >= 3) {
         lastView = self.contentRowView3;
     }
@@ -239,19 +239,19 @@
 
 - (void)fillWithData:(TUIMergeMessageCellData *)data {
     [super fillWithData:data];
-    self.relayData = data;
+    self.mergeData = data;
     self.relayTitleLabel.text = data.title;
-    int count = self.relayData.abstractSendDetailList.count;
+    int count = self.mergeData.abstractSendDetailList.count;
     switch (count) {
         case 1:
-            [self.contentRowView1 fillWithData:self.relayData.abstractSendDetailList[0][@"sender"] detailContent:self.relayData.abstractSendDetailList[0][@"detail"]];
+            [self.contentRowView1 fillWithData:self.mergeData.abstractSendDetailList[0][@"sender"] detailContent:self.mergeData.abstractSendDetailList[0][@"detail"]];
             self.contentRowView1.hidden = NO;
             self.contentRowView2.hidden = YES;
             self.contentRowView3.hidden = YES;
             break;
         case 2:
-            [self.contentRowView1 fillWithData:self.relayData.abstractSendDetailList[0][@"sender"] detailContent:self.relayData.abstractSendDetailList[0][@"detail"]];
-            [self.contentRowView2 fillWithData:self.relayData.abstractSendDetailList[1][@"sender"] detailContent:self.relayData.abstractSendDetailList[1][@"detail"]];
+            [self.contentRowView1 fillWithData:self.mergeData.abstractSendDetailList[0][@"sender"] detailContent:self.mergeData.abstractSendDetailList[0][@"detail"]];
+            [self.contentRowView2 fillWithData:self.mergeData.abstractSendDetailList[1][@"sender"] detailContent:self.mergeData.abstractSendDetailList[1][@"detail"]];
 
             self.contentRowView1.hidden = NO;
             self.contentRowView2.hidden = NO;
@@ -259,9 +259,9 @@
             break;
         default:
             
-            [self.contentRowView1 fillWithData:self.relayData.abstractSendDetailList[0][@"sender"] detailContent:self.relayData.abstractSendDetailList[0][@"detail"]];
-            [self.contentRowView2 fillWithData:self.relayData.abstractSendDetailList[1][@"sender"] detailContent:self.relayData.abstractSendDetailList[1][@"detail"]];
-            [self.contentRowView3 fillWithData:self.relayData.abstractSendDetailList[2][@"sender"] detailContent:self.relayData.abstractSendDetailList[2][@"detail"]];
+            [self.contentRowView1 fillWithData:self.mergeData.abstractSendDetailList[0][@"sender"] detailContent:self.mergeData.abstractSendDetailList[0][@"detail"]];
+            [self.contentRowView2 fillWithData:self.mergeData.abstractSendDetailList[1][@"sender"] detailContent:self.mergeData.abstractSendDetailList[1][@"detail"]];
+            [self.contentRowView3 fillWithData:self.mergeData.abstractSendDetailList[2][@"sender"] detailContent:self.mergeData.abstractSendDetailList[2][@"detail"]];
             self.contentRowView1.hidden = NO;
             self.contentRowView2.hidden = NO;
             self.contentRowView3.hidden = NO;
@@ -287,15 +287,16 @@
     mergeCellData.abstractRow2Size = [self.class caculate:mergeCellData index:1];
     mergeCellData.abstractRow3Size = [self.class caculate:mergeCellData index:2];
 
-    CGRect rect = [[mergeCellData abstractAttributedString] boundingRectWithSize:CGSizeMake(200 - 20, MAXFLOAT)
-                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                                context:nil];
+    NSAttributedString *abstractAttributedString = [mergeCellData abstractAttributedString];
+    CGRect rect = [abstractAttributedString boundingRectWithSize:CGSizeMake(TMergeMessageCell_Width_Max - 20, MAXFLOAT)
+                                                         options:NSStringDrawingUsesLineFragmentOrigin |        NSStringDrawingUsesFontLeading
+                                                         context:nil];
     CGSize size = CGSizeMake(CGFLOAT_CEIL(rect.size.width), CGFLOAT_CEIL(rect.size.height) - 10);
     mergeCellData.abstractSize = size;
     CGFloat height = mergeCellData.abstractRow1Size.height + mergeCellData.abstractRow2Size.height + mergeCellData.abstractRow3Size.height;
     UIFont *titleFont = [UIFont systemFontOfSize:16];
     height = (10 + titleFont.lineHeight + 3) + height + 1 + 5 + 20 + 5 + 3;
-    return CGSizeMake(200, height + mergeCellData.msgStatusSize.height);
+    return CGSizeMake(TMergeMessageCell_Width_Max, height + mergeCellData.msgStatusSize.height);
 }
 
 + (CGSize)caculate:(TUIMergeMessageCellData *)data index:(NSInteger)index {
@@ -316,7 +317,8 @@
     CGRect rect = [abstr boundingRectWithSize:CGSizeMake(200 - 20 - senderWidth, MAXFLOAT)
                                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                                 context:nil];
-    CGSize size = CGSizeMake(200, MIN(TRelayMessageCell_Text_Height_Max/3.0, CGFLOAT_CEIL(rect.size.height)));
+    CGSize size = CGSizeMake(TMergeMessageCell_Width_Max,
+                             MIN(TMergeMessageCell_Height_Max / 3.0, CGFLOAT_CEIL(rect.size.height)));
 
     return size;
 }

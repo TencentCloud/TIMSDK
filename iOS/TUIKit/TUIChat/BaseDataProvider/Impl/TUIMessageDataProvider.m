@@ -126,10 +126,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
 
 + (void)fillPropertyToCellData:(TUIMessageCellData *)data ofMessage:(V2TIMMessage *)message {
     data.innerMessage = message;
-    data.msgID = message.msgID;
-    data.identifier = message.sender;
-    data.name = [TUIMessageDataProvider getShowName:message];
-    data.avatarUrl = [NSURL URLWithString:message.faceURL];
     if (message.groupID.length > 0 && !message.isSelf && ![data isKindOfClass:[TUISystemMessageCellData class]]) {
         data.showName = YES;
     }

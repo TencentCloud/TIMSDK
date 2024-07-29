@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) V2TIMMessage *__nullable originMessage;
 @property(nonatomic, strong) TUIMessageCellData *originCellData;
 @property(nonatomic, strong) TUIReplyQuoteViewData *quoteData;
+@property(nonatomic, assign) BOOL showRevokedOriginMessage;
 
 /**
  * The content of replying the original message

@@ -35,29 +35,9 @@
     CGRect titleRect = [titleAttributeString boundingRectWithSize:CGSizeMake(maxWidth, singleHeight)
                                                           options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                           context:nil];
-
-    NSAttributedString *abstractAttributeString = [self.abstract getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0] emojiLocations:nil];
-    CGRect abstractRect = [abstractAttributeString boundingRectWithSize:CGSizeMake(maxWidth, singleHeight * 2)
-                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                                context:nil];
-    CGFloat abstractHeight = abstractRect.size.height;
-    if (abstractHeight > singleHeight * 2) {
-        abstractHeight = singleHeight * 2;
-    }
-
     CGFloat width = titleRect.size.width;
-    if (width < abstractRect.size.width) {
-        width = abstractRect.size.width;
-    }
-
-    CGFloat height = titleRect.size.height + 3;
-    height += abstractHeight + 3;
-
-    if (width > maxWidth) {
-        width = maxWidth;
-    }
-
-    return CGSizeMake(width, height);
+    CGFloat height = titleRect.size.height;
+    return CGSizeMake(MIN(width, maxWidth), height);
 }
 
 @end

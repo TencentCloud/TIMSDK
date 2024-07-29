@@ -42,13 +42,18 @@
 
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
 
-    if (self.conversationData.atMsgSeqs.count > 0) {
-        TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
-        tongue.type = TUIChatSmallTongueType_SomeoneAt;
-        tongue.atMsgSeqs = [self.conversationData.atMsgSeqs copy];
-        [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
-    }
     self.receiveMsgs = [NSMutableArray array];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.conversationData.atMsgSeqs.count > 0) {
+            TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
+            tongue.type = TUIChatSmallTongueType_SomeoneAt;
+            tongue.parentView = self.view.superview;
+            tongue.atMsgSeqs = [self.conversationData.atMsgSeqs copy];
+            [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
+        }
+    });
+
 }
 
 - (void)dealloc {
@@ -115,6 +120,7 @@
         if (self.conversationData.atMsgSeqs.count > 0) {
             TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
             tongue.type = TUIChatSmallTongueType_SomeoneAt;
+            tongue.parentView = self.view.superview;
             tongue.atMsgSeqs = [self.conversationData.atMsgSeqs copy];
             [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
         } else {
@@ -157,6 +163,7 @@
         if (point.y > 0) {
             TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
             tongue.type = TUIChatSmallTongueType_ScrollToBoom;
+            tongue.parentView = self.view.superview;
             [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
         }
     } else if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= 20) {
@@ -216,7 +223,7 @@
     return (TUIMessageSearchDataProvider *)self.messageDataProvider;
 }
 
-- (void)loadAndScrollToLocateMessages:(BOOL)isFirstLoad isHighlight:(BOOL)isHighlight{
+- (void)loadAndScrollToLocateMessages:(BOOL)scrollToBoom isHighlight:(BOOL)isHighlight{
     if (!self.locateMessage && self.locateGroupMessageSeq == 0) {
         return;
     }
@@ -225,42 +232,27 @@
         loadMessageWithSearchMsg:self.locateMessage
                     SearchMsgSeq:self.locateGroupMessageSeq
                 ConversationInfo:self.conversationData
-                    SucceedBlock:^(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *_Nonnull newMsgs) {
-                      [self.indicatorView stopAnimating];
-                      [self.bottomIndicatorView stopAnimating];
-                      self.indicatorView.mm_h = 0;
-                      self.bottomIndicatorView.mm_h = 0;
-                      [self.tableView reloadData];
-
-                      if (!isFirstLoad) {
-                          /**
-                           * ， tableview ， scrollToLocateMessage 
-                           * In jump scenarios such as message reply, first scroll the tableview to the bottom, and then combine scrollToLocateMessage to achieve
-                           * scroll positioning effect
-                           */
-
-                          NSInteger count = self.messageDataProvider.uiMsgs.count;
-                          if (count > 0) {
-                              [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:count - 1 inSection:0]
-                                                    atScrollPosition:UITableViewScrollPositionBottom
-                                                            animated:NO];
-                          }
-                      }
-                      [self.tableView layoutIfNeeded];
-
-                      dispatch_async(dispatch_get_main_queue(), ^{
-                        @strongify(self);
-                        [self scrollToLocateMessage:isFirstLoad];
-                        if (isHighlight) {
-                            [self highlightKeyword];
-                        }
-                      });
-                    }
-                    FailBlock:^(int code, NSString *desc){
-                    }];
+     SucceedBlock:^(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *_Nonnull newMsgs) {
+        @strongify(self);
+        [self.indicatorView stopAnimating];
+        [self.bottomIndicatorView stopAnimating];
+        self.indicatorView.mm_h = 0;
+        self.bottomIndicatorView.mm_h = 0;
+        [self.tableView reloadData];
+        [self.tableView layoutIfNeeded];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self);
+            [self scrollToLocateMessage:scrollToBoom];
+            if (isHighlight) {
+                [self highlightKeyword];
+            }
+        });
+    }
+    FailBlock:^(int code, NSString *desc){}];
 }
 
-- (void)scrollToLocateMessage:(BOOL)isFirstLoad {
+- (void)scrollToLocateMessage:(BOOL)scrollToBoom {
     /**
      *  locateMsg 
      * First find the coordinate offset of locateMsg
@@ -271,7 +263,7 @@
         if ([self isLocateMessage:uiMsg]) {
             break;
         }
-        offsetY += [uiMsg heightOfWidth:Screen_Width];
+        offsetY += [self getHeightFromMessageCellData:uiMsg];
         index++;
     }
 
@@ -293,13 +285,13 @@
     }
 
     if (offsetY > TMessageController_Header_Height) {
-        if (isFirstLoad) {
-            [self.tableView scrollRectToVisible:CGRectMake(0, self.tableView.contentOffset.y + offsetY, Screen_Width, self.tableView.bounds.size.height)
-                                       animated:NO];
-        } else {
+        if (scrollToBoom) {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
-                                  atScrollPosition:UITableViewScrollPositionMiddle
-                                          animated:YES];
+                                  atScrollPosition:UITableViewScrollPositionBottom
+                                          animated:NO];
+        } else {
+            [self.tableView scrollRectToVisible:CGRectMake(0, offsetY, Screen_Width, self.tableView.bounds.size.height)
+                                       animated:NO];
         }
     }
 }
@@ -312,7 +304,7 @@
             break;
         }
     }
-    if (cellData == nil) {
+    if (cellData == nil || cellData.innerMessage.elemType == V2TIM_ELEM_TYPE_GROUP_TIPS) {
         return;
     }
 
@@ -515,6 +507,7 @@
         [self.receiveMsgs addObject:uiMsg];
         TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
         tongue.type = TUIChatSmallTongueType_ReceiveNewMsg;
+        tongue.parentView = self.view.superview;
         tongue.unreadMsgCount = self.receiveMsgs.count;
         [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
     }
@@ -533,6 +526,7 @@
         [self.receiveMsgs removeObject:uiMsg];
         TUIChatSmallTongue_Minimalist *tongue = [[TUIChatSmallTongue_Minimalist alloc] init];
         tongue.type = TUIChatSmallTongueType_ReceiveNewMsg;
+        tongue.parentView = self.view.superview;
         tongue.unreadMsgCount = self.receiveMsgs.count;
         if (tongue.unreadMsgCount != 0) {
             [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
@@ -583,11 +577,11 @@
                 self.locateMessage = message;
                 for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
                     if ([self isLocateMessage:cellData]) {
-                        [self scrollToLocateMessage:NO];
+                        [self scrollToLocateMessage:YES];
                         return;
                     }
                 }
-                [self loadAndScrollToLocateMessages:NO isHighlight:NO];
+                [self loadAndScrollToLocateMessages:YES isHighlight:NO];
             } fail:^(int code, NSString *desc) {
                 NSLog(@"getLastMessage failed");
             }];
@@ -597,7 +591,7 @@
             TUIMessageCellData *cellData = self.receiveMsgs.firstObject;
             if (cellData) {
                 self.locateMessage = cellData.innerMessage;
-                [self scrollToLocateMessage:NO];
+                [self scrollToLocateMessage:YES];
                 [self highlightKeyword];
             }
             [self.receiveMsgs removeAllObjects];
@@ -609,12 +603,12 @@
             self.locateGroupMessageSeq = [tongue.atMsgSeqs.firstObject integerValue];
             for (TUIMessageCellData *cellData in self.messageDataProvider.uiMsgs) {
                 if ([self isLocateMessage:cellData]) {
-                    [self scrollToLocateMessage:NO];
+                    [self scrollToLocateMessage:YES];
                     [self highlightKeyword];
                     return;
                 }
             }
-            [self loadAndScrollToLocateMessages:NO isHighlight:YES];
+            [self loadAndScrollToLocateMessages:YES isHighlight:YES];
         } break;
         default:
             break;

@@ -105,6 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isCurrentMessagePin:(NSString *)msgID;
 - (void)unPinGroupMessage:(V2TIMMessage *)innerMessage;
 
+- (CGFloat)getHeightFromMessageCellData:(TUIMessageCellData *)cellData;
 @end
 
 NS_ASSUME_NONNULL_END

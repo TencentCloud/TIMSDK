@@ -9,7 +9,6 @@ import Foundation
 
 class BackgroundView: UIView {
     
-    let viewModel = UserInfoViewModel()
     let remoteUserListObserver = Observer()
     
     let userHeadImageView: UIImageView = {
@@ -39,7 +38,7 @@ class BackgroundView: UIView {
     }
     
     deinit {
-        viewModel.remoteUserList.removeObserver(remoteUserListObserver)
+        TUICallState.instance.remoteUserList.removeObserver(remoteUserListObserver)
     }
     
     // MARK: UI Specification Processing
@@ -72,7 +71,7 @@ class BackgroundView: UIView {
     }
     
     func remoteUserListChanged() {
-        viewModel.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.setUserImage()
         })
@@ -80,7 +79,7 @@ class BackgroundView: UIView {
     
     // MARK: Update UI
     func setUserImage() {
-        let remoteUser = viewModel.remoteUserList.value.first ?? User()
+        let remoteUser = TUICallState.instance.remoteUserList.value.first ?? User()
         userHeadImageView.sd_setImage(with: URL(string: remoteUser.avatar.value))
     }
 }

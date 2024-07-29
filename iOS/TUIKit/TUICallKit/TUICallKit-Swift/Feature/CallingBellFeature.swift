@@ -9,9 +9,9 @@ import Foundation
 import AVFAudio
 import TUICallEngine
 
-#if USE_TRTC
+#if canImport(TXLiteAVSDK_TRTC)
 import TXLiteAVSDK_TRTC
-#else
+#elseif canImport(TXLiteAVSDK_Professional)
 import TXLiteAVSDK_Professional
 #endif
 

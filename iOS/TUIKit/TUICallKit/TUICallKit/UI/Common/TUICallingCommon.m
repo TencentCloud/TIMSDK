@@ -117,9 +117,9 @@
     return NO;
 }
 
-+ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType
-            openSettingHandler:(void(^)(void))openSettingHandler
-                 cancelHandler:(void(^)(void))cancelHandler {
++ (UIAlertController *)getAuthorizationAlert:(AuthorizationDeniedType)deniedType
+                          openSettingHandler:(void(^)(void))openSettingHandler
+                               cancelHandler:(void(^)(void))cancelHandler {
     NSString *title = @"";
     NSString *message = @"";
     NSString *laterMessage = @"";
@@ -167,9 +167,22 @@
         }
     }]];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
-    });
+    return alertController;
+}
+
++ (UIViewController *)getViewControllerForView:(UIView *)view {
+    if (view == nil) {
+        return nil;
+    }
+    
+    UIResponder *responder = view;
+    while ((responder = [responder nextResponder])) {
+        if ([responder isKindOfClass:[UIViewController class]] && [responder respondsToSelector:@selector(presentedViewController)]) {
+            return (UIViewController *)responder;
+        }
+    }
+    
+    return nil;
 }
 
 @end

@@ -9,7 +9,6 @@ import Foundation
 
 class GroupBackgroundView: UIView {
     
-    let viewModel = InviteeAvatarListViewModel()
     let selfUserObserver = Observer()
     
     let userHeadImageView: UIImageView = {

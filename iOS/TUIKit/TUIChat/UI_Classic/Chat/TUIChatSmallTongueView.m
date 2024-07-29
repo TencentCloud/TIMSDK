@@ -164,51 +164,42 @@ static NSMutableDictionary *gImageCache;
 
 static TUIChatSmallTongueView *gTongueView = nil;
 static TUIChatSmallTongue *gTongue = nil;
-static UIWindow *gWindow = nil;
 static CGFloat gBottomMargin = 0;
 
 @implementation TUIChatSmallTongueManager
 
 + (void)showTongue:(TUIChatSmallTongue *)tongue delegate:(id<TUIChatSmallTongueViewDelegate>)delegate {
-    if (tongue.type == gTongue.type && tongue.unreadMsgCount == gTongue.unreadMsgCount && tongue.atMsgSeqs == gTongue.atMsgSeqs) {
+    if (tongue.type == gTongue.type 
+        && tongue.parentView == gTongue.parentView
+        && tongue.unreadMsgCount == gTongue.unreadMsgCount
+        && tongue.atMsgSeqs == gTongue.atMsgSeqs
+        && !gTongueView.hidden) {
         return;
     }
     gTongue = tongue;
 
-    if (!gWindow) {
-        gWindow = [[UIWindow alloc] initWithFrame:CGRectZero];
-        gWindow.windowLevel = UIWindowLevelAlert;
-        gWindow.backgroundColor = [UIColor clearColor];
-
-        if (@available(iOS 13.0, *)) {
-            for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
-                if (windowScene.activationState == UISceneActivationStateForegroundActive) {
-                    gWindow.windowScene = windowScene;
-                    break;
-                }
-            }
-        }
+    if (!gTongueView) {
+        gTongueView = [[TUIChatSmallTongueView alloc] init];
+    } else {
+        [gTongueView removeFromSuperview];
     }
     CGFloat tongueWidth = [TUIChatSmallTongueView getTongueWidth:gTongue];
     if(isRTL()) {
-        gWindow.frame =
-            CGRectMake(16, Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight - gBottomMargin, 
+        gTongueView.frame =
+            CGRectMake(16,
+                       tongue.parentView.mm_h - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight - gBottomMargin,
                        tongueWidth, TongueHeight);
     }
     else {
-        gWindow.frame =
-            CGRectMake(Screen_Width - tongueWidth - 16, 
-                       Screen_Height - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight - gBottomMargin,
+        gTongueView.frame =
+            CGRectMake(tongue.parentView.mm_w - tongueWidth - 16,
+                       tongue.parentView.mm_h - Bottom_SafeHeight - TTextView_Height - 20 - TongueHeight - gBottomMargin,
                        tongueWidth, TongueHeight);
     }
-    if (!gTongueView) {
-        gTongueView = [[TUIChatSmallTongueView alloc] initWithFrame:CGRectZero];
-        [gWindow addSubview:gTongueView];
-        gWindow.hidden = NO;
-    }
-    gTongueView.frame = gWindow.bounds;
+    
     gTongueView.delegate = delegate;
     [gTongueView setTongue:gTongue];
+    [tongue.parentView addSubview:gTongueView];
 }
 
 + (void)removeTongue:(TUIChatSmallTongueType)type {
@@ -220,8 +211,10 @@ static CGFloat gBottomMargin = 0;
 
 + (void)removeTongue {
     gTongue = nil;
-    gTongueView = nil;
-    gWindow = nil;
+    if (gTongueView) {
+        [gTongueView removeFromSuperview];
+        gTongueView = nil;
+    }
 }
 
 + (void)hideTongue:(BOOL)isHidden {

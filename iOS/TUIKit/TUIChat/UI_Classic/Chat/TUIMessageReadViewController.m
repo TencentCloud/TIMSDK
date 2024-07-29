@@ -249,7 +249,7 @@
     self.messageBackView = messageBackView;
 
     UILabel *nameLabel = [[UILabel alloc] init];
-    nameLabel.text = self.cellData.name;
+    nameLabel.text = self.cellData.senderName;
     nameLabel.font = [UIFont systemFontOfSize:12.0];
     nameLabel.textColor = TUIChatDynamicColor(@"chat_message_read_name_date_text_color", @"#999999");
     nameLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;

@@ -176,9 +176,14 @@ static CGRect gCustomTopViewRect;
     if (gGroupPinTopView) {
         gGroupPinTopView.frame = CGRectMake(0, CGRectGetMaxY(gCustomTopView.frame), gGroupPinTopView.frame.size.width, gGroupPinTopView.frame.size.height);;
     }
-    CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
-    _messageController.view.frame = CGRectMake(0, [self topMarginByCustomView], self.view.frame.size.width,
-                                               self.view.frame.size.height - textViewHeight - Bottom_SafeHeight - [self topMarginByCustomView]);
+
+    CGFloat topMarginByCustomView = [self topMarginByCustomView];
+    if (_messageController.view.mm_y != topMarginByCustomView) {
+        CGFloat textViewHeight = TUIChatConfig.defaultConfig.enableMainPageInputBar? TTextView_Height:0;
+        _messageController.view.frame = CGRectMake(0, topMarginByCustomView, self.view.mm_w,
+                                                   self.view.mm_h - textViewHeight - Bottom_SafeHeight - topMarginByCustomView);
+        [self.messageController scrollToBottom:YES];
+    }
 }
 
 - (void)dealloc {
@@ -219,18 +224,6 @@ static CGRect gCustomTopViewRect;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-
-    if (self.inputController.status == Input_Status_Input || self.inputController.status == Input_Status_Input_Keyboard) {
-        CGPoint offset = self.messageController.tableView.contentOffset;
-        __weak typeof(self) weakSelf = self;
-        dispatch_async(dispatch_get_main_queue(), ^{
-          __strong typeof(weakSelf) strongSelf = weakSelf;
-          strongSelf.responseKeyboard = YES;
-          [UIApplication.sharedApplication.keyWindow endEditing:YES];
-          [strongSelf inputController:strongSelf.inputController didChangeHeight:CGRectGetMaxY(strongSelf.inputController.inputBar.frame) + Bottom_SafeHeight];
-          [strongSelf.messageController.tableView setContentOffset:offset];
-        });
-    }
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations{
@@ -261,6 +254,10 @@ static CGRect gCustomTopViewRect;
       BOOL otherSideTypingFlag = [otherSideTyping boolValue];
       if (!otherSideTypingFlag) {
           [weakSelf checkTitle:YES];
+      }
+      else {
+          NSString *typingText = [NSString stringWithFormat:@"%@...", TIMCommonLocalizableString(TUIKitTyping)];
+          [weakSelf.titleView setTitle:typingText];
       }
     }];
 
@@ -445,7 +442,7 @@ static CGRect gCustomTopViewRect;
 }
 
 - (void)saveDraft {
-    NSString *content = [self.inputController.inputBar.inputTextView.textStorage getPlainString];
+    NSString *content = [self.inputController.inputBar.inputTextView.textStorage tui_getPlainString];
 
     TUIReplyPreviewData *previewData = nil;
     if (self.inputController.referenceData) {
@@ -652,6 +649,8 @@ static CGRect gCustomTopViewRect;
 }
 
 - (void)rightBarButtonClick:(UIButton *)button {
+    [self.inputController reset];
+
     TUIExtensionInfo *info = button.tui_extValueObj;
     if (info == nil || ![info isKindOfClass:TUIExtensionInfo.class] || info.onClicked == nil) {
         return;
@@ -924,6 +923,8 @@ static CGRect gCustomTopViewRect;
         }
                                        failBlock:nil];
     }
+    
+    [self.inputController reset];
 }
 
 - (void)messageController:(TUIBaseMessageController *)controller onSelectMessageContent:(TUIMessageCell *)cell {
@@ -1261,7 +1262,7 @@ static CGRect gCustomTopViewRect;
       TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
       replyData.msgID = data.msgID;
       replyData.msgAbstract = desc;
-      replyData.sender = data.name;
+      replyData.sender = data.senderName;
       replyData.type = (NSInteger)data.innerMessage.elemType;
       replyData.originMessage = data.innerMessage;
 
@@ -1311,7 +1312,7 @@ static CGRect gCustomTopViewRect;
       TUIReferencePreviewData *referenceData = [[TUIReferencePreviewData alloc] init];
       referenceData.msgID = data.msgID;
       referenceData.msgAbstract = desc;
-      referenceData.sender = data.name;
+      referenceData.sender = data.senderName;
       referenceData.type = (NSInteger)data.innerMessage.elemType;
       referenceData.originMessage = data.innerMessage;
       [self.inputController showReferencePreview:referenceData];

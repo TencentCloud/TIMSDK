@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
  *   @"你好,😭""  ->  @"你好,[大哭]"
  *   @"Hello,😭"  ->  @"Hello,[Cry]"
  */
-- (NSString *)getPlainString;
+- (NSString *)tui_getPlainString;
 
 @end
 

@@ -412,7 +412,7 @@
     if (!atUserExist) {
         TUIUserModel *user = [[TUIUserModel alloc] init];
         user.userId = cell.messageData.identifier;
-        user.name = cell.messageData.name;
+        user.name = cell.messageData.senderName;
         [self.atUserList addObject:user];
 
         NSString *nameString = [NSString stringWithFormat:@"@%@ ", user.name];

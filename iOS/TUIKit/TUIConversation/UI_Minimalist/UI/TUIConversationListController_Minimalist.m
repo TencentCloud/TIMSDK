@@ -116,7 +116,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     [editButton setFrame:CGRectMake(0, 0, 18 + 21 * 2, 18)];
 
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [moreButton setImage:[UIImage imageNamed:TUIDemoImagePath_Minimalist(@"nav_add")] forState:UIControlStateNormal];
+    [moreButton setImage:[UIImage imageNamed:TUIConversationImagePath_Minimalist(@"nav_add")] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(rightBarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     moreButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [moreButton setFrame:CGRectMake(0, 0, 20, 20)];

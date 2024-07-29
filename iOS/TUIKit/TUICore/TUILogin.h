@@ -113,6 +113,8 @@ FOUNDATION_EXTERN NSString *const TUILogoutFailNotification;
 
 @property(nonatomic, copy, nullable) void (^onLog)(NSInteger logLevel, NSString * __nullable logContent);
 
+@property(nonatomic, assign) BOOL initLocalStorageOnly;
+
 @end
 
 @interface TUILogin : NSObject

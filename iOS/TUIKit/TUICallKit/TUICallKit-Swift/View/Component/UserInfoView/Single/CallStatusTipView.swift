@@ -9,8 +9,8 @@ import Foundation
 
 class CallStatusTipView: UIView {
     
-    let viewModel = UserInfoViewModel()
     let selfCallStatusObserver = Observer()
+    let networkQualityObserver = Observer()
     
     let callStatusLabel: UILabel = {
         let callStatusLabel = UILabel(frame: CGRect.zero)
@@ -32,7 +32,8 @@ class CallStatusTipView: UIView {
     }
     
     deinit {
-        viewModel.selfCallStatus.removeObserver(selfCallStatusObserver)
+        TUICallState.instance.selfUser.value.callStatus.removeObserver(selfCallStatusObserver)
+        TUICallState.instance.networkQualityReminder.removeObserver(networkQualityObserver)
     }
     
     // MARK: UI Specification Processing
@@ -58,27 +59,80 @@ class CallStatusTipView: UIView {
     // MARK: Register TUICallState Observer && Update UI
     func registerObserveState() {
         callStatusChange()
+        networkQualityChange()
     }
     
     func callStatusChange() {
-        viewModel.selfCallStatus.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.selfUser.value.callStatus.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.updateStatusText()
         })
     }
     
+    func networkQualityChange() {
+        TUICallState.instance.networkQualityReminder.addObserver(networkQualityObserver, closure: { [weak self] newValue, _ in
+            guard let self = self else { return }
+            self.updateNetworkQualityText()
+        })
+    }
+    
+    func updateNetworkQualityText() {
+        switch TUICallState.instance.networkQualityReminder.value {
+        case .Local:
+            self.callStatusLabel.text = TUICallKitLocalize(key: "TUICallKit.Self.NetworkLowQuality") ?? ""
+            break
+        case .Remote:
+            self.callStatusLabel.text = TUICallKitLocalize(key: "TUICallKit.OtherParty.NetworkLowQuality") ?? ""
+            break
+        case .None:
+            updateStatusText()
+            break
+        }
+    }
+    
+    private var isFirstShowAccept: Bool = true
     func updateStatusText() {
-        switch viewModel.selfCallStatus.value {
+        switch TUICallState.instance.selfUser.value.callStatus.value {
         case .waiting:
-            self.callStatusLabel.text = viewModel.getCurrentWaitingText()
+            self.callStatusLabel.text = self.getCurrentWaitingText()
             break
         case .accept:
-            self.callStatusLabel.text = TUICallKitLocalize(key: "TUICallKit.accept") ?? ""
+            if isFirstShowAccept {
+                self.callStatusLabel.text = TUICallKitLocalize(key: "TUICallKit.accept") ?? ""
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.isFirstShowAccept = false
+                }
+            } else {
+                self.callStatusLabel.text = ""
+            }
             break
         case .none:
             break
         default:
             break
         }
+    }
+    
+    func getCurrentWaitingText() -> String {
+        var waitingText = String()
+        switch TUICallState.instance.mediaType.value {
+        case .audio:
+            if TUICallState.instance.selfUser.value.callRole.value == .call {
+                waitingText = TUICallKitLocalize(key: "TUICallKit.waitAccept") ?? ""
+            } else {
+                waitingText = TUICallKitLocalize(key: "TUICallKit.inviteToAudioCall") ?? ""
+            }
+        case .video:
+            if TUICallState.instance.selfUser.value.callRole.value == .call {
+                waitingText = TUICallKitLocalize(key: "TUICallKit.waitAccept") ?? ""
+            } else {
+                waitingText = TUICallKitLocalize(key: "TUICallKit.inviteToVideoCall") ?? ""
+            }
+        case .unknown:
+            break
+        default:
+            break
+        }
+        return waitingText
     }
 }

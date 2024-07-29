@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL supportForReply;
 
+@property(nonatomic, assign) BOOL showRevokedOriginMessage;
+
 @end
 
 NS_ASSUME_NONNULL_END

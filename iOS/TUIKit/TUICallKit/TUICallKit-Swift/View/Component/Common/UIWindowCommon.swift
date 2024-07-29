@@ -15,9 +15,10 @@ extension UIWindow {
     }
     
     static func getKeyWindow() -> UIWindow? {
-        var keyWindow: UIWindow? = UIWindow()
+        var keyWindow: UIWindow?
         if #available(iOS 13, *) {
             keyWindow = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
                 .compactMap { $0 as? UIWindowScene }
                 .flatMap { $0.windows }
                 .first(where: { $0.isKeyWindow })
@@ -27,32 +28,12 @@ extension UIWindow {
         return keyWindow
     }
     
-    static func getCurrentWindow() -> UIWindow? {
-        var currentWindow: UIWindow? {
-            if #available(iOS 13.0, *) {
-                if let window = UIApplication.shared.connectedScenes
-                    .filter({$0.activationState == .foregroundActive})
-                    .map({$0 as? UIWindowScene})
-                    .compactMap({$0})
-                    .first?.windows
-                    .filter({$0.isKeyWindow}).first{
-                    return window
-                }else if let window = UIApplication.shared.delegate?.window{
-                    return window
-                }else{
-                    return nil
-                }
-            } else {
-                if let window = UIApplication.shared.delegate?.window{
-                    return window
-                }else{
-                    return nil
-                }
-            }
-        }
+    static func getTopFullscreenWindow() -> UIWindow? {
+        let topWindow = UIApplication.shared.windows
+            .filter { !$0.isHidden && $0.bounds.equalTo(UIScreen.main.bounds) }
+            .max(by: { $0.windowLevel.rawValue < $1.windowLevel.rawValue })
         
-        return currentWindow
+        return topWindow
     }
-
-
+    
 }

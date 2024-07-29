@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel * content;
 @property (nonatomic, strong) UIButton * removeButton;
 @property (nonatomic, strong) UIView * multiAnimationView;
+@property (nonatomic, strong) UIView * bottomLine;
 @property (nonatomic, assign) BOOL isFirstPage;
 - (void)fillWithData:(TUIMessageCellData *)cellData;
 - (void)hiddenMultiAnimation;

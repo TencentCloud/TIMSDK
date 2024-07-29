@@ -85,6 +85,13 @@
         make.height.mas_equalTo(20);
         make.top.mas_equalTo(self.mas_bottom);
     }];
+    
+    [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(self);
+        make.height.mas_equalTo(0.5);
+        make.centerX.mas_equalTo(self);
+        make.bottom.mas_equalTo(self);
+    }];
 }
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     CGPoint newP = [self convertPoint:point toView:self.multiAnimationView];
@@ -101,7 +108,8 @@
     [self addSubview:self.content];
     [self addSubview:self.removeButton];
     [self addSubview:self.multiAnimationView];
-
+    [self addSubview:self.bottomLine];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
     [self addGestureRecognizer:tap];
 }
@@ -160,7 +168,11 @@
         UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectZero];
         arrow.image = TUIChatBundleThemeImage(@"chat_pop_group_pin_down_arrow_img", @"chat_down_arrow_icon");
         [arrowBackgroundView addSubview:arrow];
-            
+        
+        UIView *bottomLine = [[UIView alloc] init];
+        bottomLine.backgroundColor = [UIColor grayColor];
+        [arrowBackgroundView addSubview:bottomLine];
+
         [arrowBackgroundView  mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.mas_equalTo(_multiAnimationView);
             make.size.mas_equalTo(CGSizeMake(20, 20));
@@ -170,8 +182,22 @@
             make.center.mas_equalTo(arrowBackgroundView);
             make.size.mas_equalTo(CGSizeMake(20, 20));
         }];
+        
+        [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(_multiAnimationView);
+            make.height.mas_equalTo(0.5);
+            make.centerX.mas_equalTo(_multiAnimationView);
+            make.bottom.mas_equalTo(_multiAnimationView);
+        }];
     }
     return _multiAnimationView;
+}
+- (UIView *)bottomLine {
+    if (!_bottomLine) {
+        _bottomLine = [[UIView alloc] init];
+        _bottomLine.backgroundColor = [UIColor grayColor];
+    }
+    return _bottomLine;
 }
 - (void)removeCurrentGroupPin {
     if (self.onClickRemove) {
@@ -186,11 +212,13 @@
 - (void)hiddenMultiAnimation {
     self.multiAnimationView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0];
     _multiAnimationView.alpha = 0;
+    _bottomLine.alpha = 1;
 }
     
 - (void)showMultiAnimation {
     self.multiAnimationView.backgroundColor = TUIChatDynamicColor(@"chat_pop_group_pin_back_color", @"#F9F9F9");
     _multiAnimationView.alpha = 1;
+    _bottomLine.alpha = 0;
 }
 
 @end

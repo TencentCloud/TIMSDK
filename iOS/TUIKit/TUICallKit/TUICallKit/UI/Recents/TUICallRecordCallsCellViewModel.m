@@ -188,7 +188,7 @@
     self.timeLabelStr = [TUITool convertDateToStr:[NSDate dateWithTimeIntervalSince1970:beginTime]];
 }
 
-#pragma mark - 私有方法
+#pragma mark - Private Method
 
 - (void)cacheGroupCallAvatar:(UIImage*)avatar inviteStr:(NSString *)inviteStr {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{

@@ -60,9 +60,12 @@ typedef NS_ENUM(NSUInteger, AuthorizationDeniedType ) {
 
 + (BOOL)checkAuthorizationStatusIsDenied:(TUICallMediaType)callMediaType;
 
-+ (void)showAuthorizationAlert:(AuthorizationDeniedType)deniedType
-            openSettingHandler:(void(^)(void))openSettingHandler
-                 cancelHandler:(void(^)(void))cancelHandler;
++ (UIAlertController *)getAuthorizationAlert:(AuthorizationDeniedType)deniedType
+                          openSettingHandler:(void(^)(void))openSettingHandler
+                               cancelHandler:(void(^)(void))cancelHandler;
+
++ (UIViewController *)getViewControllerForView:(UIView *)view;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,11 +20,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIAudioRecordInfo : NSObject
-/// 录制文件地址
+
 @property (nonatomic, copy) NSString *path;
-/// 应用的 SDKAppID
 @property (nonatomic, assign) NSInteger sdkAppId;
-/// AI 降噪签名
 @property (nonatomic, copy) NSString *signature;
 
 @end
@@ -40,9 +38,7 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, strong) TUIAudioRecordInfo *mAudioRecordInfo;
 @property (nonatomic, assign) AVAudioSessionCategory mCategory;
 @property (nonatomic, assign) AVAudioSessionCategoryOptions mCategoryOptions;
-/**
- * Result callback for calling other service
- */
+// Result callback for calling other service
 @property (nonatomic, copy) TUICallServiceResultCallback callback;
 
 @end
@@ -99,7 +95,6 @@ NS_ASSUME_NONNULL_END
             return nil;
         }
         
-        /// 如果当前在通话中,不支持录音
         if (TUICallStatusNone != [TUICallingStatusManager shareInstance].callStatus) {
             [self notifyAudioMessageRecordEvent:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey
                                         errCode:TUICore_RecordAudioMessageNotifyError_StatusInCall
@@ -107,7 +102,6 @@ NS_ASSUME_NONNULL_END
             return nil;
         }
         
-        /// 当前已经在录音中
         if (self.mAudioRecordInfo) {
             [self notifyAudioMessageRecordEvent:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey
                                         errCode:TUICore_RecordAudioMessageNotifyError_StatusIsAudioRecording
@@ -119,7 +113,6 @@ NS_ASSUME_NONNULL_END
         [self requestRecordAuthorization:^(BOOL granted) {
             __strong typeof(self) strongSelf = weakSelf;
             if (granted) {
-                /// 获取音频焦点
                 if (![strongSelf requestAudioFocus]) {
                     [strongSelf notifyAudioMessageRecordEvent:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey
                                                       errCode:TUICore_RecordAudioMessageNotifyError_RequestAudioFocusFailed
@@ -137,15 +130,12 @@ NS_ASSUME_NONNULL_END
                     NSString *signatureKey = TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SignatureKey;
                     strongSelf.mAudioRecordInfo.signature = [param tui_objectForKey:signatureKey
                                                                             asClass:NSString.class];
-                    /// 开启音频采集
                     [[TRTCCloud sharedInstance] setDelegate:strongSelf];
-                    /// 启用音量大小
                     [[TRTCCloud sharedInstance] enableAudioVolumeEvaluation:500 enable_vad:YES];
                     [strongSelf startRecordAudioMessage];
                 }
             } else {
                 __strong typeof(self) strongSelf = weakSelf;
-                /// 获取麦克风权限失败
                 [strongSelf notifyAudioMessageRecordEvent:TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey
                                                   errCode:TUICore_RecordAudioMessageNotifyError_MicPermissionRefused
                                                      path:nil];
@@ -211,9 +201,7 @@ NS_ASSUME_NONNULL_END
     [[TRTCCloud sharedInstance] callExperimentalAPI:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]];
     [[TRTCCloud sharedInstance] enableAudioVolumeEvaluation:0 enable_vad:NO];
     [[TRTCCloud sharedInstance] stopLocalAudio];
-    // 清空录制信息
     self.mAudioRecordInfo = nil;
-    // 释放音频焦点
     [self abandonAudioFocus];
 }
 
@@ -233,7 +221,6 @@ NS_ASSUME_NONNULL_END
                groupId:(NSString *)groupId
          callMediaType:(TUICallMediaType)callMediaType
               userData:(NSString *)userData{
-    // 收到通话邀请,停止录制
     [self stopRecordAudioMessage];
 }
 

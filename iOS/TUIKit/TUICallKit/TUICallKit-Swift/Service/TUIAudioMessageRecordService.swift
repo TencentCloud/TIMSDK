@@ -10,9 +10,9 @@ import AVFAudio
 import TUICore
 import TUICallEngine
 
-#if USE_TRTC
+#if canImport(TXLiteAVSDK_TRTC)
 import TXLiteAVSDK_TRTC
-#else
+#elseif canImport(TXLiteAVSDK_Professional)
 import TXLiteAVSDK_Professional
 #endif
 
@@ -64,14 +64,12 @@ extension TUIAudioMessageRecordService {
                 return nil
             }
             
-            /// 如果当前在通话中,不支持录音
             if TUICallState.instance.selfUser.value.callStatus.value != TUICallStatus.none {
                 notifyAudioMessageRecordEvent(method: TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey,
                                               errorCode: Int(TUICore_RecordAudioMessageNotifyError_StatusInCall), path: "")
                 return nil
             }
             
-            /// 当前已经在录音中
             if audioRecordInfo != nil {
                 notifyAudioMessageRecordEvent(method: TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey,
                                               errorCode: Int(TUICore_RecordAudioMessageNotifyError_StatusIsAudioRecording), path: "")
@@ -81,7 +79,6 @@ extension TUIAudioMessageRecordService {
             requestRecordAuthorization { [weak self] granted in
                 guard let self = self else { return }
                 if granted {
-                    /// 获取音频焦点
                     if !self.requestAudioFocus() {
                         self.notifyAudioMessageRecordEvent(method: TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey,
                                                            errorCode: Int(TUICore_RecordAudioMessageNotifyError_RequestAudioFocusFailed), path: "")
@@ -96,16 +93,13 @@ extension TUIAudioMessageRecordService {
                         let signatureKey = TUICore_TUIAudioMessageRecordService_StartRecordAudioMessageMethod_SignatureKey
                         self.audioRecordInfo?.signature = param[signatureKey] as? String ?? ""
                         
-                        /// 抢占TRTC delegate
                         TRTCCloud.sharedInstance().delegate = self
-                        /// 启用音量大小
                         let audioVolumeEvaluateParams = TRTCAudioVolumeEvaluateParams()
                         audioVolumeEvaluateParams.interval = 500
                         TRTCCloud.sharedInstance().enableAudioVolumeEvaluation(true, with: audioVolumeEvaluateParams)
                         self.startRecordAudioMessage()
                     }
                 } else {
-                    /// 获取麦克风权限失败
                     self.notifyAudioMessageRecordEvent(method: TUICore_RecordAudioMessageNotify_StartRecordAudioMessageSubKey,
                                                        errorCode: Int(TUICore_RecordAudioMessageNotifyError_MicPermissionRefused), path: "")
                 }

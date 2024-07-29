@@ -29,9 +29,6 @@
 #import "TUIVideoReplyQuoteView_Minimalist.h"
 #import "TUIVoiceReplyQuoteView_Minimalist.h"
 
-#define kReplyQuoteViewMaxWidth 175
-#define kReplyQuoteViewMarginWidth 35
-
 @interface TUIReplyMessageCell_Minimalist ()
 
 @property(nonatomic, strong) TUIReplyQuoteView_Minimalist *currentOriginView;
@@ -69,7 +66,6 @@
 - (void)fillWithData:(TUIReplyMessageCellData *)data {
     [super fillWithData:data];
     self.replyData = data;
-
     self.senderLabel.text = [NSString stringWithFormat:@"%@:", data.sender];
     if (data.direction == MsgDirectionIncoming) {
         self.contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_recv_text_color", @"#000000");
@@ -124,9 +120,9 @@
     self.currentOriginView = [self getCustomOriginView:replyData.originCellData];
     [self hiddenAllCustomOriginViews:YES];
     self.currentOriginView.hidden = NO;
+
     replyData.quoteData.supportForReply = YES;
-    BOOL hasOriginMsgRevoke = (replyData.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED);
-    
+    replyData.quoteData.showRevokedOriginMessage = replyData.showRevokedOriginMessage;
     [self.currentOriginView fillWithData:replyData.quoteData];
 
     [self.quoteView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -156,20 +152,19 @@
         make.size.mas_equalTo(self.replyData.senderSize);
     }];
 
-    if (hasOriginMsgRevoke) {
+    BOOL hideSenderLabel = (replyData.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) &&
+                            !replyData.showRevokedOriginMessage;
+    if (hideSenderLabel) {
         self.senderLabel.hidden = YES;
-    }
-    else {
+    } else {
         self.senderLabel.hidden = NO;
     }
-
     
     [self.currentOriginView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.senderLabel);
-        if (hasOriginMsgRevoke) {
+        if (hideSenderLabel) {
             make.centerY.mas_equalTo(self.quoteView);
-        }
-        else {
+        } else {
             make.top.mas_equalTo(self.senderLabel.mas_bottom).mas_offset(4);
         }
 //        make.width.mas_greaterThanOrEqualTo(self.replyData.quotePlaceholderSize);
@@ -215,10 +210,9 @@
     } else if ([view isKindOfClass:[TUIMergeReplyQuoteView_Minimalist class]]) {
         TUIMergeReplyQuoteView_Minimalist *quoteView = (TUIMergeReplyQuoteView_Minimalist *)view;
         if (self.replyData.direction == MsgDirectionIncoming) {
-            quoteView.titleLabel.textColor = quoteView.subTitleLabel.textColor =
-                TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
+            quoteView.titleLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
         } else {
-            quoteView.titleLabel.textColor = quoteView.subTitleLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
+            quoteView.titleLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
         }
     }
 
@@ -343,12 +337,8 @@
     CGFloat quoteWidth = 0;
 
     CGFloat quoteMinWidth = 100;
-    CGFloat quoteMaxWidth = kReplyQuoteViewMaxWidth;
+    CGFloat quoteMaxWidth = TReplyQuoteView_Max_Width;
     CGFloat quotePlaceHolderMarginWidth = 12;
-
-    CGRect messageRevokeRect = CGRectZero;
-    BOOL hasOriginMsgRevoke = (replyCellData.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED);
-
     
     // Calculate the size of label which displays the sender's displyname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}];
@@ -356,8 +346,11 @@
                                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                attributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}
                                                   context:nil];
-
-    if (hasOriginMsgRevoke) {
+    
+    CGRect messageRevokeRect = CGRectZero;
+    BOOL showRevokeStr = (replyCellData.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) &&
+                            !replyCellData.showRevokedOriginMessage;
+    if (showRevokeStr) {
         NSString *msgRevokeStr = TIMCommonLocalizableString(TUIKitRepliesOriginMessageRevoke);
         messageRevokeRect = [msgRevokeStr boundingRectWithSize:CGSizeMake(quoteMaxWidth, senderSize.height)
                                                                    options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
@@ -393,7 +386,7 @@
 
     quoteHeight = 3 + senderRect.size.height + 4 + placeholderSize.height + 6;
 
-    if (hasOriginMsgRevoke) {
+    if (showRevokeStr) {
         quoteWidth = MAX(quoteWidth, messageRevokeRect.size.width);
         quoteHeight = 3  + 4 + messageRevokeRect.size.height + 6;
     }
@@ -416,7 +409,7 @@
         height += replyCellData.msgStatusSize.height;
     }
 
-    return CGSizeMake(quoteWidth + kReplyQuoteViewMarginWidth, height);
+    return CGSizeMake(quoteWidth + TReplyQuoteView_Margin_Width, height);
 }
 
 @end

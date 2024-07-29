@@ -8,7 +8,7 @@
 import Foundation
 
 class GroupCallerUserInfoView: UIView {
-    let viewModel = GroupCallerUserInfoViewModel()
+    
     let remoteUserListObserver = Observer()
     
     let userHeadImageView: UIImageView = {
@@ -51,7 +51,7 @@ class GroupCallerUserInfoView: UIView {
     }
     
     deinit {
-        viewModel.remoteUserList.removeObserver(remoteUserListObserver)
+        TUICallState.instance.remoteUserList.removeObserver(remoteUserListObserver)
     }
     
     // MARK: UI Specification Processing
@@ -91,7 +91,7 @@ class GroupCallerUserInfoView: UIView {
     
     // MARK: Register TUICallState Observer && Update UI
     func registerObserveState() {
-        viewModel.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.setUserImageAndName()
         })
@@ -99,7 +99,7 @@ class GroupCallerUserInfoView: UIView {
     
     // MARK: Update UI
     func setUserImageAndName() {
-        let remoteUser = viewModel.remoteUserList.value.first ?? User()
+        let remoteUser = TUICallState.instance.remoteUserList.value.first ?? User()
         userNameLabel.text = User.getUserDisplayName(user: remoteUser)
         
         if let url = URL(string: remoteUser.avatar.value) {

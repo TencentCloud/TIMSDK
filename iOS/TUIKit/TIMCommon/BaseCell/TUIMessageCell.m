@@ -340,7 +340,7 @@
         self.avatarView.layer.cornerRadius = [TUIConfig defaultConfig].avatarCornerRadius;
     }
 
-    self.nameLabel.text = data.name;
+    self.nameLabel.text = data.senderName;
     
     if (data.direction == MsgDirectionIncoming) {
         self.nameLabel.textColor = self.class.incommingNameColor;

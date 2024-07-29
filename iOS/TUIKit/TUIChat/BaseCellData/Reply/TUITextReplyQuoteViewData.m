@@ -28,17 +28,15 @@
 }
 
 - (CGSize)contentSize:(CGFloat)maxWidth {
-    
     NSAttributedString *attributeString = nil;
-    BOOL isOriginCellRevoked = (self.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED );
-    
-    if (isOriginCellRevoked) {
+    BOOL showRevokeStr = (self.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED) &&
+                            !self.showRevokedOriginMessage;
+    if (showRevokeStr) {
         NSString * revokeStr = self.supportForReply?
         TIMCommonLocalizableString(TUIKitRepliesOriginMessageRevoke):
         TIMCommonLocalizableString(TUIKitReferenceOriginMessageRevoke);
         attributeString = [revokeStr getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0] emojiLocations:nil];
-    }
-    else {
+    } else {
         attributeString = [self.text getFormatEmojiStringWithFont:[UIFont systemFontOfSize:10.0] emojiLocations:nil];
     }
     
@@ -47,7 +45,7 @@
                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                 context:nil];
     CGFloat h = rect.size.height < size.height * 2 ? rect.size.height : size.height * 2;
-    if (isOriginCellRevoked && self.supportForReply) {
+    if (showRevokeStr && self.supportForReply) {
         h = size.height *2;
     }
     return CGSizeMake(rect.size.width, h);

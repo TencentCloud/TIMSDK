@@ -1,6 +1,6 @@
 //
 //  TUICallRecordCallsCellViewModel.swift
-//  
+//  TUICallKit
 //
 //  Created by vincepzhang on 2023/8/28.
 //
@@ -141,20 +141,19 @@ class TUICallRecordCallsCellViewModel {
         case .group:
             guard let inviteList = callRecord.inviteList as? [String] else { return }
             allUsers = inviteList
-            allUsers.append(callRecord.inviter)
         case .multi:
             break
         @unknown default:
             break
         }
         
-        V2TIMManager.sharedInstance()?.getUsersInfo(allUsers, succ: { [weak self] infoList in
+        User.getUserInfosFromIM(userIDs: allUsers) { [weak self] infoList in
             guard let self = self else { return }
-            guard let infoList = infoList else { return }
-            let titleArray = infoList.map { $0.nickName ?? $0.userID }
-            guard let titleArray = titleArray as? [String] else { return }
+            let titleArray = infoList.map { $0.remark.value.count > 0
+                ? $0.remark.value
+                : $0.nickname.value.count > 0 ? $0.nickname.value : $0.id.value }
             self.titleLabelStr.value = titleArray.joined(separator: ",")
-        }, fail: nil)
+        }
     }
     
     private func configTime(_ callRecord: TUICallRecords) {

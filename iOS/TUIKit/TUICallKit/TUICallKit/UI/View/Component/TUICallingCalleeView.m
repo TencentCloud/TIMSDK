@@ -39,11 +39,9 @@ static CGFloat const kSpacing = 5.0f;
     return self;
 }
 
-/// 多人通话，被呼叫方UI初始化
 - (void)setupCalleeViewView {
     [self addSubview:self.calleeTipLabel];
     [self addSubview:self.calleeCollectionView];
-    // 视图约束
     [self.calleeTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.top.equalTo(self);
         make.leading.equalTo(self).offset(20);

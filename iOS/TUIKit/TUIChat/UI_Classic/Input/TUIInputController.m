@@ -380,7 +380,7 @@
     NSDictionary *simpleCurrentContent = @{
         @"messageID" : messageCellData.innerMessage.msgID ?: @"",
         @"messageAbstract" : [messageCellData.innerMessage.textElem.text ?: @"" getInternationalStringWithfaceContent],
-        @"messageSender" : messageCellData.innerMessage.sender ?: @"",
+        @"messageSender" : messageCellData.senderName ? : @"",
         @"messageType" : @(messageCellData.innerMessage.elemType),
         @"messageTime" : @(messageCellData.innerMessage.timestamp ? [messageCellData.innerMessage.timestamp timeIntervalSince1970] : 0),
         @"messageSequence" : @(messageCellData.innerMessage.seq),

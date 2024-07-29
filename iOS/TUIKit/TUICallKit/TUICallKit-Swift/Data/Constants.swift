@@ -5,10 +5,10 @@
 //  Created by vincepzhang on 2022/12/30.
 //
 
-// 默认头像
+// Default avatar
 let TUI_CALL_DEFAULT_AVATAR: String = "https://imgcache.qq.com/qcloud/public/static//avatar1_100.20191230.png"
 
-// MARK: 屏幕尺寸相关
+// MARK: Screen Size Param
 let ScreenSize = UIScreen.main.bounds.size
 let Screen_Width = UIScreen.main.bounds.size.width
 let Screen_Height = UIScreen.main.bounds.size.height
@@ -38,11 +38,11 @@ let kMicroVideoViewHeight = 196.scaleHeight()
 let kMicroGroupViewWidth = 88.scaleWidth()
 let kMicroGroupViewHeight = 106.scaleWidth()
 
-let kMicroAudioViewRect = CGRect(x: Screen_Width - kMicroAudioViewWidth, 
+let kMicroAudioViewRect = CGRect(x: Screen_Width - kMicroAudioViewWidth,
                                  y: 150.scaleHeight(),
                                  width: kMicroAudioViewWidth,
                                  height: kMicroAudioViewHeight)
-let kMicroVideoViewRect = CGRect(x: Screen_Width - kMicroVideoViewWidth, 
+let kMicroVideoViewRect = CGRect(x: Screen_Width - kMicroVideoViewWidth,
                                  y: 150.scaleHeight(),
                                  width: kMicroVideoViewWidth,
                                  height: kMicroVideoViewHeight)
@@ -69,4 +69,10 @@ let kBtnSmallSize = CGSize(width: 60.scaleWidth(), height: 60.scaleWidth())
 
 class Constants {
     static let EVENT_SHOW_TUICALLKIT_VIEWCONTROLLER = "eventShowTUICallKitViewController"
+}
+
+enum NetworkQualityHint {
+    case None
+    case Local
+    case Remote
 }

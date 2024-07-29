@@ -9,7 +9,6 @@ import Foundation
 import TUICallEngine
 
 class TimerView: UIView {
-    let viewModel = TimerViewModel()
     
     let timeCountObserver = Observer()
     
@@ -19,7 +18,7 @@ class TimerView: UIView {
         timerLabel.backgroundColor = UIColor.clear
         timerLabel.textAlignment = .center
         timerLabel.textColor = UIColor.t_colorWithHexString(color: "#D5E0F2")
-        timerLabel.text = viewModel.getCallTimeString()
+        timerLabel.text = GCDTimer.secondToHMSString(second: TUICallState.instance.timeCount.value)
         return timerLabel
     }()
     
@@ -33,10 +32,11 @@ class TimerView: UIView {
     }
     
     deinit {
-        viewModel.timeCount.removeObserver(timeCountObserver)
+        TUICallState.instance.timeCount.removeObserver(timeCountObserver)
     }
     
     // MARK: UI Specification Processing
+    
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -57,16 +57,18 @@ class TimerView: UIView {
     }
     
     // MARK: Register TUICallState Observer && Update UI
+    
     func registerObserveState() {
         callTimeChange()
     }
     
     func callTimeChange() {
-        viewModel.timeCount.addObserver(timeCountObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.timeCount.addObserver(timeCountObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             DispatchCallKitMainAsyncSafe {
-                self.timerLabel.text = self.viewModel.getCallTimeString()
+                self.timerLabel.text = GCDTimer.secondToHMSString(second: newValue)
             }
         })
     }
+    
 }

@@ -168,13 +168,7 @@ static NSMutableDictionary *gCustomMessageInfoMap = nil;
 - (CGFloat)getEstimatedHeightFromMessageCellData:(TUIMessageCellData *)cellData {
     NSString *key = [self getHeightCacheKey:cellData];
     CGFloat height = [[self.heightCacheMaps objectForKey:key] floatValue];
-    if (height == 0) {
-        CellClass cellClass = [self.cellClassMaps objectForKey:NSStringFromClass(cellData.class)];
-        if ([cellClass respondsToSelector:@selector(getEstimatedHeight:)]) {
-            height = [cellClass getEstimatedHeight:cellData];
-        }
-    }
-    return height > 0 ? height : 60;
+    return height > 0 ? height : UITableViewAutomaticDimension;;
 }
 
 - (void)removeHeightCacheOfMessageCellData:(TUIMessageCellData *)cellData {
@@ -208,7 +202,7 @@ static NSMutableDictionary *gCustomMessageInfoMap = nil;
     [self bindMessageCellClass:TUIVideoMessageCell_Minimalist.class cellDataClass:TUIVideoMessageCellData.class reuseID:TVideoMessageCell_ReuseId];
     [self bindMessageCellClass:TUIFileMessageCell_Minimalist.class cellDataClass:TUIFileMessageCellData.class reuseID:TFileMessageCell_ReuseId];
     [self bindMessageCellClass:TUIJoinGroupMessageCell_Minimalist.class cellDataClass:TUIJoinGroupMessageCellData.class reuseID:TJoinGroupMessageCell_ReuseId];
-    [self bindMessageCellClass:TUIMergeMessageCell_Minimalist.class cellDataClass:TUIMergeMessageCellData.class reuseID:TRelayMessageCell_ReuserId];
+    [self bindMessageCellClass:TUIMergeMessageCell_Minimalist.class cellDataClass:TUIMergeMessageCellData.class reuseID:TMergeMessageCell_ReuserId];
     [self bindMessageCellClass:TUIReplyMessageCell_Minimalist.class cellDataClass:TUIReplyMessageCellData.class reuseID:TReplyMessageCell_ReuseId];
     [self bindMessageCellClass:TUIReferenceMessageCell_Minimalist.class
                  cellDataClass:TUIReferenceMessageCellData.class

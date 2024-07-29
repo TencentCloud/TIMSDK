@@ -163,7 +163,8 @@
         self.groupPinList = groupPinList;
         [[NSNotificationCenter defaultCenter] postNotificationName:TUICore_TUIChatExtension_ChatViewTopArea_ChangedNotification object:nil];
         if (self.pinPageVC) {
-            self.pinPageVC.groupPinList = groupPinList;
+            NSMutableArray *formatGroupPinList = [NSMutableArray arrayWithArray:groupPinList.reverseObjectEnumerator.allObjects];
+            self.pinPageVC.groupPinList = formatGroupPinList;
             self.pinPageVC.canRemove = [self.messageController isCurrentUserRoleSuperAdminInGroup];
             if (groupPinList.count > 0) {
                 [self reloadPopPinPage];
@@ -415,7 +416,7 @@
     if (!atUserExist) {
         TUIUserModel *user = [[TUIUserModel alloc] init];
         user.userId = cell.messageData.identifier;
-        user.name = cell.messageData.name;
+        user.name = cell.messageData.senderName;
         [self.atUserList addObject:user];
 
         NSString *nameString = [NSString stringWithFormat:@"@%@ ", user.name];

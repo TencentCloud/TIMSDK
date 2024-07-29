@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong) UILabel *bottomTipsLabel;
 
-@property(nonatomic, strong) TUIMergeMessageCellData *relayData;
+@property(nonatomic, strong) TUIMergeMessageCellData *mergeData;
 - (void)fillWithData:(TUIMergeMessageCellData *)data;
 
 @end

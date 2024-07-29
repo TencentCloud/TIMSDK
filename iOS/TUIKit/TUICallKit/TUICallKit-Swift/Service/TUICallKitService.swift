@@ -64,10 +64,7 @@ extension TUICallKitService {
             guard let signalingInfo = param[TUICore_TUICallingService_ShowCallingViewMethod_SignalingInfo] as? V2TIMSignalingInfo else {
                 return nil
             }
-            
-            let groupID = signalingInfo.groupID
-            var selector = NSSelectorFromString("onReceiveGroupCallAPNs")
-            
+            let selector = NSSelectorFromString("onReceiveGroupCallAPNs:")
             if TUICallEngine.createInstance().responds(to: selector) {
                 TUICallEngine.createInstance().perform(selector, with: signalingInfo)
             }

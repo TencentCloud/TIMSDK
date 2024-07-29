@@ -9,8 +9,8 @@ import Foundation
 
 class CallUserInfoView: UIView {
     
-    let viewModel = UserInfoViewModel()
     let remoteUserListObserver = Observer()
+    
     let userHeadImageView: UIImageView = {
         let userHeadImageView = UIImageView(frame: CGRect.zero)
         userHeadImageView.layer.masksToBounds = true
@@ -41,7 +41,7 @@ class CallUserInfoView: UIView {
     }
     
     deinit {
-        viewModel.remoteUserList.removeObserver(remoteUserListObserver)
+        TUICallState.instance.remoteUserList.removeObserver(remoteUserListObserver)
     }
     
     // MARK: UI Specification Processing
@@ -78,7 +78,7 @@ class CallUserInfoView: UIView {
     }
     
     func remoteUserListChanged() {
-        viewModel.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.remoteUserList.addObserver(remoteUserListObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.setUserImageAndName()
         })
@@ -86,7 +86,7 @@ class CallUserInfoView: UIView {
     
     // MARK: Update UI
     func setUserImageAndName() {
-        let remoteUser = viewModel.remoteUserList.value.first ?? User()
+        let remoteUser = TUICallState.instance.remoteUserList.value.first ?? User()
         userNameLabel.text = User.getUserDisplayName(user: remoteUser)
         
         if let url = URL(string: remoteUser.avatar.value) {

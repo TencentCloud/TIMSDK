@@ -9,7 +9,6 @@ import Foundation
 
 class FloatingWindowButton: UIView {
     
-    let viewModel = FloatingWindowButtonViewModel()
     let mediaTypeObserver = Observer()
     
     let floatButton: FloatingWindowCustomButton = {
@@ -29,7 +28,7 @@ class FloatingWindowButton: UIView {
     }
     
     deinit {
-        viewModel.mediaType.removeObserver(mediaTypeObserver)
+        TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
     }
     
     // MARK: UI Specification Processing

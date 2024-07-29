@@ -7,7 +7,6 @@
 
 class GroupCallView: UIView {
     
-    let viewModel = GroupCallViewModel()
     let selfCallStatusObserver = Observer()
     let mediaTypeObserver = Observer()
     private var isViewReady: Bool = false
@@ -19,7 +18,7 @@ class GroupCallView: UIView {
     let maskedView = {
         let maskedView = UIView(frame: CGRect.zero)
         maskedView.backgroundColor =  UIColor.t_colorWithHexString(color: "#22262E", alpha: 0.85)
-        return maskedView;
+        return maskedView
     }()
     
     let layoutView = {
@@ -82,8 +81,8 @@ class GroupCallView: UIView {
     }
     
     deinit {
-        viewModel.selfCallStatus.removeObserver(selfCallStatusObserver)
-        viewModel.mediaType.removeObserver(mediaTypeObserver)
+        TUICallState.instance.selfUser.value.callStatus.removeObserver(selfCallStatusObserver)
+        TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
         
         for view in subviews {
             view.removeFromSuperview()
@@ -183,19 +182,19 @@ class GroupCallView: UIView {
     func createGroupCallView() {
         handleFloatingWindowBtn()
         
-        if viewModel.selfCallStatus.value == .waiting {
-            if viewModel.selfCallRole.value == .call {
+        if TUICallState.instance.selfUser.value.callStatus.value == .waiting {
+            if TUICallState.instance.selfUser.value.callRole.value == .call {
                 createCallWaitingView()
-            } else if viewModel.selfCallRole.value == .called {
+            } else if TUICallState.instance.selfUser.value.callRole.value == .called {
                 createCalledWaitingView()
             }
-        } else if viewModel.selfCallStatus.value == .accept {
+        } else if TUICallState.instance.selfUser.value.callStatus.value == .accept {
             createCallingView()
         }
     }
     
     func handleFloatingWindowBtn() {
-        if viewModel.enableFloatWindow {
+        if TUICallState.instance.enableFloatWindow {
             floatingWindowBtn.isHidden = false
         } else {
             floatingWindowBtn.isHidden = true
@@ -208,7 +207,7 @@ class GroupCallView: UIView {
         inviteUserButton.isHidden = false
         functionView.isHidden = false
         callStatusTipLabel.isHidden = false
-        waitingHintView.isHidden = viewModel.selfCallRole.value == .call ? true : false
+        waitingHintView.isHidden = TUICallState.instance.selfUser.value.callRole.value == .call ? true : false
     }
     
     func createCalledWaitingView() {
@@ -245,14 +244,14 @@ class GroupCallView: UIView {
     }
     
     func callStatusChanged() {
-        viewModel.selfCallStatus.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.selfUser.value.callStatus.addObserver(selfCallStatusObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.createGroupCallView()
         })
     }
     
     func mediaTypeChanged() {
-        viewModel.mediaType.addObserver(mediaTypeObserver) { [weak self] newValue, _  in
+        TUICallState.instance.mediaType.addObserver(mediaTypeObserver) { [weak self] newValue, _  in
             guard let self = self else { return }
             self.createGroupCallView()
         }

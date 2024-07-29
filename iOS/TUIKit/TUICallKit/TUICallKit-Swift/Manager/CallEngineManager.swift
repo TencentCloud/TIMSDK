@@ -9,9 +9,9 @@ import Foundation
 import TUICore
 import TUICallEngine
 
-#if USE_TRTC
+#if canImport(TXLiteAVSDK_TRTC)
 import TXLiteAVSDK_TRTC
-#else
+#elseif canImport(TXLiteAVSDK_Professional)
 import TXLiteAVSDK_Professional
 #endif
 
@@ -337,4 +337,41 @@ class CallEngineManager {
         
         engine.callExperimentalAPI(jsonObject: paramsString)
     }
+    
+    func setBlurBackground() {
+        let currentEnable = TUICallState.instance.enableBlurBackground.value
+        let level = !currentEnable ? 3 : 0
+        TUICallState.instance.enableBlurBackground.value = !currentEnable
+        engine.setBlurBackground(level) { code, message in
+            TUICallState.instance.enableBlurBackground.value = false
+        }
+    }
+    
+    func reportOnlineLog(_ enableVirtualBackground: Bool) {
+        let msgDic: [String: Any] = ["enablevirtualbackground": enableVirtualBackground,
+                                     "version": TUICALL_VERSION,
+                                     "platform": "iOS",
+                                     "framework": "native",
+                                     "sdk_app_id": TUILogin.getSdkAppID(),]
+        guard let msgData = try? JSONSerialization.data(withJSONObject: msgDic,
+                                                        options: JSONSerialization.WritingOptions(rawValue: 0)) else {
+            return
+        }
+        guard let msgString = NSString(data: msgData, encoding: String.Encoding.utf8.rawValue) as? String else {
+            return
+        }
+        let jsonParams: [String: Any] = ["api": "reportOnlineLog",
+                                         "params": ["level": 1,
+                                                    "msg":msgDic,
+                                                    "more_msg":"TUICallkit"],]
+        guard let data = try? JSONSerialization.data(withJSONObject: jsonParams,
+                                                     options: JSONSerialization.WritingOptions(rawValue: 0)) else {
+            return
+        }
+        guard let paramsString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String else {
+            return
+        }
+        engine.getTRTCCloudInstance().callExperimentalAPI(paramsString)
+    }
+    
 }

@@ -447,15 +447,16 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 // group live cell
 #define TGroupLiveMessageCell_ReuseId @"TGroupLiveMessageCell"
 
-// repply message cell
+// reply message cell
 #define TReplyMessageCell_ReuseId @"TUIReplyMessageCell"
 #define TUIReferenceMessageCell_ReuseId @"TUIReferenceMessageCell"
+#define TReplyQuoteView_Max_Width 175
+#define TReplyQuoteView_Margin_Width 35
 
-// relay message cell
-#define TRelayMessageCell_ReuserId @"TRelayMessageCell"
-#define TRelayMessageCell_Text_PADDING (230)
-#define TRelayMessageCell_Text_Height_Max (100)
-#define TRelayMessageCell_Text_Width_Max (Screen_Width - TRelayMessageCell_Text_PADDING)
+// merge message cell
+#define TMergeMessageCell_ReuserId @"TMergeMessageCell"
+#define TMergeMessageCell_Width_Max 200
+#define TMergeMessageCell_Height_Max 100
 
 // rich text cell
 #define TRichTextMessageCell_ReuserId @"TRichTextMessageCell"

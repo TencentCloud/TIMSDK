@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIMergeReplyQuoteView : TUIReplyQuoteView
 
 @property(nonatomic, strong) UILabel *titleLabel;
-@property(nonatomic, strong) UILabel *subTitleLabel;
 
 @end
 

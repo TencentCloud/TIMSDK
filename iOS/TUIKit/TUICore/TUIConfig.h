@@ -12,9 +12,6 @@
  *
  * TUIConfig implements the default initialization of the configuration file, you can change the default configuration here according to your needs
  * Configuration file include emoticons, default icons, and more
- *
- * It should be noted that the emoticons in TUIKit are copyrighted. The purchased IM service does not include the right to use the emoticons. Please replace
- * them with your own emoticons when you go online, otherwise you will face legal risks.
  */
 
 #import <Foundation/Foundation.h>

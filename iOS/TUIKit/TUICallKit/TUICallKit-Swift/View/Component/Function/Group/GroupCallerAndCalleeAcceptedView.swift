@@ -24,7 +24,6 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     
     weak var delegate: GroupCallerAndCalleeAcceptedViewDelegate?
     
-    let viewModel = GroupCallerAndCalleeAcceptedViewModel()
     let isCameraOpenObserver = Observer()
     let showLargeViewUserIdObserver = Observer()
     
@@ -42,14 +41,14 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     }()
     
     lazy var muteMicBtn: BaseControlButton = {
-        let titleKey = viewModel.isMicMute.value ? "TUICallKit.muted" : "TUICallKit.unmuted"
+        let titleKey = TUICallState.instance.isMicMute.value ? "TUICallKit.muted" : "TUICallKit.unmuted"
         let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: titleKey) ?? "",
                                            imageSize: kBtnSmallSize) { [weak self] sender in
             guard let self = self else { return }
             self.muteMicEvent(sender: sender)
         }
-        let imageName = viewModel.isMicMute.value ? "icon_mute_on" : "icon_mute"
+        let imageName = TUICallState.instance.isMicMute.value ? "icon_mute_on" : "icon_mute"
         if let image = TUICallKitCommon.getBundleImage(name: imageName) {
             btn.updateImage(image: image)
         }
@@ -58,14 +57,14 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     }()
     
     lazy var closeCameraBtn: BaseControlButton = {
-        let titleKey = viewModel.isCameraOpen.value ? "TUICallKit.cameraOn" : "TUICallKit.cameraOff"
+        let titleKey = TUICallState.instance.isCameraOpen.value ? "TUICallKit.cameraOn" : "TUICallKit.cameraOff"
         let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: titleKey) ?? "",
                                            imageSize: kBtnSmallSize) { [weak self] sender in
             guard let self = self else { return }
             self.closeCameraTouchEvent(sender: sender)
         }
-        if let image = TUICallKitCommon.getBundleImage(name: viewModel.isCameraOpen.value ? "icon_camera_on" : "icon_camera_off") {
+        if let image = TUICallKitCommon.getBundleImage(name: TUICallState.instance.isCameraOpen.value ? "icon_camera_on" : "icon_camera_off") {
             btn.updateImage(image: image)
         }
         btn.updateTitleColor(titleColor: UIColor.t_colorWithHexString(color: "#D5E0F2"))
@@ -73,14 +72,14 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     }()
     
     lazy var changeSpeakerBtn: BaseControlButton = {
-        let titleKey = (viewModel.audioDevice.value == .speakerphone) ? "TUICallKit.speakerPhone" : "TUICallKit.earpiece"
+        let titleKey = (TUICallState.instance.audioDevice.value == .speakerphone) ? "TUICallKit.speakerPhone" : "TUICallKit.earpiece"
         let btn = BaseControlButton.create(frame: CGRect.zero,
                                            title: TUICallKitLocalize(key: titleKey) ?? "",
                                            imageSize: kBtnSmallSize) { [weak self] sender in
             guard let self = self else { return }
             self.changeSpeakerEvent(sender: sender)
         }
-        let imageName = (viewModel.audioDevice.value == .speakerphone) ? "icon_handsfree_on" : "icon_handsfree"
+        let imageName = (TUICallState.instance.audioDevice.value == .speakerphone) ? "icon_handsfree_on" : "icon_handsfree"
         if let image = TUICallKitCommon.getBundleImage(name: imageName) {
             btn.updateImage(image: image)
         }
@@ -118,8 +117,8 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     }
     
     deinit {
-        viewModel.isCameraOpen.removeObserver(isCameraOpenObserver)
-        viewModel.showLargeViewUserId.removeObserver(showLargeViewUserIdObserver)
+        TUICallState.instance.isCameraOpen.removeObserver(isCameraOpenObserver)
+        TUICallState.instance.showLargeViewUserId.removeObserver(showLargeViewUserIdObserver)
     }
     
     // MARK: UI Specification Processing
@@ -130,7 +129,7 @@ class GroupCallerAndCalleeAcceptedView: UIView {
         constructViewHierarchy()
         activateConstraints()
         setContainerViewCorner()
-        let isHidden: Bool = (viewModel.showLargeViewUserId.value.count <= 1)
+        let isHidden: Bool = (TUICallState.instance.showLargeViewUserId.value.count <= 1)
         containerView.isHidden = isHidden
         matchBtn.isHidden = isHidden
         isViewReady = true
@@ -150,7 +149,7 @@ class GroupCallerAndCalleeAcceptedView: UIView {
         containerView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: frame.size.width, height: groupFunctionViewHeight))
         
         muteMicBtn.snp.makeConstraints { make in
-            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? 100.scaleWidth() : -100.scaleWidth())
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? 110.scaleWidth() : -110.scaleWidth())
             make.centerY.equalTo(changeSpeakerBtn)
             make.width.height.equalTo(60.scaleWidth())
         }
@@ -160,7 +159,7 @@ class GroupCallerAndCalleeAcceptedView: UIView {
             make.width.height.equalTo(60.scaleWidth())
         }
         closeCameraBtn.snp.makeConstraints { make in
-            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? -100.scaleWidth() : 100.scaleWidth())
+            make.centerX.equalTo(self).offset(TUICoreDefineConvert.getIsRTL() ? -110.scaleWidth() : 110.scaleWidth())
             make.centerY.equalTo(self.changeSpeakerBtn)
             make.width.height.equalTo(60.scaleWidth())
         }
@@ -177,12 +176,12 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     
     // MARK: Register TUICallState Observer && Update UI
     func registerObserveState() {
-        viewModel.isCameraOpen.addObserver(isCameraOpenObserver, closure: { [weak self] newValue, _ in
+        TUICallState.instance.isCameraOpen.addObserver(isCameraOpenObserver, closure: { [weak self] newValue, _ in
             guard let self = self else { return }
             self.updateCloseCameraBtn(open: newValue)
         })
         
-        viewModel.showLargeViewUserId.addObserver(showLargeViewUserIdObserver) { [weak self] newValue, _  in
+        TUICallState.instance.showLargeViewUserId.addObserver(showLargeViewUserIdObserver) { [weak self] newValue, _  in
             guard let self = self else { return }
             if newValue.count > 1 {
                 self.showAnimation()
@@ -196,27 +195,27 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     
     // MARK: Action Event
     func muteMicEvent(sender: UIButton) {
-        viewModel.muteMic()
-        updateMuteAudioBtn(mute: viewModel.isMicMute.value == true)
+        CallEngineManager.instance.muteMic()
+        updateMuteAudioBtn(mute: TUICallState.instance.isMicMute.value == true)
     }
     
     func closeCameraTouchEvent(sender: UIButton) {
-        updateCloseCameraBtn(open: viewModel.isCameraOpen.value != true)
-        if viewModel.isCameraOpen.value == true {
-            viewModel.closeCamera()
+        updateCloseCameraBtn(open: TUICallState.instance.isCameraOpen.value != true)
+        if TUICallState.instance.isCameraOpen.value == true {
+            CallEngineManager.instance.closeCamera()
         } else {
-            guard let videoViewEntity = VideoFactory.instance.viewMap[viewModel.selfUser.value.id.value] else { return }
-            viewModel.openCamera(videoView: videoViewEntity.videoView)
+            guard let videoViewEntity = VideoFactory.instance.viewMap[TUICallState.instance.selfUser.value.id.value] else { return }
+            CallEngineManager.instance.openCamera(videoView: videoViewEntity.videoView)
         }
     }
     
     func changeSpeakerEvent(sender: UIButton) {
-        viewModel.changeSpeaker()
-        updateChangeSpeakerBtn(isSpeaker: viewModel.audioDevice.value == .speakerphone)
+        CallEngineManager.instance.changeSpeaker()
+        updateChangeSpeakerBtn(isSpeaker: TUICallState.instance.audioDevice.value == .speakerphone)
     }
     
     @objc func hangupTouchEvent(sender: UIButton) {
-        viewModel.hangup()
+        CallEngineManager.instance.hangup()
     }
     
     @objc func matchTouchEvent(sender: UIButton) {

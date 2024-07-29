@@ -216,6 +216,20 @@ NSString *const TUILogoutFailNotification = @"TUILogoutFailNotification";
         [NSNotificationCenter.defaultCenter postNotificationName:TUILoginSuccessNotification object:nil];
         return;
     }
+
+    if (config && config.initLocalStorageOnly) {
+        [[V2TIMManager sharedInstance] callExperimentalAPI:@"initLocalStorage" param:self.userID succ:^(NSObject *result) {
+          if (succ) {
+            succ();
+          }
+        } fail:^(int code, NSString *desc) {
+          if (fail) {
+            fail(code, desc);
+          }
+        }];
+        return;
+    }
+
     __weak __typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] login:userID
         userSig:userSig

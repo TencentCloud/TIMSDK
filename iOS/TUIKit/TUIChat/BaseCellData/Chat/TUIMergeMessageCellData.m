@@ -21,13 +21,13 @@
         return limitCell;
     }
 
-    TUIMergeMessageCellData *relayData = [[TUIMergeMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
-    relayData.title = elem.title;
-    relayData.abstractList = [NSArray arrayWithArray:elem.abstractList];
-    relayData.abstractSendDetailList = [self.class formatAbstractSendDetailList:elem.abstractList];
-    relayData.mergerElem = elem;
-    relayData.reuseId = TRelayMessageCell_ReuserId;
-    return relayData;
+    TUIMergeMessageCellData *mergeData = [[TUIMergeMessageCellData alloc] initWithDirection:(message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming)];
+    mergeData.title = elem.title;
+    mergeData.abstractList = [NSArray arrayWithArray:elem.abstractList];
+    mergeData.abstractSendDetailList = [self.class formatAbstractSendDetailList:elem.abstractList];
+    mergeData.mergerElem = elem;
+    mergeData.reuseId = TMergeMessageCell_ReuserId;
+    return mergeData;
 }
 
 + (NSString *)getDisplayString:(V2TIMMessage *)message {

@@ -36,13 +36,16 @@
         make.edges.mas_equalTo(self);
     }];
 }
+
 - (void)fillWithData:(TUIReplyQuoteViewData *)data {
     [super fillWithData:data];
     if (![data isKindOfClass:TUITextReplyQuoteViewData.class]) {
         return;
     }
     TUITextReplyQuoteViewData *myData = (TUITextReplyQuoteViewData *)data;
-    if (data.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED ) {
+    BOOL showRevokeStr = data.originCellData.innerMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED &&
+                            !data.showRevokedOriginMessage;
+    if (showRevokeStr) {
         NSString * revokeStr = data.supportForReply?
         TIMCommonLocalizableString(TUIKitRepliesOriginMessageRevoke):
         TIMCommonLocalizableString(TUIKitReferenceOriginMessageRevoke);

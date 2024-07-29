@@ -273,15 +273,6 @@
         data.showName = YES;
         if (data) {
             data.innerMessage = msg;
-            data.msgID = msg.msgID;
-            data.identifier = msg.sender;
-            data.name = data.identifier;
-            if (msg.nameCard.length > 0) {
-                data.name = msg.nameCard;
-            } else if (msg.nickName.length > 0) {
-                data.name = msg.nickName;
-            }
-            data.avatarUrl = [NSURL URLWithString:msg.faceURL];
             [uiMsgs addObject:data];
         }
     }
@@ -514,7 +505,7 @@
     TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
     replyData.msgID = data.msgID;
     replyData.msgAbstract = desc;
-    replyData.sender = data.name;
+    replyData.sender = data.senderName;
     replyData.type = (NSInteger)data.innerMessage.elemType;
     replyData.originMessage = data.innerMessage;
     self.inputController.replyData = replyData;
@@ -555,10 +546,10 @@
         [self showFileMessage:(TUIFileMessageCell *)cell];
     }
     if ([cell isKindOfClass:[TUIMergeMessageCell class]]) {
-        TUIMergeMessageListController *relayVc = [[TUIMergeMessageListController alloc] init];
-        relayVc.mergerElem = [(TUIMergeMessageCell *)cell relayData].mergerElem;
-        relayVc.delegate = self.delegate;
-        [self.navigationController pushViewController:relayVc animated:YES];
+        TUIMergeMessageListController *mergeVc = [[TUIMergeMessageListController alloc] init];
+        mergeVc.mergerElem = [(TUIMergeMessageCell *)cell mergeData].mergerElem;
+        mergeVc.delegate = self.delegate;
+        [self.navigationController pushViewController:mergeVc animated:YES];
     }
     if ([cell isKindOfClass:[TUILinkCell class]]) {
         [self showLinkMessage:(TUILinkCell *)cell];

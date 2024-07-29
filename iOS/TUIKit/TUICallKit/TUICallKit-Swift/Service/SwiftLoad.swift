@@ -8,10 +8,12 @@
 
 import Foundation
 import TUICore
+import TUICallEngine
 
 extension NSObject {
     @objc class func swiftLoad() {
         let _ = TUICallKit.createInstance()
+        let _ = TUICallEngine.createInstance()
         
         TUICore.registerService(TUICore_TUICallingService, object: TUICallKitService.instance)
         
@@ -26,6 +28,11 @@ extension NSObject {
         TUICore.registerExtension(TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID,
                                   object: TUICallKitExtension.instance)
         TUICore.registerExtension(TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID,
+                                  object: TUICallKitExtension.instance)
+        
+        TUICore.registerExtension(TUICore_TUIChatExtension_ChatViewTopArea_ClassicExtensionID,
+                                  object: TUICallKitExtension.instance)
+        TUICore.registerExtension(TUICore_TUIChatExtension_ChatViewTopArea_MinimalistExtensionID,
                                   object: TUICallKitExtension.instance)
         
         TUICore.registerObjectFactory(TUICore_TUICallingObjectFactory, objectFactory: TUICallKitObjectFactory.instance)

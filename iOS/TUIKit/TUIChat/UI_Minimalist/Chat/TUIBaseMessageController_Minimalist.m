@@ -330,36 +330,77 @@ typedef NSNumber * HeightNumber;
         toConversation:self.conversationData
         willSendBlock:^(BOOL isReSend, TUIMessageCellData *_Nonnull dateUIMsg) {
           @strongify(self);
-          [self scrollToBottom:YES];
-
-          int delay = 1;
-          if ([cellData isKindOfClass:[TUIImageMessageCellData class]]) {
-              delay = 0;
+          if ([cellData isKindOfClass:[TUIVideoMessageCellData class]]) {
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [self scrollToBottom:YES];
+              });
+          } else {
+              [self scrollToBottom:YES];
           }
-
-          @weakify(self);
-          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            @strongify(self);
-            if (cellData.status == Msg_Status_Sending) {
-                [self changeMsg:cellData status:Msg_Status_Sending_2];
-            }
-          });
+          [self setUIMessageStatus:cellData status:Msg_Status_Sending_2];
         }
         SuccBlock:^{
           @strongify(self);
           [self reloadUIMessage:cellData];
-          [self changeMsg:cellData status:Msg_Status_Succ];
+          [self setUIMessageStatus:cellData status:Msg_Status_Succ];
         }
         FailBlock:^(int code, NSString *desc) {
           @strongify(self);
-          NSString * errorMsg = [TUITool convertIMError:code msg:desc];
-          [self makeSendErrorHud:errorMsg];
-          [self changeMsg:cellData status:Msg_Status_Fail];
+          [self reloadUIMessage:cellData];
+          [self setUIMessageStatus:cellData status:Msg_Status_Fail];
+          [self makeSendErrorHud:code desc:desc];
         }];
 }
 
-- (void)makeSendErrorHud:(NSString *)msg {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:msg message:nil preferredStyle:UIAlertControllerStyleAlert];
+- (void)setUIMessageStatus:(TUIMessageCellData *)cellData status:(TMsgStatus)status {
+    switch (status) {
+        case Msg_Status_Init:
+        case Msg_Status_Succ:
+        case Msg_Status_Fail:
+            {
+                [self changeMsg:cellData status:status];
+            }
+            break;
+        case Msg_Status_Sending:
+        case Msg_Status_Sending_2:
+            {
+                int delay = 1;
+                if ([cellData isKindOfClass:[TUIImageMessageCellData class]] ||
+                    [cellData isKindOfClass:[TUIVideoMessageCellData class]]) {
+                    delay = 0;
+                }
+                if (0 == delay) {
+                    [self changeMsg:cellData status:Msg_Status_Sending_2];
+                } else {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        if (cellData.innerMessage.status == V2TIM_MSG_STATUS_SENDING) {
+                            [self changeMsg:cellData status:Msg_Status_Sending_2];
+                        }
+                    });
+                }
+            }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)makeSendErrorHud:(int)code desc:(NSString *)desc  {
+    // The text or image msg is sensitive, the cell height may change.
+    if (code == 80001 || code == 80004) {
+        [self scrollToBottom:YES];
+        return;
+    }
+    
+    NSString *errorMsg = @"";
+    if (self.isMsgNeedReadReceipt && code == ERR_SDK_INTERFACE_NOT_SUPPORT) {
+        errorMsg = [NSString stringWithFormat:@"%@%@", TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceMessageRead),
+                                         TUIKitLocalizableString(TUIKitErrorUnsupporInterfaceSuffix)];
+    } else {
+        errorMsg = [TUITool convertIMError:code msg:desc];
+    }
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:errorMsg message:nil preferredStyle:UIAlertControllerStyleAlert];
     [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];
 }
@@ -396,7 +437,7 @@ typedef NSNumber * HeightNumber;
                                        callback:^{
         @strongify(self)
         [self.messageDataProvider replaceUIMsg:newUIMsg atIndex:index];
-        [self.tableView reloadData];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     }];
 }
 
@@ -716,6 +757,10 @@ static NSMutableArray *reloadMsgIndexs = nil;
     [TUITool.applicationKeywindow endEditing:YES];
 }
 
+- (CGFloat)getHeightFromMessageCellData:(TUIMessageCellData *)cellData {
+    return [self.messageCellConfig getHeightFromMessageCellData:cellData];
+}
+
 #pragma mark - UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.messageDataProvider.uiMsgs.count;
@@ -735,7 +780,7 @@ static NSMutableArray *reloadMsgIndexs = nil;
         TUIMessageCellData *cellData = self.messageDataProvider.uiMsgs[indexPath.row];
         return [self.messageCellConfig getEstimatedHeightFromMessageCellData:cellData];
     } else {
-        return 44.f;
+        return UITableViewAutomaticDimension;
     }
 }
 
@@ -1429,16 +1474,16 @@ static NSMutableArray *reloadMsgIndexs = nil;
                                                         completion:^(BOOL finished){
                                                         }];
     }
-    TUIMergeMessageListController_Minimalist *relayVc = [[TUIMergeMessageListController_Minimalist alloc] init];
-    relayVc.delegate = self.delegate;
-    relayVc.mergerElem = cell.relayData.mergerElem;
-    relayVc.conversationData = self.conversationData;
-    relayVc.parentPageDataProvider = self.messageDataProvider;
+    TUIMergeMessageListController_Minimalist *mergeVc = [[TUIMergeMessageListController_Minimalist alloc] init];
+    mergeVc.delegate = self.delegate;
+    mergeVc.mergerElem = cell.mergeData.mergerElem;
+    mergeVc.conversationData = self.conversationData;
+    mergeVc.parentPageDataProvider = self.messageDataProvider;
     __weak typeof(self) weakSelf = self;
-    relayVc.willCloseCallback = ^() {
+    mergeVc.willCloseCallback = ^() {
       [weakSelf.tableView reloadData];
     };
-    [self.navigationController pushViewController:relayVc animated:YES];
+    [self.navigationController pushViewController:mergeVc animated:YES];
 }
 
 - (void)showLinkMessage:(TUILinkCell_Minimalist *)cell {

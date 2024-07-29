@@ -314,15 +314,6 @@
         data.cellLayout = layout;
         if (data) {
             data.innerMessage = msg;
-            data.msgID = msg.msgID;
-            data.identifier = msg.sender;
-            data.name = data.identifier;
-            if (msg.nameCard.length > 0) {
-                data.name = msg.nameCard;
-            } else if (msg.nickName.length > 0) {
-                data.name = msg.nickName;
-            }
-            data.avatarUrl = [NSURL URLWithString:msg.faceURL];
             [uiMsgs addObject:data];
         }
     }
@@ -552,7 +543,7 @@
     TUIReplyPreviewData *replyData = [[TUIReplyPreviewData alloc] init];
     replyData.msgID = data.msgID;
     replyData.msgAbstract = desc;
-    replyData.sender = data.name;
+    replyData.sender = data.senderName;
     replyData.type = (NSInteger)data.innerMessage.elemType;
     replyData.originMessage = data.innerMessage;
     self.inputController.replyData = replyData;
@@ -593,10 +584,10 @@
         [self showFileMessage:(TUIFileMessageCell_Minimalist *)cell];
     }
     if ([cell isKindOfClass:[TUIMergeMessageCell_Minimalist class]]) {
-        TUIMergeMessageListController_Minimalist *relayVc = [[TUIMergeMessageListController_Minimalist alloc] init];
-        relayVc.mergerElem = [(TUIMergeMessageCell_Minimalist *)cell relayData].mergerElem;
-        relayVc.delegate = self.delegate;
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:relayVc];
+        TUIMergeMessageListController_Minimalist *mergeVc = [[TUIMergeMessageListController_Minimalist alloc] init];
+        mergeVc.mergerElem = [(TUIMergeMessageCell_Minimalist *)cell mergeData].mergerElem;
+        mergeVc.delegate = self.delegate;
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:mergeVc];
         nav.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:nav animated:NO completion:nil];
     }

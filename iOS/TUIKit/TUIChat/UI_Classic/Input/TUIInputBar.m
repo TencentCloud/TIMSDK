@@ -354,7 +354,7 @@
                                                                          strongSelf.allowSendTypingStatusByChangeWord = YES;
                                                                        }];
 
-    if (self.isFocusOn && [textView.textStorage getPlainString].length > 0) {
+    if (self.isFocusOn && [textView.textStorage tui_getPlainString].length > 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldBeginTyping:)]) {
             [_delegate inputTextViewShouldBeginTyping:textView];
         }
@@ -369,14 +369,14 @@
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-    if (self.allowSendTypingStatusByChangeWord && self.isFocusOn && [textView.textStorage getPlainString].length > 0) {
+    if (self.allowSendTypingStatusByChangeWord && self.isFocusOn && [textView.textStorage tui_getPlainString].length > 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldBeginTyping:)]) {
             self.allowSendTypingStatusByChangeWord = NO;
             [_delegate inputTextViewShouldBeginTyping:textView];
         }
     }
 
-    if (self.isFocusOn && [textView.textStorage getPlainString].length == 0) {
+    if (self.isFocusOn && [textView.textStorage tui_getPlainString].length == 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldEndTyping:)]) {
             [_delegate inputTextViewShouldEndTyping:textView];
         }
@@ -430,7 +430,7 @@
 
     if ([text isEqualToString:@"\n"]) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]) {
-            NSString *sp = [[textView.textStorage getPlainString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            NSString *sp = [[textView.textStorage tui_getPlainString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             if (sp.length == 0) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:TIMCommonLocalizableString(TUIKitInputBlankMessageTitle)
                                                                             message:nil
@@ -438,7 +438,7 @@
                 [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
                 [self.mm_viewController presentViewController:ac animated:YES completion:nil];
             } else {
-                [_delegate inputBar:self didSendText:[textView.textStorage getPlainString]];
+                [_delegate inputBar:self didSendText:[textView.textStorage tui_getPlainString]];
                 [self clearInput];
             }
         }
@@ -447,7 +447,7 @@
         if (textView.textStorage.length > range.location) {
             // Delete the @ message like @xxx at one time
             NSAttributedString *lastAttributedStr = [textView.textStorage attributedSubstringFromRange:NSMakeRange(range.location, 1)];
-            NSString *lastStr = [lastAttributedStr getPlainString];
+            NSString *lastStr = [lastAttributedStr tui_getPlainString];
             if (lastStr && lastStr.length > 0 && [lastStr characterAtIndex:0] == ' ') {
                 NSUInteger location = range.location;
                 NSUInteger length = range.length;
@@ -462,10 +462,10 @@
                     location--;
                     length++;
                     // Convert characters to ascii code, copy to int, avoid out of bounds
-                    int c = (int)[[[textView.textStorage attributedSubstringFromRange:NSMakeRange(location, 1)] getPlainString] characterAtIndex:0];
+                    int c = (int)[[[textView.textStorage attributedSubstringFromRange:NSMakeRange(location, 1)] tui_getPlainString] characterAtIndex:0];
 
                     if (c == at) {
-                        NSString *atText = [[textView.textStorage attributedSubstringFromRange:NSMakeRange(location, length)] getPlainString];
+                        NSString *atText = [[textView.textStorage attributedSubstringFromRange:NSMakeRange(location, length)] tui_getPlainString];
                         UIFont *textFont = kTUIInputNoramlFont;
                         NSAttributedString *spaceString = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSFontAttributeName : textFont}];
                         [textView.textStorage replaceCharactersInRange:NSMakeRange(location, length) withAttributedString:spaceString];
@@ -503,7 +503,7 @@
 }
 
 - (NSString *)getInput {
-    return [_inputTextView.textStorage getPlainString];
+    return [_inputTextView.textStorage tui_getPlainString];
 }
 
 - (void)addEmoji:(TUIFaceCellData *)emoji {

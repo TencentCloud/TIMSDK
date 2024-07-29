@@ -88,6 +88,11 @@ typedef NS_ENUM(NSUInteger, TMsgSource) {
 @property(nonatomic, strong) NSString *identifier;
 
 /**
+ *  Message display sender name
+ */
+@property(nonatomic, strong, readonly) NSString *senderName;
+
+/**
  *  Sender's avatar url
  */
 @property(nonatomic, strong) NSURL *__nullable avatarUrl;
@@ -101,13 +106,6 @@ typedef NS_ENUM(NSUInteger, TMsgSource) {
  * Whether to use the receiver's avatar, default is NO
  */
 @property(nonatomic, assign) BOOL isUseMsgReceiverAvatar;
-
-/**
- *
- *  Sender's nickname
- *  The nickname and ID are not necessarily the same, and the nickname is displayed by default in the chat interface.
- */
-@property(nonatomic, strong) NSString *name;
 
 /**
  *

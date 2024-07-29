@@ -13,7 +13,10 @@
 "TUICallKit.Group.inviteToGroupCall" = "邀请你加入多人通话";
 "TUICallKit.Group.waitAccept" = "等待接听";
 "TUICallKit.determine" = "确定";
+"TUICallKit.lineBusy" = "对方忙";
 
+"TUICallKit.switchCamera" = "翻转";
+"TUICallKit.blurBackground" = "模糊背景";
 "TUICallKit.hangup" = "挂断";
 "TUICallKit.decline" = "拒接";
 "TUICallKit.switchToAudio" = "切换到语音通话";
@@ -64,3 +67,11 @@
 "TUICallKit.earpiece" = "扬声器已关";
 "TUICallKit.cameraOn" = "摄像头已开";
 "TUICallKit.cameraOff" = "摄像头已关";
+
+"TUICallKit.JoinGroupView.title" = "\%d人正在\%@";
+"TUICallKit.JoinGroupView.join" = "加入";
+"TUICallKit.JoinGroupView.audioCall" = "语音通话";
+"TUICallKit.JoinGroupView.videoCall" = "视频通话";
+
+"TUICallKit.OtherParty.NetworkLowQuality" = "当前通话对方网络不佳";
+"TUICallKit.Self.NetworkLowQuality" = "当前通话你的网络不佳";

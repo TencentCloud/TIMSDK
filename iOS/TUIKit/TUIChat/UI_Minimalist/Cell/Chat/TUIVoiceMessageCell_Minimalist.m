@@ -176,7 +176,7 @@
         } else {
             make.trailing.mas_equalTo(self.container.mas_trailing);
         }
-        make.top.mas_equalTo(self.container.mas_bottom).offset(6);
+        make.top.mas_equalTo(self.container.mas_bottom).offset(self.messageData.messageContainerAppendSize.height + 6);
         make.size.mas_equalTo(size);
     }];
 

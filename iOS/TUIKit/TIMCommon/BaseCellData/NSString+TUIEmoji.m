@@ -613,7 +613,7 @@
 
 @implementation NSAttributedString (EmojiExtension)
 
-- (NSString *)getPlainString {
+- (NSString *)tui_getPlainString {
     NSMutableString *plainString = [NSMutableString stringWithString:self.string];
     __block NSUInteger base = 0;
 

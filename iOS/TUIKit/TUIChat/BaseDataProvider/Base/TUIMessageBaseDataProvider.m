@@ -327,7 +327,6 @@
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTypingStatus) object:nil];
 
         self.conversationModel.otherSideTyping = YES;
-        self.conversationModel.title = [NSString stringWithFormat:@"%@...", TIMCommonLocalizableString(TUIKitTyping)];
         // If the other party does not continue typing, end the status every 5 seconds
         [self performSelector:@selector(resetTypingStatus) withObject:nil afterDelay:5.0];
     } else {
@@ -511,6 +510,7 @@
                     userInfo.nickName = obj.nickName;
                     userInfo.friendRemark = obj.friendRemark;
                     userInfo.nameCard = obj.nameCard;
+                    userInfo.faceURL = obj.faceURL;
                     [result setObject:userInfo forKey:userInfo.userID];
                 }
               }];
@@ -528,6 +528,7 @@
                       userInfo.userID = item.friendInfo.userID;
                       userInfo.nickName = item.friendInfo.userFullInfo.nickName;
                       userInfo.friendRemark = item.friendInfo.friendRemark;
+                      userInfo.faceURL = item.friendInfo.userFullInfo.faceURL;
                       [result setObject:userInfo forKey:userInfo.userID];
                   }
               }
@@ -605,9 +606,6 @@
                        imMsg.isExcludedFromUnreadCount = [TUIConfig defaultConfig].isExcludedFromUnreadCount;
                        imMsg.isExcludedFromLastMessage = [TUIConfig defaultConfig].isExcludedFromLastMessage;
 
-                       // Update send status
-                       uiMsg.status = Msg_Status_Sending;
-
                        // Update sender
                        uiMsg.identifier = [TUILogin getUserID];
 
@@ -679,19 +677,6 @@
                              }
                              [TUIMessageProgressManager.shareManager notifyMessageSendingResult:uiMsg.msgID result:TUIMessageSendingResultTypeFail];
                            }];
-                       uiMsg.name = [self.class getShowName:uiMsg.innerMessage];
-
-                       /**
-                        * Notes: innerMessage.faceURL is assigned inside sendMessage, so it needs to be last. TUIMessageCell
-                        * internally monitors changes to avatarUrl, so it doesn't need to be refreshed again.
-                        */
-                       uiMsg.avatarUrl = [NSURL URLWithString:[uiMsg.innerMessage faceURL]];
-
-                       /**
-                        * Sending a message needs to carry [identifier], otherwise sending the message again, clicking on the avatar of [Me] will result in an
-                        * inaccessible personal information page
-                        */
-                       uiMsg.identifier = [uiMsg.innerMessage sender];
                      }];
                    }];
 }
@@ -796,18 +781,21 @@
         [self removeUIMsg:uiMsg];
     }
 }
+
 - (void)removeUImsgAtIndex:(NSUInteger)index {
     if (index < self.uiMsgs.count) {
         TUIMessageCellData *msg = self.uiMsgs[index];
         [self removeUIMsg:msg];
     }
 }
+
 - (void)clearUIMsgList {
     NSArray *clearArray = [NSArray arrayWithArray:self.uiMsgs];
     [self removeUIMsgList:clearArray];
     self.msgForDate = nil;
     self.uiMsgs_ = nil;
 }
+
 - (void)replaceUIMsg:(TUIMessageCellData *)cellData atIndex:(NSUInteger)index {
     if (index < self.uiMsgs.count) {
         TUIMessageCellData *oldMsg = self.uiMsgs[index];
@@ -820,8 +808,6 @@
         if (self.mergeAdjacentMsgsFromTheSameSender) {
             [self.class updateUIMsgStatus:cellData uiMsgs:self.uiMsgs_];
         }
-    } else {
-        [self addUIMsg:cellData];
     }
 }
 

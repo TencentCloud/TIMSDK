@@ -168,8 +168,6 @@
 
 - (NSString *)getInput;
 
-- (void)defaultLayout;
-
 - (void)updateTextViewFrame;
 
 - (void)changeToKeyboard;

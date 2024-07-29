@@ -34,6 +34,18 @@
 	<string>#000000</string>
 	<key>callkit_nav_item_title_text_color</key>
 	<string>#F4F5F9</string>
+	<key>callkit_join_group_bottom_container_bg_color</key>
+	<string>#272727</string>
+	<key>callkit_join_group_title_color</key>
+	<string>#CCCCCC</string>
+	<key>callkit_join_group_expand_bg_color</key>
+	<string>#111111</string>
+	<key>callkit_join_group_line_color</key>
+	<string>#AAAAAA</string>
+	<key>callkit_join_group_button_color</key>
+	<string>#CCCCCC</string>
+	<key>callkit_join_group_bg_color</key>
+	<string>#111111</string>
 	<key>icon_nav_back_image</key>
 	<string>nav_back.png</string>
 </dict>
