@@ -7,11 +7,11 @@
 
 #import "TUIWarningView.h"
 #import <TIMCommon/TIMDefine.h>
+#import <TIMCommon/TUIAttributedLabel.h>
 
-@interface TUIWarningView ()
-
-@property(nonatomic, strong) UILabel *tipsLabel;
-@property(nonatomic, strong) UIButton *tipsButton;
+@interface TUIWarningView ()<TUIAttributedLabelDelegate>
+@property(nonatomic, strong) UIImageView *tipsIcon;
+@property(nonatomic, strong) TUIAttributedLabel *tipsLabel;
 @property(nonatomic, copy) void (^buttonAction)(void);
 @property(nonatomic, strong) UIButton *gotButton;
 @property(nonatomic, copy) void (^gotButtonAction)(void);
@@ -26,70 +26,54 @@
     if (self) {
         self.buttonAction = action;
         self.gotButtonAction = gotButtonAction;
-        self.backgroundColor = [UIColor tui_colorWithHex:@"FF9500" alpha:0.1];
+        self.backgroundColor = [UIColor tui_colorWithHex:@"FFE8D5" alpha:1];
 
+        self.tipsIcon = [[UIImageView alloc] initWithFrame:CGRectZero];
+        [self addSubview:self.tipsIcon];
+        self.tipsIcon.image = [UIImage imageNamed:TIMCommonImagePath(@"icon_secure_info_img")];        
         if (tips.length > 0) {
-            self.tipsLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-            [self addSubview:self.tipsLabel];
-            self.tipsLabel.font = [UIFont systemFontOfSize:12];
+            self.tipsLabel = [[TUIAttributedLabel alloc] initWithFrame:CGRectZero];
             self.tipsLabel.numberOfLines = 0;
-            self.tipsLabel.textColor = [UIColor tui_colorWithHex:@"FF8C39"];
+            self.tipsLabel.userInteractionEnabled = YES;
+            self.tipsLabel.delegate = self;
+            self.tipsLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
+            [self addSubview:self.tipsLabel];
+        
+            NSMutableParagraphStyle  *paragraphStyle = [self.class customParagraphStyle];
+            NSString *contentString = [tips stringByAppendingString:buttonTitle];
+            NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] initWithString:contentString];
+            [mutableAttributedString addAttribute:NSParagraphStyleAttributeName 
+                                            value:paragraphStyle 
+                                            range:[contentString rangeOfString:contentString]];
+            [mutableAttributedString addAttribute:NSForegroundColorAttributeName
+                                            value:[UIColor tui_colorWithHex:@"A02800"]
+                                            range:[contentString rangeOfString:contentString]];
+            [mutableAttributedString addAttribute:NSStrokeColorAttributeName
+                                            value:[UIColor tui_colorWithHex:@"A02800"]
+                                            range:[contentString rangeOfString:contentString]];
+            [mutableAttributedString addAttribute:NSFontAttributeName
+                                            value:[UIFont systemFontOfSize:14]
+                                            range:[contentString rangeOfString:contentString]];
+            [mutableAttributedString addAttribute:NSStrokeWidthAttributeName value:@0 range:[contentString rangeOfString:contentString]];
+            [self.tipsLabel setText:mutableAttributedString];
+            self.tipsLabel.linkAttributes = @{(NSString *)kCTForegroundColorAttributeName:[UIColor systemBlueColor],
+                                          (NSString *)kCTUnderlineStyleAttributeName:[NSNumber numberWithBool:NO]};
 
-            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            paragraphStyle.minimumLineHeight = 18;
-            [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-            [paragraphStyle setAlignment:isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft];
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:tips];
-            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [tips length])];
-            self.tipsLabel.attributedText = attributedString;
+            [self.tipsLabel addLinkToURL:[NSURL URLWithString:@"click"] withRange:[contentString rangeOfString:buttonTitle]];
+
+            CGFloat maxWidth = self.mm_w - 92;
             CGRect rect =
-                [self.tipsLabel.text boundingRectWithSize:CGSizeMake(self.mm_w - 28, MAXFLOAT)
-                                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                               attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:12], NSParagraphStyleAttributeName : paragraphStyle}
-                                                  context:nil];
-            self.mm_height(rect.size.height + 32);
-            self.tipsLabel.mm_width(rect.size.width).mm_height(rect.size.height).mm_top(16).mm_left(14);
-            if (isRTL()) {
-                [self.tipsLabel resetFrameToFitRTL];
-            }
-        }
-
-        CGFloat btnMargin = 10;
-
-        if (gotButtonTitle.length > 0) {
-            self.gotButton = [UIButton buttonWithType:UIButtonTypeSystem];
-            [self addSubview:self.gotButton];
-            [self.gotButton setTitle:gotButtonTitle forState:UIControlStateNormal];
-            [self.gotButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-            [self.gotButton setTitleColor:[UIColor tui_colorWithHex:@"006EFF"] forState:UIControlStateNormal];
-            [self.gotButton addTarget:self action:@selector(onGotButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-            self.gotButton.mm_sizeToFit().mm_right(btnMargin).mm_bottom(10);
-
+            [mutableAttributedString boundingRectWithSize:CGSizeMake(maxWidth, MAXFLOAT)
+                                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+            CGFloat margin = isRTL()?5:0;
+            self.mm_height(ceil(rect.size.height) + 32 + margin);
         }
         
-        if (buttonTitle.length > 0) {
-            self.tipsButton = [UIButton buttonWithType:UIButtonTypeSystem];
-            [self addSubview:self.tipsButton];
-            [self.tipsButton setTitle:buttonTitle forState:UIControlStateNormal];
-            [self.tipsButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
-            [self.tipsButton setTitleColor:[UIColor tui_colorWithHex:@"006EFF"] forState:UIControlStateNormal];
-            [self.tipsButton addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-            self.tipsButton.mm_sizeToFit();
-            self.tipsButton.frame = CGRectMake(
-                                               CGRectGetMinX(self.gotButton.frame) - self.tipsButton.frame.size.width - btnMargin,
-                                               self.gotButton.frame.origin.y,
-                                               self.tipsButton.frame.size.width,
-                                               self.tipsButton.frame.size.height);
-        }
-        if (isRTL()) {
-            
-            if (gotButtonTitle.length > 0) {
-                [self.gotButton resetFrameToFitRTL];
-            }
-            
-            if (buttonTitle.length > 0) {
-                [self.tipsButton resetFrameToFitRTL];
-            }
+        if (gotButtonTitle.length > 0) {
+            self.gotButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.gotButton setImage:[UIImage imageNamed:TIMCommonImagePath(@"icon_secure_cancel_img")] forState:UIControlStateNormal];
+            [self addSubview:self.gotButton];
+            [self.gotButton addTarget:self action:@selector(onGotButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     return self;
@@ -108,4 +92,60 @@
     }
 }
 
++ (NSMutableParagraphStyle *)customParagraphStyle {
+    NSMutableParagraphStyle  *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    if (@available(iOS 9.0, *)) {
+        paragraphStyle.allowsDefaultTighteningForTruncation = YES;
+    }
+    if (isRTL()) {
+        [paragraphStyle setLineBreakMode:NSLineBreakByCharWrapping];
+        paragraphStyle.alignment = NSTextAlignmentRight ;
+        paragraphStyle.minimumLineHeight = 18;
+        [paragraphStyle setLineSpacing:11];
+    }
+    else {
+        [paragraphStyle setLineBreakMode:NSLineBreakByCharWrapping];
+        paragraphStyle.alignment = NSTextAlignmentLeft ;
+        paragraphStyle.minimumLineHeight = 11;
+        [paragraphStyle setLineSpacing:4];
+    }
+    
+    return paragraphStyle;
+}
+
+
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints {
+    [super updateConstraints];
+
+    [self.tipsIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(16);
+        make.leading.mas_equalTo(20);
+        make.width.height.mas_equalTo(16);
+    }];
+    
+    [self.tipsLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(16);
+        make.leading.mas_equalTo(self.tipsIcon.mas_trailing).mas_offset(10);
+        make.trailing.mas_equalTo(self.mas_trailing).mas_offset(-46);
+        make.bottom.mas_equalTo(-16);
+    }];
+    
+    [self.gotButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(16);
+        make.trailing.mas_equalTo(-20);
+        make.width.height.mas_equalTo(16);
+    }];
+}
+
+#pragma mark - TUIAttributedLabelDelegate
+- (void)attributedLabel:(TUIAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
+    if (self.buttonAction) {
+        self.buttonAction();
+    }
+}
 @end

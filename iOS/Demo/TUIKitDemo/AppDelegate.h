@@ -24,6 +24,7 @@ static AppDelegate *app = nil;
 @property (nonatomic, assign) BOOL allowRotation;
 @property (nonatomic, assign) NSUInteger unReadCount;
 @property (nonatomic, strong, readonly) TUIContactViewDataProvider *contactDataProvider;
+@property (nonatomic, assign) int lastLoginResultCode;
 
 + (id)sharedInstance;
 

@@ -48,7 +48,7 @@
 
 "ChatsCreateFailed" = "创建群失败";
 
-"ChatSecurityWarning" = "【安全提示】本 APP 仅用于体验腾讯云即时通信 IM 产品功能，不可用于业务洽谈与拓展。请勿轻信汇款、中奖等涉及钱款的信息，勿轻易拨打陌生电话，谨防上当受骗。";
+"ChatSecurityWarning" = "请勿轻信汇款、中奖等信息，谨慎对待陌生电话，避免上当受骗。遇到可疑情况请及时反馈。";
 "ChatSecurityWarningReport" = "点此举报";
 "ChatSecurityWarningGot" = "我知道了";
 

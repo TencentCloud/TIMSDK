@@ -60,6 +60,7 @@ NSString *kHaveViewedIMIntroduction = @"TUIKitDemo_HaveViewedIMIntroduction";
 @property(nonatomic, assign) BOOL inContactsVC;
 @property(nonatomic, assign) BOOL inSettingVC;
 @property(nonatomic, assign) BOOL inCallsRecordVC;
+@property(nonatomic ,assign) BOOL isTencentRTCApp;
 @property(nonatomic, strong) UIImage *originRTCBackImage;
 
 @end
@@ -74,11 +75,13 @@ NSString *kHaveViewedIMIntroduction = @"TUIKitDemo_HaveViewedIMIntroduction";
     if (self.windowIsClosed) {
         return;
     }
-
+    NSString *appBundleId = [[NSBundle mainBundle] bundleIdentifier];
+    self.isTencentRTCApp = [appBundleId isEqualToString:@"com.tencent.rtc.app"];
+    TUIChatConfig.defaultConfig.enableWelcomeCustomMessage = !self.isTencentRTCApp;
     TUIRegisterThemeResourcePath(TUIDemoThemePath, TUIThemeModuleDemo);
     [TUIThemeSelectController disableFollowSystemStyle];
     [TUIThemeSelectController applyLastTheme];
-
+    
     [self configIMNavigation];
     [self setupCustomSticker];
     [self setupChatSecurityWarningView];
@@ -153,7 +156,9 @@ static BOOL g_hasAddedCustomFace = NO;
         group4350.menuPath = [bundlePath stringByAppendingPathComponent:@"4350/menu"];  // TUIChatFaceImagePath(@"4350/menu");
         [service appendFaceGroup:group4350];
     }
-
+    if (self.isTencentRTCApp) {
+        return;
+    }
     // 4351 group
     NSMutableArray *faces4351 = [NSMutableArray array];
     for (int i = 0; i <= 15; i++) {
@@ -239,15 +244,21 @@ static BOOL g_hasAddedCustomFace = NO;
     NSString *tips = TIMCommonLocalizableString(TIMAppChatSecurityWarning);
     NSString *buttonTitle = TIMCommonLocalizableString(TIMAppChatSecurityWarningReport);
     NSString *gotButtonTitle = TIMCommonLocalizableString(TIMAppChatSecurityWarningGot);
-
+    void (^buttonAction)(void) = ^{
+        NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
+        [TUITool openLinkWithURL:url];
+    };
+    if (self.isTencentRTCApp) {
+        tips = TIMCommonLocalizableString(TIMTencentRTCAppChatSecurityWarning);
+        buttonAction = nil;
+        buttonTitle = @"";
+    }
     __block TUIWarningView *tipsView = [[TUIWarningView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, 0)
                                                                 tips:tips
                                                          buttonTitle:buttonTitle
-                                                        buttonAction:^{
-                                                          NSURL *url = [NSURL URLWithString:@"https://cloud.tencent.com/act/event/report-platform"];
-                                                          [TUITool openLinkWithURL:url];
-    }
-                                                      gotButtonTitle:gotButtonTitle gotButtonAction:^{
+                                                        buttonAction:buttonAction
+                                                      gotButtonTitle:gotButtonTitle 
+                                                     gotButtonAction:^{
         tipsView.frame = CGRectZero;;
         [tipsView removeFromSuperview];
         [[NSNotificationCenter defaultCenter] postNotificationName:TUICore_TUIChatExtension_ChatViewTopArea_ChangedNotification object:nil];
@@ -267,7 +278,6 @@ static BOOL g_hasAddedCustomFace = NO;
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHaveViewedIMIntroduction];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-
     self.view.backgroundColor = [UIColor whiteColor];
 
     UIImageView *imLogo = [[UIImageView alloc] initWithFrame:CGRectMake(kScale375(24), 56, 62, 31)];

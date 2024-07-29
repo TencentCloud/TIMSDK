@@ -48,7 +48,7 @@
 
 "ChatsCreateFailed" = "Create Group Failed";
 
-"ChatSecurityWarning" = "[Security Reminder] This App is only used to experience the features of Tencent Cloud Chat products, and cannot be used for business negotiation and expansion. Please do not trust remittance, winning the lottery and other information related to money, do not easily make strange phone calls, beware of being deceived.";
+"ChatSecurityWarning" = "Do not easily believe in remittance, winning prizes, and other information. Be cautious when dealing with unknown phone calls to avoid being deceived. Please report any suspicious situations in a timely manner.";
 "ChatSecurityWarningReport" = "Report";
 "ChatSecurityWarningGot" = "Got it";
 
