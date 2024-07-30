@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tuiroomkit_set_conference_device"
+    android:background="@drawable/tuiroomkit_bg_conference_encrypt"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_mute_all_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tuiroomkit_mute_all_audio"
+        android:textSize="16sp"
+        android:textColor="@color/tuiroomkit_color_schedule_conference_text"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_mute_all_video"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_mute_all_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:thumb="@drawable/tuiroomkit_switch_thumb_selector"
+        app:track="@drawable/tuiroomkit_encrypt_switch_track_selector"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_mute_all_audio"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_mute_all_audio"/>
+
+    <TextView
+        android:id="@+id/tv_mute_all_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/tuiroomkit_color_schedule_conference_text"
+        android:text="@string/tuiroomkit_mute_all_video"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_mute_all_audio"
+        app:layout_constraintStart_toStartOf="@+id/tv_mute_all_audio"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_mute_all_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:thumb="@drawable/tuiroomkit_switch_thumb_selector"
+        app:track="@drawable/tuiroomkit_encrypt_switch_track_selector"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_mute_all_video"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_mute_all_video"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

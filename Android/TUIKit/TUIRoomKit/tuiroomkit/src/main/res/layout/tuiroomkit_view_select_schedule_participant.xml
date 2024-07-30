@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="32dp">
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/tuiroomkit_scheduled_attendees"
+        android:textSize="16sp"
+        android:textColor="#2B2E38"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/tuiroomkit_ll_select_attendees"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tuiroomkit_tv_attendee_count"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="#4F586B"/>
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/tuiroomkit_icon_arrows_right"/>
+    </LinearLayout>
+    
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/tuiroomkit_iv_third_attendee"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/tuiroomkit_head"
+        app:round="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_ll_select_attendees"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/tuiroomkit_iv_second_attendee"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/tuiroomkit_head"
+        app:round="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_iv_third_attendee"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/tuiroomkit_iv_first_attendee"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/tuiroomkit_head"
+        app:round="2dp"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_iv_second_attendee"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,9 +9,7 @@ import androidx.annotation.Nullable;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.Request;
-import com.trtc.tuikit.common.livedata.LiveData;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 
 public class SeatState {

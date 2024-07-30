@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.videoseat.Constants;
-import com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel.UserEntity;
 
 import java.text.Collator;
 import java.util.Collections;
@@ -30,6 +29,9 @@ public class UserListSorter {
 
     public void sortList(List<UserEntity> userList) {
         Collections.sort(userList, mUserSortComparator);
+        if (isSpeakerOfSelected(userList)) {
+            return;
+        }
         advanceSingleVideoUserForSpeaker(userList);
     }
 
@@ -38,6 +40,9 @@ public class UserListSorter {
             return false;
         }
         if (isSpeakerOfScreenSharing(userList)) {
+            return false;
+        }
+        if (isSpeakerOfSelected(userList)) {
             return false;
         }
         if (sortForPersonalVideoShowOnIfNeeded(userList)) {
@@ -68,6 +73,13 @@ public class UserListSorter {
         return userList.get(0).isScreenShareAvailable();
     }
 
+    public boolean isSpeakerOfSelected(List<UserEntity> userList) {
+        if (userList.isEmpty()) {
+            return false;
+        }
+        return userList.get(0).isSelected();
+    }
+
     public boolean isSpeakerOfPersonalVideoShow(List<UserEntity> userList) {
         if (userList.size() < Constants.SPEAKER_MODE_MEMBER_MIN_LIMIT) {
             return false;
@@ -85,16 +97,23 @@ public class UserListSorter {
 
         /**
          * Sorting priority:
-         * 1. Screen sharing users;
-         * 2. Room owner;
-         * 3. Myself;
-         * 4. Compare userName (Pinyin for Chinese);
-         * 5. UserName is the same, compare userId;
+         * 1. selected user;
+         * 2. Screen sharing user;
+         * 3. Room owner;
+         * 4. Myself;
+         * 5. Compare userName (Pinyin for Chinese);
+         * 6. UserName is the same, compare userId;
          */
         @Override
         public int compare(UserEntity o1, UserEntity o2) {
             if (o1 == null || o2 == null) {
                 return -1;
+            }
+            if (o1.isSelected()) {
+                return -1;
+            }
+            if (o2.isSelected()) {
+                return 1;
             }
             if (o1.isScreenShareAvailable()) {
                 return -1;

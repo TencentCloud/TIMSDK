@@ -22,6 +22,7 @@ import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit
+import com.tencent.qcloud.tuikit.tuicallkit.extensions.joiningroupcall.JoinInGroupCallView
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.joiningroupcall.JoinInGroupCallViewModel
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.recents.RecentCallsFragment
 import org.json.JSONException
@@ -156,8 +157,11 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
         Log.i(TAG, "JoinInGroupCall, groupId: $groupId")
 
         val callViewModel = getJoinInGroupCallViewModel()
-        callViewModel.setParentView(parentView)
+        val callView = JoinInGroupCallView(appContext)
+        callViewModel.setJoinInGroupCallView(callView)
         callViewModel.getGroupAttributes(groupId)
+        parentView.addView(callView)
+        parentView.visibility = View.VISIBLE
         return true
     }
 

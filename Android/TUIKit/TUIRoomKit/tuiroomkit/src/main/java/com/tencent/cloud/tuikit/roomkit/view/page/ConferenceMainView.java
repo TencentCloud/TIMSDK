@@ -11,7 +11,6 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,7 +28,7 @@ import android.widget.Toast;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.FeatureSwitch;
+import com.tencent.cloud.tuikit.roomkit.model.FeatureSwitch;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;

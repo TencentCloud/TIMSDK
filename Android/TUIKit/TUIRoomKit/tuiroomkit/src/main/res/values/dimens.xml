@@ -45,4 +45,14 @@
     <dimen name="tuivideoseat_video_view_conor">16dp</dimen>
     <dimen name="tuivideoseat_video_view_size_small">100dp</dimen>
     <dimen name="tuivideoseat_video_view_size_middle">180dp</dimen>
+
+    <dimen name="tuiroomkit_create_room_margin_bottom">100dp</dimen>
+    <dimen name="tuiroomkit_enter_room_margin_bottom">20dp</dimen>
+
+    <dimen name="tuiroomkit_conference_item_margin_bottom">20dp</dimen>
+
+    <dimen name="tuiroomkit_wheel_indication_size">2dp</dimen>
+    <dimen name="tuiroomkit_wheel_item_space">12dp</dimen>
+    <dimen name="tuiroomkit_wheel_text_size">24sp</dimen>
+    <dimen name="tuiroomkit_wheel_margins">8dp</dimen>
 </resources>

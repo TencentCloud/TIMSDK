@@ -18,9 +18,14 @@ public class ConferenceConstant {
 
     public static final int DURATION_FOREVER = 0;
 
-    public static final String KEY_ERROR = "KEY_ERROR";
 
     public static final int USER_NOT_FOUND = -1;
 
+    public static final int VOLUME_CAN_HEARD_MIN_LIMIT    = 10;
+    public static final int VOLUME_INDICATOR_SHOW_TIME_MS = 500;
+
+
+    public static final String KEY_ERROR                      = "KEY_ERROR";
     public static final String KEY_ROOM_RAISE_HAND_TIP_SHOWED = "KEY_ROOM_RAISE_HAND_TIP_SHOWED";
+    public static final String KEY_CONFERENCE_ID              = "KEY_CONFERENCE_ID";
 }

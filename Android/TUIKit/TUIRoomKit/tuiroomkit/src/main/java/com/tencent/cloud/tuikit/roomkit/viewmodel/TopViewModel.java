@@ -3,16 +3,16 @@ package com.tencent.cloud.tuikit.roomkit.viewmodel;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_CAMERA_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.ROOM_NAME_CHANGED;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RTCubeUtils;
@@ -53,12 +53,14 @@ public class TopViewModel implements ConferenceEventCenter.RoomEngineEventRespon
         ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
         ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
         ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(ROOM_NAME_CHANGED, this);
     }
 
     public void unSubscribeEngineEvent() {
         ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_AUDIO_ROUTE_CHANGED, this);
         ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
         ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(ROOM_NAME_CHANGED, this);
     }
 
     private void createTimeHandler() {
@@ -134,6 +136,10 @@ public class TopViewModel implements ConferenceEventCenter.RoomEngineEventRespon
         }
         if (event == LOCAL_USER_ENTER_ROOM) {
             mTopView.setTitle(mConferenceState.roomInfo.name);
+        }
+        if (event == ROOM_NAME_CHANGED) {
+            String conferenceName = (String) params.get(ConferenceEventConstant.KEY_ROOM_NAME);
+            mTopView.setTitle(conferenceName);
         }
     }
 }

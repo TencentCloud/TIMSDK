@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.model.manager;
 
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ALREADY_IN_SEAT;
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.PERMISSION_DENIED;
+import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.ExtensionType.CONFERENCE_LIST_MANAGER;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.RequestAction.REQUEST_TO_OPEN_REMOTE_CAMERA;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.RequestAction.REQUEST_TO_OPEN_REMOTE_MICROPHONE;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.ResolutionMode.LANDSCAPE;
@@ -20,6 +21,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomK
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_ROOM_ID;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -27,6 +29,7 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
+import com.tencent.cloud.tuikit.engine.extension.TUIConferenceListManager;
 import com.tencent.cloud.tuikit.engine.extension.TUIRoomDeviceManager;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
@@ -41,6 +44,7 @@ import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.controller.MediaController;
 import com.tencent.cloud.tuikit.roomkit.model.controller.UserController;
 import com.tencent.cloud.tuikit.roomkit.model.controller.ViewController;
 import com.tencent.cloud.tuikit.roomkit.model.data.RoomState;
@@ -66,8 +70,9 @@ public class ConferenceController {
 
     private static ConferenceController sInstance;
 
-    private ViewController mViewController;
-    private UserController mUserController;
+    private ViewController  mViewController;
+    private UserController  mUserController;
+    private MediaController mMediaController;
 
     private boolean mIsLoginSuccess = false;
 
@@ -75,6 +80,9 @@ public class ConferenceController {
     private TUIRoomEngine   mRoomEngine;
     private ConferenceState mConferenceState;
     private TUIRoomObserver mObserver;
+
+    private final TUIConferenceListManager          mConferenceListManager;
+    private final TUIConferenceListManager.Observer mConferenceListObserver;
 
     private TRTCCloud    mTRTCCloud;
     private TRTCObserver mTRTCObserver;
@@ -102,6 +110,10 @@ public class ConferenceController {
 
     public UserController getUserController() {
         return mUserController;
+    }
+
+    public MediaController getMediaController() {
+        return mMediaController;
     }
 
     public SeatState getSeatState() {
@@ -156,9 +168,11 @@ public class ConferenceController {
             return;
         }
 
+        Log.d(TAG, "responseRemoteRequest requestAction=" + requestAction + " agree=" + agree);
         mRoomEngine.responseRemoteRequest(requestId, agree, new TUIRoomDefine.ActionCallback() {
             @Override
             public void onSuccess() {
+                Log.d(TAG, "responseRemoteRequest onSuccess");
                 if (callback != null) {
                     callback.onSuccess();
                 }
@@ -168,9 +182,10 @@ public class ConferenceController {
             }
 
             @Override
-            public void onError(TUICommonDefine.Error error, String s) {
+            public void onError(TUICommonDefine.Error error, String message) {
+                Log.d(TAG, "responseRemoteRequest onError error=" + error + " message=" + message);
                 if (callback != null) {
-                    callback.onError(error, s);
+                    callback.onError(error, message);
                 }
             }
         });
@@ -425,6 +440,10 @@ public class ConferenceController {
         mRoomEngine = TUIRoomEngine.sharedInstance();
         Log.d(TAG, "createInstance mRoomEngine=" + mRoomEngine + " manager=" + this);
 
+        mConferenceListManager = (TUIConferenceListManager) TUIRoomEngine.sharedInstance().getExtension(CONFERENCE_LIST_MANAGER);
+        mConferenceListObserver = new ConferenceListObserver(mConferenceState);
+        mConferenceListManager.addObserver(mConferenceListObserver);
+
         mObserver = new RoomEngineObserver(mConferenceState);
         mRoomEngine.addObserver(mObserver);
         mRoomFloatWindowManager = new RoomWindowManager(mContext);
@@ -435,6 +454,7 @@ public class ConferenceController {
 
         mViewController = new ViewController(mConferenceState, mRoomEngine);
         mUserController = new UserController(mConferenceState, mRoomEngine);
+        mMediaController = new MediaController(mConferenceState, mRoomEngine);
     }
 
     public void changeUserRole(String userId, TUIRoomDefine.Role role, TUIRoomDefine.ActionCallback callback) {
@@ -451,10 +471,10 @@ public class ConferenceController {
     }
 
     public void createRoom(TUIRoomDefine.RoomInfo roomInfo, TUIRoomDefine.ActionCallback callback) {
+        roomInfo.name = transferConferenceName(roomInfo.name);
         loginRoomEngine(new TUIRoomDefine.ActionCallback() {
             @Override
             public void onSuccess() {
-                roomInfo.name = transferConferenceName(roomInfo.name);
                 Log.i(TAG, "createRoom roomInfo=" + roomInfo + " thread.name=" + Thread.currentThread().getName());
                 mRoomEngine.createRoom(roomInfo, new TUIRoomDefine.ActionCallback() {
                     @Override
@@ -511,6 +531,7 @@ public class ConferenceController {
                         Log.i(TAG, "enterRoom onSuccess thread.name=" + Thread.currentThread().getName());
                         initRoomStore(engineRoomInfo);
                         setVideoEncoderParam();
+                        getSeatApplicationList();
                         autoTakeSeatForOwner(new TUIRoomDefine.RequestCallback() {
                             @Override
                             public void onAccepted(String requestId, String userId) {
@@ -575,7 +596,7 @@ public class ConferenceController {
     }
 
     public void getSeatApplicationList() {
-        if (!mConferenceState.roomInfo.isSeatEnabled) {
+        if (!mConferenceState.roomInfo.isSeatEnabled || mConferenceState.userModel.getRole() == TUIRoomDefine.Role.GENERAL_USER) {
             return;
         }
         Log.d(TAG, "getSeatApplicationList");
@@ -899,6 +920,7 @@ public class ConferenceController {
     }
 
     private void destroyInstance() {
+        mConferenceListManager.removeObserver(mConferenceListObserver);
         mRoomEngine.removeObserver(mObserver);
         mTRTCCloud.removeListener(mTRTCObserver);
         mConferenceState.roomInfo = null;
@@ -910,6 +932,7 @@ public class ConferenceController {
         mRoomFloatWindowManager.destroy();
         mViewController.destroy();
         mUserController.destroy();
+        mMediaController.destroy();
         FloatChatStore.sharedInstance().destroyInstance();
         sInstance = null;
         Log.d(TAG, "destroyInstance manager=" + this + " mConferenceState=" + mConferenceState);
@@ -973,6 +996,7 @@ public class ConferenceController {
     }
 
     private void decideMediaStatus(boolean enableAudio, boolean enableVideo, boolean isSoundOnSpeaker) {
+        setCameraResolutionMode(Configuration.ORIENTATION_PORTRAIT == mContext.getResources().getConfiguration().orientation);
         decideAudioRoute(isSoundOnSpeaker);
 
         boolean isPushAudio = isPushAudio(enableAudio);

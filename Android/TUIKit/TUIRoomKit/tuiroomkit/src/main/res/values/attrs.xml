@@ -17,4 +17,29 @@
     <declare-styleable name="NotificationView">
         <attr name="durationMS" format="integer" />
     </declare-styleable>
+    <declare-styleable name="WheelPicker">
+        <attr format="reference" name="wheel_data"/>
+        <attr format="integer" name="wheel_selected_item_position"/>
+        <attr format="dimension" name="wheel_item_text_size"/>
+        <attr format="color" name="wheel_item_text_color"/>
+        <attr format="color" name="wheel_selected_item_text_color"/>
+        <attr format="boolean" name="wheel_same_width"/>
+        <attr format="string" name="wheel_maximum_width_text"/>
+        <attr format="integer" name="wheel_maximum_width_text_position"/>
+        <attr format="integer" name="wheel_visible_item_count"/>
+        <attr format="dimension" name="wheel_item_space"/>
+        <attr format="boolean" name="wheel_cyclic"/>
+        <attr format="boolean" name="wheel_indicator"/>
+        <attr format="color" name="wheel_indicator_color"/>
+        <attr format="dimension" name="wheel_indicator_size"/>
+        <attr format="boolean" name="wheel_curtain"/>
+        <attr format="color" name="wheel_curtain_color"/>
+        <attr format="boolean" name="wheel_atmospheric"/>
+        <attr format="boolean" name="wheel_curved"/>
+        <attr format="enum" name="wheel_item_align">
+            <enum name="center" value="0"/>
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+    </declare-styleable>
 </resources>

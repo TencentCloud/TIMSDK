@@ -14,4 +14,6 @@ public interface IVideoSeatViewModel {
     void stopPlayVideo(String userId, boolean isSharingScreen, boolean isStreamStop);
 
     void setLocalVideoView(UserEntity selfEntity);
+
+    void toggleScreenSizeOnDoubleClick(int position);
 }

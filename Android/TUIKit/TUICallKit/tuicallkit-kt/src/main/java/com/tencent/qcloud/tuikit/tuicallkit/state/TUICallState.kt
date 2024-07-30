@@ -63,7 +63,7 @@ class TUICallState {
         isCameraOpen.set(false)
         isFrontCamera.set(TUICommonDefine.Camera.Front)
         isMicrophoneMute.set(false)
-        audioPlayoutDevice.set(AudioPlaybackDevice.Earpiece)
+        audioPlayoutDevice.set(AudioPlaybackDevice.Speakerphone)
         enableMuteMode = SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLKIT)
             .getBoolean(CallingBellFeature.PROFILE_MUTE_MODE, false)
         isShowFullScreen.set(false)
@@ -141,14 +141,11 @@ class TUICallState {
         }
 
         override fun onCallBegin(
-            room: TUICommonDefine.RoomId?,
-            callMediaType: TUICallDefine.MediaType?,
-            callRole: TUICallDefine.Role?
+            room: TUICommonDefine.RoomId?, callMediaType: TUICallDefine.MediaType?, callRole: TUICallDefine.Role?
         ) {
             TUILog.i(TAG, "onCallBegin -> {room: $room, callMediaType: $callMediaType, callRole: $callRole}")
             if (TUICallDefine.Role.Called == instance.selfUser.get().callRole.get()
                 && TUICallDefine.MediaType.Audio == instance.mediaType.get()
-                && TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()
             ) {
                 EngineManager.instance.selectAudioPlaybackDevice(AudioPlaybackDevice.Earpiece)
             } else {
@@ -168,10 +165,8 @@ class TUICallState {
         }
 
         override fun onCallEnd(
-            room: TUICommonDefine.RoomId?,
-            callMediaType: TUICallDefine.MediaType?,
-            callRole: TUICallDefine.Role?,
-            totalTime: Long
+            room: TUICommonDefine.RoomId?, callMediaType: TUICallDefine.MediaType?,
+            callRole: TUICallDefine.Role?, totalTime: Long
         ) {
             TUILog.i(TAG, "onCallEnd -> {room: $room, callMediaType: $callMediaType, callRole: $callRole")
             roomId.set(room)
@@ -179,8 +174,7 @@ class TUICallState {
         }
 
         override fun onCallMediaTypeChanged(
-            oldCallMediaType: TUICallDefine.MediaType?,
-            newCallMediaType: TUICallDefine.MediaType?
+            oldCallMediaType: TUICallDefine.MediaType?, newCallMediaType: TUICallDefine.MediaType?
         ) {
             TUILog.i(
                 TAG, "onCallMediaTypeChanged -> {oldCallMediaType: $oldCallMediaType"

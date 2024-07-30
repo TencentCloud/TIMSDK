@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tuiroomkit_bg_main_color_black">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:navigationIcon="@drawable/tuiroomkit_ic_back">
+
+        <TextView
+            android:id="@+id/main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:singleLine="true"
+            android:text="@string/tuiroomkit_enter_room"
+            android:textColor="@color/tuiroomkit_color_text_light_grey"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/tuiroomkit_bg_radius_light_black"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="18dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="18dp">
+
+            <TextView
+                android:id="@+id/room_id_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/tuiroomkit_room_id"
+                android:textColor="@color/tuiroomkit_color_text_light_grey"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/user_name_title"
+                app:layout_constraintStart_toStartOf="@+id/user_name_title"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/et_room_id"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/tuiroomkit_please_input_room_number"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/tuiroomkit_color_text_light_grey"
+                android:textColorHint="@color/tuiroomkit_color_hint"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/room_id_title"
+                app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
+                app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                app:layout_constraintTop_toTopOf="@+id/room_id_title"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <View
+                android:id="@+id/divide"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/tuiroomkit_color_divide_line"
+                app:layout_constraintTop_toBottomOf="@+id/room_id_title"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <TextView
+                android:id="@+id/user_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="15dp"
+                android:text="@string/tuiroomkit_your_name"
+                android:textColor="@color/tuiroomkit_color_text_light_grey"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divide" />
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/tuiroomkit_color_text_light_grey"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/user_name_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/user_name_title"
+                app:layout_constraintTop_toTopOf="@+id/user_name_title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_setting_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/tuiroomkit_bg_radius_light_black"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_enter"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/tuiroomkit_btn_join"
+                android:enabled="true"
+                android:gravity="center"
+                android:text="@string/tuiroomkit_enter_room"
+                android:textColor="@color/tuiroomkit_color_text_light_grey"
+                android:textSize="14sp"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
+

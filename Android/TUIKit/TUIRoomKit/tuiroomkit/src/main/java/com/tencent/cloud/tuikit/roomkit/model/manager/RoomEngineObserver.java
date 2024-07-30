@@ -2,7 +2,6 @@ package com.tencent.cloud.tuikit.roomkit.model.manager;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM_LOW;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
-import static com.tencent.cloud.tuikit.roomkit.videoseat.Constants.VOLUME_CAN_HEARD_MIN_LIMIT;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,10 +25,10 @@ import java.util.Map;
 public class RoomEngineObserver extends TUIRoomObserver {
     private static final String TAG = "RoomEngineObserver";
 
-    private ConferenceState mConferenceState;
-    private SeatState       mSeatState;
-    private ViewState       mViewState;
-    private UserState       mUserState;
+    private final ConferenceState mConferenceState;
+    private final SeatState       mSeatState;
+    private final ViewState       mViewState;
+    private final UserState       mUserState;
 
     public RoomEngineObserver(ConferenceState conferenceState) {
         mConferenceState = conferenceState;
@@ -172,7 +171,7 @@ public class RoomEngineObserver extends TUIRoomObserver {
             mUserState.updateUserScreenState(userId, hasVideo);
         } else {
             mConferenceState.updateUserCameraState(userId, streamType, hasVideo, reason);
-            mUserState.updateUserCameraState(userId, hasVideo);
+            mUserState.updateUserCameraState(userId, hasVideo, streamType);
         }
     }
 
@@ -190,13 +189,14 @@ public class RoomEngineObserver extends TUIRoomObserver {
             if (TextUtils.isEmpty(userId)) {
                 continue;
             }
-            if (entry.getValue() < VOLUME_CAN_HEARD_MIN_LIMIT) {
-                continue;
-            }
             if (TextUtils.equals(userId, mConferenceState.userModel.userId) && !mConferenceState.audioModel.isHasAudioStream()) {
                 continue;
             }
-            mConferenceState.updateUserAudioVolume(userId, entry.getValue());
+            int volume = entry.getValue();
+            mConferenceState.updateUserAudioVolume(userId, volume);
+            UserState.UserVolumeInfo userVolumeInfo = mUserState.userVolumeInfo.get();
+            userVolumeInfo.update(userId, volume);
+            mUserState.userVolumeInfo.set(userVolumeInfo);
         }
         Map<String, Object> map = new HashMap<>();
         map.put(ConferenceEventConstant.KEY_VOLUME_MAP, volumeMap);

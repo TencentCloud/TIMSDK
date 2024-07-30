@@ -12,16 +12,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.TUIFloatChatRecyclerView
-        android:id="@+id/rv_msg"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.MessageBarrageView
+        android:id="@+id/tuiroomkit_view_message_barrage"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbars="none"
-        android:requiresFadingEdge="vertical"
-        android:fadingEdgeLength="40dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_notice" />
+        android:layout_height="wrap_content"
+        android:maxHeight="200dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

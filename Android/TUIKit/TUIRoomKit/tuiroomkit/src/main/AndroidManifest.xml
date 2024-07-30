@@ -10,8 +10,65 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application>
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.ConferenceMainActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.PrepareActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.CreateConferenceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.EnterConferenceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.ConferenceDetails.ScheduledConferenceDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.ModifyConference.ModifyConferenceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.ScheduleConferenceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.TimeZone.TimeZoneActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
             android:name="com.tencent.cloud.tuikit.roomkit.view.page.RoomMainActivity"
@@ -45,7 +102,7 @@
             android:name="com.tencent.cloud.tuikit.roomkit.common.KeepAliveService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="mediaProjection" />
+            android:foregroundServiceType="mediaPlayback" />
         <service
             android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomFloatViewService"
             android:enabled="true"

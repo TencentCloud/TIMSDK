@@ -1,0 +1,149 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="228dp"
+    android:background="@drawable/tuiroomkit_bg_bottom_dialog_white_portrait">
+
+    <ImageView
+        android:id="@+id/img_divide_tag"
+        android:layout_width="24dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/tuiroomkit_icon_line_dropdown"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_schedule_success_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#4F586B"
+        android:textSize="18sp"
+        android:text="@string/tuiroomkit_schedule_success_and_invite_text"
+        app:layout_constraintTop_toBottomOf="@+id/img_divide_tag"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_room_id_title"
+        android:text="@string/tuiroomkit_scheduled_room_id"
+        android:textColor="#8F9AB2"
+        android:textSize="14sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_schedule_success_text"/>
+
+    <TextView
+        android:id="@+id/tv_room_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:textSize="14sp"
+        android:textColor="#4F586B"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_room_id_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_room_id_title"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_room_id_copy"
+        android:layout_marginEnd="20dp"
+        android:layout_width="60dp"
+        android:layout_height="26dp"
+        android:background="@drawable/tuiroomkit_btn_schedule_copy_room_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_room_id_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_room_id_title">
+        
+        <ImageView
+            android:id="@+id/tv_room_id_copy_text"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/tuiroomkit_icon_grey_copy"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:text="@string/tuiroomkit_meeting_info_copy"
+            android:textSize="12sp"
+            android:textColor="#4F586B"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tv_room_id_copy_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_room_link_title"
+        android:text="@string/tuiroomkit_room_link"
+        android:textColor="#8F9AB2"
+        android:textSize="14sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_room_id_title"/>
+
+    <TextView
+        android:id="@+id/tv_room_link"
+        android:layout_width="188dp"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#4F586B"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/tv_room_id"
+        app:layout_constraintTop_toTopOf="@+id/tv_room_link_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_room_link_title"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_room_link_copy"
+        android:layout_marginEnd="20dp"
+        android:layout_width="60dp"
+        android:layout_height="26dp"
+        android:visibility="gone"
+        android:background="@drawable/tuiroomkit_btn_schedule_copy_room_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_room_link"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_room_link">
+
+        <ImageView
+            android:id="@+id/tv_room_link_copy_text"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/tuiroomkit_icon_grey_copy"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:text="@string/tuiroomkit_meeting_info_copy"
+            android:textSize="12sp"
+            android:textColor="#4F586B"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tv_room_link_copy_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

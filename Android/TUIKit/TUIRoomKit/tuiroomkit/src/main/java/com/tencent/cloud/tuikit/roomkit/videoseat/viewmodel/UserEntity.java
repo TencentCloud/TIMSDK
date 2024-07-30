@@ -2,8 +2,8 @@ package com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel;
 
 import android.text.TextUtils;
 
-import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.ConferenceVideoView;
 
 public class UserEntity {
     private int     audioVolume;
@@ -17,11 +17,12 @@ public class UserEntity {
     private boolean isCameraAvailable;
     private boolean isScreenShareAvailable;
     private boolean isVideoPlaying;
+    private boolean isSelected;
 
     private TUIRoomDefine.VideoStreamType videoStreamType = TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
 
-    private TUIVideoView       mRoomVideoView;
-    private TUIRoomDefine.Role role;
+    private ConferenceVideoView mRoomVideoView;
+    private TUIRoomDefine.Role  role;
 
     public boolean isSelf() {
         return isSelf;
@@ -47,11 +48,11 @@ public class UserEntity {
         this.audioVolume = audioVolume;
     }
 
-    public TUIVideoView getRoomVideoView() {
+    public ConferenceVideoView getRoomVideoView() {
         return mRoomVideoView;
     }
 
-    public void setRoomVideoView(TUIVideoView roomVideoView) {
+    public void setRoomVideoView(ConferenceVideoView roomVideoView) {
         mRoomVideoView = roomVideoView;
     }
 
@@ -125,6 +126,14 @@ public class UserEntity {
 
     public void setVideoPlaying(boolean videoPlaying) {
         isVideoPlaying = videoPlaying;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public TUIRoomDefine.VideoStreamType getVideoStreamType() {

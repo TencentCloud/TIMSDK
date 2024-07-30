@@ -1,14 +1,19 @@
 package com.tencent.cloud.tuikit.roomkit.common.livedata;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class LiveListData<T> {
-    private List<T>                   mList;
-    private List<LiveListObserver<T>> mObservers = new CopyOnWriteArrayList<>();
+    private static final String TAG = "LiveListData";
+
+    private       List<T>                   mList;
+    private final List<LiveListObserver<T>> mObservers = new CopyOnWriteArrayList<>();
 
     public LiveListData() {
         mList = new LinkedList<>();
@@ -36,6 +41,17 @@ public class LiveListData<T> {
 
     public void add(T item) {
         insert(mList.size(), item);
+    }
+
+    public void insert(T item, Comparator<T> comparator) {
+        int size = mList.size();
+        int position = 0;
+        for (; position < size; position++) {
+            if (comparator.compare(item, mList.get(position)) < 0) {
+                break;
+            }
+        }
+        insert(position, item);
     }
 
     public void insert(int position, T item) {
@@ -71,7 +87,18 @@ public class LiveListData<T> {
         }
     }
 
-    public void replace(List<T> list) {
+    public void redirect(List<T> list) {
+        mList = list;
+        for (int i = 0; i < mObservers.size(); i++) {
+            mObservers.get(i).onDataChanged(list);
+        }
+    }
+
+    public void replaceAll(List<T> list) {
+        if (mList == list) {
+            Log.e(TAG, "Replace the same object, you can use redirect instead.");
+            return;
+        }
         mList.clear();
         mList.addAll(list);
         for (int i = 0; i < mObservers.size(); i++) {
@@ -87,6 +114,27 @@ public class LiveListData<T> {
         mList.set(index, item);
         for (int i = 0; i < mObservers.size(); i++) {
             mObservers.get(i).onItemChanged(index, item);
+        }
+    }
+
+    public void move(T item, Comparator<T> comparator) {
+        int fromPosition = mList.indexOf(item);
+        if (fromPosition == -1) {
+            return;
+        }
+        mList.remove(item);
+
+        int toPosition = 0;
+        int size = mList.size();
+        for (; toPosition < size; toPosition++) {
+            if (comparator.compare(item, mList.get(toPosition)) < 0) {
+                break;
+            }
+        }
+        mList.add(toPosition, item);
+
+        for (int i = 0; i < mObservers.size(); i++) {
+            mObservers.get(i).onItemMoved(fromPosition, toPosition, item);
         }
     }
 
@@ -124,5 +172,9 @@ public class LiveListData<T> {
 
     public int size() {
         return mList.size();
+    }
+
+    public boolean isEmpty() {
+        return mList.isEmpty();
     }
 }

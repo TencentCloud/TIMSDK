@@ -1,29 +1,30 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 
+import android.text.TextUtils;
+
 import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.view.StateHolder;
 import com.trtc.tuikit.common.livedata.LiveData;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;
-import java.util.Set;
 
 public class CameraIconStateHolder extends StateHolder {
     private String                      mUserId            = "";
     private LiveData<CameraIconUiState> mCameraIconData    = new LiveData<>(new CameraIconUiState());
     private CameraIconUiState           mCameraIconUiState = new CameraIconUiState();
 
-    private boolean      mIsSeatEnable         = mRoomState.isSeatEnabled.get();
-    private List<String> mSeatedUsers          = mSeatState.seatedUsers.getList();
-    private Set<String>  mHasCameraStreamUsers = mUserState.hasCameraStreamUsers.get();
-    private Observer<Boolean> mSeatEnableObserver = new Observer<Boolean>() {
+    private boolean                  mIsSeatEnable         = mRoomState.isSeatEnabled.get();
+    private List<String>             mSeatedUsers          = mSeatState.seatedUsers.getList();
+    private List<String>             mHasCameraStreamUsers = mUserState.hasCameraStreamUsers.getList();
+    private Observer<Boolean>        mSeatEnableObserver   = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isSeatEnable) {
             mIsSeatEnable = isSeatEnable;
             updateViewData();
         }
     };
-    private LiveListObserver<String> mSeatObserver = new LiveListObserver<String>() {
+    private LiveListObserver<String> mSeatObserver         = new LiveListObserver<String>() {
         @Override
         public void onDataChanged(List<String> list) {
             updateViewData();
@@ -39,9 +40,20 @@ public class CameraIconStateHolder extends StateHolder {
             updateViewData();
         }
     };
-    private Observer<Set<String>>       mCameraStreamObserver = new Observer<Set<String>>() {
+    private LiveListObserver<String>    mCameraStreamObserver = new LiveListObserver<String>() {
         @Override
-        public void onChanged(Set<String> hasCameraStreamUsers) {
+        public void onItemInserted(int position, String item) {
+            if (!TextUtils.equals(item, mUserId)) {
+                return;
+            }
+            updateViewData();
+        }
+
+        @Override
+        public void onItemRemoved(int position, String item) {
+            if (!TextUtils.equals(item, mUserId)) {
+                return;
+            }
             updateViewData();
         }
     };

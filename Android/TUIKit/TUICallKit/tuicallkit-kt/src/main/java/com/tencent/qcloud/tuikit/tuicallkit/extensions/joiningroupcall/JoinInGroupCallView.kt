@@ -2,8 +2,6 @@ package com.tencent.qcloud.tuikit.tuicallkit.extensions.joiningroupcall
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -23,29 +21,30 @@ import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
 import com.tencent.qcloud.tuikit.tuicallkit.utils.UserInfoUtils
 
 class JoinInGroupCallView(context: Context) : FrameLayout(context) {
-    private var callView: View? = null
     private var layoutExpand: ConstraintLayout? = null
     private var layoutUserListView: LinearLayout? = null
     private var imageIconExpand: ImageView? = null
     private var textUserHint: TextView? = null
     private var btnJoinCall: Button? = null
 
-    private var appContext: Context
+    private var appContext = context.applicationContext
     private var isViewExpand: Boolean = false
 
     init {
-        appContext = context.applicationContext
         initView()
     }
 
     private fun initView() {
-        callView = LayoutInflater.from(appContext).inflate(R.layout.tuicallkit_join_group_call_expand_view, this)
+        val callView = LayoutInflater.from(appContext).inflate(R.layout.tuicallkit_join_group_call_expand_view, this)
 
         textUserHint = callView?.findViewById(R.id.tv_user_hint)
         imageIconExpand = callView?.findViewById(R.id.img_ic_expand)
         btnJoinCall = callView?.findViewById(R.id.btn_join_call)
         layoutUserListView = callView?.findViewById(R.id.ll_layout_avatar)
         layoutExpand = callView?.findViewById(R.id.cl_expand_view)
+
+        imageIconExpand?.setBackgroundResource(R.drawable.tuicallkit_ic_join_group_expand)
+        layoutExpand?.visibility = LinearLayout.GONE
     }
 
     fun updateView(groupId: String?, roomId: TUICommonDefine.RoomId, mediaType: MediaType, userList: List<String>?) {
@@ -54,9 +53,6 @@ class JoinInGroupCallView(context: Context) : FrameLayout(context) {
         btnJoinCall?.text = context.resources.getString(R.string.tuicallkit_join_group_call)
 
         if (userList.isNullOrEmpty()) {
-            if (callView != null && callView?.parent != null) {
-                (callView?.parent as ViewGroup).removeView(callView)
-            }
             return
         }
         refreshUserAvatarView(userList)
@@ -73,8 +69,6 @@ class JoinInGroupCallView(context: Context) : FrameLayout(context) {
             TUICallKit.createInstance(appContext).joinInGroupCall(roomId, groupId, mediaType)
         }
 
-        imageIconExpand?.setBackgroundResource(R.drawable.tuicallkit_ic_join_group_expand)
-        layoutExpand?.visibility = LinearLayout.GONE
         imageIconExpand?.setOnClickListener {
             displayExpandView()
         }

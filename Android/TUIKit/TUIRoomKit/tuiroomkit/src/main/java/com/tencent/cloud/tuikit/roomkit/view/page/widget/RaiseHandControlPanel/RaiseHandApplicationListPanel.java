@@ -3,8 +3,6 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 

@@ -104,12 +104,12 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         }
 
         private void setRoomAdminFlag(UserState.UserInfo user) {
-            if (user.role == TUIRoomDefine.Role.GENERAL_USER) {
+            if (user.role.get() == TUIRoomDefine.Role.GENERAL_USER) {
                 mLayoutOwner.setVisibility(View.INVISIBLE);
                 mLayoutManager.setVisibility(View.INVISIBLE);
                 return;
             }
-            if (user.role == TUIRoomDefine.Role.ROOM_OWNER) {
+            if (user.role.get() == TUIRoomDefine.Role.ROOM_OWNER) {
                 mLayoutOwner.setVisibility(View.VISIBLE);
                 mLayoutManager.setVisibility(View.INVISIBLE);
                 return;
@@ -147,16 +147,16 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             if (TextUtils.equals(localUser.userId, user.userId)) {
                 return false;
             }
-            if (localUser.role == TUIRoomDefine.Role.ROOM_OWNER) {
+            if (localUser.role.get() == TUIRoomDefine.Role.ROOM_OWNER) {
                 return true;
             }
-            if (localUser.role == TUIRoomDefine.Role.GENERAL_USER) {
+            if (localUser.role.get() == TUIRoomDefine.Role.GENERAL_USER) {
                 return TextUtils.equals(localUser.userId, user.userId);
             }
             if (TextUtils.equals(localUser.userId, user.userId)) {
                 return true;
             }
-            return user.role == TUIRoomDefine.Role.GENERAL_USER;
+            return user.role.get() == TUIRoomDefine.Role.GENERAL_USER;
         }
     }
 }

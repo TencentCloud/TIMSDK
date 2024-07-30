@@ -52,7 +52,7 @@ class CallWaitingHintView(context: Context) : androidx.appcompat.widget.AppCompa
                 context.getString(R.string.tuicallkit_wait_accept_group)
             }
         } else {
-            updateSingleCallWaitingText()
+            updateStatusText()
         }
     }
 
@@ -68,12 +68,12 @@ class CallWaitingHintView(context: Context) : androidx.appcompat.widget.AppCompa
         }
     }
 
-    private fun updateStatusText() {
+    private fun updateStatusText(): String {
         if (TUICallDefine.Scene.GROUP_CALL == viewModel.scene.get()
             && TUICallDefine.Status.Accept == viewModel.callStatus.get()
         ) {
             visibility = View.GONE
-            return
+            return ""
         }
         if (viewModel.callStatus.get() == TUICallDefine.Status.Waiting) {
             text = updateSingleCallWaitingText()
@@ -89,6 +89,8 @@ class CallWaitingHintView(context: Context) : androidx.appcompat.widget.AppCompa
         } else {
             text = ""
         }
+
+        return text.toString()
     }
 
     private fun addObserver() {

@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuicallkit.extensions.joiningroupcall
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import com.google.gson.Gson
 import com.tencent.imsdk.v2.V2TIMGroupListener
 import com.tencent.imsdk.v2.V2TIMManager
@@ -10,14 +9,20 @@ import com.tencent.imsdk.v2.V2TIMValueCallback
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
+import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 
 class JoinInGroupCallViewModel(context: Context) {
     private val appContext: Context
-    private var parentViewGroup: ViewGroup? = null
     private var callView: JoinInGroupCallView? = null
     private var currentGroupId: String? = null
+
+    private var callStatusObserver = Observer<TUICallDefine.Status> {
+        if (it == TUICallDefine.Status.None) {
+            currentGroupId?.let { it1 -> getGroupAttributes(it1) }
+        }
+    }
 
     private val groupListener: V2TIMGroupListener = object : V2TIMGroupListener() {
         override fun onGroupAttributeChanged(groupID: String?, groupAttributeMap: MutableMap<String?, String>?) {
@@ -33,10 +38,12 @@ class JoinInGroupCallViewModel(context: Context) {
     init {
         appContext = context.applicationContext
         V2TIMManager.getInstance().addGroupListener(groupListener)
+        TUICallState.instance.selfUser.get().callStatus.observe(callStatusObserver)
     }
 
-    fun setParentView(parentView: ViewGroup) {
-        parentViewGroup = parentView
+    fun setJoinInGroupCallView(joinInGroupCallView: JoinInGroupCallView) {
+        callView = joinInGroupCallView
+        callView?.visibility = View.GONE
     }
 
     fun getGroupAttributes(groupId: String) {
@@ -76,6 +83,7 @@ class JoinInGroupCallViewModel(context: Context) {
 
         val businessType = extraMap[KEY_BUSINESS_TYPE] as? String
         if (businessType.isNullOrEmpty() || businessType != VALUE_BUSINESS_TYPE) {
+            TUILog.w(TAG, "no user in the call")
             removeCallView()
             return
         }
@@ -93,12 +101,9 @@ class JoinInGroupCallViewModel(context: Context) {
             TUICallDefine.MediaType.Audio
         }
 
-        callView = JoinInGroupCallView(appContext)
-
         val roomId = parseRoomId(extraMap)
-        TUILog.i(TAG, "groupId: $groupId, roomId:$roomId, mediaType: $mediaType, userList: $userList")
         callView?.updateView(groupId, roomId, mediaType, userList)
-        showCallView()
+        callView?.visibility = View.VISIBLE
     }
 
     private fun parseRoomId(extraMap: Map<String, Any>): TUICommonDefine.RoomId {
@@ -137,20 +142,8 @@ class JoinInGroupCallViewModel(context: Context) {
         return list
     }
 
-    private fun showCallView() {
-        if (callView?.parent != null) {
-            (callView?.parent as ViewGroup).removeView(callView)
-        }
-        if (callView != null) {
-            parentViewGroup?.addView(callView)
-            parentViewGroup?.visibility = View.VISIBLE
-        }
-    }
-
     private fun removeCallView() {
-        if (callView?.parent != null) {
-            (callView?.parent as ViewGroup).removeView(callView)
-        }
+        callView?.visibility = View.GONE
     }
 
     companion object {

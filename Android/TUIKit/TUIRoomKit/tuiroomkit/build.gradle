@@ -5,11 +5,11 @@ def projects = this.rootProject.getAllprojects().stream().map { project -> proje
 
 android {
     namespace "com.tencent.cloud.tuikit.roomkit"
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdk 30
 
     defaultConfig {
         minSdkVersion 19
+        multiDexEnabled = true
         targetSdkVersion 30
     }
 
@@ -50,13 +50,13 @@ dependencies {
 
     implementation project(':timcommon')
 
-    api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:2.4.0.61"
-    implementation rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_TRTC:11.6.0.13641"
+    api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:2.5.0.69"
+    implementation rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_TRTC:11.9.0.14445"
     if (projects.contains("tuicore")) {
         api project(':tuicore')
     } else {
-        api "com.tencent.liteav.tuikit:tuicore:8.0.5895"
-        implementation rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:8.0.5895"
+        api "com.tencent.liteav.tuikit:tuicore:8.1.6103"
+        implementation rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:8.1.6103"
     }
     if (projects.contains("common")) {
         implementation project(':common')

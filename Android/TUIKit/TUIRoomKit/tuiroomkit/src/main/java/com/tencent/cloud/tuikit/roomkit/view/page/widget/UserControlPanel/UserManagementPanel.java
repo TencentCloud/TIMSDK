@@ -6,7 +6,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +40,10 @@ public class UserManagementPanel extends BaseBottomDialog {
     private ImageView               mImageCamera;
     private ImageView               mImageMessageDisable;
     private CircleImageView         mImageHead;
-    private LinearLayout            mLayoutMic;
-    private LinearLayout            mLayoutCamera;
-    private LinearLayout            mLayoutKickoffStage;
-    private LinearLayout            mLayoutInviteToStage;
+    private RelativeLayout          mLayoutMic;
+    private RelativeLayout          mLayoutCamera;
+    private RelativeLayout          mLayoutKickoffStage;
+    private RelativeLayout          mLayoutInviteToStage;
     private UserManagementViewModel mViewModel;
 
     private RequestManager mGlideRequestManager;
@@ -53,6 +53,7 @@ public class UserManagementPanel extends BaseBottomDialog {
         mContext = context;
         mUser = user;
         mViewModel = new UserManagementViewModel(mContext, user, this);
+        mGlideRequestManager = Glide.with(mContext);
     }
 
     @Override
@@ -99,17 +100,12 @@ public class UserManagementPanel extends BaseBottomDialog {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mGlideRequestManager = Glide.with(mContext);
-        mGlideRequestManager.load(mUser.getAvatarUrl()).into(mImageHead);
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mGlideRequestManager != null) {
-            mGlideRequestManager.clear(mImageHead);
-            mGlideRequestManager = null;
-        }
+        mGlideRequestManager.clear(mImageHead);
     }
 
     public void showKickDialog(final String userId, String userName) {
@@ -174,6 +170,7 @@ public class UserManagementPanel extends BaseBottomDialog {
             userName = userName + getContext().getString(R.string.tuiroomkit_me);
         }
         textUserName.setText(userName);
+        mGlideRequestManager.load(mUser.getAvatarUrl()).into(mImageHead);
     }
 
     private void initMediaView() {
@@ -184,9 +181,10 @@ public class UserManagementPanel extends BaseBottomDialog {
         mLayoutMic = findViewById(R.id.ll_mute_mic);
         mLayoutCamera = findViewById(R.id.ll_close_camera);
         if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_MEDIA_CONTROL)) {
+            mLayoutMic.setVisibility(View.GONE);
+            mLayoutCamera.setVisibility(View.GONE);
             return;
         }
-        mLayoutMic.setVisibility(View.VISIBLE);
         mLayoutMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,7 +192,6 @@ public class UserManagementPanel extends BaseBottomDialog {
                 dismiss();
             }
         });
-        mLayoutCamera.setVisibility(View.VISIBLE);
         mLayoutCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,12 +206,11 @@ public class UserManagementPanel extends BaseBottomDialog {
     private void initMessageDisableView() {
         mImageMessageDisable = findViewById(R.id.tuiroomkit_image_message_disable);
         mTextMessageDisable = findViewById(R.id.tuiroomkit_tv_message_disable);
+        View layoutMessageDisable = findViewById(R.id.tuiroomkit_ll_message_disable);
         if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_MESSAGE_ENABLE)) {
+            layoutMessageDisable.setVisibility(View.GONE);
             return;
         }
-
-        View layoutMessageDisable = findViewById(R.id.tuiroomkit_ll_message_disable);
-        layoutMessageDisable.setVisibility(View.VISIBLE);
         layoutMessageDisable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,11 +222,11 @@ public class UserManagementPanel extends BaseBottomDialog {
     }
 
     private void initTransferOwnerView() {
+        View layoutTransferOwner = findViewById(R.id.tuiroomkit_ll_transfer_owner);
         if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_OWNER_TRANSFER)) {
+            layoutTransferOwner.setVisibility(View.GONE);
             return;
         }
-        View layoutTransferOwner = findViewById(R.id.tuiroomkit_ll_transfer_owner);
-        layoutTransferOwner.setVisibility(View.VISIBLE);
         layoutTransferOwner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,14 +237,12 @@ public class UserManagementPanel extends BaseBottomDialog {
     }
 
     private void initManagerAddView() {
-        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_MANAGER_CONTROL)) {
-            return;
-        }
-        if (mUser.getRole() == TUIRoomDefine.Role.MANAGER) {
-            return;
-        }
         View layoutManagerControl = findViewById(R.id.tuiroomkit_ll_manager_add);
-        layoutManagerControl.setVisibility(View.VISIBLE);
+        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_MANAGER_CONTROL)
+                || mUser.getRole() == TUIRoomDefine.Role.MANAGER) {
+            layoutManagerControl.setVisibility(View.GONE);
+            return;
+        }
         layoutManagerControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,14 +267,12 @@ public class UserManagementPanel extends BaseBottomDialog {
     }
 
     private void initManagerRemoveView() {
-        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_MANAGER_CONTROL)) {
-            return;
-        }
-        if (mUser.getRole() != TUIRoomDefine.Role.MANAGER) {
-            return;
-        }
         View layoutManagerControl = findViewById(R.id.tuiroomkit_ll_manager_remove);
-        layoutManagerControl.setVisibility(View.VISIBLE);
+        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_MANAGER_CONTROL)
+                || mUser.getRole() != TUIRoomDefine.Role.MANAGER) {
+            layoutManagerControl.setVisibility(View.GONE);
+            return;
+        }
         layoutManagerControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -305,11 +297,11 @@ public class UserManagementPanel extends BaseBottomDialog {
     }
 
     private void initKickOutView() {
+        View layoutKickOut = findViewById(R.id.tuiroomkit_ll_kick_out);
         if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_KICK_OUT_ROOM)) {
+            layoutKickOut.setVisibility(View.GONE);
             return;
         }
-        View layoutKickOut = findViewById(R.id.tuiroomkit_ll_kick_out);
-        layoutKickOut.setVisibility(View.VISIBLE);
         layoutKickOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -321,13 +313,11 @@ public class UserManagementPanel extends BaseBottomDialog {
 
     private void initKickOffSeatView() {
         mLayoutKickoffStage = findViewById(R.id.ll_kick_off_stage);
-        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_SEAT_CONTROL)) {
+        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_SEAT_CONTROL)
+                || !mViewModel.isEnableSeatControl() || !mUser.isOnSeat()) {
+            mLayoutKickoffStage.setVisibility(View.GONE);
             return;
         }
-        if (!mViewModel.isEnableSeatControl() || !mUser.isOnSeat()) {
-            return;
-        }
-        mLayoutKickoffStage.setVisibility(View.VISIBLE);
         mLayoutKickoffStage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,13 +329,11 @@ public class UserManagementPanel extends BaseBottomDialog {
 
     private void initInviteTakeSeatView() {
         mLayoutInviteToStage = findViewById(R.id.ll_invite_to_stage);
-        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_SEAT_CONTROL)) {
+        if (!mViewModel.checkPermission(UserManagementViewModel.ACTION_SEAT_CONTROL)
+                || !mViewModel.isEnableSeatControl() || mUser.isOnSeat()) {
+            mLayoutInviteToStage.setVisibility(View.GONE);
             return;
         }
-        if (!mViewModel.isEnableSeatControl() || mUser.isOnSeat()) {
-            return;
-        }
-        mLayoutInviteToStage.setVisibility(View.VISIBLE);
         mLayoutInviteToStage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

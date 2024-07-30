@@ -11,7 +11,6 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomK
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,13 +18,13 @@ import android.util.Log;
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.TakeSeatRequestEntity;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
-import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
 
 import java.util.List;

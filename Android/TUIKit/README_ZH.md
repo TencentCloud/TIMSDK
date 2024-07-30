@@ -14,7 +14,7 @@
 
 [最新 TUISearch 下载](https://im.sdk.qcloud.com/download/tuikit/8.1.6103/android/TUISearch.zip)
 
-[最新 TUICallKit 下载](https://im.sdk.qcloud.com/download/tuikit/8.0.5895/android/TUICallKit.zip)
+[最新 TUICallKit 下载](https://im.sdk.qcloud.com/download/tuikit/8.1.6103/android/TUICallKit.zip)
 
 [最新 TUIOfflinePush 下载](https://im.sdk.qcloud.com/download/tuikit/7.7.5282/android/TUIOfflinePush.zip)
 
@@ -30,7 +30,7 @@
 
 [最新 TIMCommon 下载](https://im.sdk.qcloud.com/download/tuikit/8.1.6103/android/TIMCommon.zip)
 
-[最新 TUIRoomKit 下载](https://im.sdk.qcloud.com/download/tuikit/8.0.5895/android/TUIRoomKit.zip)
+[最新 TUIRoomKit 下载](https://im.sdk.qcloud.com/download/tuikit/8.1.6103/android/TUIRoomKit.zip)
 
 [最新 TUIChatBotPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.1.6103/android/TUIChatBotPlugin.zip)
 

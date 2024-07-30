@@ -89,16 +89,16 @@ public class InviteSeatButtonStateHolder extends StateHolder {
         if (mSeatedUsers.contains(mUserId)) {
             return false;
         }
-        if (mLocalUser.role == TUIRoomDefine.Role.GENERAL_USER) {
+        if (mLocalUser.role.get() == TUIRoomDefine.Role.GENERAL_USER) {
             return false;
         }
-        if (mLocalUser.role == TUIRoomDefine.Role.ROOM_OWNER) {
+        if (mLocalUser.role.get() == TUIRoomDefine.Role.ROOM_OWNER) {
             return true;
         }
         UserState.UserInfo userInfo = mUserState.allUsers.find(new UserState.UserInfo(mUserId));
         if (userInfo == null) {
             return false;
         }
-        return userInfo.role == TUIRoomDefine.Role.GENERAL_USER;
+        return userInfo.role.get() == TUIRoomDefine.Role.GENERAL_USER;
     }
 }

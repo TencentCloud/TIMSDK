@@ -9,20 +9,18 @@ import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.trtc.tuikit.common.livedata.LiveData;
 
-import java.util.LinkedHashSet;
-
 public class UserState {
     public LiveData<UserInfo> selfInfo = new LiveData<>(new UserInfo(TUILogin.getUserId()));
 
     public LiveListData<UserInfo> allUsers = new LiveListData<>();
 
-    public LiveData<LinkedHashSet<String>> hasAudioStreamUsers  = new LiveData<>(new LinkedHashSet<>());
-    public LiveData<LinkedHashSet<String>> hasCameraStreamUsers = new LiveData<>(new LinkedHashSet<>());
-    //   public LiveData<LinkedHashSet<String>> playBigCameraStreamUsers = new LiveData<>(new LinkedHashSet<>());
-    public LiveData<LinkedHashSet<String>> disableMessageUsers  = new LiveData<>(new LinkedHashSet<>());
-    public LiveData<String>                hasScreenStreamUser  = new LiveData<>("");
+    public LiveListData<String> hasAudioStreamUsers      = new LiveListData<>();
+    public LiveListData<String> hasCameraStreamUsers     = new LiveListData<>();
+    public LiveListData<String> playBigCameraStreamUsers = new LiveListData<>();
+    public LiveListData<String> disableMessageUsers      = new LiveListData<>();
 
-    //   public LiveData<UserVolumeInfo> userVolumeInfo = new LiveData<>(new UserVolumeInfo());
+    public LiveData<String>         screenStreamUser = new LiveData<>("");
+    public LiveData<UserVolumeInfo> userVolumeInfo   = new LiveData<>(new UserVolumeInfo("", 0));
 
     public void remoteUserEnterRoom(TUIRoomDefine.UserInfo userInfo) {
         UserInfo user = new UserInfo(userInfo);
@@ -64,22 +62,29 @@ public class UserState {
         }
     }
 
-    public void updateUserCameraState(String userId, boolean hasCameraStream) {
+    public void updateUserCameraState(String userId, boolean hasCameraStream,
+                                      TUIRoomDefine.VideoStreamType streamType) {
         if (hasCameraStream) {
             hasCameraStreamUsers.add(userId);
+            if (streamType == TUIRoomDefine.VideoStreamType.CAMERA_STREAM) {
+                playBigCameraStreamUsers.add(userId);
+            }
         } else {
             hasCameraStreamUsers.remove(userId);
+            if (streamType == TUIRoomDefine.VideoStreamType.CAMERA_STREAM) {
+                playBigCameraStreamUsers.remove(userId);
+            }
         }
     }
 
     public void updateUserScreenState(String userId, boolean hasScreenStream) {
-        String sharingUserId = hasScreenStreamUser.get();
+        String sharingUserId = screenStreamUser.get();
         if (hasScreenStream && TextUtils.isEmpty(sharingUserId)) {
-            hasScreenStreamUser.set(userId);
+            screenStreamUser.set(userId);
             return;
         }
         if (!hasScreenStream && TextUtils.equals(userId, sharingUserId)) {
-            hasScreenStreamUser.set(null);
+            screenStreamUser.set("");
         }
     }
 
@@ -92,10 +97,10 @@ public class UserState {
     }
 
     public static class UserInfo {
-        public String             userId    = "";
-        public String             userName  = "";
-        public String             avatarUrl = "";
-        public TUIRoomDefine.Role role      = TUIRoomDefine.Role.GENERAL_USER;
+        public String                       userId    = "";
+        public String                       userName  = "";
+        public String                       avatarUrl = "";
+        public LiveData<TUIRoomDefine.Role> role      = new LiveData<>(TUIRoomDefine.Role.GENERAL_USER);
 
         public UserInfo(String userId) {
             this.userId = userId;
@@ -109,7 +114,7 @@ public class UserState {
             this.userId = userInfo.userId;
             this.userName = userInfo.userName;
             this.avatarUrl = userInfo.avatarUrl;
-            this.role = userInfo.userRole;
+            this.role.set(userInfo.userRole);
         }
 
         @Override
@@ -122,8 +127,18 @@ public class UserState {
     }
 
     public static class UserVolumeInfo {
-        public String userId = "";
-        public int    volume = 0;
+        public String userId;
+        public int    volume;
+
+        public UserVolumeInfo(String userId, int volume) {
+            this.userId = userId;
+            this.volume = volume;
+        }
+
+        public void update(String userId, int volume) {
+            this.userId = userId;
+            this.volume = volume;
+        }
     }
 }
 

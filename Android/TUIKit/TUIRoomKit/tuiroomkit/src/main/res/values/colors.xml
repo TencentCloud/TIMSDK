@@ -51,4 +51,14 @@
     <color name="tuiroomkit_color_float_chat_user_name_color">#B2BBD1</color>
     <color name="tuiroomkit_color_float_chat_item_back_color">#6622262E</color>
     <color name="tuiroomkit_color_bg_user_list_btn_seat">#4F586B</color>
+
+    <color name="tuiroomkit_color_main_background">#373A43</color>
+
+    <color name="tuiroomkit_color_main_scheduled_room_info">#F8F9FB</color>
+    <color name="tuiroomkit_color_enter_scheduled_room_and_invite">#F0F3FA</color>
+    <color name="tuiroomkit_color_cancel_scheduled_room">#FAF0F0</color>
+    <color name="tuiroomkit_color_dialog_cancel_scheduled_room">#ED414D</color>
+    <color name="tuiroomkit_color_button_schedule_conference">#1C66E5</color>
+    <color name="tuiroomkit_color_schedule_conference_text">#2B2E38</color>
+    <color name="tuiroomkit_color_duration_picker_line">#212121</color>
 </resources>

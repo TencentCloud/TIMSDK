@@ -100,7 +100,7 @@ public class UserRecyclerViewStateHolder extends StateHolder {
                 users.add(item);
             }
         }
-        mUserListData.replace(users);
+        mUserListData.redirect(users);
     }
 
     private void notifyUserChanged(UserState.UserInfo userInfo) {

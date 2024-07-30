@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="187dp"
+    android:background="@drawable/tuiroomkit_bg_bottom_dialog_white_portrait">
+
+    <LinearLayout
+        android:id="@+id/ll_select_conference_type"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="116dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btn_free_speech"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_room_free_speech"
+            android:textColor="#22262E"
+            android:textSize="16sp" />
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F2F5FC"/>
+
+        <Button
+            android:id="@+id/btn_raise_hand"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_room_raise_hand"
+            android:textColor="#22262E"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+    
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="#F2F5FC"
+        app:layout_constraintTop_toBottomOf="@+id/ll_select_conference_type"/>
+
+    <Button
+        android:id="@+id/btn_cancel_select"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:text="@string/tuiroomkit_cancel"
+        android:textColor="#22262E"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/divide_line"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

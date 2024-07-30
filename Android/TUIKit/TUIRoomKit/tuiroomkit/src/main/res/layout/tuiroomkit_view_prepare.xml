@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_root_prepare"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/tuiroomkit_ic_back_black"
+        app:layout_constraintBottom_toBottomOf="@+id/img_head_prepare"
+        app:layout_constraintStart_toStartOf="@+id/ll_enter_room"
+        app:layout_constraintTop_toTopOf="@+id/img_head_prepare" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_head_prepare"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/tuiroomkit_head"
+        app:layout_constraintStart_toEndOf="@id/img_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_name_prepare"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/img_head_prepare"
+        app:layout_constraintStart_toEndOf="@+id/img_head_prepare"
+        app:layout_constraintTop_toTopOf="@+id/img_head_prepare" />
+
+    <LinearLayout
+        android:id="@+id/ll_enter_room"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="69dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ll_create_room">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/tuiroomkit_ic_enter_room"/>
+
+        <TextView
+            android:id="@+id/img_enter_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="9dp"
+            android:text="@string/tuiroomkit_enter_room"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_create_room"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ll_enter_room">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/tuiroomkit_ic_create_room"/>
+
+        <TextView
+            android:id="@+id/img_create_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:layout_marginTop="9dp"
+            android:text="@string/tuiroomkit_create_room"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_schedule_conference"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ll_create_room"
+        app:layout_constraintTop_toTopOf="@+id/ll_enter_room">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/tuiroomkit_schedule_room_icon"/>
+
+        <TextView
+            android:id="@+id/img_schedule_conference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:layout_marginTop="9dp"
+            android:text="@string/tuiroomkit_schedule_room_btn"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:background="#E7ECF6"
+        app:layout_constraintTop_toBottomOf="@+id/ll_enter_room"/>
+
+    <FrameLayout
+        android:id="@+id/tuiroomkit_fl_conference_list_container"
+        android:layout_width="335dp"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divide_line"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

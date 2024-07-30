@@ -125,13 +125,8 @@ public class ConferenceState {
     }
 
     public void addTakeSeatRequest(TUIRoomDefine.Request request) {
-        UserEntity user = findUser(allUserList, request.userId);
-        if (user == null) {
-            Log.e(TAG, "addTakeSeatRequest user is null");
-            return;
-        }
         TakeSeatRequestEntity takeSeatRequestEntity =
-                new TakeSeatRequestEntity(user.getUserId(), user.getUserName(), user.getAvatarUrl(), request);
+                new TakeSeatRequestEntity(request.userId, request.userName, request.avatarUrl, request);
         takeSeatRequestList.add(takeSeatRequestEntity);
 
         Map<String, Object> map = new HashMap<>();

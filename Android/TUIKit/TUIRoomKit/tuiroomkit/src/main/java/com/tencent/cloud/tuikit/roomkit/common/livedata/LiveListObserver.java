@@ -3,7 +3,8 @@ package com.tencent.cloud.tuikit.roomkit.common.livedata;
 import java.util.List;
 
 public abstract class LiveListObserver<T> {
-    public abstract void onDataChanged(List<T> list);
+    public void onDataChanged(List<T> list) {
+    }
 
     public void onItemChanged(int position, T item) {
     }

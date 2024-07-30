@@ -29,6 +29,7 @@ public class BaseDialogFragment extends DialogFragment {
     private String mContent;
     private String mNegativeName;
     private String mPositiveName;
+    private int    mPositiveButtonColor = 0;
 
     private boolean mIsHideNegativeView;
 
@@ -76,6 +77,11 @@ public class BaseDialogFragment extends DialogFragment {
 
     public BaseDialogFragment hideNegativeView() {
         mIsHideNegativeView = true;
+        return this;
+    }
+
+    public BaseDialogFragment setPositiveButtonColor(int color) {
+        mPositiveButtonColor = color;
         return this;
     }
 
@@ -137,6 +143,9 @@ public class BaseDialogFragment extends DialogFragment {
         Button btnPositive = mRootView.findViewById(R.id.tuiroomkit_btn_dialog_positive);
         if (!TextUtils.isEmpty(mPositiveName)) {
             btnPositive.setText(mPositiveName);
+        }
+        if (mPositiveButtonColor != 0) {
+            btnPositive.setTextColor(mPositiveButtonColor);
         }
         btnPositive.setOnClickListener(new View.OnClickListener() {
             @Override

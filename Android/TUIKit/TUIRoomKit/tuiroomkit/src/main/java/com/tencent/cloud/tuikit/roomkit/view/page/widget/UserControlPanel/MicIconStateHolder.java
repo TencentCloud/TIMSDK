@@ -1,29 +1,30 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 
+import android.text.TextUtils;
+
 import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.view.StateHolder;
 import com.trtc.tuikit.common.livedata.LiveData;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;
-import java.util.Set;
 
 public class MicIconStateHolder extends StateHolder {
     private String                   mUserId         = "";
     private LiveData<MicIconUiState> mMicIconData    = new LiveData<>(new MicIconUiState());
     private MicIconUiState           mMicIconUiState = new MicIconUiState();
 
-    private boolean      mIsSeatEnable        = mRoomState.isSeatEnabled.get();
-    private     List<String> mSeatedUsers         = mSeatState.seatedUsers.getList();
-    private     Set<String>  mHasAudioStreamUsers = mUserState.hasAudioStreamUsers.get();
-    private Observer<Boolean>        mSeatEnableObserver = new Observer<Boolean>() {
+    private boolean                  mIsSeatEnable        = mRoomState.isSeatEnabled.get();
+    private List<String>             mSeatedUsers         = mSeatState.seatedUsers.getList();
+    private List<String>             mHasAudioStreamUsers = mUserState.hasAudioStreamUsers.getList();
+    private Observer<Boolean>        mSeatEnableObserver  = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isSeatEnable) {
             mIsSeatEnable = isSeatEnable;
             updateViewData();
         }
     };
-    private     LiveListObserver<String> mSeatObserver       = new LiveListObserver<String>() {
+    private LiveListObserver<String>  mSeatObserver        = new LiveListObserver<String>() {
         @Override
         public void onDataChanged(List<String> list) {
             updateViewData();
@@ -39,9 +40,20 @@ public class MicIconStateHolder extends StateHolder {
             updateViewData();
         }
     };
-    private Observer<Set<String>>    mAudioStreamObserver = new Observer<Set<String>>() {
+    private LiveListObserver<String> mAudioStreamObserver = new LiveListObserver<String>() {
         @Override
-        public void onChanged(Set<String> hasAudioStreamUsers) {
+        public void onItemInserted(int position, String item) {
+            if (!TextUtils.equals(item, mUserId)) {
+                return;
+            }
+            updateViewData();
+        }
+
+        @Override
+        public void onItemRemoved(int position, String item) {
+            if (!TextUtils.equals(item, mUserId)) {
+                return;
+            }
             updateViewData();
         }
     };
