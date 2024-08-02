@@ -12,10 +12,10 @@ class ExitRoomView: UIView {
     private let viewModel: ExitRoomViewModel
     private var isViewReady: Bool = false
     var currentUser: UserEntity {
-        EngineManager.createInstance().store.currentUser
+        EngineManager.shared.store.currentUser
     }
     var roomInfo: TUIRoomInfo {
-        EngineManager.createInstance().store.roomInfo
+        EngineManager.shared.store.roomInfo
     }
     
     let panelControl : UIControl = {

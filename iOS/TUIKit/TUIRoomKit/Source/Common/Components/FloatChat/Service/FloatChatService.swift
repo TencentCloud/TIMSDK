@@ -14,9 +14,10 @@ import OpenCombine
 #else
 import Combine
 #endif
+import Factory
 
 class FloatChatService: NSObject {
-    @WeakLazyInjected private var store: FloatChatStoreProvider?
+    @WeakLazyInjected(\.floatChatService) private var store: FloatChatStoreProvider?
     private let imManager = {
         V2TIMManager.sharedInstance()
     }()

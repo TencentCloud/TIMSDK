@@ -22,8 +22,8 @@ class ConferenceSession {
     }
     
     private func quickStartConference(roomInfo: TUIRoomInfo, enableAudio: Bool, enableVideo: Bool, isSoundOnSpeaker: Bool, onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        EngineManager.createInstance().createRoom(roomInfo: roomInfo) {
-            EngineManager.createInstance().enterRoom(roomId: roomInfo.roomId, enableAudio: enableAudio, enableVideo: enableVideo,
+        EngineManager.shared.createRoom(roomInfo: roomInfo) {
+            EngineManager.shared.enterRoom(roomId: roomInfo.roomId, enableAudio: enableAudio, enableVideo: enableVideo,
                                                      isSoundOnSpeaker: isSoundOnSpeaker) {
                 onSuccess()
             } onError: { code, message in
@@ -36,7 +36,7 @@ class ConferenceSession {
     }
     
     func join(onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        EngineManager.createInstance().enterRoom(roomId: conferenceId, enableAudio: !conferenceParams.isMuteMicrophone, enableVideo: conferenceParams.isOpenCamera, isSoundOnSpeaker: conferenceParams.isSoundOnSpeaker) {
+        EngineManager.shared.enterRoom(roomId: conferenceId, enableAudio: !conferenceParams.isMuteMicrophone, enableVideo: conferenceParams.isOpenCamera, isSoundOnSpeaker: conferenceParams.isSoundOnSpeaker) {
             onSuccess()
         } onError: { code, message in
             onError(code, message)

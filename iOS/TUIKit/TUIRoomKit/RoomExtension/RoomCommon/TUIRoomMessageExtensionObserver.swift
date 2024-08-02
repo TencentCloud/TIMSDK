@@ -15,5 +15,6 @@ extension NSObject {
         TUICore.registerService(TUICore_TUIRoomImAccessService, object: TUIRoomImAccessService.shared)
         TUICore.registerObjectFactory(TUICore_TUIRoomImAccessFactory, objectFactory: TUIRoomImAccessFactory.shared)
         TUICore.registerExtension(TUICore_TUIContactExtension_MeSettingMenu_ClassicExtensionID, object: RoomMessageExtensionObserver.shared)
+        ServiceInitializer.shared.registerObserver()
     }
 }

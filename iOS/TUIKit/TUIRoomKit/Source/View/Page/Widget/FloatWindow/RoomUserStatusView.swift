@@ -56,29 +56,20 @@ class RoomUserStatusView: UIView {
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().offset(-8)
         }
+        voiceVolumeImageView.snp.makeConstraints { make in
+            make.leading.equalTo(homeOwnerImageView.snp.trailing).offset(6.scale375())
+            make.width.height.equalTo(14)
+            make.centerY.equalToSuperview()
+        }
     }
-
+    
     private func updateViewConstraints() {
         guard homeOwnerImageView.superview != nil else { return }
-        if isOwner {
-            homeOwnerImageView.isHidden = false
-            homeOwnerImageView.snp.remakeConstraints { make in
-                make.leading.equalToSuperview()
-                make.width.height.equalTo(24)
-                make.top.bottom.equalToSuperview()
-            }
-            voiceVolumeImageView.snp.remakeConstraints { make in
-                make.leading.equalTo(homeOwnerImageView.snp.trailing).offset(6.scale375())
-                make.width.height.equalTo(14)
-                make.centerY.equalToSuperview()
-            }
-        } else {
-            homeOwnerImageView.isHidden = true
-            voiceVolumeImageView.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(5)
-                make.width.height.equalTo(14)
-                make.centerY.equalToSuperview()
-            }
+        homeOwnerImageView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.height.equalTo(24)
+            make.top.bottom.equalToSuperview()
+            make.width.equalTo(isOwner ? 24 : 0)
         }
     }
 }
@@ -90,7 +81,7 @@ extension RoomUserStatusView {
         } else {
             userNameLabel.text = userModel.userId
         }
-        isOwner = userModel.userId == EngineManager.createInstance().store.roomInfo.ownerId
+        isOwner = userModel.userId == EngineManager.shared.store.roomInfo.ownerId
         updateViewConstraints()
         updateUserVolume(hasAudio: userModel.hasAudioStream, volume: userModel.userVoiceVolume)
     }

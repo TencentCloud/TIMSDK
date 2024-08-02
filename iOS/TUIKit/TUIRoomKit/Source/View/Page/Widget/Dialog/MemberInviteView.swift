@@ -18,9 +18,9 @@ class MemberInviteView: UIView {
         return view
     }()
     
-    let titleLabel: UILabel = {
+    lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = .inviteMemberText
+        label.text = viewModel.title
         label.textColor = UIColor(0xD5E0F2)
         label.font = UIFont(name: "PingFangSC-Regular", size: 18)
         label.textAlignment = .left
@@ -84,6 +84,7 @@ class MemberInviteView: UIView {
             make.leading.equalToSuperview().offset(16.scale375())
             make.trailing.equalToSuperview().offset(-16.scale375())
             make.height.equalTo(56.scale375())
+            make.bottom.equalToSuperview().offset(-20.scale375Height())
         }
         
         for item in viewModel.messageItems {
@@ -120,8 +121,5 @@ private extension String {
     }
     static var copyRoomLinkSuccess: String {
         localized("Conference Link copied.")
-    }
-    static var inviteMemberText: String {
-        localized("Invite member")
     }
 }

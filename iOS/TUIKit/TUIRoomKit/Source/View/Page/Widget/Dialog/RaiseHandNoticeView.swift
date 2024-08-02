@@ -75,7 +75,7 @@ class RaiseHandNoticeView: UIView {
     
     @objc func dismiss() {
         isHidden = true
-        EngineManager.createInstance().changeRaiseHandNoticeState(isShown: false)
+        EngineManager.shared.changeRaiseHandNoticeState(isShown: false)
     }
 }
 

@@ -308,7 +308,7 @@ private extension String {
         localized("Meeting")
     }
     static var inProgressText: String {
-        localized("In progress")
+        localized("Ongoing")
     }
     static var peopleEnteredMeetingText: String {
         localized("People have entered the meeting")

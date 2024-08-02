@@ -281,7 +281,7 @@ extension RoomRouter {
         navController.pushViewController(viewController, animated: animated)
     }
     
-    private func present(viewController: UIViewController, animated: Bool = true) {
+    func present(viewController: UIViewController, animated: Bool = true) {
         if #available(iOS 13.0, *) {
             viewController.modalPresentationStyle = .automatic
         } else {

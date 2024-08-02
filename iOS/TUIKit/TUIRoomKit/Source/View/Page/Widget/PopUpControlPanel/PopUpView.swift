@@ -142,7 +142,7 @@ class PopUpView: UIView {
             rootView = TransferMasterView(viewModel: model)
         case .QRCodeViewType:
             let model = QRCodeViewModel(urlString: "https://web.sdk.qcloud.com/component/tuiroom/index.html#/" + "#/room?roomId=" +
-                                        EngineManager.createInstance().store.roomInfo.roomId)
+                                        EngineManager.shared.store.roomInfo.roomId)
             rootView = QRCodeView(viewModel: model)
         case .inviteViewType:
             let model = MemberInviteViewModel()

@@ -12,15 +12,31 @@ class UserListManagerView: UIView {
     var viewModel: UserListManagerViewModel
     private var isViewReady: Bool = false
     private var viewArray: [ButtonItemView] = []
+    private var currentLandscape: Bool = isLandscape
     
-    let dropView : UIView = {
-        let view = UIView()
+    let contentView: UIView = {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = UIColor(0x22262E)
+        view.layer.cornerRadius = 12
         return view
     }()
     
-    let dropImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(named: "room_drop_arrow",in:tuiRoomKitBundle(),compatibleWith: nil)
+    let dropArrowButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "room_drop_arrow", in: tuiRoomKitBundle(), compatibleWith: nil), for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 12.scale375Height(), left: 20.scale375(), bottom: 12.scale375Height(), right: 20.scale375())
+        return button
+    }()
+    
+    let rightArrowButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "room_right_arrow", in: tuiRoomKitBundle(), compatibleWith: nil), for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 20.scale375Height(), left: 12.scale375(), bottom: 20.scale375Height(), right: 12.scale375())
+        return button
+    }()
+    
+    let scrollView: UIScrollView = {
+        let view = UIScrollView()
         return view
     }()
     
@@ -61,13 +77,6 @@ class UserListManagerView: UIView {
         return view
     }()
     
-    let contentView: UIView = {
-        let view = UIView(frame: .zero)
-        view.backgroundColor = UIColor(0x22262E)
-        view.layer.cornerRadius = 12
-        return view
-    }()
-    
     init(viewModel: UserListManagerViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -88,39 +97,30 @@ class UserListManagerView: UIView {
         isViewReady = true
     }
     
-    func constructViewHierarchy() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard currentLandscape != isLandscape else { return }
+        setupViewOrientation(isLandscape: isLandscape)
+        currentLandscape = isLandscape
+    }
+    
+    private func constructViewHierarchy() {
         addSubview(backBlockView)
         addSubview(contentView)
-        contentView.addSubview(dropView)
-        contentView.addSubview(headView)
-        contentView.addSubview(stackView)
-        dropView.addSubview(dropImageView)
+        contentView.addSubview(dropArrowButton)
+        contentView.addSubview(rightArrowButton)
+        contentView.addSubview(scrollView)
+        scrollView.addSubview(headView)
+        scrollView.addSubview(stackView)
         headView.addSubview(avatarImageView)
         headView.addSubview(userLabel)
         setupStackView()
     }
     
-    func activateConstraints() {
-        backBlockView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        contentView.snp.makeConstraints { make in
-            make.bottom.leading.trailing.equalToSuperview()
-            make.height.equalTo(500.scale375())
-        }
-        dropView.snp.makeConstraints { make in
-            make.top.left.right.equalToSuperview()
-            make.height.equalTo(30.scale375())
-        }
-        dropImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(12.scale375())
-            make.centerX.equalToSuperview()
-            make.height.equalTo(3.scale375())
-            make.width.equalTo(24.scale375())
-        }
+    private func activateConstraints() {
+        setupViewOrientation(isLandscape: isLandscape)
         headView.snp.makeConstraints { make in
-            make.top.equalTo(dropView.snp.bottom).offset(10.scale375())
-            make.leading.equalToSuperview().offset(16.scale375())
+            make.top.leading.equalToSuperview()
             make.trailing.equalToSuperview().offset(-16.scale375())
             make.height.equalTo(40.scale375())
         }
@@ -137,7 +137,40 @@ class UserListManagerView: UIView {
         }
         stackView.snp.makeConstraints { make in
             make.top.equalTo(headView.snp.bottom).offset(20.scale375())
-            make.leading.equalToSuperview().offset(16.scale375())
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+    }
+    
+    private func setupViewOrientation(isLandscape: Bool) {
+        backBlockView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        contentView.snp.remakeConstraints { make in
+            if isLandscape {
+                make.height.equalToSuperview()
+            } else {
+                make.height.equalTo(500.scale375())
+            }
+            make.bottom.leading.trailing.equalToSuperview()
+        }
+        dropArrowButton.snp.remakeConstraints { make in
+            make.height.equalTo(isLandscape ? 0 : 43.scale375())
+            make.top.centerX.equalToSuperview()
+        }
+        rightArrowButton.snp.remakeConstraints { make in
+            make.width.equalTo(isLandscape ? 27.scale375() : 0)
+            make.leading.centerY.equalToSuperview()
+        }
+        scrollView.snp.remakeConstraints { make in
+            make.top.equalTo(dropArrowButton.snp.bottom).offset(10.scale375())
+            if isLandscape {
+                make.leading.equalTo(rightArrowButton.snp.trailing).offset(5.scale375())
+            } else {
+                make.leading.equalToSuperview().offset(16.scale375())
+            }
+            make.bottom.equalToSuperview()
             make.trailing.equalToSuperview().offset(-16.scale375())
         }
     }
@@ -147,8 +180,8 @@ class UserListManagerView: UIView {
         setupViewState()
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismiss))
         backBlockView.addGestureRecognizer(tap)
-        let dropTap = UITapGestureRecognizer(target: self, action: #selector(dismiss))
-        dropView.addGestureRecognizer(dropTap)
+        dropArrowButton.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
+        rightArrowButton.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
     }
     
     private func setupStackView() {
@@ -199,6 +232,7 @@ class UserListManagerView: UIView {
         self.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        setupViewOrientation(isLandscape: isLandscape)
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
             self.alpha = 1

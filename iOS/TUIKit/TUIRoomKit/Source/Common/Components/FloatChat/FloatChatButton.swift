@@ -14,9 +14,10 @@ import OpenCombineDispatch
 #else
 import Combine
 #endif
+import Factory
 
 class FloatChatButton: UIView {
-    @Injected private var store: FloatChatStoreProvider
+    @Injected(\.floatChatService) private var store: FloatChatStoreProvider
     private lazy var floatInputViewShowState = self.store.select(FloatChatSelectors.getShowFloatInputView)
     var cancellableSet = Set<AnyCancellable>()
     weak var inputController: UIViewController?

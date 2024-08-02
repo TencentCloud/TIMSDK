@@ -162,8 +162,14 @@ class ListCellItemView: UIView {
     func setupViewState(item: ListCellItemData) {
         titleLabel.isHidden = item.titleText.isEmpty
         titleLabel.text = item.titleText
+        if let titleColor = item.titleColor {
+            titleLabel.textColor = titleColor
+        }
         messageLabel.isHidden = item.messageText.isEmpty
         messageLabel.text = item.messageText
+        if let messageColor = item.messageColor {
+            messageLabel.textColor = messageColor
+        }
         rightSwitch.isHidden = !item.hasSwitch
         rightSwitch.isOn = item.isSwitchOn
         rightButton.isHidden = !item.hasRightButton

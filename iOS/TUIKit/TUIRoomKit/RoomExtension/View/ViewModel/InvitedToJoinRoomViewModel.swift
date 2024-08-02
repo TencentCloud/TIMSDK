@@ -47,7 +47,7 @@ class InvitedToJoinRoomViewModel: NSObject, AVAudioPlayerDelegate {
     
     func agreeAction() {
         stopPlay()
-        if EngineManager.createInstance().store.isEnteredRoom {
+        if EngineManager.shared.store.isEnteredRoom {
             roomManager.exitOrDestroyPreviousRoom { [weak self] in
                 guard let self = self else { return }
                 self.enterRoom()

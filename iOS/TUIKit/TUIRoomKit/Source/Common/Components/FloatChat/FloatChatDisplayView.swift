@@ -13,9 +13,10 @@ import OpenCombineDispatch
 #else
 import Combine
 #endif
+import Factory
 
 class FloatChatDisplayView: UIView {
-    @Injected private var store: FloatChatStoreProvider
+    @Injected(\.floatChatService) private var store: FloatChatStoreProvider
     private lazy var messageListPublisher = self.store.select(FloatChatSelectors.getMessageList)
     private var messageList: [FloatChatMessage] = []
     var cancellableSet = Set<AnyCancellable>()

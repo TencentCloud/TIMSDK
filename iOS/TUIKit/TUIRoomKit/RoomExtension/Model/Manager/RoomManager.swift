@@ -12,7 +12,7 @@ import TUICore
 class RoomManager {
     static let shared = RoomManager()
     private var engineManager: EngineManager {
-        EngineManager.createInstance()
+        EngineManager.shared
     }
     private var roomInfo: TUIRoomInfo {
         engineManager.store.roomInfo

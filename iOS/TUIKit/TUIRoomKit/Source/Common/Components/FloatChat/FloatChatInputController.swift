@@ -10,9 +10,10 @@ import UIKit
 import SnapKit
 import Foundation
 import TUICore
+import Factory
 
 class FloatChatInputController: UIViewController {
-    @Injected private var store: FloatChatStoreProvider
+    @Injected(\.floatChatService) private var store: FloatChatStoreProvider
     
     private var textViewBottomConstraint: Constraint?
     private var textViewHeightConstraint: Constraint?

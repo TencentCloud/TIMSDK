@@ -13,7 +13,7 @@ class BottomItemView: UIView {
     var itemData: ButtonItemData
     
     var engineManager: EngineManager {
-        EngineManager.createInstance()
+        EngineManager.shared
     }
     
     let button: UIButton = {

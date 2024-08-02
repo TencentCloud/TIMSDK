@@ -21,15 +21,14 @@ protocol RoomMessageViewResponder: NSObject {
 class RoomMessageViewModel: NSObject {
     var message: RoomMessageModel
     private var engineManager: EngineManager {
-        EngineManager.createInstance()
+        EngineManager.shared
     }
     lazy var userId: String = {
-        return TUILogin.getUserID() ?? EngineManager.createInstance().store.currentUser.userId
+        return TUILogin.getUserID() ?? EngineManager.shared.store.currentUser.userId
     }()
     var messageManager: RoomMessageManager {
         RoomMessageManager.shared
     }
-    let roomKit = TUIRoomKit.createInstance()
     let roomManager = RoomManager.shared
     weak var viewResponder: RoomMessageViewResponder?
     init(message: RoomMessageModel) {

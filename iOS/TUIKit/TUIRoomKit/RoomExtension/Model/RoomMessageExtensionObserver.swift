@@ -18,8 +18,8 @@ class RoomMessageExtensionObserver: NSObject {
     }
     @objc private func pushChatExtensionRoomSettingsViewController() {
         if let nav = settingMenuNavigationController {
-            let vc = ChatExtensionRoomSettingsViewController(isOpenMicrophone: EngineManager.createInstance().store.isOpenMicrophone,
-                                                 isOpenCamera: EngineManager.createInstance().store.isOpenCamera)
+            let vc = ChatExtensionRoomSettingsViewController(isOpenMicrophone: EngineManager.shared.store.isOpenMicrophone,
+                                                 isOpenCamera: EngineManager.shared.store.isOpenCamera)
             nav.pushViewController(vc, animated: true)
         }
     }

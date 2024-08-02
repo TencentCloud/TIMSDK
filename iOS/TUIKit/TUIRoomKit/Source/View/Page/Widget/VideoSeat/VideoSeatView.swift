@@ -146,7 +146,7 @@ class TUIVideoSeatView: UIView {
     }
     
     func bindInteraction() {
-        screenCaptureMaskView.isHidden = !EngineManager.createInstance().store.currentUser.hasScreenStream
+        screenCaptureMaskView.isHidden = !EngineManager.shared.store.currentUser.hasScreenStream
         addGesture()
     }
     

@@ -14,7 +14,7 @@ import RTCRoomEngine
 class RoomMessageManager: NSObject {
     static let shared = RoomMessageManager()
     private var engineManager: EngineManager {
-        EngineManager.createInstance()
+        EngineManager.shared
     }
     private lazy var userId: String = {
         return TUILogin.getUserID() ?? engineManager.store.currentUser.userId
@@ -125,19 +125,14 @@ extension RoomMessageManager {
 extension RoomMessageManager: TUINotificationProtocol {
     func onNotifyEvent(_ key: String, subKey: String, object anObject: Any?, param: [AnyHashable : Any]?) {
         guard key == TUICore_TUIChatNotify, subKey == TUICore_TUIChatNotify_SendMessageSubKey else { return }
-        guard let code = param?[TUICore_TUIChatNotify_SendMessageSubKey_Code] as? Int else { return }
-        if code == 0 {
-            guard let message = param?[TUICore_TUIChatNotify_SendMessageSubKey_Message] as? V2TIMMessage else { return }
-            let messageModel = RoomMessageModel()
-            messageModel.updateMessage(message: message)
-            guard messageModel.messageId.count > 0, messageModel.roomState == .creating, messageModel.roomId == RoomManager.shared.roomId else { return }
-            let roomInfo = TUIRoomInfo()
-            roomInfo.roomId = messageModel.roomId
-            RoomManager.shared.createRoom(roomInfo: roomInfo)
-        } else {
-            guard let errorMessage = param?[TUICore_TUIChatNotify_SendMessageSubKey_Desc] as? String else { return }
-            RoomRouter.makeToast(toast: errorMessage)
-        }
+        guard let code = param?[TUICore_TUIChatNotify_SendMessageSubKey_Code] as? Int, code == 0 else { return }
+        guard let message = param?[TUICore_TUIChatNotify_SendMessageSubKey_Message] as? V2TIMMessage else { return }
+        let messageModel = RoomMessageModel()
+        messageModel.updateMessage(message: message)
+        guard messageModel.messageId.count > 0, messageModel.roomState == .creating, messageModel.roomId == RoomManager.shared.roomId else { return }
+        let roomInfo = TUIRoomInfo()
+        roomInfo.roomId = messageModel.roomId
+        RoomManager.shared.createRoom(roomInfo: roomInfo)
     }
 }
 

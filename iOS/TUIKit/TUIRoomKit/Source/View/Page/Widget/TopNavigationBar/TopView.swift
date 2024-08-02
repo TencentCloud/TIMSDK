@@ -27,7 +27,7 @@ class TopView: UIView {
         let view = UIStackView()
         view.axis = .horizontal
         view.alignment = .center
-        view.spacing = 24.scale375()
+        view.spacing = 2.scale375()
         return view
     }()
     
@@ -39,7 +39,7 @@ class TopView: UIView {
     let meetingNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(0xD5E0F2)
-        label.font = UIFont(name: "PingFangSC-Medium", size: 16)
+        label.font = UIFont(name: "PingFangSC-Medium", size: 15)
         label.textAlignment = isRTL ? .right : .left
         label.lineBreakMode = .byTruncatingTail
         return label
@@ -123,7 +123,7 @@ class TopView: UIView {
             menuButtons.append(view)
             stackView.addArrangedSubview(view)
             viewArray.append(view)
-            let size = item.size ?? CGSize(width: 20.scale375(), height: 20.scale375())
+            let size = item.size ?? CGSize(width: 35.scale375(), height: 40.scale375Height())
             view.snp.makeConstraints { make in
                 make.height.equalTo(size.height)
                 make.width.equalTo(size.width)
@@ -132,33 +132,24 @@ class TopView: UIView {
     }
     
     func activateConstraints() {
+        updateRootViewOrientation(isLandscape: isLandscape)
         backgroundImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        contentView.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalToSuperview().offset(44.scale375Height())
-        }
         meetingTitleView.snp.makeConstraints { make in
-            make.width.equalTo(200.scale375())
+            make.width.lessThanOrEqualTo(180.scale375())
             make.height.equalTo(44.scale375Height())
-            make.centerX.centerY.equalToSuperview()
+            make.center.equalToSuperview()
         }
         stackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16.scale375())
+            make.leading.equalToSuperview().offset(10.scale375())
             make.top.bottom.equalToSuperview()
-            make.trailing.equalTo(meetingTitleView.snp.leading).offset(-16.scale375())
         }
         meetingNameLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview().offset(-9.scale375())
             make.top.equalToSuperview()
             make.height.equalTo(24.scale375())
-            make.width.lessThanOrEqualTo(182.scale375())
-        }
-        dropDownButton.snp.makeConstraints { make in
-            make.leading.equalTo(meetingNameLabel.snp.trailing).offset(2.scale375())
-            make.centerY.equalTo(meetingNameLabel)
-            make.width.height.equalTo(16.scale375())
+            make.width.lessThanOrEqualTo(140.scale375())
+            make.leading.equalToSuperview()
         }
         timeLabel.snp.makeConstraints { make in
             make.top.equalTo(meetingNameLabel.snp.bottom).offset(5)
@@ -195,29 +186,40 @@ class TopView: UIView {
     }
     
     func updateRootViewOrientation(isLandscape: Bool) {
-        if isLandscape {
-            contentView.snp.updateConstraints() { make in
+        contentView.snp.remakeConstraints { make in
+            if isLandscape {
                 make.top.equalToSuperview()
-            }
-            timeLabel.snp.remakeConstraints() { make in
-                make.centerY.equalTo(dropDownButton)
-                make.leading.equalTo(dropDownButton.snp.trailing).offset(15)
-            }
-            meetingTitleView.snp.updateConstraints { make in
-                make.width.equalTo(300.scale375())
-                make.height.equalTo(24.scale375Height())
-            }
-        } else {
-            contentView.snp.updateConstraints() { make in
+            } else {
                 make.top.equalToSuperview().offset(44.scale375Height())
             }
-            timeLabel.snp.remakeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        meetingTitleView.snp.remakeConstraints { make in
+            if isLandscape {
+                make.width.lessThanOrEqualTo(300.scale375())
+                make.height.equalTo(24.scale375Height())
+            } else {
+                make.width.lessThanOrEqualTo(180.scale375())
+                make.height.equalTo(44.scale375Height())
+            }
+            make.center.equalToSuperview()
+        }
+        dropDownButton.snp.remakeConstraints { make in
+            make.leading.equalTo(meetingNameLabel.snp.trailing).offset(2.scale375())
+            make.centerY.equalTo(meetingNameLabel)
+            make.width.height.equalTo(16.scale375())
+            if !isLandscape {
+                make.trailing.equalToSuperview()
+            }
+        }
+        timeLabel.snp.remakeConstraints { make in
+            if isLandscape {
+                make.centerY.equalTo(dropDownButton)
+                make.leading.equalTo(dropDownButton.snp.trailing).offset(15)
+                make.trailing.equalToSuperview()
+            } else {
                 make.top.equalTo(meetingNameLabel.snp.bottom).offset(5)
                 make.centerX.equalToSuperview()
-            }
-            meetingTitleView.snp.updateConstraints { make in
-                make.width.equalTo(200.scale375())
-                make.height.equalTo(44.scale375Height())
             }
         }
     }
@@ -243,6 +245,9 @@ enum AlertAction {
 }
 
 extension TopView: TopViewModelResponder {
+    func updateMeetingNameLabel(_ text: String) {
+        meetingNameLabel.text = text
+    }
     
     func updateStackView(item: ButtonItemData) {
         guard let view = viewArray.first(where: { $0.itemData.buttonType == item.buttonType }) else { return }
