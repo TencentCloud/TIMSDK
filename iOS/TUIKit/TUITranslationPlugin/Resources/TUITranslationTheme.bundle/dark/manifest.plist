@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>id</key>
+	<string>dark</string>
+	<key>name</key>
+	<string>黑夜</string>
+	<key>name_en</key>
+	<string>Dark</string>
+	<key>translation_view_bg_color</key>
+	<string>#1F1F1F</string>
+	<key>translation_view_text_color</key>
+	<string>#D9D9D9</string>
+	<key>translation_view_tips_color</key>
+	<string>#D9D9D9</string>
+	<key>translation_view_icon_loading_img</key>
+	<string>translation_loading.png</string>
+	<key>translation_view_icon_tips_img</key>
+	<string>translation_tips.png</string>
+	<key>translation_view_pop_menu_copy_img</key>
+	<string>icon_copy.png</string>
+	<key>translation_view_pop_menu_hide_img</key>
+	<string>icon_hide.png</string>
+	<key>translation_view_pop_menu_forward_img</key>
+	<string>icon_forward.png</string>
+</dict>
+</plist>
