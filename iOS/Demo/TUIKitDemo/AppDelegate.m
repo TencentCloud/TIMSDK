@@ -41,11 +41,7 @@
 #import "SettingController_Minimalist.h"
 //Minimalist
 
-#if __has_include(<TIMPush/TIMPushManager.h>)
-    #import <TIMPush/TIMPushManager.h>
-#elif __has_include(<TPush/TIMPushManager.h>)
-    #import <TPush/TIMPushManager.h>
-#endif
+#import <TIMPush/TIMPushManager.h>
 #import <UserNotifications/UserNotifications.h>
 
 @interface AppDelegate () <V2TIMConversationListener, TUILoginListener, TUIThemeSelectControllerDelegate, TUILanguageSelectControllerDelegate,V2TIMAPNSListener, TIMPushDelegate, V2TIMSDKListener>

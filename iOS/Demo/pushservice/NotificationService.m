@@ -8,11 +8,7 @@
 
 #import "NotificationService.h"
 #import "TCConstants.h"
-#if __has_include(<TIMPush/TIMPushManager.h>)
-    #import <TIMPush/TIMPushManager.h>
-#elif __has_include(<TPush/TIMPushManager.h>)
-    #import <TPush/TIMPushManager.h>
-#endif
+#import <TIMPush/TIMPushManager.h>
 @interface NotificationService ()
 
 @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
