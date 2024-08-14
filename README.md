@@ -154,24 +154,14 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.1.6103 @2024.07.26
+## Latest Enhanced Version 8.1.6116 @2024.08.14
 ### SDK
-- Long connection supports HTTP protocol, enhancing network penetration capabilities.
-- Topic message reception options now support setting whether to follow the community.
-- Topics add a new message reception option to only receive @ messages.
-- Read receipts for private chat messages now include the read time.
-- Support disabling cloud callbacks before and after message sending.
-- Fixed an issue where the conversation list did not update in real-time when group - avatars or names were changed.
-- Fixed an issue where pulling the grouped conversation list was abnormal when logging in without a network connection.
-- Optimized Android HTTPS security issues.
-- Optimized rich media file download authentication.
-- Enhanced database performance for Android.
+- Signaling now supports disabling callbacks before and after message sending
+- Fixed an issue where after deleting a pinned conversation, new messages could not retrieve the conversation
+- Fixed an occasional issue where after deleting a conversation and receiving a conversation deletion callback, there would still be occasional conversation update callbacks; also fixed occasional crash issues
+- Fixed occasional crash issues
 
 ### TUIKit & Demo
-- TPush standalone push product launched with a smaller package size.
-- Push adds a login-free push feature.
-- Push introduces a new intelligent detection strategy for available channels.
-- Push adds a push registration timeout protection mechanism.
-- TUIChat optimizes the UI display of pinned messages and security prompts.
-- TUIChat international version UI supports "User is typing" status.
-- Optimized the UI experience for message sending and receiving, reducing lag issues.
+- Updated customer service plugin agreement
+- Fixed a crash issue on the iOS side of the group note plugin
+
