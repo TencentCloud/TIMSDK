@@ -275,10 +275,6 @@ public class ChatMessageParser {
                 String customerServiceSrcValue = (String)customJsonMap.get(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY);
                 businessId = TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY + customerServiceSrcValue;
                 return businessId;
-            } else if (customJsonMap.containsKey(TUIConstants.TUIChatBotPlugin.CHAT_BOT_MESSAGE_KEY)) {
-                Double chatBotSrcValue = (Double) customJsonMap.get(TUIConstants.TUIChatBotPlugin.CHAT_BOT_BUSINESS_ID_SRC_KEY);
-                businessId = TUIConstants.TUIChatBotPlugin.CHAT_BOT_MESSAGE_KEY + chatBotSrcValue.intValue();
-                return businessId;
             }
         }
         if (businessIdObj instanceof String) {

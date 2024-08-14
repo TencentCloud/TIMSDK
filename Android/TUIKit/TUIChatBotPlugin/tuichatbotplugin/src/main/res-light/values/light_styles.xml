@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="TUIChatBotLightTheme" parent="TUIBaseLightTheme">
-        <item name="text_theme_color">@color/text_theme_color_light</item>
-        <item name="title_refresh">@drawable/title_refresh_light</item>
-
-        <item name="chat_bot_icon">@drawable/chat_bot_icon_light</item>
-    </style>
-</resources>

@@ -22,6 +22,12 @@
     <string name="customer_service_buying_guidelines">مجموعة Tencent Cloud للمراسلة الفورية</string>
     <string name="customer_service_i_know">أرى</string>
 
+    <string name="refresh_questions">غيره</string>
+    <string name="chat_bot">إنسان آلي</string>
+
+    <string name="chat_bot_unsupport_tips">يعد المكون الإضافي للروبوت وظيفة مدفوعة الأجر ذات قيمة مضافة وهو حاليًا في مرحلة الاختبار الداخلي.يرجى النقر للدخول إلى [Tencent Cloud Instant Messaging IM Group] للتقدم بطلب للحصول على نسخة تجريبية.</string>
+    <string name="chat_bot_buying_guidelines">مجموعة Tencent Cloud للمراسلة الفورية</string>
+
     <string-array name="common_phrases_list">
         <item>هل هو في المخزون؟</item>
         <item>هل يمكن أن يكون أرخص؟</item>

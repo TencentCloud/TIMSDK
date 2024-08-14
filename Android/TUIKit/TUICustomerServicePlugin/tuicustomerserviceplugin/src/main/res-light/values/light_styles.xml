@@ -3,12 +3,13 @@
     <style name="TUICustomerServiceLightTheme" parent="TUIBaseLightTheme">
         <item name="customer_service_item_text_color">@color/customer_service_item_text_color_light</item>
         <item name="product_close_color">@color/product_close_color_light</item>
-        <item name="evaluation_number_default_color">@color/evaluation_number_default_color_light</item>
+        <item name="number_default_color">@color/evaluation_number_default_color_light</item>
         <item name="submit_bg_color">@color/submit_bg_color_light</item>
         <item name="customer_service_icon">@drawable/customer_service_icon_light</item>
         <item name="customer_service_item_arrow">@drawable/customer_service_item_arrow_light</item>
         <item name="evaluation_number_active_bg">@drawable/evaluation_number_active_bg_light</item>
         <item name="send_suggest_icon">@drawable/send_suggest_icon_light</item>
-        <item name="evaluation_number_default_bg">@drawable/evaluation_number_default_bg_light</item>
+        <item name="number_default_bg">@drawable/evaluation_number_default_bg_light</item>
+        <item name="title_refresh">@drawable/title_refresh_light</item>
     </style>
 </resources>

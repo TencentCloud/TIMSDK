@@ -32,6 +32,10 @@ public class TUICustomerServicePresenter {
         messageBean = currentMessage;
     }
 
+    public TUIMessageBean getMessageBean() {
+        return messageBean;
+    }
+
     public void getCustomerServiceUserInfo(V2TIMValueCallback<List<V2TIMUserFullInfo>> callback) {
         provider.getCustomerServiceUserInfo(callback);
     }
@@ -72,12 +76,12 @@ public class TUICustomerServicePresenter {
         TUIChatService.getInstance().sendMessage(messageBean, userID, V2TIMConversation.V2TIM_C2C, false);
     }
 
-    public void getEvaluationSetting(String userID) {
+    public void sendHelloMessage(String userID) {
         JSONObject getEvaluationSettingJson = new JSONObject();
         try {
             getEvaluationSettingJson.put(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY, 0);
             getEvaluationSettingJson.put(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY,
-                TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_GET_EVALUATION_SETTING);
+                TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_SAY_HELLO);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -100,10 +104,10 @@ public class TUICustomerServicePresenter {
             submitMenuJson.put(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY,
                 TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION_SELECTED);
             JSONObject menuSelectedJson = new JSONObject();
-            menuSelectedJson.put(TUICustomerServiceConstants.DESK_KIT_ITEM_ID, submitMenu.getId());
-            menuSelectedJson.put(TUICustomerServiceConstants.DESK_KIT_ITEM_CONTENT, submitMenu.getContent());
-            menuSelectedJson.put(TUICustomerServiceConstants.DESK_KIT_SESSION_ID, sessionID);
-            submitMenuJson.put(TUICustomerServiceConstants.DESK_KIT_ITEM_MENU_SELECTED, menuSelectedJson);
+            menuSelectedJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_ITEM_ID, submitMenu.getId());
+            menuSelectedJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_ITEM_CONTENT, submitMenu.getContent());
+            menuSelectedJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_SESSION_ID, sessionID);
+            submitMenuJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_ITEM_MENU_SELECTED, menuSelectedJson);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -142,11 +146,11 @@ public class TUICustomerServicePresenter {
             productMessageJson.put(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY,
                 TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_CARD);
             JSONObject productJson = new JSONObject();
-            productJson.put(TUICustomerServiceConstants.DESK_KIT_HEADER, productInfo.getName());
-            productJson.put(TUICustomerServiceConstants.DESK_KIT_ITEM_DESCRIPTION, productInfo.getDescription());
-            productJson.put(TUICustomerServiceConstants.DESK_KIT_CARD_PIC, productInfo.getPictureUrl());
-            productJson.put(TUICustomerServiceConstants.DESK_KIT_CARD_URL, productInfo.getJumpUrl());
-            productMessageJson.put(TUICustomerServiceConstants.DESK_KIT_CONTENT, productJson);
+            productJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_HEADER, productInfo.getName());
+            productJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_ITEM_DESCRIPTION, productInfo.getDescription());
+            productJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_CARD_PIC, productInfo.getPictureUrl());
+            productJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_CARD_URL, productInfo.getJumpUrl());
+            productMessageJson.put(TUICustomerServiceConstants.CUSTOMER_SERVICE_CONTENT, productJson);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

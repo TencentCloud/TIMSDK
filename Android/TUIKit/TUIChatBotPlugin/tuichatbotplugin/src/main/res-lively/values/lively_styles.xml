@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="TUIChatBotLivelyTheme" parent="TUIBaseLivelyTheme">
-        <item name="text_theme_color">@color/text_theme_color_lively</item>
-        <item name="title_refresh">@drawable/title_refresh_lively</item>
-
-        <item name="chat_bot_icon">@drawable/chat_bot_icon_lively</item>
-    </style>
-</resources>

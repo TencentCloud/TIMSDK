@@ -22,11 +22,8 @@ import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
-import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.config.TUICustomerServiceConfig;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class DemoApplication extends MultiDexApplication {
@@ -42,7 +39,6 @@ public class DemoApplication extends MultiDexApplication {
             initIMDemoAppInfo();
             setPermissionRequestContent();
             registerLanguageChangedReceiver();
-            initTUICustomerServiceAccounts();
         }
     }
 
@@ -70,13 +66,6 @@ public class DemoApplication extends MultiDexApplication {
         IntentFilter languageFilter = new IntentFilter();
         languageFilter.addAction(Constants.DEMO_LANGUAGE_CHANGED_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(languageChangedReceiver, languageFilter);
-    }
-
-    private void initTUICustomerServiceAccounts() {
-        List<String> customerServiceAccountList = new ArrayList<>();
-        customerServiceAccountList.add("@im_agent#online_shopping_mall");
-        customerServiceAccountList.add("@im_agent#online_doctor");
-        TUICustomerServiceConfig.getInstance().setCustomerServiceAccounts(customerServiceAccountList);
     }
 
     public void setPermissionRequestContent() {

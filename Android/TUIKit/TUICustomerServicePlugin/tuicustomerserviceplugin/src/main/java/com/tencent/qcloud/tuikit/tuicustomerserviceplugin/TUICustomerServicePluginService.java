@@ -21,6 +21,8 @@ import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.BotBranchMessageBean;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.BotBranchMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.BranchMessageBean;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.BranchMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.CardMessageBean;
@@ -31,8 +33,14 @@ import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.CustomerServiceTy
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.EvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.EvaluationMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.InvisibleMessageBean;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.RichTextMessageBean;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.RichTextMessageReplyQuoteBean;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.StreamTextMessageBean;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.StreamTextMessageReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.page.CustomerServiceMemberListActivity;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.page.CustomerServiceProfileActivity;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.BotBranchHolder;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.BotBranchReplyView;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.BranchHolder;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.BranchReplyView;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.CardHolder;
@@ -43,6 +51,10 @@ import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.Evalu
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.EvaluationReplyView;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.InputViewFloatLayerProxy;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.InvisibleHolder;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.RichTextHolder;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.RichTextReplyQuoteView;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.StreamTextHolder;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.StreamTextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.config.TUICustomerServiceConfig;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.presenter.TUICustomerServicePresenter;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.util.TUICustomerServiceUtils;
@@ -118,6 +130,36 @@ public class TUICustomerServicePluginService implements TUIInitializer, ITUINoti
         TUICore.callService(TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME,
             TUIConstants.TUIChat.Method.RegisterCustomMessage.METHOD_NAME, evaluationParam);
 
+        Map<String, Object> botBranchParam = new HashMap<>();
+        botBranchParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BUSINESS_ID,
+                TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY + TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_BOT_RESPONSE);
+        botBranchParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BEAN_CLASS, BotBranchMessageBean.class);
+        botBranchParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_VIEW_HOLDER_CLASS, BotBranchHolder.class);
+        botBranchParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_BEAN_CLASS, BotBranchMessageReplyQuoteBean.class);
+        botBranchParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_VIEW_CLASS, BotBranchReplyView.class);
+        TUICore.callService(
+                TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME, TUIConstants.TUIChat.Method.RegisterCustomMessage.METHOD_NAME, botBranchParam);
+
+        Map<String, Object> richTextParam = new HashMap<>();
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BUSINESS_ID,
+                TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY + TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_BOT_RICH_TEXT);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BEAN_CLASS, RichTextMessageBean.class);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_VIEW_HOLDER_CLASS, RichTextHolder.class);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_BEAN_CLASS, RichTextMessageReplyQuoteBean.class);
+        richTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_VIEW_CLASS, RichTextReplyQuoteView.class);
+        TUICore.callService(TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME,
+                TUIConstants.TUIChat.Method.RegisterCustomMessage.METHOD_NAME, richTextParam);
+
+        Map<String, Object> streamTextParam = new HashMap<>();
+        streamTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BUSINESS_ID,
+                TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY + TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_BOT_STREAM_TEXT);
+        streamTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BEAN_CLASS, StreamTextMessageBean.class);
+        streamTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_VIEW_HOLDER_CLASS, StreamTextHolder.class);
+        streamTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_BEAN_CLASS, StreamTextMessageReplyQuoteBean.class);
+        streamTextParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_REPLY_VIEW_CLASS, StreamTextReplyQuoteView.class);
+        TUICore.callService(TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME,
+                TUIConstants.TUIChat.Method.RegisterCustomMessage.METHOD_NAME, streamTextParam);
+
         Map<String, Object> invisibleEndParam = new HashMap<>();
         invisibleEndParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BUSINESS_ID,
             TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY + TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_END);
@@ -165,7 +207,7 @@ public class TUICustomerServicePluginService implements TUIInitializer, ITUINoti
         Map<String, Object> invisibleGetEvaluationSettingParam = new HashMap<>();
         invisibleGetEvaluationSettingParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BUSINESS_ID,
             TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY
-                + TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_GET_EVALUATION_SETTING);
+                + TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_SAY_HELLO);
         invisibleGetEvaluationSettingParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_BEAN_CLASS, InvisibleMessageBean.class);
         invisibleGetEvaluationSettingParam.put(TUIConstants.TUIChat.Method.RegisterCustomMessage.MESSAGE_VIEW_HOLDER_CLASS, InvisibleHolder.class);
         TUICore.callService(TUIConstants.TUIChat.Method.RegisterCustomMessage.CLASSIC_SERVICE_NAME,
@@ -302,7 +344,7 @@ public class TUICustomerServicePluginService implements TUIInitializer, ITUINoti
                         @Override
                         public void run() {
                             TUICustomerServicePresenter presenter = new TUICustomerServicePresenter();
-                            presenter.getEvaluationSetting(userID);
+                            presenter.sendHelloMessage(userID);
                         }
                     }, 200);
 

@@ -143,7 +143,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/evaluation_number_default_bg_light"
                     android:gravity="center"
-                    android:textColor="?attr/evaluation_number_default_color"
+                    android:textColor="?attr/number_default_color"
                     android:textSize="12sp"
                     android:text="1"/>
                 <View
@@ -165,7 +165,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/evaluation_number_default_bg_light"
                     android:gravity="center"
-                    android:textColor="?attr/evaluation_number_default_color"
+                    android:textColor="?attr/number_default_color"
                     android:textSize="12sp"
                     android:text="2"/>
                 <View
@@ -187,7 +187,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/evaluation_number_default_bg_light"
                     android:gravity="center"
-                    android:textColor="?attr/evaluation_number_default_color"
+                    android:textColor="?attr/number_default_color"
                     android:textSize="12sp"
                     android:text="3"/>
                 <View
@@ -209,7 +209,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/evaluation_number_default_bg_light"
                     android:gravity="center"
-                    android:textColor="?attr/evaluation_number_default_color"
+                    android:textColor="?attr/number_default_color"
                     android:textSize="12sp"
                     android:text="4"/>
                 <View
@@ -231,7 +231,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/evaluation_number_default_bg_light"
                     android:gravity="center"
-                    android:textColor="?attr/evaluation_number_default_color"
+                    android:textColor="?attr/number_default_color"
                     android:textSize="12sp"
                     android:text="5"/>
                 <View

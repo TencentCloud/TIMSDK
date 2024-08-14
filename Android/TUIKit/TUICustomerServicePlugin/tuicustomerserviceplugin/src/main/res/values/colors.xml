@@ -9,4 +9,8 @@
     <color name="evaluation_number_background_disable_color">#80ffffff</color>
     <color name="card_desc_color">#ff6c2e</color>
     <color name="float_layer_text_color">#999999</color>
+
+    <color name="bot_message_bg">#FBFBFB</color>
+    <color name="grey_line_color">#eeeeee</color>
+    <color name="bot_title_color">#171538</color>
 </resources>

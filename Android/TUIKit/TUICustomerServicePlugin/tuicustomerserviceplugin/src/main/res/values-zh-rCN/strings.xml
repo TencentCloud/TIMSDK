@@ -22,6 +22,12 @@
     <string name="customer_service_buying_guidelines">腾讯云即时通信 IM 群</string>
     <string name="customer_service_i_know">我知道了</string>
 
+    <string name="refresh_questions">换一换</string>
+    <string name="chat_bot">机器人</string>
+
+    <string name="chat_bot_unsupport_tips">机器人插件是增值付费功能，当前处于内测阶段，请点击进入[腾讯云即时通信 IM 群]申请开通试用</string>
+    <string name="chat_bot_buying_guidelines">腾讯云即时通信 IM 群</string>
+
     <string-array name="common_phrases_list">
         <item>是否有货？</item>
         <item>可以便宜一点吗？</item>

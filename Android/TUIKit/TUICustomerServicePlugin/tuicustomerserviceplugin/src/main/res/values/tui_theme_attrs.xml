@@ -3,11 +3,13 @@
     <attr name="customer_service_item_text_color" format="reference|color"/>
     <attr name="customer_service_reply_quote_text_color" format="reference|color"/>
     <attr name="product_close_color" format="reference|color"/>
-    <attr name="evaluation_number_default_color" format="reference|color"/>
+    <attr name="number_default_color" format="reference|color"/>
     <attr name="submit_bg_color" format="reference|color"/>
     <attr name="customer_service_item_arrow" format="reference"/>
     <attr name="evaluation_number_active_bg" format="reference"/>
     <attr name="send_suggest_icon" format="reference"/>
     <attr name="customer_service_icon" format="reference"/>
-    <attr name="evaluation_number_default_bg" format="reference"/>
+    <attr name="number_default_bg" format="reference"/>
+
+    <attr name="title_refresh" format="reference"/>
 </resources>
