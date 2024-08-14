@@ -22,6 +22,12 @@
     <string name="customer_service_buying_guidelines">Tencent Cloud Instant messaging IM Group</string>
     <string name="customer_service_i_know">I got it</string>
 
+    <string name="refresh_questions">Change it</string>
+    <string name="chat_bot">ChatBot</string>
+
+    <string name="chat_bot_unsupport_tips">ChatBot is a value-added payment feature, which is currently in the internal testing stage. Click to enter [Tencent Cloud Instant messaging IM Group] to apply for activation and trial.</string>
+    <string name="chat_bot_buying_guidelines">Tencent Cloud Instant messaging IM Group</string>
+
     <string-array name="common_phrases_list">
         <item>Is it in stock?</item>
         <item>Can it be cheaper?</item>

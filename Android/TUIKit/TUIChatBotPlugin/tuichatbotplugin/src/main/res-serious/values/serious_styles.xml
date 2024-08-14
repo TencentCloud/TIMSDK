@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="TUIChatBotSeriousTheme" parent="TUIBaseSeriousTheme">
-        <item name="text_theme_color">@color/text_theme_color_serious</item>
-        <item name="title_refresh">@drawable/title_refresh_serious</item>
-
-        <item name="chat_bot_icon">@drawable/chat_bot_icon_serious</item>
-    </style>
-</resources>

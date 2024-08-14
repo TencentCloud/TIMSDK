@@ -175,9 +175,7 @@ dependencies {
     if (projects.contains("tuiemojiplugin")) {
         api project(':tuiemojiplugin')
     }
-    if (projects.contains("tuichatbotplugin")) {
-        api project(':tuichatbotplugin')
-    }
+
     annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
 
 }

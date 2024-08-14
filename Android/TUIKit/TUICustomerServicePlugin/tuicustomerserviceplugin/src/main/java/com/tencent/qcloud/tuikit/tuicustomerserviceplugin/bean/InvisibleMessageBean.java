@@ -38,7 +38,7 @@ public class InvisibleMessageBean extends TUIMessageBean {
             try {
                 JSONObject invisibleJson = new JSONObject(data);
                 invisibleBean.src = invisibleJson.optString(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY);
-                JSONObject contentJson = invisibleJson.optJSONObject(TUICustomerServiceConstants.DESK_KIT_ITEM_CONTENT);
+                JSONObject contentJson = invisibleJson.optJSONObject(TUICustomerServiceConstants.CUSTOMER_SERVICE_ITEM_CONTENT);
                 if (contentJson != null) {
                     invisibleBean.menuSendRuleFlag = contentJson.optInt(InvisibleBean.MENU_SEND_RULE_FLAG);
                 }
@@ -58,7 +58,7 @@ public class InvisibleMessageBean extends TUIMessageBean {
                 int triggerResult = invisibleBean.menuSendRuleFlag & invisibleBean.RULE_USER_TRIGGER_EVALUATION;
                 TUICustomerServicePluginService.getInstance().setCanTriggerEvaluation(triggerResult > 0 ? true : false);
             } else if (invisibleBean.src.equals(TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_TRIGGER_EVALUATION)) {
-            } else if (invisibleBean.src.equals(TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_GET_EVALUATION_SETTING)) {
+            } else if (invisibleBean.src.equals(TUIConstants.TUICustomerServicePlugin.BUSINESS_ID_SRC_CUSTOMER_SERVICE_SAY_HELLO)) {
             } else {
                 String text = TUICustomerServicePluginService.getAppContext().getString(com.tencent.qcloud.tuikit.timcommon.R.string.timcommon_no_support_msg);
                 setExtra(text);

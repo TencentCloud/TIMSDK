@@ -177,9 +177,9 @@ public class EvaluationHolder extends MessageBaseHolder {
             } else {
                 for (int i = 0; i < tvNumberList.size(); i++) {
                     int finalI = i;
-                    tvNumberList.get(i).setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.evaluation_number_default_bg));
+                    tvNumberList.get(i).setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.number_default_bg));
                     tvNumberList.get(i).setTextColor(
-                        rootView.getResources().getColor(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.evaluation_number_default_color)));
+                        rootView.getResources().getColor(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.number_default_color)));
                     numberFloatLayerList.get(i).setVisibility(View.GONE);
                     tvNumberList.get(i).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -194,9 +194,9 @@ public class EvaluationHolder extends MessageBaseHolder {
                                     tvNumberList.get(j).setTextColor(rootView.getResources().getColor(R.color.evaluation_number_active_color));
                                 } else {
                                     tvNumberList.get(j).setBackgroundResource(
-                                        TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.evaluation_number_default_bg));
+                                        TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.number_default_bg));
                                     tvNumberList.get(j).setTextColor(rootView.getResources().getColor(
-                                        TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.evaluation_number_default_color)));
+                                        TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.number_default_color)));
                                 }
                             }
                         }
@@ -232,9 +232,9 @@ public class EvaluationHolder extends MessageBaseHolder {
                         ivStarList.get(i).setBackgroundResource(R.drawable.evaluation_star_default);
                         starFloatLayerList.get(i).setVisibility(View.VISIBLE);
                     } else {
-                        tvNumberList.get(i).setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.evaluation_number_default_bg));
+                        tvNumberList.get(i).setBackgroundResource(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.number_default_bg));
                         tvNumberList.get(i).setTextColor(
-                            rootView.getResources().getColor(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.evaluation_number_default_color)));
+                            rootView.getResources().getColor(TUIThemeManager.getAttrResId(rootView.getContext(), R.attr.number_default_color)));
                         numberFloatLayerList.get(i).setVisibility(View.VISIBLE);
                     }
                 }

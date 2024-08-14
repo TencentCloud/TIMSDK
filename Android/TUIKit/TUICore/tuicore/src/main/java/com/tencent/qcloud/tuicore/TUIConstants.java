@@ -48,6 +48,7 @@ public final class TUIConstants {
         public static final String TUI_CONVERSATION_GROUP = "TUIConversationGroupService";
         public static final String TUI_CONVERSATION_MARK = "TUIConversationMarkService";
         public static final String TUI_PRIVACY = "PrivacyService";
+        public static final String USB_CAMERA = "USBCameraService";
     }
 
     public static final class ObjectFactory {
@@ -573,6 +574,14 @@ public final class TUIConstants {
         }
     }
 
+    public static final class USBCamera {
+        public static final String SERVICE_NAME         = Service.USB_CAMERA;
+        public static final String KEY_USB_CAMERA       = "keyUSBCamera";
+        public static final String SUB_KEY_OPEN_CAMERA  = "eventSubOpenUSBCamera";
+        public static final String SUB_KEY_CLOSE_CAMERA = "eventSubCloseUSBCamera";
+        public static final String PARAM_TX_CLOUD_VIEW  = "TXCloudView";
+    }
+
     public static final class TUILive {
         public static final String SERVICE_NAME = Service.TUI_LIVE;
 
@@ -962,7 +971,7 @@ public final class TUIConstants {
     public static final class TUICustomerServicePlugin {
         public static final String CUSTOMER_SERVICE_MESSAGE_KEY = "customerServicePlugin";
         public static final String CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY = "src";
-        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_GET_EVALUATION_SETTING = "7";
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_SAY_HELLO = "7";
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION = "9";
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION_SELECTED = "10";
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_TYPING = "12";
@@ -973,16 +982,9 @@ public final class TUIConstants {
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_CARD = "22";
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_EVALUATION_SETTING = "23";
         public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_TRIGGER_EVALUATION = "24";
-    }
-
-    public static final class TUIChatBotPlugin {
-        public static final String CHAT_BOT_MESSAGE_KEY = "chatbotPlugin";
-        public static final int CHAT_BOT_MESSAGE_VALUE = 1;
-        public static final String CHAT_BOT_BUSINESS_ID_SRC_KEY = "src";
-        public static final int CHAT_BOT_BUSINESS_ID_SRC_STREAM_TEXT = 2;
-        public static final int CHAT_BOT_BUSINESS_ID_SRC_HELLO_REQUEST = 7;
-        public static final int CHAT_BOT_BUSINESS_ID_SRC_RICH_TEXT = 9;
-        public static final int CHAT_BOT_BUSINESS_ID_SRC_RESPONSE = 15;
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_BOT_RESPONSE = "29"; // Supported in 8.1 and later
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_BOT_RICH_TEXT = "30"; // Supported in 8.1 and later
+        public static final String BUSINESS_ID_SRC_CUSTOMER_SERVICE_BOT_STREAM_TEXT = "31"; // Supported in 8.1 and later
     }
 
     public static final class Message {
