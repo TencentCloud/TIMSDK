@@ -2,6 +2,17 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 8.1.6116 @2024.08.14 - Enhanced Version
+### SDK
+- Signaling now supports disabling callbacks before and after message sending
+- Fixed an issue where after deleting a pinned conversation, new messages could not retrieve the conversation
+- Fixed an occasional issue where after deleting a conversation and receiving a conversation deletion callback, there would still be occasional conversation update callbacks; also fixed occasional crash issues
+- Fixed occasional crash issues
+
+### TUIKit & Demo
+- Updated customer service plugin agreement
+- Fixed a crash issue on the iOS side of the group note plugin
+
 ## 8.1.6103 @2024.07.26 - Enhanced Version
 ### SDK
 - Long connection supports HTTP protocol, enhancing network penetration capabilities.
