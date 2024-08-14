@@ -1,16 +1,16 @@
 //
-//  TUIChatBotPluginBranchCell.h
-//  TUIChatBotPlugin
+//  TUIBotBranchCell.h
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2023/10/30.
 //
 
 #import <TIMCommon/TUIBubbleMessageCell.h>
-#import "TUIChatBotPluginBranchCellData.h"
+#import "TUIBotBranchCellData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUIChatBotPluginBranchItemCell : UITableViewCell
+@interface TUIBotBranchItemCell : UITableViewCell
 @property (nonatomic, assign) BranchMsgSubType subType;
 @property (nonatomic, strong) UIImageView *topLine;
 @property (nonatomic, strong) UILabel *numberLabel;
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *arrowView;
 @end
 
-@interface TUIChatBotPluginBranchCell : TUIBubbleMessageCell
+@interface TUIBotBranchCell : TUIBubbleMessageCell
 @property (nonatomic, strong) UIImageView *headerBkView;
 @property (nonatomic, strong) UIImageView *headerDotView;
 @property (nonatomic, strong) UILabel *headerLabel;
@@ -26,9 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *headerRefreshView;
 @property (nonatomic, strong) UITableView *itemsTableView;
 
-- (void)fillWithData:(TUIChatBotPluginBranchCellData *)data;
+- (void)fillWithData:(TUIBotBranchCellData *)data;
 
-@property (nonatomic, strong) TUIChatBotPluginBranchCellData *customData;
+@property (nonatomic, strong) TUIBotBranchCellData *customData;
 
 @end
 

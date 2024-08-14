@@ -1,16 +1,16 @@
 //
-//  TUIChatBotPluginStreamTextCell.m
-//  TUIChatBotPlugin
+//  TUIChatBotStreamTextCell.m
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2023/10/30.
 //
 
-#import "TUIChatBotPluginStreamTextCell.h"
+#import "TUIBotStreamTextCell.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
 
-@implementation TUIChatBotPluginStreamTextCell
-- (void)fillWithData:(TUIChatBotPluginStreamTextCellData *)data {
+@implementation TUIBotStreamTextCell
+- (void)fillWithData:(TUIBotStreamTextCellData *)data {
     [super fillWithData:data];
     // 在线 Push 的文本需要流式展示
     if (Msg_Source_OnlinePush == data.source) {

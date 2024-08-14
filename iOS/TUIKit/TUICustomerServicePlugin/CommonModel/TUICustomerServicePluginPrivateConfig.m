@@ -10,7 +10,7 @@
 
 static const long long kTUICustomerServiceCommercialAbility = 1LL << 40;
 static BOOL gEnableCustomerService = NO;
-static NSString *gDefaultCustomerServiceAccount = @"@default_customer_service_account";
+static NSString *gDefaultCustomerServiceAccount = @"@customer_service_account";
 
 @implementation TUICustomerServicePluginPrivateConfig
 

@@ -26,6 +26,14 @@
 	<string>contact_customer_service.png</string>
 	<key>customer_service_card_pic_placeholder_img</key>
 	<string>card_pic_placeholder.png</string>
+	<key>bot_branch_cell_arrow_img</key>
+	<string>branch_cell_arrow.png</string>
+	<key>bot_branch_cell_dotted_line_img</key>
+	<string>branch_cell_dotted_line.png</string>
+	<key>bot_branch_cell_head_bk_img</key>
+	<string>branch_cell_head_bk.png</string>
+	<key>bot_branch_cell_refresh_img</key>
+	<string>branch_cell_refresh.png</string>
 	<key>customer_service_card_item_desc_text_color</key>
 	<string>#999999</string>
 	<key>customer_service_card_input_bg_color</key>
@@ -88,5 +96,17 @@
 	<string>#000000</string>
 	<key>customer_service_phrase_backview_bg_color</key>
 	<string>#FFFFFF</string>
+	<key>bot_branch_cell_header_dot_color</key>
+	<string>#FFFFFF</string>
+	<key>bot_branch_cell_header_text_color_1</key>
+	<string>#FFFFFF</string>
+	<key>bot_branch_cell_header_text_color_2</key>
+	<string>#000000</string>
+	<key>bot_branch_cell_refresh_btn_color</key>
+	<string>#006EFF</string>
+	<key>bot_branch_cell_number_text_color</key>
+	<string>#006EFF</string>
+	<key>bot_branch_cell_content_text_color</key>
+	<string>#333333</string>
 </dict>
 </plist>

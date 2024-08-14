@@ -16,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 #define TUICustomerServicePluginEvaluationBubbleWidth (0.67 * Screen_Width)
 #define TUICustomerServicePluginCardBubbleWidth (0.65 * Screen_Width)
 
+#define TUIBotBranchCellWidth (0.65 * Screen_Width)
+#define TUIBotBranchCellMargin 12
+#define TUIBotBranchCellInnerMargin 8
+
 @interface TUICustomerServicePluginDataProvider (CalculateSize)
 
 + (CGSize)calcBranchCellSize:(NSString *)header items:(NSArray *)items;
@@ -47,6 +51,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (CGSize)calcMenuCellSize:(NSString *)title;
 + (CGSize)calcMenuCellButtonSize:(NSString *)title;
 
++ (CGSize)calcBotBranchCellSize:(NSString *)header items:(NSArray *)items;
++ (CGSize)calcBotBranchCellSizeOfHeader:(NSString *)header;
++ (CGSize)calcBotBranchCellSizeOfTableView:(NSArray *)items;
++ (CGFloat)calcBotBranchCellHeightOfTableView:(NSArray *)items row:(NSInteger)row;
++ (CGFloat)calcBotBranchCellHeightOfContent:(NSString *)content;
 @end
 
 NS_ASSUME_NONNULL_END

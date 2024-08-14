@@ -1,11 +1,11 @@
 //
-//  TUIChatBotPluginStreamTextCellData.m
-//  TUIChatBotPlugin
+//  TUIBotStreamTextCellData.m
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2023/10/30.
 //
 
-#import "TUIChatBotPluginStreamTextCellData.h"
+#import "TUIBotStreamTextCellData.h"
 #import <TUICore/TUICore.h>
 
 #ifndef CGFLOAT_CEIL
@@ -16,14 +16,14 @@
 #endif
 #endif
 
-@implementation TUIChatBotPluginStreamTextCellData
+@implementation TUIBotStreamTextCellData
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data
                                                           options:NSJSONReadingAllowFragments error:nil];
     if (param == nil) {
         return nil;
     }
-    TUIChatBotPluginStreamTextCellData *cellData = [[TUIChatBotPluginStreamTextCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+    TUIBotStreamTextCellData *cellData = [[TUIBotStreamTextCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
     cellData.innerMessage = message;
     cellData.content = [self getDisplayString:message];
     cellData.displayedContentLength = 0;

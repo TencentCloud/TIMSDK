@@ -1,14 +1,14 @@
 //
-//  TUIChatBotPluginBranchCellData.m
-//  TUIChatBotPlugin
+//  TUIBotBranchCellData.m
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2023/10/30.
 //
 
-#import "TUIChatBotPluginBranchCellData.h"
-#import "TUIChatBotPluginDataProvider+CalculateSize.h"
+#import "TUIBotBranchCellData.h"
+#import "TUICustomerServicePluginDataProvider+CalculateSize.h"
 
-@implementation TUIChatBotPluginBranchCellData
+@implementation TUIBotBranchCellData
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data
@@ -16,7 +16,7 @@
     if (param == nil) {
         return nil;
     }
-    TUIChatBotPluginBranchCellData *cellData = [[TUIChatBotPluginBranchCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+    TUIBotBranchCellData *cellData = [[TUIBotBranchCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
     cellData.innerMessage = message;
 
     NSString *subType = param[@"subtype"];
@@ -42,7 +42,7 @@
     if (param == nil) {
         return nil;
     }
-    TUIChatBotPluginBranchCellData *cellData = [[TUIChatBotPluginBranchCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+    TUIBotBranchCellData *cellData = [[TUIBotBranchCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
     cellData.innerMessage = message;
     NSDictionary *content = param[@"content"];
     return content[@"title"];

@@ -92,7 +92,7 @@
                     TUICommonContactCellData *data = [TUICommonContactCellData new];
                     data.identifier = info.userID;
                     data.avatarUrl = [NSURL URLWithString:info.faceURL];
-                    data.title = info.nickName;
+                    data.title = (info.nickName.length > 0 ? info.nickName : info.userID);
                     [self.cellDatas addObject:data];
                     break;
                 }

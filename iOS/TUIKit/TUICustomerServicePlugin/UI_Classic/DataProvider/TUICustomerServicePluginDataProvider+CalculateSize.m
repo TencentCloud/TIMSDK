@@ -185,4 +185,48 @@
     return CGSizeMake(rect.size.width + margin, 32);
 }
 
+#pragma mark -Bot
++ (CGSize)calcBotBranchCellSize:(NSString *)header items:(NSArray *)items {
+    float topBottomMargin = TUIBotBranchCellMargin;
+    float marginBetweenHeaderAndTableView = TUIBotBranchCellInnerMargin;
+    float headerHeight = [TUICustomerServicePluginDataProvider calcBranchCellSizeOfHeader:header].height;
+    float tableViewHeight = [TUICustomerServicePluginDataProvider calcBranchCellSizeOfTableView:items].height;
+    return CGSizeMake(TUIBotBranchCellWidth,
+                      headerHeight + tableViewHeight + topBottomMargin * 2 + marginBetweenHeaderAndTableView);
+}
+
++ (CGSize)calcBotBranchCellSizeOfHeader:(NSString *)header {
+    float leftRightMargin = TUIBotBranchCellMargin;
+    CGRect rect = [header boundingRectWithSize:CGSizeMake(TUIBotBranchCellWidth - leftRightMargin * 2, MAXFLOAT)
+                                       options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                    attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:16] }
+                                       context:nil];
+    return CGSizeMake(TUIBotBranchCellWidth, rect.size.height);
+}
+
++ (CGSize)calcBotBranchCellSizeOfTableView:(NSArray *)items {
+    CGFloat height = 0;
+    for (int i = 0; i < items.count; i++) {
+        height += [self calcBranchCellHeightOfTableView:items row:i];
+    }
+    return CGSizeMake(TUIBotBranchCellWidth, height);
+}
+
++ (CGFloat)calcBotBranchCellHeightOfTableView:(NSArray *)items row:(NSInteger)row {
+    if (row < 0 || row >= items.count) {
+        return 0;
+    }
+    NSString *content = items[row];
+    return [self calcBranchCellHeightOfContent:content];
+}
+
++ (CGFloat)calcBotBranchCellHeightOfContent:(NSString *)content {
+    float width = TUIBotBranchCellWidth - TUIBotBranchCellMargin * 2 - 5 - 6;
+    CGRect rect = [content boundingRectWithSize:CGSizeMake(width, MAXFLOAT)
+                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                     attributes:@{ NSFontAttributeName : [UIFont systemFontOfSize:16] }
+                                        context:nil];
+    return MAX(rect.size.height + 16, 36);
+}
+
 @end

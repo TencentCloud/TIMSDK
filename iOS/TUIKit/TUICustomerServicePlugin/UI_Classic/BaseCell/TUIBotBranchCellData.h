@@ -1,6 +1,6 @@
 //
-//  TUIChatBotPluginBranchCellData.h
-//  TUIChatBotPlugin
+//  TUIBotBranchCellData.h
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2023/10/30.
 //
@@ -11,11 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, BranchMsgSubType) {
-    BranchMsgSubType_Welcome = 0, // 欢迎消息
-    BranchMsgSubType_Clarify = 1, // 澄清消息
+    BranchMsgSubType_Welcome = 0,
+    BranchMsgSubType_Clarify = 1,
 };
 
-@interface TUIChatBotPluginBranchCellData : TUIBubbleMessageCellData
+@interface TUIBotBranchCellData : TUIBubbleMessageCellData
 
 @property (nonatomic, assign) BranchMsgSubType subType;
 @property (nonatomic, copy) NSString *header;

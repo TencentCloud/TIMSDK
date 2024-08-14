@@ -1,15 +1,15 @@
 //
-//  TUIChatBotPluginRichTextCellData.m
-//  TUIChatBotPlugin
+//  TUIBotRichTextCellData.m
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2024/3/1.
 //  Copyright © 2024 Tencent. All rights reserved.
 //
 
-#import "TUIChatBotPluginRichTextCellData.h"
+#import "TUIBotRichTextCellData.h"
 #import <TIMCommon/TIMDefine.h>
 
-@implementation TUIChatBotPluginRichTextCellData
+@implementation TUIBotRichTextCellData
 
 + (TUIMessageCellData *)getCellData:(V2TIMMessage *)message {
     NSDictionary *param = [NSJSONSerialization JSONObjectWithData:message.customElem.data
@@ -17,7 +17,7 @@
     if (param == nil) {
         return nil;
     }
-    TUIChatBotPluginRichTextCellData *cellData = [[TUIChatBotPluginRichTextCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
+    TUIBotRichTextCellData *cellData = [[TUIBotRichTextCellData alloc] initWithDirection:message.isSelf ? MsgDirectionOutgoing : MsgDirectionIncoming];
     cellData.innerMessage = message;
     cellData.content = param[@"content"];
     cellData.reuseId = TRichTextMessageCell_ReuserId;

@@ -1,18 +1,18 @@
 //
-//  TUIChatBotPluginBranchCell.m
-//  TUIChatBotPlugin
+//  TUIBotBranchCell.m
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2023/10/30.
 //
 
-#import "TUIChatBotPluginBranchCell.h"
-#import "TUIChatBotPluginDataProvider.h"
-#import "TUIChatBotPluginDataProvider+CalculateSize.h"
+#import "TUIBotBranchCell.h"
+#import "TUICustomerServicePluginDataProvider.h"
+#import "TUICustomerServicePluginDataProvider+CalculateSize.h"
 #import <TIMCommon/TIMDefine.h>
 #import <TIMCommon/TIMRTLUtil.h>
 #import <TUICore/TUICore.h>
 
-@implementation TUIChatBotPluginBranchItemCell
+@implementation TUIBotBranchItemCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -21,25 +21,25 @@
         self.contentView.backgroundColor = [UIColor clearColor];
         
         _topLine = [[UIImageView alloc] init];
-        [_topLine setImage:TUIChatBotPluginBundleThemeImage(@"chat_bot_branch_cell_dotted_line_img", @"branch_cell_dotted_line")];
+        [_topLine setImage:TUICustomerServicePluginBundleThemeImage(@"bot_branch_cell_dotted_line_img", @"branch_cell_dotted_line")];
         [self.contentView addSubview:_topLine];
         
         _numberLabel = [[UILabel alloc] init];
         _numberLabel.font = [UIFont systemFontOfSize:17];
         _numberLabel.numberOfLines = 0;
         _numberLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _numberLabel.textColor = TUIChatBotPluginDynamicColor(@"chat_bot_branch_cell_number_text_color", @"#006EFF");
+        _numberLabel.textColor = TUICustomerServicePluginDynamicColor(@"bot_branch_cell_number_text_color", @"#006EFF");
         [self.contentView addSubview:_numberLabel];
         
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.font = [UIFont systemFontOfSize:14];
         _contentLabel.numberOfLines = 0;
         _contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _contentLabel.textColor = TUIChatBotPluginDynamicColor(@"chat_bot_branch_cell_content_text_color", @"#333333");
+        _contentLabel.textColor = TUICustomerServicePluginDynamicColor(@"bot_branch_cell_content_text_color", @"#333333");
         [self.contentView addSubview:_contentLabel];
         
         _arrowView = [[UIImageView alloc] init];
-        UIImage *arrowImage = TUIChatBotPluginBundleThemeImage(@"chat_bot_branch_cell_arrow_img", @"branch_cell_arrow");
+        UIImage *arrowImage = TUICustomerServicePluginBundleThemeImage(@"bot_branch_cell_arrow_img", @"branch_cell_arrow");
         [_arrowView setImage:[arrowImage rtl_imageFlippedForRightToLeftLayoutDirection]];
         [self.contentView addSubview:_arrowView];
     }
@@ -51,32 +51,32 @@
     [super updateConstraints];
     
     [self.topLine mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.mas_equalTo(TUIChatBotPluginBranchCellMargin);
+        make.leading.mas_equalTo(TUIBotBranchCellMargin);
         make.top.mas_equalTo(0);
-        make.width.mas_equalTo(self.mm_w - TUIChatBotPluginBranchCellMargin * 2);
+        make.width.mas_equalTo(self.mm_w - TUIBotBranchCellMargin * 2);
         make.height.mas_equalTo(0.5);
     }];
     
     if (BranchMsgSubType_Welcome == self.subType) {
-        CGFloat height = [TUIChatBotPluginDataProvider calcBranchCellHeightOfContent:self.contentLabel.text];
+        CGFloat height = [TUICustomerServicePluginDataProvider calcBranchCellHeightOfContent:self.contentLabel.text];
         [self.numberLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.mas_equalTo(TUIChatBotPluginBranchCellMargin);
+            make.leading.mas_equalTo(TUIBotBranchCellMargin);
             make.centerY.mas_equalTo(self.contentView.mas_centerY);
             make.width.mas_equalTo(20);
             make.height.mas_equalTo(20);
         }];
         [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.mas_equalTo(self.numberLabel.mas_trailing).offset(TUIChatBotPluginBranchCellMargin);
+            make.leading.mas_equalTo(self.numberLabel.mas_trailing).offset(TUIBotBranchCellMargin);
             make.centerY.mas_equalTo(self.contentView.mas_centerY);
-            make.width.mas_equalTo(self.mm_w - TUIChatBotPluginBranchCellMargin * 4 - kScale375(16) - 6);
+            make.width.mas_equalTo(self.mm_w - TUIBotBranchCellMargin * 4 - kScale375(16) - 6);
             make.height.mas_equalTo(height);
         }];
     } else {
         [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.mas_equalTo(TUIChatBotPluginBranchCellMargin);
+            make.leading.mas_equalTo(TUIBotBranchCellMargin);
             make.top.mas_equalTo(0);
-            make.width.mas_equalTo(self.mm_w - TUIChatBotPluginBranchCellMargin * 2 - kScale375(16) - 6);
-            make.height.mas_equalTo([TUIChatBotPluginDataProvider calcBranchCellHeightOfContent:self.contentLabel.text]);
+            make.width.mas_equalTo(self.mm_w - TUIBotBranchCellMargin * 2 - kScale375(16) - 6);
+            make.height.mas_equalTo([TUICustomerServicePluginDataProvider calcBranchCellHeightOfContent:self.contentLabel.text]);
         }];
     }
     
@@ -92,22 +92,22 @@
 
 
 #define BranchItemCellMaxCountPerPage 4
-@interface TUIChatBotPluginBranchCell() <UITableViewDelegate, UITableViewDataSource>
+@interface TUIBotBranchCell() <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
-@implementation TUIChatBotPluginBranchCell
+@implementation TUIBotBranchCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _headerBkView = [[UIImageView alloc] init];
-        UIImage *headerBkImage = TUIChatBotPluginBundleThemeImage(@"chat_bot_branch_cell_head_bk_img", @"branch_cell_head_bk");
+        UIImage *headerBkImage = TUICustomerServicePluginBundleThemeImage(@"bot_branch_cell_head_bk_img", @"branch_cell_head_bk");
         [_headerBkView setImage:[headerBkImage rtl_imageFlippedForRightToLeftLayoutDirection]];
         [self.container addSubview:_headerBkView];
         
         _headerDotView = [[UIImageView alloc] init];
-        [_headerDotView setBackgroundColor:TUIChatBotPluginDynamicColor(@"chat_bot_branch_cell_header_dot_color", @"#FFFFFF")];
+        [_headerDotView setBackgroundColor:TUICustomerServicePluginDynamicColor(@"bot_branch_cell_header_dot_color", @"#FFFFFF")];
         _headerDotView.layer.cornerRadius = kScale375(8) / 2;
         _headerDotView.layer.masksToBounds = YES;
         [self.container addSubview:_headerDotView];
@@ -116,19 +116,19 @@
         _headerLabel.font = [UIFont systemFontOfSize:14];
         _headerLabel.numberOfLines = 0;
         _headerLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _headerLabel.textColor = TUIChatBotPluginDynamicColor(@"chat_bot_branch_cell_header_text_color_1", @"#FFFFFF");
+        _headerLabel.textColor = TUICustomerServicePluginDynamicColor(@"bot_branch_cell_header_text_color_1", @"#FFFFFF");
         [self.container addSubview:_headerLabel];
         
         _headerRefreshBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _headerRefreshBtn.backgroundColor = [UIColor clearColor];
         [_headerRefreshBtn setTitle:TIMCommonLocalizableString(TUIChatBotChangeQuestion) forState:UIControlStateNormal];
         [_headerRefreshBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-        [_headerRefreshBtn setTitleColor:TUIChatBotPluginDynamicColor(@"chat_bot_branch_cell_refresh_btn_color", @"#006EFF") forState:UIControlStateNormal];
+        [_headerRefreshBtn setTitleColor:TUICustomerServicePluginDynamicColor(@"bot_branch_cell_refresh_btn_color", @"#006EFF") forState:UIControlStateNormal];
         [_headerRefreshBtn addTarget:self action:@selector(onRefresh) forControlEvents:UIControlEventTouchUpInside];
         [self.container addSubview:_headerRefreshBtn];
         
         _headerRefreshView = [[UIImageView alloc] init];
-        [_headerRefreshView setImage:TUIChatBotPluginBundleThemeImage(@"chat_bot_branch_cell_refresh_img", @"branch_cell_refresh")];
+        [_headerRefreshView setImage:TUICustomerServicePluginBundleThemeImage(@"bot_branch_cell_refresh_img", @"branch_cell_refresh")];
         UITapGestureRecognizer *tag = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onRefresh)];
         [_headerRefreshView addGestureRecognizer:tag];
         _headerRefreshView.userInteractionEnabled = YES;
@@ -141,7 +141,7 @@
         _itemsTableView.delegate = self;
         _itemsTableView.dataSource = self;
         _itemsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [_itemsTableView registerClass:[TUIChatBotPluginBranchItemCell class] forCellReuseIdentifier:@"item_cell"];
+        [_itemsTableView registerClass:[TUIBotBranchItemCell class] forCellReuseIdentifier:@"item_cell"];
         [self.container addSubview:_itemsTableView];
     }
     return self;
@@ -181,7 +181,7 @@
                    param:param];
 }
 
-- (void)fillWithData:(TUIChatBotPluginBranchCellData *)data {
+- (void)fillWithData:(TUIBotBranchCellData *)data {
     [super fillWithData:data];
     
     self.customData = data;
@@ -192,14 +192,14 @@
         self.headerRefreshView.hidden = NO;
         self.headerBkView.hidden = NO;
         self.headerLabel.font = [UIFont systemFontOfSize:14];
-        self.headerLabel.textColor = TUIChatBotPluginDynamicColor(@"chat_bot_branch_cell_header_text_color_1", @"#FFFFFF");
+        self.headerLabel.textColor = TUICustomerServicePluginDynamicColor(@"bot_branch_cell_header_text_color_1", @"#FFFFFF");
     } else {
         self.headerDotView.hidden = YES;
         self.headerRefreshBtn.hidden = YES;
         self.headerRefreshView.hidden = YES;
         self.headerBkView.hidden = YES;
         self.headerLabel.font = [UIFont boldSystemFontOfSize:14];
-        self.headerLabel.textColor = TUIChatBotPluginDynamicColor(@"chat_bot_branch_cell_header_text_color_2", @"#000000");
+        self.headerLabel.textColor = TUICustomerServicePluginDynamicColor(@"bot_branch_cell_header_text_color_2", @"#000000");
     }
     [self.itemsTableView reloadData];
     
@@ -214,9 +214,9 @@
 
 // Override, the size of bubble content.
 + (CGSize)getContentSize:(TUIMessageCellData *)data {
-    NSAssert([data isKindOfClass:TUIChatBotPluginBranchCellData.class],
-             @"data must be a kind of TUIChatBotPluginBranchCellData");
-    TUIChatBotPluginBranchCellData *branchCellData = (TUIChatBotPluginBranchCellData *)data;
+    NSAssert([data isKindOfClass:TUIBotBranchCellData.class],
+             @"data must be a kind of TUIBotBranchCellData");
+    TUIBotBranchCellData *branchCellData = (TUIBotBranchCellData *)data;
     if (!branchCellData.pageItems) {
         if (BranchMsgSubType_Welcome == branchCellData.subType) {
             branchCellData.pageItems = [branchCellData.items subarrayWithRange:
@@ -225,20 +225,20 @@
             branchCellData.pageItems = branchCellData.items;
         }
     }
-    return [TUIChatBotPluginDataProvider calcBranchCellSize:branchCellData.header items:branchCellData.pageItems];
+    return [TUICustomerServicePluginDataProvider calcBranchCellSize:branchCellData.header items:branchCellData.pageItems];
 }
 
 - (void)updateConstraints {
     [super updateConstraints];
 
-    CGFloat cellHeight = [TUIChatBotPluginDataProvider calcBranchCellSize:self.customData.header
+    CGFloat cellHeight = [TUICustomerServicePluginDataProvider calcBranchCellSize:self.customData.header
                                                                     items:self.customData.pageItems].height;
-    CGSize tableViewSize = [TUIChatBotPluginDataProvider calcBranchCellSizeOfTableView:self.customData.pageItems];
-    CGSize headerLabelSize = [TUIChatBotPluginDataProvider calcBranchCellSizeOfHeader:self.customData.header];
-    CGSize headerSize = CGSizeMake(self.container.mm_w, headerLabelSize.height + TUIChatBotPluginBranchCellMargin + TUIChatBotPluginBranchCellInnerMargin);
+    CGSize tableViewSize = [TUICustomerServicePluginDataProvider calcBranchCellSizeOfTableView:self.customData.pageItems];
+    CGSize headerLabelSize = [TUICustomerServicePluginDataProvider calcBranchCellSizeOfHeader:self.customData.header];
+    CGSize headerSize = CGSizeMake(self.container.mm_w, headerLabelSize.height + TUIBotBranchCellMargin + TUIBotBranchCellInnerMargin);
     
     self.container
-        .mm_width(TUIChatBotPluginBranchCellWidth)
+        .mm_width(TUIBotBranchCellWidth)
         .mm_height(cellHeight);
     
     if (BranchMsgSubType_Welcome == self.customData.subType) {
@@ -250,14 +250,14 @@
         }];
         
         [self.headerDotView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.mas_equalTo(TUIChatBotPluginBranchCellMargin);
+            make.leading.mas_equalTo(TUIBotBranchCellMargin);
             make.centerY.mas_equalTo(self.headerBkView);
-            make.width.mas_equalTo(TUIChatBotPluginBranchCellInnerMargin);
-            make.height.mas_equalTo(TUIChatBotPluginBranchCellInnerMargin);
+            make.width.mas_equalTo(TUIBotBranchCellInnerMargin);
+            make.height.mas_equalTo(TUIBotBranchCellInnerMargin);
         }];
         
         [self.headerRefreshView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.trailing.mas_equalTo(self.container.mas_trailing).offset(-TUIChatBotPluginBranchCellMargin);
+            make.trailing.mas_equalTo(self.container.mas_trailing).offset(-TUIBotBranchCellMargin);
             make.centerY.mas_equalTo(self.headerBkView);
             make.width.mas_equalTo(12);
             make.height.mas_equalTo(16);
@@ -265,21 +265,21 @@
         
         [self.headerRefreshBtn sizeToFit];
         [self.headerRefreshBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.trailing.mas_equalTo(self.headerRefreshView.mas_leading).offset(-TUIChatBotPluginBranchCellMargin);
+            make.trailing.mas_equalTo(self.headerRefreshView.mas_leading).offset(-TUIBotBranchCellMargin);
             make.centerY.mas_equalTo(self.headerBkView);
             make.size.mas_equalTo(self.headerRefreshBtn.frame.size);
         }];
         
         [self.headerLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.mas_equalTo(self.headerDotView.mas_trailing).offset(TUIChatBotPluginBranchCellMargin);
-            make.trailing.mas_equalTo(self.headerRefreshBtn.mas_leading).offset(-TUIChatBotPluginBranchCellMargin);
+            make.leading.mas_equalTo(self.headerDotView.mas_trailing).offset(TUIBotBranchCellMargin);
+            make.trailing.mas_equalTo(self.headerRefreshBtn.mas_leading).offset(-TUIBotBranchCellMargin);
             make.centerY.mas_equalTo(self.headerBkView);
             make.height.mas_equalTo(headerLabelSize.height);
         }];
     } else {
         [self.headerLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.mas_equalTo(TUIChatBotPluginBranchCellMargin);
-            make.top.mas_equalTo(TUIChatBotPluginBranchCellMargin);
+            make.leading.mas_equalTo(TUIBotBranchCellMargin);
+            make.top.mas_equalTo(TUIBotBranchCellMargin);
             make.width.mas_equalTo(headerLabelSize.width);
             make.height.mas_equalTo(headerLabelSize.height);
         }];
@@ -295,7 +295,7 @@
 
 #pragma mark - UITableViewDelegate & UITableViewDataSource
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [TUIChatBotPluginDataProvider calcBranchCellHeightOfTableView:self.customData.pageItems row:indexPath.row];
+    return [TUICustomerServicePluginDataProvider calcBranchCellHeightOfTableView:self.customData.pageItems row:indexPath.row];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -305,7 +305,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 
     NSString *content = self.customData.pageItems[indexPath.row];
-    [TUIChatBotPluginDataProvider sendTextMessage:content];
+    [TUICustomerServicePluginDataProvider sendTextMessage:content];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -316,7 +316,7 @@
     if (self.customData.pageItems.count <= indexPath.row) {
         return nil;
     }
-    TUIChatBotPluginBranchItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"item_cell" forIndexPath:indexPath];
+    TUIBotBranchItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"item_cell" forIndexPath:indexPath];
     cell.subType = self.customData.subType;
     if (BranchMsgSubType_Welcome == self.customData.subType) {
         cell.numberLabel.hidden = NO;

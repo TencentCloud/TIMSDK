@@ -127,6 +127,27 @@
                            TMessageCell_Data_Name : @"TUICustomerServicePluginCardCellData"
                          }
     ];
+    [TUICore callService:TUICore_TUIChatService
+                      method:TUICore_TUIChatService_AppendCustomMessageMethod
+                       param:@{BussinessID : GetCustomerServiceBussinessID(BussinessID_Src_CustomerService_Bot_Welcome_Clarify),
+                               TMessageCell_Name : @"TUIBotBranchCell",
+                               TMessageCell_Data_Name : @"TUIBotBranchCellData"
+                             }
+        ];
+    [TUICore callService:TUICore_TUIChatService
+                  method:TUICore_TUIChatService_AppendCustomMessageMethod
+                   param:@{BussinessID : GetCustomerServiceBussinessID(BussinessID_Src_CustomerService_Bot_Rich_Text),
+                           TMessageCell_Name : @"TUIBotRichTextCell",
+                           TMessageCell_Data_Name : @"TUIBotRichTextCellData"
+                         }
+    ];
+    [TUICore callService:TUICore_TUIChatService
+                  method:TUICore_TUIChatService_AppendCustomMessageMethod
+                   param:@{BussinessID : GetCustomerServiceBussinessID(BussinessID_Src_CustomerService_Bot_Stream_Text),
+                           TMessageCell_Name : @"TUIBotStreamTextCell",
+                           TMessageCell_Data_Name : @"TUIBotStreamTextCellData"
+                         }
+    ];
 }
 
 #pragma mark - TUINotificationProtocol

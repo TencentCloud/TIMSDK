@@ -1,24 +1,24 @@
 //
-//  TUIChatBotPluginRichTextCell.m
-//  TUIChatBotPlugin
+//  TUIBotRichTextCell.m
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2024/3/1.
 //  Copyright © 2024 Tencent. All rights reserved.
 //
 
-#import "TUIChatBotPluginRichTextCell.h"
+#import "TUIBotRichTextCell.h"
 #import <TUIChat/TUITextMessageCell.h>
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUICore.h>
 #import <WebKit/WebKit.h>
 
-@interface TUIChatBotPluginRichTextCell ()<WKNavigationDelegate>
+@interface TUIBotRichTextCell ()<WKNavigationDelegate>
 @property(nonatomic, strong) WKWebView *webView;
 @property(nonatomic, strong) UIColor *webViewBkColor;
 @property(nonatomic, strong) UIColor *webViewTextColor;
 @end
 
-@implementation TUIChatBotPluginRichTextCell
+@implementation TUIBotRichTextCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -51,7 +51,7 @@
         [_webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:nil];
         _webView.scrollView.scrollEnabled = NO;
         
-        NSString *bundlePath = TUIBundlePath(TUIChatBotPluginBundle,TUIChatBotPluginBundle_Key_Class);
+        NSString *bundlePath = TUIBundlePath(TUICustomerServicePluginBundle,TUICustomerServicePluginBundle_Key_Class);
         NSString *path = [bundlePath stringByAppendingPathComponent:@"markdown.html"];
         if (path) {
             NSURL *url = [NSURL fileURLWithPath:path];
@@ -85,7 +85,7 @@
     }];
 }
 
-- (void)fillWithData:(TUIChatBotPluginRichTextCellData *)data {
+- (void)fillWithData:(TUIBotRichTextCellData *)data {
     // set data
     [super fillWithData:data];
     self.webViewData = data;
@@ -128,8 +128,8 @@
 
 #pragma mark - TUIMessageCellProtocol
 + (CGSize)getContentSize:(TUIMessageCellData *)data {
-    if ([data isKindOfClass:[TUIChatBotPluginRichTextCellData class]]) {
-        return CGSizeMake(TRichTextMessageCell_Width_Max, [(TUIChatBotPluginRichTextCellData *)data cellHeight]);
+    if ([data isKindOfClass:[TUIBotRichTextCellData class]]) {
+        return CGSizeMake(TRichTextMessageCell_Width_Max, [(TUIBotRichTextCellData *)data cellHeight]);
     }
     return CGSizeZero;
 }

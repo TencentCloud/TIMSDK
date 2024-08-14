@@ -1,6 +1,6 @@
 //
-//  TUIChatBotPluginStreamTextCellData.h
-//  TUIChatBotPlugin
+//  TUIBotStreamTextCellData.h
+//  TUICustomerServicePlugin
 //
 //  Created by lynx on 2023/10/30.
 //
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUIChatBotPluginStreamTextCellData : TUITextMessageCellData
+@interface TUIBotStreamTextCellData : TUITextMessageCellData
 @property(nonatomic, strong) dispatch_source_t timer;
 @property(nonatomic, strong) UIFont *contentFont;
 @property(nonatomic, strong) NSAttributedString *contentString;
