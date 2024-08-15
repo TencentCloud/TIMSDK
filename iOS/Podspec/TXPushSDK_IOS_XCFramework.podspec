@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXPushSDK_IOS_XCFramework'
-  spec.version      = '8.1.6103'
+  spec.version      = '8.1.6116'
   spec.platform     = :ios
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.1.6103/PushSDK_8.1.6103.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.1.6116/PushSDK_8.1.6116.xcframework.zip'}
   spec.vendored_frameworks = '**/PushSDK.xcframework'
   spec.resource_bundle = {
     "#{spec.module_name}_Privacy" => '**/PushSDK.xcframework/ios-arm64_armv7/PushSDK.framework/PrivacyInfo.xcprivacy'
