@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUISearch'
-  spec.version      = '8.1.6103'
-  spec.platform     = :ios 
+  spec.version      = '8.1.6116'
+  spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
       :text => <<-LICENSE

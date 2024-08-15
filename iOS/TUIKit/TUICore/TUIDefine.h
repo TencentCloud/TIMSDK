@@ -59,15 +59,10 @@
 #define BussinessID_Src_CustomerService_Card @"22"
 #define BussinessID_Src_CustomerService_EvaluationRule @"23"
 #define BussinessID_Src_CustomerService_EvaluationTrigger @"24"
+#define BussinessID_Src_CustomerService_Bot_Welcome_Clarify @"29" // Supported in 8.1 and later
+#define BussinessID_Src_CustomerService_Bot_Rich_Text @"30" // Supported in 8.1 and later
+#define BussinessID_Src_CustomerService_Bot_Stream_Text @"31" // Supported in 8.1 and later
 #define GetCustomerServiceBussinessID(src) [NSString stringWithFormat:@"%@%@",BussinessID_CustomerService, src]
-// Supported in 7.7 and later
-#define BussinessID_ChatBot @"chatbotPlugin"
-#define BussinessID_Src_ChatBot @"src"
-#define BussinessID_Src_ChatBot_Stream_Text @(2)
-#define BussinessID_Src_ChatBot_Request @(7)
-#define BussinessID_Src_ChatBot_Rich_Text @(9)
-#define BussinessID_Src_ChatBot_Welcome_Clarify_Selected @(15)
-#define GetChatBotBussinessID(src) [NSString stringWithFormat:@"%@%@",BussinessID_ChatBot, src]
 
 /**
  * The business version of "Group-creating custom message"
@@ -153,7 +148,6 @@
 #define TUITranslationBundle @"TUITranslation"
 #define TUIVoiceToTextBundle @"TUIVoiceToText"
 #define TUICustomerServicePluginBundle @"TUICustomerServicePlugin"
-#define TUIChatBotPluginBundle @"TUIChatBotPlugin"
 
 #define TUIKitLocalizableBundle @"TUIKitLocalizable"
 #define TUICoreLocalizableBundle TUIKitLocalizableBundle
@@ -184,7 +178,6 @@
 #define TUIChatLocalizableBundle_Key_Class @"TUIChatService"
 #define TIMCommonLocalizableBundle_Key_Class @"TIMConfig"
 #define TUICustomerServicePluginBundle_Key_Class @"TUICustomerServicePluginService"
-#define TUIChatBotPluginBundle_Key_Class @"TUIChatBotPluginService"
 
 static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     if ([bundleKeyClass isEqualToString:TUICoreBundle_Key_Class] || [bundleKeyClass isEqualToString:TUIKitLocalizableBundle_Key_Class]) {
@@ -230,9 +223,6 @@ static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     }
     if ([bundleKeyClass isEqualToString:TUICustomerServicePluginBundle_Key_Class]) {
         return @"TUICustomerServicePlugin";
-    }
-    if ([bundleKeyClass isEqualToString:TUIChatBotPluginBundle_Key_Class]) {
-        return @"TUIChatBotPlugin";
     }
     return @"";
 }
@@ -281,7 +271,6 @@ static inline NSString *getTUIGetBundlePath(NSString *bundleName, NSString *bund
 #define TUIVoiceToTextThemePath TUIBundlePath(@"TUIVoiceToTextTheme", TUIVoiceToTextBundle_Key_Class)
 #define TUICallKitThemePath TUIBundlePath(@"TUICallKitTheme", TUICallKitBundle_Key_Class)
 #define TUICustomerServicePluginThemePath TUIBundlePath(@"TUICustomerServicePluginTheme",TUICustomerServicePluginBundle_Key_Class)
-#define TUIChatBotPluginThemePath TUIBundlePath(@"TUIChatBotPluginTheme",TUIChatBotPluginBundle_Key_Class)
 
 static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     if ([bundleName isEqualToString:TUIChatLocalizableBundle] || [bundleName isEqualToString:TUIChatFaceBundle]) {
@@ -315,8 +304,6 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUIVoiceToTextImagePath(imageName) [TUIBundlePath(TUIVoiceToTextBundle, TUIVoiceToTextBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUICustomerServicePluginImagePath(imageName) \
     [TUIBundlePath(TUICustomerServicePluginBundle,TUICustomerServicePluginBundle_Key_Class) stringByAppendingPathComponent:imageName]
-#define TUIChatBotPluginImagePath(imageName) \
-    [TUIBundlePath(TUIChatBotPluginBundle,TUIChatBotPluginBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 //-----Minimalist-------
 #define TUIDemoBundle_Minimalist @"TUIDemo_Minimalist"

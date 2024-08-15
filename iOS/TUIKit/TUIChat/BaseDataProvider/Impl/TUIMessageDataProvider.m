@@ -259,8 +259,8 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
                 return data;
             }
         }
-        // In CustomerService and ChatBot scenarios, unsupported messages are not displayed directly.
-        if ([businessID tui_containsString:BussinessID_CustomerService] || [businessID tui_containsString:BussinessID_ChatBot]) {
+        // In CustomerService scenarios, unsupported messages are not displayed directly.
+        if ([businessID tui_containsString:BussinessID_CustomerService]) {
             return nil;
         }
         return [self getUnsupportedCellData:message];
@@ -522,8 +522,8 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         if (cellDataClass && [cellDataClass respondsToSelector:@selector(getDisplayString:)]) {
             return [cellDataClass getDisplayString:message];
         }
-        // In CustomerService and ChatBot scenarios, unsupported messages are not displayed directly.
-        if ([businessID tui_containsString:BussinessID_CustomerService] || [businessID tui_containsString:BussinessID_ChatBot]) {
+        // In CustomerService scenarios, unsupported messages are not displayed directly.
+        if ([businessID tui_containsString:BussinessID_CustomerService]) {
             return nil;
         }
         return TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
@@ -676,11 +676,6 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
             NSString *src = param[BussinessID_Src_CustomerService];
             if (src.length > 0 && [src isKindOfClass:[NSString class]]) {
                 return [NSString stringWithFormat:@"%@%@", BussinessID_CustomerService, src];
-            }
-        } else if ([param.allKeys containsObject:BussinessID_ChatBot]) {
-            NSNumber *src = param[BussinessID_Src_ChatBot];
-            if (src && [src isKindOfClass:[NSNumber class]]) {
-                return [NSString stringWithFormat:@"%@%@", BussinessID_ChatBot, src];
             }
         }
         return nil;

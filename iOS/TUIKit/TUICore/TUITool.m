@@ -871,13 +871,15 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
         return;
     }
 
+    __weak __typeof(vc) weakVC = vc;
     [[NSNotificationCenter defaultCenter] addObserverForName:TUIKitNotification_onReceivedValueAddedUnsupportPurchaseNeededError
                                                       object:nil
                                                        queue:nil
                                                   usingBlock:^(NSNotification *_Nonnull note) {
+        __strong __typeof(weakVC) strongVC = weakVC;
         NSDictionary *userInfo = note.userInfo;
         NSString *service = [userInfo objectForKey:@"service"];
-        [TUITool showValueAddedUnsupportNeedPurchaseAlertOfService:service onVC:vc];
+        [TUITool showValueAddedUnsupportNeedPurchaseAlertOfService:service onVC:strongVC];
     }];
 }
 
