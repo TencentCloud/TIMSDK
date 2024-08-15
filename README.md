@@ -156,10 +156,10 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ## Latest Enhanced Version 8.1.6116 @2024.08.14
 ### SDK
-- Signaling now supports disabling callbacks before and after message sending
-- Fixed an issue where after deleting a pinned conversation, new messages could not retrieve the conversation
-- Fixed an occasional issue where after deleting a conversation and receiving a conversation deletion callback, there would still be occasional conversation update callbacks; also fixed occasional crash issues
-- Fixed occasional crash issues
+- Signaling now supports disabling callbacks before and after message sending.
+- Fixed an issue where after deleting a pinned conversation, new messages could not retrieve the conversation.
+- Fixed an occasional issue where after deleting a conversation and receiving a conversation deletion callback, there would still be occasional conversation update callbacks.
+- Fixed occasional crash issues.
 
 ### TUIKit & Demo
 - Updated customer service plugin agreement
