@@ -23,7 +23,6 @@ target 'TUIKitDemo' do
   pod 'TUIConversationMarkPlugin', '8.1.6116'
   pod 'TUIVoiceToTextPlugin', '8.1.6116'
   pod 'TUICustomerServicePlugin', '8.1.6116'
-  pod 'TUIChatBotPlugin', '8.1.6116'
   pod 'TUIEmojiPlugin', '8.1.6116'
   pod 'TUICallKit_Swift','>= 2.5.0.1020'   
   pod 'TUIRoomKit','>= 2.5.0'        
