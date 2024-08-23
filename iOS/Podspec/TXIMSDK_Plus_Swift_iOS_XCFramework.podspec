@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_Swift_iOS_XCFramework'
-  spec.version      = '8.1.6116'
+  spec.version      = '8.1.6905'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.1.6116/ImSDK_Plus_Swift_8.1.6116.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.1.6905/ImSDK_Plus_Swift_8.1.6905.xcframework.zip'}
   spec.vendored_frameworks = '**/ImSDK_Plus_Swift.xcframework'
   spec.resource_bundle = {
     "#{spec.module_name}_Privacy" => '**/ImSDK_Plus_Swift.xcframework/ios-arm64_armv7/ImSDK_Plus_Swift.framework/PrivacyInfo.xcprivacy'
