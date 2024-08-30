@@ -1,10 +1,10 @@
 English | [简体中文](./README_ZH.md)
 
-# TIM SDK 8.1.6116 (Mac)
+# TIM SDK 8.1.6122 (Mac)
 
 ## Download IM SDK
 
-[Download ImSDKForMac_Plus.framework Edition](https://im.sdk.qcloud.com/download/plus/8.1.6116/ImSDKForMac_Plus_8.1.6116.framework.zip)
+[Download ImSDKForMac_Plus.framework Edition](https://im.sdk.qcloud.com/download/plus/8.1.6122/ImSDKForMac_Plus_8.1.6122.framework.zip)
 
 Note: The SDK supports three types of APIs: Objective-C, C, and C++. It is strongly recommended that you choose one type of API and avoid mixing it with other types of APIs.
 
