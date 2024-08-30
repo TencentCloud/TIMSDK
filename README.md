@@ -154,14 +154,12 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.1.6116 @2024.08.14
+## Latest Enhanced Version 8.1.6122 @2024.08.30
 ### SDK
-- Signaling now supports disabling callbacks before and after message sending.
-- Fixed an issue where after deleting a pinned conversation, new messages could not retrieve the conversation.
-- Fixed an occasional issue where after deleting a conversation and receiving a conversation deletion callback, there would still be occasional conversation update callbacks.
-- Fixed occasional crash issues.
-
-### TUIKit & Demo
-- Updated customer service plugin agreement
-- Fixed a crash issue on the iOS side of the group note plugin
-
+- Support offline push for HarmonyOS platform
+- Android platform IM SDK adapted to 16K Page Size
+- Optimize server time correction logic
+- Optimize HTTP addresses for anycast routing on the international site
+- Optimize default value for QUIC channel ping timeout
+- Fix the issue where Mac end group notifications do not distinguish between actively joining a group and being passively invited
+- Fix the issue with incorrect account type during Push login
