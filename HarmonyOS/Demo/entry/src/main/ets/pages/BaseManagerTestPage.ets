@@ -95,7 +95,6 @@ import {
   V2TIMOfflinePushFlag,
   V2TIMOfflinePushInfo,
   V2TIMOfflinePushManager,
-  V2TIMOfflinePushTokenType,
   V2TIMReceiveMessageOpt,
   V2TIMReceiveMessageOptInfo,
   V2TIMSDKConfig,
