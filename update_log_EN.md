@@ -2,6 +2,16 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 8.1.6122 @2024.08.30 - Enhanced Version
+### SDK
+- Support offline push for HarmonyOS platform
+- Android platform IM SDK adapted to 16K Page Size
+- Optimize server time correction logic
+- Optimize HTTP addresses for anycast routing on the international site
+- Optimize default value for QUIC channel ping timeout
+- Fix the issue where Mac end group notifications do not distinguish between actively joining a group and being passively invited
+- Fix the issue with incorrect account type during Push login
+
 ## 8.1.6116 @2024.08.14 - Enhanced Version
 ### SDK
 - Signaling now supports disabling callbacks before and after message sending.
