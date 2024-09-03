@@ -15,7 +15,6 @@ target 'TUIKitDemo' do
   pod 'TUIContact', '8.1.6116'
   pod 'TUIGroup', '8.1.6116'
   pod 'TUISearch', '8.1.6116'
-  pod 'TIMPush', '8.1.6116'
   pod 'TUIPollPlugin', '8.1.6116'
   pod 'TUIGroupNotePlugin', '8.1.6116'
   pod 'TUITranslationPlugin', '8.1.6116'
@@ -24,7 +23,8 @@ target 'TUIKitDemo' do
   pod 'TUIVoiceToTextPlugin', '8.1.6116'
   pod 'TUICustomerServicePlugin', '8.1.6116'
   pod 'TUIEmojiPlugin', '8.1.6116'
-  pod 'TUICallKit_Swift','>= 2.5.0.1020'   
+  pod 'TIMPush', '8.1.6906'
+  pod 'TUICallKit_Swift','>= 2.5.0.1020'
   pod 'TUIRoomKit','>= 2.5.0'        
   pod 'MJRefresh'
   pod 'Masonry'
@@ -34,7 +34,7 @@ end
 target 'pushservice' do
   use_frameworks!
   use_modular_headers!
-  pod 'TIMPush', '8.1.6116'
+  pod 'TIMPush', '8.1.6906'
 end
 #Pods config
 #Fix Xcode14 Bundle target error
