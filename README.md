@@ -154,7 +154,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.2.6235 @2024.09.27
+## Latest Enhanced Version 8.2.6325 @2024.09.27
 ### SDK
 
 - IMSDK now supports crash reporting and monitoring.
