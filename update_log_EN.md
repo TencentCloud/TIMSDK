@@ -2,6 +2,35 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 8.2.6235 @2024.09.27 - Enhanced Version
+### SDK
+
+- IMSDK now supports crash reporting and monitoring.
+- IMSDK supports HarmonyOS C API version.
+- IMSDK supports Sony PS platform.
+- IMSDK supports pure push notifications.
+- Login now allows for custom fields to be carried.
+- Optimized the logic for server timestamp correction.
+- Upgraded the backend notification protocol for fan following.
+- Updated versions of libcurl and libopenssl.
+- Upgraded the long connection routing address selection.
+- Enhanced the authentication logic for downloading rich media files via COS.
+- Group voting and group serial message support is now top-positionable.
+- Messages flagged by security measures are not allowed to be forwarded or quoted.
+- Audio and video calls now support enabling virtual backgrounds.
+- Removed the HttpDNS routing method for long connections.
+- Optimized the loading process of QUIC and encryption plugins on the Android platform.
+- Fixed an issue with the Linux SDK exporting some internal symbols.
+- Resolved a rare issue where merged forwarded messages downloaded via the Flutter SDK lacked a message ID.
+- Fixed an error in parsing custom signaling fields in the Harmony SDK.
+- Corrected an issue with parsing session tag fields in the Harmony SDK.
+- Addressed occasional disarray in session sorting fields within the Harmony SDK.
+
+### TUIKit & Demo
+- TUIKit offers enriched API for interface customization.
+- Fixed an issue where clicking on a message in TUIChat did not automatically hide the keyboard.
+
+
 ## 8.1.6122 @2024.08.30 - Enhanced Version
 ### SDK
 - Support offline push for HarmonyOS platform
