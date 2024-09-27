@@ -10,6 +10,7 @@
 
 #import <TIMCommon/TIMPopActionProtocol.h>
 #import <TIMCommon/TUIMessageCell.h>
+#import <TUIChat/TUIChatConfig.h>
 #import <TUIChat/TUIReferenceMessageCell.h>
 #import <TUIChat/TUIReferenceMessageCell_Minimalist.h>
 #import <TUIChat/TUIReplyMessageCell.h>
@@ -129,6 +130,12 @@ static id gShareInstance = nil;
             return nil;
         }
         if (![self isSelectAllContentOfMessage:cell]) {
+            return nil;
+        }
+        if (![TUIChatConfig defaultConfig].enablePopMenuTranslateAction) {
+            return nil;
+        }
+        if (cell.messageData.innerMessage.hasRiskContent) {
             return nil;
         }
 

@@ -12,6 +12,7 @@
 #import <TIMCommon/TUIMessageCell.h>
 #import <TUIChat/TUIVoiceMessageCell.h>
 #import <TUIChat/TUIVoiceMessageCell_Minimalist.h>
+#import <TUIChat/TUIChatConfig.h>
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIDefine.h>
 #import "TUIVoiceToTextConfig.h"
@@ -99,6 +100,9 @@ static id gShareInstance = nil;
     if (![extensionID isKindOfClass:NSString.class]) {
         return nil;
     }
+    if (![TUIChatConfig defaultConfig].enablePopMenuConvertAction) {
+        return nil;
+    }
 
     if ([extensionID isEqualToString:TUICore_TUIChatExtension_PopMenuActionItem_ClassicExtensionID]) {
         // Extension entrance in pop menu when message is long pressed.
@@ -115,6 +119,9 @@ static id gShareInstance = nil;
             return nil;
         }
         if ([TUIVoiceToTextDataProvider shouldShowConvertedText:cell.messageData.innerMessage]) {
+            return nil;
+        }
+        if (cell.messageData.innerMessage.hasRiskContent) {
             return nil;
         }
 
