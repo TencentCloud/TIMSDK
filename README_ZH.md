@@ -165,7 +165,7 @@
 
 [接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## 最新增强版 8.2.6235 @2024.09.27
+## 最新增强版 8.2.6325 @2024.09.27
 ### SDK
 - IMSDK 支持 Crash 上报监控
 - IMSDK 支持鸿蒙 C API 版本
