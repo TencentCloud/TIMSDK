@@ -15,9 +15,6 @@ English | [简体中文](./版本历史.md)
 - Updated versions of libcurl and libopenssl.
 - Upgraded the long connection routing address selection.
 - Enhanced the authentication logic for downloading rich media files via COS.
-- Group voting and group serial message support is now top-positionable.
-- Messages flagged by security measures are not allowed to be forwarded or quoted.
-- Audio and video calls now support enabling virtual backgrounds.
 - Removed the HttpDNS routing method for long connections.
 - Optimized the loading process of QUIC and encryption plugins on the Android platform.
 - Fixed an issue with the Linux SDK exporting some internal symbols.
@@ -28,6 +25,9 @@ English | [简体中文](./版本历史.md)
 
 ### TUIKit & Demo
 - TUIKit offers enriched API for interface customization.
+- Group voting and group serial message support is now top-positionable.
+- Messages flagged by security measures are not allowed to be forwarded or quoted.
+- Audio and video calls now support enabling virtual backgrounds.
 - Fixed an issue where clicking on a message in TUIChat did not automatically hide the keyboard.
 
 
