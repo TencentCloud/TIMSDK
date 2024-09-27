@@ -2,7 +2,7 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
-## 8.2.6235 @2024.09.27 - Enhanced Version
+## 8.2.6325 @2024.09.27 - Enhanced Version
 ### SDK
 
 - IMSDK now supports crash reporting and monitoring.
