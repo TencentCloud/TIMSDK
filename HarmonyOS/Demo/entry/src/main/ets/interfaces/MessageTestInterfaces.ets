@@ -115,7 +115,9 @@ export class MessageTestInterfaces {
 
   static createTextAtMessageAndSend() {
     let message = V2TIMManager.getMessageManager().createTextAtMessage(info.text, info.atUsers);
-    MessageTestInterfaces.sendMessage(message);
+    if (message) {
+      MessageTestInterfaces.sendMessage(message);
+    }
   }
 
   static createCustomMessageAndSend() {

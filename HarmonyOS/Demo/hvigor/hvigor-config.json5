@@ -1,8 +1,6 @@
 {
-  hvigorVersion: "4.1.2",
-  dependencies: {
-    "@ohos/hvigor-ohos-plugin": "4.1.2",
-  },
+  modelVersion: "5.0.0",
+  dependencies: {},
   execution: {
     // "analyze": "default",                    /* Define the build analyze mode. Value: [ "default" | "verbose" | false ]. Default: "default" */
     // "daemon": true,                          /* Enable daemon compilation. Value: [ true | false ]. Default: true */

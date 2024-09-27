@@ -7,6 +7,6 @@
   description: "Demo for Tencent IM SDK",
   version: "7.7.5294",
   dependencies: {
-    "@tencentcloud/imsdk": "file:./imsdk-ohos-8.1.6122.har",
+    "@tencentcloud/imsdk": "file:./imsdk-ohos-8.2.6325.har",
   },
 }
