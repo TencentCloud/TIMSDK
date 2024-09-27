@@ -165,12 +165,29 @@
 
 [接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## 最新增强版 8.1.6122 @2024.08.30
+## 最新增强版 8.2.6235 @2024.09.27
 ### SDK
-- 支持鸿蒙平台离线推送
-- 安卓平台 IM SDK 适配 16K Page Size
-- 优化服务器时间校正逻辑
-- 优化国际站 anycast 选路的 http 地址
-- 优化 quic 通道 ping timeout 默认值
-- 修复 Mac 端进群通知没有区分主动进群和被动邀请的问题
-- 修复 Push 登录账号类型错误的问题
+- IMSDK 支持 Crash 上报监控
+- IMSDK 支持鸿蒙 C API 版本
+- IMSDK 支持索尼 PS 平台
+- IMSDK 支持纯推送消息
+- 登录支持携带自定义字段
+- 优化服务器时间戳校正逻辑 
+- 升级粉丝关注后台通知协议
+- 升级 libcurl 和 libopenssl 版本
+- 升级长连接选路地址
+- 升级 Cos 富媒体文件下载鉴权逻辑
+- 群投票和群接龙消息支持置顶
+- 被安全打击的消息不允许转发和引用
+- 音视频通话支持开启虚拟背景
+- 长连接删除 HttpDNS 选路方式
+- 优化安卓平台 QUIC 与加密插件的加载流程
+- 修复 Linux SDK 导出部分内部符号的问题
+- 修复 Flutter SDK 下载到的合并转发消息偶现没有消息 ID 的问题
+- 修复 Harmony SDK 信令自定义字段解析错误的问题
+- 修复 Harmony SDK 会话标签字段解析错误的问题
+- 修复 Harmony SDK 会话排序字段偶现错乱的问题
+
+### TUIKit & Demo
+- TUIKit 丰富界面定制 API 
+- 修复 TUIChat 点击消息不会自动收起键盘的问题
