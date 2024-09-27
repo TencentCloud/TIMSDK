@@ -154,12 +154,30 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.1.6122 @2024.08.30
+## Latest Enhanced Version 8.2.6235 @2024.09.27
 ### SDK
-- Support offline push for HarmonyOS platform
-- Android platform IM SDK adapted to 16K Page Size
-- Optimize server time correction logic
-- Optimize HTTP addresses for anycast routing on the international site
-- Optimize default value for QUIC channel ping timeout
-- Fix the issue where Mac end group notifications do not distinguish between actively joining a group and being passively invited
-- Fix the issue with incorrect account type during Push login
+
+- IMSDK now supports crash reporting and monitoring.
+- IMSDK supports HarmonyOS C API version.
+- IMSDK supports Sony PS platform.
+- IMSDK supports pure push notifications.
+- Login now allows for custom fields to be carried.
+- Optimized the logic for server timestamp correction.
+- Upgraded the backend notification protocol for fan following.
+- Updated versions of libcurl and libopenssl.
+- Upgraded the long connection routing address selection.
+- Enhanced the authentication logic for downloading rich media files via COS.
+- Group voting and group serial message support is now top-positionable.
+- Messages flagged by security measures are not allowed to be forwarded or quoted.
+- Audio and video calls now support enabling virtual backgrounds.
+- Removed the HttpDNS routing method for long connections.
+- Optimized the loading process of QUIC and encryption plugins on the Android platform.
+- Fixed an issue with the Linux SDK exporting some internal symbols.
+- Resolved a rare issue where merged forwarded messages downloaded via the Flutter SDK lacked a message ID.
+- Fixed an error in parsing custom signaling fields in the Harmony SDK.
+- Corrected an issue with parsing session tag fields in the Harmony SDK.
+- Addressed occasional disarray in session sorting fields within the Harmony SDK.
+
+### TUIKit & Demo
+- TUIKit offers enriched API for interface customization.
+- Fixed an issue where clicking on a message in TUIChat did not automatically hide the keyboard.
