@@ -48,6 +48,19 @@
               param:@{
                   TUICore_TUICallingService_EnableMultiDeviceAbilityMethod_EnableMultiDeviceAbility : @(TUIChatConfig.defaultConfig.enableMultiDeviceForCall)
               }];
+    [TUICore
+        callService:TUICore_TUICallingService
+             method:TUICore_TUICallingService_EnableIncomingBannerMethod
+              param:@{
+        TUICore_TUICallingService_EnableIncomingBannerMethod_EnableIncomingBanner : @(TUIChatConfig.defaultConfig.enableIncomingBanner)
+              }];
+    [TUICore
+        callService:TUICore_TUICallingService
+             method:TUICore_TUICallingService_EnableVirtualBackgroundForCallMethod
+              param:@{
+        TUICore_TUICallingService_EnableVirtualBackgroundForCallMethod_EnableVirtualBackgroundForCall 
+                    : @(TUIChatConfig.defaultConfig.enableVirtualBackgroundForCall)
+              }];
 }
 
 - (NSString *)getDisplayString:(V2TIMMessage *)message {

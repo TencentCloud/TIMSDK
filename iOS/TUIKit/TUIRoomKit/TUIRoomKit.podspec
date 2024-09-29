@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name                  = 'TUIRoomKit'
-  spec.version               = '1.3.2'
+  spec.version               = '2.6.1'
   spec.platform              = :ios
   spec.ios.deployment_target = '13.0'
   spec.license               = { :type => 'MIT', :file => 'LICENSE' }
@@ -51,7 +51,7 @@ Pod::Spec.new do |spec|
     professional.dependency 'OpenCombineFoundation', '~> 0.14.0'
     professional.source_files = 'Source/*.swift', 'Source/Presenter/*.swift', 'Source/**/*.swift', 'Source/**/*.h', 'Source/**/*.m', 'RoomExtension/**/*.swift', 'RoomExtension/**/*.h', 'RoomExtension/**/*.m'
     professional.resource_bundles = {
-      'TUIRoomKitBundle' => ['Resources/*.xcassets', 'Resources/Localized/**/*.strings']
+      'TUIRoomKitBundle' => ['Resources/*.xcassets', 'Resources/Localized/*.xcstrings']
     }
     professional.resource = ['Resources/*.bundle']
     professional.pod_target_xcconfig = {'OTHER_SWIFT_FLAGS' => '-D TXLiteAVSDK_Professional', 'GCC_PREPROCESSOR_DEFINITIONS' => 'TXLiteAVSDK_Professional=1', 'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'USE_OPENCOMBINE'}
@@ -65,7 +65,7 @@ Pod::Spec.new do |spec|
     trtc.dependency 'OpenCombineFoundation', '~> 0.14.0'
     trtc.source_files = 'Source/*.swift', 'Source/Presenter/*.swift', 'Source/**/*.swift', 'Source/**/*.h', 'Source/**/*.m', 'RoomExtension/**/*.swift', 'RoomExtension/**/*.h', 'RoomExtension/**/*.m'
     trtc.resource_bundles = {
-      'TUIRoomKitBundle' => ['Resources/*.xcassets', 'Resources/Localized/**/*.strings']
+      'TUIRoomKitBundle' => ['Resources/*.xcassets', 'Resources/Localized/*.xcstrings']
     }
     trtc.resource = ['Resources/*.bundle']
     trtc.pod_target_xcconfig = {'OTHER_SWIFT_FLAGS' => '-D TXLiteAVSDK_TRTC', 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) COCOAPODS=1 TXLiteAVSDK_TRTC=1', 'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'USE_OPENCOMBINE'}

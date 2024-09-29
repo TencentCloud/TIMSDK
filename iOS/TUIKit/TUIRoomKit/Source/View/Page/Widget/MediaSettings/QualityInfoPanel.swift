@@ -198,15 +198,19 @@ extension QualityInfoPanel: UITableViewDelegate {
         return cellHeight.scale375()
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.sections[safe: section]?.titleText
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let view = view as? UITableViewHeaderFooterView else { return }
-        view.textLabel?.textColor = UIColor(0x99A2B2)
-        view.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        view.textLabel?.textAlignment = isRTL ? .right : .left
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        let headerLabel = UILabel()
+        headerLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        headerLabel.textColor = UIColor(0x99A2B2)
+        headerLabel.textAlignment = isRTL ? .right : .left
+        headerLabel.text = viewModel.sections[safe: section]?.titleText
+        headerView.addSubview(headerLabel)
+        headerLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(16)
+            make.centerY.equalToSuperview()
+        }
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

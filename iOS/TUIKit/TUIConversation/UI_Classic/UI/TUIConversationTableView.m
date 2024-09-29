@@ -11,10 +11,15 @@
 #import <TUICore/TUICore.h>
 #import "TUIConversationCell.h"
 #import "TUIFoldListViewController.h"
+#import "TUIConversationConfig.h"
 
 @interface TUIConversationTableView () <UITableViewDelegate, UITableViewDataSource, TUIConversationListDataProviderDelegate>
 @property(nonatomic, strong) UIImageView *tipsView;
 @property(nonatomic, strong) UILabel *tipsLabel;
+@property (nonatomic, assign) BOOL hideMarkReadAction;
+@property (nonatomic, assign) BOOL hideDeleteAction;
+@property (nonatomic, assign) BOOL hideHideAction;
+@property (nonatomic, strong) NSArray *customizedItems;
 @end
 
 @implementation TUIConversationTableView {
@@ -197,6 +202,23 @@
     }
 }
 
+- (void)parseActionHiddenTagAndCustomizedItems:(TUIConversationCellData *)cellData {
+    id<TUIConversationConfigDataSource> dataSource = [TUIConversationConfig sharedConfig].moreMenuDataSource;
+    NSArray *customizedItems = @[];
+    if (dataSource && [dataSource respondsToSelector:@selector(conversationShouldHideItemsInMoreMenu:)]) {
+        NSInteger flag = [dataSource conversationShouldHideItemsInMoreMenu:cellData];
+        self.hideDeleteAction = flag & TUIConversationItemInMoreMenu_Delete;
+        self.hideMarkReadAction = flag & TUIConversationItemInMoreMenu_MarkRead;
+        self.hideHideAction = flag & TUIConversationItemInMoreMenu_Hide;
+    }
+    if (dataSource && [dataSource respondsToSelector:@selector(conversationShouldAddNewItemsToMoreMenu:)]) {
+        NSArray *items = [dataSource conversationShouldAddNewItemsToMoreMenu:cellData];
+        if ([items isKindOfClass:NSArray.class] && items.count > 0) {
+            self.customizedItems = items;
+        }
+    }
+}
+
 #pragma mark - Table view data source
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self.dataProvider loadNexPageConversations];
@@ -221,6 +243,7 @@
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     TUIConversationCellData *cellData = self.dataProvider.conversationList[indexPath.row];
     NSMutableArray *rowActions = [NSMutableArray array];
+    [self parseActionHiddenTagAndCustomizedItems:cellData];
 
     @weakify(self);
     if (cellData.isLocalConversationFoldList) {
@@ -235,7 +258,9 @@
                                                }
                                              }];
         markHideAction.backgroundColor = RGB(242, 147, 64);
-        [rowActions addObject:markHideAction];
+        if (!self.hideHideAction) {
+            [rowActions addObject:markHideAction];
+        }
         return rowActions;
     }
 
@@ -260,7 +285,9 @@
                                                                                     confirmBtnInfo:confirmBtnInfo];
                                                                           }];
     deleteAction.backgroundColor = RGB(242, 77, 76);
-    [rowActions addObject:deleteAction];
+    if (!self.hideDeleteAction) {
+        [rowActions addObject:deleteAction];
+    }
 
     // MarkAsRead action
     UITableViewRowAction *markAsReadAction =
@@ -282,7 +309,9 @@
                                            }
                                          }];
     markAsReadAction.backgroundColor = RGB(20, 122, 255);
-    [rowActions addObject:markAsReadAction];
+    if (!self.hideMarkReadAction) {
+        [rowActions addObject:markAsReadAction];
+    }
 
     // More action
     NSArray *moreExtensionList =
@@ -304,7 +333,9 @@
                                                }
                                              }];
         markAsHideAction.backgroundColor = RGB(242, 147, 64);
-        [rowActions addObject:markAsHideAction];
+        if (!self.hideHideAction) {
+            [rowActions addObject:markAsHideAction];
+        }
     } else {
         UITableViewRowAction *moreAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive
                                                                               title:TIMCommonLocalizableString(More)
@@ -324,9 +355,11 @@
     trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0)) {
     TUIConversationCellData *cellData = self.dataProvider.conversationList[indexPath.row];
 
+    [self parseActionHiddenTagAndCustomizedItems:cellData];
+    
     // config Actions
     @weakify(self);
-    if (cellData.isLocalConversationFoldList) {
+    if (cellData.isLocalConversationFoldList && !self.hideHideAction) {
         UIContextualAction *markHideAction = [UIContextualAction
             contextualActionWithStyle:UIContextualActionStyleNormal
                                 title:TIMCommonLocalizableString(MarkHide)
@@ -367,8 +400,10 @@
                                     confirmBtnInfo:confirmBtnInfo];
                           }];
     deleteAction.backgroundColor = RGB(242, 77, 76);
-    [arrayM addObject:deleteAction];
-
+    if (!self.hideDeleteAction) {
+        [arrayM addObject:deleteAction];
+    }
+    
     // MarkAsRead action
     UIContextualAction *markAsReadAction = [UIContextualAction
         contextualActionWithStyle:UIContextualActionStyleNormal
@@ -389,7 +424,9 @@
                             }
                           }];
     markAsReadAction.backgroundColor = RGB(20, 122, 255);
-    [arrayM addObject:markAsReadAction];
+    if (!self.hideMarkReadAction) {
+        [arrayM addObject:markAsReadAction];
+    }
 
     // More action
     NSArray *moreExtensionList =
@@ -397,7 +434,7 @@
                             param:@{
                                 TUICore_TUIConversationExtension_ConversationCellAction_ConversationIDKey : cellData.conversationID,
                                 TUICore_TUIConversationExtension_ConversationCellAction_MarkListKey : cellData.conversationMarkList ?: @[],
-                                TUICore_TUIConversationExtension_ConversationCellAction_GroupListKey : cellData.conversationGroupList ?: @[]
+                                TUICore_TUIConversationExtension_ConversationCellAction_GroupListKey : cellData.conversationGroupList ?: @[],
                             }];
     if (self.disableMoreActionExtension || 0 == moreExtensionList.count) {
         UIContextualAction *markAsHideAction = [UIContextualAction
@@ -411,7 +448,9 @@
                                 }
                               }];
         markAsHideAction.backgroundColor = RGB(242, 147, 64);
-        [arrayM addObject:markAsHideAction];
+        if (!self.hideHideAction) {
+            [arrayM addObject:markAsHideAction];
+        }
     } else {
         UIContextualAction *moreAction = [UIContextualAction
             contextualActionWithStyle:UIContextualActionStyleNormal
@@ -434,15 +473,22 @@
 - (void)showMoreAction:(TUIConversationCellData *)cellData extensionList:(NSArray *)extensionList {
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     __weak typeof(self) weakSelf = self;
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(MarkHide)
-                                                    style:UIAlertActionStyleDefault
-                                                  handler:^(UIAlertAction *_Nonnull action) {
-                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                    [strongSelf.dataProvider markConversationHide:cellData];
-                                                    if (cellData.isLocalConversationFoldList) {
-                                                        [TUIConversationListDataProvider cacheConversationFoldListSettings_HideFoldItem:YES];
-                                                    }
-                                                  }]];
+    if (self.customizedItems.count > 0) {
+        for (UIAlertAction *action in self.customizedItems) {
+            [ac tuitheme_addAction:action];
+        }
+    }
+    if (!self.hideHideAction) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(MarkHide)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+                                                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                        [strongSelf.dataProvider markConversationHide:cellData];
+                                                        if (cellData.isLocalConversationFoldList) {
+                                                            [TUIConversationListDataProvider cacheConversationFoldListSettings_HideFoldItem:YES];
+                                                        }
+                                                      }]];
+    }
     [self addCustomAction:ac cellData:cellData];
     [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     if (self.convDelegate && [self.convDelegate respondsToSelector:@selector(tableViewDidShowAlert:)]) {

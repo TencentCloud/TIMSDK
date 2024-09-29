@@ -65,6 +65,7 @@
     self.cameraView.type = self.type;
     self.cameraView.aspectRatio = self.aspectRatio;
     self.cameraView.delegate = self;
+    self.cameraView.maxVideoCaptureTimeLimit = self.videoMaximumDuration;
     [self.view addSubview:self.cameraView];
 
     NSError *error;

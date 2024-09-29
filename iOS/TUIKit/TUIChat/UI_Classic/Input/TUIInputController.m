@@ -39,8 +39,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
-}
-- (void)viewWillAppear:(BOOL)animated {
+    
     _inputBar.frame = CGRectMake(16, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width - 32, TTextView_Height);
     [_inputBar setNeedsLayout];
     _menuView.frame = CGRectMake(16, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width - 32, TMenuView_Menu_Height);
@@ -49,7 +48,12 @@
     [_faceSegementScrollView setNeedsLayout];
     _moreView.frame = CGRectMake(0, _inputBar.frame.origin.y + _inputBar.frame.size.height, self.view.frame.size.width, _moreView.frame.size.height);
     [_moreView setNeedsLayout];
-    
+}
+- (void)viewWillAppear:(BOOL)animated {
+    [_inputBar setNeedsLayout];
+    [_menuView setNeedsLayout];
+    [_faceSegementScrollView setNeedsLayout];
+    [_moreView setNeedsLayout];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];

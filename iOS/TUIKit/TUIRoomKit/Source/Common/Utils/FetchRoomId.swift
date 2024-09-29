@@ -29,13 +29,23 @@ class FetchRoomId {
     
     class func checkIfRoomIdExists(roomId: String, onExist: @escaping () -> (), onNotExist: @escaping () -> ()) {
         V2TIMManager.sharedInstance().getGroupsInfo([roomId]) { infoResult in
-            if infoResult?.first?.resultCode == 0 {
+            if checkIfRoomIdExistsWithResultCode(infoResult?.first?.resultCode) {
                 onExist()
             } else {
                 onNotExist()
             }
         } fail: { code, message in
             onNotExist()
+        }
+    }
+    
+    private class func checkIfRoomIdExistsWithResultCode(_ resultCode: Int32?) -> Bool {
+        let kIMCodeGroupSuccess = 0
+        let kIMCodeGroupInsufficientOperationAuthority = 10007
+        if let resultCode = resultCode {
+            return resultCode == kIMCodeGroupSuccess || resultCode == kIMCodeGroupInsufficientOperationAuthority
+        } else {
+            return false
         }
     }
 }

@@ -41,6 +41,7 @@ class TopViewModel: NSObject {
         createBottomData()
         initialStatus()
         subscribeUIEvent()
+        updateTimerLabelText()
     }
     
     private func createBottomData() {
@@ -82,11 +83,17 @@ class TopViewModel: NSObject {
     private func subscribeUIEvent() {
         EngineEventCenter.shared.subscribeUIEvent(key: .TUIRoomKitService_CurrentUserHasVideoStream, responder: self)
         EngineEventCenter.shared.subscribeEngine(event: .onConferenceInfoChanged, observer: self)
+        EngineEventCenter.shared.subscribeEngine(event: .onStartedRoom, observer: self)
+        EngineEventCenter.shared.subscribeEngine(event: .onJoinedRoom, observer: self)
+        EngineEventCenter.shared.subscribeEngine(event: .onInitialRoomInfo, observer: self)
     }
     
     private func unsubscribeUIEvent() {
         EngineEventCenter.shared.unsubscribeUIEvent(key: .TUIRoomKitService_CurrentUserHasVideoStream, responder: self)
         EngineEventCenter.shared.unsubscribeEngine(event: .onConferenceInfoChanged, observer: self)
+        EngineEventCenter.shared.unsubscribeEngine(event: .onStartedRoom, observer: self)
+        EngineEventCenter.shared.unsubscribeEngine(event: .onJoinedRoom, observer: self)
+        EngineEventCenter.shared.unsubscribeEngine(event: .onInitialRoomInfo, observer: self)
     }
     
     private func switchMicItemAction(sender: UIButton) {
@@ -118,7 +125,7 @@ class TopViewModel: NSObject {
     }
     
     func dropDownAction(sender: UIView) {
-        RoomRouter.shared.presentPopUpViewController(viewType: .roomInfoViewType, height: 258)
+        RoomRouter.shared.presentPopUpViewController(viewType: .roomInfoViewType, height: 290.scale375Height())
     }
     
     func exitAction(sender: UIView) {
@@ -129,6 +136,7 @@ class TopViewModel: NSObject {
         let timeInterval: TimeInterval = Date().timeIntervalSince1970
         let timeStamp = Int(timeInterval)
         var totalSeconds: UInt = UInt(labs(timeStamp - store.timeStampOnEnterRoom))
+        guard topMenuTimer == nil, store.isEnteredRoom else { return }
         updateTimer(totalSeconds: totalSeconds)
         topMenuTimer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
         topMenuTimer?.schedule(deadline: .now(), repeating: .seconds(1))
@@ -169,6 +177,11 @@ extension TopViewModel: RoomEngineEventResponder {
             guard let modifyFlag = param?["modifyFlag"] as? TUIConferenceModifyFlag else { return }
             guard modifyFlag.contains(.roomName) else { return }
             viewResponder?.updateMeetingNameLabel(conferenceInfo.basicRoomInfo.name)
+        case .onStartedRoom, .onJoinedRoom:
+            updateTimerLabelText()
+        case .onInitialRoomInfo:
+            guard let roomInfo = param?["roomInfo"] as? TUIRoomInfo else { return }
+            viewResponder?.updateMeetingNameLabel(roomInfo.name)
         default: break
         }
     }

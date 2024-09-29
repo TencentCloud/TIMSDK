@@ -1,5 +1,5 @@
 //
-//  FloatChatCell.swift
+//  FloatChatMessageView.swift
 //  TUIRoomKit
 //
 //  Created by CY zhao on 2024/5/10.
@@ -8,12 +8,12 @@
 import SnapKit
 import UIKit
 
-class FloatChatDefaultCell: UITableViewCell {
-    static let identifier = "FloatChatDefaultCell"
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .none
+class FloatChatMessageView: UIView {
+    private let messageHorizonSpacing: CGFloat = 8
+    private let messageVerticalSpacing: CGFloat = 5
+    init(floatMessage: FloatChatMessage? = nil) {
+        self.floatMessage = floatMessage
+        super.init(frame: .zero)
         setupUI()
     }
     
@@ -21,14 +21,7 @@ class FloatChatDefaultCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let messageView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 13.0
-        view.backgroundColor = UIColor.tui_color(withHex: "#22262E", alpha: 0.4)
-        return view
-    }()
-    
-    private let messageLabel: UILabel = {
+    lazy var messageLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "PingFangSC-Regular", size: 14.0)
         label.numberOfLines = 0
@@ -48,35 +41,31 @@ class FloatChatDefaultCell: UITableViewCell {
         }
     }
     
+    var height: CGFloat {
+        return messageLabel.frame.height + 2 * messageVerticalSpacing
+    }
+    
     func setupUI() {
-        backgroundColor = .clear
+        backgroundColor = UIColor.tui_color(withHex: "#22262E", alpha: 0.4)
+        layer.cornerRadius = 13.0
         constructViewHierarchy()
         activateConstraints()
+        updateMessage(with: floatMessage)
     }
     
     private func constructViewHierarchy() {
-        contentView.addSubview(messageView)
-        messageView.addSubview(messageLabel)
+        addSubview(messageLabel)
     }
     
     private func activateConstraints() {
-        messageView.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.top)
-            make.height.equalTo(contentView.snp.height).offset(-8)
-            make.leading.equalTo(contentView.snp.leading).offset(8)
-            make.width.lessThanOrEqualTo(contentView).offset(-8 * 2)
-        }
         messageLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(5)
-            make.bottom.equalToSuperview().offset(-5)
-            make.leading.equalToSuperview().offset(5)
-            make.trailing.equalToSuperview().offset(-5)
+            make.leading.equalToSuperview().offset(messageHorizonSpacing)
+            make.top.equalToSuperview().offset(messageVerticalSpacing)
         }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        updateMessage(with: nil)
+        self.snp.makeConstraints { make in
+            make.width.equalTo(messageLabel).offset(2 * messageHorizonSpacing)
+            make.height.equalTo(messageLabel).offset(2 * messageVerticalSpacing)
+        }
     }
     
     private func updateMessage(with message: FloatChatMessage?) {
@@ -88,8 +77,10 @@ class FloatChatDefaultCell: UITableViewCell {
      }
      
      private func getAttributedText(from message: FloatChatMessage) -> NSMutableAttributedString {
-         let userName = message.user.userName + ": "
-         let userNameAttributes: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 12)]
+         var userName = message.user.userName.isEmpty ? message.user.userId : message.user.userName
+         userName = userName + ": "
+         let userNameAttributes: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 12),
+                                                                  .foregroundColor: UIColor.tui_color(withHex: "B2BBD1")]
          let userNameAttributedText = NSMutableAttributedString(string: userName,
                                                                 attributes: userNameAttributes)
 

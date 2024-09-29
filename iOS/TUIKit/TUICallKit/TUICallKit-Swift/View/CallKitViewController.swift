@@ -25,6 +25,7 @@ class CallKitViewController: UIViewController, SingleCallViewDelegate {
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        view.backgroundColor = .black
         if TUICallState.instance.scene.value == .single {
             let callView: SingleCallView? = SingleCallView(frame: CGRect.zero)
             callView?.delegate = self

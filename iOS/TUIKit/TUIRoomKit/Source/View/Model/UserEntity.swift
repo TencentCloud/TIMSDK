@@ -31,6 +31,14 @@ class UserEntity {
         hasScreenStream = userInfo.hasScreenStream
     }
     
+    init(){}
+    
+    init(invitation: TUIInvitation) {
+        self.userId = invitation.invitee.userId
+        self.userName = invitation.invitee.userName
+        self.avatarUrl = invitation.invitee.avatarUrl
+    }
+    
     deinit {
         debugPrint("deinit \(self)")
     }

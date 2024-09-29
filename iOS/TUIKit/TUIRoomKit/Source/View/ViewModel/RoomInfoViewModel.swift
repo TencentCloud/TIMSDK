@@ -12,10 +12,11 @@ import RTCRoomEngine
 enum CopyType {
     case copyRoomIdType
     case copyRoomLinkType
+    case copyRoomPassword
 }
 
 protocol RoomInfoResponder : NSObjectProtocol {
-    func showCopyToast(copyType: CopyType)
+    func showCopyToast(copyType: CopyType?)
     func updateNameLabel(_ text: String)
 }
 
@@ -27,6 +28,9 @@ class RoomInfoViewModel: NSObject {
     var roomInfo: TUIRoomInfo {
         store.roomInfo
     }
+    lazy var title = {
+        roomInfo.name
+    }()
     weak var viewResponder: RoomInfoResponder?
     var roomLink: String? {
         guard let bundleId = Bundle.main.bundleIdentifier else { return nil }
@@ -38,6 +42,9 @@ class RoomInfoViewModel: NSObject {
             return nil
         }
     }
+    private lazy var conferenceDetails = {
+        title
+    }()
     override init() {
         super.init()
         subscribeEngine()
@@ -53,59 +60,62 @@ class RoomInfoViewModel: NSObject {
     }
     
     func createListCellItemData(titleText: String, messageText: String,
-                                hasButton: Bool, copyType: CopyType) -> ListCellItemData {
+                                hasButton: Bool, copyType: CopyType?) -> ListCellItemData {
         let item = ListCellItemData()
         item.titleText = titleText
         item.messageText = messageText
-        item.hasRightButton = true
-        let buttonData = ButtonItemData()
-        buttonData.normalIcon = "room_copy"
-        buttonData.normalTitle = .copyText
-        buttonData.cornerRadius = 4
-        buttonData.titleFont = UIFont(name: "PingFangSC-Regular", size: 12)
-        buttonData.titleColor = UIColor(0xB2BBD1)
-        buttonData.backgroundColor = UIColor(0x6B758A).withAlphaComponent(0.7)
-        buttonData.resourceBundle = tuiRoomKitBundle()
-        buttonData.action = { [weak self] sender in
-            guard let self = self, let button = sender as? UIButton else { return }
-            self.copyAction(sender: button, text: item.messageText,copyType: copyType)
-            
+        item.hasRightButton = hasButton
+        if item.hasRightButton {
+            let buttonData = ButtonItemData()
+            buttonData.normalIcon = "room_copy"
+            buttonData.normalTitle = .copyText
+            buttonData.cornerRadius = 4
+            buttonData.titleFont = UIFont(name: "PingFangSC-Regular", size: 12)
+            buttonData.titleColor = UIColor(0xB2BBD1)
+            buttonData.backgroundColor = UIColor(0x6B758A).withAlphaComponent(0.7)
+            buttonData.resourceBundle = tuiRoomKitBundle()
+            buttonData.action = { [weak self] sender in
+                guard let self = self, let button = sender as? UIButton else { return }
+                self.copyAction(sender: button, text: item.messageText,copyType: copyType)
+            }
+            item.buttonData = buttonData
         }
-        item.buttonData = buttonData
+        conferenceDetails = conferenceDetails +  "\n\(titleText) : \(messageText)"
         return item
     }
     
     func createSourceData() {
-        let roomHostItem = ListCellItemData()
-        roomHostItem.titleText = .roomHostText
         var userName = roomInfo.ownerId
         if let userModel = store.attendeeList.first(where: { $0.userId == roomInfo.ownerId}) {
             userName = userModel.userName
         }
-        roomHostItem.messageText = userName
+        let roomHostItem = createListCellItemData(titleText: .roomHostText, messageText: userName, hasButton: false, copyType: nil)
         messageItems.append(roomHostItem)
-        
-        let roomTypeItem = ListCellItemData()
-        roomTypeItem.titleText = .roomTypeText
-        roomTypeItem.messageText = roomInfo.isSeatEnabled ?  .raiseHandSpeakText: .freedomSpeakText
+        let roomTypeItem = createListCellItemData(titleText: .roomTypeText, messageText: roomInfo.isSeatEnabled ?  .raiseHandSpeakText: .freedomSpeakText, hasButton: false, copyType: nil)
         messageItems.append(roomTypeItem)
-        
         let roomIdItem = createListCellItemData(titleText: .roomIdText, messageText: roomInfo.roomId, hasButton: true, copyType: .copyRoomIdType)
         messageItems.append(roomIdItem)
-        
+        if roomInfo.password.count > 0 {
+            let passwordItem = createListCellItemData(titleText: .conferencePasswordText, messageText: roomInfo.password, hasButton: true, copyType: .copyRoomPassword)
+            messageItems.append(passwordItem)
+        }
         if let roomLink = roomLink {
             let roomLinkItem = createListCellItemData(titleText: .roomLinkText, messageText: roomLink, hasButton: true, copyType: .copyRoomLinkType)
             messageItems.append(roomLinkItem)
         }
     }
     
-    func copyAction(sender: UIButton, text: String, copyType: CopyType){
+    func copyAction(sender: UIButton, text: String, copyType: CopyType?){
         UIPasteboard.general.string = text
         viewResponder?.showCopyToast(copyType: copyType)
     }
     
     func codeAction(sender: UIButton) {
         RoomRouter.shared.presentPopUpViewController(viewType: .QRCodeViewType, height: 720.scale375Height())
+    }
+    
+    func copyConferenceDetails() {
+        UIPasteboard.general.string = conferenceDetails
     }
     
     deinit {
@@ -149,4 +159,5 @@ private extension String {
     static var copyText: String {
         localized("Copy")
     }
+    static let conferencePasswordText = localized("Conference password")
 }

@@ -17,6 +17,7 @@
 #import <TUICore/UIView+TUILayout.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIAudioRecorder.h"
+#import "TUIChatConfig.h"
 
 @interface TUIInputBar_Minimalist () <UITextViewDelegate, TUIAudioRecorderDelegate>
 
@@ -213,9 +214,10 @@
     _moreButton.frame = CGRectMake(kScale390(16), kScale390(13), iconSize, iconSize);
     _cameraButton.frame = CGRectMake(Screen_Width - kScale390(16) - iconSize, 13, iconSize, iconSize);
     _micButton.frame = CGRectMake(Screen_Width - kScale390(56) - iconSize, 13, iconSize, iconSize);
-
+    
     CGFloat faceSize = 19;
     _faceButton.frame = CGRectMake(_micButton.mm_x - kScale390(50), 15, faceSize, faceSize);
+    
     _keyboardButton.frame = _faceButton.frame;
     _inputTextView.frame = CGRectMake(kScale390(56), 7, Screen_Width - kScale390(152), 36);
 
@@ -631,7 +633,7 @@
 }
 
 - (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
-    float maxDuration = 59.7;
+    float maxDuration = MIN(59.7, [TUIChatConfig defaultConfig].maxAudioRecordDuration);
     NSInteger seconds = maxDuration - time;
     _recordTimeLabel.text = [NSString stringWithFormat:@"%d:%.2d", (int)time / 60, (int)time % 60 + 1];
 

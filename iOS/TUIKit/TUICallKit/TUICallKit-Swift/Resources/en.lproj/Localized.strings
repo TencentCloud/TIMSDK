@@ -14,6 +14,11 @@
 "TUICallKit.Group.waitAccept" = "Waiting";
 "TUICallKit.determine" = "OK";
 "TUICallKit.lineBusy" = "Line Busy";
+"TUICallKit.userHangup" = "\%@ end the call.";
+"TUICallKit.userReject" = "\%@ rejected call";
+"TUICallKit.otherPartyHangup" = "Other party hung up, call ended";
+"TUICallKit.otherPartyReject" = "Call rejected by other party";
+"TUICallKit.otherPartyNoResponse" = "The other party did not respond";
 
 "TUICallKit.switchCamera" = "Switch";
 "TUICallKit.blurBackground" = "Blur Background";

@@ -12,4 +12,5 @@ enum UserActions {
     static let getSelfInfo = ActionTemplate(id: key.appending(".getSelfInfo"))
     static let updateSelfInfo = ActionTemplate(id: key.appending(".updateSelfInfo"), payloadType: UserInfo.self)
     static let fetchUserInfo = ActionTemplate(id: key.appending(".fetchUserInfo"), payloadType: String.self)
+    static let updateAllUsers = ActionTemplate(id: key.appending(".updateAllUsers"), payloadType: [UserInfo].self)
 }

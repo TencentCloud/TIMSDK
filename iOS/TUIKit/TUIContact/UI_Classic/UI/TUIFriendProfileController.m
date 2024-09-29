@@ -19,6 +19,7 @@
 #import "TUIContactAvatarViewController.h"
 #import "TUIContactConversationCellData.h"
 #import "TUITextEditController.h"
+#import "TUIContactConfig.h"
 
 @interface TUIFriendProfileController ()
 @property NSArray<NSArray *> *dataList;
@@ -70,181 +71,198 @@
 - (void)loadData {
     NSMutableArray *list = @[].mutableCopy;
     [list addObject:({
-              NSMutableArray *inlist = @[].mutableCopy;
-              [inlist addObject:({
-                          TUICommonContactProfileCardCellData *personal = [[TUICommonContactProfileCardCellData alloc] init];
-                          personal.identifier = self.userFullInfo.userID;
-                          personal.avatarImage = DefaultAvatarImage;
-                          personal.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
-                          personal.name = [self.userFullInfo showName];
-                          personal.genderString = [self.userFullInfo showGender];
-                          personal.signature = self.userFullInfo.selfSignature.length
-                                                   ? [NSString stringWithFormat:TIMCommonLocalizableString(SignatureFormat), self.userFullInfo.selfSignature]
-                                                   : TIMCommonLocalizableString(no_personal_signature);
-                          personal.reuseId = @"CardCell";
-                          personal.showSignature = YES;
-                          personal;
-                      })];
-              inlist;
-          })];
+        NSMutableArray *inlist = @[].mutableCopy;
+        [inlist addObject:({
+                  TUICommonContactProfileCardCellData *personal = [[TUICommonContactProfileCardCellData alloc] init];
+                  personal.identifier = self.userFullInfo.userID;
+                  personal.avatarImage = DefaultAvatarImage;
+                  personal.avatarUrl = [NSURL URLWithString:self.userFullInfo.faceURL];
+                  personal.name = [self.userFullInfo showName];
+                  personal.genderString = [self.userFullInfo showGender];
+                  personal.signature = self.userFullInfo.selfSignature.length
+                                           ? [NSString stringWithFormat:TIMCommonLocalizableString(SignatureFormat), self.userFullInfo.selfSignature]
+                                           : TIMCommonLocalizableString(no_personal_signature);
+                  personal.reuseId = @"CardCell";
+                  personal.showSignature = YES;
+                  personal;
+              })];
+        inlist;
+    })];
 
-    [list addObject:({
-              NSMutableArray *inlist = @[].mutableCopy;
-              [inlist addObject:({
-                          TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-                          data.key = TIMCommonLocalizableString(ProfileAlia);
-                          data.value = self.friendProfile.friendRemark;
-                          if (data.value.length == 0) {
-                              data.value = TIMCommonLocalizableString(None);
-                          }
-                          data.showAccessory = YES;
-                          data.cselector = @selector(onChangeRemark:);
-                          data.reuseId = @"TextCell";
-                          data;
-                      })];
-              inlist;
-          })];
+    if ([self isItemShown:TUIContactConfigItem_Alias]) {
+        [list addObject:({
+            NSMutableArray *inlist = @[].mutableCopy;
+            [inlist addObject:({
+                      TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
+                      data.key = TIMCommonLocalizableString(ProfileAlia);
+                      data.value = self.friendProfile.friendRemark;
+                      if (data.value.length == 0) {
+                          data.value = TIMCommonLocalizableString(None);
+                      }
+                      data.showAccessory = YES;
+                      data.cselector = @selector(onChangeRemark:);
+                      data.reuseId = @"TextCell";
+                      data;
+                  })];
+            inlist;
+        })];
+    }
 
-    [list addObject:({
-              NSMutableArray *inlist = @[].mutableCopy;
-              [inlist addObject:({
-                          TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-                          data.title = TIMCommonLocalizableString(ProfileMessageDoNotDisturb);
-                          data.cswitchSelector = @selector(onMessageDoNotDisturb:);
-                          data.reuseId = @"SwitchCell";
-                          __weak typeof(self) weakSelf = self;
-                          [[V2TIMManager sharedInstance] getC2CReceiveMessageOpt:@[ self.friendProfile.userID ]
-                                                                            succ:^(NSArray<V2TIMUserReceiveMessageOptInfo *> *optList) {
-                                                                              for (V2TIMReceiveMessageOptInfo *info in optList) {
-                                                                                  if ([info.userID isEqual:self.friendProfile.userID]) {
-                                                                                      data.on = (info.receiveOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
-                                                                                      [weakSelf.tableView reloadData];
-                                                                                      break;
-                                                                                  }
-                                                                              }
-                                                                            }
-                                                                            fail:nil];
-                          data;
-                      })];
-
-              [inlist addObject:({
-                          TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-                          data.title = TIMCommonLocalizableString(ProfileStickyonTop);
-                          data.on = NO;
+    if ([self isItemShown:TUIContactConfigItem_MuteAndPin]) {
+        [list addObject:({
+            NSMutableArray *inlist = @[].mutableCopy;
+            [inlist addObject:({
+                TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
+                data.title = TIMCommonLocalizableString(ProfileMessageDoNotDisturb);
+                data.cswitchSelector = @selector(onMessageDoNotDisturb:);
+                data.reuseId = @"SwitchCell";
+                __weak typeof(self) weakSelf = self;
+                [[V2TIMManager sharedInstance] getC2CReceiveMessageOpt:@[ self.friendProfile.userID ]
+                                                                  succ:^(NSArray<V2TIMUserReceiveMessageOptInfo *> *optList) {
+                    for (V2TIMReceiveMessageOptInfo *info in optList) {
+                        if ([info.userID isEqual:self.friendProfile.userID]) {
+                            data.on = (info.receiveOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
+                            [weakSelf.tableView reloadData];
+                            break;
+                        }
+                    }
+                }
+                                                                  fail:nil];
+                data;
+            })];
+            
+            [inlist addObject:({
+                TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
+                data.title = TIMCommonLocalizableString(ProfileStickyonTop);
+                data.on = NO;
 #ifndef SDKPlaceTop
 #define SDKPlaceTop
 #endif
 #ifdef SDKPlaceTop
-                          __weak typeof(self) weakSelf = self;
-                          [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"c2c_%@", self.friendProfile.userID]
-                                                                  succ:^(V2TIMConversation *conv) {
-                                                                    data.on = conv.isPinned;
-                                                                    [weakSelf.tableView reloadData];
-                                                                  }
-                                                                  fail:^(int code, NSString *desc){
-
-                                                                  }];
+                __weak typeof(self) weakSelf = self;
+                [V2TIMManager.sharedInstance getConversation:[NSString stringWithFormat:@"c2c_%@", self.friendProfile.userID]
+                                                        succ:^(V2TIMConversation *conv) {
+                    data.on = conv.isPinned;
+                    [weakSelf.tableView reloadData];
+                }
+                                                        fail:^(int code, NSString *desc){
+                    
+                }];
 #else
-                          if ([[[TUIConversationPin sharedInstance] topConversationList]
-                                  containsObject:[NSString stringWithFormat:@"c2c_%@", self.friendProfile.userID]]) {
-                              data.on = YES;
-                          }
+                if ([[[TUIConversationPin sharedInstance] topConversationList]
+                     containsObject:[NSString stringWithFormat:@"c2c_%@", self.friendProfile.userID]]) {
+                    data.on = YES;
+                }
 #endif
-                          data.cswitchSelector = @selector(onTopMostChat:);
-                          data.reuseId = @"SwitchCell";
-                          data;
-                      })];
-
-              inlist;
-          })];
-
-    [list addObject:({
-              NSMutableArray *inlist = @[].mutableCopy;
-              [inlist addObject:({
-                          TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-                          data.key = TIMCommonLocalizableString(TUIKitClearAllChatHistory);
-                          data.showAccessory = YES;
-                          data.cselector = @selector(onClearHistoryChatMessage:);
-                          data.reuseId = @"TextCell";
-                          data;
-                      })];
-
-              [inlist addObject:({
-                          TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
-                          data.key = TIMCommonLocalizableString(ProfileSetBackgroundImage);
-                          data.showAccessory = YES;
-                          data.cselector = @selector(onChangeBackgroundImage:);
-                          data.reuseId = @"TextCell";
-                          data;
-                      })];
-
-              inlist;
-          })];
+                data.cswitchSelector = @selector(onTopMostChat:);
+                data.reuseId = @"SwitchCell";
+                data;
+            })];
+            
+            inlist;
+        })];
+    }
 
     [list addObject:({
-              NSMutableArray *inlist = @[].mutableCopy;
-              [inlist addObject:({
-                          TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
-                          data.title = TIMCommonLocalizableString(ProfileBlocked);
-                          data.cswitchSelector = @selector(onChangeBlackList:);
-                          data.reuseId = @"SwitchCell";
-                          __weak typeof(self) weakSelf = self;
-                          [[V2TIMManager sharedInstance]
-                              getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
-                                for (V2TIMFriendInfo *friend in infoList) {
-                                    if ([friend.userID isEqualToString:self.friendProfile.userID]) {
-                                        data.on = true;
-                                        [weakSelf.tableView reloadData];
-                                        break;
-                                    }
-                                }
-                              }
-                                      fail:nil];
-                          data;
-                      })];
-              inlist;
-          })];
+        NSMutableArray *inlist = @[].mutableCopy;
+        if ([self isItemShown:TUIContactConfigItem_ClearChatHistory]) {
+            [inlist addObject:({
+                TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
+                data.key = TIMCommonLocalizableString(TUIKitClearAllChatHistory);
+                data.showAccessory = YES;
+                data.cselector = @selector(onClearHistoryChatMessage:);
+                data.reuseId = @"TextCell";
+                data;
+            })];
+        }
+        
+        if ([self isItemShown:TUIContactConfigItem_Background]) {
+            [inlist addObject:({
+                TUICommonContactTextCellData *data = TUICommonContactTextCellData.new;
+                data.key = TIMCommonLocalizableString(ProfileSetBackgroundImage);
+                data.showAccessory = YES;
+                data.cselector = @selector(onChangeBackgroundImage:);
+                data.reuseId = @"TextCell";
+                data;
+            })];
+        }
+        
+        inlist;
+    })];
+
+    if ([self isItemShown:TUIContactConfigItem_Block]) {
+        [list addObject:({
+            NSMutableArray *inlist = @[].mutableCopy;
+            [inlist addObject:({
+                TUICommonContactSwitchCellData *data = TUICommonContactSwitchCellData.new;
+                data.title = TIMCommonLocalizableString(ProfileBlocked);
+                data.cswitchSelector = @selector(onChangeBlackList:);
+                data.reuseId = @"SwitchCell";
+                __weak typeof(self) weakSelf = self;
+                [[V2TIMManager sharedInstance]
+                 getBlackList:^(NSArray<V2TIMFriendInfo *> *infoList) {
+                    for (V2TIMFriendInfo *friend in infoList) {
+                        if ([friend.userID isEqualToString:self.friendProfile.userID]) {
+                            data.on = true;
+                            [weakSelf.tableView reloadData];
+                            break;
+                        }
+                    }
+                }
+                 fail:nil];
+                data;
+            })];
+            inlist;
+        })];
+    }
 
     // Action menu
     [list addObject:({
-              NSMutableArray *inlist = @[].mutableCopy;
-              // Extension menus
-              NSMutableDictionary *extensionParam = [NSMutableDictionary dictionary];
-              if (self.friendProfile.userID.length > 0) {
-                  extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_UserID] = self.friendProfile.userID;
-              }
-              extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(NO);
-              extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(NO);
-              NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID param:extensionParam];
-              for (TUIExtensionInfo *info in extensionList) {
-                  if (info.text && info.onClicked) {
-                      TUIButtonCellData *data = [[TUIButtonCellData alloc] init];
-                      data.title = info.text;
-                      data.style = ButtonWhite;
-                      data.textColor = TIMCommonDynamicColor(@"primary_theme_color", @"147AFF");
-                      data.reuseId = @"ButtonCell";
-                      data.cbuttonSelector = @selector(onActionMenuExtensionClicked:);
-                      data.tui_extValueObj = info;
-                      [inlist addObject:data];
-                  }
-              }
+        NSMutableArray *inlist = @[].mutableCopy;
+        // Extension menus
+        NSMutableDictionary *extensionParam = [NSMutableDictionary dictionary];
+        if (self.friendProfile.userID.length > 0) {
+          extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_UserID] = self.friendProfile.userID;
+        }
+        extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(NO);
+        extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(NO);
+        NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID param:extensionParam];
+        for (TUIExtensionInfo *info in extensionList) {
+          if (info.text && info.onClicked) {
+              TUIButtonCellData *data = [[TUIButtonCellData alloc] init];
+              data.title = info.text;
+              data.style = ButtonWhite;
+              data.textColor = TIMCommonDynamicColor(@"primary_theme_color", @"147AFF");
+              data.reuseId = @"ButtonCell";
+              data.cbuttonSelector = @selector(onActionMenuExtensionClicked:);
+              data.tui_extValueObj = info;
+              [inlist addObject:data];
+          }
+        }
 
-              // Built-in "Delete Friend" menu
-              [inlist addObject:({
-                          TUIButtonCellData *data = TUIButtonCellData.new;
-                          data.title = TIMCommonLocalizableString(ProfileDeleteFirend);
-                          data.style = ButtonRedText;
-                          data.cbuttonSelector = @selector(onDeleteFriend:);
-                          data.reuseId = @"ButtonCell";
-                          data;
-                      })];
-              TUIButtonCellData *lastdata = [inlist lastObject];
-              lastdata.hideSeparatorLine = YES;
-              inlist;
-          })];
+        // Built-in "Delete Friend" menu
+        if ([self isItemShown:TUIContactConfigItem_Block]) {
+            [inlist addObject:({
+                TUIButtonCellData *data = TUIButtonCellData.new;
+                data.title = TIMCommonLocalizableString(ProfileDeleteFirend);
+                data.style = ButtonRedText;
+                data.cbuttonSelector = @selector(onDeleteFriend:);
+                data.reuseId = @"ButtonCell";
+                data;
+            })];
+        }
+             
+        TUIButtonCellData *lastdata = [inlist lastObject];
+        lastdata.hideSeparatorLine = YES;
+        inlist;
+    })];
 
     self.dataList = list;
     [self.tableView reloadData];
+}
+    
+- (BOOL)isItemShown:(TUIContactConfigItem)item {
+    return ![TUIContactConfig.sharedConfig isItemHiddenInContactConfig:item];
 }
 
 #pragma mark - Table view data source

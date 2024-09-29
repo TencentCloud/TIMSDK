@@ -253,25 +253,33 @@
     }
 }
 
-- (void)scrollToLocateMessage:(V2TIMMessage *)locateMessage {
+- (void)scrollToLocateMessage:(V2TIMMessage *)locateMessage matchKeyword:(NSString *)msgAbstract {
     CGFloat offsetY = 0;
+    NSInteger index = 0;
     for (TUIMessageCellData *uiMsg in self.uiMsgs) {
         if ([uiMsg.innerMessage.msgID isEqualToString:locateMessage.msgID]) {
             break;
         }
         offsetY += [uiMsg heightOfWidth:Screen_Width];
+        index++;
     }
 
+    if (index == self.uiMsgs.count) {
+        return;
+    }
+    
     offsetY -= self.tableView.frame.size.height / 2.0;
     if (offsetY <= TMessageController_Header_Height) {
         offsetY = TMessageController_Header_Height + 0.1;
     }
 
     if (offsetY > TMessageController_Header_Height) {
-        if (self.tableView.contentOffset.y > offsetY) {
-            [self.tableView scrollRectToVisible:CGRectMake(0, offsetY, Screen_Width, self.tableView.bounds.size.height) animated:YES];
-        }
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
+                              atScrollPosition:UITableViewScrollPositionMiddle
+                                      animated:YES];
     }
+    
+    [self highlightKeyword:msgAbstract locateMessage:locateMessage];
 }
 
 - (void)highlightKeyword:(NSString *)keyword locateMessage:(V2TIMMessage *)locateMessage {
@@ -358,7 +366,7 @@
                   if ([cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
                       [self jumpDetailPageByMessage:message];
                   } else if ([cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
-                      [self scrollToLocateMessage:message];
+                      [self scrollToLocateMessage:message matchKeyword:msgAbstract];
                   }
                 }];
 

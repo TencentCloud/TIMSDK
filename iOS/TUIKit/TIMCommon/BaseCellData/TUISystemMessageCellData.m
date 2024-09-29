@@ -70,4 +70,28 @@
   return result;
 }
 
+static UIFont *gTextFont;
++ (void)setTextFont:(UIFont *)textFont {
+    gTextFont = textFont;
+}
++ (UIFont *)textFont {
+    return gTextFont;
+}
+
+static UIColor *gTextColor;
++ (void)setTextColor:(UIColor *)textColor {
+    gTextColor = textColor;
+}
++ (UIColor *)textColor {
+    return gTextColor;
+}
+
+static UIColor *gTextBackgroundColor;
++ (void)setTextBackgroundColor:(UIColor *)textBackgroundColor {
+    gTextBackgroundColor = textBackgroundColor;
+}
++ (UIColor *)textBackgroundColor {
+    return gTextBackgroundColor;
+}
+
 @end

@@ -10,12 +10,11 @@ import RTCRoomEngine
 
 class ScheduleDetailsDataHelper: ScheduleConferenceDataHelper {
     
-    override class func generateScheduleConferenceData(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore, viewController: MemberSelectionDelegate? = nil) -> [Int : [CellConfigItem]] {
+    class func generateScheduleDetailsConferenceData(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore, viewStore: ConferenceMainViewStore) -> [Int : [CellConfigItem]] {
         var menus: [Int:[CellConfigItem]] = [:]
         menus[0] = getFirstSectionDetailsMenus(route: route, store: store, operation: operation)
-        menus[1] = getSecondSectionDetailsMenus(store: store, operation: operation)
-        guard let thirdSectionDetailsMenus = getThirdSectionDetailsMenus(route: route, store: store, operation: operation) else { return menus }
-        menus[2] = thirdSectionDetailsMenus
+        menus[1] = getSecondSectionDetailsMenus(store: store, operation: operation, viewStore: viewStore)
+        menus[2] = getThirdSectionDetailsMenus(route: route, store: store, operation: operation)
         guard let fourthSectionDetailsMenus = getFourthSectionDetailsMenus(route: route, store: store, operation: operation) else { return menus }
         menus[3] = fourthSectionDetailsMenus
         return menus
@@ -28,17 +27,19 @@ class ScheduleDetailsDataHelper: ScheduleConferenceDataHelper {
         array.append(getDetailsStartTimeItem(route: route, store: store))
         array.append(getDetailsDurationTimeItem(route: route, store: store))
         array.append(getDetailsConferenceTypeItem(route: route, store: store))
+        if let passwordItem = getConferencePasswordItem(store: store) {
+            array.append(passwordItem)
+        }
         array.append(getRoomHostItem(route: route, store: store))
         array.append(getDetailsParticipatingMembersItem(route: route, store: store))
         return array
     }
     
-    private class func getSecondSectionDetailsMenus(store: ScheduleConferenceStore, operation: ConferenceStore) -> [CellConfigItem] {
-        return [getEnterRoomItem(store: store, operation: operation)]
+    private class func getSecondSectionDetailsMenus(store: ScheduleConferenceStore, operation: ConferenceStore, viewStore: ConferenceMainViewStore) -> [CellConfigItem] {
+        return [getEnterRoomItem(store: store, operation: operation, viewStore: viewStore)]
     }
     
-    private class func getThirdSectionDetailsMenus(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore) -> [CellConfigItem]? {
-        guard store.conferenceInfo.basicInfo.ownerId == operation.selectCurrent(UserSelectors.getSelfId) else { return nil }
+    private class func getThirdSectionDetailsMenus(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore) -> [CellConfigItem] {
         return [getInviteItem(route: route, store: store)]
     }
     
@@ -104,6 +105,7 @@ class ScheduleDetailsDataHelper: ScheduleConferenceDataHelper {
             let selector = Selector(keyPath: \ConferenceInfo.attendeeListResult.attendeeList)
             store.select(selector)
                 .receive(on: RunLoop.main)
+                .removeDuplicates()
                 .sink { list in
                     if let cell = cell as? ScheduleTabCell {
                         var iconList: [String] = []
@@ -124,13 +126,24 @@ class ScheduleDetailsDataHelper: ScheduleConferenceDataHelper {
         return item
     }
     
-    private class func getEnterRoomItem(store: ScheduleConferenceStore, operation: ConferenceStore) -> ButtonItem {
+    private class func getConferencePasswordItem(store: ScheduleConferenceStore) -> ListItem? {
+        guard store.conferenceInfo.basicInfo.password.count > 0 else { return nil }
+        var passwordItem = ListItem(title: .conferencePasswordText)
+        passwordItem.content = store.conferenceInfo.basicInfo.password
+        passwordItem.selectClosure = nil
+        passwordItem.showButton = false
+        return passwordItem
+    }
+    
+    private class func getEnterRoomItem(store: ScheduleConferenceStore, operation: ConferenceStore, viewStore: ConferenceMainViewStore) -> ButtonItem {
         var item = ButtonItem(title: .enterTheRoomText)
         item.titleColor = UIColor(0x0961F7)
         item.backgroudColor = UIColor(0xF0F3FA)
         item.selectClosure = {
             let conferenceId = store.conferenceInfo.basicInfo.roomId
             operation.dispatch(action: RoomActions.joinConference(payload: conferenceId))
+            operation.dispatch(action: ScheduleViewActions.popDetailView())
+            viewStore.updateInternalCreation(isInternalCreation: true)
         }
         return item
     }
@@ -140,8 +153,8 @@ class ScheduleDetailsDataHelper: ScheduleConferenceDataHelper {
         item.titleColor = UIColor(0x0961F7)
         item.backgroudColor = UIColor(0xF0F3FA)
         item.selectClosure = {
-            let view = InviteEnterRoomView(roomId: store.conferenceInfo.basicInfo.roomId)
-                    route.present(route: .popup(view: view))
+            let view = InviteEnterRoomView(conferenceInfo: store.conferenceInfo)
+            route.present(route: .popup(view: view))
         }
         return item
     }
@@ -177,4 +190,5 @@ private extension String {
     static let copyRoomIdSuccess = localized("Conference ID copied.")
     static let noParticipantsYet = localized("No participants yet")
     static let participantsNumber = localized("xx/300 people")
+    static let conferencePasswordText = localized("Conference password")
 }

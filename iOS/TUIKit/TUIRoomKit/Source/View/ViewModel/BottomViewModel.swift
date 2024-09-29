@@ -9,6 +9,8 @@
 import Foundation
 import RTCRoomEngine
 import TUICore
+import Factory
+import Combine
 
 protocol BottomViewModelResponder: AnyObject {
     func updateButtonView(item: ButtonItemData)
@@ -41,6 +43,7 @@ class BottomViewModel: NSObject {
         engineManager.store.inviteSeatList
     }
     var isCalledFromShareScreen = false
+    var cancellableSet = Set<AnyCancellable>()
     
     private lazy var memberItem: ButtonItemData = {
         let memberItem = ButtonItemData()
@@ -203,6 +206,10 @@ class BottomViewModel: NSObject {
         return item
     }()
     
+    private lazy var invitationPopupPublisher = {
+        conferenceStore.select(ViewSelectors.getShowinvitationPopupView)
+    }()
+    
     override init() {
         super.init()
         createBottomData()
@@ -216,9 +223,19 @@ class BottomViewModel: NSObject {
         EngineEventCenter.shared.subscribeEngine(event: .onAllUserCameraDisableChanged, observer: self)
         EngineEventCenter.shared.subscribeEngine(event: .onAllUserMicrophoneDisableChanged, observer: self)
         EngineEventCenter.shared.subscribeEngine(event: .onInitialSelfUserInfo, observer: self)
+        EngineEventCenter.shared.subscribeEngine(event: .onRemoteUserEnterRoom, observer: self)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onUserScreenCaptureStarted),
                                                name: UIScreen.capturedDidChangeNotification, object: nil)
+        invitationPopupPublisher
+            .receive(on: DispatchQueue.mainQueue)
+            .sink { [weak self] showInvitationPopupView in
+                guard let self = self else { return }
+                if showInvitationPopupView {
+                    showMemberSelectViewAction()
+                }
+            }
+            .store(in: &cancellableSet)
     }
     
     func createBottomData() {
@@ -410,7 +427,7 @@ class BottomViewModel: NSObject {
     }
     
     func inviteAction(sender: UIButton) {
-        RoomRouter.shared.presentPopUpViewController(viewType: .inviteViewType, height: 186)
+        RoomRouter.shared.presentPopUpViewController(viewType: .inviteViewType, height: 158.scale375Height())
     }
     
     func floatAction(sender: UIButton) {
@@ -419,6 +436,18 @@ class BottomViewModel: NSObject {
     
     func setupAction(sender: UIButton) {
         RoomRouter.shared.presentPopUpViewController(viewType: .mediaSettingViewType, height: 709.scale375Height())
+    }
+    
+    func showMemberSelectViewAction() {
+        conferenceStore.dispatch(action: InvitationViewActions.resetPopupViewFlag())
+        let inRoomUsers = attendeeList.map{ UserInfo(userEntity: $0).convertToUser() }
+        // TODO: @jeremiawang Use ConferenceRouter to push ContactVC
+        let participants = ConferenceParticipants(unSelectableList: inRoomUsers)
+        guard let vc = Container.shared.contactViewController(participants) as? (ContactViewProtocol & UIViewController) else {
+            return
+        }
+        vc.delegate = self
+        RoomRouter.shared.push(viewController: vc)
     }
     
     @objc func onUserScreenCaptureStarted(notification:Notification)
@@ -440,9 +469,12 @@ class BottomViewModel: NSObject {
         EngineEventCenter.shared.unsubscribeEngine(event: .onAllUserCameraDisableChanged, observer: self)
         EngineEventCenter.shared.unsubscribeEngine(event: .onAllUserMicrophoneDisableChanged, observer: self)
         EngineEventCenter.shared.unsubscribeEngine(event: .onInitialSelfUserInfo, observer: self)
+        EngineEventCenter.shared.unsubscribeEngine(event: .onRemoteUserEnterRoom, observer: self)
         NotificationCenter.default.removeObserver(self, name: UIScreen.capturedDidChangeNotification, object: nil)
         debugPrint("deinit \(self)")
     }
+    
+    @Injected(\.conferenceStore) private var conferenceStore: ConferenceStore
 }
 
 // MARK: - Private
@@ -640,14 +672,28 @@ extension BottomViewModel: RoomEngineEventResponder {
             updateRaiseHandItem()
             reorderTheMoreItem()
             viewResponder?.updateStackView(items: viewItems)
+        case .onRemoteUserEnterRoom:
+            guard let userInfo = param?["userInfo"] as? TUIUserInfo else { return }
+            conferenceStore.dispatch(action: ConferenceInvitationActions.removeInvitation(payload: userInfo.userId))
         default: break
+        }
+    }
+}
+
+extension BottomViewModel: ContactViewSelectDelegate {
+    func onMemberSelected(_ viewController: any ContactViewProtocol, invitees: [User]) {
+        let userIdList = invitees.map{ $0.userId }
+        self.conferenceStore.dispatch(action: ConferenceInvitationActions.inviteUsers(payload: (roomInfo.roomId, userIdList)))
+        RoomRouter.shared.pop()
+        if !invitees.isEmpty{
+            viewResponder?.makeToast(text: .inviteEnterRoomSuccesstext)
         }
     }
 }
 
 private extension String {
     static var memberText: String {
-        localized("Participants(%lld)")
+        localized("Users(%lld)")
     }
     static var muteAudioText: String {
         localized("Mute")
@@ -671,7 +717,7 @@ private extension String {
         localized("Join stage")
     }
     static var leaveSeatText: String {
-        localized("Leave stage")
+        localized("Step down")
     }
     static var muteSeatReasonText: String {
         localized("Can be turned on after taking the stage")
@@ -753,5 +799,8 @@ private extension String {
     }
     static var joinStageApplicationTimedOutText: String {
         localized("The request to go on stage has timed out")
+    }
+    static var inviteEnterRoomSuccesstext: String {
+        localized("Invitation has been sent, waiting for users to join")
     }
 }

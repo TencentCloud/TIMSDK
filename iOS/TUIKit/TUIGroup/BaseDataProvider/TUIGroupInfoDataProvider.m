@@ -9,6 +9,7 @@
 #import "TUIGroupMemberCellData.h"
 #import "TUIGroupMembersCellData.h"
 #import "TUIGroupNoticeCell.h"
+#import "TUIGroupConfig.h"
 
 @interface TUIGroupInfoDataProvider () <V2TIMGroupListener>
 @property(nonatomic, strong) TUICommonTextCellData *addOptionData;
@@ -219,130 +220,149 @@
         [dataList addObject:commonArray];
 
         NSMutableArray *memberArray = [NSMutableArray array];
-        TUICommonTextCellData *countData = [[TUICommonTextCellData alloc] init];
-        countData.key = TIMCommonLocalizableString(TUIKitGroupProfileMember);
-        countData.value = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupProfileMemberCount), self.groupInfo.memberCount];
-        countData.cselector = @selector(didSelectMembers);
-        countData.showAccessory = YES;
-        [memberArray addObject:countData];
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Members]) {
+            TUICommonTextCellData *countData = [[TUICommonTextCellData alloc] init];
+            countData.key = TIMCommonLocalizableString(TUIKitGroupProfileMember);
+            countData.value = [NSString stringWithFormat:TIMCommonLocalizableString(TUIKitGroupProfileMemberCount), self.groupInfo.memberCount];
+            countData.cselector = @selector(didSelectMembers);
+            countData.showAccessory = YES;
+            [memberArray addObject:countData];
 
-        NSMutableArray *tmpArray = [self getShowMembers:self.membersData];
-        TUIGroupMembersCellData *membersData = [[TUIGroupMembersCellData alloc] init];
-        membersData.members = tmpArray;
-        [memberArray addObject:membersData];
-        self.groupMembersCellData = membersData;
-        [dataList addObject:memberArray];
+            NSMutableArray *tmpArray = [self getShowMembers:self.membersData];
+            TUIGroupMembersCellData *membersData = [[TUIGroupMembersCellData alloc] init];
+            membersData.members = tmpArray;
+            [memberArray addObject:membersData];
+            self.groupMembersCellData = membersData;
+            [dataList addObject:memberArray];
+        }
 
         // group info
         NSMutableArray *groupInfoArray = [NSMutableArray array];
 
-        TUIGroupNoticeCellData *notice = [[TUIGroupNoticeCellData alloc] init];
-        notice.name = TIMCommonLocalizableString(TUIKitGroupNotice);
-        notice.desc = self.groupInfo.notification ?: TIMCommonLocalizableString(TUIKitGroupNoticeNull);
-        notice.target = self;
-        notice.selector = @selector(didSelectNotice);
-        [groupInfoArray addObject:notice];
-
-        TUICommonTextCellData *manageData = [[TUICommonTextCellData alloc] init];
-        manageData.key = TIMCommonLocalizableString(TUIKitGroupProfileManage);
-        manageData.value = @"";
-        manageData.showAccessory = YES;
-        manageData.cselector = @selector(didSelectGroupManage);
-        if (([TUIGroupInfoDataProvider isMeOwner:self.groupInfo])) {
-            [groupInfoArray addObject:manageData];
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Notice]) {
+            TUIGroupNoticeCellData *notice = [[TUIGroupNoticeCellData alloc] init];
+            notice.name = TIMCommonLocalizableString(TUIKitGroupNotice);
+            notice.desc = self.groupInfo.notification ?: TIMCommonLocalizableString(TUIKitGroupNoticeNull);
+            notice.target = self;
+            notice.selector = @selector(didSelectNotice);
+            [groupInfoArray addObject:notice];
         }
 
-        TUICommonTextCellData *typeData = [[TUICommonTextCellData alloc] init];
-        typeData.key = TIMCommonLocalizableString(TUIKitGroupProfileType);
-        typeData.value = [TUIGroupInfoDataProvider getGroupTypeName:self.groupInfo];
-        [groupInfoArray addObject:typeData];
-
-        TUICommonTextCellData *addOptionData = [[TUICommonTextCellData alloc] init];
-        addOptionData.key = TIMCommonLocalizableString(TUIKitGroupProfileJoinType);
-
-        if ([self.groupInfo.groupType isEqualToString:@"Work"]) {
-            addOptionData.value = TIMCommonLocalizableString(TUIKitGroupProfileInviteJoin);
-        } else if ([self.groupInfo.groupType isEqualToString:@"Meeting"]) {
-            addOptionData.value = TIMCommonLocalizableString(TUIKitGroupProfileAutoApproval);
-        } else {
-            if ([TUIGroupInfoDataProvider isMeOwner:self.groupInfo]) {
-                addOptionData.cselector = @selector(didSelectAddOption:);
-                addOptionData.showAccessory = YES;
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Members]) {
+            TUICommonTextCellData *manageData = [[TUICommonTextCellData alloc] init];
+            manageData.key = TIMCommonLocalizableString(TUIKitGroupProfileManage);
+            manageData.value = @"";
+            manageData.showAccessory = YES;
+            manageData.cselector = @selector(didSelectGroupManage);
+            if (([TUIGroupInfoDataProvider isMeOwner:self.groupInfo])) {
+                [groupInfoArray addObject:manageData];
             }
-            addOptionData.value = [TUIGroupInfoDataProvider getAddOption:self.groupInfo];
         }
-        [groupInfoArray addObject:addOptionData];
-        self.addOptionData = addOptionData;
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Manage]) {
+            TUICommonTextCellData *typeData = [[TUICommonTextCellData alloc] init];
+            typeData.key = TIMCommonLocalizableString(TUIKitGroupProfileType);
+            typeData.value = [TUIGroupInfoDataProvider getGroupTypeName:self.groupInfo];
+            [groupInfoArray addObject:typeData];
 
-        TUICommonTextCellData *inviteOptionData = [[TUICommonTextCellData alloc] init];
-        inviteOptionData.key = TIMCommonLocalizableString(TUIKitGroupProfileInviteType);
-        if ([TUIGroupInfoDataProvider isMeOwner:self.groupInfo]) {
-            inviteOptionData.cselector = @selector(didSelectAddOption:);
-            inviteOptionData.showAccessory = YES;
+            TUICommonTextCellData *addOptionData = [[TUICommonTextCellData alloc] init];
+            addOptionData.key = TIMCommonLocalizableString(TUIKitGroupProfileJoinType);
+
+            if ([self.groupInfo.groupType isEqualToString:@"Work"]) {
+                addOptionData.value = TIMCommonLocalizableString(TUIKitGroupProfileInviteJoin);
+            } else if ([self.groupInfo.groupType isEqualToString:@"Meeting"]) {
+                addOptionData.value = TIMCommonLocalizableString(TUIKitGroupProfileAutoApproval);
+            } else {
+                if ([TUIGroupInfoDataProvider isMeOwner:self.groupInfo]) {
+                    addOptionData.cselector = @selector(didSelectAddOption:);
+                    addOptionData.showAccessory = YES;
+                }
+                addOptionData.value = [TUIGroupInfoDataProvider getAddOption:self.groupInfo];
+            }
+            [groupInfoArray addObject:addOptionData];
+            self.addOptionData = addOptionData;
+
+            TUICommonTextCellData *inviteOptionData = [[TUICommonTextCellData alloc] init];
+            inviteOptionData.key = TIMCommonLocalizableString(TUIKitGroupProfileInviteType);
+            if ([TUIGroupInfoDataProvider isMeOwner:self.groupInfo]) {
+                inviteOptionData.cselector = @selector(didSelectAddOption:);
+                inviteOptionData.showAccessory = YES;
+            }
+            inviteOptionData.value = [TUIGroupInfoDataProvider getApproveOption:self.groupInfo];
+            [groupInfoArray addObject:inviteOptionData];
+            self.inviteOptionData = inviteOptionData;
+            [dataList addObject:groupInfoArray];
+
         }
-        inviteOptionData.value = [TUIGroupInfoDataProvider getApproveOption:self.groupInfo];
-        [groupInfoArray addObject:inviteOptionData];
-        self.inviteOptionData = inviteOptionData;
-        [dataList addObject:groupInfoArray];
-
+       
         // personal info
-        TUICommonTextCellData *nickData = [[TUICommonTextCellData alloc] init];
-        nickData.key = TIMCommonLocalizableString(TUIKitGroupProfileAlias);
-        nickData.value = self.selfInfo.nameCard;
-        nickData.cselector = @selector(didSelectGroupNick:);
-        nickData.showAccessory = YES;
-        self.groupNickNameCellData = nickData;
-        [dataList addObject:@[ nickData ]];
-
-        NSMutableArray *personalArray = [NSMutableArray array];
-
-        TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
-
-        if (![self.groupInfo.groupType isEqualToString:GroupType_Meeting]) {
-            messageSwitchData.on = (self.groupInfo.recvOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
-            messageSwitchData.title = TIMCommonLocalizableString(TUIKitGroupProfileMessageDoNotDisturb);
-            messageSwitchData.cswitchSelector = @selector(didSelectOnNotDisturb:);
-            [personalArray addObject:messageSwitchData];
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Alias]) {
+            TUICommonTextCellData *nickData = [[TUICommonTextCellData alloc] init];
+            nickData.key = TIMCommonLocalizableString(TUIKitGroupProfileAlias);
+            nickData.value = self.selfInfo.nameCard;
+            nickData.cselector = @selector(didSelectGroupNick:);
+            nickData.showAccessory = YES;
+            self.groupNickNameCellData = nickData;
+            [dataList addObject:@[ nickData ]];
         }
 
         TUICommonSwitchCellData *markFold = [[TUICommonSwitchCellData alloc] init];
-
         TUICommonSwitchCellData *switchData = [[TUICommonSwitchCellData alloc] init];
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_MuteAndPin]) {
+            NSMutableArray *personalArray = [NSMutableArray array];
 
-        markFold.title = TIMCommonLocalizableString(TUIKitConversationMarkFold);
+            TUICommonSwitchCellData *messageSwitchData = [[TUICommonSwitchCellData alloc] init];
 
-        markFold.displaySeparatorLine = YES;
+            if (![self.groupInfo.groupType isEqualToString:GroupType_Meeting]) {
+                messageSwitchData.on = (self.groupInfo.recvOpt == V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE);
+                messageSwitchData.title = TIMCommonLocalizableString(TUIKitGroupProfileMessageDoNotDisturb);
+                messageSwitchData.cswitchSelector = @selector(didSelectOnNotDisturb:);
+                [personalArray addObject:messageSwitchData];
+            }
 
-        markFold.cswitchSelector = @selector(didSelectOnFoldConversation:);
-        if (messageSwitchData.on) {
-            [personalArray addObject:markFold];
+
+
+            markFold.title = TIMCommonLocalizableString(TUIKitConversationMarkFold);
+
+            markFold.displaySeparatorLine = YES;
+
+            markFold.cswitchSelector = @selector(didSelectOnFoldConversation:);
+            if (messageSwitchData.on) {
+                [personalArray addObject:markFold];
+            }
+
+            switchData.title = TIMCommonLocalizableString(TUIKitGroupProfileStickyOnTop);
+            [personalArray addObject:switchData];
+
+            [dataList addObject:personalArray];
         }
 
-        switchData.title = TIMCommonLocalizableString(TUIKitGroupProfileStickyOnTop);
-        [personalArray addObject:switchData];
-
-        [dataList addObject:personalArray];
-
-        TUICommonTextCellData *changeBackgroundImageItem = [[TUICommonTextCellData alloc] init];
-        changeBackgroundImageItem.key = TIMCommonLocalizableString(ProfileSetBackgroundImage);
-        changeBackgroundImageItem.cselector = @selector(didSelectOnChangeBackgroundImage:);
-        changeBackgroundImageItem.showAccessory = YES;
-        [dataList addObject:@[ changeBackgroundImageItem ]];
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Background]) {
+            TUICommonTextCellData *changeBackgroundImageItem = [[TUICommonTextCellData alloc] init];
+            changeBackgroundImageItem.key = TIMCommonLocalizableString(ProfileSetBackgroundImage);
+            changeBackgroundImageItem.cselector = @selector(didSelectOnChangeBackgroundImage:);
+            changeBackgroundImageItem.showAccessory = YES;
+            [dataList addObject:@[ changeBackgroundImageItem ]];
+        }
 
         NSMutableArray *buttonArray = [NSMutableArray array];
-        TUIButtonCellData *clearHistory = [[TUIButtonCellData alloc] init];
-        clearHistory.title = TIMCommonLocalizableString(TUIKitClearAllChatHistory);
-        clearHistory.style = ButtonRedText;
-        clearHistory.cbuttonSelector = @selector(didClearAllHistory:);
-        [buttonArray addObject:clearHistory];
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_ClearChatHistory]) {
+            TUIButtonCellData *clearHistory = [[TUIButtonCellData alloc] init];
+            clearHistory.title = TIMCommonLocalizableString(TUIKitClearAllChatHistory);
+            clearHistory.style = ButtonRedText;
+            clearHistory.cbuttonSelector = @selector(didClearAllHistory:);
+            [buttonArray addObject:clearHistory];
+        }
 
-        TUIButtonCellData *quitButton = [[TUIButtonCellData alloc] init];
-        quitButton.title = TIMCommonLocalizableString(TUIKitGroupProfileDeleteAndExit);
-        quitButton.style = ButtonRedText;
-        quitButton.cbuttonSelector = @selector(didDeleteGroup:);
-        [buttonArray addObject:quitButton];
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_DeleteAndLeave]) {
+            TUIButtonCellData *quitButton = [[TUIButtonCellData alloc] init];
+            quitButton.title = TIMCommonLocalizableString(TUIKitGroupProfileDeleteAndExit);
+            quitButton.style = ButtonRedText;
+            quitButton.cbuttonSelector = @selector(didDeleteGroup:);
+            [buttonArray addObject:quitButton];
+        }
 
-        if ([self.class isMeSuper:self.groupInfo]) {
+        if ([self.class isMeSuper:self.groupInfo] &&
+            ![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Transfer]) {
             TUIButtonCellData *transferButton = [[TUIButtonCellData alloc] init];
             transferButton.title = TIMCommonLocalizableString(TUIKitGroupTransferOwner);
             transferButton.style = ButtonRedText;
@@ -350,7 +370,8 @@
             [buttonArray addObject:transferButton];
         }
 
-        if ([self.groupInfo canDismissGroup]) {
+        if ([self.groupInfo canDismissGroup] &&
+            ![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Dismiss]) {
             TUIButtonCellData *deletebutton = [[TUIButtonCellData alloc] init];
             deletebutton.title = TIMCommonLocalizableString(TUIKitGroupProfileDissolve);
             deletebutton.style = ButtonRedText;
@@ -358,12 +379,13 @@
             [buttonArray addObject:deletebutton];
         }
         
-        TUIButtonCellData *reportButton = [[TUIButtonCellData alloc] init];
-        reportButton.title = TIMCommonLocalizableString(TUIKitGroupProfileReport);
-        reportButton.style = ButtonRedText;
-        reportButton.cbuttonSelector = @selector(didReportGroup:);
-        [buttonArray addObject:reportButton];
-
+        if (![TUIGroupConfig.sharedConfig isItemHiddenInGroupConfig:TUIGroupConfigItem_Report]) {
+            TUIButtonCellData *reportButton = [[TUIButtonCellData alloc] init];
+            reportButton.title = TIMCommonLocalizableString(TUIKitGroupProfileReport);
+            reportButton.style = ButtonRedText;
+            reportButton.cbuttonSelector = @selector(didReportGroup:);
+            [buttonArray addObject:reportButton];
+        }
 
         TUIButtonCellData *lastCellData = [buttonArray lastObject];
         lastCellData.hideSeparatorLine = YES;

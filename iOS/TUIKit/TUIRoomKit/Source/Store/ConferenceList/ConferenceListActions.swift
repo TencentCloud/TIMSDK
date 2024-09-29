@@ -31,7 +31,7 @@ enum ConferenceListActions {
     static let insertConference = ActionTemplate(id: key.appending(".insertConference"), payloadType: ConferenceInfo.self)
     static let removeConference = ActionTemplate(id: key.appending(".removeConference"), payloadType: String.self)
     static let onConferenceUpdated = ActionTemplate(id: key.appending(".onConferenceUpdated"), payloadType: ConferenceInfo.self)
-    static let onScheduleSuccess = ActionTemplate(id: key.appending("onScheduleSuccess"), payloadType: String.self)
+    static let onScheduleSuccess = ActionTemplate(id: key.appending("onScheduleSuccess"), payloadType: TUIConferenceInfo.self)
     static let onCancelSuccess = ActionTemplate(id: key.appending("onCancelSuccess"))
     
     static let onUpdateInfoSuccess = ActionTemplate(id: key.appending("onUpdateInfoSuccess"))
@@ -42,7 +42,7 @@ enum ConferenceListActions {
 // MARK: - Subject action, only event, no reduce.
 enum ScheduleResponseActions {
     static let key = "action.schedule.response"
-    static let onScheduleSuccess = ActionTemplate(id: key.appending("onScheduleSuccess"), payloadType: String.self)
+    static let onScheduleSuccess = ActionTemplate(id: key.appending("onScheduleSuccess"), payloadType: TUIConferenceInfo.self)
     static let onCancelSuccess = ActionTemplate(id: key.appending("onScheduleSuccess"))
     static let onUpdateInfoSuccess = ActionTemplate(id: key.appending("onUpdateInfoSuccess"))
 }

@@ -56,7 +56,6 @@ class CallEngineManager {
                 TUICallState.instance.isCameraOpen.value = true
             }
             
-            let _ = CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeDial)
             succ()
         } fail: { code, message in
             fail(code,message)
@@ -100,7 +99,6 @@ class CallEngineManager {
                 TUICallState.instance.isCameraOpen.value = true
             }
             
-            let _ = CallingBellFeature.instance.startPlayMusic(type: .CallingBellTypeDial)
             succ()
         } fail: { code, message in
             fail(code, message)
@@ -173,24 +171,30 @@ class CallEngineManager {
         }
     }
     
-    func openMicrophone() {
-        engine.openMicrophone {
-            TUICallState.instance.isMicMute.value = false
-            TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
-                                subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey,
-                                object: nil,
-                                param: nil)
-        } fail: { code , message  in
+    func openMicrophone(_ notifyEvent: Bool = true) {
+        if TUICallState.instance.selfUser.value.callStatus.value != .none {
+            engine.openMicrophone {
+                TUICallState.instance.isMicMute.value = false
+                if (notifyEvent) {
+                    TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
+                                        subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey,
+                                        object: nil,
+                                        param: nil)
+                }
+            } fail: { code , message  in
+            }
         }
     }
     
-    func closeMicrophone() {
+    func closeMicrophone(_ notifyEvent: Bool = true) {
         engine.closeMicrophone()
         TUICallState.instance.isMicMute.value = true
-        TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
-                            subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey,
-                            object: nil,
-                            param: nil)
+        if (notifyEvent) {
+            TUICore.notifyEvent(TUICore_TUICallKitVoIPExtensionNotify,
+                                subKey: TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey,
+                                object: nil,
+                                param: nil)
+        }
     }
     
     func changeSpeaker() {

@@ -40,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, class) UIImage *outgoingBubble;
 
 /**
+ *  Send bubble icon (normal state)
+ *  - The send icon of the bubble, assigned to the @bubble when the bubble message was sent.
+ */
+@property(nonatomic, class) UIImage *outgoingSameBubble;
+
+/**
  *  Send bubble icon (highlighted state)
  *  - The send icon (highlighted state) of the bubble, assigned to @highlightedBubble when the bubble message was sent.
  */
@@ -57,6 +63,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  - The receive icon of the bubble, assigned to the @bubble when the bubble message was received.
  */
 @property(nonatomic, class) UIImage *incommingBubble;
+
+/**
+ *
+ *  Receive bubble icon (normal state)
+ *  - The receive icon of the bubble, assigned to the @bubble when the bubble message was received.
+ */
+@property(nonatomic, class) UIImage *incommingSameBubble;
 
 /**
  *

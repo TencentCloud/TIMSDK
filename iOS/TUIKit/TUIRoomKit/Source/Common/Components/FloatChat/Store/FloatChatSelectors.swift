@@ -9,8 +9,7 @@
 import Foundation
 
 enum FloatChatSelectors {
-    static let getMessageList = Selector(keyPath: \FloatChatState.messageList)
-    static let getMessageCount = Selector.with(getMessageList) { $0.count }
+    static let getLatestMessage = Selector(keyPath: \FloatChatState.latestMessage)
     static let getShowFloatInputView = Selector(keyPath: \FloatChatState.isFloatInputViewShow)
     static let getRoomId = Selector(keyPath: \FloatChatState.roomId)
 }

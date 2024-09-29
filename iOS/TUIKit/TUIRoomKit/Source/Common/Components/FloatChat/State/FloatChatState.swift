@@ -12,20 +12,16 @@ import ImSDK_Plus
 struct FloatChatState: Codable {
     var isFloatInputViewShow = false
     var roomId: String = ""
-    var messageList = [FloatChatMessage]()
+    var latestMessage = FloatChatMessage()
 }
 
 struct FloatChatMessage: Codable, Equatable {
+    var id = UUID()
     var user = FloatChatUser()
     var content: String = ""
     var extInfo: [String: AnyCodable] = [:]
     
     init() {}
-    
-    init(with message: TUIMessage) {
-        self.user = FloatChatUser(userId: message.userId, userName: message.userName, avatarUrl: message.avatarURL)
-        self.content = message.message
-    }
     
     init(user: FloatChatUser, content: String) {
         self.user = user

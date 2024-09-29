@@ -13,5 +13,7 @@ enum RoomActions {
     
     static let joinConference = ActionTemplate(id: key.appending(".joinConference"), payloadType: (String).self)
     
+    static let updateRoomState = ActionTemplate(id: key.appending(".updateRoomState"), payloadType: RoomInfo.self)
+    static let clearRoomState = ActionTemplate(id: key.appending(".clearRoomState"))
     static let onJoinSuccess = ActionTemplate(id: key.appending(".onJoinSuccess"))
 }

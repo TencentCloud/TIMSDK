@@ -12,11 +12,11 @@ protocol Route: ActionDispatcher {
     func uninitialize()
     func pushTo(route: ConferenceRoute)
     func present(route: ConferenceRoute)
-    func dismiss()
+    func dismiss(animated: Bool)
     func pop()
     func popTo(route: ConferenceRoute)
     func pop(route: ConferenceRoute) 
-    func showMemberSelectView(delegte: MemberSelectionDelegate, selectedlist: [User])
+    func showContactView(delegate: ContactViewSelectDelegate, participants: ConferenceParticipants)
 }
 
 private let currentRouteActionSelector = Selector(keyPath: \ConferenceRouteState.currentRouteAction)
@@ -70,10 +70,10 @@ extension ConferenceRouter: Route {
         store.dispatch(action: ConferenceNavigationAction.navigate(payload: .present(route: route)))
     }
     
-    func dismiss() {
+    func dismiss(animated: Bool) {
         guard let viewController = self.navigationController?.topViewController ?? self.navigationController else { return }
         if let presentedViewController = viewController.presentedViewController {
-            presentedViewController.dismiss(animated: true) {
+            presentedViewController.dismiss(animated: animated) {
                 [weak self] in
                 guard let self = self else { return }
                 if let rootVC = self.rootViewController {
@@ -115,9 +115,9 @@ extension ConferenceRouter: Route {
         }
     }
     
-    func showMemberSelectView(delegte: MemberSelectionDelegate, selectedlist: [User]) {
+    func showContactView(delegate: ContactViewSelectDelegate, participants: ConferenceParticipants) {
         guard let factory = store.selectCurrent(memberSelectFactorySelector) else { return }
-        let selectParams = MemberSelectParams(selectedUsers: selectedlist, delegate: delegte, factory: factory)
+        let selectParams = MemberSelectParams(participants: participants, delegate: delegate, factory: factory)
         store.dispatch(action: ConferenceNavigationAction.navigate(payload: .push(route: .selectMember(memberSelectParams: selectParams))))
     }
     
@@ -157,7 +157,14 @@ extension ConferenceRouter {
     
     private func present(viewRoute: ConferenceRoute) {
         guard let viewController = self.navigationController?.topViewController ?? self.navigationController else { return }
-        viewController.present(viewRoute.viewController, animated: true) { [weak self] in
+        if viewController.presentedViewController != nil {
+            self.dismiss(animated: false)
+        }
+        var animated: Bool = true
+        if case .invitation = viewRoute {
+            animated = false
+        }
+        viewController.present(viewRoute.viewController, animated: animated) { [weak self] in
             guard let self = self else { return }
             self.store.dispatch(action: ConferenceNavigationAction.navigate(payload: ConferenceNavigation.presented(route: viewRoute)))
         }

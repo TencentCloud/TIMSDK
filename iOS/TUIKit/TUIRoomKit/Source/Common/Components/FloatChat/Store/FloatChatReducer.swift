@@ -14,10 +14,10 @@ let floatChatReducer = Reducer<FloatChatState>(
         let selfInfo = TUIRoomEngine.getSelfInfo()
         let user = FloatChatUser(loginInfo: selfInfo)
         let floatMessage = FloatChatMessage(user: user, content: action.payload)
-        state.messageList.append(floatMessage)
+        state.latestMessage = floatMessage
     },
     ReduceOn(FloatChatActions.onMessageReceived) { state, action in
-        state.messageList.append(action.payload)
+        state.latestMessage = action.payload
     },
     ReduceOn(FloatViewActions.showFloatInputView) { state, action in
         state.isFloatInputViewShow = action.payload

@@ -17,9 +17,10 @@ import Factory
 
 class FloatChatDisplayView: UIView {
     @Injected(\.floatChatService) private var store: FloatChatStoreProvider
-    private lazy var messageListPublisher = self.store.select(FloatChatSelectors.getMessageList)
-    private var messageList: [FloatChatMessage] = []
+    private lazy var messagePublisher = self.store.select(FloatChatSelectors.getLatestMessage)
+    private var messages: [FloatChatMessageView] = []
     var cancellableSet = Set<AnyCancellable>()
+    private let messageSpacing: CGFloat = 8
     
     private lazy var blurLayer: CALayer = {
         let layer = CAGradientLayer()
@@ -39,92 +40,79 @@ class FloatChatDisplayView: UIView {
         blurLayer.frame = self.bounds
     }
     
-    private let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
-        tableView.showsVerticalScrollIndicator = false
-        tableView.backgroundColor = .clear
-        tableView.separatorStyle = .none
-        tableView.contentInsetAdjustmentBehavior = .never
-        tableView.register(FloatChatDefaultCell.self, forCellReuseIdentifier: FloatChatDefaultCell.identifier)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 50
-        return tableView
-    }()
-    
     private var isViewReady = false
     override func didMoveToWindow() {
         super.didMoveToWindow()
         guard !isViewReady else { return }
         constructViewHierarchy()
-        activateConstraints()
         bindInteraction()
         isViewReady = true
     }
 
     private func constructViewHierarchy() {
-        addSubview(tableView)
         self.layer.mask = blurLayer
-    }
-
-    private func activateConstraints() {
-        tableView.snp.makeConstraints { (make) in
-            make.top.left.bottom.right.equalToSuperview()
-        }
     }
     
     func bindInteraction() {
-        tableView.dataSource = self
-        
-        messageListPublisher
-            .filter{ !$0.isEmpty }
+        messagePublisher
+            .filter{ !$0.content.isEmpty }
             .receive(on: DispatchQueue.mainQueue)
-            .sink { [weak self] floatMessages in
+            .sink { [weak self] floatMessage in
                 guard let self = self else { return }
-                let rowsBefore = self.messageList.count
-                let rowsAfter = floatMessages.count
-                let numberOfRowsInserted = rowsAfter - rowsBefore
-                if numberOfRowsInserted > 0 {
-                    var insertIndexs = [IndexPath]()
-                    for i in 0..<numberOfRowsInserted {
-                        insertIndexs.append(IndexPath(row: rowsBefore + i, section: 0))
-                    }
-                    self.messageList = floatMessages
-                    self.tableView.beginUpdates()
-                    self.tableView.insertRows(at: insertIndexs, with: .automatic)
-                    self.tableView.endUpdates()
-                } else {
-                    self.messageList = floatMessages
-                    self.tableView.reloadData()
-                }
-                let lastIndexPath = IndexPath(row: rowsAfter - 1, section: 0)
-                self.tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
+                self.addMessage(floatMessage)
             }
             .store(in: &cancellableSet)
     }
-}
-
-// MARK: - UITableViewDataSource
-
-extension FloatChatDisplayView: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FloatChatDefaultCell.identifier, for: indexPath)
-        if let cell = cell as? FloatChatDefaultCell, indexPath.row < messageList.count {
-            cell.floatMessage = messageList[indexPath.row]
+    
+    private func addMessage(_ message: FloatChatMessage) {
+        let messageView = FloatChatMessageView(floatMessage: message)
+        if currentMessageHeight() + messageView.height + messageSpacing > bounds.height {
+            removeOldestMessage()
         }
-        return cell
+        addSubview(messageView)
+        messageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.lessThanOrEqualToSuperview()
+            make.height.lessThanOrEqualToSuperview()
+            if let lastMessage = messages.last {
+                make.top.equalTo(lastMessage.snp.bottom).offset(messageSpacing).priority(.high)
+            }
+            make.bottom.lessThanOrEqualToSuperview()
+        }
+        messages.append(messageView)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.removeMessageWithAnimation(message: messageView)
+        }
     }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messageList.count
+    
+    private func currentMessageHeight() -> CGFloat {
+        return messages.reduce(0) { $0 + $1.height + messageSpacing}
+    }
+    
+    private func removeOldestMessage() {
+        guard let oldest = messages.first else { return }
+        removeMessage(message: oldest)
+    }
+    
+    private func removeMessageWithAnimation(message: FloatChatMessageView) {
+        UIView.animate(withDuration: 0.3) {
+            message.alpha = 0
+        } completion: { _ in
+            self.removeMessage(message: message)
+        }
+    }
+    
+    private func removeMessage(message: FloatChatMessageView) {
+        if let index = messages.firstIndex(of: message) {
+            message.removeFromSuperview()
+            messages.remove(at: index)
+        }
     }
 }
 
 extension FloatChatDisplayView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-         let view = super.hitTest(point, with: event)
-         if view == tableView {
-             return nil
-         }
-         return view
-     }
+        return nil
+    }
 }

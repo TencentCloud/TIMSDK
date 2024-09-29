@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import RTCRoomEngine
+import Factory
+import Combine
 
 class UserListCell: UITableViewCell {
     var attendeeModel: UserEntity
@@ -67,6 +70,38 @@ class UserListCell: UITableViewCell {
         return button
     }()
     
+    let callButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.backgroundColor = UIColor(0x6B758A)
+        button.layer.cornerRadius = 6
+        button.setTitle(.callText, for: .normal)
+        button.setTitleColor(UIColor(0xB2BBD1), for: .normal)
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 12)
+        button.isHidden = true
+        return button
+    }()
+    
+    let callingLabel: UILabel = {
+        let label = UILabel ()
+        label.font = UIFont(name: "PingFangSC-Regular", size: 14)
+        label.backgroundColor = UIColor.clear
+        label.textColor = UIColor(0xD5E0F2)
+        label.text = .callingText
+        label.isHidden = true
+        return label
+    }()
+    
+    let notJoiningLabel: UILabel = {
+        let label = UILabel ()
+        label.font = UIFont(name: "PingFangSC-Regular", size: 14)
+        label.backgroundColor = UIColor.clear
+        label.textAlignment = .right
+        label.textColor = UIColor(0xD5E0F2)
+        label.text = .notJoinNowText
+        label.isHidden = true
+        return label
+    }()
+    
     let downLineView : UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(0x4F586B,alpha: 0.3)
@@ -102,6 +137,9 @@ class UserListCell: UITableViewCell {
         contentView.addSubview(muteVideoButton)
         contentView.addSubview(inviteStageButton)
         contentView.addSubview(downLineView)
+        contentView.addSubview(callButton)
+        contentView.addSubview(callingLabel)
+        contentView.addSubview(notJoiningLabel)
     }
     
     func activateConstraints() {
@@ -147,6 +185,24 @@ class UserListCell: UITableViewCell {
             make.trailing.equalTo(81.scale375())
             make.height.equalTo(16.scale375())
         }
+        callButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.centerY.equalTo(self.avatarImageView)
+            make.width.equalTo(48.scale375())
+            make.height.equalTo(28.scale375Height())
+        }
+        callingLabel.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.centerY.equalTo(self.avatarImageView)
+            make.width.equalTo(60.scale375())
+            make.height.equalTo(28.scale375Height())
+        }
+        notJoiningLabel.snp.makeConstraints{ make in
+            make.trailing.equalTo(callButton.snp.leading).offset(-12.scale375())
+            make.centerY.equalTo(self.avatarImageView)
+            make.width.equalTo(120.scale375())
+            make.height.equalTo(28.scale375Height())
+        }
         downLineView.snp.makeConstraints { make in
             make.leading.equalTo(userLabel)
             make.trailing.equalToSuperview()
@@ -161,6 +217,7 @@ class UserListCell: UITableViewCell {
         inviteStageButton.addTarget(self, action: #selector(inviteStageAction(sender:)), for: .touchUpInside)
         muteAudioButton.addTarget(self, action: #selector(showUserManageAction(sender:)), for: .touchUpInside)
         muteVideoButton.addTarget(self, action: #selector(showUserManageAction(sender:)), for: .touchUpInside)
+        callButton.addTarget(self, action: #selector(inviteEnterAction(sender:)), for: .touchUpInside)
     }
     
     func setupViewState(item: UserEntity) {
@@ -188,13 +245,35 @@ class UserListCell: UITableViewCell {
         roleLabel.isHidden = item.userRole == .generalUser
         muteAudioButton.isSelected = !item.hasAudioStream
         muteVideoButton.isSelected = !item.hasVideoStream
-        guard viewModel.roomInfo.isSeatEnabled else { return }
-        muteAudioButton.isHidden = !attendeeModel.isOnSeat
-        muteVideoButton.isHidden = !attendeeModel.isOnSeat
-        if viewModel.checkSelfInviteAbility(invitee: attendeeModel) {
-            inviteStageButton.isHidden = attendeeModel.isOnSeat
-        } else {
+        if viewModel.roomInfo.isSeatEnabled {
+            muteAudioButton.isHidden = !attendeeModel.isOnSeat
+            muteVideoButton.isHidden = !attendeeModel.isOnSeat
+            if viewModel.checkSelfInviteAbility(invitee: attendeeModel) {
+                inviteStageButton.isHidden = attendeeModel.isOnSeat
+            } else {
+                inviteStageButton.isHidden = true
+            }
+        }
+        setupCallingViewState(item: item)
+    }
+    
+    private func setupCallingViewState(item: UserEntity) {
+        if let index = viewModel.invitationList.firstIndex(where: { $0.invitee.userId == item.userId }) {
+            let invitation = viewModel.invitationList[index]
+            muteAudioButton.isHidden = true
+            muteVideoButton.isHidden = true
             inviteStageButton.isHidden = true
+            let isPending = invitation.status == .pending
+            callButton.isHidden = isPending
+            callingLabel.isHidden = !isPending
+            notJoiningLabel.isHidden = true
+        }
+    }
+    
+    func showNotJoiningLabel() {
+        self.notJoiningLabel.isHidden = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.notJoiningLabel.isHidden = true
         }
     }
     
@@ -207,9 +286,15 @@ class UserListCell: UITableViewCell {
         viewModel.showUserManageViewAction(userId: attendeeModel.userId, userName: attendeeModel.userName)
     }
     
+    @objc func inviteEnterAction(sender: UIButton) {
+        self.conferenceStore.dispatch(action: ConferenceInvitationActions.inviteUsers(payload: (viewModel.roomInfo.roomId, [attendeeModel.userId])))
+    }
+    
     deinit {
         debugPrint("deinit \(self)")
     }
+    
+    @Injected(\.conferenceStore) private var conferenceStore
 }
 
 private extension String {
@@ -224,5 +309,14 @@ private extension String {
     }
     static var administratorText: String {
         localized("Administrator")
+    }
+    static var callText: String {
+        localized("Call")
+    }
+    static var callingText: String {
+        localized("Calling...")
+    }
+    static var notJoinNowText: String {
+        localized("Not joining for now")
     }
 }

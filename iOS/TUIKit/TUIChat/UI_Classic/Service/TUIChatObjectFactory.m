@@ -12,6 +12,7 @@
 #import "TUIChatConfig.h"
 #import "TUIChatDefine.h"
 #import "TUIGroupChatViewController.h"
+#import "TUIChatShortcutMenuView.h"
 
 @interface TUIChatObjectFactory () <TUIObjectProtocol>
 
@@ -95,7 +96,7 @@
     }
     
     if ([isEnableRoomInfoStr isEqualToString:@"0"]) {
-        conversationModel.enabelRoom = NO;
+        conversationModel.enableRoom = NO;
     }
     if ([isLimitedPortraitOrientationStr isEqualToString:@"1"]) {
         conversationModel.isLimitedPortraitOrientation = YES;
@@ -128,7 +129,6 @@
     if ([isEnableAlbumStr isEqualToString:@"0"]) {
         conversationModel.enableAlbum = NO;
     }
-    
     
     TUIBaseChatViewController *chatVC = nil;
     if (conversationModel.groupID.length > 0) {

@@ -19,6 +19,7 @@ enum PopUpViewType {
     case QRCodeViewType
     case chatViewType
     case inviteViewType
+    case inviteMemberViewType
 }
 
 protocol PopUpViewModelResponder: AnyObject {

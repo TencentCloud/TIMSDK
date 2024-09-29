@@ -30,7 +30,7 @@ class TextFieldCell: ScheduleBaseCell {
         view.textAlignment = isRTL ? .left : .right
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100.scale375(), height: 50.scale375Height()))
         toolbar.barStyle = .default
-        toolbar.items = [UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),UIBarButtonItem(title: .ok, style: .done, target: self, action: #selector(saveTextField))];
+        toolbar.items = [UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil), UIBarButtonItem(title: .ok, style: .done, target: self, action: #selector(saveTextField))]
         view.inputAccessoryView = toolbar
         view.delegate = self
         return view
@@ -71,6 +71,7 @@ class TextFieldCell: ScheduleBaseCell {
         textField.text = textFieldItem.content
         textField.isEnabled = textFieldItem.isEnable
         textField.keyboardType = textFieldItem.keyboardType
+        textField.placeholder = textFieldItem.placeholder
     }
     
     @objc func saveTextField() {

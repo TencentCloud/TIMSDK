@@ -18,11 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TUIChatDataProvider : TUIChatBaseDataProvider
 
 #pragma mark - CellData
-- (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
-                                                           userID:(NSString *)userID
-                                                conversationModel:(TUIChatConversationModel *)conversationModel
-                                                 actionController:(id<TIMInputViewMoreActionProtocol>)actionController;
+// For Classic Edition.
+- (NSMutableArray<TUIInputMoreCellData *> *)getMoreMenuCellDataArray:(NSString *)groupID
+                                                              userID:(NSString *)userID
+                                                   conversationModel:(TUIChatConversationModel *)conversationModel
+                                                    actionController:(id<TIMInputViewMoreActionProtocol>)actionController;
 
+// For Minimalist Edition.
 - (NSArray<TUICustomActionSheetItem *> *)getInputMoreActionItemList:(nullable NSString *)userID
                                                             groupID:(nullable NSString *)groupID
                                                   conversationModel:(TUIChatConversationModel *)conversationModel

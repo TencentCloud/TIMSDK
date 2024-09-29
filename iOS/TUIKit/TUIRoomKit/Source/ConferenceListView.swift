@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import Factory
 import TUICore
+import RTCRoomEngine
 
 struct ConferenceSection {
     let date: Date
@@ -318,8 +319,8 @@ extension ConferenceListView {
             .filter { $0.id == ScheduleResponseActions.onScheduleSuccess.id }
             .sink { [weak self] action in
                 guard let self = self else { return }
-                if let action = action as? AnonymousAction<String> {
-                    let view = InviteEnterRoomView(roomId: action.payload, style: .inviteWhenSuccess)
+                if let action = action as? AnonymousAction<TUIConferenceInfo> {
+                    let view = InviteEnterRoomView(conferenceInfo: ConferenceInfo(with: action.payload), style: .inviteWhenSuccess)
                     self.navigation.present(route: .popup(view: view))
                 }
             }

@@ -353,6 +353,8 @@
         if ([self.navigationController.topViewController isKindOfClass:NSClassFromString(@"TUISelectGroupMemberViewController")]) {
             return;
         }
+        //When pushing a new VC, the keyboard needs to be hidden.
+        [self.inputController reset];
         __weak typeof(self) weakSelf = self;
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID] = self.conversationData.groupID;

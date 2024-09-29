@@ -73,12 +73,12 @@ class ScheduleTabCell: ScheduleBaseCell {
             make.centerY.equalToSuperview()
         }
         messageLabel.snp.makeConstraints() { make in
-            make.trailing.equalTo(button.snp.leading).offset(-6.scale375())
+            make.trailing.equalTo(button.snp.leading).offset(-5.scale375())
             make.centerY.equalToSuperview()
             make.width.lessThanOrEqualTo(170.scale375())
         }
         avatarsView.snp.makeConstraints { make in
-            make.trailing.equalTo(messageLabel.snp.leading).offset(-10.scale375())
+            make.trailing.equalTo(messageLabel.snp.leading).offset(-5.scale375())
             make.centerY.equalToSuperview()
             make.width.lessThanOrEqualTo(120.scale375())
         }
@@ -112,6 +112,10 @@ class ScheduleTabCell: ScheduleBaseCell {
                 make.width.height.equalTo(32.scale375())
             }
             avatarsView.addArrangedSubview(imageView)
+        }
+        titleLabel.snp.updateConstraints { make in
+            let maxWidth = iconList.count > 0 ? 80.scale375() : 100.scale375()
+            make.width.lessThanOrEqualTo(maxWidth)
         }
     }
     

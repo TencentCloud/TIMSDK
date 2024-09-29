@@ -8,6 +8,7 @@
 
 #import "TUIRecordView.h"
 #import <TIMCommon/TIMDefine.h>
+#import "TUIChatConfig.h"
 
 @implementation TUIRecordView
 - (id)init {
@@ -47,7 +48,7 @@
     _timeLabel.textColor = [UIColor whiteColor];
     _timeLabel.textAlignment = NSTextAlignmentCenter;
     _timeLabel.layer.cornerRadius = 5;
-    _timeLabel.text = @"60\"";
+    _timeLabel.text = [NSString stringWithFormat:@"%.0f\"", MIN(60, [TUIChatConfig defaultConfig].maxAudioRecordDuration)];
     [_background addSubview:_timeLabel];
 }
 

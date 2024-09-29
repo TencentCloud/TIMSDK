@@ -18,9 +18,11 @@ class RouteContext {
     var popUpViewController: Weak<PopUpViewController>?
     var appearance: AnyObject?
     let navigationDelegate = RoomRouter.RoomNavigationDelegate()
-    var chatWindow : UIWindow?
     var currentLandscape: Bool = isLandscape
     weak var rootViewController: UIViewController?
+    var chatWindow : UIWindow?
+    let chatWindowWidth = min(kScreenWidth, kScreenHeight) + 20
+    let chatWindowHeight = min(kScreenWidth, kScreenHeight)
     init() {
         if #available(iOS 13, *) {
             appearance = UINavigationBarAppearance()
@@ -66,18 +68,18 @@ class RoomRouter: NSObject {
     
     func pushToChatController(user: UserEntity, roomInfo: TUIRoomInfo) {
         guard let chatVC = makeChatController(user: user, roomInfo: roomInfo) else { return }
-        let nav = !isLandscape ? navController : UINavigationController(rootViewController: chatVC)
         if !isLandscape {
             push(viewController: chatVC, animated: false)
         } else {
+            let nav = UINavigationController(rootViewController: chatVC)
+            nav.navigationBar.backgroundColor = .white
             if #available(iOS 13, *) {
                 guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
                 context.chatWindow = UIWindow(windowScene: windowScene)
             } else {
                 context.chatWindow = UIWindow(frame: UIScreen.main.bounds)
             }
-            let chatWidth = min(kScreenWidth, kScreenHeight)
-            context.chatWindow?.frame = CGRect(x: kScreenWidth - chatWidth - kDeviceSafeBottomHeight, y: 0, width: chatWidth, height: chatWidth)
+            context.chatWindow?.frame = CGRect(x: kScreenWidth - context.chatWindowWidth - kDeviceSafeBottomHeight, y: 0, width: context.chatWindowWidth, height: context.chatWindowHeight)
             context.chatWindow?.rootViewController = nav
             context.chatWindow?.windowLevel = UIWindow.Level.statusBar + 1
             context.chatWindow?.isHidden = false
@@ -174,7 +176,10 @@ class RoomRouter: NSObject {
         }
     }
     
-    class func presentAlert(title: String?, message: String?, sureTitle:String?, declineTitle: String?, sureBlock: (() -> ())?, declineBlock: (() -> ())?) {
+    class func presentAlert(title: String?, message: String?, sureTitle:String?, declineTitle: String?, sureBlock: (() -> ())?, declineBlock: (() -> ())?, autoConfirmSeconds: Int? = nil) {
+        var timer: Timer?
+        var remainingSeconds = autoConfirmSeconds ?? 0
+        
         let alertVC = UIAlertController(title: title,
                                         message: message,
                                         preferredStyle: .alert)
@@ -185,10 +190,24 @@ class RoomRouter: NSObject {
             declineAction.setValue(UIColor(0x4F586B), forKey: "titleTextColor")
             alertVC.addAction(declineAction)
         }
-        let sureAction = UIAlertAction(title: sureTitle, style: .default) { _ in
+        let sureActionTitle = (autoConfirmSeconds != nil) ? "\(sureTitle ?? "") (\(remainingSeconds))" : sureTitle
+        let sureAction = UIAlertAction(title: sureActionTitle, style: .default) { _ in
             sureBlock?()
+            timer?.invalidate()
         }
         alertVC.addAction(sureAction)
+        
+        if autoConfirmSeconds != nil {
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                remainingSeconds -= 1
+                if remainingSeconds <= 0 {
+                    sureBlock?()
+                    timer?.invalidate()
+                } else {
+                    sureAction.setValue("\(sureTitle ?? "") (\(remainingSeconds))", forKey: "title")
+                }
+            }
+        }
         shared.getCurrentWindowViewController()?.present(alertVC, animated: true)
         let weakObserver = { [weak alertVC] in return alertVC }
         shared.context.alterControllers.append(weakObserver)
@@ -305,11 +324,9 @@ extension RoomRouter {
                 navigationController.navigationBar.scrollEdgeAppearance = appearance
             }
         } else {
-            navigationController.navigationBar.barTintColor = UIColor(0x1B1E26)
             navigationController.navigationBar.shadowImage = UIImage()
             navigationController.navigationBar.barStyle = .default
         }
-        navigationController.delegate = context.navigationDelegate
         let weakObserver = { [weak navigationController] in
             return navigationController
         }
@@ -325,7 +342,7 @@ extension RoomRouter {
         barAppearance.configureWithDefaultBackground()
         barAppearance.shadowColor = nil
         barAppearance.backgroundEffect = nil
-        barAppearance.backgroundColor = UIColor(0x1B1E26)
+        barAppearance.backgroundColor = .white
     }
     
     private func getCurrentWindowViewController() -> UIViewController? {
@@ -377,14 +394,9 @@ extension RoomRouter.RoomNavigationDelegate: UINavigationControllerDelegate {
         if viewController is ConferenceMainViewController {
             if #available(iOS 13.0, *) {
                 if let appearance = RoomRouter.shared.context.appearance as? UINavigationBarAppearance {
-                    appearance.backgroundColor = UIColor(0x1B1E26)
                     navigationController.navigationBar.standardAppearance = appearance
                     navigationController.navigationBar.scrollEdgeAppearance = appearance
-                    navigationController.navigationBar.tintColor = UIColor.white
                 }
-            } else {
-                navigationController.navigationBar.tintColor = UIColor.white
-                navigationController.navigationBar.backgroundColor = UIColor(0x1B1E26)
             }
         }
     }

@@ -164,7 +164,8 @@
         self.groupPinList = groupPinList;
         [[NSNotificationCenter defaultCenter] postNotificationName:TUICore_TUIChatExtension_ChatViewTopArea_ChangedNotification object:nil];
         if (self.pinPageVC) {
-            self.pinPageVC.groupPinList = groupPinList;
+            NSMutableArray *formatGroupPinList = [NSMutableArray arrayWithArray:groupPinList.reverseObjectEnumerator.allObjects];
+            self.pinPageVC.groupPinList = formatGroupPinList;
             self.pinPageVC.canRemove = [self.messageController isCurrentUserRoleSuperAdminInGroup];
             if (groupPinList.count > 0) {
                 [self reloadPopPinPage];
@@ -354,6 +355,8 @@
         if ([self.navigationController.topViewController isKindOfClass:NSClassFromString(@"TUISelectGroupMemberViewController_Minimalist")]) {
             return;
         }
+        //When pushing a new VC, the keyboard needs to be hidden.
+        [self.inputController reset];
         __weak typeof(self) weakSelf = self;
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID] = self.conversationData.groupID;

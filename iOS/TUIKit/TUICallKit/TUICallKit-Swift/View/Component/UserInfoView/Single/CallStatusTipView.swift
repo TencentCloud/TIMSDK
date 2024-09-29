@@ -11,6 +11,7 @@ class CallStatusTipView: UIView {
     
     let selfCallStatusObserver = Observer()
     let networkQualityObserver = Observer()
+    private var isFirstShowAccept: Bool = true
     
     let callStatusLabel: UILabel = {
         let callStatusLabel = UILabel(frame: CGRect.zero)
@@ -23,6 +24,7 @@ class CallStatusTipView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        isFirstShowAccept = (TUICallState.instance.selfUser.value.callStatus.value == .accept) ? false : true
         updateStatusText()
         registerObserveState()
     }
@@ -90,7 +92,6 @@ class CallStatusTipView: UIView {
         }
     }
     
-    private var isFirstShowAccept: Bool = true
     func updateStatusText() {
         switch TUICallState.instance.selfUser.value.callStatus.value {
         case .waiting:

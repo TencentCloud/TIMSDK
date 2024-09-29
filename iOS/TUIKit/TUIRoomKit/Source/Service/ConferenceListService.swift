@@ -26,11 +26,11 @@ class ConferenceListService: NSObject {
         listManager?.removeObserver(self)
     }
     
-    func scheduleConference(conferenceInfo: TUIConferenceInfo) -> AnyPublisher<String, RoomError> {
-        return Future<String, RoomError> { [weak self] promise in
+    func scheduleConference(conferenceInfo: TUIConferenceInfo) -> AnyPublisher<TUIConferenceInfo, RoomError> {
+        return Future<TUIConferenceInfo, RoomError> { [weak self] promise in
             guard let self = self else { return }
             self.listManager?.scheduleConference(conferenceInfo) {
-                promise(.success((conferenceInfo.basicRoomInfo.roomId)))
+                promise(.success(conferenceInfo))
             } onError: { error, message in
                 promise(.failure(RoomError(error: error, message: message)))
             }
@@ -116,6 +116,21 @@ class ConferenceListService: NSObject {
         .eraseToAnyPublisher()
     }
     
+    func fetchConferenceInfo(roomId: String) -> AnyPublisher<ConferenceInfo, RoomError> {
+        return Future<ConferenceInfo, RoomError> { [weak self] promise in
+            guard let self = self else { return }
+            EngineManager.shared.fetchRoomInfo(roomId: roomId) { [weak self] roomInfo in
+                guard let self = self, let roomInfo = roomInfo else { return }
+                let currentList = self.store?.selectCurrent(ConferenceListSelectors.getConferenceList)
+                guard var updateConference = currentList?.first(where: { $0.basicInfo.roomId == roomInfo.roomId }) else { return }
+                updateConference.basicInfo = RoomInfo(with: roomInfo)
+                promise(.success(updateConference))
+            } onError: { error, message in
+                promise(.failure(RoomError(error: error , message: message)))
+            }
+        }
+        .eraseToAnyPublisher()
+    }
 }
 
 extension ConferenceListService: TUIConferenceListManagerObserver {

@@ -19,6 +19,8 @@ struct RoomInfo {
     var isMicrophoneDisableForAllUser = true
     var isCameraDisableForAllUser = true
     var createTime: UInt = 0
+    var isPasswordEnabled: Bool = false
+    var isEnteredRoom = false
     
     init() {}
     init(with roomInfo: TUIRoomInfo) {
@@ -32,6 +34,7 @@ struct RoomInfo {
         self.isMicrophoneDisableForAllUser = roomInfo.isMicrophoneDisableForAllUser
         self.isCameraDisableForAllUser = roomInfo.isCameraDisableForAllUser
         self.createTime = roomInfo.createTime
+        self.isPasswordEnabled = roomInfo.password.count > 0
     }
 }
 

@@ -14,6 +14,7 @@
 #import "TUIConversationCellData_Minimalist.h"
 #import "TUIConversationCell_Minimalist.h"
 #import "TUIFoldListViewController_Minimalist.h"
+#import "TUIConversationConfig.h"
 
 static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Minimalist_ReuseId";
 
@@ -138,7 +139,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 }
 
 - (void)setupViews {
-    self.view.backgroundColor = TUIConversationDynamicColor(@"conversation_bg_color", @"#FFFFFF");
+    self.view.backgroundColor = [TUIConversationConfig sharedConfig].listBackgroundColor ? : TUIConversationDynamicColor(@"conversation_bg_color", @"#FFFFFF");
     CGRect rect = self.view.bounds;
     _tableView = [[UITableView alloc] initWithFrame:rect];
     _tableView.tableFooterView = [[UIView alloc] init];
@@ -767,6 +768,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 
         @weakify(self);
         if (uiMsgs.count > 0) {
+            self.multiChooseView.readButton.enabled = NO;
             self.multiChooseView.hideButton.enabled = YES;
             self.multiChooseView.deleteButton.enabled = YES;
             [self.multiChooseView.readButton setTitle:TIMCommonLocalizableString(MarkAsRead) forState:UIControlStateNormal];
@@ -828,7 +830,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
             TUICore_TUIChatObjectFactory_ChatViewController_ConversationID : data.conversationID ?: @"",
             TUICore_TUIChatObjectFactory_ChatViewController_AtTipsStr : data.atTipsStr ?: @"",
             TUICore_TUIChatObjectFactory_ChatViewController_AtMsgSeqs : data.atMsgSeqs ?: @[],
-            TUICore_TUIChatObjectFactory_ChatViewController_Draft : data.draftText ?: @""
+            TUICore_TUIChatObjectFactory_ChatViewController_Draft : data.draftText ?: @"",
         };
         [self.navigationController pushViewController:TUICore_TUIChatObjectFactory_ChatViewController_Minimalist param:param forResult:nil];
     }
@@ -888,41 +890,77 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
 
 // MARK: action
 - (void)showMoreAction:(TUIConversationCellData *)cellData {
+    id<TUIConversationConfigDataSource> dataSource = [TUIConversationConfig sharedConfig].moreMenuDataSource;
+    BOOL hideHide = NO;
+    BOOL hidePin = NO;
+    BOOL hideClear = NO;
+    BOOL hideDelete = NO;
+    NSArray *customizedItems = @[];
+    if (dataSource && [dataSource respondsToSelector:@selector(conversationShouldHideItemsInMoreMenu:)]) {
+        NSInteger flag = [dataSource conversationShouldHideItemsInMoreMenu:cellData];
+        hideHide = flag & TUIConversationItemInMoreMenu_Hide;
+        hidePin = flag & TUIConversationItemInMoreMenu_Pin;
+        hideClear = flag & TUIConversationItemInMoreMenu_Clear;
+        hideDelete = flag & TUIConversationItemInMoreMenu_Delete;
+    }
+    if (dataSource && [dataSource respondsToSelector:@selector(conversationShouldAddNewItemsToMoreMenu:)]) {
+        customizedItems = [dataSource conversationShouldAddNewItemsToMoreMenu:cellData];
+    }
+    
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     __weak typeof(self) weakSelf = self;
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(MarkHide)
-                                                    style:UIAlertActionStyleDefault
-                                                  handler:^(UIAlertAction *_Nonnull action) {
-                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                    [strongSelf.dataProvider markConversationHide:cellData];
-                                                    if (cellData.isLocalConversationFoldList) {
-                                                        [TUIConversationListDataProvider_Minimalist cacheConversationFoldListSettings_HideFoldItem:YES];
-                                                    }
-                                                  }]];
-
-    if (!cellData.isMarkAsFolded) {
-        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:cellData.isOnTop ? TIMCommonLocalizableString(UnPin) : TIMCommonLocalizableString(Pin)
+    if (!hideHide) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(MarkHide)
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction *_Nonnull action) {
                                                         __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                        [strongSelf.dataProvider pinConversation:cellData pin:!cellData.isOnTop];
+                                                        [strongSelf.dataProvider markConversationHide:cellData];
+                                                        if (cellData.isLocalConversationFoldList) {
+                                                            [TUIConversationListDataProvider_Minimalist cacheConversationFoldListSettings_HideFoldItem:YES];
+                                                        }
                                                       }]];
     }
 
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(ClearHistoryChatMessage)
-                                                    style:UIAlertActionStyleDefault
-                                                  handler:^(UIAlertAction *_Nonnull action) {
-                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                    [strongSelf.dataProvider markConversationAsRead:cellData];
-                                                    [strongSelf.dataProvider clearHistoryMessage:cellData];
-                                                  }]];
 
-    [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Delete)
-                                                    style:UIAlertActionStyleDestructive
-                                                  handler:^(UIAlertAction *_Nonnull action) {
-                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                    [strongSelf.dataProvider removeConversation:cellData];
-                                                  }]];
+    if (!cellData.isMarkAsFolded) {
+        if (!hidePin) {
+            [ac tuitheme_addAction:[UIAlertAction actionWithTitle:cellData.isOnTop ? TIMCommonLocalizableString(UnPin) : TIMCommonLocalizableString(Pin)
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction *_Nonnull action) {
+                                                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                            [strongSelf.dataProvider pinConversation:cellData pin:!cellData.isOnTop];
+                                                          }]];
+        }
+
+    }
+
+    if (!hideClear) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(ClearHistoryChatMessage)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf.dataProvider markConversationAsRead:cellData];
+            [strongSelf.dataProvider clearHistoryMessage:cellData];
+        }]];
+    }
+
+    if (!hideDelete) {
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Delete)
+                                                        style:UIAlertActionStyleDestructive
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf.dataProvider removeConversation:cellData];
+        }]];
+    }
+
+    if (customizedItems.count > 0) {
+        for (id action in customizedItems) {
+            if (![action isKindOfClass:UIAlertAction.class]) {
+                continue;
+            }
+            [ac tuitheme_addAction:action];
+        }
+    }
 
     [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:ac animated:YES completion:nil];

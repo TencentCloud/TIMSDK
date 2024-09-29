@@ -124,6 +124,7 @@ static CGRect gCustomTopViewRect;
         [self setupCustomTopView];
     }
     [self setupMessageController];
+    [self setupInputMoreMenu];
     [self setupInputController];
 
     // data provider
@@ -482,6 +483,25 @@ static CGRect gCustomTopViewRect;
     _inputController.view.hidden = !TUIChatConfig.defaultConfig.enableMainPageInputBar;
 
 }
+
+- (void)setupInputMoreMenu {
+    id<TUIChatInputBarConfigDataSource> dataSource = [TUIChatConfig defaultConfig].inputBarDataSource;
+    if (dataSource && [dataSource respondsToSelector:@selector(inputBarShouldHideItemsInMoreMenuOfModel:)]) {
+        TUIChatInputBarMoreMenuItem tag = [dataSource inputBarShouldHideItemsInMoreMenuOfModel:self.conversationData];
+        self.conversationData.enableFile = !(tag & TUIChatInputBarMoreMenuItem_File);
+        self.conversationData.enableAlbum = !(tag & TUIChatInputBarMoreMenuItem_Album);
+        self.conversationData.enableTakePhoto = !(tag & TUIChatInputBarMoreMenuItem_TakePhoto);
+        self.conversationData.enableRecordVideo = !(tag & TUIChatInputBarMoreMenuItem_RecordVideo);
+        self.conversationData.enableWelcomeCustomMessage = !(tag & TUIChatInputBarMoreMenuItem_CustomMessage);
+    }
+    if (dataSource && [dataSource respondsToSelector:@selector(inputBarShouldAddNewItemsToMoreMenuOfModel:)]) {
+        NSArray *items = [dataSource inputBarShouldAddNewItemsToMoreMenuOfModel:self.conversationData];
+        if ([items isKindOfClass:NSArray.class]) {
+            self.conversationData.customizedNewItemsInMoreMenu = items;
+        }
+    }
+}
+
 - (void)configHeadImageView:(TUIChatConversationModel *)convData {
     /**
      * Setup default avatar
@@ -745,6 +765,8 @@ static CGRect gCustomTopViewRect;
 }
 
 - (void)rightBarButtonClick {
+    //When pushing a new VC, the keyboard needs to be hidden.
+    [self.inputController reset];
     if (_conversationData.userID.length > 0) {
         [self getUserOrFriendProfileVCWithUserID:self.conversationData.userID
             succBlock:^(UIViewController *_Nonnull vc) {

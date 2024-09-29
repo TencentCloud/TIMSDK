@@ -26,6 +26,7 @@ class ConferenceStoreProvider {
     private func initializeStore() {
         initializeUserStore()
         initializeConferenceListStore()
+        initializeConferenceInvitationStore()
         initializeRoomStore()
         initializeErrorEffect()
         initializedViewStore()
@@ -41,7 +42,13 @@ class ConferenceStoreProvider {
         operation.register(effects: ConferenceListEffects())
     }
     
+    private func initializeConferenceInvitationStore() {
+        operation.register(reducer: ConferenceInvitationReducer, for: \.conferenceInvitationState)
+        operation.register(effects: ConferenceInvitationEffects())
+    }
+    
     private func initializeRoomStore() {
+        operation.register(reducer: roomReducer, for: \.roomState)
         operation.register(effects: RoomEffects())
     }
     
@@ -57,6 +64,7 @@ class ConferenceStoreProvider {
     
     private func initializedViewStore() {
         viewStore.register(reducer: scheduleViewReducer,for: \ViewState.scheduleViewState)
+        viewStore.register(reducer: invitationViewReducer, for: \ViewState.invitationViewState)
     }
     
     deinit {
@@ -66,11 +74,16 @@ class ConferenceStoreProvider {
         operation.unregister(reducer: ConferenceListReducer)
         operation.unregisterEffects(withId: ConferenceListEffects.id)
         
+        operation.unregister(reducer: ConferenceInvitationReducer)
+        operation.unregisterEffects(withId: ConferenceInvitationEffects.id)
+        
+        operation.unregister(reducer: roomReducer)
         operation.unregisterEffects(withId: RoomEffects.id)
         
         operation.unregisterEffects(withId: ErrorEffects.id)
         
         viewStore.unregister(reducer: scheduleViewReducer)
+        viewStore.unregister(reducer: invitationViewReducer)
     }
 }
 

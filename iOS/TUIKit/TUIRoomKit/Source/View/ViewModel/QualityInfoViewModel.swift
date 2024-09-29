@@ -175,7 +175,7 @@ private extension String {
         localized("Latency")
     }
     static var lossString: String {
-        localized("Package Loss")
+        localized("Packet Loss Rate")
     }
     static var bitrateString: String {
         localized("Bitrate")

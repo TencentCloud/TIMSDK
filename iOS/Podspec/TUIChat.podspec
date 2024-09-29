@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '8.1.6116'
+  spec.version      = '8.2.6325'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.1.6116/ios/TUIChat.zip?time=11'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUIChat.zip?time=11'}
 
   spec.default_subspec = 'ALL'
 
@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
     commonModel.source_files = '**/TUIChat/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TXIMSDK_Plus_iOS_XCFramework'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon','~> 8.1.6116'
+    commonModel.dependency 'TIMCommon','~> 8.2.6325'
     commonModel.dependency 'ReactiveObjC'
     commonModel.dependency 'SDWebImage'
     commonModel.dependency 'Masonry'
@@ -120,7 +120,9 @@ Pod::Spec.new do |spec|
       header.source_files = '**/TUIChat/UI_Classic/Header/*.{h,m,mm}'
       header.dependency "TUIChat/UI_Classic/Service"
     end
-    uiClassic.resource = ['**/TUIChat/Resources/*.bundle']
+    uiClassic.resource = [
+      '**/TUIChat/Resources/*.bundle'
+    ]
   end
 
   spec.subspec 'UI_Minimalist' do |uiMinimalist|
@@ -158,7 +160,9 @@ Pod::Spec.new do |spec|
       header.source_files = '**/TUIChat/UI_Minimalist/Header/*.{h,m,mm}'
       header.dependency "TUIChat/UI_Minimalist/Service"
     end
-    uiMinimalist.resource = ['**/TUIChat/Resources/*.bundle']
+    uiMinimalist.resource = [
+      '**/TUIChat/Resources/*.bundle'
+    ]
   end
 
   spec.subspec 'ALL' do |all|

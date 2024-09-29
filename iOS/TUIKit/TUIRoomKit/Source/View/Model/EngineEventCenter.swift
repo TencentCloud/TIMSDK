@@ -68,8 +68,12 @@ class EngineEventCenter: NSObject {
         case onDeletedTakeSeatRequest
         case onExitedRoom
         case onDestroyedRoom
+        case onStartedRoom
+        case onJoinedRoom
         case onConferenceInfoChanged
         case onInitialSelfUserInfo
+        case onInitialRoomInfo
+        case onGetUserListFinished
     }
     
     enum RoomUIEvent: String {

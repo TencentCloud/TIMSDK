@@ -14,6 +14,11 @@
 "TUICallKit.Group.waitAccept" = "منتظر";
 "TUICallKit.determine" = "تأكيد ";
 "TUICallKit.lineBusy" = "الخط مشغول";
+"TUICallKit.userHangup" = "\%@ انهى المكالمة";
+"TUICallKit.userReject" = "\%@ رفض المكالمة";
+"TUICallKit.otherPartyHangup" = "أنهى الطرف الآخر المكالمة";
+"TUICallKit.otherPartyReject" = "الطرف الآخر رفض المكالمة";
+"TUICallKit.otherPartyNoResponse" = "لم يستجب الطرف الآخر";
 
 "TUICallKit.switchCamera" = "يُحوّل";
 "TUICallKit.blurBackground" = "الخلفية الغائمة";

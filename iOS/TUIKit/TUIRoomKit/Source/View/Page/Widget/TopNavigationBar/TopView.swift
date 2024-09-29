@@ -39,7 +39,7 @@ class TopView: UIView {
     let meetingNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(0xD5E0F2)
-        label.font = UIFont(name: "PingFangSC-Medium", size: 15)
+        label.font = UIFont(name: "PingFangSC-Medium", size: 16)
         label.textAlignment = isRTL ? .right : .left
         label.lineBreakMode = .byTruncatingTail
         return label
@@ -142,13 +142,13 @@ class TopView: UIView {
             make.center.equalToSuperview()
         }
         stackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(10.scale375())
+            make.leading.equalToSuperview().offset(16.scale375())
             make.top.bottom.equalToSuperview()
         }
         meetingNameLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.height.equalTo(24.scale375())
-            make.width.lessThanOrEqualTo(140.scale375())
+            make.width.lessThanOrEqualTo(128.scale375())
             make.leading.equalToSuperview()
         }
         timeLabel.snp.makeConstraints { make in
@@ -182,7 +182,6 @@ class TopView: UIView {
         meetingTitleView.addGestureRecognizer(dropTap)
         exitView.addGestureRecognizer(exitTap)
         viewModel.viewResponder = self
-        viewModel.updateTimerLabelText()
     }
     
     func updateRootViewOrientation(isLandscape: Bool) {
@@ -292,7 +291,7 @@ private extension String {
         localized("Cancel")
     }
     static var exitText: String {
-        localized("exit")
+        localized("Exit")
     }
 }
 

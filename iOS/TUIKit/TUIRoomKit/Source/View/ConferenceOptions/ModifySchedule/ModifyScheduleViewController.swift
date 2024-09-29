@@ -83,8 +83,8 @@ extension ModifyScheduleViewController {
     }
 }
 
-extension ModifyScheduleViewController: MemberSelectionDelegate {
-    public func onMemberSelected(_ viewController: SelectMemberControllerProtocol,
+extension ModifyScheduleViewController: ContactViewSelectDelegate {
+    public func onMemberSelected(_ viewController: ContactViewProtocol,
                                  invitees: [User]) {
         var conferenceInfo = modifyStore.conferenceInfo
         conferenceInfo.attendeeListResult.attendeeList = invitees.map { $0.userInfo }

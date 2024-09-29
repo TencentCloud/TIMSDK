@@ -28,4 +28,10 @@ extension String {
         }
         return nil
     }
+    
+    func isStringOnlyDigits() -> Bool {
+        let regex = "^[0-9]+$"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
+        return predicate.evaluate(with: self)
+    }
 }

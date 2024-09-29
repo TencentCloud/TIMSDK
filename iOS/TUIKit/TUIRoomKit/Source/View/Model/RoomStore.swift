@@ -9,6 +9,7 @@
 import Foundation
 import TUICore
 import RTCRoomEngine
+import Factory
 
 let roomHashNumber: Int = 0x3B9AC9FF
 
@@ -66,6 +67,11 @@ class RoomStore: NSObject {
         } else {
             isShownRaiseHandNotice = true
         }
+    }
+    
+    func initialRoomInfo(_ roomInfo: TUIRoomInfo) {
+        self.roomInfo = roomInfo
+        EngineEventCenter.shared.notifyEngineEvent(event: .onInitialRoomInfo, param: ["roomInfo": roomInfo])
     }
     
     func initalEnterRoomMessage() {

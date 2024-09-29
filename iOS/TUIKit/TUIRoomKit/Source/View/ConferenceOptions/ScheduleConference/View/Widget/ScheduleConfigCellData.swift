@@ -74,6 +74,7 @@ struct TextFieldItem: CellConfigItem {
     var content: String = ""
     var keyboardType: UIKeyboardType = .default
     var maxLengthInBytes: Int = 100
+    var placeholder: String = ""
 }
 
 struct ButtonItem: CellConfigItem {

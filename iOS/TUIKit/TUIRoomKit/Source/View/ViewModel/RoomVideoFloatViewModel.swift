@@ -90,7 +90,6 @@ class RoomVideoFloatViewModel: NSObject {
     }
     
     deinit {
-        engineManager.stopPlayRemoteVideo(userId: userId, streamType: streamType)
         unsubscribeEngine()
         unsubLogoutNotification()
         debugPrint("deinit \(self)")

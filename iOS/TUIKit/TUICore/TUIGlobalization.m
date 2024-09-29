@@ -67,20 +67,14 @@ static BOOL gRTLOption = NO;
         language = @"en";
     } else if ([language hasPrefix:@"zh"]) {
         if ([language rangeOfString:@"Hans"].location != NSNotFound) {
-            language = @"zh-Hans";  // Simplified Chinese
-        } else {                    // zh-Hant\zh-HK\zh-TW
-            language = @"zh-Hant";  // Traditional Chinese
+            // Simplified Chinese
+            language = @"zh-Hans";
+        } else {
+            // Traditional Chinese
+            language = @"zh-Hant";
         }
-    } else if ([language hasPrefix:@"ko"]) {
-        language = @"ko";
-    } else if ([language hasPrefix:@"ru"]) {
-        language = @"ru";
-    } else if ([language hasPrefix:@"uk"]) {
-        language = @"uk";
     } else if ([language hasPrefix:@"ar"]) {
         language = @"ar";
-    }else if ([language hasPrefix:@"ja"]) {
-        language = @"ja";
     }
     else {
         language = @"en";

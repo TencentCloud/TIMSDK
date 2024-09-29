@@ -21,3 +21,18 @@ let scheduleViewReducer = Reducer<ScheduleViewState>(
         state.detailViewPopFlag = false
     })
 )
+
+let invitationViewReducer = Reducer<InvitationViewState> (
+    ReduceOn(InvitationViewActions.dismissInvitationView, reduce: { state, action in
+        state.invitationViewDismissFlag = true
+    }),
+    ReduceOn(InvitationViewActions.resetInvitationFlag, reduce: { state, action in
+        state.invitationViewDismissFlag = false
+    }),
+    ReduceOn(InvitationViewActions.showInvitationPopupView, reduce: { state, action in
+        state.showInvitationPopupView = true
+    }),
+    ReduceOn(InvitationViewActions.resetPopupViewFlag, reduce: { state, action in
+        state.showInvitationPopupView = false
+    })
+)

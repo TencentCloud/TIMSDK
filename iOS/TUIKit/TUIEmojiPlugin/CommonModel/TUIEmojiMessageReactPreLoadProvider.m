@@ -28,6 +28,9 @@
         if (cellData.msgID) {
             [cellDataMap setObject:cellData forKey:cellData.msgID];
         }
+        if (!cellData.reactdataProvider) {
+            [cellData setupReactDataProvider];
+        }
     }
     
     __weak typeof(self)weakSelf = self;
@@ -44,9 +47,6 @@
                 if (model) {
                     if (msgID) {
                         TUIMessageCellData *cellData = cellDataMap[msgID];
-                        if (!cellData.reactdataProvider) {
-                            [cellData setupReactDataProvider];
-                        }
                         cellData.reactdataProvider.isFirsLoad = YES;
                         [cellData.reactdataProvider.reactMap setObject:model forKey:model.emojiKey];
                         [cellData.reactdataProvider.reactArray addObject:model];

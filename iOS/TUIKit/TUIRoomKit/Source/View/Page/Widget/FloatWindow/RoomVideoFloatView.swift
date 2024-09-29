@@ -10,6 +10,7 @@ import Factory
 
 class RoomVideoFloatView: UIView {
     @Injected(\.floatChatService) private var store: FloatChatStoreProvider
+    @Injected(\.conferenceStore) private var conferenceStore: ConferenceStore
     private var isDraging: Bool = false
     private let viewModel: RoomVideoFloatViewModel
     private let space: CGFloat = 10

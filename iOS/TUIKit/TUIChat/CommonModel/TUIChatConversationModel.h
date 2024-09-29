@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @import UIKit;
+@class TUIChatShortcutMenuCellData;
+@class TUIInputMoreCellData;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -92,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, assign) BOOL enableWelcomeCustomMessage;
 
-@property(nonatomic, assign) BOOL enabelRoom;
+@property(nonatomic, assign) BOOL enableRoom;
 
 @property(nonatomic, assign) BOOL isLimitedPortraitOrientation;
 
@@ -107,6 +109,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL enableAlbum;
 
 @property(nonatomic, assign) BOOL enableFile;
+
+@property (nonatomic, copy) NSArray *customizedNewItemsInMoreMenu;
+
+@property (nonatomic, strong) UIColor *shortcutViewBackgroundColor;
+@property (nonatomic, assign) CGFloat shortcutViewHeight;
+@property (nonatomic, strong) NSArray<TUIChatShortcutMenuCellData *> *shortcutMenuItems;
 
 @end
 

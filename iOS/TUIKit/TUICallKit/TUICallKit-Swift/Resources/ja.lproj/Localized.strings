@@ -14,6 +14,11 @@
 "TUICallKit.Group.waitAccept" = "待機中";
 "TUICallKit.determine" = "もちろん";
 "TUICallKit.lineBusy" = "回線ビジー";
+"TUICallKit.userHangup" = "\%@ 通話終了";
+"TUICallKit.userReject" = "\%@ は通話を拒否しました";
+"TUICallKit.otherPartyHangup" = "相手が切断、通話終了";
+"TUICallKit.otherPartyReject" = "相手による通話拒否";
+"TUICallKit.otherPartyNoResponse" = "呼び出しタイムアウト";
 
 "TUICallKit.switchCamera" = "切り替え";
 "TUICallKit.blurBackground" = "背景をぼかす";

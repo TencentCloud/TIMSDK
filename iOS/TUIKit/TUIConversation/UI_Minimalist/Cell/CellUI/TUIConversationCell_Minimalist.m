@@ -7,6 +7,7 @@
 //
 
 #import "TUIConversationCell_Minimalist.h"
+#import "TUIConversationConfig.h"
 
 @implementation TUIConversationCell_Minimalist
 
@@ -24,9 +25,21 @@
 
 - (void)fillWithData:(TUIConversationCellData *)convData {
     self.convData = convData;
-
-    self.timeLabel.text = [TUITool convertDateToStr:convData.time];
+    
+    self.titleLabel.textColor = TUIDynamicColor(@"", TUIThemeModuleCore_Minimalist, @"#000000");
+    if ([TUIConversationConfig sharedConfig].cellTitleLabelFont) {
+        self.titleLabel.font = [TUIConversationConfig sharedConfig].cellTitleLabelFont;
+    }
+    
     self.subTitleLabel.attributedText = convData.subTitle;
+    if ([TUIConversationConfig sharedConfig].cellSubtitleLabelFont) {
+        self.subTitleLabel.font = [TUIConversationConfig sharedConfig].cellSubtitleLabelFont;
+    }
+    
+    self.timeLabel.text = [TUITool convertDateToStr:convData.time];
+    if ([TUIConversationConfig sharedConfig].cellTimeLabelFont) {
+        self.timeLabel.font = [TUIConversationConfig sharedConfig].cellTimeLabelFont;
+    }
 
     [self configRedPoint:convData];
 
@@ -192,8 +205,8 @@
     } else {
         self.notDisturbRedDot.hidden = YES;
         self.notDisturbView.hidden = YES;
-        self.unReadView.hidden = NO;
         [self.unReadView setNum:convData.unreadCount];
+        self.unReadView.hidden = convData.unreadCount == 0 ? YES : ![TUIConversationConfig sharedConfig].showCellUnreadCount;
     }
 
     // Mark As Unread
@@ -205,6 +218,7 @@
         } else {
             // Marked unread Show number 1
             [self.unReadView setNum:1];
+            self.unReadView.hidden = convData.unreadCount == 0 ? YES : ![TUIConversationConfig sharedConfig].showCellUnreadCount;
         }
     }
 
@@ -261,9 +275,9 @@
     CGFloat imgHeight = height - 2 * (kScale390(12));
 
     if (self.convData.isOnTop) {
-        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_top_bg_color", @"#F4F4F4");
+        self.contentView.backgroundColor = [TUIConversationConfig sharedConfig].pinnedCellBackgroundColor ? : TUIConversationDynamicColor(@"conversation_cell_top_bg_color", @"#F4F4F4");
     } else {
-        self.contentView.backgroundColor = TUIConversationDynamicColor(@"conversation_cell_bg_color", @"#FFFFFF");
+        self.contentView.backgroundColor = [TUIConversationConfig sharedConfig].cellBackgroundColor ? : TUIConversationDynamicColor(@"conversation_cell_bg_color", @"#FFFFFF");
     }
     
     CGFloat selectedIconSize = 20;

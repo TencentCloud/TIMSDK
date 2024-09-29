@@ -25,8 +25,8 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             pushVC.push(viewControllerKey, param: requestParam) { [weak self] responseData in
                 guard let self = self else { return }
                 guard let modelList = responseData[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList]
-                        as? [TUIUserModel] else { return }
-                let userIDs: [String] = modelList.map { $0.userId }
+                        as? [AnyObject] else { return }
+                let userIDs: [String] = modelList.compactMap { $0.userId }
                 self.startCall(groupID: groupID, userIDs: userIDs, callingType: type)
             }
         }

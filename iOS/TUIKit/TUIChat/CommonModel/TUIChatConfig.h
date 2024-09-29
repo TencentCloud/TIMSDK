@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <TIMCommon/TIMCommonModel.h>
 #import <TIMCommon/TUIMessageCellData.h>
+#import "TUIChatConversationModel.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class TUIChatEventConfig;
 
 typedef NS_ENUM(NSUInteger, TUIChatRegisterCustomMessageStyleType) {
@@ -16,11 +20,45 @@ typedef NS_ENUM(NSUInteger, TUIChatRegisterCustomMessageStyleType) {
     TUIChatRegisterCustomMessageStyleTypeMinimalist = 1,
 };
 
-NS_ASSUME_NONNULL_BEGIN
+@class TUICustomActionSheetItem;
+@class TUIChatConversationModel;
+typedef NS_OPTIONS(NSInteger, TUIChatInputBarMoreMenuItem) {
+    TUIChatInputBarMoreMenuItem_None = 0,
+    TUIChatInputBarMoreMenuItem_CustomMessage = 1 << 0,
+    TUIChatInputBarMoreMenuItem_TakePhoto = 1 << 1,
+    TUIChatInputBarMoreMenuItem_RecordVideo = 1 << 2,
+    TUIChatInputBarMoreMenuItem_Album = 1 << 3,
+    TUIChatInputBarMoreMenuItem_File = 1 << 4,
+    TUIChatInputBarMoreMenuItem_Room = 1 << 5,
+    TUIChatInputBarMoreMenuItem_Poll = 1 << 6,
+    TUIChatInputBarMoreMenuItem_GroupNote = 1 << 7,
+    TUIChatInputBarMoreMenuItem_VideoCall = 1 << 8,
+    TUIChatInputBarMoreMenuItem_AudioCall = 1 << 9,
+};
+@protocol TUIChatInputBarConfigDataSource <NSObject>
+@optional
+/**
+ *  Implement this method to hide items in more menu of the specified model.
+ */
+- (TUIChatInputBarMoreMenuItem)inputBarShouldHideItemsInMoreMenuOfModel:(TUIChatConversationModel *)model;
+/**
+ *  Implement this method to add new items to the more menu of the specified model.
+ */
+- (NSArray<TUICustomActionSheetItem *> *)inputBarShouldAddNewItemsToMoreMenuOfModel:(TUIChatConversationModel *)model;
+@end
+
+@protocol TUIChatShortcutViewDataSource <NSObject>
+@optional
+- (NSArray<TUIChatShortcutMenuCellData *> *)itemsInShortcutViewOfModel:(TUIChatConversationModel *)model;
+- (UIColor *)shortcutViewBackgroundColorOfModel:(TUIChatConversationModel *)model;
+- (CGFloat)shortcutViewHeightOfModel:(TUIChatConversationModel *)model;
+@end
+
 
 @interface TUIChatConfig : NSObject
 
 + (TUIChatConfig *)defaultConfig;
+
 @property(nonatomic, strong) NSArray<TUIFaceGroup *> *chatContextEmojiDetailGroups;
 
 /**
@@ -59,6 +97,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) BOOL enablePopMenuReferenceAction;
 
+@property(nonatomic, assign) BOOL enablePopMenuPinAction;
+@property(nonatomic, assign) BOOL enablePopMenuRecallAction;
+@property(nonatomic, assign) BOOL enablePopMenuTranslateAction;
+@property(nonatomic, assign) BOOL enablePopMenuConvertAction;
+@property(nonatomic, assign) BOOL enablePopMenuForwardAction;
+@property(nonatomic, assign) BOOL enablePopMenuSelectAction;
+@property(nonatomic, assign) BOOL enablePopMenuCopyAction;
+@property(nonatomic, assign) BOOL enablePopMenuDeleteAction;
+@property(nonatomic, assign) BOOL enablePopMenuInfoAction;
+@property(nonatomic, assign) BOOL enablePopMenuAudioPlaybackAction;
+
 /**
  *  Whether the C2C chat dialog box displays "The other party is typing...", the default is YES
  */
@@ -90,11 +139,41 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL enableMultiDeviceForCall;
 
 /**
+ * Set whether to enable incoming banner when user received audio and video calls, default is false
+ */
+@property(nonatomic, assign) BOOL enableIncomingBanner;
+
+/**
+ * Set whether to enable the virtual background for audio and video calls, default value is false
+ */
+@property(nonatomic, assign) BOOL enableVirtualBackgroundForCall;
+
+/**
  * The time interval for message recall, in seconds, default is 120 seconds. If you want to adjust this configuration, please modify the IM console settings
  * synchronously.
  * https://cloud.tencent.com/document/product/269/38656#.E6.B6.88.E6.81.AF.E6.92.A4.E5.9B.9E.E8.AE.BE.E7.BD.AE
  */
 @property(nonatomic, assign) NSUInteger timeIntervalForMessageRecall;
+
+/**
+ 不超过 60s
+ */
+@property (nonatomic, assign) CGFloat maxAudioRecordDuration;
+
+/**
+ 不超过 15s
+ */
+@property (nonatomic, assign) CGFloat maxVideoRecordDuration;
+
+@property(nonatomic, assign) BOOL showRoomButton;
+@property(nonatomic, assign) BOOL showPollButton;
+@property(nonatomic, assign) BOOL showGroupNoteButton;
+@property(nonatomic, assign) BOOL showRecordVideoButton;
+@property(nonatomic, assign) BOOL showTakePhotoButton;
+@property(nonatomic, assign) BOOL showAlbumButton;
+@property(nonatomic, assign) BOOL showFileButton;
+
+
 
 /**
  * This class is used to register event listeners for Chat from external sources, to listen for various events in Chat and respond accordingly,
@@ -107,6 +186,14 @@ NS_ASSUME_NONNULL_BEGIN
  * which will be intercepted and only the overridden method will be executed. The Chat module will not continue to process it.
  */
 @property(nonatomic, strong) TUIChatEventConfig * eventConfig;
+/**
+ *  DataSource for inputBar.
+ */
+@property (nonatomic, weak) id<TUIChatInputBarConfigDataSource> inputBarDataSource;
+/**
+ *  DataSource for shortcutView above inputBar.
+ */
+@property (nonatomic, weak) id<TUIChatShortcutViewDataSource> shortcutViewDataSource;
 
 @end
 
@@ -175,6 +262,8 @@ NS_ASSUME_NONNULL_BEGIN
      messageCellDataClassName:(NSString *)cellDataName
                     styleType:(TUIChatRegisterCustomMessageStyleType)styleType;
 @end
+
+
 
 NS_ASSUME_NONNULL_END
 

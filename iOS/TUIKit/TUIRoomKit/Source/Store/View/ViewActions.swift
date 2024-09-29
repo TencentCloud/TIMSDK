@@ -24,6 +24,15 @@ enum ScheduleViewActions {
     static let resetPopDetailFlag = ActionTemplate(id: key.appending(".resetPopDetailFlag"))
 }
 
+enum InvitationViewActions {
+    static let key = ViewActions.key + ".invitationView"
+    
+    static let dismissInvitationView = ActionTemplate(id: key.appending(".dismissInvitationView"))
+    static let resetInvitationFlag = ActionTemplate(id: key.appending(".resetInvitationFlag"))
+    static let showInvitationPopupView = ActionTemplate(id: key.appending(".showInvitationPopupView"))
+    static let resetPopupViewFlag = ActionTemplate(id: key.appending(".resetPopupViewFlag"))
+}
+
 struct ToastInfo: Identifiable {
     enum Position {
         case center

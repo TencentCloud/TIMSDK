@@ -9,6 +9,7 @@ import Foundation
 
 struct ViewState {
     var scheduleViewState = ScheduleViewState()
+    var invitationViewState = InvitationViewState()
 }
 
 struct ScheduleViewState {
@@ -16,3 +17,7 @@ struct ScheduleViewState {
     var detailViewPopFlag = false
 }
 
+struct InvitationViewState {
+    var invitationViewDismissFlag = true
+    var showInvitationPopupView = false
+}

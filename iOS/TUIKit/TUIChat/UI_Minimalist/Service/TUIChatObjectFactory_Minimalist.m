@@ -76,7 +76,7 @@
         conversationModel.enableAudioCall = NO;
     }
     if ([isEnableRoomInfoStr isEqualToString:@"0"]) {
-        conversationModel.enabelRoom = NO;
+        conversationModel.enableRoom = NO;
     }
     
     TUIBaseChatViewController_Minimalist *chatVC = nil;

@@ -254,14 +254,9 @@
     }
 
     if (offsetY > TMessageController_Header_Height) {
-        if (scrollToBoom) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
-                                  atScrollPosition:UITableViewScrollPositionBottom
-                                          animated:NO];
-        } else {
-            [self.tableView scrollRectToVisible:CGRectMake(0, offsetY, Screen_Width, self.tableView.bounds.size.height)
-                                       animated:NO];
-        }
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:NO];
     }
 }
 

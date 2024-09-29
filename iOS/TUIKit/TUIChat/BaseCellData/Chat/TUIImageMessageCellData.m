@@ -180,7 +180,7 @@
         [TUITool asyncDecodeImage:path
                          complete:^(NSString *path, UIImage *image) {
                            dispatch_async(dispatch_get_main_queue(), ^{
-                             if (![path tui_containsString:@".gif"]) {
+                             if (![path tui_containsString:@".gif"] || (image.sd_imageFormat != SDImageFormatGIF)) {
                                  /**
                                   * The gif image is too large to be cached in memory
                                   */

@@ -18,7 +18,6 @@
 @property UITableView *tableView;
 @property UITextView *addWordTextView;
 @property UITextField *nickTextField;
-@property UILabel *groupNameLabel;
 @property BOOL keyboardShown;
 @property TUICommonContactProfileCardCellData *cardCellData;
 @property TUICommonContactSwitchCellData *singleSwitchData;
@@ -140,8 +139,9 @@
     return 44;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-{ return 4; }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 4;
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UILabel *label = [[UILabel alloc] init];
@@ -160,9 +160,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 2) {
-        return 2;
-    }
     return 1;
 }
 
@@ -173,44 +170,26 @@
         cell.delegate = self;
         [cell fillWithData:self.cardCellData];
         return cell;
-    }
-    if (indexPath.section == 1) {
+    } else if (indexPath.section == 1) {
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AddWord"];
         [cell.contentView addSubview:self.addWordTextView];
         self.addWordTextView.mm_width(Screen_Width).mm_height(120);
         return cell;
-    }
-    if (indexPath.section == 2) {
-        if (indexPath.row == 0) {
-            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"NickName"];
-            cell.textLabel.text = TIMCommonLocalizableString(Alia);
-            [cell.contentView addSubview:self.nickTextField];
+    } else if (indexPath.section == 2) {
+        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"NickName"];
+        cell.textLabel.text = TIMCommonLocalizableString(Alia);
+        [cell.contentView addSubview:self.nickTextField];
+        
+        UIView *separtor = [[UIView alloc] init];
+          separtor.backgroundColor = [UIColor groupTableViewBackgroundColor];
+          [cell.contentView addSubview:separtor];
+          separtor.mm_width(tableView.mm_w).mm_bottom(0).mm_left(0).mm_height(1);
 
-            UIView *separtor = [[UIView alloc] init];
-            separtor.backgroundColor = [UIColor groupTableViewBackgroundColor];
-            [cell.contentView addSubview:separtor];
-            separtor.mm_width(tableView.mm_w).mm_bottom(0).mm_left(0).mm_height(1);
+        self.nickTextField.mm_width(cell.contentView.mm_w / 2).mm_height(cell.contentView.mm_h).mm_right(20);
+        self.nickTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 
-            self.nickTextField.mm_width(cell.contentView.mm_w / 2).mm_height(cell.contentView.mm_h).mm_right(20);
-            self.nickTextField.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-
-            return cell;
-        } else {
-            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"GroupName"];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.textLabel.text = TIMCommonLocalizableString(Group);
-            cell.detailTextLabel.text = TIMCommonLocalizableString(my_friend);
-            self.groupNameLabel = cell.detailTextLabel;
-
-            UIView *separtor = [[UIView alloc] init];
-            separtor.backgroundColor = [UIColor groupTableViewBackgroundColor];
-            [cell.contentView addSubview:separtor];
-            separtor.mm_width(tableView.mm_w).mm_bottom(0).mm_left(0).mm_height(1);
-
-            return cell;
-        }
-    }
-    if (indexPath.section == 3) {
+        return cell;
+    } else if (indexPath.section == 3) {
         TUIButtonCell *cell = [[TUIButtonCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"send"];
         TUIButtonCellData *data = [[TUIButtonCellData alloc] init];
         data.style = ButtonWhite;
@@ -238,7 +217,6 @@
     V2TIMFriendAddApplication *application = [[V2TIMFriendAddApplication alloc] init];
     application.addWording = self.addWordTextView.text;
     application.friendRemark = self.nickTextField.text;
-    // application.group = self.groupNameLabel.text;
     application.userID = self.profile.userID;
     application.addSource = @"iOS";
     if (self.singleSwitchData.on) {

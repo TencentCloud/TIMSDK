@@ -8,6 +8,8 @@
 import Foundation
 
 struct OperationState {
+    var roomState = RoomInfo()
     var userState = UserState()
     var conferenceListState = ConferenceListState()
+    var conferenceInvitationState = ConferenceInvitationState()
 }

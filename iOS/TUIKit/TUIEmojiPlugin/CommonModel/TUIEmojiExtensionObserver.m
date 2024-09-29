@@ -191,6 +191,13 @@ static id gShareInstance = nil;
                 [weakTagView notifyReactionChanged];
             }
         }
+        else {
+            //When invisible, the height should be reset if there is a change in response
+            if (!CGSizeEqualToSize(CGSizeZero, delegateView.messageData.messageContainerAppendSize)) {
+                delegateView.messageData.messageContainerAppendSize = CGSizeZero;
+                [weakTagView notifyReactionChanged];
+            }
+        }
         
         tagView.emojiClickCallback = ^(TUIReactModel *_Nonnull model) {
             [weakSelf emojiClick:parentView ReactMessage:delegateView.messageData faceList:weakTagView.listArrM];
@@ -208,6 +215,9 @@ static id gShareInstance = nil;
         
         TUIChatPopContextController *delegateVC = [param objectForKey:TUICore_TUIChatExtension_ChatPopMenuReactRecentView_Delegate];
         if (![parentView isKindOfClass:UIView.class]) {
+            return NO;
+        }
+        if (![TUIChatConfig defaultConfig].enablePopMenuEmojiReactAction) {
             return NO;
         }
     
@@ -277,6 +287,13 @@ static id gShareInstance = nil;
                 if (weakTagView) {
                     [weakTagView refreshByArray:delegateView.messageData.reactdataProvider.reactArray];
                 }
+            }
+        }
+        else {
+            //When invisible, the height should be reset if there is a change in response
+            if (!CGSizeEqualToSize(CGSizeZero, delegateView.messageData.messageContainerAppendSize)) {
+                delegateView.messageData.messageContainerAppendSize = CGSizeZero;
+                [weakTagView notifyReactionChanged];
             }
         }
         

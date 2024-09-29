@@ -40,7 +40,7 @@ import RTCRoomEngine
     public func enterRoom(roomId: String, enableAudio: Bool, enableVideo: Bool, isSoundOnSpeaker: Bool,
                           onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
         EngineManager.shared.enterRoom(roomId: roomId, enableAudio: enableAudio, enableVideo: enableVideo,
-                                                 isSoundOnSpeaker: isSoundOnSpeaker) {
+                                                 isSoundOnSpeaker: isSoundOnSpeaker) { roomInfo in
             RoomRouter.shared.pushMainViewController()
         } onError: { code, message in
             onError(code, message)

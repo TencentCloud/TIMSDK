@@ -145,6 +145,8 @@ class PopUpView: UIView {
                                         EngineManager.shared.store.roomInfo.roomId)
             rootView = QRCodeView(viewModel: model)
         case .inviteViewType:
+            rootView = InviteView()
+        case .inviteMemberViewType:
             let model = MemberInviteViewModel()
             rootView = MemberInviteView(viewModel: model)
         default: break

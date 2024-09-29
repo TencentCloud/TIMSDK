@@ -6,19 +6,65 @@
 //
 
 import Foundation
+import RTCRoomEngine
 
-@objc public enum ConferenceError: Int {
-    case success = 0
-    case failed = -1
-    case conferenceIdNotExist = -2100
-    case conferenceIdInvalid = -2105
-    case conferenceIdOccupied = -2106
-    case conferenceNameInvalid = -2107
+@objcMembers public class StartConferenceParams: NSObject {
+    public var roomId = ""
+    
+    public var isOpenMicrophone = true
+    public var isOpenCamera = false
+    public var isOpenSpeaker = true
+    
+    public var isMicrophoneDisableForAllUser = false
+    public var isCameraDisableForAllUser = false
+    
+    public var isSeatEnabled = false
+    public var name: String?
+    
+    public init(roomId: String,
+                isOpenMicrophone: Bool = true,
+                isOpenCamera: Bool = false,
+                isOpenSpeaker: Bool = true,
+                isMicrophoneDisableForAllUser: Bool = false,
+                isCameraDisableForAllUser: Bool = false,
+                isSeatEnabled: Bool = false,
+                name: String? = nil) {
+        self.roomId = roomId
+        self.isOpenMicrophone = isOpenMicrophone
+        self.isOpenCamera = isOpenCamera
+        self.isOpenSpeaker = isOpenSpeaker
+        self.isMicrophoneDisableForAllUser = isMicrophoneDisableForAllUser
+        self.isCameraDisableForAllUser = isCameraDisableForAllUser
+        self.isSeatEnabled = isSeatEnabled
+        self.name = name
+        super.init()
+    }
+}
+
+@objcMembers public class JoinConferenceParams: NSObject {
+    public var roomId = ""
+    
+    public var isOpenMicrophone = true
+    public var isOpenCamera = false
+    public var isOpenSpeaker = true
+    
+    public var password: String?
+    
+    public init(roomId: String,
+                isOpenMicrophone: Bool = true,
+                isOpenCamera: Bool = false,
+                isOpenSpeaker: Bool = true) {
+        self.roomId = roomId
+        self.isOpenMicrophone = isOpenMicrophone
+        self.isOpenCamera = isOpenCamera
+        self.isOpenSpeaker = isOpenSpeaker
+        super.init()
+    }
 }
 
 @objc public protocol ConferenceObserver {
-    @objc optional func onConferenceStarted(conferenceId: String, error: ConferenceError)
-    @objc optional func onConferenceJoined(conferenceId: String, error: ConferenceError)
-    @objc optional func onConferenceFinished(conferenceId: String)
-    @objc optional func onConferenceExited(conferenceId: String)
+    @objc optional func onConferenceStarted(roomInfo: TUIRoomInfo, error: TUIError, message: String)
+    @objc optional func onConferenceJoined(roomInfo: TUIRoomInfo, error: TUIError, message: String)
+    @objc optional func onConferenceFinished(roomId: String)
+    @objc optional func onConferenceExited(roomId: String)
 }

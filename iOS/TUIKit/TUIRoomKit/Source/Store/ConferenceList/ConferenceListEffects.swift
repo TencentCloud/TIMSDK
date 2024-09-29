@@ -16,8 +16,8 @@ class ConferenceListEffects: Effects {
         actions.wasCreated(from: ConferenceListActions.scheduleConference)
             .flatMap { action in
                 environment.conferenceListService.scheduleConference(conferenceInfo: action.payload)
-                    .map { roomId in
-                        ConferenceListActions.onScheduleSuccess(payload: roomId)
+                    .map { conferenceInfo in
+                        ConferenceListActions.onScheduleSuccess(payload: conferenceInfo)
                     }
                     .catch { error -> Just<Action> in
                         Just(ErrorActions.throwError(payload: error))
@@ -103,8 +103,8 @@ class ConferenceListEffects: Effects {
         actions
             .wasCreated(from: ConferenceListActions.onScheduleSuccess)
             .sink { action in
-                let roomId = action.payload
-                environment.store?.dispatch(action: ScheduleResponseActions.onScheduleSuccess(payload: roomId))
+                let conferenceInfo = action.payload
+                environment.store?.dispatch(action: ScheduleResponseActions.onScheduleSuccess(payload: conferenceInfo))
             }
     }
     

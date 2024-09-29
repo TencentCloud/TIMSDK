@@ -21,14 +21,35 @@
         self.enableVideoCall = YES;
         self.enableAudioCall = YES;
         self.enableWelcomeCustomMessage = YES;
+        self.showFileButton = YES;
+        self.showAlbumButton = YES;
+        self.showTakePhotoButton = YES;
+        self.showRecordVideoButton = YES;
+        self.showGroupNoteButton = YES;
+        self.showPollButton = YES;
+        self.showRoomButton = YES;
         self.enablePopMenuEmojiReactAction = YES;
         self.enablePopMenuReplyAction = YES;
         self.enablePopMenuReferenceAction = YES;
+        self.enablePopMenuPinAction = YES;
+        self.enablePopMenuRecallAction = YES;
+        self.enablePopMenuTranslateAction = YES;
+        self.enablePopMenuConvertAction = YES;
+        self.enablePopMenuForwardAction = YES;
+        self.enablePopMenuSelectAction = YES;
+        self.enablePopMenuCopyAction = YES;
+        self.enablePopMenuDeleteAction = YES;
+        self.enablePopMenuInfoAction = YES;
+        self.enablePopMenuAudioPlaybackAction = YES;
         self.enableMainPageInputBar = YES;
         self.enableTypingStatus = YES;
         self.enableFloatWindowForCall = YES;
         self.enableMultiDeviceForCall = NO;
+        self.enableIncomingBanner = YES;
+        self.enableVirtualBackgroundForCall = NO;
         self.timeIntervalForMessageRecall = 120;
+        self.maxAudioRecordDuration = 60;
+        self.maxVideoRecordDuration = 15;
     }
     return self;
 }

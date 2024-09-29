@@ -441,7 +441,7 @@ extension TUIVideoSeatViewModel: RoomEngineEventResponder {
         case .onUserRoleChanged:
             guard let userId = param?["userId"] as? String else { return }
             guard let userRole = param?["userRole"] as? TUIRole else { return }
-            engineManager.fetchRoomInfo() { [weak self] in
+            engineManager.fetchRoomInfo(roomId: roomInfo.roomId) { [weak self] _ in
                 guard let self = self else { return }
                 self.changeUserRole(userId: userId, userRole: userRole)
             }
@@ -467,7 +467,7 @@ extension TUIVideoSeatViewModel: TUIRoomObserver {
         
         guard videoSeatViewType == .speechType else { return }
         guard let currentSpeakerItem = findCurrentSpeaker(list: listSeatItem) else { return }
-        if speakerItem?.userId == currentSpeakerItem.userId {
+        if viewResponder?.getMoveMiniscreen().seatItem != nil, speakerItem?.userId == currentSpeakerItem.userId {
             viewResponder?.updateMiniscreenVolume(currentSpeakerItem)
         } else {
             guard isConformedSpeakerTimeInterval() else { return }
@@ -513,7 +513,8 @@ extension TUIVideoSeatViewModel: TUIRoomObserver {
                 viewResponder?.deleteItems(at: [screenIndexPath])
             }
         }
-        resetMiniscreen()
+        speakerItem = nil
+        viewResponder?.updateMiniscreen(nil)
     }
     
     private func setRemoteRenderParams(userId: String, streamType: TUIVideoStreamType) {

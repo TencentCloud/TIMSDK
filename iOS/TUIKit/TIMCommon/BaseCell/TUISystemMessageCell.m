@@ -21,8 +21,6 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _messageLabel = [[UILabel alloc] init];
-        _messageLabel.font = [UIFont systemFontOfSize:13];
-        _messageLabel.textColor = [UIColor d_systemGrayColor];
         _messageLabel.textAlignment = NSTextAlignmentCenter;
         _messageLabel.numberOfLines = 1;
         _messageLabel.backgroundColor = [UIColor clearColor];
@@ -60,17 +58,21 @@
 {
     [super fillWithData:data];
     self.systemData = data;
+    
+    self.messageLabel.textColor = TUISystemMessageCellData.textColor ? : data.contentColor;
+    self.messageLabel.font = TUISystemMessageCellData.textFont ? : data.contentFont;
+    self.messageLabel.backgroundColor = TUISystemMessageCellData.textBackgroundColor ? : [UIColor clearColor];
     self.messageLabel.attributedText = data.attributedString;
+    
     self.nameLabel.hidden = YES;
     self.avatarView.hidden = YES;
     self.retryView.hidden = YES;
     [self.indicator stopAnimating];
+    
     // tell constraints they need updating
     [self setNeedsUpdateConstraints];
-
     // update constraints now so we can animate the change
     [self updateConstraintsIfNeeded];
-
     [self layoutIfNeeded];
 }
 

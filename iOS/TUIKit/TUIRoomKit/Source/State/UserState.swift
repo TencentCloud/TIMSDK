@@ -38,6 +38,20 @@ struct UserInfo: Codable {
         self.avatarUrl = userInfo.avatarUrl
         self.userRole = userInfo.userRole
     }
+    
+    init(userEntity: UserEntity) {
+        self.userId = userEntity.userId
+        self.userName = userEntity.userName
+        self.avatarUrl = userEntity.avatarUrl
+        self.userRole = userEntity.userRole
+    }
+}
+
+enum UserListType {
+    case allUsers
+    case onStageUsers
+    case offStageUsers
+    case notInRoomUsers
 }
 
 extension UserInfo: Hashable {
@@ -119,4 +133,15 @@ extension TUIRole: Codable {
         userInfo.avatarUrl = avatarUrl
     }
 
+}
+
+@objc public class ConferenceParticipants: NSObject {
+    @objc public var selectedList: [User] = []
+    @objc public var unSelectableList : [User] = []
+    
+    @objc public init(selectedList: [User] = [], unSelectableList: [User] = []) {
+        self.selectedList = selectedList
+        self.unSelectableList = unSelectableList
+        super.init()
+    }
 }

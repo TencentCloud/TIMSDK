@@ -1,6 +1,29 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    " invite you to join the conference" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أدعوك للانضمام إلى الاجتماع"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " invite you to join the conference"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "邀请你加入会议"
+          }
+        }
+      }
+    },
     "'s quick meeting" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -43,6 +66,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加"
+          }
+        }
+      }
+    },
+    "Add user" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة عضو"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " Add user"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加成员"
           }
         }
       }
@@ -967,8 +1013,8 @@
         }
       }
     },
-    "Audio settings" : {
-      "extractionState" : "migrated",
+    "Audio Settings" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -979,7 +1025,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Audio settings"
+            "value" : "Audio Settings"
           }
         },
         "zh-Hans" : {
@@ -1078,6 +1124,75 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "预定成功，邀请成员加入"
+          }
+        }
+      }
+    },
+    "Call" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتصل"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "呼叫"
+          }
+        }
+      }
+    },
+    "Call all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اتصل بالجميع"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call all"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "呼叫所有人"
+          }
+        }
+      }
+    },
+    "Calling..." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جارٍ الاتصال..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calling..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "呼叫中..."
           }
         }
       }
@@ -1289,6 +1404,29 @@
         }
       }
     },
+    "Conference Host" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يستضيف:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host: "
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主持人："
+          }
+        }
+      }
+    },
     "Conference ID copied successfully." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1377,6 +1515,75 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "房间名不能为空！"
+          }
+        }
+      }
+    },
+    "Conference password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كلمة مرور المؤتمر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conference password"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "房间密码"
+          }
+        }
+      }
+    },
+    "Conference password copied" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم نسخ كلمة مرور المؤتمر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conference password copied"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "会议密码已复制"
+          }
+        }
+      }
+    },
+    "Conference password copied successfully." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم نسخ كلمة مرور المؤتمر بنجاح."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conference password copied successfully."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "房间密码复制成功"
           }
         }
       }
@@ -1519,6 +1726,29 @@
         }
       }
     },
+    "Copy room information" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "معلومات عن غرفة النسخ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy room information"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制房间信息"
+          }
+        }
+      }
+    },
     "Create Room" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1565,6 +1795,29 @@
         }
       }
     },
+    "Currently in the room" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حاليا في الغرفة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currently in the room"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前已在房间中"
+          }
+        }
+      }
+    },
     "Decline" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -1607,6 +1860,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "禁言"
+          }
+        }
+      }
+    },
+    "Do not enter for now" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يدخل بعد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do not enter for now"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂不进入"
           }
         }
       }
@@ -1795,6 +2071,29 @@
         }
       }
     },
+    "Enter 6-digit password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أدخل كلمة المرور المكونة من 6 أرقام"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter 6-digit password"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请输入6位进房密码"
+          }
+        }
+      }
+    },
     "Enter a conference ID" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1904,19 +2203,42 @@
         }
       }
     },
-    "exit" : {
-      "extractionState" : "migrated",
+    "Entered(xx)" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ينهي"
+            "value" : "دخلت الغرفة(xx)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "exit"
+            "value" : "Entered(xx) "
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已进房(xx)"
+          }
+        }
+      }
+    },
+    "Exit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مخرج"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit"
           }
         },
         "zh-Hans" : {
@@ -2042,6 +2364,29 @@
         }
       }
     },
+    "Floating Chat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الدردشة العائمة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Floating Chat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开启聊天弹幕"
+          }
+        }
+      }
+    },
     "Frame Rate" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -2128,6 +2473,29 @@
         }
       }
     },
+    "Full High Definition" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دقة عالية كاملة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full High Definition"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "超清"
+          }
+        }
+      }
+    },
     "Generating room number, please try again later" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2151,8 +2519,8 @@
         }
       }
     },
-    "High resolution" : {
-      "extractionState" : "migrated",
+    "High Definition" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2163,7 +2531,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "High resolution"
+            "value" : "High Definition"
           }
         },
         "zh-Hans" : {
@@ -2243,6 +2611,29 @@
         }
       }
     },
+    "I see" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أرى"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I see"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我知道了"
+          }
+        }
+      }
+    },
     "If you do not want to end the conference, please appoint a new moderator before leaving the conference." : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -2312,6 +2703,52 @@
         }
       }
     },
+    "Input can't be empty!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يمكن أن يكون الإدخال فارغًا!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Input can't be empty!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入不能为空"
+          }
+        }
+      }
+    },
+    "Invitation has been sent, waiting for users to join" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم إرسال رسالة الدعوة، في انتظار انضمام الأعضاء"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invitation has been sent, waiting for users to join"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "邀请信息已发出，等待成员加入"
+          }
+        }
+      }
+    },
     "Invite" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -2348,6 +2785,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invite member"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "邀请成员"
+          }
+        }
+      }
+    },
+    "Invite members to join" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دعوة الأعضاء للانضمام"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite members to join"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "邀请成员加入"
+          }
+        }
+      }
+    },
+    "Invite Others" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دعوة الآخرين"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite Others"
           }
         },
         "zh-Hans" : {
@@ -2400,6 +2883,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "邀请你进入会议"
+          }
+        }
+      }
+    },
+    "Join" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ينضم"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Join"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入"
+          }
+        }
+      }
+    },
+    "Join now" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نضم الان"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Join now"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "立即加入"
           }
         }
       }
@@ -2607,29 +3136,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "离开会议"
-          }
-        }
-      }
-    },
-    "Leave stage" : {
-      "extractionState" : "migrated",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مرحلة المغادرة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leave stage"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "下台"
           }
         }
       }
@@ -3002,6 +3508,29 @@
         }
       }
     },
+    "Modify successfully" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم التعديل بنجاح"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modify successfully"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改成功"
+          }
+        }
+      }
+    },
     "More" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -3113,6 +3642,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "网络"
+          }
+        }
+      }
+    },
+    "Network Quality Monitoring" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مراقبة جودة الشبكة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network Quality Monitoring"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "质量检测"
+          }
+        }
+      }
+    },
+    "Next Day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اليوم التالي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Day"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "次日"
           }
         }
       }
@@ -3255,6 +3830,46 @@
         }
       }
     },
+    "Not Entered(xx)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يتم الدخول للغرفة(xx)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Entered(xx)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未进入(xx)"
+          }
+        }
+      }
+    },
+    "Not joining for now" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لن انضم في الوقت الحالي"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂不入会"
+          }
+        }
+      }
+    },
     "Not on stage(xx)" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -3393,42 +4008,19 @@
         }
       }
     },
-    "Open Floating Chat" : {
-      "extractionState" : "migrated",
+    "Other Settings" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "افتح الدردشة العائمة"
+            "value" : "الإعدادات الأخرى"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Floating Chat"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "开启聊天弹幕"
-          }
-        }
-      }
-    },
-    "Other settings" : {
-      "extractionState" : "migrated",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اعدادات اخرى"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other settings"
+            "value" : "Other Settings"
           }
         },
         "zh-Hans" : {
@@ -3439,25 +4031,48 @@
         }
       }
     },
-    "Package Loss" : {
-      "extractionState" : "migrated",
+    "Packet Loss Rate" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "فقدان الحزمة"
+            "value" : "معدل فقدان الحزمة"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Package Loss"
+            "value" : "Packet Loss Rate"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "丢包率"
+          }
+        }
+      }
+    },
+    "Participant" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشارك:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participant："
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "参会人："
           }
         }
       }
@@ -3481,89 +4096,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "成员上台申请"
-          }
-        }
-      }
-    },
-    "Participants(%lld)" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "مشاركون(%lld)"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "مشاركون(%lld)"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "مشاركون(%lld)"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "مشاركون(%lld)"
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "مشاركون(%lld)"
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "مشاركون(%lld)"
-                }
-              }
-            }
-          }
-        },
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Participant(%lld)"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Participants(%lld)"
-                }
-              }
-            }
-          }
-        },
-        "zh-Hans" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "成员(%lld)"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "成员(%lld)"
-                }
-              }
-            }
           }
         }
       }
@@ -3610,6 +4142,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "参与成员"
+          }
+        }
+      }
+    },
+    "People" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "人"
           }
         }
       }
@@ -3683,25 +4238,48 @@
         }
       }
     },
-    "Quality Inspection" : {
-      "extractionState" : "migrated",
+    "Please enter your room password" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "فحص الجودة"
+            "value" : "الرجاء إدخال كلمة المرور الخاصة بغرفتك"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quality Inspection"
+            "value" : "Please enter your room password"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "质量检测"
+            "value" : "请输入入会密码"
+          }
+        }
+      }
+    },
+    "Please exit before joining a new room" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرجى الخروج قبل الانضمام إلى غرفة جديدة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please exit before joining a new room"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先退出后再加入新的房间"
           }
         }
       }
@@ -3982,6 +4560,29 @@
         }
       }
     },
+    "Room information copied successfully" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم نسخ معلومات الغرفة بنجاح"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room information copied successfully"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "房间信息复制成功"
+          }
+        }
+      }
+    },
     "Room link" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4028,7 +4629,7 @@
         }
       }
     },
-    "Room password" : {
+    "Room Password" : {
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -4040,13 +4641,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Room password"
+            "value" : "Room Password"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "进房密码"
+            "value" : "房间密码"
           }
         }
       }
@@ -4126,19 +4727,19 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "قل شيئا"
+            "value" : "قل شيئا..."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Say something"
+            "value" : "Say something..."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "说点什么"
+            "value" : "说点什么..."
           }
         }
       }
@@ -4230,7 +4831,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "搜索成员"
+            "value" : "搜索参会成员"
           }
         }
       }
@@ -4390,6 +4991,29 @@
         }
       }
     },
+    "Share room" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشاركة الغرفة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share room"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享房间"
+          }
+        }
+      }
+    },
     "Share Screen" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -4436,19 +5060,19 @@
         }
       }
     },
-    "Smooth resolution" : {
-      "extractionState" : "migrated",
+    "Smooth" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "القرار السلس"
+            "value" : "سلس"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Smooth resolution"
+            "value" : "Smooth"
           }
         },
         "zh-Hans" : {
@@ -4482,19 +5106,19 @@
         }
       }
     },
-    "Standard resolution" : {
-      "extractionState" : "migrated",
+    "Standard Definition" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "التعريف القياسى"
+            "value" : "تعريف قياسي"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standard resolution"
+            "value" : "Standard Definition"
           }
         },
         "zh-Hans" : {
@@ -4593,6 +5217,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开始时间"
+          }
+        }
+      }
+    },
+    "Step down" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انزل"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step down"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下台"
           }
         }
       }
@@ -5103,6 +5750,29 @@
         }
       }
     },
+    "The start time cannot be earlier than the current time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يمكن أن يكون وقت البدء قبل الوقت الحالي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The start time cannot be earlier than the current time"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始时间不能早于当前时间"
+          }
+        }
+      }
+    },
     "This member has already received the same request, please try again later" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -5333,6 +6003,89 @@
         }
       }
     },
+    "Users(%lld)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "مستخدم(%lld)"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "مستخدم(%lld)"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "مستخدم(%lld)"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "مستخدم(%lld)"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "مستخدم(%lld)"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "مستخدم(%lld)"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "User(%lld)"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Users(%lld)"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "成员(%lld)"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "成员(%lld)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Video" : {
       "extractionState" : "migrated",
       "localizations" : {
@@ -5379,19 +6132,19 @@
         }
       }
     },
-    "Video settings" : {
-      "extractionState" : "migrated",
+    "Video Settings" : {
+      "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "اعدادات الفيديو"
+            "value" : "إعدادات الفيديو"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video settings"
+            "value" : "Video Settings"
           }
         },
         "zh-Hans" : {
@@ -5467,6 +6220,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "等待成员入会"
+          }
+        }
+      }
+    },
+    "Wrong password, please re-enter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كلمة المرور خاطئة، يرجى إعادة إدخالها"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wrong password, please re-enter"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "密码错误，请重新输入"
           }
         }
       }
@@ -6042,6 +6818,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "您的姓名"
+          }
+        }
+      }
+    },
+    "Your room password format is incorrect, please check it" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صيغة كلمة المرور الخاصة بغرفتك غير صحيحة، يرجى التحقق منها"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your room password format is incorrect, please check it"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "房间密码格式不正确，请检查"
           }
         }
       }

@@ -11,6 +11,7 @@ import Factory
 
 class ConferenceListCell: UITableViewCell {
     @Injected(\.conferenceStore) private var store
+    @Injected(\.conferenceMainViewStore) private var viewStore
     static let reusedIdentifier = "ConferenceListCell"
     private var conferenceInfo: ConferenceInfo?
     
@@ -105,6 +106,8 @@ class ConferenceListCell: UITableViewCell {
         }
         if !info.basicInfo.roomId.isEmpty {
             store.dispatch(action: RoomActions.joinConference(payload: info.basicInfo.roomId))
+            store.dispatch(action: ScheduleViewActions.popDetailView())
+            viewStore.updateInternalCreation(isInternalCreation: true)
         }
     }
     

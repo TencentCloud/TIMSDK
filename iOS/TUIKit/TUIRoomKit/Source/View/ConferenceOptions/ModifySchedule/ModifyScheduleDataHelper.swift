@@ -9,7 +9,7 @@ import Foundation
 import RTCRoomEngine
 
 class ModifyScheduleDataHelper: ScheduleConferenceDataHelper {
-    class func generateScheduleConferenceData(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore, modifyStore: ScheduleConferenceStore, viewController: MemberSelectionDelegate) ->
+    class func generateScheduleConferenceData(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore, modifyStore: ScheduleConferenceStore, viewController: ContactViewSelectDelegate) ->
     [Int : [CellConfigItem]] {
         var menus: [Int:[CellConfigItem]] = [:]
         menus[0] = getFirstSectionModifyMenus(route: route, store: modifyStore, viewController: viewController)
@@ -17,7 +17,7 @@ class ModifyScheduleDataHelper: ScheduleConferenceDataHelper {
         return menus
     }
     
-    private class func getFirstSectionModifyMenus(route: Route, store: ScheduleConferenceStore, viewController: MemberSelectionDelegate) -> [CellConfigItem] {
+    private class func getFirstSectionModifyMenus(route: Route, store: ScheduleConferenceStore, viewController: ContactViewSelectDelegate) -> [CellConfigItem] {
         var array: [CellConfigItem] = []
         array.append(getConferenceNameItem(route: route, store: store))
         var conferenceTypeItem = getConferenceTypeItem(route: route, store: store)
@@ -42,7 +42,7 @@ class ModifyScheduleDataHelper: ScheduleConferenceDataHelper {
             let view = TimePickerView()
             view.pickerDate = Date(timeIntervalSince1970: TimeInterval(store.conferenceInfo.scheduleStartTime))
             view.dismissAction = {
-                route.dismiss()
+                route.dismiss(animated: true)
             }
             route.present(route: .popup(view: view))
         }
@@ -55,7 +55,7 @@ class ModifyScheduleDataHelper: ScheduleConferenceDataHelper {
             let view = DurationPickerView()
             view.timeDuration = TimeInterval(store.conferenceInfo.durationTime)
             view.dismissAction = {
-                route.dismiss()
+                route.dismiss(animated: true)
             }
             route.present(route: .popup(view: view))
         }
@@ -81,7 +81,7 @@ class ModifyScheduleDataHelper: ScheduleConferenceDataHelper {
             updateConferenceInfoIfNeeded(store: store, operation: operation, modifyStore: modifyStore)
             updateAttendsIfNeeded(store: store, operation: operation, modifyStore: modifyStore)
             store.update(conference: modifyStore.conferenceInfo)
-            operation.dispatch(action: ScheduleResponseActions.onUpdateInfoSuccess())
+            route.pop()
         }
         return item
     }

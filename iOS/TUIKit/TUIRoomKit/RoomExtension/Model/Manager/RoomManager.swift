@@ -48,7 +48,7 @@ class RoomManager {
         roomObserver.registerObserver()
         engineManager.store.isImAccess = true
         self.roomId = roomId
-        engineManager.enterRoom(roomId: roomId, enableAudio: engineManager.store.isOpenMicrophone, enableVideo: engineManager.store.isOpenCamera, isSoundOnSpeaker: true) { [weak self] in
+        engineManager.enterRoom(roomId: roomId, enableAudio: engineManager.store.isOpenMicrophone, enableVideo: engineManager.store.isOpenCamera, isSoundOnSpeaker: true) { [weak self]  roomInfo in
             guard let self = self else { return }
             self.roomObserver.enteredRoom()
             guard isShownConferenceViewController else { return }

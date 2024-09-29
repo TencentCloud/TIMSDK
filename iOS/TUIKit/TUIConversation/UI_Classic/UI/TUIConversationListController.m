@@ -13,6 +13,7 @@
 #import "TUIConversationCell.h"
 #import "TUIConversationListDataProvider.h"
 #import "TUIFoldListViewController.h"
+#import "TUIConversationConfig.h"
 
 #define GroupBtnSpace 24
 #define GroupScrollViewHeight 30
@@ -124,7 +125,7 @@
 }
 
 - (void)setupViews {
-    self.view.backgroundColor = TUIConversationDynamicColor(@"conversation_bg_color", @"#FFFFFF");
+    self.view.backgroundColor = [TUIConversationConfig sharedConfig].listBackgroundColor ? : TUIConversationDynamicColor(@"conversation_bg_color", @"#FFFFFF");
     self.viewHeight = self.view.mm_h;
     if (self.isShowBanner) {
         CGSize size = CGSizeMake(self.view.bounds.size.width, 60);
@@ -211,6 +212,7 @@
 - (TUIConversationTableView *)tableViewForAll {
     if (!_tableViewForAll) {
         _tableViewForAll = [[TUIConversationTableView alloc] init];
+        _tableViewForAll.backgroundColor = self.view.backgroundColor;
         _tableViewForAll.convDelegate = self;
         _tableViewForAll.tipsMsgWhenNoConversation = [NSString stringWithFormat:TIMCommonLocalizableString(TUIConversationNone), @""];
         if (self.settingDataProvider) {

@@ -14,6 +14,7 @@
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/TUITool.h>
+#import <TUICore/TUILogin.h>
 #import <UIKit/UIWindow.h>
 #import "TUIChatCallingDataProvider.h"
 #import "TUIChatConversationModel.h"
@@ -230,11 +231,12 @@
 
 - (void)loadGroupInfo {
     if (self.conversationData.groupID.length > 0) {
-        [self.messageDataProvider getPinMessageList];
-        [self.messageDataProvider getSelfInfoInGroup:^{
-            
-        }];
         __weak typeof(self) weakSelf = self;
+        [self.messageDataProvider getPinMessageList];
+        [self.messageDataProvider loadGroupInfo:^{
+            [weakSelf.messageDataProvider getSelfInfoInGroup:^{}];
+        }];
+        
         self.messageDataProvider.groupRoleChanged = ^(V2TIMGroupMemberRole role) {
             if (weakSelf.groupRoleChanged) {
                 weakSelf.groupRoleChanged(role);
@@ -438,6 +440,11 @@
     }
     if (cellData) {
         cellData.placeHolderCellData = placeHolderCellData;
+        cellData.identifier = [TUILogin getUserID];
+        NSString *faceUrl = [TUILogin getFaceUrl];
+        if (faceUrl.length > 0) {
+            cellData.avatarUrl = [NSURL URLWithString:faceUrl];
+        }
         [self sendUIMessage:cellData];
     }
 }
@@ -536,7 +543,9 @@
         if ([param[TUICore_TUIPluginNotify_DidChangePluginViewSubKey_isAllowScroll2Bottom] isEqualToString:@"0"] ) {
             isAllowScroll2Bottom = NO ;
             TUIMessageCellData *lasData = [self.messageDataProvider.uiMsgs lastObject];
-            if ([lasData.msgID isEqualToString:data.msgID] ) {
+            BOOL isInBottomPage = (self.tableView.contentSize.height - self.tableView.contentOffset.y
+                               <= Screen_Height);
+            if ([lasData.msgID isEqualToString:data.msgID]  && isInBottomPage) {
                 isAllowScroll2Bottom = YES;
             }
         }
@@ -800,12 +809,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
-        TUIMessageCellData *cellData = self.messageDataProvider.uiMsgs[indexPath.row];
-        return [self.messageCellConfig getEstimatedHeightFromMessageCellData:cellData];
-    } else {
-        return UITableViewAutomaticDimension;
-    }
+    return UITableViewAutomaticDimension;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -924,6 +928,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         return;
     }
     
+    //Hide the keyboard when tapping on the message.
+    [self hideKeyboardIfNeeded];
+    
     if ([TUIMessageCellConfig isPluginCustomMessageCellData:cell.messageData]) {
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         if (cell) {
@@ -997,7 +1004,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         [self addChatCommonActionToCell:cell ofMenu:menu];
     } else {
         // Plugin common Action
-        // （multiAction） （quoteAction） （referenceAction） (deleteAction) (recallAction)
+        // MultiSelect/Quote/Reply/Pin/Delete
         [self addChatPluginCommonActionToCell:cell ofMenu:menu];
     }
     
@@ -1049,41 +1056,42 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIChatPopMenuAction *recallAction = [self setupRecallAction:cell];
     TUIChatPopMenuAction *multiAction = [self setupMulitSelectAction:cell];
     TUIChatPopMenuAction *forwardAction = [self setupForwardAction:cell];
+    TUIChatPopMenuAction *replyAction = [self setupReplyAction:cell];
     TUIChatPopMenuAction *quoteAction = [self setupQuoteAction:cell];
-    TUIChatPopMenuAction *referenceAction = [self setupReferenceAction:cell];
     TUIChatPopMenuAction *audioPlaybackStyleAction = [self setupAudioPlaybackStyleAction:cell];
     TUIChatPopMenuAction *groupPinAction = [self setupGroupPinAction:cell];
     
     TUIMessageCellData *data = cell.messageData;
     V2TIMMessage *imMsg = data.innerMessage;
     
+    BOOL isMsgSendSucceed = imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC;
+    BOOL isContentModerated = imMsg.hasRiskContent;
+    
     if (imMsg.soundElem) {
         [menu addAction:audioPlaybackStyleAction];
     }
-    if ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReplyMessageCellData.class] ||
-        [data isKindOfClass:TUIReferenceMessageCellData.class]) {
+    if (([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReplyMessageCellData.class] ||
+        [data isKindOfClass:TUIReferenceMessageCellData.class]) && !isContentModerated) {
         [menu addAction:copyAction];
     }
     [menu addAction:deleteAction];
-    [menu addAction:multiAction];
-    if (imMsg) {
-        if ([imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < TUIChatConfig.defaultConfig.timeIntervalForMessageRecall &&
-            (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)) {
-            [menu addAction:recallAction];
-        }
+    if (!isContentModerated) {
+        [menu addAction:multiAction];
     }
-    if ([self canForward:data] && imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && !imMsg.hasRiskContent) {
+    if (imMsg && [imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < TUIChatConfig.defaultConfig.timeIntervalForMessageRecall && isMsgSendSucceed) {
+        [menu addAction:recallAction];
+    }
+    if ([self canForward:data] && isMsgSendSucceed && !isContentModerated) {
         [menu addAction:forwardAction];
     }
-    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && [TUIChatConfig defaultConfig].enablePopMenuReplyAction) {
+    if (isMsgSendSucceed && !isContentModerated) {
+        [menu addAction:replyAction];
+    }
+    if (isMsgSendSucceed && !isContentModerated) {
         [menu addAction:quoteAction];
     }
-    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && [TUIChatConfig defaultConfig].enablePopMenuReferenceAction) {
-        [menu addAction:referenceAction];
-    }
     BOOL isGroup = (data.innerMessage.groupID.length > 0);
-    if (isGroup && [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup] && 
-        (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC) ) {
+    if (isGroup && [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup] && isMsgSendSucceed && !isContentModerated) {
         [menu addAction:groupPinAction];
     }
 }
@@ -1093,25 +1101,26 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIChatPopMenuAction *deleteAction = [self setupDeleteAction:cell];
     TUIChatPopMenuAction *recallAction = [self setupRecallAction:cell];
     TUIChatPopMenuAction *multiAction = [self setupMulitSelectAction:cell];
+    TUIChatPopMenuAction *replyAction = [self setupReplyAction:cell];
     TUIChatPopMenuAction *quoteAction = [self setupQuoteAction:cell];
-    TUIChatPopMenuAction *referenceAction = [self setupReferenceAction:cell];
+    TUIChatPopMenuAction *pinAction = [self setupGroupPinAction:cell];
 
     TUIMessageCellData *data = cell.messageData;
     V2TIMMessage *imMsg = data.innerMessage;
-
+    BOOL isContentModerated = imMsg.hasRiskContent;
+    
+    BOOL isMsgSendSucceed = imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC;
     [menu addAction:multiAction];
-
-    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && [TUIChatConfig defaultConfig].enablePopMenuReplyAction) {
+    if (isMsgSendSucceed) {
+        [menu addAction:replyAction];
         [menu addAction:quoteAction];
     }
-    if (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC && [TUIChatConfig defaultConfig].enablePopMenuReferenceAction) {
-        [menu addAction:referenceAction];
+    BOOL isGroup = (data.innerMessage.groupID.length > 0);
+    if (isGroup && [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup] && isMsgSendSucceed && !isContentModerated) {
+        [menu addAction:pinAction];
     }
-
     [menu addAction:deleteAction];
-
-    if (imMsg && [imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < TUIChatConfig.defaultConfig.timeIntervalForMessageRecall &&
-        (imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC)) {
+    if (imMsg && [imMsg isSelf] && [[NSDate date] timeIntervalSinceDate:imMsg.timestamp] < TUIChatConfig.defaultConfig.timeIntervalForMessageRecall && isMsgSendSucceed) {
         [menu addAction:recallAction];
     }
 }
@@ -1140,8 +1149,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     TUIChatPopMenuAction *deleteAction = [self setupDeleteAction:cell];
     TUIChatPopMenuAction *multiAction = [self setupMulitSelectAction:cell];
     TUIChatPopMenuAction *forwardAction = [self setupForwardAction:cell];
+    TUIChatPopMenuAction *replyAction = [self setupReplyAction:cell];
     TUIChatPopMenuAction *quoteAction = [self setupQuoteAction:cell];
-    TUIChatPopMenuAction *referenceAction = [self setupReferenceAction:cell];
     TUIChatPopMenuAction *groupPinAction = [self setupGroupPinAction:cell];
     
     TUIMessageCellData *data = cell.messageData;
@@ -1167,12 +1176,8 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
           if ([self canForward:data]) {
               [menu addAction:forwardAction];
           }
-          if ([TUIChatConfig defaultConfig].enablePopMenuReplyAction) {
-              [menu addAction:quoteAction];
-          }
-          if ([TUIChatConfig defaultConfig].enablePopMenuReferenceAction) {
-              [menu addAction:referenceAction];
-          }
+          [menu addAction:replyAction];
+          [menu addAction:quoteAction];
           if (isGroup && [self.messageDataProvider isCurrentUserRoleSuperAdminInGroup]) {
               [menu addAction:groupPinAction];
           }
@@ -1208,6 +1213,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     };
 }
 - (TUIChatPopMenuAction *)setupCopyAction:(TUIMessageCell *)cell {
+    BOOL isCopyShown = [TUIChatConfig defaultConfig].enablePopMenuCopyAction;
     TUIChatPopMenuAction *copyAction = nil;
     @weakify(self);
     @weakify(cell);
@@ -1219,9 +1225,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                                                       @strongify(cell);
                                                       [self onCopyMsg:cell];
                                                     }];
-    return copyAction;
+    return isCopyShown ? copyAction : nil;
 }
 - (TUIChatPopMenuAction *)setupDeleteAction:(TUIMessageCell *)cell {
+    BOOL isDeleteShown = [TUIChatConfig defaultConfig].enablePopMenuDeleteAction;
     @weakify(self);
     TUIChatPopMenuAction *deleteAction = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Delete)
                                                                                image:TUIChatBundleThemeImage(@"chat_icon_delete_img", @"icon_delete")
@@ -1230,10 +1237,11 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                                                                               @strongify(self);
                                                                               [self onDelete:nil];
                                                                             }];
-    return deleteAction;
+    return isDeleteShown ? deleteAction : nil;
 }
 
 - (TUIChatPopMenuAction *)setupRecallAction:(TUIMessageCell *)cell {
+    BOOL isRecallShown = [TUIChatConfig defaultConfig].enablePopMenuRecallAction;
     TUIChatPopMenuAction *recallAction = nil;
     TUIMessageCellData *data = cell.messageData;
     V2TIMMessage *imMsg = data.innerMessage;
@@ -1246,9 +1254,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                                                         [self onRevoke:nil];
                                                       }];
 
-    return recallAction;
+    return isRecallShown ? recallAction : nil;
 }
 - (TUIChatPopMenuAction *)setupMulitSelectAction:(TUIMessageCell *)cell {
+    BOOL isSelectShown = [TUIChatConfig defaultConfig].enablePopMenuSelectAction;
     @weakify(self);
     TUIChatPopMenuAction *multiAction = nil;
     multiAction = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Multiple)
@@ -1259,10 +1268,11 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                                                        [self onMulitSelect:nil];
                                                      }];
 
-    return multiAction;
+    return isSelectShown ? multiAction : nil;
 }
 
 - (TUIChatPopMenuAction *)setupForwardAction:(TUIMessageCell *)cell {
+    BOOL isForwardShown = [TUIChatConfig defaultConfig].enablePopMenuForwardAction;
     @weakify(self);
     TUIChatPopMenuAction *forwardAction = nil;
     forwardAction = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Forward)
@@ -1272,36 +1282,39 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                                                          @strongify(self);
                                                          [self onForward:nil];
                                                        }];
-    return forwardAction;
+    return isForwardShown ? forwardAction : nil;
 }
 
-- (TUIChatPopMenuAction *)setupQuoteAction:(TUIMessageCell *)cell {
+- (TUIChatPopMenuAction *)setupReplyAction:(TUIMessageCell *)cell {
+    BOOL isReplyShown = [TUIChatConfig defaultConfig].enablePopMenuReplyAction;
     @weakify(self);
-    TUIChatPopMenuAction *quoteAction = nil;
-    quoteAction = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Reply)
+    TUIChatPopMenuAction *replyAction = nil;
+    replyAction = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(Reply)
                                                         image:TUIChatBundleThemeImage(@"chat_icon_reply_img", @"icon_reply")
                                                        weight:5000
                                                      callback:^{
                                                        @strongify(self);
                                                        [self onReply:nil];
                                                      }];
-    return quoteAction;
+    return isReplyShown ? replyAction : nil;
 }
 
-- (TUIChatPopMenuAction *)setupReferenceAction:(TUIMessageCell *)cell {
+- (TUIChatPopMenuAction *)setupQuoteAction:(TUIMessageCell *)cell {
+    BOOL isQuoteShown = [TUIChatConfig defaultConfig].enablePopMenuReferenceAction;
     @weakify(self);
-    TUIChatPopMenuAction *referenceAction = nil;
-    referenceAction = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(TUIKitReference)
+    TUIChatPopMenuAction *quoteAction = nil;
+    quoteAction = [[TUIChatPopMenuAction alloc] initWithTitle:TIMCommonLocalizableString(TUIKitReference)
                                                             image:TUIChatBundleThemeImage(@"chat_icon_reference_img", @"icon_reference")
                                                            weight:7000
                                                          callback:^{
                                                            @strongify(self);
                                                            [self onReference:nil];
                                                          }];
-    return referenceAction;
+    return isQuoteShown ? quoteAction : nil;
 }
 
 - (TUIChatPopMenuAction *)setupAudioPlaybackStyleAction:(TUIMessageCell *)cell {
+    BOOL isPlaybackShown = [TUIChatConfig defaultConfig].enablePopMenuAudioPlaybackAction;
     @weakify(self);
     TUIChatPopMenuAction *audioPlaybackStyleAction = nil;
     __weak typeof(audioPlaybackStyleAction)  weakAction = audioPlaybackStyleAction;
@@ -1335,9 +1348,10 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         [TUIVoiceMessageCellData changeAudioPlaybackStyle];
 
     }];
-    return audioPlaybackStyleAction;
+    return isPlaybackShown ? audioPlaybackStyleAction : nil;
 }
 - (TUIChatPopMenuAction *)setupGroupPinAction:(TUIMessageCell *)cell {
+    BOOL isPinShown = [TUIChatConfig defaultConfig].enablePopMenuPinAction;
     @weakify(self);
     BOOL isPinned = [self.messageDataProvider isCurrentMessagePin:self.menuUIMsg.innerMessage.msgID];
     TUIChatPopMenuAction *groupPinAction = nil;
@@ -1351,7 +1365,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                                                            @strongify(self);
                                                            [self onGroupPin:nil currentStatus:isPinned];
                                                          }];
-    return groupPinAction;
+    return isPinShown ? groupPinAction : nil;
 }
 - (BOOL)canForward:(TUIMessageCellData *)data {
     return ![TUIMessageCellConfig isPluginCustomMessageCellData:data];

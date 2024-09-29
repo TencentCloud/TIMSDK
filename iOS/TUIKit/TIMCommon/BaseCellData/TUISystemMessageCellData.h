@@ -53,6 +53,21 @@ typedef NS_ENUM(NSInteger, TUISystemMessageType) {
 
 @property(nonatomic, strong) NSArray<NSString *> *replacedUserIDList;
 
+/**
+ *  The font of label which displays the system message content.
+ */
+@property(nonatomic, class) UIFont *textFont;
+
+/**
+ *  The color of label which displays the system message content.
+ */
+@property(nonatomic, class) UIColor *textColor;
+
+/**
+ *  The background color of label which displays the system message content.
+ */
+@property(nonatomic, class) UIColor *textBackgroundColor;
+
 @end
 
 NS_ASSUME_NONNULL_END

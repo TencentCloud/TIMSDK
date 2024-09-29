@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIConversation'
-  spec.version      = '8.1.6116'
+  spec.version      = '8.2.6325'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
   
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.1.6116/ios/TUIConversation.zip?time=3'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUIConversation.zip?time=3'}
 
   spec.default_subspec = 'ALL'
 
@@ -24,7 +24,7 @@ Pod::Spec.new do |spec|
     commonModel.source_files = '**/TUIConversation/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TXIMSDK_Plus_iOS_XCFramework'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon','~> 8.1.6116'
+    commonModel.dependency 'TIMCommon','~> 8.2.6325'
     commonModel.dependency 'ReactiveObjC'
     commonModel.dependency 'Masonry'
   end

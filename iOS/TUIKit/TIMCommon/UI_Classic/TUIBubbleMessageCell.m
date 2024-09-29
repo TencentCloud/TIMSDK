@@ -184,39 +184,58 @@
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onThemeChanged:) name:TUIDidApplyingThemeChangedNotfication object:nil];
 }
 
-static UIImage *gOutgoingBubble;
 
+#pragma mark - outgoing Bubble
+static UIImage *gOutgoingBubble;
 + (UIImage *)outgoingBubble {
     if (!gOutgoingBubble) {
         UIImage *defaultImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_send_img", defaultImage);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gOutgoingBubble = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
+        [self setOutgoingBubble:TUIChatDynamicImage(@"chat_bubble_send_img", defaultImage)];
     }
     return gOutgoingBubble;
 }
 
 + (void)setOutgoingBubble:(UIImage *)outgoingBubble {
-    gOutgoingBubble = outgoingBubble;
+    gOutgoingBubble = [self stretchImage:outgoingBubble];
 }
 
 static UIImage *gOutgoingHighlightedBubble;
 + (UIImage *)outgoingHighlightedBubble {
     if (!gOutgoingHighlightedBubble) {
         UIImage *defaultImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkgHL")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_send_img", defaultImage);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gOutgoingHighlightedBubble = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
+        [self setOutgoingHighlightedBubble:TUIChatDynamicImage(@"chat_bubble_send_img", defaultImage)];
     }
     return gOutgoingHighlightedBubble;
 }
 
 + (void)setOutgoingHighlightedBubble:(UIImage *)outgoingHighlightedBubble {
-    gOutgoingHighlightedBubble = outgoingHighlightedBubble;
+    gOutgoingHighlightedBubble = [self stretchImage:outgoingHighlightedBubble];
+}
+
+static UIImage *gOutgoingAnimatedHighlightedAlpha50;
++ (UIImage *)outgoingAnimatedHighlightedAlpha50 {
+    if (!gOutgoingAnimatedHighlightedAlpha50) {
+        UIImage *alpha50 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg_alpha50")];
+        [self setOutgoingAnimatedHighlightedAlpha50:TUIChatDynamicImage(@"chat_bubble_send_alpha50_img", alpha50)];
+    }
+    return gOutgoingAnimatedHighlightedAlpha50;
+}
+
++ (void)setOutgoingAnimatedHighlightedAlpha50:(UIImage *)outgoingAnimatedHighlightedAlpha50 {
+    gOutgoingAnimatedHighlightedAlpha50 = [self stretchImage:outgoingAnimatedHighlightedAlpha50];
+}
+
+static UIImage *gOutgoingAnimatedHighlightedAlpha20;
++ (UIImage *)outgoingAnimatedHighlightedAlpha20 {
+    if (!gOutgoingAnimatedHighlightedAlpha20) {
+        UIImage *alpha20 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg_alpha20")];
+        [self setOutgoingAnimatedHighlightedAlpha20:TUIChatDynamicImage(@"chat_bubble_send_alpha20_img", alpha20)];
+    }
+    return gOutgoingAnimatedHighlightedAlpha20;
+}
+
++ (void)setOutgoingAnimatedHighlightedAlpha20:(UIImage *)outgoingAnimatedHighlightedAlpha20 {
+    gOutgoingAnimatedHighlightedAlpha20 = [self stretchImage:outgoingAnimatedHighlightedAlpha20];
 }
 
 static UIImage *gOutgoingErrorBubble;
@@ -225,46 +244,62 @@ static UIImage *gOutgoingErrorBubble;
         UIImage *defaultImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg")];
         UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_send_img", defaultImage);
         formatImage = [TUISecurityStrikeView changeImageColorWith:[UIColor tui_colorWithHex:@"#FA5151" alpha:0.16] image:formatImage alpha:1];
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gOutgoingErrorBubble = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
+        gOutgoingErrorBubble = [self stretchImage:formatImage];
     }
     return gOutgoingErrorBubble;
 }
 
+#pragma mark - incomming Bubble
 static UIImage *gIncommingBubble;
 + (UIImage *)incommingBubble {
     if (!gIncommingBubble) {
         UIImage *defaultImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_receive_img", defaultImage);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gIncommingBubble = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
+        [self setIncommingBubble:TUIChatDynamicImage(@"chat_bubble_receive_img", defaultImage)];
     }
     return gIncommingBubble;
 }
 
 + (void)setIncommingBubble:(UIImage *)incommingBubble {
-    gIncommingBubble = incommingBubble;
+    gIncommingBubble = [self stretchImage:incommingBubble];
 }
 
 static UIImage *gIncommingHighlightedBubble;
 + (UIImage *)incommingHighlightedBubble {
     if (!gIncommingHighlightedBubble) {
         UIImage *defaultImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkgHL")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_receive_img", defaultImage);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gIncommingHighlightedBubble = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
+        [self setIncommingHighlightedBubble:TUIChatDynamicImage(@"chat_bubble_receive_img", defaultImage)];
     }
     return gIncommingHighlightedBubble;
 }
 
 + (void)setIncommingHighlightedBubble:(UIImage *)incommingHighlightedBubble {
-    gIncommingHighlightedBubble = incommingHighlightedBubble;
+    gIncommingHighlightedBubble = [self stretchImage:incommingHighlightedBubble];
+}
+
+static UIImage *gIncommingAnimatedHighlightedAlpha50;
++ (UIImage *)incommingAnimatedHighlightedAlpha50 {
+    if (!gIncommingAnimatedHighlightedAlpha50) {
+        UIImage *alpha50 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg_alpha50")];
+        [self setIncommingAnimatedHighlightedAlpha50:TUIChatDynamicImage(@"chat_bubble_receive_alpha50_img", alpha50)];
+    }
+    return gIncommingAnimatedHighlightedAlpha50;
+}
+
++ (void)setIncommingAnimatedHighlightedAlpha50:(UIImage *)incommingAnimatedHighlightedAlpha50 {
+    gIncommingAnimatedHighlightedAlpha50 = [self stretchImage:incommingAnimatedHighlightedAlpha50];
+}
+
+static UIImage *gIncommingAnimatedHighlightedAlpha20;
++ (UIImage *)incommingAnimatedHighlightedAlpha20 {
+    if (!gIncommingAnimatedHighlightedAlpha20) {
+        UIImage *alpha20 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg_alpha20")];
+        [self setIncommingAnimatedHighlightedAlpha20:TUIChatDynamicImage(@"chat_bubble_receive_alpha20_img", alpha20)];
+    }
+    return gIncommingAnimatedHighlightedAlpha20;
+}
+
++ (void)setIncommingAnimatedHighlightedAlpha20:(UIImage *)incommingAnimatedHighlightedAlpha20 {
+    gIncommingAnimatedHighlightedAlpha20 = [self stretchImage:incommingAnimatedHighlightedAlpha20];
 }
 
 static UIImage *gIncommingErrorBubble;
@@ -273,16 +308,18 @@ static UIImage *gIncommingErrorBubble;
         UIImage *defaultImage = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg")];
         UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_receive_img", defaultImage);
         formatImage = [TUISecurityStrikeView changeImageColorWith:[UIColor tui_colorWithHex:@"#FA5151" alpha:0.16] image:formatImage alpha:1];
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gIncommingErrorBubble = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
+        gIncommingErrorBubble = [self stretchImage:formatImage];
     }
     return gIncommingErrorBubble;
 }
 
-static CGFloat gOutgoingBubbleTop = 0;
++ (UIImage *)stretchImage:(UIImage *)oldImage {
+    UIImage *image = [oldImage rtl_imageFlippedForRightToLeftLayoutDirection];
+    UIEdgeInsets insets = rtlEdgeInsetsWithInsets(UIEdgeInsetsFromString(@"{12,12,12,12}"));
+    return [image resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+}
 
+static CGFloat gOutgoingBubbleTop = 0;
 + (CGFloat)outgoingBubbleTop {
     return gOutgoingBubbleTop;
 }
@@ -292,7 +329,6 @@ static CGFloat gOutgoingBubbleTop = 0;
 }
 
 static CGFloat gIncommingBubbleTop = 0;
-
 + (CGFloat)incommingBubbleTop {
     return gIncommingBubbleTop;
 }
@@ -301,76 +337,6 @@ static CGFloat gIncommingBubbleTop = 0;
     gIncommingBubbleTop = incommingBubbleTop;
 }
 
-
-static UIImage *gOutgoingAnimatedHighlightedAlpha50;
-
-+ (UIImage *)outgoingAnimatedHighlightedAlpha50 {
-    if (!gOutgoingAnimatedHighlightedAlpha50) {
-        UIImage *alpha50 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg_alpha50")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_send_alpha50_img", alpha50);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gOutgoingAnimatedHighlightedAlpha50 = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
-    }
-    return gOutgoingAnimatedHighlightedAlpha50;
-}
-
-+ (void)setOutgoingAnimatedHighlightedAlpha50:(UIImage *)image {
-    gOutgoingAnimatedHighlightedAlpha50 = image;
-}
-
-static UIImage *gOutgoingAnimatedHighlightedAlpha20;
-
-+ (UIImage *)outgoingAnimatedHighlightedAlpha20 {
-    if (!gOutgoingAnimatedHighlightedAlpha20) {
-        UIImage *alpha20 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"SenderTextNodeBkg_alpha20")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_send_alpha20_img", alpha20);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gOutgoingAnimatedHighlightedAlpha20 = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
-    }
-    return gOutgoingAnimatedHighlightedAlpha20;
-}
-
-+ (void)setOutgoingAnimatedHighlightedAlpha20:(UIImage *)image {
-    gOutgoingAnimatedHighlightedAlpha20 = image;
-}
-
-static UIImage *gIncommingAnimatedHighlightedAlpha50;
-+ (UIImage *)incommingAnimatedHighlightedAlpha50 {
-    if (!gIncommingAnimatedHighlightedAlpha50) {
-        UIImage *alpha50 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg_alpha50")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_receive_alpha50_img", alpha50);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gIncommingAnimatedHighlightedAlpha50 = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
-    }
-    return gIncommingAnimatedHighlightedAlpha50;
-}
-
-+ (void)setIncommingAnimatedHighlightedAlpha50:(UIImage *)image {
-    gIncommingAnimatedHighlightedAlpha50 = image;
-}
-
-static UIImage *gIncommingAnimatedHighlightedAlpha20;
-+ (UIImage *)incommingAnimatedHighlightedAlpha20 {
-    if (!gIncommingAnimatedHighlightedAlpha20) {
-        UIImage *alpha20 = [[TUIImageCache sharedInstance] getResourceFromCache:TUIChatImagePath(@"ReceiverTextNodeBkg_alpha20")];
-        UIImage *formatImage = TUIChatDynamicImage(@"chat_bubble_receive_alpha20_img", alpha20);
-        formatImage = [formatImage rtl_imageFlippedForRightToLeftLayoutDirection];
-        UIEdgeInsets ei = UIEdgeInsetsFromString(@"{12,12,12,12}");
-        ei = rtlEdgeInsetsWithInsets(ei);
-        gIncommingAnimatedHighlightedAlpha20 = [formatImage resizableImageWithCapInsets:ei resizingMode:UIImageResizingModeStretch];
-    }
-    return gIncommingAnimatedHighlightedAlpha20;
-}
-
-+ (void)setIncommingAnimatedHighlightedAlpha20:(UIImage *)image {
-    gIncommingAnimatedHighlightedAlpha20 = image;
-}
 
 + (void)onThemeChanged:(NSNotification *)notice {
     gOutgoingBubble = nil;

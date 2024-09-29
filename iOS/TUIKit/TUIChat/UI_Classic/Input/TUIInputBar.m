@@ -19,6 +19,7 @@
 #import <TUICore/UIView+TUILayout.h>
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "TUIAudioRecorder.h"
+#import "TUIChatConfig.h"
 
 @interface TUIInputBar () <UITextViewDelegate, TUIAudioRecorderDelegate>
 @property(nonatomic, strong) TUIRecordView *recordView;
@@ -277,7 +278,7 @@
           [self.recordView removeFromSuperview];
           self.recordView = nil;
         });
-    } else if (interval > 60) {
+    } else if (interval > MIN(59, [TUIChatConfig defaultConfig].maxAudioRecordDuration)) {
         [self.recordView setStatus:Record_Status_TooLong];
         [self.recorder cancel];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -643,11 +644,11 @@
 }
 
 - (void)audioRecorder:(TUIAudioRecorder *)recorder didRecordTimeChanged:(NSTimeInterval)time {
-    float realMaxDuration = 59.7;
-    float uiMaxDuration = 59;
+    float uiMaxDuration = MIN(59, [TUIChatConfig defaultConfig].maxAudioRecordDuration);
+    float realMaxDuration = uiMaxDuration + 0.7;
     NSInteger seconds = uiMaxDuration - time;
     self.recordView.timeLabel.text = [[NSString alloc] initWithFormat:@"%ld\"", (long)seconds + 1];
-    if (time >= 55 && time <= uiMaxDuration) {
+    if (time >= (uiMaxDuration - 4) && time <= uiMaxDuration) {
         NSInteger seconds = uiMaxDuration - time;
         /**
          * The long type is cast here to eliminate compiler warnings.

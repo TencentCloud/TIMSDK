@@ -29,6 +29,18 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
         return floatWindow
     }()
     
+    var callKitViewController: CallKitViewController?
+    
+    func getCallKitViewController() -> CallKitViewController {
+        if let callKitViewController = callKitViewController {
+            return callKitViewController
+        } else {
+            let newCallKitViewController = CallKitViewController()
+            callKitViewController = newCallKitViewController
+            return newCallKitViewController
+        }
+    }
+    
     override init() {
         super.init()
         registerObserveState()
@@ -47,7 +59,8 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     }
     
     func closeCallWindow() {
-        callWindow.rootViewController = UIViewController()
+        callKitViewController = nil
+        callWindow.rootViewController = nil
         callWindow.isHidden = true
     }
     
@@ -66,7 +79,7 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     
     func showCallView() {
         closeFloatWindow()
-        callWindow.rootViewController = CallKitNavigationController(rootViewController: CallKitViewController())
+        callWindow.rootViewController = CallKitNavigationController(rootViewController: getCallKitViewController())
         callWindow.isHidden = false
         callWindow.frame = CGRect(x: 0, y: 0, width: Screen_Width, height: Screen_Height)
         callWindow.t_makeKeyAndVisible()
@@ -86,7 +99,7 @@ class WindowManager: NSObject, FloatingWindowViewDelegate {
     }
     
     func closeFloatWindow() {
-        floatWindow.rootViewController = UIViewController()
+        floatWindow.rootViewController = nil
         floatWindow.isHidden = true
         isFloating = false
     }

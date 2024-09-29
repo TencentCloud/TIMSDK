@@ -163,6 +163,8 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 
 - (void)getPinMessageList;
 
+- (void)loadGroupInfo:(dispatch_block_t)callback;
+
 - (void)getSelfInfoInGroup:(dispatch_block_t)callback;
 
 - (void)pinGroupMessage:(NSString *)groupID

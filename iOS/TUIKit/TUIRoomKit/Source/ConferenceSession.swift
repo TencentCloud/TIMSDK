@@ -2,60 +2,37 @@
 //  ConferenceSession.swift
 //  TUIRoomKit
 //
-//  Created by janejntang on 2024/3/6.
+//  Created by CY zhao on 2024/8/9.
 //
 
-import RTCRoomEngine
+import Foundation
 
-class ConferenceSession {
-    let conferenceId: String
-    var conferenceParams: ConferenceParams = ConferenceParams()
+@objcMembers public class ConferenceSession: NSObject {
+    @objc public static let sharedInstance = ConferenceSession()
+    let implementation = ConferenceSessionImp()
     
-    init(conferenceId: String) {
-        self.conferenceId = conferenceId
+    @objc public func addObserver(observer: ConferenceObserver) {
+        implementation.addObserver(observer: observer)
     }
     
-    func quickStart(onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        let roomInfo = createRoomInfo(conferenceParams: conferenceParams)
-        quickStartConference(roomInfo: roomInfo, enableAudio: !conferenceParams.isMuteMicrophone, enableVideo:
-                                conferenceParams.isOpenCamera, isSoundOnSpeaker: conferenceParams.isSoundOnSpeaker, onSuccess: onSuccess, onError: onError)
+    @objc public func removeObserver(observer: ConferenceObserver) {
+        implementation.removeObserver(observer: observer)
     }
     
-    private func quickStartConference(roomInfo: TUIRoomInfo, enableAudio: Bool, enableVideo: Bool, isSoundOnSpeaker: Bool, onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        EngineManager.shared.createRoom(roomInfo: roomInfo) {
-            EngineManager.shared.enterRoom(roomId: roomInfo.roomId, enableAudio: enableAudio, enableVideo: enableVideo,
-                                                     isSoundOnSpeaker: isSoundOnSpeaker) {
-                onSuccess()
-            } onError: { code, message in
-                onError(code, message)
-            }
-        } onError: { code, message in
-            onError(code, message)
-        }
+    @objc public static func destroySharedInstance() {
+        sharedInstance.implementation.destroy()
+    }
+    
+    @objc public func enableWaterMark() {
+        implementation.enableWaterMark()
+    }
+    
+    @objc public func setWaterMarkText(waterMarkText: String) {
+        implementation.setWaterMarkText(waterMarkText: waterMarkText)
+    }
+    
+    @objc public func setContactsViewProvider(_ provider: @escaping (ConferenceParticipants) -> ContactViewProtocol) {
+        implementation.setContactsViewProvider(provider)
+    }
         
-    }
-    
-    func join(onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
-        EngineManager.shared.enterRoom(roomId: conferenceId, enableAudio: !conferenceParams.isMuteMicrophone, enableVideo: conferenceParams.isOpenCamera, isSoundOnSpeaker: conferenceParams.isSoundOnSpeaker) {
-            onSuccess()
-        } onError: { code, message in
-            onError(code, message)
-        }
-    }
-    
-    private func createRoomInfo(conferenceParams: ConferenceParams) -> TUIRoomInfo {
-        let roomInfo = TUIRoomInfo()
-        roomInfo.roomId = conferenceId
-        roomInfo.isMicrophoneDisableForAllUser = !conferenceParams.enableMicrophoneForAllUser
-        roomInfo.isCameraDisableForAllUser = !conferenceParams.enableCameraForAllUser
-        roomInfo.isMessageDisableForAllUser = !conferenceParams.enableMessageForAllUser
-        roomInfo.isSeatEnabled = conferenceParams.enableSeatControl
-        roomInfo.name = conferenceParams.name ?? ""
-        roomInfo.seatMode = .applyToTake
-        return roomInfo
-    }
-    
-    deinit {
-        debugPrint("deinit \(self)")
-    }
 }

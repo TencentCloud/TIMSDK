@@ -14,6 +14,11 @@
 "TUICallKit.Group.waitAccept" = "等待接听";
 "TUICallKit.determine" = "确定";
 "TUICallKit.lineBusy" = "对方忙";
+"TUICallKit.userHangup" = "\%@ 结束通话";
+"TUICallKit.userReject" = "\%@ 拒绝了通话请求";
+"TUICallKit.otherPartyHangup" = "对方已挂断，通话结束";
+"TUICallKit.otherPartyReject" = "对方拒绝了通话请求";
+"TUICallKit.otherPartyNoResponse" = "对方未响应";
 
 "TUICallKit.switchCamera" = "翻转";
 "TUICallKit.blurBackground" = "模糊背景";

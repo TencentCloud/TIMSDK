@@ -17,7 +17,7 @@ import RTCRoomEngine
 
 class EngineManager: NSObject {
     static private(set) var shared = EngineManager()
-    
+
     private(set) lazy var store: RoomStore = {
         let store = RoomStore()
         return store
@@ -81,8 +81,8 @@ class EngineManager: NSObject {
         }
     }
     
-    func enterRoom(roomId: String, enableAudio: Bool, enableVideo: Bool, isSoundOnSpeaker: Bool,
-                   onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
+    func enterRoom(roomId: String, options: TUIEnterRoomOptions? = nil, enableAudio: Bool, enableVideo: Bool, isSoundOnSpeaker: Bool,
+                   onSuccess: @escaping TUIRoomInfoBlock, onError: @escaping TUIErrorBlock) {
         store.videoSetting.isCameraOpened = enableVideo
         store.audioSetting.isSoundOnSpeaker = isSoundOnSpeaker
         setFramework()
@@ -91,12 +91,12 @@ class EngineManager: NSObject {
             { [weak self] in
                 guard let self = self else { return }
                 self.isLoginEngine = true
-                self.enterEngineRoom(roomId: roomId, enableAudio: enableAudio, onSuccess: onSuccess, onError: onError)
+                self.enterEngineRoom(roomId: roomId, options: options, enableAudio: enableAudio, onSuccess: onSuccess, onError: onError)
             } onError: { code, message in
                 onError(code, message)
             }
         } else {
-            enterEngineRoom(roomId: roomId, enableAudio: enableAudio, onSuccess: onSuccess, onError: onError)
+            enterEngineRoom(roomId: roomId, options: options, enableAudio: enableAudio, onSuccess: onSuccess, onError: onError)
         }
     }
     
@@ -285,11 +285,13 @@ class EngineManager: NSObject {
         store.selfTakeSeatRequestId = nil
     }
     
-    func fetchRoomInfo(onSuccess: TUISuccessBlock? = nil, onError: TUIErrorBlock? = nil) {
-        roomEngine.fetchRoomInfo { [weak self] roomInfo in
+    func fetchRoomInfo(roomId: String ,onSuccess: TUIRoomInfoBlock? = nil, onError: TUIErrorBlock? = nil) {
+        roomEngine.fetchRoomInfo(roomId: roomId, roomType: .conference) { [weak self] roomInfo in
             guard let self = self, let roomInfo = roomInfo else { return }
-            self.store.roomInfo = roomInfo
-            onSuccess?()
+            if roomId == self.store.roomInfo.roomId {
+                self.store.initialRoomInfo(roomInfo)
+            }
+            onSuccess?(roomInfo)
         } onError: { code, message in
             onError?(code, message)
             debugPrint("fetchRoomInfo,code:\(code), message:\(message)")
@@ -521,7 +523,9 @@ extension EngineManager {
         self.store.roomInfo = roomInfo
         self.roomEngine.createRoom(roomInfo) {
             onSuccess()
-        } onError: { code, message in
+        } onError: { [weak self] code, message in
+            guard let self = self else { return }
+            self.destroyEngineManager()
             onError(code, message)
         }
     }
@@ -535,44 +539,75 @@ extension EngineManager {
         return name + .quickConferenceText
     }
     
-    private func enterEngineRoom(roomId: String, enableAudio: Bool, onSuccess: @escaping TUISuccessBlock, onError: @escaping TUIErrorBlock) {
+    private func enterEngineRoom(roomId: String, options: TUIEnterRoomOptions? = nil, enableAudio: Bool, onSuccess: @escaping TUIRoomInfoBlock, onError: @escaping TUIErrorBlock) {
         guard !store.isEnteredRoom else {
             if store.roomInfo.roomId == roomId {
-                onSuccess()
+                onSuccess(store.roomInfo)
             } else {
                 onError(.failed, .inAnotherRoomText)
             }
             return
         }
-        roomEngine.enterRoom(roomId) { [weak self] roomInfo in
-            guard let self = self else { return }
-            guard let roomInfo = roomInfo else { return }
-            //Update the room entry data stored
-            self.addEngineObserver()
-            self.store.roomInfo = roomInfo
-            self.store.initialRoomCurrentUser()
-            self.store.initalEnterRoomMessage()
-            //Initialize user list
-            self.initUserList()
-            //Initialize video settings
-            self.initLocalVideoState()
-            self.subLogoutNotification()
-            self.updateSeatApplicationList()
-            if !self.isNeededAutoTakeSeat() {
-                self.operateLocalMicrophone(enableAudio: enableAudio)
-                onSuccess()
-            } else {
-                self.autoTakeSeatForOwner { [weak self] in
-                    guard let self = self else { return }
-                    self.operateLocalMicrophone(enableAudio: enableAudio)
-                    onSuccess()
-                } onError: { code, message in
-                    onError(code, message)
-                }
+        if let options = options {
+            roomEngine.enterRoom(roomId, roomType: .conference, options: options) { [weak self] roomInfo in
+                guard let self = self else { return }
+                guard let roomInfo = roomInfo else { return }
+                self.handleEnterRoomResult(roomInfo: roomInfo, enableAudio: enableAudio, onSuccess: onSuccess, onError: onError)
+            } onError: { [weak self] code, message in
+                guard let self = self else { return }
+                self.destroyEngineManager()
+                onError(code, message)
             }
-        } onError: { code, message in
-            onError(code, message)
+        } else {
+            roomEngine.enterRoom(roomId) { [weak self] roomInfo in
+                guard let self = self else { return }
+                guard let roomInfo = roomInfo else { return }
+                self.handleEnterRoomResult(roomInfo: roomInfo, enableAudio: enableAudio, onSuccess: onSuccess, onError: onError)
+            } onError: { [weak self] code, message in
+                guard let self = self else { return }
+                self.destroyEngineManager()
+                onError(code, message)
+            }
         }
+    }
+    
+    private func handleEnterRoomResult(roomInfo: TUIRoomInfo, enableAudio: Bool, onSuccess: @escaping TUIRoomInfoBlock, onError: @escaping TUIErrorBlock) {
+        //Update the room entry data stored
+        addEngineObserver()
+        store.initialRoomInfo(roomInfo)
+        store.initialRoomCurrentUser()
+        //Initialize user list
+        initUserList()
+        //Initialize video settings
+        initLocalVideoState()
+        subLogoutNotification()
+        updateSeatApplicationList()
+        if !isNeededAutoTakeSeat() {
+            operateLocalMicrophone(enableAudio: enableAudio)
+            updateCameraState()
+            store.initalEnterRoomMessage()
+            onSuccess(roomInfo)
+        } else {
+            autoTakeSeatForOwner { [weak self] in
+                guard let self = self else { return }
+                self.operateLocalMicrophone(enableAudio: enableAudio)
+                self.updateCameraState()
+                self.store.initalEnterRoomMessage()
+                onSuccess(roomInfo)
+            } onError: { [weak self] code, message in
+                guard let self = self else { return }
+                self.destroyEngineManager()
+                onError(code, message)
+            }
+        }
+    }
+    
+    private func updateCameraState() {
+        if store.roomInfo.isSeatEnabled && !store.currentUser.isOnSeat {
+            store.videoSetting.isCameraOpened = false
+            return
+        }
+        operateLocalCamera()
     }
     
     private func isNeededAutoTakeSeat() -> Bool {
@@ -610,6 +645,25 @@ extension EngineManager {
         } else if RoomCommon.checkAuthorMicStatusIsDenied() {
             muteLocalAudio()
             openLocalMicrophone()
+        }
+    }
+    
+    private func operateLocalCamera() {
+        let openLocalCameraActionBlock = { [weak self] in
+            guard let self = self else { return }
+            setLocalVideoView(streamType: .cameraStream, view: nil)
+            openLocalCamera()
+        }
+        if store.videoSetting.isCameraOpened && !store.roomInfo.isCameraDisableForAllUser {
+            if RoomCommon.checkAuthorCamaraStatusIsDenied() {
+                openLocalCameraActionBlock()
+            } else {
+                RoomCommon.cameraStateActionWithPopCompletion { granted in
+                    if granted {
+                        openLocalCameraActionBlock()
+                    }
+                }
+            }
         }
     }
     
@@ -651,6 +705,7 @@ extension EngineManager {
                     EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RenewVideoSeatView, param: [:])
                 }
                 EngineEventCenter.shared.notifyUIEvent(key: .TUIRoomKitService_RenewUserList, param: [:])
+                EngineEventCenter.shared.notifyEngineEvent(event: .onGetUserListFinished, param: [:])
             }
         } onError: { code, message in
             onError(code, message)
@@ -696,15 +751,13 @@ extension EngineManager {
     }
     
     private func handleDestroyRoomResult() {
-        store.conferenceObserver?.onConferenceFinished?(conferenceId: store.roomInfo.roomId)
         destroyEngineManager()
-        EngineEventCenter.shared.notifyEngineEvent(event: .onDestroyedRoom, param: [:])
+        EngineEventCenter.shared.notifyEngineEvent(event: .onDestroyedRoom, param: [ "roomId" : store.roomInfo.roomId ])
     }
     
     private func handleExitRoomResult() {
-        store.conferenceObserver?.onConferenceExited?(conferenceId: store.roomInfo.roomId)
         destroyEngineManager()
-        EngineEventCenter.shared.notifyEngineEvent(event: .onExitedRoom, param: [:])
+        EngineEventCenter.shared.notifyEngineEvent(event: .onExitedRoom, param: [ "roomId" : store.roomInfo.roomId ])
     }
     
 }

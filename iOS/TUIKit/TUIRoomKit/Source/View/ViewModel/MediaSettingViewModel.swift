@@ -246,13 +246,13 @@ class MediaSettingViewModel {
 
 private extension String {
     static var videoText: String {
-        localized("Video settings")
+        localized("Video Settings")
     }
     static var audioText: String {
-        localized("Audio settings")
+        localized("Audio Settings")
     }
     static var otherText: String {
-        localized("Other settings")
+        localized("Other Settings")
     }
     static var versionLowToastText: String {
         localized("Your system version is below 12.0. Please update.")
@@ -282,21 +282,21 @@ private extension String {
         localized("Audio Recording")
     }
     static var smoothResolutionText: String {
-        localized("Smooth resolution")
+        localized("Smooth")
     }
     static var standardResolutionText: String {
-        localized("Standard resolution")
+        localized("Standard Definition")
     }
     static var highResolutionText: String {
-        localized("High resolution")
+        localized("High Definition")
     }
     static var superResolutionText: String {
-        localized("Super resolution")
+        localized("Full High Definition")
     }
     static var qualityInspectionText: String {
-        localized("Quality Inspection")
+        localized("Network Quality Monitoring")
     }
     static var floatChatText: String {
-        localized("Open Floating Chat")
+        localized("Floating Chat")
     }
 }

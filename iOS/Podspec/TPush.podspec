@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TPush'
-  spec.version      = '8.1.6116'
+  spec.version      = '8.2.6325'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,9 +15,9 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuiplugin/8.1.6116/ios/TPush_8.1.6116.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuiplugin/8.2.6325/ios/TPush_8.2.6325.xcframework.zip'}
   
-  spec.dependency 'TXPushSDK_IOS_XCFramework','8.1.6116'
+  spec.dependency 'TXPushSDK_IOS_XCFramework'
 
   spec.vendored_frameworks = 'TPush.xcframework'
   spec.resource_bundle = {

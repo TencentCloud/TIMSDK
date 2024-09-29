@@ -52,6 +52,8 @@
         [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
 
         [TUICore registerEvent:TUICore_TUIConversationNotify subKey:TUICore_TUIConversationNotify_RemoveConversationSubKey object:self];
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLoginSucc) name:TUILoginSuccessNotification object:nil];
+
     }
     return self;
 }
@@ -549,6 +551,9 @@
     if (conversationList.count == 0) {
         return;
     }
+    if (!TUILogin.isUserLogined) {
+        return;
+    }
 
     if (!NSThread.isMainThread) {
         __weak typeof(self) weakSelf = self;
@@ -783,6 +788,26 @@
     [self handleOnlineStatus:userStatusList];
 }
 
+- (void)onConnectFailed:(int)code err:(NSString *)err {
+    NSLog(@"%s", __func__);
+}
+
+- (void)onConnectSuccess {
+    NSLog(@"%s", __func__);
+    if (self.conversationList.count > 0) {
+        NSArray *conversationList = [NSArray arrayWithArray:self.conversationList];
+        [self updateOnlineStatus:conversationList];
+    }
+}
+
+- (void)onLoginSucc {
+    NSLog(@"%s", __func__);
+    if (self.conversationList.count > 0) {
+        NSArray *conversationList = [NSArray arrayWithArray:self.conversationList];
+        [self updateOnlineStatus:conversationList];
+    }
+
+}
 #pragma mark - V2TIMAdvancedMsgListener
 
 - (void)onRecvNewMessage:(V2TIMMessage *)msg {

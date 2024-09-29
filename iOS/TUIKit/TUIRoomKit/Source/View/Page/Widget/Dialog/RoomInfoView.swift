@@ -40,9 +40,20 @@ class RoomInfoView: UIView {
         view.axis = .vertical
         view.alignment = .center
         view.distribution = .equalSpacing
-        view.spacing = 0
+        view.spacing = 3
         view.backgroundColor = UIColor(0x1B1E26)
         return view
+    }()
+    
+    let copyButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(.copyRoomInformation, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        button.setTitleColor(UIColor(0xB2BBD1), for: .normal)
+        button.titleLabel?.textAlignment = .center
+        button.backgroundColor = UIColor(0x4F586B).withAlphaComponent(0.3)
+        button.layer.cornerRadius = 6
+        return button
     }()
     
     init(viewModel: RoomInfoViewModel) {
@@ -74,6 +85,7 @@ class RoomInfoView: UIView {
         addSubview(headView)
         headView.addSubview(nameLabel)
         headView.addSubview(codeButton)
+        addSubview(copyButton)
     }
     
     func activateConstraints() {
@@ -81,10 +93,9 @@ class RoomInfoView: UIView {
             make.top.equalTo(headView.snp.bottom).offset(20.scale375())
             make.leading.equalToSuperview().offset(16.scale375())
             make.trailing.equalToSuperview().offset(-16.scale375())
-            make.height.equalTo(128.scale375())
         }
         headView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(35.scale375())
+            make.top.equalToSuperview().offset(20.scale375Height())
             make.leading.equalToSuperview().offset(16.scale375())
             make.trailing.equalToSuperview().offset(-16.scale375())
             make.height.equalTo(25.scale375())
@@ -100,12 +111,18 @@ class RoomInfoView: UIView {
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(25.scale375())
         }
+        copyButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.height.equalTo(40.scale375Height())
+            make.top.equalTo(stackView.snp.bottom).offset(20.scale375Height())
+        }
         for item in viewModel.messageItems {
             let view = ListCellItemView(itemData: item)
             viewArray.append(view)
             stackView.addArrangedSubview(view)
             view.snp.makeConstraints { make in
-                make.height.equalTo(20.scale375())
+                make.height.equalTo(24.scale375Height())
                 make.width.equalToSuperview()
             }
         }
@@ -115,15 +132,21 @@ class RoomInfoView: UIView {
         backgroundColor = UIColor(0x1B1E26)
         setupViewState(item: viewModel)
         codeButton.addTarget(self, action: #selector(codeAction(sender:)), for: .touchUpInside)
+        copyButton.addTarget(self, action: #selector(copyAction(sender: )), for: .touchUpInside)
         viewModel.viewResponder = self
     }
     
     func setupViewState(item: RoomInfoViewModel) {
-        nameLabel.text = EngineManager.shared.store.roomInfo.name
+        nameLabel.text = viewModel.title
     }
     
     @objc func codeAction(sender: UIButton) {
         viewModel.codeAction(sender: sender)
+    }
+    
+    @objc func copyAction(sender: UIButton) {
+        viewModel.copyConferenceDetails()
+        makeToast(.roomInformationCopiedSuccessfully)
     }
     
     deinit {
@@ -136,9 +159,18 @@ extension RoomInfoView: RoomInfoResponder {
         nameLabel.text = text
     }
     
-    func showCopyToast(copyType: CopyType) {
-        RoomRouter.makeToastInCenter(toast: copyType == .copyRoomIdType ?
-            .copyRoomIdSuccess : .copyRoomLinkSuccess,duration: 0.5)
+    func showCopyToast(copyType: CopyType?) {
+        var test: String
+        guard let copyType = copyType else { return }
+        switch copyType {
+        case .copyRoomPassword:
+            test = .copyRoomPasswordSuccess
+        case .copyRoomIdType:
+            test = .copyRoomIdSuccess
+        case .copyRoomLinkType:
+            test = .copyRoomLinkSuccess
+        }
+        RoomRouter.makeToastInCenter(toast: test,duration: 0.5)
     }
 }
 
@@ -149,5 +181,9 @@ private extension String {
     static var copyRoomLinkSuccess: String {
         localized("Conference Link copied.")
     }
+    static let conferencePasswordSuccess = localized("Conference password copied successfully.")
+    static let copyRoomInformation = localized("Copy room information")
+    static let roomInformationCopiedSuccessfully = localized("Room information copied successfully")
+    static let copyRoomPasswordSuccess = localized("Conference password copied")
 }
 

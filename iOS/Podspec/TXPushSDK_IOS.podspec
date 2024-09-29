@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXPushSDK_IOS'
-  spec.version      = '8.1.6116'
+  spec.version      = '8.2.6325'
   spec.platform     = :ios
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.1.6116/PushSDK_8.1.6116.framework.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.2.6325/PushSDK_8.2.6325.framework.zip'}
   spec.vendored_frameworks = '**/PushSDK.framework'
   spec.preserve_paths = '**/PushSDK.framework'
   spec.source_files = '**/PushSDK.framework/Headers/*.h', '**/PushSDK.framework/cpluscplus/include/*.h'

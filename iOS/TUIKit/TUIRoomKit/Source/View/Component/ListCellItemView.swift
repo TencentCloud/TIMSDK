@@ -97,17 +97,17 @@ class ListCellItemView: UIView {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.width.equalTo(124.scale375())
+            make.width.equalTo(100.scale375())
             make.height.equalTo(20.scale375())
         }
         
         messageLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(80.scale375())
+            make.leading.equalTo(titleLabel.snp.trailing).offset(16.scale375())
             make.centerY.equalToSuperview()
             if itemData.hasRightButton  {
                 make.trailing.equalTo(rightButton.snp.leading)
             } else if (itemData.hasSwitch) {
-                make.trailing.equalTo(rightSwitch.snp.trailing)
+                make.trailing.equalTo(rightSwitch.snp.leading)
             } else {
                 make.trailing.equalToSuperview()
             }
@@ -137,8 +137,8 @@ class ListCellItemView: UIView {
                 make.width.equalTo(size.width)
                 make.height.equalTo(size.height)
             } else {
-                make.width.equalTo(60.scale375())
-                make.height.equalTo(26.scale375Height())
+                make.width.equalTo(57.scale375())
+                make.height.equalTo(20.scale375Height())
             }
         }
         downLineView.snp.makeConstraints { make in

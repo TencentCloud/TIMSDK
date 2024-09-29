@@ -18,5 +18,8 @@ let userReducer = Reducer<UserState>(
     }),
     ReduceOn(UserActions.updateSelfInfo, reduce: { state, action in
         state.selfInfo = action.payload
+    }),
+    ReduceOn(UserActions.updateAllUsers, reduce: { state, action in
+        state.allUsers = action.payload
     })
 )

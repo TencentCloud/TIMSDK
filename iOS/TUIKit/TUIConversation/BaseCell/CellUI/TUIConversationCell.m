@@ -11,6 +11,7 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/TUIThemeManager.h>
 #import <TUICore/TUITool.h>
+#import "TUIConversationConfig.h"
 
 #define kScale UIScreen.mainScreen.bounds.size.width / 375.0
 
@@ -78,8 +79,22 @@
 - (void)fillWithData:(TUIConversationCellData *)convData {
     self.convData = convData;
 
-    self.timeLabel.text = [TUITool convertDateToStr:convData.time];
+    
+    self.titleLabel.textColor = TIMCommonDynamicColor(@"form_title_color", @"#000000");
+    if ([TUIConversationConfig sharedConfig].cellTitleLabelFont) {
+        self.titleLabel.font = [TUIConversationConfig sharedConfig].cellTitleLabelFont;
+    }
+    
     self.subTitleLabel.attributedText = convData.subTitle;
+    if ([TUIConversationConfig sharedConfig].cellSubtitleLabelFont) {
+        self.subTitleLabel.font = [TUIConversationConfig sharedConfig].cellSubtitleLabelFont;
+    }
+    
+    self.timeLabel.text = [TUITool convertDateToStr:convData.time];
+    if ([TUIConversationConfig sharedConfig].cellTimeLabelFont) {
+        self.timeLabel.font = [TUIConversationConfig sharedConfig].cellTimeLabelFont;
+    }
+    
     if (self.convData.showCheckBox) {
         _selectedIcon.hidden = NO;
     } else {
@@ -295,8 +310,8 @@
     } else {
         self.notDisturbRedDot.hidden = YES;
         self.notDisturbView.hidden = YES;
-        self.unReadView.hidden = NO;
         [self.unReadView setNum:convData.unreadCount];
+        self.unReadView.hidden = convData.unreadCount == 0 ? YES : ![TUIConversationConfig sharedConfig].showCellUnreadCount;
     }
 
     // Mark As Unread
@@ -308,6 +323,7 @@
         } else {
             // Marked unread Show number 1
             [self.unReadView setNum:1];
+            self.unReadView.hidden = ![TUIConversationConfig sharedConfig].showCellUnreadCount;
         }
     }
 
@@ -327,6 +343,13 @@
     [super updateConstraints];
     CGFloat height = [self.convData heightOfWidth:self.mm_w];
     self.mm_h = height;
+    
+    if (self.convData.isOnTop) {
+        self.contentView.backgroundColor = [TUIConversationConfig sharedConfig].pinnedCellBackgroundColor ? : TUIConversationDynamicColor(@"conversation_cell_top_bg_color", @"#F4F4F4");
+    } else {
+        self.contentView.backgroundColor = [TUIConversationConfig sharedConfig].cellBackgroundColor ? : TUIConversationDynamicColor(@"conversation_cell_bg_color", @"#FFFFFF");
+    }
+    
     CGFloat selectedIconSize = 20;
     [self.selectedIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
         if (self.convData.showCheckBox) {

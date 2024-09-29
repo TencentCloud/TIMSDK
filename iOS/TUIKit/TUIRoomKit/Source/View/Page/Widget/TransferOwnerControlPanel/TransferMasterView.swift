@@ -29,11 +29,13 @@ class TransferMasterView: UIView {
             searchBar.searchTextField.textColor = UIColor(0xB2BBD1)
             searchBar.searchTextField.tintColor = UIColor(0xB2BBD1).withAlphaComponent(0.3)
             searchBar.searchTextField.layer.cornerRadius = 6
+            searchBar.searchTextField.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         } else {
             if let textField = searchBar.value(forKey: "searchField") as? UITextField {
                 textField.textColor = UIColor(0xB2BBD1)
                 textField.tintColor = UIColor(0xB2BBD1).withAlphaComponent(0.3)
                 textField.layer.cornerRadius = 6
+                textField.font = UIFont.systemFont(ofSize: 14, weight: .medium)
             }
         }
         return searchBar
@@ -51,7 +53,8 @@ class TransferMasterView: UIView {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         button.setTitle(.appointAndLeaveRoomText, for: .normal)
         button.setTitleColor(UIColor(0xFFFFFF), for: .normal)
-        button.backgroundColor = UIColor(0x006EFF)
+        button.setBackgroundImage(UIColor(0x006EFF).withAlphaComponent(0.2).trans2Image(), for: .disabled)
+        button.setBackgroundImage(UIColor(0x006EFF).trans2Image(), for: .normal)
         button.layer.cornerRadius = 12
         button.clipsToBounds = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -134,6 +137,7 @@ class TransferMasterView: UIView {
         appointMasterButton.addTarget(self, action: #selector(appointMasterAction(sender:)), for: .touchUpInside)
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideSearchControl(sender:)))
         searchControl.addGestureRecognizer(tap)
+        appointMasterButton.isEnabled = viewModel.userId.count > 0
     }
     
     @objc func appointMasterAction(sender: UIButton) {
@@ -200,6 +204,7 @@ extension TransferMasterView: UITableViewDelegate {
             searchBar.resignFirstResponder()
         }
         viewModel.userId = attendeeList[indexPath.row].userId
+        appointMasterButton.isEnabled = true
         transferMasterTableView.reloadData()
     }
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

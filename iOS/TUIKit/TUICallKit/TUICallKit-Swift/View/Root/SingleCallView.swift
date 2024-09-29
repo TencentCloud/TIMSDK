@@ -244,9 +244,7 @@ class SingleCallView: UIView {
     }
     
     func createCallStatusTipView() {
-        if TUICallState.instance.selfUser.value.callRole.value == .call {
-            callStatusTipView.isHidden = false
-        }
+        callStatusTipView.isHidden = false
     }
     
     func createAudioAcceptView() {

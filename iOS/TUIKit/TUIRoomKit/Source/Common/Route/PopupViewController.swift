@@ -13,10 +13,11 @@ class PopupViewController: UIViewController {
     let contentView: UIView
     
     private let visualEffectView: UIView = {
-        let blurEffect = UIBlurEffect(style:.dark)
-        let visualEffectView = UIVisualEffectView(effect: blurEffect)
-        visualEffectView.alpha = 0.8
-        return visualEffectView
+        let blurEffect = UIBlurEffect(style: .dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.frame = UIScreen.main.bounds
+        view.alpha = 0
+        return view
     }()
     
     public init(contentView: UIView) {
@@ -41,14 +42,10 @@ class PopupViewController: UIViewController {
     }
     
     func constructViewHierarchy() {
-        view.addSubview(visualEffectView)
         view.addSubview(contentView)
     }
     
     func activateConstraints() {
-        visualEffectView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalToSuperview()
-        }
         contentView.snp.remakeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
         }
@@ -59,7 +56,7 @@ class PopupViewController: UIViewController {
         guard let touch = touches.first else { return }
         let point = touch.location(in: contentView)
         guard !contentView.layer.contains(point) else { return }
-        route.dismiss()
+        route.dismiss(animated: true)
     }
     
     // MARK: - private property.
@@ -76,6 +73,11 @@ extension PopupViewController: UIViewControllerTransitioningDelegate {
         } else {
             transitionAnimator.alertTransitionPosition = .right
         }
+        source.view.addSubview(visualEffectView)
+        UIView.animate(withDuration: transitionAnimator.duration) { [weak self] in
+            guard let self = self else { return }
+            self.visualEffectView.alpha = 1
+        }
         return transitionAnimator
     }
     
@@ -86,6 +88,15 @@ extension PopupViewController: UIViewControllerTransitioningDelegate {
             transitionAnimator.alertTransitionPosition = .bottom
         } else {
             transitionAnimator.alertTransitionPosition = .right
+        }
+        UIView.animate(withDuration: transitionAnimator.duration) { [weak self] in
+            guard let self = self else { return }
+            self.visualEffectView.alpha = 0
+        } completion: { [weak self] finished in
+            guard let self = self else { return }
+            if finished {
+                self.visualEffectView.removeFromSuperview()
+            }
         }
         return transitionAnimator
     }

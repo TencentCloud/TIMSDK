@@ -9,15 +9,15 @@ import Foundation
 import RTCRoomEngine
 
 struct MemberSelectParams {
-    let selectedUsers: [User]
-    let delegate: MemberSelectionDelegate
+    let participants: ConferenceParticipants
+    let delegate: ContactViewSelectDelegate
     let factory: MemberSelectionFactory
 }
 
-public protocol SelectMemberControllerProtocol: UIViewController {
-    var delegate: MemberSelectionDelegate? { get set }
+@objc public protocol ContactViewProtocol: AnyObject {
+    var delegate: ContactViewSelectDelegate? { get set }
 }
 
-public protocol MemberSelectionDelegate: AnyObject {
-    func onMemberSelected(_ viewController: SelectMemberControllerProtocol, invitees: [User])
+@objc public protocol ContactViewSelectDelegate: AnyObject {
+    func onMemberSelected(_ viewController: ContactViewProtocol, invitees: [User])
 }

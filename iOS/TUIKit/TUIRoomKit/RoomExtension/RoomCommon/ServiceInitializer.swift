@@ -19,6 +19,8 @@ class ServiceInitializer {
     
     private var isLoginEngine: Bool = false
     static let shared = ServiceInitializer()
+    private var invitationManager: TUIConferenceInvitationManager?
+    private var invitationObserver: InvitationObserverService?
 
     private init() {
     }
@@ -34,10 +36,24 @@ class ServiceInitializer {
 
     @objc private func logoutSuccess(_ notification: Notification) {
         logout(onSuccess: nil, onError: nil)
+        removeInvitationObserver()
     }
 
     @objc private func loginSuccess(_ notification: Notification) {
         login(onSuccess: nil, onError: nil)
+        addInvitationObserver()
+    }
+    
+    private func addInvitationObserver() {
+        invitationObserver = InvitationObserverService.shared
+        invitationManager = TUIRoomEngine.sharedInstance().getExtension(extensionType: .conferenceInvitationManager) as? TUIConferenceInvitationManager
+        guard let invitationObserver = invitationObserver else { return }
+        invitationManager?.addObserver(invitationObserver)
+    }
+    
+    private func removeInvitationObserver() {
+        guard let invitationObserver = invitationObserver else { return }
+        invitationManager?.removeObserver(invitationObserver)
     }
 
     func login(onSuccess: TUISuccessBlock?, onError: TUIErrorBlock?) {

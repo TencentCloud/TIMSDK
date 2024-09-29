@@ -63,6 +63,7 @@ class EmotionHelper {
         // Fixed an issue where font changed due to inserting AttributeString;
         // Prevents the textView font from getting smaller after inserting an expression
         intactAttributedString.addAttribute(.font, value: font, range: NSRange(location: 0, length: intactAttributedString.length))
+        intactAttributedString.addAttribute(.foregroundColor, value:  UIColor.tui_color(withHex: "D5E0F2"), range: NSRange(location: 0, length: intactAttributedString.length))
         return intactAttributedString
     }
 

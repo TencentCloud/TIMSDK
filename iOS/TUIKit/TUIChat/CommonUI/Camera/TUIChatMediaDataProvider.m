@@ -19,6 +19,7 @@
 #import <TIMCommon/NSTimer+TUISafe.h>
 #import <TUICore/TUITool.h>
 #import "TUICameraViewController.h"
+#import "TUIChatConfig.h"
 
 #define kTUIChatMediaSelectImageMax 9
 @interface TUIChatMediaDataProvider () <PHPickerViewControllerDelegate,
@@ -89,6 +90,9 @@
       vc.type = TUICameraMediaTypeVideo;
       vc.videoMinimumDuration = 1.5;
       vc.delegate = weakSelf;
+      if ([TUIChatConfig defaultConfig].maxVideoRecordDuration > 0) {
+         vc.videoMaximumDuration = [TUIChatConfig defaultConfig].maxVideoRecordDuration;
+      }
       if (weakSelf.presentViewController.navigationController) {
           [weakSelf.presentViewController.navigationController pushViewController:vc animated:YES];
       } else {

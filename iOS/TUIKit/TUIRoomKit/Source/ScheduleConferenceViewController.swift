@@ -11,11 +11,13 @@ import RTCRoomEngine
 import Combine
 import TUICore
 
-public typealias MemberSelectionFactory = ([User]) -> SelectMemberControllerProtocol
+public typealias MemberSelectionFactory = ([User]) -> ContactViewProtocol
 
 @objcMembers public class ScheduleConferenceViewController: UIViewController {
     private var cancellableSet = Set<AnyCancellable>()
     let memberSelectionFactory: MemberSelectionFactory?
+    private let durationTime = 1800
+    private let reminderSecondsBeforeStart = 600
     lazy var rootView: ScheduleConferenceTableView = {
         return ScheduleConferenceTableView(menus: ScheduleConferenceDataHelper.generateScheduleConferenceData(route: route, store: store, operation: operation, viewController: self))
     }()
@@ -53,11 +55,15 @@ public typealias MemberSelectionFactory = ([User]) -> SelectMemberControllerProt
         subscribeScheduleSubject()
         subscribeToast()
         
-        let selector = Selector(keyPath: \ConferenceInfo.isEncrypted)
+        let selector = Selector(keyPath: \ConferenceInfo.basicInfo.isPasswordEnabled)
         store.select(selector)
+            .removeDuplicates()
             .receive(on: RunLoop.main)
-            .sink { [weak self] isEncrypted in
+            .sink { [weak self] isPasswordEnabled in
                 guard let self = self else { return }
+                var conferenceInfo = store.conferenceInfo
+                conferenceInfo.basicInfo.password = isPasswordEnabled ? getRandomNumber(numberOfDigits: 6) : ""
+                store.update(conference: conferenceInfo)
                 self.rootView.menus = ScheduleConferenceDataHelper.generateScheduleConferenceData(route: self.route, store: self.store, operation: self.operation, viewController: self)
                 self.rootView.tableView.reloadData()
             }
@@ -76,22 +82,28 @@ public typealias MemberSelectionFactory = ([User]) -> SelectMemberControllerProt
     
     private func initializeData() {
         operation.dispatch(action: UserActions.getSelfInfo())
-        let conferenceInfo = getConferenceInfo()
-        store.update(conference: conferenceInfo)
-        store.fetchAttendees(cursor: "")
+        getConferenceInfo { [weak self] conferenceInfo in
+            guard let self = self else { return }
+            self.store.update(conference: conferenceInfo)
+            self.store.fetchAttendees(cursor: "")
+        }
     }
     
-    private func getConferenceInfo() -> ConferenceInfo {
-        var info = ConferenceInfo()
-        info.scheduleStartTime = getStartTime()
-        info.durationTime = 1800
-        var basicInfo = RoomInfo()
-        basicInfo.roomId = FetchRoomId.getRandomRoomId(numberOfDigits: 6)
-        basicInfo.name = localizedReplace(.temporaryRoomText, replace: operation.selectCurrent(UserSelectors.getSelfUserName))
-        basicInfo.isCameraDisableForAllUser = false
-        basicInfo.isMicrophoneDisableForAllUser = false
-        info.basicInfo = basicInfo
-        return info
+    private func getConferenceInfo(onGetConferenceInfo: @escaping (ConferenceInfo)->()) {
+        FetchRoomId.getRoomId { [weak self] roomId in
+            guard let self = self else { return }
+            var info = ConferenceInfo()
+            info.scheduleStartTime = self.getStartTime()
+            info.durationTime = UInt(self.durationTime)
+            info.reminderSecondsBeforeStart = self.reminderSecondsBeforeStart
+            var basicInfo = RoomInfo()
+            basicInfo.roomId = roomId
+            basicInfo.name = localizedReplace(.temporaryRoomText, replace: self.operation.selectCurrent(UserSelectors.getSelfUserName))
+            basicInfo.isCameraDisableForAllUser = false
+            basicInfo.isMicrophoneDisableForAllUser = false
+            info.basicInfo = basicInfo
+            onGetConferenceInfo(info)
+        }
     }
     
     private func getStartTime() -> UInt {
@@ -104,6 +116,13 @@ public typealias MemberSelectionFactory = ([User]) -> SelectMemberControllerProt
         }
         time = time + fiveMinutesInterval
         return time
+    }
+    
+    private func getRandomNumber(numberOfDigits: Int) -> String {
+        let minNumber = Int(truncating: NSDecimalNumber(decimal: pow(10, numberOfDigits - 1)))
+        let maxNumber = Int(truncating: NSDecimalNumber(decimal: pow(10, numberOfDigits))) - 1
+        let randomNumber = arc4random_uniform(UInt32(maxNumber - minNumber)) + UInt32(minNumber)
+        return String(randomNumber)
     }
     
     deinit {
@@ -145,8 +164,8 @@ extension ScheduleConferenceViewController {
     }
 }
 
-extension ScheduleConferenceViewController: MemberSelectionDelegate {
-    public func onMemberSelected(_ viewController: SelectMemberControllerProtocol, 
+extension ScheduleConferenceViewController: ContactViewSelectDelegate {
+    public func onMemberSelected(_ viewController: ContactViewProtocol, 
                                  invitees: [User]) {
         var conferenceInfo = store.conferenceInfo
         conferenceInfo.attendeeListResult.attendeeList = invitees.map { $0.userInfo }

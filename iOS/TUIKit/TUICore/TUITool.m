@@ -457,10 +457,7 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
       }
 
       // load origin image
-      UIImage *image = [UIImage imageNamed:path];
-      if (image == nil) {
-          image = [UIImage imageWithContentsOfFile:path];
-      }
+      UIImage *image = [UIImage imageWithContentsOfFile:path];
 
       // There is no path ending, but it may actually be a gif image
       if (image == nil) {
@@ -473,6 +470,12 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
       if (image == nil) {
           callback(path, image);
           return;
+      }
+      
+      if (image.sd_imageFormat == SDImageFormatGIF) {
+        image = [UIImage sd_imageWithGIFData:[NSData dataWithContentsOfFile:path]];
+        callback(path, image);
+        return;
       }
 
       // SDWebImage is priority

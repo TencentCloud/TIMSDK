@@ -39,6 +39,7 @@
 #import "TUITextMessageCellData.h"
 #import "TUIVideoMessageCellData.h"
 #import "TUIVoiceMessageCellData.h"
+#import "TUIChatShortcutMenuView.h"
 
 static UIView *gCustomTopView;
 static UIView *gTopExentsionView;
@@ -110,7 +111,9 @@ static CGRect gCustomTopViewRect;
     [self configBackgroundView];
     [self setupNavigator];
     [self setupMessageController];
+    [self setupInputMoreMenu];
     [self setupInputController];
+    [self setupShortcutView];
     
     // reset then setup bottom container and its margin
     NSDictionary *userInfo = @{TUIKitNotification_onMessageVCBottomMarginChanged_Margin: @(0)};
@@ -198,6 +201,10 @@ static CGRect gCustomTopViewRect;
     if (parent == nil) {
         [self saveDraft];
     }
+}
+
+- (void)viewDidLayoutSubviews {
+    [self layoutBottomContanerView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -359,7 +366,33 @@ static CGRect gCustomTopViewRect;
 
 - (void)setupBottomContainerView {
     [self.view addSubview:self.bottomContainerView];
-    [self notifyBttomContainerReady];
+    
+    NSArray *shortcutMenuItems = self.conversationData.shortcutMenuItems;
+    CGFloat viewHeight = self.conversationData.shortcutViewHeight;
+    if (shortcutMenuItems.count > 0) {
+        TUIChatShortcutMenuView *view = [[TUIChatShortcutMenuView alloc] initWithDataSource:shortcutMenuItems];
+        view.viewHeight = viewHeight;
+        view.itemHorizontalSpacing = 0.0;
+        if (self.conversationData.shortcutViewBackgroundColor != nil) {
+            view.backgroundColor = self.conversationData.shortcutViewBackgroundColor;
+        }
+        [self.bottomContainerView addSubview:view];
+        [view updateFrame];
+    } else {
+        [self notifyBttomContainerReady];
+    }
+}
+
+- (void)layoutBottomContanerView {
+    if (self.bottomContainerView.mm_y == self.messageController.view.mm_maxY) {
+        return;
+    }
+    if (self.conversationData.shortcutMenuItems.count > 0) {
+        CGFloat height = self.conversationData.shortcutViewHeight > 0 ? self.conversationData.shortcutViewHeight : 46;
+        self.messageController.view.mm_h = self.messageController.view.mm_h - height;
+        self.bottomContainerView.frame = CGRectMake(0, self.messageController.view.mm_maxY,
+                                                    self.messageController.view.mm_w, height);
+    }
 }
 
 - (void)setupInputController {
@@ -378,10 +411,51 @@ static CGRect gCustomTopViewRect;
 
     _inputController.view.hidden = !TUIChatConfig.defaultConfig.enableMainPageInputBar;
 
-    self.moreMenus = [self.dataProvider moreMenuCellDataArray:self.conversationData.groupID
-                                                       userID:self.conversationData.userID
-                                            conversationModel:self.conversationData
-                                             actionController:self];
+    self.moreMenus = [self.dataProvider getMoreMenuCellDataArray:self.conversationData.groupID
+                                                          userID:self.conversationData.userID
+                                               conversationModel:self.conversationData
+                                                actionController:self];
+}
+
+- (void)setupShortcutView {
+    id<TUIChatShortcutViewDataSource> dataSource = [TUIChatConfig defaultConfig].shortcutViewDataSource;
+    if (dataSource && [dataSource respondsToSelector:@selector(itemsInShortcutViewOfModel:)]) {
+        NSArray *items = [dataSource itemsInShortcutViewOfModel:self.conversationData];
+        if (items.count > 0) {
+            self.conversationData.shortcutMenuItems = items;
+            if (dataSource && [dataSource respondsToSelector:@selector(shortcutViewBackgroundColorOfModel:)]) {
+                UIColor *backgroundColor = [dataSource shortcutViewBackgroundColorOfModel:self.conversationData];
+                self.conversationData.shortcutViewBackgroundColor = backgroundColor;
+            }
+            if (dataSource && [dataSource respondsToSelector:@selector(shortcutViewHeightOfModel:)]) {
+                CGFloat height = [dataSource shortcutViewHeightOfModel:self.conversationData];
+                self.conversationData.shortcutViewHeight = height;
+            }
+        }
+    }
+}
+
+- (void)setupInputMoreMenu {
+    id<TUIChatInputBarConfigDataSource> dataSource = [TUIChatConfig defaultConfig].inputBarDataSource;
+    if (dataSource && [dataSource respondsToSelector:@selector(inputBarShouldHideItemsInMoreMenuOfModel:)]) {
+        TUIChatInputBarMoreMenuItem tag = [dataSource inputBarShouldHideItemsInMoreMenuOfModel:self.conversationData];
+        self.conversationData.enableFile = !(tag & TUIChatInputBarMoreMenuItem_File);
+        self.conversationData.enablePoll = !(tag & TUIChatInputBarMoreMenuItem_Poll);
+        self.conversationData.enableRoom = !(tag & TUIChatInputBarMoreMenuItem_Room);
+        self.conversationData.enableAlbum = !(tag & TUIChatInputBarMoreMenuItem_Album);
+        self.conversationData.enableAudioCall = !(tag & TUIChatInputBarMoreMenuItem_AudioCall);
+        self.conversationData.enableVideoCall = !(tag & TUIChatInputBarMoreMenuItem_VideoCall);
+        self.conversationData.enableGroupNote = !(tag & TUIChatInputBarMoreMenuItem_GroupNote);
+        self.conversationData.enableTakePhoto = !(tag & TUIChatInputBarMoreMenuItem_TakePhoto);
+        self.conversationData.enableRecordVideo = !(tag & TUIChatInputBarMoreMenuItem_RecordVideo);
+        self.conversationData.enableWelcomeCustomMessage = !(tag & TUIChatInputBarMoreMenuItem_CustomMessage);
+    }
+    if (dataSource && [dataSource respondsToSelector:@selector(inputBarShouldAddNewItemsToMoreMenuOfModel:)]) {
+        NSArray *items = [dataSource inputBarShouldAddNewItemsToMoreMenuOfModel:self.conversationData];
+        if ([items isKindOfClass:NSArray.class]) {
+            self.conversationData.customizedNewItemsInMoreMenu = items;
+        }
+    }
 }
 
 - (void)configBackgroundView {
@@ -632,7 +706,7 @@ static CGRect gCustomTopViewRect;
             [TUIChatDataProvider getGroupInfoWithGroupID:self.conversationData.groupID
                                                SuccBlock:^(V2TIMGroupInfoResult *_Nonnull groupResult) {
                                                  if (groupResult.info.groupName.length > 0 &&
-                                                     self.conversationData.enabelRoom) {
+                                                     self.conversationData.enableRoom) {
                                                      self.conversationData.title = groupResult.info.groupName;
                                                  }
                                                  if ([groupResult.info.groupType isEqualToString:@"Room"] ) {
@@ -836,10 +910,10 @@ static CGRect gCustomTopViewRect;
 }
 
 - (void)inputControllerDidClickMore:(TUIInputController *)inputController {
-    self.moreMenus = [self.dataProvider moreMenuCellDataArray:self.conversationData.groupID
-                                                       userID:self.conversationData.userID
-                                            conversationModel:self.conversationData
-                                             actionController:self];
+    self.moreMenus = [self.dataProvider getMoreMenuCellDataArray:self.conversationData.groupID
+                                                          userID:self.conversationData.userID
+                                               conversationModel:self.conversationData
+                                                actionController:self];
 }
 
 #pragma mark - TUIBaseMessageControllerDelegate

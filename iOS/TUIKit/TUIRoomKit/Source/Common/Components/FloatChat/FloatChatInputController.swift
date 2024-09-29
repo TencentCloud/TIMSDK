@@ -14,6 +14,7 @@ import Factory
 
 class FloatChatInputController: UIViewController {
     @Injected(\.floatChatService) private var store: FloatChatStoreProvider
+    @Injected(\.conferenceStore) private var operation
     
     private var textViewBottomConstraint: Constraint?
     private var textViewHeightConstraint: Constraint?
@@ -54,7 +55,7 @@ class FloatChatInputController: UIViewController {
         let button = UIButton()
         button.setTitle(.sendText, for: .normal)
         button.layer.cornerRadius = 18
-        button.backgroundColor = UIColor.tui_color(withHex: "#29CC6A")
+        button.backgroundColor = UIColor.tui_color(withHex: "#006CFF")
         return button
     }()
     
@@ -165,7 +166,11 @@ class FloatChatInputController: UIViewController {
     }
     
     @objc private func onSendButtonTapped(sender: UIButton) {
-        store.dispatch(action: FloatChatActions.sendMessage(payload: inputTextView.normalText))
+        if inputTextView.normalText.isEmpty {
+            operation.dispatch(action: ViewActions.showToast(payload: ToastInfo(message: .inputCannotBeEmpty, position: .center)))
+        } else {
+            store.dispatch(action: FloatChatActions.sendMessage(payload: inputTextView.normalText))
+        }
         hideInputView()
     }
 
@@ -270,5 +275,6 @@ private extension String {
     static var sendText: String {
         localized("Send")
     }
+    static let inputCannotBeEmpty = localized("Input can't be empty!")
 }
 

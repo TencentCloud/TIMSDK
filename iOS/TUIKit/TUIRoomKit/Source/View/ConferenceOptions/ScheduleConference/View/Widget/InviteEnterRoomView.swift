@@ -25,9 +25,9 @@ class InviteEnterRoomView: UIView {
             return .inviteWhenSuccess
         }
     }
-    let roomId: String
+    let conferenceInfo: ConferenceInfo
     lazy var menus = {
-        InviteEnterRoomDataHelper.generateInviteEnterRoomHelperData(roomId: roomId, operation: operation)
+        InviteEnterRoomDataHelper.generateInviteEnterRoomHelperData(conferenceInfo: conferenceInfo, operation: operation)
     }()
     
     private let dropArrowButton: UIButton = {
@@ -51,13 +51,25 @@ class InviteEnterRoomView: UIView {
         view.axis = .vertical
         view.alignment = .center
         view.distribution = .equalSpacing
-        view.spacing = 0
+        view.spacing = 10
         view.backgroundColor = .clear
         return view
     }()
     
-    init(roomId: String, style: InviteEnterRoomViewStyle = .normal) {
-        self.roomId = roomId
+    private let copyButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(.copyRoomInformation, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.setTitleColor(UIColor(0x1C66E5), for: .normal)
+        button.titleLabel?.textAlignment = .center
+        button.layer.cornerRadius = 6
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor(0x1C66E5).cgColor
+        return button
+    }()
+    
+    init(conferenceInfo: ConferenceInfo, style: InviteEnterRoomViewStyle = .normal) {
+        self.conferenceInfo = conferenceInfo
         self.style = style
         super.init(frame: .zero)
     }
@@ -82,6 +94,7 @@ class InviteEnterRoomView: UIView {
         addSubview(dropArrowButton)
         addSubview(titleLabel)
         addSubview(stackView)
+        addSubview(copyButton)
     }
     
     private func activateConstraints() {
@@ -97,15 +110,20 @@ class InviteEnterRoomView: UIView {
             make.top.equalTo(titleLabel.snp.bottom).offset(20.scale375Height())
             make.leading.equalToSuperview().offset(16.scale375())
             make.trailing.equalToSuperview().offset(-16.scale375())
-            make.height.equalTo(56.scale375())
-            make.bottom.equalToSuperview().offset(-50.scale375Height())
+        }
+        copyButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(16.scale375())
+            make.trailing.equalToSuperview().offset(-16.scale375())
+            make.height.equalTo(44.scale375Height())
+            make.top.equalTo(stackView.snp.bottom).offset(20.scale375Height())
+            make.bottom.equalToSuperview().offset(-34.scale375Height())
         }
         
         for item in menus {
             let view = ListCellItemView(itemData: item)
             stackView.addArrangedSubview(view)
             view.snp.makeConstraints { make in
-                make.height.equalTo(20.scale375())
+                make.height.equalTo(20.scale375Height())
                 make.width.equalToSuperview()
             }
         }
@@ -114,10 +132,20 @@ class InviteEnterRoomView: UIView {
     private func bindInteraction() {
         subscribeToast()
         dropArrowButton.addTarget(self, action: #selector(dropAction(sender: )), for: .touchUpInside)
+        copyButton.addTarget(self, action: #selector(copyAction(sender: )), for: .touchUpInside)
     }
     
     @objc func dropAction(sender: UIButton) {
-        route.dismiss()
+        route.dismiss(animated: true)
+    }
+    
+    @objc func copyAction(sender: UIButton) {
+        var conferenceDetails = title
+        menus.forEach { item in
+            conferenceDetails = conferenceDetails +  "\n\(item.titleText) : \(item.messageText)"
+        }
+        UIPasteboard.general.string = conferenceDetails
+        operation.dispatch(action: ViewActions.showToast(payload: ToastInfo(message: .roomInformationCopiedSuccessfully)))
     }
     
     deinit {
@@ -149,6 +177,8 @@ extension InviteEnterRoomView {
     }}
 
 private extension String {
-    static let inviteMember = localized("Invite member")
+    static let inviteMember = localized("Invite members to join")
     static let inviteWhenSuccess = localized("Booking successful, invite members to join")
+    static let copyRoomInformation = localized("Copy room information")
+    static let roomInformationCopiedSuccessfully = localized("Room information copied successfully")
 }

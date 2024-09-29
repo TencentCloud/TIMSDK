@@ -16,7 +16,7 @@
         self.msgNeedReadReceipt = YES;
         self.enableVideoCall = YES;
         self.enableAudioCall = YES;
-        self.enabelRoom  = YES;
+        self.enableRoom  = YES;
         self.enableWelcomeCustomMessage  = YES;
         self.isLimitedPortraitOrientation = NO;
         self.enablePoll = YES;

@@ -8,6 +8,7 @@
 
 import Foundation
 import RTCRoomEngine
+import Factory
 
 protocol UserListViewResponder: NSObject {
     func updateBottomControlView(isHidden: Bool)
@@ -17,7 +18,7 @@ protocol UserListViewResponder: NSObject {
     func updateMuteAllAudioButtonState(isSelect: Bool)
     func updateMuteAllVideoButtonState(isSelect: Bool)
     func showAlert(title: String?, message: String?, sureTitle:String?, declineTitle: String?, sureBlock: (() -> ())?, declineBlock: (() -> ())?)
-    func updateListStateView(onStage: Int, offStage: Int)
+    func updateListStateView()
     func updateMemberLabel(count: Int)
     func updateUserListTableView()
 }
@@ -26,6 +27,7 @@ class UserListViewModel: NSObject {
     var userId: String = ""
     var userName: String = ""
     var attendeeList: [UserEntity] = []
+    var invitationList: [TUIInvitation] = []
     var engineManager: EngineManager {
         EngineManager.shared
     }
@@ -40,7 +42,7 @@ class UserListViewModel: NSObject {
     }
     let timeoutNumber: Double = 60
     weak var viewResponder: UserListViewResponder?
-    var isShownOnStageList: Bool = true
+    lazy var userListType: UserListType = isSeatEnabled ? .onStageUsers: .allUsers
     var onStageCount: Int {
         store.seatList.count
     }
@@ -50,10 +52,10 @@ class UserListViewModel: NSObject {
     var allUserCount: Int {
         store.attendeeList.count
     }
-    lazy var isShownBottomControlView: Bool = {
-        return currentUser.userRole != .generalUser
-    }()
-    lazy var isShownListStateView: Bool = {
+    var isShownBottomControlView: Bool {
+        return store.currentUser.userRole != .generalUser
+    }
+    lazy var isSeatEnabled: Bool = {
         return roomInfo.isSeatEnabled
     }()
     lazy var isShownNotificationView: Bool = {
@@ -65,6 +67,11 @@ class UserListViewModel: NSObject {
     lazy var searchText: String = {
         return ""
     }()
+    var invitationUserList: [TUIInvitation] {
+        return conferenceStore.selectCurrent(ConferenceInvitationSelectors.getInvitationList)
+    }
+    
+    @Injected(\.conferenceStore) var conferenceStore
     
     override init() {
         super.init()
@@ -90,7 +97,17 @@ class UserListViewModel: NSObject {
     }
     
     func updateAttendeeList() {
-        let userList = roomInfo.isSeatEnabled ? isShownOnStageList ? store.seatList : store.offSeatList : store.attendeeList
+        var userList: [UserEntity] = []
+        switch userListType {
+        case .allUsers:
+            userList = store.attendeeList
+        case .onStageUsers:
+            userList = store.seatList
+        case .offStageUsers:
+            userList = store.offSeatList
+        case .notInRoomUsers:
+            userList = invitationList.map{ UserEntity(invitation: $0) }
+        }
         if isSearching, searchText.count > 0 {
             let searchArray = userList.filter({ model -> Bool in
                 return (model.userName.contains(searchText))
@@ -192,10 +209,35 @@ class UserListViewModel: NSObject {
         }
     }
     
-    func changeListState(isOnStage: Bool) {
-        isShownOnStageList = isOnStage
+    func changeListState(type: UserListType) {
+        userListType = type
         updateAttendeeList()
         viewResponder?.reloadUserListView()
+    }
+    
+    func compareLists(oldList: [TUIInvitation], newList: [TUIInvitation]) -> (added: [TUIInvitation], removed: [TUIInvitation], changed: [TUIInvitation]) {
+        var added = [TUIInvitation]()
+        var removed = [TUIInvitation]()
+        var changed = [TUIInvitation]()
+        let oldDict = Dictionary(uniqueKeysWithValues: oldList.map { ($0.invitee.userId, $0) })
+        let newDict = Dictionary(uniqueKeysWithValues: newList.map { ($0.invitee.userId, $0) })
+        
+        for newInvitation in newList {
+            if oldDict[newInvitation.invitee.userId] == nil {
+                added.append(newInvitation)
+            }
+        }
+        for oldInvitation in oldList {
+            if newDict[oldInvitation.invitee.userId] == nil {
+                removed.append(oldInvitation)
+            }
+        }
+        for newInvitation in newList {
+            if let oldInvitation = oldDict[newInvitation.invitee.userId], oldInvitation != newInvitation {
+                changed.append(newInvitation)
+            }
+        }
+        return (added, removed, changed)
     }
 }
 
@@ -206,8 +248,7 @@ extension UserListViewModel: RoomKitUIEventResponder {
             viewResponder?.updateMemberLabel(count: allUserCount)
             updateAttendeeList()
             viewResponder?.reloadUserListView()
-            guard isShownListStateView else { return }
-            viewResponder?.updateListStateView(onStage: onStageCount, offStage: offStageCount)
+            viewResponder?.updateListStateView()
         case .TUIRoomKitService_CurrentUserRoleChanged:
             guard let userRole = info?["userRole"] as? TUIRole else { return }
             viewResponder?.updateBottomControlView(isHidden: userRole == .generalUser)

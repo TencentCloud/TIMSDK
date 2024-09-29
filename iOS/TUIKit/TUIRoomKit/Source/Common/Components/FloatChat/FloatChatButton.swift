@@ -21,16 +21,13 @@ class FloatChatButton: UIView {
     private lazy var floatInputViewShowState = self.store.select(FloatChatSelectors.getShowFloatInputView)
     var cancellableSet = Set<AnyCancellable>()
     weak var inputController: UIViewController?
-    var roomId: String
+    var roomId = ""
+    private let emojiLabelSpacing: CGFloat = 6
+    private let horizonSpacing: CGFloat = 10
     
-    init(roomId: String) {
+    func updateRoomId(roomId: String) {
         self.roomId = roomId
-        super.init(frame: .zero)
         store.dispatch(action: FloatChatActions.setRoomId(payload: roomId))
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     private let emojiView: UIImageView = {
@@ -67,6 +64,8 @@ class FloatChatButton: UIView {
     }
     
     private func constructViewHierarchy() {
+        backgroundColor = UIColor.tui_color(withHex: "22262E80", alpha: 0.5)
+        layer.cornerRadius = 15
         addSubview(emojiView)
         addSubview(label)
         addSubview(clickView)
@@ -74,15 +73,15 @@ class FloatChatButton: UIView {
     
     private func activateConstraints() {
         emojiView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(4)
+            make.leading.equalToSuperview().offset(horizonSpacing)
             make.centerY.equalToSuperview()
             make.width.equalTo(24)
             make.height.equalTo(24)
         }
         label.snp.makeConstraints { make in
-            make.leading.equalTo(emojiView.snp.trailing).offset(6)
+            make.leading.equalTo(emojiView.snp.trailing).offset(emojiLabelSpacing)
             make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-horizonSpacing)
             make.height.equalTo(24)
         }
         clickView.snp.makeConstraints { make in

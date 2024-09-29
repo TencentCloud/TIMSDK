@@ -20,20 +20,21 @@
 #define Input_SendBtn_Key @"Input_SendBtn_Key"
 #define Input_SendBtn_Title @"Input_SendBtn_Title"
 #define Input_SendBtn_ImageName @"Input_SendBtn_ImageName"
+
 @interface TUISplitEmojiData : NSObject
 @property (nonatomic, assign) NSInteger start;
 @property (nonatomic, assign) NSInteger end;
 @end
+
 @implementation TUISplitEmojiData
 @end
+
 @interface TUIChatDataProvider ()
 @property(nonatomic, strong) TUIInputMoreCellData *welcomeInputMoreMenu;
-
 @property(nonatomic, strong) NSMutableArray<TUIInputMoreCellData *> *customInputMoreMenus;
 @property(nonatomic, strong) NSArray<TUIInputMoreCellData *> *builtInInputMoreMenus;
-
 @property(nonatomic, strong) NSArray<TUICustomActionSheetItem *> *customInputMoreActionItemList;
-@property(nonatomic, strong) NSArray<TUICustomActionSheetItem *> *builtInInputMoreActionItemList;
+@property(nonatomic, strong) NSMutableArray<TUICustomActionSheetItem *> *builtInInputMoreActionItemList;
 @end
 
 @implementation TUIChatDataProvider
@@ -45,55 +46,128 @@
     return self;
 }
 
+#pragma mark - Public
+// For Classic Edition.
+- (NSMutableArray<TUIInputMoreCellData *> *)getMoreMenuCellDataArray:(NSString *)groupID
+                                                              userID:(NSString *)userID
+                                                   conversationModel:(TUIChatConversationModel *)conversationModel
+                                                    actionController:(id<TIMInputViewMoreActionProtocol>)actionController {
+    self.builtInInputMoreMenus = [self createBuiltInInputMoreMenusWithConversationModel:conversationModel];
+    NSMutableArray *moreMenus = [NSMutableArray array];
+    [moreMenus addObjectsFromArray:self.builtInInputMoreMenus];
+    
+    BOOL isNeedWelcomeCustomMessage = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage && conversationModel.enableWelcomeCustomMessage;
+    if (isNeedWelcomeCustomMessage) {
+        if (![self.customInputMoreMenus containsObject:self.welcomeInputMoreMenu]) {
+            [self.customInputMoreMenus addObject:self.welcomeInputMoreMenu];
+        }
+    }
+    [moreMenus addObjectsFromArray:self.customInputMoreMenus];
+
+    // Extension items
+    BOOL isNeedVideoCall = [TUIChatConfig defaultConfig].enableVideoCall && conversationModel.enableVideoCall;
+    BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall && conversationModel.enableAudioCall;
+    BOOL isNeedRoom = [TUIChatConfig defaultConfig].showRoomButton && conversationModel.enableRoom;
+    BOOL isNeedPoll = [TUIChatConfig defaultConfig].showPollButton && conversationModel.enablePoll;
+    BOOL isNeedGroupNote = [TUIChatConfig defaultConfig].showGroupNoteButton && conversationModel.enableGroupNote;
+    
+    NSMutableDictionary *extensionParam = [NSMutableDictionary dictionary];
+    if (userID.length > 0) {
+        extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_UserID] = userID;
+    } else if (groupID.length > 0) {
+        extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_GroupID] = groupID;
+    }
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall] = @(!isNeedVideoCall);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall] = @(!isNeedAudioCall);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom]  = @(!isNeedRoom);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterPoll]  = @(!isNeedPoll);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterGroupNote]  = @(!isNeedGroupNote);
+    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_ActionVC] = actionController;
+    NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID param:extensionParam];
+    for (TUIExtensionInfo *info in extensionList) {
+        NSAssert(info.icon && info.text && info.onClicked, @"extension for input view is invalid, check icon/text/onclick");
+        if (info.icon && info.text && info.onClicked) {
+            TUIInputMoreCellData *data = [[TUIInputMoreCellData alloc] init];
+            data.priority = info.weight;
+            data.image = info.icon;
+            data.title = info.text;
+            data.onClicked = info.onClicked;
+            [moreMenus addObject:data];
+        }
+    }
+    
+    // Customized items
+    if (conversationModel.customizedNewItemsInMoreMenu.count > 0) {
+        [moreMenus addObjectsFromArray:conversationModel.customizedNewItemsInMoreMenu];
+    }
+
+    // Sort with priority
+    NSArray *sortedMenus = [moreMenus sortedArrayUsingComparator:^NSComparisonResult(TUIInputMoreCellData *obj1, TUIInputMoreCellData *obj2) {
+      return obj1.priority > obj2.priority ? NSOrderedAscending : NSOrderedDescending;
+    }];
+    return [NSMutableArray arrayWithArray:sortedMenus];
+}
+
+// For Minimalist Edition.
+- (NSArray<TUICustomActionSheetItem *> *)getInputMoreActionItemList:(NSString *)userID
+                                                            groupID:(NSString *)groupID
+                                                  conversationModel:(TUIChatConversationModel *)conversationModel
+                                                             pushVC:(UINavigationController *)pushVC
+                                                   actionController:(id<TIMInputViewMoreActionProtocol>)actionController {
+    NSMutableArray *result = [NSMutableArray array];
+    [result addObjectsFromArray:[self createBuiltInInputMoreActionItemList:conversationModel]];
+    [result addObjectsFromArray:[self createCustomInputMoreActionItemList:conversationModel]];
+
+    // Extension items
+    NSMutableArray<TUICustomActionSheetItem *> *items = [NSMutableArray array];
+    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+    if (userID.length > 0) {
+        param[TUICore_TUIChatExtension_InputViewMoreItem_UserID] = userID;
+    } else if (groupID.length > 0) {
+        param[TUICore_TUIChatExtension_InputViewMoreItem_GroupID] = groupID;
+    }
+    param[TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall] = @(!TUIChatConfig.defaultConfig.enableVideoCall);
+    param[TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall] = @(!TUIChatConfig.defaultConfig.enableAudioCall);
+    if (pushVC) {
+        param[TUICore_TUIChatExtension_InputViewMoreItem_PushVC] = pushVC;
+    }
+    param[TUICore_TUIChatExtension_InputViewMoreItem_ActionVC] = actionController;
+    NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_InputViewMoreItem_MinimalistExtensionID param:param];
+    for (TUIExtensionInfo *info in extensionList) {
+        if (info.icon && info.text && info.onClicked) {
+            TUICustomActionSheetItem *item = [[TUICustomActionSheetItem alloc] initWithTitle:info.text
+                                                                                    leftMark:info.icon
+                                                                           withActionHandler:^(UIAlertAction *_Nonnull action) {
+                                                                             info.onClicked(param);
+                                                                           }];
+            item.priority = info.weight;
+            [items addObject:item];
+        }
+    }
+    if (items.count > 0) {
+        [result addObjectsFromArray:items];
+    }
+
+    // Sort with priority
+    NSArray *sorted = [result sortedArrayUsingComparator:^NSComparisonResult(TUICustomActionSheetItem *obj1, TUICustomActionSheetItem *obj2) {
+      return obj1.priority > obj2.priority ? NSOrderedAscending : NSOrderedDescending;
+    }];
+    return sorted;
+}
+
+#pragma mark - Private
 - (void)onChangeLanguage {
     self.customInputMoreActionItemList = nil;
     self.builtInInputMoreActionItemList = nil;
 }
 
-- (TUIInputMoreCellData *)welcomeInputMoreMenu {
-    if (!_welcomeInputMoreMenu) {
-        __weak typeof(self) weakSelf = self;
-        _welcomeInputMoreMenu = [[TUIInputMoreCellData alloc] init];
-        _welcomeInputMoreMenu.priority = 0;
-        _welcomeInputMoreMenu.title = TIMCommonLocalizableString(TUIKitMoreLink);
-        _welcomeInputMoreMenu.image = TUIChatBundleThemeImage(@"chat_more_link_img", @"chat_more_link_img");
-        _welcomeInputMoreMenu.onClicked = ^(NSDictionary *actionParam) {
-          NSString *text = TIMCommonLocalizableString(TUIKitWelcome);
-          NSString *link = TUITencentCloudHomePageEN;
-          NSString *language = [TUIGlobalization tk_localizableLanguageKey];
-          if ([language tui_containsString:@"zh-"]) {
-              link = TUITencentCloudHomePageCN;
-          }
-          NSError *error = nil;
-          NSDictionary *param = @{BussinessID : BussinessID_TextLink, @"text" : text, @"link" : link};
-          NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
-          if (error) {
-              NSLog(@"[%@] Post Json Error", [weakSelf class]);
-              return;
-          }
-          V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data desc:text extension:text];
-          if ([weakSelf.delegate respondsToSelector:@selector(dataProvider:sendMessage:)]) {
-              [weakSelf.delegate dataProvider:weakSelf sendMessage:message];
-          }
-        };
-    }
-    return _welcomeInputMoreMenu;
-}
-
-- (NSMutableArray<TUIInputMoreCellData *> *)customInputMoreMenus {
-    if (!_customInputMoreMenus) {
-        _customInputMoreMenus = [NSMutableArray array];
-    }
-    return _customInputMoreMenus;
-}
-
-- (NSArray<TUIInputMoreCellData *> *)builtInInputMoreMenus {
-    if (_builtInInputMoreMenus == nil) {
-        return  [self configBuiltInInputMoreMenusWithConversationModel:nil];
-    }
-    return _builtInInputMoreMenus;
-}
-- (NSArray<TUIInputMoreCellData *> *)configBuiltInInputMoreMenusWithConversationModel:(TUIChatConversationModel *)conversationModel {
+#pragma mark -- Classic
+- (NSArray<TUIInputMoreCellData *> *)createBuiltInInputMoreMenusWithConversationModel:(TUIChatConversationModel *)conversationModel {
+    BOOL isNeedRecordVideo = [TUIChatConfig defaultConfig].showRecordVideoButton && conversationModel.enableRecordVideo;
+    BOOL isNeedTakePhoto = [TUIChatConfig defaultConfig].showTakePhotoButton && conversationModel.enableTakePhoto;
+    BOOL isNeedAlbum = [TUIChatConfig defaultConfig].showAlbumButton && conversationModel.enableAlbum;
+    BOOL isNeedFile = [TUIChatConfig defaultConfig].showFileButton && conversationModel.enableFile;
+    
     __weak typeof(self) weakSelf = self;
     TUIInputMoreCellData *albumData = [[TUIInputMoreCellData alloc] init];
     albumData.priority = 1000;
@@ -135,34 +209,96 @@
       }
     };
     
-    if (!conversationModel) {
-        _builtInInputMoreMenus = @[ albumData, takePictureData, videoData, fileData ];
+    NSMutableArray *formatArray = [NSMutableArray array];
+    if (isNeedAlbum) {
+        [formatArray addObject:albumData];
     }
-    else {
-        NSMutableArray *formatArray = [NSMutableArray array];
-        if (conversationModel.enableAlbum) {
-            [formatArray addObject:albumData];
-        }
-        
-        if (conversationModel.enableTakePhoto) {
-            [formatArray addObject:takePictureData];
-        }
-        
-        if (conversationModel.enableRecordVideo) {
-            [formatArray addObject:videoData];
-        }
-        if (conversationModel.enableFile) {
-            [formatArray addObject:fileData];
-        }
-        _builtInInputMoreMenus = [NSArray arrayWithArray:formatArray];
+    if (isNeedTakePhoto) {
+        [formatArray addObject:takePictureData];
     }
+    if (isNeedRecordVideo) {
+        [formatArray addObject:videoData];
+    }
+    if (isNeedFile) {
+        [formatArray addObject:fileData];
+    }
+    _builtInInputMoreMenus = [NSArray arrayWithArray:formatArray];
+    
     return _builtInInputMoreMenus;
 }
 
-- (NSArray<TUICustomActionSheetItem *> *)customInputMoreActionItemList {
+#pragma mark -- Minimalist
+- (NSArray<TUICustomActionSheetItem *> *)createBuiltInInputMoreActionItemList:(TUIChatConversationModel *)model {
+    if (_builtInInputMoreActionItemList == nil) {
+        self.builtInInputMoreActionItemList = [NSMutableArray array];
+        
+        BOOL showTakePhoto = [TUIChatConfig defaultConfig].showTakePhotoButton && model.enableTakePhoto;
+        BOOL showAlbum = [TUIChatConfig defaultConfig].showAlbumButton && model.enableAlbum;
+        BOOL showRecordVideo = [TUIChatConfig defaultConfig].showRecordVideoButton && model.enableRecordVideo;
+        BOOL showFile = [TUIChatConfig defaultConfig].showFileButton && model.enableFile;
+        
+        __weak typeof(self) weakSelf = self;
+        if (showAlbum) {
+            TUICustomActionSheetItem *album =
+                [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMorePhoto)
+                                                       leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_photo")]
+                                              withActionHandler:^(UIAlertAction *_Nonnull action) {
+                                                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onSelectPhotoMoreCellData)]) {
+                                                    [weakSelf.delegate onSelectPhotoMoreCellData];
+                                                }
+                                              }];
+            album.priority = 1000;
+            [self.builtInInputMoreActionItemList addObject:album];
+        }
+
+        if (showTakePhoto) {
+            TUICustomActionSheetItem *takePhoto =
+                [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMoreCamera)
+                                                       leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_camera")]
+                                              withActionHandler:^(UIAlertAction *_Nonnull action) {
+                                                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onTakePictureMoreCellData)]) {
+                                                    [weakSelf.delegate onTakePictureMoreCellData];
+                                                }
+                                              }];
+            takePhoto.priority = 900;
+            [self.builtInInputMoreActionItemList addObject:takePhoto];
+        }
+
+        if (showRecordVideo) {
+            TUICustomActionSheetItem *recordVideo =
+                [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMoreVideo)
+                                                       leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_video")]
+                                              withActionHandler:^(UIAlertAction *_Nonnull action) {
+                                                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onTakeVideoMoreCellData)]) {
+                                                    [weakSelf.delegate onTakeVideoMoreCellData];
+                                                }
+                                              }];
+            recordVideo.priority = 800;
+            [self.builtInInputMoreActionItemList addObject:recordVideo];
+        }
+ 
+        if (showFile) {
+            TUICustomActionSheetItem *file =
+                [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMoreFile)
+                                                       leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_document")]
+                                              withActionHandler:^(UIAlertAction *_Nonnull action) {
+                                                if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onSelectFileMoreCellData)]) {
+                                                    [weakSelf.delegate onSelectFileMoreCellData];
+                                                }
+                                              }];
+            file.priority = 700;
+            [self.builtInInputMoreActionItemList addObject:file];
+        }
+    }
+    return self.builtInInputMoreActionItemList;
+}
+
+- (NSArray<TUICustomActionSheetItem *> *)createCustomInputMoreActionItemList:(TUIChatConversationModel *)model {
     if (_customInputMoreActionItemList == nil) {
         NSMutableArray *arrayM = [NSMutableArray array];
-        if (TUIChatConfig.defaultConfig.enableWelcomeCustomMessage) {
+        
+        BOOL showCustom = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage && model.enableWelcomeCustomMessage;
+        if (showCustom) {
             __weak typeof(self) weakSelf = self;
             TUICustomActionSheetItem *link =
                 [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMoreLink)
@@ -189,59 +325,16 @@
                                               }];
             [arrayM addObject:link];
         }
+        
+        if (model.customizedNewItemsInMoreMenu.count > 0) {
+            [arrayM addObjectsFromArray:model.customizedNewItemsInMoreMenu];
+        }
         _customInputMoreActionItemList = [NSArray arrayWithArray:arrayM];
     }
     return _customInputMoreActionItemList;
 }
 
-- (NSArray<TUICustomActionSheetItem *> *)builtInInputMoreActionItemList {
-    if (_builtInInputMoreActionItemList == nil) {
-        __weak typeof(self) weakSelf = self;
-        TUICustomActionSheetItem *photo =
-            [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMorePhoto)
-                                                   leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_photo")]
-                                          withActionHandler:^(UIAlertAction *_Nonnull action) {
-                                            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onSelectPhotoMoreCellData)]) {
-                                                [weakSelf.delegate onSelectPhotoMoreCellData];
-                                            }
-                                          }];
-        photo.priority = 1000;
-
-        TUICustomActionSheetItem *camera =
-            [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMoreCamera)
-                                                   leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_camera")]
-                                          withActionHandler:^(UIAlertAction *_Nonnull action) {
-                                            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onTakePictureMoreCellData)]) {
-                                                [weakSelf.delegate onTakePictureMoreCellData];
-                                            }
-                                          }];
-        camera.priority = 900;
-
-        TUICustomActionSheetItem *video =
-            [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMoreVideo)
-                                                   leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_video")]
-                                          withActionHandler:^(UIAlertAction *_Nonnull action) {
-                                            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onTakeVideoMoreCellData)]) {
-                                                [weakSelf.delegate onTakeVideoMoreCellData];
-                                            }
-                                          }];
-        video.priority = 800;
-
-        TUICustomActionSheetItem *file =
-            [[TUICustomActionSheetItem alloc] initWithTitle:TIMCommonLocalizableString(TUIKitMoreFile)
-                                                   leftMark:[UIImage imageNamed:TUIChatImagePath_Minimalist(@"icon_more_document")]
-                                          withActionHandler:^(UIAlertAction *_Nonnull action) {
-                                            if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onSelectFileMoreCellData)]) {
-                                                [weakSelf.delegate onSelectFileMoreCellData];
-                                            }
-                                          }];
-        file.priority = 700;
-        _builtInInputMoreActionItemList = @[ photo, camera, video, file ];
-    }
-    return _builtInInputMoreActionItemList;
-}
-
-
+#pragma mark -- Override
 - (NSString *)abstractDisplayWithMessage:(V2TIMMessage *)msg {
     NSString *desc = @"";
     if (msg.nickName.length > 0) {
@@ -359,109 +452,49 @@
     return stringList;
 }
 
-#pragma mark - CellData
-
-- (NSMutableArray<TUIInputMoreCellData *> *)moreMenuCellDataArray:(NSString *)groupID
-                                                           userID:(NSString *)userID
-                                         conversationModel:(TUIChatConversationModel *)conversationModel
-                                                 actionController:(id<TIMInputViewMoreActionProtocol>)actionController {
-    
-    BOOL isNeedVideoCall = [TUIChatConfig defaultConfig].enableVideoCall && conversationModel.enableVideoCall;
-    BOOL isNeedAudioCall = [TUIChatConfig defaultConfig].enableAudioCall && conversationModel.enableAudioCall;
-    BOOL isNeedWelcomeCustomMessage = [TUIChatConfig defaultConfig].enableWelcomeCustomMessage && conversationModel.enableWelcomeCustomMessage;
-    BOOL isNeedRoom = conversationModel.enabelRoom;
-    BOOL isNeedPoll = conversationModel.enablePoll;
-    BOOL isNeedGroupNote = conversationModel.enableGroupNote;
-
-    self.builtInInputMoreMenus = [self configBuiltInInputMoreMenusWithConversationModel:conversationModel];
-    
-    NSMutableArray *moreMenus = [NSMutableArray array];
-    [moreMenus addObjectsFromArray:self.builtInInputMoreMenus];
-    
-    if (isNeedWelcomeCustomMessage) {
-        if (![self.customInputMoreMenus containsObject:self.welcomeInputMoreMenu]) {
-            [self.customInputMoreMenus addObject:self.welcomeInputMoreMenu];
-        }
+#pragma mark - Getter
+- (TUIInputMoreCellData *)welcomeInputMoreMenu {
+    if (!_welcomeInputMoreMenu) {
+        __weak typeof(self) weakSelf = self;
+        _welcomeInputMoreMenu = [[TUIInputMoreCellData alloc] init];
+        _welcomeInputMoreMenu.priority = 0;
+        _welcomeInputMoreMenu.title = TIMCommonLocalizableString(TUIKitMoreLink);
+        _welcomeInputMoreMenu.image = TUIChatBundleThemeImage(@"chat_more_link_img", @"chat_more_link_img");
+        _welcomeInputMoreMenu.onClicked = ^(NSDictionary *actionParam) {
+          NSString *text = TIMCommonLocalizableString(TUIKitWelcome);
+          NSString *link = TUITencentCloudHomePageEN;
+          NSString *language = [TUIGlobalization tk_localizableLanguageKey];
+          if ([language tui_containsString:@"zh-"]) {
+              link = TUITencentCloudHomePageCN;
+          }
+          NSError *error = nil;
+          NSDictionary *param = @{BussinessID : BussinessID_TextLink, @"text" : text, @"link" : link};
+          NSData *data = [NSJSONSerialization dataWithJSONObject:param options:0 error:&error];
+          if (error) {
+              NSLog(@"[%@] Post Json Error", [weakSelf class]);
+              return;
+          }
+          V2TIMMessage *message = [TUIMessageDataProvider getCustomMessageWithJsonData:data desc:text extension:text];
+          if ([weakSelf.delegate respondsToSelector:@selector(dataProvider:sendMessage:)]) {
+              [weakSelf.delegate dataProvider:weakSelf sendMessage:message];
+          }
+        };
     }
-    [moreMenus addObjectsFromArray:self.customInputMoreMenus];
-
-    // Extension menus
-    NSMutableDictionary *extensionParam = [NSMutableDictionary dictionary];
-    if (userID.length > 0) {
-        extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_UserID] = userID;
-    } else if (groupID.length > 0) {
-        extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_GroupID] = groupID;
-    }
-    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall] = @(!isNeedVideoCall);
-    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall] = @(!isNeedAudioCall);
-    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterRoom]  = @(!isNeedRoom);
-    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterPoll]  = @(!isNeedPoll);
-    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_FilterGroupNote]  = @(!isNeedGroupNote);
-    extensionParam[TUICore_TUIChatExtension_InputViewMoreItem_ActionVC] = actionController;
-    NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_InputViewMoreItem_ClassicExtensionID param:extensionParam];
-    for (TUIExtensionInfo *info in extensionList) {
-        NSAssert(info.icon && info.text && info.onClicked, @"extension for input view is invalid, check icon/text/onclick");
-        if (info.icon && info.text && info.onClicked) {
-            TUIInputMoreCellData *data = [[TUIInputMoreCellData alloc] init];
-            data.priority = info.weight;
-            data.image = info.icon;
-            data.title = info.text;
-            data.onClicked = info.onClicked;
-            [moreMenus addObject:data];
-        }
-    }
-
-    // Sort with priority
-    NSArray *sortedMenus = [moreMenus sortedArrayUsingComparator:^NSComparisonResult(TUIInputMoreCellData *obj1, TUIInputMoreCellData *obj2) {
-      return obj1.priority > obj2.priority ? NSOrderedAscending : NSOrderedDescending;
-    }];
-    return [NSMutableArray arrayWithArray:sortedMenus];
+    return _welcomeInputMoreMenu;
 }
 
-- (NSArray<TUICustomActionSheetItem *> *)getInputMoreActionItemList:(NSString *)userID
-                                                            groupID:(NSString *)groupID
-                                                  conversationModel:(TUIChatConversationModel *)conversationModel
-                                                             pushVC:(UINavigationController *)pushVC
-                                                   actionController:(id<TIMInputViewMoreActionProtocol>)actionController {
-    NSMutableArray *result = [NSMutableArray array];
-    [result addObjectsFromArray:self.builtInInputMoreActionItemList];
-    [result addObjectsFromArray:self.customInputMoreActionItemList];
+- (NSMutableArray<TUIInputMoreCellData *> *)customInputMoreMenus {
+    if (!_customInputMoreMenus) {
+        _customInputMoreMenus = [NSMutableArray array];
+    }
+    return _customInputMoreMenus;
+}
 
-    // Extension items
-    NSMutableArray<TUICustomActionSheetItem *> *items = [NSMutableArray array];
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    if (userID.length > 0) {
-        param[TUICore_TUIChatExtension_InputViewMoreItem_UserID] = userID;
-    } else if (groupID.length > 0) {
-        param[TUICore_TUIChatExtension_InputViewMoreItem_GroupID] = groupID;
+- (NSArray<TUIInputMoreCellData *> *)builtInInputMoreMenus {
+    if (_builtInInputMoreMenus == nil) {
+        return  [self createBuiltInInputMoreMenusWithConversationModel:nil];
     }
-    param[TUICore_TUIChatExtension_InputViewMoreItem_FilterVideoCall] = @(!TUIChatConfig.defaultConfig.enableVideoCall);
-    param[TUICore_TUIChatExtension_InputViewMoreItem_FilterAudioCall] = @(!TUIChatConfig.defaultConfig.enableAudioCall);
-    if (pushVC) {
-        param[TUICore_TUIChatExtension_InputViewMoreItem_PushVC] = pushVC;
-    }
-    param[TUICore_TUIChatExtension_InputViewMoreItem_ActionVC] = actionController;
-    NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIChatExtension_InputViewMoreItem_MinimalistExtensionID param:param];
-    for (TUIExtensionInfo *info in extensionList) {
-        if (info.icon && info.text && info.onClicked) {
-            TUICustomActionSheetItem *item = [[TUICustomActionSheetItem alloc] initWithTitle:info.text
-                                                                                    leftMark:info.icon
-                                                                           withActionHandler:^(UIAlertAction *_Nonnull action) {
-                                                                             info.onClicked(param);
-                                                                           }];
-            item.priority = info.weight;
-            [items addObject:item];
-        }
-    }
-    if (items.count > 0) {
-        [result addObjectsFromArray:items];
-    }
-
-    // Sort with priority
-    NSArray *sorted = [result sortedArrayUsingComparator:^NSComparisonResult(TUICustomActionSheetItem *obj1, TUICustomActionSheetItem *obj2) {
-      return obj1.priority > obj2.priority ? NSOrderedAscending : NSOrderedDescending;
-    }];
-    return sorted;
+    return _builtInInputMoreMenus;
 }
 
 @end

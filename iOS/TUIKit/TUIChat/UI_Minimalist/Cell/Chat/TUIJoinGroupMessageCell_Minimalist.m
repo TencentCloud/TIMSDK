@@ -44,7 +44,8 @@
     paragraphStyle.alignment = NSTextAlignmentCenter;
     NSDictionary *attributeDict = @{
         NSFontAttributeName : self.messageLabel.font,
-        NSForegroundColorAttributeName : [UIColor d_systemGrayColor],
+        NSForegroundColorAttributeName : self.messageLabel.textColor,
+        NSBackgroundColorAttributeName : self.messageLabel.backgroundColor,
         NSParagraphStyleAttributeName : paragraphStyle
     };
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];

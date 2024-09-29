@@ -15,6 +15,7 @@
 #import "TUIContactAvatarViewController.h"
 #import "TUIContactConversationCellData.h"
 #import "TUIFriendRequestViewController.h"
+#import "TUIContactConfig.h"
 
 @interface TUIUserProfileController () <TUIContactProfileCardDelegate>
 @property NSMutableArray<NSArray *> *dataList;
@@ -96,35 +97,37 @@
 
     if (self.actionType == PCA_ADD_FRIEND) {
         [[V2TIMManager sharedInstance] checkFriend:@[ self.userFullInfo.userID ]
-            checkType:V2TIM_FRIEND_TYPE_BOTH
-            succ:^(NSArray<V2TIMFriendCheckResult *> *resultList) {
-              if (resultList.count == 0) {
-                  return;
-              }
-              V2TIMFriendCheckResult *result = resultList.firstObject;
-              if (result.relationType == V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST || result.relationType == V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY) {
-                  return;
-              }
-
-              [self.dataList addObject:({
-                                 NSMutableArray *inlist = @[].mutableCopy;
-                                 [inlist addObject:({
-                                             TUIButtonCellData *data = TUIButtonCellData.new;
-                                             data.title = TIMCommonLocalizableString(FriendAddTitle);
-                                             data.style = ButtonWhite;
-                                             data.cbuttonSelector = @selector(onAddFriend);
-                                             data.reuseId = @"ButtonCell";
-                                             data.hideSeparatorLine = YES;
-                                             data;
-                                         })];
-                                 inlist;
-                             })];
-
-              [self.tableView reloadData];
+                                         checkType:V2TIM_FRIEND_TYPE_BOTH
+                                              succ:^(NSArray<V2TIMFriendCheckResult *> *resultList) {
+            if (resultList.count == 0) {
+                return;
             }
-            fail:^(int code, NSString *desc) {
-              NSLog(@"");
-            }];
+            V2TIMFriendCheckResult *result = resultList.firstObject;
+            if (result.relationType == V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST ||
+                result.relationType == V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY) {
+                return;
+            }
+
+            if (![TUIContactConfig.sharedConfig isItemHiddenInContactConfig:TUIContactConfigItem_AddFriend]) {
+                [self.dataList addObject:({
+                    NSMutableArray *inlist = @[].mutableCopy;
+                    [inlist addObject:({
+                        TUIButtonCellData *data = TUIButtonCellData.new;
+                        data.title = TIMCommonLocalizableString(FriendAddTitle);
+                        data.style = ButtonWhite;
+                        data.cbuttonSelector = @selector(onAddFriend);
+                        data.reuseId = @"ButtonCell";
+                        data.hideSeparatorLine = YES;
+                        data;
+                    })];
+                    inlist;
+                })];
+                [self.tableView reloadData];
+            }
+        }
+        fail:^(int code, NSString *desc) {
+            NSLog(@"");
+        }];
     }
 
     if (self.actionType == PCA_PENDENDY_CONFIRM) {

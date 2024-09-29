@@ -99,11 +99,13 @@ extension MediaSettingView: UITableViewDelegate {
         return 55.scale375()
     }
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let view = view as? UITableViewHeaderFooterView else { return }
-        view.textLabel?.textColor = UIColor(0xD8D8D8)
-        view.textLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        view.textLabel?.textAlignment = isRTL ? .right : .left
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerLabel = UILabel()
+        headerLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        headerLabel.textColor = UIColor(0xD8D8D8)
+        headerLabel.textAlignment = isRTL ? .right : .left
+        headerLabel.text = viewModel.topItems[safe: section]
+        return headerLabel
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -122,11 +124,6 @@ extension MediaSettingView: UITableViewDelegate {
                              cornerRadii: CGSize(width: 12, height: 12))
         }
     }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.topItems[safe: section]
-    }
-    
 }
 
 extension MediaSettingView: MediaSettingViewEventResponder {

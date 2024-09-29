@@ -20,7 +20,7 @@ struct ConferenceInfo {
     var timeZone: TimeZone = .current
     var attendeeListResult = AttendeeListResult()
     var durationTime: UInt = 0
-    var isEncrypted: Bool = false
+    var reminderSecondsBeforeStart = 0
     // MARK: basic info
     var basicInfo = RoomInfo()
     
@@ -31,6 +31,7 @@ struct ConferenceInfo {
         self.scheduleEndTime = conferenceInfo.scheduleEndTime
         self.durationTime = self.scheduleEndTime - self.scheduleStartTime
         self.status = conferenceInfo.status
+        self.reminderSecondsBeforeStart = conferenceInfo.reminderSecondsBeforeStart
         self.basicInfo = RoomInfo(with: conferenceInfo.basicRoomInfo)
     }
 }
@@ -66,6 +67,7 @@ extension TUIConferenceInfo {
         self.scheduleEndTime = self.scheduleStartTime + conferenceInfo.durationTime
         self.scheduleAttendees = conferenceInfo.attendeeListResult.attendeeList.map { $0.userId }
         self.basicRoomInfo =  TUIRoomInfo(roomInfo: conferenceInfo.basicInfo)
+        self.reminderSecondsBeforeStart = conferenceInfo.reminderSecondsBeforeStart
     }
 }
 

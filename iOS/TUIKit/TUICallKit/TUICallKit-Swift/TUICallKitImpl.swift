@@ -19,6 +19,7 @@ import TXLiteAVSDK_Professional
 class TUICallKitImpl: TUICallKit {
     static let instance = TUICallKitImpl()
     let selfUserCallStatusObserver = Observer()
+    let callingBellFeature = CallingBellFeature()
     
     override init() {
         super.init()

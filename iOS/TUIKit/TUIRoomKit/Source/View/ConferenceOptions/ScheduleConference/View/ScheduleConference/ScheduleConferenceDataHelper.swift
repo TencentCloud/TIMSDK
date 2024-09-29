@@ -12,11 +12,12 @@ class ScheduleConferenceDataHelper {
     open class func generateScheduleConferenceData(route: Route,
                                                    store: ScheduleConferenceStore,
                                                    operation: ConferenceStore,
-                                                   viewController: MemberSelectionDelegate? = nil) -> [Int: [CellConfigItem]] {
+                                                   viewController: ContactViewSelectDelegate? = nil) -> [Int: [CellConfigItem]] {
         var menus: [Int:[CellConfigItem]] = [:]
         menus[0] = getFirstSectionMenus(route: route, store: store, viewController: viewController)
         menus[1] = getSecondSectionMenus(route: route, store: store)
-        menus[2] = getThirdSectionMenus(route: route, store: store, operation: operation)
+        menus[2] = getThirdSectionMenus(route: route, store: store)
+        menus[3] = getFourthSectionMenus(route: route, store: store, operation: operation)
         return menus
     }
 }
@@ -24,7 +25,7 @@ class ScheduleConferenceDataHelper {
 // MARK: - private function.
 extension ScheduleConferenceDataHelper {
     
-    class func getFirstSectionMenus(route: Route, store: ScheduleConferenceStore, viewController: MemberSelectionDelegate?) -> [CellConfigItem] {
+    class func getFirstSectionMenus(route: Route, store: ScheduleConferenceStore, viewController: ContactViewSelectDelegate?) -> [CellConfigItem] {
         var array: [CellConfigItem] = []
         array.append(getConferenceNameItem(route: route, store: store))
         array.append(getConferenceTypeItem(route: route, store: store))
@@ -37,12 +38,21 @@ extension ScheduleConferenceDataHelper {
     
     class func getSecondSectionMenus(route: Route, store: ScheduleConferenceStore) -> [CellConfigItem] {
         var array: [CellConfigItem] = []
+        array.append(getEncryptRoomItem(store: store))
+        if store.conferenceInfo.basicInfo.isPasswordEnabled {
+            array.append(getRoomPasswordItem(store: store))
+        }
+        return array
+    }
+    
+    class func getThirdSectionMenus(route: Route, store: ScheduleConferenceStore) -> [CellConfigItem] {
+        var array: [CellConfigItem] = []
         array.append(getMuteAllItem(route: route, store: store))
         array.append(getFreezeVideoItem(route: route, store: store))
         return array
     }
     
-    class func getThirdSectionMenus(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore) -> [CellConfigItem] {
+    class func getFourthSectionMenus(route: Route, store: ScheduleConferenceStore, operation: ConferenceStore) -> [CellConfigItem] {
         return [getbookItem(route: route, store: store, operation: operation)]
     }
     
@@ -75,7 +85,7 @@ extension ScheduleConferenceDataHelper {
         conferenceTypeItem.selectClosure = {
             let view = RoomTypeView()
             view.dismissAction = {
-                route.dismiss()
+                route.dismiss(animated: true)
             }
             route.present(route: .popup(view: view))
         }
@@ -102,7 +112,7 @@ extension ScheduleConferenceDataHelper {
             let view = TimePickerView()
             view.pickerDate = Date(timeIntervalSince1970: TimeInterval(store.conferenceInfo.scheduleStartTime))
             view.dismissAction = {
-                route.dismiss()
+                route.dismiss(animated: true)
             }
             route.present(route: .popup(view: view))
         }
@@ -126,7 +136,7 @@ extension ScheduleConferenceDataHelper {
         durationTimeItem.selectClosure = {
             let view = DurationPickerView()
             view.dismissAction = {
-                route.dismiss()
+                route.dismiss(animated: true)
             }
             route.present(route: .popup(view: view))
         }
@@ -165,14 +175,15 @@ extension ScheduleConferenceDataHelper {
         return timeZoneItem
     }
     
-    class func getParticipatingMembersItem(route: Route, store: ScheduleConferenceStore, viewController: MemberSelectionDelegate? = nil) -> ListItem {
+    class func getParticipatingMembersItem(route: Route, store: ScheduleConferenceStore, viewController: ContactViewSelectDelegate? = nil) -> ListItem {
         var participatingMembersItem = ListItem(title: .participatingMembersText)
         participatingMembersItem.showButton = true
         participatingMembersItem.buttonIcon = "room_right_arrow1"
-        participatingMembersItem.selectClosure = {
+        participatingMembersItem.selectClosure = { [weak viewController] in
             guard let vc = viewController else { return }
             let users = store.conferenceInfo.attendeeListResult.attendeeList.map { $0.convertToUser() }
-            route.showMemberSelectView(delegte: vc, selectedlist: users)
+            let participants = ConferenceParticipants(selectedList: users)
+            route.showContactView(delegate: vc, participants: participants)
         }
         participatingMembersItem.bindStateClosure = { cell, cancellableSet in
             let selector = Selector(keyPath: \ConferenceInfo.attendeeListResult.attendeeList)
@@ -199,10 +210,10 @@ extension ScheduleConferenceDataHelper {
     
     class func getEncryptRoomItem(store: ScheduleConferenceStore) -> SwitchItem {
         var encryptRoomItem = SwitchItem(title: .encryptTheRoomText)
-        encryptRoomItem.isOn = store.conferenceInfo.isEncrypted
+        encryptRoomItem.isOn = store.conferenceInfo.basicInfo.isPasswordEnabled
         encryptRoomItem.selectClosure = {
             var conferenceInfo = store.conferenceInfo
-            conferenceInfo.isEncrypted = !conferenceInfo.isEncrypted
+            conferenceInfo.basicInfo.isPasswordEnabled = !store.conferenceInfo.basicInfo.isPasswordEnabled
             store.update(conference: conferenceInfo)
         }
         return encryptRoomItem
@@ -210,6 +221,9 @@ extension ScheduleConferenceDataHelper {
     
     class func getRoomPasswordItem(store: ScheduleConferenceStore) -> TextFieldItem {
         var roomPasswordItem = TextFieldItem(title: .roomPasswordText, content: store.conferenceInfo.basicInfo.password)
+        roomPasswordItem.keyboardType = .numberPad
+        roomPasswordItem.maxLengthInBytes = 6
+        roomPasswordItem.placeholder = .enterJoinRoomPassword
         roomPasswordItem.saveTextClosure = { text in
             var conferenceInfo = store.conferenceInfo
             conferenceInfo.basicInfo.password = text
@@ -226,6 +240,17 @@ extension ScheduleConferenceDataHelper {
             conferenceInfo.basicInfo.isMicrophoneDisableForAllUser = !conferenceInfo.basicInfo.isMicrophoneDisableForAllUser
             store.update(conference: conferenceInfo)
         }
+        muteAllItem.bindStateClosure = { cell, cancellableSet in
+            let selector = Selector(keyPath: \ConferenceInfo.basicInfo.isMicrophoneDisableForAllUser)
+            store.select(selector)
+                .receive(on: RunLoop.main)
+                .sink { isMicrophoneDisableForAllUser in
+                    if let cell = cell as? SwitchCell {
+                        cell.rightSwitch.isOn = isMicrophoneDisableForAllUser
+                    }
+                }
+                .store(in: &cancellableSet)
+        }
         return muteAllItem
     }
     
@@ -237,6 +262,17 @@ extension ScheduleConferenceDataHelper {
             conferenceInfo.basicInfo.isCameraDisableForAllUser = !conferenceInfo.basicInfo.isCameraDisableForAllUser
             store.update(conference: conferenceInfo)
         }
+        freezeVideoItem.bindStateClosure = { cell, cancellableSet in
+            let selector = Selector(keyPath: \ConferenceInfo.basicInfo.isCameraDisableForAllUser)
+            store.select(selector)
+                .receive(on: RunLoop.main)
+                .sink { isCameraDisableForAllUser in
+                    if let cell = cell as? SwitchCell {
+                        cell.rightSwitch.isOn = isCameraDisableForAllUser
+                    }
+                }
+                .store(in: &cancellableSet)
+        }
         return freezeVideoItem
     }
     
@@ -245,14 +281,32 @@ extension ScheduleConferenceDataHelper {
         bookItem.titleColor = UIColor(0xFFFFFF)
         bookItem.backgroudColor = UIColor(0x1C66E5)
         bookItem.selectClosure = {
+            guard TimeInterval(store.conferenceInfo.scheduleStartTime) >= Date().timeIntervalSince1970 else {
+                operation.dispatch(action: ViewActions.showToast(payload: ToastInfo(message: .startTimeCannotEarlierCurrentTime)))
+                return
+            }
             guard store.conferenceInfo.basicInfo.name.count > 0 else {
                 operation.dispatch(action: ViewActions.showToast(payload: ToastInfo(message: .nameCannotBeEmptyText)))
+                return
+            }
+            guard checkPasswordFormat(conferenceInfo: store.conferenceInfo) else {
+                operation.dispatch(action: ViewActions.showToast(payload: ToastInfo(message: .passwordFormatIsIncorrect)))
                 return
             }
             let conferenceInfo = TUIConferenceInfo(conferenceInfo: store.conferenceInfo)
             operation.dispatch(action: ConferenceListActions.scheduleConference(payload: conferenceInfo))
         }
         return bookItem
+    }
+    
+    class func checkPasswordFormat(conferenceInfo: ConferenceInfo) -> Bool {
+        if conferenceInfo.basicInfo.isPasswordEnabled {
+            let password = conferenceInfo.basicInfo.password
+            let passwordLength = 6
+            return password.count == passwordLength && password.isStringOnlyDigits()
+        } else {
+            return true
+        }
     }
     
     class func getTimeIntervalString(_ time: TimeInterval, timeZone: TimeZone) -> String {
@@ -293,8 +347,11 @@ private extension String {
     static let participatingMembersText = localized("Participating members")
     static let addToText = localized("Add to")
     static let encryptTheRoomText = localized("Encrypt the room")
-    static let roomPasswordText = localized("Room password")
+    static let roomPasswordText = localized("Room Password")
     static let bookRoomText = localized("Schedule Room")
     static let nameCannotBeEmptyText = localized("Conference name cannot be empty!")
     static let participantsNumber = localized("xx/300 people")
+    static let passwordFormatIsIncorrect = localized("Your room password format is incorrect, please check it")
+    static let enterJoinRoomPassword = localized("Enter 6-digit password")
+    static let startTimeCannotEarlierCurrentTime = localized("The start time cannot be earlier than the current time")
 }

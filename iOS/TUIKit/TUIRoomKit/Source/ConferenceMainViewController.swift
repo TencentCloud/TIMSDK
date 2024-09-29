@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import Combine
+import Factory
+import TUICore
 
 @objcMembers public class ConferenceMainViewController: UIViewController {
+    private var cancellableSet = Set<AnyCancellable>()
     private var viewModel: ConferenceMainViewModel = ConferenceMainViewModel()
     public override var shouldAutorotate: Bool {
         return true
@@ -31,6 +35,8 @@ import UIKit
             perform(selector)
         }
 #endif
+        viewModel.onViewDidLoadAction()
+        subscribeToast()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -44,23 +50,61 @@ import UIKit
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    public func quickStartConference(conferenceId: String) {
-        viewModel.quickStartConference(conferenceId: conferenceId)
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        viewStore.updateInternalCreation(isInternalCreation: false)
     }
     
-    public func joinConference(conferenceId: String) {
-        viewModel.joinConference(conferenceId: conferenceId)
+    func quickStartConference() {
+        viewModel.quickStartConference()
     }
     
-    public func setConferenceParams(params: ConferenceParams) {
-        viewModel.setConferenceParams(params: params)
+    func joinConference() {
+        viewModel.joinConference()
     }
     
-    public func setConferenceObserver(observer: ConferenceObserver) {
-        viewModel.setConferenceObserver(observer: observer)
+    public func setStartConferenceParams(params: StartConferenceParams) {
+        viewModel.setStartConferenceParams(params: params)
     }
     
+    public func setJoinConferenceParams(params: JoinConferenceParams) {
+        viewModel.setJoinConferenceParams(params: params)
+    }
+        
+    var startConferenceParams: StartConferenceParams? {
+        get {
+            return viewModel.startConferenceParams
+        }
+    }
+    
+    var joinConferenceParams: JoinConferenceParams? {
+        get {
+            return viewModel.joinConferenceParams
+        }
+    }
+
+    @Injected(\.conferenceMainViewStore) private var viewStore
+    @Injected(\.conferenceStore) var operation: ConferenceStore
     deinit {
         debugPrint("deinit \(self)")
+    }
+}
+
+extension ConferenceMainViewController {
+    private func subscribeToast() {
+        operation.toastSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] toast in
+                guard let self = self else { return }
+                var position = TUICSToastPositionBottom
+                switch toast.position {
+                case .center:
+                    position = TUICSToastPositionCenter
+                default:
+                    break
+                }
+                self.view.makeToast(toast.message, duration: toast.duration, position: position)
+            }
+            .store(in: &cancellableSet)
     }
 }

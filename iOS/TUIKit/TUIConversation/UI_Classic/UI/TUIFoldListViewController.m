@@ -25,12 +25,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.conv = [[TUIConversationListController alloc] init];
+    self.conv.isShowConversationGroup = NO;
+    self.conv.isShowBanner = NO;
     self.conv.dataProvider = [[TUIFoldConversationListDataProvider alloc] init];
     self.conv.dataProvider.delegate = (id)self.conv;
     self.conv.tableViewForAll.tipsMsgWhenNoConversation = TIMCommonLocalizableString(TUIKitContactNoGroupChats);
     self.conv.tableViewForAll.disableMoreActionExtension = YES;
-    self.conv.isShowConversationGroup = NO;
-    self.conv.isShowBanner = NO;
     self.conv.delegate = self;
     [self addChildViewController:self.conv];
     [self.view addSubview:self.conv.view];
