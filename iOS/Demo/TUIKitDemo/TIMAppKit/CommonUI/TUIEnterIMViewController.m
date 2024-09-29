@@ -224,6 +224,7 @@ static BOOL g_hasAddedCustomFace = NO;
     }
     TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus];
     TUIChatConfig.defaultConfig.enableMultiDeviceForCall = YES;
+    TUIChatConfig.defaultConfig.enableVirtualBackgroundForCall = YES;
     TUIConfig.defaultConfig.avatarType = TAvatarTypeRadiusCorner;
 }
 
@@ -237,6 +238,7 @@ static BOOL g_hasAddedCustomFace = NO;
     }
     TUIConfig.defaultConfig.displayOnlineStatusIcon = [[NSUserDefaults standardUserDefaults] boolForKey:kEnableOnlineStatus_mini];
     TUIChatConfig.defaultConfig.enableMultiDeviceForCall = YES;
+    TUIChatConfig.defaultConfig.enableVirtualBackgroundForCall = YES;
     TUIConfig.defaultConfig.avatarType = TAvatarTypeRounded;
 }
 

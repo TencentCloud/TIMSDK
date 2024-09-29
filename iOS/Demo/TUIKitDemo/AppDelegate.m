@@ -53,6 +53,8 @@
 @property (nonatomic, strong) UITabBarController *preloadMainVC;
 @property (nonatomic, strong) NSString *userID;
 @property (nonatomic, strong) NSString *userSig;
+
+@property (nonatomic, strong) NSMutableDictionary *clickNotificationInfo;
 @end
 
 @implementation AppDelegate
@@ -217,6 +219,7 @@
     [[V2TIMManager sharedInstance] setAPNSListener:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateMarkUnreadCount:) name:TUIKitNotification_onConversationMarkUnreadCountChanged object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLoginSucc) name:TUILoginSuccessNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onLogoutSucc) name:TUILogoutSuccessNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onDisplayCallsRecordForMinimalist:) name:kEnableCallsRecord_mini object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onDisplayCallsRecordForClassic:) name:kEnableCallsRecord object:nil];
@@ -836,8 +839,8 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
 }
 
 #pragma mark - TIMPush
-// TIMPush 
-- (int)offlinePushCertificateID {
+// TIMPush
+- (int)businessID {
     
     NSInteger kAPNSBusiIdByType =  [NSUserDefaults.standardUserDefaults integerForKey:@"kAPNSBusiIdByType"];
     if (kAPNSBusiIdByType > 0) {
@@ -869,6 +872,46 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
  */
 
 - (void)navigateToBuiltInChatViewController:(NSString *)userID groupID:(NSString *)groupID {
+    if ([V2TIMManager sharedInstance].getLoginStatus == V2TIM_STATUS_LOGINED ) {
+        // custom operation such as navigate chatVC;
+        [self navigateToBuiltInChatViewControllerImpl:userID groupID:groupID];
+    }
+    else {
+        //Save the information and click on it. Jump after login is complete.
+        //Wait for TUILoginSuccessNotification to be notified
+        if (userID.length > 0) {
+            [self.clickNotificationInfo setObject:userID forKey:@"userID"];
+        }
+        if (groupID.length > 0) {
+            [self.clickNotificationInfo setObject:groupID forKey:@"groupID"];
+        }
+        
+    }
+}
+
+- (void)onLoginSucc {
+    //Handling push messages from cold starts
+    if (self.clickNotificationInfo && [self.clickNotificationInfo isKindOfClass:[NSDictionary class]]) {
+        NSString *userID = nil;
+        if ([self.clickNotificationInfo objectForKey:@"userID"]) {
+            userID = [self.clickNotificationInfo objectForKey:@"userID"];
+        }
+        
+        NSString *groupID = nil;
+        if ([self.clickNotificationInfo objectForKey:@"groupID"]) {
+            groupID = [self.clickNotificationInfo objectForKey:@"groupID"];
+        }
+        
+        if (userID || groupID ) {
+            [self navigateToBuiltInChatViewControllerImpl:userID groupID:groupID];
+            //clear
+            [self.clickNotificationInfo removeAllObjects];
+        }
+    }
+}
+
+- (void)navigateToBuiltInChatViewControllerImpl:(NSString *)userID
+                                        groupID:(NSString *)groupID {
     UITabBarController *tab = [self getMainController];
     if (![tab isKindOfClass: UITabBarController.class]) {
         //Logging in
@@ -891,6 +934,14 @@ typedef void (^confirmHandler)(UIAlertAction *action, NSString *content);
     if ([vc respondsToSelector:NSSelectorFromString(@"pushToChatViewController:userID:")]) {
         [vc performSelector:NSSelectorFromString(@"pushToChatViewController:userID:") withObject:groupID withObject:userID];
     }
+    
+}
+
+- (NSMutableDictionary *)clickNotificationInfo {
+    if (!_clickNotificationInfo) {
+        _clickNotificationInfo = [[NSMutableDictionary alloc] init];
+    }
+    return _clickNotificationInfo;
 }
 
 @end
