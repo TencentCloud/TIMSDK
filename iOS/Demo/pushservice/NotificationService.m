@@ -27,7 +27,7 @@
     NSString * appGroupID = kTIMPushAppGorupKey;
     
     __weak typeof(self) weakSelf = self;
-    [TIMPushManager onReceiveNotificationRequest:request inAppGroupID:appGroupID callback:^(UNNotificationContent *content) {
+    [TIMPushManager handleNotificationServiceRequest:request appGroupID:appGroupID callback:^(UNNotificationContent *content) {
         weakSelf.bestAttemptContent = [content mutableCopy];
         // Modify the notification content here...
         // self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
