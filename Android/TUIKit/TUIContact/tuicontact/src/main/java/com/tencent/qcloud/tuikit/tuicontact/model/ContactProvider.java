@@ -168,14 +168,13 @@ public class ContactProvider {
     }
 
     public void addFriend(String userId, String addWording, IUIKitCallback<Pair<Integer, String>> callback) {
-        addFriend(userId, addWording, null, null, callback);
+        addFriend(userId, addWording, null, callback);
     }
 
-    public void addFriend(String userId, String addWording, String friendGroup, String remark, IUIKitCallback<Pair<Integer, String>> callback) {
+    public void addFriend(String userId, String addWording, String remark, IUIKitCallback<Pair<Integer, String>> callback) {
         V2TIMFriendAddApplication v2TIMFriendAddApplication = new V2TIMFriendAddApplication(userId);
         v2TIMFriendAddApplication.setAddWording(addWording);
         v2TIMFriendAddApplication.setAddSource("android");
-        v2TIMFriendAddApplication.setFriendGroup(friendGroup);
         v2TIMFriendAddApplication.setFriendRemark(remark);
         V2TIMManager.getFriendshipManager().addFriend(v2TIMFriendAddApplication, new V2TIMValueCallback<V2TIMFriendOperationResult>() {
             @Override

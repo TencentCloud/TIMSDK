@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
+import androidx.fragment.app.Fragment;
+
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TUIForwardSelectMinimalistFragment extends BaseFragment {
+public class TUIForwardSelectMinimalistFragment extends Fragment {
     private static final String TAG = TUIForwardSelectMinimalistFragment.class.getSimpleName();
 
     private View mBaseView;

@@ -21,6 +21,7 @@ import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
+import com.tencent.qcloud.tuikit.tuicontact.config.minimalistui.TUIContactConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,13 +95,17 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             itemViewHolder.unreadText.setVisibility(View.GONE);
             itemViewHolder.userStatusView.setVisibility(View.GONE);
             int radius = ScreenUtil.dip2px(20);
+            if (TUIContactConfigMinimalist.getContactAvatarRadius() != TUIContactConfigMinimalist.UNDEFINED) {
+                radius = TUIContactConfigMinimalist.getContactAvatarRadius();
+            }
+            itemViewHolder.avatar.setRadius(radius);
             if (isGroupList) {
                 int defaultIconResId = TUIUtil.getDefaultGroupIconResIDByGroupType(itemViewHolder.itemView.getContext(), contactBean.getGroupType());
                 GlideEngine.loadUserIcon(itemViewHolder.avatar, contactBean.getAvatarUrl(), defaultIconResId, radius);
             } else {
                 GlideEngine.loadUserIcon(itemViewHolder.avatar, contactBean.getAvatarUrl(), radius);
             }
-            if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfig.getInstance().isShowUserStatus()) {
+            if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfigMinimalist.isShowUserOnlineStatusIcon()) {
                 itemViewHolder.userStatusView.setVisibility(View.VISIBLE);
                 if (contactBean.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
                     itemViewHolder.userStatusView.setBackgroundResource(

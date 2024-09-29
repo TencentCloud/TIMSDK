@@ -29,11 +29,6 @@ public class C2CChatPresenter extends ChatPresenter {
 
     private TypingListener typingListener;
 
-    public C2CChatPresenter() {
-        super();
-        TUIChatLog.i(TAG, "C2CChatPresenter Init");
-    }
-
     public void initListener() {
         chatEventListener = new C2CChatEventListener() {
             @Override

@@ -28,14 +28,14 @@ public abstract class TUIBaseChatActivity extends BaseLightActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
-        chat(getIntent());
+        initChat(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         TUIChatLog.i(TAG, "onNewIntent");
         super.onNewIntent(intent);
-        chat(intent);
+        initChat(intent);
     }
 
     @Override
@@ -44,7 +44,7 @@ public abstract class TUIBaseChatActivity extends BaseLightActivity {
         super.onResume();
     }
 
-    private void chat(Intent intent) {
+    private void initChat(Intent intent) {
         Bundle bundle = intent.getExtras();
         TUIChatLog.i(TAG, "bundle: " + bundle + " intent: " + intent);
 

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThemeSelectActivity extends BaseLightActivity {
-    public static final String THEME = "language";
 
     private TitleBarLayout titleBarLayout;
     private RecyclerView recyclerView;

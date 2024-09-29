@@ -26,7 +26,6 @@ public class ConferenceEventCenter {
         LOCAL_CAMERA_STATE_CHANGED,
         LOCAL_SCREEN_STATE_CHANGED,
         LOCAL_AUDIO_STATE_CHANGED,
-        LOCAL_AUDIO_ROUTE_CHANGED,
         ALL_USER_MICROPHONE_DISABLE_CHANGED,
         ALL_USER_CAMERA_DISABLE_CHANGED,
         SEND_MESSAGE_FOR_ALL_USER_DISABLE_CHANGED,
@@ -51,8 +50,6 @@ public class ConferenceEventCenter {
         REMOTE_USER_TAKE_SEAT,
         REMOTE_USER_LEAVE_SEAT,
         REQUEST_RECEIVED,
-        RECEIVE_TEXT_MESSAGE,
-        RECEIVE_CUSTOM_MESSAGE,
         KICKED_OFF_SEAT,
         USER_TAKE_SEAT_REQUEST_ADD,
         USER_TAKE_SEAT_REQUEST_REMOVE,
@@ -80,7 +77,6 @@ public class ConferenceEventCenter {
         public static final String DISMISS_USER_MANAGEMENT       = "DISMISS_USER_MANAGEMENT";
         public static final String SHOW_EXIT_ROOM_VIEW           = "SHOW_EXIT_ROOM_VIEW";
         public static final String DISMISS_EXIT_ROOM_VIEW        = "DISMISS_EXIT_ROOM_VIEW";
-        public static final String SHOW_MEETING_INFO             = "SHOW_MEETING_INFO";
         public static final String DISMISS_MEETING_INFO          = "DISMISS_MEETING_INFO";
         public static final String SHOW_USER_LIST                = "SHOW_USER_LIST";
         public static final String DISMISS_USER_LIST             = "DISMISS_USER_LIST";
@@ -94,6 +90,9 @@ public class ConferenceEventCenter {
         public static final String DISMISS_INVITE_PANEL          = "DISMISS_INVITE_PANEL";
         public static final String SHOW_INVITE_PANEL_SECOND      = "SHOW_INVITE_PANEL_SECOND";
         public static final String DISMISS_INVITE_PANEL_SECOND   = "DISMISS_INVITE_PANEL_SECOND";
+        public static final String SHOW_SHARE_ROOM_PANEL         = "SHOW_SHARE_ROOM_PANEL";
+        public static final String DISMISS_SHARE_ROOM_PANEL      = "DISMISS_SHARE_ROOM_PANEL";
+        public static final String SHOW_SELECT_USER_TO_CALL_VIEW = "SHOW_SELECT_USER_TO_CALL_VIEW";
         public static final String SHOW_OWNER_EXIT_ROOM_PANEL    = "SHOW_OWNER_EXIT_ROOM_PANEL";
         public static final String DISMISS_OWNER_EXIT_ROOM_PANEL = "DISMISS_OWNER_EXIT_ROOM_PANEL";
 
@@ -106,6 +105,8 @@ public class ConferenceEventCenter {
         public static final String DISMISS_MAIN_ACTIVITY = "DISMISS_MAIN_ACTIVITY";
         public static final String ENABLE_FLOAT_CHAT     = "ENABLE_FLOAT_CHAT";
         public static final String SCHEDULED_CONFERENCE_SUCCESS = "SCHEDULED_CONFERENCE_SUCCESS";
+
+        public static final String DESTROY_INVITATION_RECEIVED_ACTIVITY = "DESTROY_INVITATION_RECEIVED_ACTIVITY";
     }
 
     public interface RoomEngineEventResponder {

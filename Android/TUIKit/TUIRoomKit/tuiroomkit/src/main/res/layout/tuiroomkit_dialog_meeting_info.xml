@@ -161,7 +161,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/tuiroomkit_root_room_link_layout"
+        android:id="@+id/tuiroomkit_rl_room_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -169,6 +169,64 @@
         android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_rl_room_id">
+
+        <TextView
+            android:id="@+id/tv_room_password_title"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tuiroomkit_room_password_title"
+            android:textColor="@color/tuiroomkit_color_info_title"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_room_password_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toStartOf="@+id/btn_copy_room_password"
+            android:layout_toEndOf="@id/tv_room_password_title"
+            android:gravity="center_vertical"
+            android:textColor="@color/tuiroomkit_color_white"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/btn_copy_room_password"
+            android:layout_width="60dp"
+            android:layout_height="26dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/tuiroomkit_bg_copy_grey"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="6dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/tuiroomkit_transparent"
+                android:src="@drawable/tuiroomkit_ic_copy_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="12sp"
+                android:textColor="#B2BBD1"
+                android:text="@string/tuiroomkit_meeting_info_copy" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tuiroomkit_root_room_link_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_rl_room_password">
 
         <TextView
             android:id="@+id/tv_room_link_title"
@@ -182,8 +240,8 @@
             android:id="@+id/tv_room_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="13dp"
             android:layout_toStartOf="@+id/btn_copy_room_link"
             android:layout_toEndOf="@id/tv_room_link_title"
             android:ellipsize="end"
@@ -220,5 +278,20 @@
                 android:text="@string/tuiroomkit_meeting_info_copy" />
         </LinearLayout>
     </RelativeLayout>
+    
+    <Button
+        android:id="@+id/btn_copy_invitation_link_button"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/tuiroomkit_bg_copy_room_info_button"
+        android:textSize="14sp"
+        android:textColor="#B2BBD1"
+        android:text="@string/tuiroomkit_copy_invitation_link"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_root_room_link_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

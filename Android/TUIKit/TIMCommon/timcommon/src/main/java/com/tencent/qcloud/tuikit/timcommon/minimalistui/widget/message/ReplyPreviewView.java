@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -19,9 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
@@ -82,7 +83,7 @@ public class ReplyPreviewView extends FrameLayout {
             replyText.setText(String.format(Locale.US, getResources().getString(R.string.chat_reply_num), messageRepliesBean.getRepliesSize()));
             List<MessageRepliesBean.ReplyBean> repliesBeanList = messageRepliesBean.getReplies();
             List<String> iconList = getReplyUserIconLt(repliesBeanList);
-            if (iconList == null || iconList.isEmpty()) {
+            if (iconList.isEmpty()) {
                 return;
             }
             String secondIconUrl = null;
@@ -131,10 +132,16 @@ public class ReplyPreviewView extends FrameLayout {
                 return;
             }
         }
+
+        RequestBuilder<Drawable> errorRequestBuilder = Glide.with(getContext())
+            .load(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light)
+            .transform(new ReplyRingCircleCrop());
+
         Glide.with(getContext())
             .load(url)
             .centerCrop()
-            .apply(new RequestOptions().transform(new ReplyRingCircleCrop()).error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
+            .transform(new ReplyRingCircleCrop())
+            .error(errorRequestBuilder)
             .into(imageView);
     }
 

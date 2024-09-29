@@ -189,19 +189,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
 
-        <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
-            android:id="@+id/group_controller"
-            app:name="@string/contact_friend_group"
-            app:subject="@string/contact_my_friend"
-            app:canNav="false"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"/>
-
-        <View
-            android:background="#1A000000"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
     </LinearLayout>
 
     <TextView

@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
+import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreItem;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.BaseInputFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InputMoreFragment extends BaseInputFragment {
-    private List<InputMoreActionUnit> mInputMoreList = new ArrayList<>();
+    private List<InputMoreItem> mInputMoreList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -26,7 +26,7 @@ public class InputMoreFragment extends BaseInputFragment {
         return baseView;
     }
 
-    public void setActions(List<InputMoreActionUnit> actions) {
+    public void setActions(List<InputMoreItem> actions) {
         this.mInputMoreList = actions;
     }
 }

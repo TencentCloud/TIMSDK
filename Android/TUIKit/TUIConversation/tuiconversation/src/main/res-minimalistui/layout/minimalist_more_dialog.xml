@@ -3,12 +3,12 @@
     android:id="@+id/more_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="34dp"
+    android:background="@color/transparent"
+    android:gravity="center"
+    android:orientation="vertical"
     android:visibility="visible"
     tools:visibility="visible">
 
@@ -16,72 +16,22 @@
         android:id="@+id/layout_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:alpha="0.95"
         android:background="@drawable/alert_bg"
-        android:alpha="0.95">
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/not_display"
-        android:text="@string/not_display"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="center"
-        android:textColor="#147AFF"
-        android:textSize="17sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white" />
-
-    <TextView
-        android:id="@+id/top_set"
-        android:text="@string/chat_top"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="center"
-        android:textColor="#147AFF"
-        android:textSize="17sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white" />
-
-    <TextView
-        android:id="@+id/clear_chat"
-        android:text="@string/clear_message"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="center"
-        android:textColor="#147AFF"
-        android:textSize="17sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white" />
-
-    <TextView
-        android:id="@+id/delete_chat"
-        android:text="@string/chat_delete"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="center"
-        android:textColor="#FF584C"
-        android:textSize="17sp" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/cancel_button"
-        android:layout_below="@+id/layout_actions"
-        android:background="@drawable/alert_bg"
-        android:layout_marginTop="12dp"
-        android:text="@string/cancel"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_below="@+id/layout_actions"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/alert_bg"
         android:gravity="center"
+        android:text="@string/cancel"
         android:textColor="#147AFF"
         android:textSize="17sp" />
 

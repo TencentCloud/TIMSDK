@@ -31,8 +31,8 @@
     <application>
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity"
+            android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <provider
@@ -54,8 +54,8 @@
 
         <activity
             android:name=".extensions.inviteuser.SelectGroupMemberActivity"
+            android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <receiver

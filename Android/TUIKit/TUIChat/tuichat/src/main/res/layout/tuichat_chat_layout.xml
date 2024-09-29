@@ -18,6 +18,18 @@
         android:layout_below="@+id/chat_title_bar"
         android:background="@color/chat_title_line_color" />
 
+    <ImageView
+        android:id="@+id/chat_background_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_line"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:scaleType="matrix"
+        android:src="@color/timcommon_transparent" />
+
     <FrameLayout
         android:id="@+id/custom_layout"
         android:layout_width="match_parent"
@@ -114,6 +126,16 @@
 
     <FrameLayout
         android:id="@+id/fl_input_float"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/shortcut_container"
+        android:paddingTop="5dp"
+        android:background="?attr/chat_input_area_bg"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <FrameLayout
+        android:id="@+id/shortcut_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/chat_input_layout"

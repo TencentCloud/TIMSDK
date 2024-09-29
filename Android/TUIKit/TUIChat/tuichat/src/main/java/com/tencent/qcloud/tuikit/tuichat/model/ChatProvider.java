@@ -2,11 +2,11 @@ package com.tencent.qcloud.tuikit.tuichat.model;
 
 import static com.tencent.imsdk.BaseConstants.ERR_SDK_MSG_MODIFY_CONFLICT;
 import static com.tencent.imsdk.BaseConstants.ERR_SUCC;
+import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED;
 import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 import android.text.TextUtils;
 import android.util.Pair;
-
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
@@ -41,8 +41,8 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
-import com.tencent.qcloud.tuicore.push.OfflinePushExtInfo;
 import com.tencent.qcloud.tuicore.push.OfflinePushExtConfigInfo;
+import com.tencent.qcloud.tuicore.push.OfflinePushExtInfo;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageFeature;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
@@ -54,9 +54,9 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
@@ -64,7 +64,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -274,7 +273,6 @@ public class ChatProvider {
                 List<V2TIMGroupApplication> v2TIMGroupApplicationList = v2TIMGroupApplicationResult.getGroupApplicationList();
                 for (int i = 0; i < v2TIMGroupApplicationList.size(); i++) {
                     GroupApplyInfo info = new GroupApplyInfo(v2TIMGroupApplicationList.get(i));
-                    info.setStatus(0);
                     applies.add(info);
                 }
                 callBack.onSuccess(applies);
@@ -604,17 +602,40 @@ public class ChatProvider {
         });
     }
 
-    public void findMessage(List<String> msgIds, IUIKitCallback<List<TUIMessageBean>> callback) {
+    public void findPresentMessages(List<String> msgIds, IUIKitCallback<List<TUIMessageBean>> callback) {
+        findMessages(msgIds, new TUIValueCallback<List<TUIMessageBean>>() {
+            @Override
+            public void onSuccess(List<TUIMessageBean> messageBeans) {
+                List<TUIMessageBean> presentMessageList = new ArrayList<>();
+                if (messageBeans != null) {
+                    for (TUIMessageBean message : messageBeans) {
+                        if (message != null && message.getV2TIMMessage() != null
+                                && message.getV2TIMMessage().getStatus() != V2TIM_MSG_STATUS_HAS_DELETED) {
+                            presentMessageList.add(message);
+                        }
+                    }
+                }
+                TUIChatUtils.callbackOnSuccess(callback, presentMessageList);
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIChatUtils.callbackOnError(callback, errorCode, errorMessage);
+            }
+        });
+    }
+
+    public void findMessages(List<String> msgIds, TUIValueCallback<List<TUIMessageBean>> callback) {
         V2TIMManager.getMessageManager().findMessages(msgIds, new V2TIMValueCallback<List<V2TIMMessage>>() {
             @Override
             public void onSuccess(List<V2TIMMessage> messages) {
-                List<TUIMessageBean> messageBeans = ChatMessageParser.parsePresentMessageList(messages);
-                TUIChatUtils.callbackOnSuccess(callback, messageBeans);
+                List<TUIMessageBean> messageBeans = ChatMessageParser.parseMessageList(messages);
+                TUIValueCallback.onSuccess(callback, messageBeans);
             }
 
             @Override
             public void onError(int code, String desc) {
-                TUIChatUtils.callbackOnError(callback, code, desc);
+                TUIValueCallback.onError(callback, code, desc);
             }
         });
     }
@@ -916,14 +937,14 @@ public class ChatProvider {
         }
     }
 
-    public void getGroupType(String groupID, TUIValueCallback<String> callback) {
+    public void getGroupInfo(String groupID, TUIValueCallback<V2TIMGroupInfo> callback) {
         V2TIMManager.getGroupManager().getGroupsInfo(Collections.singletonList(groupID), new V2TIMValueCallback<List<V2TIMGroupInfoResult>>() {
             @Override
             public void onSuccess(List<V2TIMGroupInfoResult> v2TIMGroupInfoResults) {
                 if (!v2TIMGroupInfoResults.isEmpty()) {
                     V2TIMGroupInfoResult result = v2TIMGroupInfoResults.get(0);
                     if (result.getResultCode() == ERR_SUCC) {
-                        TUIValueCallback.onSuccess(callback, result.getGroupInfo().getGroupType());
+                        TUIValueCallback.onSuccess(callback, result.getGroupInfo());
                     } else {
                         TUIValueCallback.onError(callback, result.getResultCode(), result.getResultMessage());
                     }

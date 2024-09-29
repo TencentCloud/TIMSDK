@@ -50,9 +50,11 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
+import com.tencent.qcloud.tuikit.tuicontact.config.minimalistui.TUIContactConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.ContactEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
+import com.tencent.qcloud.tuikit.tuiconversation.config.minimalistui.TUIConversationConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 
 import java.util.ArrayList;
@@ -235,10 +237,10 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
 
         userStatusSwitch = statusView.findViewById(R.id.user_status_switch);
         userStatusSubTitle = statusView.findViewById(R.id.user_status_subtitle);
-        boolean userStatus = mSharedPreferences.getBoolean(Constants.DEMO_SP_KEY_USER_STATUS, false);
+        boolean userStatus = mSharedPreferences.getBoolean(Constants.DEMO_SP_KEY_USER_STATUS, TUIConversationConfigMinimalist.isShowUserOnlineStatusIcon());
         userStatusSwitch.setChecked(userStatus);
-        TUIConversationConfig.getInstance().setShowUserStatus(userStatus);
-        TUIContactConfig.getInstance().setShowUserStatus(userStatus);
+        TUIConversationConfigMinimalist.setShowUserOnlineStatusIcon(userStatus);
+        TUIContactConfigMinimalist.setShowUserOnlineStatusIcon(userStatus);
         userStatusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -249,8 +251,8 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
                     userStatusSubTitle.setText(getResources().getString(R.string.demo_user_status_switch_off_text));
                 }
 
-                TUIConversationConfig.getInstance().setShowUserStatus(isChecked);
-                TUIContactConfig.getInstance().setShowUserStatus(isChecked);
+                TUIConversationConfigMinimalist.setShowUserOnlineStatusIcon(isChecked);
+                TUIContactConfigMinimalist.setShowUserOnlineStatusIcon(isChecked);
                 mSharedPreferences.edit().putBoolean(Constants.DEMO_SP_KEY_USER_STATUS, isChecked).commit();
                 refreshFragmentUI();
             }

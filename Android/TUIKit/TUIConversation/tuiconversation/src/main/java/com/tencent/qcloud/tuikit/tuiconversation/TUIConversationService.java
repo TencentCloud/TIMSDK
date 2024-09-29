@@ -434,6 +434,7 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
 
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventObserver.onNewConversation(conversationInfoList);
                 }
             }
@@ -448,6 +449,7 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
 
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
+                    conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
                     conversationEventObserver.onConversationChanged(conversationInfoList);
                 }
             }

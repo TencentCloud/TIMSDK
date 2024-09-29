@@ -1,5 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.model;
 
+import static com.tencent.cloud.tuikit.engine.extension.TUIConferenceInvitationManager.RejectedReason.IN_OTHER_CONFERENCE;
+import static com.tencent.cloud.tuikit.engine.extension.TUIConferenceInvitationManager.RejectedReason.REJECT_TO_ENTER;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.BUSINESS_ID_ROOM_MESSAGE;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.KEY_INVITE_DATA;
 import static com.tencent.cloud.tuikit.roomkit.imaccess.AccessRoomConstants.ROOM_INVITE_SINGLING;
@@ -12,6 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
+import com.tencent.cloud.tuikit.engine.extension.TUIConferenceInvitationManager;
+import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomMsgManager;
 import com.tencent.cloud.tuikit.roomkit.common.utils.BusinessSceneUtil;
@@ -19,6 +25,7 @@ import com.tencent.cloud.tuikit.roomkit.imaccess.view.InvitedToJoinRoomActivity;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomClickListener;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomMessageBean;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomMessageHolder;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSignalingListener;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
@@ -45,6 +52,7 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
         initExtension();
         initRoomMessage();
         initSignalingListener();
+        initConferenceInvitationObserver();
     }
 
     private void initExtension() {
@@ -117,6 +125,32 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
         return false;
     }
 
+    private void initConferenceInvitationObserver() {
+        TUIConferenceInvitationManager invitationManager = (TUIConferenceInvitationManager) TUIRoomEngine.sharedInstance().getExtension(TUICommonDefine.ExtensionType.CONFERENCE_INVITATION_MANAGER);
+        invitationManager.addObserver(new TUIConferenceInvitationManager.Observer() {
+            @Override
+            public void onReceiveInvitation(TUIRoomDefine.RoomInfo roomInfo, TUIConferenceInvitationManager.Invitation invitation, String extensionInfo) {
+                if (ConferenceController.sharedInstance().getViewState().isInvitationPending.get()) {
+                    ConferenceController.sharedInstance().getInvitationController().reject(roomInfo.roomId, REJECT_TO_ENTER, null);
+                    return;
+                }
+                if (ConferenceController.sharedInstance().getRoomController().isInRoom()) {
+                    ConferenceController.sharedInstance().getInvitationController().reject(roomInfo.roomId, IN_OTHER_CONFERENCE, null);
+                    return;
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putString("roomId", roomInfo.roomId);
+                bundle.putString("conferenceName", roomInfo.name);
+                bundle.putString("ownerName", roomInfo.ownerName);
+                bundle.putString("inviterName", invitation.inviter.userName);
+                bundle.putString("inviterAvatarUrl", roomInfo.ownerAvatarUrl);
+                bundle.putInt("memberCount", roomInfo.memberCount);
+                TUICore.startActivity("InvitationReceivedActivity", bundle);
+            }
+        });
+    }
+
     @Override
     public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
         if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID)
@@ -126,7 +160,7 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
                 return null;
             }
             Object obj = param.get(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM);
-            if (obj != null && obj instanceof Boolean && ((boolean)obj)) {
+            if (obj != null && obj instanceof Boolean && ((boolean) obj)) {
                 return null;
             }
             ChatInputMoreListener chatInputMoreListener =

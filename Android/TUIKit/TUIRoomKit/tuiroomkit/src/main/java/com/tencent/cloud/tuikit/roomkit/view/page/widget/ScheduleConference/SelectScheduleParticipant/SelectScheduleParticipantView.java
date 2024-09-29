@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.Sel
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -15,8 +16,10 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleConferenceStateHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectScheduleParticipantView extends FrameLayout implements ParticipantSelector.ParticipantSelectCallback {
@@ -81,14 +84,27 @@ public class SelectScheduleParticipantView extends FrameLayout implements Partic
         mIvSecondAttendee = parent.findViewById(R.id.tuiroomkit_iv_second_attendee);
         mIvThirdAttendee = parent.findViewById(R.id.tuiroomkit_iv_third_attendee);
 
-        mLayoutSelectAttendee.setOnClickListener(v -> mParticipantSelector.startParticipantSelect(mContext, mStateHolder.mAttendeeData.getList(), SelectScheduleParticipantView.this));
+        mLayoutSelectAttendee.setOnClickListener(v -> mParticipantSelector.startParticipantSelect(mContext, getAttendees(), SelectScheduleParticipantView.this));
+    }
+
+    public ConferenceParticipants getAttendees() {
+        ConferenceParticipants participants = new ConferenceParticipants();
+        if (mStateHolder == null || mStateHolder.mAttendeeData.isEmpty()) {
+            return participants;
+        }
+        for (UserState.UserInfo userInfo : mStateHolder.mAttendeeData.getList()) {
+            User user = new User();
+            user.userId = userInfo.userId;
+            user.userName = userInfo.userName;
+            user.avatarUrl = userInfo.avatarUrl;
+            participants.selectedList.add(user);
+        }
+        return participants;
     }
 
     @Override
     public void onParticipantSelected(List<UserState.UserInfo> participants) {
-        for (UserState.UserInfo user : participants) {
-            mStateHolder.mAttendeeData.add(user);
-        }
+        mStateHolder.mAttendeeData.replaceAll(new ArrayList<>(participants));
     }
 
     public void updateView() {

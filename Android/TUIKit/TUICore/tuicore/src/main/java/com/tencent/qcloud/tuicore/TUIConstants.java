@@ -753,6 +753,9 @@ public final class TUIConstants {
         public static final String METHOD_SET_CUSTOM_CONFIG_FILE = "setCustomConfigFile";
         public static final String SET_CUSTOM_CONFIG_FILE_KEY = "setCustomConfigFileKey";
         public static final String METHOD_SET_CUSTOM_FCM_RING = "setCustomFCMRing";
+        public static final String METHOD_DO_BACKGROUND = "doBackground";
+        public static final String METHOD_DO_FOREGROUND = "doForeground";
+        public static final String APP_UNREAD_COUNT_KEY = "appUnreadCountKey";
 
 
         public static class XiaoMi {

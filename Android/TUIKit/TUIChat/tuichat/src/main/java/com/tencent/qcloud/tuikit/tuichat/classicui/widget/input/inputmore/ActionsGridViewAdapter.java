@@ -9,15 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
+import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreItem;
 
 import java.util.List;
 
 public class ActionsGridViewAdapter extends BaseAdapter {
 
-    private List<InputMoreActionUnit> baseActions;
+    private List<InputMoreItem> baseActions;
 
-    public void setBaseActions(List<InputMoreActionUnit> baseActions) {
+    public void setBaseActions(List<InputMoreItem> baseActions) {
         this.baseActions = baseActions;
     }
 
@@ -41,7 +41,7 @@ public class ActionsGridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        InputMoreActionUnit action = baseActions.get(position);
+        InputMoreItem action = baseActions.get(position);
         View unitView = action.getUnitView();
         if (unitView != null) {
             return unitView;

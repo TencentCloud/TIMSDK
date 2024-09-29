@@ -14,19 +14,19 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.component.MessageProperties;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIBaseChatFragment;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIBaseChatMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuivoicetotextplugin.R;
@@ -48,7 +48,7 @@ public class VoiceToTextMessageLayoutProxy {
 
     public VoiceToTextMessageLayoutProxy() {}
 
-    public void showVoiceToTextView(BaseFragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean tuiMessageBean) {
+    public void showVoiceToTextView(Fragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean tuiMessageBean) {
         if (viewGroup == null || tuiMessageBean == null) {
             return;
         }
@@ -71,7 +71,7 @@ public class VoiceToTextMessageLayoutProxy {
         });
     }
 
-    protected void setVoiceToTextContent(BaseFragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean msg) {
+    protected void setVoiceToTextContent(Fragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean msg) {
         LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.convert_content_layout, viewGroup);
         ImageView loadingImage = viewGroup.findViewById(R.id.convert_loading_iv);
         TextView convertedText = viewGroup.findViewById(R.id.convert_tv);
@@ -95,8 +95,16 @@ public class VoiceToTextMessageLayoutProxy {
                 }
                 convertedText.setTextColor(Color.BLACK);
             }
-            if (MessageProperties.getInstance().getChatContextFontSize() != 0) {
-                convertedText.setTextSize(MessageProperties.getInstance().getChatContextFontSize());
+            if (msg.isSelf()) {
+                int sendTextMessageFontSize = TUIChatConfigClassic.getSendTextMessageFontSize();
+                if (sendTextMessageFontSize != TUIChatConfigClassic.UNDEFINED)  {
+                    convertedText.setTextSize(sendTextMessageFontSize);
+                }
+            } else {
+                int receiveTextMessageFontSize = TUIChatConfigClassic.getReceiveTextMessageFontSize();
+                if (receiveTextMessageFontSize != TUIChatConfigClassic.UNDEFINED)  {
+                    convertedText.setTextSize(receiveTextMessageFontSize);
+                }
             }
 
             convertedText.setText(voiceToTextPresenter.getConvertedText(msg.getV2TIMMessage()));
@@ -123,7 +131,7 @@ public class VoiceToTextMessageLayoutProxy {
         }
     }
 
-    private void showConvertedItemPopMenu(BaseFragment fragment, String themeStyle, RecyclerView recyclerView, View view, TUIMessageBean messageInfo) {
+    private void showConvertedItemPopMenu(Fragment fragment, String themeStyle, RecyclerView recyclerView, View view, TUIMessageBean messageInfo) {
         initConvertedPopActions(fragment, themeStyle, messageInfo);
         if (mConvertedPopActions.size() == 0) {
             return;
@@ -142,7 +150,7 @@ public class VoiceToTextMessageLayoutProxy {
         mConvertedChatPopMenu.show(view, location[1]);
     }
 
-    private void initConvertedPopActions(BaseFragment fragment, String themeStyle, TUIMessageBean msg) {
+    private void initConvertedPopActions(Fragment fragment, String themeStyle, TUIMessageBean msg) {
         if (msg == null) {
             return;
         }
@@ -193,7 +201,7 @@ public class VoiceToTextMessageLayoutProxy {
         TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
     }
 
-    private void onForwardConvertedTextClick(BaseFragment fragment, String themeStyle, TUIMessageBean messageBean) {
+    private void onForwardConvertedTextClick(Fragment fragment, String themeStyle, TUIMessageBean messageBean) {
         if (fragment == null) {
             TUIVoiceToTextLog.e(TAG, "onForwardConvertedTextClick fragment is null!");
             return;

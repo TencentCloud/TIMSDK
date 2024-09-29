@@ -167,13 +167,6 @@
                     app:canNav="true"
                     app:name="@string/contact_friend_remark" />
 
-                <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
-                    android:id="@+id/friend_group_lv"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/contact_profile_item_height"
-                    app:canNav="true"
-                    app:name="@string/contact_friend_group" />
-
             </LinearLayout>
 
             <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView

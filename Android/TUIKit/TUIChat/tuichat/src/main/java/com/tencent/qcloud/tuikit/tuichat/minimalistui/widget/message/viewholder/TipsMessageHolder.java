@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder;
 
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageBa
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinimalist;
 
 public class TipsMessageHolder extends MessageBaseHolder {
     protected TextView mChatTipsTv;
@@ -30,14 +32,18 @@ public class TipsMessageHolder extends MessageBaseHolder {
     public void layoutViews(TUIMessageBean msg, int position) {
         super.layoutViews(msg, position);
 
-        if (properties.getTipsMessageBubble() != null) {
-            mChatTipsTv.setBackground(properties.getTipsMessageBubble());
+        Drawable systemMessageBackground = TUIChatConfigMinimalist.getSystemMessageBackground();
+        if (systemMessageBackground != null) {
+            mChatTipsTv.setBackground(systemMessageBackground);
         }
-        if (properties.getTipsMessageFontColor() != 0) {
-            mChatTipsTv.setTextColor(properties.getTipsMessageFontColor());
+        int systemMessageTextFontColor = TUIChatConfigMinimalist.getSystemMessageTextColor();
+        if (systemMessageTextFontColor != TUIChatConfigMinimalist.UNDEFINED) {
+            mChatTipsTv.setTextColor(systemMessageTextFontColor);
         }
-        if (properties.getTipsMessageFontSize() != 0) {
-            mChatTipsTv.setTextSize(properties.getTipsMessageFontSize());
+        int systemMessageTextFontSize = TUIChatConfigMinimalist.getSystemMessageFontSize();
+        if (systemMessageTextFontSize != TUIChatConfigMinimalist.UNDEFINED) {
+            mChatTipsTv.setTextSize(systemMessageTextFontSize);
+            mReEditText.setTextSize(systemMessageTextFontSize);
         }
 
         mReEditText.setVisibility(View.GONE);

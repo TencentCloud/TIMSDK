@@ -15,11 +15,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.trtc.tuikit.common.livedata.Observer;
 
+import java.util.Random;
+
 public class SetConferenceEncryptView extends FrameLayout {
-    private Context          mContext;
-    private SwitchCompat     mSwitchEncryption;
-    private ConstraintLayout mLayoutRoomPassword;
-    private EditText         mEditPassword;
+    private static final int              PASSWORD_LENGTH = 6;
+    private              Context          mContext;
+    private              SwitchCompat     mSwitchEncryption;
+    private              ConstraintLayout mLayoutRoomPassword;
+    private              EditText         mEditPassword;
 
     private       ScheduleConferenceStateHolder             mStateHolder;
     private final Observer<SetConferenceEncryptViewUiState> mEncryptObserver = this::updateView;
@@ -51,12 +54,6 @@ public class SetConferenceEncryptView extends FrameLayout {
                 .inflate(R.layout.tuiroomkit_view_set_conference_encrypt,
                         this, false));
         mSwitchEncryption = findViewById(R.id.switch_room_encryption);
-        mSwitchEncryption.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isEnable) {
-                mStateHolder.updateEnableEncrypt(isEnable);
-            }
-        });
         mLayoutRoomPassword = findViewById(R.id.cl_room_password);
         mEditPassword = findViewById(R.id.edit_room_password);
         mEditPassword.addTextChangedListener(new TextWatcher() {
@@ -69,13 +66,32 @@ public class SetConferenceEncryptView extends FrameLayout {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                mStateHolder.updatePassword(s.toString());
+            public void afterTextChanged(Editable password) {
+                mStateHolder.updatePassword(password.toString());
             }
         });
+        mSwitchEncryption.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isEnable) {
+                mStateHolder.updateEnableEncrypt(isEnable);
+                if (isEnable) {
+                    mEditPassword.setText(generateRandomPassword());
+                }
+            }
+        });
+
         if (!mSwitchEncryption.isEnabled()) {
             mLayoutRoomPassword.setVisibility(GONE);
         }
+    }
+
+    private String generateRandomPassword() {
+        Random random = new Random();
+        int minNumber = (int) Math.pow(10, PASSWORD_LENGTH - 1);
+        int maxNumber = (int) Math.pow(10, PASSWORD_LENGTH) - 1;
+        int randomNumber = random.nextInt(maxNumber - minNumber) + minNumber;
+        String password = randomNumber + "";
+        return password;
     }
 
     public void disableSetEncrypt() {

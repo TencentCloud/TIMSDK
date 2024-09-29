@@ -8,13 +8,15 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.RelativeLayout;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 
-public class MinimalistMessageLayout extends RelativeLayout {
+public class MinimalistMessageLayout extends ConstraintLayout {
     private View msgArea;
     private View quoteArea;
     private View bottomArea;

@@ -1,7 +1,19 @@
 package com.tencent.cloud.tuikit.roomkit.model.manager;
 
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.RoomDismissedReason.BY_SERVER;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM_LOW;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.ConferenceExitedReason.EXITED_BY_ADMIN_KICK_OUT;
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.ConferenceExitedReason.EXITED_BY_JOINED_ON_OTHER_DEVICE;
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.ConferenceExitedReason.EXITED_BY_KICKED_OUT_OF_LINE;
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.ConferenceExitedReason.EXITED_BY_SERVER_KICK_OUT;
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.ConferenceExitedReason.EXITED_BY_USER_SIG_EXPIRED;
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.ConferenceFinishedReason.FINISHED_BY_OWNER;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE_EXITED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE_FINISHED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_REASON;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,14 +21,18 @@ import android.util.Log;
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
-import com.tencent.cloud.tuikit.roomkit.ConferenceObserver;
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.data.InvitationState;
+import com.tencent.cloud.tuikit.roomkit.model.data.MediaState;
+import com.tencent.cloud.tuikit.roomkit.model.data.RoomState;
 import com.tencent.cloud.tuikit.roomkit.model.data.SeatState;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
+import com.tencent.qcloud.tuicore.TUICore;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,12 +45,18 @@ public class RoomEngineObserver extends TUIRoomObserver {
     private final SeatState       mSeatState;
     private final ViewState       mViewState;
     private final UserState       mUserState;
+    private final RoomState       mRoomState;
+    private final MediaState      mMediaState;
+    private final InvitationState mInvitationState;
 
     public RoomEngineObserver(ConferenceState conferenceState) {
         mConferenceState = conferenceState;
         mSeatState = conferenceState.seatState;
         mViewState = conferenceState.viewState;
         mUserState = conferenceState.userState;
+        mRoomState = conferenceState.roomState;
+        mMediaState = conferenceState.mediaState;
+        mInvitationState = conferenceState.invitationState;
     }
 
     @Override
@@ -52,19 +74,31 @@ public class RoomEngineObserver extends TUIRoomObserver {
         Map<String, Object> map = new HashMap<>();
         map.put(ConferenceEventConstant.KEY_MESSAGE, message);
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.KICKED_OFF_LINE, map);
+
+        Map<String, Object> param = new HashMap<>(2);
+        param.put(KEY_CONFERENCE, mConferenceState.roomState.roomInfo);
+        param.put(KEY_REASON, EXITED_BY_KICKED_OUT_OF_LINE);
+        TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_EXITED, param);
     }
 
     @Override
     public void onUserSigExpired() {
         Log.d(TAG, "onUserSigExpired");
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.USER_SIG_EXPIRED, null);
+
+        Map<String, Object> param = new HashMap<>(2);
+        param.put(KEY_CONFERENCE, mConferenceState.roomState.roomInfo);
+        param.put(KEY_REASON, EXITED_BY_USER_SIG_EXPIRED);
+        TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_EXITED, param);
     }
 
     @Override
     public void onRoomNameChanged(String roomId, String roomName) {
+        Log.d(TAG, "onRoomNameChanged roomId=" + roomId + ",roomName=" + roomName);
         Map<String, Object> map = new HashMap<>();
         map.put(ConferenceEventConstant.KEY_ROOM_ID, roomId);
         map.put(ConferenceEventConstant.KEY_ROOM_NAME, roomName);
+        mConferenceState.roomState.roomName.set(roomName);
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.ROOM_NAME_CHANGED, map);
     }
 
@@ -98,17 +132,19 @@ public class RoomEngineObserver extends TUIRoomObserver {
     }
 
     @Override
-    public void onRoomDismissed(String roomId) {
+    public void onRoomDismissed(String roomId, TUIRoomDefine.RoomDismissedReason reason) {
         Log.d(TAG, "onRoomDismissed roomId=" + roomId);
+        if (BY_SERVER == reason) {
+            return;
+        }
         Map<String, Object> map = new HashMap<>();
         map.put(ConferenceEventConstant.KEY_ROOM_ID, roomId);
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.ROOM_DISMISSED, map);
 
-        ConferenceObserver observer = mConferenceState.getConferenceObserver();
-        if (observer != null) {
-            Log.i(TAG, "onConferenceFinished : " + roomId);
-            observer.onConferenceFinished(roomId);
-        }
+        Map<String, Object> param = new HashMap<>(2);
+        param.put(KEY_CONFERENCE, mRoomState.roomInfo);
+        param.put(KEY_REASON, FINISHED_BY_OWNER);
+        TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_FINISHED, param);
     }
 
     @Override
@@ -119,11 +155,13 @@ public class RoomEngineObserver extends TUIRoomObserver {
         map.put(ConferenceEventConstant.KEY_MESSAGE, message);
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM, map);
 
-        ConferenceObserver observer = mConferenceState.getConferenceObserver();
-        if (observer != null) {
-            Log.i(TAG, "onConferenceExisted : " + roomId);
-            observer.onConferenceExisted(roomId);
-        }
+        Map<String, Object> param = new HashMap<>(2);
+        param.put(KEY_CONFERENCE, mRoomState.roomInfo);
+        ConferenceDefine.ConferenceExitedReason exitedReason = reason == TUIRoomDefine.KickedOutOfRoomReason.BY_ADMIN
+                ? EXITED_BY_ADMIN_KICK_OUT : reason == TUIRoomDefine.KickedOutOfRoomReason.BY_SERVER
+                ? EXITED_BY_SERVER_KICK_OUT : EXITED_BY_JOINED_ON_OTHER_DEVICE;
+        param.put(KEY_REASON, exitedReason);
+        TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_EXITED, param);
     }
 
     @Override
@@ -131,6 +169,7 @@ public class RoomEngineObserver extends TUIRoomObserver {
         Log.d(TAG, "onRemoteUserEnterRoom userId=" + userInfo.userId);
         mConferenceState.remoteUserEnterRoom(userInfo);
         mUserState.remoteUserEnterRoom(userInfo);
+        mInvitationState.remoteUserEnterRoom(userInfo);
     }
 
     @Override
@@ -160,11 +199,22 @@ public class RoomEngineObserver extends TUIRoomObserver {
     }
 
     @Override
+    public void onUserInfoChanged(TUIRoomDefine.UserInfo userInfo, List<TUIRoomDefine.UserInfoModifyFlag> modifyFlag) {
+        Log.d(TAG, "onUserInfoChanged userId=" + userInfo.userId + " role=" + userInfo.userRole);
+        if (userInfo.userRole == TUIRoomDefine.Role.ROOM_OWNER) {
+            mConferenceState.roomState.ownerName.set(userInfo.userName);
+        }
+    }
+
+    @Override
     public void onUserVideoStateChanged(String userId, TUIRoomDefine.VideoStreamType streamType, boolean hasVideo,
                                         TUIRoomDefine.ChangeReason reason) {
         Log.d(TAG, "onUserVideoStateChanged userId=" + userId + " hasVideo=" + hasVideo + " type=" + streamType);
         if (TextUtils.equals(userId, mConferenceState.userModel.userId) && streamType == CAMERA_STREAM_LOW) {
             return;
+        }
+        if (TextUtils.equals(userId, mConferenceState.userModel.userId)  && streamType == CAMERA_STREAM) {
+            mMediaState.isCameraOpened.set(hasVideo);
         }
         if (streamType == SCREEN_STREAM) {
             mConferenceState.handleUserScreenStateChanged(userId, hasVideo);
@@ -184,6 +234,7 @@ public class RoomEngineObserver extends TUIRoomObserver {
 
     @Override
     public void onUserVoiceVolumeChanged(Map<String, Integer> volumeMap) {
+        Map<String, Integer> volumes = mMediaState.volumeInfos.get();
         for (Map.Entry<String, Integer> entry : volumeMap.entrySet()) {
             String userId = entry.getKey();
             if (TextUtils.isEmpty(userId)) {
@@ -192,12 +243,15 @@ public class RoomEngineObserver extends TUIRoomObserver {
             if (TextUtils.equals(userId, mConferenceState.userModel.userId) && !mConferenceState.audioModel.isHasAudioStream()) {
                 continue;
             }
+            volumes.put(entry.getKey(), entry.getValue());
             int volume = entry.getValue();
             mConferenceState.updateUserAudioVolume(userId, volume);
             UserState.UserVolumeInfo userVolumeInfo = mUserState.userVolumeInfo.get();
             userVolumeInfo.update(userId, volume);
             mUserState.userVolumeInfo.set(userVolumeInfo);
         }
+        mMediaState.volumeInfos.set(volumes);
+        volumes.clear();
         Map<String, Object> map = new HashMap<>();
         map.put(ConferenceEventConstant.KEY_VOLUME_MAP, volumeMap);
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.USER_VOICE_VOLUME_CHANGED, map);
@@ -299,22 +353,6 @@ public class RoomEngineObserver extends TUIRoomObserver {
         mConferenceState.removeTakeSeatRequest(request.requestId);
         mSeatState.removeTakeSeatRequest(request.requestId);
         mViewState.removePendingTakeSeatRequest(request.requestId);
-    }
-
-    @Override
-    public void onReceiveTextMessage(String roomId, TUICommonDefine.Message message) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(ConferenceEventConstant.KEY_ROOM_ID, roomId);
-        map.put(ConferenceEventConstant.KEY_MESSAGE, message);
-        ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.RECEIVE_TEXT_MESSAGE, map);
-    }
-
-    @Override
-    public void onReceiveCustomMessage(String roomId, TUICommonDefine.Message message) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(ConferenceEventConstant.KEY_ROOM_ID, roomId);
-        map.put(ConferenceEventConstant.KEY_MESSAGE, message);
-        ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.RECEIVE_CUSTOM_MESSAGE, map);
     }
 
     @Override

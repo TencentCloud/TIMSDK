@@ -26,8 +26,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotification {
-
-    private lateinit var mContext: Context
+    private var context: Context = context.applicationContext
     private var mAudioRecordInfo: AudioRecordInfo? = null
     private var mFocusRequest: AudioFocusRequest? = null
     private var mAudioManager: AudioManager? = null
@@ -67,45 +66,43 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
                 return false
             }
 
-            PermissionRequest.requestPermissions(mContext,
-                TUICallDefine.MediaType.Audio,
-                object : PermissionCallback() {
-                    override fun onGranted() {
-                        initAudioFocusManager()
-                        if (requestAudioFocus() != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                            TUILog.e(TAG, "startRecordAudioMessage failed, Failed to obtain audio focus")
-                            notifyAudioMessageRecordEvent(
-                                TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START,
-                                TUIConstants.TUICalling.ERROR_REQUEST_AUDIO_FOCUS_FAILED,
-                                null
-                            )
-                            return
-                        }
-                        mAudioRecordInfo = AudioRecordInfo()
-                        if (param.containsKey(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH)) {
-                            mAudioRecordInfo!!.path = param[TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH] as String?
-                        }
-                        if (param.containsKey(TUIConstants.TUICalling.PARAM_NAME_SDK_APP_ID)) {
-                            mAudioRecordInfo!!.sdkAppId = param[TUIConstants.TUICalling.PARAM_NAME_SDK_APP_ID] as Int
-                        }
-                        if (param.containsKey(TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE)) {
-                            mAudioRecordInfo!!.signature =
-                                param[TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE] as String?
-                        }
-
-                        TRTCCloud.sharedInstance(mContext).setListener(mTRTCCloudListener)
-                        startRecordAudioMessage()
-                    }
-
-                    override fun onDenied() {
-                        super.onDenied()
+            PermissionRequest.requestPermissions(context, TUICallDefine.MediaType.Audio, object : PermissionCallback() {
+                override fun onGranted() {
+                    initAudioFocusManager()
+                    if (requestAudioFocus() != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                        TUILog.e(TAG, "startRecordAudioMessage failed, Failed to obtain audio focus")
                         notifyAudioMessageRecordEvent(
                             TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START,
-                            TUIConstants.TUICalling.ERROR_MIC_PERMISSION_REFUSED,
+                            TUIConstants.TUICalling.ERROR_REQUEST_AUDIO_FOCUS_FAILED,
                             null
                         )
+                        return
                     }
-                })
+                    mAudioRecordInfo = AudioRecordInfo()
+                    if (param.containsKey(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH)) {
+                        mAudioRecordInfo!!.path = param[TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH] as String?
+                    }
+                    if (param.containsKey(TUIConstants.TUICalling.PARAM_NAME_SDK_APP_ID)) {
+                        mAudioRecordInfo!!.sdkAppId = param[TUIConstants.TUICalling.PARAM_NAME_SDK_APP_ID] as Int
+                    }
+                    if (param.containsKey(TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE)) {
+                        mAudioRecordInfo!!.signature =
+                            param[TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE] as String?
+                    }
+
+                    TRTCCloud.sharedInstance(context).addListener(mTRTCCloudListener)
+                    startRecordAudioMessage()
+                }
+
+                override fun onDenied() {
+                    super.onDenied()
+                    notifyAudioMessageRecordEvent(
+                        TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START,
+                        TUIConstants.TUICalling.ERROR_MIC_PERMISSION_REFUSED,
+                        null
+                    )
+                }
+            })
             return true
         }
         if (TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_STOP_RECORD_AUDIO_MESSAGE, method)) {
@@ -130,7 +127,7 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
             super.onLocalRecordBegin(errCode, storagePath)
             val tempCode = convertErrorCode("onLocalRecordBegin", errCode)
             if (errCode == TUIConstants.TUICalling.ERROR_NONE) {
-                TRTCCloud.sharedInstance(mContext).startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_SPEECH)
+                TRTCCloud.sharedInstance(context).startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_SPEECH)
             }
             notifyAudioMessageRecordEvent(TUIConstants.TUICalling.EVENT_SUB_KEY_RECORD_START, tempCode, storagePath)
         }
@@ -155,7 +152,6 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
     }
 
     init {
-        mContext = context.applicationContext
         TUICore.registerEvent(
             TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED,
             TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS,
@@ -177,7 +173,7 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
             params.put(TUIConstants.TUICalling.PARAM_NAME_AUDIO_PATH, mAudioRecordInfo!!.path)
             params.put("key", mAudioRecordInfo!!.signature)
             jsonObject.put("params", params)
-            TRTCCloud.sharedInstance(mContext).callExperimentalAPI(jsonObject.toString())
+            TRTCCloud.sharedInstance(context).callExperimentalAPI(jsonObject.toString())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -193,12 +189,12 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
             jsonObject.put("api", "stopRecordAudioMessage")
             val params = JSONObject()
             jsonObject.put("params", params)
-            TRTCCloud.sharedInstance(mContext).callExperimentalAPI(jsonObject.toString())
+            TRTCCloud.sharedInstance(context).callExperimentalAPI(jsonObject.toString())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
         TUILog.i(TAG, "stopRecordAudioMessage, stopLocalAudio")
-        TRTCCloud.sharedInstance(mContext).stopLocalAudio()
+        TRTCCloud.sharedInstance(context).stopLocalAudio()
 
         mAudioRecordInfo = null
         abandonAudioFocus()
@@ -216,20 +212,24 @@ class TUIAudioMessageRecordService(context: Context) : ITUIService, ITUINotifica
 
     override fun onNotifyEvent(key: String, subKey: String, param: Map<String, Any>?) {
         if (TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED == key && TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS == subKey) {
-            TUICallEngine.createInstance(mContext).addObserver(mCallObserver)
+            TUICallEngine.createInstance(context).addObserver(mCallObserver)
         }
     }
 
     private fun initAudioFocusManager() {
         if (mAudioManager == null) {
-            mAudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            mAudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         }
         if (mOnFocusChangeListener == null) {
             mOnFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
                 when (focusChange) {
                     AudioManager.AUDIOFOCUS_GAIN -> {}
-                    AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
+                    AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ->
                         stopRecordAudioMessage()
+
+                    AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                        //transient lost audio focus and the new focus owner doesn't require others to be silent.
+                    }
 
                     else -> {}
                 }

@@ -80,6 +80,11 @@ public class ReplyMessageHolder extends MessageContentHolder {
         } else {
             quoteFrameLayout.setVisibility(View.GONE);
         }
+        setThemeColor(msg);
+
+        if (isForwardMode || isReplyDetailMode) {
+            return;
+        }
 
         msgArea.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -104,12 +109,6 @@ public class ReplyMessageHolder extends MessageContentHolder {
                 return true;
             }
         });
-
-        setThemeColor(msg);
-        if (isForwardMode || isReplyDetailMode) {
-            return;
-        }
-
         setSelectableTextHelper(msg, replyContentTv, position);
     }
 

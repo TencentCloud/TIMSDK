@@ -88,13 +88,12 @@ public class VideoSeatViewModel extends TUIRoomObserver
 
     @Override
     public void setLocalVideoView(UserEntity selfEntity) {
-        if (selfEntity == null || selfEntity.getRoomVideoView() == mLocalPreview
-                || selfEntity.isScreenShareAvailable()) {
+        if (selfEntity == null) {
             return;
         }
-        mLocalPreview = selfEntity.getRoomVideoView();
-        Log.d(TAG, "setLocalVideoView userName=" + selfEntity.getUserName() + " mLocalPreview=" + mLocalPreview);
-        mRoomEngine.setLocalVideoView(mLocalPreview);
+        Log.d(TAG, "setLocalVideoView userId=" + selfEntity.getUserId() + " isCameraAvailable=" + selfEntity.isCameraAvailable());
+        mRoomEngine.setLocalVideoView(selfEntity.isCameraAvailable() ? selfEntity.getRoomVideoView() : null);
+        notifyUserVideoVisibilityStageChanged(selfEntity.getUserId());
     }
 
     @Override
@@ -422,8 +421,6 @@ public class VideoSeatViewModel extends TUIRoomObserver
         entity.setRoomVideoView(roomVideoView);
         if (userInfo.userId.equals(mSelfUserId)) {
             entity.setSelf(true);
-            // When you first enter the room, the SDK may not call back the information that your video has been opened.
-            setLocalVideoView(entity);
         }
         entity.setUserName(userInfo.userName);
         entity.setUserAvatar(userInfo.avatarUrl);
@@ -550,10 +547,6 @@ public class VideoSeatViewModel extends TUIRoomObserver
         int position = mUserListSorter.insertUser(mUserEntityList, entity);
         mVideoSeatView.notifyItemInserted(position);
         mUserEntityMap.put(entity.getUserId(), entity);
-        if (entity.isSelf()) {
-            // When you first enter the room, the SDK may not call back the information that your video has been opened.
-            setLocalVideoView(entity);
-        }
     }
 
     private void removeMemberEntity(String userId) {

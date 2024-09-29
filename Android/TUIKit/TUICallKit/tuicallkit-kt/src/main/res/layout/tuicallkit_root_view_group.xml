@@ -34,8 +34,8 @@
         android:id="@+id/rl_layout_caller_user_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="98dp"
         android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/rl_layout_invitee_wait_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/gl_horizontal_top" />
@@ -75,7 +75,7 @@
         android:id="@+id/rl_layout_add_user"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:background="#00000000"
         app:layout_constraintEnd_toEndOf="parent"

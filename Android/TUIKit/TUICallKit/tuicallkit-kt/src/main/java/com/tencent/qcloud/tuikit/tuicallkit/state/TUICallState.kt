@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.text.TextUtils
 import com.tencent.qcloud.tuicore.TUIConfig
+import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.util.SPUtils
@@ -47,6 +48,8 @@ class TUICallState {
     public var isBottomViewExpand = LiveData<Boolean>()
     public var showLargeViewUserId = LiveData<String>()
     public var networkQualityReminder = LiveData<Constants.NetworkQualityHint>()
+
+    var orientation = Constants.Orientation.Portrait
 
     private var timeHandler: Handler? = null
     private var timeHandlerThread: HandlerThread? = null
@@ -206,6 +209,7 @@ class TUICallState {
 
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
+                ToastUtil.toastShortMessage(TUIConfig.getAppContext().getString(R.string.tuicallkit_toast_callee_reject))
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
             } else if (remoteUserList.get().isEmpty()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
@@ -220,6 +224,7 @@ class TUICallState {
 
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
+                ToastUtil.toastShortMessage(TUIConfig.getAppContext().getString(R.string.tuicallkit_toast_callee_no_response))
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
             } else if (remoteUserList.get().isEmpty()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
@@ -256,6 +261,7 @@ class TUICallState {
 
             removeUserOnLeave(userId)
             if (TUICallDefine.Scene.SINGLE_CALL == instance.scene.get()) {
+                ToastUtil.toastShortMessage(TUIConfig.getAppContext().getString(R.string.tuicallkit_toast_callee_hangup))
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
             } else if (remoteUserList.get().isEmpty()) {
                 instance.selfUser.get().callStatus.set(TUICallDefine.Status.None)
@@ -388,6 +394,12 @@ class TUICallState {
         showLargeViewUserId.removeAll()
         enableBlurBackground.removeAll()
         networkQualityReminder.removeAll()
+
+        if (TUICore.getService(TUIConstants.USBCamera.SERVICE_NAME) != null) {
+            TUICore.notifyEvent(
+                TUIConstants.USBCamera.KEY_USB_CAMERA, TUIConstants.USBCamera.SUB_KEY_CLOSE_CAMERA, null
+            )
+        }
     }
 
     private fun resetCall() {

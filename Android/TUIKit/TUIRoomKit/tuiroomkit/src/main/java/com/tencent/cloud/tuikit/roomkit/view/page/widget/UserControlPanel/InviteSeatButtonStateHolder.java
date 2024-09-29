@@ -3,6 +3,7 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.view.StateHolder;
 import com.trtc.tuikit.common.livedata.LiveData;
 import com.trtc.tuikit.common.livedata.Observer;
@@ -83,7 +84,7 @@ public class InviteSeatButtonStateHolder extends StateHolder {
     }
 
     private boolean shouldShowInviteSeat() {
-        if (!mIsSeatEnabled) {
+        if (!ViewState.UserListType.OFF_SEAT_INSIDE_THE_ROOM.equals(mViewState.userListType.get())) {
             return false;
         }
         if (mSeatedUsers.contains(mUserId)) {

@@ -79,14 +79,12 @@ public class CallingMessageHolder extends TextMessageHolder {
                 }
             };
 
-            msgArea.setOnClickListener(onRecallClickListener);
-            mCallingLayout.setOnClickListener(onRecallClickListener);
-
             if (isForwardMode || isReplyDetailMode) {
                 return;
             }
-            setSelectableTextHelper(msg, msgBodyText, position);
-            msgBodyText.setOnClickListener(onRecallClickListener);
+            msgArea.setOnClickListener(onRecallClickListener);
+            mCallingLayout.setOnClickListener(onRecallClickListener);
+            setTextClickListener(onRecallClickListener);
         }
     }
 }

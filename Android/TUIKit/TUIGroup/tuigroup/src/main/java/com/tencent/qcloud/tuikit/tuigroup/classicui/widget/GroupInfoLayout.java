@@ -38,6 +38,7 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuigroup.config.classicui.TUIGroupConfigClassic;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupInfoFragment;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupMemberActivity;
@@ -208,6 +209,41 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
             mChangeOwnerBtn.setVisibility(GONE);
         }
         setupExtension();
+
+        applyCustomConfig();
+    }
+
+    private void applyCustomConfig() {
+        if (!TUIGroupConfigClassic.isShowMuteAndPin()) {
+            mMsgRevOptionSwitchView.setVisibility(GONE);
+            mFoldGroupChatSwitchView.setVisibility(GONE);
+            mTopSwitchView.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowManage()) {
+            mGroupManageView.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowAlias()) {
+            mNickView.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowBackground()) {
+            mChatBackground.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowMembers()) {
+            mMemberView.setVisibility(GONE);
+            memberList.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowClearChatHistory()) {
+            mClearMsgBtn.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowDeleteAndLeave()) {
+            mDissolveBtn.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowTransfer()) {
+            mChangeOwnerBtn.setVisibility(GONE);
+        }
+        if (!TUIGroupConfigClassic.isShowDismiss()) {
+            mDissolveBtn.setVisibility(GONE);
+        }
     }
 
     private void setupExtension() {

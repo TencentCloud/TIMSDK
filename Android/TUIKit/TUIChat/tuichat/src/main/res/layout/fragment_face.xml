@@ -19,7 +19,7 @@
         android:paddingLeft="23.04dp"
         android:paddingRight="23.04dp" />
 
-    <com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView
+    <com.tencent.qcloud.tuikit.timcommon.component.IndicatorView
         android:id="@+id/face_indicator"
         android:layout_marginBottom="10dp"
         android:layout_width="match_parent"

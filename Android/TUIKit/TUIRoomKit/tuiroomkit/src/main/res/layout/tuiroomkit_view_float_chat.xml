@@ -15,7 +15,7 @@
 
     <FrameLayout
         android:id="@+id/tuiroomkit_barrage_button_container"
-        android:layout_width="110dp"
+        android:layout_width="130dp"
         android:layout_height="36dp"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"

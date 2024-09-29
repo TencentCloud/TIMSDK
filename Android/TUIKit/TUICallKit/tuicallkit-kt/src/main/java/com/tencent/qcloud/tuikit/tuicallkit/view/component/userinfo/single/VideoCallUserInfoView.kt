@@ -8,14 +8,14 @@ import android.widget.TextView
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.single.VideoCallUserInfoViewModel
 
 class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
     private var imageAvatar: ImageView? = null
     private var textUserName: TextView? = null
-    private var mViewModel: VideoCallUserInfoViewModel = VideoCallUserInfoViewModel()
+    private var userModel = TUICallState.instance.remoteUserList.get().first()
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.Accept) {
@@ -58,11 +58,11 @@ class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
         LayoutInflater.from(context).inflate(R.layout.tuicallkit_user_info_video, this)
         imageAvatar = findViewById(R.id.iv_user_avatar)
         textUserName = findViewById(R.id.tv_user_name)
-        ImageLoader.loadImage(context, imageAvatar, mViewModel.avatar.get(), R.drawable.tuicallkit_ic_avatar)
-        textUserName!!.text = mViewModel.nickname.get()
+        ImageLoader.loadImage(context, imageAvatar, userModel.avatar.get(), R.drawable.tuicallkit_ic_avatar)
+        textUserName!!.text = userModel.nickname.get()
 
-        if (mViewModel.callStatus.get() == TUICallDefine.Status.Accept
-            || mViewModel.mediaType.get() == TUICallDefine.MediaType.Audio
+        if (TUICallState.instance.selfUser.get().callStatus.get() == TUICallDefine.Status.Accept
+            || TUICallState.instance.mediaType.get() == TUICallDefine.MediaType.Audio
         ) {
             this.visibility = GONE
         } else {
@@ -71,16 +71,16 @@ class VideoCallUserInfoView(context: Context) : BaseCallView(context) {
     }
 
     private fun addObserver() {
-        mViewModel.callStatus.observe(callStatusObserver)
-        mViewModel.mediaType.observe(mediaTypeObserver)
-        mViewModel.avatar.observe(avatarObserver)
-        mViewModel.nickname.observe(nicknameObserver)
+        TUICallState.instance.selfUser.get().callStatus.observe(callStatusObserver)
+        TUICallState.instance.mediaType.observe(mediaTypeObserver)
+        userModel.avatar.observe(avatarObserver)
+        userModel.nickname.observe(nicknameObserver)
     }
 
     private fun removeObserver() {
-        mViewModel.callStatus.removeObserver(callStatusObserver)
-        mViewModel.mediaType.removeObserver(mediaTypeObserver)
-        mViewModel.avatar.removeObserver(avatarObserver)
-        mViewModel.nickname.removeObserver(nicknameObserver)
+        TUICallState.instance.selfUser.get().callStatus.removeObserver(callStatusObserver)
+        TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
+        userModel.avatar.removeObserver(avatarObserver)
+        userModel.nickname.removeObserver(nicknameObserver)
     }
 }

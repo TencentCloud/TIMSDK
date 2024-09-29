@@ -8,20 +8,23 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomE
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_SCREEN_STATE_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_VOICE_VOLUME_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomVideoFloatView;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;
 import java.util.Map;
@@ -30,11 +33,27 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
     private static final String TAG = "RoomVideoFloatViewModel";
 
     private static final int VOLUME_CAN_HEARD_MIN_LIMIT = 10;
+    private static final int VIDEO_SWITCH_INTERVAL_MS   = 5 * 1000;
+
+    private long mLastSwitchTime = 0L;
 
     private RoomVideoFloatView mRoomVideoFloatView;
     private TUIVideoView       mVideoView;
 
-    private UserEntity mFloatUser;
+    private       UserEntity                           mFloatUser;
+    private final Observer<Map<String, Integer>>       mVolumeObserver = this::handleVolumeChanged;
+    private final LiveListObserver<UserState.UserInfo> mUserObserver = new LiveListObserver<UserState.UserInfo>() {
+        @Override
+        public void onItemRemoved(int position, UserState.UserInfo item) {
+            handleUserLeave(item.userId);
+        }
+    };
+    private final LiveListObserver<String>             mSeatObserver   = new LiveListObserver<String>() {
+        @Override
+        public void onItemRemoved(int position, String item) {
+            handleUserLeave(item);
+        }
+    };
 
     public RoomVideoFloatViewModel(RoomVideoFloatView roomVideoFloatView, TUIVideoView videoView) {
         mRoomVideoFloatView = roomVideoFloatView;
@@ -60,10 +79,6 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
                 initUserInfo();
                 break;
 
-            case USER_VOICE_VOLUME_CHANGED:
-                handleEventVoiceVolumeChanged(params);
-                break;
-
             case USER_MIC_STATE_CHANGED:
                 handleEventMicStateChanged(params);
                 break;
@@ -83,23 +98,6 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
             default:
                 Log.w(TAG, "un handle event : " + event);
                 break;
-        }
-    }
-
-    private void handleEventVoiceVolumeChanged(Map<String, Object> params) {
-        if (params == null || mFloatUser == null) {
-            return;
-        }
-        Map<String, Integer> map = (Map<String, Integer>) params.get(ConferenceEventConstant.KEY_VOLUME_MAP);
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            if (!TextUtils.equals(entry.getKey(), mFloatUser.getUserId())) {
-                continue;
-            }
-            int volume = entry.getValue();
-            if (volume > VOLUME_CAN_HEARD_MIN_LIMIT) {
-                mRoomVideoFloatView.onNotifyAudioVolumeChanged(volume);
-            }
-            break;
         }
     }
 
@@ -194,6 +192,81 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
         mRoomVideoFloatView.onNotifyUserInfoChanged(mFloatUser);
     }
 
+    private void handleUserLeave(String userId) {
+        if (mFloatUser == null || !TextUtils.equals(userId, mFloatUser.getUserId())) {
+            return;
+        }
+        initUserInfo();
+    }
+
+    private void handleVolumeChanged(Map<String, Integer> volumes) {
+        if (mFloatUser == null) {
+            return;
+        }
+        if (volumes == null || volumes.isEmpty()) {
+            return;
+        }
+        updateVolumeView(volumes);
+        switchVolumeUser(volumes);
+    }
+
+    private void updateVolumeView(Map<String, Integer> volumes) {
+        for (Map.Entry<String, Integer> entry : volumes.entrySet()) {
+            if (!TextUtils.equals(entry.getKey(), mFloatUser.getUserId())) {
+                continue;
+            }
+            int volume = entry.getValue();
+            if (volume > VOLUME_CAN_HEARD_MIN_LIMIT) {
+                mRoomVideoFloatView.onNotifyAudioVolumeChanged(volume);
+            }
+            break;
+        }
+    }
+
+    private void switchVolumeUser(Map<String, Integer> volumes) {
+        if (isScreenSharing()) {
+            return;
+        }
+        long curTime = SystemClock.elapsedRealtime();
+        if (curTime - mLastSwitchTime < VIDEO_SWITCH_INTERVAL_MS) {
+            return;
+        }
+        boolean isFloatUserTalking = false;
+        String maxVolumeUserId = null;
+        int maxVolume = 0;
+        for (Map.Entry<String, Integer> entry : volumes.entrySet()) {
+            int volume = entry.getValue();
+            if (volume < VOLUME_CAN_HEARD_MIN_LIMIT) {
+                continue;
+            }
+            if (TextUtils.equals(entry.getKey(), mFloatUser.getUserId())) {
+                isFloatUserTalking = true;
+                break;
+            }
+            if (volume > maxVolume) {
+                maxVolume = volume;
+                maxVolumeUserId = entry.getKey();
+            }
+        }
+        if (isFloatUserTalking || TextUtils.isEmpty(maxVolumeUserId)) {
+            return;
+        }
+        UserEntity maxVolumeUser = findUser(maxVolumeUserId, CAMERA_STREAM);
+        if (maxVolumeUser == null) {
+            return;
+        }
+        if (mFloatUser.isHasVideoStream()) {
+            stopVideoPlay(mFloatUser);
+        }
+        mFloatUser = maxVolumeUser;
+        if (mFloatUser.isHasVideoStream()) {
+            startVideoPlay(mFloatUser);
+        }
+        mLastSwitchTime = curTime;
+        mRoomVideoFloatView.onNotifyAudioStreamStateChanged(mFloatUser.isHasAudioStream());
+        mRoomVideoFloatView.onNotifyUserInfoChanged(mFloatUser);
+    }
+
     private void initUserInfo() {
         mFloatUser = findUserForFloatVideo();
         if (mFloatUser == null) {
@@ -215,7 +288,10 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
         eventCenter.subscribeEngine(USER_CAMERA_STATE_CHANGED, this);
         eventCenter.subscribeEngine(USER_SCREEN_STATE_CHANGED, this);
         eventCenter.subscribeEngine(USER_MIC_STATE_CHANGED, this);
-        eventCenter.subscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
+
+        ConferenceController.sharedInstance().getMediaState().volumeInfos.observe(mVolumeObserver);
+        ConferenceController.sharedInstance().getUserState().allUsers.observe(mUserObserver);
+        ConferenceController.sharedInstance().getSeatState().seatedUsers.observe(mSeatObserver);
     }
 
     private void unRegisterNotification() {
@@ -225,7 +301,10 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
         eventCenter.unsubscribeEngine(USER_CAMERA_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(USER_SCREEN_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(USER_MIC_STATE_CHANGED, this);
-        eventCenter.unsubscribeEngine(USER_VOICE_VOLUME_CHANGED, this);
+
+        ConferenceController.sharedInstance().getMediaState().volumeInfos.removeObserver(mVolumeObserver);
+        ConferenceController.sharedInstance().getUserState().allUsers.removeObserver(mUserObserver);
+        ConferenceController.sharedInstance().getSeatState().seatedUsers.removeObserver(mSeatObserver);
     }
 
     private void startVideoPlay(UserEntity userInfo) {
@@ -263,6 +342,7 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
             return null;
         }
         UserEntity roomOwner = null;
+        UserEntity self = null;
         for (UserEntity item : allUserList) {
             if (item.isHasVideoStream() && item.getVideoStreamType() == SCREEN_STREAM && !TextUtils.equals(
                     TUILogin.getUserId(), item.getUserId())) {
@@ -272,10 +352,13 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
                     && item.getVideoStreamType() != SCREEN_STREAM) {
                 roomOwner = item;
             }
+            if (TextUtils.equals(item.getUserId(), TUILogin.getUserId())
+                    && item.getVideoStreamType() != SCREEN_STREAM) {
+                self = item;
+            }
         }
         if (roomOwner == null) {
-            Log.e(TAG, "findUserForFloatVideo roomOwner is null");
-            return allUserList.get(0);
+            return self;
         }
         return roomOwner;
     }

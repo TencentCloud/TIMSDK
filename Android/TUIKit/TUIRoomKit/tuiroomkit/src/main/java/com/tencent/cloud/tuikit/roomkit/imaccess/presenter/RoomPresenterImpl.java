@@ -156,6 +156,7 @@ public class RoomPresenterImpl extends RoomPresenter implements IRoomCallback, C
             @Override
             public void onSuccess() {
                 Log.d(TAG, "waitUntilGiveUpRoomOwner onSuccess thread name=" + Thread.currentThread().getName());
+                mRoomObserver.getRoomMsgData().setRoomManagerId(roomManagerVolunteer.getUserId());
                 mGiveUpRoomManagerLatch.countDown();
                 ConferenceController.sharedInstance(TUILogin.getAppContext()).getConferenceState().userModel.changeRole(
                         TUIRoomDefine.Role.GENERAL_USER);

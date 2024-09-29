@@ -45,10 +45,10 @@
     <string name="tuiroomkit_mute_video_by_master">The room owner disabled your video.</string>
     <string name="tuiroomkit_un_mute_video_by_master">The room owner enabled your video.</string>
     <string name="tuiroomkit_title_collection_volume">Capture Volume</string>
-    <string name="tuiroomkit_title_quality_check">Quality Check</string>
+    <string name="tuiroomkit_title_quality_check">Network Quality Monitoring</string>
     <string name="tuiroomkit_title_network">Network</string>
-    <string name="tuiroomkit_title_network_delay">NetworkDelay</string>
-    <string name="tuiroomkit_title_packet_loss_rate">PacketLossRate</string>
+    <string name="tuiroomkit_title_network_delay">Latency</string>
+    <string name="tuiroomkit_title_packet_loss_rate">Packet Loss Rate</string>
     <string name="tuiroomkit_title_trtc_statistics_audio">Audio</string>
     <string name="tuiroomkit_title_trtc_statistics_video">Video</string>
     <string name="tuiroomkit_title_bitrate">Bitrate</string>
@@ -59,9 +59,9 @@
     <string name="tuiroomkit_title_audio_recording">Audio Recording</string>
     <string name="tuiroomkit_btn_start_recording">Start</string>
     <string name="tuiroomkit_toast_recording_file_path_copied">Recording file save path: %s</string>
-    <string name="tuiroomkit_title_video">Video</string>
-    <string name="tuiroomkit_title_audio">Audio</string>
-    <string name="tuiroomkit_title_other_setting">Other Setting</string>
+    <string name="tuiroomkit_title_video">Video Settings</string>
+    <string name="tuiroomkit_title_audio">Audio Settings</string>
+    <string name="tuiroomkit_title_other_setting">Other Settings</string>
     <string name="tuiroomkit_title_sharing">Share</string>
     <string name="tuiroomkit_title_local_mirror">Local Mirror</string>
     <string name="tuiroomkit_title_enable">Enable</string>
@@ -70,7 +70,7 @@
     <string name="tuiroomkit_tv_enable_audio">Enable Audio</string>
     <string name="tuiroomkit_tv_screen_capture">You are sharing your screen</string>
     <string name="tuiroomkit_tv_stop_screen_capture">Stop</string>
-    <string name="tuiroomkit_tv_screen_recording">Screen Recording</string>
+    <string name="tuiroomkit_tv_screen_recording">Screen Sharing</string>
     <string name="tuiroomkit_toast_need_floating_window_permission">Floating window permission is required</string>
     <string name="tuiroomkit_item_leave">exit</string>
     <string name="tuiroomkit_item_close_microphone">Mute</string>
@@ -98,7 +98,7 @@
     <string name="tuiroomkit_microphone">Microphone</string>
     <string name="tuiroomkit_camera">Camera</string>
     <string name="tuiroomkit_meeting_title">%s\'s quick conference</string>
-    <string name="tuiroomkit_meeting_invite_title">Invite members</string>
+    <string name="tuiroomkit_meeting_invite_title">Invite Others</string>
     <string name="tuiroomkit_meeting_info_copy">Copy</string>
     <string name="tuiroomkit_master">Master</string>
     <string name="tuiroomkit_room_manager">Manager</string>
@@ -115,7 +115,7 @@
     <string name="tuiroomkit_permission_storage_reason">Need to access your storage permission, which is used for the multi-person audio and video room function after it is turned on, and your QR code can be saved to the phone only after it is turned on</string>
     <string name="tuiroomkit_tips_start_storage">Please turn on the storage permission first</string>
     <string name="tuiroomkit_hint_search_member">Search for participants</string>
-    <string name="tuiroomkit_me">&#160;(me)</string>
+    <string name="tuiroomkit_me">&#160;(Me)</string>
     <string name="tuiroomkit_forward_master_to">Make host</string>
     <string name="tuiroomkit_manager_add">Set as administrator</string>
     <string name="tuiroomkit_manager_remove">Remove administrator</string>
@@ -173,12 +173,12 @@
     <string name="tuiroomkit_agree">Agree</string>
     <string name="tuiroomkit_refuse">Refuse</string>
     <string name="tuiroomkit_check">Check</string>
-    <string name="tuiroomkit_leave_room_tips">If you don\'t want to end the meeting, \n please assign a new host before leaving the meeting</string>
-    <string name="tuiroomkit_leave_room">Leave conference</string>
-    <string name="tuiroomkit_finish_room">End conference</string>
+    <string name="tuiroomkit_leave_room_tips">If you don\'t want to end the conference, \n please assign a new host before leaving the conference</string>
+    <string name="tuiroomkit_leave_room">Leave Conference</string>
+    <string name="tuiroomkit_finish_room">End Conference</string>
     <string name="tuiroomkit_assign_new_master">Assign new master</string>
     <string name="tuiroomkit_specify_and_leave">specify and leave</string>
-    <string name="tuiroomkit_confirm_leave_tip">Are you sure you want to leave the room</string>
+    <string name="tuiroomkit_confirm_leave_tip">Are you sure you want to leave the conference</string>
     <string name="tuiroomkit_room_link_params">%s#/room?roomId=%s</string>
     <string name="tuiroomkit_toast_agreed_invitation">You have agreed to the stage invitation and can speak</string>
     <string name="tuiroomkit_toast_agreed_on_stage_by_master">The host has approved your application to be on stage</string>
@@ -204,7 +204,7 @@
     <string name="tuiroomkit_chat_access_room_invite_reject">Reject</string>
     <string name="tuiroomkit_chat_access_room_extension_settings">Fast meeting settings</string>
     <string name="tuiroomkit_chat_access_room_extension_settings_audio">Enable audio when joining a meeting</string>
-    <string name="tuiroomkit_chat_access_room_extension_settings_video">入Enable video when joining a meeting</string>
+    <string name="tuiroomkit_chat_access_room_extension_settings_video">Enable video when joining a meeting</string>
     <string name="tuiroomkit_can_not_join_room_tip">Audio and video are occupied by other functions, so cannot join the meeting</string>
     <string name="tuiroomkit_hint_stop_live_screen">Stop Screen Sharing Screen Streaming</string>
     <string name="tuiroomkit_hint_stop_live_screen_cancel">Cancel</string>
@@ -219,7 +219,7 @@
     <string name="tuiroomkit_video_resolution_smooth">Smooth</string>
     <string name="tuiroomkit_video_resolution_sd">Standard Definition</string>
     <string name="tuiroomkit_video_resolution_hd">High Definition</string>
-    <string name="tuiroomkit_video_resolution_uhd">Ultra High Definition</string>
+    <string name="tuiroomkit_video_resolution_uhd">Full High Definition</string>
 
     <string name="tuiroomkit_toast_conference_id_not_exist">This conference does not exist, please join again</string>
     <string name="tuiroomkit_toast_conference_id_invalid">The current conference number is invalid, please check your input</string>
@@ -227,12 +227,12 @@
     <string name="tuiroomkit_toast_conference_name_invalid">The current conference name is invalid, please check your input</string>
 
     <string name="tuiroomkit_float_chat_warning_not_empty">"input can't be empty!"</string>
-    <string name="tuiroomkit_float_chat_hint">say something</string>
+    <string name="tuiroomkit_float_chat_hint">Say something</string>
     <string name="tuiroomkit_float_chat_btn_send">Send</string>
     <string name="tuiroomkit_float_chat_enable">Floating Chat</string>
 
     <string name="tuiroomkit_temporary_conference_name">%s\'s temporary room</string>
-    <string name="tuiroomkit_schedule_room_btn">Schedule Room</string>
+    <string name="tuiroomkit_schedule_room_btn">Schedule</string>
     <string name="tuiroomkit_scheduled_room_image_tag">No scheduled room</string>
     <string name="tuiroomkit_scheduled_room_btn_enter">Enter</string>
     <string name="tuiroomkit_scheduled_enter_room">Enter room</string>
@@ -243,18 +243,18 @@
     <string name="tuiroomkit_scheduled_start_time">Start time</string>
     <string name="tuiroomkit_scheduled_duration">Room Duration</string>
     <string name="tuiroomkit_scheduled_room_type">Room type</string>
-    <string name="tuiroomkit_scheduled_host">Host</string>
-    <string name="tuiroomkit_scheduled_attendees">Attendees</string>
+    <string name="tuiroomkit_scheduled_host">Creator</string>
+    <string name="tuiroomkit_scheduled_attendees">Participants</string>
     <string name="tuiroomkit_scheduled_hint_cancel_room_title">Cancel scheduled room</string>
     <string name="tuiroomkit_scheduled_hint_cancel_message">After cancellation, other members will not be able to join</string>
     <string name="tuiroomkit_scheduled_hint_cancel_room">Cancel</string>
     <string name="tuiroomkit_scheduled_hint_not_cancel">UnCanceled</string>
     <string name="tuiroomkit_scheduled_room_detail_text">Room details</string>
-    <string name="tuiroomkit_scheduled_modify_text">Modify</string>
-    <string name="tuiroomkit_scheduled_room_title_text">Schedule Room</string>
+    <string name="tuiroomkit_scheduled_modify_text">Revise</string>
+    <string name="tuiroomkit_scheduled_room_title_text">Schedule</string>
     <string name="tuiroomkit_scheduled_time_zone_title_text">Time zone</string>
     <string name="tuiroomkit_scheduled_room_encrypt_text">Encryption</string>
-    <string name="tuiroomkit_scheduled_room_password_text">Password</string>
+    <string name="tuiroomkit_scheduled_room_password_text">Room Password</string>
     <string name="tuiroomkit_scheduled_waiting_room_text">Waiting room</string>
     <string name="tuiroomkit_minute_text">%2dm</string>
     <string name="tuiroomkit_schedule_success_and_invite_text">Schedule successful, invite members to join</string>
@@ -276,7 +276,7 @@
     <string name="tuiroomkit_start_time_minute_text">%02d</string>
     <string name="tuiroomkit_selected_text">Selected</string>
     <string name="tuiroomkit_conference_status_not_start">Not started</string>
-    <string name="tuiroomkit_conference_status_running">In progress</string>
+    <string name="tuiroomkit_conference_status_running">Ongoing</string>
     <string name="tuiroomkit_conference_status_finished">Finished</string>
     <string name="tuiroomkit_attendees_avatar_display_unit">People</string>
     <string name="tuiroomkit_start_time_earlier_than_current_time">Start time cannot be earlier than the current time.</string>
@@ -290,6 +290,13 @@
     <string name="tuiroomkit_conference_already_started_and_cannot_be_modified">Conference has already started, and it cannot be modified!</string>
     <string name="tuiroomkit_conference_already_started_and_cannot_be_cancel">Conference has already started, and it cannot be cancelled!</string>
     <string name="tuiroomkit_no_participants_yet">No participants yet</string>
+    <string name="tuiroomkit_enter_conference_password_title">Conference Password</string>
+    <string name="tuiroomkit_please_input_conference_password">Please enter the conference password</string>
+    <string name="tuiroomkit_join">Join</string>
+    <string name="tuiroomkit_password_is_empty">Password is empty</string>
+    <string name="tuiroomkit_room_password_title">Room Password</string>
+    <string name="tuiroomkit_room_password_format_error">Your room password format is incorrect, please check it</string>
+    <string name="tuiroomkit_room_password_error">Wrong password, please re-enter</string>
 
     <string name="tuiroomkit_tip_creating_room_id">Generating conference number, please try again later</string>
     <string name="tuiroomkit_turn_on_audio">Mic</string>
@@ -299,4 +306,41 @@
     <string name="tuiroomkit_please_input_room_number">Enter a conference ID</string>
     <string name="tuiroomkit_enter_room">Join room</string>
     <string name="tuiroomkit_create_room">Create room</string>
+    <string name="tuiroomkit_repeat_start_room_dialog_title">Currently in the room</string>
+    <string name="tuiroomkit_repeat_start_room_dialog_content">Please exit before joining a new room</string>
+    <string name="tuiroomkit_i_see">I see</string>
+
+    <string name="tuiroomkit_invite_yout_to_join_conference">%s invite you to join the conference</string>
+    <string name="tuiroomkit_conference_host">Host:</string>
+    <string name="tuiroomkit_participant">Participant:</string>
+    <string name="tuiroomkit_join_now">Join now</string>
+    <string name="tuiroomkit_do_not_enter_for_now">Do not enter for now</string>
+    <string name="tuiroomkit_add_user">Add user</string>
+    <string name="tuiroomkit_share_room">Share room</string>
+    <string name="tuiroomkit_not_entered">Not entered(%s)</string>
+    <string name="tuiroomkit_call">Call</string>
+    <string name="tuiroomkit_calling">Calling…</string>
+    <string name="tuiroomkit_not_join_for_now">Not join for now</string>
+    <string name="tuiroomkit_call_everyone">Call all</string>
+    <string name="tuiroomkit_already_entered_room">Entered(%s)</string>
+    <string name="tuiroomkit_copy_room_id_and_link">Copy the room id and link</string>
+    <string name="tuiroomkit_copy_success">Copy successful</string>
+    <string name="tuiroomkit_room_time">Room time</string>
+    <string name="tuiroomkit_copy_invitation_link">Copy invitation link</string>
+    <string name="tuiroomkit_format_copy_room_info_without_password">%s Inviting you to join the conference\nRoom Theme：%s\nRoom ID：%s</string>
+    <string name="tuiroomkit_format_copy_room_info_with_password">%s Inviting you to join the conference\nRoom Theme:%s\nRoom ID:%s\nRoom password:%s</string>
+    <string name="tuiroomkit_format_copy_room_info_out_room">%sInviting you to join the conference\nRoom Theme:%s\nRoom time:%s\nRoom ID:%s</string>
+    <string name="tuiroomkit_format_copy_room_info_out_room_with_password">%sInviting you to join the conference\nRoom Theme:%s\nRoom Time:%s\nRoom ID:%s\nRoom Password:%s</string>
+    <string name="tuiroomkit_format_conference_time">%s-%02d:%02d</string>
+    <string name="tuiroomkit_format_conference_next_day_time">%s-(Next Day)%02d:%02d</string>
+    <string name="tuiroomkit_format_conference_start_time">%d%s%02d%s%02d%s %02d:%02d</string>
+    <string name="tuiroomkit_copy_room_password_success">Copy the room password was successful</string>
+    <string name="tuiroomkit_copy_room_invitation_link_success">Copy invitation link successful</string>
+    <string name="tuiroomkit_please_enter_six_digit_password">Enter 6-digit password</string>
+    <string name="tuiroomkit_invitation_has_been_sent">Invitation has been sent, waiting for users to join</string>
+    <string name="tuiroomkit_conference_modify_success">Modification successful</string>
+
+    <string name="tuiroomkit_default_water_mark_text">%s(%s)</string>
+    <string name="tuiroomkit_password_digits">0123456789</string>
+    <string name="tuiroomkit_confirm_dialog_count_down_text">(%s)</string>
 </resources>

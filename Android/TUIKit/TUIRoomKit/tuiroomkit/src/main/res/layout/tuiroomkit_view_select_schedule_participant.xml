@@ -10,6 +10,7 @@
         android:text="@string/tuiroomkit_scheduled_attendees"
         android:textSize="16sp"
         android:textColor="#2B2E38"
+        android:textStyle="bold"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"/>
 

@@ -1,6 +1,16 @@
 package com.tencent.cloud.tuikit.roomkit.model;
 
 public class ConferenceEventConstant {
+    public static final String KEY_CONFERENCE          = "KEY_CONFERENCE";
+    public static final String KEY_CONFERENCE_STARTED  = "KEY_CONFERENCE_STARTED";
+    public static final String KEY_CONFERENCE_JOINED   = "KEY_CONFERENCE_JOINED";
+    public static final String KEY_CONFERENCE_EXITED   = "KEY_CONFERENCE_EXITED";
+    public static final String KEY_CONFERENCE_FINISHED = "KEY_CONFERENCE_FINISHED";
+    public static final String KEY_CONFERENCE_ID       = "KEY_CONFERENCE_ID";
+    public static final String KEY_CONFERENCE_INFO     = "KEY_CONFERENCE_INFO";
+    public static final String KEY_CONFERENCE_ERROR    = "KEY_CONFERENCE_ERROR";
+    public static final String KEY_CONFERENCE_MESSAGE  = "KEY_CONFERENCE_MESSAGE";
+
     public static final String KEY_ROOM_URL       = "roomURL";
     public static final String KEY_ERROR_CODE     = "errorCode";
     public static final String KEY_MESSAGE        = "message";

@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cl_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="160dp">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal">
 
     <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
         android:id="@+id/iv_user_avatar"
@@ -13,6 +12,7 @@
         android:layout_height="100dp"
         android:src="@drawable/tuicallkit_ic_avatar"
         app:corner_radius="6dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

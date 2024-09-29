@@ -44,7 +44,7 @@
         android:layout_below="@id/message_top_time_tv"
         android:layout_toEndOf="@id/select_checkbox">
 
-        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView
+        <ImageView
             android:id="@+id/left_user_icon_view"
             android:layout_width="41dp"
             android:layout_height="41dp"
@@ -52,11 +52,9 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="11.52dp"
             android:visibility="gone"
-            app:default_image="?attr/core_default_user_icon"
-            app:image_radius="20dp"
             tools:visibility="visible" />
 
-        <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView
+        <ImageView
             android:id="@+id/right_user_icon_view"
             android:layout_width="41dp"
             android:layout_height="41dp"
@@ -64,11 +62,10 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="11.52dp"
             android:visibility="gone"
-            app:default_image="?attr/core_default_user_icon"
-            app:image_radius="20dp" />
+            tools:visibility="visible"/>
 
         <TextView
-            android:id="@+id/user_name_tv"
+            android:id="@+id/left_user_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -84,7 +81,7 @@
             android:id="@+id/msg_detail_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/user_name_tv"
+            android:layout_alignTop="@id/left_user_name_tv"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="3.36dp"
             android:ellipsize="end"
@@ -99,7 +96,7 @@
             android:id="@+id/msg_content_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user_name_tv"
+            android:layout_below="@id/left_user_name_tv"
             android:layout_toStartOf="@id/right_user_icon_view"
             android:layout_toEndOf="@id/left_user_icon_view"
 

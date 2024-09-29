@@ -9,8 +9,10 @@ import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function.VideoCallerAndCalleeAcceptedViewModel
 
 class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context) {
     private var rootLayout: MotionLayout? = null
@@ -25,8 +27,6 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
     private var textAudioDevice: TextView? = null
     private var textCamera: TextView? = null
 
-    private var viewModel = VideoCallerAndCalleeAcceptedViewModel()
-
     private var isCameraOpenObserver = Observer<Boolean> {
         imageOpenCamera?.isActivated = it
         textCamera?.text = if (it) {
@@ -35,9 +35,11 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
             context.getString(R.string.tuicallkit_toast_disable_camera)
         }
 
-        if (it && viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+        if (it && TUICallState.instance.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
             refreshButton(R.id.iv_function_switch_camera, VISIBLE)
-            refreshButton(R.id.img_blur_background, if (viewModel.isShowVirtualBackgroundButton) VISIBLE else GONE)
+            refreshButton(
+                R.id.img_blur_background, if (TUICallState.instance.showVirtualBackgroundButton) VISIBLE else GONE
+            )
         } else {
             refreshButton(R.id.iv_function_switch_camera, GONE)
             refreshButton(R.id.img_blur_background, GONE)
@@ -53,8 +55,8 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
         imageMute?.isActivated = it
     }
 
-    private var isSpeakerObserver = Observer<Boolean> {
-        imageAudioDevice?.isActivated = it
+    private var isSpeakerObserver = Observer<TUICommonDefine.AudioPlaybackDevice> {
+        imageAudioDevice?.isActivated = it == TUICommonDefine.AudioPlaybackDevice.Speakerphone
     }
 
     private val isBottomViewExpandedObserver = Observer<Boolean> {
@@ -70,21 +72,20 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
 
     override fun clear() {
         removeObserver()
-        viewModel.removeObserver()
     }
 
     private fun addObserver() {
-        viewModel.isCameraOpen.observe(isCameraOpenObserver)
-        viewModel.isMicMute.observe(isMicMuteObserver)
-        viewModel.isSpeaker.observe(isSpeakerObserver)
-        viewModel.isBottomViewExpanded.observe(isBottomViewExpandedObserver)
+        TUICallState.instance.isCameraOpen.observe(isCameraOpenObserver)
+        TUICallState.instance.isMicrophoneMute.observe(isMicMuteObserver)
+        TUICallState.instance.audioPlayoutDevice.observe(isSpeakerObserver)
+        TUICallState.instance.isBottomViewExpand.observe(isBottomViewExpandedObserver)
     }
 
     private fun removeObserver() {
-        viewModel.isCameraOpen.removeObserver(isCameraOpenObserver)
-        viewModel.isMicMute.removeObserver(isMicMuteObserver)
-        viewModel.isSpeaker.removeObserver(isSpeakerObserver)
-        viewModel.isBottomViewExpanded.removeObserver(isBottomViewExpandedObserver)
+        TUICallState.instance.isCameraOpen.removeObserver(isCameraOpenObserver)
+        TUICallState.instance.isMicrophoneMute.removeObserver(isMicMuteObserver)
+        TUICallState.instance.audioPlayoutDevice.removeObserver(isSpeakerObserver)
+        TUICallState.instance.isBottomViewExpand.removeObserver(isBottomViewExpandedObserver)
     }
 
     private fun initView() {
@@ -102,39 +103,42 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
         imageExpandView = findViewById(R.id.iv_expanded)
         imageExpandView?.visibility = INVISIBLE
 
-        imageOpenCamera?.isActivated = viewModel.isCameraOpen.get() == true
-        imageMute?.isActivated = viewModel.isMicMute.get() == true
-        imageAudioDevice?.isActivated = viewModel.isSpeaker.get() == true
+        imageOpenCamera?.isActivated = TUICallState.instance.isCameraOpen.get() == true
+        imageMute?.isActivated = TUICallState.instance.isMicrophoneMute.get() == true
+        imageAudioDevice?.isActivated =
+            TUICallState.instance.audioPlayoutDevice.get() == TUICommonDefine.AudioPlaybackDevice.Speakerphone
 
-        textCamera?.text = if (viewModel.isCameraOpen.get()) {
+        textCamera?.text = if (TUICallState.instance.isCameraOpen.get()) {
             context.getString(R.string.tuicallkit_toast_enable_camera)
         } else {
             context.getString(R.string.tuicallkit_toast_disable_camera)
         }
 
-        textAudioDevice?.text = if (viewModel.isSpeaker.get() == true) {
-            context.getString(R.string.tuicallkit_toast_speaker)
+        if (TUICallState.instance.audioPlayoutDevice.get() == TUICommonDefine.AudioPlaybackDevice.Speakerphone) {
+            textAudioDevice?.text = context.getString(R.string.tuicallkit_toast_speaker)
         } else {
-            context.getString(R.string.tuicallkit_toast_use_earpiece)
+            textAudioDevice?.text = context.getString(R.string.tuicallkit_toast_use_earpiece)
         }
 
-        if (viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL && viewModel.isCameraOpen.get()) {
+        if (TUICallState.instance.scene.get() == TUICallDefine.Scene.SINGLE_CALL
+            && TUICallState.instance.isCameraOpen.get()
+        ) {
             imageSwitchCamera?.visibility = VISIBLE
-            imageBlurBackground?.visibility = if (viewModel.isShowVirtualBackgroundButton) VISIBLE else GONE
+            imageBlurBackground?.visibility = if (TUICallState.instance.showVirtualBackgroundButton) VISIBLE else GONE
         } else {
             imageSwitchCamera?.visibility = GONE
             imageBlurBackground?.visibility = GONE
         }
 
-        if (!viewModel.isBottomViewExpanded.get() && viewModel.showLargerViewUserId.get() != null) {
-            viewModel.updateView()
+        if (!TUICallState.instance.isBottomViewExpand.get() && TUICallState.instance.showLargeViewUserId.get() != null) {
+            TUICallState.instance.isBottomViewExpand.set(!TUICallState.instance.isBottomViewExpand.get())
         }
         initViewListener()
         enableSwipeFunctionView(false)
     }
 
     private fun enableSwipeFunctionView(enable: Boolean) {
-        if (viewModel.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+        if (TUICallState.instance.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
             rootLayout?.enableTransition(R.id.video_function_view_transition, false)
             return
         }
@@ -143,44 +147,58 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
 
     private fun initViewListener() {
         imageMute?.setOnClickListener {
-            val resId = if (viewModel.isMicMute.get() == true) {
-                viewModel.openMicrophone()
+            val resId = if (TUICallState.instance.isMicrophoneMute.get() == true) {
+                EngineManager.instance.openMicrophone(null)
                 R.string.tuicallkit_toast_disable_mute
             } else {
-                viewModel.closeMicrophone()
+                EngineManager.instance.closeMicrophone()
                 R.string.tuicallkit_toast_enable_mute
             }
             textMute?.text = context.getString(resId)
         }
         imageAudioDevice?.setOnClickListener {
-            val resId = if (viewModel.isSpeaker.get() == true) {
-                viewModel.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
-                R.string.tuicallkit_toast_use_earpiece
+            var resId: Int
+            if (TUICallState.instance.audioPlayoutDevice.get() == TUICommonDefine.AudioPlaybackDevice.Speakerphone) {
+                EngineManager.instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
+                resId = R.string.tuicallkit_toast_use_earpiece
             } else {
-                viewModel.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
-                R.string.tuicallkit_toast_speaker
+                EngineManager.instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
+                resId = R.string.tuicallkit_toast_speaker
             }
             textAudioDevice?.text = context.getString(resId)
         }
         imageOpenCamera?.setOnClickListener {
-            if (viewModel.isCameraOpen.get() == true) {
-                viewModel.closeCamera()
+            if (TUICallState.instance.isCameraOpen.get() == true) {
+                EngineManager.instance.closeCamera()
             } else {
-                viewModel.openCamera()
+                var camera: TUICommonDefine.Camera = TUICallState.instance.isFrontCamera.get()
+                val videoView = VideoViewFactory.instance.findVideoView(TUICallState.instance.selfUser.get().id)
+                EngineManager.instance.openCamera(camera, videoView?.getVideoView(), null)
+
+                if (TUICallState.instance.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+                    if (TUICallState.instance.showLargeViewUserId.get() != TUICallState.instance.selfUser.get().id) {
+                        TUICallState.instance.showLargeViewUserId.set(TUICallState.instance.selfUser.get().id)
+                    }
+                }
             }
         }
-        imageHangup?.setOnClickListener { viewModel.hangup() }
+
+        imageHangup?.setOnClickListener { EngineManager.instance.hangup(null) }
 
         imageExpandView?.setOnClickListener() {
-            viewModel.updateView()
+            TUICallState.instance.isBottomViewExpand.set(!TUICallState.instance.isBottomViewExpand.get())
         }
 
         imageBlurBackground?.setOnClickListener {
-            viewModel.setBlurBackground()
+            EngineManager.instance.setBlurBackground(!TUICallState.instance.enableBlurBackground.get())
         }
 
         imageSwitchCamera?.setOnClickListener() {
-            viewModel.switchCamera()
+            var camera = TUICommonDefine.Camera.Back
+            if (TUICallState.instance.isFrontCamera.get() == TUICommonDefine.Camera.Back) {
+                camera = TUICommonDefine.Camera.Front
+            }
+            EngineManager.instance.switchCamera(camera)
         }
 
         rootLayout?.addTransitionListener(object : MotionLayout.TransitionListener {
@@ -200,7 +218,7 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
     }
 
     private fun updateView(isExpand: Boolean) {
-        if (viewModel.scene?.get() == TUICallDefine.Scene.SINGLE_CALL) {
+        if (TUICallState.instance.scene?.get() == TUICallDefine.Scene.SINGLE_CALL) {
             return
         }
         if (isExpand) {
@@ -209,6 +227,5 @@ class VideoCallerAndCalleeAcceptedView(context: Context) : BaseCallView(context)
         } else {
             rootLayout?.transitionToEnd()
         }
-
     }
 }

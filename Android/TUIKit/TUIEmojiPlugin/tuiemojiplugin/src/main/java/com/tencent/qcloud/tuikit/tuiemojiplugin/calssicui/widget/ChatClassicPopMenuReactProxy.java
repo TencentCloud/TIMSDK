@@ -28,9 +28,8 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-import com.tencent.qcloud.tuikit.tuichat.classicui.component.EmojiIndicatorView;
+import com.tencent.qcloud.tuikit.timcommon.component.IndicatorView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.popmenu.ChatPopMenu;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuikit.tuiemojiplugin.R;
 import com.tencent.qcloud.tuikit.tuiemojiplugin.bean.MessageReactionBean;
 import com.tencent.qcloud.tuikit.tuiemojiplugin.bean.ReactionBean;
@@ -50,7 +49,7 @@ public class ChatClassicPopMenuReactProxy {
 
     private RecyclerView facePageRecyclerView;
     private LinearLayout facePageLinearLayout;
-    private EmojiIndicatorView facePageIndicator;
+    private IndicatorView facePageIndicator;
     private RecyclerView recentFaceView;
     private View divideLine;
     private FacePageAdapter facePageAdapter;

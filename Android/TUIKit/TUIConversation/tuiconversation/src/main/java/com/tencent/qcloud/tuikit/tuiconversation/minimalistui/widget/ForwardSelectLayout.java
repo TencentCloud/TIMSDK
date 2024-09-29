@@ -57,7 +57,6 @@ public class ForwardSelectLayout extends RelativeLayout {
         adapter.setShowMultiSelectCheckBox(true);
         adapter.setSwipeEnabled(false);
         conversationList.setAdapter((IConversationListAdapter) adapter);
-        conversationList.setItemAvatarRadius(ScreenUtil.dip2px(28));
         presenter.setAdapter(adapter);
         presenter.loadMoreConversation();
     }

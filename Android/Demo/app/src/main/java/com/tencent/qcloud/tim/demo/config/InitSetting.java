@@ -46,7 +46,8 @@ public class InitSetting {
         TUIThemeManager.addLivelyTheme(R.style.DemoLivelyTheme);
         TUIThemeManager.addSeriousTheme(R.style.DemoSeriousTheme);
         setPermissionRequestContent();
-        TUIChatConfigs.getConfigs().getGeneralConfig().setEnableMultiDeviceForCall(true);
+        TUIChatConfigs.getGeneralConfig().setEnableMultiDeviceForCall(true);
+        TUIChatConfigs.getGeneralConfig().setEnableVirtualBackgroundForCall(true);
         CustomConfigHelper.initCustom(mContext);
         initOfflinePushConfigs();
         initDemoStyle();
@@ -89,19 +90,10 @@ public class InitSetting {
 
     private void initOfflinePushConfigs() {
         final SharedPreferences sharedPreferences = mContext.getSharedPreferences("TUIKIT_DEMO_SETTINGS", mContext.MODE_PRIVATE);
-        int registerMode = sharedPreferences.getInt("test_OfflinePushRegisterMode_v2", 0);
         int callbackMode = sharedPreferences.getInt("test_OfflinePushCallbackMode_v2", 1);
-        Log.i(TAG, "initOfflinePushConfigs registerMode = " + registerMode);
         Log.i(TAG, "initOfflinePushConfigs callbackMode = " + callbackMode);
 
-        OfflinePushConfigs.getOfflinePushConfigs().setRegisterPushMode(registerMode);
         OfflinePushConfigs.getOfflinePushConfigs().setClickNotificationCallbackMode(callbackMode);
-
-        // auto register
-        boolean auto = registerMode == 0 ? false : true;
-        Map<String, Object> autoParam = new HashMap<>();
-        autoParam.put(TUIConstants.TIMPush.DISABLE_AUTO_REGISTER_PUSH_KEY, auto);
-        TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_DISABLE_AUTO_REGISTER_PUSH, autoParam);
 
         // ring
         boolean enablePrivateRing = sharedPreferences.getBoolean("test_enable_private_ring", false);
@@ -115,11 +107,6 @@ public class InitSetting {
 
     // call after login success
     public void registerPushManually() {
-        int registerMode = OfflinePushConfigs.getOfflinePushConfigs().getRegisterPushMode();
-        DemoLog.d(TAG, "OfflinePush register mode:" + registerMode);
-        if (registerMode == OfflinePushConfigs.REGISTER_PUSH_MODE_AUTO) {
-            return;
-        }
         if (offlinePushAPIDemo == null) {
             offlinePushAPIDemo = new OfflinePushAPIDemo();
         }

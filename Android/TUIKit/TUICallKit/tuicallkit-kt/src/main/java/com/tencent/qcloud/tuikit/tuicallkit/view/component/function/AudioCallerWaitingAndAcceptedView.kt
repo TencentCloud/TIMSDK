@@ -8,8 +8,9 @@ import android.widget.TextView
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function.AudioCallerWaitingAndAcceptedViewModel
 
 class AudioCallerWaitingAndAcceptedView(context: Context) : BaseCallView(context) {
     private var layoutMute: LinearLayout? = null
@@ -20,35 +21,36 @@ class AudioCallerWaitingAndAcceptedView(context: Context) : BaseCallView(context
     private var textMic: TextView? = null
     private var textAudioDevice: TextView? = null
 
-    private var viewModel = AudioCallerWaitingAndAcceptedViewModel()
-
     private var isMicMuteObserver = Observer<Boolean> {
         imageMute?.isActivated = it
+        textMic?.text = getMicText()
     }
 
-    private var isSpeakerObserver = Observer<Boolean> {
-        imageHandsFree?.isActivated = it
+    private var audioPlayoutDeviceObserver = Observer<TUICommonDefine.AudioPlaybackDevice> {
+        if (it == TUICommonDefine.AudioPlaybackDevice.Speakerphone) {
+            imageHandsFree?.isActivated = true
+        } else {
+            imageHandsFree?.isActivated = false
+        }
     }
 
     init {
         initView()
-
         addObserver()
     }
 
     override fun clear() {
         removeObserver()
-        viewModel?.removeObserver()
     }
 
     private fun addObserver() {
-        viewModel?.isMicMute?.observe(isMicMuteObserver)
-        viewModel?.isSpeaker?.observe(isSpeakerObserver)
+        TUICallState.instance.isMicrophoneMute.observe(isMicMuteObserver)
+        TUICallState.instance.audioPlayoutDevice?.observe(audioPlayoutDeviceObserver)
     }
 
     private fun removeObserver() {
-        viewModel?.isMicMute?.removeObserver(isMicMuteObserver)
-        viewModel?.isSpeaker?.removeObserver(isSpeakerObserver)
+        TUICallState.instance.isMicrophoneMute.removeObserver(isMicMuteObserver)
+        TUICallState.instance.audioPlayoutDevice?.removeObserver(audioPlayoutDeviceObserver)
     }
 
     private fun initView() {
@@ -61,33 +63,47 @@ class AudioCallerWaitingAndAcceptedView(context: Context) : BaseCallView(context
         textMic = findViewById(R.id.tv_mic)
         textAudioDevice = findViewById(R.id.tv_audio_device)
 
-        imageMute?.isActivated = viewModel?.isMicMute?.get() == true
-        imageHandsFree?.isActivated = viewModel?.isSpeaker?.get() == true
+        imageMute?.isActivated = TUICallState.instance.isMicrophoneMute.get() == true
+        imageHandsFree?.isActivated =
+            TUICallState.instance.audioPlayoutDevice.get() == TUICommonDefine.AudioPlaybackDevice.Speakerphone
+        textMic?.text = getMicText()
+        textAudioDevice?.text = getAudioDeviceText()
+
         initViewListener()
     }
 
     private fun initViewListener() {
         layoutMute?.setOnClickListener {
-            val resId = if (viewModel?.isMicMute?.get() == true) {
-                viewModel?.openMicrophone()
-                R.string.tuicallkit_toast_disable_mute
+            if (TUICallState.instance.isMicrophoneMute.get() == true) {
+                EngineManager.instance.openMicrophone(null)
             } else {
-                viewModel?.closeMicrophone()
-                R.string.tuicallkit_toast_enable_mute
+                EngineManager.instance.closeMicrophone()
             }
-            textMic?.setText(context.getString(resId))
         }
-        layoutHangup?.setOnClickListener { viewModel?.hangup() }
+        layoutHangup?.setOnClickListener { EngineManager.instance.hangup(null) }
         layoutHandsFree?.setOnClickListener {
-            val resId = if (viewModel?.isSpeaker?.get() == true) {
-                viewModel?.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
-                R.string.tuicallkit_toast_use_earpiece
+            if (TUICallState.instance.audioPlayoutDevice.get() == TUICommonDefine.AudioPlaybackDevice.Speakerphone) {
+                EngineManager.instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
             } else {
-                viewModel?.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
-                R.string.tuicallkit_toast_speaker
+                EngineManager.instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
             }
-            textAudioDevice?.setText(context.getString(resId))
+            textAudioDevice?.text = getAudioDeviceText()
         }
     }
 
+    private fun getMicText(): String {
+        return if (TUICallState.instance.isMicrophoneMute.get() == true) {
+            context.getString(R.string.tuicallkit_toast_enable_mute)
+        } else {
+            context.getString(R.string.tuicallkit_toast_disable_mute)
+        }
+    }
+
+    private fun getAudioDeviceText(): String {
+        return if (TUICallState.instance.audioPlayoutDevice.get() == TUICommonDefine.AudioPlaybackDevice.Speakerphone) {
+            context.getString(R.string.tuicallkit_toast_speaker)
+        } else {
+            context.getString(R.string.tuicallkit_toast_use_earpiece)
+        }
+    }
 }

@@ -17,34 +17,6 @@ public interface IConversationListLayout {
      */
     void disableItemUnreadDot(boolean flag);
 
-    /**
-     * Set session item avatar rounded corners
-     *
-     * @param radius
-     */
-    void setItemAvatarRadius(int radius);
-
-    /**
-     * Set the font size at the top of the session item
-     *
-     * @param size
-     */
-    void setItemTopTextSize(int size);
-
-    /**
-     * Set the font size at the bottom of the session item
-     *
-     * @param size
-     */
-    void setItemBottomTextSize(int size);
-
-    /**
-     * Set the session item date font size
-     *
-     * @param size
-     */
-    void setItemDateTextSize(int size);
-
     View getListLayout();
 
     ConversationListAdapter getAdapter();

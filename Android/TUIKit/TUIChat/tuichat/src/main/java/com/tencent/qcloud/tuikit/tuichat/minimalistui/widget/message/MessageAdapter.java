@@ -5,17 +5,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.highlight.HighlightPresenter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.UserFaceUrlCache;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
-import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
@@ -42,26 +41,21 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     protected boolean isShowMultiSelectCheckBox = false;
 
     private boolean isForwardMode = false;
-    private boolean isReplyDetailMode = false;
 
     private ChatPresenter presenter;
-    private BaseFragment fragment;
+    private Fragment fragment;
     private UserFaceUrlCache faceUrlCache;
 
     public void setPresenter(ChatPresenter chatPresenter) {
         this.presenter = chatPresenter;
     }
 
-    public void setFragment(BaseFragment fragment) {
+    public void setFragment(Fragment fragment) {
         this.fragment = fragment;
     }
 
     public void setForwardMode(boolean forwardMode) {
         isForwardMode = forwardMode;
-    }
-
-    public void setReplyDetailMode(boolean replyDetailMode) {
-        isReplyDetailMode = replyDetailMode;
     }
 
     public ArrayList<TUIMessageBean> getSelectedItem() {
@@ -133,8 +127,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (holder instanceof MessageContentHolder) {
             MessageContentHolder messageContentHolder = (MessageContentHolder) holder;
             messageContentHolder.isForwardMode = isForwardMode;
-            messageContentHolder.isMessageDetailMode = isReplyDetailMode;
-            messageContentHolder.setShowRead(TUIChatConfigs.getConfigs().getGeneralConfig().isMsgNeedReadReceipt());
+            messageContentHolder.setShowRead(TUIChatConfigs.getGeneralConfig().isMsgNeedReadReceipt());
             messageContentHolder.setNeedShowBottom(presenter.isNeedShowBottom());
             messageContentHolder.setRecyclerView(mRecycleView);
             messageContentHolder.setFragment(fragment);
@@ -180,6 +173,11 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
                 baseHolder.msgContentFrame.setOnClickListener(null);
             }
         } else {
+            if (messageBean.hasRiskContent()) {
+                baseHolder.mMutiSelectCheckBox.setEnabled(false);
+            } else {
+                baseHolder.mMutiSelectCheckBox.setEnabled(true);
+            }
             baseHolder.mMutiSelectCheckBox.setVisibility(View.VISIBLE);
             baseHolder.mMutiSelectCheckBox.setChecked(isItemChecked(messageBean));
             baseHolder.mMutiSelectCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -243,11 +241,17 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     }
 
     public void changeCheckedStatus(TUIMessageBean messageBean) {
+        if (messageBean.hasRiskContent()) {
+            setItemChecked(messageBean, false);
+            return;
+        }
+
         if (isItemChecked(messageBean)) {
             setItemChecked(messageBean, false);
         } else {
             setItemChecked(messageBean, true);
         }
+
         onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="110dp"
+    android:layout_width="match_parent"
     android:layout_height="36dp"
     android:background="@drawable/tuiroomkit_float_chat_bottom_btn_background"
     android:id="@+id/root_barrage_view">

@@ -32,6 +32,7 @@
             android:textSize="16sp"
             android:text="@string/tuiroomkit_scheduled_room_detail_text"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,6 +46,7 @@
             android:text="@string/tuiroomkit_scheduled_modify_text"
             android:textSize="16sp"
             android:textColor="#1C66E5"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -67,6 +69,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tuiroomkit_scheduled_room_name"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginStart="20dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,6 +82,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tuiroomkit_scheduled_room_id"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/tv_scheduled_start_time_title"
             app:layout_constraintTop_toBottomOf="@id/tv_scheduled_room_name_title"
@@ -91,6 +95,7 @@
             android:text="@string/tuiroomkit_scheduled_start_time"
             android:textSize="16sp"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_room_id_title"
             app:layout_constraintStart_toStartOf="@+id/tv_scheduled_room_id_title"
             app:layout_constraintBottom_toTopOf="@+id/tv_scheduled_room_duration_title"/>
@@ -102,6 +107,7 @@
             android:text="@string/tuiroomkit_scheduled_duration"
             android:textSize="16sp"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tv_scheduled_start_time_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_start_time_title"
             app:layout_constraintBottom_toTopOf="@+id/tv_scheduled_room_type_title"/>
@@ -113,9 +119,36 @@
             android:text="@string/tuiroomkit_scheduled_room_type"
             android:textSize="16sp"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tv_scheduled_room_duration_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_room_duration_title"
+            app:layout_constraintBottom_toTopOf="@+id/tv_scheduled_room_password_title"/>
+
+        <TextView
+            android:id="@+id/tv_scheduled_room_password_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#2B2E38"
+            android:text="@string/tuiroomkit_room_password_title"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_scheduled_room_type_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_room_type_title"
             app:layout_constraintBottom_toTopOf="@+id/tv_room_initiator_title"/>
+
+        <TextView
+            android:id="@+id/tv_scheduled_room_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#2B2E38"
+            android:textSize="16sp"
+            android:alpha="0.7"
+            android:maxLines="1"
+            android:maxWidth="150dp"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@+id/tv_scheduled_room_password_title"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_scheduled_room_password_title"
+            app:layout_constraintEnd_toEndOf="@+id/tv_scheduled_room_type"/>
 
         <TextView
             android:id="@+id/tv_room_initiator_title"
@@ -124,8 +157,9 @@
             android:text="@string/tuiroomkit_scheduled_host"
             android:textSize="16sp"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tv_scheduled_room_type_title"
-            app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_room_type_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_room_password_title"
             app:layout_constraintBottom_toTopOf="@+id/tv_members_of_conference_title"/>
 
         <TextView
@@ -135,6 +169,7 @@
             android:text="@string/tuiroomkit_scheduled_attendees"
             android:textSize="16sp"
             android:textColor="#2B2E38"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_room_initiator_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_room_initiator_title"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -150,6 +185,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:gravity="end"
+            android:alpha="0.7"
             app:layout_constraintStart_toEndOf="@+id/tv_scheduled_room_name_title"
             app:layout_constraintTop_toTopOf="@+id/tv_scheduled_room_name_title"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -162,6 +198,7 @@
             android:textColor="#2B2E38"
             android:textSize="16sp"
             android:layout_marginEnd="4dp"
+            android:alpha="0.7"
             app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_room_name"
             app:layout_constraintTop_toTopOf="@+id/tv_scheduled_room_id_title"
             app:layout_constraintEnd_toStartOf="@+id/img_copy_room_id_icon"/>
@@ -182,6 +219,7 @@
             android:layout_height="wrap_content"
             android:textColor="#2B2E38"
             android:textSize="16sp"
+            android:alpha="0.7"
             app:layout_constraintTop_toTopOf="@+id/tv_scheduled_start_time_title"
             app:layout_constraintEnd_toEndOf="@+id/img_copy_room_id_icon"/>
 
@@ -191,6 +229,7 @@
             android:layout_height="wrap_content"
             android:textColor="#2B2E38"
             android:textSize="16sp"
+            android:alpha="0.7"
             app:layout_constraintEnd_toEndOf="@+id/tv_scheduled_start_time"
             app:layout_constraintTop_toTopOf="@+id/tv_scheduled_room_duration_title"/>
 
@@ -200,6 +239,7 @@
             android:layout_height="wrap_content"
             android:textColor="#2B2E38"
             android:textSize="16sp"
+            android:alpha="0.7"
             android:maxLines="1"
             android:maxWidth="150dp"
             android:ellipsize="end"
@@ -219,6 +259,7 @@
             android:layout_height="wrap_content"
             android:textColor="#2B2E38"
             android:textSize="16sp"
+            android:alpha="0.7"
             app:layout_constraintEnd_toEndOf="@+id/tv_scheduled_room_type"
             app:layout_constraintTop_toTopOf="@+id/tv_room_initiator_title"/>
 
@@ -279,6 +320,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#4F586B"
                 android:textSize="16sp"
+                android:alpha="0.7"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/img_arrows_right"/>
@@ -312,6 +354,7 @@
             android:text="@string/tuiroomkit_scheduled_enter_room"
             android:textColor="#0961F7"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -334,6 +377,7 @@
             android:text="@string/tuiroomkit_scheduled_invite_members"
             android:textColor="#0961F7"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -356,6 +400,7 @@
             android:text="@string/tuiroomkit_scheduled_cancel_room"
             android:textColor="#ED414D"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

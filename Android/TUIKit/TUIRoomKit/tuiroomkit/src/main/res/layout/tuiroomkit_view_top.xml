@@ -13,8 +13,8 @@
         android:layout_centerInParent="true"
         android:layout_marginStart="10dp">
 
-        <TextView
-            android:id="@+id/tv_title"
+        <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.ConferenceNameView
+            android:id="@+id/conference_tv_room_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxEms="9"
@@ -27,23 +27,23 @@
             android:id="@+id/img_arrow_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/tv_broadcast_time"
+            android:layout_above="@id/conference_tv_room_duration"
             android:layout_alignParentTop="true"
             android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/tv_title"
+            android:layout_toEndOf="@id/conference_tv_room_name"
             android:src="@drawable/tuiroomkit_ic_arrow_down" />
 
-        <TextView
-            android:id="@+id/tv_broadcast_time"
+        <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.ConferenceDurationView
+            android:id="@+id/conference_tv_room_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_title"
+            android:layout_below="@id/conference_tv_room_name"
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/img_headset"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.AudioRouteSwitchView
+        android:id="@+id/conference_view_audio_route"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
         android:layout_alignParentStart="true"
@@ -51,13 +51,13 @@
         android:layout_marginStart="16dp"
         android:src="@drawable/tuiroomkit_icon_speaker" />
 
-    <ImageView
-        android:id="@+id/img_camera_switch"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.CameraSwitchView
+        android:id="@+id/conference_view_camera_switch"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
         android:layout_centerVertical="true"
         android:layout_marginStart="24dp"
-        android:layout_toEndOf="@+id/img_headset"
+        android:layout_toEndOf="@+id/conference_view_audio_route"
         android:src="@drawable/tuiroomkit_ic_camera_switch" />
 
 
@@ -84,14 +84,14 @@
             android:text="@string/tuiroomkit_item_leave" />
     </LinearLayout>
 
-    <ImageView
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.ReportView
         android:id="@+id/btn_report"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
         android:layout_centerVertical="true"
         android:layout_marginStart="-135dp"
         android:layout_marginEnd="20dp"
-        android:layout_toStartOf="@id/img_headset"
+        android:layout_toStartOf="@id/conference_view_audio_route"
         android:src="@drawable/tuiroomkit_ic_report_room"
         android:visibility="gone" />
 

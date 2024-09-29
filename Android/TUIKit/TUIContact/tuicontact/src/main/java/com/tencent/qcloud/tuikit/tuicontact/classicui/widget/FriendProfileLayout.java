@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +33,7 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuicontact.config.classicui.TUIContactConfigClassic;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IFriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
 import java.util.ArrayList;
@@ -58,7 +58,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
     private LineControllerView mChatTopView;
     private LineControllerView mMessageOptionView;
     private LineControllerView addFriendRemarkLv;
-    private LineControllerView addFriendGroupLv;
     private LineControllerView mChatBackground;
     private TextView deleteFriendBtn;
     private TextView clearMessageBtn;
@@ -145,8 +144,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
 
         addFriendRemarkLv = findViewById(R.id.friend_remark_lv);
         addFriendRemarkLv.setOnClickListener(this);
-        addFriendGroupLv = findViewById(R.id.friend_group_lv);
-        addFriendGroupLv.setContent(getContext().getString(R.string.contact_my_friend));
 
         remarkAndGroupTip = findViewById(R.id.remark_and_group_tip);
 
@@ -302,7 +299,6 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         addFriendArea.setVisibility(VISIBLE);
         remarkAndGroupTip.setVisibility(GONE);
         addFriendRemarkLv.setVisibility(GONE);
-        addFriendGroupLv.setVisibility(GONE);
     }
 
     private void setViewContentFromFriendApplicationBean(FriendApplicationBean data) {
@@ -371,18 +367,22 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 if (!isFriend) {
                     if (isGroup) {
                         addFriendRemarkLv.setVisibility(GONE);
-                        addFriendGroupLv.setVisibility(GONE);
+                    } else {
+                        addFriendRemarkLv.setVisibility(VISIBLE);
                     }
                     mTitleBar.setTitle(getResources().getString(R.string.add_friend), ITitleBarLayout.Position.MIDDLE);
                     addFriendSendBtn.setVisibility(VISIBLE);
                     addFriendArea.setVisibility(VISIBLE);
                 } else {
+                    mTitleBar.setTitle(getResources().getString(R.string.profile_detail), ITitleBarLayout.Position.MIDDLE);
                     mRemarkView.setVisibility(VISIBLE);
                     extensionListView.setVisibility(VISIBLE);
                     deleteFriendBtn.setVisibility(VISIBLE);
                     mAddBlackView.setVisibility(VISIBLE);
                     mChatTopView.setVisibility(View.VISIBLE);
                     mChatBackground.setVisibility(VISIBLE);
+                    addFriendSendBtn.setVisibility(GONE);
+                    addFriendArea.setVisibility(GONE);
                     updateMessageOptionView();
                 }
             }
@@ -436,6 +436,33 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
             GlideEngine.loadUserIcon(mHeadImageView, bean.getAvatarUrl(), radius);
         }
         mIDView.setText(mId);
+
+        applyCustomConfig();
+    }
+
+    public void applyCustomConfig() {
+        if (!TUIContactConfigClassic.isShowAlias()) {
+            mRemarkView.setVisibility(GONE);
+        }
+        if (!TUIContactConfigClassic.isShowMuteAndPin()) {
+            mChatTopView.setVisibility(GONE);
+            mMessageOptionView.setVisibility(GONE);
+        }
+        if (!TUIContactConfigClassic.isShowBackground()) {
+            mChatBackground.setVisibility(GONE);
+        }
+        if (!TUIContactConfigClassic.isShowBlock()) {
+            mAddBlackView.setVisibility(GONE);
+        }
+        if (!TUIContactConfigClassic.isShowClearChatHistory()) {
+            clearMessageBtn.setVisibility(GONE);
+        }
+        if (!TUIContactConfigClassic.isShowDelete()) {
+            deleteFriendBtn.setVisibility(GONE);
+        }
+        if (!TUIContactConfigClassic.isShowAddFriend()) {
+            addFriendArea.setVisibility(GONE);
+        }
     }
 
     private void loadUserProfile(String id) {
@@ -565,7 +592,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                     }
                 });
             } else {
-                presenter.addFriend(mId, addWording, friendGroup, remark, new IUIKitCallback<Pair<Integer, String>>() {
+                presenter.addFriend(mId, addWording, remark, new IUIKitCallback<Pair<Integer, String>>() {
                     @Override
                     public void onSuccess(Pair<Integer, String> data) {
                         ToastUtil.toastShortMessage(data.second);

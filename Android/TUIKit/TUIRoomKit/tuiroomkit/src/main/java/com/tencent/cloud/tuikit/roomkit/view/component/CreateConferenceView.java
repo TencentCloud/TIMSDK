@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceSession;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.FetchRoomId;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
@@ -34,6 +36,19 @@ public class CreateConferenceView extends RelativeLayout
     private TUICallback mFinishCallback;
 
     private String mRoomId;
+
+    private final ConferenceDefine.ConferenceObserver mConferenceObserver = new ConferenceDefine.ConferenceObserver() {
+        @Override
+        public void onConferenceStarted(TUIRoomDefine.RoomInfo roomInfo, TUICommonDefine.Error error, String message) {
+            if (error == TUICommonDefine.Error.SUCCESS) {
+                return;
+            }
+            RoomToast.toastLongMessage("error=" + error + " message=" + message);
+            mTextCreateRoom.setClickable(true);
+            mRoomId = null;
+            initData();
+        }
+    };
 
     public CreateConferenceView(Context context) {
         super(context);
@@ -98,8 +113,15 @@ public class CreateConferenceView extends RelativeLayout
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ConferenceSession.sharedInstance().addObserver(mConferenceObserver);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        ConferenceSession.sharedInstance().removeObserver(mConferenceObserver);
     }
 
     @Override
@@ -114,20 +136,8 @@ public class CreateConferenceView extends RelativeLayout
                 RoomToast.toastShortMessage(mContext.getString(R.string.tuiroomkit_tip_creating_room_id));
                 return;
             }
-            mViewModel.createRoom(mRoomId, new TUIRoomDefine.ActionCallback() {
-                @Override
-                public void onSuccess() {
-                }
-
-                @Override
-                public void onError(TUICommonDefine.Error error, String message) {
-                    RoomToast.toastLongMessage("error=" + error + " message=" + message);
-                    mTextCreateRoom.setClickable(true);
-                    mRoomId = null;
-                    initData();
-                }
-            });
-            mTextCreateRoom.setClickable(false);
+            mViewModel.createRoom(mRoomId);
+            mFinishCallback.onSuccess();
         }
     }
 }

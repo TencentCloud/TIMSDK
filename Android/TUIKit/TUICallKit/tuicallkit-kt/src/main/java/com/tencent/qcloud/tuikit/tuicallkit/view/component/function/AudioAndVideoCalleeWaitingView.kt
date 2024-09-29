@@ -5,15 +5,14 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.function.AudioAndVideoCalleeWaitingViewModel
 
 class AudioAndVideoCalleeWaitingView(context: Context) : BaseCallView(context) {
     private var layoutReject: LinearLayout? = null
     private var layoutDialing: LinearLayout? = null
     private var textReject: TextView? = null
     private var textDialing: TextView? = null
-    private var viewModel = AudioAndVideoCalleeWaitingViewModel()
 
     init {
         initView()
@@ -33,7 +32,7 @@ class AudioAndVideoCalleeWaitingView(context: Context) : BaseCallView(context) {
     }
 
     private fun initViewListener() {
-        layoutReject!!.setOnClickListener { viewModel?.reject() }
-        layoutDialing!!.setOnClickListener { viewModel?.accept() }
+        layoutReject!!.setOnClickListener { EngineManager.instance.reject(null) }
+        layoutDialing!!.setOnClickListener { EngineManager.instance.accept(null) }
     }
 }

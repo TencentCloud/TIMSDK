@@ -9,6 +9,7 @@ import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageCo
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinimalist;
 
 public class TextMessageHolder extends MessageContentHolder {
     public TextMessageHolder(View itemView) {
@@ -28,18 +29,9 @@ public class TextMessageHolder extends MessageContentHolder {
         }
         TextMessageBean textMessageBean = (TextMessageBean) msg;
         textMessageBean.setSelectText(textMessageBean.getText());
-        if (properties.getChatContextFontSize() != 0) {
-            timeInLineTextLayout.setTextSize(properties.getChatContextFontSize());
-        }
-        if (textMessageBean.isSelf()) {
-            if (properties.getRightChatContentFontColor() != 0) {
-                timeInLineTextLayout.setTextColor(properties.getRightChatContentFontColor());
-            }
-        } else {
-            if (properties.getLeftChatContentFontColor() != 0) {
-                timeInLineTextLayout.setTextColor(properties.getLeftChatContentFontColor());
-            }
-        }
+
+        applyCustomConfig();
+
         setOnTimeInLineTextClickListener(textMessageBean);
         if (textMessageBean.getText() != null) {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), textMessageBean.getText(), false);
@@ -47,6 +39,28 @@ public class TextMessageHolder extends MessageContentHolder {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), textMessageBean.getExtra(), false);
         } else {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), TUIChatService.getAppContext().getString(R.string.no_support_msg), false);
+        }
+    }
+
+    protected void applyCustomConfig() {
+        if (isLayoutOnStart) {
+            int sendTextMessageColor = TUIChatConfigMinimalist.getSendTextMessageColor();
+            if (sendTextMessageColor != TUIChatConfigMinimalist.UNDEFINED) {
+                timeInLineTextLayout.setTextColor(sendTextMessageColor);
+            }
+            int sendTextMessageFontSize = TUIChatConfigMinimalist.getSendTextMessageFontSize();
+            if (sendTextMessageFontSize != TUIChatConfigMinimalist.UNDEFINED)  {
+                timeInLineTextLayout.setTextSize(sendTextMessageFontSize);
+            }
+        } else {
+            int receiveTextMessageColor = TUIChatConfigMinimalist.getReceiveTextMessageColor();
+            if (receiveTextMessageColor != TUIChatConfigMinimalist.UNDEFINED) {
+                timeInLineTextLayout.setTextColor(receiveTextMessageColor);
+            }
+            int receiveTextMessageFontSize = TUIChatConfigMinimalist.getReceiveTextMessageFontSize();
+            if (receiveTextMessageFontSize != TUIChatConfigMinimalist.UNDEFINED)  {
+                timeInLineTextLayout.setTextSize(receiveTextMessageFontSize);
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingview
 
 import android.content.Context
 import android.content.Context.WINDOW_SERVICE
+import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.Build
 import android.view.Gravity
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
@@ -25,12 +27,12 @@ import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
 import com.tencent.qcloud.tuikit.tuicallkit.utils.PermissionRequest
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
 
-class IncomingFloatView(context: Context) {
+class IncomingFloatView(context: Context) : RelativeLayout(context) {
     companion object {
         private const val TAG = "IncomingViewFloat"
     }
 
-    private var appContext: Context
+    private var appContext: Context = context.applicationContext
     private var caller: User? = null
 
     private var windowManager: WindowManager? = null
@@ -49,10 +51,6 @@ class IncomingFloatView(context: Context) {
         if (it == TUICallDefine.Status.None || it == TUICallDefine.Status.Accept) {
             cancelIncomingView()
         }
-    }
-
-    init {
-        appContext = context.applicationContext
     }
 
     fun showIncomingView(user: User) {
@@ -79,7 +77,7 @@ class IncomingFloatView(context: Context) {
     }
 
     private fun initWindow() {
-        layoutView = LayoutInflater.from(appContext).inflate(R.layout.tuicallkit_incoming_float_view, null)
+        layoutView = LayoutInflater.from(context).inflate(R.layout.tuicallkit_incoming_float_view, this)
         imageFloatAvatar = layoutView.findViewById(R.id.img_float_avatar)
         textFloatTitle = layoutView.findViewById(R.id.tv_float_title)
         textFloatDescription = layoutView.findViewById(R.id.tv_float_desc)
@@ -173,4 +171,9 @@ class IncomingFloatView(context: Context) {
             windowLayoutParams!!.format = PixelFormat.TRANSPARENT
             return windowLayoutParams as WindowManager.LayoutParams
         }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        layoutView?.let { windowManager?.updateViewLayout(layoutView, viewParams) }
+    }
 }

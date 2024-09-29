@@ -18,10 +18,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.TUIFloatChatButton.OnSendListener;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.model.TUIFloatChat;
@@ -155,7 +155,7 @@ public class FloatChatSendView extends Dialog implements IFloatChatSendView, OnD
         }
         String message = mEditText.getText().toString().trim();
         if (TextUtils.isEmpty(message)) {
-            ToastUtil.toastLongMessage(mContext.getString(R.string.tuiroomkit_float_chat_warning_not_empty));
+            RoomToast.toastLongMessage(mContext.getString(R.string.tuiroomkit_float_chat_warning_not_empty));
         } else {
             TUIFloatChat barrage = createBarrageModel(message);
             sendBarrage(barrage);

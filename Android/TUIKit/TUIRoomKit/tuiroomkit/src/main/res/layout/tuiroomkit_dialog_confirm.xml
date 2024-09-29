@@ -41,7 +41,8 @@
         android:id="@+id/cl_button_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_divide">
 
         <Button
             android:id="@+id/btn_negative"
@@ -56,18 +57,40 @@
             app:layout_constraintLeft_toLeftOf="@id/cl_button_panel"
             app:layout_constraintRight_toLeftOf="@+id/btn_positive" />
 
-        <Button
+        <LinearLayout
             android:id="@+id/btn_positive"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:text="@android:string/ok"
-            android:textColor="#FF584C"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/cl_button_panel"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toRightOf="@id/btn_negative"
-            app:layout_constraintRight_toRightOf="@id/cl_button_panel" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_positive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="@android:string/ok"
+                android:textColor="#FF584C"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_count_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:textColor="#FF584C"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

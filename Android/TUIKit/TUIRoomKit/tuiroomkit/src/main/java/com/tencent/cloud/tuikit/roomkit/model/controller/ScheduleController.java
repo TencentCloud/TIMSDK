@@ -130,6 +130,7 @@ public class ScheduleController {
         ConferenceListState.ConferenceInfo oldInfo = mConferenceListState.scheduledConferences.find(newInfo);
         if (oldInfo == null) {
             Log.e(TAG, "updateConferenceInfo conference not found : " + newInfo.basicRoomInfo.roomId);
+            callback.onError(FAILED, null);
             return;
         }
         if (oldInfo.status == TUIConferenceListManager.ConferenceStatus.RUNNING) {
@@ -237,6 +238,21 @@ public class ScheduleController {
         conferenceInfo.fetchScheduledAttendeesCursor = FETCH_CURSOR_OF_INIT;
         conferenceInfo.hadScheduledAttendees.clear();
         conferenceInfo.hadScheduledAttendeeCount.set(0);
+    }
+
+    public void fetchRoomInfo(String roomId, TUIRoomDefine.GetRoomInfoCallback callback) {
+        TUIRoomEngine.sharedInstance().fetchRoomInfo(roomId, TUIRoomDefine.RoomType.CONFERENCE, new TUIRoomDefine.GetRoomInfoCallback() {
+            @Override
+            public void onSuccess(TUIRoomDefine.RoomInfo roomInfo) {
+                callback.onSuccess(roomInfo);
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String message) {
+                Log.d(TAG, "fetchRoomInfo onError error=" + error + " message=" + message);
+                callback.onError(error, message);
+            }
+        });
     }
 
     private class ConferenceListObserver extends TUIConferenceListManager.Observer {

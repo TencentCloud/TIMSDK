@@ -27,7 +27,7 @@ public class ConferenceListObserver extends TUIConferenceListManager.Observer {
     @Override
     public void onConferenceInfoChanged(TUIConferenceListManager.ConferenceInfo conferenceInfo, List<TUIConferenceListManager.ConferenceModifyFlag> modifyFlagList) {
         Log.d(TAG, "onConferenceInfoChanged conferenceId=" + conferenceInfo.basicRoomInfo.roomId + " name=" + conferenceInfo.basicRoomInfo.name);
-        if (!TextUtils.equals(mRoomState.roomId, conferenceInfo.basicRoomInfo.roomId)) {
+        if (!TextUtils.equals(mRoomState.roomId.get(), conferenceInfo.basicRoomInfo.roomId)) {
             return;
         }
         if (!isConferenceNameChanged(modifyFlagList)) {
@@ -37,6 +37,7 @@ public class ConferenceListObserver extends TUIConferenceListManager.Observer {
         Map<String, Object> map = new HashMap<>();
         map.put(ConferenceEventConstant.KEY_ROOM_ID, conferenceInfo.basicRoomInfo.roomId);
         map.put(ConferenceEventConstant.KEY_ROOM_NAME, conferenceInfo.basicRoomInfo.name);
+        mRoomState.roomName.set(conferenceInfo.basicRoomInfo.name);
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.ROOM_NAME_CHANGED, map);
     }
 

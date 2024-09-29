@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/timcommon_transparent"
     android:gravity="center_vertical"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -12,6 +13,7 @@
 
     <RelativeLayout
         android:gravity="center_vertical"
+        android:background="@color/timcommon_transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -52,6 +54,7 @@
         android:gravity="center_vertical"
         android:layout_marginStart="8dp"
         android:layout_weight="1"
+        android:background="@color/timcommon_transparent"
         android:layout_width="0dp"
         android:layout_height="wrap_content">
 
@@ -71,10 +74,33 @@
             tools:text="Daniel"/>
 
         <TextView
+            android:id="@+id/fold_group_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/conversation_title"
+            android:textSize="12sp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#FF666666"
+            tools:text="FoldGroup"/>
+
+        <TextView
+            android:id="@+id/fold_group_name_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/conversation_title"
+            android:layout_toEndOf="@id/fold_group_name"
+            android:textSize="12sp"
+            android:textColor="#FF666666"
+            android:layout_marginEnd="4dp"
+            android:text=":"/>
+
+        <TextView
             android:id="@+id/conversation_at_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/conversation_title"
+            android:layout_toEndOf="@id/fold_group_name_divider"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/read_dot_bg"

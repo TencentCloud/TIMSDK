@@ -1,25 +1,23 @@
 package com.tencent.qcloud.tuikit.tuicontact.classicui.widget;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
-import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
+import com.tencent.qcloud.tuikit.tuicontact.config.classicui.TUIContactConfigClassic;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
 import java.util.ArrayList;
@@ -91,6 +89,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         });
         holder.unreadText.setVisibility(View.GONE);
         holder.userStatusView.setVisibility(View.GONE);
+
+        int radius = ScreenUtil.dip2px(4.6f);
+        if (TUIContactConfigClassic.getContactAvatarRadius() != TUIContactConfigClassic.UNDEFINED) {
+            radius = TUIContactConfigClassic.getContactAvatarRadius();
+        }
+        holder.avatar.setRadius(radius);
+
         if (presenter.newContacts == contactBean) {
             holder.avatar.setImageResource(TUIThemeManager.getAttrResId(holder.itemView.getContext(), R.attr.contact_new_friend_icon));
             holder.unreadText.setText(contactBean.getUnreadCount() + "");
@@ -107,14 +112,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             if (contactBean.isTop() && contactBean.getExtensionListener() != null) {
                 holder.avatar.setImageResource(contactBean.getAvatarResID());
             } else {
-                int radius = holder.itemView.getResources().getDimensionPixelSize(R.dimen.contact_profile_face_radius);
                 if (isGroupList) {
                     int defaultIconResId = TUIUtil.getDefaultGroupIconResIDByGroupType(holder.itemView.getContext(), contactBean.getGroupType());
                     GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), defaultIconResId, radius);
                 } else {
                     GlideEngine.loadUserIcon(holder.avatar, contactBean.getAvatarUrl(), radius);
                 }
-                if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfig.getInstance().isShowUserStatus()) {
+                if (dataSourceType == ContactListView.DataSource.CONTACT_LIST && TUIContactConfigClassic.isShowUserOnlineStatusIcon()) {
                     holder.userStatusView.setVisibility(View.VISIBLE);
                     if (contactBean.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_ONLINE) {
                         holder.userStatusView.setBackgroundResource(
@@ -195,7 +199,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
         TextView unreadText;
-        ImageView avatar;
+        ShadeImageView avatar;
         CheckBox ccSelect;
         View content;
         View line;

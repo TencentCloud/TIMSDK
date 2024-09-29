@@ -78,62 +78,7 @@ public class FriendProfilePresenter {
                 bean.setId(user.getId());
                 bean.setAvatarUrl(user.getAvatarUrl());
                 bean.setSignature(user.getSignature());
-
-                CountDownLatch latch = new CountDownLatch(2);
-                ThreadUtils.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        isInBlackList(id, new IUIKitCallback<Boolean>() {
-                            @Override
-                            public void onSuccess(Boolean data) {
-                                bean.setBlackList(data);
-                                latch.countDown();
-                            }
-
-                            @Override
-                            public void onError(String module, int errCode, String errMsg) {
-                                latch.countDown();
-                            }
-                        });
-                    }
-                });
-
-                ThreadUtils.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        isFriend(id, bean, new TUIValueCallback<Boolean>() {
-                            @Override
-                            public void onSuccess(Boolean data) {
-                                bean.setFriend(data);
-                                latch.countDown();
-                            }
-
-                            @Override
-                            public void onError(int errCode, String errMsg) {
-                                latch.countDown();
-                            }
-                        });
-                    }
-                });
-
-                ThreadUtils.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            latch.await();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        ThreadUtils.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (friendProfileLayout != null) {
-                                    friendProfileLayout.onDataSourceChanged(bean);
-                                }
-                            }
-                        });
-                    }
-                });
+                refreshDataSource(bean);
             }
 
             @Override
@@ -141,6 +86,38 @@ public class FriendProfilePresenter {
                 ToastUtil.toastShortMessage("getUsersInfo error , code = " + errCode + ", desc = " + errMsg);
             }
         });
+
+        isInBlackList(id, new IUIKitCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean data) {
+                bean.setBlackList(data);
+                refreshDataSource(bean);
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                refreshDataSource(bean);
+            }
+        });
+
+        isFriend(id, bean, new TUIValueCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean data) {
+                bean.setFriend(data);
+                refreshDataSource(bean);
+            }
+
+            @Override
+            public void onError(int errCode, String errMsg) {
+                refreshDataSource(bean);
+            }
+        });
+    }
+
+    private void refreshDataSource(ContactItemBean bean) {
+        if (friendProfileLayout != null) {
+            friendProfileLayout.onDataSourceChanged(bean);
+        }
     }
 
     public void isInBlackList(String id, IUIKitCallback<Boolean> callback) {
@@ -246,8 +223,8 @@ public class FriendProfilePresenter {
         provider.refuseJoinGroupApply(info, reason, callback);
     }
 
-    public void addFriend(String userId, String addWord, String friendGroup, String remark, IUIKitCallback<Pair<Integer, String>> callback) {
-        provider.addFriend(userId, addWord, friendGroup, remark, new IUIKitCallback<Pair<Integer, String>>() {
+    public void addFriend(String userId, String addWord, String remark, IUIKitCallback<Pair<Integer, String>> callback) {
+        provider.addFriend(userId, addWord, remark, new IUIKitCallback<Pair<Integer, String>>() {
             @Override
             public void onSuccess(Pair<Integer, String> data) {
                 int code = data.first;

@@ -1,6 +1,9 @@
 package com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
@@ -17,10 +20,10 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.component.swipe.Attributes;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
+import com.tencent.qcloud.tuikit.tuiconversation.config.minimalistui.TUIConversationConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationLayout;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.page.TUIConversationMinimalistFragment;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.setting.ConversationLayoutSetting;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +109,15 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
                 conversationMutiSelectEnd();
             }
         });
+
+        applyCustomConfig();
+    }
+
+    private void applyCustomConfig() {
+        Drawable listBackground = TUIConversationConfigMinimalist.getListBackground();
+        if (listBackground != null) {
+            mConversationList.setBackground(listBackground);
+        }
     }
 
     public void initUI() {
@@ -192,7 +204,6 @@ public class ConversationLayout extends RelativeLayout implements IConversationL
         if (presenter != null) {
             presenter.setAdapter(adapter);
         }
-        ConversationLayoutSetting.customizeConversation(this);
         mConversationList.loadConversation();
         mConversationList.loadMarkedConversation();
     }

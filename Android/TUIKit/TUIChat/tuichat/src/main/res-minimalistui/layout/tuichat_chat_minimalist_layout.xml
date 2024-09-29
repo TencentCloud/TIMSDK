@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
-    <include layout="@layout/chat_minimalist_header_layout"
+    <include
+        layout="@layout/chat_minimalist_header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        />
+        android:layout_marginEnd="16dp" />
 
     <View
         android:id="@+id/view_line"
-        android:layout_below="@id/chat_header"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_below="@id/chat_header"
         android:background="#1F000000" />
+
+    <ImageView
+        android:id="@+id/chat_background_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chat_header"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:baselineAligned="false"
+        android:clickable="false"
+        android:scaleType="matrix"
+        android:src="@color/timcommon_transparent" />
 
     <FrameLayout
         android:id="@+id/custom_layout"
@@ -53,10 +65,10 @@
 
     <com.tencent.qcloud.tuikit.tuichat.component.pinned.GroupPinnedView
         android:id="@+id/group_pinned_message_view"
-        android:layout_below="@id/chat_notice_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_below="@id/chat_notice_layout"
+        android:visibility="gone" />
 
     <com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.MessageRecyclerView
         android:id="@+id/chat_message_layout"
@@ -70,35 +82,35 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/jump_view_layout"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        android:layout_marginEnd="-16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/chat_input_layout"
         android:layout_alignParentEnd="true"
+        android:layout_marginEnd="-16dp"
         android:layout_marginBottom="35dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp">
 
         <LinearLayout
             android:id="@+id/jump_message_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
             android:background="#FFFFFF"
             android:gravity="center"
             android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="6dp"
             android:visibility="visible">
 
             <ImageView
                 android:id="@+id/arrow_icon"
                 android:layout_width="18.76dp"
                 android:layout_height="18.76dp"
+                android:background="@drawable/chat_minimalist_jump_down_icon"
                 android:clickable="false"
-                android:scaleType="fitCenter"
-                android:background="@drawable/chat_minimalist_jump_down_icon" />
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:id="@+id/jump_message_content"
@@ -107,7 +119,7 @@
                 android:singleLine="true"
                 android:textColor="#147AFF"
                 android:textSize="14sp"
-                tools:text="8"/>
+                tools:text="8" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

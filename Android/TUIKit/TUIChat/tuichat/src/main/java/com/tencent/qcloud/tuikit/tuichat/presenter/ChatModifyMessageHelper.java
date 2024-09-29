@@ -63,7 +63,7 @@ public class ChatModifyMessageHelper {
                 if (beModifiedMessage != null) {
                     task.messageBean = beModifiedMessage;
                 }
-                helper.provider.findMessage(Collections.singletonList(task.messageBean.getId()), new IUIKitCallback<List<TUIMessageBean>>() {
+                helper.provider.findPresentMessages(Collections.singletonList(task.messageBean.getId()), new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> data) {
                         if (data != null && data.size() == 1) {

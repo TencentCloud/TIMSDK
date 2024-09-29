@@ -21,46 +21,48 @@ public class IMContactSelector implements ParticipantSelector.IParticipantSelect
     private static final String TAG = "IMContactSelector";
 
     @Override
-    public void startParticipantSelect(Context context, List<UserState.UserInfo> participants, ParticipantSelector.ParticipantSelectCallback participantSelectCallback) {
+    public void startParticipantSelect(Context context, ConferenceParticipants participants, ParticipantSelector.ParticipantSelectCallback participantSelectCallback) {
         if (!(context instanceof ActivityResultCaller)) {
             return;
         }
         ActivityResultCaller caller = (ActivityResultCaller) context;
         Bundle param = new Bundle();
         param.putBoolean(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECT_FRIENDS, true);
-        param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, getSelectedList(participants));
+        param.putStringArrayList(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.SELECTED_LIST, getSelectedList(participants.selectedList));
         TUICore.startActivityForResult(caller, "StartGroupMemberSelectActivity", param, result -> {
             if (result.getData() == null) {
-                participantSelectCallback.onParticipantSelected(participants);
+                participantSelectCallback.onParticipantSelected(transUserInfoList(participants.selectedList));
                 return;
             }
             List<String> userIds = (List<String>) result.getData().getSerializableExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.DATA_LIST);
             if (userIds == null) {
-                participantSelectCallback.onParticipantSelected(participants);
+                participantSelectCallback.onParticipantSelected(transUserInfoList(participants.selectedList));
                 return;
             }
-            parseSelectedParticipant(participants, userIds, participantSelectCallback);
+            parseSelectedParticipant(participants.selectedList, userIds, participantSelectCallback);
         });
     }
 
-    private ArrayList<String> getSelectedList(List<UserState.UserInfo> participants) {
+    private ArrayList<String> getSelectedList(List<User> participants) {
         ArrayList<String> selectedList = new ArrayList<>();
         if (participants == null || participants.isEmpty()) {
             return selectedList;
         }
-        for (UserState.UserInfo item : participants) {
+        for (User item : participants) {
             selectedList.add(item.userId);
         }
         return selectedList;
     }
 
-    private void parseSelectedParticipant(List<UserState.UserInfo> oldParticipants, List<String> newParticipants, ParticipantSelector.ParticipantSelectCallback participantSelectCallback) {
-        List<UserState.UserInfo> participants = new ArrayList<>(newParticipants.size());
+    private void parseSelectedParticipant(List<User> oldParticipants, List<String> newParticipants, ParticipantSelector.ParticipantSelectCallback participantSelectCallback) {
+        List<User> participants = new ArrayList<>(newParticipants.size());
         List<String> users = new LinkedList<>();
 
         int index;
         for (String item : newParticipants) {
-            index = oldParticipants.indexOf(new UserState.UserInfo(item));
+            User user = new User();
+            user.userId = item;
+            index = oldParticipants.indexOf(user);
             if (index != -1) {
                 participants.add(oldParticipants.get(index));
             } else {
@@ -68,7 +70,7 @@ public class IMContactSelector implements ParticipantSelector.IParticipantSelect
             }
         }
         if (users.isEmpty()) {
-            participantSelectCallback.onParticipantSelected(participants);
+            participantSelectCallback.onParticipantSelected(transUserInfoList(participants));
             return;
         }
         Log.e(TAG, "getUsersInfo size=" + users.size());
@@ -77,19 +79,34 @@ public class IMContactSelector implements ParticipantSelector.IParticipantSelect
             public void onSuccess(List<V2TIMUserFullInfo> list) {
                 Log.d(TAG, "getUsersInfo onSuccess size=" + list.size());
                 for (V2TIMUserFullInfo item : list) {
-                    UserState.UserInfo userInfo  = new UserState.UserInfo(item.getUserID());
-                    userInfo.userName = item.getNickName();
-                    userInfo.avatarUrl = item.getFaceUrl();
-                    participants.add(userInfo);
+                    User user = new User();
+                    user.userId = item.getUserID();
+                    user.userName = item.getNickName();
+                    user.avatarUrl = item.getFaceUrl();
+                    participants.add(user);
                 }
-                participantSelectCallback.onParticipantSelected(participants);
+                participantSelectCallback.onParticipantSelected(transUserInfoList(participants));
             }
 
             @Override
             public void onError(int code, String desc) {
                 Log.e(TAG, "getUsersInfo onError code=" + code + " desc=" + desc);
-                participantSelectCallback.onParticipantSelected(participants);
+                participantSelectCallback.onParticipantSelected(transUserInfoList(participants));
             }
         });
+    }
+
+    private List<UserState.UserInfo> transUserInfoList(List<User> Participants) {
+        List<UserState.UserInfo> userInfoList = new ArrayList<>();
+        if (Participants == null) {
+            return userInfoList;
+        }
+        for (User participant : Participants) {
+            UserState.UserInfo user = new UserState.UserInfo(participant.userId);
+            user.userName = participant.userName;
+            user.avatarUrl = participant.avatarUrl;
+            userInfoList.add(user);
+        }
+        return userInfoList;
     }
 }

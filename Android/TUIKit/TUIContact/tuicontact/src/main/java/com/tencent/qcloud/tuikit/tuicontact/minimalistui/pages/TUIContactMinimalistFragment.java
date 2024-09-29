@@ -6,11 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuicontact.R;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactLayout;
@@ -18,7 +17,7 @@ import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
-public class TUIContactMinimalistFragment extends BaseFragment {
+public class TUIContactMinimalistFragment extends Fragment {
     private static final String TAG = TUIContactMinimalistFragment.class.getSimpleName();
     private ContactLayout mContactLayout;
 

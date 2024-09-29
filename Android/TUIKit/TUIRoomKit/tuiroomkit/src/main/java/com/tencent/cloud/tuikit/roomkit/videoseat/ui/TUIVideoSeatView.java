@@ -391,7 +391,6 @@ public class TUIVideoSeatView extends RelativeLayout {
         }
         if (entity.isSelf()) {
             mViewModel.setLocalVideoView(entity);
-            notifyItemVideoVisibilityStageChanged(entity);
             return;
         }
         if (!entity.isVideoAvailable()) {
@@ -406,6 +405,7 @@ public class TUIVideoSeatView extends RelativeLayout {
             return;
         }
         if (entity.isSelf()) {
+            mViewModel.setLocalVideoView(entity);
             return;
         }
         if (mViewModel != null) {
@@ -441,9 +441,7 @@ public class TUIVideoSeatView extends RelativeLayout {
             return;
         }
         UserEntity entity = mMemberEntityList.get(position);
-        if (entity.isSelf()) {
-            notifyItemVideoVisibilityStageChanged(entity);
-        } else if (entity.isCameraAvailable()) {
+        if (entity.isCameraAvailable()) {
             startVideoPlay(entity);
         } else {
             stopVideoPlay(entity);

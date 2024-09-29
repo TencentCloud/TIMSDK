@@ -1,9 +1,9 @@
 package com.tencent.cloud.tuikit.roomkit.model.controller;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
+import com.tencent.cloud.tuikit.engine.extension.TUIRoomDeviceManager;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
@@ -35,5 +35,23 @@ public class MediaController extends Controller {
     public void stopPlayRemoteVideo(String userId, TUIRoomDefine.VideoStreamType videoStreamType) {
         Log.d(TAG, "stopPlayRemoteVideo userId=" + userId + " videoStreamType=" + videoStreamType);
         mRoomEngine.stopPlayRemoteVideo(userId, videoStreamType);
+    }
+
+    public void switchAudioRoute() {
+        boolean isOpenSpeaker = !mMediaState.isSpeakerOpened.get();
+        setAudioRoute(isOpenSpeaker);
+    }
+
+    public void setAudioRoute(boolean isOpenSpeaker) {
+        mRoomEngine.getMediaDeviceManager().setAudioRoute(
+                isOpenSpeaker ? TUIRoomDeviceManager.AudioRoute.SPEAKERPHONE :
+                        TUIRoomDeviceManager.AudioRoute.EARPIECE);
+        mConferenceState.mediaState.isSpeakerOpened.set(isOpenSpeaker);
+    }
+
+    public void switchCamera() {
+        boolean isFrontCamera = !mMediaState.isFrontCamera.get();
+        mRoomEngine.getMediaDeviceManager().switchCamera(isFrontCamera);
+        mMediaState.isFrontCamera.set(isFrontCamera);
     }
 }

@@ -7,6 +7,7 @@ import static com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.servic
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -15,7 +16,6 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.liteav.base.Log;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.model.TUIFloatChat;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 
 
 public class FloatChatIMService implements IFloatChatMessage {
@@ -64,7 +64,7 @@ public class FloatChatIMService implements IFloatChatMessage {
                     @Override
                     public void onError(int i, String s) {
                         Log.e(TAG, " sendGroupCustomMessage error " + i + " errorMessage:" + s);
-                        ToastUtil.toastLongMessageCenter(ErrorMessageConverter.convertIMError(i, s));
+                        RoomToast.toastLongMessageCenter(ErrorMessageConverter.convertIMError(i, s));
                         if (callback != null) {
                             callback.onFailed(i, s);
                         }

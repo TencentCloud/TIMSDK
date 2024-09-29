@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/shortcut_item"
+    tools:text="Commonly used expressions"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:background="@drawable/chat_input_shortcut_item_bg"
+    android:paddingStart="12dp"
+    android:paddingLeft="12dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="12dp"
+    android:paddingRight="12dp"
+    android:paddingBottom="6dp"
+    android:textColor="#8f959e"
+    android:textSize="14sp">
+
+</TextView>
