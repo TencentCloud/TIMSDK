@@ -5,6 +5,10 @@
     <string name="tuicallkit_toast_speaker">扬声器已开</string>
     <string name="tuicallkit_toast_use_earpiece">扬声器已关</string>
     <string name="tuicallkit_toast_user_end">%s 结束通话</string>
+    <string name="tuicallkit_toast_callee_hangup">对方已挂断，通话结束</string>
+    <string name="tuicallkit_toast_user_reject">%s 拒绝了通话请求</string>
+    <string name="tuicallkit_toast_callee_reject">对方拒绝了通话请求</string>
+    <string name="tuicallkit_toast_callee_no_response">对方未响应</string>
     <string name="tuicallkit_other_party_network_low_quality">当前通话对方网络不佳</string>
     <string name="tuicallkit_self_network_low_quality">当前通话你的网络不佳</string>
     <string name="tuicallkit_toast_switch_camera">翻转</string>

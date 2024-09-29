@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
@@ -16,7 +18,6 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.ImageSelectMinimalistActivity;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuigroup.R;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GroupInfoFragment extends BaseFragment {
+public class GroupInfoFragment extends Fragment {
     private static final String TAG = "GroupInfoFragment";
 
     private View baseView;

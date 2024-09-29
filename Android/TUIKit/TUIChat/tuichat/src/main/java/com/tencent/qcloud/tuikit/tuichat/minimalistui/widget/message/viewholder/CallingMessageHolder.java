@@ -55,7 +55,7 @@ public class CallingMessageHolder extends TextMessageHolder {
                     }
                 }
             });
-            itemView.setOnClickListener(new View.OnClickListener() {
+            msgArea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
@@ -74,6 +74,7 @@ public class CallingMessageHolder extends TextMessageHolder {
             });
         } else {
             itemView.setOnClickListener(null);
+            msgArea.setOnClickListener(null);
             timeInLineTextLayout.getTextView().setOnLongClickListener(null);
             timeInLineTextLayout.getTextView().setOnClickListener(null);
         }

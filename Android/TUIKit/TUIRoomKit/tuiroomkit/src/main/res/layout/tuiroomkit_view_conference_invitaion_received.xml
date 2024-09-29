@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tuiroomkit_color_black">
+
+    <ImageView
+        android:id="@+id/img_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.2"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_18_percent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.18" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_inviter_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/tuiroomkit_head"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gl_18_percent" />
+
+    <TextView
+        android:id="@+id/tv_invitation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="jason邀请你加入会议"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_inviter_avatar" />
+
+    <TextView
+        android:id="@+id/tv_conference_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="生产线设备采购工作汇报会"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_invitation" />
+
+    <TextView
+        android:id="@+id/tv_conference_owner_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tuiroomkit_conference_host"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view_divider"
+        app:layout_constraintEnd_toStartOf="@+id/tv_conference_owner"
+        app:layout_constraintTop_toTopOf="@+id/view_divider" />
+
+    <TextView
+        android:id="@+id/tv_conference_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="jason"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view_divider"
+        app:layout_constraintEnd_toStartOf="@+id/view_divider"
+        app:layout_constraintTop_toTopOf="@+id/view_divider" />
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="1dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/common_color_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_conference_name" />
+
+    <TextView
+        android:id="@+id/tv_conference_member_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/tuiroomkit_participant"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view_divider"
+        app:layout_constraintStart_toEndOf="@+id/view_divider"
+        app:layout_constraintTop_toTopOf="@+id/view_divider" />
+
+    <TextView
+        android:id="@+id/tv_conference_member_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5人"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view_divider"
+        app:layout_constraintStart_toEndOf="@+id/tv_conference_member_label"
+        app:layout_constraintTop_toTopOf="@+id/view_divider" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_72_percent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.72" />
+
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.ConferenceInvitation.SlideToAcceptView
+        android:id="@+id/view_accept_invitation"
+        android:layout_width="196dp"
+        android:layout_height="77dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gl_72_percent" />
+
+    <Button
+        android:id="@+id/btn_reject_invitation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@null"
+        android:text="@string/tuiroomkit_do_not_enter_for_now"
+        android:textAllCaps="false"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_accept_invitation" />
+</androidx.constraintlayout.widget.ConstraintLayout>

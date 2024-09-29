@@ -9,7 +9,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.IConversationListAdapter;
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.interfaces.IConversationLayout;
-import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.setting.ConversationLayoutSetting;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationFoldPresenter;
 
 public class FoldedConversationLayout extends RelativeLayout implements IConversationLayout {
@@ -52,7 +51,6 @@ public class FoldedConversationLayout extends RelativeLayout implements IConvers
         if (presenter != null) {
             presenter.setAdapter(adapter);
         }
-        ConversationLayoutSetting.customizeConversation(this);
         conversationListLayout.loadConversation();
     }
 

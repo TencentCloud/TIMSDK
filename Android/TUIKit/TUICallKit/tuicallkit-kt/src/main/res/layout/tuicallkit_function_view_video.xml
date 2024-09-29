@@ -4,6 +4,9 @@
     android:id="@+id/cl_view_video"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:adjustViewBounds="true"
+    android:maxWidth="480dp"
     app:layoutDescription="@xml/tuicallkit_function_view_video_expanded_scene">
 
     <View

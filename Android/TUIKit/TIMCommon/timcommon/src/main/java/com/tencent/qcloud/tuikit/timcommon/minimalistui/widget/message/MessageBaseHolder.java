@@ -1,8 +1,5 @@
 package com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message;
 
-import android.animation.Animator;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -16,8 +13,8 @@ import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.component.MessageProperties;
 import com.tencent.qcloud.tuikit.timcommon.component.highlight.HighlightPresenter;
+import com.tencent.qcloud.tuikit.timcommon.config.minimalistui.TUIConfigMinimalist;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.HighlightListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
@@ -27,7 +24,6 @@ import java.util.Locale;
 
 public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public ICommonMessageAdapter mAdapter;
-    public MessageProperties properties = MessageProperties.getInstance();
     protected OnItemClickListener onItemClickListener;
 
     public FrameLayout msgContentFrame;
@@ -37,13 +33,13 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     public CheckBox mMutiSelectCheckBox;
     public View mContentLayout;
 
-    private ValueAnimator highLightAnimator;
     public TextView chatTimeText;
 
     protected boolean floatMode = false;
 
-    protected boolean isShowStart = true;
+    protected boolean isLayoutOnStart = true;
     private HighlightListener highlightListener;
+    protected TUIMessageBean currentMessageBean;
 
     public MessageBaseHolder(View itemView) {
         super(itemView);
@@ -84,16 +80,10 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
     }
 
     public void layoutViews(final TUIMessageBean msg, final int position) {
+        currentMessageBean = msg;
         registerHighlightListener(msg.getId());
-        if (properties.getChatTimeBubble() != null) {
-            chatTimeText.setBackground(properties.getChatTimeBubble());
-        }
-        if (properties.getChatTimeFontColor() != 0) {
-            chatTimeText.setTextColor(properties.getChatTimeFontColor());
-        }
-        if (properties.getChatTimeFontSize() != 0) {
-            chatTimeText.setTextSize(properties.getChatTimeFontSize());
-        }
+
+        setChatTimeStyle();
 
         if (position > 1) {
             TUIMessageBean last = mAdapter.getItem(position - 1);
@@ -111,25 +101,46 @@ public abstract class MessageBaseHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    private void setChatTimeStyle() {
+        Drawable chatTimeBubble = TUIConfigMinimalist.getChatTimeBubble();
+        if (chatTimeBubble != null) {
+            chatTimeText.setBackground(chatTimeBubble);
+        }
+        int chatTimeFontColor = TUIConfigMinimalist.getChatTimeFontColor();
+        if (chatTimeFontColor != TUIConfigMinimalist.UNDEFINED) {
+            chatTimeText.setTextColor(chatTimeFontColor);
+        }
+        int chatTimeFontSize = TUIConfigMinimalist.getChatTimeFontSize();
+        if (chatTimeFontSize != TUIConfigMinimalist.UNDEFINED) {
+            chatTimeText.setTextSize(chatTimeFontSize);
+        }
+    }
+
     private void registerHighlightListener(String msgID) {
-        highlightListener = new HighlightListener() {
-            @Override
-            public void onHighlightStart() {}
+        if (highlightListener == null) {
+            highlightListener = new HighlightListener() {
+                @Override
+                public void onHighlightStart() {}
 
-            @Override
-            public void onHighlightEnd() {
-                clearHighLightBackground();
-            }
+                @Override
+                public void onHighlightEnd() {
+                    clearHighLightBackground();
+                }
 
-            @Override
-            public void onHighlightUpdate(int color) {
-                setHighLightBackground(color);
-            }
-        };
+                @Override
+                public void onHighlightUpdate(int color) {
+                    setHighLightBackground(color);
+                }
+            };
+        }
         HighlightPresenter.registerHighlightListener(msgID, highlightListener);
     }
 
-    public void onRecycled() {}
+    public void onRecycled() {
+        if (currentMessageBean != null) {
+            HighlightPresenter.unregisterHighlightListener(currentMessageBean.getId());
+        }
+    }
 
     public static String getTimeFormatText(Date date) {
         if (date == null) {

@@ -36,7 +36,7 @@
     <string name="contact_add_friend_remark">ملاحظات</string>
     <string name="contact_friend_group">المجموعة</string>
     <string name="contact_set_add_wording">يرجى إدخال رسالة التحقق</string>
-    <string name="contact_set_remark_and_group">يرجى إدخال الملاحظات والمجموعة</string>
+    <string name="contact_set_remark_and_group">يرجى إدخال الملاحظات</string>
     <string name="contact_add_wording">رسالة التحقق:</string>
     <string name="contact_my_friend">أصدقائي</string>
     <string name="contact_modify_remark_rule">يسمح فقط بالأحرف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>

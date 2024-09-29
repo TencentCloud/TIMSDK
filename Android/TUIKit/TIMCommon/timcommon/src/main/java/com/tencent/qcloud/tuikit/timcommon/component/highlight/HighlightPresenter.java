@@ -8,9 +8,7 @@ import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.TIMCommonService;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.HighlightListener;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HighlightPresenter {
@@ -29,14 +27,20 @@ public class HighlightPresenter {
 
     private final Map<String, ValueAnimator> highlightMap = new HashMap<>();
 
+    private int highLightDarkColor = -1;
+    private int highLightLightColor = -1;
+
     private HighlightPresenter() {}
 
-    // Use WeakReference, no need to unregister.
     public static void registerHighlightListener(String highlightID, HighlightListener listener) {
         if (listener == null) {
             return;
         }
         getInstance().highlightListenerMap.put(highlightID, new WeakReference<>(listener));
+    }
+
+    public static void unregisterHighlightListener(String highlightID) {
+        getInstance().highlightListenerMap.remove(highlightID);
     }
 
     public static void startHighlight(String highlightID) {
@@ -47,11 +51,22 @@ public class HighlightPresenter {
         getInstance().internalStopHighlight(highlightID);
     }
 
+    public static void setHighlightDarkColor(int color) {
+        getInstance().highLightDarkColor = color;
+    }
+
+    public static void setHighlightLightColor(int color) {
+        getInstance().highLightLightColor = color;
+    }
+
     private void internalStartHighlight(String highlightID) {
         ValueAnimator highlightAnimator = new ValueAnimator();
-        int highLightColorDark = TIMCommonService.getAppContext().getResources().getColor(R.color.chat_message_bubble_high_light_dark_color);
-        int highLightColorLight = TIMCommonService.getAppContext().getResources().getColor(R.color.chat_message_bubble_high_light_light_color);
-        highlightAnimator.setIntValues(highLightColorDark, highLightColorLight);
+        if (highLightDarkColor == highLightLightColor && highLightLightColor == -1) {
+            highLightDarkColor = TIMCommonService.getAppContext().getResources().getColor(R.color.chat_message_bubble_high_light_dark_color);
+            highLightLightColor = TIMCommonService.getAppContext().getResources().getColor(R.color.chat_message_bubble_high_light_light_color);
+        }
+
+        highlightAnimator.setIntValues(highLightDarkColor, highLightLightColor);
         highlightAnimator.setEvaluator(new ArgbEvaluator());
         highlightAnimator.setRepeatCount(DEFAULT_REPEAT_COUNT);
         highlightAnimator.setDuration(DEFAULT_DURATION);

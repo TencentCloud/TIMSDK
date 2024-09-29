@@ -61,26 +61,6 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     }
 
     @Override
-    public void setItemAvatarRadius(int radius) {
-        mAdapter.setItemAvatarRadius(radius);
-    }
-
-    @Override
-    public void setItemTopTextSize(int size) {
-        mAdapter.setItemTopTextSize(size);
-    }
-
-    @Override
-    public void setItemBottomTextSize(int size) {
-        mAdapter.setItemBottomTextSize(size);
-    }
-
-    @Override
-    public void setItemDateTextSize(int size) {
-        mAdapter.setItemDateTextSize(size);
-    }
-
-    @Override
     public ConversationListLayout getListLayout() {
         return this;
     }

@@ -140,28 +140,28 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
     }
 
     override fun joinInGroupCall(roomId: RoomId?, groupId: String?, mediaType: TUICallDefine.MediaType?) {
-        TUILog.i(TAG, "TUICallKit joinInGroupCall{roomId:${roomId}, groupId:${groupId}, mediaType:${mediaType}")
+        TUILog.i(TAG, "TUICallKit joinInGroupCall{roomId:$roomId, groupId:$groupId, mediaType:$mediaType}")
         EngineManager.instance.joinInGroupCall(roomId, groupId, mediaType)
     }
 
     override fun setCallingBell(filePath: String?) {
-        TUILog.i(TAG, "TUICallKit setCallingBell{filePath:${filePath}")
+        TUILog.i(TAG, "TUICallKit setCallingBell{filePath:$filePath}")
         SPUtils.getInstance(CallingBellFeature.PROFILE_TUICALLKIT)
             .put(CallingBellFeature.PROFILE_CALL_BELL, filePath)
     }
 
     override fun enableMuteMode(enable: Boolean) {
-        TUILog.i(TAG, "TUICallKit enableMuteMode{enable:${enable}")
+        TUILog.i(TAG, "TUICallKit enableMuteMode{enable:$enable}")
         EngineManager.instance.enableMuteMode(enable)
     }
 
     override fun enableFloatWindow(enable: Boolean) {
-        TUILog.i(TAG, "TUICallKit enableFloatWindow{enable:${enable}")
+        TUILog.i(TAG, "TUICallKit enableFloatWindow{enable:$enable}")
         EngineManager.instance.enableFloatWindow(enable)
     }
 
     override fun enableVirtualBackground(enable: Boolean) {
-        TUILog.i(TAG, "TUICallKit enableVirtualBackground{enable:${enable}")
+        TUILog.i(TAG, "TUICallKit enableVirtualBackground{enable:$enable}")
         TUICallState.instance.showVirtualBackgroundButton = enable
 
         val data = HashMap<String, Any>()
@@ -170,8 +170,21 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
     }
 
     override fun enableIncomingBanner(enable: Boolean) {
-        TUILog.i(TAG, "TUICallKit enableIncomingBanner{enable:${enable}")
+        TUILog.i(TAG, "TUICallKit enableIncomingBanner{enable:$enable}")
         TUICallState.instance.enableIncomingBanner = enable
+    }
+
+    override fun setScreenOrientation(orientation: Int) {
+        TUILog.i(TAG, "TUICallKit setScreenOrientation{orientation:$orientation}")
+        if (orientation in 0..2) {
+            TUICallState.instance.orientation = Constants.Orientation.values()[orientation]
+        }
+
+        if (orientation == Constants.Orientation.LandScape.ordinal) {
+            val videoEncoderParams = TUICommonDefine.VideoEncoderParams()
+            videoEncoderParams.resolutionMode = TUICommonDefine.VideoEncoderParams.ResolutionMode.Landscape
+            TUICallEngine.createInstance(context).setVideoEncoderParams(videoEncoderParams, null)
+        }
     }
 
     fun queryOfflineCall() {
@@ -285,7 +298,10 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
                     when {
                         isFCMData && hasFloatPermission -> startSmallScreenView(IncomingFloatView(context))
                         isFCMData && hasNotificationPermission -> startSmallScreenView(IncomingNotificationView(context))
-                        else -> startFullScreenView()
+                        hasBgPermission -> startFullScreenView()
+                        else -> {
+                            TUILog.w(TAG_VIEW, "App is in background with no permission")
+                        }
                     }
                 } else {
                     startFullScreenView()
@@ -298,7 +314,10 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
                 when {
                     hasFloatPermission -> startSmallScreenView(IncomingFloatView(context))
                     isFCMData && hasNotificationPermission -> startSmallScreenView(IncomingNotificationView(context))
-                    else -> startFullScreenView()
+                    hasBgPermission -> startFullScreenView()
+                    else -> {
+                        TUILog.w(TAG_VIEW, "App is in background with no permission")
+                    }
                 }
                 return@post
             }

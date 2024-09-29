@@ -2,7 +2,6 @@ package com.tencent.cloud.tuikit.roomkit.model.entity;
 
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_CAPTURE_VOLUME_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_PLAY_VOLUME_CHANGED;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_ROUTE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_VOLUME_EVALUATION_CHANGED;
 
@@ -16,7 +15,6 @@ public class AudioModel {
 
     private boolean hasAudioStream   = false;
     private boolean isMicOpen        = false;
-    private boolean isSoundOnSpeaker = false;
 
     public int getCaptureVolume() {
         return captureVolume;
@@ -60,14 +58,5 @@ public class AudioModel {
 
     public void setMicOpen(boolean micOpened) {
         isMicOpen = micOpened;
-    }
-
-    public boolean isSoundOnSpeaker() {
-        return isSoundOnSpeaker;
-    }
-
-    public void setSoundOnSpeaker(boolean soundOnSpeaker) {
-        isSoundOnSpeaker = soundOnSpeaker;
-        ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_AUDIO_ROUTE_CHANGED, null);
     }
 }

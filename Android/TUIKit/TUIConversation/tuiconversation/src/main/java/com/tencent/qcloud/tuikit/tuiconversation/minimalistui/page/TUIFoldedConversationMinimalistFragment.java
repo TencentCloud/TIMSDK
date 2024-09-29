@@ -13,11 +13,12 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -30,7 +31,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationFoldPrese
 import java.util.ArrayList;
 import java.util.List;
 
-public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
+public class TUIFoldedConversationMinimalistFragment extends Fragment {
     private View mBaseView;
     private TitleBarLayout mTitleBarLayout;
     private FoldedConversationLayout mFoldedLayout;
@@ -126,7 +127,7 @@ public class TUIFoldedConversationMinimalistFragment extends BaseFragment {
             @Override
             public void onActionClick(int index, Object data) {
                 ConversationInfo conversationInfo = (ConversationInfo) data;
-                mFoldedLayout.markConversationHidden((ConversationInfo) data);
+                mFoldedLayout.markConversationHidden(conversationInfo);
             }
         });
         conversationPopActions.add(action);

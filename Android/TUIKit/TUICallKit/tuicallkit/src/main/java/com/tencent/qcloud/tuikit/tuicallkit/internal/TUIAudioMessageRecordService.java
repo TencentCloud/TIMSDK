@@ -95,7 +95,7 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                                 (String) param.get(TUIConstants.TUICalling.PARAM_NAME_AUDIO_SIGNATURE);
                     }
 
-                    TRTCCloud.sharedInstance(mContext).setListener(mTRTCCloudListener);
+                    TRTCCloud.sharedInstance(mContext).addListener(mTRTCCloudListener);
                     startRecordAudioMessage();
                 }
 
@@ -228,9 +228,10 @@ public class TUIAudioMessageRecordService implements ITUIService, ITUINotificati
                             break;
                         case AudioManager.AUDIOFOCUS_LOSS:
                         case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                        case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                             stopRecordAudioMessage();
                             break;
+                        case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                            //transient lost audio focus and the new focus owner doesn't require others to be silent.
                         default:
                             break;
                     }

@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.multidex.MultiDexApplication;
-
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.utils.BrandUtil;
@@ -22,7 +21,6 @@ import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
-
 import java.lang.reflect.Field;
 import java.util.Map;
 

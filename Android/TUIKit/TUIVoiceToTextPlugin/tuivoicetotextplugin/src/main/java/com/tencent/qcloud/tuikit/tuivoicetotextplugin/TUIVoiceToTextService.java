@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.auto.service.AutoService;
@@ -19,8 +20,9 @@ import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
+import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuivoicetotextplugin.model.VoiceToTextProvider;
 import com.tencent.qcloud.tuikit.tuivoicetotextplugin.presenter.VoiceToTextPresenter;
 import com.tencent.qcloud.tuikit.tuivoicetotextplugin.widget.VoiceToTextMessageLayoutProxy;
@@ -64,6 +66,16 @@ public class TUIVoiceToTextService implements TUIInitializer, ITUIExtension {
             || TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessagePopMenu.MINIMALIST_EXTENSION_ID)) {
             if (param == null || param.isEmpty()) {
                 return null;
+            }
+
+            if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessagePopMenu.MINIMALIST_EXTENSION_ID)) {
+                if (!TUIChatConfigMinimalist.isEnableConvert()) {
+                    return null;
+                }
+            } else {
+                if (!TUIChatConfigClassic.isEnableConvert()) {
+                    return null;
+                }
             }
 
             TUIMessageBean messageBean = (TUIMessageBean) param.get(TUIConstants.TUIChat.Extension.MessagePopMenu.MESSAGE_BEAN);
@@ -127,10 +139,10 @@ public class TUIVoiceToTextService implements TUIInitializer, ITUIExtension {
             }
 
             RecyclerView recyclerView = (RecyclerView) param.get(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW);
-            BaseFragment fragment = null;
+            Fragment fragment = null;
             Object fragmentObject = param.get(TUIConstants.TUIChat.FRAGMENT);
-            if (fragmentObject != null && fragmentObject instanceof BaseFragment) {
-                fragment = (BaseFragment) fragmentObject;
+            if (fragmentObject != null && fragmentObject instanceof Fragment) {
+                fragment = (Fragment) fragmentObject;
             }
 
             if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID)) {

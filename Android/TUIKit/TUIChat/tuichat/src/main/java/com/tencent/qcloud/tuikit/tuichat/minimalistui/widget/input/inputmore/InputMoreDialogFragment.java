@@ -21,13 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
+import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreItem;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InputMoreDialogFragment extends DialogFragment {
     private Dialog moreDialog;
-    private List<InputMoreActionUnit> mInputMoreList = new ArrayList<>();
+    private List<InputMoreItem> mInputMoreList = new ArrayList<>();
     private RecyclerView mInputActionView;
     private SelectAdapter mAdapter;
 
@@ -75,7 +75,7 @@ public class InputMoreDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void setActions(List<InputMoreActionUnit> actions) {
+    public void setActions(List<InputMoreItem> actions) {
         this.mInputMoreList = actions;
     }
 
@@ -89,7 +89,7 @@ public class InputMoreDialogFragment extends DialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull SelectAdapter.SelectViewHolder holder, int position) {
-            InputMoreActionUnit actionUnit = mInputMoreList.get(position);
+            InputMoreItem actionUnit = mInputMoreList.get(position);
             holder.itemText.setText(actionUnit.getName());
             if (actionUnit.getIconResId() > 0) {
                 holder.itemImage.setImageResource(actionUnit.getIconResId());

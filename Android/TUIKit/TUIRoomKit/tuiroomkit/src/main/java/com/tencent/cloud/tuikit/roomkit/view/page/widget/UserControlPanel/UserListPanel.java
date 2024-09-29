@@ -1,5 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_USER_LIST;
@@ -13,17 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.controller.InvitationController;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
@@ -40,16 +39,14 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
     private TextView          mMuteAudioAllBtn;
     private TextView          mMuteVideoAllBtn;
     private TextView          mMoreOptions;
+    private TextView          mCallAllBtn;
     private TextView          mMemberCount;
     private EditText          mEditSearch;
-    private LinearLayout      mBtnInvite;
-    private LinearLayout      mLayoutOnOffSeatTab;
-    private AppCompatButton   mBtnOnSeatTab;
-    private AppCompatButton   mBtnOffSeatTab;
     private UserListViewModel mViewModel;
 
-    private UserListPanelStateHolder       mStateHolder = new UserListPanelStateHolder();
-    private Observer<UserListPanelUiState> mUiObserver  = this::updateView;
+    private UserListPanelStateHolder mStateHolder          = new UserListPanelStateHolder();
+    private Observer<Boolean>        mUserListTypeObserver = this::updateBottomButtonVisibility;
+    private Observer<Boolean>        mUserListSizeObserver = this::updateCallAllButtonVisibility;
 
     private Observer<Boolean> mScreenOrientationObserver = this::updateViewOrientation;
 
@@ -69,8 +66,10 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mStateHolder.observe(mUiObserver);
+        mStateHolder.observeUserListType(mUserListTypeObserver);
+        mStateHolder.observeCallAllButtonState(mUserListSizeObserver);
         ConferenceController.sharedInstance().getViewState().isScreenPortrait.observe(mScreenOrientationObserver);
+        ConferenceController.sharedInstance().getInvitationController().initInvitationList();
     }
 
     @Override
@@ -78,7 +77,8 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
         super.onDetachedFromWindow();
         ConferenceController.sharedInstance().getViewState().isScreenPortrait.removeObserver(
                 mScreenOrientationObserver);
-        mStateHolder.removeObserver(mUiObserver);
+        mStateHolder.removeObserverListType(mUserListTypeObserver);
+        mStateHolder.removeObserverCallButtonState(mUserListSizeObserver);
         ConferenceController.sharedInstance().getViewController().updateSearchUserKeyWord("");
     }
 
@@ -89,17 +89,16 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
 
     @Override
     protected void initView() {
-        initTabView();
         mMemberCount = findViewById(R.id.main_title);
         mMuteAudioAllBtn = findViewById(R.id.btn_mute_audio_all);
         mMuteVideoAllBtn = findViewById(R.id.btn_mute_video_all);
         mMoreOptions = findViewById(R.id.btn_mute_more_options);
+        mCallAllBtn = findViewById(R.id.btn_call_all_user);
         mEditSearch = findViewById(R.id.et_search);
-        mBtnInvite = findViewById(R.id.btn_invite);
         mMuteAudioAllBtn.setOnClickListener(this);
         mMuteVideoAllBtn.setOnClickListener(this);
         mMoreOptions.setOnClickListener(this);
-        mBtnInvite.setOnClickListener(this);
+        mCallAllBtn.setOnClickListener(this);
         findViewById(R.id.tuiroomkit_rl_title).setOnClickListener(this);
 
         mEditSearch.addTextChangedListener(new TextWatcher() {
@@ -162,8 +161,12 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
             showDisableAllMicDialog();
         } else if (v.getId() == R.id.btn_mute_video_all) {
             showDisableAllCameraDialog();
-        } else if (v.getId() == R.id.btn_mute_more_options || v.getId() == R.id.btn_invite) {
+        } else if (v.getId() == R.id.btn_mute_more_options) {
             ConferenceEventCenter.getInstance().notifyUIEvent(SHOW_INVITE_PANEL_SECOND, null);
+        } else if (v.getId() == R.id.btn_call_all_user) {
+            InvitationController invitationController = ConferenceController.sharedInstance().getInvitationController();
+            invitationController.inviteUsers(invitationController.getInviteeListFormInvitationList(
+                    ConferenceController.sharedInstance().getInvitationState().invitationList.getList()), null);
         }
     }
 
@@ -254,33 +257,28 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
                 }).showDialog(activity, "disableDeviceForAllUserByAdmin");
     }
 
-    private void initTabView() {
-        mLayoutOnOffSeatTab = findViewById(R.id.tuiroomkit_ll_seat_tab);
-        mBtnOnSeatTab = findViewById(R.id.tuiroomkit_btn_user_on_seat);
-        mBtnOffSeatTab = findViewById(R.id.tuiroomkit_btn_user_off_seat);
-        mBtnOnSeatTab.setOnClickListener(v -> {
-            ConferenceController.sharedInstance().getViewController().updateOnSeatPanelSelected(true);
-        });
-        mBtnOffSeatTab.setOnClickListener(v -> {
-            ConferenceController.sharedInstance().getViewController().updateOnSeatPanelSelected(false);
-        });
+    private void updateBottomButtonVisibility(boolean isNotEnteredUserTab) {
+        if (isNotEnteredUserTab) {
+            mMuteAudioAllBtn.setVisibility(GONE);
+            mMuteVideoAllBtn.setVisibility(GONE);
+            mMoreOptions.setVisibility(GONE);
+        } else if (!TUIRoomDefine.Role.GENERAL_USER.equals(ConferenceController.sharedInstance().getUserState().selfInfo.get().role.get())) {
+            mMuteAudioAllBtn.setVisibility(VISIBLE);
+            mMuteVideoAllBtn.setVisibility(VISIBLE);
+            mMoreOptions.setVisibility(VISIBLE);
+        }
     }
-    private void updateView(UserListPanelUiState uiState) {
-        mLayoutOnOffSeatTab.setVisibility(uiState.isShowOnOffSeatTab ? VISIBLE : View.GONE);
-        mBtnOnSeatTab.setBackground(uiState.isOnSeatTabSelected ?
-                ContextCompat.getDrawable(mContext, R.drawable.tuiroomkit_bg_user_list_tab_selected) : null);
-        mBtnOnSeatTab.setText(
-                mContext.getString(R.string.tuiroomkit_user_list_on_seat, String.valueOf(uiState.onSeatUserCount)));
-        mBtnOffSeatTab.setBackground(uiState.isOnSeatTabSelected ?
-                null : ContextCompat.getDrawable(mContext, R.drawable.tuiroomkit_bg_user_list_tab_selected));
-        mBtnOffSeatTab.setText(
-                mContext.getString(R.string.tuiroomkit_user_list_off_seat, String.valueOf(uiState.offSeatUserCount)));
+
+    private void updateCallAllButtonVisibility(boolean isShow) {
+        mCallAllBtn.setVisibility(isShow ? VISIBLE : GONE);
     }
 
     private void updateViewOrientation(Boolean isScreenPortrait) {
         changeConfiguration(null);
-        mStateHolder.removeObserver(mUiObserver);
-        mStateHolder.observe(mUiObserver);
+        mStateHolder.removeObserverListType(mUserListTypeObserver);
+        mStateHolder.removeObserverCallButtonState(mUserListTypeObserver);
+        mStateHolder.observeUserListType(mUserListTypeObserver);
+        mStateHolder.observeCallAllButtonState(mUserListTypeObserver);
     }
 }
 

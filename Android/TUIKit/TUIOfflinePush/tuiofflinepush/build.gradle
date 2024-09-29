@@ -72,7 +72,7 @@ dependencies {
             api 'com.tencent.liteav.tuikit:tuicore:7.7.5285'
         }
     } else {
-        implementation 'com.alibaba:fastjson:1.1.46.android'
+        implementation 'com.alibaba:fastjson:1.2.31.android'
         compileOnly fileTree(dir: 'libs', include: ['uniapp-v8-release.aar'])
     }
 }

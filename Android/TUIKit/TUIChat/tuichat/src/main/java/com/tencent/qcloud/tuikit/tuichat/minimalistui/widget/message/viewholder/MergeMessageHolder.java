@@ -41,18 +41,6 @@ public class MergeMessageHolder extends MessageContentHolder {
         if (msg == null) {
             return;
         }
-        setMessageBubbleBackground(R.drawable.chat_minimalist_merge_message_border);
-        if (!isForwardMode && !isMessageDetailMode) {
-            if (msg.isSelf()) {
-                if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    setMessageBubbleBackground(properties.getRightBubble().getConstantState().newDrawable());
-                }
-            } else {
-                if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    setMessageBubbleBackground(properties.getLeftBubble().getConstantState().newDrawable());
-                }
-            }
-        }
 
         MergeMessageBean messageBean = (MergeMessageBean) msg;
         String title = messageBean.getTitle();
@@ -90,6 +78,11 @@ public class MergeMessageHolder extends MessageContentHolder {
             }
         });
         setMessageBubbleDefaultPadding();
+    }
+
+    @Override
+    public void setMessageBubbleBackground(int resID) {
+        super.setMessageBubbleBackground(R.drawable.chat_minimalist_merge_message_border);
     }
 
     void setContent(List<String> abstractList) {
@@ -147,8 +140,4 @@ public class MergeMessageHolder extends MessageContentHolder {
         }
     }
 
-    @Override
-    protected boolean isNeedChangedBackground() {
-        return false;
-    }
 }

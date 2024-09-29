@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/tuiroomkit_ic_back_black"
         app:layout_constraintBottom_toBottomOf="@+id/img_head_prepare"
-        app:layout_constraintStart_toStartOf="@+id/ll_enter_room"
+        app:layout_constraintStart_toStartOf="@+id/ll_create_room"
         app:layout_constraintTop_toTopOf="@+id/img_head_prepare" />
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -39,44 +39,14 @@
         app:layout_constraintTop_toTopOf="@+id/img_head_prepare" />
 
     <LinearLayout
-        android:id="@+id/ll_enter_room"
-        android:layout_width="90dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="69dp"
-        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ll_create_room">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/tuiroomkit_ic_enter_room"/>
-
-        <TextView
-            android:id="@+id/img_enter_room"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="9dp"
-            android:text="@string/tuiroomkit_enter_room"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/ll_create_room"
         android:layout_width="90dp"
         android:layout_height="80dp"
         android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ll_enter_room"
         app:layout_constraintTop_toTopOf="@+id/ll_enter_room">
 
         <ImageView
@@ -99,6 +69,36 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_enter_room"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="69dp"
+        android:background="@drawable/tuiroomkit_bg_bottom_item_blue"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="@+id/ll_create_room"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ll_schedule_conference">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/tuiroomkit_ic_enter_room"/>
+
+        <TextView
+            android:id="@+id/img_enter_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="9dp"
+            android:text="@string/tuiroomkit_enter_room"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/ll_schedule_conference"
         android:layout_width="90dp"
         android:layout_height="80dp"
@@ -106,7 +106,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ll_create_room"
+        app:layout_constraintStart_toEndOf="@+id/ll_enter_room"
         app:layout_constraintTop_toTopOf="@+id/ll_enter_room">
 
         <ImageView
@@ -140,10 +140,11 @@
 
     <FrameLayout
         android:id="@+id/tuiroomkit_fl_conference_list_container"
-        android:layout_width="335dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:scrollbars="none"
-        android:layout_marginEnd="0dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"

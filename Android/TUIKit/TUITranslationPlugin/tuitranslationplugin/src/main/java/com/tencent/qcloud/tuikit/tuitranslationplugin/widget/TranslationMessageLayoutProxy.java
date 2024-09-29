@@ -15,19 +15,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.component.MessageProperties;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
+import com.tencent.qcloud.tuikit.timcommon.config.classicui.TUIConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.popmenu.ChatPopMenu;
 import com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIBaseChatFragment;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIBaseChatMinimalistFragment;
 import com.tencent.qcloud.tuikit.tuitranslationplugin.R;
@@ -48,7 +49,7 @@ public class TranslationMessageLayoutProxy {
 
     public TranslationMessageLayoutProxy() {}
 
-    public void showTranslationView(BaseFragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean tuiMessageBean) {
+    public void showTranslationView(Fragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean tuiMessageBean) {
         if (viewGroup == null || tuiMessageBean == null) {
             return;
         }
@@ -61,7 +62,7 @@ public class TranslationMessageLayoutProxy {
         translationPresenter.translateMessage(tuiMessageBean, null);
     }
 
-    protected void setTranslationContent(BaseFragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean msg) {
+    protected void setTranslationContent(Fragment fragment, String themeStyle, RecyclerView recyclerView, ViewGroup viewGroup, TUIMessageBean msg) {
         LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.translation_contant_layout, viewGroup);
         ImageView translationLoadingImage = viewGroup.findViewById(R.id.translate_loading_iv);
         LinearLayout translationResultLayout = viewGroup.findViewById(R.id.translate_result_ll);
@@ -86,8 +87,17 @@ public class TranslationMessageLayoutProxy {
                 }
                 translationText.setTextColor(Color.BLACK);
             }
-            if (MessageProperties.getInstance().getChatContextFontSize() != 0) {
-                translationText.setTextSize(MessageProperties.getInstance().getChatContextFontSize());
+
+            if (msg.isSelf()) {
+                int sendTextMessageFontSize = TUIChatConfigClassic.getSendTextMessageFontSize();
+                if (sendTextMessageFontSize != TUIChatConfigClassic.UNDEFINED)  {
+                    translationText.setTextSize(sendTextMessageFontSize);
+                }
+            } else {
+                int receiveTextMessageFontSize = TUIChatConfigClassic.getReceiveTextMessageFontSize();
+                if (receiveTextMessageFontSize != TUIChatConfigClassic.UNDEFINED)  {
+                    translationText.setTextSize(receiveTextMessageFontSize);
+                }
             }
 
             FaceManager.handlerEmojiText(translationText, presenter.getTranslationText(msg.getV2TIMMessage()), false);
@@ -114,7 +124,7 @@ public class TranslationMessageLayoutProxy {
         }
     }
 
-    private void showTranslationItemPopMenu(BaseFragment fragment, String themeStyle, RecyclerView recyclerView, View view, TUIMessageBean messageInfo) {
+    private void showTranslationItemPopMenu(Fragment fragment, String themeStyle, RecyclerView recyclerView, View view, TUIMessageBean messageInfo) {
         initTranslationPopActions(fragment, themeStyle, messageInfo);
         if (mTranslationPopActions.size() == 0) {
             return;
@@ -133,7 +143,7 @@ public class TranslationMessageLayoutProxy {
         mTranslationChatPopMenu.show(view, location[1]);
     }
 
-    private void initTranslationPopActions(BaseFragment fragment, String themeStyle, TUIMessageBean msg) {
+    private void initTranslationPopActions(Fragment fragment, String themeStyle, TUIMessageBean msg) {
         if (msg == null) {
             return;
         }
@@ -183,7 +193,7 @@ public class TranslationMessageLayoutProxy {
         TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, param);
     }
 
-    private void onForwardTranslationClick(BaseFragment fragment, String themeStyle, TUIMessageBean messageBean) {
+    private void onForwardTranslationClick(Fragment fragment, String themeStyle, TUIMessageBean messageBean) {
         if (fragment == null) {
             TUITranslationLog.e(TAG, "onForwardTranslationClick fragment is null!");
             return;

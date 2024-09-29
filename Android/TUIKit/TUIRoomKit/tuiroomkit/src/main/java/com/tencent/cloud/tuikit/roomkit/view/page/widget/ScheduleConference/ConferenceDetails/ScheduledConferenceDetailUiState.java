@@ -16,6 +16,7 @@ public class ScheduledConferenceDetailUiState {
     public       String                                    conferenceType     = "";
     public       String                                    conferenceOwner    = "";
     public       String                                    conferenceOwnerId  = "";
+    public       String                                    conferenceTime = "";
     public       TUIConferenceListManager.ConferenceStatus conferenceStatus   = NONE;
     public final List<UserState.UserInfo>                  attendees          = new ArrayList<>();
 }

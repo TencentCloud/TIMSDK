@@ -17,8 +17,10 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class TimeZoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -31,7 +33,8 @@ public class TimeZoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public TimeZoneAdapter(Context context, String currentId) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
-        mSelectItemPosition = initTimeZoneList(currentId, mTimeZoneList);
+        initTimezoneList();
+        mSelectItemPosition = getCurrentItemPosition(currentId);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -49,21 +52,33 @@ public class TimeZoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public int    offset;
     }
 
-    public int initTimeZoneList(String currentId, List<TimeZoneItem> list) {
+    public void initTimezoneList() {
         String[] timeZoneIds = TimeZone.getAvailableIDs();
-        TimeZoneItem currentTimeZoneItem = new TimeZoneItem();
+        Set<TimeZoneItem> timeZoneSet = new HashSet<>();
+        Set<String> timeZoneNames = new HashSet<>();
+
         for (String id : timeZoneIds) {
             TimeZoneItem item = new TimeZoneItem();
             setTimeZoneItemData(id, item);
-            if (TextUtils.equals(id, currentId)) {
-                currentTimeZoneItem = item;
-            }
-            if (!TextUtils.equals(item.zone, item.name)) {
-                list.add(item);
+            if (!TextUtils.equals(item.zone, item.name) && !timeZoneNames.contains(item.name)) {
+                timeZoneSet.add(item);
+                timeZoneNames.add(item.name);
             }
         }
-        sortTimeZoneList(list);
-        return list.indexOf(currentTimeZoneItem);
+
+        mTimeZoneList = new ArrayList<>(timeZoneSet);
+        sortTimeZoneList(mTimeZoneList);
+    }
+
+    public int getCurrentItemPosition(String timeZoneId) {
+        TimeZoneItem currentItem = new TimeZoneItem();
+        setTimeZoneItemData(timeZoneId, currentItem);
+        for (TimeZoneItem item : mTimeZoneList) {
+            if (TextUtils.equals(item.zone, currentItem.zone) && TextUtils.equals(item.name, currentItem.name)) {
+                return mTimeZoneList.indexOf(item);
+            }
+        }
+        return 0;
     }
 
     public void setTimeZoneItemData(String id, TimeZoneItem item) {

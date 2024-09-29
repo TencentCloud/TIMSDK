@@ -13,11 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
@@ -46,14 +45,11 @@ public class UserManagementPanel extends BaseBottomDialog {
     private RelativeLayout          mLayoutInviteToStage;
     private UserManagementViewModel mViewModel;
 
-    private RequestManager mGlideRequestManager;
-
     public UserManagementPanel(@NonNull Context context, UserEntity user) {
         super(context);
         mContext = context;
         mUser = user;
         mViewModel = new UserManagementViewModel(mContext, user, this);
-        mGlideRequestManager = Glide.with(mContext);
     }
 
     @Override
@@ -105,7 +101,6 @@ public class UserManagementPanel extends BaseBottomDialog {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mGlideRequestManager.clear(mImageHead);
     }
 
     public void showKickDialog(final String userId, String userName) {
@@ -170,7 +165,7 @@ public class UserManagementPanel extends BaseBottomDialog {
             userName = userName + getContext().getString(R.string.tuiroomkit_me);
         }
         textUserName.setText(userName);
-        mGlideRequestManager.load(mUser.getAvatarUrl()).into(mImageHead);
+        ImageLoader.loadImage(mContext, mImageHead, mUser.getAvatarUrl(), R.drawable.tuiroomkit_head);
     }
 
     private void initMediaView() {

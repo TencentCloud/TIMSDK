@@ -2,9 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.page;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,9 +14,9 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Supplier;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -30,10 +27,9 @@ import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -43,6 +39,7 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.ChatView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.InputView;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.MessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioPlayer;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
@@ -53,8 +50,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
-public abstract class TUIBaseChatFragment extends BaseFragment {
+public abstract class TUIBaseChatFragment extends Fragment {
     private static final String TAG = TUIBaseChatFragment.class.getSimpleName();
 
     protected View baseView;
@@ -323,6 +321,13 @@ public abstract class TUIBaseChatFragment extends BaseFragment {
             TUIChatLog.e(TAG, "initChatViewBackground getChatInfo is null");
             return;
         }
+
+        Drawable chatBackground = TUIChatConfigClassic.getBackground();
+        if (chatBackground != null) {
+            setChatBackground(chatBackground);
+            return;
+        }
+
         DataStoreUtil.getInstance().getValueAsync(getChatInfo().getId(), new DataStoreUtil.GetResult<String>() {
             @Override
             public void onSuccess(String result) {
@@ -337,18 +342,7 @@ public abstract class TUIBaseChatFragment extends BaseFragment {
     }
 
     protected void setChatViewBackground(String uri) {
-        TUIChatLog.d(TAG, "setChatViewBackground uri = " + uri);
         if (TextUtils.isEmpty(uri)) {
-            return;
-        }
-
-        if (chatView == null) {
-            TUIChatLog.e(TAG, "setChatViewBackground chatview is null");
-            return;
-        }
-
-        if (messageRecyclerView == null) {
-            TUIChatLog.e(TAG, "setChatViewBackground messageRecyclerView is null");
             return;
         }
 
@@ -367,35 +361,16 @@ public abstract class TUIBaseChatFragment extends BaseFragment {
             return;
         }
 
-        messageRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                int imageWidth = messageRecyclerView.getWidth();
-                int imageHeight = messageRecyclerView.getHeight();
-                if (imageHeight > messageViewBackgroundHeight) {
-                    messageViewBackgroundHeight = imageHeight;
-                }
-                TUIChatLog.d(TAG, "messageRecyclerView  width = " + imageWidth + ", height = " + messageViewBackgroundHeight);
-                if (imageWidth == 0 || messageViewBackgroundHeight == 0) {
-                    return;
-                }
-                Glide.with(getContext()).asBitmap().load(mChatBackgroundUrl).into(new CustomTarget<Bitmap>(imageWidth, messageViewBackgroundHeight) {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        TUIChatLog.d(TAG, "messageRecyclerView onGlobalLayout url = " + mChatBackgroundUrl);
-                        Bitmap srcBitmap = ImageUtil.zoomImg(resource, imageWidth, messageViewBackgroundHeight);
-                        messageRecyclerView.setBackground(new BitmapDrawable(getResources(), resource) {
-                            @Override
-                            public void draw(@NonNull Canvas canvas) {
-                                // TUIChatLog.d(TAG, "draw canvas =" + canvas.getClipBounds());
-                                canvas.drawBitmap(srcBitmap, canvas.getClipBounds(), canvas.getClipBounds(), null);
-                            }
-                        });
-                    }
+        setChatBackground(mChatBackgroundUrl);
+    }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {}
-                });
+    private void setChatBackground(Object backgroundRes) {
+        ThreadUtils.execute(() -> {
+            try {
+                Drawable drawable = Glide.with(baseView.getContext()).asDrawable().load(backgroundRes).submit().get();
+                chatView.setChatBackground(drawable);
+            } catch (ExecutionException | InterruptedException e) {
+                TUIChatLog.e(TAG, "load background failed");
             }
         });
     }

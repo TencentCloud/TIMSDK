@@ -10,6 +10,7 @@ import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.CallTimerView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.CallWaitingHintView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatingWindowButton
@@ -20,12 +21,10 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.component.function.VideoCallerW
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.userinfo.single.AudioCallUserInfoView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.userinfo.single.VideoCallUserInfoView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.SingleCallVideoLayout
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.root.SingleCallViewModel
 
 class SingleCallView(context: Context) : RelativeLayout(context) {
     private var layoutTimer: FrameLayout? = null
-    private var layoutUserInfoVideo: FrameLayout? = null
-    private var layoutUserInfoAudio: FrameLayout? = null
+    private var layoutUserInfo: FrameLayout? = null
     private var layoutFunction: FrameLayout? = null
     private var layoutFloatIcon: FrameLayout? = null
     private var layoutRender: FrameLayout? = null
@@ -37,7 +36,6 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
     private var hintView: CallWaitingHintView? = null
     private var singleCallVideoLayout: SingleCallVideoLayout? = null
     private var floatingWindowButton: FloatingWindowButton? = null
-    private var viewModel = SingleCallViewModel()
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
         refreshFunctionView()
@@ -87,8 +85,7 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
         LayoutInflater.from(context).inflate(R.layout.tuicallkit_root_view_single, this)
         layoutRender = findViewById(R.id.rl_container)
         layoutFloatIcon = findViewById(R.id.rl_layout_float_icon)
-        layoutUserInfoVideo = findViewById(R.id.rl_video_user_info_layout)
-        layoutUserInfoAudio = findViewById(R.id.rl_audio_user_info_layout)
+        layoutUserInfo = findViewById(R.id.rl_user_info_layout)
         layoutTimer = findViewById(R.id.rl_single_time)
         layoutFunction = findViewById(R.id.rl_single_function)
         layoutCallTag = findViewById(R.id.fl_call_tag)
@@ -115,7 +112,7 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
     }
 
     private fun refreshRenderView() {
-        if (viewModel.mediaType.get() == TUICallDefine.MediaType.Video) {
+        if (TUICallState.instance.mediaType.get() == TUICallDefine.MediaType.Video) {
             singleCallVideoLayout = SingleCallVideoLayout(context)
             layoutRender!!.removeAllViews()
             layoutRender!!.addView(singleCallVideoLayout)
@@ -126,7 +123,7 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
     }
 
     private fun refreshTimerView() {
-        if (TUICallDefine.Status.Accept == viewModel.callStatus.get()) {
+        if (TUICallDefine.Status.Accept == TUICallState.instance.selfUser.get().callStatus.get()) {
             layoutTimer?.removeAllViews()
             callTimerView = CallTimerView(context)
             layoutTimer?.addView(callTimerView)
@@ -137,42 +134,44 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
     }
 
     private fun addObserver() {
-        viewModel.callStatus.observe(callStatusObserver)
-        viewModel.mediaType.observe(mediaTypeObserver)
-        viewModel.isShowFullScreen.observe(isShowFullScreenObserver)
+        TUICallState.instance.selfUser.get().callStatus.observe(callStatusObserver)
+        TUICallState.instance.mediaType.observe(mediaTypeObserver)
+        TUICallState.instance.isShowFullScreen.observe(isShowFullScreenObserver)
     }
 
     private fun removeObserver() {
-        viewModel.callStatus.removeObserver(callStatusObserver)
-        viewModel.mediaType.removeObserver(mediaTypeObserver)
-        viewModel.isShowFullScreen.removeObserver(isShowFullScreenObserver)
+        TUICallState.instance.selfUser.get().callStatus.removeObserver(callStatusObserver)
+        TUICallState.instance.mediaType.removeObserver(mediaTypeObserver)
+        TUICallState.instance.isShowFullScreen.removeObserver(isShowFullScreenObserver)
     }
 
     private fun refreshUserInfoView() {
-        if (viewModel.mediaType.get() == TUICallDefine.MediaType.Audio) {
-            layoutUserInfoAudio?.visibility = VISIBLE
-            layoutUserInfoVideo?.visibility = GONE
+        if (TUICallState.instance.mediaType.get() == TUICallDefine.MediaType.Audio) {
+            layoutUserInfo?.visibility = VISIBLE
             userInfoView = AudioCallUserInfoView(context)
-            layoutUserInfoAudio!!.removeAllViews()
+            layoutUserInfo!!.removeAllViews()
             if (null != userInfoView) {
-                layoutUserInfoAudio!!.addView(userInfoView)
+                layoutUserInfo!!.addView(userInfoView)
             }
         } else {
-            layoutUserInfoAudio?.visibility = GONE
-            layoutUserInfoVideo?.visibility = VISIBLE
-            userInfoView = VideoCallUserInfoView(context)
-            layoutUserInfoVideo!!.removeAllViews()
-            if (null != userInfoView) {
-                layoutUserInfoVideo!!.addView(userInfoView)
+            if (TUICallState.instance.selfUser.get().callStatus.get() == TUICallDefine.Status.Waiting) {
+                layoutUserInfo?.visibility = VISIBLE
+                userInfoView = VideoCallUserInfoView(context)
+                layoutUserInfo!!.removeAllViews()
+                if (null != userInfoView) {
+                    layoutUserInfo!!.addView(userInfoView)
+                }
+            } else {
+                layoutUserInfo?.visibility = GONE
             }
         }
     }
 
     private fun refreshFunctionView() {
-        if (TUICallDefine.Status.Waiting == viewModel.callStatus.get()) {
+        if (TUICallDefine.Status.Waiting == TUICallState.instance.selfUser.get().callStatus.get()) {
 
-            if (viewModel.callRole.get() == TUICallDefine.Role.Caller) {
-                if (viewModel.mediaType.get() == TUICallDefine.MediaType.Audio) {
+            if (TUICallState.instance.selfUser.get().callRole.get() == TUICallDefine.Role.Caller) {
+                if (TUICallState.instance.mediaType.get() == TUICallDefine.MediaType.Audio) {
                     functionView = AudioCallerWaitingAndAcceptedView(context)
                 } else {
                     functionView = VideoCallerWaitingView(context)
@@ -180,8 +179,8 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
             } else {
                 functionView = AudioAndVideoCalleeWaitingView(context)
             }
-        } else if (TUICallDefine.Status.Accept == viewModel.callStatus.get()) {
-            if (viewModel.mediaType.get() == TUICallDefine.MediaType.Audio) {
+        } else if (TUICallDefine.Status.Accept == TUICallState.instance.selfUser.get().callStatus.get()) {
+            if (TUICallState.instance.mediaType.get() == TUICallDefine.MediaType.Audio) {
                 functionView = AudioCallerWaitingAndAcceptedView(context)
             } else {
                 functionView = VideoCallerAndCalleeAcceptedView(context)
@@ -195,7 +194,7 @@ class SingleCallView(context: Context) : RelativeLayout(context) {
     }
 
     private fun showAntiFraudReminder() {
-        if (TUICallDefine.Status.Accept != viewModel.callStatus.get()) {
+        if (TUICallDefine.Status.Accept != TUICallState.instance.selfUser.get().callStatus.get()) {
             return
         }
 

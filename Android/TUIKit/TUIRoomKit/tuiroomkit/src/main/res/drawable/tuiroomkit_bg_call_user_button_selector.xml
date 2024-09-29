@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <shape>
+            <solid android:color="@color/tuiroomkit_color_bg_call" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/tuiroomkit_transparent" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+</selector>

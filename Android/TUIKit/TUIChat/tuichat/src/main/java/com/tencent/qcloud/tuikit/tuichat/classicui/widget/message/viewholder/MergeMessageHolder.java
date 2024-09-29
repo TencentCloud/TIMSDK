@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.config.classicui.TUIConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 
@@ -45,18 +47,23 @@ public class MergeMessageHolder extends MessageContentHolder {
             statusImage.setVisibility(View.GONE);
         } else {
             if (msg.isSelf()) {
-                if (properties.getRightBubble() != null && properties.getRightBubble().getConstantState() != null) {
-                    setMessageBubbleBackground(properties.getRightBubble().getConstantState().newDrawable());
+                Drawable sendBubble = TUIConfigClassic.getSendBubbleBackground();
+                if (sendBubble != null) {
+                    msgArea.setBackground(sendBubble);
                 } else {
                     setMessageBubbleBackground(R.drawable.chat_bubble_self_cavity_bg);
                 }
             } else {
-                if (properties.getLeftBubble() != null && properties.getLeftBubble().getConstantState() != null) {
-                    setMessageBubbleBackground(properties.getLeftBubble().getConstantState().newDrawable());
+                Drawable receiveBubble = TUIConfigClassic.getSendBubbleBackground();
+                if (receiveBubble != null) {
+                    msgArea.setBackground(receiveBubble);
                 } else {
                     setMessageBubbleBackground(R.drawable.chat_bubble_other_cavity_bg);
                 }
             }
+        }
+        if (!TUIConfigClassic.isEnableMessageBubbleStyle()) {
+            setMessageBubbleBackground(null);
         }
 
         MergeMessageBean messageBean = (MergeMessageBean) msg;

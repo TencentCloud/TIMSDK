@@ -13,7 +13,7 @@ import java.util.List;
  * display function of the message. This class provides a large number of methods for customization requirements, including appearance settings, event clicks,
  * and display of custom messages.
  */
-public interface IMessageLayout extends IMessageProperties {
+public interface IMessageLayout {
 
     void setAdapter(MessageAdapter adapter);
 

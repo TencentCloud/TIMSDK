@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cl_user_info_audio"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal">
 
     <ImageView
@@ -16,7 +16,6 @@
         android:id="@+id/img_avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="160dp"
         android:src="@drawable/tuicallkit_ic_avatar"
         app:corner_radius="6dp"
         app:layout_constraintBottom_toBottomOf="@id/tv_name"

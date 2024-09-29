@@ -3,6 +3,7 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
+import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.view.StateHolder;
 import com.trtc.tuikit.common.livedata.LiveData;
 import com.trtc.tuikit.common.livedata.Observer;
@@ -40,7 +41,7 @@ public class CameraIconStateHolder extends StateHolder {
             updateViewData();
         }
     };
-    private LiveListObserver<String>    mCameraStreamObserver = new LiveListObserver<String>() {
+    private LiveListObserver<String> mCameraStreamObserver = new LiveListObserver<String>() {
         @Override
         public void onItemInserted(int position, String item) {
             if (!TextUtils.equals(item, mUserId)) {
@@ -79,7 +80,14 @@ public class CameraIconStateHolder extends StateHolder {
 
     public void updateViewData() {
         mCameraIconUiState.hasCameraStream = mHasCameraStreamUsers.contains(mUserId);
-        mCameraIconUiState.isShow = !mIsSeatEnable || mSeatedUsers.contains(mUserId);
+        mCameraIconUiState.isShow = isShowView();
         mCameraIconData.set(mCameraIconUiState);
+    }
+
+    private boolean isShowView() {
+        if (ViewState.UserListType.ALL_USER_ENTERED_THE_ROOM.equals(mViewState.userListType.get())) {
+            return true;
+        }
+        return ViewState.UserListType.ON_SEAT_INSIDE_THE_ROOM.equals(mViewState.userListType.get()) && mSeatedUsers.contains(mUserId);
     }
 }

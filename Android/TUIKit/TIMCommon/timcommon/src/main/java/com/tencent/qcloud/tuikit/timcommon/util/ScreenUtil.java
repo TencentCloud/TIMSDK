@@ -2,9 +2,7 @@ package com.tencent.qcloud.tuikit.timcommon.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.WindowManager;
 import com.tencent.qcloud.tuicore.TUIConfig;
 

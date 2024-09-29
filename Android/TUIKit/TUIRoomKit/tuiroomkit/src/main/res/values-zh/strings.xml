@@ -70,7 +70,7 @@
     <string name="tuiroomkit_tv_enable_audio">开启音频</string>
     <string name="tuiroomkit_tv_screen_capture">您正在共享屏幕</string>
     <string name="tuiroomkit_tv_stop_screen_capture">停止共享</string>
-    <string name="tuiroomkit_tv_screen_recording">屏幕录制中</string>
+    <string name="tuiroomkit_tv_screen_recording">屏幕共享中</string>
     <string name="tuiroomkit_toast_need_floating_window_permission">需要打开悬浮窗权限</string>
     <string name="tuiroomkit_item_leave">结束</string>
     <string name="tuiroomkit_item_close_microphone">静音</string>
@@ -289,6 +289,13 @@
     <string name="tuiroomkit_conference_already_started_and_cannot_be_modified">会议已开始，无法修改!</string>
     <string name="tuiroomkit_conference_already_started_and_cannot_be_cancel">会议已开始，无法取消!</string>
     <string name="tuiroomkit_no_participants_yet">暂无成员</string>
+    <string name="tuiroomkit_enter_conference_password_title">入会密码</string>
+    <string name="tuiroomkit_please_input_conference_password">请输入入会密码</string>
+    <string name="tuiroomkit_join">加入</string>
+    <string name="tuiroomkit_password_is_empty">密码为空</string>
+    <string name="tuiroomkit_room_password_title">房间密码</string>
+    <string name="tuiroomkit_room_password_format_error">房间密码格式不正确，请检查</string>
+    <string name="tuiroomkit_room_password_error">密码错误，请重新输入</string>
 
     <string name="tuiroomkit_tip_creating_room_id">正在生成房间号，请稍后重试</string>
     <string name="tuiroomkit_turn_on_audio">打开音频</string>
@@ -298,4 +305,41 @@
     <string name="tuiroomkit_please_input_room_number">请输入房间号</string>
     <string name="tuiroomkit_enter_room">加入房间</string>
     <string name="tuiroomkit_create_room">新建房间</string>
+    <string name="tuiroomkit_repeat_start_room_dialog_title">当前已在房间中</string>
+    <string name="tuiroomkit_repeat_start_room_dialog_content">请先退出后再加入新的房间</string>
+    <string name="tuiroomkit_i_see">我知道了</string>
+
+    <string name="tuiroomkit_invite_yout_to_join_conference">%s邀请你加入会议</string>
+    <string name="tuiroomkit_participant">参会人：</string>
+    <string name="tuiroomkit_join_now">立即加入</string>
+    <string name="tuiroomkit_do_not_enter_for_now">暂不进入</string>
+    <string name="tuiroomkit_conference_host">主持人：</string>
+    <string name="tuiroomkit_add_user">添加成员</string>
+    <string name="tuiroomkit_share_room">分享房间</string>
+    <string name="tuiroomkit_already_entered_room">已进房(%s)</string>
+    <string name="tuiroomkit_not_entered">未进入(%s)</string>
+    <string name="tuiroomkit_call">呼叫</string>
+    <string name="tuiroomkit_calling">呼叫中…</string>
+    <string name="tuiroomkit_not_join_for_now">暂不入会</string>
+    <string name="tuiroomkit_call_everyone">呼叫所有人</string>
+    <string name="tuiroomkit_invitation_has_been_sent">邀请信息已发出，等待成员加入</string>
+    <string name="tuiroomkit_copy_room_id_and_link">复制房间号与链接</string>
+    <string name="tuiroomkit_copy_success">复制成功</string>
+    <string name="tuiroomkit_room_time">房间时间</string>
+    <string name="tuiroomkit_copy_invitation_link">复制邀请链接</string>
+    <string name="tuiroomkit_format_copy_room_info_without_password">%s邀请您加入会议\n房间主题：%s\n房间号：%s</string>
+    <string name="tuiroomkit_format_copy_room_info_with_password">%s邀请您加入会议\n房间主题：%s\n房间号：%s\n房间密码：%s</string>
+    <string name="tuiroomkit_format_copy_room_info_out_room">%s邀请您加入会议\n房间主题：%s\n房间时间：%s\n房间号：%s</string>
+    <string name="tuiroomkit_format_copy_room_info_out_room_with_password">%s邀请您加入会议\n房间主题：%s\n房间时间：%s\n房间号：%s\n房间密码：%s</string>
+    <string name="tuiroomkit_format_conference_time">%s-%02d:%02d</string>
+    <string name="tuiroomkit_format_conference_next_day_time">%s-(次日)%02d:%02d</string>
+    <string name="tuiroomkit_format_conference_start_time">%d%s%02d%s%02d%s %02d:%02d</string>
+    <string name="tuiroomkit_copy_room_password_success">复制房间密码成功</string>
+    <string name="tuiroomkit_copy_room_invitation_link_success">复制邀请链接成功</string>
+    <string name="tuiroomkit_please_enter_six_digit_password">请输入6位进房密码</string>
+    <string name="tuiroomkit_conference_modify_success">修改成功</string>
+
+    <string name="tuiroomkit_default_water_mark_text">%s(%s)</string>
+    <string name="tuiroomkit_password_digits">0123456789</string>
+    <string name="tuiroomkit_confirm_dialog_count_down_text">(%s)</string>
 </resources>

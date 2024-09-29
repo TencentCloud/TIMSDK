@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
@@ -18,15 +17,9 @@
     <application>
 
         <activity
-            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.ConferenceMainActivity"
+            android:name="com.tencent.cloud.tuikit.roomkit.ConferenceMainActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <activity
-            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.PrepareActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
@@ -57,7 +50,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
-            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.ScheduleConferenceActivity"
+            android:name="com.tencent.cloud.tuikit.roomkit.ScheduleConferenceActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
@@ -75,7 +68,11 @@
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.activity.InvitationReceivedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.Chat.ChatActivity"
             android:configChanges="orientation|screenSize"

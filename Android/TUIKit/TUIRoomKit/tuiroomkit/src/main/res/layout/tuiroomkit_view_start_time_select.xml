@@ -90,7 +90,7 @@
             app:wheel_indicator_size="1sp"
             app:wheel_visible_item_count="5"
             app:wheel_indicator_color="#F2F2F2"
-            app:wheel_item_align="right"/>
+            app:wheel_item_align="center"/>
 
         <com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.WheelPicker.WheelPicker
             android:id="@+id/np_start_time_hour"

@@ -15,6 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceSession;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.EnterConferenceViewModel;
@@ -32,12 +34,35 @@ public class EnterConferenceView extends RelativeLayout {
     private LinearLayout             mSettingContainer;
     private EnterConferenceViewModel mViewModel;
 
+    private final ConferenceDefine.ConferenceObserver mConferenceObserver = new ConferenceDefine.ConferenceObserver() {
+        @Override
+        public void onConferenceStarted(TUIRoomDefine.RoomInfo roomInfo, TUICommonDefine.Error error, String message) {
+            if (error == TUICommonDefine.Error.SUCCESS) {
+                return;
+            }
+            RoomToast.toastLongMessage("error=" + error + " message=" + message);
+            mTextEnterRoom.setClickable(true);
+        }
+    };
+
     public EnterConferenceView(Context context) {
         super(context);
         View.inflate(context, R.layout.tuiroomkit_view_enter_room, this);
         mContext = context;
         mViewModel = new EnterConferenceViewModel(mContext);
         initView();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ConferenceSession.sharedInstance().addObserver(mConferenceObserver);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ConferenceSession.sharedInstance().removeObserver(mConferenceObserver);
     }
 
     private void initView() {
@@ -50,28 +75,19 @@ public class EnterConferenceView extends RelativeLayout {
         mTextEnterRoom.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTextEnterRoom.setClickable(false);
-                mViewModel.enterRoom(mTextRoomId.getText().toString(), new TUIRoomDefine.ActionCallback() {
-                    @Override
-                    public void onSuccess() {
-                    }
-
-                    @Override
-                    public void onError(TUICommonDefine.Error error, String message) {
-                        RoomToast.toastLongMessage("error=" + error + " message=" + message);
-                        mTextEnterRoom.setClickable(true);
-                    }
-                });
+                String roomId = mTextRoomId.getText().toString();
+                if (TextUtils.isEmpty(roomId)) {
+                    RoomToast.toastLongMessageCenter(mContext.getString(R.string.tuiroomkit_conference_name_empty));
+                    return;
+                }
+                mViewModel.enterRoom(roomId);
+                finishActivity();
             }
         });
         mToolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(mContext instanceof Activity)) {
-                    return;
-                }
-                Activity activity = (Activity) mContext;
-                activity.finish();
+                finishActivity();
             }
         });
         mTextRoomId.addTextChangedListener(new TextWatcher() {
@@ -102,5 +118,13 @@ public class EnterConferenceView extends RelativeLayout {
         }
 
         mTextUserName.setText(TUILogin.getNickName());
+    }
+
+    private void finishActivity() {
+        if (!(mContext instanceof Activity)) {
+            return;
+        }
+        Activity activity = (Activity) mContext;
+        activity.finish();
     }
 }

@@ -114,18 +114,6 @@ public class GlideEngine {
             .get();
     }
 
-    public static Bitmap loadBitmap(Object imageUrl, int width, int height) throws InterruptedException, ExecutionException {
-        if (imageUrl == null) {
-            return null;
-        }
-        return Glide.with(TUILogin.getAppContext())
-            .asBitmap()
-            .load(imageUrl)
-            .apply(new RequestOptions().error(TUIThemeManager.getAttrResId(TUILogin.getAppContext(), R.attr.core_default_user_icon)))
-            .into(width, height)
-            .get();
-    }
-
     public static void loadImageSetDefault(ImageView imageView, Object uri, int defaultResId) {
         Glide.with(TUILogin.getAppContext()).load(uri).placeholder(defaultResId).apply(new RequestOptions().centerCrop().error(defaultResId)).into(imageView);
     }

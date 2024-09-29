@@ -30,10 +30,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
     public static final int SELECT_LABEL_COUNT = 1;
 
     private boolean mHasShowUnreadDot = true;
-    private int mItemAvatarRadius = ScreenUtil.getPxByDp(5);
-    private int mTopTextSize;
-    private int mBottomTextSize;
-    private int mDateTextSize;
     protected List<ConversationInfo> mDataSource = new ArrayList<>();
     private OnConversationAdapterListener mOnConversationAdapterListener;
 
@@ -257,22 +253,13 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
             default:
                 setOnClickListener(holder, getItemViewType(position), conversationInfo);
         }
+
         if (baseHolder != null) {
+            if (getCurrentPosition() == position && isClick()) {
+                baseHolder.itemView.setBackgroundResource(R.color.conversation_item_clicked_color);
+            }
             baseHolder.layoutViews(conversationInfo, position);
             setCheckBoxStatus(conversationInfo, position, baseHolder);
-        }
-
-        if (getCurrentPosition() == position && isClick()) {
-            baseHolder.itemView.setBackgroundResource(R.color.conversation_item_clicked_color);
-        } else {
-            if (conversationInfo == null) {
-                return;
-            }
-            if (conversationInfo.isTop() && !isForwardFragment) {
-                baseHolder.itemView.setBackgroundColor(baseHolder.rootView.getResources().getColor(R.color.conversation_item_top_color));
-            } else {
-                baseHolder.itemView.setBackgroundColor(Color.WHITE);
-            }
         }
     }
 
@@ -494,38 +481,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter implements ICo
         if (mOnConversationAdapterListener != null) {
             mOnConversationAdapterListener.onConversationChanged(conversationInfoList);
         }
-    }
-
-    public void setItemTopTextSize(int size) {
-        mTopTextSize = size;
-    }
-
-    public int getItemTopTextSize() {
-        return mTopTextSize;
-    }
-
-    public void setItemBottomTextSize(int size) {
-        mBottomTextSize = size;
-    }
-
-    public int getItemBottomTextSize() {
-        return mBottomTextSize;
-    }
-
-    public void setItemDateTextSize(int size) {
-        mDateTextSize = size;
-    }
-
-    public int getItemDateTextSize() {
-        return mDateTextSize;
-    }
-
-    public void setItemAvatarRadius(int radius) {
-        mItemAvatarRadius = radius;
-    }
-
-    public int getItemAvatarRadius() {
-        return mItemAvatarRadius;
     }
 
     public void disableItemUnreadDot(boolean flag) {

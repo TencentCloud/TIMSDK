@@ -1,5 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.common.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -48,6 +49,9 @@ public class ImageLoader {
             if (imageView != null && errorResId != 0) {
                 imageView.setImageResource(errorResId);
             }
+            return;
+        }
+        if (context instanceof Activity && ((Activity)context).isDestroyed()) {
             return;
         }
         Glide.with(context).load(url).error(loadTransform(context, errorResId, radius)).into(imageView);

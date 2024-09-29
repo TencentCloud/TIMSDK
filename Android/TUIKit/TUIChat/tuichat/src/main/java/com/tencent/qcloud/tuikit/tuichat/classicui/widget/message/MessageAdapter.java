@@ -5,17 +5,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.highlight.HighlightPresenter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ICommonMessageAdapter;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.UserFaceUrlCache;
-import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.ClassicUIService;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.MessageHeadHolder;
@@ -24,7 +23,6 @@ import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageAdapter;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +44,14 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
     private boolean isReplyDetailMode = false;
 
     private ChatPresenter presenter;
-    private BaseFragment fragment;
+    private Fragment fragment;
     private UserFaceUrlCache faceUrlCache;
 
     public void setPresenter(ChatPresenter chatPresenter) {
         this.presenter = chatPresenter;
     }
 
-    public void setFragment(BaseFragment fragment) {
+    public void setFragment(Fragment fragment) {
         this.fragment = fragment;
     }
 
@@ -236,11 +234,13 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             setItemChecked(messageBean, false);
             return;
         }
+
         if (isItemChecked(messageBean)) {
             setItemChecked(messageBean, false);
         } else {
             setItemChecked(messageBean, true);
         }
+
         onViewNeedRefresh(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
     }
 

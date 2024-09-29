@@ -1,5 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.common.utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
@@ -17,6 +19,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +28,8 @@ import java.util.Map;
 
 public class CommonUtils {
 
-    private static final int QR_CODE_MARGIN     = 2;
+    private static final int    QR_CODE_MARGIN = 2;
+    private static final String LABEL          = "Label";
 
     public static String getAppName(Context context) {
         ApplicationInfo applicationInfo = context.getApplicationInfo();
@@ -68,5 +72,12 @@ public class CommonUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void copyToClipboard(String content, String toastMessage) {
+        ClipboardManager cm = (ClipboardManager) TUILogin.getAppContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData mClipData = ClipData.newPlainText(LABEL, content);
+        cm.setPrimaryClip(mClipData);
+        RoomToast.toastShortMessageCenter(toastMessage);
     }
 }

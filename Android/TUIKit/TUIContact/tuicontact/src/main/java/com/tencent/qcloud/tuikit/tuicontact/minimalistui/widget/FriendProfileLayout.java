@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
-import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
@@ -38,6 +37,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
+import com.tencent.qcloud.tuikit.tuicontact.config.minimalistui.TUIContactConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IFriendProfileLayout;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.AddMoreDetailMinimalistDialogFragment;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
@@ -252,6 +252,31 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
         setupExtension();
     }
 
+    public void applyCustomConfig() {
+        if (!TUIContactConfigMinimalist.isShowAlias()) {
+            mRemarkView.setVisibility(GONE);
+        }
+        if (!TUIContactConfigMinimalist.isShowMuteAndPin()) {
+            mChatTopView.setVisibility(GONE);
+            mMessageOptionView.setVisibility(GONE);
+        }
+        if (!TUIContactConfigMinimalist.isShowBackground()) {
+            mChatBackground.setVisibility(GONE);
+        }
+        if (!TUIContactConfigMinimalist.isShowBlock()) {
+            mAddBlackView.setVisibility(GONE);
+        }
+        if (!TUIContactConfigMinimalist.isShowClearChatHistory()) {
+            clearMessageBtn.setVisibility(GONE);
+        }
+        if (!TUIContactConfigMinimalist.isShowDelete()) {
+            deleteFriendBtn.setVisibility(GONE);
+        }
+        if (!TUIContactConfigMinimalist.isShowAddFriend()) {
+            addFriendBtn.setVisibility(GONE);
+        }
+    }
+
     private void setViewContentFromItemBean(ContactItemBean data) {
         mContactInfo = data;
         isFriend = mContactInfo.isFriend();
@@ -352,6 +377,7 @@ public class FriendProfileLayout extends LinearLayout implements View.OnClickLis
                 detailDialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), "AddMoreDetail");
             });
         }
+        applyCustomConfig();
 
     }
 

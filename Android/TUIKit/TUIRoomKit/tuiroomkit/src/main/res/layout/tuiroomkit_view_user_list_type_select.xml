@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioGroup
+        android:id="@+id/tuiroomkit_user_list_type_tab"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@drawable/tuiroomkit_bg_user_list_panel_view"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/tuiroomkit_btn_user_on_seat"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/tuiroomkit_bg_user_list_tab_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_user_list_on_seat"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            app:round="6dp" />
+
+        <RadioButton
+            android:id="@+id/tuiroomkit_btn_user_off_seat"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/tuiroomkit_bg_user_list_tab_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_user_list_off_seat"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            app:round="6dp" />
+
+        <RadioButton
+            android:id="@+id/tuiroomkit_btn_user_entered"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/tuiroomkit_bg_user_list_tab_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_already_entered_room"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:round="6dp" />
+
+        <RadioButton
+            android:id="@+id/tuiroomkit_btn_user_not_entered"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/tuiroomkit_bg_user_list_tab_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/tuiroomkit_not_entered"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            app:round="6dp" />
+    </RadioGroup>
+</LinearLayout>

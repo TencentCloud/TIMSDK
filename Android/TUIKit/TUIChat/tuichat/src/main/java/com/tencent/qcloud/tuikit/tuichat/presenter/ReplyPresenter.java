@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
@@ -109,7 +110,7 @@ public class ReplyPresenter {
         for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
             messageBeanMap.put(replyBean, null);
         }
-        chatPresenter.findMessage(msgIdList, new IUIKitCallback<List<TUIMessageBean>>() {
+        provider.findMessages(msgIdList, new TUIValueCallback<List<TUIMessageBean>>() {
             @Override
             public void onSuccess(List<TUIMessageBean> data) {
                 for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
@@ -127,7 +128,7 @@ public class ReplyPresenter {
             }
 
             @Override
-            public void onError(String module, int errCode, String errMsg) {
+            public void onError(int errCode, String errMsg) {
                 processReplyBeanList(messageBeanMap);
             }
         });

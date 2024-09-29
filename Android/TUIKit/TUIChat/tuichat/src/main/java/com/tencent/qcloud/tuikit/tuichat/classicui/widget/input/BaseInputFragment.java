@@ -1,9 +1,10 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input;
 
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
+import androidx.fragment.app.Fragment;
+
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
 
-public class BaseInputFragment extends BaseFragment {
+public class BaseInputFragment extends Fragment {
     private IChatLayout mChatLayout;
 
     public IChatLayout getChatLayout() {

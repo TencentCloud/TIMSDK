@@ -2,9 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat;
 
 import android.content.Context;
 import android.text.TextUtils;
-import androidx.datastore.preferences.core.Preferences;
-import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
-import androidx.datastore.rxjava3.RxDataStore;
 import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
@@ -89,7 +86,6 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
 
     private final Map<String, Class<? extends TUIMessageBean>> customMessageMap = new HashMap<>();
     private final Set<Class<? extends TUIMessageBean>> extensionMessageClass = new HashSet<>();
-    private RxDataStore<Preferences> mChatDataStore = null;
 
     @Override
     public void init(Context context) {
@@ -99,22 +95,10 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         initService();
         initEvent();
         initIMListener();
-        initDataStore();
     }
 
     private void initService() {
         TUICore.registerService(TUIConstants.TUIChat.SERVICE_NAME, this);
-    }
-
-    private void initDataStore() {
-        if (mChatDataStore == null) {
-            mChatDataStore = new RxPreferenceDataStoreBuilder(getAppContext(), TUIChatConstants.DataStore.DATA_STORE_NAME).build();
-        }
-        DataStoreUtil.getInstance().setDataStore(mChatDataStore);
-    }
-
-    public RxDataStore<Preferences> getChatDataStore() {
-        return mChatDataStore;
     }
 
     private void initEvent() {
@@ -323,20 +307,27 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
             // Set whether to open the floating window for voice and video calls
             Map<String, Object> enableFloatWindowParam = new HashMap<>();
             enableFloatWindowParam.put(
-                TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, TUIChatConfigs.getConfigs().getGeneralConfig().isEnableFloatWindowForCall());
+                TUIConstants.TUICalling.PARAM_NAME_ENABLE_FLOAT_WINDOW, TUIChatConfigs.getGeneralConfig().isEnableFloatWindowForCall());
             TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_FLOAT_WINDOW, enableFloatWindowParam);
 
             // Set Whether to enable multi-terminal login function for audio and video calls
             Map<String, Object> enableMultiDeviceParam = new HashMap<>();
             enableMultiDeviceParam.put(
-                TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE, TUIChatConfigs.getConfigs().getGeneralConfig().isEnableMultiDeviceForCall());
+                TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE, TUIChatConfigs.getGeneralConfig().isEnableMultiDeviceForCall());
             TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_MULTI_DEVICE, enableMultiDeviceParam);
 
             // Set whether to enable incoming banner when user received audio and video calls
             Map<String, Object> incomingBannerParam = new HashMap<>();
             incomingBannerParam.put(
-                TUIConstants.TUICalling.PARAM_NAME_ENABLE_INCOMING_BANNER, TUIChatConfigs.getConfigs().getGeneralConfig().isEnableIncomingBanner());
+                TUIConstants.TUICalling.PARAM_NAME_ENABLE_INCOMING_BANNER, TUIChatConfigs.getGeneralConfig().isEnableIncomingBanner());
             TUICore.callService(TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_INCOMING_BANNER, incomingBannerParam);
+
+            // Set whether to enable the virtual background function for video calls.
+            Map<String, Object> virtualBackgroundForCallParams = new HashMap<>();
+            virtualBackgroundForCallParams.put(
+                    TUIConstants.TUICalling.PARAM_NAME_ENABLE_VIRTUAL_BACKGROUND, TUIChatConfigs.getGeneralConfig().isEnableVirtualBackgroundForCall());
+            TUICore.callService(
+                    TUIConstants.TUICalling.SERVICE_NAME, TUIConstants.TUICalling.METHOD_NAME_ENABLE_VIRTUAL_BACKGROUND, virtualBackgroundForCallParams);
         }
     }
 

@@ -106,14 +106,6 @@ public class QuoteMessageHolder extends TextMessageHolder {
             quoteContentFrameLayout.setVisibility(View.GONE);
         }
 
-        msgArea.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                selectableTextHelper.selectAll();
-                return true;
-            }
-        });
-
         quoteContentFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,10 +114,19 @@ public class QuoteMessageHolder extends TextMessageHolder {
                 }
             }
         });
+
         setThemeColor(msg);
+
         if (isForwardMode || isReplyDetailMode) {
             return;
         }
+        msgArea.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                selectableTextHelper.selectAll();
+                return true;
+            }
+        });
         setSelectableTextHelper(msg, msgBodyText, position);
     }
 

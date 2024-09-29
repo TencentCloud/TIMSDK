@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_slide_to_accept_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tuiroomkit_bg_slide_to_accept_track">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="40dp"
+        android:text="@string/tuiroomkit_join_now"
+        android:textColor="@color/tuiroomkit_color_white"
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="289dp"
+        tools:layout_editor_absoluteY="308dp" />
+
+    <ImageView
+        android:id="@+id/img_slide"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/tuiroomkit_ic_slide" />
+</FrameLayout>

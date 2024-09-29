@@ -61,26 +61,6 @@ public class FoldedConversationListLayout extends RecyclerView implements IConve
     }
 
     @Override
-    public void setItemAvatarRadius(int radius) {
-        mAdapter.setItemAvatarRadius(radius);
-    }
-
-    @Override
-    public void setItemTopTextSize(int size) {
-        mAdapter.setItemTopTextSize(size);
-    }
-
-    @Override
-    public void setItemBottomTextSize(int size) {
-        mAdapter.setItemBottomTextSize(size);
-    }
-
-    @Override
-    public void setItemDateTextSize(int size) {
-        mAdapter.setItemDateTextSize(size);
-    }
-
-    @Override
     public FoldedConversationListLayout getListLayout() {
         return this;
     }

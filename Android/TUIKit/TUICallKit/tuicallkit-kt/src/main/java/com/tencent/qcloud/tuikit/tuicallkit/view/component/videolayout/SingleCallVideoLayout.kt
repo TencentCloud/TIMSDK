@@ -1,15 +1,23 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.view.*
+import android.view.GestureDetector
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.RelativeLayout
+import com.tencent.qcloud.tuicore.util.ScreenUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
 import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.videolayout.SingleCallVideoLayoutViewModel
 
@@ -107,6 +115,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
                 parent.removeAllViews()
                 layoutRenderBig?.removeAllViews()
             }
+            setSmallRenderViewOrientation()
             if (viewModel.currentReverseRenderView) {
                 viewModel.reverseRenderLayout(false)
                 layoutRenderSmall?.addView(videoViewSmall)
@@ -126,6 +135,7 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
                 (videoViewSmall?.parent as ViewGroup).removeView(videoViewSmall)
                 layoutRenderSmall?.removeAllViews()
             }
+            setSmallRenderViewOrientation()
             layoutRenderSmall?.addView(videoViewSmall)
             EngineManager.instance.startRemoteView(viewModel.remoteUser.id, videoViewSmall?.getVideoView(), null)
         }
@@ -142,6 +152,28 @@ class SingleCallVideoLayout(context: Context) : BaseCallView(context) {
             viewModel.selfUser.videoAvailable.set(true)
             EngineManager.instance.openCamera(viewModel.isFrontCamera.get(), videoViewBig?.getVideoView(), null)
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        setSmallRenderViewOrientation()
+        layoutRenderSmall?.requestLayout()
+    }
+
+    private fun setSmallRenderViewOrientation() {
+        val isLandScape = when (TUICallState.instance.orientation) {
+            Constants.Orientation.Portrait -> false
+            Constants.Orientation.LandScape -> true
+            else -> ScreenUtil.getRealScreenWidth(context) > ScreenUtil.getRealScreenHeight(context)
+        }
+
+        val wWidth = context.resources.getDimension(R.dimen.tuicallkit_video_small_view_width).toInt()
+        val hHeight = context.resources.getDimension(R.dimen.tuicallkit_video_small_view_height).toInt()
+
+        val lp = layoutRenderSmall?.layoutParams
+        lp?.width = if (isLandScape) hHeight else wWidth
+        lp?.height = if (isLandScape) wWidth else hHeight
+        layoutRenderSmall?.layoutParams = lp
     }
 
     private fun initGestureListener(view: RelativeLayout?) {

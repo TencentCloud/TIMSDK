@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -88,7 +87,6 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
     private TabAdapter tabAdapter;
     private OnTabEventListener onTabEventListener;
     private TabBean conversationBean;
-    private TabBean communityBean;
     private TabBean contactsBean;
     private TabBean profileBean;
     private TabBean recentCallsBean;

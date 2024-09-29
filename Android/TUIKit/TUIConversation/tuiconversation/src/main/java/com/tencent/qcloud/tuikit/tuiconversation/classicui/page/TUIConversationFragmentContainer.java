@@ -17,7 +17,6 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-public class TUIConversationFragmentContainer extends BaseFragment {
+public class TUIConversationFragmentContainer extends Fragment {
     private static final String TAG = TUIConversationFragmentContainer.class.getSimpleName();
     private List<ConversationGroupBean> mConversationGroupBeans = new ArrayList<>();
 

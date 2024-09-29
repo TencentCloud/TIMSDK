@@ -35,7 +35,6 @@ import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageDetailListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.MessageViewHolderFactory;
 import com.tencent.qcloud.tuikit.tuichat.presenter.MessageReceiptPresenter;
-import com.tencent.qcloud.tuikit.tuichat.presenter.ReplyPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
 import java.util.ArrayList;
@@ -45,11 +44,10 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
     private static final String TAG = MessageDetailMinimalistActivity.class.getSimpleName();
 
     private MessageReceiptPresenter presenter;
-    private ReplyPresenter replyPresenter;
 
     private View readStatusArea;
     private View readTitle;
-    private View unreadtitle;
+    private View unreadTitle;
     private FrameLayout messageArea;
     private RecyclerView readList;
     private RecyclerView unreadList;
@@ -85,7 +83,7 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
         readStatusArea = findViewById(R.id.read_status_area);
         readList = findViewById(R.id.read_list);
         unreadList = findViewById(R.id.unread_list);
-        unreadtitle = findViewById(R.id.unread_title);
+        unreadTitle = findViewById(R.id.unread_title);
         readTitle = findViewById(R.id.read_title);
         ImageView backIcon = findViewById(R.id.back_icon);
         backIcon.getBackground().setAutoMirrored(true);
@@ -148,7 +146,7 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
                     readTitle.setVisibility(View.GONE);
                 }
                 if (info.getUnreadCount() <= 0) {
-                    unreadtitle.setVisibility(View.GONE);
+                    unreadTitle.setVisibility(View.GONE);
                 }
             }
 
@@ -191,7 +189,7 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
         groupMemberInfo.setFriendRemark(chatInfo.getChatName());
         groupMemberInfo.setIconUrl(chatInfo.getFaceUrl());
         if (messageBean.isPeerRead()) {
-            unreadtitle.setVisibility(View.GONE);
+            unreadTitle.setVisibility(View.GONE);
             readMemberList.add(groupMemberInfo);
             readAdapter.setData(readMemberList);
             readAdapter.notifyDataSetChanged();

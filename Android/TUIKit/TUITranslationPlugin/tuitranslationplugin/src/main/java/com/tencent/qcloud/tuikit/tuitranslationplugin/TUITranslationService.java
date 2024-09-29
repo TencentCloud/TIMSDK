@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.auto.service.AutoService;
@@ -23,9 +24,10 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
 import com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.SelectionActivity;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
+import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuitranslationplugin.model.TranslationProvider;
 import com.tencent.qcloud.tuikit.tuitranslationplugin.presenter.TranslationPresenter;
 import com.tencent.qcloud.tuikit.tuitranslationplugin.widget.TranslationMessageLayoutProxy;
@@ -74,10 +76,21 @@ public class TUITranslationService implements TUIInitializer, ITUIExtension {
                 return null;
             }
 
+            if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessagePopMenu.CLASSIC_EXTENSION_ID)) {
+                if (!TUIChatConfigClassic.isEnableTranslate()) {
+                    return null;
+                }
+            } else {
+                if (!TUIChatConfigMinimalist.isEnableTranslate()) {
+                    return null;
+                }
+            }
+
             TUIMessageBean messageBean = (TUIMessageBean) param.get(TUIConstants.TUIChat.Extension.MessagePopMenu.MESSAGE_BEAN);
             TranslationPresenter presenter = new TranslationPresenter();
             if ((messageBean instanceof TextMessageBean || messageBean instanceof QuoteMessageBean)
-                && presenter.getTranslationStatus(messageBean.getV2TIMMessage()) != TranslationProvider.MSG_TRANSLATE_STATUS_SHOWN) {
+                && presenter.getTranslationStatus(messageBean.getV2TIMMessage()) != TranslationProvider.MSG_TRANSLATE_STATUS_SHOWN
+                    && !messageBean.hasRiskContent()) {
                 // only select-all-text can be translated
                 String selectText = messageBean.getSelectText();
                 if (!TextUtils.isEmpty(selectText)) {
@@ -172,10 +185,10 @@ public class TUITranslationService implements TUIInitializer, ITUIExtension {
             }
 
             RecyclerView recyclerView = (RecyclerView) param.get(TUIConstants.TUIChat.CHAT_RECYCLER_VIEW);
-            BaseFragment fragment = null;
+            Fragment fragment = null;
             Object fragmentObject = param.get(TUIConstants.TUIChat.FRAGMENT);
-            if (fragmentObject != null && fragmentObject instanceof BaseFragment) {
-                fragment = (BaseFragment) fragmentObject;
+            if (fragmentObject != null && fragmentObject instanceof Fragment) {
+                fragment = (Fragment) fragmentObject;
             }
 
             if (TextUtils.equals(extensionID, TUIConstants.TUIChat.Extension.MessageBottom.CLASSIC_EXTENSION_ID)) {

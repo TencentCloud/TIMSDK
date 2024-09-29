@@ -17,35 +17,12 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class TUIMessageBean implements Serializable {
-    /**
-     *
-     * message normal
-     */
-    public static final int MSG_STATUS_NORMAL = 0;
-    /**
-     *
-     * message sending
-     */
-    public static final int MSG_STATUS_SENDING = V2TIMMessage.V2TIM_MSG_STATUS_SENDING;
-    /**
-     *
-     * message send success
-     */
-    public static final int MSG_STATUS_SEND_SUCCESS = V2TIMMessage.V2TIM_MSG_STATUS_SEND_SUCC;
-    /**
-     *
-     * message send failed
-     */
-    public static final int MSG_STATUS_SEND_FAIL = V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
-    /**
-     *
-     * messaage revoked
-     */
+    public static final int MSG_STATUS_SENDING = V2TIMMessage.V2TIM_MSG_STATUS_SENDING;
+    public static final int MSG_STATUS_SEND_SUCCESS = V2TIMMessage.V2TIM_MSG_STATUS_SEND_SUCC;
+    public static final int MSG_STATUS_SEND_FAIL = V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
     public static final int MSG_STATUS_REVOKE = V2TIMMessage.V2TIM_MSG_STATUS_LOCAL_REVOKED;
 
-    /**
-     */
     public static final int MSG_SOURCE_UNKNOWN = 0;
 
     public static final int MSG_SOURCE_ONLINE_PUSH = 1;
@@ -69,6 +46,7 @@ public abstract class TUIMessageBean implements Serializable {
     private MessageRepliesBean messageRepliesBean;
     private boolean hasReaction = false;
     private Map<String, UserBean> userBeanMap = new LinkedHashMap<>();
+    private boolean isSending = false;
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -420,7 +398,7 @@ public abstract class TUIMessageBean implements Serializable {
         List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
         if (replyBeanList != null && !replyBeanList.isEmpty()) {
             for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
-                if (userBean != null) {
+                if (userBean != null && TextUtils.equals(replyBean.getMessageSender(), userID)) {
                     replyBean.setSenderFaceUrl(userBean.getFaceUrl());
                     replyBean.setSenderShowName(userBean.getDisplayString());
                 }
@@ -430,6 +408,14 @@ public abstract class TUIMessageBean implements Serializable {
 
     public UserBean getUserBean(String userID) {
         return userBeanMap.get(userID);
+    }
+
+    public boolean isSending() {
+        return isSending;
+    }
+
+    public void setSending(boolean sending) {
+        this.isSending = sending;
     }
 
     public Set<String> getAdditionalUserIDList() {

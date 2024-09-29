@@ -2,6 +2,8 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
 import android.util.Pair;
+
+import com.tencent.imsdk.v2.V2TIMGroupInfo;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
@@ -38,11 +40,6 @@ public class GroupChatPresenter extends ChatPresenter {
     private final List<TUIMessageBean> pinnedMessageList = new ArrayList<>();
     private IGroupPinnedView groupPinnedView;
     private int selfRoleInGroup = 0;
-
-    public GroupChatPresenter() {
-        super();
-        TUIChatLog.i(TAG, "GroupChatPresenter Init");
-    }
 
     public void initListener() {
         groupChatEventListener = new GroupChatEventListener() {
@@ -373,7 +370,19 @@ public class GroupChatPresenter extends ChatPresenter {
     }
 
     public void getGroupType(String groupID, TUIValueCallback<String> callback) {
-        provider.getGroupType(groupID, callback);
+        provider.getGroupInfo(groupID, new TUIValueCallback<V2TIMGroupInfo>() {
+            @Override
+            public void onSuccess(V2TIMGroupInfo object) {
+                selfRoleInGroup = object.getRole();
+                onPinnedListChanged();
+                TUIValueCallback.onSuccess(callback, object.getGroupType());
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIValueCallback.onError(callback, errorCode, errorMessage);
+            }
+        });
     }
 
     @Override
@@ -459,20 +468,6 @@ public class GroupChatPresenter extends ChatPresenter {
 
     public void loadPinnedMessage(String groupID) {
         TUIChatLog.i(TAG, "loadPinnedMessage groupID:" + groupID);
-        provider.getGroupMembersInfo(groupID, Collections.singletonList(TUILogin.getLoginUser()), new IUIKitCallback<List<GroupMemberInfo>>() {
-            @Override
-            public void onSuccess(List<GroupMemberInfo> data) {
-                if (data != null && !data.isEmpty()) {
-                    selfRoleInGroup = data.get(0).getRole();
-                }
-                onPinnedListChanged();
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIChatLog.e(TAG, "get self role failed. code:" + errCode + ", msg:" + errMsg);
-            }
-        });
         provider.getGroupPinnedMessageList(groupID, new TUIValueCallback<List<TUIMessageBean>>() {
             @Override
             public void onSuccess(List<TUIMessageBean> messageBeans) {

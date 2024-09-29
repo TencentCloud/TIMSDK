@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
@@ -21,7 +23,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopDialogAdapter;
 import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
@@ -38,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TUIFoldedConversationFragment extends BaseFragment {
+public class TUIFoldedConversationFragment extends Fragment {
     private View mBaseView;
     private TitleBarLayout mTitleBarLayout;
     private FoldedConversationLayout mFoldedLayout;

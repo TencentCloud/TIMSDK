@@ -39,6 +39,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.MinimalistUIService;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ImageMessageHolder;
@@ -55,7 +56,6 @@ public class ChatPopActivity extends AppCompatActivity {
 
     private List<ChatPopMenuAction> chatPopMenuActionList;
 
-    private boolean isShowFaces = true;
     private ChatPopMenuAction clickedChatPopMenuAction = null;
 
     private ViewGroup popupView;
@@ -272,7 +272,7 @@ public class ChatPopActivity extends AppCompatActivity {
     }
 
     public boolean isShowFaces() {
-        return isShowFaces;
+        return TUIChatConfigMinimalist.isEnableEmojiReaction();
     }
 
     private ChatPopMenuAction getChatPopMenuAction(int position) {

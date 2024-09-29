@@ -4,6 +4,9 @@
     android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:adjustViewBounds="true"
+    android:maxWidth="480dp"
     android:layout_marginBottom="40dp">
 
     <LinearLayout

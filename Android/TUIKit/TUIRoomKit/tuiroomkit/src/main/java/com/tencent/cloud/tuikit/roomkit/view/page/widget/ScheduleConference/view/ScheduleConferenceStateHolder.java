@@ -136,7 +136,6 @@ public class ScheduleConferenceStateHolder {
     public void updatePassword(String password) {
         SetConferenceEncryptViewUiState uiState = mConferenceEncryptData.get();
         uiState.password = password;
-        mConferenceEncryptData.set(uiState);
     }
 
     private void initData(ConferenceListState.ConferenceInfo conferenceInfo) {

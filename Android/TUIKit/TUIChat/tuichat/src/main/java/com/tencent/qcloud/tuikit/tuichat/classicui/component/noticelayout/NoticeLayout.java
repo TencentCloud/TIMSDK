@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuikit.tuichat.R;
 
-public class NoticeLayout extends RelativeLayout implements INoticeLayout {
+public class NoticeLayout extends RelativeLayout {
     private RelativeLayout mNoticeLayout;
     private TextView mContentText;
     private TextView mContentExtraText;
@@ -37,22 +37,18 @@ public class NoticeLayout extends RelativeLayout implements INoticeLayout {
         mContentExtraText = findViewById(R.id.notice_content_extra);
     }
 
-    @Override
     public RelativeLayout getParentLayout() {
         return mNoticeLayout;
     }
 
-    @Override
     public TextView getContent() {
         return mContentText;
     }
 
-    @Override
     public TextView getContentExtra() {
         return mContentExtraText;
     }
 
-    @Override
     public void setOnNoticeClickListener(OnClickListener l) {
         setOnClickListener(l);
     }
@@ -66,7 +62,6 @@ public class NoticeLayout extends RelativeLayout implements INoticeLayout {
         }
     }
 
-    @Override
     public void alwaysShow(boolean show) {
         mAwaysShow = show;
         if (mAwaysShow) {

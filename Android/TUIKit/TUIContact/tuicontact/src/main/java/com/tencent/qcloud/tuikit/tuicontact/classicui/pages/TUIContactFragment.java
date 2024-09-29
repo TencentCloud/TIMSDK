@@ -6,8 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
@@ -18,7 +19,7 @@ import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TUIContactFragment extends BaseFragment {
+public class TUIContactFragment extends Fragment {
     private static final String TAG = TUIContactFragment.class.getSimpleName();
     private ContactLayout mContactLayout;
 

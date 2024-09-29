@@ -1,11 +1,13 @@
 package com.tencent.cloud.tuikit.roomkit.viewmodel;
 
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.KEY_START_CONFERENCE_PARAMS;
+
 import android.content.Context;
 import android.content.Intent;
 
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceMainActivity;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.view.activity.ConferenceMainActivity;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseSettingItem;
 import com.tencent.cloud.tuikit.roomkit.view.component.SwitchSettingItem;
 
@@ -31,14 +33,14 @@ public class CreateConferenceViewModel {
         mIsSeatEnabled = enable;
     }
 
-    public void createRoom(String conferenceId, TUIRoomDefine.ActionCallback callback) {
+    public void createRoom(String conferenceId) {
+        ConferenceDefine.StartConferenceParams params = new ConferenceDefine.StartConferenceParams(conferenceId);
+        params.isSeatEnabled = mIsSeatEnabled;
+        params.isOpenMicrophone = mIsOpenAudio;
+        params.isOpenCamera = mIsOpenVideo;
+        params.isOpenSpeaker = mIsUseSpeaker;
         Intent intent = new Intent(mContext, ConferenceMainActivity.class);
-        intent.putExtra("id", conferenceId);
-        intent.putExtra("enableSeatControl", mIsSeatEnabled);
-        intent.putExtra("muteMicrophone", !mIsOpenAudio);
-        intent.putExtra("openCamera", mIsOpenVideo);
-        intent.putExtra("soundOnSpeaker", mIsUseSpeaker);
-        intent.putExtra("isCreate", true);
+        intent.putExtra(KEY_START_CONFERENCE_PARAMS, params);
         mContext.startActivity(intent);
     }
 

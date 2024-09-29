@@ -7,21 +7,39 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.utils.widget.ImageFilterView
+import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
+import com.tencent.qcloud.tuikit.tuicallengine.impl.base.LiveData
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.group.InviteeAvatarListViewModel
 import java.util.concurrent.CopyOnWriteArrayList
 
 class InviteeAvatarListView(context: Context) : LinearLayout(context) {
 
-    private var viewModel = InviteeAvatarListViewModel()
+    private var inviteeUserList = LiveData<CopyOnWriteArrayList<User>>()
 
-    private var inviteeUserListObserver = Observer<CopyOnWriteArrayList<User>> {
+    private var remoteUserListObserver = Observer<LinkedHashSet<User>> {
+        if (it != null && it.size > 0) {
+            for (user in it) {
+                if (!inviteeUserList.get().contains(user) && TUICallDefine.Role.Called == user.callRole.get()) {
+                    inviteeUserList.add(user)
+                }
+            }
+            for ((index, user) in inviteeUserList.get().withIndex()) {
+                if (index == 0) {
+                    continue
+                }
+                if (!it.contains(user)) {
+                    inviteeUserList.remove(user)
+                }
+            }
+        }
         removeAllViews()
         initView()
     }
+
 
     private var avatarObserver = Observer<String> {
         removeAllViews()
@@ -29,33 +47,41 @@ class InviteeAvatarListView(context: Context) : LinearLayout(context) {
     }
 
     init {
+        inviteeUserList.set(CopyOnWriteArrayList())
+        inviteeUserList.get().add(TUICallState.instance.selfUser.get())
+        for (user in TUICallState.instance.remoteUserList.get()) {
+            if (TUICallDefine.Role.Called == user.callRole.get()) {
+                inviteeUserList.get().add(user)
+            }
+        }
+
         orientation = VERTICAL
         initView()
-
         addObserver()
     }
 
     fun clear() {
         removeObserver()
-
-        viewModel?.removeObserver()
     }
 
     private fun addObserver() {
-        viewModel.inviteeUserList.observe(inviteeUserListObserver)
-        for (user in viewModel.inviteeUserList.get()) {
+        TUICallState.instance.remoteUserList.observe(remoteUserListObserver)
+        for (user in inviteeUserList.get()) {
             user.avatar.observe(avatarObserver)
         }
     }
 
     private fun removeObserver() {
-        viewModel.inviteeUserList.removeObserver(inviteeUserListObserver)
-        for (user in viewModel.inviteeUserList.get()) {
+        TUICallState.instance.remoteUserList.removeObserver(remoteUserListObserver)
+        for (user in inviteeUserList.get()) {
             user.avatar.removeObserver(avatarObserver)
         }
     }
 
     private fun initView() {
+        if (inviteeUserList == null || inviteeUserList.get().isNullOrEmpty()) {
+            return
+        }
         addView(createTextView())
 
         val layoutAvatar = LinearLayout(context)
@@ -65,7 +91,7 @@ class InviteeAvatarListView(context: Context) : LinearLayout(context) {
 
         val squareWidth = context.resources.getDimensionPixelOffset(R.dimen.tuicallkit_small_image_size)
         val leftMargin = context.resources.getDimensionPixelOffset(R.dimen.tuicallkit_small_image_left_margin)
-        for ((index, user) in viewModel?.inviteeUserList?.get()!!.withIndex()) {
+        for ((index, user) in inviteeUserList?.get()!!.withIndex()) {
             val imageView = ImageFilterView(context)
             val layoutParams = LayoutParams(squareWidth, squareWidth)
             if (index != 0) {

@@ -6,6 +6,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomE
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_AUDIO_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_CAMERA_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_SCREEN_STATE_CHANGED;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.BAR_SHOW_TIME_RECOUNT;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_MEDIA_SETTING_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
@@ -68,6 +69,7 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
 
     private void subscribeEngineEvent() {
         ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
+        eventCenter.subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
         eventCenter.subscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
         eventCenter.subscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
         eventCenter.subscribeEngine(LOCAL_AUDIO_STATE_CHANGED, this);
@@ -87,6 +89,7 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
 
     private void unSubscribeEngineEvent() {
         ConferenceEventCenter eventCenter = ConferenceEventCenter.getInstance();
+        eventCenter.unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
         eventCenter.unsubscribeEngine(LOCAL_CAMERA_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(LOCAL_AUDIO_STATE_CHANGED, this);
@@ -410,7 +413,9 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
                     return;
                 }
                 mBottomView.replaceItem(BottomItemData.Type.RAISE_HAND, createRaiseHandItem());
-                RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_apply_take_seat_time_out));
+                if (mConferenceState.userModel.isOffSeat()) {
+                    RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_apply_take_seat_time_out));
+                }
             }
 
             @Override
@@ -594,6 +599,10 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
     @Override
     public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
+            case LOCAL_USER_ENTER_ROOM:
+                initData(mType);
+                break;
+
             case LOCAL_CAMERA_STATE_CHANGED:
                 updateVideoButtonSelectStatus(mConferenceState.videoModel.isCameraOpened());
                 break;

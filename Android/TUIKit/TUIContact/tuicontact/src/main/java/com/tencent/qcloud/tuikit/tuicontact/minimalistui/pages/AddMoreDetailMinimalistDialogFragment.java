@@ -54,7 +54,6 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
     private View validationArea;
     private View remarksArea;
     private MinimalistLineControllerView remarkController;
-    private MinimalistLineControllerView groupController;
     private TextView sendButton;
 
     private TUICallback addMoreCallback;
@@ -100,7 +99,6 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
 
         remarksArea = view.findViewById(R.id.remark_area);
         remarkController = view.findViewById(R.id.remarks_controller);
-        groupController = view.findViewById(R.id.group_controller);
 
         remarkController.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,8 +136,7 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
                     });
                 } else if (data instanceof ContactItemBean) {
                     String remark = remarkController.getContent();
-                    String friendGroup = groupController.getContent();
-                    presenter.addFriend(((ContactItemBean) data).getId(), addWording, friendGroup, remark, new IUIKitCallback<Pair<Integer, String>>() {
+                    presenter.addFriend(((ContactItemBean) data).getId(), addWording, remark, new IUIKitCallback<Pair<Integer, String>>() {
                         @Override
                         public void onSuccess(Pair<Integer, String> data) {
                             int toastIconType = ContactToast.TOAST_ICON_NEGATIVE;

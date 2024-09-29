@@ -7,15 +7,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.userinfo.single.AudioCallUserInfoViewModel
 
 class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
     private var imageBackground: ImageView? = null
     private var imageAvatar: ImageView? = null
     private var textUserName: TextView? = null
-    private var viewModel = AudioCallUserInfoViewModel()
+    private var userModel = TUICallState.instance.remoteUserList.get().first()
 
     private var avatarObserver = Observer<String> {
         if (!TextUtils.isEmpty(it)) {
@@ -44,23 +44,23 @@ class AudioCallUserInfoView(context: Context) : BaseCallView(context) {
         imageBackground = findViewById(R.id.img_user_background)
         imageAvatar = findViewById(R.id.img_avatar)
         textUserName = findViewById(R.id.tv_name)
-        ImageLoader.loadImage(context, imageAvatar, viewModel.avatar.get(), R.drawable.tuicallkit_ic_avatar)
-        textUserName!!.text = viewModel.nickname.get()
+        ImageLoader.loadImage(context, imageAvatar, userModel.avatar.get(), R.drawable.tuicallkit_ic_avatar)
+        textUserName!!.text = userModel.nickname.get()
 
         setBackground()
     }
 
     private fun setBackground() {
-        ImageLoader.loadBlurImage(context, imageBackground, viewModel.avatar.get())
+        ImageLoader.loadBlurImage(context, imageBackground, userModel.avatar.get())
     }
 
     private fun addObserver() {
-        viewModel.avatar.observe(avatarObserver)
-        viewModel.nickname.observe(nicknameObserver)
+        userModel.avatar.observe(avatarObserver)
+        userModel.nickname.observe(nicknameObserver)
     }
 
     private fun removeObserver() {
-        viewModel.avatar.removeObserver(avatarObserver)
-        viewModel.nickname.removeObserver(nicknameObserver)
+        userModel.avatar.removeObserver(avatarObserver)
+        userModel.nickname.removeObserver(nicknameObserver)
     }
 }

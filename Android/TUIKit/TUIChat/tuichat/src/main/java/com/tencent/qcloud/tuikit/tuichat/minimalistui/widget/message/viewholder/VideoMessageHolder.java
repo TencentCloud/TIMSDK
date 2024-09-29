@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
@@ -35,7 +36,18 @@ public class VideoMessageHolder extends ImageMessageHolder {
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgID = msg.getId();
-        performVideo((VideoMessageBean) msg, position);
+        if (msg.hasRiskContent()) {
+            videoPlayBtn.setVisibility(View.GONE);
+            ViewGroup.LayoutParams params = contentImage.getLayoutParams();
+            params.width = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            params.height = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            GlideEngine.loadImage(contentImage, R.drawable.chat_risk_image_replace_icon);
+            contentImage.setLayoutParams(params);
+            setImagePadding(msg);
+            msgContentFrame.setOnClickListener(null);
+        } else {
+            performVideo((VideoMessageBean) msg, position);
+        }
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final VideoMessageBean msg) {

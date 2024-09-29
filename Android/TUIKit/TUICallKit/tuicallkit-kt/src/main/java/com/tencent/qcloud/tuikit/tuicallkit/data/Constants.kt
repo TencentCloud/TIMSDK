@@ -24,4 +24,10 @@ object Constants {
 
     const val CALL_CHANNEL_ID = "CallChannelId"
     const val NOTIFICATION_CHANNEL_ID = "notificationChannelId"
+
+    enum class Orientation {
+        Portrait,
+        LandScape,
+        Auto
+    }
 }

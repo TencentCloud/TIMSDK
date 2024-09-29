@@ -8,6 +8,8 @@ import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
+import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinimalist;
 
 public class CustomConfigHelper {
     private static Context mContext;
@@ -26,7 +28,8 @@ public class CustomConfigHelper {
 
     public static void initChatSettings() {
         if (BrandUtil.isSamsungS9Series()) {
-            TUIChatConfigs.getGeneralConfig().setUseSystemCamera(true);
+            TUIChatConfigClassic.setUseSystemCamera(true);
+            TUIChatConfigMinimalist.setUseSystemCamera(true);
         }
     }
 }

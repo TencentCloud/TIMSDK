@@ -43,4 +43,10 @@ public class FloatChatView extends FrameLayout {
     public void setViewClickListener(OnClickListener clickListener) {
         mBarrageDisplay.setViewClickListener(clickListener);
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mBarrageDisplay.destroyPresenter();
+    }
 }

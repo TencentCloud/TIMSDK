@@ -52,7 +52,18 @@ public class ImageMessageHolder extends MessageContentHolder {
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         msgID = msg.getId();
-        performImage((ImageMessageBean) msg, position);
+        if (msg.hasRiskContent()) {
+            videoPlayBtn.setVisibility(View.GONE);
+            ViewGroup.LayoutParams params = contentImage.getLayoutParams();
+            params.width = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            params.height = itemView.getResources().getDimensionPixelSize(R.dimen.chat_image_message_error_size);
+            GlideEngine.loadImage(contentImage, R.drawable.chat_risk_image_replace_icon);
+            contentImage.setLayoutParams(params);
+            setImagePadding(msg);
+            msgContentFrame.setOnClickListener(null);
+        } else {
+            performImage((ImageMessageBean) msg, position);
+        }
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final ImageMessageBean msg) {
@@ -158,7 +169,7 @@ public class ImageMessageHolder extends MessageContentHolder {
         } else {
             boolean isRTL = LayoutUtil.isRTL();
             contentImage.setRadius(ScreenUtil.dip2px(16));
-            if (isShowStart) {
+            if (isLayoutOnStart) {
                 if (isRTL) {
                     contentImage.setRightBottomRadius(0);
                 } else {

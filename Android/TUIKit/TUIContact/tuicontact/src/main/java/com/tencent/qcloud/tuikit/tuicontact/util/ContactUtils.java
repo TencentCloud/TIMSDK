@@ -24,14 +24,6 @@ public class ContactUtils {
         }
     }
 
-    public static boolean isC2CChat(int chatType) {
-        return chatType == V2TIMConversation.V2TIM_C2C;
-    }
-
-    public static boolean isGroupChat(int chatType) {
-        return chatType == V2TIMConversation.V2TIM_GROUP;
-    }
-
     public static String getLoginUser() {
         return V2TIMManager.getInstance().getLoginUser();
     }

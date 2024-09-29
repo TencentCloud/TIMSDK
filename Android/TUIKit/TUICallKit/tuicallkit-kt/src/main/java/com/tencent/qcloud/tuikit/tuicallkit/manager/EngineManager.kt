@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 import com.tencent.imsdk.BaseConstants
 import com.tencent.qcloud.tuicore.TUIConfig
+import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
@@ -267,6 +268,14 @@ class EngineManager private constructor(context: Context) {
     }
 
     fun openCamera(camera: TUICommonDefine.Camera?, videoView: TUIVideoView?, callback: TUICommonDefine.Callback?) {
+        if (TUICore.getService(TUIConstants.USBCamera.SERVICE_NAME) != null) {
+            TUILog.i(TAG, "open usb camera")
+            val map = HashMap<String, Any?>()
+            map[TUIConstants.USBCamera.PARAM_TX_CLOUD_VIEW] = videoView
+            TUICore.notifyEvent(TUIConstants.USBCamera.KEY_USB_CAMERA, TUIConstants.USBCamera.SUB_KEY_OPEN_CAMERA, map)
+            return
+        }
+
         PermissionRequest.requestCameraPermission(context, object : PermissionCallback() {
             override fun onGranted() {
 
@@ -298,6 +307,12 @@ class EngineManager private constructor(context: Context) {
         TUICallEngine.createInstance(context).closeCamera()
         TUICallState.instance.isCameraOpen.set(false)
         TUICallState.instance.selfUser.get().videoAvailable.set(false)
+
+        if (TUICore.getService(TUIConstants.USBCamera.SERVICE_NAME) != null) {
+            TUICore.notifyEvent(
+                TUIConstants.USBCamera.KEY_USB_CAMERA, TUIConstants.USBCamera.SUB_KEY_CLOSE_CAMERA, null
+            )
+        }
     }
 
     fun switchCamera(camera: TUICommonDefine.Camera) {

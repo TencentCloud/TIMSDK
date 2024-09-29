@@ -96,19 +96,7 @@ public class StreamTextHolder extends TextMessageHolder {
         }
 
         msgBodyText.setVisibility(View.VISIBLE);
-
-        if (properties.getChatContextFontSize() != 0) {
-            msgBodyText.setTextSize(properties.getChatContextFontSize());
-        }
-        if (textMessageBean.isSelf()) {
-            if (properties.getRightChatContentFontColor() != 0) {
-                msgBodyText.setTextColor(properties.getRightChatContentFontColor());
-            }
-        } else {
-            if (properties.getLeftChatContentFontColor() != 0) {
-                msgBodyText.setTextColor(properties.getLeftChatContentFontColor());
-            }
-        }
+        applyCustomConfig();
 
         msgArea.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

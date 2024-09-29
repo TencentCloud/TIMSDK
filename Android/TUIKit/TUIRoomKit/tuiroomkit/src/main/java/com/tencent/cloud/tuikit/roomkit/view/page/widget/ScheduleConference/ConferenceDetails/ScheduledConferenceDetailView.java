@@ -2,10 +2,13 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.Con
 
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.FAILED;
 import static com.tencent.cloud.tuikit.engine.extension.TUIConferenceListManager.ConferenceStatus.RUNNING;
+import static com.tencent.cloud.tuikit.roomkit.ConferenceDefine.KEY_JOIN_CONFERENCE_PARAMS;
+import static com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleInviteMemberView.KEY_INVITE_ROOM_ID;
+import static com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleInviteMemberView.KEY_INVITE_ROOM_NAME;
+import static com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleInviteMemberView.KEY_INVITE_ROOM_TIME;
+import static com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleInviteMemberView.KEY_INVITE_ROOM_TYPE;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,13 +24,15 @@ import androidx.core.content.ContextCompat;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant;
 import com.tencent.cloud.tuikit.roomkit.model.controller.ScheduleController;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
-import com.tencent.cloud.tuikit.roomkit.view.activity.ConferenceMainActivity;
+import com.tencent.cloud.tuikit.roomkit.ConferenceMainActivity;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseDialogFragment;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.AttendeesDisplayView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleInviteMemberView;
@@ -35,33 +40,38 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.trtc.tuikit.common.livedata.Observer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ScheduledConferenceDetailView extends FrameLayout {
-    private static final String               LABEL                  = "Label";
-    private static final String               FORMAT_ATTENDEES_COUNT = "%d/300 %s";
-    private              Context              mContext;
-    private              TextView             mTvModifyRoomInfo;
-    private              TextView             mTvRoomName;
-    private              TextView             mTvRoomId;
-    private              TextView             mTvRoomStartTime;
-    private              TextView             mTvRoomDuration;
-    private              TextView             mTvConferenceType;
-    private              TextView             mTvConferenceHost;
-    private              TextView             mTvRoomMembers;
-    private              ImageFilterView      mImgFirstUserAvatar;
-    private              ImageFilterView      mImgSecondUserAvatar;
-    private              ImageFilterView      mImgThirdUserAvatar;
-    private              ImageView            mCopyRoomIdImg;
-    private              ImageView            mReturnArrowsImg;
-    private              ImageView            mAttendeeArrowsImg;
-    private              ConstraintLayout     mLayoutAttendee;
-    private              AttendeesDisplayView mAttendeesDisplayView;
-    private              ConstraintLayout     mLayoutEnterRoom;
-    private              ConstraintLayout     mLayoutInviteMembers;
-    private              ConstraintLayout     mLayoutCancelRoom;
-    private              String               mRoomId;
+    private static final String FORMAT_ATTENDEES_COUNT = "%d/300 %s";
+
+    private Context                  mContext;
+    private TextView                 mTvModifyRoomInfo;
+    private TextView                 mTvRoomName;
+    private TextView                 mTvRoomId;
+    private TextView                 mTvRoomStartTime;
+    private TextView                 mTvRoomDuration;
+    private TextView                 mTvConferenceType;
+    private TextView                 mTvConferenceHost;
+    private TextView                 mTvRoomMembers;
+    private TextView                 mTvPassword;
+    private TextView                 mTvPasswordTitle;
+    private ImageFilterView          mImgFirstUserAvatar;
+    private ImageFilterView          mImgSecondUserAvatar;
+    private ImageFilterView          mImgThirdUserAvatar;
+    private ImageView                mCopyRoomIdImg;
+    private ImageView                mReturnArrowsImg;
+    private ImageView                mAttendeeArrowsImg;
+    private ConstraintLayout         mLayoutAttendee;
+    private AttendeesDisplayView     mAttendeesDisplayView;
+    private ConstraintLayout         mLayoutEnterRoom;
+    private ConstraintLayout         mLayoutInviteMembers;
+    private ConstraintLayout         mLayoutCancelRoom;
+    private String                   mRoomId;
+    private ScheduleInviteMemberView mInviteMemberView;
 
     private final ScheduledConferenceDetailStateHolder       mStateHolder = new ScheduledConferenceDetailStateHolder();
     private final Observer<ScheduledConferenceDetailUiState> mObserver    = this::updateView;
@@ -86,7 +96,8 @@ public class ScheduledConferenceDetailView extends FrameLayout {
     }
 
     private void updateView(ScheduledConferenceDetailUiState uiState) {
-        if (uiState.conferenceStatus == RUNNING || !TextUtils.equals(uiState.conferenceOwnerId, TUILogin.getUserId())) {
+        boolean isMyConference = TextUtils.equals(uiState.conferenceOwnerId, TUILogin.getUserId());
+        if (uiState.conferenceStatus == RUNNING || !isMyConference) {
             mTvModifyRoomInfo.setVisibility(GONE);
             mLayoutCancelRoom.setVisibility(GONE);
         } else {
@@ -99,6 +110,7 @@ public class ScheduledConferenceDetailView extends FrameLayout {
         mTvRoomDuration.setText(uiState.scheduledDuration);
         mTvConferenceType.setText(uiState.conferenceType);
         mTvConferenceHost.setText(uiState.conferenceOwner);
+        initRoomPasswordView(uiState.conferenceId);
         List<UserState.UserInfo> attendeeList = uiState.attendees;
         updateUserAvatar(attendeeList);
         int attendeesCount = attendeeList.size();
@@ -114,6 +126,35 @@ public class ScheduledConferenceDetailView extends FrameLayout {
         }
         mTvRoomMembers.setText(attendeeDisplayUnit);
         mAttendeesDisplayView.setAttendees(uiState.attendees);
+
+        Map<String, Object> roomInfo = new HashMap<>();
+        roomInfo.put(KEY_INVITE_ROOM_NAME, mTvRoomName.getText().toString());
+        roomInfo.put(KEY_INVITE_ROOM_TYPE, mTvConferenceType.getText().toString());
+        roomInfo.put(KEY_INVITE_ROOM_TIME, uiState.conferenceTime);
+        roomInfo.put(KEY_INVITE_ROOM_ID, mTvRoomId.getText().toString());
+        mInviteMemberView = new ScheduleInviteMemberView(mContext, roomInfo);
+    }
+
+
+    private void initRoomPasswordView(String roomId) {
+        ScheduleController.sharedInstance().fetchRoomInfo(roomId, new TUIRoomDefine.GetRoomInfoCallback() {
+            @Override
+            public void onSuccess(TUIRoomDefine.RoomInfo roomInfo) {
+                updatePassword(roomInfo.password);
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String s) {
+                updatePassword("");
+            }
+        });
+    }
+
+    private void updatePassword(String password) {
+        boolean isEnablePassword = (!TextUtils.isEmpty(password));
+        mTvPasswordTitle.setVisibility(isEnablePassword ? VISIBLE : GONE);
+        mTvPassword.setVisibility(isEnablePassword ? VISIBLE : GONE);
+        mTvPassword.setText(isEnablePassword ? password : "");
     }
 
     private void updateUserAvatar(List<UserState.UserInfo> attendeeList) {
@@ -156,6 +197,8 @@ public class ScheduledConferenceDetailView extends FrameLayout {
         mTvConferenceType = findViewById(R.id.tv_scheduled_room_type);
         mTvConferenceHost = findViewById(R.id.tv_room_initiator);
         mTvRoomMembers = findViewById(R.id.tv_members_count);
+        mTvPassword = findViewById(R.id.tv_scheduled_room_password);
+        mTvPasswordTitle = findViewById(R.id.tv_scheduled_room_password_title);
 
         mTvModifyRoomInfo = findViewById(R.id.tv_modify_room_info);
         mCopyRoomIdImg = findViewById(R.id.img_copy_room_id_icon);
@@ -186,13 +229,11 @@ public class ScheduledConferenceDetailView extends FrameLayout {
             param.putString(ConferenceConstant.KEY_CONFERENCE_ID, mRoomId);
             TUICore.startActivity("ModifyConferenceActivity", param);
         } else if (view.getId() == R.id.img_copy_room_id_icon) {
-            copyContentToClipboard();
+            CommonUtils.copyToClipboard(mRoomId, mContext.getString(R.string.tuiroomkit_copy_room_id_success));
         } else if (view.getId() == R.id.cl_enter_scheduled_room) {
             enterConference();
         } else if (view.getId() == R.id.cl_invite_members) {
-            ScheduleInviteMemberView inviteMemberView = new ScheduleInviteMemberView(mContext, mTvRoomId.getText().toString(), "");
-            inviteMemberView.setTitleText(mContext.getString(R.string.tuiroomkit_scheduled_invite_members));
-            inviteMemberView.show();
+            showInviteMemberView();
         } else if (view.getId() == R.id.cl_cancel_room) {
             cancelScheduledConference();
         } else if (view.getId() == R.id.img_arrows_return) {
@@ -202,22 +243,31 @@ public class ScheduledConferenceDetailView extends FrameLayout {
         }
     }
 
-    private void enterConference() {
-        Intent intent = new Intent(mContext, ConferenceMainActivity.class);
-        intent.putExtra("id", mRoomId);
-        intent.putExtra("muteMicrophone", false);
-        intent.putExtra("openCamera", false);
-        intent.putExtra("soundOnSpeaker", true);
-        intent.putExtra("isCreate", false);
-        mContext.startActivity(intent);
-        finishActivity();
+    private void showInviteMemberView() {
+        ScheduleController.sharedInstance().fetchRoomInfo(mTvRoomId.getText().toString(), new TUIRoomDefine.GetRoomInfoCallback() {
+            @Override
+            public void onSuccess(TUIRoomDefine.RoomInfo roomInfo) {
+                if (mInviteMemberView != null) {
+                    mInviteMemberView.setTitleText(mContext.getString(R.string.tuiroomkit_scheduled_invite_members));
+                    mInviteMemberView.show();
+                }
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String s) {
+            }
+        });
     }
 
-    private void copyContentToClipboard() {
-        ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData mClipData = ClipData.newPlainText(LABEL, mRoomId);
-        cm.setPrimaryClip(mClipData);
-        RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_copy_room_id_success));
+    private void enterConference() {
+        ConferenceDefine.JoinConferenceParams params = new ConferenceDefine.JoinConferenceParams(mRoomId);
+        params.isOpenMicrophone = true;
+        params.isOpenCamera = false;
+        params.isOpenSpeaker = true;
+        Intent intent = new Intent(mContext, ConferenceMainActivity.class);
+        intent.putExtra(KEY_JOIN_CONFERENCE_PARAMS, params);
+        mContext.startActivity(intent);
+        finishActivity();
     }
 
     private void finishActivity() {

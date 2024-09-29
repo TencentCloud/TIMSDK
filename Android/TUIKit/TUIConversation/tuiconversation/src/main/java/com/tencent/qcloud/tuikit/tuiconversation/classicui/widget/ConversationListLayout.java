@@ -15,7 +15,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter
 public class ConversationListLayout extends RecyclerView implements IConversationListLayout {
     protected ConversationListAdapter mAdapter;
     protected ConversationPresenter presenter;
-    private boolean isFolded = false;
 
     public ConversationListLayout(Context context) {
         super(context);
@@ -58,26 +57,6 @@ public class ConversationListLayout extends RecyclerView implements IConversatio
     @Override
     public void disableItemUnreadDot(boolean flag) {
         mAdapter.disableItemUnreadDot(flag);
-    }
-
-    @Override
-    public void setItemAvatarRadius(int radius) {
-        mAdapter.setItemAvatarRadius(radius);
-    }
-
-    @Override
-    public void setItemTopTextSize(int size) {
-        mAdapter.setItemTopTextSize(size);
-    }
-
-    @Override
-    public void setItemBottomTextSize(int size) {
-        mAdapter.setItemBottomTextSize(size);
-    }
-
-    @Override
-    public void setItemDateTextSize(int size) {
-        mAdapter.setItemDateTextSize(size);
     }
 
     @Override

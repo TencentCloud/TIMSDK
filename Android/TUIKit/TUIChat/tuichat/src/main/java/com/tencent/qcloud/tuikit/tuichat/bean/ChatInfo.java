@@ -16,7 +16,6 @@ public class ChatInfo implements Serializable {
     private static List<V2TIMGroupAtInfo> atInfoList;
 
     protected String chatName;
-    // other's face url
     protected String faceUrl;
     private List<Object> iconUrlList = new ArrayList<>();
     private int type;

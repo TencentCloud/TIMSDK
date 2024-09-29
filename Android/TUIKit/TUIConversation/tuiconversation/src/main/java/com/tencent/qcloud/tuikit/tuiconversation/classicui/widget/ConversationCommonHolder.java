@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuiconversation.classicui.widget;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.view.View;
 import android.widget.CheckBox;
@@ -10,8 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
@@ -22,7 +21,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
-import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
+import com.tencent.qcloud.tuikit.tuiconversation.config.classicui.TUIConversationConfigClassic;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 
 import java.util.Date;
@@ -39,6 +38,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView atMeTv;
     protected TextView draftTv;
     protected TextView riskTv;
+    protected TextView foldGroupNameTv;
+    protected TextView foldGroupNameDivider;
     protected ImageView disturbView;
     protected ImageView markBannerView;
     protected CheckBox multiSelectCheckBox;
@@ -48,6 +49,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     private boolean isForwardMode = false;
     protected View userStatusView;
     private boolean showFoldedStyle = true;
+    private ConversationInfo currentConversation;
 
     public ConversationCommonHolder(View itemView) {
         super(itemView);
@@ -57,6 +59,8 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         messageText = rootView.findViewById(R.id.conversation_last_msg);
         timelineText = rootView.findViewById(R.id.conversation_time);
         unreadText = rootView.findViewById(R.id.conversation_unread);
+        foldGroupNameTv = rootView.findViewById(R.id.fold_group_name);
+        foldGroupNameDivider = rootView.findViewById(R.id.fold_group_name_divider);
         atAllTv = rootView.findViewById(R.id.conversation_at_all);
         atMeTv = rootView.findViewById(R.id.conversation_at_me);
         draftTv = rootView.findViewById(R.id.conversation_draft);
@@ -79,32 +83,23 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     }
 
     public void layoutViews(ConversationInfo conversation, int position) {
-        if (conversation.isTop() && !isForwardMode) {
-            leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_item_top_color));
-        } else {
-            leftItemLayout.setBackgroundColor(Color.WHITE);
-        }
+        currentConversation = conversation;
 
         if (showFoldedStyle && conversation.isMarkFold()) {
             titleText.setText(R.string.folded_group_chat);
             timelineText.setVisibility(View.GONE);
+            foldGroupNameTv.setVisibility(View.VISIBLE);
+            foldGroupNameDivider.setVisibility(View.VISIBLE);
+            foldGroupNameTv.setText(conversation.getTitle());
         } else {
             titleText.setText(conversation.getTitle());
+            foldGroupNameTv.setVisibility(View.GONE);
+            foldGroupNameDivider.setVisibility(View.GONE);
         }
         messageText.setText("");
         timelineText.setText("");
         setLastMessageAndStatus(conversation);
 
-        conversationIconView.setRadius(mAdapter.getItemAvatarRadius());
-        if (mAdapter.getItemDateTextSize() != 0) {
-            timelineText.setTextSize(mAdapter.getItemDateTextSize());
-        }
-        if (mAdapter.getItemBottomTextSize() != 0) {
-            messageText.setTextSize(mAdapter.getItemBottomTextSize());
-        }
-        if (mAdapter.getItemTopTextSize() != 0) {
-            titleText.setTextSize(mAdapter.getItemTopTextSize());
-        }
         if (!mAdapter.hasItemUnreadDot()) {
             unreadText.setVisibility(View.GONE);
         }
@@ -147,7 +142,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             riskTv.setVisibility(View.GONE);
         }
 
-        if (!conversation.isGroup() && TUIConversationConfig.getInstance().isShowUserStatus()) {
+        if (!conversation.isGroup() && TUIConversationConfigClassic.isShowUserOnlineStatusIcon()) {
             userStatusView.setVisibility(View.VISIBLE);
             if (conversation.getStatusType() == ConversationInfo.USER_STATUS_ONLINE) {
                 userStatusView.setBackgroundResource(
@@ -158,6 +153,45 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             }
         } else {
             userStatusView.setVisibility(View.GONE);
+        }
+
+        applyCustomConfig();
+    }
+
+    private void applyCustomConfig() {
+        if (currentConversation.isTop() && !isForwardMode) {
+            Drawable pinnedCellBackground = TUIConversationConfigClassic.getPinnedCellBackground();
+            if (pinnedCellBackground != null) {
+                leftItemLayout.setBackground(pinnedCellBackground);
+            } else {
+                leftItemLayout.setBackgroundColor(rootView.getResources().getColor(R.color.conversation_item_top_color));
+            }
+        } else {
+            Drawable cellBackground = TUIConversationConfigClassic.getCellBackground();
+            if (cellBackground != null) {
+                leftItemLayout.setBackground(cellBackground);
+            } else {
+                leftItemLayout.setBackgroundColor(Color.WHITE);
+            }
+        }
+        if (!TUIConversationConfigClassic.isShowCellUnreadCount()) {
+            unreadText.setVisibility(View.GONE);
+            disturbView.setVisibility(View.GONE);
+        }
+        if (!TUIConversationConfigClassic.isShowUserOnlineStatusIcon()) {
+            userStatusView.setVisibility(View.GONE);
+        }
+        if (TUIConversationConfigClassic.getCellTitleLabelFontSize() != TUIConversationConfigClassic.UNDEFINED) {
+            titleText.setTextSize(TUIConversationConfigClassic.getCellTitleLabelFontSize());
+        }
+        if (TUIConversationConfigClassic.getCellSubtitleLabelFontSize() != TUIConversationConfigClassic.UNDEFINED) {
+            messageText.setTextSize(TUIConversationConfigClassic.getCellSubtitleLabelFontSize());
+        }
+        if (TUIConversationConfigClassic.getCellTimeLabelFontSize() != TUIConversationConfigClassic.UNDEFINED) {
+            timelineText.setTextSize(TUIConversationConfigClassic.getCellTimeLabelFontSize());
+        }
+        if (TUIConversationConfigClassic.getAvatarCornerRadius() != TUIConversationConfigClassic.UNDEFINED) {
+            conversationIconView.setRadius(TUIConversationConfigClassic.getAvatarCornerRadius());
         }
     }
 

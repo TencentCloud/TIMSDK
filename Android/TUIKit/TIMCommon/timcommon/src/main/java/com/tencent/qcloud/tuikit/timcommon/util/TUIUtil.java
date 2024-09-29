@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.timcommon.util;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -51,5 +52,16 @@ public class TUIUtil {
             return TUIThemeManager.getAttrResId(context, R.attr.core_default_group_icon_community);
         }
         return R.drawable.core_default_group_icon_community;
+    }
+
+    public static Drawable newDrawable(Drawable drawable) {
+        if (drawable == null) {
+            return null;
+        }
+        Drawable.ConstantState state = drawable.getConstantState();
+        if (state != null) {
+            return state.newDrawable().mutate();
+        }
+        return drawable.mutate();
     }
 }

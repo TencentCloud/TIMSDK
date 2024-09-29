@@ -5,7 +5,6 @@
     android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:background="#FFFFFF"
     app:clickToClose="false">
 
     <RelativeLayout
@@ -104,7 +103,7 @@
         android:id="@+id/item_left"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFFFFF"
+        android:background="@color/timcommon_transparent"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="center_vertical"

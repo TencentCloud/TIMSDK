@@ -61,4 +61,6 @@
     <color name="tuiroomkit_color_button_schedule_conference">#1C66E5</color>
     <color name="tuiroomkit_color_schedule_conference_text">#2B2E38</color>
     <color name="tuiroomkit_color_duration_picker_line">#212121</color>
+
+    <color name="tuiroomkit_color_bg_call">#6B758A</color>
 </resources>

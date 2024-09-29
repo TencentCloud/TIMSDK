@@ -10,23 +10,23 @@
         android:id="@+id/tuiroomkit_panel_hide"
         android:layout_width="3dp"
         android:layout_height="24dp"
-        android:layout_marginStart="12dp"
         android:layout_gravity="center"
+        android:layout_marginStart="12dp"
         android:background="@drawable/tuiroomkit_bottom_dialog_hide_land"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
         android:id="@+id/tuiroomkit_rl_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="12dp"
-        app:layout_constraintStart_toEndOf="@+id/tuiroomkit_panel_hide"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintStart_toEndOf="@+id/tuiroomkit_panel_hide"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/main_title"
@@ -47,19 +47,19 @@
         android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingTop="18dp"
-        android:paddingEnd="4dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="10dp"
-        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_rl_title"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_rl_title"
         app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_rl_title">
 
         <EditText
             android:id="@+id/et_search"
             android:layout_width="0dp"
             android:layout_height="36dp"
+            android:layout_weight="1"
             android:background="@drawable/tuiroomkit_bg_user_list_panel_view"
             android:drawablePadding="8dp"
-            android:layout_weight="1"
             android:gravity="center_vertical"
             android:hint="@string/tuiroomkit_hint_search_member"
             android:imeOptions="actionSearch"
@@ -72,78 +72,16 @@
             android:textColorHint="@color/tuiroomkit_color_text_hint_search"
             android:textSize="14sp"
             app:drawableLeftCompat="@drawable/tuiroomkit_ic_search" />
-
-        <LinearLayout
-            android:id="@+id/btn_invite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/tuiroomkit_bg_user_list_panel_invite"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="16dp">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                app:srcCompat="@drawable/tuiroomkit_ic_user_list_invite" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/tuiroomkit_item_invite"
-                android:textColor="@color/tuiroomkit_color_stroke_blue"
-                android:textSize="14sp" />
-        </LinearLayout>
-
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/tuiroomkit_ll_seat_tab"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserListTypeSelectView
+        android:id="@+id/tuiroomkit_user_list_type_select_view"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:visibility="gone"
-        android:orientation="horizontal"
-        android:background="@drawable/tuiroomkit_bg_user_list_panel_view"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/ll_search">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/tuiroomkit_btn_user_on_seat"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="2dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="@drawable/tuiroomkit_bg_user_list_tab_selected"
-            android:gravity="center"
-            android:textAllCaps="false"
-            android:text="@string/tuiroomkit_user_list_on_seat"
-            android:textSize="14sp"
-            app:round="6dp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/tuiroomkit_btn_user_off_seat"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="2dp"
-            android:layout_weight="1"
-            android:layout_gravity="end|center_vertical"
-            android:background="@drawable/tuiroomkit_bg_user_list_tab_selected"
-            android:gravity="center"
-            android:textAllCaps="false"
-            android:text="@string/tuiroomkit_user_list_off_seat"
-            android:textSize="14sp"
-            app:round="6dp"/>
-    </LinearLayout>
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/ll_search" />
 
     <com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandNotificationView
         android:id="@+id/tuiroomkit_apply_seat_notification"
@@ -152,7 +90,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="20dp"
         android:paddingTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_ll_seat_tab"/>
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_user_list_type_select_view" />
 
     <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserRecyclerView
         android:id="@+id/tuiroomkit_rv_user_list"
@@ -160,10 +98,10 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
-        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_rl_title"
+        app:layout_constraintBottom_toTopOf="@+id/btn_mute_audio_all"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_apply_seat_notification"
-        app:layout_constraintBottom_toTopOf="@+id/btn_mute_audio_all"/>
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_panel_hide"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_apply_seat_notification" />
 
     <TextView
         android:id="@+id/btn_mute_audio_all"
@@ -175,10 +113,10 @@
         android:text="@string/tuiroomkit_mute_all_audio"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
         android:textSize="14sp"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_rl_title"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_mute_video_all" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_mute_video_all"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_rl_title" />
 
     <TextView
         android:id="@+id/btn_mute_video_all"
@@ -189,9 +127,9 @@
         android:text="@string/tuiroomkit_mute_all_video"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
         android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_mute_more_options"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/btn_mute_audio_all"
-        app:layout_constraintEnd_toStartOf="@+id/btn_mute_more_options"
         app:layout_constraintTop_toTopOf="@+id/btn_mute_audio_all" />
 
     <TextView
@@ -203,9 +141,25 @@
         android:text="@string/tuiroomkit_user_list_more_options"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
         android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/btn_mute_video_all"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btn_mute_video_all" />
 
+    <TextView
+        android:id="@+id/btn_call_all_user"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/tuiroomkit_bg_user_list_panel_view"
+        android:gravity="center"
+        android:text="@string/tuiroomkit_call_everyone"
+        android:textColor="@color/tuiroomkit_color_text_light_grey"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

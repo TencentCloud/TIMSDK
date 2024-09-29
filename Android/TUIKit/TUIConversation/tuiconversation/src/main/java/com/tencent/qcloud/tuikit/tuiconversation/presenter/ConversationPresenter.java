@@ -640,7 +640,7 @@ public class ConversationPresenter {
         // 2、 fold list is empty, delete fold item from ui and clear cache info
         if (!hideFoldItem) {
             ConversationInfo firstChangedFoldInfo = getFirstFoldInfo();
-            if (foldConversationInfoList.size() > 0 && firstChangedFoldInfo != null) {
+            if (firstChangedFoldInfo != null) {
                 // 1
                 if (mUIFoldConversation != null) {
                     if (mUIFoldConversation != firstChangedFoldInfo) {

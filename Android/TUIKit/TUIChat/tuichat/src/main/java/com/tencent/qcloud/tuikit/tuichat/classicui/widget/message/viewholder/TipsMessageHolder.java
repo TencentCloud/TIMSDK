@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,8 +12,8 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageBaseHolder;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 
 public class TipsMessageHolder extends MessageBaseHolder {
@@ -33,15 +34,18 @@ public class TipsMessageHolder extends MessageBaseHolder {
     @Override
     public void layoutViews(TUIMessageBean msg, int position) {
         super.layoutViews(msg, position);
-
-        if (properties.getTipsMessageBubble() != null) {
-            mChatTipsTv.setBackground(properties.getTipsMessageBubble());
+        Drawable systemMessageBackground = TUIChatConfigClassic.getSystemMessageBackground();
+        if (systemMessageBackground != null) {
+            mChatTipsTv.setBackground(systemMessageBackground);
         }
-        if (properties.getTipsMessageFontColor() != 0) {
-            mChatTipsTv.setTextColor(properties.getTipsMessageFontColor());
+        int systemMessageTextFontColor = TUIChatConfigClassic.getSystemMessageTextColor();
+        if (systemMessageTextFontColor != TUIChatConfigClassic.UNDEFINED) {
+            mChatTipsTv.setTextColor(systemMessageTextFontColor);
         }
-        if (properties.getTipsMessageFontSize() != 0) {
-            mChatTipsTv.setTextSize(properties.getTipsMessageFontSize());
+        int systemMessageTextFontSize = TUIChatConfigClassic.getSystemMessageFontSize();
+        if (systemMessageTextFontSize != TUIChatConfigClassic.UNDEFINED) {
+            mChatTipsTv.setTextSize(systemMessageTextFontSize);
+            mReEditText.setTextSize(systemMessageTextFontSize);
         }
 
         mReEditText.setVisibility(View.GONE);

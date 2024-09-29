@@ -57,7 +57,7 @@ public class InviteSeatButton extends androidx.appcompat.widget.AppCompatButton 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mStateHolder.observe(mObserver);
+        mStateHolder.removeObserver(mObserver);
     }
 
     private void updateView(InviteSeatButtonUiState uiState) {

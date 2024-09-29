@@ -79,7 +79,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
     @Override
     public void layoutVariableViews(TUIMessageBean msg, int position) {
         extraInfoArea.setVisibility(View.VISIBLE);
-
+        applyCustomConfig();
         msg.setSelectText(msg.getExtra());
         QuoteMessageBean quoteMessageBean = (QuoteMessageBean) msg;
         TUIMessageBean replyContentBean = quoteMessageBean.getContentMessageBean();

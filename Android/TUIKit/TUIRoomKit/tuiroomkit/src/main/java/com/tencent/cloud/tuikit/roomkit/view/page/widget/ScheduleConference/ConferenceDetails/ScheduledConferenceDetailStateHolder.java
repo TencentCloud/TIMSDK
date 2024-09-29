@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class ScheduledConferenceDetailStateHolder {
-    private static final String                                     DATE_FORMAT           = "%d%s%02d%s%02d%s %02d:%02d";
     private              String                                     mCurrentConferenceId  = "";
     private final        LiveData<ScheduledConferenceDetailUiState> mConferenceDetailData = new LiveData<>(new ScheduledConferenceDetailUiState());
     public               LiveListData<UserState.UserInfo>           hadScheduledAttendees = new LiveListData<>();
@@ -87,6 +86,7 @@ public class ScheduledConferenceDetailStateHolder {
         uiState.attendees.addAll(conferenceInfo.hadScheduledAttendees.getList());
         uiState.conferenceOwnerId = conferenceInfo.basicRoomInfo.ownerId;
         uiState.conferenceStatus = conferenceInfo.status;
+        uiState.conferenceTime = getRoomTimeString(conferenceInfo.scheduleStartTime, conferenceInfo.scheduleEndTime);
         mConferenceDetailData.set(uiState);
     }
 
@@ -96,7 +96,35 @@ public class ScheduledConferenceDetailStateHolder {
         uiState.scheduledStartTime = toDateFormat(newInfo.scheduleStartTime);
         uiState.scheduledDuration = millisToMinute((newInfo.scheduleEndTime - newInfo.scheduleStartTime));
         uiState.conferenceStatus = newInfo.status;
+        uiState.conferenceTime = getRoomTimeString(newInfo.scheduleStartTime, newInfo.scheduleEndTime);
         mConferenceDetailData.set(uiState);
+    }
+
+    private String getRoomTimeString(long startTimestamp, long endTimestamp) {
+        Context context = TUILogin.getAppContext();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(startTimestamp);
+        int startYear = calendar.get(Calendar.YEAR);
+        int startMonth = calendar.get(Calendar.MONTH) + 1;
+        int startDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int startHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int startMinute = calendar.get(Calendar.MINUTE);
+
+        calendar.setTimeInMillis(endTimestamp);
+        int endYear = calendar.get(Calendar.YEAR);
+        int endMonth = calendar.get(Calendar.MONTH) + 1;
+        int endDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int endHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int endMinute = calendar.get(Calendar.MINUTE);
+
+        String yearUnit = context.getString(R.string.tuiroomkit_year_text);
+        String monthUnit = context.getString(R.string.tuiroomkit_month_text);
+        String dayUnit = context.getString(R.string.tuiroomkit_day_text);
+        String startTimeString =  String.format(Locale.getDefault(), context.getString(R.string.tuiroomkit_format_conference_start_time), startYear, yearUnit, startMonth, monthUnit, startDay, dayUnit, startHour, startMinute);
+        if (startYear == endYear && startMonth == endMonth && startDay == endDay) {
+            return String.format(Locale.getDefault(), context.getString(R.string.tuiroomkit_format_conference_time), startTimeString, endHour, endMinute);
+        }
+        return String.format(Locale.getDefault(), context.getString(R.string.tuiroomkit_format_conference_next_day_time), startTimeString, endHour, endMinute);
     }
 
     private String toDateFormat(long time) {
@@ -111,7 +139,7 @@ public class ScheduledConferenceDetailStateHolder {
         String yearUnit = context.getString(R.string.tuiroomkit_year_text);
         String monthUnit = context.getString(R.string.tuiroomkit_month_text);
         String dayUnit = context.getString(R.string.tuiroomkit_day_text);
-        return String.format(Locale.getDefault(), DATE_FORMAT, year, yearUnit, month, monthUnit, day, dayUnit, hour, minute);
+        return String.format(Locale.getDefault(), context.getString(R.string.tuiroomkit_format_conference_start_time), year, yearUnit, month, monthUnit, day, dayUnit, hour, minute);
     }
 
     private String millisToMinute(long duration) {

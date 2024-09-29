@@ -6,20 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.tencent.qcloud.tim.demo.R;
-import com.tencent.qcloud.tim.demo.bean.UserInfo;
-import com.tencent.qcloud.tim.demo.config.AppConfig;
-import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
-import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuikit.timcommon.component.fragments.BaseFragment;
 
-public class ProfileMinimalistFragment extends BaseFragment {
+public class ProfileMinimalistFragment extends Fragment {
     private View mBaseView;
     private ProfileMinamalistLayout mProfileLayout;
 

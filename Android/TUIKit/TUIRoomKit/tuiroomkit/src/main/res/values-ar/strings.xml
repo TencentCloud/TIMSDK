@@ -70,7 +70,7 @@
     <string name="tuiroomkit_tv_enable_audio">تفعيل الصوت</string>
     <string name="tuiroomkit_tv_screen_capture">أنت تشارك شاشتك</string>
     <string name="tuiroomkit_tv_stop_screen_capture">إيقاف</string>
-    <string name="tuiroomkit_tv_screen_recording">تسجيل الشاشة</string>
+    <string name="tuiroomkit_tv_screen_recording">تشارك الشاشة</string>
     <string name="tuiroomkit_toast_need_floating_window_permission">يتطلب الإذن بالنافذة العائمة</string>
     <string name="tuiroomkit_item_leave">خروج</string>
     <string name="tuiroomkit_item_close_microphone">صامت</string>
@@ -243,14 +243,14 @@
     <string name="tuiroomkit_scheduled_start_time">وقت البدء</string>
     <string name="tuiroomkit_scheduled_duration">مدة الغرفة</string>
     <string name="tuiroomkit_scheduled_room_type">نوع الغرفة</string>
-    <string name="tuiroomkit_scheduled_host">المضيف</string>
+    <string name="tuiroomkit_scheduled_host">المنشئ</string>
     <string name="tuiroomkit_scheduled_attendees">أعضاء المشاركة</string>
     <string name="tuiroomkit_scheduled_hint_cancel_room_title">إلغاء الغرفة المحجوزة</string>
     <string name="tuiroomkit_scheduled_hint_cancel_message">بعد الإلغاء، لن يتمكن الأعضاء الآخرون من الانضمام</string>
     <string name="tuiroomkit_scheduled_hint_cancel_room">إلغاء الغرفة</string>
     <string name="tuiroomkit_scheduled_hint_not_cancel">لا تلغي للآن</string>
     <string name="tuiroomkit_scheduled_room_detail_text">تفاصيل الغرفة</string>
-    <string name="tuiroomkit_scheduled_modify_text">تعديل</string>
+    <string name="tuiroomkit_scheduled_modify_text">يراجع</string>
     <string name="tuiroomkit_scheduled_room_title_text">حجز غرفة</string>
     <string name="tuiroomkit_scheduled_time_zone_title_text">المنطقة الزمنية</string>
     <string name="tuiroomkit_scheduled_room_encrypt_text">تشفير الغرفة</string>
@@ -275,9 +275,9 @@
     <string name="tuiroomkit_start_time_hour_text">%02dساعة</string>
     <string name="tuiroomkit_start_time_minute_text">%02dدقيقة</string>
     <string name="tuiroomkit_selected_text">تم الاختيار</string>
-    <string name="tuiroomkit_conference_status_not_start">"لم يبدأ" (لم يبدأ)</string>
-    <string name="tuiroomkit_conference_status_running">جاري" (جاري).</string>
-    <string name="tuiroomkit_conference_status_finished">"انتهى" (انتهى).</string>
+    <string name="tuiroomkit_conference_status_not_start">"لم يبدأ</string>
+    <string name="tuiroomkit_conference_status_running">جاري</string>
+    <string name="tuiroomkit_conference_status_finished">انتهى</string>
     <string name="tuiroomkit_attendees_avatar_display_unit">شخص</string>
     <string name="tuiroomkit_start_time_earlier_than_current_time">لا يمكن أن يكون وقت البدء أقدم من الوقت الحالي.</string>
     <string name="tuiroomkit_today">اليوم</string>
@@ -289,6 +289,13 @@
     <string name="tuiroomkit_conference_already_started_and_cannot_be_modified">لقد بدأ الاجتماع بالفعل، ولا يمكن تعديله.</string>
     <string name="tuiroomkit_conference_already_started_and_cannot_be_cancel">الاجتماع قد بدأ بالفعل، لا يمكن إلغاؤه</string>
     <string name="tuiroomkit_no_participants_yet">لا يوجد مشاركون حتى الآن</string>
+    <string name="tuiroomkit_enter_conference_password_title">كلمة مرور الاجتماع</string>
+    <string name="tuiroomkit_please_input_conference_password">يرجى إدخال كلمة مرور الاجتماع</string>
+    <string name="tuiroomkit_join">انضم</string>
+    <string name="tuiroomkit_password_is_empty">كلمة المرور فارغة</string>
+    <string name="tuiroomkit_room_password_title">كلمة سر الغرفة</string>
+    <string name="tuiroomkit_room_password_format_error">تنسيق كلمة مرور الغرفة غير صحيح ، يرجى التحقق من ذلك</string>
+    <string name="tuiroomkit_room_password_error">كلمة المرور خاطئة، يرجى إعادة إدخالها</string>
 
     <string name="tuiroomkit_tip_creating_room_id">جار إنشاء رقم الغرفة ، يرجى المحاولة مرة أخرى لاحقًا</string>
     <string name="tuiroomkit_turn_on_audio">افتح الصوت</string>
@@ -298,4 +305,41 @@
     <string name="tuiroomkit_please_input_room_number">الرجاء إدخال رقم الغرفة</string>
     <string name="tuiroomkit_enter_room">انضم إلى الغرفة</string>
     <string name="tuiroomkit_create_room">إنشاء غرفة</string>
+    <string name="tuiroomkit_repeat_start_room_dialog_title">حاليا في الغرفة</string>
+    <string name="tuiroomkit_repeat_start_room_dialog_content">خروج الإيجار قبل الانضمام إلى غرفة جديدة</string>
+    <string name="tuiroomkit_i_see">أرى</string>
+
+    <string name="tuiroomkit_invite_yout_to_join_conference">دعوتك للمشاركة في الاجتماع%s</string>
+    <string name="tuiroomkit_participant">المشاركون في الاجتماع:</string>
+    <string name="tuiroomkit_join_now">انضم الآن</string>
+    <string name="tuiroomkit_do_not_enter_for_now">لن أدخل الآن</string>
+    <string name="tuiroomkit_conference_host">يستضيف:</string>
+    <string name="tuiroomkit_add_user">إضافة أعضاء</string>
+    <string name="tuiroomkit_share_room">مشاركة الغرفة</string>
+    <string name="tuiroomkit_not_entered">لم أدخل بعد(%s)</string>
+    <string name="tuiroomkit_call">"النداء  "</string>
+    <string name="tuiroomkit_calling">النداء قيد التنفيذ…</string>
+    <string name="tuiroomkit_not_join_for_now">لن أدخل الاجتماع الآن</string>
+    <string name="tuiroomkit_call_everyone">نداء الجميع</string>
+    <string name="tuiroomkit_already_entered_room">دخلت الغرفة(%s)</string>
+    <string name="tuiroomkit_invitation_has_been_sent">تم إرسال دعوة المعلومات، في انتظار انضمام الأعضاء</string>
+    <string name="tuiroomkit_copy_room_id_and_link">نسخ رقم الغرفة والربط</string>
+    <string name="tuiroomkit_copy_success">تم النسخ بنجاح</string>
+    <string name="tuiroomkit_room_time">وقت الغرفة</string>
+    <string name="tuiroomkit_copy_invitation_link">نسخ رابط الدعوة</string>
+    <string name="tuiroomkit_format_copy_room_info_without_password">%sندعوك للانضمام إلى الاجتماع\nموضوع الغرفة：%s\nمعرف الغرفة：%s</string>
+    <string name="tuiroomkit_format_copy_room_info_with_password">%sندعوك للانضمام إلى الاجتماع\nموضوع الغرفة：%s\nمعرف الغرفة：%s\nكلمة سر الغرفة：%s</string>
+    <string name="tuiroomkit_format_copy_room_info_out_room">%sندعوك للانضمام إلى الاجتماع\nموضوع الغرفة：%s\nوقت الغرفة：%s\nمعرف الغرفة：%s</string>
+    <string name="tuiroomkit_format_copy_room_info_out_room_with_password">%sندعوك للانضمام إلى الاجتماع\nموضوع الغرفة:%s\nوقت الغرفة:%s\nمعرف الغرفة:%s\nكلمة سر الغرف:%s</string>
+    <string name="tuiroomkit_format_conference_time">%s-%02d:%02d</string>
+    <string name="tuiroomkit_format_conference_next_day_time">%s-(في اليوم التالي)%02d:%02d</string>
+    <string name="tuiroomkit_format_conference_start_time">%d%s%02d%s%02d%s %02d:%02d</string>
+    <string name="tuiroomkit_copy_room_password_success">نجحت عملية نسخ كلمة مرور الغرفة</string>
+    <string name="tuiroomkit_copy_room_invitation_link_success">نسخ رابط الدعوة بنجاح</string>
+    <string name="tuiroomkit_please_enter_six_digit_password">أدخل 6 أرقام</string>
+    <string name="tuiroomkit_conference_modify_success">تم التعديل بنجاح</string>
+
+    <string name="tuiroomkit_default_water_mark_text">%s(%s)</string>
+    <string name="tuiroomkit_password_digits">0123456789</string>
+    <string name="tuiroomkit_confirm_dialog_count_down_text">(%s)</string>
 </resources>

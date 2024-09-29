@@ -2,23 +2,22 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.Sel
 
 import android.content.Context;
 
-import com.tencent.cloud.tuikit.roomkit.CustomViewConfig;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceSessionImpl;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParticipantSelector {
     public interface ParticipantSelectCallback {
         void onParticipantSelected(List<UserState.UserInfo> participants);
     }
+
     public interface IParticipantSelection {
-        void startParticipantSelect(Context context, List<UserState.UserInfo> participants, ParticipantSelectCallback participantSelectCallback);
+        void startParticipantSelect(Context context, ConferenceParticipants participants, ParticipantSelectCallback participantSelectCallback);
     }
 
-    public void startParticipantSelect(Context context, List<UserState.UserInfo> participants, ParticipantSelectCallback callback) {
+    public void startParticipantSelect(Context context, ConferenceParticipants participants, ParticipantSelectCallback callback) {
         IParticipantSelection selection = getParticipantSelection();
         if (selection == null) {
             return;
@@ -27,13 +26,10 @@ public class ParticipantSelector {
     }
 
     private IParticipantSelection getParticipantSelection() {
-        IParticipantSelection selection = CustomViewConfig.sharedInstance().getParticipantSelection();
-        if (selection != null) {
-            return selection;
-        }
-        ITUIService service = TUICore.getService(TUIConstants.TUIContact.SERVICE_NAME);
-        if (service != null) {
-            return new IMContactSelector();
+        Class<?> activity = ConferenceSessionImpl.sharedInstance().mContactsActivity;
+        if (activity != null) {
+            String simpleName = activity.getSimpleName();
+            return new CustomSelector(simpleName);
         }
         return null;
     }

@@ -30,10 +30,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     public static final int SELECT_LABEL_COUNT = 1;
 
     private boolean mHasShowUnreadDot = true;
-    private int mItemAvatarRadius = ScreenUtil.getPxByDp(5);
-    private int mTopTextSize;
-    private int mBottomTextSize;
-    private int mDateTextSize;
     protected List<ConversationInfo> mDataSource = new ArrayList<>();
     private OnConversationAdapterListener mOnConversationAdapterListener;
 
@@ -46,8 +42,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
     private boolean isClick = false;
     private int currentPosition = -1;
 
-    private View hideView;
-    
     private boolean showFoldedStyle = true;
 
     public ConversationListAdapter() {}
@@ -494,38 +488,6 @@ public class ConversationListAdapter extends RecyclerSwipeAdapter<RecyclerView.V
         if (mOnConversationAdapterListener != null) {
             mOnConversationAdapterListener.onConversationChanged(conversationInfoList);
         }
-    }
-
-    public void setItemTopTextSize(int size) {
-        mTopTextSize = size;
-    }
-
-    public int getItemTopTextSize() {
-        return mTopTextSize;
-    }
-
-    public void setItemBottomTextSize(int size) {
-        mBottomTextSize = size;
-    }
-
-    public int getItemBottomTextSize() {
-        return mBottomTextSize;
-    }
-
-    public void setItemDateTextSize(int size) {
-        mDateTextSize = size;
-    }
-
-    public int getItemDateTextSize() {
-        return mDateTextSize;
-    }
-
-    public void setItemAvatarRadius(int radius) {
-        mItemAvatarRadius = radius;
-    }
-
-    public int getItemAvatarRadius() {
-        return mItemAvatarRadius;
     }
 
     public void disableItemUnreadDot(boolean flag) {

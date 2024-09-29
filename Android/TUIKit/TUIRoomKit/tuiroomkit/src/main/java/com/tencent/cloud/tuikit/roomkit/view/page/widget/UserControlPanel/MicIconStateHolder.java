@@ -3,6 +3,7 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
+import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.view.StateHolder;
 import com.trtc.tuikit.common.livedata.LiveData;
 import com.trtc.tuikit.common.livedata.Observer;
@@ -24,7 +25,7 @@ public class MicIconStateHolder extends StateHolder {
             updateViewData();
         }
     };
-    private LiveListObserver<String>  mSeatObserver        = new LiveListObserver<String>() {
+    private LiveListObserver<String> mSeatObserver        = new LiveListObserver<String>() {
         @Override
         public void onDataChanged(List<String> list) {
             updateViewData();
@@ -79,7 +80,14 @@ public class MicIconStateHolder extends StateHolder {
 
     public void updateViewData() {
         mMicIconUiState.hasAudioStream = mHasAudioStreamUsers.contains(mUserId);
-        mMicIconUiState.isShow = !mIsSeatEnable || mSeatedUsers.contains(mUserId);
+        mMicIconUiState.isShow = isShowView();
         mMicIconData.set(mMicIconUiState);
+    }
+
+    private boolean isShowView() {
+        if (ViewState.UserListType.ALL_USER_ENTERED_THE_ROOM.equals(mViewState.userListType.get())) {
+            return true;
+        }
+        return ViewState.UserListType.ON_SEAT_INSIDE_THE_ROOM.equals(mViewState.userListType.get()) && mSeatedUsers.contains(mUserId);
     }
 }

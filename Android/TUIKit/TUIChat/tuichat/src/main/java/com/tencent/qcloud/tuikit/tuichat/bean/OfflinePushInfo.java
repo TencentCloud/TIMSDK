@@ -5,8 +5,6 @@ import com.tencent.imsdk.message.MessageOfflinePushInfo;
 import java.io.Serializable;
 
 public class OfflinePushInfo implements Serializable {
-    public static final String IOS_OFFLINE_PUSH_NO_SOUND = "push.no_sound";
-    public static final String IOS_OFFLINE_PUSH_DEFAULT_SOUND = "default";
 
     private String title;
     private String description;

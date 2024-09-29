@@ -1,5 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.ModifyConference;
 
+import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.FAILED;
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.PERMISSION_DENIED;
 import android.app.Activity;
 import android.content.Context;
@@ -67,6 +68,7 @@ public class ModifyConferenceView extends FrameLayout {
         mLayoutClose.setOnClickListener(view -> finishActivity());
         mLayoutSetConferenceDetail = parent.findViewById(R.id.fl_set_scheduled_conference_info);
         mLayoutSetConferenceEncrypt = parent.findViewById(R.id.fl_set_conference_password);
+        mLayoutSetConferenceEncrypt.setVisibility(GONE);
         mLayoutSetConferenceDevice = parent.findViewById(R.id.fl_set_conference_device);
         mTvSaveConference = parent.findViewById(R.id.tv_save_conference_text);
         mTvSaveConference.setText(mContext.getString(R.string.tuiroomkit_save_conference));
@@ -74,6 +76,7 @@ public class ModifyConferenceView extends FrameLayout {
         mLayoutModifyConference.setOnClickListener(v -> modifyConference(new TUIRoomDefine.ActionCallback() {
             @Override
             public void onSuccess() {
+                RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_conference_modify_success));
                 finishActivity();
             }
 
@@ -83,6 +86,7 @@ public class ModifyConferenceView extends FrameLayout {
                     RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_conference_already_started_and_cannot_be_modified));
                     finishActivity();
                 }
+                mLayoutModifyConference.setClickable(true);
             }
         }));
         TextView view = parent.findViewById(R.id.tv_conference_info);
@@ -91,6 +95,7 @@ public class ModifyConferenceView extends FrameLayout {
         mConferenceDetailView = new SetConferenceDetailView(mContext);
         mConferenceEncryptView = new SetConferenceEncryptView(mContext);
         mConferenceDeviceView = new SetConferenceDeviceView(mContext);
+        mConferenceDeviceView.setVisibility(GONE);
         mConferenceDetailView.disableSetConferenceType();
         mConferenceEncryptView.disableSetEncrypt();
         mConferenceDeviceView.disableSetDevice();
@@ -111,6 +116,7 @@ public class ModifyConferenceView extends FrameLayout {
     }
 
     private void modifyConference(TUIRoomDefine.ActionCallback callback) {
+        mLayoutModifyConference.setClickable(false);
         ConferenceListState.ConferenceInfo conferenceInfo = new ConferenceListState.ConferenceInfo(mConferenceId);
         SetConferenceDetailUiState conferenceDetailUiState = mStateHolder.mConferenceDetailData.get();
         conferenceInfo.basicRoomInfo.name = conferenceDetailUiState.conferenceName;
@@ -120,10 +126,12 @@ public class ModifyConferenceView extends FrameLayout {
         String conferenceName = conferenceInfo.basicRoomInfo.name;
         if (TextUtils.isEmpty(conferenceName)) {
             RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_conference_name_empty));
+            callback.onError(FAILED, null);
             return;
         }
         if (conferenceName.getBytes(StandardCharsets.UTF_8).length > 100) {
             RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_conference_name_exceeds_max_length));
+            callback.onError(FAILED, null);
             return;
         }
         if (conferenceInfo.status == TUIConferenceListManager.ConferenceStatus.RUNNING) {

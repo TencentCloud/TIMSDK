@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -51,8 +49,9 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.CustomHelloMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.DraftInfo;
-import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreActionUnit;
+import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreItem;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
@@ -62,7 +61,7 @@ import com.tencent.qcloud.tuikit.tuichat.component.camera.CameraActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceFragment;
 import com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditText;
 import com.tencent.qcloud.tuikit.tuichat.config.GeneralConfig;
-import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
+import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
@@ -132,11 +131,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected TIMMentionEditText mTextInput;
     private boolean mIsSending = false;
 
-    protected AppCompatActivity mActivity;
+    protected FragmentActivity mActivity;
     protected View mInputMoreView;
     protected ChatInfo mChatInfo;
-    protected List<InputMoreActionUnit> mInputMoreActionList = new ArrayList<>();
-    protected List<InputMoreActionUnit> mInputMoreCustomActionList = new ArrayList<>();
+    protected List<InputMoreItem> mInputMoreActionList = new ArrayList<>();
 
     private FaceFragment mFaceFragment;
     private ChatInputHandler mChatInputHandler;
@@ -188,7 +186,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     private void initViews() {
-        mActivity = (AppCompatActivity) getContext();
+        mActivity = (FragmentActivity) getContext();
         inflate(mActivity, R.layout.chat_input_layout, this);
         mInputMoreView = findViewById(R.id.more_groups);
         mSendAudioButton = findViewById(R.id.chat_voice_input);
@@ -454,7 +452,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 FaceUtil.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + displayInputString.length());
             }
-            
+
             // Afterwards @, the soft keyboard is to be displayed. Activity does not have onResume, so the soft keyboard cannot be displayed
             ThreadUtils.postOnUiThreadDelayed(new Runnable() {
                 @Override
@@ -660,7 +658,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     private void startCapture() {
-        if (TUIChatConfigs.getGeneralConfig().isUseSystemCamera()) {
+        if (TUIChatConfigClassic.isUseSystemCamera()) {
             if (TUIBuild.getVersionInt() < Build.VERSION_CODES.N) {
                 PermissionHelper.requestPermission(PermissionHelper.PERMISSION_STORAGE, new PermissionHelper.PermissionCallback() {
                     @Override
@@ -742,7 +740,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     private void startVideoRecord() {
-        if (TUIChatConfigs.getGeneralConfig().isUseSystemCamera()) {
+        if (TUIChatConfigClassic.isUseSystemCamera()) {
             if (TUIBuild.getVersionInt() < Build.VERSION_CODES.N) {
                 PermissionHelper.requestPermission(PermissionHelper.PERMISSION_STORAGE, new PermissionHelper.PermissionCallback() {
                     @Override
@@ -1218,9 +1216,19 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     protected void assembleActions() {
         mInputMoreActionList.clear();
-        InputMoreActionUnit actionUnit;
-        if (TUIChatConfigs.getGeneralConfig().isEnableAlbum() && getChatInfo().isEnableAlbum()) {
-            actionUnit = new InputMoreActionUnit() {
+
+        List<Integer> excludeItems = new ArrayList<>();
+        TUIChatConfigClassic.ChatInputMoreDataSource dataSource = TUIChatConfigClassic.getChatInputMoreDataSource();
+        if (dataSource != null) {
+            excludeItems.addAll(dataSource.inputBarShouldHideItemsInMoreMenuOfInfo(mChatInfo));
+            mInputMoreActionList.addAll(dataSource.inputBarShouldAddNewItemToMoreMenuOfInfo(mChatInfo));
+        }
+
+        InputMoreItem actionUnit;
+        if (TUIChatConfigClassic.isShowInputBarAlbum()
+                && getChatInfo().isEnableAlbum()
+                && !excludeItems.contains(TUIChatConfigClassic.ALBUM)) {
+            actionUnit = new InputMoreItem() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
                     startSendPhoto();
@@ -1232,8 +1240,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        if (TUIChatConfigs.getGeneralConfig().isEnableTakePhoto() && getChatInfo().isEnableTakePhoto()) {
-            actionUnit = new InputMoreActionUnit() {
+        if (TUIChatConfigClassic.isShowInputBarTakePhoto()
+                && getChatInfo().isEnableTakePhoto()
+                && !excludeItems.contains(TUIChatConfigClassic.TAKE_PHOTO)) {
+            actionUnit = new InputMoreItem() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
                     startCaptureCheckPermission();
@@ -1245,8 +1255,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        if (TUIChatConfigs.getGeneralConfig().isEnableRecordVideo() && getChatInfo().isEnableRecordVideo()) {
-            actionUnit = new InputMoreActionUnit() {
+        if (TUIChatConfigClassic.isShowInputBarRecordVideo()
+                && getChatInfo().isEnableRecordVideo()
+                && !excludeItems.contains(TUIChatConfigClassic.RECORD_VIDEO)) {
+            actionUnit = new InputMoreItem() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
                     startVideoRecordCheckPermission();
@@ -1258,8 +1270,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        if (TUIChatConfigs.getGeneralConfig().isEnableFile() && getChatInfo().isEnableFile()) {
-            actionUnit = new InputMoreActionUnit() {
+        if (TUIChatConfigClassic.isShowInputBarFile()
+                && getChatInfo().isEnableFile()
+                && !excludeItems.contains(TUIChatConfigClassic.FILE)) {
+            actionUnit = new InputMoreItem() {
                 @Override
                 public void onAction(String chatInfoId, int chatType) {
                     startSendFile();
@@ -1271,16 +1285,36 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mInputMoreActionList.add(actionUnit);
         }
 
-        List<InputMoreActionUnit> extensionList = getExtensionInputMoreList();
-        mInputMoreActionList.addAll(extensionList);
-        clearCustomActionList();
-        if (mChatLayout != null) {
-            mChatLayout.customizeInputMoreLayout();
+        // Add a welcome prompt with rich text
+        if (TUIChatConfigClassic.isShowInputBarCustom()
+                && getChatInfo().isEnableCustomHelloMessage()
+                && !excludeItems.contains(TUIChatConfigClassic.CUSTOM)) {
+            actionUnit = new InputMoreItem() {};
+            actionUnit.setIconResId(R.drawable.custom);
+            actionUnit.setName(getResources().getString(R.string.test_custom_action));
+            actionUnit.setActionId(CustomHelloMessage.CUSTOM_HELLO_ACTION_ID);
+            actionUnit.setPriority(10);
+            actionUnit.setOnClickListener(actionUnit.new OnActionClickListener() {
+                @Override
+                public void onClick() {
+                    Gson gson = new Gson();
+                    CustomHelloMessage customHelloMessage = new CustomHelloMessage();
+                    customHelloMessage.version = TUIChatConstants.version;
+
+                    String data = gson.toJson(customHelloMessage);
+                    TUIMessageBean info = ChatMessageBuilder.buildCustomMessage(data, customHelloMessage.text, customHelloMessage.text.getBytes());
+                    mChatLayout.sendMessage(info, false);
+                }
+            });
+            mInputMoreActionList.add(actionUnit);
         }
-        mInputMoreActionList.addAll(mInputMoreCustomActionList);
-        Collections.sort(mInputMoreActionList, new Comparator<InputMoreActionUnit>() {
+
+        List<InputMoreItem> extensionList = getExtensionInputMoreList();
+        mInputMoreActionList.addAll(extensionList);
+
+        Collections.sort(mInputMoreActionList, new Comparator<InputMoreItem>() {
             @Override
-            public int compare(InputMoreActionUnit o1, InputMoreActionUnit o2) {
+            public int compare(InputMoreItem o1, InputMoreItem o2) {
                 return o2.getPriority() - o1.getPriority();
             }
         });
@@ -1290,9 +1324,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         return getResources().getString(stringID);
     }
 
-    private List<InputMoreActionUnit> getExtensionInputMoreList() {
-        List<InputMoreActionUnit> list = new ArrayList<>();
-
+    private List<InputMoreItem> getExtensionInputMoreList() {
+        List<InputMoreItem> list = new ArrayList<>();
+        List<Integer> excludeItems = new ArrayList<>();
+        TUIChatConfigClassic.ChatInputMoreDataSource dataSource = TUIChatConfigClassic.getChatInputMoreDataSource();
+        if (dataSource != null) {
+            excludeItems.addAll(dataSource.inputBarShouldHideItemsInMoreMenuOfInfo(mChatInfo));
+        }
         Map<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.Extension.InputMore.CONTEXT, getContext());
         if (ChatInfo.TYPE_C2C == mChatInfo.getType()) {
@@ -1306,15 +1344,18 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM, true);
         } else {
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VIDEO_CALL,
-                !TUIChatConfigs.getGeneralConfig().isEnableVideoCall() || !getChatInfo().isEnableVideoCall());
+                !TUIChatConfigClassic.isShowInputBarVideoCall() || !getChatInfo().isEnableVideoCall()
+                    || excludeItems.contains(TUIChatConfigClassic.VIDEO_CALL));
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_VOICE_CALL,
-                !TUIChatConfigs.getGeneralConfig().isEnableAudioCall() || !getChatInfo().isEnableAudioCall());
+                !TUIChatConfigClassic.isShowInputBarAudioCall() || !getChatInfo().isEnableAudioCall()
+                    || excludeItems.contains(TUIChatConfigClassic.AUDIO_CALL));
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_ROOM,
-                !TUIChatConfigs.getGeneralConfig().isEnableRoomKit() || !getChatInfo().isEnableRoom());
+                !TUIChatConfigClassic.isShowInputBarRoomKit() || !getChatInfo().isEnableRoom() || excludeItems.contains(TUIChatConfigClassic.ROOM_KIT));
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_GROUP_NOTE,
-                !TUIChatConfigs.getGeneralConfig().isEnableGroupNote() || !getChatInfo().isEnableGroupNote());
+                !TUIChatConfigClassic.isShowInputBarGroupNote() || !getChatInfo().isEnableGroupNote()
+                    || excludeItems.contains(TUIChatConfigClassic.GROUP_NOTE));
             param.put(TUIConstants.TUIChat.Extension.InputMore.FILTER_POLL,
-                !TUIChatConfigs.getGeneralConfig().isEnablePoll() || !getChatInfo().isEnablePoll());
+                !TUIChatConfigClassic.isShowInputBarPoll() || !getChatInfo().isEnablePoll() || excludeItems.contains(TUIChatConfigClassic.POLL));
         }
         param.put(TUIConstants.TUIChat.Extension.InputMore.INPUT_MORE_LISTENER, chatInputMoreListener);
         List<TUIExtensionInfo> extensionList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID, param);
@@ -1323,7 +1364,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 String name = extensionInfo.getText();
                 int icon = (int) extensionInfo.getIcon();
                 int priority = extensionInfo.getWeight();
-                InputMoreActionUnit unit = new InputMoreActionUnit() {
+                InputMoreItem unit = new InputMoreItem() {
                     @Override
                     public void onAction(String chatInfoId, int chatType) {
                         TUIExtensionEventListener extensionListener = extensionInfo.getExtensionListener();
@@ -1376,10 +1417,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     public void replaceMoreInput(OnClickListener listener) {
         mMoreInputEvent = listener;
-    }
-
-    public void addAction(InputMoreActionUnit action) {
-        mInputMoreCustomActionList.add(action);
     }
 
     public EditText getInputText() {
@@ -1454,10 +1491,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             return;
         }
         mEmojiInputButton.setVisibility(visibility);
-    }
-
-    public void clearCustomActionList() {
-        mInputMoreCustomActionList.clear();
     }
 
     public ChatInfo getChatInfo() {

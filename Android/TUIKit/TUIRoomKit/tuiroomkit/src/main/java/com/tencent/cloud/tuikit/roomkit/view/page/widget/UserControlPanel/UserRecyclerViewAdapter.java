@@ -18,6 +18,7 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.qcloud.tuicore.TUILogin;
 
@@ -66,6 +67,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         private CircleImageView  mImageHead;
         private MicIconView      mViewMic;
         private CameraIconView   mViewCamera;
+        private CallUserView     mCallUserView;
         private LinearLayout     mLayoutOwner;
         private LinearLayout     mLayoutManager;
 
@@ -79,6 +81,8 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             mBtnInvite = itemView.findViewById(R.id.tuiroomkit_btn_invite_seat);
             mViewMic = itemView.findViewById(R.id.tuiroomkit_img_mic_state);
             mViewCamera = itemView.findViewById(R.id.tuiroomkit_img_camera_state);
+
+            mCallUserView = itemView.findViewById(R.id.tuiroomkit_call_user_view);
             mLayoutOwner = itemView.findViewById(R.id.tuiroomkit_ll_room_owner);
             mLayoutManager = itemView.findViewById(R.id.tuiroomkit_ll_room_manager);
         }
@@ -89,6 +93,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             setMediaState(user);
             initInviteUser(user);
             initUserManager(user);
+            initCallUser(user);
         }
 
         private void bindUserInfo(Context context, UserState.UserInfo user) {
@@ -134,12 +139,18 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
                     if (!hasAbilityToManageUser(user)) {
                         return;
                     }
+                    if (ConferenceController.sharedInstance().getViewState().userListType.get() == ViewState.UserListType.ALL_USER_NOT_ENTERED_THE_ROOM) {
+                        return;
+                    }
                     Map<String, Object> params = new HashMap<>();
                     params.put(KEY_USER_MODEL, user);
-                    ConferenceEventCenter.getInstance()
-                            .notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT, params);
+                    ConferenceEventCenter.getInstance().notifyUIEvent(ConferenceEventCenter.RoomKitUIEvent.SHOW_USER_MANAGEMENT, params);
                 }
             });
+        }
+
+        private void initCallUser(UserState.UserInfo user) {
+            mCallUserView.setUserId(user.userId);
         }
 
         private boolean hasAbilityToManageUser(UserState.UserInfo user) {

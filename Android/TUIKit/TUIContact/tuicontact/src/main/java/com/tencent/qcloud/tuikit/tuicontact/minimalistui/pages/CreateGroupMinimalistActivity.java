@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
+
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
@@ -106,12 +108,6 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
                 groupType = type;
                 groupTypeLv.setContent(type);
                 initGroupTypeContentView();
-                if (TextUtils.equals(groupType, TUIContactConstants.GroupType.TYPE_COMMUNITY)) {
-                    groupIdEdit.setText("");
-                    groupIdEdit.setEnabled(false);
-                } else {
-                    groupIdEdit.setEnabled(true);
-                }
             }
         }
     };
@@ -362,6 +358,22 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
         groupInfo.setIconUrlList(groupAvatarUrlList);
 
         String groupId = groupIdEdit.getText().toString();
+        if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_COMMUNITY)) {
+            if (!TextUtils.isEmpty(groupId) && !groupId.startsWith("@TGS#_")) {
+                ToastUtil.toastLongMessage(getResources().getString(R.string.community_id_edit_format_tips));
+                return;
+            }
+        } else {
+            if (!TextUtils.isEmpty(groupId) && groupId.startsWith("@TGS#")) {
+                ToastUtil.toastLongMessage(getResources().getString(R.string.group_id_edit_format_tips));
+                return;
+            }
+        }
+        if (!TextUtils.isEmpty(groupId) && groupId.length() > 48) {
+            ToastUtil.toastLongMessage(getResources().getString(R.string.group_id_edit_exceed_tips));
+            return;
+        }
+
         if (!TextUtils.isEmpty(groupId)) {
             groupInfo.setId(groupId);
         } else {

@@ -19,9 +19,11 @@
         android:layout_height="match_parent" />
 
     <FrameLayout
-        android:id="@+id/rl_audio_user_info_layout"
+        android:id="@+id/rl_user_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/fl_call_tag"
+        app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
 
     <FrameLayout
         android:id="@+id/rl_layout_float_icon"
@@ -33,18 +35,15 @@
         app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
 
     <FrameLayout
-        android:id="@+id/rl_video_user_info_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <FrameLayout
         android:id="@+id/fl_call_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@id/rl_single_function"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rl_user_info_layout" />
 
     <FrameLayout
         android:id="@+id/rl_single_time"
