@@ -16,8 +16,6 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUICallKit download](https://im.sdk.qcloud.com/download/tuikit/8.2.6325/android/TUICallKit.zip)
 
-[Latest TUIOfflinePush download](https://im.sdk.qcloud.com/download/tuikit/7.7.5282/android/TUIOfflinePush.zip)
-
 [Latest TUICommunity download](https://im.sdk.qcloud.com/download/tuikit/8.2.6325/android/TUICommunity.zip)
 
 [Latest TUITranslationPlugin download](https://im.sdk.qcloud.com/download/tuikit/8.2.6325/android/TUITranslationPlugin.zip)
