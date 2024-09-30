@@ -14,8 +14,6 @@
 
 [最新 TUISearch 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUISearch.zip)
 
-[最新 TUIOfflinePush 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUIOfflinePush.zip)
-
 [最新 TUITranslationPlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUITranslationPlugin.zip)
 
 [最新 TUIVoiceToTextPlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUIVoiceToTextPlugin.zip)
