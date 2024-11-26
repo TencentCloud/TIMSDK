@@ -2,6 +2,31 @@ English | [简体中文](./版本历史.md)
 
 # TIMSDK
 
+## 8.3.6498 @2024.11.26 - Enhanced Version
+### SDK
+
+- Support for Lite Signaling SDK
+- Support for configuring AnyCast routing address
+- Optimization of long connection IP address routing strategy
+- Online push supports custom ringtones
+- Support for OPPO push message classification
+- HarmonyOS platform SDK adaptation API 12
+- Support for HarmonyOS SDK connecting to private servers
+- Support for HarmonyOS TS API and C API mixed compilation
+- Conversation marking supports filtering duplicate requests
+- Optimization and upgrade of single chat unread message and unread count protocol
+- Completion of the recall information of the last message in the conversation
+- Fix occasional issue of message body size exceeding limit in merged forwarding - messages
+- Fix occasional issue of incorrect account type during random login of IM and Push
+- Fix parsing error of message response data format in HarmonyOS SDK
+- Fix occasional failure issue of editing merged forwarding messages
+
+### TUIKit & Demo
+- TUIKit document message supports automatic URL resolution
+- TUIKit's self-developed album browser
+- TUIKit supports video editor
+- TUIKit supports Traditional Chinese
+
 ## 8.2.6325 @2024.09.27 - Enhanced Version
 ### SDK
 
