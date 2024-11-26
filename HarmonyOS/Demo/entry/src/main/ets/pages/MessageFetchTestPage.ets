@@ -4,7 +4,7 @@ import promptAction from '@ohos.promptAction';
 import { getEnumKeys, getEnumMap } from '../tools/GetEnum'
 @Observed
 class GetInfo {
-  userID = "xlm";
+  userID = "haha";
   groupID = "";
   from = 0;
   period = 0;

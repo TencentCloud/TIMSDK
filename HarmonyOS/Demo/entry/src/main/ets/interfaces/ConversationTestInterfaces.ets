@@ -13,6 +13,7 @@ import {
 import Prompt from "@system.prompt";
 import buffer from "@ohos.buffer";
 
+import { Error } from "./BaseTestInterfaces";
 import { writeResult, onCallback, stringifyV2TIMConversation } from "../pages/ConversationManagerTestPage";
 
 export class ConversationTestInterfaces {
@@ -33,7 +34,7 @@ export class ConversationTestInterfaces {
         writeResult("getConversationListByFilter succeeded", result.nextSeq, result.isFinished, stringifyV2TIMConversation(result.conversationList));
       })
       .catch((error: Error) => {
-        writeResult("getConversationListByFilter failed", error);
+        writeResult("getConversationListByFilter failed", error.code, error.message);
       });
   }
 
@@ -44,7 +45,7 @@ export class ConversationTestInterfaces {
         writeResult("getConversation succeeded", stringifyV2TIMConversation([conversation]));
       })
       .catch((error: Error) => {
-        writeResult("getConversation failed", error);
+        writeResult("getConversation failed", error.code, error.message);
       });
   }
 
@@ -55,7 +56,7 @@ export class ConversationTestInterfaces {
         writeResult("setConversationDraft succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setConversationDraft failed", error);
+        writeResult("setConversationDraft failed", error.code, error.message);
       });
   }
 
@@ -66,7 +67,7 @@ export class ConversationTestInterfaces {
         writeResult("deleteConversation succeeded");
       })
       .catch((error: Error) => {
-        writeResult("deleteConversation failed", error);
+        writeResult("deleteConversation failed", error.code, error.message);
       });
   }
 
@@ -77,7 +78,7 @@ export class ConversationTestInterfaces {
         writeResult("getConversationList succeeded", stringifyV2TIMConversation(conversationList));
       })
       .catch((error: Error) => {
-        writeResult("getConversationList failed", error);
+        writeResult("getConversationList failed", error.code, error.message);
       });
   }
 
@@ -88,7 +89,7 @@ export class ConversationTestInterfaces {
         writeResult("deleteConversationList succeeded");
       })
       .catch((error: Error) => {
-        writeResult("deleteConversationList failed", error);
+        writeResult("deleteConversationList failed", error.code, error.message);
       });
   }
 
@@ -110,7 +111,7 @@ export class ConversationTestInterfaces {
         writeResult("getConversationListByFilter2 succeeded", result.nextSeq, result.nextSeq, stringifyV2TIMConversation(result.conversationList));
       })
       .catch((error: Error) => {
-        writeResult("getConversationListByFilter2 failed", error);
+        writeResult("getConversationListByFilter2 failed", error.code, error.message);
       });
   }
 
@@ -122,7 +123,7 @@ export class ConversationTestInterfaces {
         writeResult("setConversationCustomData succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("setConversationCustomData failed", error);
+        writeResult("setConversationCustomData failed", error.code, error.message);
       });
   }
 
@@ -133,7 +134,7 @@ export class ConversationTestInterfaces {
         writeResult("pinConversation succeeded");
       })
       .catch((error: Error) => {
-        writeResult("pinConversation failed", error);
+        writeResult("pinConversation failed", error.code, error.message);
       });
   }
 
@@ -144,7 +145,7 @@ export class ConversationTestInterfaces {
         writeResult("markConversation succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("markConversation failed", error);
+        writeResult("markConversation failed", error.code, error.message);
       });
   }
 
@@ -155,7 +156,7 @@ export class ConversationTestInterfaces {
         writeResult("getTotalUnreadMessageCount succeeded", count);
       })
       .catch((error: Error) => {
-        writeResult("getTotalUnreadMessageCount failed", error);
+        writeResult("getTotalUnreadMessageCount failed", error.code, error.message);
       });
   }
 
@@ -171,7 +172,7 @@ export class ConversationTestInterfaces {
         writeResult("getUnreadMessageCountByFilter succeeded", count);
       })
       .catch((error: Error) => {
-        writeResult("getUnreadMessageCountByFilter failed", error);
+        writeResult("getUnreadMessageCountByFilter failed", error.code, error.message);
       });
   }
 
@@ -209,7 +210,7 @@ export class ConversationTestInterfaces {
         writeResult("cleanConversationUnreadMessageCount succeeded");
       })
       .catch((error: Error) => {
-        writeResult("cleanConversationUnreadMessageCount failed", error);
+        writeResult("cleanConversationUnreadMessageCount failed", error.code, error.message);
       });
   }
 
@@ -220,7 +221,7 @@ export class ConversationTestInterfaces {
         writeResult("createConversationGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("createConversationGroup failed", error);
+        writeResult("createConversationGroup failed", error.code, error.message);
       });
   }
 
@@ -231,7 +232,7 @@ export class ConversationTestInterfaces {
         writeResult("getConversationGroupList succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getConversationGroupList failed", error);
+        writeResult("getConversationGroupList failed", error.code, error.message);
       });
   }
 
@@ -242,7 +243,7 @@ export class ConversationTestInterfaces {
         writeResult("deleteConversationGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("deleteConversationGroup failed", error);
+        writeResult("deleteConversationGroup failed", error.code, error.message);
       });
   }
 
@@ -253,7 +254,7 @@ export class ConversationTestInterfaces {
         writeResult("renameConversationGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("renameConversationGroup failed", error);
+        writeResult("renameConversationGroup failed", error.code, error.message);
       });
   }
 
@@ -264,7 +265,7 @@ export class ConversationTestInterfaces {
         writeResult("addConversationsToGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("addConversationsToGroup failed", error);
+        writeResult("addConversationsToGroup failed", error.code, error.message);
       });
   }
 
@@ -275,7 +276,7 @@ export class ConversationTestInterfaces {
         writeResult("deleteConversationsFromGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("deleteConversationsFromGroup failed", error);
+        writeResult("deleteConversationsFromGroup failed", error.code, error.message);
       });
   }
 

@@ -2,4 +2,4 @@
 
 ## 下载 IM SDK
 
-[下载 imsdk.har 版本](https://im.sdk.qcloud.com/download/plus/8.2.6325/imsdk-ohos-8.2.6325.har)，如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/103558)。
+[下载 imsdk.har 版本](https://im.sdk.qcloud.com/download/plus/8.3.6498/imsdk-ohos-8.3.6498.har)，如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/103558)。

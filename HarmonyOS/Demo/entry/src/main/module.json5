@@ -4,14 +4,14 @@
     type: "entry",
     description: "$string:module_desc",
     mainElement: "ImdemoAbility",
-    deviceTypes: ["phone", "tablet", "2in1"],
+    deviceTypes: ["phone", "tablet", "2in1", "car"],
     deliveryWithInstall: true,
     installationFree: false,
     pages: "$profile:main_pages",
     abilities: [
       {
         name: "ImdemoAbility",
-        srcEntry: "./ets/imdemoability/ImdemoAbility.ts",
+        srcEntry: "./ets/imdemoability/ImdemoAbility.ets",
         description: "$string:ImdemoAbility_desc",
         icon: "$media:layered_image",
         label: "$string:ImdemoAbility_label",
@@ -26,6 +26,20 @@
         ],
       },
     ],
+    extensionAbilities: [
+      {
+        name: "ImdemoBackupAbility",
+        srcEntry: "./ets/imdemobackupability/ImdemoBackupAbility.ets",
+        type: "backup",
+        exported: false,
+        metadata: [
+          {
+            name: "ohos.extension.backup",
+            resource: "$profile:backup_config",
+          },
+        ],
+      },
+    ],
     requestPermissions: [
       {
         name: "ohos.permission.GET_NETWORK_INFO",
@@ -33,16 +47,6 @@
       {
         name: "ohos.permission.INTERNET",
       },
-      {
-        name: "ohos.permission.READ_AUDIO",
-        reason: "{}",
-        usedScene: {},
-      },
-      {
-        name: "ohos.permission.READ_IMAGEVIDEO",
-        reason: "{}",
-        usedScene: {},
-      }
     ],
   },
 }

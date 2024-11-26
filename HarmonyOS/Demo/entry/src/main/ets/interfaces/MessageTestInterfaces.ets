@@ -29,12 +29,17 @@ import {
   V2TIMDownloadCallback,
   V2TIMGroupMemberInfo,
   V2TIMMessageManager,
+  V2TIMIOSOfflinePushType,
+  V2TIMTextElem,
+  V2TIMCustomElem,
 } from "@tencentcloud/imsdk";
 import { V2TIMManager } from "@tencentcloud/imsdk/src/main/ets/V2TIMManager";
 import buffer from "@ohos.buffer";
 import Prompt from "@system.prompt";
-import TestResult, { info } from "../pages/MessageManagerTestPage";
-import { onCallback, writeResult } from "../pages/MessageManagerTestPage";
+
+import { Error } from "./BaseTestInterfaces";
+import TestResult from "../pages/MessageManagerTestPage";
+import { onCallback, writeResult, info } from "../pages/MessageManagerTestPage";
 
 import picker from "@ohos.file.picker";
 import fs from "@ohos.file.fs";
@@ -55,6 +60,30 @@ interface SendMessageOptions {
   onlineUserOnly?: boolean;
   offlinePushInfo?: V2TIMOfflinePushInfo;
 }
+
+const pushInfo: V2TIMOfflinePushInfo = {
+  title: "harmony title",
+  desc: "harmony desc",
+  ext: '{"12":"34"}',
+  disablePush: false,
+  iOSPushType: V2TIMIOSOfflinePushType.V2TIM_IOS_OFFLINE_PUSH_TYPE_APNS,
+  ignoreIOSBadge: false,
+  iOSSound: "kIOSOfflinePushNoSound",
+  AndroidSound: "",
+  AndroidOPPOChannelID: "sd",
+  AndroidFCMChannelID: "",
+  AndroidXiaoMiChannelID: "",
+  AndroidVIVOClassification: 0,
+  AndroidVIVOCategory: "",
+  AndroidHuaWeiCategory: "IM",
+  AndroidHuaWeiImage: "https://im.sdk.qcloud.com/download/tuikit-resource/test/image_1.png",
+  AndroidHonorImage: "https://im.sdk.qcloud.com/download/tuikit-resource/test/image_1.png",
+  AndroidFCMImage: "https://im.sdk.qcloud.com/download/tuikit-resource/test/image_1.png",
+  iOSImage: "https://im.sdk.qcloud.com/download/tuikit-resource/test/image_1.png",
+  HarmonyImage: "https://im.sdk.qcloud.com/download/tuikit-resource/test/image_1.png",
+  HarmonyCategory: "IM",
+  ignoreHarmonyBadge: false,
+};
 
 export class MessageTestInterfaces {
   static clearMessageList() {
@@ -78,7 +107,7 @@ export class MessageTestInterfaces {
       priority: info.priority,
       callback: MessageTestInterfaces.onUpload,
       onlineUserOnly: info.onlineUserOnly,
-      offlinePushInfo: info.offlinePushInfo !== null ? info.offlinePushInfo : undefined,
+      offlinePushInfo: pushInfo,
     };
     return options;
   }
@@ -87,25 +116,56 @@ export class MessageTestInterfaces {
     TestResult.progress = currentSize / totalSize;
   }
 
-  private static onSendMessageSuccess(message: V2TIMMessage) {
-    TestResult.result = `send message success ${message}`;
-    msgList.push(message);
-  }
-
-  private static onSendMessageFailed(error: object | number | string | null) {
-    TestResult.result = `send message failed ${error}`;
-  }
-
   private static sendMessage(message: V2TIMMessage) {
     message.isExcludedFromContentModeration = info.excludeSecurityCheck;
     message.isExcludedFromUnreadCount = info.excludeUnreadCount;
     message.isExcludedFromLastMessage = info.excludeLastMessage;
     let options = MessageTestInterfaces.getSendMessageOptions();
     let result = V2TIMManager.getMessageManager().sendMessage(message, options);
+    msgList.push(message);
     let promise = result.promise;
     let msgID = result.msgID;
     TestResult.messageID = msgID;
-    promise.then(MessageTestInterfaces.onSendMessageSuccess).catch(MessageTestInterfaces.onSendMessageFailed);
+    promise
+      .then((message: V2TIMMessage) => {
+        let result = "";
+
+        let elem: V2TIMElem | undefined;
+        switch (message.elemType) {
+          case V2TIMElemType.V2TIM_ELEM_TYPE_TEXT:
+            {
+              const textElem = message.textElem!;
+              result += textElem.text;
+              elem = textElem.nextElem;
+            }
+            break;
+          case V2TIMElemType.V2TIM_ELEM_TYPE_CUSTOM:
+            {
+              const customElem = message.customElem!;
+              result += buffer.from(customElem.data).toString() + customElem.desc + customElem.extension;
+              elem = customElem.nextElem;
+            }
+            break;
+        }
+        while (elem) {
+          if (elem instanceof V2TIMTextElem) {
+            const textElem = elem as V2TIMTextElem;
+            result += textElem.text;
+            elem = textElem.nextElem;
+          } else if (elem instanceof V2TIMCustomElem) {
+            const customElem = elem as V2TIMCustomElem;
+            result += buffer.from(customElem.data).toString() + customElem.desc + customElem.extension;
+            elem = customElem.nextElem;
+          }
+        }
+
+        msgList.push(message);
+        writeResult("send message success", message.msgID);
+      })
+      .catch((error: Error) => {
+        msgList.push(message);
+        writeResult("send message failed", error.code, error.message);
+      });
   }
 
   static createTextMessageAndSend() {
@@ -115,9 +175,7 @@ export class MessageTestInterfaces {
 
   static createTextAtMessageAndSend() {
     let message = V2TIMManager.getMessageManager().createTextAtMessage(info.text, info.atUsers);
-    if (message) {
-      MessageTestInterfaces.sendMessage(message);
-    }
+    MessageTestInterfaces.sendMessage(message!);
   }
 
   static createCustomMessageAndSend() {
@@ -150,6 +208,7 @@ export class MessageTestInterfaces {
       MessageTestInterfaces.sendMessage(message);
     } catch (error) {
       console.error(error);
+      writeResult(error);
     }
   }
 
@@ -174,7 +233,7 @@ export class MessageTestInterfaces {
       let predicates = new dataSharePredicates.DataSharePredicates();
       predicates.equalTo("uri", user_file_uri);
       let fetchResult = await photoAccessHelper.getPhotoAccessHelper(getContext()).getAssets({
-        fetchColumns: [],
+        fetchColumns: [photoAccessHelper.PhotoKeys.DURATION],
         predicates: predicates,
       });
       const asset = await fetchResult.getFirstObject();
@@ -197,6 +256,7 @@ export class MessageTestInterfaces {
       MessageTestInterfaces.sendMessage(message);
     } catch (error) {
       console.error(error);
+      writeResult(error);
     }
   }
 
@@ -219,6 +279,7 @@ export class MessageTestInterfaces {
       MessageTestInterfaces.sendMessage(message);
     } catch (error) {
       console.error(error);
+      writeResult(error);
     }
   }
 
@@ -242,6 +303,11 @@ export class MessageTestInterfaces {
       let dataSrc: media.AVDataSrcDescriptor = {
         fileSize: fileSize,
         callback: (buffer, len, pos) => {
+          if (buffer == undefined || len == undefined || pos == undefined) {
+            console.info("dataSrc callback param invalid");
+            return -1;
+          }
+
           class Option {
             offset: number | undefined = 0;
             length: number | undefined = len;
@@ -249,7 +315,10 @@ export class MessageTestInterfaces {
           }
           let options = new Option();
           let num = fs.readSync(fd, buffer, options);
-          return num;
+          if (num > 0 && fileSize >= pos) {
+            return num;
+          }
+          return -1;
         },
       };
       let avMetadataExtractor = await media.createAVMetadataExtractor();
@@ -262,6 +331,7 @@ export class MessageTestInterfaces {
       MessageTestInterfaces.sendMessage(message);
     } catch (error) {
       console.error(error);
+      writeResult(error);
     }
   }
 
@@ -285,7 +355,12 @@ export class MessageTestInterfaces {
     const abstractList = ["abstractList"];
     const compatibleText = "compatibleText";
     if (msgList.length > 0) {
-      let message = V2TIMManager.getMessageManager().createMergerMessage(msgList, title, abstractList, compatibleText);
+      let message = V2TIMManager.getMessageManager().createMergerMessage(
+        [msgList[msgList.length - 1]],
+        title,
+        abstractList,
+        compatibleText
+      );
       if (message) {
         MessageTestInterfaces.sendMessage(message);
       }
@@ -296,7 +371,7 @@ export class MessageTestInterfaces {
 
   static createForwardMessageAndSend() {
     if (msgList.length > 0) {
-      let message = V2TIMManager.getMessageManager().createForwardMessage(msgList[0]);
+      let message = V2TIMManager.getMessageManager().createForwardMessage(msgList[msgList.length - 1]);
       if (message) {
         MessageTestInterfaces.sendMessage(message);
       }
@@ -319,6 +394,23 @@ export class MessageTestInterfaces {
     if (message) {
       MessageTestInterfaces.sendMessage(message);
     }
+  }
+
+  static sendElems() {
+    let message = V2TIMManager.getMessageManager().createTextMessage(info.text);
+
+    let textElem = new V2TIMTextElem();
+    textElem.text = "text";
+
+    let customElem = new V2TIMCustomElem();
+    customElem.data = buffer.from("data").buffer;
+    customElem.desc = "desc";
+    customElem.extension = "extension";
+
+    message.textElem!.nextElem = textElem;
+    textElem.nextElem = customElem;
+
+    MessageTestInterfaces.sendMessage(message);
   }
 
   static setC2CReceiveMessageOpt() {
@@ -350,7 +442,7 @@ export class MessageTestInterfaces {
         writeResult("getC2CReceiveMessageOpt succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getC2CReceiveMessageOpt failed", error);
+        writeResult("getC2CReceiveMessageOpt failed", error.code, error.message);
       });
   }
 
@@ -361,7 +453,7 @@ export class MessageTestInterfaces {
         writeResult("setAllReceiveMessageOpt succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setAllReceiveMessageOpt failed", error);
+        writeResult("setAllReceiveMessageOpt failed", error.code, error.message);
       });
   }
 
@@ -372,7 +464,7 @@ export class MessageTestInterfaces {
         writeResult("setAllReceiveMessageOpt2 succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setAllReceiveMessageOpt2 failed", error);
+        writeResult("setAllReceiveMessageOpt2 failed", error.code, error.message);
       });
   }
 
@@ -383,7 +475,7 @@ export class MessageTestInterfaces {
         writeResult("getAllReceiveMessageOpt succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getAllReceiveMessageOpt failed", error);
+        writeResult("getAllReceiveMessageOpt failed", error.code, error.message);
       });
   }
 
@@ -393,12 +485,12 @@ export class MessageTestInterfaces {
       return;
     }
     V2TIMManager.getMessageManager()
-      .revokeMessage(msgList[0])
+      .revokeMessage(msgList[msgList.length - 1])
       .then(() => {
         writeResult("revokeMessage succeeded");
       })
       .catch((error: Error) => {
-        writeResult("revokeMessage failed", error);
+        writeResult("revokeMessage failed", error.code, error.message);
       });
   }
 
@@ -407,7 +499,7 @@ export class MessageTestInterfaces {
       Prompt.showToast({ message: "请先发一条消息" });
       return;
     }
-    let lastMsg = msgList[0];
+    let lastMsg = msgList[msgList.length - 1];
     // let elemList = lastMsg.elemList;
     // if (elemList.length === 0) {
     //   return;
@@ -429,7 +521,22 @@ export class MessageTestInterfaces {
         writeResult("modifyMessage succeeded");
       })
       .catch((error: Error) => {
-        writeResult("modifyMessage failed", error);
+        writeResult("modifyMessage failed", error.code, error.message);
+      });
+  }
+
+  static deleteMessageFromLocalStorage() {
+    if (msgList.length <= 0) {
+      Prompt.showToast({ message: "请先发一条消息或者拉取消息" });
+      return;
+    }
+    V2TIMManager.getMessageManager()
+      .deleteMessageFromLocalStorage(msgList[msgList.length - 1])
+      .then(() => {
+        writeResult("deleteMessageFromLocalStorage succeeded");
+      })
+      .catch((error: Error) => {
+        writeResult("deleteMessageFromLocalStorage failed", error);
       });
   }
 
@@ -444,7 +551,7 @@ export class MessageTestInterfaces {
         writeResult("deleteMessage succeeded");
       })
       .catch((error: Error) => {
-        writeResult("deleteMessage failed", error);
+        writeResult("deleteMessage failed", error.code, error.message);
       });
   }
 
@@ -459,7 +566,7 @@ export class MessageTestInterfaces {
         writeResult("clearC2CHistoryMessage succeeded");
       })
       .catch((error: Error) => {
-        writeResult("clearC2CHistoryMessage failed", error);
+        writeResult("clearC2CHistoryMessage failed", error.code, error.message);
       });
   }
 
@@ -474,7 +581,7 @@ export class MessageTestInterfaces {
         writeResult("clearGroupHistoryMessage succeeded");
       })
       .catch((error: Error) => {
-        writeResult("clearGroupHistoryMessage failed", error);
+        writeResult("clearGroupHistoryMessage failed", error.code, error.message);
       });
   }
 
@@ -483,10 +590,10 @@ export class MessageTestInterfaces {
     V2TIMManager.getMessageManager()
       .insertGroupMessageToLocalStorage(message, info.groupID5, info.sender)
       .promise.then((result: V2TIMMessage) => {
-        writeResult("insertGroupMessageToLocalStorage succeeded", result);
+        writeResult("insertGroupMessageToLocalStorage succeeded", result.msgID);
       })
       .catch((error: Error) => {
-        writeResult("insertGroupMessageToLocalStorage failed", error);
+        writeResult("insertGroupMessageToLocalStorage failed", error.code, error.message);
       });
   }
 
@@ -497,10 +604,10 @@ export class MessageTestInterfaces {
     let promise = result.promise;
     promise
       .then((result: V2TIMMessage) => {
-        writeResult("insertC2CMessageToLocalStorage succeeded", result);
+        writeResult("insertC2CMessageToLocalStorage succeeded", result.msgID);
       })
       .catch((error: Error) => {
-        writeResult("insertC2CMessageToLocalStorage failed", error);
+        writeResult("insertC2CMessageToLocalStorage failed", error.code, error.message);
       });
     Prompt.showToast({ message: msgID });
   }
@@ -542,7 +649,7 @@ export class MessageTestInterfaces {
         writeResult("translateText succeeded");
       })
       .catch((error: Error) => {
-        writeResult("translateText failed", error);
+        writeResult("translateText failed", error.code, error.message);
       });
   }
 
@@ -552,12 +659,12 @@ export class MessageTestInterfaces {
       return;
     }
     V2TIMManager.getMessageManager()
-      .getMessageExtensions(msgList[0])
+      .getMessageExtensions(msgList[msgList.length - 1])
       .then((resultList: V2TIMMessageExtension[]) => {
         writeResult("getMessageExtensions succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getMessageExtensions failed", error);
+        writeResult("getMessageExtensions failed", error.code, error.message);
       });
   }
 
@@ -575,12 +682,12 @@ export class MessageTestInterfaces {
       extensionValue: "extension2222",
     };
     V2TIMManager.getMessageManager()
-      .setMessageExtensions(msgList[0], [extension1, extension2])
+      .setMessageExtensions(msgList[msgList.length - 1], [extension1, extension2])
       .then((resultList: V2TIMMessageExtensionResult[]) => {
         writeResult("setMessageExtensions succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("setMessageExtensions failed", error);
+        writeResult("setMessageExtensions failed", error.code, error.message);
       });
   }
 
@@ -591,12 +698,12 @@ export class MessageTestInterfaces {
     }
 
     V2TIMManager.getMessageManager()
-      .deleteMessageExtensions(msgList[0], ["extension1", "extension2"])
+      .deleteMessageExtensions(msgList[msgList.length - 1], ["extension1", "extension2"])
       .then((resultList: V2TIMMessageExtensionResult[]) => {
         writeResult("deleteMessageExtensions succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("deleteMessageExtensions failed", error);
+        writeResult("deleteMessageExtensions failed", error.code, error.message);
       });
   }
 
@@ -607,12 +714,12 @@ export class MessageTestInterfaces {
     }
 
     V2TIMManager.getMessageManager()
-      .addMessageReaction(msgList[0], "reactionID111")
+      .addMessageReaction(msgList[msgList.length - 1], "reactionID111")
       .then(() => {
         writeResult("addMessageReaction succeeded");
       })
       .catch((error: Error) => {
-        writeResult("addMessageReaction failed", error);
+        writeResult("addMessageReaction failed", error.code, error.message);
       });
   }
 
@@ -628,7 +735,7 @@ export class MessageTestInterfaces {
         writeResult("getMessageReactions succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getMessageReactions failed", error);
+        writeResult("getMessageReactions failed", error.code, error.message);
       });
   }
 
@@ -639,12 +746,12 @@ export class MessageTestInterfaces {
     }
 
     V2TIMManager.getMessageManager()
-      .getMessageReactionUserList(msgList[0], "reactionID111", 0, 10)
+      .getMessageReactionUserList(msgList[msgList.length - 1], "reactionID111", 0, 10)
       .then((result: V2TIMMessageReactionUserResult) => {
         writeResult("getMessageReactionUserList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getMessageReactionUserList failed", error);
+        writeResult("getMessageReactionUserList failed", error.code, error.message);
       });
   }
 
@@ -655,12 +762,12 @@ export class MessageTestInterfaces {
     }
 
     V2TIMManager.getMessageManager()
-      .removeMessageReaction(msgList[0], "reactionID111")
+      .removeMessageReaction(msgList[msgList.length - 1], "reactionID111")
       .then(() => {
         writeResult("removeMessageReaction succeeded");
       })
       .catch((error: Error) => {
-        writeResult("removeMessageReaction failed", error);
+        writeResult("removeMessageReaction failed", error.code, error.message);
       });
   }
 
@@ -668,10 +775,10 @@ export class MessageTestInterfaces {
     V2TIMManager.getMessageManager()
       .findMessages([info.messageID1, info.messageID2])
       .then((result: V2TIMMessage[]) => {
-        writeResult("findMessages succeeded", result);
+        writeResult("findMessages succeeded", result.length);
       })
       .catch((error: Error) => {
-        writeResult("findMessages failed", error);
+        writeResult("findMessages failed", error.code, error.message);
       });
   }
 
@@ -682,7 +789,7 @@ export class MessageTestInterfaces {
         writeResult("sendMessageReadReceipts succeeded");
       })
       .catch((error: Error) => {
-        writeResult("sendMessageReadReceipts failed", error);
+        writeResult("sendMessageReadReceipts failed", error.code, error.message);
       });
   }
 
@@ -693,7 +800,7 @@ export class MessageTestInterfaces {
         writeResult("getMessageReadReceipts succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getMessageReadReceipts failed", error);
+        writeResult("getMessageReadReceipts failed", error.code, error.message);
       });
   }
 
@@ -707,26 +814,26 @@ export class MessageTestInterfaces {
       ? V2TIMGroupMessageReadMembersFilter.V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_UNREAD
       : V2TIMGroupMessageReadMembersFilter.V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ;
     V2TIMManager.getMessageManager()
-      .getGroupMessageReadMemberList(msgList[0], filter, 0, 100)
+      .getGroupMessageReadMemberList(msgList[msgList.length - 1], filter, 0, 100)
       .then((result: V2TIMGroupMessageReadMemberList) => {
         writeResult("getGroupMessageReadMemberList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getGroupMessageReadMemberList failed", error);
+        writeResult("getGroupMessageReadMemberList failed", error.code, error.message);
       });
   }
 
   static getLocalCustomData() {
-    writeResult(buffer.from(msgList[0].getLocalCustomData()).toString());
+    writeResult(buffer.from(msgList[msgList.length - 1].getLocalCustomData()).toString());
   }
 
   static async setLocalCustomData() {
     try {
-      await msgList[0].setLocalCustomData(buffer.from("data").buffer);
-      const message = await V2TIMManager.getMessageManager().findMessages([msgList[0].msgID]);
+      await msgList[msgList.length - 1].setLocalCustomData(buffer.from("data").buffer);
+      const message = await V2TIMManager.getMessageManager().findMessages([msgList[msgList.length - 1].msgID]);
       writeResult(
         "success",
-        buffer.from(msgList[0].getLocalCustomData()).toString(),
+        buffer.from(msgList[msgList.length - 1].getLocalCustomData()).toString(),
         buffer.from(message[0].getLocalCustomData()).toString()
       );
     } catch (error) {
@@ -735,14 +842,14 @@ export class MessageTestInterfaces {
   }
 
   static getLocalCustomInt() {
-    writeResult(msgList[0].getLocalCustomInt());
+    writeResult(msgList[msgList.length - 1].getLocalCustomInt());
   }
 
   static async setLocalCustomInt() {
     try {
-      await msgList[0].setLocalCustomInt(1024);
-      const message = await V2TIMManager.getMessageManager().findMessages([msgList[0].msgID]);
-      writeResult("success", msgList[0].getLocalCustomInt(), message[0].getLocalCustomInt());
+      await msgList[msgList.length - 1].setLocalCustomInt(1024);
+      const message = await V2TIMManager.getMessageManager().findMessages([msgList[msgList.length - 1].msgID]);
+      writeResult("success", msgList[msgList.length - 1].getLocalCustomInt(), message[0].getLocalCustomInt());
     } catch (error) {
       writeResult("fail", error);
     }
@@ -779,7 +886,7 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
                 onCallback("downloadImage succeed");
               })
               .catch((error: Error) => {
-                onCallback("downloadImage failed", error);
+                onCallback("downloadImage failed", error.code, error.message);
               });
           });
         }
@@ -801,7 +908,7 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
                 onCallback("downloadSound succeed");
               })
               .catch((error: Error) => {
-                onCallback("downloadSound failed", error);
+                onCallback("downloadSound failed", error.code, error.message);
               });
           }
         }
@@ -828,7 +935,7 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
                 onCallback("downloadVideo succeed");
               })
               .catch((error: Error) => {
-                onCallback("downloadVideo failed", error);
+                onCallback("downloadVideo failed", error.code, error.message);
               });
           }
 
@@ -842,7 +949,7 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
                 onCallback("downloadSnapshot succeed");
               })
               .catch((error: Error) => {
-                onCallback("downloadSnapshot failed", error);
+                onCallback("downloadSnapshot failed", error.code, error.message);
               });
           }
         }
@@ -862,7 +969,7 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
                 onCallback("downloadFile succeed");
               })
               .catch((error: Error) => {
-                onCallback("downloadFile failed", error);
+                onCallback("downloadFile failed", error.code, error.message);
               });
           }
         }
@@ -901,7 +1008,7 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
                 onCallback("downloadMergerMessage succeed", messageIDList);
               })
               .catch((error: Error) => {
-                onCallback("downloadMergerMessage failed", error);
+                onCallback("downloadMergerMessage failed", error.code, error.message);
               });
           }
         }
@@ -935,6 +1042,6 @@ const advancedMsgListener: V2TIMAdvancedMsgListener = {
     onCallback("onRecvMessageReactionsChanged", changeInfos);
   },
   onGroupMessagePinned: (groupID: string, message: V2TIMMessage, isPinned: Boolean, opUser: V2TIMGroupMemberInfo) => {
-    onCallback("onGroupMessagePinned", groupID, message.seq, isPinned);
+    onCallback("onGroupMessagePinned", groupID, message.msgID, isPinned);
   },
 };

@@ -6,9 +6,9 @@
 
 ## 环境要求
 
-- DevEco Studio 4.0 Release 及以上
+- DevEco Studio 5.0.0 及以上
 
-- HarmonyOS SDK API 10 及以上
+- HarmonyOS SDK API 12 及以上
 
 ## 操作步骤
 

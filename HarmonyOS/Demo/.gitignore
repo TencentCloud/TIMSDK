@@ -9,4 +9,6 @@
 /.clang-format
 /.clang-tidy
 **/.test
+/.appanalyzer
+
 oh-package-lock.json5

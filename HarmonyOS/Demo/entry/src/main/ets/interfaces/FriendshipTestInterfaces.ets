@@ -19,9 +19,9 @@ import {
   V2TIMFollowInfo,
 } from "@tencentcloud/imsdk";
 import Prompt from "@system.prompt";
-import TestResult, { info } from "../pages/FriendshipManagerTestPage";
 
-import { onCallback, writeResult } from "../pages/FriendshipManagerTestPage";
+import { Error } from "./BaseTestInterfaces";
+import { onCallback, writeResult, info } from "../pages/FriendshipManagerTestPage";
 
 export class FriendshipTestInterfaces {
   static friendApplicationList: V2TIMFriendApplication[] = [];
@@ -43,7 +43,7 @@ export class FriendshipTestInterfaces {
         writeResult("getFriendList succeeded", info);
       })
       .catch((error: Error) => {
-        writeResult("getFriendList failed", error);
+        writeResult("getFriendList failed", error.code, error.message);
       });
   }
 
@@ -54,7 +54,7 @@ export class FriendshipTestInterfaces {
         writeResult("getFriendsInfo succeeded", info);
       })
       .catch((error: Error) => {
-        writeResult("getFriendsInfo failed", error);
+        writeResult("getFriendsInfo failed", error.code, error.message);
       });
   }
 
@@ -69,7 +69,7 @@ export class FriendshipTestInterfaces {
         writeResult("setFriendInfo succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setFriendInfo failed", error);
+        writeResult("setFriendInfo failed", error.code, error.message);
       });
   }
 
@@ -86,7 +86,7 @@ export class FriendshipTestInterfaces {
         writeResult("addFriend succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("addFriend failed", error);
+        writeResult("addFriend failed", error.code, error.message);
       });
   }
 
@@ -98,7 +98,7 @@ export class FriendshipTestInterfaces {
         writeResult("deleteFromFriendList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("deleteFromFriendList failed", error);
+        writeResult("deleteFromFriendList failed", error.code, error.message);
       });
   }
 
@@ -110,7 +110,7 @@ export class FriendshipTestInterfaces {
         writeResult("checkFriend succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("checkFriend failed", error);
+        writeResult("checkFriend failed", error.code, error.message);
       });
   }
 
@@ -122,7 +122,7 @@ export class FriendshipTestInterfaces {
         writeResult("getFriendApplicationList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getFriendApplicationList failed", error);
+        writeResult("getFriendApplicationList failed", error.code, error.message);
       });
   }
 
@@ -141,7 +141,7 @@ export class FriendshipTestInterfaces {
         writeResult("acceptFriendApplication succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("acceptFriendApplication failed", error);
+        writeResult("acceptFriendApplication failed", error.code, error.message);
       });
   }
 
@@ -156,7 +156,7 @@ export class FriendshipTestInterfaces {
         writeResult("refuseFriendApplication succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("refuseFriendApplication failed", error);
+        writeResult("refuseFriendApplication failed", error.code, error.message);
       });
   }
 
@@ -171,7 +171,7 @@ export class FriendshipTestInterfaces {
         writeResult("deleteFriendApplication succeeded");
       })
       .catch((error: Error) => {
-        writeResult("deleteFriendApplication failed", error);
+        writeResult("deleteFriendApplication failed", error.code, error.message);
       });
   }
 
@@ -182,7 +182,7 @@ export class FriendshipTestInterfaces {
         writeResult("setFriendApplicationRead succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setFriendApplicationRead failed", error);
+        writeResult("setFriendApplicationRead failed", error.code, error.message);
       });
   }
 
@@ -193,7 +193,7 @@ export class FriendshipTestInterfaces {
         writeResult("getBlackList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getBlackList failed", error);
+        writeResult("getBlackList failed", error.code, error.message);
       });
   }
 
@@ -204,7 +204,7 @@ export class FriendshipTestInterfaces {
         writeResult("addToBlackList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("addToBlackList failed", error);
+        writeResult("addToBlackList failed", error.code, error.message);
       });
   }
 
@@ -215,7 +215,7 @@ export class FriendshipTestInterfaces {
         writeResult("deleteFromBlackList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("deleteFromBlackList failed", error);
+        writeResult("deleteFromBlackList failed", error.code, error.message);
       });
   }
 
@@ -226,7 +226,7 @@ export class FriendshipTestInterfaces {
         writeResult("createFriendGroup succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("createFriendGroup failed", error);
+        writeResult("createFriendGroup failed", error.code, error.message);
       });
   }
 
@@ -237,7 +237,7 @@ export class FriendshipTestInterfaces {
         writeResult("addFriendsToFriendGroup succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("addFriendsToFriendGroup failed", error);
+        writeResult("addFriendsToFriendGroup failed", error.code, error.message);
       });
   }
 
@@ -248,7 +248,7 @@ export class FriendshipTestInterfaces {
         writeResult("deleteFriendsFromFriendGroup succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("deleteFriendsFromFriendGroup failed", error);
+        writeResult("deleteFriendsFromFriendGroup failed", error.code, error.message);
       });
   }
 
@@ -259,7 +259,7 @@ export class FriendshipTestInterfaces {
         writeResult("getFriendGroups succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getFriendGroups failed", error);
+        writeResult("getFriendGroups failed", error.code, error.message);
       });
   }
 
@@ -270,7 +270,7 @@ export class FriendshipTestInterfaces {
         writeResult("deleteFriendGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("deleteFriendGroup failed", error);
+        writeResult("deleteFriendGroup failed", error.code, error.message);
       });
   }
 
@@ -281,7 +281,7 @@ export class FriendshipTestInterfaces {
         writeResult("renameFriendGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("renameFriendGroup failed", error);
+        writeResult("renameFriendGroup failed", error.code, error.message);
       });
   }
 
@@ -292,7 +292,7 @@ export class FriendshipTestInterfaces {
         writeResult("followUser succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("followUser failed", error);
+        writeResult("followUser failed", error.code, error.message);
       });
   }
 
@@ -303,7 +303,7 @@ export class FriendshipTestInterfaces {
         writeResult("unfollowUser succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("unfollowUser failed", error);
+        writeResult("unfollowUser failed", error.code, error.message);
       });
   }
 
@@ -314,7 +314,7 @@ export class FriendshipTestInterfaces {
         writeResult("getMyFollowingList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getMyFollowingList failed", error);
+        writeResult("getMyFollowingList failed", error.code, error.message);
       });
   }
 
@@ -325,7 +325,7 @@ export class FriendshipTestInterfaces {
         writeResult("getMyFollowersList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getMyFollowersList failed", error);
+        writeResult("getMyFollowersList failed", error.code, error.message);
       });
   }
 
@@ -336,7 +336,7 @@ export class FriendshipTestInterfaces {
         writeResult("getMutualFollowersList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getMutualFollowersList failed", error);
+        writeResult("getMutualFollowersList failed", error.code, error.message);
       });
   }
 
@@ -347,7 +347,7 @@ export class FriendshipTestInterfaces {
         writeResult("getUserFollowInfo succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getUserFollowInfo failed", error);
+        writeResult("getUserFollowInfo failed", error.code, error.message);
       });
   }
 
@@ -358,7 +358,7 @@ export class FriendshipTestInterfaces {
         writeResult("checkFollowType succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("checkFollowType failed", error);
+        writeResult("checkFollowType failed", error.code, error.message);
       });
   }
 }

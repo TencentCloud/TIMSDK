@@ -23,6 +23,7 @@ import {
 } from "@tencentcloud/imsdk";
 import Prompt from "@system.prompt";
 
+import { Error } from "./BaseTestInterfaces";
 import { writeResult } from "../pages/GroupManagerTestPage";
 
 @Observed
@@ -118,7 +119,7 @@ export class GroupTestInterfaces {
         writeResult("createGroup succeeded", groupID);
       })
       .catch((error: Error) => {
-        writeResult("createGroup failed", error);
+        writeResult("createGroup failed", error.code, error.message);
       });
   }
 
@@ -129,7 +130,7 @@ export class GroupTestInterfaces {
         writeResult("getJoinedGroupList succeeded", info_list);
       })
       .catch((error: Error) => {
-        writeResult("getJoinedGroupList failed", error);
+        writeResult("getJoinedGroupList failed", error.code, error.message);
       });
   }
 
@@ -140,7 +141,7 @@ export class GroupTestInterfaces {
         writeResult("getJoinedCommunityList succeeded", info_list);
       })
       .catch((error: Error) => {
-        writeResult("getJoinedCommunityList failed", error);
+        writeResult("getJoinedCommunityList failed", error.code, error.message);
       });
   }
 
@@ -151,7 +152,7 @@ export class GroupTestInterfaces {
         writeResult("getGroupsInfo succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getGroupsInfo failed", error);
+        writeResult("getGroupsInfo failed", error.code, error.message);
       });
   }
 
@@ -168,7 +169,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupInfo succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setGroupInfo failed", error);
+        writeResult("setGroupInfo failed", error.code, error.message);
       });
   }
 
@@ -185,7 +186,7 @@ export class GroupTestInterfaces {
         writeResult("initGroupAttributes succeeded");
       })
       .catch((error: Error) => {
-        writeResult("initGroupAttributes failed", error);
+        writeResult("initGroupAttributes failed", error.code, error.message);
       });
   }
 
@@ -202,7 +203,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupAttributes succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setGroupAttributes failed", error);
+        writeResult("setGroupAttributes failed", error.code, error.message);
       });
   }
 
@@ -213,7 +214,7 @@ export class GroupTestInterfaces {
         writeResult("deleteGroupAttributes succeeded");
       })
       .catch((error: Error) => {
-        writeResult("deleteGroupAttributes failed", error);
+        writeResult("deleteGroupAttributes failed", error.code, error.message);
       });
   }
 
@@ -224,7 +225,7 @@ export class GroupTestInterfaces {
         writeResult("getGroupAttributes succeeded", resultMap);
       })
       .catch((error: Error) => {
-        writeResult("getGroupAttributes failed", error);
+        writeResult("getGroupAttributes failed", error.code, error.message);
       });
   }
 
@@ -235,7 +236,7 @@ export class GroupTestInterfaces {
         writeResult("getGroupOnlineMemberCount succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getGroupOnlineMemberCount failed", error);
+        writeResult("getGroupOnlineMemberCount failed", error.code, error.message);
       });
   }
 
@@ -251,7 +252,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupCounters succeeded", resultMap);
       })
       .catch((error: Error) => {
-        writeResult("setGroupCounters failed", error);
+        writeResult("setGroupCounters failed", error.code, error.message);
       });
   }
 
@@ -262,7 +263,7 @@ export class GroupTestInterfaces {
         writeResult("getGroupCounters succeeded", resultMap);
       })
       .catch((error: Error) => {
-        writeResult("getGroupCounters failed", error);
+        writeResult("getGroupCounters failed", error.code, error.message);
       });
   }
 
@@ -273,7 +274,7 @@ export class GroupTestInterfaces {
         writeResult("increaseGroupCounter succeeded", resultMap);
       })
       .catch((error: Error) => {
-        writeResult("increaseGroupCounter failed", error);
+        writeResult("increaseGroupCounter failed", error.code, error.message);
       });
   }
 
@@ -284,7 +285,7 @@ export class GroupTestInterfaces {
         writeResult("decreaseGroupCounter succeeded", resultMap);
       })
       .catch((error: Error) => {
-        writeResult("decreaseGroupCounter failed", error);
+        writeResult("decreaseGroupCounter failed", error.code, error.message);
       });
   }
 
@@ -295,7 +296,7 @@ export class GroupTestInterfaces {
         writeResult("getGroupMemberList succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getGroupMemberList failed", error);
+        writeResult("getGroupMemberList failed", error.code, error.message);
       });
   }
 
@@ -306,7 +307,7 @@ export class GroupTestInterfaces {
         writeResult("inviteUserToGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("inviteUserToGroup failed", error);
+        writeResult("inviteUserToGroup failed", error.code, error.message);
       });
   }
 
@@ -317,7 +318,7 @@ export class GroupTestInterfaces {
         writeResult("getGroupMembersInfo succeeded", info_list);
       })
       .catch((error: Error) => {
-        writeResult("getGroupMembersInfo failed", error);
+        writeResult("getGroupMembersInfo failed", error.code, error.message);
       });
   }
 
@@ -328,7 +329,7 @@ export class GroupTestInterfaces {
         writeResult("kickGroupMember succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("kickGroupMember failed", error);
+        writeResult("kickGroupMember failed", error.code, error.message);
       });
   }
 
@@ -343,7 +344,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupMemberInfo succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setGroupMemberInfo failed", error);
+        writeResult("setGroupMemberInfo failed", error.code, error.message);
       });
   }
 
@@ -354,7 +355,7 @@ export class GroupTestInterfaces {
         writeResult("muteGroupMember succeeded");
       })
       .catch((error: Error) => {
-        writeResult("muteGroupMember failed", error);
+        writeResult("muteGroupMember failed", error.code, error.message);
       });
   }
 
@@ -365,7 +366,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupMemberRole succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setGroupMemberRole failed", error);
+        writeResult("setGroupMemberRole failed", error.code, error.message);
       });
   }
 
@@ -381,7 +382,7 @@ export class GroupTestInterfaces {
         writeResult("markGroupMemberList succeeded");
       })
       .catch((error: Error) => {
-        writeResult("markGroupMemberList failed", error);
+        writeResult("markGroupMemberList failed", error.code, error.message);
       });
   }
 
@@ -392,7 +393,7 @@ export class GroupTestInterfaces {
         writeResult("transferGroupOwner succeeded");
       })
       .catch((error: Error) => {
-        writeResult("transferGroupOwner failed", error);
+        writeResult("transferGroupOwner failed", error.code, error.message);
       });
   }
 
@@ -406,7 +407,7 @@ export class GroupTestInterfaces {
         }
       })
       .catch((error: Error) => {
-        writeResult("getGroupApplicationList failed", error);
+        writeResult("getGroupApplicationList failed", error.code, error.message);
       });
   }
 
@@ -417,7 +418,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupApplicationRead succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setGroupApplicationRead failed", error);
+        writeResult("setGroupApplicationRead failed", error.code, error.message);
       });
   }
 
@@ -432,7 +433,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupApplicationRead succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setGroupApplicationRead failed", error);
+        writeResult("setGroupApplicationRead failed", error.code, error.message);
       });
   }
 
@@ -447,7 +448,7 @@ export class GroupTestInterfaces {
         writeResult("setGroupApplicationRead succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setGroupApplicationRead failed", error);
+        writeResult("setGroupApplicationRead failed", error.code, error.message);
       });
   }
 
@@ -463,7 +464,7 @@ export class GroupTestInterfaces {
         writeResult("createTopicInCommunity succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("createTopicInCommunity failed", error);
+        writeResult("createTopicInCommunity failed", error.code, error.message);
       });
   }
 
@@ -476,7 +477,7 @@ export class GroupTestInterfaces {
         writeResult("deleteTopicFromCommunity succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("deleteTopicFromCommunity failed", error);
+        writeResult("deleteTopicFromCommunity failed", error.code, error.message);
       });
   }
 
@@ -492,7 +493,7 @@ export class GroupTestInterfaces {
         writeResult("setTopicInfo succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setTopicInfo failed", error);
+        writeResult("setTopicInfo failed", error.code, error.message);
       });
   }
 
@@ -505,7 +506,7 @@ export class GroupTestInterfaces {
         writeResult("getTopicInfoList succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getTopicInfoList failed", error);
+        writeResult("getTopicInfoList failed", error.code, error.message);
       });
   }
 
@@ -519,7 +520,7 @@ export class GroupTestInterfaces {
         writeResult("pinGroupMessage succeeded");
       })
       .catch((error: Error) => {
-        writeResult("pinGroupMessage failed", error);
+        writeResult("pinGroupMessage failed", error.code, error.message);
       });
   }
 
@@ -533,7 +534,7 @@ export class GroupTestInterfaces {
         writeResult("unpinGroupMessage succeeded");
       })
       .catch((error: Error) => {
-        writeResult("unpinGroupMessage failed", error);
+        writeResult("unpinGroupMessage failed", error.code, error.message);
       });
   }
 
@@ -545,7 +546,7 @@ export class GroupTestInterfaces {
         writeResult("getPinedGroupMessageList succeeded", messageList[0].seq);
       })
       .catch((error: Error) => {
-        writeResult("getPinedGroupMessageList failed", error);
+        writeResult("getPinedGroupMessageList failed", error.code, error.message);
       });
   }
 }

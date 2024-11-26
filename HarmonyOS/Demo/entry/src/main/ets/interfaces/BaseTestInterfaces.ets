@@ -2,6 +2,8 @@ import { SDKAPPID, genTestUserSig } from "../tools/GenerateTestUserSig";
 import TestResult from "../pages/BaseManagerTestPage";
 import buffer from "@ohos.buffer";
 import { onGroupCallback, onSimpleMessageReceive, writeResult, onSDKCallback } from "../pages/BaseManagerTestPage";
+import { pushService } from "@kit.PushKit";
+import { hilog } from "@kit.PerformanceAnalysisKit";
 
 import {
   V2TIMManager,
@@ -23,8 +25,16 @@ import {
   V2TIMGroupMemberChangeInfo,
   V2TIMGroupListener,
   V2TIMGroupChangeInfo,
+  V2TIMOfflinePushManager,
+  V2TIMOfflinePushConfig,
 } from "@tencentcloud/imsdk";
 import Prompt from "@system.prompt";
+import { JSON } from "@kit.ArkTS";
+
+export interface Error {
+  code?: number;
+  message?: string;
+}
 
 export class BaseTestInterfaces {
   static addSDKListener() {
@@ -44,7 +54,7 @@ export class BaseTestInterfaces {
         // Test.log('logListener', logLevel, logContent);
       },
     };
-    V2TIMManager.getInstance().initSDK(SDKAPPID, sdkConfig);
+    V2TIMManager.getInstance().initSDK(getContext().getApplicationContext(), SDKAPPID, sdkConfig);
     Prompt.showToast({ message: "initSDK" });
   }
 
@@ -71,7 +81,7 @@ export class BaseTestInterfaces {
         writeResult("login succeeded");
       })
       .catch((error: Error) => {
-        writeResult("login failed", error);
+        writeResult("login failed", error.code, error.message);
       });
   }
 
@@ -82,7 +92,7 @@ export class BaseTestInterfaces {
         writeResult("logout succeeded");
       })
       .catch((error: Error) => {
-        writeResult("logout failed", error);
+        writeResult("logout failed", error.code, error.message);
       });
   }
 
@@ -110,10 +120,10 @@ export class BaseTestInterfaces {
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        writeResult("sendC2CTextMessage succeeded", message);
+        writeResult("sendC2CTextMessage succeeded", message.msgID);
       })
       .catch((error: Error) => {
-        writeResult("sendC2CTextMessage failed", error);
+        writeResult("sendC2CTextMessage failed", error.code, error.message);
       });
   }
 
@@ -124,10 +134,10 @@ export class BaseTestInterfaces {
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        writeResult("sendC2CCustomMessage succeeded", message);
+        writeResult("sendC2CCustomMessage succeeded", message.msgID);
       })
       .catch((error: Error) => {
-        writeResult("sendC2CCustomMessage failed", error);
+        writeResult("sendC2CCustomMessage failed", error.code, error.message);
       });
   }
 
@@ -141,10 +151,10 @@ export class BaseTestInterfaces {
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        writeResult("sendGroupTextMessage succeeded", message);
+        writeResult("sendGroupTextMessage succeeded", message.msgID);
       })
       .catch((error: Error) => {
-        writeResult("sendGroupTextMessage failed", error);
+        writeResult("sendGroupTextMessage failed", error.code, error.message);
       });
   }
 
@@ -159,10 +169,10 @@ export class BaseTestInterfaces {
     const promise = result.promise;
     promise
       .then((message: V2TIMMessage) => {
-        writeResult("sendGroupCustomMessage succeeded", message);
+        writeResult("sendGroupCustomMessage succeeded", message.msgID);
       })
       .catch((error: Error) => {
-        writeResult("sendGroupCustomMessage failed", error);
+        writeResult("sendGroupCustomMessage failed", error.code, error.message);
       });
   }
 
@@ -181,7 +191,7 @@ export class BaseTestInterfaces {
         writeResult("createGroup succeeded", groupID);
       })
       .catch((error: Error) => {
-        writeResult("createGroup failed", error);
+        writeResult("createGroup failed", error.code, error.message);
       });
   }
 
@@ -192,7 +202,7 @@ export class BaseTestInterfaces {
         writeResult("joinGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("joinGroup failed", error);
+        writeResult("joinGroup failed", error.code, error.message);
       });
   }
 
@@ -203,7 +213,7 @@ export class BaseTestInterfaces {
         writeResult("quitGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("quitGroup failed", error);
+        writeResult("quitGroup failed", error.code, error.message);
       });
   }
 
@@ -214,7 +224,7 @@ export class BaseTestInterfaces {
         writeResult("dismissGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("dismissGroup failed", error);
+        writeResult("dismissGroup failed", error.code, error.message);
       });
   }
 
@@ -225,7 +235,7 @@ export class BaseTestInterfaces {
         writeResult("getUsersInfo succeeded", userFullInfoList);
       })
       .catch((error: Error) => {
-        writeResult("getUsersInfo failed", error);
+        writeResult("getUsersInfo failed", error.code, error.message);
       });
   }
 
@@ -240,7 +250,7 @@ export class BaseTestInterfaces {
         writeResult("setSelfInfo succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setSelfInfo failed", error);
+        writeResult("setSelfInfo failed", error.code, error.message);
       });
   }
 
@@ -251,7 +261,7 @@ export class BaseTestInterfaces {
         writeResult("getUserStatus succeeded", userStatusList);
       })
       .catch((error: Error) => {
-        writeResult("getUserStatus failed", error);
+        writeResult("getUserStatus failed", error.code, error.message);
       });
   }
 
@@ -265,7 +275,7 @@ export class BaseTestInterfaces {
         writeResult("setSelfStatus succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setSelfStatus failed", error);
+        writeResult("setSelfStatus failed", error.code, error.message);
       });
   }
 
@@ -276,7 +286,7 @@ export class BaseTestInterfaces {
         writeResult("subscribeUserStatus succeeded");
       })
       .catch((error: Error) => {
-        writeResult("subscribeUserStatus failed", error);
+        writeResult("subscribeUserStatus failed", error.code, error.message);
       });
   }
 
@@ -287,8 +297,87 @@ export class BaseTestInterfaces {
         writeResult("unsubscribeUserStatus succeeded");
       })
       .catch((error: Error) => {
-        writeResult("unsubscribeUserStatus failed", error);
+        writeResult("unsubscribeUserStatus failed", error.code, error.message);
       });
+  }
+
+  static async setOfflinePushConfig() {
+    let pushToken: string = "";
+    await pushService
+      .getToken()
+      .then((data: string) => {
+        pushToken = data;
+        writeResult("getToken succeeded", data);
+        hilog.info(0x0000, "testTag", "Get push token successfully: %{public}s", data);
+      })
+      .catch((err: Error) => {
+        writeResult("getToken failed", err);
+      });
+    const config: V2TIMOfflinePushConfig = {
+      token: pushToken,
+      businessID: 100,
+    };
+    V2TIMManager.getOfflinePushManager()
+      .setOfflinePushConfig(config)
+      .then(() => {
+        writeResult("setOfflinePushConfig succeeded");
+      })
+      .catch((error: Error) => {
+        writeResult("setOfflinePushConfig failed", error.code, error.message);
+      });
+  }
+
+  static doBackground() {
+    V2TIMManager.getOfflinePushManager()
+      .doBackground()
+      .then(() => {
+        writeResult("doBackground succeeded");
+      })
+      .catch((error: Error) => {
+        writeResult("doBackground failed", error.code, error.message);
+      });
+  }
+
+  static doForeground() {
+    V2TIMManager.getOfflinePushManager()
+      .doForeground()
+      .then(() => {
+        writeResult("doForeground succeeded");
+      })
+      .catch((error: Error) => {
+        writeResult("doForeground failed", error.code, error.message);
+      });
+  }
+
+  static setTestEnvironment(enable_test_environment: boolean) {
+    V2TIMManager.getInstance().callExperimentalAPI("setTestEnvironment", enable_test_environment);
+  }
+
+  static setCustomServerInfo() {
+    let param: ESObject = {
+      serverPublicKey: "xxxxx",
+      longconnectionAddressList: [
+        {
+          ip: "119.147.179.186",
+          port: 80,
+        },
+        {
+          ip: "loginv6.im.qcloud.com",
+          port: 80,
+          isIPv6: true,
+        },
+      ] as ESObject,
+      shortconnectionAddressList: [
+        {
+          ip: "shortconn.im.qcloud.com",
+        },
+        {
+          ip: "shortconnv6.im.qcloud.com",
+          isIPv6: true,
+        },
+      ] as ESObject,
+    };
+    V2TIMManager.getInstance().callExperimentalAPI("setCustomServerInfo", JSON.stringify(param));
   }
 
   // static getEnumKeys(enumName: ESObject) {

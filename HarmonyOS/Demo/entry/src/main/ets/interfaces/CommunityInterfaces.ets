@@ -19,6 +19,7 @@ import {
 } from "@tencentcloud/imsdk";
 import Prompt from "@system.prompt";
 
+import { Error } from "./BaseTestInterfaces";
 import { writeResult, onCallback } from "../pages/CommunityManagerTestPage";
 
 export class CommunityInfos {
@@ -74,7 +75,7 @@ export class CommunityTestInterfaces {
         writeResult("createCommunity succeeded", groupID);
       })
       .catch((error: Error) => {
-        writeResult("createCommunity failed", error);
+        writeResult("createCommunity failed", error.code, error.message);
       });
   }
 
@@ -85,7 +86,7 @@ export class CommunityTestInterfaces {
         writeResult("createCommunity succeeded", infoList);
       })
       .catch((error: Error) => {
-        writeResult("createCommunity failed", error);
+        writeResult("createCommunity failed", error.code, error.message);
       });
   }
 
@@ -101,7 +102,7 @@ export class CommunityTestInterfaces {
         writeResult("createTopicInCommunity succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("createTopicInCommunity failed", error);
+        writeResult("createTopicInCommunity failed", error.code, error.message);
       });
   }
 
@@ -114,7 +115,7 @@ export class CommunityTestInterfaces {
         writeResult("deleteTopicFromCommunity succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("deleteTopicFromCommunity failed", error);
+        writeResult("deleteTopicFromCommunity failed", error.code, error.message);
       });
   }
 
@@ -130,7 +131,7 @@ export class CommunityTestInterfaces {
         writeResult("setTopicInfo succeeded");
       })
       .catch((error: Error) => {
-        writeResult("setTopicInfo failed", error);
+        writeResult("setTopicInfo failed", error.code, error.message);
       });
   }
 
@@ -153,7 +154,7 @@ export class CommunityTestInterfaces {
         writeResult(logMessage);
       })
       .catch((error: Error) => {
-        writeResult("getTopicInfoList failed", error);
+        writeResult("getTopicInfoList failed", error.code, error.message);
       });
   }
 
@@ -168,7 +169,7 @@ export class CommunityTestInterfaces {
         writeResult("enableTopicInheritMsgFlag succeeded");
       })
       .catch((error: Error) => {
-        writeResult("enableTopicInheritMsgFlag failed", error);
+        writeResult("enableTopicInheritMsgFlag failed", error.code, error.message);
       });
   }
 
@@ -183,7 +184,7 @@ export class CommunityTestInterfaces {
       writeResult("disableTopicInheritMsgFlag succeeded");
     })
       .catch((error: Error) => {
-        writeResult("disableTopicInheritMsgFlag failed", error);
+        writeResult("disableTopicInheritMsgFlag failed", error.code, error.message);
       });
   }
 
@@ -201,7 +202,7 @@ export class CommunityTestInterfaces {
         writeResult("createPermissionGroupInCommunity succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("createPermissionGroupInCommunity failed", error);
+        writeResult("createPermissionGroupInCommunity failed", error.code, error.message);
       });
   }
 
@@ -215,7 +216,7 @@ export class CommunityTestInterfaces {
         writeResult("deletePermissionGroupFromCommunity succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("deletePermissionGroupFromCommunity failed", error);
+        writeResult("deletePermissionGroupFromCommunity failed", error.code, error.message);
       });
   }
 
@@ -233,7 +234,7 @@ export class CommunityTestInterfaces {
         writeResult("modifyPermissionGroupInfoInCommunity succeeded");
       })
       .catch((error: Error) => {
-        writeResult("modifyPermissionGroupInfoInCommunity failed", error);
+        writeResult("modifyPermissionGroupInfoInCommunity failed", error.code, error.message);
       });
   }
 
@@ -244,7 +245,7 @@ export class CommunityTestInterfaces {
         writeResult("getJoinedPermissionGroupListInCommunity succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getJoinedPermissionGroupListInCommunity failed", error);
+        writeResult("getJoinedPermissionGroupListInCommunity failed", error.code, error.message);
       });
   }
 
@@ -258,7 +259,7 @@ export class CommunityTestInterfaces {
         writeResult("getPermissionGroupListInCommunity succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getPermissionGroupListInCommunity failed", error);
+        writeResult("getPermissionGroupListInCommunity failed", error.code, error.message);
       });
   }
 
@@ -272,7 +273,7 @@ export class CommunityTestInterfaces {
         writeResult("addCommunityMembersToPermissionGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("addCommunityMembersToPermissionGroup failed", error);
+        writeResult("addCommunityMembersToPermissionGroup failed", error.code, error.message);
       });
   }
 
@@ -286,7 +287,7 @@ export class CommunityTestInterfaces {
         writeResult("removeCommunityMembersFromPermissionGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("removeCommunityMembersFromPermissionGroup failed", error);
+        writeResult("removeCommunityMembersFromPermissionGroup failed", error.code, error.message);
       });
   }
 
@@ -297,7 +298,7 @@ export class CommunityTestInterfaces {
         writeResult("getCommunityMemberListInPermissionGroup succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("getCommunityMemberListInPermissionGroup failed", error);
+        writeResult("getCommunityMemberListInPermissionGroup failed", error.code, error.message);
       });
   }
 
@@ -316,7 +317,7 @@ export class CommunityTestInterfaces {
         writeResult("addTopicPermissionToPermissionGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("addTopicPermissionToPermissionGroup failed", error);
+        writeResult("addTopicPermissionToPermissionGroup failed", error.code, error.message);
       });
   }
 
@@ -327,7 +328,7 @@ export class CommunityTestInterfaces {
         writeResult("deleteTopicPermissionFromPermissionGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("deleteTopicPermissionFromPermissionGroup failed", error);
+        writeResult("deleteTopicPermissionFromPermissionGroup failed", error.code, error.message);
       });
   }
 
@@ -346,7 +347,7 @@ export class CommunityTestInterfaces {
         writeResult("modifyTopicPermissionInPermissionGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("modifyTopicPermissionInPermissionGroup failed", error);
+        writeResult("modifyTopicPermissionInPermissionGroup failed", error.code, error.message);
       });
   }
 
@@ -357,7 +358,7 @@ export class CommunityTestInterfaces {
         writeResult("getTopicPermissionInPermissionGroup succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("getTopicPermissionInPermissionGroup failed", error);
+        writeResult("getTopicPermissionInPermissionGroup failed", error.code, error.message);
       });
   }
 }
@@ -366,7 +367,7 @@ const communityListener: V2TIMCommunityListener = {
   onCreateTopic: (groupID: string, TopicID: string) => {
     onCallback("onCreateTopic", groupID, TopicID);
   },
-  onDeleteTopic: (groupID: string, topicIDList: string) => {
+  onDeleteTopic: (groupID: string, topicIDList: string[]) => {
     onCallback("onDeleteTopic", groupID, topicIDList);
   },
   onChangeTopicInfo: (groupID: string, topicInfo: V2TIMTopicInfo) => {

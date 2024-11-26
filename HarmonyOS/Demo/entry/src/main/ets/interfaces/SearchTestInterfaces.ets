@@ -1,3 +1,4 @@
+import { Error } from "./BaseTestInterfaces";
 import { writeResult } from "../pages/SearchTestPage";
 import {
   V2TIMFriendSearchParam,
@@ -64,7 +65,7 @@ export class SearchTestInterfaces {
         writeResult("searchFriends succeeded", result);
       })
       .catch((error: Error) => {
-        writeResult("searchFriends failed", error);
+        writeResult("searchFriends failed", error.code, error.message);
       });
   }
 
@@ -80,7 +81,7 @@ export class SearchTestInterfaces {
         writeResult("searchGroups succeeded", resultList);
       })
       .catch((error: Error) => {
-        writeResult("searchGroups failed", error);
+        writeResult("searchGroups failed", error.code, error.message);
       });
   }
 
@@ -99,7 +100,7 @@ export class SearchTestInterfaces {
         writeResult("searchGroupMembers succeeded", resultMap);
       })
       .catch((error: Error) => {
-        writeResult("searchGroupMembers failed", error);
+        writeResult("searchGroupMembers failed", error.code, error.message);
       });
   }
 
@@ -144,7 +145,7 @@ export class SearchTestInterfaces {
         writeResult("searchLocalMessages succeeded, ", resultDescription);
       })
       .catch((error: Error) => {
-        writeResult("searchLocalMessages failed", error);
+        writeResult("searchLocalMessages failed", error.code, error.message);
       });
   }
 }

@@ -180,8 +180,8 @@ export function onSimpleMessageReceive(...args: ESObject[]) {
 @Entry
 @Component
 export struct BaseManagerTestPage {
-  private userID = "xlmzz";
-  private toUserID = "xlm";
+  private userID = "shishi";
+  private toUserID = "haha";
   private msgContent = "msgContent";
   private toGroupID = "test123groupID";
   private priority = V2TIMMessagePriority.V2TIM_PRIORITY_DEFAULT;
@@ -198,6 +198,8 @@ export struct BaseManagerTestPage {
   private userID5 = "userID5";
   private userID6 = "userID6";
   @State result: Result = result;
+
+  private enable_test_environment = false;
 
   build() {
     Column() {
@@ -233,9 +235,17 @@ export struct BaseManagerTestPage {
         Column({ space: 10 }) {
           Row() {
             DemoLabel("UserID")
-            TextInput({ placeholder: "xlmzz" })
+            TextInput({ placeholder: "shishi" })
               .onChange((value: string) => this.userID = value)
               .demoTextInputStyle()
+            DemoLabel("setTestEnvironment")
+            Checkbox()
+              .onChange(() => {
+                this.enable_test_environment = !this.enable_test_environment;
+                BaseTestInterfaces.setTestEnvironment(this.enable_test_environment);
+              })
+              .width(14)
+              .height(14)
           }.DemoRowStyle()
 
           Row({ space: 10 }) {
@@ -269,7 +279,7 @@ export struct BaseManagerTestPage {
               .demoTextInputStyle()
 
             DemoLabel("ToUserID:")
-            TextInput({ placeholder: "xlm" })
+            TextInput({ placeholder: "haha" })
               .onChange((value: string) => this.toUserID = value)
               .demoTextInputStyle()
           }.DemoRowStyle()
@@ -395,6 +405,12 @@ export struct BaseManagerTestPage {
           Row({ space: 10 }) {
             DemoButton("subscribeUserStatus", (): void => BaseTestInterfaces.subscribeUserStatus(this.userID5, this.userID6));
             DemoButton("unsubscribeUserStatus", (): void => BaseTestInterfaces.unsubscribeUserStatus(this.userID5, this.userID6));
+          }
+
+          Row({ space: 10 }) {
+            DemoButton("setOfflinePushConfig", BaseTestInterfaces.setOfflinePushConfig);
+            DemoButton("doBackground", BaseTestInterfaces.doBackground);
+            DemoButton("doForeground", BaseTestInterfaces.doForeground);
           }
 
         }.alignItems(HorizontalAlign.Start)

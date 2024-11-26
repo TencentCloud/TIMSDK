@@ -60,13 +60,13 @@ export function onCallback(...args: ESObject[]) {
 
 @Observed
 class Info {
-  receiver = "xlm";
+  receiver = "haha";
   groupID = "@TGS#_@TGS#cMRYAIIM62CZ@TOPIC#_@TOPIC#cORYAIIM62C5";
   text = "test_text";
   customData = buffer.from("customData").buffer;
   customDesc = "customDesc";
   customExt = "customExt";
-  atUsers = ["xlm", "xlmzz"];
+  atUsers = ["haha", "shishi"];
   needReadReceipt = true;
   onlineUserOnly = false;
   priority = V2TIMMessagePriority.V2TIM_PRIORITY_DEFAULT;
@@ -78,10 +78,10 @@ class Info {
   soundPath = "soundPath";
   videoPath = "videoPath";
   snapshotPath = "snapshotPath";
-  groupTargetReceivers = ["xlm", "100480"];
+  groupTargetReceivers = ["haha", "hehe"];
   // set receive opt
-  userID1 = "xlm";
-  userID2 = "100480";
+  userID1 = "haha";
+  userID2 = "hehe";
   groupID2 = "@TGS#_@TGS#cMRYAIIM62CZ@TOPIC#_@TOPIC#cORYAIIM62C5";
   recvOpt = V2TIMReceiveMessageOpt.V2TIM_RECEIVE_MESSAGE;
   startHour: number = 0;
@@ -102,10 +102,10 @@ class Info {
   getTimePeriod?: number;
   messageSeqList?: number[];
   //clear message
-  userID4 = "xlm";
+  userID4 = "haha";
   groupID4 = "";
   //insert message
-  userID5 = "xlm";
+  userID5 = "haha";
   groupID5 = "";
   sender = "";
   //translate message
@@ -336,6 +336,10 @@ export struct MessageManagerTestPage {
           }.DemoRowStyle()
 
           Row({ space: 4 }) {
+            DemoButton("sendElems", MessageTestInterfaces.sendElems)
+          }.DemoRowStyle()
+
+          Row({ space: 4 }) {
             TextInput({ placeholder: info.userID1 })
               .onChange((v) => {
                 info.userID1 = v;
@@ -432,7 +436,8 @@ export struct MessageManagerTestPage {
           Row({ space: 4 }) {
             DemoButton("revokeMessage", (): void => MessageTestInterfaces.revokeMessage());
             DemoButton("modifyMessage", (): void => MessageTestInterfaces.modifyMessage());
-            DemoButton("deleteMessage", (): void => MessageTestInterfaces.modifyMessage());
+            DemoButton("deleteMessageFromLocalStorage", (): void => MessageTestInterfaces.deleteMessageFromLocalStorage());
+            DemoButton("deleteMessage", (): void => MessageTestInterfaces.deleteMessage());
           }.DemoRowStyle()
 
           Column({ space: 4 }) {

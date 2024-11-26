@@ -7,7 +7,7 @@
       arkOptions: {
         obfuscation: {
           ruleOptions: {
-            enable: true,
+            enable: false,
             files: ["./obfuscation-rules.txt"],
           },
         },
@@ -17,9 +17,6 @@
   targets: [
     {
       name: "default",
-    },
-    {
-      name: "ohosTest",
     },
   ],
 }

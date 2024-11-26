@@ -1,3 +1,4 @@
+import { Error } from "./BaseTestInterfaces";
 import { V2TIMManager } from "@tencentcloud/imsdk/src/main/ets/V2TIMManager";
 import Prompt from "@system.prompt";
 import { V2TIMSignalingListener } from "@tencentcloud/imsdk/src/main/ets/V2TIMListener";
@@ -31,7 +32,7 @@ export class SignalingTestInterfaces {
         writeResult("invite succeeded");
       })
       .catch((error: Error) => {
-        writeResult("invite failed", error);
+        writeResult("invite failed", error.code, error.message);
       });
   }
 
@@ -43,7 +44,7 @@ export class SignalingTestInterfaces {
         writeResult("inviteInGroup succeeded");
       })
       .catch((error: Error) => {
-        writeResult("inviteInGroup failed", error);
+        writeResult("inviteInGroup failed", error.code, error.message);
       });
   }
 
@@ -54,7 +55,7 @@ export class SignalingTestInterfaces {
         writeResult("cancel succeeded");
       })
       .catch((error: Error) => {
-        writeResult("cancel failed", error);
+        writeResult("cancel failed", error.code, error.message);
       });
   }
 
@@ -65,7 +66,7 @@ export class SignalingTestInterfaces {
         writeResult("accept succeeded");
       })
       .catch((error: Error) => {
-        writeResult("accept failed", error);
+        writeResult("accept failed", error.code, error.message);
       });
   }
 
@@ -76,7 +77,7 @@ export class SignalingTestInterfaces {
         writeResult("reject succeeded");
       })
       .catch((error: Error) => {
-        writeResult("reject failed", error);
+        writeResult("reject failed", error.code, error.message);
       });
   }
 
@@ -92,7 +93,7 @@ export class SignalingTestInterfaces {
         writeResult("modifyInvitation succeeded");
       })
       .catch((error: Error) => {
-        writeResult("modifyInvitation failed", error);
+        writeResult("modifyInvitation failed", error.code, error.message);
       });
   }
 }
