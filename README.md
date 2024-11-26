@@ -154,30 +154,27 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.2.6325 @2024.09.27
+## Latest Enhanced Version 8.3.6498 @2024.11.26
 ### SDK
 
-- IMSDK now supports crash reporting and monitoring.
-- IMSDK supports HarmonyOS C API version.
-- IMSDK supports Sony PS platform.
-- IMSDK supports pure push notifications.
-- Login now allows for custom fields to be carried.
-- Optimized the logic for server timestamp correction.
-- Upgraded the backend notification protocol for fan following.
-- Updated versions of libcurl and libopenssl.
-- Upgraded the long connection routing address selection.
-- Enhanced the authentication logic for downloading rich media files via COS.
-- Removed the HttpDNS routing method for long connections.
-- Optimized the loading process of QUIC and encryption plugins on the Android platform.
-- Fixed an issue with the Linux SDK exporting some internal symbols.
-- Resolved a rare issue where merged forwarded messages downloaded via the Flutter SDK lacked a message ID.
-- Fixed an error in parsing custom signaling fields in the Harmony SDK.
-- Corrected an issue with parsing session tag fields in the Harmony SDK.
-- Addressed occasional disarray in session sorting fields within the Harmony SDK.
+- Support for Lite Signaling SDK
+- Support for configuring AnyCast routing address
+- Optimization of long connection IP address routing strategy
+- Online push supports custom ringtones
+- Support for OPPO push message classification
+- HarmonyOS platform SDK adaptation API 12
+- Support for HarmonyOS SDK connecting to private servers
+- Support for HarmonyOS TS API and C API mixed compilation
+- Conversation marking supports filtering duplicate requests
+- Optimization and upgrade of single chat unread message and unread count protocol
+- Completion of the recall information of the last message in the conversation
+- Fix occasional issue of message body size exceeding limit in merged forwarding - messages
+- Fix occasional issue of incorrect account type during random login of IM and Push
+- Fix parsing error of message response data format in HarmonyOS SDK
+- Fix occasional failure issue of editing merged forwarding messages
 
 ### TUIKit & Demo
-- TUIKit offers enriched API for interface customization.
-- Group voting and group serial message support is now top-positionable.
-- Messages flagged by security measures are not allowed to be forwarded or quoted.
-- Audio and video calls now support enabling virtual backgrounds.
-- Fixed an issue where clicking on a message in TUIChat did not automatically hide the keyboard.
+- TUIKit document message supports automatic URL resolution
+- TUIKit's self-developed album browser
+- TUIKit supports video editor
+- TUIKit supports Traditional Chinese
